@@ -1,49 +1,86 @@
-RSpec.describe Agent::SectorPolicy, type: :policy do
+RSpec.describe Agent::SectorPolicy do
   subject { described_class }
 
-  let!(:territory) { create(:territory) }
-  let(:pundit_context) { AgentContext.new(agent) }
+  let(:pundit_context) { agent }
 
-  %i[new? create? show? edit? update? destroy?].each do |action|
-    describe "##{action}" do
-      let!(:agent) { create(:agent, role_in_territories: [territory]) }
+  context "agent does not have any territorial role" do
+    let(:territory) { create(:territory) }
+    let(:sector) { create(:sector, territory:) }
+    let(:agent) { create(:agent) }
 
-      context "agent has role in territory" do
-        let!(:sector) { create(:sector, territory: territory) }
-
-        permissions(action) { it { is_expected.to permit(pundit_context, sector) } }
-      end
-
-      context "agent does not have role in territory" do
-        let!(:territory2) { create(:territory) }
-        let!(:sector) { create(:sector, territory: territory2) }
-
-        permissions(action) { it { is_expected.not_to permit(pundit_context, sector) } }
-      end
-    end
+    it_behaves_like "not permit actions",
+                    :sector,
+                    :new?,
+                    :create?,
+                    :show?,
+                    :edit?,
+                    :update?,
+                    :destroy?
   end
-end
 
-RSpec.describe Agent::SectorPolicy::Scope, type: :policy do
-  describe "#resolve?" do
-    subject do
-      described_class.new(AgentContext.new(agent), Sector).resolve
+  context "agent has territorial role in sector territory" do
+    let(:territory) { create(:territory) }
+    let(:sector) { create(:sector, territory:) }
+    let(:agent) { create(:agent, role_in_territories: [territory]) }
+
+    it_behaves_like "permit actions",
+                    :sector,
+                    :new?,
+                    :create?,
+                    :show?,
+                    :edit?,
+                    :update?,
+                    :destroy?
+  end
+
+  context "agent has territorial role in other territory" do
+    let(:territory_sector) { create(:territory) }
+    let(:territory_agent) { create(:territory) }
+    let(:sector) { create(:sector, territory: territory_sector) }
+    let(:agent) { create(:agent, role_in_territories: [territory_agent]) }
+
+    it_behaves_like "not permit actions", :sector,
+                    :new?,
+                    :create?,
+                    :show?,
+                    :edit?,
+                    :update?,
+                    :destroy?
+  end
+
+  describe Agent::SectorPolicy::Scope do
+    let!(:territory_paris) { create(:territory) }
+    let!(:sector_montparnasse) { create(:sector, territory: territory_paris) }
+    let!(:sector_vautgirard) { create(:sector, territory: territory_paris) }
+
+    let!(:territory_marseille) { create(:territory) }
+    let!(:sector_timone) { create(:sector, territory: territory_marseille) }
+    let!(:sector_baille) { create(:sector, territory: territory_marseille) }
+
+    let!(:territory_lyon) { create(:territory) }
+    let!(:sector_perrache) { create(:sector, territory: territory_lyon) }
+    let!(:sector_partdieu) { create(:sector, territory: territory_lyon) }
+
+    context "agent has territorial roles in Paris and Marseille" do
+      let(:agent) { create(:agent, role_in_territories: [territory_paris, territory_marseille]) }
+
+      context "scope Paris sectors" do
+        subject do
+          described_class.new(agent, territory_paris.sectors).resolve
+        end
+
+        it { is_expected.to contain_exactly(sector_montparnasse, sector_vautgirard) }
+      end
     end
 
-    context "misc state" do
-      let!(:territory1) { create(:territory) }
-      let!(:territory2) { create(:territory) }
-      let!(:territory3) { create(:territory) }
-      let!(:agent) { create(:agent, role_in_territories: [territory1, territory2]) }
-      let!(:sector1) { create(:sector, territory: territory1) }
-      let!(:sector1bis) { create(:sector, territory: territory1) }
-      let!(:sector2) { create(:sector, territory: territory2) }
-      let!(:sector3) { create(:sector, territory: territory3) }
+    context "agent has no territorial roles at all" do
+      let(:agent) { create(:agent, role_in_territories: []) }
 
-      it { is_expected.to include(sector1) }
-      it { is_expected.to include(sector1bis) }
-      it { is_expected.to include(sector2) }
-      it { is_expected.not_to include(sector3) }
+      context "scope all sectors using Paris as context territory" do
+        subject { described_class.new(agent, territory_paris.sectors).resolve }
+
+        it { is_expected.to be_empty }
+      end
     end
   end
 end

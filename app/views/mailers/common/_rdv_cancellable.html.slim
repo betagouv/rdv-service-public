@@ -1,10 +1,25 @@
 p[style="margin-top:12px;"]
-  span> Vous pouvez modifier ou annuler votre rendez-vous
-  strong>
-    | jusqu'à 4h avant celui-ci
-  - if rdv.phone_number.present?
-    span> en appelant au #{link_to rdv.phone_number, "tel:#{rdv.phone_number_formatted}"} ou
-  | en cliquant sur le lien ci-dessous.
+  - if rdv.cancellable_by_user? || rdv.editable_by_user?
+    - if rdv.cancellable_by_user? && rdv.editable_by_user?
+      span> Vous pouvez annuler ou modifier votre rendez-vous
+      strong>
+        | jusqu'à 4h avant celui-ci
+    - elsif rdv.cancellable_by_user?
+      span> Vous pouvez annuler votre rendez-vous
+      strong>
+        | jusqu'à 4h avant celui-ci
+    - elsif rdv.editable_by_user?
+      span> Vous pouvez modifier votre rendez-vous
 
-.btn-wrapper
-  = link_to "Annuler ou modifier le rendez-vous", users_rdv_url(rdv.id, invitation_token: @token), class:"btn btn-primary"
+  - if rdv.phone_number.present?
+    span>
+      - if rdv.cancellable_by_user? || rdv.editable_by_user?
+        | en appelant au #{link_to rdv.phone_number, "tel:#{rdv.phone_number_formatted}"} ou
+      - else
+        | En cas de problème vous pouvez contacter le #{link_to rdv.phone_number, "tel:#{rdv.phone_number_formatted}"}.
+
+  - if rdv.cancellable_by_user? || rdv.editable_by_user?
+    | en cliquant sur le lien ci-dessous.
+
+  .btn-wrapper
+    = link_to rdv_mailer_cta_text(rdv), users_rdv_url(rdv.id, invitation_token: @token), class:"btn btn-primary"

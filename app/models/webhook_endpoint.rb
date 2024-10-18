@@ -29,6 +29,10 @@ class WebhookEndpoint < ApplicationRecord
     WebhookJob.perform_later(record.generate_webhook_payload(:created), id)
   end
 
+  def partially_hidden_secret
+    secret&.gsub(/.(?=.{3})/, "*")
+  end
+
   private
 
   def subscriptions_validity

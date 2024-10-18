@@ -1,8 +1,10 @@
+= render "prescription_banner"
+
 = render "banner", context: @context
 
 / Adress selection partials have multiple sections
 - if @context.current_step == :address_selection
   = render @context, context: @context
 - else
-  section.bg-light.p-4
+  section.rdv-background-color-alt-grey.py-4
     = render @context, context: @context

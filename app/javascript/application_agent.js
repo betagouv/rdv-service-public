@@ -1,7 +1,6 @@
 require("@rails/ujs").start()
 require("turbolinks").start()
 import 'bootstrap'
-import 'holderjs/holder.min'
 import 'select2/dist/js/select2.full.min.js'
 import 'select2/dist/js/i18n/fr.js'
 import { Datetimepicker } from './components/datetimepicker'
@@ -14,7 +13,6 @@ import { RdvWizardStep2 } from './components/rdv_wizard_step2.js'
 import { RdvLieu } from './components/rdv_lieu.js'
 import { PastDateAlert } from './components/past-date-alert.js'
 import { Clipboard } from './components/clipboard.js'
-import { MotifForm } from './components/motif-form.js'
 import { ZonesMap } from './components/zones-map.js'
 import { AgentUserForm } from './components/agent-user-form.js'
 import { AgentRoleForm } from './components/agent-role-form.js'
@@ -27,9 +25,18 @@ import { PlanningAgentSelect } from './components/planning-agent-select'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { DestroyButton } from './components/destroy-button'
 import { Tooltips } from './components/tooltips'
-import { HeaderTooltip } from './components/header_tooltip'
+import { PlageOuverture } from './components/plage_ouverture.js'
+import {CheckAll, UnCheckAll} from './components/check-all'
 import './components/calendar'
 import './components/browser-detection'
+import './components/clear-field-on-focus.js'
+
+import { Application } from "@hotwired/stimulus"
+import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers"
+
+window.Stimulus = Application.start()
+const context = require.context("./controllers", true, /\.js$/)
+Stimulus.load(definitionsFromContext(context))
 
 import './stylesheets/print'
 import './stylesheets/application_agent'
@@ -58,8 +65,6 @@ $(document).on('show.bs.modal', '.modal', function(e) {
 })
 
 $(document).on('turbolinks:load', function() {
-  Holder.run()
-
   let menu = new Menu()
 
   menu.init()
@@ -71,8 +76,6 @@ $(document).on('turbolinks:load', function() {
   new PlacesInputs()
 
   new Datetimepicker()
-
-  new MotifForm()
 
   new SubmitOnChange()
 
@@ -104,6 +107,10 @@ $(document).on('turbolinks:load', function() {
 
   new DestroyButton()
 
+  new PlageOuverture()
+
+  new CheckAll()
+  new UnCheckAll()
+
   Tooltips()
-  HeaderTooltip()
 })

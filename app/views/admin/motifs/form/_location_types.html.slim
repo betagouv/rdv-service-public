@@ -1,0 +1,17 @@
+- if disabled
+  p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le type
+
+.d-flex.flex-column
+  - Motif.location_types.each_key.each do |value|
+    = label_tag do
+      = f.radio_button(:location_type, value, disabled: disabled, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios")
+      span.ml-1 class=(disabled ? "text-muted" : "")
+        = Motif.human_attribute_value(:location_type, value)
+      p.text-muted.font-14= sanitize(Motif.human_attribute_value(:location_type, value, context: :hint), scrubber: :prune)
+  - motif = f.object
+  - if motif.persisted?
+    p.text-muted.font-14
+      i.fa.fa-circle-info.mr-1
+      ' Pour permettre plusieurs types de rendez-vous, vous pouvez
+      = link_to("dupliquer ce motif", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id))
+      | .

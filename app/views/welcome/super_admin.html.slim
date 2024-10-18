@@ -1,11 +1,10 @@
-.container.py-5
-  .row.justify-content-center
+.fr-mb-3w
+  .row.justify-content-center.pt-6
     .col-3
       = link_to "Accéder à superadmin", "/omniauth/github", class: "btn btn-primary", method: :post
 
-- if Rails.env.development?
-  .container.py-5
-    .row.justify-content-center
+  - if Rails.env.development?
+    .row.justify-content-center.mt-3
       .col-3
         h5 Liens utiles
         ul

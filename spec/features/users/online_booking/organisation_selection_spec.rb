@@ -17,7 +17,7 @@ RSpec.describe "Organisation selection (when motif does not require lieu)" do
   let!(:plage_die_dans_4_semaines)   { create(:plage_ouverture, first_day: 4.weeks.from_now, motifs: [motif_die]) }
 
   it "displays organisations ordered by first availability" do
-    visit prendre_rdv_path(service_id: service_social.id, departement: drome.departement_number)
+    visit prendre_rdv_path(service_id: service_social.id, departement: drome.departement_number, motif_name_with_location_type: motif_crest.name_with_location_type)
 
     expect(page.body).to match(/CMS Nyons.*CMS Crest.*CMS Die/)
   end

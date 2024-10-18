@@ -1,56 +1,54 @@
-.row.mt-3.justify-content-center
-  .col-md-6
-    h1.text-dark.mb-3 Changer de participants
+- content_for :title, "Changer de participants"
 
-    ul.list-group.list-group-flush
-      li.list-group-item
-        i.fa.fa-info-circle>
-        = @rdv.motif_name
+ul.list-group.fr-mb-3w
+  li.list-group-item
+    i.fa.fa-info-circle>
+    = @rdv.motif_name
 
-      li.list-group-item
-        .fa.fa-calendar>
-        = rdv_title(@rdv)
-        = rdv_tag(@rdv)
+  li.list-group-item
+    .fa.fa-calendar>
+    = rdv_title(@rdv)
+    = rdv_tag(@rdv)
 
-      - if @rdv.home?
-        li.list-group-item
-          .fa.fa-home>
-          | Ce RDV se déroulera à domicile
+  - if @rdv.home?
+    li.list-group-item
+      .fa.fa-home>
+      | Ce RDV se déroulera à domicile
 
-      - elsif @rdv.public_office?
-        li.list-group-item
-          .fa.fa-map-marker-alt>
-          = human_location(@rdv)
-          - if @rdv.lieu&.phone_number
-            span>
-            span.fa.fa-phone>
-            = link_to @rdv.lieu.phone_number, "tel:#{@rdv.lieu.phone_number_formatted}"
+  - elsif @rdv.public_office?
+    li.list-group-item
+      .fa.fa-map-marker-alt>
+      = human_location(@rdv)
+      - if @rdv.lieu&.phone_number
+        span>
+        span.fa.fa-phone>
+        = link_to @rdv.lieu.phone_number, "tel:#{@rdv.lieu.phone_number_formatted}"
 
-      - elsif @rdv.phone?
-        li.list-group-item
-          .fa.fa-phone>
-          | RDV Téléphonique
+  - elsif @rdv.phone?
+    li.list-group-item
+      .fa.fa-phone>
+      | RDV Téléphonique
 
-      - if @rdv.motif.instruction_for_rdv.present?
-        li.list-group-item
-          i.fa.fa-exclamation-triangle>
-          strong Informations supplémentaires :
-          .pl-3.pt-1
-            = instruction_for_rdv_to_html(@rdv.motif)
+  - if @rdv.motif.instruction_for_rdv.present?
+    li.list-group-item
+      i.fa.fa-exclamation-triangle>
+      strong Informations supplémentaires&nbsp;:
+      .pl-3.pt-1
+        = instruction_for_rdv_to_html(@rdv.motif)
 
-      li.list-group-item
-        i.fa.fa-users>
-        | Participant
+  li.list-group-item
+    i.fa.fa-users>
+    | Participant
 
-        = form_tag users_rdv_participations_path(@rdv) do
-          .form-group
-          - current_user.available_users_for_rdv.each do |possible_participant|
-            label
-              = radio_button_tag :user_id, possible_participant.id, @rdv.users.include?(possible_participant)
-              span>
-              = possible_participant.full_name
-            br
-          .form-group
-            = link_to "Ajouter un proche", new_relative_path, data: { modal: true }
-          .form-group
-            = submit_tag "Enregistrer", class: "btn btn-primary"
+    = form_tag users_rdv_participations_path(@rdv) do
+      .form-group
+      - current_user.available_users_for_rdv.each do |possible_participant|
+        label
+          = radio_button_tag :user_id, possible_participant.id, @rdv.users.include?(possible_participant)
+          span>
+          = possible_participant.full_name
+        br
+      .form-group
+        = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?), data: { modal: true }
+      .form-group
+        = submit_tag "Enregistrer", class: "btn btn-primary"

@@ -1,0 +1,26 @@
+.row
+  .col.col-md-8
+    h1 Erreur inattendue
+
+    p Erreur 500
+
+    p Désolé, une erreur s'est produite. Notre équipe technique en a été avertie automatiquement, et va chercher à la résoudre le plus rapidement possible.
+
+    p Vous pouvez retrouver plus d'information sur l'état général de notre service ici&nbsp;:
+
+    = render "admin/static_pages/instatus_iframe"
+
+    p.mt-4
+      = "Essayez de rafraîchir la page ou bien réessayez plus tard."
+
+      = " Si vous avez besoin d’une aide immédiate, merci de nous contacter avec le bouton ci-dessous ou en nous écrivant directement à l’adresse "
+
+      = mail_to(current_domain.support_email, current_domain.support_email)
+
+    .row.my-4
+      .col.flex
+        = mail_to(current_domain.support_email, "Contactez-nous", class: "btn btn-primary")
+        = link_to("Retour à l'accueil", root_path, class: "btn btn-outline-primary ml-2")
+
+  .col-0.col-md-4
+    = image_tag "static_pages/not_found_illustration.svg", class: "img-fluid p-3", alt: ""

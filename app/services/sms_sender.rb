@@ -18,7 +18,7 @@ class SmsSender < BaseService
       content,
     ].compact
       .join("\n")
-      .tr("áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ", "aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU")
+      .tr("áâãçëẽêíïîĩóôõúûũÀÁÂÃÇÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ", "aaaceeeiiiiooouuuAAAACEEEEIIIIIOOOOUUUU")
       .gsub("œ", "oe")
   end
 
@@ -128,6 +128,8 @@ class SmsSender < BaseService
     Admins::SfrMail2SmsMailer.send_sms(@api_key, @phone_number, @content).deliver_now
 
     save_receipt(result: :processed)
+  rescue Net::SMTPServerBusy => e
+    handle_failure(error_message: e.message)
   end
 
   # Clever Technologies

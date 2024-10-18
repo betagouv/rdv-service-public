@@ -23,7 +23,7 @@ RSpec.describe "User can search rdv on rdv service public" do
                                              end_time: Tod::TimeOfDay.new(10))
   end
 
-  it "allows booking a rdv", js: true do
+  it "allows booking a rdv" do
     visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
     click_on("Clarification du dossier")
     click_on("Prochaine disponibilité le") # choix du lieu

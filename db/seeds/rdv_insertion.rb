@@ -5,6 +5,19 @@
 orientation_category = MotifCategory.create!(short_name: "rsa_orientation", name: "RSA orientation")
 accompagnement_category = MotifCategory.create!(short_name: "rsa_accompagnement", name: "RSA accompagnement")
 
+MotifCategory.create!(short_name: "rsa_accompagnement_sociopro", name: "RSA accompagnement socio-pro")
+MotifCategory.create!(short_name: "rsa_accompagnement_social", name: "RSA accompagnement social")
+MotifCategory.create!(short_name: "rsa_cer_signature", name: "RSA signature CER")
+MotifCategory.create!(short_name: "rsa_follow_up", name: "RSA suivi")
+MotifCategory.create!(short_name: "rsa_insertion_offer", name: "RSA offre insertion pro")
+MotifCategory.create!(short_name: "rsa_orientation_on_phone_platform", name: "RSA orientation sur plateforme téléphonique")
+MotifCategory.create!(short_name: "rsa_atelier_collectif_mandatory", name: "RSA Atelier collectif obligatoire")
+MotifCategory.create!(short_name: "rsa_atelier_rencontres_pro", name: "RSA Atelier rencontres professionnelles")
+MotifCategory.create!(short_name: "rsa_atelier_competences", name: "RSA Atelier compétences")
+MotifCategory.create!(short_name: "rsa_main_tendue", name: "RSA Main Tendue")
+MotifCategory.create!(short_name: "rsa_spie", name: "RSA SPIE")
+MotifCategory.create!(short_name: "rsa_integration_information", name: "RSA Information d'intégration")
+
 # Territories
 territory_drome = Territory.create!(
   departement_number: "26",
@@ -112,7 +125,7 @@ agent_orgs_rdv_insertion = Agent.new(
   uid: "alain.sertion@rdv-insertion-demo.fr",
   first_name: "Alain",
   last_name: "Sertion",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
     { organisation: org_drome1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
@@ -219,20 +232,102 @@ _plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
 
 # WEBHOOKS
 WebhookEndpoint.create!(
-  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
-  secret: "rdv-solidarites",
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
   organisation_id: org_drome1.id,
   subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
 WebhookEndpoint.create!(
-  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
-  secret: "rdv-solidarites",
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
   organisation_id: org_drome2.id,
   subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
 WebhookEndpoint.create!(
-  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
-  secret: "rdv-solidarites",
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
   organisation_id: org_yonne.id,
   subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
+
+# Users
+user1 = User.create!(
+  email: "jean.rsavalence@testinvitation.fr",
+  address: "60 avenue de Chabeuil 26000 Valence",
+  first_name: "Jean",
+  last_name: "RSAValence",
+  phone_number: "0601020304",
+  created_through: "agent_creation_api",
+  invited_through: "external",
+  birth_date: 30.years.ago,
+  organisations: [org_drome1, org_drome2]
+)
+user1.set_rdv_invitation_token!
+user1.save!
+
+user2 = User.create!(
+  email: "jean.rsaAuxerre@testinvitation.fr",
+  address: "12 Rue Joubert, Auxerre, 89000",
+  first_name: "Jean",
+  last_name: "RSAAuxerre",
+  created_through: "agent_creation_api",
+  invited_through: "external",
+  birth_date: 30.years.ago,
+  organisations: [org_yonne]
+)
+user2.set_rdv_invitation_token!
+user2.save!
+
+# On reprend ci dessous les paramêtres que Rdvi utilise pour générer l'url d'invitation.
+# le code est ici https://github.com/betagouv/rdv-insertion/blob/9c03e5a6c720a88826e84ca854fd5ccb6135569a/app/services/invitations/compute_link.rb#L2
+
+dataset = [{
+  user: user1,
+  organisation: org_drome1,
+  motif: motif1_drome1,
+  city_code: "26362",
+  street_ban_id: "26362_1450",
+  longitude: "4.901427",
+  latitude: "44.931348",
+}, {
+  user: user2,
+  organisation: org_yonne,
+  motif: motif_yonne_physique,
+  city_code: "89024",
+  street_ban_id: "89024_3940",
+  longitude: "3.572903",
+  latitude: "47.795585",
+},]
+
+dataset.each do |data|
+  user = data[:user]
+  organisation = data[:organisation]
+  motif = data[:motif]
+
+  city_code = data[:city_code]
+  street_ban_id = data[:street_ban_id]
+  longitude = data[:longitude]
+  latitude = data[:latitude]
+  invitation_token = user.rdv_invitation_token
+  organisation_id = organisation.id
+  motif_category_short_name = motif.motif_category.short_name
+  address = user.address
+  departement = organisation.territory.departement_number
+
+  attributes = {
+    longitude: longitude,
+    latitude: latitude,
+    city_code: city_code,
+    street_ban_id: street_ban_id,
+    departement: departement,
+    address: address,
+    invitation_token: invitation_token,
+    organisation_ids: [organisation_id],
+    motif_category_short_name: motif_category_short_name,
+  }
+  link = "#{ENV['HOST']}/prendre_rdv?#{attributes.to_query}"
+
+  # !!! Le lien d'invitation est disponible dans la note des users
+  # jean.rsavalence@testinvitation.fr et jean.rsaAuxerre@testinvitation.fr
+  user.update!(notes: link)
+end

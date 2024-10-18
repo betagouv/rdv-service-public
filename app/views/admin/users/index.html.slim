@@ -19,7 +19,7 @@
         .col-md-6
           .form-group.string.optional._search
             = f.label :agent_id, "Agent référent", {class: "form-control-label select optional"}
-            = f.select :agent_id, [], {}, { class: "form-control select optional select2-input", data: { "select-options": { ajax: { url: admin_organisation_agents_path(current_organisation), dataType: "json", delay: 250 } } } }
+            = f.select :agent_id, [], {}, { class: "form-control select optional select2-input", data: { "select2-config": { ajax: { url: admin_organisation_agents_path(current_organisation), dataType: "json", delay: 250 } } } }
 
       input.btn.btn-primary.d-print-none type="submit" value="Rechercher"
 
@@ -41,20 +41,20 @@
               = render partial: "admin/users/user", locals: { user: user }
 
     - if @users.empty?
-      .mb-4.p.text-center Aucun usager trouvé pour ces critères
+      .mb-4.p.rdv-text-align-center Aucun usager trouvé pour ces critères
     - elsif @users.total_pages > 1
       .m-3
         .d-flex.justify-content-center id="users-pagination"
           = paginate @users, theme: "twitter-bootstrap-4"
-          .text-center= page_entries_info @users
+          .rdv-text-align-center= page_entries_info @users
   - else
     .card-body
       .row.justify-content-md-center
-        .col-md-6.text-center.my-5
+        .col-md-6.rdv-text-align-center.my-5
           p.mb-2.lead Utilisez le champ de recherche pour trouver&nbsp;un&nbsp;usager
           span.fa-stack.fa-4x
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-users.fa-stack-1x.text-white
 
-  .m-3.text-center
+  .m-3.rdv-text-align-center
     = link_to "Créer un usager", new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"

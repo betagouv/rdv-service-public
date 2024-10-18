@@ -1,0 +1,9 @@
+- content_for :container_content do
+  .fr-grid-row
+    .fr-col-md-8.m-auto
+      - if content_for :title
+        h1= yield :title
+      = render "layouts/flash_dsfr"
+      = yield
+
+= render template: "layouts/application"

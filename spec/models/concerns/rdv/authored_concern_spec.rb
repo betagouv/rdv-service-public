@@ -25,10 +25,11 @@ RSpec.describe Rdv::AuthoredConcern, type: :concern do
       end
     end
 
-    it "returns nothing when there is no 'create' version" do
+    context "there is no 'create' version"
+    it "returns a text explaining that the version was deleted for RGPD purposes" do
       rdv.versions.first.destroy!
 
-      expect(rdv.author).to eq(nil)
+      expect(rdv.author).to eq("Dans le cadre du RGPD, cette information n'est plus conservée au delà d'un an.")
     end
   end
 end

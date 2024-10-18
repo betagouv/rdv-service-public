@@ -1,9 +1,10 @@
 territory_cnfs = Territory.create!(
-  departement_number: "CN",
-  name: "Conseillers Numériques",
+  departement_number: Territory::CN_DEPARTEMENT_NUMBER,
   sms_provider: "netsize",
   sms_configuration: "login:pwd"
 )
+# Les contraintes de validations sur les noms spéciaux obligent à faire un update_columns ici
+territory_cnfs.update_columns(name: Territory::CNFS_NAME) # rubocop:disable Rails/SkipsModelValidations
 
 service_cnfs = Service.create!(name: Service::CONSEILLER_NUMERIQUE, short_name: Service::CONSEILLER_NUMERIQUE)
 territory_cnfs.services << service_cnfs
@@ -46,7 +47,7 @@ cnfs_lieu = Lieu.create!(
   longitude: 4.919825,
   availability: :enabled,
   phone_number: "01 53 24 69 70",
-  address: "8 Rue Léon Schwartzenberg, 75010 Paris"
+  address: "8 Rue Léon Schwartzenberg, Paris, 75010"
 )
 
 agent_cnfs = Agent.new(
@@ -54,7 +55,7 @@ agent_cnfs = Agent.new(
   uid: "camille-clavier@demo.rdv-solidarites.fr",
   first_name: "Camille",
   last_name: "Clavier",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_cnfs],
   invitation_accepted_at: 1.day.ago,
   roles_attributes: [{ organisation: org_cnfs, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],

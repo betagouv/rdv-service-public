@@ -13,6 +13,10 @@ RSpec.describe Motif, type: :model do
     expect(build(:motif, color: "#002233")).to be_valid
   end
 
+  it "can't be for secretariat and follow up at the same time" do
+    expect(build(:motif, for_secretariat: true, follow_up: true)).to be_invalid
+  end
+
   describe "uniqueness" do
     subject { motif.dup }
 
@@ -62,6 +66,14 @@ RSpec.describe Motif, type: :model do
       let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif3) }
+
+      context "when the agent is also part of another service" do
+        before do
+          agent.services << service
+        end
+
+        it { is_expected.to contain_exactly(motif, motif2, motif3) }
+      end
     end
 
     describe "for other service" do
@@ -95,12 +107,12 @@ RSpec.describe Motif, type: :model do
     let!(:intervenant_pmi) { create(:agent, :intervenant, intervenant_role_in_organisations: [org1], service: service_pmi) }
     let!(:motif) { create(:motif, service: service_pmi, organisation: org1) }
 
-    it { is_expected.to match_array([agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1]) }
+    it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1) }
 
     context "motif is available for secretariat" do
       let!(:motif) { create(:motif, service: service_pmi, organisation: org1, for_secretariat: true) }
 
-      it { is_expected.to match_array([agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1]) }
+      it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1) }
     end
 
     context "agent from same service but different orga" do
@@ -126,17 +138,17 @@ RSpec.describe Motif, type: :model do
   describe "visible_and_notified?" do
     it "vrai quand visible_type == visible_and_notified" do
       motif = build(:motif, :visible_and_notified)
-      expect(motif.visible_and_notified?).to eq(true)
+      expect(motif.visible_and_notified?).to be(true)
     end
 
     it "faux quand visible_type == visible_and_not_notified" do
       motif = build(:motif, :visible_and_not_notified)
-      expect(motif.visible_and_notified?).to eq(false)
+      expect(motif.visible_and_notified?).to be(false)
     end
 
     it "faux quand visible_type == invisible" do
       motif = build(:motif, :invisible)
-      expect(motif.visible_and_notified?).to eq(false)
+      expect(motif.visible_and_notified?).to be(false)
     end
   end
 
@@ -213,40 +225,42 @@ RSpec.describe Motif, type: :model do
 
   describe "#requires_lieu?" do
     it "returns false if the location_type doesn't require a lieu" do
-      expect(build(:motif, :by_phone).requires_lieu?).to eq(false)
-      expect(build(:motif, :at_home).requires_lieu?).to eq(false)
+      expect(build(:motif, :by_phone).requires_lieu?).to be(false)
+      expect(build(:motif, :at_home).requires_lieu?).to be(false)
     end
 
     it "returns true if the location_type requires a lieu" do
-      expect(build(:motif, :at_public_office).requires_lieu?).to eq(true)
+      expect(build(:motif, :at_public_office).requires_lieu?).to be(true)
     end
   end
 
-  describe "cant update type when already used for a rdv" do
-    it "valid when no RDV use this motif" do
-      motif = create(:motif, location_type: "public_office")
-      expect do
-        motif.update(location_type: "phone")
-      end.to change {
-        motif.reload.location_type
-      }.from("public_office").to("phone")
+  describe "preventing changes once the motif is used in RDVs" do
+    context "when motif is not used by any RDV" do
+      it "is allowed to change location_type" do
+        motif = create(:motif, location_type: "public_office")
+        motif.update!(location_type: "phone")
+      end
+
+      it "is allowed to change :collectif" do
+        motif = create(:motif, collectif: false)
+        motif.update!(collectif: true)
+      end
     end
 
-    it "invalid when RDV use this motif" do
-      motif = create(:motif, location_type: "public_office")
-      create(:rdv, motif: motif)
-      expect do
+    context "when motif is used by any RDV" do
+      it "is forbidden from changing location_type" do
+        motif = create(:motif, location_type: "public_office").tap { create(:rdv, motif: _1) }
         motif.update(location_type: "phone")
-      end.not_to change {
-        motif.reload.location_type
-      }
-    end
+        expect(motif.errors[:location_type]).to include("ne peut être modifié car le motif est utilisé pour un RDV")
+        expect(motif.reload.location_type).to eq("public_office")
+      end
 
-    it "error with clear error message when RDV use this motif" do
-      motif = create(:motif, location_type: "public_office")
-      create(:rdv, motif: motif)
-      motif.update(location_type: "phone")
-      expect(motif.reload.errors.full_messages).to eq(["Type de RDV ne peut être modifié car le motif est utilisé pour un RDV"])
+      it "is allowed to change :collectif" do
+        motif = create(:motif, collectif: false).tap { create(:rdv, motif: _1) }
+        motif.update(collectif: true)
+        expect(motif.errors[:collectif]).to include("ne peut être modifié car le motif est utilisé pour un RDV")
+        expect(motif.reload.collectif).to be(false)
+      end
     end
   end
 end

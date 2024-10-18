@@ -35,7 +35,7 @@ RSpec.shared_examples "SearchContext" do
       end
     end
 
-    context "with an address but several motifs available on same service" do
+    context "with an address but several matching motifs" do
       let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
       let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
 
@@ -44,8 +44,16 @@ RSpec.shared_examples "SearchContext" do
       end
     end
 
-    context "with a motif and an address" do
+    context "with a single matching motif and an address" do
       let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
+
+      it "current step is motif selection" do
+        expect(subject.current_step).to eq(:motif_selection)
+      end
+    end
+
+    context "with a single matching motif and an address and a motif name in the params" do
+      let!(:query_params) { { address: address, departement: departement_number, city_code: city_code, motif_name_with_location_type: motif.name_with_location_type } }
 
       it "current step is lieu selection" do
         expect(subject.current_step).to eq(:lieu_selection)
@@ -123,12 +131,12 @@ RSpec.shared_examples "SearchContext" do
 
   describe "#creneaux_search" do
     context "when lieu is present" do
-      it "returns a Users::CreneauxSearch using the lieu and the first matching motif" do
+      it "returns a CreneauxSearch::ForUser using the lieu and the first matching motif" do
         plage_ouverture = create(:plage_ouverture, motifs: [motif, motif2], organisation: organisation)
         lieu = plage_ouverture.lieu
         search_context = described_class.new(user:, query_params: query_params.merge(lieu_id: lieu.id))
 
-        expect(Users::CreneauxSearch).to receive(:new).with(
+        expect(CreneauxSearch::ForUser).to receive(:new).with(
           user: user,
           motif: motif,
           lieu: lieu,
@@ -142,14 +150,14 @@ RSpec.shared_examples "SearchContext" do
     context "when lieu is nil" do
       let!(:motif) { create(:motif, :by_phone, organisation: organisation) }
 
-      it "returns a Users::CreneauxSearch using no lieu and the selected motif" do
+      it "returns a CreneauxSearch::ForUser using no lieu and the selected motif" do
         create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
         search_context = described_class.new(
           user:,
           query_params: query_params
         )
 
-        expect(Users::CreneauxSearch).to receive(:new).with(
+        expect(CreneauxSearch::ForUser).to receive(:new).with(
           user: user,
           motif: motif,
           lieu: nil,

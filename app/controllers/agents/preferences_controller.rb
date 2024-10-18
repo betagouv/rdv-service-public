@@ -1,24 +1,16 @@
 class Agents::PreferencesController < AgentAuthController
-  include Admin::AuthenticatedControllerConcern
-
-  layout "registration"
+  layout "application_agent_config"
 
   before_action { @active_agent_preferences_menu_item = :notifications }
 
-  def disable_cnfs_online_booking_banner
-    skip_authorization
-    cookies.permanent[:disable_cnfs_online_booking_banner] = true
-    redirect_back_or_to(root_path)
-  end
-
   def show
     @agent = current_agent
-    authorize @agent
+    authorize(@agent, policy_class: Agent::AgentPolicy)
   end
 
   def update
     @agent = current_agent
-    authorize @agent
+    authorize(@agent, policy_class: Agent::AgentPolicy)
 
     if @agent.update(update_params)
       redirect_to agents_preferences_path, flash: { notice: t(".update.done") }

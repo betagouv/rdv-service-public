@@ -7,7 +7,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
   let!(:motif_collectif) do
-    create(:motif, :collectif, organisation: organisation, service: agent.services.first, instruction_for_rdv: "Instructions après confirmation")
+    create(:motif, :collectif, organisation: organisation, service: agent.services.first, instruction_for_rdv: "Instructions après confirmation", name: "Formation emails")
   end
   let!(:rdv_collectif) do
     create(
@@ -24,6 +24,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
 
   it "works" do
     visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
+    click_on "Formation emails" # choix du motif
 
     click_on "Prochaine disponibilité le" # choix du lieu
     click_on "S'inscrire" # choix du RDV collectif
@@ -89,6 +90,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     it "redirects to creneau search with error message" do
       visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
+      click_on "Formation emails" # choix du motif
       click_on "Prochaine disponibilité le" # choix du lieu
       click_on "S'inscrire", match: :first # choix du RDV collectif
       click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login

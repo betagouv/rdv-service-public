@@ -3,7 +3,7 @@ class Admin::AgentIntervenantsController < AgentAuthController
 
   def update
     @agent = Agent.find(params[:id])
-    authorize(@agent)
+    authorize(@agent, policy_class: Agent::AgentPolicy)
 
     agent_role = @agent.roles.find_by(organisation: current_organisation)
 

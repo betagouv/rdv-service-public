@@ -28,7 +28,7 @@
     .clear
   - if rdv.follow_up?
     div.row-result
-      span.title Référent :
+      span.title Référent&nbsp;:
       span.float-right= rdv.agents.map(&:short_name).sort.to_sentence
       .clear
   div.row-result
@@ -43,6 +43,11 @@
       span.title Ceci est un rendez-vous à domicile à l'adresse :
       div.alignright
         = rdv.address_complete
+  - elsif rdv.motif.visio?
+    div.row-result
+      span.title = "RDV par visioconférence"
+      div.alignright
+        = link_to("rejoindre la visioconférence", rdv.visio_url)
   - else
     div.row-result
       span.title Adresse :
@@ -51,5 +56,5 @@
       .clear
   - if rdv.motif.instruction_for_rdv.present? && for_role == :user
     .div.row-result.no-border
-      span.title Informations supplémentaires :
+      span.title Informations supplémentaires&nbsp;:
       = instruction_for_rdv_to_html(rdv.motif)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_15_131717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -48,6 +48,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     "agents_and_prescripteurs_and_invited_users",
   ], force: :cascade
 
+  create_enum :export_type, [
+    "rdv_export",
+    "participations_export",
+  ], force: :cascade
+
   create_enum :lieu_availability, [
     "enabled",
     "disabled",
@@ -58,6 +63,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     "public_office",
     "home",
     "phone",
+    "visio",
   ], force: :cascade
 
   create_enum :rdv_status, [
@@ -149,8 +155,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
   end
 
   create_table "agent_services", force: :cascade do |t|
-    t.bigint "agent_id"
-    t.bigint "service_id"
+    t.bigint "agent_id", null: false
+    t.bigint "service_id", null: false
     t.datetime "created_at", null: false
     t.index ["agent_id", "service_id"], name: "index_agent_services_on_agent_id_and_service_id", unique: true
     t.index ["agent_id"], name: "index_agent_services_on_agent_id"
@@ -163,6 +169,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_agent_teams_on_agent_id"
+    t.index ["team_id", "agent_id"], name: "index_agent_teams_primary_keys", unique: true
     t.index ["team_id"], name: "index_agent_teams_on_team_id"
   end
 
@@ -192,7 +199,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "confirmation_token"
@@ -223,14 +229,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
     t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
-    t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
-    t.string "cnfs_secondary_email"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
     t.string "inclusion_connect_open_id_sub"
+    t.boolean "connected_with_agent_connect", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -254,6 +259,28 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
+  end
+
+  create_table "api_calls", force: :cascade do |t|
+    t.datetime "received_at", null: false
+    t.jsonb "raw_http", null: false
+    t.string "controller_name", null: false
+    t.string "action_name", null: false
+    t.bigint "agent_id", null: false
+  end
+
+  create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.enum "export_type", null: false, enum_type: "export_type"
+    t.datetime "computed_at"
+    t.datetime "expires_at", null: false
+    t.integer "agent_id", null: false
+    t.string "file_name", null: false
+    t.jsonb "organisation_ids", null: false
+    t.jsonb "options"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_exports_on_agent_id"
+    t.index ["expires_at"], name: "index_exports_on_expires_at"
   end
 
   create_table "file_attentes", force: :cascade do |t|
@@ -294,13 +321,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.datetime "finished_at"
     t.text "error"
     t.integer "error_event", limit: 2
+    t.text "error_backtrace", array: true
+    t.uuid "process_id"
+    t.interval "duration"
     t.index ["active_job_id", "created_at"], name: "index_good_job_executions_on_active_job_id_and_created_at"
+    t.index ["process_id", "created_at"], name: "index_good_job_executions_on_process_id_and_created_at"
   end
 
   create_table "good_job_processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "state"
+    t.integer "lock_type", limit: 2
   end
 
   create_table "good_job_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -333,6 +365,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.text "job_class"
     t.integer "error_event", limit: 2
     t.text "labels", array: true
+    t.uuid "locked_by_id"
+    t.datetime "locked_at"
     t.index ["active_job_id", "created_at"], name: "index_good_jobs_on_active_job_id_and_created_at"
     t.index ["batch_callback_id"], name: "index_good_jobs_on_batch_callback_id", where: "(batch_callback_id IS NOT NULL)"
     t.index ["batch_id"], name: "index_good_jobs_on_batch_id", where: "(batch_id IS NOT NULL)"
@@ -341,8 +375,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.index ["cron_key", "cron_at"], name: "index_good_jobs_on_cron_key_and_cron_at_cond", unique: true, where: "(cron_key IS NOT NULL)"
     t.index ["finished_at"], name: "index_good_jobs_jobs_on_finished_at", where: "((retried_good_job_id IS NULL) AND (finished_at IS NOT NULL))"
     t.index ["labels"], name: "index_good_jobs_on_labels", where: "(labels IS NOT NULL)", using: :gin
+    t.index ["locked_by_id"], name: "index_good_jobs_on_locked_by_id", where: "(locked_by_id IS NOT NULL)"
     t.index ["priority", "created_at"], name: "index_good_job_jobs_for_candidate_lookup", where: "(finished_at IS NULL)"
     t.index ["priority", "created_at"], name: "index_good_jobs_jobs_on_priority_created_at_when_unfinished", order: { priority: "DESC NULLS LAST" }, where: "(finished_at IS NULL)"
+    t.index ["priority", "scheduled_at"], name: "index_good_jobs_on_priority_scheduled_at_unfinished_unlocked", where: "((finished_at IS NULL) AND (locked_by_id IS NULL))"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
@@ -379,14 +415,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
   end
 
   create_table "motifs", force: :cascade do |t|
-    t.string "name"
-    t.string "color"
+    t.string "name", null: false
+    t.string "color", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
-    t.integer "min_public_booking_delay", default: 1800, comment: "Permet de savoir combien de secondes il y aura au minimum entre la prise de rdv par un usager ou un prescripteur et le début du rdv. Par exemple si la valeur est 1800, et qu'il est 10h, le premier rdv qui pourra être pris (s'il y a une plage d'ouverture libre) sera à 10h30, puisque 1800 = 30 x 60. Cela permet à l'agent d'être prévenu suffisamment à l'avance.\n"
-    t.integer "max_public_booking_delay", default: 7889238, comment: "Permet de savoir combien de temps à l'avance il est possible de prendre rdv pour un usager ou un prescripteur. Le délai est mesuré en secondes. Cela évite que des gens prennent des rdv dans trop longtemps, et évite aux agents de s'engager à assurer des rdv alors qu'ils ne connaissent pas leur emploi du temps suffisamment à l'avance.\n"
+    t.integer "min_public_booking_delay", default: 1800, null: false, comment: "Permet de savoir combien de secondes il y aura au minimum entre la prise de rdv par un usager ou un prescripteur et le début du rdv. Par exemple si la valeur est 1800, et qu'il est 10h, le premier rdv qui pourra être pris (s'il y a une plage d'ouverture libre) sera à 10h30, puisque 1800 = 30 x 60. Cela permet à l'agent d'être prévenu suffisamment à l'avance.\n"
+    t.integer "max_public_booking_delay", default: 7889238, null: false, comment: "Permet de savoir combien de temps à l'avance il est possible de prendre rdv pour un usager ou un prescripteur. Le délai est mesuré en secondes. Cela évite que des gens prennent des rdv dans trop longtemps, et évite aux agents de s'engager à assurer des rdv alors qu'ils ne connaissent pas leur emploi du temps suffisamment à l'avance.\n"
     t.datetime "deleted_at", comment: "Permet de savoir à quelle date le motif a été soft-deleted\n"
     t.bigint "service_id", null: false
     t.text "restriction_for_rdv", comment: "Instructions à accepter avant la prise du rendez-vous par l'usager\n"
@@ -417,12 +453,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
   create_table "motifs_plage_ouvertures", id: false, force: :cascade do |t|
     t.bigint "motif_id", null: false
     t.bigint "plage_ouverture_id", null: false
+    t.index ["motif_id", "plage_ouverture_id"], name: "index_motifs_plage_ouvertures_primary_keys", unique: true
     t.index ["motif_id"], name: "index_motifs_plage_ouvertures_on_motif_id"
     t.index ["plage_ouverture_id"], name: "index_motifs_plage_ouvertures_on_plage_ouverture_id"
   end
 
   create_table "organisations", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "horaires"
@@ -469,7 +506,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
 
   create_table "plage_ouvertures", force: :cascade do |t|
     t.bigint "agent_id", null: false
-    t.string "title"
+    t.string "title", null: false
     t.bigint "organisation_id", null: false
     t.date "first_day", null: false
     t.time "start_time", null: false
@@ -533,7 +570,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
 
   create_table "receipts", force: :cascade do |t|
     t.bigint "rdv_id"
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.string "event", null: false
     t.enum "channel", null: false, enum_type: "receipts_channel"
     t.enum "result", null: false, enum_type: "receipts_result"
@@ -585,10 +622,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
   end
 
   create_table "services", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "short_name"
+    t.string "short_name", null: false
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
     t.index ["name"], name: "index_services_on_name"
@@ -620,7 +657,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "sms_provider", enum_type: "sms_provider"
-    t.json "sms_configuration"
+    t.string "sms_configuration"
     t.boolean "has_own_sms_provider", default: false
     t.boolean "enable_notes_field", default: false
     t.boolean "enable_caisse_affiliation_field", default: false
@@ -638,8 +675,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
   end
 
   create_table "territory_services", force: :cascade do |t|
-    t.bigint "territory_id"
-    t.bigint "service_id"
+    t.bigint "territory_id", null: false
+    t.bigint "service_id", null: false
     t.datetime "created_at", null: false
     t.index ["service_id"], name: "index_territory_services_on_service_id"
     t.index ["territory_id", "service_id"], name: "index_territory_services_on_territory_id_and_service_id", unique: true
@@ -655,8 +692,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
     t.string "email"
     t.string "address"
     t.string "phone_number"
@@ -666,7 +703,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
@@ -695,7 +731,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.string "post_code"
     t.string "city_name"
     t.enum "invited_through", default: "devise_email", enum_type: "user_invited_through"
-    t.enum "created_through", default: "unknown", enum_type: "user_created_through"
+    t.enum "created_through", default: "unknown", null: false, enum_type: "user_created_through"
     t.string "case_number"
     t.string "address_details"
     t.integer "logement"
@@ -703,6 +739,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.string "ants_pre_demande_number"
     t.string "rdv_invitation_token"
     t.virtual "text_search_terms", type: :tsvector, as: "(((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
+    t.datetime "rdv_invitation_token_updated_at"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
@@ -726,9 +763,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
     t.bigint "item_id", null: false
     t.string "event", null: false
     t.string "whodunnit"
-    t.text "old_object"
     t.datetime "created_at"
-    t.text "old_object_changes"
     t.json "virtual_attributes"
     t.jsonb "object"
     t.jsonb "object_changes"
@@ -737,7 +772,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
 
   create_table "webhook_endpoints", force: :cascade do |t|
     t.string "target_url", null: false
-    t.string "secret"
+    t.string "secret", null: false
     t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -747,9 +782,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
   end
 
   create_table "zones", force: :cascade do |t|
-    t.string "level"
-    t.string "city_name"
-    t.string "city_code"
+    t.string "level", null: false
+    t.string "city_name", null: false
+    t.string "city_code", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "sector_id", null: false
@@ -771,6 +806,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_04_163238) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
+  add_foreign_key "api_calls", "agents"
+  add_foreign_key "exports", "agents"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "lieux", "organisations"

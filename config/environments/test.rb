@@ -48,7 +48,7 @@ Rails.application.configure do
   # config.active_storage.service = :test
 
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
-  config.action_mailer.default_url_options = { host: "localhost:#{port}", utm_source: "test", utm_medium: "email", utm_campaign: "default" }
+  config.action_mailer.default_url_options = { host: "localhost:#{port}" }
   config.action_mailer.perform_caching = false
 
   # Tell Action Mailer not to deliver emails to the real world.
@@ -84,4 +84,10 @@ Rails.application.configure do
   config.active_record.encryption.primary_key = "test"
   config.active_record.encryption.deterministic_key = "test"
   config.active_record.encryption.key_derivation_salt = "test"
+
+  # Dans l'environnement de test on ne met pas de date d'expiration des cookies, car l'heure du
+  # serveur de test et celle du navigateur sont différentes quand on utilise une spec d'intégration en
+  # js: true avec un travel_to.
+  # Quand le travel_to est dans le passé, cela fait expirer le cookie immédiatement et rend le test impossible.
+  config.session_store :cookie_store, key: "_rdv_sp_session"
 end

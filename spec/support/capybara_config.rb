@@ -10,7 +10,7 @@ Capybara.register_driver :selenium do |app|
   binary = chrome_bin if chrome_bin
   browser_options = Selenium::WebDriver::Chrome::Options.new(
     # these args seem to reduce test flakyness
-    args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000],
+    args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen],
     "goog:loggingPrefs": { browser: "ALL" },
     binary: binary
   )
@@ -33,15 +33,26 @@ Capybara.configure do |config|
   config.javascript_driver = :selenium
   config.server = :puma, { Silent: true }
   config.disable_animation = true
+  config.save_path = Rails.root.join("tmp/capybara")
 
   # This is necessary when using Selenium + custom .localhost domain.
   # See: https://stackoverflow.com/a/63973323/2864020
   config.always_include_port = true
 end
 
+RSpec.configure do |config|
+  config.after(:each, js: true) do
+    logs = page.driver.browser.logs.get(:browser)
+    aggregate_failures "javascript errors" do
+      logs.each do |log|
+        expect(log.level).not_to eq("SEVERE"), log.message
+        warn "JS warning in console: #{log.message}" if log.level == "WARNING"
+      end
+    end
+  end
+end
+
 def expect_page_to_be_axe_clean(path)
-  visit path # TODO: supprimer en même temps que app/javascript/components/header_tooltip.js
-  # Le premier visit permet d'afficher le tooltip du header, et faire qu'il n'apparaisse pas la deuxieme fois
   visit path
   expect(page).to have_current_path(path)
   expect(page).to be_axe_clean

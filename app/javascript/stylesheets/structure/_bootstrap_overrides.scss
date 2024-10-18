@@ -1,0 +1,33 @@
+// Ces règles sont temporaires, on les supprimera une fois qu’on aura complètement remplacé
+// Bootstrap par le DSFR.
+
+.btn:hover {
+  color: inherit;
+}
+
+a.btn[href],
+a.stretched-link[href] {
+  background-image: none;
+  // pour éviter le soulignement des boutons et liens bootstrap
+}
+
+footer {
+  background-color: var(
+    --background-default-grey
+  ); // this should go on the body
+
+  a,
+  a:hover {
+    color: inherit;
+  }
+  [href]:not(.fr-footer__brand-link):not(.fr-footer__partners-link) {
+    background-image: var(--underline-img), var(--underline-img);
+  }
+  .fr-footer__partners-link {
+    border: 1px solid transparent;
+
+    &:hover {
+      border-color: #ccc;
+    }
+  }
+}

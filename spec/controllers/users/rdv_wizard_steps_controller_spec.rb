@@ -5,7 +5,7 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
     let!(:motif) { create(:motif, organisation: organisation) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let(:starts_at) { Time.zone.parse("2020-03-03 10h00") }
-    let!(:mock_creneau) { instance_double(::Creneau) }
+    let!(:mock_creneau) { instance_double(Creneau) }
     let!(:mock_rdv) { build(:rdv, starts_at: starts_at, users: [user], created_by: user) } # cannot use instance_double because it breaks pundit inference
     let(:mock_user_rdv_wizard) { instance_double(UserRdvWizard::Step2, creneau: mock_creneau, rdv: mock_rdv) }
 
@@ -36,11 +36,7 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
       end
 
       context "with invitation token" do
-        let!(:invitation_token) do
-          user.assign_rdv_invitation_token
-          user.save!
-          user.rdv_invitation_token
-        end
+        let!(:invitation_token) { user.set_rdv_invitation_token! }
 
         before { request.session[:invitation] = { invitation_token:, expires_at: 10.hours.from_now } }
 

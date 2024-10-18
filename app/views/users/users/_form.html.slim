@@ -1,6 +1,8 @@
-- form_url = local_assigns[:rdv_wizard].present? ? users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv)) : users_informations_path
-- form_method = local_assigns[:rdv_wizard].present? ? "post" : "patch"
-- territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
+ruby:
+  rdv_wizard = local_assigns[:rdv_wizard]
+  form_url = rdv_wizard.present? ? users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv)) : users_informations_path
+  form_method = rdv_wizard.present? ? "post" : "patch"
+  territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
 
 = simple_form_for user, url: form_url, method: form_method  do |f|
   = render "model_errors", model: user, f: f
@@ -8,27 +10,27 @@
     .col-md-6= f.input :first_name, placeholder: "Prénom", disabled: user.logged_once_with_franceconnect?
     .col-md-6= f.input :last_name, placeholder: "Nom"
   .form-row
-    - unless current_user.only_invited? || current_domain == Domain::RDV_MAIRIE
+    - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_MAIRIE
       .col-md-6= f.input :birth_name, placeholder: "Nom de naissance", disabled: user.logged_once_with_franceconnect?
-      .col-md-6= date_input(f, :birth_date, disabled: user.logged_once_with_franceconnect?)
-  - if local_assigns[:rdv_wizard]&.rdv&.requires_ants_predemande_number? || current_user.rdvs.requires_ants_predemande_number.any?
-    = f.input :ants_pre_demande_number, required: true, hint: t("simple_form.hints.user.ants_pre_demande_number_html")
+      .col-md-6= f.input :birth_date, as: :string, input_html: { type: "date" }, disabled: user.logged_once_with_franceconnect?
+  - if rdv_wizard&.rdv&.requires_ants_predemande_number?
+    = f.input :ants_pre_demande_number, required: true, hint: t("simple_form.hints.user.ants_pre_demande_number_html"), input_html: {style: "text-transform: uppercase;"}
   - if user.logged_once_with_franceconnect?
     .alert.alert-info.d-flex.align-items-center
       .mr-3
         .fa.fa-info
       div= I18n.t("users.franceconnect_frozen_fields")
-  = f.input :phone_number, as: :tel, required: local_assigns[:rdv_wizard]&.motif&.phone?
-  - if current_user.only_invited?
+  - if current_user.signed_in_with_invitation_token?
     = f.input :email, disabled: user.email.present? && !user.email_changed?, required: true
+  = f.input :phone_number, as: :tel, required: rdv_wizard&.motif&.phone?
   - if user.phone_number.present? && !user.phone_number_mobile?
     .alert.alert-warning Vous ne recevrez pas de SMS avec ce numéro non-mobile
   div.mb-2 Préférences de notifications
   div= f.input :notify_by_email
   div= f.input :notify_by_sms
-  - unless current_user.only_invited? || current_domain == Domain::RDV_MAIRIE
-    - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
-    = f.input :address, input_html: {value: address_value, class: "places-js-container" }
+  - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_MAIRIE
+    - address_value = rdv_wizard.present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
+    = f.input :address, input_html: {value: address_value, class: "places-js-container" }, required: rdv_wizard&.motif&.home?
 
   - if territories.map(&:enable_address_details).any?
     = f.input :address_details, input_html: {class: "places-js-container" }
@@ -52,7 +54,7 @@
         - if territories.map(&:enable_number_of_children_field).any?
           .col-md-6= f.input :number_of_children, input_html: { min: "0", max: "15", step: "any" }
 
-    - if local_assigns[:rdv_wizard]
+    - if rdv_wizard
       ruby:
         current_organisation = Motif.find(rdv_wizard.to_query[:motif_id]).organisation
       - if current_organisation.territory.enable_logement_field
@@ -60,9 +62,9 @@
     - elsif territories.map(&:enable_logement_field).any?
       = f.input :logement, collection: User.human_attribute_values(:logement)
 
-  - if local_assigns[:rdv_wizard].present?
+  - if rdv_wizard.present?
     - rdv_wizard.to_query.each do |wizard_key, wizard_value|
       = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
 
-  .text-right
-    = f.button :submit, (local_assigns[:rdv_wizard].present? ? "Continuer" : "Modifier")
+  .rdv-text-align-right
+    = f.button :submit, (rdv_wizard.present? ? "Continuer" : "Modifier")

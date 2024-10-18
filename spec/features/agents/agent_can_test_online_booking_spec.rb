@@ -5,7 +5,7 @@ RSpec.describe "Agents can try the user-facing online booking pages" do
   before do
     first_day = Date.parse("2023/08/01")
     travel_to(first_day.beginning_of_day)
-    motif = create(:motif, organisation: organisation, service: agent.services.first)
+    motif = create(:motif, organisation: organisation, service: agent.services.first, name: "Accompagnement Formation")
     motif.plage_ouvertures << create(:plage_ouverture, first_day: first_day, organisation: organisation, agent: agent)
   end
 
@@ -14,9 +14,11 @@ RSpec.describe "Agents can try the user-facing online booking pages" do
     visit public_link_to_org_path(organisation_id: organisation.id)
     expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
     click_link(agent.services.first.name)
-    expect(page).to have_content("Sélectionnez un lieu de RDV :")
+    expect(page).to have_content("Sélectionnez le motif de votre RDV :")
+    click_link("Accompagnement Formation")
+    expect(page).to have_content("Sélectionnez un lieu de RDV")
     click_link("Prochaine disponibilité")
-    expect(page).to have_content("Sélectionnez un créneau :")
+    expect(page).to have_content("Sélectionnez un créneau")
   end
 
   it "works on the RDV_MAIRIE domain" do

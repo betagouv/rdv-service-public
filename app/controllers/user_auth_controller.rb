@@ -17,26 +17,18 @@ class UserAuthController < ApplicationController
     end
   end
 
-  def authorize(record, *args)
-    super([:user, record], *args)
-  end
-
-  def policy_scope(clasz)
-    super([:user, clasz])
-  end
-
   def user_not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
-    redirect_to(request.referer || authenticated_user_root_path)
+    redirect_to authenticated_user_root_path
   end
 
   def authenticated_user_root_path
-    current_user.only_invited? ? root_path : users_rdvs_path
+    current_user.signed_in_with_invitation_token? ? root_path : users_rdvs_path
   end
 
   def should_verify_user_name_initials?
-    return false unless current_user.only_invited?
+    return false unless current_user.signed_in_with_invitation_token?
     return false if cookies.encrypted[user_name_initials_cookie_name] == true
 
     true

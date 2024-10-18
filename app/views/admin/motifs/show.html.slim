@@ -4,7 +4,7 @@
   .col-md-12.col-lg-8
     .card.mt-2
       .card-header
-        h3.text-center Motif #{@motif.name} (#{@motif.service.short_name})
+        h3.rdv-text-align-center Motif #{@motif.name} (#{@motif.service.short_name})
       .card-body
         = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
         = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service.name)
@@ -22,7 +22,7 @@
           div
             = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
           div.text-muted
-            = @motif.human_attribute_value(:location_type, context: :hint)
+            = sanitize(@motif.human_attribute_value(:location_type, context: :hint), scrubber: :prune)
         hr
 
         = motif_attribute_row \
@@ -37,7 +37,7 @@
 
           .mb-2= motif_attribute_row \
           Motif.human_attribute_name(:bookable_by), \
-          I18n.t("activerecord.attributes.motif/bookable_by/hint.#{@motif.bookable_by}", \
+          I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.#{@motif.bookable_by}", \
           organisation_name: @motif.organisation.name \
           )
         - if @motif.bookable_outside_of_organisation?
@@ -65,7 +65,8 @@
         hr
 
         = motif_attribute_row(Motif.human_attribute_name(:visibility_type)) do
-          div= @motif.human_attribute_value(:visibility_type)
+          div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
+
           div.text-muted
             = @motif.human_attribute_value(:visibility_type, context: :hint)
             - if current_organisation.rdv_insertion?
@@ -88,11 +89,13 @@
 
       - if @motif_policy.edit? || @motif_policy.destroy?
         .card-footer
-          .d-flex.justify-content-end
+          .d-flex.justify-content-end.flex-gap-1em
             - if @motif_policy.destroy?
-              div.mr-2= link_to "Supprimer", admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce motif ?"}, class: "btn btn-danger w-100"
+              div= link_to "Supprimer", admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce motif ?"}, class: "btn btn-danger w-100"
+            - if @motif_policy.duplicate?
+              div= link_to "Dupliquer", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "btn btn-primary w-100"
             - if @motif_policy.edit?
-              div= link_to "Éditer", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
+              div= link_to "Modifier", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
 
 .row.justify-content-center
   .col-md-12.col-lg-8

@@ -141,7 +141,7 @@ motif_org_paris_nord_pmi_collectif = Motif.create!(
   default_duration_in_min: 60,
   location_type: :public_office
 )
-_motif_org_paris_nord_social_rappel = Motif.create!(
+motif_org_paris_nord_social_rappel = Motif.create!(
   name: "Être rappelé par la MDS",
   color: "#FF7C00",
   organisation_id: org_paris_nord.id,
@@ -149,7 +149,7 @@ _motif_org_paris_nord_social_rappel = Motif.create!(
   bookable_by: :everyone,
   location_type: :phone
 )
-_motif_org_paris_nord_social_suivi = Motif.create!(
+motif_org_paris_nord_social_suivi = Motif.create!(
   name: "Suivi RSA",
   color: "#CC7C00",
   organisation_id: org_paris_nord.id,
@@ -180,9 +180,9 @@ _motif_org_paris_nord_social_collectif = Motif.create!(
 # MOTIFS organisations du 62
 
 motifs = {}
-[[:bapaume, org_bapaume], [:arques, org_arques]].each do |seed_id, org|
-  motifs[seed_id] ||= {}
-  motifs[seed_id][:pmi_rappel] = Motif.create!(
+Organisation.where(territory: territory62).each do |org|
+  motifs[org] ||= {}
+  motifs[org][:pmi_rappel] = Motif.create!(
     name: "Être rappelé par la PMI",
     color: "#10FF10",
     organisation_id: org.id,
@@ -190,7 +190,7 @@ motifs = {}
     bookable_by: :everyone,
     location_type: :phone
   )
-  motifs[seed_id][:pmi_prenatale] = Motif.create!(
+  motifs[org][:pmi_prenatale] = Motif.create!(
     name: "Consultation prénatale",
     color: "#FF1010",
     organisation_id: org.id,
@@ -208,7 +208,7 @@ motifs_attributes = 1000.times.map do |i|
     name: "motif_#{i}",
     color: "#000000",
     organisation_id: org_arques.id,
-    service_id: service_secretariat.id,
+    service_id: service_pmi.id,
     bookable_by: :everyone,
     location_type: :public_office,
   }
@@ -221,7 +221,7 @@ lieu_org_paris_nord_bolivar = Lieu.create!(
   name: "MDS Bolivar",
   organisation: org_paris_nord,
   availability: :enabled,
-  address: "126 Avenue Simon Bolivar, 75019, Paris",
+  address: "126 Avenue Simon Bolivar, Paris, 75019",
   latitude: 48.8809263,
   longitude: 2.3739077
 )
@@ -229,7 +229,7 @@ lieu_org_paris_nord_bd_aubervilliers = Lieu.create!(
   name: "MDS Bd Aubervilliers",
   organisation: org_paris_nord,
   availability: :enabled,
-  address: "18 Boulevard d'Aubervilliers, 75019 Paris",
+  address: "18 Boulevard d'Aubervilliers, Paris, 75019",
   latitude: 48.8882196,
   longitude: 2.3650464
 )
@@ -237,7 +237,7 @@ lieu_arques_nord = Lieu.create!(
   name: "Maison Arques Nord",
   organisation: org_arques,
   availability: :enabled,
-  address: "10 rue du marechal leclerc, 62410 Arques",
+  address: "10 rue du marechal leclerc, Arques, 62410",
   latitude: 50.7406,
   longitude: 2.3103
 )
@@ -245,7 +245,7 @@ lieu_bapaume_est = Lieu.create!(
   name: "MJC Bapaume Est",
   organisation: org_bapaume,
   availability: :enabled,
-  address: "10 rue emile delot, 62450 Arques",
+  address: "10 rue emile delot, Arques, 62450",
   latitude: 50.1026,
   longitude: 2.8486
 )
@@ -285,7 +285,7 @@ user_org_paris_nord_patricia = User.new(
   last_name: "Duroy",
   email: "patricia_duroy@demo.rdv-solidarites.fr",
   birth_date: Date.parse("20/06/1975"),
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   phone_number: "0101010101",
   organisation_ids: [org_paris_nord.id, org_arques.id],
   created_through: "user_sign_up"
@@ -310,7 +310,7 @@ user_org_paris_nord_lea = User.new(
   last_name: "Dupont",
   email: "lea_dupont@demo.rdv-solidarites.fr",
   birth_date: Date.parse("01/12/1982"),
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   phone_number: "0101010102",
   organisation_ids: [org_paris_nord.id],
   created_through: "user_sign_up"
@@ -325,7 +325,7 @@ user_org_paris_nord_jean = User.new(
   last_name: "Moustache",
   email: "jean_moustache@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   phone_number: "0101010103",
   organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
   created_through: "user_sign_up"
@@ -340,7 +340,7 @@ user_org_paris_sud = User.new(
   last_name: "Factice",
   email: "francis.factice@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   phone_number: "0101010103",
   organisation_ids: [org_paris_sud.id],
   created_through: "user_sign_up"
@@ -353,7 +353,7 @@ user_org_paris_sud.update!(logement: 2)
 user_org_arques = User.new(
   first_name: "Francis",
   last_name: "Factice",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   phone_number: "0611223344",
   organisation_ids: [org_arques.id],
   created_through: "user_sign_up"
@@ -365,7 +365,7 @@ user_org_arques.save!
 user_org_bapaume = User.new(
   first_name: "François",
   last_name: "Factice",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   email: "francois@factice.cool",
   organisation_ids: [org_bapaume.id],
   created_through: "user_sign_up"
@@ -402,7 +402,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   uid: "martine@demo.rdv-solidarites.fr",
   first_name: "Martine",
   last_name: "Validay",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
@@ -422,7 +422,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   uid: "marco@demo.rdv-solidarites.fr",
   first_name: "Marco",
   last_name: "Durand",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
@@ -436,12 +436,31 @@ agent_org_paris_nord_pmi_marco = Agent.new(
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
 
+agent_org_paris_nord_pmi_elsa = Agent.new(
+  email: "Elsa@demo.rdv-solidarites.fr",
+  uid: "Elsa@demo.rdv-solidarites.fr",
+  first_name: "Elsa",
+  last_name: "Deck",
+  password: "Rdvservicepublictest1!",
+  services: [service_pmi],
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
+  agent_territorial_access_rights_attributes: [{
+    territory: territory75,
+    allow_to_manage_teams: false,
+    allow_to_manage_access_rights: false,
+    allow_to_invite_agents: false,
+  }]
+)
+agent_org_paris_nord_pmi_elsa.skip_confirmation!
+agent_org_paris_nord_pmi_elsa.save!
+
 agent_org_paris_nord_social_polo = Agent.new(
   email: "polo@demo.rdv-solidarites.fr",
   uid: "polo@demo.rdv-solidarites.fr",
   first_name: "Polo",
   last_name: "Durant",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_social],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
@@ -460,7 +479,7 @@ org_arques_pmi_maya = Agent.new(
   uid: "maya@demo.rdv-solidarites.fr",
   first_name: "Maya",
   last_name: "Patrick",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, access_level: AgentRole::ACCESS_LEVEL_ADMIN } },
@@ -473,13 +492,14 @@ org_arques_pmi_maya = Agent.new(
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
+org_arques_pmi_maya.territorial_roles.create!(territory: territory62)
 
 agent_org_bapaume_pmi_bruno = Agent.new(
   email: "bruno@demo.rdv-solidarites.fr",
   uid: "bruno@demo.rdv-solidarites.fr",
   first_name: "Bruno",
   last_name: "Frangi",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
@@ -499,7 +519,7 @@ agent_org_bapaume_pmi_gina = Agent.new(
   uid: "gina@demo.rdv-solidarites.fr",
   first_name: "Gina",
   last_name: "Leone",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
@@ -609,12 +629,24 @@ _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(16),
   recurrence: Montrose.every(:week, on: [:tuesday], interval: 1, starts: Date.tomorrow)
 )
+_plage_ouverture_org_paris_nord_polo_perm = PlageOuverture.create!(
+  title: "Perm. sociale",
+  organisation_id: org_paris_nord.id,
+  agent_id: agent_org_paris_nord_social_polo.id,
+  lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
+  motif_ids: [motif_org_paris_nord_social_rappel.id, motif_org_paris_nord_social_suivi.id],
+  first_day: Date.tomorrow,
+  start_time: Tod::TimeOfDay.new(14),
+  end_time: Tod::TimeOfDay.new(16),
+  recurrence: Montrose.every(:week, on: [:tuesday], interval: 1, starts: Date.tomorrow)
+)
+
 _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
   title: "Perm. tradi",
   organisation_id: org_arques.id,
   agent_id: org_arques_pmi_maya.id,
   lieu_id: lieu_arques_nord.id,
-  motif_ids: [motifs[:arques][:pmi_rappel].id, motifs[:arques][:pmi_prenatale].id],
+  motif_ids: [motifs[org_arques][:pmi_rappel].id, motifs[org_arques][:pmi_prenatale].id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(9),
   end_time: Tod::TimeOfDay.new(15),
@@ -625,7 +657,7 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   organisation_id: org_bapaume.id,
   agent_id: agent_org_bapaume_pmi_bruno.id,
   lieu_id: lieu_bapaume_est.id,
-  motif_ids: [motifs[:bapaume][:pmi_rappel].id, motifs[:bapaume][:pmi_prenatale].id],
+  motif_ids: [motifs[org_arques][:pmi_rappel].id, motifs[org_bapaume][:pmi_prenatale].id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(9),
   end_time: Tod::TimeOfDay.new(15),
@@ -638,7 +670,7 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
     organisation_id: org_bapaume.id,
     agent_id: agent_org_bapaume_pmi_gina.id,
     lieu_id: lieu_bapaume_est.id,
-    motif_ids: [motifs[:bapaume][:pmi_prenatale].id],
+    motif_ids: [motifs[org_bapaume][:pmi_prenatale].id],
     first_day: Date.tomorrow,
     start_time: Tod::TimeOfDay.new(11),
     end_time: Tod::TimeOfDay.new(18),
@@ -713,8 +745,8 @@ Rdv.create!(
     motif_id: motif_org_paris_nord_pmi_collectif.id,
     lieu: lieu_org_paris_nord_bolivar,
     organisation_id: org_paris_nord.id,
-    agent_ids: [agent_org_paris_nord_social_polo.id],
-    created_by: agent_org_paris_nord_social_polo,
+    agent_ids: [agent_org_paris_nord_pmi_elsa.id],
+    created_by: agent_org_paris_nord_pmi_elsa,
     users_count: 0,
     user_ids: []
   )
@@ -755,7 +787,15 @@ end
 Participation.insert_all!(participations_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
 receipts_attributes = rdv_ids.map do |id|
-  { rdv_id: id, organisation_id: org_paris_nord.id, event: events.sample, channel: Receipt.channels.values.sample, result: Receipt.results.values.sample, created_at: now, updated_at: now }
+  {
+    rdv_id: id,
+    user_id: user_org_paris_nord_josephine.id,
+    organisation_id: org_paris_nord.id,
+    event: events.sample,
+    channel: Receipt.channels.values.sample,
+    result: Receipt.results.values.sample,
+    created_at: now, updated_at: now,
+  }
 end
 Receipt.insert_all!(receipts_attributes)
 # rubocop:enable Rails/SkipsModelValidations

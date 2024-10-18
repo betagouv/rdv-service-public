@@ -38,7 +38,7 @@ Rails.application.configure do
   # config.active_storage.service = :local
 
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: ENV["HOST"].sub(%r{^https?://}, ""), utm_source: "dev", utm_medium: "email", utm_campaign: "default" }
+  config.action_mailer.default_url_options = { host: ENV["HOST"].sub(%r{^https?://}, "") }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   if ENV["DEVELOPMENT_SMTP_USER_NAME"].present?

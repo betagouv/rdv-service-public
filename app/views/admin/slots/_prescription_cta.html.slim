@@ -1,6 +1,0 @@
-- if show_agent_prescription_feature?(user_provided: @form.user_ids.any?)
-  .text-center.mt-2.mb-4
-    p.text-muted
-      = "Vous pouvez aussi "
-      = link_to("élargir votre recherche", search_creneau_admin_organisation_prescription_path(user_ids: @form.user_ids, departement: current_territory.departement_number))
-      = " aux créneaux ouverts à la prescription dans d'autres organisations."

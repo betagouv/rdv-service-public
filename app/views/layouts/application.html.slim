@@ -1,27 +1,11 @@
-doctype html
-html lang="fr"
-  head
-    = render "common/head"
-  body class="#{agents_or_users_body_class}"
-    header.header.bg-white
-      = render "layouts/rdv_solidarites_instance_name"
-      = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-      .container
-        - if current_user.present? && !current_user.only_invited?
-          = render "common/header_user_logged"
-        - else
-          = render "common/header"
-
-        = render "layouts/flash"
-        - if content_for :title
-          .row
-            .col-md-12.d-flex.justify-content-between.align-items-center
-              - if content_for :breadcrumb
-                div
-                  = yield :breadcrumb
-
-    main class="#{ "container" if params[:controller].include?("users/") }"
+- content_for :main_content do
+  .fr-container.pt-3
+    - if content_for :container_content
+      = yield :container_content
+    - else
+      - if content_for :title
+        h1= yield :title
+      = render "layouts/flash_dsfr"
       = yield
-    #modal-holder
-    footer.main-footer
-      = render "common/footer_users"
+
+= render template: "layouts/application_base"

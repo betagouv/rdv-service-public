@@ -1,36 +1,55 @@
 - if plage_ouverture.available_motifs.any?
-  = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture] do |f|
-    = render("model_errors", model: plage_ouverture, f: f)
-    = collapsible_form_fields_for_warnings(plage_ouverture) do
-      = f.hidden_field :agent_id
-      = f.input :title, hint: "Uniquement visible en interne", placeholder: "Ex: Permanence PMI exceptionnelle"
-      = f.association :lieu,
-        collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
-        label_method: :full_name,
-        input_html: { \
-            class: "select2-input", \
-            data: { \
-              placeholder: "Sélectionnez un lieu", \
-              "select-options": { disableSearch: true }, \
-              "allow-clear": true, \
-            }, \
-          }
-      - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
-      - motifs_by_services.each do |service, motifs|
-        - extra_options = motifs_by_services.size > 1 ? { label: "Motifs de #{service.name}", required: false } : {}
-        / Le "required: false" permet de ne pas afficher la petite astérisque, mais le champ reste obligatoire
-        = f.association(:motifs, collection: motifs, label_method: -> { motif_name_with_location_type_and_badges(_1) }, as: :check_boxes, **extra_options)
+  = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
+    .row.justify-content-center
+      .col-md-6
+        .card
+          .card-body
+            = render("model_errors", model: plage_ouverture, f: f)
+            = collapsible_form_fields_for_warnings(plage_ouverture) do
+              = f.hidden_field :agent_id
+              = f.input :title, placeholder: "Saisissez le nom de la plage d'ouverture"
+              - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
+              - motifs_by_services.each do |service, motifs|
+                .form-group
+                  p Motifs de #{service.name}
+                  - motifs.each do |motif|
+                    .pl-3
+                      = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}" }, motif.id, false
+                      = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
+              .collapse.js-lieu-field
+                = f.association :lieu,
+                  collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
+                  label_method: :full_name,
+                  input_html: { \
+                      class: "select2-input", \
+                      data: { \
+                        placeholder: "Sélectionnez un lieu", \
+                        "select2-config": { disableSearch: true }, \
+                        "allow-clear": true, \
+                      }, \
+                    }
+    .row.justify-content-center
+      .col-md-6
+        .card
+          .card-body
+            = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
 
-      hr
-
-      = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
-
-      .row
-        .col.text-left
-          = link_to "Annuler", \
-            plage_ouverture.persisted? ? admin_organisation_plage_ouverture_path(current_organisation, plage_ouverture) : admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
-            class: "btn btn-link"
-        .col.text-right
-          = f.button :submit
+    .row.justify-content-center
+      .col-md-6
+        .row.mb-5
+          - if plage_ouverture.persisted?
+            .col.text-left
+              = link_to "Annuler", \
+                admin_organisation_plage_ouverture_path(current_organisation, plage_ouverture), \
+                class: "btn btn-link"
+            .col.text-right
+              = f.button :submit, "Enregistrer"
+          -else
+            .col.text-left
+              = link_to "Annuler", \
+                admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
+                class: "btn btn-link"
+            .col.text-right
+              = f.button :submit, "Créer la plage d'ouverture"
 - else
   | Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.

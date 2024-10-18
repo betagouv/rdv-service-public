@@ -28,12 +28,20 @@ ul.list-group.list-group-flush
       .fa.fa-phone>
       | RDV Téléphonique
 
+  - elsif rdv.motif.visio?
+    li.list-group-item
+      .fa.fa-video-camera>
+      = "RDV par visioconférence "
+      = link_to(rdv.visio_url, target: :_blank) do
+        = "rejoindre la visioconférence "
+        i.fa.fa-external-link[aria-hidden="true"]
+
   li.list-group-item
     .row
       .col
         .fa.fa-user>
         = users_to_sentence(rdv.users)
-    - if policy([:user, rdv]).can_change_participants?
+    - if policy(rdv, policy_class: User::RdvPolicy).can_change_participants?
       .col-auto
         span>
         = link_to "modifier", users_rdv_participations_path(rdv)
@@ -44,14 +52,14 @@ ul.list-group.list-group-flush
   - if rdv.motif.instruction_for_rdv.present?
     li.list-group-item
       i.fa.fa-exclamation-triangle>
-      strong Informations supplémentaires :
+      strong Informations supplémentaires&nbsp;:
       .pl-3.pt-1
         = instruction_for_rdv_to_html(rdv.motif)
   = render "/users/rdvs/file_attente", rdv: rdv
 
   / Check for authorizations and already cancelled rdv/participation
-  - unless policy([:user, rdv]).cancel? || \
-      policy([:user, current_user.participation_for(rdv)]).cancel? || \
+  - unless policy(rdv, policy_class: User::RdvPolicy).cancel? || \
+      policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel? || \
       rdv.cancelled? || \
       current_user.participation_for(rdv).cancelled? || \
       rdv.in_the_past?
@@ -61,13 +69,13 @@ ul.list-group.list-group-flush
       | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
 
 .py-2.d-flex.justify-content-between.align-items-center
-  .text-left.mt-2
-    - if policy([:user, rdv]).edit?
+  .mt-2
+    - if policy(rdv, policy_class: User::RdvPolicy).edit?
        = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
-  .text-right.mt-2
-    - if policy([:user, rdv]).cancel?
+  .mt-2
+    - if policy(rdv, policy_class: User::RdvPolicy).cancel?
         = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
-    - if policy([:user, current_user.participation_for(rdv)]).cancel?
+    - if policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel?
         = link_to "Annuler votre participation", "#", data: { toggle: "modal", target: "#js-cancel-participation-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
 
 = render( \

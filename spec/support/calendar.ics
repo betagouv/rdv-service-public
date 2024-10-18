@@ -28,7 +28,7 @@ DTSTART;TZID=Europe/Paris:20220711T000000
 DTEND;TZID=Europe/Paris:20220711T004500
 DESCRIPTION:plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-
  test.localhost/admin/organisations/123000/rdvs/123123
-LOCATION:Lieu n°3 (3 rue de l'adresse 12345 Ville)
+LOCATION:Lieu n°3 (3 rue de l'adresse\, Ville\, 12345)
 STATUS:CONFIRMED
 SUMMARY:Atelier collectif (1/5)
 END:VEVENT
@@ -39,7 +39,7 @@ DTSTART;TZID=Europe/Paris:20220710T000000
 DTEND;TZID=Europe/Paris:20220710T004500
 DESCRIPTION:plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-
  test.localhost/admin/organisations/123000/rdvs/789000
-LOCATION:Lieu n°2 (2 rue de l'adresse 12345 Ville)
+LOCATION:Lieu n°2 (2 rue de l'adresse\, Ville\, 12345)
 STATUS:CANCELLED
 SUMMARY:Accompagnement individuel
 END:VEVENT
@@ -50,7 +50,7 @@ DTSTART;TZID=Europe/Paris:20220709T000000
 DTEND;TZID=Europe/Paris:20220709T004500
 DESCRIPTION:plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-
  test.localhost/admin/organisations/123000/rdvs/456000
-LOCATION:Lieu n°1 (1 rue de l'adresse 12345 Ville)
+LOCATION:Lieu n°1 (1 rue de l'adresse\, Ville\, 12345)
 STATUS:CONFIRMED
 SUMMARY:Accompagnement individuel
 END:VEVENT

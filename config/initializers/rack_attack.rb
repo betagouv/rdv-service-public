@@ -5,14 +5,14 @@ class Rack::Attack
   end
 
   self.throttled_responder = lambda do |request|
-    match_data = request.env['rack.attack.match_data']
+    match_data = request.env["rack.attack.match_data"]
     now = match_data[:epoch_time]
 
     headers = {
-      'Content-Type' => 'application/json',
-      'RateLimit-Limit' => match_data[:limit].to_s,
-      'RateLimit-Remaining' => '0',
-      'Retry-After' => (match_data[:period] - (now % match_data[:period])).to_s,
+      "Content-Type" => "application/json",
+      "RateLimit-Limit" => match_data[:limit].to_s,
+      "RateLimit-Remaining" => "0",
+      "Retry-After" => (match_data[:period] - (now % match_data[:period])).to_s,
     }
 
     [429, headers, [{ errors: ["Limite d'appels API atteinte. Merci de patienter.\n"] }.to_json]]

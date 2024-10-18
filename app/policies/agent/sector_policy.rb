@@ -1,26 +1,32 @@
-class Agent::SectorPolicy < ApplicationPolicy
-  alias context pundit_user
-  delegate :agent, to: :context, prefix: :current # defines current_agent
-
-  def agent_has_role_in_record_territory?
-    current_agent.territorial_roles.pluck(:territory_id).include?(record.territory_id)
+class Agent::SectorPolicy
+  def initialize(agent, sector)
+    @current_agent = agent
+    @sector = sector
   end
 
-  alias new? agent_has_role_in_record_territory?
-  alias create? agent_has_role_in_record_territory?
-  alias show? agent_has_role_in_record_territory?
-  alias edit? agent_has_role_in_record_territory?
-  alias update? agent_has_role_in_record_territory?
-  alias destroy? agent_has_role_in_record_territory?
+  def territorial_admin?
+    self.class.allowed_to_manage_sectors_in?(@sector.territory, @current_agent)
+  end
 
-  class Scope < Scope
-    alias context pundit_user
-    delegate :agent, to: :context, prefix: :current # defines current_agent
+  def self.allowed_to_manage_sectors_in?(territory, agent)
+    agent.territorial_admin_in?(territory)
+  end
+
+  alias new? territorial_admin?
+  alias create? territorial_admin?
+  alias show? territorial_admin?
+  alias edit? territorial_admin?
+  alias update? territorial_admin?
+  alias destroy? territorial_admin?
+
+  class Scope
+    def initialize(agent, scope)
+      @current_agent = agent
+      @scope = scope
+    end
 
     def resolve
-      scope
-        .joins(:territory)
-        .where(territories: { id: current_agent.territorial_roles.pluck(:territory_id) })
+      @scope.where(territory_id: @current_agent.territorial_roles.select(:territory_id))
     end
   end
 end

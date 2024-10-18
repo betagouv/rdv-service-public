@@ -14,7 +14,7 @@ fr:
         not_yet_created_plage_ouverture: Vous n'avez pas encore créé de plage d'ouverture.
         this_agent_not_yet_created_plage_ouverture: "%{full_name} n'a pas encore créé de plage d'ouverture."
         explanation_plage_ouverture: Les plages d'ouvertures affichent votre disponibilité à la prise de RDV, qu'elle soit faite par l'usager lui même (en ligne) ou par un autre agent de votre organisation. Chaque agent a ses propres plages d'ouvertures et peut y associer des motifs et un lieu. Les plages peuvent être récurrentes.
-        description: Description
+        description: Nom de la plage d'ouverture
         motifs: Motifs
         place: Lieu
         dates: Dates

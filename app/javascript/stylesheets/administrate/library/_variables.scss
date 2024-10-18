@@ -30,7 +30,7 @@ $light-green: #4ab471 !default;
 $grey-0: #f6f7f7 !default;
 $grey-1: #dfe0e1 !default;
 $grey-2: #cfd8dc !default;
-$grey-5: #6F6F71 !default;
+$grey-5: #6f6f71 !default;
 $grey-7: #293f54 !default;
 
 $hint-grey: #7b808c !default;
@@ -53,7 +53,7 @@ $flash-colors: (
   alert: $light-yellow,
   error: $red,
   notice: mix($white, $blue, 50%),
-  success: $light-green
+  success: $light-green,
 );
 
 // Border

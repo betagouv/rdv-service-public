@@ -16,20 +16,12 @@
 - [Dashlord](https://dashlord.incubateur.net/#/url/https%3A%2F%2Fwww.rdv-solidarites.fr)
 - [Sentry](https://sentry.incubateur.net/organizations/betagouv/issues/?environment=production&project=74)
 - [Skylight](https://oss.skylight.io/app/applications/RgR7i58P67xN/recent/6h/endpoints)
-- [Updown pour la production](https://updown.io/feom) et pour [la démo](https://updown.io/x4tw)
-
-## Security Policy
-
-### Supported Versions
-
-We try to keep up with the latest versions of all our dependencies, as much as possible.
-
-### Reporting a Vulnerability
-
-Please [contact us](mailto:contact@rdv-solidarites.fr) to report any vulnerability. Thank you!
+- Updown pour :
+  - [l'instance `production-rdv-solidarites`](https://updown.io/gxgd)
+  - [l'instance `production-rdv-mairie`](https://updown.io/hv6l)
+  - [l'instance `demo-rdv-solidarites`](https://updown.io/0jrc)
 
 ## Développement
 
 - [Installation](1-installation.md)
 - [Contribuer](2-contributions.md)
-

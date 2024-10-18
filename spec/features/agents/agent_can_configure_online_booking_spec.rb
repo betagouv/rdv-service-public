@@ -73,4 +73,28 @@ RSpec.describe "Agents can configure online booking" do
       expect(page).to have_content("1 rendez-vous avec des places disponibles")
     end
   end
+
+  describe "booking link" do
+    context "when organisation is sectorized" do
+      before do
+        sector = create(:sector, territory: organisation.territory)
+        create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation)
+        create(:motif, :sectorisation_level_organisation, organisation: organisation)
+      end
+
+      it "points to the public booking home page" do
+        login_as(agent, scope: :agent)
+        visit admin_organisation_online_booking_path(organisation)
+        expect(find("input#booking_link").value).to eq("http://www.rdv-solidarites-test.localhost:#{Capybara.server_port}/prendre_rdv")
+      end
+    end
+
+    context "when organisation is not sectorized" do
+      it "points to the public booking home page" do
+        login_as(agent, scope: :agent)
+        visit admin_organisation_online_booking_path(organisation)
+        expect(find("input#booking_link").value).to eq("http://www.rdv-solidarites-test.localhost:#{Capybara.server_port}/org/#{organisation.id}/#{organisation.slug}")
+      end
+    end
+  end
 end

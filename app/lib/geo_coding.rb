@@ -9,7 +9,8 @@ class GeoCoding
 
     {
       city_code: feature.dig("properties", "citycode"),
-      street_ban_id: feature.dig("properties", "id"),
+      # 5 chars for city insee code, 1 for _, 4 for street fantoir
+      street_ban_id: feature.dig("properties", "id").first(10),
     }
   end
 

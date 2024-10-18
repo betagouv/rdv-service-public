@@ -26,10 +26,6 @@ module UserRdvWizard
       end
     end
 
-    def invitation?
-      @attributes[:invitation_token].present?
-    end
-
     def params_to_selections
       if @rdv.present?
         return @attributes.merge(service: @rdv.motif.service_id, motif_name_with_location_type: @rdv.motif.name_with_location_type)
@@ -42,7 +38,7 @@ module UserRdvWizard
       motif = @rdv.motif
       motif.default_duration_in_min = @attributes[:duration].to_i if @attributes[:duration]
 
-      @creneau ||= Users::CreneauSearch.creneau_for(
+      @creneau ||= CreneauxSearch::ForUser.creneau_for(
         user: @user,
         motif: motif,
         lieu: lieu,
@@ -87,11 +83,14 @@ module UserRdvWizard
   class Step1 < Base
     validate :phone_number_present_for_motif_by_phone
     validate do
-      User::Ants.validate_ants_pre_demande_number(
-        user: @user,
-        ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
-        ignore_benign_errors: @user_attributes[:ignore_benign_errors]
-      )
+      if rdv.requires_ants_predemande_number?
+        ValidateAntsPreDemandeNumber.perform(
+          user: @user,
+          ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
+          ignore_benign_errors: @user_attributes[:ignore_benign_errors]
+        )
+        errors.merge!(@user)
+      end
     end
 
     def phone_number_present_for_motif_by_phone
@@ -112,7 +111,7 @@ module UserRdvWizard
 
   class Step2 < Base
     def initialize(user, attributes)
-      super(user, attributes)
+      super
       # Hacky override of user_ids on step2
       @rdv.user_ids = [attributes[:created_user_id]] if attributes[:created_user_id].present?
     end

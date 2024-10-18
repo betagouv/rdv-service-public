@@ -1,8 +1,25 @@
+@import "vendor/inclusion_connect_button";
+@import "vendor/proconnect_button_dsfr";
+
+.fr-connect-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .flex {
   display: flex;
   align-items: center;
 }
 
-.flex--center {
+.centered-flex {
+  display: flex;
+  align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+}
+
+// Un hack pour éviter d'afficher les astérisques de champs obligatoire dans les formulaires DSFR
+label > abbr[title="obligatoire"] {
+  display: none;
 }

@@ -20,11 +20,7 @@ RSpec.describe "Adding a user to a collective RDV" do
   let!(:other_user1) { create(:user) }
   let!(:other_user2) { create(:user) }
   let!(:rdv2) { create(:rdv, :without_users, motif: motif2, agents: [agent], organisation: organisation, lieu: lieu2) }
-  let!(:invitation_token) do
-    invited_user.assign_rdv_invitation_token
-    invited_user.save!
-    invited_user.rdv_invitation_token
-  end
+  let!(:invitation_token) { invited_user.set_rdv_invitation_token!  }
 
   let(:params) do
     {
@@ -42,7 +38,7 @@ RSpec.describe "Adding a user to a collective RDV" do
   end
 
   def select_lieu
-    expect(page).to have_content("Sélectionnez un lieu de RDV :")
+    expect(page).to have_content("Sélectionnez un lieu de RDV")
     click_link("Prochaine disponibilité")
   end
 

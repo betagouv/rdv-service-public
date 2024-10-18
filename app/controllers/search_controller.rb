@@ -1,4 +1,6 @@
 class SearchController < ApplicationController
+  layout "application_base"
+
   include TokenInvitable
 
   # utilisé par le Pas-de-Calais pour prendre rdv depuis leur site : https://www.pasdecalais.fr/Solidarite-Sante/Enfance-et-famille/La-Protection-Maternelle-et-Infantile/Prendre-rendez-vous-en-ligne-en-MDS-PMI-ou-service-social
@@ -46,7 +48,7 @@ class SearchController < ApplicationController
 
   def resin
     redirect_to prendre_rdv_path(
-      departement: "CN",
+      departement: Territory::CN_DEPARTEMENT_NUMBER,
       service_id: Service.find_by(name: Service::CONSEILLER_NUMERIQUE)&.id,
       motif_name_with_location_type: "accompagnement_individuel-public_office",
       external_organisation_ids: params[:external_organisation_ids].split(","),

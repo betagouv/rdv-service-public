@@ -21,24 +21,25 @@
         b Plage d'ouverture ##{@plage_ouverture.id}
       .card-body
         div.mt-2.d-flex
-          .flex-shrink-0.mr-1.font-weight-bold Description :
+          .flex-shrink-0.mr-1.font-weight-bold Description&nbsp;:
           span= @plage_ouverture.title
         div.mt-2.d-flex
-          .flex-shrink-0.mr-1.font-weight-bold Agent :
+          .flex-shrink-0.mr-1.font-weight-bold Agent&nbsp;:
           span= @plage_ouverture.agent.full_name
+        - if @plage_ouverture.lieu
+          div.mt-2.d-flex
+            .flex-shrink-0.mr-1.font-weight-bold Lieu&nbsp;:
+            = lieu_tag(@plage_ouverture.lieu)
         div.mt-2.d-flex
-          .flex-shrink-0.mr-1.font-weight-bold Lieu :
-          = lieu_tag(@plage_ouverture.lieu)
-        div.mt-2.d-flex
-          .flex-shrink-0.mr-1.font-weight-bold Motifs :
+          .flex-shrink-0.mr-1.font-weight-bold Motifs&nbsp;:
           ul.pl-3.mb-0
             - @plage_ouverture.motifs.each do |motif|
               li= motif_name_with_location_type_and_badges(motif)
         div.mt-2.d-flex
-          .flex-shrink-0.mr-1.font-weight-bold Répétition :
+          .flex-shrink-0.mr-1.font-weight-bold Répétition&nbsp;:
           span= @plage_ouverture.recurring? ? "Récurrente" : po_exceptionnelle_tag(@plage_ouverture)
         div.mt-2.d-flex
-          .flex-shrink-0.mr-1.font-weight-bold Dates :
+          .flex-shrink-0.mr-1.font-weight-bold Dates&nbsp;:
           - if @plage_ouverture.recurring?
             = sanitize(display_recurrence(@plage_ouverture).join(" "))
           - else
@@ -87,4 +88,4 @@
 
 .row.justify-content-center
   .col-md-12.col-lg-8
-    = render "admin/versions/resource_versions_row", resource_policy: policy([:agent, @plage_ouverture]), resource: @plage_ouverture
+    = render "admin/versions/resource_versions_row", resource_policy: policy(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy), resource: @plage_ouverture

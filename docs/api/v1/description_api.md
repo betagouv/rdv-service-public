@@ -4,10 +4,7 @@ Toutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles v
 
 # Dépréciations
 
-**ATTENTION l'association `rdvs_users` des `rdvs` est dépréciée au profit de l'association `participations`.**
-
 **ATTENTION le champ `created_by` des `rdvs` et des `participations` est déprécié au profit du champ `created_by_type`.**
-
 
 # Requêtes
 

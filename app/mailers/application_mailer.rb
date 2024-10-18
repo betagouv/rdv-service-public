@@ -18,7 +18,11 @@ class ApplicationMailer < ActionMailer::Base
   end
 
   def set_default_from_with_display_name
-    mail.from %("#{domain.name}" <#{default_from}>) if mail.from.blank?
+    mail.from(rfc5322_name_and_email(domain.name, default_from)) if mail.from.blank?
+  end
+
+  def rfc5322_name_and_email(name, email)
+    %("#{name}" <#{email}>)
   end
 
   def default_from

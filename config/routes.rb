@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
   ## OAUTH ##
   devise_scope :user do
     get "omniauth/franceconnect/callback" => "omniauth_callbacks#franceconnect"
   end
+
+  get "agent_connect/auth" => "agent_connect#auth"
+  get "agent_connect/callback" => "agent_connect#callback"
 
   get "inclusion_connect/auth" => "inclusion_connect#auth"
   get "inclusion_connect/callback" => "inclusion_connect#callback"
@@ -20,7 +23,7 @@ Rails.application.routes.draw do
   delete "super_admins/sign_out" => "super_admins/sessions#destroy"
 
   namespace :super_admins do
-    resources :agents do
+    resources :agents, except: [:destroy] do
       get "sign_in_as", on: :member
       post :invite, on: :member
       resources :migrations, only: %i[new create]
@@ -28,7 +31,7 @@ Rails.application.routes.draw do
     resources :agent_roles, only: %i[show edit update destroy]
     resources :agent_services, only: %i[show destroy]
     resources :user_profiles, only: %i[destroy]
-    resources :super_admins
+    resources :super_admins, only: %i[index destroy]
     resources :organisations
     resources :services
     resources :motifs
@@ -97,18 +100,18 @@ Rails.application.routes.draw do
     put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
 
     namespace :agents do
-      resource :preferences, only: %i[show update] do
-        post :disable_cnfs_online_booking_banner
-      end
+      resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
-
       resources :users, only: [] do
         collection do
           get "search"
         end
+      end
+      resources :exports, only: %i[index] do
+        get :download
       end
     end
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
@@ -120,16 +123,23 @@ Rails.application.routes.draw do
     namespace "admin" do
       resources :territories, only: %i[edit update show] do
         scope module: "territories" do
-          resources :agent_roles, only: %i[edit update create destroy]
+          resources :agent_roles, only: %i[update create destroy]
           resources :agent_territorial_access_rights, only: %i[update]
+          resources :agent_territorial_roles, only: %i[] do
+            collection do
+              put :create_or_destroy
+            end
+          end
           resources :webhook_endpoints, except: %i[show]
-          resources :agents, only: %i[index update edit] do
+          resources :agents, only: %i[index new create edit] do
             member do
               put :territory_admin
               patch :update_services
+              patch :update_teams
             end
           end
-          resources :teams
+          resources :teams, except: :show
+          resources :motifs, only: %i[index new create destroy]
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]
@@ -145,23 +155,26 @@ Rails.application.routes.draw do
             delete "/zones" => "zones#destroy_multiple"
           end
           get "sectorisation_test" => "sectorisation_tests#search"
-
-          devise_for :agents, controllers: { invitations: "admin/territories/invitations_devise" }, only: :invitations
         end
       end
 
-      # Routes pour les ressources du calendrier.
-      # TODO trouver un meilleur nom pour éviter la nécessité de ce commentaire :)
-      resources :agents, only: %i[], module: :agents do
+      namespace :agenda do
         resources :plage_ouvertures, only: [:index]
         resources :rdvs, only: [:index]
         resources :absences, only: [:index]
       end
 
       resources :organisations do
+        get "creneaux_search" => "creneaux_search#index"
+        get "creneaux_search/selection_creneaux" => "creneaux_search#selection_creneaux"
+        # Lien très utilisé pour la duplication de RDV
+        # il permet de reprendre un RDV, éventuellement pour un autre motif
+        # https://zammad10.ethibox.fr/#ticket/zoom/3044
+        # On le garde pour la rétrocompatibilité après le renommage de la route.
+        get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
+        get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
+
         resources :plage_ouvertures, except: %i[index new]
-        resources :agent_searches, only: :index, module: "creneaux"
-        resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs
         resources :rdvs_collectifs, only: %i[index new create edit update] do
@@ -245,12 +258,16 @@ Rails.application.routes.draw do
     get "confirmation"
   end
 
-  %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines health_check].each do |page_name|
+  %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
   get "/.well-known/microsoft-identity-association" => "static_pages#microsoft_domain_verification", format: :json
 
-  get "/budget", to: redirect("https://pad.incubateur.net/3hxhbOuaSyapxRUg_PnA5g#ANCT-L%E2%80%99Incubateur-des-Territoires", status: 302)
+  get "health_check" => "health#db_connection"
+  get "health/jobs_queues" => "health#jobs_queues"
+  get "health/jobs_scheduled" => "health#jobs_scheduled"
+
+  get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Service-Public", status: 302)
 
   ## Shorten urls for SMS
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
@@ -282,7 +299,7 @@ Rails.application.routes.draw do
     # we rename the short parameter tkn
     params[:invitation_token] ||= params.delete(:tkn) if params[:tkn]
     params.delete(:id) # id is passed through path_params
-    params.values.any? ? "?#{params.to_query}" : ''
+    params.values.any? ? "?#{params.to_query}" : ""
   end
 
   # short public link
@@ -306,14 +323,17 @@ Rails.application.routes.draw do
   # TODO: remplacer `prendre_rdv` par le root_path
   get "/prendre_rdv", to: "search#search_rdv"
 
-  # rubocop:disable Style/FormatStringToken
   # temporary route after admin namespace introduction
-  get "/organisations/*rest", to: redirect('admin/organisations/%{rest}')
+  get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")
   # old agenda rule was bookmarked by some agents
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
-  # rubocop:enable Style/FormatStringToken
-
   post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :sendinblue
+
+  # This route redirects invitations to rdv-insertion so that rdv-insertion
+  # can use rdvs domain name in their emails
+  get "/i/r/:uuid", to: redirect { |path_params, _|
+    "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]&.strip}"
+  }
 
   if Rails.env.development?
     namespace :lapin do
@@ -328,4 +348,7 @@ Rails.application.routes.draw do
 
   ## APIs
   draw :api
+
+  match "/404", to: "errors#not_found", via: :all
+  match "/500", to: "errors#internal_server_error", via: :all
 end

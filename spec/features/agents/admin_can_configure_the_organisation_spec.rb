@@ -45,7 +45,7 @@ RSpec.describe "Admin can configure the organisation" do
 
     expect_page_title("Nouveau lieu")
     fill_in "Nom", with: "Un autre nouveau lieu"
-    fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
+    fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000"
     first("input#lieu_latitude", visible: false).set(48.583844)
     first("input#lieu_longitude", visible: false).set(7.735253)
     click_button "Enregistrer"
@@ -71,11 +71,11 @@ RSpec.describe "Admin can configure the organisation" do
   it "CRUD on motifs", js: true do
     click_link "Paramètres"
     click_link "Motifs"
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
 
     click_link motif.name
     expect(page).to have_content("Motif 1")
-    click_link "Éditer"
+    click_link "Modifier"
     fill_in :motif_name, with: "Être appelé par"
     click_button("Enregistrer")
     expect(page).to have_content("Être appelé par")
@@ -92,17 +92,17 @@ RSpec.describe "Admin can configure the organisation" do
       retry
     end
 
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
     expect(page).to have_content("Vous n'avez pas encore créé de motif.")
 
     click_link "Créer un motif", match: :first
-    expect(page).to have_content("Nouveau motif")
+    expect(page).to have_content("Configuration générale")
     ## Check secretariat is unavailable
-    expect(page.all("select#motif_service_id option").map(&:value)).to match_array ["", pmi.id.to_s, service_social.id.to_s]
+    expect(page.all("select#motif_service_id option").map(&:value)).to contain_exactly("", pmi.id.to_s, service_social.id.to_s)
     select(service_social.name, from: :motif_service_id)
     fill_in :motif_name, with: "truc"
-    fill_in "Couleur", with: le_nouveau_motif.color
-    click_button "Enregistrer"
+    fill_in "Couleur associée", with: le_nouveau_motif.color
+    click_button "Créer le motif"
     expect(page).to have_link("truc")
   end
 end

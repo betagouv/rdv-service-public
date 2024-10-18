@@ -53,6 +53,14 @@ RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
         it do
           expect(response.parsed_body["rdv"]["status"]).to eq(status)
         end
+
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "participations",
+            action_name: "update",
+            agent_id: admin_agent.id
+          )
+        end
       end
     end
   end

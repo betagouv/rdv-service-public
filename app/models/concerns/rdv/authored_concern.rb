@@ -11,7 +11,9 @@ module Rdv::AuthoredConcern
   def author
     creation_event = versions_where_event_eq_create.loaded? ? versions_where_event_eq_create.first : versions.where(event: "create").first
     whodunnit = creation_event&.whodunnit
-    return nil if whodunnit.blank?
+    if whodunnit.blank?
+      return "Dans le cadre du RGPD, cette information n'est plus conservée au delà d'un an."
+    end
 
     if whodunnit.starts_with?("[User] ")
       whodunnit.gsub("[User] ", "")

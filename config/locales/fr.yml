@@ -22,29 +22,13 @@ fr:
         select_placeholder_single_use_lieu: Lieu ponctuel
       show:
         update: Modifier
-        duplicate: Dupliquer…
+        duplicate: Dupliquer
     rdvs_collectifs:
       new:
         single_use_lieu_hint_html: Ce rendez-vous aura lieu à une adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>
         existing_lieu_hint_html: Ce rendez-vous aura lieu à une adresse habituelle ? <a href>Choisir un lieu existant.</a>
         select_placeholder_existing_lieu: Choisir un lieu existant
         select_placeholder_single_use_lieu: Lieu ponctuel
-    slots:
-      index:
-        place_index: Revenir aux filtres
-        available_slots_title_html: Créneaux disponibles pour <strong>%{motif}</strong>
-        place_informations_html: <strong>%{place_name}</strong> <small>au %{place_address}</small>
-    creneaux:
-      agent_searches:
-        index:
-          agents: Agents
-          teams: Équipes
-          search_for_slots_title: Trouver un RDV
-          search_for_slots_subtitle: pour %{users_fullname}
-          available_places_with_slots:
-            zero: Aucun lieu ne propose de disponibilité
-            one: "Un lieu propose des disponibilités :"
-            other: "%{count} lieux proposent des disponibilités :"
     territories:
       agents:
         index:
@@ -100,11 +84,6 @@ fr:
               blank: est obligatoire pour les motifs sur place
   agents:
     create_cta: "Ajouter un agent"
-    export_mailer:
-      rdv_export:
-        description: Vous trouverez en pièce jointe l’export des RDVs que vous avez demandé.
-      participations_export:
-        description: Vous trouverez en pièce jointe l’export des RDVs par usager que vous avez demandé.
   mailers:
     agents:
       export_mailer:
@@ -295,7 +274,7 @@ fr:
       update: Enregistrer
   layouts:
     flash:
-      confirm_export_queued_html: "Votre export est en cours de création : il sera envoyé à %{agent_email} dès qu'il sera prêt.<br />Il est possible que votre boîte mail ne permette pas qu'on lui envoie des fichiers trop lourds. Si vous ne recevez pas l'export dans les minutes qui viennent, essayez d'exporter moins de rendez-vous à la fois en les filtrant sur une période plus courte.<br />Pour plus d'aide, vous pouvez aussi nous contacter à l'adresse %{support_email}."
+      confirm_export_queued_html: 'Votre export est en cours de création&nbsp;: il sera bientôt disponible dans la <a href="%{exports_path}">liste de vos exports</a>.'
     currency:
       format:
         delimiter: " "
@@ -365,5 +344,6 @@ fr:
       datetimepicker: "%d/%m/%Y %H:%M"
     pm: pm
   public_office: "sur place"
+  visio: "par visioconférence"
   phone: "par téléphone"
   home: "à domicile"

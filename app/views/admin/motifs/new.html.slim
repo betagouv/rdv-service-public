@@ -1,14 +1,16 @@
 - content_for(:menu_item) { "menu-motifs" }
 
-- content_for :title do
-  | Nouveau motif
+- page_title = @motif.duplicated_from_motif ? %(Duplication du motif "#{@motif.duplicated_from_motif}") : t("motifs.form.title.new")
+- content_for :title, page_title
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
     li.breadcrumb-item
-      = link_to "Vos motifs", admin_organisation_motifs_path(current_organisation)
-    li.breadcrumb-item.active Nouveau un motif
+      = link_to t("motifs.index.title"), admin_organisation_motifs_path(current_organisation)
+    li.breadcrumb-item.active = page_title
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
-    = render "form", motif: @motif
+.row
+  .col-md-12
+    = simple_form_for [:admin, @motif.organisation, @motif], html: { "data-controller": "motif-form" } do |f|
+      = render "model_errors", model: @motif, f: f
+      = render "admin/motifs/form", motif: @motif, f: f, rdvi_mode: current_organisation.rdv_insertion?

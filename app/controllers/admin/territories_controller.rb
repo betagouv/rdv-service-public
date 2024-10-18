@@ -2,16 +2,11 @@ class Admin::TerritoriesController < Admin::Territories::BaseController
   skip_before_action :set_territory
   before_action :set_territory_with_id
 
-  def show
-    authorize @territory
-  end
+  def show; end
 
-  def edit
-    authorize @territory
-  end
+  def edit; end
 
   def update
-    authorize @territory
     if @territory.update(territory_params)
       flash[:success] = "Mise à jour réussie !"
     else
@@ -23,10 +18,11 @@ class Admin::TerritoriesController < Admin::Territories::BaseController
   private
 
   def territory_params
-    params.require(:territory).permit(:name, :phone_number, :visible_users_throughout_the_territory)
+    params.require(:territory).permit(:name, :phone_number)
   end
 
   def set_territory_with_id
     @territory = Territory.find(params[:id])
+    authorize(@territory, policy_class: Agent::TerritoryPolicy)
   end
 end

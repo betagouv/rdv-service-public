@@ -1,8 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
-  with_examples
-
+RSpec.describe "Referent Assignation authentified API" do
   path "/api/rdvinsertion/referent_assignations/create_many" do
     post "Ajouter un ou plusieurs référents à un utilisateur" do
       with_shared_secret_authentication
@@ -43,20 +41,41 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
         it { expect(user.reload.referent_agents).to include(agent1) }
 
         it { expect(user.reload.referent_agents).not_to include(agent2) }
+
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "referent_assignations",
+            action_name: "create_many",
+            agent_id: agent1.id
+          )
+        end
       end
 
-      it_behaves_like "an endpoint that returns 401 - unauthorized" do
+      context "when authentication fails" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
         let(:user_id) { user.id }
 
         before do
           allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
         end
+
+        it "returns a 401 unauthorized response" do
+          post "/api/rdvinsertion/referent_assignations/create_many", params: { "agent_ids[]": [agent1.id, agent2.id], user_id: user.id }, headers: auth_headers
+
+          expect(response).to have_http_status(:unauthorized)
+        end
       end
 
-      it_behaves_like "an endpoint that returns 404 - not found", "l'utilisateur n'a pas été trouvé" do
+      context "when user is not found" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
         let(:user_id) { User.last.id + 1 }
+
+        it "returns a 404 not found" do
+          post "/api/rdvinsertion/referent_assignations/create_many", params: { "agent_ids[]": [agent1.id, agent2.id], user_id: user_id }, headers: auth_headers
+
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).to include("not_found")
+        end
       end
     end
   end

@@ -13,7 +13,7 @@ RSpec.describe "Public links API", swagger_doc: "v1/api.json" do
       parameter name: "territory", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26"
 
       response 200, "Retourne les liens publics de recherche" do
-        let!(:terr) { create(:territory, departement_number: "CN") }
+        let!(:terr) { create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER) }
         let!(:organisation_a) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_A", territory: terr) }
         let!(:organisation_b) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_B", territory: terr) }
         let!(:organisation_c) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_C", territory: terr) }
@@ -67,6 +67,8 @@ RSpec.describe "Public links API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { expect(parsed_response_body).to match_array(expected_body) }
+        # No ApiCall log for public links
+        it { expect(ApiCall.count).to eq(0) }
       end
 
       response 400, "Retourne 'bad_request' quand le territory est manquant" do
@@ -84,7 +86,7 @@ RSpec.describe "Public links API", swagger_doc: "v1/api.json" do
       end
 
       it_behaves_like "an endpoint that returns 429 - too_many_requests", :get, Rails.application.routes.url_helpers.api_v1_public_links_path do
-        let(:territory) { "CN" }
+        let(:territory) { Territory::CN_DEPARTEMENT_NUMBER }
       end
     end
   end

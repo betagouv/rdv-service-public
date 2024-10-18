@@ -5,9 +5,7 @@ RSpec.describe "Handling an email reply from a user" do
          headers: { "Content-Type" => "application/json" }
   end
 
-  before do
-    ENV["SENDINBLUE_INBOUND_PASSWORD"] = "S3cr3T"
-  end
+  stub_env_with(SENDINBLUE_INBOUND_PASSWORD: "S3cr3T")
 
   context "when using a valid password" do
     let(:password_param) { "S3cr3T" }

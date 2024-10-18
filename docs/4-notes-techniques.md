@@ -27,7 +27,7 @@ Note : la librairie graphviz doit être installée ([voir guide](https://voormed
 ## Tâches récurrentes
 
 Nous utilisons la fonctionnalité de cron inclue dans GoodJob pour gérer nos tâches récurrentes.
-Les jobs récurrents sont implémentés dans `app/jobs/cron_job.rb`. 
+Les jobs récurrents sont implémentés dans `app/jobs/cron_job.rb`.
 Les horaires de ces jobs sont définis dans `config/initializers/good_job.rb`.
 
 ## Dumps de production
@@ -50,7 +50,7 @@ Pour tester les migrations avec les données de prod, il faut récupérer un bac
 
 Il est recommandé de lancer le serveur local sans le worker sinon il y aura beaucoup de jobs de reminders et de simulations d'envois de mails :
 
-`foreman start -f Procfile.dev  web=1,webpack=1`
+`foreman start -f Procfile.dev  web=1,js=1`
 
 ## Export Excel sectorisation
 
@@ -94,10 +94,93 @@ En attendant, voici comment procéder.
 
 ## Tester les invitations
 
-Pour le moment, il y a un système d'invitation avancé qui est utilisé par RDV-Insertion et qui n'est pas encore intégré dans RDV-Solidarités. Pour tester le cheminement coté RDV-Solidarités, voici comment faire :
+Pour le moment, il y a un système d'invitation avancé qui est utilisé par RDV-Insertion et qui n'est pas encore intégré dans RDV Service Public.
 
-- créer un rdv pour un nouvel utilisateur créé à la volée,
-- inviter cet utilisateur
-- récupérer le token dans le mail d‘invitation de letter_opener
-- aller sur l’url du rdv en rajoutant le token en paramètre, ça donne quelque chose comme http://localhost:5000/users/rdvs/1234?invitation_token=MON_TOKEN
+Le code qui génère le lien d'invitation dans le service de RDVI `Invitations::ComputeLink` dédié est présent dans ce fichier https://github.com/betagouv/rdv-insertion/blob/9c03e5a6c720a88826e84ca854fd5ccb6135569a/app/services/invitations/compute_link.rb#L2
 
+Pour tester en local **depuis RDVSP** vous pouvez utiliser le script `scripts/invite_user.rb`.
+
+## Montée en version des dépendances
+
+### Version de Ruby
+Pas de politique très clairement décidée mais la pratique est d’essayer de coller à la version la plus récente. Lors de la mise à jour de Ruby, il faut penser à mettre à jour la version cible de la gem `parser` dans le `Gemfile`, cf [le README de parser](https://github.com/whitequark/parser#compatibility-with-ruby-mri).
+
+### Version de Rails
+Pas de politique très clairement décidée mais la pratique est d’essayer de coller à la version la plus récente.
+
+### Versions des gems et des node modules
+Une politique de mise à jour prudente a été décidée cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)
+
+## Review apps
+
+Les review apps ne sont pas créées automatiquement pour chaque PR pour économiser des ressources.
+
+La commande pour créer une review app pour la PR #4242 est
+
+```bash
+scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites integration-link-manual-review-app 4242
+```
+
+Un raccourci existe pour retrouver le numéro de la PR correspondant à la branche courante automatiquement : `make review_app`
+
+Par défaut, seul un worker web est activé, si vous souhaitez que les jobs s’exécutent il faut activer un worker jobs depuis le dashboard ou avec cette commande :
+
+```sh
+scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 scale jobs:1
+```
+
+Le fichier `scalingo.json` décrit la configuration initiale et les variables d’environnement des review apps.
+Les review apps sont détruites automatiquement à la fermeture de la PR ou après 48h sans déploiement.
+On ne peut pas empêcher une PR spécifique d’être automatiquement détruite après ces 48h.
+En revanche, on peut en recréer une nouvelle sans problème.
+
+L’envoi d’email est désactivé par défaut sur les review apps.
+Pour l’activer vous pouvez utiliser cette commande :
+
+```sh
+    scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 env-unset DISABLE_SENDING_EMAILS && \
+    scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 restart
+```
+
+## Search Contexts
+
+```mermaid
+classDiagram
+  WebSearchContext <|-- AgentPrescriptionSearchContext
+  SearchContext <|-- WebSearchContext
+  WebSearchContext *-- Users-CreneauxWizardConcern
+  InvitationSearchContext <|-- WebInvitationSearchContext
+  SearchContext <|-- InvitationSearchContext
+  WebInvitationSearchContext *-- Users-CreneauxWizardConcern
+
+  class Users-CreneauxWizardConcern {
+    + to_partial_path()
+  }
+  class SearchContext {
+    - user
+    - query_params
+    + filter_motifs()
+  }
+```
+
+## Metabase
+
+Nous utilisons Metabase pour donner à l'ensemble de l'équipe une visibilité sur nos données.
+
+Notre dossier d'architecture technique fournit une description haut niveau de notre usage de Metabase :
+[architecture-technique.md](architecture-technique.md)
+
+Le code qui gère notre pipeline d'ETL est disponible [ici](https://github.com/betagouv/rdv-service-public-etl)
+
+### Mettre à jour Metabase
+
+Nous avons utilisé le déploiement en un clic décrit dans cette doc de Scalingo :
+https://doc.scalingo.com/platform/getting-started/getting-started-with-metabase
+
+Pour mettre à jour Metabase il faut déclencher un deploy en utilisant la commande ci-dessous.
+
+⚠️ Attention, une mise à jour de Metabase peut mal se passer et rendre notre Metabase indisponible.
+
+```bash
+scalingo --app rdv-service-public-metabase deploy https://github.com/Scalingo/metabase-scalingo/archive/refs/heads/master.tar.gz
+```

@@ -43,7 +43,7 @@
                 fieldset
                   = f.association :lieu, collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name, label_method: :full_name,
                     label: false,  include_blank: true,  required: false,
-                    input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
+                    input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true } }
                   small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
                     = t(".single_use_lieu_hint_html")
                 fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
@@ -54,11 +54,11 @@
                     = t(".existing_lieu_hint_html")
 
             - elsif @rdv_form.motif.home?
-              = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
+              = f.input :address, label: "Lieu (RDV à domicile)", disabled: true, input_html: { class: "places-js-container" }
             = f.association :agents,
               collection: @rdv_form.motif.authorized_agents,
               label_method: :full_name_and_service,
-              input_html: { multiple: true, class: "select2-input" }
+              input_html: { multiple: true, class: "select2-input", data: { "auto-select-sole-option": true } }
 
             - if @rdv_form.motif.collectif?
               = f.input :name, wrapper_html: { class: "mb-1" }
@@ -72,25 +72,26 @@
               = f.fields_for :participations, @rdv.participations do |participation_form|
                 = render "admin/participations/form", form: participation_form
 
-            .form-group
-              = select_tag :status,
-                      options_for_select([]),
-                      include_blank: "Ajouter un usager",
-                      required: false,
-                      class: "select2-input js-rdv-user-select",
-                      data: { \
-                width: "auto", \
-                "scroll-to-bottom": params[:add_user].present?, \
-                "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
-               }
+            div.form-row.grid-align-center.pb-4
+              .flex-grow-1.pr-4
+                = select_tag :status,
+                        options_for_select([]),
+                        include_blank: "Ajouter un usager",
+                        required: false,
+                        class: "select2-input js-rdv-user-select",
+                        data: { \
+                  width: "auto", \
+                  "scroll-to-bottom": params[:add_user].present?, \
+                  "select2-config": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
+                 }
               span.small.text-muted
-              | L'usager n'existe pas ?&nbsp;
-              = link_to \
-                "Créer un usager", \
-                new_admin_organisation_user_path( \
-                  current_organisation, modal: true, return_location: request.url, role: default_service_selection_from(@rdv.motif.service) \
-                    ), \
-                data: { modal: true }
+                | L'usager n'existe pas ?&nbsp;
+                = link_to \
+                  "Créer un usager", \
+                  new_admin_organisation_user_path( \
+                    current_organisation, modal: true, return_location: request.url, role: default_service_selection_from(@rdv.motif.service) \
+                      ), \
+                  data: { modal: true }
 
             .text-right
               = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"

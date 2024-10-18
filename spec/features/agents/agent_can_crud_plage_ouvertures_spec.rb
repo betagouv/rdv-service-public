@@ -5,7 +5,6 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
   let!(:agent) { create(:agent, service: service, admin_role_in_organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, agent: agent, organisation: organisation, title: "Permanence") }
-  let(:new_plage_ouverture) { build(:plage_ouverture, lieu: lieu, agent: agent, organisation: organisation) }
 
   before do
     login_as(agent, scope: :agent)
@@ -22,7 +21,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Modifier"
 
       expect_page_title("Modifier votre plage d'ouverture")
-      fill_in "Description", with: "La belle plage"
+      fill_in "Nom de la plage d'ouverture", with: "La belle plage"
       click_button("Enregistrer")
 
       expect_page_title("La belle plage")
@@ -39,10 +38,10 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Créer une plage d'ouverture", match: :first
       expect_page_title("Nouvelle plage d'ouverture")
 
-      fill_in "Description", with: "Accueil"
+      fill_in "Nom de la plage d'ouverture", with: "Accueil"
       select(lieu.full_name, from: "plage_ouverture_lieu_id") if lieu
       check "Suivi bonjour"
-      click_button "Enregistrer"
+      click_button "Créer la plage d'ouverture"
 
       expect_page_title("Accueil")
       click_link "Modifier"
@@ -92,23 +91,30 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
   context "for an other agent calendar" do
     let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence") }
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, :weekdays, first_day: Time.zone.today.prev_week(:monday), motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence")
+    end
 
-    it "can crud a plage_ouverture" do
+    it "can crud a plage_ouverture", js: true do
       visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
 
-      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
-      click_link "Permanence"
-
+      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)") # vue liste
+      expect(page).to have_content "Permanence"
+      click_link "Vue calendrier"
+      expect(page).to have_content "Semaine" # necessary to make sure the calendar page has loaded
+      expect(page).to have_content "Permanence"
+      first("a", text: "Permanence").click
       expect_page_title("Permanence")
       click_link "Modifier"
 
       expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
-      fill_in "Description", with: "La belle plage"
+      fill_in "Nom de la plage d'ouverture", with: "La belle plage"
       click_button("Enregistrer")
 
       expect_page_title("La belle plage")
-      click_link("Supprimer")
+      accept_confirm do
+        click_link("Supprimer")
+      end
 
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
       expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
@@ -116,10 +122,10 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first
 
       expect_page_title("Nouvelle plage d'ouverture")
-      fill_in "Description", with: "Accueil"
-      select(lieu.full_name, from: "plage_ouverture_lieu_id")
+      fill_in "Nom de la plage d'ouverture", with: "Accueil"
       check "Suivi bonjour"
-      click_button "Enregistrer"
+      select(lieu.full_name, from: "plage_ouverture_lieu_id")
+      click_button "Créer la plage d'ouverture"
 
       expect_page_title("Accueil")
       click_link "Modifier"
@@ -139,7 +145,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         click_link "Modifier"
 
         expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
-        fill_in "Description", with: "La belle plage"
+        fill_in "Nom de la plage d'ouverture", with: "La belle plage"
         click_button("Enregistrer")
 
         expect_page_title("La belle plage")
@@ -151,13 +157,44 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first
 
         expect_page_title("Nouvelle plage d'ouverture")
-        fill_in "Description", with: "Accueil"
+        fill_in "Nom de la plage d'ouverture", with: "Accueil"
         check "Suivi bonjour"
-        click_button "Enregistrer"
+        click_button "Créer la plage d'ouverture"
 
         expect_page_title("Accueil")
         click_link "Modifier"
       end
+    end
+  end
+
+  describe "sending an email notification upon deletion" do
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, start_time: Tod::TimeOfDay.new(8, 30), end_time: Tod::TimeOfDay.new(9, 30)) }
+
+    it "works" do
+      expect { click_link("Supprimer") }.to change(enqueued_jobs, :size).by(1)
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(plage_ouverture.agent.email).size }.by(1)
+      open_email(plage_ouverture.agent.email)
+      expect(current_email.subject).to eq("RDV Solidarités - Plage d’ouverture supprimée - #{plage_ouverture.title}")
+      expect(current_email.body).to include(plage_ouverture.title)
+      expect(current_email.body).to include(plage_ouverture.agent.full_name)
+      expect(current_email.body).to include(plage_ouverture.motifs.first.name)
+      expect(current_email.body).to include("de 08:30 à 09:30") # on s'assure que les heures sont bien sérialisées et dé-sérialisées (objets Tod::TimeOfDay)
+    end
+  end
+
+  describe "displaying overlapping plages on the show page" do
+    let!(:overlapping_plage) do
+      plage_ouverture.dup.tap do |duplicate|
+        duplicate.title = "Autre plage au même moment"
+        duplicate.motifs = plage_ouverture.motifs
+        duplicate.save!
+      end
+    end
+
+    it "works" do
+      visit admin_organisation_plage_ouverture_path(organisation, plage_ouverture)
+      expect(page).to have_content(plage_ouverture.title)
+      expect(page).to have_content("Conflit de dates et d'horaires avec d'autres plages d'ouvertures\nPlage d'ouverture #{overlapping_plage.id}")
     end
   end
 end

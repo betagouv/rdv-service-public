@@ -26,8 +26,8 @@ class Motif < ApplicationRecord
   SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
-  enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
-  enum bookable_by: {
+  enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
+  enum :bookable_by, {
     agents: "agents",
     agents_and_prescripteurs: "agents_and_prescripteurs",
     agents_and_prescripteurs_and_invited_users: "agents_and_prescripteurs_and_invited_users",
@@ -68,7 +68,8 @@ class Motif < ApplicationRecord
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
   validate :not_at_home_if_collectif
-  validate :unused_motif, if: :location_type_changed?
+  validate :cant_change_once_rdvs_exist
+  validate :cant_be_for_secretariat_and_follow_up
 
   # Scopes
   scope :active, lambda { |active = true|
@@ -92,11 +93,13 @@ class Motif < ApplicationRecord
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
-                       elsif agent.secretaire?
-                         for_secretariat
                        else
                          where(service: agent.services)
                        end
+
+    if agent.secretaire?
+      available_motifs = available_motifs.or(for_secretariat)
+    end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
   # This should match the implementation of #name_with_location_type
@@ -105,9 +108,10 @@ class Motif < ApplicationRecord
       match_data = name_with_location_type&.match(/(.*)-#{location_type}$/)
       match_data ? [match_data[1], location_type] : nil
     end.compact.first
-    where(%{REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '#{NAME_SLUG_REGEXP.source}', '_', 'g') = ?}, slug_name)
+    where(%{REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), ?, '_', 'g') = ?}, NAME_SLUG_REGEXP.source, slug_name)
       .where(location_type: location_type)
   }
+  scope :sectorized, -> { where(sectorisation_level: [SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_AGENT]) }
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
   scope :sectorisation_level_agent, -> { where(sectorisation_level: SECTORISATION_LEVEL_AGENT) }
@@ -141,7 +145,7 @@ class Motif < ApplicationRecord
       .includes(:services)
       .complete
       .active
-      .order_by_last_name
+      .ordered_by_last_name
   end
 
   def visible_and_notified?
@@ -218,6 +222,10 @@ class Motif < ApplicationRecord
     bookable_by == "everyone"
   end
 
+  def bookable_by_agents_and_prescripteurs?
+    bookable_by == "agents_and_prescripteurs"
+  end
+
   def bookable_by_invited_users?
     bookable_by == "agents_and_prescripteurs_and_invited_users"
   end
@@ -228,6 +236,12 @@ class Motif < ApplicationRecord
 
   def requires_ants_predemande_number?
     motif_category&.requires_ants_predemande_number?
+  end
+
+  attr_accessor :duplicated_from_motif_id
+
+  def duplicated_from_motif
+    Motif.find_by(id: duplicated_from_motif_id) if duplicated_from_motif_id
   end
 
   private
@@ -250,9 +264,16 @@ class Motif < ApplicationRecord
     errors.add(:base, :not_at_home_if_collectif)
   end
 
-  def unused_motif
-    return if rdvs.empty?
+  def cant_change_once_rdvs_exist
+    return unless rdvs.exists?
 
-    errors.add(:location_type, :cant_change_because_already_used)
+    errors.add(:collectif, :cant_change_because_already_used) if attribute_changed?(:collectif)
+    errors.add(:location_type, :cant_change_because_already_used) if attribute_changed?(:location_type)
+  end
+
+  def cant_be_for_secretariat_and_follow_up
+    if for_secretariat && follow_up
+      errors.add(:for_secretariat, :cant_be_enabled_if_follow_up)
+    end
   end
 end

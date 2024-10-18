@@ -42,7 +42,7 @@ fr:
         title: Nouveau RDV ajouté sur votre agenda %{domain_name} pour %{date}
         title_participation: Nouvelle participation au RDV collectif sur votre agenda %{domain_name} pour %{date}
         created_at_date_by_user: Un nouveau RDV qui aura lieu %{date} vient d’être ajouté à votre agenda.
-        created_participation_at_date_by_user: La participation de %{author} au RDV collectif qui aura lieu %{date} vient d’être ajoutée.
+        created_participation_at_date_by_user: La participation de %{user} au RDV collectif qui aura lieu %{date} vient d’être ajoutée.
       rdv_updated:
         title: RDV du %{date} modifié
       rdv_cancelled:

@@ -16,11 +16,11 @@ RSpec.describe "User can search for rdvs" do
     let!(:autre_motif) { create(:motif, name: "Consultation", organisation: organisation, restriction_for_rdv: nil, service: service) }
     let!(:motif_autre_service) { create(:motif, :by_phone, name: "Télé consultation", organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-    let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
-    let!(:plage_ouverture_autre_service) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif_autre_service], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:autre_plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture_autre_service) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif_autre_service], lieu: lieu, organisation: organisation) }
     let!(:lieu2) { create(:lieu, organisation: organisation) }
-    let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
+    let!(:plage_ouverture2) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
     it "default", js: true do
       visit root_path
@@ -28,15 +28,30 @@ RSpec.describe "User can search for rdvs" do
       choose_service(motif.service)
       choose_motif(motif)
       choose_lieu(lieu)
+
+      expect(page).to have_current_path(path_for_creneau_choice) # Cet expect permet de vérifier que les tests qui se basent sur ce path pour éviter des étapes intermédiaires sont corrects
+
       choose_creneau
       sign_up
       continue_to_rdv(motif)
       add_relative
       confirm_rdv(motif, lieu)
     end
+
+    describe "On RDV Service Public" do
+      it "doesn't require an ANTS predemande number for a relative", js: true do
+        visit "http://www.rdv-mairie-test.localhost/#{path_for_creneau_choice}"
+        choose_creneau
+        sign_up
+        click_button("Continuer")
+
+        add_relative(birth_date: false)
+        confirm_rdv(motif, lieu)
+      end
+    end
   end
 
-  describe "when the motifs don't require a lieu" do
+  describe "Prise de RDV en ligne" do
     let!(:service) { create(:service) }
     let!(:territory) { create(:territory, departement_number: "92") }
     let!(:first_organisation_with_po) { create(:organisation, :with_contact, territory: territory) }
@@ -60,10 +75,14 @@ RSpec.describe "User can search for rdvs" do
       create(:motif, :by_phone, name: "RSA orientation par téléphone", organisation: organisation_without_po, restriction_for_rdv: nil, service: service)
     end
 
-    shared_examples "take a rdv without lieu" do
+    context "when the motif is by phone" do
       it "can take a RDV in the available organisations", js: true do
         visit root_path
         execute_search
+
+        ## Motif selection
+        expect(page).to have_content(first_motif.name)
+        click_link(first_motif.name)
 
         ## Organisation selection
         expect(page).to have_content(first_organisation_with_po.name)
@@ -88,16 +107,67 @@ RSpec.describe "User can search for rdvs" do
       end
     end
 
-    context "when the motif is by phone" do
-      it_behaves_like "take a rdv without lieu"
-    end
-
     context "when the motif is at home" do
       before do
         [first_motif, other_motif_with_po, motif_without_po].each { |m| m.update!(location_type: "home") }
       end
 
-      it_behaves_like "take a rdv without lieu"
+      it "can take a RDV in the available organisations", js: true do
+        visit root_path
+        execute_search
+
+        ## Motif selection
+        expect(page).to have_content(first_motif.name)
+        click_link(first_motif.name)
+
+        ## Organisation selection
+        expect(page).to have_content(first_organisation_with_po.name)
+        expect(page).to have_content(first_organisation_with_po.phone_number)
+        expect(page).to have_content(first_organisation_with_po.website)
+        expect(page).to have_content("mercredi 15 décembre 2021 à 11h00")
+
+        expect(page).to have_content(other_organisation_with_po.name)
+        expect(page).to have_content(other_organisation_with_po.phone_number)
+        expect(page).to have_content(other_organisation_with_po.website)
+        expect(page).to have_content("jeudi 16 décembre 2021 à 10h00")
+
+        expect(page).not_to have_content(organisation_without_po.name)
+
+        find(".card-title", text: /#{first_organisation_with_po.name}/).ancestor(".card").find("a.stretched-link").click
+
+        choose_creneau
+        sign_up
+        continue_to_rdv(first_motif, address: "03 Rue Lambert, Paris, 75016")
+        add_relative
+        confirm_rdv(first_motif)
+      end
+    end
+
+    context "when the motif is visio (visioconférence)" do
+      before do
+        [first_motif, other_motif_with_po, motif_without_po].each { |m| m.update!(location_type: Motif.location_types[:visio]) }
+      end
+
+      it "can take a RDV in the available organisations", js: true do
+        visit root_path
+        execute_search
+
+        ## Motif selection
+        expect(page).to have_content(first_motif.name)
+        click_link(first_motif.name)
+
+        expect(page).not_to have_content(organisation_without_po.name)
+
+        find(".card-title", text: /#{first_organisation_with_po.name}/).ancestor(".card").find("a.stretched-link").click
+
+        choose_creneau
+        expect(page).to have_content("RDV par visioconférence")
+        sign_up
+        continue_to_rdv(first_motif, address: "03 Rue Lambert, Paris, 75016")
+        add_relative
+        confirm_rdv(first_motif)
+        expect(page).to have_content("RDV par visioconférence")
+      end
     end
   end
 
@@ -144,7 +214,7 @@ RSpec.describe "User can search for rdvs" do
     ## POs
     let!(:plage_ouverture) do
       create(
-        :plage_ouverture, :daily,
+        :plage_ouverture, :weekdays,
         agent: agent, motifs: [motif1], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
         start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12)
       )
@@ -158,7 +228,7 @@ RSpec.describe "User can search for rdvs" do
     end
     let!(:plage_ouverture3) do
       create(
-        :plage_ouverture, :daily,
+        :plage_ouverture, :weekdays,
         agent: agent, motifs: [motif3], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
         start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(17)
       )
@@ -166,7 +236,7 @@ RSpec.describe "User can search for rdvs" do
     # Available PO for selected motif on other agent
     let!(:plage_ouverture4) do
       create(
-        :plage_ouverture, :daily,
+        :plage_ouverture, :weekdays,
         agent: agent2, motifs: [motif1], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
         start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(15)
       )
@@ -311,7 +381,7 @@ RSpec.describe "User can search for rdvs" do
     expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
     fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
 
-    # fake algolia autocomplete to pass on Circle ci
+    find("#search_departement", visible: :all) # permet d'attendre que l'élément soit dans le DOM
     page.execute_script("document.querySelector('#search_departement').value = '92'")
     page.execute_script("document.querySelector('#search_submit').disabled = false")
 
@@ -371,28 +441,32 @@ RSpec.describe "User can search for rdvs" do
     # Password reset page after confirmation
     expect(page).to have_content("Votre compte a été validé")
     expect(page).to have_content("Définir mon mot de passe")
-    fill_in(:password, with: "correcthorse")
+    fill_in(:password, with: "Rdvservicepublictest1!")
     click_button("Enregistrer")
   end
 
-  def continue_to_rdv(motif)
+  def continue_to_rdv(motif, address: nil)
     expect(page).to have_content("Vos informations")
     fill_in("Date de naissance", with: Time.zone.yesterday.strftime("%d/%m/%Y"))
     fill_in("Nom de naissance", with: "Lapinou")
+    fill_in("Adresse", with: address) if address
     click_button("Continuer")
 
     expect(page).to have_content(motif.name)
     expect(page).to have_content("Michel LAPIN (Lapinou)")
   end
 
-  def add_relative
+  def add_relative(birth_date: true)
     click_link("Ajouter un proche")
     expect(page).to have_selector("h1", text: "Ajouter un proche")
     fill_in("Prénom", with: "Mathieu")
     fill_in("Nom", with: "Lapin")
-    fill_in("Date de naissance", with: Date.yesterday)
+    fill_in("Date de naissance", with: Date.yesterday) if birth_date
     click_button("Enregistrer")
-    expect(page).to have_content("Mathieu LAPIN")
+
+    # Pour éviter une flaky spec (causée par l'animation CSS de la modale ?),
+    # on vérifie directement que le proche est bien enregistré dans la base.
+    wait_for { User.exists?(first_name: "Mathieu", last_name: "Lapin") }.to be(true)
 
     click_button("Continuer")
   end
@@ -406,10 +480,27 @@ RSpec.describe "User can search for rdvs" do
     expect(page).to have_content(lieu.address) if lieu.present?
     expect(page).to have_content(motif.name)
     expect(page).to have_content("11h00")
-    expect(Rdv.first.participations.first.created_by_user?).to be(true)
+    expect(Rdv.last.participations.all?(&:created_by_user?)).to be(true)
+    relative = User.find_by(first_name: "Mathieu", last_name: "Lapin")
+    expect(Rdv.last.users).to include(relative)
   end
 
   def expect_page_h1(title)
     expect(page).to have_selector("h1", text: title)
+  end
+
+  def path_for_creneau_choice
+    prendre_rdv_path(
+      address: "79 Rue de Plaisance, 92250 La Garenne-Colombes",
+      city_code: "",
+      departement: 92,
+      date: "2022-01-13 08:00:00 +0100",
+      latitude: "",
+      lieu_id: lieu&.id,
+      longitude: "",
+      motif_name_with_location_type: "vaccination-public_office",
+      service_id: service.id,
+      street_ban_id: ""
+    )
   end
 end

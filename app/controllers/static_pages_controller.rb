@@ -1,6 +1,7 @@
 class StaticPagesController < ApplicationController
   def mds
     redirect_to root_path unless current_domain == Domain::RDV_SOLIDARITES
+    render layout: "application_base"
   end
 
   def accessibility; end
@@ -9,12 +10,8 @@ class StaticPagesController < ApplicationController
 
   def domaines; end
 
-  def health_check
-    Territory.count # check connection to DB is working
-  end
-
   def presentation_for_agents
-    render current_domain.presentation_for_agents_template_name
+    render current_domain.presentation_for_agents_template_name, layout: "application_base"
   end
 
   def microsoft_domain_verification

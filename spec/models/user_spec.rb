@@ -1,4 +1,14 @@
 RSpec.describe User, type: :model do
+  describe "#email=" do
+    it %(automatically fixes ".@" typo) do
+      expect(described_class.new(email: "francis.@exemple.fr").email).to eq("francis@exemple.fr")
+    end
+
+    it %(automatically fixes ".." typo) do
+      expect(described_class.new(email: "francis..factice@exemple.fr").email).to eq("francis.factice@exemple.fr")
+    end
+  end
+
   describe "#add_organisation" do
     subject do
       user.add_organisation(organisation)
@@ -74,9 +84,9 @@ RSpec.describe User, type: :model do
       expect(user.email).to end_with("deleted.rdv-solidarites.fr")
       expect(user).to have_attributes(
         first_name: "Usager supprimé",
-        last_name: "Usager supprimé",
-        address: "[valeur anonymisée]"
+        last_name: "Usager supprimé"
       )
+      expect(user.address).to match %([valeur unique anonymisée \\d+])
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
 
       # on n'anonymise pas un autre utilisateur
@@ -90,8 +100,8 @@ RSpec.describe User, type: :model do
       receipt = create(:receipt, user: user, rdv: rdv, sms_phone_number: "0611111111")
       user.soft_delete
 
-      expect(receipt.reload.sms_phone_number).to eq "[valeur anonymisée]"
-      expect(rdv.reload.context).to eq "[valeur anonymisée]"
+      expect(receipt.reload.sms_phone_number).to match %([valeur unique anonymisée \\d+])
+      expect(rdv.reload.context).to match %([valeur unique anonymisée \\d+])
       expect(user.versions).to be_empty
     end
 
@@ -136,7 +146,7 @@ RSpec.describe User, type: :model do
             relative = create(:user, responsible: responsible)
 
             responsible.soft_delete(organisation)
-            expect(relative.reload.deleted_at).to eq(nil)
+            expect(relative.reload.deleted_at).to be_nil
           end
         end
 
@@ -224,7 +234,7 @@ RSpec.describe User, type: :model do
       expect(described_class.count).to eq(2)
       expect(loulou.responsible).not_to be_nil
       expect(loulou.responsible.first_name).to eq("Jean")
-      expect(loulou.responsible.notify_by_sms).to eq(false)
+      expect(loulou.responsible.notify_by_sms).to be(false)
     end
   end
 
@@ -273,9 +283,10 @@ RSpec.describe User, type: :model do
   # cf https://github.com/heartcombo/devise/wiki/How-To:-Email-only-sign-up
   describe "#set_reset_password_token" do
     it "returns the plaintext token" do
-      potential_token = subject.send(:set_reset_password_token)
-      potential_token_digest = Devise.token_generator.digest(subject, :reset_password_token, potential_token)
-      actual_token_digest = subject.reset_password_token
+      user = build(:user)
+      potential_token = user.send(:set_reset_password_token)
+      potential_token_digest = Devise.token_generator.digest(user, :reset_password_token, potential_token)
+      actual_token_digest = user.reset_password_token
       expect(potential_token_digest).to eql(actual_token_digest)
     end
   end
@@ -289,7 +300,7 @@ RSpec.describe User, type: :model do
     before { travel_to(Time.zone.parse("2022-04-05 13:45")) }
 
     it "is valid" do
-      expect(subject).to eq(true)
+      expect(subject).to be(true)
     end
   end
 
@@ -345,6 +356,16 @@ RSpec.describe User, type: :model do
       parent = create(:user)
       child = create(:user, responsible: parent)
       expect { parent.update!(responsible: child) }.to raise_error(ActiveRecord::RecordInvalid, /L'usager⋅e ne peut être responsable de son propre responsable/)
+    end
+  end
+
+  describe "#ants_pre_demande_number" do
+    it "accepts lowercase letters, but normalizes them to uppercase" do
+      user = create(:user)
+      user.ants_pre_demande_number = "abcde12345"
+      expect(user).to be_valid
+      user.save
+      expect(user.reload.ants_pre_demande_number).to eq "ABCDE12345"
     end
   end
 end

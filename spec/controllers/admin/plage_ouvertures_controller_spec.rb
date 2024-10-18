@@ -5,7 +5,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:motif) { create(:motif, organisation: organisation, service: service) }
-  let!(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Sud", address: "10 rue Belsunce") }
+  let!(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Sud", address: "10 rue Belsunce, Paris, 75016") }
 
   shared_examples "agent can CRUD plage ouverture" do
     describe "GET #show" do
@@ -90,7 +90,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       let!(:plage_ouverture) do
         create(
           :plage_ouverture,
-          :weekly,
+          :weekly_on_monday,
           first_day: Date.new(2020, 11, 16),
           start_time: Tod::TimeOfDay(9),
           end_time: Tod::TimeOfDay(12),
@@ -234,7 +234,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       it "send notification after destroy" do
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
-        expect(ActionMailer::Base.deliveries.size).to eq(1)
+        expect { perform_enqueued_jobs }.to change { ActionMailer::Base.deliveries.size }.by(1)
         expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Plage d’ouverture supprimée")
       end
 
@@ -243,17 +243,6 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect(ActionMailer::Base.deliveries.size).to eq(0)
-      end
-
-      it "remove plage ouverture without delay" do
-        # Difficile de tester le delai qui avait été
-        # introduit ici, c'est pourtant la source d'un problème.
-        # En attendant de pouvoir tester dans une spec de feature
-        # je pose ce test comme justification de la suppresion de
-        # l'utilisation du `delay`
-        expect do
-          delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
-        end.not_to have_enqueued_job
       end
     end
   end

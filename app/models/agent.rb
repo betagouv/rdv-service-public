@@ -1,15 +1,12 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns = ["current_sign_in_at"]
-
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
   )
 
   include Outlook::Connectable
-  include CanHaveTerritorialAccess
   include DeviseInvitable::Inviter
   include WebhookDeliverable
   include FullNameConcern
@@ -24,39 +21,41 @@ class Agent < ApplicationRecord
           id: "D",
         },
       ignoring: :accents,
-      using: { tsearch: { prefix: true, any_word: true } },
+      using: { tsearch: { prefix: true } },
     }
   end
 
-  devise :invitable, :database_authenticatable, :trackable,
-         :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
+  devise :invitable, :database_authenticatable, :trackable, :timeoutable,
+         :recoverable, :validatable, :confirmable, :async, validate_on_invite: true
+
+  def timeout_in = 14.days # Used by Devise's :timeoutable
 
   # HACK : Ces accesseurs permettent d'utiliser Devise::Models::Trackable mais sans persister les valeurs en base
   attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
 
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
-  include UncommonPasswordConcern
+  include StrongPasswordConcern
 
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
 
-  enum rdv_notifications_level: {
+  enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
     others: "others", # notify of changes made by other agents or users
     soon: "soon",     # notify of change (made by others) less than a day before the rdv
     none: "none", # never send rdv notifications
-  }, _prefix: true
+  }, prefix: true
 
-  enum plage_ouverture_notification_level: {
+  enum :plage_ouverture_notification_level, {
     all: "all", # notify of all changes
     none: "none", # never send plage_ouverture notifications
-  }, _prefix: true
+  }, prefix: true
 
-  enum absence_notification_level: {
+  enum :absence_notification_level, {
     all: "all", # notify of all changes
     none: "none", # never send absence notifications
-  }, _prefix: true
+  }, prefix: true
 
   # Relations
   has_many :agent_services, dependent: :destroy
@@ -84,6 +83,7 @@ class Agent < ApplicationRecord
   # and we need to destroy to trigger the callbacks on the model
   has_many :users, through: :referent_assignations, dependent: :destroy
   has_many :organisations, through: :roles, dependent: :destroy
+  has_many :territories_through_organisations, source: :territory, through: :organisations
   has_many :webhook_endpoints, through: :organisations
 
   attr_accessor :allow_blank_name
@@ -97,6 +97,7 @@ class Agent < ApplicationRecord
   validates :agent_services, presence: true
 
   # Hooks
+  before_destroy :prevent_destroy_if_rdvs
 
   # Scopes
   scope :complete, lambda {
@@ -105,7 +106,6 @@ class Agent < ApplicationRecord
     where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
   }
   scope :active, -> { where(deleted_at: nil) }
-  scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :in_any_of_these_services, lambda { |services|
     joins(:agent_services).where(agent_services: { service_id: services.map(&:id) })
   }
@@ -120,10 +120,6 @@ class Agent < ApplicationRecord
 
   def confreres
     Agent.in_any_of_these_services(services)
-  end
-
-  def remember_me # Override from Devise::rememberable to enable it by default
-    super.nil? ? true : super
   end
 
   def reverse_full_name_and_service
@@ -161,7 +157,13 @@ class Agent < ApplicationRecord
       referent_assignations.destroy_all
       sector_attributions.destroy_all
 
-      update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
+      update_columns(
+        deleted_at: Time.zone.now,
+        email_original: email,
+        email: deleted_email,
+        uid: deleted_email,
+        inclusion_connect_open_id_sub: ("deleted_#{inclusion_connect_open_id_sub}" if inclusion_connect_open_id_sub.present?)
+      )
     end
   end
 
@@ -201,6 +203,10 @@ class Agent < ApplicationRecord
     role_in_organisation(organisation).admin?
   end
 
+  def access_level_in(organisation)
+    role_in_organisation(organisation)&.access_level
+  end
+
   def territorial_admin_in?(territory)
     territorial_role_in(territory).present?
   end
@@ -211,10 +217,6 @@ class Agent < ApplicationRecord
 
   def access_rights_for_territory(territory)
     agent_territorial_access_rights.find_by(territory: territory)
-  end
-
-  def organisations_territory_ids
-    organisations.distinct(:territory_id).select(:territory_id)
   end
 
   def update_unknown_past_rdv_count!
@@ -270,6 +272,13 @@ class Agent < ApplicationRecord
   end
 
   def read_only_profile_infos?
-    inclusion_connect_open_id_sub.present?
+    inclusion_connect_open_id_sub.present? || connected_with_agent_connect?
+  end
+
+  def prevent_destroy_if_rdvs
+    if rdvs.any?
+      errors.add(:base, "Un agent ne peut pas être définitivement supprimé si il a des RDVs")
+      throw :abort
+    end
   end
 end

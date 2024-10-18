@@ -47,8 +47,6 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
-  # Voir health_check_spec.rb pour les infos de contexte
-  config.ssl_options = { redirect: { exclude: proc { |env| env&.path&.start_with?('/health_check') } } }
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
@@ -72,7 +70,7 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { protocol: "https", host: ENV["HOST"]&.sub(%r{^https?://}, ""), utm_source: "rdv-solidarites", utm_medium: "email", utm_campaign: "auto" }
+  config.action_mailer.default_url_options = { protocol: "https", host: ENV["HOST"]&.sub(%r{^https?://}, "") }
   config.action_mailer.asset_host = ENV["HOST"]
 
   if ENV["DISABLE_SENDING_EMAILS"]
@@ -107,7 +105,7 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter = Logger::Formatter.new
 
   # Use a different logger for distributed setups.
   # require "syslog/logger"

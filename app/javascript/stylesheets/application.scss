@@ -2,221 +2,80 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "./_variables";
+@import "./_variables_dsfr";
 @import "./fontawesome_imports";
-@import "./fonts";
+// import bootstrap file by file so we can remove unwanted rules component by component
+// cf https://github.com/twbs/bootstrap/blob/v4.3.1/scss/bootstrap.scss
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+//@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/code";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/input-group";
+@import "~bootstrap/scss/custom-forms";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/breadcrumb";
+@import "~bootstrap/scss/pagination";
+@import "~bootstrap/scss/badge";
+@import "~bootstrap/scss/jumbotron";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/progress";
+@import "~bootstrap/scss/media";
+@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/close";
+@import "~bootstrap/scss/toasts";
+@import "~bootstrap/scss/modal";
+@import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/popover";
+@import "~bootstrap/scss/carousel";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/utilities/align";
+//@import "~bootstrap/scss/utilities/background";
+@import "~bootstrap/scss/utilities/borders";
+@import "~bootstrap/scss/utilities/clearfix";
+@import "~bootstrap/scss/utilities/display";
+@import "~bootstrap/scss/utilities/embed";
+@import "~bootstrap/scss/utilities/flex";
+@import "~bootstrap/scss/utilities/float";
+@import "~bootstrap/scss/utilities/interactions";
+@import "~bootstrap/scss/utilities/overflow";
+@import "~bootstrap/scss/utilities/position";
+@import "~bootstrap/scss/utilities/screenreaders";
+@import "~bootstrap/scss/utilities/shadows";
+@import "~bootstrap/scss/utilities/sizing";
+@import "~bootstrap/scss/utilities/spacing";
+@import "~bootstrap/scss/utilities/stretched-link";
+//@import "~bootstrap/scss/utilities/text";
+@import "~bootstrap/scss/utilities/visibility";
 
-@import "~bootstrap/scss/bootstrap";
-@import "~select2/dist/css/select2";
-@import "~select2-bootstrap4-theme/dist/select2-bootstrap4.min";
-@import "jquery-datetimepicker/build/jquery.datetimepicker.min";
+@import "~bootstrap/scss/print";
 
 @import "vendor/inclusion_connect_button";
 
 @import "./components/backgrounds";
-@import "./components/types";
+@import "./components/backgrounds_dsfr";
 @import "./components/search_form";
 @import "./components/bubble";
 @import "./components/forms";
 @import "./components/cards";
 @import "./components/utilities";
+@import "./components/utilities_dsfr";
 @import "./components/steps";
 @import "./components/autocomplete";
-@import "./components/rdv_status";
 @import "./components/rdv_solidarites_instance_name";
-@import "./components/lieux";
 @import "./components/alert";
-@import "./components/select2";
+@import "./components/button_group_before_card";
 
 // Structure
-@import "./structure/general";
-@import "./structure/header";
-@import "./structure/footer";
-@import "./structure/page-head";
+@import "./structure/footer_dsfr";
 @import "./structure/authentication";
-@import "./structure/left-menu";
-
-h1 {
-  font-size: 3rem;
-  font-weight: bold;
-  color: white;
-}
-
-h2 {
-  font-size: $h2-font-size;
-  color: $primary;
-  font-weight: bold;
-  padding-bottom: 1rem;
-}
-
-@include media-breakpoint-only(xs) {
-  h1 {
-    font-size: 2rem;
-  }
-  h2 {
-    font-size: 1.5rem;
-  }
-  h3 {
-    font-size: 1.3rem;
-  }
-}
-
-
-a {
-  transition: all 0.3s;
-  display: inline-block;
-}
-
-p {
-  line-height: 1.7rem;
-}
-
-section header {
-  margin-bottom: 70px;
-}
-
-
-/* General Media Query ---------------------------------- */
-@media (max-width: 991px) {
-  h2 {
-    text-align: center;
-  }
-
-  .container {
-    max-width: 90%;
-  }
-
-  section {
-    padding: 100px 0;
-  }
-
-  .img-fluid {
-    max-width: 60%;
-  }
-
-  .content {
-    .col-lg-4{
-      order: 1;
-    }
-    .col-lg-8{
-      order: 2;
-    }
-  }
-}
-
-/*
-* ==========================================================
-*     NAVBAR
-* ==========================================================
-*/
-
-nav.navbar {
-  background: none;
-  transition: all 0.5s;
-  padding-left: 0;
-  padding-right: 0;
-
-  .navbar-brand {
-    font-weight: 800;
-    font-size: 1.7rem;
-    color: #222;
-  }
-  a.nav-link {
-    color: #333;
-    font-size: 1.1rem;
-    &:hover, &.active {
-      color: $primary;
-    }
-  }
-  .navbar-btn {
-    margin-left: 15px;
-  }
-  .navbar-toggler {
-    outline: none;
-    span {
-      width: 25px;
-      margin: 5px;
-      display: block;
-      height: 2px;
-      background: #333;
-      -webkit-transition: all 0.2s;
-      transition: all 0.2s;
-    }
-    &.active span {
-      &:first-of-type {
-        -webkit-transform: rotate(45deg) translate(10px);
-        transform: rotate(45deg) translate(10px);
-      }
-      &:last-of-type {
-        -webkit-transform: rotate(-45deg) translate(10px);
-        transform: rotate(-45deg) translate(10px);
-      }
-      &:nth-of-type(2) {
-        opacity: 0;
-      }
-    }
-  }
-}
-
-/* Navbar Mediaquery ----------------------------------- */
-@media (max-width: 1199px) {
-  nav.navbar .navbar-btn {
-    margin-left: 0;
-  }
-}
-
-
-/*
-* ==========================================================
-*     HERO SECTION
-* ==========================================================
-*/
-
-section {
-  &.hero {
-    p {
-      margin: 20px 0;
-    }
-  }
-  &.our-mission p {
-    margin: 30px 0;
-  }
-
-  &.who i {
-    font-size: 4em;
-  }
-}
-
-
-/* =========================================
-   THEMING OF BOOTSTRAP COMPONENTS
-   ========================================= */
-/*
- * 1. NAVBAR
- */
-
-.navbar {
-  padding: 0.5rem 1rem;
-}
-
-.navbar-brand {
-  display: inline-block;
-  padding-top: 0.3125rem;
-  padding-bottom: 0.3125rem;
-  margin-right: 1rem;
-  font-size: 1.25rem;
-}
-
-.navbar-toggler {
-  padding: 0.25rem 0.75rem;
-  font-size: 1.25rem;
-  line-height: 1;
-  border: 1px solid transparent;
-  border-radius: 50px;
-}
-
-.img-circle {
-  margin-top: -70px;
-  @include media-breakpoint-down(md) {
-    margin-top: 0;
-  }
-}
+@import "./structure/bootstrap_overrides";

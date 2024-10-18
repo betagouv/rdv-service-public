@@ -1,0 +1,32 @@
+- content_for :title, t(".title")
+
+- if @exports.any?
+  .row.my-4
+    .col-md-12
+      .text-muted.font-14
+        ' Vous trouverez ci-dessous les exports réalisés au cours de ces deux dernières semaines.
+        => "Les liens de téléchargement ne sont valables que pour une durée de #{Export::EXPIRATION_DELAY.in_hours.to_i}h."
+        ' Si le lien a expiré, vous pouvez générer un nouvel export à partir de la
+        = link_to("liste des RDV", admin_organisation_rdvs_path(organisation_id: current_agent.organisations.ordered_by_name.first.id))
+        | .
+
+  table.table.table-sm
+    tbody
+      - @exports.each do |export|
+        tr
+          td.align-middle
+            = export.to_s
+            br
+            .text-muted
+              = export.organisation_ids.map { Organisation.find(_1).name }.join(", ")
+          td.align-middle
+            .text-right
+              - if export.available?
+                = link_to agents_export_download_path(export.id), class: "btn btn-link btn-sm", style: "white-space: nowrap", target: "_blank" do
+                  i.fa.fa-download.mr-1
+                  | Télécharger
+              - else
+                .d-block= render partial: "agents/exports/export_badge", locals: { export: export }
+
+- else
+  .rdv-text-align-center.py-2 Vous n'avez aucun export

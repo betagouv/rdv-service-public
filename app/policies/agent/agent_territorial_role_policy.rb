@@ -1,21 +1,20 @@
-class Agent::AgentTerritorialRolePolicy < ApplicationPolicy
-  alias context pundit_user
-  delegate :agent, to: :context, prefix: :current # defines current_agent
-
-  def agent_has_role_in_record_territory?
-    current_agent.territorial_roles.pluck(:territory_id).include?(record.territory_id)
+class Agent::AgentTerritorialRolePolicy
+  def initialize(current_agent, agent_territorial_role)
+    @current_agent = current_agent
+    @agent_territorial_role = agent_territorial_role
   end
 
-  alias new? agent_has_role_in_record_territory?
-  alias create? agent_has_role_in_record_territory?
-  alias destroy? agent_has_role_in_record_territory?
+  def create_or_destroy?
+    territorial_admin? && visible_agent?
+  end
 
-  class Scope < Scope
-    alias context pundit_user
-    delegate :agent, to: :context, prefix: :current # defines current_agent
+  private
 
-    def resolve
-      scope.where(territory: current_agent.territories)
-    end
+  def territorial_admin?
+    @current_agent.territorial_admin_in?(@agent_territorial_role.territory)
+  end
+
+  def visible_agent?
+    Agent::AgentPolicy::Scope.new(@current_agent, Agent).resolve.find_by(id: @agent_territorial_role.agent_id)
   end
 end

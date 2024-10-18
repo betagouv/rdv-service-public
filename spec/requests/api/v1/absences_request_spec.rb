@@ -34,7 +34,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(parsed_response_body["absences"].pluck("id")).to match_array([absence1.id]) }
+        it { expect(parsed_response_body["absences"].pluck("id")).to contain_exactly(absence1.id) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"
@@ -91,6 +91,18 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_absence.end_day).to eq(Date.new(2023, 11, 20)) }
 
         it { expect(created_absence.end_time).to eq(Tod::TimeOfDay.new(15, 0)) }
+
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "absences",
+            action_name: "create",
+            agent_id: agent.id,
+            received_at: be_within(10.seconds).of(Time.zone.now)
+          )
+          expect(ApiCall.first.raw_http["method"]).to eq("POST")
+          expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
+          expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
+        end
       end
 
       response 200, "Crée et renvoie une absence quand c'est l'email de l'agent qu'on utilise", document: false do

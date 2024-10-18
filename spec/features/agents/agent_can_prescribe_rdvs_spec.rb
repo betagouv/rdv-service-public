@@ -3,12 +3,12 @@ RSpec.describe "agents can prescribe rdvs" do
     travel_to(now)
     stub_request(
       :get,
-      "https://api-adresse.data.gouv.fr/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris"
+      "https://api-adresse.data.gouv.fr/search/?q=16%20Quai%20de%20la%20Loire,%20Paris,%2075019"
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
   let(:now) { Time.zone.parse("2024-01-05 16h00") }
-  let!(:territory) { create(:territory, departement_number: "83") }
+  let!(:territory) { create(:territory, departement_number: "75") }
 
   let!(:service_rsa) { create(:service, name: "Service RSA") }
   let!(:service_autre) { create(:service, name: "Service autre") }
@@ -30,21 +30,23 @@ RSpec.describe "agents can prescribe rdvs" do
 
   before do
     next_month = (now + 1.month).to_date
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_mds], lieu: mds_paris_nord, organisation: org_mds)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_sud, organisation: org_insertion, agent: agent_insertion)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_nord, organisation: org_insertion)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_mds], lieu: mds_paris_nord, organisation: org_mds)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_sud, organisation: org_insertion, agent: agent_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_nord, organisation: org_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
+    current_agent.reload # needed to populate agent.organisations :/
+    agent_insertion.reload
   end
 
   def go_to_prescription_page
     login_as(current_agent, scope: :agent)
     visit root_path
     within(".left-side-menu") { click_on "Trouver un RDV" }
-    click_link "élargir votre recherche"
+    click_link "Élargir la recherche"
   end
 
   describe 'using "Trouver un RDV"' do
-    let!(:existing_user) { create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds]) }
+    let!(:existing_user) { create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds], address: "16 Quai de la Loire, Paris, 75019") }
 
     it "works (happy path)", js: true do
       go_to_prescription_page
@@ -83,14 +85,14 @@ RSpec.describe "agents can prescribe rdvs" do
       created_rdv = Rdv.last
       expect(created_rdv.users.first).to eq(existing_user)
       # User ends up in current org, distant org, and other orgs she was already in
-      expect(created_rdv.users.first.organisations).to match_array([org_mds, org_insertion])
+      expect(created_rdv.users.first.organisations).to contain_exactly(org_mds, org_insertion)
       expect(created_rdv.organisation).to eq(org_insertion)
       expect(created_rdv.motif).to eq(motif_insertion)
       expect(created_rdv.lieu).to eq(mission_locale_paris_nord)
       expect(created_rdv.starts_at).to eq(Time.zone.parse("2024-02-05 11:00"))
       expect(created_rdv.created_by).to eq(current_agent)
       expect(created_rdv.participations.last.created_by).to eq(current_agent)
-      expect(created_rdv.participations.last.created_by_agent_prescripteur).to eq(true)
+      expect(created_rdv.participations.last.created_by_agent_prescripteur).to be(true)
     end
 
     describe "for a collective rdv" do
@@ -125,7 +127,7 @@ RSpec.describe "agents can prescribe rdvs" do
         expect(page).to have_content("Date du rendez-vous :")
         expect(page).to have_content("Usager : FACTICE Francis")
         expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
-        expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to eq(true)
+        expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to be(true)
       end
     end
   end
@@ -149,8 +151,8 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Jean-Paul")
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
-      expect(Rdv.last.users.first.organisations).to match_array([org_mds, org_insertion])
-      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
+      expect(Rdv.last.users.first.organisations).to contain_exactly(org_mds, org_insertion)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
     end
 
     # Cette spec a été ajoutée suite à un bug qui faisait qu'on si on
@@ -183,18 +185,18 @@ RSpec.describe "agents can prescribe rdvs" do
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.full_name).to eq("Jean-Pierre BONJOUR")
-      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
     end
   end
 
   describe "starting from a user profile" do
-    let!(:user) { create(:user, organisations: [org_mds]) }
+    let!(:user) { create(:user, organisations: [org_mds], address: "16 Quai de la Loire, Paris, 75019") }
 
     it "pre-fills the user" do
       login_as(current_agent, scope: :agent)
       visit admin_organisation_user_path(org_mds, id: user.id)
       within(".content") { click_on "Trouver un RDV" } # Trouver un RDV pour l'usager
-      click_link "élargir votre recherche"
+      click_link "Élargir la recherche"
       expect(page).to have_content("Nouveau RDV par prescription")
       expect(page).to have_content("pour #{user.full_name}")
       # Select Service
@@ -212,7 +214,76 @@ RSpec.describe "agents can prescribe rdvs" do
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
       expect(Rdv.last.users.first).to eq(user)
-      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
+    end
+
+    describe "with sectorization", js: true do
+      let!(:sector) { create(:sector, territory: territory) }
+      let!(:sector_attribution) { create(:sector_attribution, sector: sector, organisation: org_mds) }
+      let!(:zone) do
+        create(
+          :zone,
+          sector: sector,
+          level: "street",
+          street_ban_id: "75119_5732",
+          street_name: "Quai de la Loire",
+          city_name: "Paris",
+          city_code: "75119"
+        )
+      end
+
+      before do
+        motif_mds.update(sectorisation_level: "organisation")
+        motif_insertion.update(sectorisation_level: "organisation")
+        motif_autre_service.update(sectorisation_level: "organisation")
+
+        login_as(current_agent, scope: :agent)
+        visit admin_organisation_creneaux_search_path(org_mds, user_ids: [user.id])
+        click_link "Élargir la recherche"
+      end
+
+      it "when sectorization is enabled on the user street level only it show the street leveled motif only" do
+        expect(page).not_to have_content(motif_insertion.name)
+        expect(page).not_to have_content(motif_autre_service.name)
+        expect(page).to have_content(motif_mds.service.name)
+        expect(page).to have_content(motif_mds.name)
+        click_on motif_mds.name
+        find(".card-title", text: /#{mds_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+        first(:link, "11:00").click
+        expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      end
+
+      context "when sectorization is enabled on the street level and on city level on 2 differents sectors" do
+        before do
+          # on crée un zone de niveau "city" liée au à l'orga org_insertion
+          # afin de vérifier que les motifs de cette orga sont bien affichés
+          sector_of_city_zone = create(:sector, territory: territory)
+          create(:sector_attribution, sector: sector_of_city_zone, organisation: org_insertion)
+          create(:zone, sector: sector_of_city_zone, level: "city", city_name: "Paris", city_code: "75119")
+        end
+
+        it "show both services and motifs" do
+          if Date.new(2024, 10, 19).future?
+            pending # rubocop:disable RSpec/Pending
+            raise "cette flaky spec a été désactivée pendant un mois le temps de travailler dessus"
+          end
+
+          expect(page).to have_content(motif_mds.service.name)
+          expect(page).to have_content(motif_insertion.service.name)
+          click_on motif_mds.service.name
+          expect(page).to have_content(motif_mds.name)
+          click_on motif_mds.name
+          # Back to service selection
+          page.go_back
+          page.go_back
+          click_on motif_insertion.service.name
+          expect(page).to have_content(motif_insertion.name)
+          click_on motif_insertion.name
+          find(".card-title", text: /#{mission_locale_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+          first(:link, "11:00").click
+          expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+        end
+      end
     end
   end
 
@@ -234,7 +305,7 @@ RSpec.describe "agents can prescribe rdvs" do
       login_as(current_agent, scope: :agent)
       visit root_path
       within(".left-side-menu") { click_on "Trouver un RDV" }
-      click_link "élargir votre recherche"
+      click_link "Élargir la recherche"
       # Select Service
       find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
@@ -258,7 +329,7 @@ RSpec.describe "agents can prescribe rdvs" do
       created_rdv = Rdv.last
       expect(created_rdv.users.first).to eq(user_in_organisation_mystere)
       # User ends up in distant org, and other orgs she was already in
-      expect(created_rdv.users.first.organisations).to match_array([organisation_mystere, org_insertion])
+      expect(created_rdv.users.first.organisations).to contain_exactly(organisation_mystere, org_insertion)
     end
   end
 

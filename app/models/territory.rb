@@ -1,19 +1,27 @@
 class Territory < ApplicationRecord
-  MAIRIES_NAME = "Mairies".freeze
+  has_paper_trail
+
+  SPECIAL_NAMES = [
+    MAIRIES_NAME = "Mairies".freeze,
+    CNFS_NAME = "Conseillers Numériques".freeze,
+    VISIOPLAINTE_NAME = "Visioplainte".freeze,
+  ].freeze
+  CN_DEPARTEMENT_NUMBER = "CN".freeze
+
   # Mixins
   include PhoneNumberValidation::HasPhoneNumber
 
   # Attributes
   auto_strip_attributes :name
 
-  enum sms_provider: {
+  enum :sms_provider, {
     netsize: "netsize",
     send_in_blue: "send_in_blue",
     contact_experience: "contact_experience",
     sfr_mail2sms: "sfr_mail2sms",
     clever_technologies: "clever_technologies",
     orange_contact_everyone: "orange_contact_everyone",
-  }, _prefix: true
+  }, prefix: true
 
   # Relations
   has_many :teams, dependent: :destroy
@@ -39,8 +47,13 @@ class Territory < ApplicationRecord
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
   validates :name, presence: true, if: -> { persisted? }
   validate do
-    if name_was == MAIRIES_NAME
-      errors.add(:name, "Le nom de ce territoire permet de le brancher au moteur de recherche de l'ANTS et ne peut pas être changé")
+    if name_changed? && name_was.in?(SPECIAL_NAMES)
+      errors.add(:name, "Le nom de ce territoire lui donne des propriétés particulières et ne peut donc pas être changé")
+    end
+  end
+  validate do
+    if name_changed? && name.in?(SPECIAL_NAMES)
+      errors.add(:name, "Ce nom ne peut pas être utilisé")
     end
   end
 
@@ -51,6 +64,7 @@ class Territory < ApplicationRecord
   scope :with_upcoming_rdvs, lambda {
     where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
+  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(territories.name))")) }
 
   ## -
 
@@ -81,9 +95,20 @@ class Territory < ApplicationRecord
     find_by(name: MAIRIES_NAME)
   end
 
+  def mairies?
+    name == MAIRIES_NAME
+  end
+
+  def cn?
+    name == CNFS_NAME
+  end
+
   def sectorized?
-    sectors.joins(:attributions).any? &&
-      motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
+    sectors.joins(:attributions).any? && motifs.active.sectorized.any?
+  end
+
+  def any_motifs_opened_for_prescription?
+    motifs.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.exists?
   end
 
   def any_social_field_enabled?
@@ -102,9 +127,12 @@ class Territory < ApplicationRecord
 
   private
 
+  DEPARTEMENTS_NAMES = CSV.read(Rails.root.join("lib/assets/departements_fr.csv"), headers: :first_row)
+    .to_h { [_1["number"], _1["name"]] }.freeze
+
   def fill_name_for_departements
     return if name.present? || departement_number.blank?
 
-    self.name = Departements::NAMES[departement_number]
+    self.name = DEPARTEMENTS_NAMES[departement_number]
   end
 end

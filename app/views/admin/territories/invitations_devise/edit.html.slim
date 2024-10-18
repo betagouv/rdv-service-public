@@ -1,18 +1,44 @@
-.text-center.w-75.m-auto
-  h1.text-dark.mt-0.font-weight-bold.mb-4 Inscription
+.fr-container
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-xs-12.fr-col-md-8.fr-py-5w
+      h1.fr-pb-3w Création de compte sur #{current_domain.name}
 
-  = render "common/inclusionconnect_button", locals: { login_hint: resource.email }
+      - if display_agent_connect_button? || display_inclusion_connect_button?
+        .fr-grid-row--gutters.centered-flex
+          - if display_agent_connect_button?
+            .fr-col-md-6= render "common/proconnect_button_dsfr"
 
-  = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put, class: "text-left" } do |f|
-    p.text-muted.text-center.mb-4 Complétez vos informations.
-    = render "devise/shared/error_messages", resource: resource
-    = f.hidden_field :invitation_token
-    .form-row
-      .col-md-6= f.input :first_name, placeholder: "Dominique"
-      .col-md-6= f.input :last_name, placeholder: "DUPONT"
-    .form-group
-      = f.label :password
-      = f.password_field :password, required: true, class: "form-control ", placeholder: "Choisissez votre mot de passe", id: "password"
-      span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
-      .font-14.mt-1.text-muted = "#{Devise.password_length.first} caractères minimum"
-    .text-center= f.button :submit, t("devise.invitations.edit.submit_button")
+          - if display_inclusion_connect_button?
+            .fr-col-md-6= render "common/inclusionconnect_button", login_hint: resource.email
+
+        p.fr-mt-3w.fr-hr-or = "ou"
+
+      h6 Créer un compte avec email et mot de passe
+      = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, wrapper: :dsfr_wrapper do |f|
+        p.fr-hint-text Tous les champs sont obligatoires.
+        = render "devise/shared/dsfr_error_messages", resource: resource
+        = f.hidden_field :invitation_token
+        .fr-grid-row.fr-grid-row--gutters
+          .fr-col-md-6= f.input :first_name, required: true
+          .fr-col-md-6= f.input :last_name, required: true
+        .fr-password.fr-mt-2w[data-component="js_dsfr_new_password"]
+          = f.label :password, class: "fr-label fr-password__label" do
+            = "Mot de passe"
+            span.fr-hint-text Choisissez votre mot de passe
+          .fr-input-wrap
+            = f.password_field :password, required: true, id: "password", class: "fr-input fr-password__input", autocomplete: "new-password"
+          .fr-messages-group[aria-live="assertive"]
+            p.fr-message#password-input-message
+              = "Votre mot de passe doit contenir :"
+            p.fr-message.fr-message--info[data-component="js_dsfr_new_password__min_length_message" data-min-length="#{Devise.password_length.first}"] = "#{Devise.password_length.first} caractères minimum"
+            p.fr-message.fr-message--info[data-component="js_dsfr_new_password__at_least_one_digit_message"] = "1 chiffre minimum"
+            p.fr-message.fr-message--info[data-component="js_dsfr_new_password__at_least_one_capital_letter_message"] = "1 majuscule minimum"
+            p.fr-message.fr-message--info[data-component="js_dsfr_new_password__at_least_one_special_character_message"] = "1 caractère spécial minimum"
+          .fr-password__checkbox.fr-checkbox-group.fr-checkbox-group--sm
+            input#password-show[aria-label="Afficher le mot de passe" type="checkbox" aria-describedby="password-show-messages"]
+            label.fr-password__checkbox.fr-label[for="password-show"]
+              = "Afficher"
+            .fr-messages-group#password-show-messages[aria-live="assertive"]
+
+        .fr-btns-group.fr-btns-group--inline.fr-btns-group--right
+          .fr-mt-2w= f.button :submit, t("devise.invitations.edit.submit_button"), class: "fr-btn"

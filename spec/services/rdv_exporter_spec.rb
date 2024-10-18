@@ -1,6 +1,5 @@
 RSpec.describe RdvExporter, type: :service do
   describe "#xls_string_from_rdvs_rows" do
-    # rubocop:disable RSpec/ExampleLength
     it "return export with header" do
       rdv = create(:rdv, created_at: Time.zone.parse("2023-01-01"), agents: [create(:agent, email: "agent@mail.com")])
       rdv_row = described_class.row_array_from(rdv)
@@ -41,7 +40,6 @@ RSpec.describe RdvExporter, type: :service do
       expect(first_data_row.first).to eq(2023)
       expect(first_data_row.last).to eq("agent@mail.com")
     end
-    # rubocop:enable RSpec/ExampleLength
   end
 
   describe "#row_array_from rdv" do
@@ -136,9 +134,9 @@ RSpec.describe RdvExporter, type: :service do
       end
 
       it "return « lieu name and adresse » when rdv in place" do
-        lieu = build(:lieu, name: "Centre ville", address: "3 place de la république 56700 Hennebont")
+        lieu = build(:lieu, name: "Centre ville", address: "3 place de la république, Hennebont, 56700")
         rdv = build(:rdv, :with_fake_timestamps, lieu: lieu)
-        expect(described_class.row_array_from(rdv)[10]).to eq("Centre ville (3 place de la république 56700 Hennebont)")
+        expect(described_class.row_array_from(rdv)[10]).to eq("Centre ville (3 place de la république, Hennebont, 56700)")
       end
     end
 
@@ -227,7 +225,7 @@ RSpec.describe RdvExporter, type: :service do
 
   describe "code postal du premier responsable" do
     it "return 92320 (Chatillon's postal code) when first responsable leave there" do
-      first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, 92320 Châtillon")
+      first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, Châtillon, 92320")
       minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
       other_major = create(:user, birth_date: Date.new(2002, 3, 12))
       other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
@@ -236,7 +234,7 @@ RSpec.describe RdvExporter, type: :service do
     end
 
     it "return responsible's postal code for relative" do
-      first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, 92320 Châtillon")
+      first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, Châtillon, 92320")
       minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
       rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor])
       expect(described_class.row_array_from(rdv)[18]).to eq("92320")
@@ -245,7 +243,7 @@ RSpec.describe RdvExporter, type: :service do
     it "return second responsible postal code when first does not have one" do
       major = create(:user, birth_date: Date.new(2002, 3, 12), address: nil)
       minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: major.id)
-      other_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, 92320 Châtillon")
+      other_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, Châtillon, 92320")
       other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
       rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, other_minor, major, other_major])
       expect(described_class.row_array_from(rdv)[18]).to eq("92320")

@@ -2,13 +2,13 @@ RSpec.describe Users::RdvsController, type: :controller do
   render_views
 
   describe "POST create" do
-    subject { post :create, params: params }
+    subject(:post_create) { post :create, params: params }
 
     let(:organisation) { create(:organisation) }
     let(:user) { create(:user) }
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
-    let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
+    let(:starts_at) { Time.zone.parse("2020-02-20 10h30") }
     let(:mock_geo_search) { instance_double(Users::GeoSearch) }
     let(:token) { "12345" }
     let(:params) do
@@ -17,7 +17,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         lieu_id: lieu&.id,
         departement: "12",
         city_code: "12100",
-        where: "1 rue de la, ville 12345",
+        where: "1 rue de la, ville, 12345",
         motif_id: motif.id,
         starts_at: starts_at,
         organisation_ids: [organisation.id],
@@ -25,27 +25,25 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     before do
-      travel_to(Time.zone.local(2019, 7, 20))
+      travel_to(Time.zone.local(2020, 1, 20))
       sign_in user
 
       allow(Users::GeoSearch).to receive(:new)
         .with(departement: "12", city_code: "12100", street_ban_id: nil)
         .and_return(mock_geo_search)
-      allow(Users::CreneauSearch).to receive(:creneau_for)
-        .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
-        .and_return(mock_creneau)
       allow(Notifiers::RdvCreated).to receive(:perform_with)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")
-      subject
     end
 
     describe "when there is an available creneau" do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let(:mock_creneau) do
-        instance_double(Creneau, agent: agent, motif: motif, lieu: lieu, starts_at: starts_at, duration_in_min: 30)
+
+      before do
+        create(:plage_ouverture, organisation: organisation, motifs: [motif], lieu: lieu, agent: agent, start_time: Tod::TimeOfDay.new(10, 30), first_day: starts_at.to_date)
       end
 
       it "creates rdv" do
+        post_create
         expect(Rdv.count).to eq(1)
         expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
         expect(user.rdvs.last.created_by).to eq(user)
@@ -57,22 +55,32 @@ RSpec.describe Users::RdvsController, type: :controller do
         let(:lieu) { nil }
 
         it "creates the rdv" do
+          post_create
           expect(Rdv.count).to eq(1)
           expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
           expect(user.rdvs.last.created_by).to eq(user)
           expect(user.participations.last.created_by).to eq(user)
         end
       end
+
+      context "when the user is injecting a motif id that they should not be able to book" do
+        let(:motif) { create(:motif, organisation: organisation, bookable_by: :agents) }
+
+        it "doesn't find a creneau" do
+          post_create
+          expect(Rdv.count).to eq(0)
+          expect(flash[:error]).to eq "Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action"
+        end
+      end
     end
 
     describe "when there is no available creneau" do
-      let(:mock_creneau) { nil }
-
-      it "creates rdv" do
+      it "doesn't create a rdv" do
+        post_create
         expect(Rdv.count).to eq(0)
         expect(response).to redirect_to prendre_rdv_path(
           departement: "12", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
-          address: "1 rue de la, ville 12345", organisation_ids: [organisation.id], city_code: "12100"
+          address: "1 rue de la, ville, 12345", organisation_ids: [organisation.id], city_code: "12100"
         )
         expect(flash[:error]).to eq "Ce créneau n’est plus disponible. Veuillez en sélectionner un autre."
       end
@@ -122,7 +130,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
           put :cancel, params: { id: rdv.id }
           expect(response).to redirect_to(users_rdvs_path)
-          expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.")
+          expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
         end
       end
     end
@@ -289,11 +297,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "with a valid invitation token" do
-        let!(:invitation_token) do
-          user.assign_rdv_invitation_token
-          user.save!
-          user.rdv_invitation_token
-        end
+        let!(:invitation_token) { user.set_rdv_invitation_token! }
 
         before do
           request.session[:invitation] = { invitation_token:, expires_at: 1.hour.from_now }
@@ -358,11 +362,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "with a valid invitation token" do
-        let!(:invitation_token) do
-          user.assign_rdv_invitation_token
-          user.save!
-          user.rdv_invitation_token
-        end
+        let!(:invitation_token) { user.set_rdv_invitation_token! }
 
         before do
           request.session[:invitation] = { invitation_token: invitation_token, expires_at: 1.hour.from_now }
@@ -372,7 +372,7 @@ RSpec.describe Users::RdvsController, type: :controller do
           get :index
 
           expect(response).to redirect_to(root_path)
-          expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.")
+          expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
         end
       end
     end
@@ -387,7 +387,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:organisation) { create(:organisation) }
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
+    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation, max_public_booking_delay: 2.weeks.to_i) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
@@ -402,12 +402,20 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it { expect(assigns(:all_creneaux)).to be_empty }
       it { expect(response.body).to include("Malheureusement, tous les créneaux sont pris.") }
+
+      context "for a js request" do
+        subject do
+          get :creneaux, params: { id: rdv.id }, xhr: true
+        end
+
+        it { expect(response.body).to include("Malheureusement, tous les créneaux sont pris.") }
+      end
     end
 
     context "creneaux available" do
       before do
         # Une plage quotidienne qui commence dans 3 jours, ouvertures de 10h00 à 12h00
-        create(:plage_ouverture, :daily,
+        create(:plage_ouverture, :weekdays,
                first_day: 3.days.from_now,
                start_time: Tod::TimeOfDay.new(10),
                end_time: Tod::TimeOfDay.new(12),
@@ -428,7 +436,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       it { expect(assigns(:creneaux)).not_to be_empty }
-      it { expect(response.body).to include("Voici les créneaux disponibles pour modifier votre rendez-vous du") }
+      it { expect(response.body).to include("Voici les créneaux disponibles pour déplacer votre rendez-vous du") }
       it { expect(response.body).to include("dimanche 06 janvier 2019 à 10h00") }
       it { expect(response.body).to include("10:00") } # heure de créneau pour la plage quotidienne
       it { expect(response.body).to include("16:00") } # heure de créneau pour la plage ponctuelle
@@ -440,7 +448,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       before { subject }
 
       it { expect(response).to redirect_to(users_rdvs_path) }
-      it { expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.") }
+      it { expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action") }
     end
   end
 
@@ -454,7 +462,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:starts_at) { 3.days.from_now }
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
+    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
@@ -464,7 +472,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       travel_to(now)
       sign_in user
 
-      allow(Users::CreneauSearch).to receive(:creneau_for)
+      allow(CreneauxSearch::ForUser).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
     end
@@ -472,14 +480,14 @@ RSpec.describe Users::RdvsController, type: :controller do
     context "creneau is available" do
       before { subject }
 
-      it { expect(response.body).to include("Modification du Rendez-vous") }
+      it { expect(response.body).to include("Modification du RDV") }
       it { expect(response.body).to include("Confirmer le nouveau créneau") }
 
       context "when the motif is by phone and lieu is missing" do
         let(:motif) { create(:motif, :by_phone, organisation: organisation) }
         let(:lieu) { nil }
 
-        it { expect(response.body).to include("Modification du Rendez-vous") }
+        it { expect(response.body).to include("Modification du RDV") }
         it { expect(response.body).to include("Confirmer le nouveau créneau") }
       end
     end
@@ -498,7 +506,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "is not authorized" do
         subject
         expect(response).to redirect_to(users_rdvs_path)
-        expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.")
+        expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
       end
     end
   end
@@ -509,7 +517,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:starts_at) { 3.days.from_now }
     let(:user) { create(:user) }
     let(:motif) { create(:motif, organisation: organisation) }
-    let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
+    let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
     let(:token) { "12345" }
@@ -517,7 +525,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     before do
       travel_to(now)
       sign_in user
-      allow(Users::CreneauSearch).to receive(:creneau_for)
+      allow(CreneauxSearch::ForUser).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")

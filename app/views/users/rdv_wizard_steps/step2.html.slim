@@ -2,7 +2,7 @@
 
 .row.justify-content-center
   .col-lg-7.col-md-10.col-sm-11
-    h3.text-center.mb-3 Choix de l'usager
+    h3.rdv-text-align-center.mb-3 Choix de l'usager
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
@@ -32,9 +32,9 @@
                 wrapper_html: { class: "mb-0" },
                 input_html: { name: "rdv[user_ids][]" }
           .form-group
-            = link_to "Ajouter un proche", new_relative_path, data: { modal: true }
+            = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?), data: { modal: true }
           .row
             .col
               = link_to "Revenir en arrière", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), class: "btn btn-link"
-            .col.text-right
+            .col
               = f.button :submit, "Continuer"

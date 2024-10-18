@@ -13,14 +13,23 @@
   cursor: pointer;
   box-shadow: none;
   user-select: none;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out;
+  transition:
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
   color: #fff;
   border: 4px solid #000091;
   background-color: #000091;
   background-repeat: no-repeat;
+  background-size: auto; //override to be compatible with dsfr
 }
 
-.btn-inclusion-connect.active, .btn-inclusion-connect.focus, .btn-inclusion-connect.hover, .btn-inclusion-connect:active, .btn-inclusion-connect:focus, .btn-inclusion-connect:hover {
+// the starting a is necessary for dsfr compatibility
+a.btn-inclusion-connect.active,
+a.btn-inclusion-connect.focus,
+a.btn-inclusion-connect.hover,
+a.btn-inclusion-connect:active,
+a.btn-inclusion-connect:focus,
+a.btn-inclusion-connect:hover {
   text-decoration: none;
   color: #fff;
   border-color: #2323ff;
@@ -41,7 +50,8 @@
   outline: #0a76f6 2px solid;
 }
 
-.btn-inclusion-connect.disabled, .btn-inclusion-connect:disabled {
+.btn-inclusion-connect.disabled,
+.btn-inclusion-connect:disabled {
   pointer-events: none;
   background-color: #b3b4c3;
   border-color: #b3b4c3;

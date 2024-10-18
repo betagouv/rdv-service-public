@@ -1,37 +1,45 @@
 class Agent::MotifPolicy < ApplicationPolicy
-  def update?
-    admin_of_the_motif_organisation?
+  def self.agent_can_manage_motif?(motif, agent)
+    motif.organisation.in?(organisations_i_can_manage(agent))
   end
 
-  alias new? update?
-  alias create? update?
-  alias edit? update?
-  alias destroy? update?
-  alias versions? update?
+  def self.agent_can_use_motif?(motif, agent)
+    return false unless motif.organisation.in?(agent.organisations)
 
-  def show?
-    return unless agent_role_in_motif_organisation
-
-    current_agent.secretaire? || admin_of_the_motif_organisation? ||
-      @record.service.in?(current_agent.services)
+    agent.secretaire? ||
+      agent_can_manage_motif?(motif, agent) ||
+      motif.service.in?(agent.services)
   end
 
-  def bookable?
-    @record.bookable_outside_of_organisation?
+  def self.organisations_i_can_manage(agent)
+    agent.admin_orgs
   end
 
-  private
+  def agent_can_manage_motif?
+    self.class.agent_can_manage_motif?(motif, current_agent)
+  end
+
+  def agent_can_use_motif?
+    self.class.agent_can_use_motif?(motif, current_agent)
+  end
+
+  alias show? agent_can_use_motif?
+  alias new? agent_can_manage_motif?
+  alias duplicate? agent_can_manage_motif?
+  alias create? agent_can_manage_motif?
+  alias edit? agent_can_manage_motif?
+  alias update? agent_can_manage_motif?
+  alias destroy? agent_can_manage_motif?
+  alias versions? agent_can_manage_motif?
 
   alias current_agent pundit_user
 
-  def admin_of_the_motif_organisation?
-    return unless agent_role_in_motif_organisation
-
-    agent_role_in_motif_organisation.access_level == AgentRole::ACCESS_LEVEL_ADMIN
+  def bookable?
+    motif.bookable_outside_of_organisation?
   end
 
-  def agent_role_in_motif_organisation
-    @agent_role_in_motif_organisation ||= current_agent.roles.find_by(organisation_id: @record.organisation_id)
+  def motif
+    @record
   end
 
   class Scope < ApplicationPolicy::Scope

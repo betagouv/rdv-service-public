@@ -27,7 +27,7 @@ class Compte
       lieu.save!
 
       self.agent = Agent.invite!(@attributes[:agent].merge(
-                                   password: SecureRandom.hex,
+                                   password: SecureRandom.base64(32),
                                    roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
                                  ))
 

@@ -1,0 +1,107 @@
+.card#bookable_by_section
+  .card-body
+    h5.card-title= Motif.human_attribute_name("bookable_by")
+    p= Motif.human_attribute_name("bookable_by_hint")
+
+    .form-row
+      .col-md-12
+        = label_tag do
+          = f.radio_button(:bookable_by, :agents, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
+          span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents"))
+          p.text-muted.font-14.mt-1
+            = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents"))
+
+      .form-row
+        .col-md-12
+          = label_tag do
+            = f.radio_button(:bookable_by, :agents_and_prescripteurs, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
+            span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs"))
+            p.text-muted.font-14.mt-1
+              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"))
+
+    - if rdvi_mode
+      .form-row
+        .col-md-12
+          = label_tag do
+            = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_invited_users, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
+            span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs_and_invited_users"))
+            p.text-muted.font-14.mt-1
+              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs_and_invited_users"))
+
+    .form-row
+      .col-md-12
+        = label_tag do
+          = f.radio_button(:bookable_by, :everyone, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
+          span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.everyone"))
+          p.text-muted.font-14.mt-1
+            = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
+
+.card.collapse [data-motif-form-target="bookingDelaySection"]
+  .card-body
+    h5.card-title= Motif.human_attribute_name("booking_delay")
+    p= Motif.human_attribute_name("booking_delay_hint")
+
+    .form-row.mt-4
+      .col-md-6= f.input :min_public_booking_delay, label: "Délai minimum avant le RDV", collection: min_max_delay_options
+      .col-md-6= f.input :max_public_booking_delay, label: "Délai maximum avant le RDV", collection: min_max_delay_options
+
+    .mt-2
+      = f.input(:rdvs_editable_by_user, input_html: { class: "js-check-on-section-enable js-uncheck-on-section-disable" }, wrapper_html: { class: "mb-1" })
+      .text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
+
+.card
+  .card-body
+    h5.card-title= Motif.human_attribute_name("follow_up_short")
+    p.mb-3= Motif.human_attribute_name("follow_up_warning")
+    = f.input :follow_up, input_html: { "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "followUpCheckbox" }
+
+.card.collapse [data-motif-form-target="secretariatSection"]
+  .card-body
+    h5.card-title= Motif.human_attribute_name("for_secretariat_short")
+    p.mb-3= Motif.human_attribute_name("for_secretariat_hint")
+    = f.input :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), input_html: { class: "js-uncheck-on-section-disable" }
+
+- if current_territory.motif_categories.present?
+  .card
+    .card-body
+      h5.card-title= MotifCategory.model_name.human
+      p.mt-1= MotifCategory.human_attribute_name("category_hint")
+      .form-row.mt-3
+        .col-md-12
+          = f.association :motif_category, collection: current_territory.motif_categories, include_blank: "Aucune", label: false
+
+- unless current_domain.online_reservation_with_public_link
+  .card.collapse [data-motif-form-target="sectoSection"]
+    .card-body
+      h5.card-title.mb-2= Motif.human_attribute_name("sectorisation_level_title")
+      .mb-3
+        span>= Motif.human_attribute_name("sectorisation_level_hint")
+        = link_to "https://doc.rdv-solidarites.fr/guide-utilisation/pour-un-territoire/sectorisation-geographique/" do
+          span> Voir la documentation concernant la sectorisation
+          i.fa.fa-external-link-alt>
+      .mb-2
+        = label_tag do
+          = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT)
+          span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT, context: :hint)
+        = label_tag do
+          = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION)
+          span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION, context: :hint)
+          - if motif.organisation
+            .text-muted.font-14.my-1
+              - sectors_attributed_to_orga = Sector.attributed_to_organisation(motif.organisation)
+              = t("motifs.form.sectorisation_level.sectors_attributed_to_orga", count: sectors_attributed_to_orga.count, sectors: sectors_attributed_to_orga.map(&:name).to_sentence.truncate(100), organisation: motif.organisation.name)
+        = label_tag do
+          = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT)
+          span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT, context: :hint)
+          - if motif.service && motif.organisation
+            - attributions_group = SectorAttribution.level_agent_grouped_by_service(motif.organisation).fetch(motif.service_id, {agents_count: 0, attributions: []})
+            .text-muted.font-14.my-1.ml-3
+              = t( \
+                "motifs.form.sectorisation_level.sectors_attributed_to_agents", \
+                count: attributions_group[:agents_count], \
+                service: motif.service.name, \
+                sectors_count_human: t("motifs.index.sectorisation_level_organisation", count: attributions_group[:sectors_count]), \
+                sectors: attributions_group[:attributions].map { "#{_1.agent.full_name} -> #{_1.sector.name}" }.to_sentence.truncate(100) \
+              )
+      - if current_agent.territorial_admin_in?(current_territory)
+        = link_to "Configuration des secteurs", admin_territory_sectors_path(current_territory)

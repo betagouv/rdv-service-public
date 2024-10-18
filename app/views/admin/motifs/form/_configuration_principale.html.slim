@@ -1,0 +1,60 @@
+p
+  ' Vous avez la possibilité de créer ou modifier un motif dans sa configuration principale uniquement, si vous
+  ' souhaitez un paramétrage simplifié. Sinon, vous pouvez accéder aux autres onglets pour un paramétrage plus avancé.
+
+= f.hidden_field :duplicated_from_motif_id
+- organisations_i_can_manage = Agent::MotifPolicy.organisations_i_can_manage(current_agent)
+- if motif.duplicated_from_motif && motif.new_record? && organisations_i_can_manage.count > 1
+  .card
+    .card-body
+      = f.association :organisation, label: "Créer le motif dans cette organisation", collection: organisations_i_can_manage, required: true, input_html: { class: "select2-input", data: { "auto-select-sole-option": true } }
+
+.card
+  .card-body
+    h5.card-title Configuration générale
+    .form-row
+      .col-md-12
+        / Nous voulons que l'autocomplete ne propose que les noms des motifs en base,
+        / pas celles de l'historique de saisie du navigateur, d'où le autocomplete="off".
+        = f.input :name, label: fake_required_label("Nom du motif"), input_html: { list: "motif_names", autocomplete: "off" }, placeholder: "Saisissez le nom du motif", required: false
+        datalist#motif_names
+          - Motif.where(organisation_id: current_agent.organisations).map(&:name).uniq.each do |org_name|
+            option= org_name
+    .form-row
+      .col-md-12
+        = f.association :service, label: fake_required_label("Service associé"), collection: current_territory.services.reject(&:secretariat?), required: false, input_html: { \
+          class: "select2-input", \
+          data: { \
+            placeholder: "Sélectionnez le service auquel le motif sera associé", \
+            "select2-config": { disableSearch: true }, \
+            "auto-select-sole-option": true,
+          }, \
+        }
+    .form-row
+      .col-md-6= f.input :default_duration_in_min, label: "Durée du RDV (en minutes)"
+      .col-md-6= f.input :color, as: "color", label: "Couleur associée"
+
+.card
+  .card-body
+    h5.card-title Type de RDV
+    p Choisissez le type du rendez-vous :
+    = render partial: "admin/motifs/form/location_types", locals: { f: f, disabled: motif.rdvs.any? }
+
+.card
+  .card-body
+    - disabled = motif.rdvs.any?
+    h5.card-title Nombre de participants
+    p Choisissez le nombre de participants :
+
+    - if disabled
+      p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le nombre de participants
+
+    = label_tag do
+      = f.radio_button(:collectif, false, disabled: disabled)
+      span.ml-1= Motif.human_attribute_value(:collectif, false)
+      p.text-muted.font-14.mt-1= Motif.human_attribute_value(:collectif, false, context: :hint)
+
+    = label_tag do
+      = f.radio_button(:collectif, true, disabled: disabled)
+      span.ml-1= Motif.human_attribute_value(:collectif, true)
+      p.text-muted.font-14.mt-1= Motif.human_attribute_value(:collectif, true, context: :hint)

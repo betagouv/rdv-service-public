@@ -7,6 +7,29 @@ main.container
         = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
         .card-body
           h3 Vos coordonnées de prescripteur
+          / Incitation à l'utilisation de la prescription interne
+          - if @rdv_wizard.present? && show_agent_prescription_incitation?
+            - territory = @rdv_wizard.motif.organisation.territory
+            .alert.alert-success
+              p.mb-0
+                i.fas.fa-lightbulb>
+                | Nouvelle fonctionnalité&nbsp;: Pour ne pas avoir à remplir ce formulaire pour chaque nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent
+                / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
+                - if !territory.sectorized?
+                  / Le lien de prescription interne redirige vers la premiére organisation de l'agent dans le même territoire
+                  = link_to user_selection_admin_organisation_prescription_path( \
+                      current_agent.organisations.find_by(territory: territory), session[:rdv_wizard_attributes].merge(prescripteur: "interne") \
+                    ) do
+                    | &nbsp;en cliquant ici.
+                - else
+                  | .
+
+              p.mb-0
+              span> Pour en savoir plus consultez
+              = link_to "https://rdvs.notion.site/Prescription-f1c857697c68421d91592ae88364c05d", target: "_blank" do
+                span> la documentation
+                i.fa.fa-external-link-alt>
+
           p
             = "Ces informations permettront à l'agent qui assure le rendez-vous de savoir qui l'a planifié, "
             = "et de vous contacter s'il y a une erreur sur le type de rendez-vous."
@@ -28,5 +51,5 @@ main.container
                 .col-12
                   = f.input :phone_number, as: :tel, placeholder: "0122334455", label: "Votre numéro de téléphone professionnel", hint: ""
 
-            .form-group.mb-0.text-center
+            .form-group.mb-0.rdv-text-align-center
               = f.submit "Continuer", class: "btn btn-primary"

@@ -4,8 +4,8 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def index
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
 
-    @rdvs = policy_scope(Rdv).where(organisation: current_organisation).collectif
-    @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
+    @rdvs = policy_scope(current_organisation.rdvs, policy_scope_class: Agent::RdvPolicy::Scope).collectif
+    @rdvs = @rdvs.order(starts_at: :asc).page(page_number)
 
     @form = Admin::RdvCollectifSearchForm.new(params.permit(:motif_id, :organisation_id, :from_date, :with_remaining_seats))
 
@@ -18,20 +18,20 @@ class Admin::RdvsCollectifsController < AgentAuthController
     @rdv = @rdv_form.rdv
 
     if params[:duplicated_rdv_id]
-      duplicated_rdv = policy_scope(Rdv).find(params[:duplicated_rdv_id])
+      duplicated_rdv = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).find(params[:duplicated_rdv_id])
 
       new_rdv_attributes = duplicated_rdv.attributes.symbolize_keys.slice(*create_attribute_names)
       @rdv.assign_attributes(new_rdv_attributes)
       @rdv.agents = duplicated_rdv.agents
     end
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
   def create
     @rdv_form = Admin::NewRdvForm.new(pundit_user, create_params.merge(organisation: current_organisation))
     @rdv = @rdv_form.rdv
 
-    authorize(@rdv, :new?)
+    authorize(@rdv, :new?, policy_class: Agent::RdvPolicy)
     if @rdv_form.save
       Notifiers::RdvCreated.perform_with(@rdv, current_agent)
       redirect_to admin_organisation_rdvs_collectifs_path(current_organisation), notice: I18n.t("admin.rdvs.message.success.create")
@@ -43,7 +43,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def edit
     @rdv = Rdv.find(params[:id])
 
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
 
     @add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
     users_to_add = User.where(id: @add_user_ids)
@@ -52,7 +52,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
   def update
     @rdv = Rdv.find(params[:id])
-    authorize(@rdv, :update?)
+    authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
     if @rdv.update_and_notify(current_agent, update_users_params)
       flash[:notice] = "Participants mis à jour"

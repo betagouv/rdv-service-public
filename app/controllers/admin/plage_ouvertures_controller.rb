@@ -6,17 +6,17 @@ class Admin::PlageOuverturesController < AgentAuthController
   before_action :set_agent
 
   def show
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
   def index
-    all_plage_ouvertures = policy_scope(PlageOuverture)
+    all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
       .where(agent_id: filter_params[:agent_id])
       .order(updated_at: :desc)
     @plage_ouvertures = all_plage_ouvertures
       .where(expired_cached: filter_params[:current_tab] == "expired")
-    @plage_ouvertures = @plage_ouvertures.page(filter_params[:page]) unless params[:view_mode] == "calendar"
+    @plage_ouvertures = @plage_ouvertures.page(page_number) unless params[:view_mode] == "calendar"
     @plage_ouvertures = @plage_ouvertures.search_by_text(params[:search]) if params[:search].present?
     @display_tabs = all_plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
   end
@@ -39,19 +39,19 @@ class Admin::PlageOuverturesController < AgentAuthController
       agent: @agent,
       **defaults
     )
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
   def edit
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
   def create
     @plage_ouverture.organisation = current_organisation
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.save
 
-      plage_ouverture_mailer.plage_ouverture_created.deliver_later if @agent.plage_ouverture_notification_level == "all"
+      Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_created.deliver_later if @agent.plage_ouverture_notification_level == "all"
       flash[:notice] = "Plage d'ouverture créée"
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
     else
@@ -60,9 +60,9 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def update
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.update(plage_ouverture_params)
-      plage_ouverture_mailer.plage_ouverture_updated.deliver_later if @agent.plage_ouverture_notification_level == "all"
+      Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_updated.deliver_later if @agent.plage_ouverture_notification_level == "all"
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), notice: "La plage d'ouverture a été modifiée."
     else
       render :edit
@@ -70,11 +70,14 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def destroy
-    authorize(@plage_ouverture)
-    # NOTE: the destruction email is sent synchronously (not in a job) to ensure @absence still exists.
-    mail = plage_ouverture_mailer.plage_ouverture_destroyed
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+    motif_ids = @plage_ouverture.motifs.ids
     if @plage_ouverture.destroy
-      mail.deliver_now if @agent.plage_ouverture_notification_level == "all"
+      # On passe la plage au job sous forme sérialisée puisqu'elle n'existe plus en base.
+      if @agent.plage_ouverture_notification_level == "all"
+        plage_attributes = PlageOuverture.serialize_for_active_job(@plage_ouverture).merge(motif_ids: motif_ids)
+        Agents::PlageOuvertureMailer.with(plage_ouverture: plage_attributes).plage_ouverture_destroyed.deliver_later
+      end
       redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent), notice: "La plage d'ouverture a été supprimée."
     else
       render :edit
@@ -84,7 +87,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   private
 
   def set_agent
-    @agent = filter_params[:agent_id].present? ? policy_scope(Agent).find(filter_params[:agent_id]) : @plage_ouverture.agent
+    @agent = filter_params[:agent_id].present? ? policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(filter_params[:agent_id]) : @plage_ouverture.agent
   end
 
   def set_plage_ouverture

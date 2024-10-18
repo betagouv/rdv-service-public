@@ -1,16 +1,22 @@
-Pour tester : <`mettre ici l'url de la review app une fois déployé`>
+Closes #XXXX
+
+Review app : https://demo-rdv-solidarites-prXXXX.osc-secnum-fr1.scalingo.io/
+
+# Contexte
 
 Décrire le pourquoi des modifications
 
-Closes #issue_number
+# Solution
+
+Expliquer les choix techniques
 
 # Checklist
 
-Avant la revue :
+- [ ] Extraire dans d'autres PRs les changements indépendants, si nécessaire
 - [ ] Préparer des captures de l’interface avant et après
-- [ ] Nettoyer les commits pour faciliter la relecture
-- [ ] Supprimer les éventuels logs de test et le code mort
 
-Revue :
-- [ ] Relecture du code
-- [ ] Test sur la review app / en local
+## Captures d'écran
+
+Avant | Après
+:- | -:
+_mettre un screenshot ici_ | _et ici_

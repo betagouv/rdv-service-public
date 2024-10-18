@@ -3,7 +3,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
   around { |example| perform_enqueued_jobs { example.run } }
 
-  let!(:territory) { create(:territory, departement_number: "CN") }
+  let!(:territory) { create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER) }
   let!(:organisation_a) { create(:organisation, territory: territory, external_id: "123") }
   let!(:organisation_b) { create(:organisation, territory: territory, external_id: "456") }
 
@@ -38,6 +38,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
     it "works" do
       # On teste le domaine qui utilise les liens publics
       visit "http://www.rdv-aide-numerique-test.localhost/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
+      click_on("Motif A") # choix du motif
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)
@@ -56,7 +57,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
       open_email("davidnchicode@crotonmail.com")
       current_email.click_link("Confirmer mon compte")
-      fill_in "password", with: "correcthorse"
+      fill_in "password", with: "Rdvservicepublictest1!"
       click_on("Enregistrer")
 
       # Page de formulaire où l'on peut ajouter le nom de naissance, la date de naissance, le téléphone...
@@ -91,6 +92,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
     it "allows navigating back from sign in to motif selection" do
       visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}"
+      click_on("Motif A") # choix du motif
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)
@@ -102,7 +104,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
       click_on "modifier", match: :first
 
-      expect(page).to have_content("Sélectionnez un lieu de RDV")
+      expect(page).to have_content("Sélectionnez le motif de votre RDV")
     end
   end
 end

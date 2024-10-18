@@ -6,8 +6,9 @@ fr:
           attributes:
             base:
               duplicate: Il existe déjà un RDV au même moment, au même lieu, pour le même motif, avec les mêmes participant⋅es
+              missing_mobile_phone_or_email: "Vous devez indiquer un numéro de téléphone mobile ou une adresse email pour que l'usager puisse recevoir le lien de visioconférence."
             starts_at:
-              must_be_within_two_years: "doit être dans moins de deux ans."
+              format: "L’horaire du RDV %{message}"
             phone_number:
               missing_for_phone_motif: "Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique."
               format: "%{message}"

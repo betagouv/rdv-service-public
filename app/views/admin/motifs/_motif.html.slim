@@ -1,3 +1,5 @@
+- motif_policy = policy(motif, policy_class: Agent::MotifPolicy)
+
 tr
   td.pr-0.text-right
     span.badge.badge-pill.ml-0.mr-2 style="background: #{motif.color};" &nbsp;
@@ -5,7 +7,7 @@ tr
     = link_to motif.name, admin_organisation_motif_path(motif.organisation, motif)
     = motif_badges(motif, only: %i[for_secretariat follow_up collectif])
   td
-    = motif_badges(motif, only: %i[bookable_by_everyone bookable_by_invited_users])
+    = motif_badges(motif, only: %i[bookable_by_everyone bookable_by_agents_and_prescripteurs bookable_by_invited_users])
   - if @display_sectorisation_level
     td
       - if !motif.bookable_outside_of_organisation? || motif.follow_up?
@@ -21,12 +23,15 @@ tr
   td= motif.service.short_name
   td= motif.human_attribute_value(:location_type)
   td= "#{motif.default_duration_in_min} min."
-  - if policy([:agent, motif]).edit? || policy([:agent, motif]).destroy?
+  - if motif_policy.edit? || motif_policy.destroy?
     td
-      .d-flex
-        - if policy([:agent, motif]).edit?
-          div.mr-3= link_to edit_admin_organisation_motif_path(current_organisation, motif), title: "Modifier" do
+      .d-flex.flex-gap-1em
+        - if motif_policy.edit?
+          div= link_to edit_admin_organisation_motif_path(current_organisation, motif), title: "Modifier" do
             i.fa.fa-edit
-        - if policy([:agent, motif]).destroy?
+        - if motif_policy.duplicate?
+          div= link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), title: "Dupliquer" do
+            i.fa.fa-copy
+        - if motif_policy.destroy?
           div= link_to admin_organisation_motif_path(current_organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
             i.fa.fa-trash-alt

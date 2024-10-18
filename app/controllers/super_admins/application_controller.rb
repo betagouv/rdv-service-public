@@ -43,8 +43,6 @@ module SuperAdmins
     end
 
     def user_for_paper_trail
-      return "Local SuperAdmin" if current_super_admin.nil?
-
       current_super_admin.name_for_paper_trail
     end
 
@@ -60,6 +58,14 @@ module SuperAdmins
 
     def set_sentry_context
       Sentry.set_user({ email: current_super_admin.email }) if super_admin_signed_in?
+    end
+
+    def current_super_admin
+      if ENV["ADMIN_BASIC_AUTH_PASSWORD"].present?
+        return SuperAdmin.new(first_name: "Local", last_name: "SuperAdmin", role: :legacy_admin)
+      end
+
+      super
     end
   end
 end

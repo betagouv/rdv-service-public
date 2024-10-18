@@ -6,7 +6,7 @@ FactoryBot.define do
     uid { email }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
-    password { "correcthorse" }
+    password { "Correcth0rse!" }
     confirmed_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
     invitation_accepted_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
 

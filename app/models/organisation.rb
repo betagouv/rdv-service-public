@@ -5,7 +5,7 @@ class Organisation < ApplicationRecord
 
   # Attributes
   auto_strip_attributes :email, :name
-  enum verticale: {
+  enum :verticale, {
     rdv_insertion: "rdv_insertion",
     rdv_solidarites: "rdv_solidarites",
     rdv_aide_numerique: "rdv_aide_numerique",
@@ -60,7 +60,7 @@ class Organisation < ApplicationRecord
 
     where(id: attributions.pluck(:organisation_id))
   }
-  scope :order_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
+  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(organisations.name))")) }
   scope :contactable, lambda {
     where.not(phone_number: ["", nil])
       .or(where.not(website: ["", nil]))
@@ -96,5 +96,13 @@ class Organisation < ApplicationRecord
   def phone_number_is_valid?
     # Blank, Valid Phone, 4 digits phone (organisations only)
     phone_number.blank? || Phonelib.parse(phone_number).valid? || phone_number.match(/^\d{4}$/)
+  end
+
+  def humanized_phone_number
+    Phonelib.parse(phone_number).national
+  end
+
+  def sectorized?
+    sector_attributions.any? && motifs.active.sectorized.any?
   end
 end

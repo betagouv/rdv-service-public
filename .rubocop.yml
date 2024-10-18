@@ -9,8 +9,10 @@ AllCops:
     - "node_modules/**/*"
     - "db/schema.rb"
     - "db/migrate/*good_job*.rb"
+    - "scripts/screenshots/**/*"
   NewCops: enable
   TargetRubyVersion: 3.1.2
+  SuggestExtensions: false
 
 Bundler/OrderedGems:
   Exclude:
@@ -23,6 +25,9 @@ Layout/LineLength:
     - 'spec/jobs/outlook/update_event_job_spec.rb'
     - 'spec/models/concerns/outlook/synchronizable_spec.rb'
     - 'spec/models/outlook/event_spec.rb'
+    - 'spec/jobs/cron_job/destroy_old_rdvs_and_inactive_accounts_job_spec.rb'
+    - 'spec/services/participation_exporter_spec.rb'
+    - 'spec/services/participation_exporter_spec.rb'
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
@@ -38,35 +43,23 @@ Lint/AssignmentInCondition:
 Metrics/AbcSize:
   Enabled: false
 
-Metrics/BlockLength:
-  Exclude:
-    - "Guardfile"
-    - "scripts/*"
-    - "spec/**/*"
-    - "config/initializers/*"
-    - "config/environments/*"
-    - "config/routes.rb"
-    - "config/routes/api.rb"
-
 Metrics/CyclomaticComplexity:
   Max: 8 # default is 7
 
+
+# disable all Metrics Length cops. They don’t provide an explicit way to improve code.
+
+Metrics/BlockLength:
+  Enabled: false
+
 Metrics/ClassLength:
-  Max: 150
-  CountAsOne: ['array', 'hash', 'heredoc']
-  Exclude:
-    - 'app/models/rdv.rb'
-    - 'app/models/user.rb'
+  Enabled: false
 
 Metrics/ModuleLength:
-  Max: 150
-  CountAsOne: ['array', 'hash', 'heredoc']
+  Enabled: false
 
 Metrics/MethodLength:
-  CountAsOne: ['array', 'hash', 'heredoc']
-  Max: 20
-  Exclude:
-    - 'db/migrate/20210301135256_create_territories.rb'
+  Enabled: false
 
 Rails/ApplicationController:
   Exclude:
@@ -112,11 +105,25 @@ Rails/LexicallyScopedActionFilter:
 Rails/ActiveRecordCallbacksOrder:
   Enabled: false
 
+Rails/FindEach:
+  Enabled: false
+
+Rails/ThreeStateBooleanColumn:
+  Enabled: false
+
+Rails/WhereRange:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
 # This allows the standard syntax for the `change` matcher, see:
 # https://relishapp.com/rspec/rspec-expectations/docs/built-in-matchers/change-matcher
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'spec/**/*'
+
+# RSPEC rules
 
 RSpec/AnyInstance:
   Exclude:
@@ -133,10 +140,7 @@ RSpec/ContextWording:
   Enabled: False
 
 RSpec/ExampleLength:
-  Max: 30
-  Exclude:
-    - 'spec/features/**/*'
-    - 'spec/requests/api/**/*'
+  Enabled: false
 
 RSpec/LetSetup:
   Enabled: false
@@ -180,6 +184,33 @@ RSpec/MessageChain:
   Exclude:
     - "spec/jobs/outlook/mass_create_event_job_spec.rb"
 
+# Pending specs always rot, please create a GitHub issue so it can rot instead
+RSpec/Pending:
+  Enabled: true
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/ExampleWording:
+  Enabled: false
+
+RSpec/ScatteredSetup:
+  Enabled: false
+
+RSpec/ReceiveMessages:
+  Enabled: false
+
+Rails/ActionOrder:
+  Enabled: false
+
+RSpec/ChangeByZero:
+  Enabled: false
+
+RSpec/MetadataStyle:
+  Enabled: false
+
+#  STYLE rules
+
 Style/AsciiComments:
   Enabled: false
 
@@ -201,6 +232,9 @@ Style/GuardClause:
 Style/IfUnlessModifier:
   Enabled: false
 
+Style/MultilineBlockChain:
+  Enabled: false
+
 Style/OpenStructUse:
   Enabled: false
 
@@ -215,21 +249,12 @@ Naming/BlockForwarding:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
-  Exclude:
-    - "config/**/*"
 
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
-
-RSpec/ScatteredSetup:
-  Enabled: false
-
-RSpec/FilePath:
-  CustomTransform:
-    SfrMail2SmsMailer: sfr_mail_2_sms_mailer
 
 Style/NumericPredicate:
   Enabled: false
@@ -239,3 +264,23 @@ Style/NumericLiterals:
 
 Rails/UnusedIgnoredColumns:
   Enabled: false
+
+Style/SoleNestedConditional:
+  Enabled: false
+
+Style/FetchEnvVar:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false
+
+Style/ComparableClamp:
+  Enabled: false
+
+# cette vérification serait bien à mettre en place mais il y plus de 20 specs qui ne la respectent pas aujourd’hui
+RSpec/NoExpectationExample:
+  Enabled: false
+
+Rails/RedundantActiveRecordAllMethod:
+  Exclude:
+    - "db/migrate/**"

@@ -50,18 +50,8 @@ module ApiSpecSharedExamples
   end
 
   RSpec.shared_context "rdv_mairie_api_authentication", :rdv_mairie_api_authentication do
-    before do
-      ENV["ANTS_RDV_API_URL"] = "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api"
-      ENV["ANTS_RDV_OPT_AUTH_TOKEN"] = "fake-token"
-    end
-
-    around do |example|
-      previous_auth_token = ENV["ANTS_API_AUTH_TOKEN"]
-      ENV["ANTS_API_AUTH_TOKEN"] = ""
-
-      example.run
-
-      ENV["ANTS_API_AUTH_TOKEN"] = previous_auth_token
-    end
+    stub_env_with ANTS_RDV_API_URL: "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api",
+                  ANTS_RDV_OPT_AUTH_TOKEN: "fake-token",
+                  ANTS_API_AUTH_TOKEN: ""
   end
 end

@@ -6,11 +6,7 @@ RSpec.describe SearchController, type: :controller do
   let!(:departement_number) { "75" }
   let!(:city_code) { "75007" }
   let!(:address) { "20 avenue de ségur" }
-  let!(:invitation_token) do
-    user.assign_rdv_invitation_token
-    user.save!
-    user.rdv_invitation_token
-  end
+  let!(:invitation_token) { user.set_rdv_invitation_token! }
 
   let!(:user) { create(:user, organisations: [organisation]) }
 
@@ -38,7 +34,7 @@ RSpec.describe SearchController, type: :controller do
 
   let!(:creneaux_search) do
     instance_double(
-      Users::CreneauxSearch,
+      CreneauxSearch::ForUser,
       creneaux: [],
       next_availability: build(:creneau, starts_at: Time.zone.parse("2019-08-05 08h00"))
     )
@@ -145,7 +141,7 @@ RSpec.describe SearchController, type: :controller do
 
     describe "lieu selection" do
       before do
-        allow(Users::CreneauxSearch).to receive(:new).with(
+        allow(CreneauxSearch::ForUser).to receive(:new).with(
           user: nil,
           motif: motif,
           lieu: lieu,
@@ -157,6 +153,7 @@ RSpec.describe SearchController, type: :controller do
       it "lists the the available lieux linked to the motifs" do
         get :search_rdv, params: {
           address: address, departement: departement_number, city_code: city_code,
+          motif_name_with_location_type: motif.name_with_location_type,
         }
         expect(subject).to include("Lieu numéro 1")
         expect(subject).not_to include("Lieu numéro 2")
@@ -169,9 +166,10 @@ RSpec.describe SearchController, type: :controller do
           lieu_id: plage_ouverture.lieu_id,
           agent: plage_ouverture.agent
         )
-        allow(NextAvailabilityService).to receive(:find).and_return(slot)
+        allow(CreneauxSearch::NextAvailability).to receive(:find).and_return(slot)
         get :search_rdv, params: {
           address: address, departement: departement_number, city_code: city_code,
+          motif_name_with_location_type: motif.name_with_location_type,
         }
         expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
       end
@@ -179,7 +177,7 @@ RSpec.describe SearchController, type: :controller do
 
     describe "creneaux selection" do
       before do
-        allow(Users::CreneauxSearch).to receive(:new).with(
+        allow(CreneauxSearch::ForUser).to receive(:new).with(
           user: nil,
           motif: motif,
           lieu: lieu,
@@ -191,7 +189,7 @@ RSpec.describe SearchController, type: :controller do
       context "creneaux are available soon" do
         let!(:creneaux_search) do
           instance_double(
-            Users::CreneauxSearch,
+            CreneauxSearch::ForUser,
             creneaux: [build(:creneau, starts_at: Time.zone.parse("2019-07-22 08h00"))]
           )
         end
@@ -199,6 +197,7 @@ RSpec.describe SearchController, type: :controller do
         it "returns a creneau" do
           get :search_rdv, params: {
             lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code,
+            motif_name_with_location_type: motif.name_with_location_type,
           }
           expect(subject).to include("08:00")
         end
@@ -207,7 +206,7 @@ RSpec.describe SearchController, type: :controller do
       context "when first availability is in the future" do
         let!(:creneaux_search) do
           instance_double(
-            Users::CreneauxSearch,
+            CreneauxSearch::ForUser,
             creneaux: [],
             next_availability: build(:creneau, starts_at: Time.zone.parse("2019-08-05 08h00"))
           )
@@ -216,6 +215,7 @@ RSpec.describe SearchController, type: :controller do
         it "returns next availability" do
           get :search_rdv, params: {
             lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code,
+            motif_name_with_location_type: motif.name_with_location_type,
           }
           expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
         end

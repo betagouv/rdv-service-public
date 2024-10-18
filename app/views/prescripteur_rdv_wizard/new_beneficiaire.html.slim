@@ -19,13 +19,14 @@ main.container
             - if @rdv_wizard.rdv.requires_ants_predemande_number?
               .row
                 .col-12
-                  = f.input :ants_pre_demande_number, label: "Numéro de pré-demande ANTS", required: true
+                  = f.input :ants_pre_demande_number, required: true, input_html: {style: "text-transform: uppercase;"}
 
-            = render("model_errors", model: @beneficiaire, f: f)
             .form-group
               .row
                 .col-12
                   = f.input :phone_number, as: :tel, placeholder: "06134567890", hint: "Un SMS de confirmation et un SMS de rappel seront envoyés à ce numéro"
 
-            .form-group.mb-0.text-center
+            = render("model_errors", model: @beneficiaire, f: f)
+
+            .form-group.mb-0.rdv-text-align-center
               = f.submit "Confirmer le rendez-vous", class: "btn btn-primary"

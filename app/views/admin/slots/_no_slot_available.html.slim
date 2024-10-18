@@ -1,7 +1,0 @@
-.text-center.mt-2
-  p= "Aucun créneau disponible dans l'organisation #{@form.organisation.name} pour les filtres sélectionnés."
-  - if show_agent_prescription_feature?(user_provided: @form.user_ids.any?)
-    p
-      | Vous pouvez aussi élargir votre recherche aux créneaux ouverts à la prescription dans d'autres organisations.
-    p
-      = link_to("Élargir la recherche", search_creneau_admin_organisation_prescription_path(user_ids: @form.user_ids, departement: current_territory.departement_number), class: "btn btn-outline-primary")

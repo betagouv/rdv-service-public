@@ -46,15 +46,16 @@ class Agent::UserPolicy < DefaultAgentPolicy
     end
   end
 
-  # Cette scope est utilisée lors des recherches usager tronquées sur tout le territoire
+  # Scope utilisée lors des recherches usager sur tout le territoire (avec résultats tronqués)
   class TerritoryScope < Scope
     def resolve
-      scope.joins(:territories).where(territories: current_agent.organisations_territory_ids)
-    end
-
-    def agent_in_cnfs_or_mairies_territories?
-      cnfs_and_mairies_territory_ids = [Territory.mairies&.id, Territory.find_by(departement_number: "CN")&.id].compact
-      (cnfs_and_mairies_territory_ids & current_agent.organisations.pluck(:territory_id)).any? # & does an array overlap here
+      # On a un seul territoire pour tous les CNFS, idem pour les mairies,
+      # on veut donc *pas* décloisonner la recherche sur tout le territoire.
+      if current_organisation.territory.mairies? || current_organisation.territory.cn?
+        super
+      else
+        scope.joins(:territories).where(territories: current_organisation.territory)
+      end
     end
   end
 
@@ -70,7 +71,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
     # returns ids for persisted join records so it doesn't work for new records
     # nor updates. we cannot either use pluck for the same reason
 
-    authorized_organisation_ids = \
+    authorized_organisation_ids =
       if current_organisation
         if current_organisation.territory.visible_users_throughout_the_territory
           current_organisation.territory.organisation_ids
@@ -81,7 +82,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
         current_agent.organisation_ids
       end
 
-    (@record.user_profiles.map(&:organisation_id) & authorized_organisation_ids).present?
+    (@record.user_profiles.map(&:organisation_id) & authorized_organisation_ids).present? # rubocop:disable Style/ArrayIntersect
 
     # also, this is not strictly speaking correct. this only checks that the
     # resulting user will belong to the current organisation, but it should also

@@ -1,10 +1,11 @@
 require "swagger_helper"
 
-RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.json" do
+RSpec.describe "Available Creneaux Count for Invitation" do
   with_examples
+  let!(:now) { Time.zone.parse("2023-10-23 16:00") }
 
   before do
-    travel_to(Time.zone.parse("2023-10-23 16:00"))
+    travel_to(now)
   end
 
   path "/api/rdvinsertion/invitations/creneau_availability" do
@@ -103,9 +104,9 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
       let!(:plage_ouverture_follow_up) { create(:plage_ouverture, agent: agent, motifs: [motif_follow_up], lieu: lieu2, organisation: organisation1) }
       let!(:plage_ouverture_with_secto) { create(:plage_ouverture, motifs: [motif_with_secto], lieu: lieu, organisation: org_with_secto) }
 
-      let!(:lieu) { create(:lieu, name: "Bordeaux Centre", address: "Place de la bourse, 33000 Bordeaux", organisation: organisation1) }
-      let!(:lieu2) { create(:lieu, name: "Bruges", address: "3 Rue Gabriel Fauré, 33520 Bruges", organisation: organisation1) }
-      let!(:lieu3) { create(:lieu, name: "Loin de Bordeaux", address: "7 Av. du Commandant l'Herminier, 33740 Arès", organisation: other_org_without_po) }
+      let!(:lieu) { create(:lieu, name: "Bordeaux Centre", address: "Place de la bourse, Bordeaux, 33000", organisation: organisation1) }
+      let!(:lieu2) { create(:lieu, name: "Bruges", address: "3 Rue Gabriel Fauré, Bruges, 33520", organisation: organisation1) }
+      let!(:lieu3) { create(:lieu, name: "Loin de Bordeaux", address: "7 Av. du Commandant l'Herminier, Arès, 33740", organisation: other_org_without_po) }
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
@@ -117,6 +118,19 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
 
         it "Quand il n'y a pas de params" do
           expect(parsed_response_body["creneau_availability"]).to be_falsey
+        end
+
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "invitations",
+            action_name: "creneau_availability",
+            agent_id: agent.id,
+            received_at: now
+          )
+          expect(ApiCall.first.raw_http["method"]).to eq("GET")
+          expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
+          expect(ApiCall.first.raw_http["headers"]).not_to include("rack.session.options")
+          expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
         end
 
         context "Si le lieu n'existe pas" do
@@ -174,6 +188,18 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
           let!(:"organisation_ids[]") { [organisation1.id] }
 
           it { expect(parsed_response_body["creneau_availability"]).to be_truthy }
+
+          it "logs the API call" do
+            expect(ApiCall.first.attributes.symbolize_keys).to include(
+              controller_name: "invitations",
+              action_name: "creneau_availability",
+              agent_id: agent.id,
+              received_at: now
+            )
+            expect(ApiCall.first.raw_http["method"]).to eq("GET")
+            expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
+            expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
+          end
         end
 
         context "Avec le params organisation_ids[]" do

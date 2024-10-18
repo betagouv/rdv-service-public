@@ -16,13 +16,13 @@ RSpec.describe "Agent can update a RDV", js: true do
     visit edit_admin_organisation_rdv_path(organisation, rdv)
     click_link("Définir un lieu ponctuel.")
     fill_in "Nom", with: "Café de la gare"
-    fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
+    fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000"
     page.execute_script("document.querySelector('input#rdv_lieu_attributes_latitude').value = '48.583844'")
     page.execute_script("document.querySelector('input#rdv_lieu_attributes_longitude').value = 7.735253")
     click_button "Enregistrer"
 
     expect(page).to have_content("Café de la gare")
-    expect(page).to have_content("3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est")
+    expect(page).to have_content("3 Place de la Gare, Strasbourg, 67000")
     expect(page).to have_selector(".badge-info", text: /Ponctuel/)
   end
 

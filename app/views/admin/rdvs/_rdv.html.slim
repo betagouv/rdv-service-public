@@ -13,7 +13,7 @@
         = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
   hr.my-0.mx-3
   .card-body.py-3.row
-    .col-md-6.col-sm-12
+    .col-md-8.col-sm-12
       .d-flex.justify-content-between.flex-wrap.mb-1
         p.card-text
           i.fa.fa-fw.fa-calendar.mr-1.text-primary-blue
@@ -23,18 +23,18 @@
             = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, rdv.agents.first, selected_event_id: rdv.id, date: rdv.starts_at.to_date)
       = render "admin/rdvs/rdv_details", rdv: rdv
 
-    .col-md-6.col-sm-12
+    .col-md-4.col-sm-12
       div.d-flex.justify-content-end.mt-1
         = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
         - if rdv.individuel?
-          = link_to t("admin.rdvs.show.duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
+          = link_to t("admin.rdvs.show.duplicate"), admin_organisation_creneaux_search_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
         - else
           = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
 
   .mx-3
   - if rdv.users.any?
     div class=("users-details collapse p-3 pt-0")
-      h5.text-center.strong.mb-3> Participants :
+      h5.rdv-text-align-center.strong.mb-3> Participants&nbsp;:
       .row
         - rdv.users.sort_by { _1.last_name.downcase }.each do |user|
           .col-4
@@ -59,9 +59,9 @@
         .d-flex.justify-content-start.mb-2
           - if rdv.remaining_seats? && rdv.not_cancelled?
             = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "btn btn-outline-primary btn-sm" do
-              span
-                = "Ajouter un participant"
               span.ml-1
                 i.fa.fa-fw.fa-user-plus>
+              span
+                = "Ajouter un participant"
           .text-muted.align-self-center.ml-2
             = render "admin/rdvs/participants_count", rdv: rdv

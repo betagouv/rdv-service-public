@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# from https://stackoverflow.com/a/69014550
+
+pid = Process.spawn("bundle exec rails s")
+sleep 5 # time in seconds you need to ensure the server boots without errors
+
+Process.kill("INT", pid) # send ^C, gracefully terminate the server
+
+_, status = Process.wait2(pid) # wait for the server termination and get its exit code
+
+exit status.exitstatus

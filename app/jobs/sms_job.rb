@@ -4,28 +4,27 @@ class SmsJob < ApplicationJob
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
 
-  def perform(*_args, **kwargs)
-    sender_name = kwargs[:sender_name]
-    phone_number = kwargs[:phone_number]
-    content = kwargs[:content]
-    receipt_params = kwargs[:receipt_params]
+  discard_on(ActiveJob::DeserializationError) do |_job, error|
+    # Si le RDV a été supprimé avant l'exécution du job (ou d’un retry)
+    # C’est un comportement attendu, on ne veut pas retry ni être notifié sur Sentry
+    next if error.cause.is_a?(ActiveRecord::RecordNotFound)
 
-    # TODO: retirer la branche else 2 semaines après le merge (elle gère les args des anciens jobs)
-    if kwargs[:territory_id]
-      territory = Territory.find(kwargs[:territory_id])
-      provider = territory&.sms_provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
-      api_key = territory&.sms_configuration || ENV["DEFAULT_SMS_PROVIDER_KEY"]
-    else
-      provider = kwargs[:provider]
-      api_key = kwargs[:api_key]
-    end
+    # dans le cas encore jamais vu où la désérialisation échouerait pour d’autres raisons
+    # il ne sert à rien de retry non plus, mais on aimerait en être notifié
+    Sentry.capture_exception(error)
+  end
+
+  def perform(sender_name:, phone_number:, content:, territory_id:, receipt_params:)
+    territory = Territory.find(territory_id)
+    provider = ENV["FORCE_SMS_PROVIDER"].presence || territory&.sms_provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
+    api_key = territory&.sms_configuration || ENV["DEFAULT_SMS_PROVIDER_KEY"]
 
     SmsSender.perform_with(sender_name, phone_number, content, provider, api_key, receipt_params)
   end
 
-  # Don't log first failures to Sentry, to prevent noise
+  # Don't log first retries to Sentry, to prevent noise
   # on temporary unavailability of an external service.
-  def log_failure_to_sentry?(_exception)
-    executions > 2
+  def capture_sentry_warning_for_retry?(_exception)
+    super && executions > 2
   end
 end

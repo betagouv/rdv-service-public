@@ -1,55 +1,12 @@
-section.bg-primary.p-4
-  .container.mb-4
-    #search_form
-      = simple_form_for :search, url: prendre_rdv_path, method: :get do |f|
-        = f.input :departement, as: :hidden, input_html: { name: "departement", value: context.departement }
-        - if context.prescripteur?
-          = f.input :prescripteur, as: :hidden, input_html: { name: "prescripteur", value: 1 }
-        = f.input :city_code, as: :hidden, input_html: { name: "city_code", value: context.city_code }
-        = f.input :street_ban_id, as: :hidden, input_html: { name: "street_ban_id", value: context.street_ban_id }
-        = f.input :latitude, as: :hidden, input_html: { name: "latitude", value: context.latitude }
-        = f.input :longitude, as: :hidden, input_html: { name: "longitude", value: context.longitude }
-        .form-row.d-flex.justify-content-md-center
-          / TODO: change input name to address and change whereInput in application.js
-          .col-lg-9= f.input :where, label: "Votre adresse", placeholder: "ex : 21 rue Anatole France, Calais", input_html: { value: context.address, name: "address", class: "form-control-lg places-js-container" }, wrapper_html: { class: "mb-1 mb-lg-0" }
-          .col-lg-3.align-self-end
-            = f.button :button, id: "search_submit", class: "btn-white btn-lg w-100 text-center", disabled: true do
-              i.fa.fa-search>
-              | Rechercher
+= render "search/address_selection/search_form_section", context: context
+= render "search/address_selection/steps_section"
 
-section
-  .container
-    .row.mt-4
-      .col-lg-12
-        h2.text-center  Comment ça marche ?
-    .row.mt-5
-      .col-lg-3
-        .text-center.mb-3
-          .d-flex.justify-content-center
-            = image_tag "welcome/location.svg", class: "img-circle mb-3", alt: "premièrement"
-          span.text-primary.mt-3 Choisir votre adresse
-      .col-lg-3
-        .text-center.mb-3
-          .d-flex.justify-content-center
-            = image_tag "welcome/service.svg", class: "img-circle mb-3", alt: "deuxièmement"
-          span.text-primary.mt-3 Choisir un service
-      .col-lg-3
-        .text-center.mb-3
-          .d-flex.justify-content-center
-            = image_tag "welcome/motif.svg", class: "img-circle mb-3", alt: "troisièmement"
-          span.text-primary.mt-3 Choisir un motif
-      .col-lg-3
-        .text-center.mb-3
-          .d-flex.justify-content-center
-            = image_tag "welcome/creneau.svg", class: "img-circle mb-3", alt: "et quatrièmement"
-          span.text-primary.mt-3 Choisir un créneau
-
-section.bg-lightturquoise.p-5
-  .container
-    .row
-      .col-md-3.align-items-center
+section.rdv-background-color-alt-green-menthe.fr-py-8w.rdv-text-align-center.rdv-text-align-md-left
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-3.align-items-center
         = image_tag "welcome/agent.svg", class: "mx-auto d-block", alt: ""
-      .col-md-9
-        h3.mb-2.text-primary Vous êtes employé⋅e de mairie ?
-        p.lead Faciliter la prise de rendez-vous avec les citoyens.
+      .fr-col-12.fr-col-md-9
+        .fr-text--xl.mb-2.rdv-color-text-action-high-blue-ecume Vous êtes employé⋅e de mairie ?
+        p Faciliter la prise de rendez-vous avec les citoyens.
         = link_to "En savoir plus", presentation_agent_path, class: "btn btn-tertiary"

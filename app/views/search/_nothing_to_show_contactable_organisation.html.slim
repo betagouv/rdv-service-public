@@ -1,0 +1,19 @@
+.fr-col-12.fr-col-md-6
+  .card
+    .card-body
+      h5.card-title #{organisation.name}
+      ul.list-unstyled
+        - if organisation.phone_number.present?
+          li.mb-2
+            strong> Téléphone&nbsp;:
+            | #{phone_to(organisation.humanized_phone_number)}
+        - if organisation.email.present?
+          li.mb-2
+            strong> Email&nbsp;:
+            | #{mail_to(organisation.email)}
+        - if organisation.website.present?
+          li.mb-2
+            strong> Site web&nbsp;:
+            = link_to organisation.website, target: "_blank" do
+              span> #{organisation.website}
+              i.fa.fa-external-link-alt>

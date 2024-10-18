@@ -19,7 +19,7 @@
 
   .card-footer
     - if current_user&.participation_for(rdv)&.not_cancelled?
-      .text-muted Vous êtes déjà inscrit pour cet atelier.
+      .rdv-color-text-mention-grey Vous êtes déjà inscrit pour cet atelier.
     - else
       = link_to @context.wizard_after_creneau_selection_path(rdv_collectif_id: rdv.id), class: "d-flex card-text mb-2" do
         i.fa.fa-fw.fa-user-plus>

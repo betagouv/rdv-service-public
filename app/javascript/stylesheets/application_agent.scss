@@ -9,11 +9,12 @@
 @import "~select2-bootstrap4-theme/dist/select2-bootstrap4.min";
 
 // Plugins
-@import '@fullcalendar/core/main';
-@import '@fullcalendar/daygrid/main';
-@import '@fullcalendar/timegrid/main';
-@import '@fullcalendar/list/main';
+@import "@fullcalendar/core/main";
+@import "@fullcalendar/daygrid/main";
+@import "@fullcalendar/timegrid/main";
+@import "@fullcalendar/list/main";
 @import "jquery-datetimepicker/build/jquery.datetimepicker.min";
+@import "./headway";
 
 // Structure
 @import "./structure/general";

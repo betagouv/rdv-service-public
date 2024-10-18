@@ -1,4 +1,4 @@
-.container
+.fr-container
   .card
     .card-body
       = link_to path_to_service_selection(params), class: "d-block stretched-link" do
@@ -6,14 +6,14 @@
           .col-auto.align-self-center
             i.fa.fa-chevron-left
           .col
-            h2.pb-1.mb-1 = context.service.name
-.container
+            h2.fr-pb-0.fr-mb-0 = context.service.name
+.fr-container
   - if context.unique_motifs_by_name_and_location_type.empty?
     = render "search/nothing_to_show", context: context
   - else
-    h2.font-weight-bold Sélectionnez le motif de votre RDV :
+    h2.rdv-font-weight-700 Sélectionnez le motif de votre RDV&nbsp;:
     - context.unique_motifs_by_name_and_location_type.each do |motif|
       .card.mb-3
-        = link_to(prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))) do
+        = link_to prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type)), class: "rdv-background-image-none" do
           = render "search/motif_selection_card", motif: motif
   = render "search/referent_booking_card", context: context

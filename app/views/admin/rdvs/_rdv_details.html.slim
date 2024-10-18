@@ -14,24 +14,36 @@
         - if rdv.context.blank?
           .text-muted = t(".empty_context")
         - else
-          .text-muted Contexte :
+          .text-muted Contexte&nbsp;:
           .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
 
 - if rdv.phone?
   p.card-text
     i.fa.fa-fw.fa-phone.text-primary-blue>
     | RDV téléphonique
+- elsif rdv.motif.visio?
+  p.card-text.mb-0
+    - should_display_link = current_agent.in?(rdv.agents) || current_agent.secretaire?
+    i.fa.fa-video-camera.text-primary-blue>
+    = "Par visioconférence "
+    - if should_display_link
+      = link_to(rdv.visio_url, target: :_blank) do
+        = "démarrer la visioconférence "
+        i.fa.fa-external-link[aria-hidden="true"]
+    - else
+      br
+      small.text-muted = "Le lien de visioconférence s'affiche uniquement pour l'agent qui assure le RDV et les secrétaires."
+
 - else
   .d-flex.card-text.mb-1
     div.mr-1
       i.fa.fa-fw.fa-map-marker.text-primary-blue>
     p.card-text
       - if rdv.home?
-        | RDV à domicile :
+        | RDV à domicile&nbsp;:
         = human_location(rdv)
       - elsif rdv.public_office?
         = human_location(rdv)
-
 .d-flex.card-text
   div.mr-1
     i.fa.fa-fw.fa-user.text-primary-blue>

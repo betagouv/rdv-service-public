@@ -42,7 +42,7 @@ all_cdad_agent = Agent.new(
   uid: "secretariat@cdad.fr",
   first_name: "Maxime",
   last_name: "Secrétariat",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
@@ -62,7 +62,7 @@ cdad1_agent = Agent.new(
   uid: "cdad1@cdad.fr",
   first_name: "Basic",
   last_name: "CDAD1",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
@@ -81,7 +81,7 @@ cdad1_admin = Agent.new(
   uid: "cdad1_admin@cdad.fr",
   first_name: "Admin",
   last_name: "CDAD1",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
@@ -100,7 +100,7 @@ cdad2_agent = Agent.new(
   uid: "cdad2@cdad.fr",
   first_name: "Basic",
   last_name: "CDAD2",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
@@ -119,7 +119,7 @@ cdad2_admin = Agent.new(
   uid: "cdad2_admin@cdad.fr",
   first_name: "Admin",
   last_name: "CDAD2",
-  password: "lapinlapin",
+  password: "Rdvservicepublictest1!",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
@@ -179,7 +179,7 @@ lieu1_bordeaux = Lieu.create!(
   availability: :enabled,
   phone_number: "05.47.33.91.17",
   phone_number_formatted: "+33547339117",
-  address: "30 rue des Frères Bonie, 33000 BORDEAUX"
+  address: "30 rue des Frères Bonie, BORDEAUX, 33000"
 )
 Lieu.create!(
   name: "Point-justice de LANGON",
@@ -189,7 +189,7 @@ Lieu.create!(
   availability: :enabled,
   phone_number: "05.57.36.25.54",
   phone_number_formatted: "+330557362554",
-  address: "Résidence de l'Horloge, Place de l'horloge, 33210 LANGON"
+  address: "Résidence de l'Horloge, Place de l'horloge, LANGON, 33210"
 )
 
 ## Plages d'Ouvertures

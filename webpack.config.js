@@ -8,6 +8,7 @@ module.exports = {
     administrate: "./app/javascript/administrate",
     application: "./app/javascript/application",
     application_agent: "./app/javascript/application_agent",
+    application_agent_config: "./app/javascript/application_agent_config",
     charts: "./app/javascript/charts",
     mail: "./app/javascript/mail",
     instance_name: "./app/javascript/instance_name",
@@ -45,7 +46,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
-      Holder: 'holderjs',
       Popper: ['popper.js', 'default'],
       Rails: ['@rails/ujs']
     }),

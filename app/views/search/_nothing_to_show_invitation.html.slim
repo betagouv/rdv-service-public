@@ -1,0 +1,19 @@
+- if context.contactable_organisations.present?
+  - if context.contactable_organisations.one?
+    p Vous pouvez contacter l'organisation pour demander l'ouverture de créneaux.
+  - else
+    p Vous pouvez contacter les organisations suivantes pour leur demander d'ouvrir des créneaux.
+  .row
+    - context.contactable_organisations.each do |organisation|
+      = render "nothing_to_show_contactable_organisation", organisation: organisation
+
+  p Ou leur envoyer un email en cliquant sur le bouton ci-dessous.
+
+- email = context.organisations_emails.presence || "support@rdv-insertion.fr"
+= mail_to email,
+  subject: "[Problème Invitation. Créneaux Indisponibles, motif : #{context.motif_category_name}]",
+  cc: "#{'support@rdv-insertion.fr' unless context.organisations_emails.empty?}",
+  class: "btn btn-primary" do
+  span>
+    i.fa.fa-envelope
+  | Envoyer une demande d'ouverture de créneaux

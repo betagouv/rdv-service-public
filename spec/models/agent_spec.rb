@@ -25,6 +25,13 @@ RSpec.describe Agent, type: :model do
       expect(agent.email_original).to eq("karim@le64.fr")
     end
 
+    it "prepend deleted_ to inclusion_connect_open_id_sub" do
+      agent = create(:agent, email: "karim@le64.fr", inclusion_connect_open_id_sub: "123456", organisations: [])
+      create(:rdv, agents: [agent])
+      agent.soft_delete
+      expect(agent.inclusion_connect_open_id_sub).to eq("deleted_123456")
+    end
+
     it "update mail with a unique value" do
       agent = create(:agent, basic_role_in_organisations: [])
       create(:rdv, agents: [agent])
@@ -68,23 +75,25 @@ RSpec.describe Agent, type: :model do
   end
 
   describe "password validations" do
-    let(:organisation) { create(:organisation) }
+    it "provide the agent with explanations" do
+      agent = build(:agent)
 
-    let(:agent) do
-      create(:agent, admin_role_in_organisations: [organisation]).reload # The reload makes sure the role is in memory
-    end
-
-    xit "has only one validation for password length" do
-      # Actuellement, ce test ne passe pas parce la validation est exécutée deux fois :
-      # - une fois sur agent.password
-      # - une fois sur agent.roles.agent.password
-      # La deuxième validation est causée par le fait qu'on a un cycle de accepts_nested_attributes_for de agent, vers roles, puis à nouveau vers l'agent.
-      # J'ai essayé d'ajouter un inverse_of sur le has_many, mais sans succès.
-      # Pour le moment, cette double validation est contournée en dupliquant les clés de traductions des erreurs de agent vers agents/roles/agent, puis en faisant un uniq
-      # sur les messages d'erreur.
       agent.password = "123"
       agent.validate
-      expect(agent.errors.count).to eq(1)
+      expected_error_messages = [
+        "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères",
+        "Votre mot de passe doit comporter au moins une majuscule.",
+        "Votre mot de passe doit comporter au moins un caractère spécial, par exemple un signe de ponctuation.",
+      ]
+      expect(agent.errors).to match_array(expected_error_messages)
+
+      agent.password = "123!M"
+      agent.validate
+      expect(agent.errors).to contain_exactly("Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères")
+
+      agent.password = "123!Merci c'est assez long"
+      agent.validate
+      expect(agent).to be_valid
     end
   end
 
@@ -130,12 +139,12 @@ RSpec.describe Agent, type: :model do
   describe "#multiple_organisations_access?" do
     it "return true with agent with 2 organisations" do
       agent = create(:agent, organisations: create_list(:organisation, 2))
-      expect(agent.multiple_organisations_access?).to eq(true)
+      expect(agent.multiple_organisations_access?).to be(true)
     end
 
     it "return false when agent allow to access multiple organisations" do
       agent = create(:agent, organisations: [create(:organisation)])
-      expect(agent.multiple_organisations_access?).to eq(false)
+      expect(agent.multiple_organisations_access?).to be(false)
     end
   end
 

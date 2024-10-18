@@ -1,0 +1,4 @@
+fr:
+  export_type:
+    rdv_export: "Export de RDV"
+    participations_export: "Export de RDV par usager"

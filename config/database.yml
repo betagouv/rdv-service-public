@@ -25,9 +25,9 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   # And also GoodJob doc: https://github.com/bensheldon/good_job#database-connections
-  # For web containers, pool size is puma's default number of threads.
+  # For web containers, pool size is puma's default number of threads, plus the number of threads defined by global_executor_concurrency
   # For GoodJob container, pool size is GOOD_JOB_MAX_THREADS (5) + 3 (1 for LISTEN/NOTIFY, 2 for CRON)
-  pool: <%= $PROGRAM_NAME.include?("good_job") ? ENV.fetch("GOOD_JOB_MAX_THREADS", 5).to_i + 3 : ENV.fetch("RAILS_MAX_THREADS", 5).to_i %>
+  pool: <%= $PROGRAM_NAME.include?("good_job") ? ENV.fetch("GOOD_JOB_MAX_THREADS", 5).to_i + 3 : (ENV.fetch("RAILS_MAX_THREADS", 5).to_i + 4) %>
 
 development:
   <<: *default

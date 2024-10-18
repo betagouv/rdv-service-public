@@ -18,12 +18,9 @@ RSpec.describe "Agent can create user" do
     expect_page_title("Nouvel usager")
   end
 
-  context "ants_pre_demander number is not used" do
+  context "ants_pre_demander number is validated and has no appointment declared yet" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: { ants_pre_demande_number => { appointments: [] } }.to_json
-      )
+      stub_ants_status("1122334455")
     end
 
     it "creates user with no warning" do
@@ -31,33 +28,40 @@ RSpec.describe "Agent can create user" do
       fill_in :user_last_name, with: "Lebreton"
       fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
       click_button "Créer"
-      expect(page).not_to have_content(
-        "Le numéro de pré-demande ANTS renseigné, est déjà utilisé pour une prise de RDV auprès de Mairie de Sannois. Veuillez dans un premier temps, annuler ce RDV en cliquant ici"
-      )
+      expect(page).not_to have_content("déjà utilisé")
       expect_page_title("Marco LEBRETON")
-      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to eq(true)
+      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to be(true)
     end
   end
 
-  context "ants_pre_demander is already used" do
+  context "when using a pre-demande number in lowercase" do
+    let!(:call_to_status_with_upcased_number) { stub_ants_status("ABCD1234EF", appointments: []) }
+
+    it "considers it as uppercase when calling ANTS API and saving it in user" do
+      fill_in :user_first_name, with: "Marco"
+      fill_in :user_last_name, with: "Lebreton"
+      fill_in :user_ants_pre_demande_number, with: "abcd1234ef"
+      expect { click_button "Créer" }.to change(User, :count).by(1)
+      expect(User.last.ants_pre_demande_number).to eq("ABCD1234EF")
+      expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
+    end
+  end
+
+  context "ants_pre_demander number is validated but already has appointments" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: {
-          ants_pre_demande_number => {
-            appointments: [
-              {
-                management_url: "https://gerer-rdv.com",
-                meeting_point: "Mairie de Sannois",
-                appointment_date: "01/01/2030",
-              },
-            ],
+      stub_ants_status(
+        "1122334455",
+        appointments: [
+          {
+            management_url: "https://gerer-rdv.com",
+            meeting_point: "Mairie de Sannois",
+            appointment_date: "2023-04-03T08:45:00",
           },
-        }.to_json
+        ]
       )
     end
 
-    it "creates user with no warning" do
+    it "displays a warning but allows user creation" do
       fill_in :user_first_name, with: "Marco"
       fill_in :user_last_name, with: "Lebreton"
       fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
@@ -67,7 +71,22 @@ RSpec.describe "Agent can create user" do
       )
       click_button("Confirmer en ignorant les avertissements")
       expect_page_title("Marco LEBRETON")
-      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to eq(true)
+      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to be(true)
+    end
+  end
+
+  context "ants_pre_demander number is consumed (dossier déjà envoyé et instruit en préfecture)" do
+    before do
+      stub_ants_status("1122334455", status: "consumed")
+    end
+
+    it "prevents agent from creating the user / RDV" do
+      fill_in :user_first_name, with: "Marco"
+      fill_in :user_last_name, with: "Lebreton"
+      fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
+      click_button "Créer"
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end
 end

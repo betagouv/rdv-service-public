@@ -91,4 +91,19 @@ RSpec.describe "Agent can CRUD absences" do
       expect(page).not_to have_content(future_absence.title)
     end
   end
+
+  describe "sending an email notification upon deletion" do
+    let!(:absence) { create(:absence, agent: agent, start_time: Tod::TimeOfDay.new(8, 30), end_time: Tod::TimeOfDay.new(9, 30)) }
+
+    it "works" do
+      click_link "Indisponibilités"
+      expect { click_link("Supprimer") }.to change(enqueued_jobs, :size).by(1)
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(absence.agent.email).size }.by(1)
+      open_email(absence.agent.email)
+      expect(current_email.subject).to eq("RDV Solidarités - Indisponibilité supprimée - #{absence.title}")
+      expect(current_email.body).to include(absence.title)
+      expect(current_email.body).to include(absence.agent.full_name)
+      expect(current_email.body).to include("de 08:30 à 09:30") # on s'assure que les heures sont bien sérialisées et dé-sérialisées (objets Tod::TimeOfDay)
+    end
+  end
 end

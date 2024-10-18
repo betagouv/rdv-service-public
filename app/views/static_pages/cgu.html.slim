@@ -1,121 +1,119 @@
-- content_for :title, "Conditions d’utilisation de la plateforme"
+- content_for :title, "Conditions d’utilisation de la plateforme #{current_domain.name}"
 
-.container.mt-3
-  .row.align-items-center.mb-4.content
-    .col-lg-8
-      h1.text-dark.mb-3 Conditions d’utilisation de la plateforme #{current_domain.name}
-      p Les présentes conditions générales d’utilisation (dites « CGU ») encadrent les différents usages de la Plateforme "#{current_domain.name}" et définissent les conditions d’accès et d’utilisation des services par l’Utilisateur.
-      h2 Article 1 - Champ d'application
+.fr-grid-row
+  .fr-col-md-8
+    p Les présentes conditions générales d’utilisation (dites «&nbsp;CGU&nbsp;») encadrent les différents usages de la Plateforme "#{current_domain.name}" et définissent les conditions d’accès et d’utilisation des services par l’Utilisateur.
+    h2 Article 1 - Champ d'application
 
-      p La plateforme "#{current_domain.name} " est à l'initiative de l’ Agence Nationale de la Cohésion des Territoires (ANCT).
-      p Cette plateforme inclut le site principal RDV Solidarités, disponible à l'adresse www.rdv-solidarites.fr, ainsi que le site RDV Aide Numérique, disponible à l'adresse www.rdv-aide-numerique.fr.
-      h2 Article 2 - Objet
+    p La plateforme "#{current_domain.name} " est à l'initiative de l’ Agence Nationale de la Cohésion des Territoires (ANCT).
+    p Cette plateforme inclut le site principal RDV Solidarités, disponible à l'adresse www.rdv-solidarites.fr, ainsi que le site RDV Aide Numérique, disponible à l'adresse www.rdv-aide-numerique.fr.
+    h2 Article 2 - Objet
 
-      p #{current_domain.name} est un outil permettant d'organiser et de fluidifier la prise de rendez-vous médico-sociaux ou de formation numérique pour les services publics.
+    p #{current_domain.name} est un outil permettant d'organiser et de fluidifier la prise de rendez-vous médico-sociaux ou de formation numérique pour les services publics.
 
-      h2 Article 3 - Définitions
+    h2 Article 3 - Définitions
 
-      ul
-        li « L'Utilisateur » est toute personne utilisant la plateforme "#{current_domain.name}".
-        li « L'Usager » est tout administré utilisant la plateforme "#{current_domain.name}".
-        li « L'Agent » est tout agent public utilisant la plateforme "#{current_domain.name}".
-        li Les « Services » sont les fonctionnalités offertes par la plateforme.
+    ul
+      li «&nbsp;L'Utilisateur&nbsp;» est toute personne utilisant la plateforme "#{current_domain.name}".
+      li «&nbsp;L'Usager&nbsp;» est tout administré utilisant la plateforme "#{current_domain.name}".
+      li «&nbsp;L'Agent&nbsp;» est tout agent public utilisant la plateforme "#{current_domain.name}".
+      li Les «&nbsp;Services&nbsp;» sont les fonctionnalités offertes par la plateforme.
 
-      h2 Article 4 - Fonctionnalités
+    h2 Article 4 - Fonctionnalités
 
-      h3 4.1 Fonctionnalités ouvertes aux Usagers
+    h3 4.1 Fonctionnalités ouvertes aux Usagers
 
-      p #{current_domain.name} permet à tout Usager qui le souhaite de :
-      ul
-        li
-          p se créer un compte lui permettant de prendre un rendez-vous avec un service public.
-          p A cet effet, il lui suffira de se créer un compte sur le site de la plateforme en fournissant les informations suivantes : nom, prénom, adresse e-mail et numéro de téléphone. Il pourra également remplir une fiche d'information dans laquelle il devra renseigner des informations relatives à sa situation sociale et familiale : adresse, caisse d'affiliation, situation familiale, numéro d'allocataire, nombre d'enfants.
+    p #{current_domain.name} permet à tout Usager qui le souhaite de&nbsp;:
+    ul
+      li
+        p se créer un compte lui permettant de prendre un rendez-vous avec un service public.
+        p A cet effet, il lui suffira de se créer un compte sur le site de la plateforme en fournissant les informations suivantes&nbsp;: nom, prénom, adresse e-mail et numéro de téléphone. Il pourra également remplir une fiche d'information dans laquelle il devra renseigner des informations relatives à sa situation sociale et familiale&nbsp;: adresse, caisse d'affiliation, situation familiale, numéro d'allocataire, nombre d'enfants.
 
-        li
-          p vérifier s'il est possible de prendre rendez-vous via la plateforme en fonction de son adresse.
-          p En effet, en entrant l'adresse dans la barre de recherche, l'usager reçoit un message lui indiquant les services publics utilisant le dispositif à proximité de chez lui. Si de tels services n'existent pas, il recevra un message lui indiquant que la prise en charge n'est pas encore établie.
+      li
+        p vérifier s'il est possible de prendre rendez-vous via la plateforme en fonction de son adresse.
+        p En effet, en entrant l'adresse dans la barre de recherche, l'usager reçoit un message lui indiquant les services publics utilisant le dispositif à proximité de chez lui. Si de tels services n'existent pas, il recevra un message lui indiquant que la prise en charge n'est pas encore établie.
 
-        li
-          p renseigner des informations relatives à un "Proche".
-          p A cet effet, il pourra remplir une "fiche" pour simplifier les démarches futures d'un proche. Il lui revient d'informer le proche par tous moyens et dans un délai d'1 mois, de la transmission de ces informations à la Plateforme #{current_domain.name}.
+      li
+        p renseigner des informations relatives à un "Proche".
+        p A cet effet, il pourra remplir une "fiche" pour simplifier les démarches futures d'un proche. Il lui revient d'informer le proche par tous moyens et dans un délai d'1 mois, de la transmission de ces informations à la Plateforme #{current_domain.name}.
 
-      h3 4.2 Fonctionnalités ouvertes aux Agents
+    h3 4.2 Fonctionnalités ouvertes aux Agents
 
-      p #{current_domain.name} permet à tout agent réalisant une mission de service public de :
-      ul
-        li Regrouper les actions relatives à la prise de rendez-vous en ligne ;
-        li Organiser directement la configuration générale de la prise de rendez-vous ;
-        li Etablir des plages d'ouverture relatives au rendez-vous ;
-        li Créer une fiche "Nouvel usager" ;
-        li Gérer les statistiques relatives à la prise de rendez-vous.
+    p #{current_domain.name} permet à tout agent réalisant une mission de service public de&nbsp;:
+    ul
+      li Regrouper les actions relatives à la prise de rendez-vous en ligne ;
+      li Organiser directement la configuration générale de la prise de rendez-vous ;
+      li Etablir des plages d'ouverture relatives au rendez-vous ;
+      li Créer une fiche "Nouvel usager" ;
+      li Gérer les statistiques relatives à la prise de rendez-vous.
 
-      h4 A) Regrouper les actions relatives à la prise de rendez-vous
+    h4 A) Regrouper les actions relatives à la prise de rendez-vous
 
-      p Cette fonctionnalité permet de faciliter la prise de rendez-vous en ligne des usagers, en choisissant certaines modalités relatives à l'interface. Ainsi, la structure pourra :
-      ul
-        li Déterminer le service avec lequel l'usager prendra rendez-vous ;
-        li Préciser le lieu du rendez-vous ;
-        li Ajouter les Agents susceptibles de procéder aux rendez-vous et consultations ;
-        li Établir un délai minimum et maximum de réservation.
+    p Cette fonctionnalité permet de faciliter la prise de rendez-vous en ligne des usagers, en choisissant certaines modalités relatives à l'interface. Ainsi, la structure pourra&nbsp;:
+    ul
+      li Déterminer le service avec lequel l'usager prendra rendez-vous ;
+      li Préciser le lieu du rendez-vous ;
+      li Ajouter les Agents susceptibles de procéder aux rendez-vous et consultations ;
+      li Établir un délai minimum et maximum de réservation.
 
-      p Ces fonctionnalités permettent aux agents et structures de simplifier le processus de choix des usagers et l'organisation interne de la structure liée à la prise de rendez-vous.
+    p Ces fonctionnalités permettent aux agents et structures de simplifier le processus de choix des usagers et l'organisation interne de la structure liée à la prise de rendez-vous.
 
-      h4 B) Organiser directement la configuration générale de la prise de rendez-vous
+    h4 B) Organiser directement la configuration générale de la prise de rendez-vous
 
-      p Cette fonctionnalité permet aux structures de déterminer et préciser les modalités des rendez-vous. Ces modalités sont déterminantes pour l'organisation générale des structures et des prises de rendez-vous. En effet, chaque structure pourra :
-      ul
-        li Choisir la durée moyenne de rendez-vous ;
-        li Choisir le type de rendez-vous (sur place, téléphone, à domicile) ;
-        li Établir ou organiser un rendez-vous de suivi ;
-        li Permettre la notification par SMS aux usagers.
+    p Cette fonctionnalité permet aux structures de déterminer et préciser les modalités des rendez-vous. Ces modalités sont déterminantes pour l'organisation générale des structures et des prises de rendez-vous. En effet, chaque structure pourra&nbsp;:
+    ul
+      li Choisir la durée moyenne de rendez-vous ;
+      li Choisir le type de rendez-vous (sur place, téléphone, à domicile) ;
+      li Établir ou organiser un rendez-vous de suivi ;
+      li Permettre la notification par SMS aux usagers.
 
-      h4 C) Établir des plages d'ouvertures
+    h4 C) Établir des plages d'ouvertures
 
-      p Cette fonctionnalité permet aux structures de mieux intégrer les rendez-vous pris ou à prendre dans les plages d'ouverture de la structure. En effet, chaque structure pourra :
-      ul
-        li Déterminer un "nom" pour la plage d'ouverture uniquement visible en interne ;
-        li Déterminer un lieu d'ouverture ;
-        li Déterminer la plage horaire.
+    p Cette fonctionnalité permet aux structures de mieux intégrer les rendez-vous pris ou à prendre dans les plages d'ouverture de la structure. En effet, chaque structure pourra&nbsp;:
+    ul
+      li Déterminer un "nom" pour la plage d'ouverture uniquement visible en interne ;
+      li Déterminer un lieu d'ouverture ;
+      li Déterminer la plage horaire.
 
-      p Après avoir déterminé ces éléments, la structure devra "créer sa plage". Cette plage préviendra toute prise de rendez-vous en dehors d'horaires ou de moments prévus par la structure. Elle pourra les modifier à tout moment.
+    p Après avoir déterminé ces éléments, la structure devra "créer sa plage". Cette plage préviendra toute prise de rendez-vous en dehors d'horaires ou de moments prévus par la structure. Elle pourra les modifier à tout moment.
 
-      p A ces possibilités, s'ajoutent celles permettant d'intégrer les RDV prévus dans le futur, en :
-      ul
-        li ajoutant directement un rendez-vous dans l'agenda de la structure ou d'un Agent de manière spécifique ;
-        li en précisant les créneaux pour lesquels un Agent n'est pas présent et ne peut donc prendre de rendez-vous.
+    p A ces possibilités, s'ajoutent celles permettant d'intégrer les RDV prévus dans le futur, en&nbsp;:
+    ul
+      li ajoutant directement un rendez-vous dans l'agenda de la structure ou d'un Agent de manière spécifique ;
+      li en précisant les créneaux pour lesquels un Agent n'est pas présent et ne peut donc prendre de rendez-vous.
 
-      h4 D) Créer une fiche "Nouvel Usager"
+    h4 D) Créer une fiche "Nouvel Usager"
 
-      p Cette fonctionnalité est ouverte aux Agents, qui peuvent créer une fiche pour un usager ou pour un proche de l'usager. Cette fonctionnalité permet une meilleure visibilité et organisation aux structures. Ainsi, il est possible de remplir une fiche d'Usager et de proposer à l'usager de se créer un compte #{current_domain.name}. Lorsque l'usager est un "proche", alors l'Agent devra remplir la fiche du Nouvel usager "Responsable", c'est-à-dire celui avec lequel il est en relation directe. Il reviendra à l'Usager d'informer le proche par tous moyens et dans un délai d'1 mois, de la transmission de ces informations à la Plateforme #{current_domain.name}.
+    p Cette fonctionnalité est ouverte aux Agents, qui peuvent créer une fiche pour un usager ou pour un proche de l'usager. Cette fonctionnalité permet une meilleure visibilité et organisation aux structures. Ainsi, il est possible de remplir une fiche d'Usager et de proposer à l'usager de se créer un compte #{current_domain.name}. Lorsque l'usager est un "proche", alors l'Agent devra remplir la fiche du Nouvel usager "Responsable", c'est-à-dire celui avec lequel il est en relation directe. Il reviendra à l'Usager d'informer le proche par tous moyens et dans un délai d'1 mois, de la transmission de ces informations à la Plateforme #{current_domain.name}.
 
-      h4 E) Gérer les statistiques de la structure.
+    h4 E) Gérer les statistiques de la structure.
 
-      p Chaque Agent peut télécharger un export de ses Rendez-vous, et ainsi voir la progression relative aux Rendez-vous manqués (excusés ou non). Les informations suivantes sont disponibles :
+    p Chaque Agent peut télécharger un export de ses Rendez-vous, et ainsi voir la progression relative aux Rendez-vous manqués (excusés ou non). Les informations suivantes sont disponibles&nbsp;:
 
-      ul
-        li Nombre de Rendez-vous ;
-        li Nombre de personnes vues ;
-        li Nombre d'absences excusées à des rendez-vous ;
-        li Nombre d'absences non excusées à des rendez-vous.
+    ul
+      li Nombre de Rendez-vous ;
+      li Nombre de personnes vues ;
+      li Nombre d'absences excusées à des rendez-vous ;
+      li Nombre d'absences non excusées à des rendez-vous.
 
-      h2 Article 5 – Responsabilités
+    h2 Article 5 – Responsabilités
 
-      h3 5.1 L’éditeur de la « Plateforme #{current_domain.name} »
+    h3 5.1 L’éditeur de la «&nbsp;Plateforme #{current_domain.name}&nbsp;»
 
-      p Les sources des informations diffusées sur la Plateforme sont réputées fiables mais le site ne garantit pas qu’il soit exempt de défauts, d’erreurs ou d’omissions.
+    p Les sources des informations diffusées sur la Plateforme sont réputées fiables mais le site ne garantit pas qu’il soit exempt de défauts, d’erreurs ou d’omissions.
 
-      p L’éditeur s’autorise à suspendre ou révoquer n'importe quel compte et toutes les actions réalisées par ce biais, s’il estime que l’usage réalisé du service porte préjudice à son image ou ne correspond pas aux exigences de sécurité.
+    p L’éditeur s’autorise à suspendre ou révoquer n'importe quel compte et toutes les actions réalisées par ce biais, s’il estime que l’usage réalisé du service porte préjudice à son image ou ne correspond pas aux exigences de sécurité.
 
-      p L’éditeur s’engage à la sécurisation de la Plateforme, notamment en prenant toutes les mesures nécessaires permettant de garantir la sécurité et la confidentialité des informations fournies.
+    p L’éditeur s’engage à la sécurisation de la Plateforme, notamment en prenant toutes les mesures nécessaires permettant de garantir la sécurité et la confidentialité des informations fournies.
 
-      p L’éditeur fournit les moyens nécessaires et raisonnables pour assurer un accès continu, sans contrepartie financière, à la Plateforme. Il se réserve la liberté de faire évoluer, de modifier ou de suspendre, sans préavis, la plateforme pour des raisons de maintenance ou pour tout autre motif jugé nécessaire.
+    p L’éditeur fournit les moyens nécessaires et raisonnables pour assurer un accès continu, sans contrepartie financière, à la Plateforme. Il se réserve la liberté de faire évoluer, de modifier ou de suspendre, sans préavis, la plateforme pour des raisons de maintenance ou pour tout autre motif jugé nécessaire.
 
-      h3 5.2 L’Utilisateur
+    h3 5.2 L’Utilisateur
 
-      p L'Utilisateur s'assure de garder son mot de passe secret. Toute divulgation du mot de passe, quelle que soit sa forme, est interdite. Il assume les risques liés à l'utilisation de son identifiant et mot de passe.
+    p L'Utilisateur s'assure de garder son mot de passe secret. Toute divulgation du mot de passe, quelle que soit sa forme, est interdite. Il assume les risques liés à l'utilisation de son identifiant et mot de passe.
 
-      p Toute information transmise par l'Utilisateur est de sa seule responsabilité. Il est rappelé que toute personne procédant à une fausse déclaration pour elle-même ou pour autrui s’expose, notamment, aux sanctions prévues à l’article 441-1 du code pénal, prévoyant des peines pouvant aller jusqu’à trois ans d’emprisonnement et 45 000 euros d’amende.
+    p Toute information transmise par l'Utilisateur est de sa seule responsabilité. Il est rappelé que toute personne procédant à une fausse déclaration pour elle-même ou pour autrui s’expose, notamment, aux sanctions prévues à l’article 441-1 du code pénal, prévoyant des peines pouvant aller jusqu’à trois ans d’emprisonnement et 45 000 euros d’amende.
 
-      h2 Article 6 - Mise à jour des conditions d’utilisation
+    h2 Article 6 - Mise à jour des conditions d’utilisation
 
-      p Les termes des présentes conditions d’utilisation peuvent être amendés à tout moment, sans préavis, en fonction des modifications apportées à la plateforme, de l’évolution de la législation ou pour tout autre motif jugé nécessaire.
+    p Les termes des présentes conditions d’utilisation peuvent être amendés à tout moment, sans préavis, en fonction des modifications apportées à la plateforme, de l’évolution de la législation ou pour tout autre motif jugé nécessaire.

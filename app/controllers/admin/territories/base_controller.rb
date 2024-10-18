@@ -13,26 +13,25 @@ class Admin::Territories::BaseController < ApplicationController
   def current_territory
     @territory
   end
+
   helper_method :current_territory
 
   def pundit_user
-    AgentTerritorialContext.new(current_agent, current_territory)
+    current_agent
   end
+
   helper_method :pundit_user
-
-  def authorize(record, *args)
-    # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
-    super([:configuration, record], *args)
-  end
-
-  def policy_scope(record, *args)
-    # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
-    super([:configuration, record], *args)
-  end
 
   private
 
   def set_territory
     @territory = Territory.find(params[:territory_id])
+
+    # On instancie une policy plutôt que d'appeler authorize pour ne pas neutraliser le `verify_authorized`
+    unless Agent::TerritoryPolicy.new(current_agent, @territory).show?
+      raise Pundit::NotAuthorizedError, "not authorized"
+    end
+
+    @territory
   end
 end

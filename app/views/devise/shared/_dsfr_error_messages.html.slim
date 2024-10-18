@@ -1,0 +1,6 @@
+- if resource.errors.any?
+  .fr-alert.fr-alert--error.fr-mb-2w
+    h3.fr-alert__title Erreur
+    ul
+      - resource.errors.full_messages.uniq.each do |message|
+        li = message

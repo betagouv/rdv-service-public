@@ -1,23 +1,27 @@
-class Agent::ZonePolicy < ApplicationPolicy
-  alias context pundit_user
-  delegate :agent, to: :context, prefix: :current # defines current_agent
-
-  def agent_has_role_in_record_territory?
-    current_agent.territorial_roles.pluck(:territory_id).include?(record.sector.territory_id)
+class Agent::ZonePolicy
+  def initialize(agent, zone)
+    @current_agent = agent
+    @zone = zone
   end
 
-  alias new? agent_has_role_in_record_territory?
-  alias create? agent_has_role_in_record_territory?
-  alias destroy? agent_has_role_in_record_territory?
+  def territorial_admin?
+    @current_agent.territorial_admin_in?(@zone.territory)
+  end
 
-  class Scope < Scope
-    alias context pundit_user
-    delegate :agent, to: :context, prefix: :current # defines current_agent
+  alias new? territorial_admin?
+  alias create? territorial_admin?
+  alias destroy? territorial_admin?
+
+  class Scope
+    def initialize(agent, scope)
+      @current_agent = agent
+      @scope = scope
+    end
 
     def resolve
-      scope
-        .joins(sector: [:territory])
-        .where(sectors: { territories: { id: current_agent.territorial_roles.pluck(:territory_id) } })
+      @scope
+        .joins(:sector)
+        .where(sectors: { territory_id: @current_agent.territorial_roles.pluck(:territory_id) })
     end
   end
 end

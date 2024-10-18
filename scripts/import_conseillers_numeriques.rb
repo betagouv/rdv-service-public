@@ -1,16 +1,17 @@
 # Usage:
-# - télécharger le fichier de tous les cnfs depuis https://coop.conseiller-numerique.gouv.fr/accueil
-# - mettre le fichier export_cnfs.csv dans tmp
-# - exécuter: scalingo --app=production-rdv-solidarites --region=osc-secnum-fr1 run --file=tmp/export-cnfs.csv "rails runner scripts/import_conseillers_numeriques.rb"
+# - télécharger l'export "Liste des candidats embauchés" (embauches.csv)
+#   depuis https://pilotage.conseiller-numerique.gouv.fr/admin/exports
+# - mettre le fichier embauches.csv dans tmp
+# - exécuter: scalingo --app=production-rdv-solidarites --region=osc-secnum-fr1 run --file=tmp/embauches.csv "rails runner scripts/import_conseillers_numeriques.rb"
 
 require "csv"
 
-conseillers_numeriques = CSV.read("/tmp/uploads/export-cnfs.csv", headers: true, col_sep: ";", liberal_parsing: true)
+conseillers_numeriques = CSV.read("/tmp/uploads/embauches.csv", headers: true, col_sep: ";", liberal_parsing: true)
 
 conseillers_numeriques.each do |conseiller_numerique|
-  next if conseiller_numerique["Email @conseiller-numerique.fr"].blank?
+  next if conseiller_numerique["email professionnel secondaire"].blank? || conseiller_numerique["Compte activé"]&.strip != "oui"
 
-  external_id = "conseiller-numerique-#{conseiller_numerique['Id du conseiller']}"
+  external_id = "conseiller-numerique-#{conseiller_numerique['ID conseiller']}"
 
   agent = Agent.find_by(external_id: external_id)
   next if agent&.deleted_at?
@@ -18,13 +19,14 @@ conseillers_numeriques.each do |conseiller_numerique|
   Sentry.with_scope do |scope|
     processed_params = {
       external_id: external_id,
-      email: conseiller_numerique["Email @conseiller-numerique.fr"],
-      secondary_email: conseiller_numerique["Email"],
-      first_name: conseiller_numerique["Prénom"],
-      last_name: conseiller_numerique["Nom"],
+      email: conseiller_numerique["email professionnel secondaire"],
+      secondary_email: conseiller_numerique["email"],
+      old_email: conseiller_numerique["email professionnel"],
+      first_name: conseiller_numerique["prenom"],
+      last_name: conseiller_numerique["nom"],
       structure: {
-        external_id: conseiller_numerique["Id long de la structure"],
-        name: conseiller_numerique["Nom de la structure"],
+        external_id: conseiller_numerique["ID long Structure"],
+        name: conseiller_numerique["Dénomination"],
         address: conseiller_numerique["Adresse de la structure"],
       },
     }.with_indifferent_access

@@ -1,9 +1,9 @@
 class Api::V1::AgentAuthBaseController < Api::V1::BaseController
-  include Pundit::Authorization
+  include ExplicitPunditConcern
   include DeviseTokenAuth::Concerns::SetUserByToken
 
   skip_before_action :verify_authenticity_token
-  before_action :authenticate_agent
+  before_action :authenticate_agent, :log_api_call_in_database
 
   def pundit_user
     AgentOrganisationContext.new(current_agent, current_organisation)
@@ -16,10 +16,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       else
         current_agent.organisations.find_by(id: params[:organisation_id])
       end
-  end
-
-  def authorize(record, *args)
-    super([:agent, record], *args)
   end
 
   # Rescuable exceptions
@@ -67,16 +63,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   private
 
-  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
-  # A terme, on voudra forcer l'argument policy_scope_class
-  def policy_scope(scope, policy_scope_class: nil)
-    if policy_scope_class
-      super(scope, policy_scope_class: policy_scope_class)
-    else
-      super([:agent, scope])
-    end
-  end
-
   def authenticate_agent
     if request.headers.include?("X-Agent-Auth-Signature")
       # Bypass DeviseTokenAuth
@@ -117,5 +103,29 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_json),
       request.headers["X-Agent-Auth-Signature"]
     )
+  end
+
+  def log_api_call_in_database
+    raw_http = {
+      method: request.method,
+      path: request.fullpath,
+      host: request.host,
+      # We only keep headers that are uppercase (convention for HTTP headers)
+      headers: request.headers.select { |key, _| key == key.upcase }.to_h.transform_values { |value| value.is_a?(String) ? value : value.inspect },
+    }
+
+    ApiCall.create!(
+      raw_http: raw_http,
+      controller_name: controller_name,
+      action_name: action_name,
+      agent_id: current_agent.id
+    )
+  rescue StandardError => e
+    Sentry.capture_exception(e, extra: {
+                               raw_http: raw_http,
+                               controller_name: controller_name,
+                               action_name: action_name,
+                               agent_id: current_agent&.id,
+                             })
   end
 end

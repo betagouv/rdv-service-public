@@ -35,7 +35,7 @@ module Lapin
     config.i18n.available_locales = %i[fr]
     config.i18n.default_locale = :fr
     config.i18n.raise_on_missing_translations = true
-    config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
+    config.i18n.load_path += Rails.root.glob("config/locales/**/*.{rb,yml}")
     config.action_mailer.preview_paths = [Rails.root.join("spec/mailers/previews")]
     config.active_model.i18n_customize_full_message = true
 
@@ -43,9 +43,6 @@ module Lapin
 
     config.active_support.cache_format_version = 7.0
 
-    # Both cache and sessions are stored in the same Redis database:
-    # - cache keys are prefixed with "cache:"
-    # - session keys are prefixed with "session:"
     redis_settings = {
       connect_timeout: 30, # Defaults to 20 seconds
       read_timeout: 1, # Defaults to 1 second
@@ -61,15 +58,24 @@ module Lapin
 
     config.x.redis_namespace = "app"
 
-    config.session_store :cookie_store, key: "_rdv_sp_session"
+    # Avec cette configuration, on crée un cookie qui expire au bout de 8 heures
+    # Cette date d'expiration est mise à jour à chaque requête.
+    # L'expiration est aussi gérée avec le module Timeoutable de Devise, qui indique le temps entre le login et la déconnexion.
+    # L'utilisateur peut être obligé à se reconnecter par Devise::Timeoutable même si le cookie n'a pas expiré.
+    config.session_store :cookie_store, key: "_rdv_sp_session", expire_after: 8.hours
 
     # Devise layout
     config.to_prepare do
       [Devise::RegistrationsController, Devise::SessionsController, Devise::ConfirmationsController, Devise::PasswordsController, Devise::InvitationsController].each do |controller|
-        controller.layout "registration"
+        controller.layout "application_agent_config"
       end
     end
 
     config.x.rack_attack.limit = 50
+
+    config.exceptions_app = routes # Permet les pages d'erreur custom
+
+    config.active_record.async_query_executor = :global_thread_pool
+    config.active_record.global_executor_concurrency = 4 # update the pool size in database.yml if you change this
   end
 end

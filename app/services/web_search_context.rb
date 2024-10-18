@@ -30,7 +30,7 @@ class WebSearchContext < SearchContext
   end
 
   def departement
-    @departement ||= (@query_params[:departement] || public_link_organisation&.departement_number)
+    @departement ||= @query_params[:departement] || public_link_organisation&.departement_number
   end
 
   def organisation_id
@@ -57,8 +57,13 @@ class WebSearchContext < SearchContext
 
   # TODO : move this to a specific search context https://github.com/betagouv/rdv-solidarites.fr/pull/3827#discussion_r1351988739
   def public_link_organisation
-    @public_link_organisation ||= \
+    @public_link_organisation ||=
       @public_link_organisation_id.present? ? Organisation.find(@public_link_organisation_id) : nil
+  end
+
+  def motif_param_present?
+    @motif_id.present? ||
+      @motif_name_with_location_type.present?
   end
 
   private

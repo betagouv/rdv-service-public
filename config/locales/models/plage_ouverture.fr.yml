@@ -4,16 +4,19 @@ fr:
       plage_ouverture: Plage d'ouverture
     attributes:
       plage_ouverture:
-        title: Description
+        title: Nom de la plage d'ouverture
         first_day: Premier jour
         start_time: Commence à
         end_time: Termine à
         recurrence: Répéter
         lieu: Lieu
+        recurrence_ends_at: Dernier jour
     errors:
       models:
         plage_ouverture:
           attributes:
+            first_day:
+              format: "Le premier jour %{message}"
             end_time:
               must_be_after_start_time: "doit être après l’heure de début."
             lieu:

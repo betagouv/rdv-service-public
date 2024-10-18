@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.0"
+ruby "3.3.3"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -32,6 +32,8 @@ gem "sentry-rails"
 gem "skylight"
 # Block & throttle abusive requests
 gem "rack-attack"
+# Dépendance interne pour anonymiser les records AR
+gem "anonymizer", path: "lib/anonymizer"
 
 # Database
 # Pg is the Ruby interface to the PostgreSQL RDBMS
@@ -51,13 +53,15 @@ gem "paper_trail"
 # Integrate PostgreSQL's enum data type into ActiveRecord's schema and migrations.
 gem "activerecord-postgres_enum"
 # A Ruby client library for Redis
-gem "redis", "< 5.0"
+gem "redis"
 # Adds a Redis::Namespace class which can be used to namespace calls to Redis.
 gem "redis-namespace"
+# Generic connection pooling for Ruby
+gem "connection_pool"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden
-gem "devise"
+gem "devise", git: "https://github.com/victormours/devise", ref: "0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6"
 # An invitation strategy for Devise
 gem "devise_invitable"
 # Deliver Devise's emails in the background using ActiveJob.
@@ -79,7 +83,7 @@ gem "common_french_passwords"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
-gem "good_job"
+gem "good_job", "3.27.4"
 
 # JSON serialization and queries
 
@@ -122,8 +126,6 @@ gem "dsfr-view-components"
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
-# SendinBlue API V3 Ruby Gem
-gem "sib-api-v3-sdk" # SendInBlue (SMS)
 # The Spreadsheet Library is designed to read and write Spreadsheet Documents
 gem "spreadsheet" # Excel export
 # If string, numeric, symbol and nil values wanna be a boolean value, they can with the new #to_b method (and more).
@@ -145,6 +147,14 @@ gem "lograge"
 # TODO: retirer cette ligne quand une nouvelle version de httpclient est released
 gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
 
+# Ces gems ne seront plus intégrées à Ruby en version 3.4.0 Lors de l'upgrade
+# depuis 3.3.3, on pourra vérifier si les gems qui en dépendent implicitement
+# ont ajouté dans leur gemspec une dépendance explicite.
+gem "bigdecimal"
+gem "csv"
+gem "drb"
+gem "observer"
+
 group :development do
   #  Hot reload
 
@@ -160,11 +170,14 @@ group :development do
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
   # Automatic Ruby code style checking tool.
-  gem "rubocop", "1.24.1", require: false
+  gem "rubocop", "~> 1.65", require: false
+  # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
+  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.3)
+  gem "parser", "3.3.3.0", require: false
   # Code style checking for RSpec files
-  gem "rubocop-rspec", "2.7.0"
+  gem "rubocop-rspec", "~> 3.0", require: false
   # Automatic Rails code style checking tool.
-  gem "rubocop-rails", "2.13.1"
+  gem "rubocop-rails", "~> 2.25", require: false
   # Slim template linting tool
   gem "slim_lint", require: false
 
@@ -183,10 +196,12 @@ group :development do
 
   # Other
 
+  # Manage Procfile-based applications
+  gem "foreman", require: false
   # Gives letter_opener an interface for browsing sent emails
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
-  gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+  gem "rails-erd", require: false # Keeps docs/domain_model.svg up-to-date. See .erdconfig
 end
 
 group :test do
@@ -204,6 +219,8 @@ group :test do
   gem "rswag-specs"
   # rspec command for spring
   gem "spring-commands-rspec"
+  # Time-resilient expectations in RSpec
+  gem "rspec-wait"
 
   # Accessibility
 
@@ -237,6 +254,9 @@ group :test do
 
   # Library for stubbing HTTP requests in Ruby.
   gem "webmock"
+
+  # Modify your ENV
+  gem "climate_control"
 
   # Dépendence indirecte de axe-core-api
   gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"

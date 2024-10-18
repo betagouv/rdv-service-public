@@ -1,0 +1,37 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "./_variables";
+@import "./fontawesome_imports";
+@import "./fonts";
+
+@import "~bootstrap/scss/bootstrap";
+@import "~select2/dist/css/select2";
+@import "~select2-bootstrap4-theme/dist/select2-bootstrap4.min";
+@import "jquery-datetimepicker/build/jquery.datetimepicker.min";
+
+@import "vendor/inclusion_connect_button";
+@import "vendor/proconnect_button";
+
+@import "./components/backgrounds";
+@import "./components/types";
+@import "./components/search_form";
+@import "./components/bubble";
+@import "./components/forms";
+@import "./components/cards";
+@import "./components/utilities";
+@import "./components/autocomplete";
+@import "./components/rdv_status";
+@import "./components/rdv_solidarites_instance_name";
+@import "./components/alert";
+@import "./components/select2";
+
+// Structure
+@import "./structure/general";
+@import "./structure/header";
+@import "./structure/footer";
+@import "./structure/page-head";
+@import "./structure/authentication";
+@import "./structure/left-menu";
+@import "./structure/misc";
+@import "./structure/misc_agent_config";

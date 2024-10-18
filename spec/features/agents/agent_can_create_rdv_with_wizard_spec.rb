@@ -73,7 +73,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     else
       click_link("Définir un lieu ponctuel.")
       fill_in "Nom", with: "Café de la gare"
-      fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
+      fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000"
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_latitude').value = '48.583844'")
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_longitude').value = 7.735253")
     end
@@ -133,7 +133,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         step4
 
         expect(user_from_other_organisation.rdvs.count).to eq(1)
-        expect(user_from_other_organisation.reload.organisations).to match_array([organisation, other_organisation])
+        expect(user_from_other_organisation.reload.organisations).to contain_exactly(organisation, other_organisation)
       end
     end
 
@@ -169,7 +169,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         stub_request(:post, "https://example.com/")
         click_button("Créer RDV")
         expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
-          JSON.parse(req.body)["data"]["users"].map { |user| user["id"] } == [user.id]
+          JSON.parse(req.body)["data"]["users"].pluck("id") == [user.id]
         end)
       end
     end

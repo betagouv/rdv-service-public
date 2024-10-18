@@ -4,13 +4,16 @@ fr:
       motif: Motif
     attributes:
       motif:
+        name: Nom
         organisation: Organisation
         service: Service
         collectif: Nombre de participants
         color: Couleur
         bookable_by: Réservation en ligne
-        bookable_by_hint: Vous pouvez décider de qui peut prendre RDV pour ce motif
+        bookable_by_hint: "Définissez quel utilisateur peut prendre rendez-vous pour ce motif :"
         visibility_type: Visibilité usager
+        booking_delay: Délai de réservation
+        booking_delay_hint: "Vous pouvez définir une “fenêtre de réservation” pour la prise d’un rendez-vous : il s’agit du délai maximum et minimum possible, entre le moment où l’usager prend rendez-vous, et le rendez-vous en lui même. Ces délais ne s'appliquent pas à la prise de rendez-vous par d'autres agents."
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
         custom_cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l’annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l’usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.
         default_cancel_warning_message: Voulez-vous vraiment annuler ce RDV ?
@@ -21,10 +24,10 @@ fr:
         for_secretariat: Motif accessible au secrétariat
         for_secretariat_label: Autoriser les agents du service Secrétariat à assurer ces RDV
         for_secretariat_short: RDV Secrétariat
-        for_secretariat_hint: En plus des agents du service de ce motif, les agents du service Secrétariat pourront aussi assurer ces RDV et ouvrir des plages d'ouverture dans leur agenda avec ce motif
-        follow_up: Limiter ces RDV aux usagers bénéficiant d'un suivi par un référent
+        for_secretariat_hint: En plus du service sélectionné pour ce motif, les agents du service « Secrétariat » peuvent partager leurs disponibilités et assurer les rendez-vous de ce motif.
+        follow_up: Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent
         follow_up_short: RDV de suivi
-        follow_up_warning: Les motifs pour RDV de suivi ne sont pas visible lors de la réservation en ligne par les usagers sans compte et sans référent. Les usagers avec un référent pourront prendre rdv depuis leur espace personnel.
+        follow_up_warning: Les rendez-vous de suivi sont réservés aux usagers ayant un agent référent associé sur la fiche usager. Ces rendez-vous de suivi ne sont pas visibles lors de la réservation en ligne pour les usagers sans compte et sans référent. Seuls les usagers avec un référent pourront prendre rendez-vous depuis leur espace personnel.
         follow_up_hint: Ce motif est réservé uniquement aux usagers bénéficiant d'un accompagnement
         default_duration_in_min: Durée par défaut en minutes
         default_duration_in_min_short: Durée par défaut
@@ -42,21 +45,21 @@ fr:
         instruction_for_rdv_hint: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_short: Indications après
         rdvs_editable_by_user: RDVs modifiables
-        rdvs_editable_by_user_hint: L'horaire du RDV peut être changé par l'usager au plus tard 2 jours avant le début du RDV
+        rdvs_editable_by_user_hint: L’horaire et la date du rendez-vous peuvent être changés par l’usager au plus tard 48h avant le rendez-vous.
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel
       motif/collectifs/hint:
-        true: "Plusieurs personnes assisteront au même RDV, par exemple pour un atelier en groupe. Les participants seront notifiés individuellement."
-        false: "Le RDV est pour une personne en particulier. Des accompagnants peuvent être ajoutés au RDV, comme par exemple les parents de l'enfant pour qui le RDV a lieu."
-      motif/visibility_types:
-        visible_and_notified: Visible et notifié
-        visible_and_not_notified: Visible et non notifié
-        invisible: Invisible
+        true: Le rendez-vous est destiné à plusieurs usagers. Chaque participants est notifié individuellement.
+        false: Le rendez-vous est réservé pour un usager en particulier. Cet usager peut être accompagné (parent, tuteur, traducteur, …) pour la consultation individuelle.
+      motif/visibility_types/html:
+        visible_and_notified: RDV <strong>visible</strong> et <strong>notifié</strong>
+        visible_and_not_notified: RDV <strong>visible</strong> et <strong>non notifié</strong>
+        invisible: RDV <strong>non visible</strong>
       motif/visibility_types/hint:
-        visible_and_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager sera notifié par SMS et/ou email
-        visible_and_not_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
-        invisible: Le RDV sera invisible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
+        visible_and_notified: L’usager sera notifié de la création et modification du rendez-vous par SMS et/ou e-mail. Ce dernier sera visible dans son espace personnel.
+        visible_and_not_notified: L’usager ne sera pas notifié du rendez-vous, mais il sera visible dans son espace personnel.
+        invisible: Le rendez-vous ne sera pas visible dans l’espace personnel de l’usager, et il ne recevra aucune notification.
       motif/visibility_types/hint_rdv_insertion:
         visible_and_notified: ""
         visible_and_not_notified: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion)"
@@ -78,22 +81,40 @@ fr:
         home: À domicile
         phone: Par téléphone
         public_office: Sur place
+        visio: Par visioconférence
       motif/location_types/hint:
-        public_office: Le RDV aura lieu au lieu sélectionné (MDS...)
-        phone: L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil
-        home: L'usager sera notifié que le RDV aura lieu à l'adresse remplie dans son profil
+        public_office: L'agent reçoit l'usager sur place, au lieu sélectionné (MDS...).
+        visio: L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV. L'agent se connecte au <a href="https://www.numerique.gouv.fr/outils-agents/webconference-etat/" target="_blank">service de webconférence de l'État <i class="fa fa-external-link" /></a> avec ProConnect pour démarrer la visioconférence.
+        phone: L’agent appelle le numéro indiqué sur la fiche de l'usager.
+        home: L’agent se rend à l'adresse indiquée sur la fiche de l'usager.
+      motif/bookable_by/radio_label_html:
+        agents: >
+          Agents de l’organisation
+        agents_and_prescripteurs: >
+          Agents de l’organisation et prescripteurs
+        agents_and_prescripteurs_and_invited_users: >
+          Agents de l’organisation, prescripteurs et usagers via une invitation
+        everyone: >
+          Agents de l’organisation, prescripteurs et usagers
       motif/bookable_by/hint:
-        agents: "Uniquement les agents de %{organisation_name}"
-        agents_and_prescripteurs: "Ouvert aux agents et aux prescripteurs"
-        agents_and_prescripteurs_and_invited_users: "Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation"
-        everyone: "Ouvert aux agents, aux prescripteurs et aux usagers"
+        agents: >
+          Seuls vous et les agents de votre organisation peuvent ajouter des rendez-vous à votre agenda.
+        agents_and_prescripteurs: >
+          Les agents et prescripteurs d’autres organisations peuvent ajouter des rendez-vous à votre agenda. Voir la 
+          <a href="https://rdvs.notion.site/Travailler-avec-les-prescripteurs-de-mon-territoire-b44f509920a34b5fbfa9b47bb57a7c28">documentation</a>
+          pour plus d’informations.
+        agents_and_prescripteurs_and_invited_users: >
+          Les agents, prescripteurs, et usagers peuvent ajouter des rendez-vous dans votre agenda.
+        everyone: >
+          Les agents, prescripteurs, et usagers peuvent ajouter des rendez-vous dans votre agenda.
     errors:
       models:
         motif:
+          cant_change_because_already_used: ne peut être modifié car le motif est utilisé pour un RDV
           attributes:
             base:
               not_at_home_if_collectif: Les RDV collectifs doivent avoir lieu sur place.
             name:
               taken: est déjà utilisé pour un motif avec le même type de RDV.
-            location_type:
-              cant_change_because_already_used: ne peut être modifié car le motif est utilisé pour un RDV
+            for_secretariat:
+              cant_be_enabled_if_follow_up: ne peut être activé si "RDV de suivi" est activé

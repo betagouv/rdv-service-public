@@ -1,0 +1,6 @@
+version: 2
+
+secret:
+  ignored_matches:
+    - name: seed_password
+      match: "Rdvservicepublictest1!"

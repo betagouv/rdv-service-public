@@ -139,17 +139,28 @@ RSpec.describe "Agent can see RDV details correctly" do
     end
   end
 
-  # Ce test a été ajouté suite à un crash de l'affichage de la page RDV
-  # lorsque l'agent du RDV avait été hard deleted depuis le SuperAdmin.
-  context "when agent has been hard deleted" do
-    let(:rdv) { create(:rdv, organisation: organisation, created_by: agent) }
-    let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+  context "when the rdv is by visio" do
+    let(:motif) { create(:motif, service: service, location_type: :visio) }
+    let(:user) { create(:user) }
 
-    it "does not display the link to the agenda" do
-      rdv.agents.first.rdvs.destroy_all
-      rdv.agents.first.destroy!
-      visit admin_organisation_rdv_path(organisation, rdv)
-      expect(page).not_to have_content("voir dans l'agenda")
+    context "when the agent participates in the rdv" do
+      let(:rdv) { create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation, starts_at: starts_at) }
+
+      it "shows the link to start the visio" do
+        visit admin_organisation_rdv_path(organisation, rdv)
+        expect(page).to have_content "démarrer la visioconférence"
+        expect(page).to have_content "Par visioconférence"
+      end
+    end
+
+    context "when the agent does not participates in the rdv" do
+      let(:rdv) { create(:rdv, agents: [create(:agent)], users: [user], motif: motif, organisation: organisation, starts_at: starts_at) }
+
+      it "does not show the link to start the visio" do
+        visit admin_organisation_rdv_path(organisation, rdv)
+        expect(page).not_to have_content "démarrer la visioconférence"
+        expect(page).to have_content "Par visioconférence"
+      end
     end
   end
 end

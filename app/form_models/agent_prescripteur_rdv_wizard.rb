@@ -12,10 +12,6 @@ class AgentPrescripteurRdvWizard
     @motif ||= rdv.motif
   end
 
-  def invitation?
-    false
-  end
-
   def params_to_selections
     query_params
   end
@@ -45,7 +41,7 @@ class AgentPrescripteurRdvWizard
   end
 
   def creneau
-    @creneau ||= Users::CreneauSearch.creneau_for(
+    @creneau ||= CreneauxSearch::ForUser.creneau_for(
       user: users&.first,
       motif: motif,
       lieu: lieu,

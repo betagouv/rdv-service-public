@@ -1,0 +1,7 @@
+- case export.status
+- when Export::STATUS_PENDING
+  span.badge.badge-info
+    | En création
+- when Export::STATUS_EXPIRED
+  span.badge.badge-dark
+    | Expiré

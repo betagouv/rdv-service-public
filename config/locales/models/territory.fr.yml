@@ -8,4 +8,3 @@ fr:
         departement_number: Département
         sms_configuration: "Clef d’API / Mot de passe"
         sms_provider: "Fournisseur pour l’envoi de SMS"
-        visible_users_throughout_the_territory: Usagers visible sur tout le territoire

@@ -8,7 +8,7 @@ module Users::CreneauxWizardConcern
       :address_selection
     elsif !service_selected?
       :service_selection
-    elsif !motif_name_and_type_selected?
+    elsif !motif_selected?
       :motif_selection
     elsif requires_lieu_selection?
       :lieu_selection
@@ -37,7 +37,7 @@ module Users::CreneauxWizardConcern
   end
 
   def user_selected_organisation
-    @user_selected_organisation ||= \
+    @user_selected_organisation ||=
       @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
   end
 
@@ -89,6 +89,10 @@ module Users::CreneauxWizardConcern
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
+  def no_availability?
+    creneaux.empty? && next_availability.nil?
+  end
+
   def max_public_booking_delay
     matching_motifs.maximum("max_public_booking_delay")
   end
@@ -99,8 +103,9 @@ module Users::CreneauxWizardConcern
     !first_matching_motif.requires_lieu? && user_selected_organisation.nil? && public_link_organisation.nil?
   end
 
-  def motif_name_and_type_selected?
-    unique_motifs_by_name_and_location_type.length == 1
+  def motif_selected?
+    motif_param_present? &&
+      unique_motifs_by_name_and_location_type.length == 1
   end
 
   def service_selected?

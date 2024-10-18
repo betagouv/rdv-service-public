@@ -2,7 +2,7 @@ RSpec.describe "API auth", type: :request do
   # inspired by https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing
 
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, password: "correcthorse", admin_role_in_organisations: [organisation]) }
+  let!(:agent) { create(:agent, password: "Correcth0rse!", admin_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent) }
 
   context "login with wrong password" do
@@ -13,7 +13,7 @@ RSpec.describe "API auth", type: :request do
         headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
       )
       expect(response.status).to eq(401)
-      expect(response.has_header?("access-token")).to eq(false)
+      expect(response.has_header?("access-token")).to be(false)
     end
   end
 
@@ -21,11 +21,11 @@ RSpec.describe "API auth", type: :request do
     it "returns error" do
       post(
         api_v1_agent_with_token_auth_session_path,
-        params: { email: "blah@demo.rdv-sol.fr", password: "correcthorse" }.to_json,
+        params: { email: "blah@demo.rdv-sol.fr", password: "Correcth0rse!" }.to_json,
         headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
       )
       expect(response.status).to eq(401)
-      expect(response.has_header?("access-token")).to eq(false)
+      expect(response.has_header?("access-token")).to be(false)
     end
   end
 
@@ -54,11 +54,11 @@ RSpec.describe "API auth", type: :request do
     it "gives you an authentication code if you are an existing user and you satisfy the password" do
       post(
         api_v1_agent_with_token_auth_session_path,
-        params: { email: agent.email, password: "correcthorse" }.to_json,
+        params: { email: agent.email, password: "Correcth0rse!" }.to_json,
         headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
       )
       expect(response.status).to eq(200)
-      expect(response.has_header?("access-token")).to eq(true)
+      expect(response.has_header?("access-token")).to be(true)
       get(
         api_v1_absences_path,
         headers: {

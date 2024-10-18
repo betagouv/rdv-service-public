@@ -5,14 +5,10 @@
     = f.email_field :email, autofocus: true, class: "form-control", placeholder: "nom.prenom@email.com"
   .form-group
     = f.label :password
-    = f.password_field :password, autocomplete: "off", required: true, class: "form-control ", placeholder: "Votre mot de passe", id: "password"
+    = f.password_field :password, autocomplete: "current-password", required: true, class: "form-control ", placeholder: "Votre mot de passe", id: "password"
     span.fa.fa-fw.fa-eye.toggle-password role="button" aria-hidden="true" tabindex="-1"
 
     .mt-1.mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name)
 
-  .form-group.mb-3
-    .custom-control.custom-checkbox
-      = f.check_box :remember_me, class: "custom-control-input"
-      = f.label :remember_me, t("devise.sessions.new.remember_me"),class: "custom-control-label"
-  .form-group.mb-0.text-center
+  .form-group.mb-0.rdv-text-align-center
     = f.submit "Se connecter", class: "btn btn-primary"

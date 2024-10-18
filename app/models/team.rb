@@ -14,7 +14,7 @@ class Team < ApplicationRecord
           id: "D",
         },
       ignoring: :accents,
-      using: { tsearch: { prefix: true, any_word: true } },
+      using: { tsearch: { prefix: true } },
     }
   end
 
@@ -31,6 +31,9 @@ class Team < ApplicationRecord
   # Validations
   validates :name, presence: true, uniqueness: { scope: :territory }
   validate :agent_from_same_territory, if: -> { agents.any? }
+
+  # Scopes
+  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(teams.name))")) }
 
   ## -
 

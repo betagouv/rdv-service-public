@@ -5,7 +5,7 @@ RSpec.describe "Rés'In specific public link" do
     travel_to(Time.zone.parse("2023-01-30 17:00"))
   end
 
-  let!(:cnfs_territory) { create(:territory, departement_number: "CN") }
+  let!(:cnfs_territory) { create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER) }
   let!(:cnfs_service) { create(:service, :conseiller_numerique) }
   let!(:orga_cnfs_lyon_a) { create(:organisation, territory: cnfs_territory, external_id: "123") }
   let!(:orga_cnfs_lyon_b) { create(:organisation, territory: cnfs_territory, external_id: "456") }

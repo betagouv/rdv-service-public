@@ -1,3 +1,4 @@
+# voir docs/interconnexions/ants.md
 class Api::Ants::EditorController < Api::Ants::BaseController
   before_action :check_required_params!, only: [:available_time_slots]
 
@@ -40,17 +41,18 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def time_slots(lieu, reason)
-    motifs(lieu, reason).map do |motif|
+    creneaux = motifs(lieu, reason).map do |motif|
       motif.default_duration_in_min = rdv_duration(motif)
       motif_creneaux = creneaux(lieu, motif)
       motif_creneaux.map { |creneau| time_slot_data(creneau) }.uniq
-    end.flatten
+    end
+
+    creneaux.flatten.uniq { _1[:datetime] }.sort_by { _1[:datetime] }
   end
 
   def creneaux(lieu, motif)
-    Users::CreneauxSearch.new(
+    CreneauxSearch::ForUser.new(
       lieu: lieu,
-      user: @current_user,
       motif: motif,
       date_range: date_range
     ).creneaux
@@ -100,6 +102,10 @@ class Api::Ants::EditorController < Api::Ants::BaseController
       Sentry.capture_message("ANTS provided invalid reason: #{params[:reason].inspect}", fingerprint: ["ants_invalid_reason"])
       render status: :bad_request, json: { error: { code: 400, message: "Invalid reason param" } }
     end
+
+    if params[:start_date] > params[:end_date]
+      render status: :bad_request, json: { error: { code: 400, message: "start_date is after end_date" } }
+    end
   end
 
   def time_slot_data(creneau)
@@ -112,9 +118,9 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   def time_slot_url(creneau)
     creneaux_url(
       starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
-      lieu_id: creneau.lieu.id,
+      lieu_id: creneau.lieu_id,
       motif_id: creneau.motif.id,
-      public_link_organisation_id: creneau.lieu.organisation.id,
+      public_link_organisation_id: creneau.motif.organisation_id,
       duration: creneau.motif.default_duration_in_min
     )
   end

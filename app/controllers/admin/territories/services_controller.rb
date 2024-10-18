@@ -1,6 +1,6 @@
 class Admin::Territories::ServicesController < Admin::Territories::BaseController
   def edit
-    authorize current_territory
+    authorize(current_territory, policy_class: Agent::TerritoryPolicy)
 
     activated_services = format_for_checkboxes(current_territory.services)
     other_services = format_for_checkboxes(Service.where.not(id: current_territory.service_ids))
@@ -9,8 +9,8 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   end
 
   def update
-    authorize current_territory
-    current_territory.update(services_params)
+    authorize(current_territory, policy_class: Agent::TerritoryPolicy)
+    current_territory.update!(services_params)
     flash[:alert] = "Liste des services disponibles mise à jour"
 
     if params[:redirect_to_organisation_id].present?

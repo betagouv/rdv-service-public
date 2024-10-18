@@ -3,7 +3,7 @@
   "info": {
     "title": "API RDV Solidarités",
     "version": "v1",
-    "description": "L'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.\n\nToutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.\n\n# Dépréciations\n\n**ATTENTION l'association `rdvs_users` des `rdvs` est dépréciée au profit de l'association `participations`.**\n\n**ATTENTION le champ `created_by` des `rdvs` et des `participations` est déprécié au profit du champ `created_by_type`.**\n\n\n# Requêtes\n\nL'API adhère aux principes REST :\n\n- requêtes `GET` : lecture sans modification\n- requêtes `POST` : création de nouvelle ressource\n- requêtes `PATCH` : mise à jour d'une ressource existante\n- requêtes `DELETE` : suppression d'une ressource\n\nLes paramètres des requêtes `GET` doivent être envoyés via les query string de la requête.\n\nLes paramètres des requêtes `POST` doivent être transmis dans le corps de la requête sous un format JSON valide, et doivent contenir le header `Content-Type: application/json`.\n\nLes paramètres doivent respecter les formats suivants :\n- `DATE` : \"YYYY-MM-DD\" par exemple : \"2021-10-21\"\n- `TIME` : H:m[:s], par exemple : \"10:30\"\n\n# Versionnage\n\nL'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).\n\n# Routes\n\nLes points de terminaison de l'API sont accessibles par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.\n\nAvec :\n\n- `version` est la version de l'API\n- `endpoint` est le nom du point de terminaison\n\nPar exemple, on aura : `https://<domain>/api/v1/absences`\n\nPour la version production, les requêtes doivent être adressées à https://www.rdv-solidarites.fr et non à https://rdv-solidarites.fr.\n\nPour la version démo, les requêtes doivent être adressées à https://demo.rdv-solidarites.fr.\n\n# Authentification\n\nCertains points de terminaison sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.\n\n## Headers d'authentification\n\nTous les agents peuvent utiliser l'API. Les requêtes faites sur l'API sont authentifiées grace à des tokens d'accès associés à chaque agent. Chaque action faite via l'API est donc attribuable à un agent.\n\nPour récupérer le token d'accès d'un agent il faut faire une première requête `POST` à l'url `https://www.rdv-solidarites.fr/api/v1/auth/sign_in` en passant en paramètres JSON l'email et le mot de passe de l'agent. Par exemple (avec HTTPie) :\n\n```httpie\nhttp --json POST 'https://www.rdv-solidarites.fr/api/v1/auth/sign_in' \\\n  email='martine@demo.rdv-solidarites.fr' password='123456'\n```\n\nEn cas de succès d'authentification, la réponse à cette requête contiendra dans le corps le détail de l'agent, et dans les headers les token d'accès à l'API. Par exemple :\n\n```http\nHTTP/1.1 200 OK\nX-Frame-Options: SAMEORIGIN\nX-XSS-Protection: 1; mode=block\nX-Content-Type-Options: nosniff\nX-Download-Options: noopen\nX-Permitted-Cross-Domain-Policies: none\nReferrer-Policy: strict-origin-when-cross-origin\nContent-Type: application/json; charset=utf-8\naccess-token: SFYBngO55ImjD1HOcv-ivQ< token-type: Bearer\nclient: Z6EihQAY9NWsZByfZ47i_Q< expiry: 1605600758\nuid: martine@demo.rdv-solidarites.fr\nETag: W/\"0fe52663d6745c922160384e13afe1e1\"\nCache-Control: max-age=0, private, must-revalidate\nX-Meta-Request-Version: 0.7.2\nX-Request-Id: 291fab6a-043b-4b9c-b4b9-3c7fc9c9453a\nX-Runtime: 0.194743< Transfer-Encoding: chunked\n* Connection #0 to host rdv-solidarites.fr left intact\n{\n  \"data\": {\n    \"id\":1,\n    \"deleted_at\":null,\n    \"email\":\"martine@demo.rdv-solidarites.fr\",\n    \"provider\":\"email\",\n    \"service_id\":1,\n    \"role\":\"admin\",\n    \"last_name\":\"VALIDAY\",\n    \"first_name\":\"Martine\",\n    \"uid\":\"martine@demo.rdv-solidarites.fr\",\n    \"allow_password_change\":false\n  }\n}\n* Closing connection 0\n```\n\nLes 3 headers essentiels pour l'authentification sont les suivants :\n\n```http\naccess-token: SFYBngO55ImjD1HOcv-ivQ\nclient: Z6EihQAY9NWsZByfZ47i_Q\nuid: martine@demo.rdv-solidarites.fr\n```\n\n- `access-token` : c'est le jeton d'accès qui vous a été attribué. Il a une durée de vie de 24h, après ça il vous faudra reproduire cette procédure pour en récupérer un nouveau.\n- `client` : un identifiant unique associé à l'appareil depuis lequel vous avez effectué la requête\n- `uid` : l'identifiant de l'agent dans l'API, égal à l'email de l'agent.\n\n**Ces 3 headers doivent être transmis avec chacune de vos requêtes successives à l'API**, peu importe la méthode HTTP.\n\n## Permissions\n\nLes rôles et permissions des agents sont les mêmes via l'API que depuis l'interface web.\n\nC'est à dire que les agents classiques ont accès à leur service uniquement, les agents du service secrétariat peuvent accéder aux agendas des agents des autres services, les agents admin ont accès à toute l'organisation, etc.\n\nPar défaut, les requêtes en lecture n'appliquent aucun filtre et retourneront toutes les ressources auxquelles a accès l'agent connecté. Par exemple si un agent admin fait une requête pour accéder à la liste des absences sans filtre, l'API retournera toutes les absences de tous les agents appartenant aux organisations dont fait partie cet agent admin, ce qui peut faire beaucoup.\n\n\n\n# Sérialisation\n\nL'API supporte uniquement le format JSON. Toutes les réponses envoyées par l'API contiendront le header `Content-Type: application/json` et leur contenu est présent dans le body dans un format JSON à désérialiser.\n\n# Pagination des réponses par listes\n\nTous les points de terminaison qui retournent des listes sont paginés. De manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.\n\n## Paramètres\n\nLe paramètre (optionnel) `page` permet d'accéder à une page donnée. Sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 100 éléments par page.\n\n## Résultats\n\nLa réponse contient en outre un objet meta qui indique le nombre total de pages et d’items, par exemple :\n\n```rb\n{\n  […],\n  \"meta\": {\n      \"current_page\": 1,\n      \"total_count\": 112,\n      \"total_pages\": 2\n  }\n}\n```\n\n# Rate limiting\n\nL'utilisation de l'API est limitée pour les points de terminaison sans authentification. Vous pouvez effectuer au maximum 50 appels par minutes. Si vous dépassez cette limite, une erreur 429 vous sera renvoyée et vous trouverez le temps que vous devez attendre avant de relancer une requête dans le header (`Retry-After`).\n\n# Codes de retour\n\nL'API est susceptible de retourner les codes suivants :\n\n| Code  | Nom                   | Description                                                                   |\n| ----  | --------              | --------                                                                      |\n| `200` | Success               | Succès                                                                        |\n| `204` | No Content            | Succès mais la réponse ne contient pas de données (exemple : suppression)     |\n| `400` | Bad Request           | La requête est invalide                                                       |\n| `401` | Unauthorized          | L'authentification a échoué                                                   |\n| `403` | Forbidden             | Droits insuffisants pour réaliser l'action demandée                           |\n| `404` | Not Found             | La ressource est introuvable                                                  |\n| `422` | Unprocessable Entity  | La donnée transmise est mal formattée                                         |\n| `429` | Too Many Requests     | Trop de requêtes ont été effectuées                                           |\n| `500` | Internal Server Error | Une erreur serveur produite (l'équipe technique est notifiée automatiquement) |\n\n# Erreurs\n\nEn cas d'erreur reconnue par le système (par exemple erreur 422), les champs suivants seront présents dans la réponse pour vous informer sur les problèmes :\n\n- `errors` : [ERREUR] : liste d'erreurs groupées par attribut problèmatique au format machine\n- `error_messages` : [ERREUR] : idem mais dans un format plus facilement lisible.\n\n# Principes fonctionnels\n\n- Les statuts des RDV et des participants.\n\nLe statut du RDV (status) est un statut général. **Il n'est pas représentatif des statuts individuels des usagers.**\n\n**Chaque participant au RDV a son propre statut de participation porté par l'association `participations` du RDV.**\n\nPour les RDV avec l'attribut collectif à false les statuts du/des participants et du RDV seront tous identiques. (dans l'exemple suivant : `seen`)\n\nIl est conseillé malgrés tout d'utiliser les statuts des participants (dans `participations`) quelque soit le type de rdv.\n\n```rb\n{\n  \"rdvs\": [\n    {\n      \"id\": 8,\n      \"collectif\": false,\n      \"status\": \"seen\",\n      \"participations\": [\n        {\n          \"id\": 8,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 10,\n            \"first_name\": \"Tristan\",\n            \"last_name\": \"LEROUX\",\n          }\n        },\n        {\n          \"id\": 9,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 11,\n            \"first_name\": \"Marie\",\n            \"last_name\": \"LEROUX\",\n          }\n        }\n      ],\n      \"participations\": [\n        {\n          \"id\": 8,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 10,\n            \"first_name\": \"Tristan\",\n            \"last_name\": \"LEROUX\",\n          }\n        },\n        {\n          \"id\": 9,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 11,\n            \"first_name\": \"Marie\",\n            \"last_name\": \"LEROUX\",\n          }\n        }\n      ],\n      \"users_count\": 2,\n    }\n  ],\n}\n```\n\nPour les RDV avec l'attribut collectif à true les statuts du/des participants peuvent être différents.\n\nIci, le RDV a un status `seen` mais les 3 participants ont des status de participation différents.\n- Tristan Leroux s'est présenté au RDV collectif : `seen`\n- Roger Lapin ne s'est pas présenté et n'a pas annulé : `noshow`\n- Marie Dupont a annulé sa venue : `excused`\n\n`users_count` représente le nombre d'inscrits au RDV en temps réél (Tous les statuts hors `revoked` et `excused`)\n\n```rb\n{\n  \"rdvs\": [\n    {\n      \"id\": 8,\n      \"collectif\": true,\n      \"status\": \"seen\",\n      \"participations\": [\n        {\n          \"id\": 8,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 10,\n            \"first_name\": \"Tristan\",\n            \"last_name\": \"LEROUX\",\n          }\n        },\n        {\n          \"id\": 9,\n          \"status\": \"noshow\",\n          \"user\": {\n            \"id\": 11,\n            \"first_name\": \"Roger\",\n            \"last_name\": \"LAPIN\",\n          }\n        },\n        {\n          \"id\": 7,\n          \"status\": \"excused\",\n          \"user\": {\n            \"id\": 12,\n            \"first_name\": \"Marie\",\n            \"last_name\": \"DUPONT\",\n          }\n        },\n      ],\n      \"participations\": [\n        {\n          \"id\": 8,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 10,\n            \"first_name\": \"Tristan\",\n            \"last_name\": \"LEROUX\",\n          }\n        },\n        {\n          \"id\": 9,\n          \"status\": \"noshow\",\n          \"user\": {\n            \"id\": 11,\n            \"first_name\": \"Roger\",\n            \"last_name\": \"LAPIN\",\n          }\n        },\n        {\n          \"id\": 7,\n          \"status\": \"excused\",\n          \"user\": {\n            \"id\": 12,\n            \"first_name\": \"Marie\",\n            \"last_name\": \"DUPONT\",\n          }\n        },\n      ],\n      \"users_count\": 2,\n    }\n  ],\n}\n```\n"
+    "description": "L'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.\n\nToutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.\n\n# Dépréciations\n\n**ATTENTION le champ `created_by` des `rdvs` et des `participations` est déprécié au profit du champ `created_by_type`.**\n\n# Requêtes\n\nL'API adhère aux principes REST :\n\n- requêtes `GET` : lecture sans modification\n- requêtes `POST` : création de nouvelle ressource\n- requêtes `PATCH` : mise à jour d'une ressource existante\n- requêtes `DELETE` : suppression d'une ressource\n\nLes paramètres des requêtes `GET` doivent être envoyés via les query string de la requête.\n\nLes paramètres des requêtes `POST` doivent être transmis dans le corps de la requête sous un format JSON valide, et doivent contenir le header `Content-Type: application/json`.\n\nLes paramètres doivent respecter les formats suivants :\n- `DATE` : \"YYYY-MM-DD\" par exemple : \"2021-10-21\"\n- `TIME` : H:m[:s], par exemple : \"10:30\"\n\n# Versionnage\n\nL'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).\n\n# Routes\n\nLes points de terminaison de l'API sont accessibles par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.\n\nAvec :\n\n- `version` est la version de l'API\n- `endpoint` est le nom du point de terminaison\n\nPar exemple, on aura : `https://<domain>/api/v1/absences`\n\nPour la version production, les requêtes doivent être adressées à https://www.rdv-solidarites.fr et non à https://rdv-solidarites.fr.\n\nPour la version démo, les requêtes doivent être adressées à https://demo.rdv-solidarites.fr.\n\n# Authentification\n\nCertains points de terminaison sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.\n\n## Headers d'authentification\n\nTous les agents peuvent utiliser l'API. Les requêtes faites sur l'API sont authentifiées grace à des tokens d'accès associés à chaque agent. Chaque action faite via l'API est donc attribuable à un agent.\n\nPour récupérer le token d'accès d'un agent il faut faire une première requête `POST` à l'url `https://www.rdv-solidarites.fr/api/v1/auth/sign_in` en passant en paramètres JSON l'email et le mot de passe de l'agent. Par exemple (avec HTTPie) :\n\n```httpie\nhttp --json POST 'https://www.rdv-solidarites.fr/api/v1/auth/sign_in' \\\n  email='martine@demo.rdv-solidarites.fr' password='123456'\n```\n\nEn cas de succès d'authentification, la réponse à cette requête contiendra dans le corps le détail de l'agent, et dans les headers les token d'accès à l'API. Par exemple :\n\n```http\nHTTP/1.1 200 OK\nX-Frame-Options: SAMEORIGIN\nX-XSS-Protection: 1; mode=block\nX-Content-Type-Options: nosniff\nX-Download-Options: noopen\nX-Permitted-Cross-Domain-Policies: none\nReferrer-Policy: strict-origin-when-cross-origin\nContent-Type: application/json; charset=utf-8\naccess-token: SFYBngO55ImjD1HOcv-ivQ< token-type: Bearer\nclient: Z6EihQAY9NWsZByfZ47i_Q< expiry: 1605600758\nuid: martine@demo.rdv-solidarites.fr\nETag: W/\"0fe52663d6745c922160384e13afe1e1\"\nCache-Control: max-age=0, private, must-revalidate\nX-Meta-Request-Version: 0.7.2\nX-Request-Id: 291fab6a-043b-4b9c-b4b9-3c7fc9c9453a\nX-Runtime: 0.194743< Transfer-Encoding: chunked\n* Connection #0 to host rdv-solidarites.fr left intact\n{\n  \"data\": {\n    \"id\":1,\n    \"deleted_at\":null,\n    \"email\":\"martine@demo.rdv-solidarites.fr\",\n    \"provider\":\"email\",\n    \"service_id\":1,\n    \"role\":\"admin\",\n    \"last_name\":\"VALIDAY\",\n    \"first_name\":\"Martine\",\n    \"uid\":\"martine@demo.rdv-solidarites.fr\",\n    \"allow_password_change\":false\n  }\n}\n* Closing connection 0\n```\n\nLes 3 headers essentiels pour l'authentification sont les suivants :\n\n```http\naccess-token: SFYBngO55ImjD1HOcv-ivQ\nclient: Z6EihQAY9NWsZByfZ47i_Q\nuid: martine@demo.rdv-solidarites.fr\n```\n\n- `access-token` : c'est le jeton d'accès qui vous a été attribué. Il a une durée de vie de 24h, après ça il vous faudra reproduire cette procédure pour en récupérer un nouveau.\n- `client` : un identifiant unique associé à l'appareil depuis lequel vous avez effectué la requête\n- `uid` : l'identifiant de l'agent dans l'API, égal à l'email de l'agent.\n\n**Ces 3 headers doivent être transmis avec chacune de vos requêtes successives à l'API**, peu importe la méthode HTTP.\n\n## Permissions\n\nLes rôles et permissions des agents sont les mêmes via l'API que depuis l'interface web.\n\nC'est à dire que les agents classiques ont accès à leur service uniquement, les agents du service secrétariat peuvent accéder aux agendas des agents des autres services, les agents admin ont accès à toute l'organisation, etc.\n\nPar défaut, les requêtes en lecture n'appliquent aucun filtre et retourneront toutes les ressources auxquelles a accès l'agent connecté. Par exemple si un agent admin fait une requête pour accéder à la liste des absences sans filtre, l'API retournera toutes les absences de tous les agents appartenant aux organisations dont fait partie cet agent admin, ce qui peut faire beaucoup.\n\n\n\n# Sérialisation\n\nL'API supporte uniquement le format JSON. Toutes les réponses envoyées par l'API contiendront le header `Content-Type: application/json` et leur contenu est présent dans le body dans un format JSON à désérialiser.\n\n# Pagination des réponses par listes\n\nTous les points de terminaison qui retournent des listes sont paginés. De manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.\n\n## Paramètres\n\nLe paramètre (optionnel) `page` permet d'accéder à une page donnée. Sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 100 éléments par page.\n\n## Résultats\n\nLa réponse contient en outre un objet meta qui indique le nombre total de pages et d’items, par exemple :\n\n```rb\n{\n  […],\n  \"meta\": {\n      \"current_page\": 1,\n      \"total_count\": 112,\n      \"total_pages\": 2\n  }\n}\n```\n\n# Rate limiting\n\nL'utilisation de l'API est limitée pour les points de terminaison sans authentification. Vous pouvez effectuer au maximum 50 appels par minutes. Si vous dépassez cette limite, une erreur 429 vous sera renvoyée et vous trouverez le temps que vous devez attendre avant de relancer une requête dans le header (`Retry-After`).\n\n# Codes de retour\n\nL'API est susceptible de retourner les codes suivants :\n\n| Code  | Nom                   | Description                                                                   |\n| ----  | --------              | --------                                                                      |\n| `200` | Success               | Succès                                                                        |\n| `204` | No Content            | Succès mais la réponse ne contient pas de données (exemple : suppression)     |\n| `400` | Bad Request           | La requête est invalide                                                       |\n| `401` | Unauthorized          | L'authentification a échoué                                                   |\n| `403` | Forbidden             | Droits insuffisants pour réaliser l'action demandée                           |\n| `404` | Not Found             | La ressource est introuvable                                                  |\n| `422` | Unprocessable Entity  | La donnée transmise est mal formattée                                         |\n| `429` | Too Many Requests     | Trop de requêtes ont été effectuées                                           |\n| `500` | Internal Server Error | Une erreur serveur produite (l'équipe technique est notifiée automatiquement) |\n\n# Erreurs\n\nEn cas d'erreur reconnue par le système (par exemple erreur 422), les champs suivants seront présents dans la réponse pour vous informer sur les problèmes :\n\n- `errors` : [ERREUR] : liste d'erreurs groupées par attribut problèmatique au format machine\n- `error_messages` : [ERREUR] : idem mais dans un format plus facilement lisible.\n\n# Principes fonctionnels\n\n- Les statuts des RDV et des participants.\n\nLe statut du RDV (status) est un statut général. **Il n'est pas représentatif des statuts individuels des usagers.**\n\n**Chaque participant au RDV a son propre statut de participation porté par l'association `participations` du RDV.**\n\nPour les RDV avec l'attribut collectif à false les statuts du/des participants et du RDV seront tous identiques. (dans l'exemple suivant : `seen`)\n\nIl est conseillé malgrés tout d'utiliser les statuts des participants (dans `participations`) quelque soit le type de rdv.\n\n```rb\n{\n  \"rdvs\": [\n    {\n      \"id\": 8,\n      \"collectif\": false,\n      \"status\": \"seen\",\n      \"participations\": [\n        {\n          \"id\": 8,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 10,\n            \"first_name\": \"Tristan\",\n            \"last_name\": \"LEROUX\",\n          }\n        },\n        {\n          \"id\": 9,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 11,\n            \"first_name\": \"Marie\",\n            \"last_name\": \"LEROUX\",\n          }\n        }\n      ],\n      \"participations\": [\n        {\n          \"id\": 8,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 10,\n            \"first_name\": \"Tristan\",\n            \"last_name\": \"LEROUX\",\n          }\n        },\n        {\n          \"id\": 9,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 11,\n            \"first_name\": \"Marie\",\n            \"last_name\": \"LEROUX\",\n          }\n        }\n      ],\n      \"users_count\": 2,\n    }\n  ],\n}\n```\n\nPour les RDV avec l'attribut collectif à true les statuts du/des participants peuvent être différents.\n\nIci, le RDV a un status `seen` mais les 3 participants ont des status de participation différents.\n- Tristan Leroux s'est présenté au RDV collectif : `seen`\n- Roger Lapin ne s'est pas présenté et n'a pas annulé : `noshow`\n- Marie Dupont a annulé sa venue : `excused`\n\n`users_count` représente le nombre d'inscrits au RDV en temps réél (Tous les statuts hors `revoked` et `excused`)\n\n```rb\n{\n  \"rdvs\": [\n    {\n      \"id\": 8,\n      \"collectif\": true,\n      \"status\": \"seen\",\n      \"participations\": [\n        {\n          \"id\": 8,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 10,\n            \"first_name\": \"Tristan\",\n            \"last_name\": \"LEROUX\",\n          }\n        },\n        {\n          \"id\": 9,\n          \"status\": \"noshow\",\n          \"user\": {\n            \"id\": 11,\n            \"first_name\": \"Roger\",\n            \"last_name\": \"LAPIN\",\n          }\n        },\n        {\n          \"id\": 7,\n          \"status\": \"excused\",\n          \"user\": {\n            \"id\": 12,\n            \"first_name\": \"Marie\",\n            \"last_name\": \"DUPONT\",\n          }\n        },\n      ],\n      \"participations\": [\n        {\n          \"id\": 8,\n          \"status\": \"seen\",\n          \"user\": {\n            \"id\": 10,\n            \"first_name\": \"Tristan\",\n            \"last_name\": \"LEROUX\",\n          }\n        },\n        {\n          \"id\": 9,\n          \"status\": \"noshow\",\n          \"user\": {\n            \"id\": 11,\n            \"first_name\": \"Roger\",\n            \"last_name\": \"LAPIN\",\n          }\n        },\n        {\n          \"id\": 7,\n          \"status\": \"excused\",\n          \"user\": {\n            \"id\": 12,\n            \"first_name\": \"Marie\",\n            \"last_name\": \"DUPONT\",\n          }\n        },\n      ],\n      \"users_count\": 2,\n    }\n  ],\n}\n```\n"
   },
   "components": {
     "securitySchemes": {
@@ -118,12 +118,6 @@
               "$ref": "#/components/schemas/participation"
             }
           },
-          "rdvs_users": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/rdvs_user"
-            }
-          },
           "starts_at": {
             "type": "string"
           },
@@ -164,7 +158,6 @@
           "motif",
           "name",
           "organisation",
-          "rdvs_users",
           "participations",
           "starts_at",
           "status",
@@ -205,6 +198,10 @@
             "nullable": true
           },
           "last_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "inclusion_connect_open_id_sub": {
             "type": "string",
             "nullable": true
           }
@@ -824,55 +821,6 @@
           "territory"
         ]
       },
-      "rdvs_user": {
-        "type": "object",
-        "properties": {
-          "send_lifecycle_notifications": {
-            "type": "boolean"
-          },
-          "send_reminder_notification": {
-            "type": "boolean"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "unknown",
-              "seen",
-              "excused",
-              "revoked",
-              "noshow"
-            ]
-          },
-          "user": {
-            "$ref": "#/components/schemas/user"
-          },
-          "created_by": {
-            "type": "string",
-            "enum": [
-              "agent",
-              "user",
-              "prescripteur"
-            ]
-          },
-          "created_by_type": {
-            "type": "string",
-            "enum": [
-              "Agent",
-              "User",
-              "Prescripteur"
-            ]
-          },
-          "created_by_id": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "send_lifecycle_notifications",
-          "send_reminder_notification",
-          "status",
-          "user"
-        ]
-      },
       "participation": {
         "type": "object",
         "properties": {
@@ -1150,628 +1098,6 @@
     }
   ],
   "paths": {
-    "/api/rdvinsertion/invitations/creneau_availability": {
-      "get": {
-        "summary": "Renvoi true si au moins un créneau est disponible pour une invitation",
-        "security": [
-          {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access-token",
-            "in": "header",
-            "description": "Token d'accès (authentification)",
-            "example": "SFYBngO55ImjD1HOcv-ivQ",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "client",
-            "in": "header",
-            "description": "Clé client d'accès (authentification)",
-            "example": "Z6EihQAY9NWsZByfZ47i_Q",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uid",
-            "in": "header",
-            "description": "Identifiant d'accès (authentification)",
-            "example": "martine@demo.rdv-solidarites.fr",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "invitation_token",
-            "in": "query",
-            "description": "Le token d'invitation",
-            "example": "123456789",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "address",
-            "in": "query",
-            "description": "L'adresse de recherche",
-            "example": "1 rue de la paix",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "latitude",
-            "in": "query",
-            "description": "La latitude de recherche",
-            "example": "45.188529",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "longitude",
-            "in": "query",
-            "description": "La longitude de recherche",
-            "example": "5.724524",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "city_code",
-            "in": "query",
-            "description": "Le code INSEE de la commune de recherche",
-            "example": "26001",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "departement",
-            "in": "query",
-            "description": "Le numéro ou code de département de recherche",
-            "example": "26",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "street_ban_id",
-            "in": "query",
-            "description": "L'ID de la voie de recherche",
-            "example": "260010000Rue de la Paix",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "motif_category_short_name",
-            "in": "query",
-            "description": "Le nom court de la catégorie de motif de recherche",
-            "example": "rsa_orientation",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "lieu_id",
-            "in": "query",
-            "description": "L'ID du lieu de recherche",
-            "example": "1",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "organisation_ids[]",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "description": "Les IDs des organisations de recherche",
-            "example": [
-              "1",
-              "2",
-              "3"
-            ],
-            "required": false
-          },
-          {
-            "name": "referent_ids[]",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "description": "Les IDs des référents de recherche",
-            "example": [
-              "1",
-              "2",
-              "3"
-            ],
-            "required": false
-          }
-        ],
-        "tags": [
-          "CreneauxCount"
-        ],
-        "operationId": "availableCreneauxCount",
-        "description": "Renvoi true si au moins un créneau est disponible pour une invitation",
-        "responses": {
-          "200": {
-            "description": "Retourne true quand il y a des créneaux disponibles",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "creneau_availability": true,
-                      "error": "Couldn't find Lieu with 'id'=666"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/rdvinsertion/motif_categories/": {
-      "post": {
-        "summary": "Créer une catégorie de motifs",
-        "security": [
-          {
-            "uid": [
-
-            ],
-            "X-Agent-Auth-Signature": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "uid",
-            "in": "header",
-            "description": "Identifiant d'accès (authentification)",
-            "example": "martine@demo.rdv-solidarites.fr",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Agent-Auth-Signature",
-            "in": "header",
-            "description": "payload crypté par le SHARED_SECRET_FOR_AGENTS_AUTH",
-            "example": "SFYBngO55ImjD1HOcv",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "description": "Nom affiché de la catégorie de motifs",
-            "example": "RSA Orientation",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "short_name",
-            "in": "query",
-            "description": "Nom de la catégorie (généralement parametrizé)",
-            "example": "rsa_orientation",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "tags": [
-          "MotifCategory"
-        ],
-        "operationId": "createMotifCategory",
-        "description": "Crée une catégorie de motifs",
-        "responses": {
-          "200": {
-            "description": "Crée une catégorie de motifs",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "motif_category": {
-                        "id": 64,
-                        "name": "RSA Orientation",
-                        "short_name": "rsa_orientation"
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/motif_category_with_root"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "errors": [
-                        "Vous devez vous connecter ou vous inscrire pour continuer."
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/error_authentication"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/rdvinsertion/motif_category_territories/": {
-      "post": {
-        "summary": "Activer une catégorie de motifs sur un territoire",
-        "security": [
-          {
-            "uid": [
-
-            ],
-            "X-Agent-Auth-Signature": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "uid",
-            "in": "header",
-            "description": "Identifiant d'accès (authentification)",
-            "example": "martine@demo.rdv-solidarites.fr",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Agent-Auth-Signature",
-            "in": "header",
-            "description": "payload crypté par le SHARED_SECRET_FOR_AGENTS_AUTH",
-            "example": "SFYBngO55ImjD1HOcv",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "organisation_id",
-            "in": "query",
-            "description": "ID de l'organisation",
-            "example": 12,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "motif_category_short_name",
-            "in": "query",
-            "description": "Nom de la catégorie (généralement parametrizé)",
-            "example": "rsa_orientation",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "tags": [
-          "MotifCategoryTerritory"
-        ],
-        "operationId": "createMotifCategoryTerritory",
-        "description": "Activer une catégorie de motifs sur un territoire",
-        "responses": {
-          "200": {
-            "description": "Active une catégorie de motifs sur un territoire",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "territory": {
-                        "id": 46,
-                        "departement_number": "01",
-                        "motif_categories": [
-                          {
-                            "id": 69,
-                            "name": "Catégorie de motif n°1",
-                            "short_name": "1_motif_cat"
-                          }
-                        ],
-                        "name": "Territoire n°1"
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/territory_with_root"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "errors": [
-                        "Vous devez vous connecter ou vous inscrire pour continuer."
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/error_authentication"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/rdvinsertion/referent_assignations/create_many": {
-      "post": {
-        "summary": "Ajouter un ou plusieurs référents à un utilisateur",
-        "security": [
-          {
-            "uid": [
-
-            ],
-            "X-Agent-Auth-Signature": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "uid",
-            "in": "header",
-            "description": "Identifiant d'accès (authentification)",
-            "example": "martine@demo.rdv-solidarites.fr",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Agent-Auth-Signature",
-            "in": "header",
-            "description": "payload crypté par le SHARED_SECRET_FOR_AGENTS_AUTH",
-            "example": "SFYBngO55ImjD1HOcv",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "agent_ids[]",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "description": "ID des agents référents",
-            "example": "[1, 2]"
-          },
-          {
-            "name": "user_id",
-            "in": "query",
-            "description": "ID de l'utilisateur",
-            "example": 12,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "tags": [
-          "ReferentAssignations"
-        ],
-        "operationId": "createReferentAssignations",
-        "description": "Ajoute un ou plusieurs référents à un utilisateur",
-        "responses": {
-          "200": {
-            "description": "Ajouter un utilisateur à une ou plusieurs organisations",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": ""
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "errors": [
-                        "Vous devez vous connecter ou vous inscrire pour continuer."
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/error_authentication"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Renvoie 'not_found' quand l'utilisateur n'a pas été trouvé",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "not_found": "user"
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/error_not_found"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/rdvinsertion/user_profiles/create_many": {
-      "post": {
-        "summary": "Ajouter un utilisateur à une ou plusieurs organisations",
-        "security": [
-          {
-            "uid": [
-
-            ],
-            "X-Agent-Auth-Signature": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "uid",
-            "in": "header",
-            "description": "Identifiant d'accès (authentification)",
-            "example": "martine@demo.rdv-solidarites.fr",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Agent-Auth-Signature",
-            "in": "header",
-            "description": "payload crypté par le SHARED_SECRET_FOR_AGENTS_AUTH",
-            "example": "SFYBngO55ImjD1HOcv",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "organisation_ids[]",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "description": "ID des organisations",
-            "example": "[1, 2]"
-          },
-          {
-            "name": "user_id",
-            "in": "query",
-            "description": "ID de l'utilisateur",
-            "example": 12,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "tags": [
-          "UserProfiles"
-        ],
-        "operationId": "createUserProfiles",
-        "description": "Ajoute un utilisateur à une ou plusieurs organisations",
-        "responses": {
-          "200": {
-            "description": "Ajouter un utilisateur à une ou plusieurs organisations",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": ""
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "errors": [
-                        "Vous devez vous connecter ou vous inscrire pour continuer."
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/error_authentication"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Renvoie 'not_found' quand l'utilisateur n'a pas été trouvé",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "not_found": "user"
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/error_not_found"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/absences": {
       "get": {
         "summary": "Lister les absences",
@@ -1977,20 +1303,21 @@
                   "example": {
                     "value": {
                       "absence": {
-                        "id": 17,
+                        "id": 18,
                         "agent": {
                           "id": 12,
                           "email": "agent@example.com",
-                          "first_name": "Amaryllis",
-                          "last_name": "Thomas"
+                          "first_name": "Agrippin",
+                          "inclusion_connect_open_id_sub": null,
+                          "last_name": "Menard"
                         },
                         "end_day": "2023-11-20",
                         "end_time": "15:00:00",
                         "first_day": "2023-11-20",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20240207T154800Z\r\nUID:absence_17@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
-                        "ical_uid": "absence_17@RDV Solidarités",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20241003T104425Z\r\nUID:absence_18@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical_uid": "absence_18@RDV Solidarités",
                         "organisation": {
-                          "id": 119,
+                          "id": 134,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
@@ -2168,20 +1495,21 @@
                   "example": {
                     "value": {
                       "absence": {
-                        "id": 26,
+                        "id": 27,
                         "agent": {
-                          "id": 135,
+                          "id": 156,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Eugène",
-                          "last_name": "Martinez"
+                          "first_name": "Eugénie",
+                          "inclusion_connect_open_id_sub": null,
+                          "last_name": "Fontaine"
                         },
-                        "end_day": "2024-02-08",
+                        "end_day": "2024-10-04",
                         "end_time": "15:30:00",
-                        "first_day": "2024-02-08",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20240207T154801Z\r\nUID:absence_26@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20240208T100000\r\nDTEND;TZID=Europe/Paris:20240208T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
-                        "ical_uid": "absence_26@RDV Solidarités",
+                        "first_day": "2024-10-04",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20241003T104426Z\r\nUID:absence_27@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20241004T100000\r\nDTEND;TZID=Europe/Paris:20241004T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical_uid": "absence_27@RDV Solidarités",
                         "organisation": {
-                          "id": 133,
+                          "id": 148,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
@@ -2380,20 +1708,21 @@
                   "example": {
                     "value": {
                       "absence": {
-                        "id": 38,
+                        "id": 39,
                         "agent": {
-                          "id": 147,
+                          "id": 168,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Adegrine",
-                          "last_name": "Blanc"
+                          "first_name": "Audebert",
+                          "inclusion_connect_open_id_sub": null,
+                          "last_name": "Prévost"
                         },
-                        "end_day": "2024-02-08",
+                        "end_day": "2024-10-04",
                         "end_time": "15:30:00",
-                        "first_day": "2024-02-08",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20240207T154802Z\r\nUID:absence_38@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20240208T100000\r\nDTEND;TZID=Europe/Paris:20240208T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
-                        "ical_uid": "absence_38@RDV Solidarités",
+                        "first_day": "2024-10-04",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20241003T104427Z\r\nUID:absence_39@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20241004T100000\r\nDTEND;TZID=Europe/Paris:20241004T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical_uid": "absence_39@RDV Solidarités",
                         "organisation": {
-                          "id": 145,
+                          "id": 160,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
@@ -2689,10 +2018,11 @@
                     "value": {
                       "agents": [
                         {
-                          "id": 168,
+                          "id": 192,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Eudoxie",
-                          "last_name": "Reynaud"
+                          "first_name": "Brigitte",
+                          "inclusion_connect_open_id_sub": null,
+                          "last_name": "Poulain"
                         }
                       ],
                       "meta": {
@@ -2841,7 +2171,7 @@
                     "value": {
                       "motifs": [
                         {
-                          "id": 86,
+                          "id": 102,
                           "bookable_by": "everyone",
                           "bookable_publicly": true,
                           "collectif": false,
@@ -2850,16 +2180,16 @@
                           "instruction_for_rdv": null,
                           "location_type": "public_office",
                           "motif_category": {
-                            "id": 76,
+                            "id": 86,
                             "name": "Catégorie de motif n°1",
                             "short_name": "1_motif_cat"
                           },
                           "name": "Motif 1",
-                          "organisation_id": 182,
-                          "service_id": 275
+                          "organisation_id": 201,
+                          "service_id": 316
                         },
                         {
-                          "id": 87,
+                          "id": 103,
                           "bookable_by": "everyone",
                           "bookable_publicly": true,
                           "collectif": false,
@@ -2868,13 +2198,13 @@
                           "instruction_for_rdv": null,
                           "location_type": "public_office",
                           "motif_category": {
-                            "id": 77,
+                            "id": 87,
                             "name": "Catégorie de motif n°2",
                             "short_name": "2_motif_cat"
                           },
                           "name": "Motif 2",
-                          "organisation_id": 182,
-                          "service_id": 275
+                          "organisation_id": 201,
+                          "service_id": 316
                         }
                       ],
                       "meta": {
@@ -3005,35 +2335,35 @@
                     "value": {
                       "organisations": [
                         {
-                          "id": 209,
+                          "id": 234,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         {
-                          "id": 210,
+                          "id": 235,
                           "email": null,
                           "name": "Organisation n°2",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         {
-                          "id": 211,
+                          "id": 236,
                           "email": null,
                           "name": "Organisation n°3",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         {
-                          "id": 212,
+                          "id": 237,
                           "email": null,
                           "name": "Organisation n°4",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         {
-                          "id": 213,
+                          "id": 238,
                           "email": null,
                           "name": "Organisation n°5",
                           "phone_number": null,
@@ -3157,7 +2487,7 @@
                   "example": {
                     "value": {
                       "organisation": {
-                        "id": 220,
+                        "id": 245,
                         "email": null,
                         "name": "Organisation n°1",
                         "phone_number": null,
@@ -3272,7 +2602,7 @@
                   "example": {
                     "value": {
                       "organisation": {
-                        "id": 224,
+                        "id": 249,
                         "email": "pole@parcours.fr",
                         "name": "Pole parcours",
                         "phone_number": "33100008012",
@@ -3363,15 +2693,15 @@
                       "public_links": [
                         {
                           "external_id": "ext_id_A",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/263"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/297"
                         },
                         {
                           "external_id": "ext_id_B",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/264"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/298"
                         },
                         {
                           "external_id": "ext_id_C",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/265"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/299"
                         }
                       ]
                     }
@@ -3529,35 +2859,36 @@
                     "value": {
                       "rdvs": [
                         {
-                          "id": 8,
-                          "address": "1 rue de l'adresse 12345 Ville",
+                          "id": 10,
+                          "address": "1 rue de l'adresse, Ville, 12345",
                           "agents": [
                             {
-                              "id": 241,
+                              "id": 275,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Ursule",
-                              "last_name": "Bourgeois"
+                              "first_name": "Pascale",
+                              "inclusion_connect_open_id_sub": null,
+                              "last_name": "Prévost"
                             }
                           ],
                           "cancelled_at": null,
                           "collectif": false,
                           "context": null,
                           "created_by": "agent",
-                          "created_by_id": 241,
+                          "created_by_id": 275,
                           "created_by_type": "Agent",
                           "duration_in_min": 45,
                           "ends_at": "2022-01-01 08:45:00 +0100",
                           "lieu": {
-                            "id": 82,
-                            "address": "1 rue de l'adresse 12345 Ville",
+                            "id": 97,
+                            "address": "1 rue de l'adresse, Ville, 12345",
                             "name": "Lieu n°1",
-                            "organisation_id": 275,
+                            "organisation_id": 309,
                             "phone_number": null,
                             "single_use": false
                           },
                           "max_participants_count": null,
                           "motif": {
-                            "id": 134,
+                            "id": 157,
                             "bookable_by": "everyone",
                             "bookable_publicly": true,
                             "collectif": false,
@@ -3566,17 +2897,17 @@
                             "instruction_for_rdv": null,
                             "location_type": "public_office",
                             "motif_category": {
-                              "id": 124,
+                              "id": 141,
                               "name": "Catégorie de motif n°1",
                               "short_name": "1_motif_cat"
                             },
                             "name": "Motif 1",
-                            "organisation_id": 277,
-                            "service_id": 350
+                            "organisation_id": 311,
+                            "service_id": 407
                           },
                           "name": null,
                           "organisation": {
-                            "id": 275,
+                            "id": 309,
                             "email": null,
                             "name": "Organisation n°1",
                             "phone_number": null,
@@ -3584,76 +2915,37 @@
                           },
                           "participations": [
                             {
-                              "id": 10,
+                              "id": 13,
                               "created_by": "agent",
                               "created_by_agent_prescripteur": false,
-                              "created_by_id": 241,
+                              "created_by_id": 275,
                               "created_by_type": "Agent",
                               "send_lifecycle_notifications": true,
                               "send_reminder_notification": true,
                               "status": "unknown",
                               "user": {
-                                "id": 59,
-                                "address": "20 avenue de Ségur, Paris",
+                                "id": 68,
+                                "address": "20 avenue de Ségur, Paris, 75012",
                                 "address_details": null,
                                 "affiliation_number": "39012093812038",
                                 "birth_date": "1985-07-20",
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2024-02-07 16:48:07 +0100",
+                                "created_at": "2024-10-03 12:44:33 +0200",
                                 "email": "usager_1@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Auxane",
+                                "first_name": "Marc",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "FABRE",
+                                "last_name": "MOREAU",
                                 "logement": "locataire",
                                 "notes": "Super note",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "07 80 48 39 29",
-                                "phone_number_formatted": "+33780483929",
-                                "responsible": null,
-                                "responsible_id": null,
-                                "user_profiles": null
-                              }
-                            }
-                          ],
-                          "rdvs_users": [
-                            {
-                              "id": 10,
-                              "created_by": "agent",
-                              "created_by_agent_prescripteur": false,
-                              "created_by_id": 241,
-                              "created_by_type": "Agent",
-                              "send_lifecycle_notifications": true,
-                              "send_reminder_notification": true,
-                              "status": "unknown",
-                              "user": {
-                                "id": 59,
-                                "address": "20 avenue de Ségur, Paris",
-                                "address_details": null,
-                                "affiliation_number": "39012093812038",
-                                "birth_date": "1985-07-20",
-                                "birth_name": null,
-                                "caisse_affiliation": "caf",
-                                "case_number": null,
-                                "created_at": "2024-02-07 16:48:07 +0100",
-                                "email": "usager_1@lapin.fr",
-                                "family_situation": "divorced",
-                                "first_name": "Auxane",
-                                "invitation_accepted_at": null,
-                                "invitation_created_at": null,
-                                "last_name": "FABRE",
-                                "logement": "locataire",
-                                "notes": "Super note",
-                                "notify_by_email": true,
-                                "notify_by_sms": true,
-                                "number_of_children": 12,
-                                "phone_number": "07 80 48 39 29",
-                                "phone_number_formatted": "+33780483929",
+                                "phone_number": "646258745",
+                                "phone_number_formatted": "+33646258745",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
@@ -3664,35 +2956,35 @@
                           "status": "unknown",
                           "users": [
                             {
-                              "id": 59,
-                              "address": "20 avenue de Ségur, Paris",
+                              "id": 68,
+                              "address": "20 avenue de Ségur, Paris, 75012",
                               "address_details": null,
                               "affiliation_number": "39012093812038",
                               "birth_date": "1985-07-20",
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2024-02-07 16:48:07 +0100",
+                              "created_at": "2024-10-03 12:44:33 +0200",
                               "email": "usager_1@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Auxane",
+                              "first_name": "Marc",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "FABRE",
+                              "last_name": "MOREAU",
                               "logement": "locataire",
                               "notes": "Super note",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "07 80 48 39 29",
-                              "phone_number_formatted": "+33780483929",
+                              "phone_number": "646258745",
+                              "phone_number_formatted": "+33646258745",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "ae883df7-ae98-4185-8b3d-cc365f6ce625"
+                          "uuid": "f2ec0b24-db7b-47be-a550-7bcb857dc288"
                         }
                       ],
                       "meta": {
@@ -3811,34 +3103,35 @@
                     "value": {
                       "referent_assignation": {
                         "agent": {
-                          "id": 336,
+                          "id": 376,
                           "email": "agent_2@lapin.fr",
-                          "first_name": "Vivien",
-                          "last_name": "Gérard"
+                          "first_name": "Émeric",
+                          "inclusion_connect_open_id_sub": null,
+                          "last_name": "Da silva"
                         },
                         "user": {
-                          "id": 131,
-                          "address": "20 avenue de Ségur, Paris",
+                          "id": 144,
+                          "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-02-07 16:48:14 +0100",
+                          "created_at": "2024-10-03 12:44:39 +0200",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Séverine",
+                          "first_name": "Marceline",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "BARBIER",
+                          "last_name": "MORIN",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "0765646571",
-                          "phone_number_formatted": "+33765646571",
+                          "phone_number": "655935387",
+                          "phone_number_formatted": "+33655935387",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4119,35 +3412,35 @@
                     "value": {
                       "user_profile": {
                         "organisation": {
-                          "id": 362,
+                          "id": 402,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         "user": {
-                          "id": 146,
-                          "address": "20 avenue de Ségur, Paris",
+                          "id": 160,
+                          "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-02-07 16:48:15 +0100",
+                          "created_at": "2024-10-03 12:44:40 +0200",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Acanthe",
+                          "first_name": "Jeannel",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "GUERIN",
+                          "last_name": "DUFOUR",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "6 34 30 09 67",
-                          "phone_number_formatted": "+33634300967",
+                          "phone_number": "0684072040",
+                          "phone_number_formatted": "+33684072040",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4446,15 +3739,15 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 162,
-                        "address": "20 avenue de Ségur, Paris",
+                        "id": 177,
+                        "address": "20 avenue de Ségur, Paris, 75012",
                         "address_details": null,
                         "affiliation_number": "39012093812038",
                         "birth_date": "1985-07-20",
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2024-02-07 16:48:17 +0100",
+                        "created_at": "2024-10-03 12:44:42 +0200",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
@@ -4466,14 +3759,14 @@
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "0619983714",
-                        "phone_number_formatted": "+33619983714",
+                        "phone_number": "784872388",
+                        "phone_number_formatted": "+33784872388",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
                           {
                             "organisation": {
-                              "id": 382,
+                              "id": 423,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null,
@@ -4666,7 +3959,7 @@
             "name": "address",
             "in": "query",
             "description": "Adresse",
-            "example": "10 rue du Havre, Paris",
+            "example": "10 rue du Havre, Paris, 75016",
             "required": false,
             "schema": {
               "type": "string"
@@ -4785,15 +4078,15 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 201,
-                        "address": "10 rue du Havre, Paris",
+                        "id": 216,
+                        "address": "10 rue du Havre, Paris, 75016",
                         "address_details": null,
                         "affiliation_number": "101010",
                         "birth_date": "1976-10-01",
                         "birth_name": "Fripouille",
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2024-02-07 16:48:18 +0100",
+                        "created_at": "2024-10-03 12:44:43 +0200",
                         "email": "jean@jacques.fr",
                         "family_situation": "single",
                         "first_name": "Alain",
@@ -4808,33 +4101,33 @@
                         "phone_number": "33600008012",
                         "phone_number_formatted": "+33600008012",
                         "responsible": {
-                          "id": 200,
-                          "address": "20 avenue de Ségur, Paris",
+                          "id": 215,
+                          "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-02-07 16:48:18 +0100",
+                          "created_at": "2024-10-03 12:44:43 +0200",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Bénigne",
+                          "first_name": "Renée",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "GAUTHIER",
+                          "last_name": "DELAUNAY",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "7 93 42 65 97",
-                          "phone_number_formatted": "+33793426597",
+                          "phone_number": "742209196",
+                          "phone_number_formatted": "+33742209196",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
                         },
-                        "responsible_id": 200,
+                        "responsible_id": 215,
                         "user_profiles": null
                       }
                     }
@@ -4970,7 +4263,7 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "invitation_token": "R1CIWRJC"
+                      "invitation_token": "VS5JNYJB"
                     }
                   }
                 },
@@ -5109,28 +4402,28 @@
                     "value": {
                       "users": [
                         {
-                          "id": 219,
-                          "address": "20 avenue de Ségur, Paris",
+                          "id": 234,
+                          "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-02-07 16:48:20 +0100",
+                          "created_at": "2024-10-03 12:44:44 +0200",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Marius",
+                          "first_name": "Brunon",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "ROGER",
+                          "last_name": "ROUSSEL",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "6 99 10 32 63",
-                          "phone_number_formatted": "+33699103263",
+                          "phone_number": "0643630277",
+                          "phone_number_formatted": "+33643630277",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -5302,7 +4595,7 @@
             "name": "address",
             "in": "query",
             "description": "Adresse",
-            "example": "10 rue du Havre, Paris",
+            "example": "10 rue du Havre, Paris, 75016",
             "required": false,
             "schema": {
               "type": "string"
@@ -5393,15 +4686,15 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 230,
-                        "address": "10 rue du Havre, Paris",
+                        "id": 245,
+                        "address": "10 rue du Havre, Paris, 75016",
                         "address_details": null,
                         "affiliation_number": "101010",
                         "birth_date": "1976-10-01",
                         "birth_name": "Fripouille",
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2024-02-07 16:48:20 +0100",
+                        "created_at": "2024-10-03 12:44:45 +0200",
                         "email": "jean@jacques.fr",
                         "family_situation": "single",
                         "first_name": "Johnny",
@@ -5416,33 +4709,33 @@
                         "phone_number": "33600008012",
                         "phone_number_formatted": "+33600008012",
                         "responsible": {
-                          "id": 229,
-                          "address": "20 avenue de Ségur, Paris",
+                          "id": 244,
+                          "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-02-07 16:48:20 +0100",
+                          "created_at": "2024-10-03 12:44:45 +0200",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Léonard",
+                          "first_name": "Josse",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "MARCHAL",
+                          "last_name": "ROBERT",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "0664049471",
-                          "phone_number_formatted": "+33664049471",
+                          "phone_number": "06 15 83 22 56",
+                          "phone_number_formatted": "+33615832256",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
                         },
-                        "responsible_id": 229,
+                        "responsible_id": 244,
                         "user_profiles": null
                       }
                     }
@@ -5589,28 +4882,28 @@
                     "value": {
                       "users": [
                         {
-                          "id": 239,
-                          "address": "20 avenue de Ségur, Paris",
+                          "id": 254,
+                          "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-02-07 16:48:21 +0100",
+                          "created_at": "2024-10-03 12:44:45 +0200",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Rose",
+                          "first_name": "Jehanne",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "ROCHE",
+                          "last_name": "LEMAITRE",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "0636499233",
-                          "phone_number_formatted": "+33636499233",
+                          "phone_number": "0652453458",
+                          "phone_number_formatted": "+33652453458",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -5733,15 +5026,15 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 244,
-                        "address": "20 avenue de Ségur, Paris",
+                        "id": 259,
+                        "address": "20 avenue de Ségur, Paris, 75012",
                         "address_details": null,
                         "affiliation_number": "39012093812038",
                         "birth_date": "1985-07-20",
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2024-02-07 16:48:21 +0100",
+                        "created_at": "2024-10-03 12:44:46 +0200",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
@@ -5753,14 +5046,14 @@
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "0786693408",
-                        "phone_number_formatted": "+33786693408",
+                        "phone_number": "7 58 35 20 60",
+                        "phone_number_formatted": "+33758352060",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
                           {
                             "organisation": {
-                              "id": 454,
+                              "id": 495,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null,
@@ -6080,8 +5373,8 @@
                   "example": {
                     "value": {
                       "webhook_endpoint": {
-                        "id": 25,
-                        "organisation_id": 477,
+                        "id": 30,
+                        "organisation_id": 519,
                         "subscriptions": [
                           "rdv",
                           "user",
@@ -6284,8 +5577,8 @@
                   "example": {
                     "value": {
                       "webhook_endpoint": {
-                        "id": 30,
-                        "organisation_id": 490,
+                        "id": 35,
+                        "organisation_id": 532,
                         "subscriptions": [
                           "rdv",
                           "user",

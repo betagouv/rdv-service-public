@@ -5,7 +5,7 @@ namespace :api do
     resources :absences, except: %i[new edit]
     resources :agents, only: %i[index]
     resources :users, only: %i[create index show update] do
-      post :rdv_invitation_token, to: 'users#rdv_invitation_token', on: :member
+      post :rdv_invitation_token, to: "users#rdv_invitation_token", on: :member
     end
     resource :user_profiles, only: %i[create destroy]
     resource :referent_assignations, only: %i[create destroy]
@@ -28,7 +28,7 @@ namespace :api do
 
   namespace :rdvinsertion do
     resources :invitations, only: [] do
-      get 'creneau_availability', to: 'invitations#creneau_availability', on: :collection
+      get "creneau_availability", to: "invitations#creneau_availability", on: :collection
     end
     resource :user_profiles, only: [] do
       post :create_many, on: :collection
@@ -36,8 +36,24 @@ namespace :api do
     resource :referent_assignations, only: [] do
       post :create_many, on: :collection
     end
+    resources :users, only: %i[show]
     resources :motif_categories, only: %i[create]
     resources :motif_category_territories, only: %i[create]
+  end
+
+  namespace :visioplainte do
+    resources :guichets, only: %i[index]
+    resources :plages_ouverture, only: %i[index]
+    resources :creneaux, only: %i[index] do
+      collection do
+        get :prochain
+      end
+    end
+    resources :rdvs, only: %i[create destroy index] do
+      member do
+        put :cancel
+      end
+    end
   end
 end
 

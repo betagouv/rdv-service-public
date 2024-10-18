@@ -8,10 +8,8 @@ RSpec.describe RdvsExportJob do
 
       described_class.perform_now(agent: agent, organisation_ids: [organisation.id, other_organisation.id], options: {})
 
-      # Perform batch of jobs and callback job
-      perform_enqueued_jobs
-
-      expect_zipped_attached_xls(expected_file_name: "export-rdv-2022-09-14.xls")
+      expect { perform_enqueued_jobs }.to have_enqueued_mail(Agents::ExportMailer, :rdv_export)
+      expect(Export.last.file_name).to eq("export-rdv-2022-09-14.xls")
     end
 
     it "has an attachment which contains the current date and org ID" do
@@ -26,9 +24,13 @@ RSpec.describe RdvsExportJob do
       described_class.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
 
       # Perform batch of jobs and callback job
+      expect { perform_enqueued_jobs }.to have_enqueued_mail
+      # Deliver email
       perform_enqueued_jobs
 
-      expect_zipped_attached_xls(expected_file_name: "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls")
+      expect(Export.last.file_name).to eq("export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls")
+      email = email_sent_to(agent.email)
+      expect(email.html_part.body.to_s).to include("Votre export est prêt")
     end
 
     it "prevents agent from exporting an org in which she does not belong" do

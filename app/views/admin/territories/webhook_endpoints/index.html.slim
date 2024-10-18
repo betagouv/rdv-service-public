@@ -19,7 +19,7 @@
                   .d-flex
                     div.mr-3= link_to edit_admin_territory_webhook_endpoint_path(current_territory, webhook), title: t("helpers.edit") do
                         i.fa.fa-edit
-                    = link_to admin_territory_webhook_endpoint_path(current_territory, webhook), method: :delete, data: { confirm: t(".confirm_destroy") } do
+                    = link_to admin_territory_webhook_endpoint_path(current_territory, webhook), title: t("helpers.delete"), method: :delete, data: { confirm: t(".confirm_destroy") } do
                         i.fa.fa-trash-alt
 
         = link_to "Ajouter", new_admin_territory_webhook_endpoint_path(current_territory), class: "btn btn-primary"

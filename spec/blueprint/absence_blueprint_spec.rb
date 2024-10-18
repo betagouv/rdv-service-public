@@ -8,6 +8,7 @@ RSpec.describe AbsenceBlueprint do
                                                          "first_name" => "Bob",
                                                          "last_name" => "Henri",
                                                          "id" => nil,
+                                                         "inclusion_connect_open_id_sub" => nil,
                                                        })
     end
 

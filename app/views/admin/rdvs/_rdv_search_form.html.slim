@@ -21,7 +21,7 @@
               input_html: { \
                 class: "select2-input", \
                 data: { \
-                  "select-options": { \
+                  "select2-config": { \
                     ajax: { \
                       url: admin_organisation_agents_path(@scoped_organisations&.map(&:id)),
                       dataType: "json",
@@ -38,7 +38,7 @@
               input_html: { \
                 class: "select2-input", \
                 data: { \
-                  "select-options": { \
+                  "select2-config": { \
                     ajax: { \
                       url: search_admin_organisation_users_path(@scoped_organisations&.map(&:id)),
                       dataType: "json",
@@ -67,7 +67,7 @@
             wrapper: "horizontal_form"
       - temporal_statuses = Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"]
       = f.input :status, collection: temporal_statuses,
-              label_method: -> { ::Rdv.human_attribute_value(:status, _1, disable_cast: true) },
+              label_method: -> { Rdv.human_attribute_value(:status, _1, disable_cast: true) },
               prompt: "Tous",
               label: "Statut",
               wrapper: "horizontal_form",

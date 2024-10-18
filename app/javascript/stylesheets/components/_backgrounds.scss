@@ -1,32 +1,5 @@
 .bg-light {
-  background-color: darken(#F6F7FA, 2%) !important;
-}
-
-.bg-lightturquoise {
-  background-color: $lightturquoise;
-}
-
-.bg-dark {
-  color: white;
-  button {
-    color: white;
-  }
-}
-@include media-breakpoint-down(sm) {
-  .bg-dark {
-    background: $bg-leftbar !important;
-  }
-}
-
-
-.bg-primary {
-  background-color: $primary !important;
-}
-
-a.bg-primary {
-  &:focus, &:hover {
-    background-color: #2d6ade !important;
-  }
+  background-color: darken(#f6f7fa, 2%) !important;
 }
 
 .bg-negative {
@@ -34,7 +7,8 @@ a.bg-primary {
 }
 
 a.bg-success {
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     background-color: #1e7e34 !important;
   }
 }

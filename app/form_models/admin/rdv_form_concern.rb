@@ -6,7 +6,7 @@ module Admin::RdvFormConcern
   included do
     attr_accessor :rdv
 
-    delegate(*::Rdv.attribute_names, to: :rdv)
+    delegate(*::Rdv.hardcoded_attribute_names, to: :rdv)
     delegate :motif, :organisation, :agents, :users, to: :rdv
     delegate :overlapping_plages_ouvertures, :overlapping_plages_ouvertures?, to: :rdv
     delegate :overlapping_absences, :overlapping_absences?, to: :rdv
@@ -15,7 +15,7 @@ module Admin::RdvFormConcern
 
     delegate :errors, to: :rdv
 
-    validate :validate_rdv
+    validate -> { rdv.validate }
     validate :check_duplicates
 
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
@@ -50,10 +50,6 @@ module Admin::RdvFormConcern
   end
 
   private
-
-  def validate_rdv
-    rdv.validate
-  end
 
   def warn_overlapping_plage_ouverture
     return if ignore_benign_errors

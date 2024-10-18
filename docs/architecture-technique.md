@@ -2,9 +2,9 @@
 
 > Ce dossier a pour but de présenter l’architecture technique du SI. Il n’est par conséquent ni un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
 
-**Nom du projet :** RDV Services Publics
+**Nom du projet :** RDV Service Public
 
-**Dépôt de code :** https://github.com/betagouv/rdv-solidarites.fr
+**Dépôt de code :** https://github.com/betagouv/rdv-service-public
 
 **Hébergeur :** Scalingo, Paris (région Scalingo "osc-secnum-fr1", région Outscale "cloudgouv-eu-west-1")
 
@@ -24,9 +24,9 @@
 
 | Organisme                  | Nom                   | Rôle                   | Activité  |
 |----------------------------|-----------------------|------------------------|-----------|
-| RDV Services Publics       | François Ferrandis    | Lead tech              | Rédaction |
-| RDV Services Publics       | Victor Mours          | Lead tech              | Relecture + Rédaction |
-| RDV Services Publics       | Mehdi Karouch Idrissi | Product Manager        | Relecture |
+| RDV Service Public         | François Ferrandis    | Lead tech              | Relecture + Rédaction |
+| RDV Service Public         | Victor Mours          | Lead tech              | Relecture + Rédaction |
+| RDV Service Public         | Mehdi Karouch Idrissi | Product Manager        | Relecture |
 | ANCT                       | Amélie Naquet         | Cheffe de projet SoNum | Relecture |
 | Incubateur des territoires | Charles Capelli       | Consultant SSI         | Relecture |
 
@@ -36,7 +36,7 @@ Outil de prise de RDV pour le service public. Il permet aux agents de gérer leu
 
 Il est open source, bien que toutes les instances soient gérées par l'équipe.
 
-Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-services-publics.html
+Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-service-public.html
 
 ## Architecture
 
@@ -102,7 +102,7 @@ utilisent RDV Insertion utilisent ces webhooks.
 | Nom de l’applicatif | Service          | Version   | Commentaires                                                    |
 |---------------------|------------------|-----------|-----------------------------------------------------------------|
 | Serveur web         | Rails @ Scalingo | Rails 7   | Voir ci-dessous pour le détail des librairies                   |
-| BDD métier          | PostgreSQL       | `13.9.0`  | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
+| BDD métier          | PostgreSQL       | `14.10.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
 | BDD technique       | Redis            | `7.2.3`   | Stockage des sessions et du cache                               |
 
 La liste des librairies Ruby est disponible dans :
@@ -126,7 +126,7 @@ Notre application est accessible sous 3 "marques" différentes :
 Nous avons actuellement 3 instances :
 - `production-rdv-solidarites` : serveur de production pour `www.rdv-solidarites.fr` et `www.rdv-aide-numerique.fr`
 - `production-rdv-mairie` : serveur de production pour `rdv.anct.gouv.fr`
-- `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.rdv-mairie.fr`
+- `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.anct.gouv.fr`
 
 ```mermaid
 flowchart TD
@@ -138,7 +138,7 @@ flowchart TD
     %% Domaines de demo
     demo.rdv-solidarites.fr
     demo.rdv-aide-numerique.fr
-    demo.rdv-mairie.fr
+    demo.rdv.anct.gouv.fr
 
     %% Apps Scalingo
     production-rdv-solidarites((production-rdv-solidarites))
@@ -151,12 +151,12 @@ flowchart TD
     rdv.anct.gouv.fr --> production-rdv-mairie
     demo.rdv-solidarites.fr --> demo-rdv-solidarites
     demo.rdv-aide-numerique.fr --> demo-rdv-solidarites
-    demo.rdv-mairie.fr --> demo-rdv-solidarites
+    demo.rdv.anct.gouv.fr --> demo-rdv-solidarites
 ```
 
 `production-rdv-solidarites` est notre instance de production actuelle. Elle est représentée fidèlement dans les
-schémas ci-dessous. `production-rdv-mairie` est une nouvelle instance que nous venons de créer (mai 2023). Nous avons
-créé cette instance afin de séparer les données de la future plateforme `rdv.anct.gouv.fr` de nos données existantes.
+schémas ci-dessous. `production-rdv-mairie` est une instance plus récente créée en mai 2023. Nous avons
+créé cette instance afin de séparer les données de plateforme `rdv.anct.gouv.fr` de nos données existantes.
 
 L'instance `demo-rdv-solidarites` sert de plateforme de démo pour nos 3 domaines.
 
@@ -264,6 +264,19 @@ C4Container
     Rel(job_etl, backups, "TCP")
 ```
 
+### Gestion DNS
+
+C'est **Gandi (gandi.net)** qui fournit nos noms de domaine et la gestion DNS.
+
+Nous y gérons les domaines suivants :
+- `rdv-solidarites.fr` : domaine de production historique, également utilisé pour `demo.rdv-solidarites.fr`
+- `rdv-service-public.fr` : gestion d'une boite mail support@rdv-service-public.fr
+- `rdv-aide-numerique.fr` : domaine de production de la plateforme RDV Aide Numérique (pointe sur l'instance principale)
+- `rdv-services-publics.fr` : anti phishing : redirige vers `rdv-service-public.fr`
+- `rdv-solidarite.fr` : anti phishing : redirige vers `rdv-solidarites.fr`
+- `rdv-solidarités.fr` : anti phishing : redirige vers `rdv-solidarites.fr`
+- `rdv-solidarité.fr` : anti phishing : redirige vers `rdv-solidarites.fr`
+
 ### Schéma des données
 
 Lancer `make generate_db_diagram` pour obtenir un SVG de l'état actuel des tables Postgres. Le fichier `db/schema.rb` donne aussi une description des tables via un DSL Ruby.
@@ -278,12 +291,13 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 Les serveurs (applicatif et base de données) sont gérés par Scalingo. Scalingo ne fournit pas de système de rôle : soit
 on a accès à une app, soit on ne l'a pas.
 
-Nous avons actuellement 5 apps Scalingo, les trois premières pour le métier, les deux autres pour le tooling :
+Nous avons actuellement 6 apps Scalingo, les trois premières pour le métier, les trois autres pour le tooling :
 
 - `osc-secnum-fr1/production-rdv-solidarites`
 - `osc-secnum-fr1/production-rdv-mairie`
 - `osc-secnum-fr1/demo-rdv-solidarites`
 - `osc-secnum-fr1/rdv-service-public-etl`
+- `osc-secnum-fr1/rdv-service-public-etl-staging`
 - `osc-secnum-fr1/rdv-service-public-metabase`
 
 Le fait d'avoir accès à une app Scalingo donne les droits suivants :
@@ -325,16 +339,13 @@ notre checklist d'onboarding un point précisant qu'il faut impérativement acti
 TOTP, Scalingo propose une procédure qui inclut la vérification de l'identité de l'utilisateur concerné par la
 transmission d'un document d'identité.
 
-Note : la fonctionnalité de review app est activée sur l'app de démo. Le fichier `scalingo.json` contient la liste des
-variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de la création d'une review app. Une review
-app est automatiquement créée lors de l'ouverture d'une Pull Request Github, et automatiquement détruire lors de la
-fermeture / merge d'une PR.
+Note : les review apps sont créées manuellement et héritent de l'app de démo. Le fichier `scalingo.json` contient la liste des variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de la création d'une review app. Les review apps sont automatiquement détruites lors de la fermeture d'une PR.
 
 #### Détection de fuite de secrets
 
 Nous avons activé la fonctionnalité "Secret scanning" de GitHub sur notre dépôt. Ce système envoie des alertes et bloque le push si des secrets sont détectés dans un commit.
 
-Nous ne disposons pas d'autre système automatisé de détection de fuite de secrets.
+GitGuardian, qui fait de la détection automatisée de fuites de secrets est aussi activé parmis les Github actions de la CI.
 
 ### Authentification, contrôle d’accès, habilitations et profils
 
@@ -360,7 +371,7 @@ La connexion à un profil usager est faite par email + mot de passe. Les mots de
 (en utilisant Devise qui utilise Bcrypt). Une connexion via FranceConnect est aussi proposée : un compte est alors
 créé ou relié si l'e-mail existe déjà dans notre base usagers.
 
-Un mot de passe doit avoir une longueur d'**au moins 10 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
+Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
 
 #### Les agents
 
@@ -380,7 +391,7 @@ La connexion à un profil agent est faite par email + mot de passe. Les mots de 
 (en utilisant une Devise qui utilise Bcrypt). Une connexion via InclusionConnect est aussi proposée : un compte est alors
 créé ou relié si l'e-mail existe déjà dans notre base agents.
 
-Un mot de passe doit avoir une longueur d'**au moins 10 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
+Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
 
 #### Les super admins
 
@@ -482,6 +493,10 @@ Parmi les données que nous manipulons, les plus critiques sont :
 - l'historique des RDVs pris par une personne ainsi que le motif de ces RDV
 - le champs "contexte", un champs texte libre où les agents peuvent saisir des informations de contexte sur un RDV
 
+### Flux des données personnelles dans le SI
+
+Le flux des données personnelles dans le SI est détaillé dans  [ce diagramme](/docs/flux_de_donnees_personnelles_si.svg) et [sa légende](/docs/legende_flux_de_donnees_personnelles_si.md).
+
 ### Bonnes pratiques de sécurité au sein de l'équipe
 
 Lors de l'accueil d'un nouveau membre de l'équipe, on le forme à plusieurs bonnes pratiques de sécurité :
@@ -497,6 +512,8 @@ Pour les membres de l'équipe technique, on prend ces mesures supplémentaires :
 Voici les suppressions automatiques mises en place :
 - Suppression des RDVs de plus de 2 ans
 - Suppression des plages d'ouverture de plus de 1 an
-- Suppression des logs PaperTrail (auditing) de plus de 2 ans
+- Suppression des logs PaperTrail (auditing) de plus de 1 an contenant des données personnelles autres que l'identité de la personne dont on journalise l'action.
+- Anonymisation des logs PaperTrail(auditing) de plus de 1 an ne contenant pas données personnelles autre que l'identité de la personne dont on journalise l'action
+- Suppression des logs PaperTrail (auditing) de plus de 5 ans
 - Suppression des usagers inactifs pendant au moins 2 ans (pas de rdv dans les 2 dernières années, et compte créé depuis plus de 2 ans)
 - Suppression des agents inactifs pendant au moins 2 ans (pas de rdv dans les 2 dernières années, et compte créé depuis plus de 2 ans, pas de connexion depuis 2 ans)

@@ -1,12 +1,6 @@
 class CronJob < ApplicationJob
   queue_as :cron
 
-  private
-
-  def hard_timeout
-    1.hour
-  end
-
   class FileAttenteJob < CronJob
     def perform
       FileAttente.send_notifications
@@ -26,16 +20,6 @@ class CronJob < ApplicationJob
     def perform
       [PlageOuverture, Absence].each do |klass|
         klass.not_expired.find_each(&:refresh_expired_cached)
-      end
-    end
-  end
-
-  class WarmUpOccurrencesCache < CronJob
-    def perform
-      [PlageOuverture, Absence].each do |klass|
-        klass.regulieres.not_expired.find_each do |model|
-          model.earliest_future_occurrence_time(refresh: true)
-        end
       end
     end
   end
@@ -61,7 +45,8 @@ class CronJob < ApplicationJob
 
   class DestroyInactiveUsers < CronJob
     def perform(date_limit)
-      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).left_outer_joins(:participations).where(participations: { id: nil })
+      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).where.missing(:participations)
+        .where("users.rdv_invitation_token_updated_at is null or users.rdv_invitation_token_updated_at < ?", date_limit)
 
       old_users_without_rdvs_or_relatives = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id").where(relatives: { id: nil })
 
@@ -82,7 +67,7 @@ class CronJob < ApplicationJob
     protected
 
     def inactive_agents(date_limit)
-      agents_without_rdvs = Agent.left_outer_joins(:agents_rdvs).where(agents_rdvs: { id: nil })
+      agents_without_rdvs = Agent.where.missing(:agents_rdvs)
 
       agents_without_rdvs.where("created_at < ?", date_limit).where("last_sign_in_at IS NULL OR last_sign_in_at < ?", date_limit)
     end
@@ -121,10 +106,15 @@ class CronJob < ApplicationJob
     end
   end
 
-  class DestroyOldVersions < CronJob
+  class AnonymizeOldReceipts < CronJob
     def perform
-      # Versions are used in RDV exports, and RDVs are currently kept for 2 years.
-      PaperTrail::Version.where("created_at < ?", 2.years.ago).delete_all
+      Anonymizer.anonymize_records!("receipts", scope: Receipt.arel_table[:created_at].lt(6.months.ago))
+    end
+  end
+
+  class DestroyOldApiCalls < CronJob
+    def perform
+      ApiCall.where("received_at < ?", 1.year.ago).delete_all
     end
   end
 

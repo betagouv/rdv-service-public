@@ -3,9 +3,9 @@ Rails.application.configure do
 
   config.good_job.preserve_job_records = true
   config.cleanup_preserved_jobs_before_seconds_ago = 604_800 # 1 semaine
-  config.good_job.on_thread_error = ->(exception) { Sentry.capture_exception(exception) }
+  config.good_job.on_thread_error = ->(exception) { Sentry.capture_exception(exception) } # this is never called !
   config.good_job.execution_mode = :external
-  config.good_job.queues = '*'
+  config.good_job.queues = "*"
   config.good_job.max_threads = 5
   config.good_job.shutdown_timeout = 25 # seconds
 
@@ -39,12 +39,6 @@ Rails.application.configure do
       class: "CronJob::UpdateExpirationsJob",
     },
 
-    # Préchauffage de cache : pas essentiel mais idéalement quotidien
-    warm_up_occurrences_cache: {
-      cron: "every day at 04:00 Europe/Paris",
-      class: "CronJob::WarmUpOccurrencesCache",
-    },
-
     # Reset de la liste d'usagers en salle d'attente, à vider chaque soir
     destroy_redis_waiting_room_keys: {
       cron: "every day at 21:30 Europe/Paris",
@@ -62,6 +56,14 @@ Rails.application.configure do
     destroy_old_versions: {
       cron: "every day at 23:00 Europe/Paris",
       class: "CronJob::DestroyOldVersions",
+    },
+    destroy_old_api_calls: {
+      cron: "every day at 23:30 Europe/Paris",
+      class: "CronJob::DestroyOldApiCalls",
+    },
+    anonymize_old_receipts: {
+      cron: "every day at 23:45 Europe/Paris",
+      class: "CronJob::AnonymizeOldReceipts",
     },
     warn_about_expiring_azure_app_secrets: {
       cron: "every day at 10:00 Europe/Paris",

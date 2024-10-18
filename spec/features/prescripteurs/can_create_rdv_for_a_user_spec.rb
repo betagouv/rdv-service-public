@@ -3,11 +3,12 @@ RSpec.describe "prescripteur can create RDV for a user" do
     travel_to(Time.zone.parse("2022-11-07 15:00"))
   end
 
-  let!(:organisation) { create(:organisation) }
+  let!(:territory) { create(:territory, departement_number: "75") }
+  let!(:organisation) { create(:organisation, territory: territory) }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
   let(:bookable_by) { "everyone" }
   let!(:motif) do
-    create(:motif, organisation: organisation, service: agent.services.first, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation")
+    create(:motif, organisation: organisation, service: agent.services.first, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation", name: "Formation emails")
   end
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }
@@ -15,6 +16,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
   it "works" do
     visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
+    click_on "Formation emails" # choix du motif
     click_on "Prochaine disponibilité le" # choix du lieu
     click_on "08:00" # choix du créneau
     click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
@@ -109,6 +111,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     it "doesn't shows error messages and doesn't allow continuing" do
       visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
+      click_on "Formation emails" # choix du motif
       click_on "Prochaine disponibilité le" # choix du lieu
       click_on "08:00" # choix du créneau
       click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
@@ -140,9 +143,12 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
     it "doesn't create a new one but adds the user to the organisation" do
       visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+      # On vérifie que le message d'incitation à la prescription interne ne s'affiche pas (l'agent n'est pas connecté)
+      expect(page).not_to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
 
       fill_address_form
 
+      click_on "Formation emails" # choix du motif
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau
 
@@ -173,6 +179,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
         fill_address_form
 
+        click_on "Formation emails" # choix du motif
         click_on "Prochaine disponibilité le", match: :first # choix du lieu
         click_on "08:00" # choix du créneau
 
@@ -198,6 +205,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
       fill_address_form
 
+      click_on "Formation emails" # choix du motif
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau
 
@@ -205,7 +213,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
       find_all("a", text: "modifier").last.click # Retour en arrière au choix de créneau
 
-      expect(page).to have_content("Sélectionnez un créneau :")
+      expect(page).to have_content("Sélectionnez un créneau")
 
       click_on(lieu.name)
 
@@ -215,6 +223,60 @@ RSpec.describe "prescripteur can create RDV for a user" do
       click_on "08:00" # choix du créneau
 
       expect(page).to have_content("Vos coordonnées de prescripteur")
+    end
+  end
+
+  context "when using the prescripteur route for a logged agent" do
+    let!(:agent_prescripteur) { create(:agent, admin_role_in_organisations: [organisation2]) }
+    let(:sector) { build(:sector, territory: territory) }
+    let!(:organisation2) { create(:organisation, territory: territory) }
+
+    before do
+      login_as(agent_prescripteur, scope: :agent)
+    end
+
+    it "display internal prescription incitation and correctly redirect to the feature", js: true do
+      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+      expect(page).to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
+
+      fill_address_form
+
+      click_on "Formation emails" # choix du motif
+      click_on "Prochaine disponibilité le", match: :first
+      click_on "08:00"
+
+      expect(page).to have_content("Vos coordonnées de prescripteur")
+      expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque " \
+                                   "nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent")
+      expect(page).to have_link("en cliquant ici")
+      click_on "en cliquant ici"
+      expect(page).to have_current_path("/admin/organisations/#{agent_prescripteur.organisations.find_by(territory: territory).id}/prescription/user_selection", ignore_query: true)
+      expect(page).to have_content(lieu.name)
+      expect(page).to have_content("08h00")
+      expect(page).to have_content(motif.name)
+    end
+
+    it "doesn't display internal prescription incitation when the agent doesn't belongs to a territory with opened motifs" do
+      organisation.motifs.destroy_all
+      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+      expect(page).not_to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
+    end
+
+    context "when the agent belongs to a sectorized territory" do
+      before do
+        allow_any_instance_of(Territory).to receive(:sectorized?).and_return(true) # rubocop:disable RSpec/AnyInstance
+      end
+
+      it "doesn't display internal prescription incitation link when territory is sectorized", js: true do
+        visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+        fill_address_form
+        click_on "Formation emails" # choix du motif
+        click_on "Prochaine disponibilité le", match: :first
+        click_on "08:00"
+        expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque " \
+                                     "nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent.")
+        expect(page).not_to have_link("en cliquant ici")
+      end
     end
   end
 

@@ -2,32 +2,32 @@ fr:
   admin:
     absences:
       common: &common
-        your_busy_times: Vos indisponibilités
-        confirm_delete_busy_time: Confirmez-vous la suppression de cette indisponibilité ?
-        busy_time_of: Indisponibilités de %{full_name}
+        your_absences: Vos indisponibilités
+        confirm_delete_absence: Confirmez-vous la suppression de cette indisponibilité ?
+        absences_of: Indisponibilités de %{full_name}
       index:
         <<: *common
-        create_busy_time: Créer une indisponibilité
-        create_busy_time_for: Créer une indisponibilité pour %{full_name}
-        you_not_yet_create_busy_time: Vous n'avez pas encore créé d'indisponibilité
-        has_no_busy_time_yet: "%{full_name} n'a pas encore créé d'indisponibilité."
+        create_absence: Créer une indisponibilité
+        create_absence_for: Créer une indisponibilité pour %{full_name}
+        you_not_yet_create_absence: Vous n'avez pas encore créé d'indisponibilité
+        has_no_absence_yet: "%{full_name} n'a pas encore créé d'indisponibilité."
         explanation_html: Les indisponibilités sont des exceptions aux <em>plages d'ouvertures</em>. Vous pouvez les utiliser pour les congés ou les fermetures. Les indisponibilités peuvent être récurrentes (par exemple pour les temps partiels).
       absence:
         <<: *common
       edit:
         <<: *common
-        update_your_busy_time: Modifier votre indisponibilité
-        update_busy_time_of: Modifier l'indisponibilité de %{full_name}
+        update_your_absence: Modifier votre indisponibilité
+        update_absences_of: Modifier l'indisponibilité de %{full_name}
       new:
         <<: *common
-        new_busy_time_for: Nouvelle indisponibilité pour %{full_name}
-        new_busy_time: Nouvelle indisponibilité
+        new_absence_for: Nouvelle indisponibilité pour %{full_name}
+        new_absence: Nouvelle indisponibilité
       form:
         <<: *common
-        busy_time_example: 'Ex: Indisponibilité pour formation premiers secours'
+        absence_example: 'Ex: Indisponibilité pour formation premiers secours'
       create:
-        busy_time_created: L'indisponibilité a été créée.
+        absence_created: L'indisponibilité a été créée.
       update:
-        busy_time_updated: L'indisponibilité a été modifiée.
+        absence_updated: L'indisponibilité a été modifiée.
       destroy:
-        busy_time_deleted: L'indisponibilité a été supprimée.
+        absence_deleted: L'indisponibilité a été supprimée.

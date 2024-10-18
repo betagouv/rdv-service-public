@@ -73,6 +73,10 @@ linters:
       - Style/RedundantInterpolation
       - Style/RedundantParentheses
       - Style/WordArray
+      - Style/RedundantLineContinuation
+      - Layout/LineContinuationSpacing
+      - Lint/RedundantSafeNavigation
+      - Rails/HttpStatus
   ControlStatementSpacing:
     enabled: false
   LineLength:

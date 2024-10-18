@@ -2,24 +2,14 @@
 footer {
   color: $blue;
   text-decoration: none;
-  h2{
+  h2 {
     font-size: 1.125rem;
-  }
-  .footer-links {
-    color: $blue;
-  }
-  .footer-links a {
-    color: $blue;
-    &:hover {
-      color: $gray-900;
-    }
   }
 }
 
 // only used for users
 footer.main-footer {
   padding: 3rem 0 0;
-  overflow-x: hidden;
   .brand {
     font-weight: 800;
     font-size: 1.7rem;
@@ -40,15 +30,25 @@ footer.main-footer {
   padding: 19px 30px 20px;
   position: absolute;
   right: 0;
-  color: $gray-600;
   left: $leftbar-width;
 }
-
-body.users .footer {left: 0;}
 
 @include media-breakpoint-down(sm) {
   .footer {
     left: 0 !important;
     text-align: center;
   }
+}
+
+// DSFR overrides
+
+.fr-footer__partners-title {
+  font-size: 1.5rem;
+}
+
+.fr-footer__partners-main {
+  // this avoids footer to overflow on the right and thus increasing the viewport width which breaks DSFR modals
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: $white;
 }

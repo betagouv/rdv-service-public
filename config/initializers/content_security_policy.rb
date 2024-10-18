@@ -17,6 +17,9 @@ tiles_etalab = "etalab-tiles.fr"
 voxusagers = "voxusagers.numerique.gouv.fr"
 # Utilisé sur nos pages statiques (404.html, 500.html)
 bootstrap_cdn = "*.bootstrapcdn.com"
+# Headway nous permet de publier un changelog au sein de l'app
+headway_cnd = "cdn.headwayapp.co"
+headway_widget = "headway-widget.net"
 
 Rails.application.config.content_security_policy do |policy|
   policy.default_src :self
@@ -24,12 +27,12 @@ Rails.application.config.content_security_policy do |policy|
   policy.object_src :none
   policy.worker_src :blob
   policy.child_src :blob, :self
-  policy.frame_src :self, in_status
+  policy.frame_src :self, in_status, headway_widget
   policy.media_src :self, s3_de_rdv_insertion
   policy.img_src :self, :data, voxusagers
-  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox
+  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd
   policy.connect_src :self, api_adresse_data_gouv, tiles_etalab
-  policy.script_src :self, :unsafe_inline, api_mapbox
+  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI

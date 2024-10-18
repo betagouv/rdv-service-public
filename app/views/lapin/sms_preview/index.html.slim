@@ -1,10 +1,9 @@
-.container.mt-3
-  .row.justify-content-center
-    .col-md-8
-      - @actions.each do |group, action_names|
-        .card
-          .card-body
-            h5.card-title= group
-            ul
-              - action_names.each do |name|
-                li= link_to name, lapin_sms_preview_preview_path(group.to_s.parameterize, name)
+.fr-grid-row.justify-content-center
+  .fr-col-md-8
+    - @actions.each do |group, action_names|
+      .card
+        .card-body
+          h5.card-title= group
+          ul
+            - action_names.each do |name|
+              li= link_to name, lapin_sms_preview_preview_path(group.to_s.parameterize, name)

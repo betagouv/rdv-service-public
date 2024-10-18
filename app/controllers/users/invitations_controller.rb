@@ -1,8 +1,15 @@
 class Users::InvitationsController < Devise::InvitationsController
-  layout "user_registration"
+  layout "application_narrow"
   # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :delete_token_from_session, only: [:update]
   # rubocop:enable Rails/LexicallyScopedActionFilter
+
+  # Bloque l'accès aux méthodes du controller parent pour éviter de permettre d'envoyer des invitations n'importe comment
+  before_action :block_controller_action, except: %i[edit update invitation] # rubocop:disable Rails/LexicallyScopedActionFilter
+
+  def block_controller_action
+    raise Pundit::NotAuthorizedError, "not authorized"
+  end
 
   include CanHaveRdvWizardContext
 

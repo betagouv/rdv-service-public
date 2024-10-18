@@ -11,7 +11,7 @@ RSpec.describe SmsSender, type: :service do
     context "remove accents and weird chars" do
       let(:content) { "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ" }
 
-      it { is_expected.to eq("àaäaaèéeeeìiiiiòoöooùuüuuñcAAÄAAEÉEEEIIIIIOOÖOOUUÜUUÑÇ") }
+      it { is_expected.to eq("àaäaaèéeeeìiiiiòoöooùuüuuñcAAÄAAEÉEEEIIIIIOOÖOOUUÜUUÑC") }
     end
 
     context "oe character" do
@@ -21,9 +21,11 @@ RSpec.describe SmsSender, type: :service do
     end
 
     describe "instance name" do
-      before { ENV["RDV_SOLIDARITES_INSTANCE_NAME"] = instance_name }
-
-      after { ENV.delete("RDV_SOLIDARITES_INSTANCE_NAME") }
+      around do |example|
+        with_modified_env(RDV_SOLIDARITES_INSTANCE_NAME: instance_name) do
+          example.run
+        end
+      end
 
       let(:content) { "Contenu de test" }
 

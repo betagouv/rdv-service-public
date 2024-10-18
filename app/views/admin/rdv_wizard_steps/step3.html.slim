@@ -22,7 +22,7 @@ ruby:
           fieldset
             = f.association :lieu, collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name, label_method: :full_name,
               label: false,  include_blank: true,  required: false,
-              input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
+              input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true} }
             small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
               = t(".single_use_lieu_hint_html")
           fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
@@ -32,8 +32,8 @@ ruby:
             small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
               = t(".existing_lieu_hint_html")
       - elsif @rdv.home?
-        = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
+        = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}", input_html: { class: "places-js-container" }
       - elsif @rdv.phone?
-        = f.input :address, label: "Lieu (RDV téléphonique)",  disabled: true, hint: "Il n'y a pas d'adresse car le RDV est téléphonique"
-      = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
+        = f.input :address, label: "Lieu (RDV téléphonique)",  disabled: true, hint: "Il n'y a pas d'adresse car le RDV est téléphonique", input_html: { class: "places-js-container" }
+      = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input", data: { "auto-select-sole-option": true } }
       = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

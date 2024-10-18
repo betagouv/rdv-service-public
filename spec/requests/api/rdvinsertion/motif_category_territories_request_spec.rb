@@ -1,8 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "Motif Category Territory API", swagger_doc: "v1/api.json" do
-  with_examples
-
+RSpec.describe "Motif Category Territory API" do
   path "/api/rdvinsertion/motif_category_territories/" do
     post "Activer une catégorie de motifs sur un territoire" do
       with_shared_secret_authentication
@@ -36,17 +34,23 @@ RSpec.describe "Motif Category Territory API", swagger_doc: "v1/api.json" do
 
         let!(:motif_categories_count_before) { territory.motif_categories.count }
 
-        schema "$ref" => "#/components/schemas/territory_with_root"
-
         run_test!
 
         it { expect(territory.motif_categories.count).to eq(motif_categories_count_before + 1) }
         it { expect(territory.motif_categories.last.short_name).to eq(motif_category_short_name) }
         it { expect(parsed_response_body["territory"]["name"]).to match(territory.name) }
         it { expect(parsed_response_body["territory"]["motif_categories"][0]["short_name"]).to match(motif_category_short_name) }
+
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "motif_category_territories",
+            action_name: "create",
+            agent_id: agent.id
+          )
+        end
       end
 
-      it_behaves_like "an endpoint that returns 401 - unauthorized" do
+      context "when authentication fails" do
         let!(:territory) { create(:territory) }
         let!(:organisation) { create(:organisation, territory: territory) }
         let!(:organisation_id) { organisation.id }
@@ -55,6 +59,12 @@ RSpec.describe "Motif Category Territory API", swagger_doc: "v1/api.json" do
 
         before do
           allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
+        end
+
+        it "returns a 401 unauthorized response" do
+          post "/api/rdvinsertion/motif_category_territories/", params: { organisation_id: organisation_id, motif_category_short_name: motif_category_short_name }, headers: auth_headers
+
+          expect(response).to have_http_status(:unauthorized)
         end
       end
     end

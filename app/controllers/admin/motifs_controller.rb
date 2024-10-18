@@ -8,7 +8,7 @@ class Admin::MotifsController < AgentAuthController
     @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope).active
     @motifs = params[:search].present? ? @unfiltered_motifs.search_by_text(params[:search]) : @unfiltered_motifs.ordered_by_name
     @motifs = filtered(@motifs, params)
-    @motifs = @motifs.includes(:organisation).includes(:service).page(params[:page])
+    @motifs = @motifs.includes(:organisation).includes(:service).page(page_number)
 
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
     @sectorisation_level_agent_counts_by_service = SectorAttribution.level_agent_grouped_by_service(current_organisation)
@@ -19,22 +19,30 @@ class Admin::MotifsController < AgentAuthController
 
   def new
     @motif = Motif.new(organisation: current_organisation)
-    authorize(@motif)
+
+    source_motif = Agent::MotifPolicy::Scope.new(current_agent, Motif).resolve.find_by(id: params[:duplicated_from_motif_id] || params.dig(:motif, :duplicated_from_motif_id))
+    if source_motif
+      @motif.assign_attributes(source_motif.attributes.symbolize_keys.slice(*FORM_ATTRIBUTES))
+      @motif.duplicated_from_motif_id = source_motif.id
+    end
+
+    authorize(@motif, policy_class: Agent::MotifPolicy)
   end
 
   def edit
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
   end
 
   def show
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
     @motif_policy = Agent::MotifPolicy.new(current_agent, @motif)
   end
 
   def create
-    @motif = Motif.new(motif_params)
-    @motif.organisation = @organisation
-    authorize(@motif)
+    @motif = Motif.new
+    @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
+    @motif.organisation ||= current_organisation
+    authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.save
       flash[:notice] = "Motif créé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
@@ -44,8 +52,8 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def update
-    authorize(@motif)
-    if @motif.update(motif_params)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
+    if @motif.update(params.require(:motif).permit(*FORM_ATTRIBUTES))
       flash[:notice] = "Le motif a été modifié."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
@@ -54,7 +62,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def destroy
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.soft_delete
       flash[:notice] = "Le motif a été supprimé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
@@ -64,6 +72,29 @@ class Admin::MotifsController < AgentAuthController
   end
 
   private
+
+  FORM_ATTRIBUTES = %i[
+    name
+    service_id
+    organisation_id
+    color
+    motif_category_id
+    default_duration_in_min
+    bookable_by
+    location_type
+    max_public_booking_delay
+    min_public_booking_delay
+    visibility_type
+    restriction_for_rdv
+    instruction_for_rdv
+    custom_cancel_warning_message
+    for_secretariat
+    follow_up
+    collectif
+    sectorisation_level
+    rdvs_editable_by_user
+    duplicated_from_motif_id
+  ].freeze
 
   def pundit_user
     current_agent
@@ -87,25 +118,5 @@ class Admin::MotifsController < AgentAuthController
   def set_motif
     @motif = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
       .find(params[:id])
-  end
-
-  def motif_params
-    params.require(:motif)
-      .permit(:name, :service_id,
-              :color, :motif_category_id,
-              :default_duration_in_min,
-              :bookable_by,
-              :location_type,
-              :max_public_booking_delay,
-              :min_public_booking_delay,
-              :visibility_type,
-              :restriction_for_rdv,
-              :instruction_for_rdv,
-              :custom_cancel_warning_message,
-              :for_secretariat,
-              :follow_up,
-              :collectif,
-              :sectorisation_level,
-              :rdvs_editable_by_user)
   end
 end

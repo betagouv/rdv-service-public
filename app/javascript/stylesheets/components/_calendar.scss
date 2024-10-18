@@ -114,21 +114,34 @@
 
 .fc-bgevent {
   opacity: 1;
-  .fc-title{
+  .fc-title {
     color: black !important;
   }
 }
 
-.fc-event-excused, .fc-event-seen, .fc-event-revoked {
-  opacity: .7;
+.fc-event-excused,
+.fc-event-seen,
+.fc-event-revoked {
+  opacity: 0.7;
 }
 
 .fc-event-waiting {
-  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.3) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.3) 75%,
+    transparent 75%,
+    transparent
+  );
   background-size: 1rem 1rem;
 }
 
-.fc-event-excused, .fc-event-noshow, .fc-event-revoked{
+.fc-event-excused,
+.fc-event-noshow,
+.fc-event-revoked {
   .fc-content .fc-title {
     text-decoration: line-through;
   }
@@ -160,17 +173,18 @@
   justify-content: start;
   align-items: center;
   padding-left: 0.6rem;
-  &.fc-event-small{
+  &.fc-event-small {
     line-height: 0.6rem;
     padding: 0;
   }
-  .fc-time, .fc-title{
+  .fc-time,
+  .fc-title {
     text-align: left;
   }
 }
 .fc-event-container {
   margin: 0 !important;
-  .fc-event{
+  .fc-event {
     border: none;
   }
 }
@@ -187,7 +201,9 @@
 
 @include media-breakpoint-down(sm) {
   .fc-toolbar {
-    .fc-left,.fc-right,.fc-center {
+    .fc-left,
+    .fc-right,
+    .fc-center {
       float: none;
       display: block;
       clear: both;
@@ -195,9 +211,9 @@
     }
   }
   .fc {
-    .fc-toolbar{
-      >* {
-        >* {
+    .fc-toolbar {
+      > * {
+        > * {
           float: none;
         }
       }
@@ -209,33 +225,37 @@
 }
 
 .fc-timeGridWeek-view {
-
   .fc-event {
     margin-left: 5%;
   }
 }
 
 .fc-event.selected {
-  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
 }
 
 @keyframes shake {
-  10%, 90% {
+  10%,
+  90% {
     transform: translate3d(-1px, 0, 0);
   }
 
-  20%, 80% {
+  20%,
+  80% {
     transform: translate3d(2px, 0, 0);
   }
 
-  30%, 50%, 70% {
+  30%,
+  50%,
+  70% {
     transform: translate3d(-4px, 0, 0);
   }
 
-  40%, 60% {
+  40%,
+  60% {
     transform: translate3d(4px, 0, 0);
   }
 }

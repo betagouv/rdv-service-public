@@ -34,7 +34,15 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id]) }
+        it { expect(parsed_response_body["agents"].pluck("id")).to contain_exactly(agent.id) }
+
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "agents",
+            action_name: "index",
+            agent_id: agent.id
+          )
+        end
       end
 
       response 200, "policy scoped agents", document: false do
@@ -42,7 +50,7 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id, agent2.id]) }
+        it { expect(parsed_response_body["agents"].pluck("id")).to contain_exactly(agent.id, agent2.id) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"

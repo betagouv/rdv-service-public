@@ -1,0 +1,44 @@
+.card
+  .card-body.pt-4
+    h5.card-title Visibilité usager
+    - %i[visible_and_notified visible_and_not_notified invisible].each do |value|
+      = label_tag do
+        = f.radio_button(:visibility_type, value)
+        span.ml-1= sanitize(Motif.human_attribute_value(:visibility_type, value, context: :html))
+        p
+          span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint)
+          - if rdvi_mode
+            br
+            span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
+
+.card
+  .card-body
+    h5.card-title Consignes à destination de l'usager
+    p.mb-2 Vous pouvez paramétrer des messages par défaut, qui s’afficheront avant la prise de rendez-vous, après la confirmation du rendez-vous, et/ou en cas d’annulation du rendez-vous.
+    .mt-3
+      = f.input :restriction_for_rdv,
+              label: sanitize("Instructions à accepter <strong>avant</strong> la prise du RDV"),
+              placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
+              input_html: { rows: 5 },
+              wrapper_html: { class: "mb-1" }
+      = link_to image_path("motif_form/restriction_for_rdv.png"), target: "_blank" do
+        span> Voir un exemple
+        i.fa.fa-external-link-alt>
+    .mt-3
+      = f.input :instruction_for_rdv,
+              label: sanitize("Instructions affichées <strong>après</strong> la prise du RDV"),
+              placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
+              input_html: { rows: 5 },
+              wrapper_html: { class: "mb-1" }
+      = link_to image_path("motif_form/instruction_for_rdv.png"), target: "_blank" do
+        span> Voir un exemple
+        i.fa.fa-external-link-alt>
+    .mt-3
+      = f.input :custom_cancel_warning_message,
+              label: sanitize("Message d’avertissement </strong>en cas d’annulation</strong>"),
+              placeholder: "Laissez vide si vous ne souhaitez pas afficher de messager d’avertissement.",
+              input_html: { rows: 5 },
+              wrapper_html: { class: "mb-1" }
+      = link_to image_path("motif_form/custom_cancel_warning_message.png"), target: "_blank" do
+        span> Voir un exemple
+        i.fa.fa-external-link-alt>

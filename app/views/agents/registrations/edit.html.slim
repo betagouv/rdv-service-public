@@ -1,10 +1,12 @@
 - content_for :title, "Votre compte"
 
-= render "form", resource: resource, resource_name: resource_name, devise_mapping: devise_mapping unless resource.read_only_profile_infos?
-= render "infos", resource: resource, resource_name: resource_name, devise_mapping: devise_mapping if resource.read_only_profile_infos?
+- if resource.read_only_profile_infos?
+  = render "infos", resource: resource, resource_name: resource_name, devise_mapping: devise_mapping
+- else
+  = render "form", resource: resource, resource_name: resource_name, devise_mapping: devise_mapping
 
-- if policy([:agent, resource]).destroy?
-  .mt-5.text-center
+- if policy(resource, policy_class: Agent::AgentPolicy).destroy?
+  .mt-5.rdv-text-align-center
     hr
     p.font-13 Vous souhaitez supprimer votre compte ?
     = link_to "Supprimer", \

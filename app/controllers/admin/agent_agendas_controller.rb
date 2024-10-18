@@ -1,8 +1,8 @@
 class Admin::AgentAgendasController < AgentAuthController
   def show
     @hide_rdv_a_renseigner_in_main_layout = true
-    @agent = policy_scope(Agent).find(params[:id])
-    authorize(AgentAgenda.new(agent: @agent, organisation: current_organisation))
+    @agent = Agent.find(params[:id])
+    authorize(AgentAgenda.new(agent: @agent, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
     @status = params[:status]
     @organisation = current_organisation
     @selected_event_id = params[:selected_event_id]
@@ -11,7 +11,7 @@ class Admin::AgentAgendasController < AgentAuthController
 
   def toggle_displays
     @agent = current_agent
-    authorize(@agent)
+    authorize(@agent, policy_class: Agent::AgentPolicy)
     @agent.update!(agent_role_params)
     redirect_to admin_organisation_agent_agenda_path(params.permit(:status, :selected_event_id, :date))
   end

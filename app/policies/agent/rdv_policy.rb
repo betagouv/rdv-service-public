@@ -1,14 +1,24 @@
-class Agent::RdvPolicy < DefaultAgentPolicy
-  def status?
-    same_agent_or_has_access?
-  end
+class Agent::RdvPolicy < ApplicationPolicy
+  include CurrentAgentInPolicyConcern
 
   def create?
     true
   end
+  alias new? create?
+
+  def update?
+    same_agent_or_has_access?
+  end
+  alias edit? update?
+  alias status? update?
+
+  # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV,
+  # qui permet à la fois de l'afficher et de le modifier
+  alias show? update?
+  alias versions? show?
 
   def destroy?
-    admin_and_same_org?
+    current_agent.access_level_in(@record.organisation) == AgentRole::ACCESS_LEVEL_ADMIN
   end
 
   def self.explain(organisation, agent)
@@ -29,26 +39,38 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     @record.motif.service.in?(current_agent.services)
   end
 
-  class Scope < Scope
-    def resolve
-      organisation_scope = scope.where(organisation: current_agent.organisations)
-      unless context.can_access_others_planning?
-        organisation_scope = organisation_scope.joins(%i[motif agents_rdvs]).where(motifs: { service: current_agent.services })
-          .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
-      end
-      organisation_scope
+  def same_agent_or_has_access?
+    return true if current_agent.in?(@record.agents)
+
+    case current_agent.access_level_in(@record.organisation)
+    when AgentRole::ACCESS_LEVEL_ADMIN
+      true
+    when AgentRole::ACCESS_LEVEL_BASIC
+      same_service? || current_agent.secretaire?
+    else
+      false
     end
   end
 
-  class DepartementScope < Scope
+  class Scope < Scope
+    include CurrentAgentInPolicyConcern
+
     def resolve
-      if context.can_access_others_planning?
-        scope.where(organisation: current_agent.organisations)
+      if current_agent.secretaire?
+        scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
+          .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
+
       else
-        scope.joins(%i[motif agents_rdvs])
-          .where(organisation: current_agent.organisations)
-          .where(motifs: { service: current_agent.services })
-          .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
+
+        scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
+          .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
+          .joins(:motif, :agents_rdvs)
+          .where(
+            "agents_rdvs.agent_id = ?
+              OR (motifs.service_id IN (?) AND agent_roles.access_level = 'basic')
+              OR (agent_roles.access_level = 'admin')",
+            current_agent.id, current_agent.service_ids
+          )
       end
     end
   end

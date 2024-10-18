@@ -25,16 +25,53 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(cal.decoded).to match("STATUS:CANCELLED") if rdv.cancelled?
     end
 
-    it "contains the link to the rdv" do
+    it "contains the link to the rdv for cancellation without phone" do
+      expect(mail.html_part.body.encoded).to match("Vous pouvez annuler votre rendez-vous</span> <strong>jusqu'à 4h avant celui-ci</strong> en cliquant sur le lien ci-dessous.")
+      expect(mail.html_part.body.encoded).to match("Annuler le rendez-vous</a>")
+      expect(mail.html_part.body.encoded).not_to match("en appelant au")
       expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}?invitation_token=12345")
+    end
+
+    it "contains the link to the rdv for view only without phone" do
+      rdv.motif.update(rdvs_editable_by_user: false)
+      rdv.motif.update(rdvs_cancellable_by_user: false)
+      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_created
+      expect(mail.html_part.body.encoded).not_to match("En cas de problème vous pouvez contacter le")
+      expect(mail.html_part.body.encoded).to match("Voir le rendez-vous</a>")
+    end
+
+    it "contains the link to the rdv for cancellation with phone" do
+      rdv.organisation.update(phone_number: "0601010101")
+      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_created
+      expect(mail.html_part.body.encoded).to match("<span>Vous pouvez annuler votre rendez-vous</span> <strong>jusqu'à 4h avant celui-ci</strong>")
+      expect(mail.html_part.body.encoded).to match("<span>en appelant au <a href=\"tel:0601010101\">0601010101</a> ou</span> en cliquant sur le lien ci-dessous")
+      expect(mail.html_part.body.encoded).to match("Annuler le rendez-vous</a>")
+    end
+
+    it "contains the link to the rdv for view only with phone" do
+      rdv.organisation.update(phone_number: "0601010101")
+      rdv.motif.update(rdvs_editable_by_user: false)
+      rdv.motif.update(rdvs_cancellable_by_user: false)
+      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_created
+      expect(mail.html_part.body.encoded).to match("<span>En cas de problème vous pouvez contacter le <a href=\"tel:0601010101\">0601010101</a>")
+      expect(mail.html_part.body.encoded).to match("Voir le rendez-vous</a>")
+    end
+
+    it "contains the link to the rdv for edit and cancellation with phone" do
+      rdv.organisation.update(phone_number: "0601010101")
+      rdv.update(created_by_type: "User")
+      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_created
+      expect(mail.html_part.body.encoded).to match("<span>Vous pouvez annuler ou modifier votre rendez-vous</span> <strong>jusqu'à 4h avant celui-ci</strong>")
+      expect(mail.html_part.body.encoded).to match("<span>en appelant au <a href=\"tel:0601010101\">0601010101</a> ou</span> en cliquant sur le lien ci-dessous")
+      expect(mail.html_part.body.encoded).to match("Annuler ou modifier le rendez-vous</a>")
     end
   end
 
   describe "#rdv_updated" do
     let(:previous_starting_time) { 2.days.from_now }
     let(:new_starting_time) { 3.days.from_now }
-    let(:new_lieu) { create(:lieu, name: "Stade de France", address: "rue du Stade") }
-    let(:previous_lieu) { create(:lieu, name: "MJC Aix", address: "rue du Previous") }
+    let(:new_lieu) { create(:lieu, name: "Stade de France", address: "rue du Stade, Paris, 75016") }
+    let(:previous_lieu) { create(:lieu, name: "MJC Aix", address: "rue du Previous, Paris, 75016") }
     let(:rdv) { create(:rdv, lieu: new_lieu, starts_at: new_starting_time) }
     let(:user) { rdv.users.first }
     let(:token) { "12345" }
@@ -42,7 +79,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     before { travel_to(Time.zone.parse("2022-08-24 09:00:00")) }
 
     it "renders the headers" do
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_updated(starts_at: previous_starting_time, lieu_id: nil)
+      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
       expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
       expect(mail.to).to eq([user.email])
       expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
@@ -50,19 +87,19 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
     it "indicates the previous and current values" do
       mail = described_class.with(rdv: rdv, user: user, token: token)
-        .rdv_updated(starts_at: previous_starting_time, lieu_id: previous_lieu.id)
+        .rdv_updated(old_starts_at: previous_starting_time, lieu_id: previous_lieu.id)
 
-      previous_details = "Votre RDV qui devait avoir lieu le 26 août à 09:00 à l&#39;adresse MJC Aix (rue du Previous) a été modifié"
+      previous_details = "Votre RDV qui devait avoir lieu le 26 août à 09:00 à l&#39;adresse MJC Aix (rue du Previous, Paris, 75016) a été modifié"
       expect(mail.html_part.body.to_s).to include(previous_details)
 
       # new details
       expect(mail.html_part.body.to_s).to include("samedi 27 août 2022 à 09h00")
-      expect(mail.html_part.body.to_s).to include("Stade de France (rue du Stade)")
+      expect(mail.html_part.body.to_s).to include("Stade de France (rue du Stade, Paris, 75016)")
     end
 
     it "works when no lieu_id is passed" do
       mail = described_class.with(rdv: rdv, user: user, token: token)
-        .rdv_updated(starts_at: previous_starting_time, lieu_id: nil)
+        .rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
 
       previous_details = "Votre RDV qui devait avoir lieu le 26 août à 09:00 a été modifié"
       expect(mail.html_part.body.to_s).to include(previous_details)
@@ -117,8 +154,8 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
       mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
 
-      expected_url = prendre_rdv_url(\
-        departement: rdv.organisation.departement_number, \
+      expected_url = prendre_rdv_url(
+        departement: rdv.organisation.departement_number,
         motif_name_with_location_type: rdv.motif.name_with_location_type, \
         organisation_ids: [rdv.organisation_id], \
         address: rdv.address, \

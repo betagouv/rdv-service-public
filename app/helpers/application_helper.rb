@@ -14,6 +14,21 @@ module ApplicationHelper
     end
   end
 
+  def alert_dsfr_class_for(alert)
+    case alert
+    when :success
+      "fr-alert--success"
+    when :alert
+      "fr-alert--warning"
+    when :error
+      "fr-alert--error"
+    when :notice
+      "fr-alert--info"
+    else
+      raise ArgumentError, "alert should be a key among :success, :alert, :error or :notice"
+    end
+  end
+
   def datetime_input(form, field, input_html: {})
     form.input(
       field,
@@ -41,8 +56,8 @@ module ApplicationHelper
     )
   end
 
-  def agents_or_users_body_class
-    agent_path? ? "agents" : "users"
+  def fake_required_label(label)
+    sanitize("#{label} <abbr title=\"obligatoire\">*</abbr>")
   end
 
   def link_logo
@@ -104,15 +119,22 @@ module ApplicationHelper
       tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
   end
 
-  def admin_link_to_if_permitted(organisation, object, name = object.to_s)
-    if policy([:agent, object]).show?
-      link_to name, polymorphic_path([:admin, organisation, object])
-    else
-      name
-    end
-  end
-
   def self_anchor(identifier, &block)
     tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
+  end
+
+  def display_agent_connect_button?
+    return false unless current_domain.agent_connect_client_id
+
+    return true if params[:force_agent_connect].present? # Permet de tester manuellement Agent Connect avant de désactiver la variable d'env AGENT_CONNECT_DISABLED
+
+    return false if ENV["AGENT_CONNECT_DISABLED"]
+    return false if Rails.configuration.x.agent_connect_unreachable_at_boot_time
+
+    ENV["AGENT_CONNECT_BASE_URL"].present?
+  end
+
+  def display_inclusion_connect_button?
+    !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
   end
 end

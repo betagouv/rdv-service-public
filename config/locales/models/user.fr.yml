@@ -7,7 +7,7 @@ fr:
     attributes:
       user:
         organisation: Organisation
-        caisse_affiliation : Caisse d'affiliation
+        caisse_affiliation: Caisse d'affiliation
         affiliation_number: Numéro d'allocataire
         family_situation: Situation familiale
         number_of_children: Nombre d'enfants
@@ -18,7 +18,7 @@ fr:
         notify_by_email: "Accepte les notifications par email"
         created_through: "Origine du compte"
         notes: Remarques
-        ants_pre_demande_number: Numéro de pré-demande ANTS
+        ants_pre_demande_number: &ants_pre_demande_number_label Numéro de pré-demande ANTS
       user/logements:
         sdf: Sans domicile fixe
         heberge: Hébergé
@@ -53,6 +53,9 @@ fr:
               too_common: "Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte. Veuillez en choisir un autre."
               too_short:
                 other: "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins %{count} caractères"
+            ants_pre_demande_number: &ants_pre_demande_number_errors
+              invalid_format: doit comporter 10 chiffres et lettres
+              unexpected_api_error: n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.
     warnings:
       models:
         user:
@@ -66,3 +69,13 @@ fr:
       agent:
         ants_pre_demande_number_html: Pour accélérer la démarche de l'usager, nous vous recommandons très fortement de pré-remplir son dossier sur le <a href="https://passeport.ants.gouv.fr/demarches-en-ligne" target="_blank">site de l'ANTS</a>, et d'indiquer son numéro de pré-demande.
 
+  # BeneficiaireForm
+  activemodel:
+    attributes:
+      beneficiaire_form:
+        ants_pre_demande_number: *ants_pre_demande_number_label
+    errors:
+      models:
+        beneficiaire_form:
+          attributes:
+            ants_pre_demande_number: *ants_pre_demande_number_errors

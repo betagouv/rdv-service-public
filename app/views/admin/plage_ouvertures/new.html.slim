@@ -11,15 +11,11 @@
   ol.breadcrumb.m-0
     li.breadcrumb-item
       = link_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent) do
-      - if @plage_ouverture.agent == current_agent
-        | Vos plages d'ouverture
-      - else
-        | Plages d'ouverture de #{@plage_ouverture.agent.full_name}
+        - if @plage_ouverture.agent == current_agent
+          | Vos plages d'ouverture
+        - else
+          | Plages d'ouverture de #{@plage_ouverture.agent.full_name}
     li.breadcrumb-item.active
       | Nouvelle plage
 
-.row.justify-content-center
-  .col-md-6
-    .card
-      .card-body
-        = render "form", plage_ouverture: @plage_ouverture, agent: @agent
+= render "form", plage_ouverture: @plage_ouverture, agent: @agent

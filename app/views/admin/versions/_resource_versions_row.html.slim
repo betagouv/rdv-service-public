@@ -10,3 +10,7 @@
         = cache([resource, resource.class.paper_trail_options[:only]], expires_in: 7.days) do
           - versions = PaperTrailAugmentedVersion.for_resource(resource)
           = render "admin/versions/versions", versions: versions.reverse
+        p.text-muted.font-14
+          - unless resource.class.name.in?(CronJob::DestroyOldVersions::MODEL_NAMES_WITH_NO_PERSONAL_INFORMATION)
+            - if resource.created_at < 1.year.ago
+              | Dans le cadre du RGPD, l'historique des changements n'est plus conservé au delà d'un an

@@ -52,7 +52,7 @@ nav.left-side-menu-wrapper
             li
               = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
             li
-              = active_link_to t(".busy_times"), admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
+              = active_link_to "Indisponibilités", admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
             li
               = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item side-menu__item--small"
 
@@ -100,21 +100,18 @@ nav.left-side-menu-wrapper
             ]
               li
                 = active_link_to "Organisation", admin_organisation_path(current_organisation), active: :exact, class: "side-menu__item side-menu__item--small"
-              - if current_domain.online_reservation_with_public_link
-                li
-                  = active_link_to "Réservation en ligne", admin_organisation_online_booking_path(current_organisation), class: "side-menu__item side-menu__item--small"
               li
                 = active_link_to "Lieux", admin_organisation_lieux_path(current_organisation), class: "side-menu__item side-menu__item--small"
               li
-                = active_link_to "Agents", admin_organisation_agents_path(current_organisation), class: "side-menu__item side-menu__item--small"
-              li
-                = active_link_to "Invitations", admin_organisation_invitations_path(current_organisation), class: "side-menu__item side-menu__item--small"
+                = active_link_to "Agents", admin_organisation_agents_path(current_organisation), active: [["admin/agents", "admin/invitations"], []], class: "side-menu__item side-menu__item--small"
               li
                 = active_link_to "Motifs", admin_organisation_motifs_path(current_organisation), class: "side-menu__item side-menu__item--small"
+              li
+                = active_link_to "Réservation en ligne", admin_organisation_online_booking_path(current_organisation), class: "side-menu__item side-menu__item--small"
               - if current_agent.territorial_admin_in?(current_organisation.territory)
                 = link_to admin_territory_path(current_organisation.territory), class: "side-menu__item side-menu__item--small" do
                   i.fa.fa-cog>
-                  = t(".configuration")
+                  ' Espace Admin
         li
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
             i.fa.fa-question-circle>

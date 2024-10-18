@@ -29,12 +29,15 @@ ruby:
             remove_user_path = new_admin_organisation_rdv_wizard_step_path(remove_path_params)
           div.ml-2= link_to remove_user_path, title: t("helpers.remove")
             i.fa.fa-minus-circle
-          div.ml-2
-            = link_to edit_admin_organisation_user_path( \
-                current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
-              ), \
-              data: { modal: "true" }, title: t("helpers.edit")
-              i.fa.fa-edit
+          / la ligne suivante gère le cas d’un usager qui ne fait pas partie de l’orga courante mais d’une autre orga dans laquelle l’agent courant a les droits suffisants pour l’éditer
+          - organisation_where_editable = current_agent.organisations.to_a.prepend(current_organisation).uniq.find { |org| Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, org), user).edit? }
+          - if organisation_where_editable
+            div.ml-2
+              = link_to edit_admin_organisation_user_path( \
+                 organisation_where_editable, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
+                ), \
+                data: { modal: "true" }, title: t("helpers.edit")
+                i.fa.fa-edit
 
     - show_add_user = @rdv.users.empty?
     .pl-2.mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "" : "show")
@@ -52,7 +55,7 @@ ruby:
             class: "select2-input js-new-rdv-users-select",
             data: { \
               width: :style,
-              "select-options": { ajax: { url: search_agents_users_path(exclude_ids: @rdv.users.map(&:id), organisation_id: @rdv.organisation_id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, \
+              "select2-config": { ajax: { url: search_agents_users_path(exclude_ids: @rdv.users.map(&:id), organisation_id: @rdv.organisation_id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, \
             }
 
           span.small.text-muted
@@ -64,7 +67,7 @@ ruby:
       - else
         .row.d-flex.justify-content-center
           p
-            | Vous n'avez pas d'usager pour le moment, vous pouvez en créer un dès a présent :
+            | Vous n'avez pas d'usager pour le moment, vous pouvez en créer un dès a présent&nbsp;:
         .row.d-flex.justify-content-center
           = link_to \
             "Créer un usager", \
