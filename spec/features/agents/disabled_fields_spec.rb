@@ -1,4 +1,4 @@
-RSpec.describe "some fields that are specific to a certain domain can be disabled and hidden from the interface" do
+RSpec.describe "some fields that are specific to a certain domain can be disabled and hidden from the interface", versioning: true do
   let!(:organisation) { create(:organisation, territory: territory) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }

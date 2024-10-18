@@ -1,4 +1,4 @@
-RSpec.describe Rdv::AuthoredConcern, type: :concern do
+RSpec.describe Rdv::AuthoredConcern, type: :concern, versioning: true do
   describe ".author" do
     let(:rdv) { create(:rdv) }
 
