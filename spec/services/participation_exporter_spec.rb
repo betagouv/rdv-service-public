@@ -1,4 +1,6 @@
-RSpec.describe ParticipationExporter, type: :service do
+# On active { versioning: true } car les exports utilisent les données PaperTrail
+# Voir https://github.com/paper-trail-gem/paper_trail?tab=readme-ov-file#7b-rspec
+RSpec.describe ParticipationExporter, type: :service, versioning: true do
   describe "#xls_string_from_rdvs_rows" do
     it "return export with header" do
       rdv = create(
