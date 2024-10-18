@@ -80,8 +80,8 @@ ANTS_RDV_OPT_AUTH_TOKEN=[récupérer dans vaultwarden]
 ANTS_RDV_API_URL=https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api
 ```
 
-Dans les seeds, la mairie de Sannois (95) est configurée pour ouvrir des créneaux de passeports.
-Vous pouvez donc chercher et réserver un RDV en passant par [rdv-mairie.localhost:3000](http://www.rdv-mairie.localhost:3000)
+Dans les seeds, la mairie de Sannois est configurée pour ouvrir des créneaux de passeports.
+Vous pouvez donc chercher et réserver un RDV en suivant ce lien <http://www.rdv-mairie.localhost:3000/prendre_rdv?departement=95&city_code=95582&street_ban_id=&latitude=48.973523&longitude=2.253694&address=Sannois%2C+95110&button=>
 
 Utilisez des application ID de tests, trouvés sur [cette issue GitLab](https://gitlab.com/france-titres/rendez-vous-mairie/interaction-avec-les-editeurs/-/issues/83#note_2154079306) :
 
