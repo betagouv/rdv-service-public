@@ -720,7 +720,7 @@ DEPENDENCIES
   devise!
   devise-async
   devise_invitable
-  devise_token_auth!
+  devise_token_auth (= 1.2.3)!
   dotenv-rails
   drb
   dsfr-view-components
