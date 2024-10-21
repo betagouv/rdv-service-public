@@ -9,14 +9,26 @@ module Ants
     # useful to debug tests and avoid retries
     # discard_on(StandardError) { |_job, ex| raise ex }
 
-    def perform(application_id:)
+    def perform(rdv_attributes: nil, application_id: nil, **_kwargs)
+      return perform_for_application_id(application_id) if application_id
+
+      # Ce code gère la rétrocompatibilité avec l'ancienne signature de ce job
+      # TODO: supprimer ce code 2 semaines après le merge
+      raise ArgumentError("missing application_id or rdv_attributes") if rdv_attributes.blank?
+
+      (
+        User.where(id: rdv_attributes[:users_ids]).pluck(:ants_pre_demande_number) +
+        [rdv_attributes[:obsolete_application_id]]
+      ).compact_blank.each { self.class.perform_later(application_id: _1) }
+    end
+
+    def perform_for_application_id(application_id)
       ants_status = AntsApi.status(application_id:, timeout: 4)
 
       return false unless ants_status["status"] == "validated"
 
       ants_appointments = ants_status["appointments"]
         .select { _1["management_url"].match(%r{^https?://#{Domain::RDV_MAIRIE.host_name}.*}) }
-      # on ne fait volontairement pas de parsing pour éviter des bugs sur des URLs d’autres éditeurs
 
       rdv = Rdv.joins(:users)
         .where(users: { ants_pre_demande_number: application_id })
