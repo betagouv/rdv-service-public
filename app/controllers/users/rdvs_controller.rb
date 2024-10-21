@@ -110,7 +110,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def set_rdv
-    @rdv = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).find(params[:id])
+    @rdv = Rdv.find(params[:id])
     authorize(@rdv, policy_class: User::RdvPolicy)
   end
 
