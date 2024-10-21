@@ -1,5 +1,7 @@
 module Ants
   class SyncAppointmentJob < ApplicationJob
+    RDV_MAIRIE_URL_REGEX = %r{^https?://#{Domain::RDV_MAIRIE.host_name}.*}
+
     # empêcher deux jobs parallèles avec le même application_id
     include GoodJob::ActiveJobExtensions::Concurrency
     good_job_control_concurrency_with(
@@ -28,7 +30,7 @@ module Ants
       return false unless ants_status["status"] == "validated"
 
       ants_appointments = ants_status["appointments"]
-        .select { _1["management_url"].match(%r{^https?://#{Domain::RDV_MAIRIE.host_name}.*}) }
+        .select { _1["management_url"].match(RDV_MAIRIE_URL_REGEX) }
 
       rdv = Rdv.joins(:users)
         .where(users: { ants_pre_demande_number: application_id })
