@@ -27,7 +27,8 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def show?
-    rdv_belongs_to_user_or_relatives? && (
+    record.motif.visible? &&
+      rdv_belongs_to_user_or_relatives? && (
       (record.collectif? && record.bookable_by_everyone_or_bookable_by_invited_users?) ||
       !current_user.signed_in_with_invitation_token? ||
       current_user.invited_for_rdv?(record)
@@ -43,7 +44,8 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def can_change_participants?
-    !current_user.signed_in_with_invitation_token? &&
+    record.motif.visible? &&
+      !current_user.signed_in_with_invitation_token? &&
       current_user.participation_for(record).not_cancelled? &&
       !record.in_the_past?
   end
