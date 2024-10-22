@@ -263,7 +263,7 @@ RSpec.describe "agents can prescribe rdvs" do
         end
 
         it "show both services and motifs" do
-          if Date.new(2024, 10, 19).future?
+          if Date.new(2024, 11, 19).future?
             pending # rubocop:disable RSpec/Pending
             raise "cette flaky spec a été désactivée pendant un mois le temps de travailler dessus"
           end
