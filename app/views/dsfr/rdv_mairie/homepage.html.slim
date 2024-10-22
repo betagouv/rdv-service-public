@@ -56,6 +56,51 @@
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img.fr-px-md-8w.fr-py-md-4w
               = dsfr_svg("artwork/pictograms/map/location-france", class: "fr-responsive-img")
+hr
+
+ruby:
+  cards = [
+    {
+      title: "Centralisez les informations",
+      desc: "Les informations des usagers, des disponiblités et des rendez-vous sont centralisées pour simplifier le quotidien des agents et permettre une réponse rapide aux usagers.",
+      svg: "artwork/pictograms/environment/human-cooperation",
+    },
+    {
+      title: "Éviter les rendez-vous non honorés",
+      desc: "Des notifications SMS et emails de création, de modification et de rappel de rendez-vous sont envoyées automatiquement aux usagers limitant le nombre de rendez-vous non honorés.",
+      svg: "artwork/pictograms/digital/application",
+    },
+    {
+      title: "Ouvrir vos disponibilités en ligne",
+      desc: "Votre administration peut rendre accessible ses disponibilités en ligne. Les usagers peuvent planifier des rendez-vous téléphonique, en visioconférence ou en présentiel en choisissant leur préférence selon vos disponiblités.",
+      svg: "artwork/pictograms/digital/calendar",
+    },
+    {
+      title: "Améliorer l’expérience usager",
+      desc: "L’interface (aux couleurs de la charte de l’État) propose un parcours simple et rapide pour les usagers facilitant ainsi les démarches avec vos services. Les usagers peuvent modifier ou annuler un rendez-vous en autonomie.",
+      svg: "artwork/pictograms",
+    },
+    {
+      title: "Produire des statistiques",
+      desc: "Les données des rendez-vous sont centralisées et permettent la production de statistiques pour mesurer votre activité et accompagner votre prise de décision.",
+      svg: "artwork/pictograms/digital/data-visualization",
+    },
+  ]
+
+.fr-container.fr-pt-4w.fr-pb-12w
+  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+    .fr-col-12.fr-col-md-8.rdv-text-align-center
+      h2
+        | Simplifiez la gestion administrative
+  - cards.each do |card_content|
+    .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+      .fr-card__body
+        .fr-card__content
+          h3.fr-card__title= card_content[:title]
+          p.fr-card__desc= card_content[:desc]
+      .fr-card__header.rdv-background-color-alt-blue-ecume
+        .fr-card__img
+          = dsfr_svg(card_content[:svg], class: "fr-responsive-img rdv-max-height-12rem")
 
 .fr-py-7w[style="background-color:  #DEE5FD"]
   .fr-container
