@@ -154,6 +154,8 @@ gem "bigdecimal"
 gem "csv"
 gem "drb"
 gem "observer"
+gem "logger"
+gem "ostruct"
 
 group :development do
   #  Hot reload
