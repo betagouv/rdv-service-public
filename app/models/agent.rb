@@ -86,6 +86,9 @@ class Agent < ApplicationRecord
   has_many :territories_through_organisations, source: :territory, through: :organisations
   has_many :webhook_endpoints, through: :organisations
 
+  has_many :access_grants, class_name: "Doorkeeper::AccessGrant", dependent: :delete_all
+  has_many :access_tokens, class_name: "Doorkeeper::AccessToken", dependent: :delete_all
+
   attr_accessor :allow_blank_name
 
   # Validation
