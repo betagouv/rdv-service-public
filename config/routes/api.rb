@@ -54,6 +54,11 @@ namespace :api do
         put :cancel
       end
     end
+
+    # Une route pour réinitialiser les données en staging
+    if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
+      post :reset, to: "base#reset"
+    end
   end
 end
 
