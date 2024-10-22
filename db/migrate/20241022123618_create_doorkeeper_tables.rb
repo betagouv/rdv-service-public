@@ -1,10 +1,9 @@
-# frozen_string_literal: true
-
 class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
   def change
     create_table :oauth_applications do |t|
       t.string  :name,    null: false
       t.string  :uid,     null: false
+      # TODO: voir si on a quand même du chiffrage avec des colonnes string
       t.text :secret, null: false # On utilise une colonne text plutôt que de type string comme le proposer doorkeeper par défaut pour pouvoir chiffrer cette colonne
 
       t.text    :redirect_uri, null: false
@@ -16,7 +15,7 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
     add_index :oauth_applications, :uid, unique: true
 
     create_table :oauth_access_grants do |t|
-      t.references :agent, null: false
+      t.references :resource_owner, null: false
       t.references :application,     null: false
       t.string   :token,             null: false
       t.integer  :expires_in,        null: false
@@ -30,7 +29,7 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
     add_foreign_key :oauth_access_grants, :oauth_applications, column: :application_id, validate: false
 
     create_table :oauth_access_tokens do |t|
-      t.references :agent, index: true
+      t.references :resource_owner, index: true
 
       t.references :application, null: false
 
@@ -63,7 +62,7 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
 
     add_foreign_key :oauth_access_tokens, :oauth_applications, column: :application_id, validate: false
 
-    add_foreign_key :oauth_access_grants, :agents, column: :agent_id, validate: false
-    add_foreign_key :oauth_access_tokens, :agents, column: :agent_id, validate: false
+    add_foreign_key :oauth_access_grants, :agents, column: :resource_owner_id, validate: false
+    add_foreign_key :oauth_access_tokens, :agents, column: :resource_owner_id, validate: false
   end
 end

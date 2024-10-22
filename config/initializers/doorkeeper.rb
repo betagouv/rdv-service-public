@@ -1,37 +1,24 @@
-# frozen_string_literal: true
-
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (requires ORM extensions installed).
   # Check the list of supported ORMs here: https://github.com/doorkeeper-gem/doorkeeper#orms
   orm :active_record
 
   # This block will be called to check whether the resource owner is authenticated or not.
-  resource_owner_authenticator do
-    current_agent || redirect_to(new_agent_session_path)
-  end
+  resource_owner_authenticator { authenticate_agent! }
 
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
   # adding oauth authorized applications. In other case it will return 403 Forbidden response
   # every time somebody will try to access the admin web interface.
   #
-  # admin_authenticator do
-  #   # Put your admin authentication logic here.
-  #   # Example implementation:
-  #
-  #   if current_user
-  #     head :forbidden unless current_user.admin?
-  #   else
-  #     redirect_to sign_in_url
-  #   end
-  # end
+  admin_authenticator { authenticate_super_admin! }
 
   # You can use your own model classes if you need to extend (or even override) default
   # Doorkeeper models such as `Application`, `AccessToken` and `AccessGrant.
   #
   # By default Doorkeeper ActiveRecord ORM uses its own classes:
   #
-  # access_token_class "Doorkeeper::AccessToken"
+  access_token_class "Oauth::AccessToken"
   # access_grant_class "Doorkeeper::AccessGrant"
   # application_class "Doorkeeper::Application"
   #
@@ -241,7 +228,7 @@ Doorkeeper.configure do
   # For more information go to
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
-  # default_scopes  :public
+  default_scopes :write
   # optional_scopes :write, :update
 
   # Allows to restrict only certain scopes for grant_type.

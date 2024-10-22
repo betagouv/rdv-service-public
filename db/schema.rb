@@ -459,7 +459,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_124933) do
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
-    t.bigint "agent_id", null: false
+    t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
     t.string "token", null: false
     t.integer "expires_in", null: false
@@ -467,13 +467,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_124933) do
     t.string "scopes", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "revoked_at"
-    t.index ["agent_id"], name: "index_oauth_access_grants_on_agent_id"
     t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
+    t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
     t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
-    t.bigint "agent_id"
+    t.bigint "resource_owner_id"
     t.bigint "application_id", null: false
     t.text "token", null: false
     t.text "refresh_token"
@@ -482,9 +482,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_124933) do
     t.datetime "created_at", null: false
     t.datetime "revoked_at"
     t.text "previous_refresh_token", default: "", null: false
-    t.index ["agent_id"], name: "index_oauth_access_tokens_on_agent_id"
     t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
     t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
   end
 
@@ -860,9 +860,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_124933) do
   add_foreign_key "motifs", "services"
   add_foreign_key "motifs_plage_ouvertures", "motifs"
   add_foreign_key "motifs_plage_ouvertures", "plage_ouvertures"
-  add_foreign_key "oauth_access_grants", "agents"
+  add_foreign_key "oauth_access_grants", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
-  add_foreign_key "oauth_access_tokens", "agents"
+  add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
