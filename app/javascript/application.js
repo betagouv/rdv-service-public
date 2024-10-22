@@ -1,5 +1,4 @@
 require("@rails/ujs").start()
-require("turbolinks").start()
 import { PlacesInputs } from './components/places-inputs.js'
 import { Modal } from './components/modal';
 import { ShowHidePassword } from './components/show-hide-password.js';
@@ -12,7 +11,7 @@ import './stylesheets/print';
 
 new Modal();
 
-$(document).on('turbolinks:load', function() {
+document.addEventListener("DOMContentLoaded", function() {
   new ShowHidePassword();
   new PlacesInputs();
   new NameInitialsForm();

@@ -645,9 +645,6 @@ GEM
     tilt (2.0.11)
     timeout (0.4.1)
     tod (2.2.0)
-    turbolinks (5.2.1)
-      turbolinks-source (~> 5.2)
-    turbolinks-source (5.2.0)
     typhoeus (1.4.1)
       ethon (>= 0.9.0)
     tzinfo (2.0.6)
@@ -790,7 +787,6 @@ DEPENDENCIES
   sprockets-rails
   strong_migrations
   tod (~> 2.2)
-  turbolinks (~> 5)
   typhoeus
   wannabe_bool
   webmock

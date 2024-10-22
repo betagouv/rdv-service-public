@@ -21,7 +21,7 @@ div id="creneaux-lieu-#{lieu&.id}"
             - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_public_booking_delay?
               - creneaux_for_date.each_value do |creneaux|
                 - creneaux.sort.each do |creneau|
-                  = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at), "data-turbolinks": false, class: "btn btn-light mr-1 mb-1 w-100", aria: { label: "Choisir le créneau de #{l(creneau.starts_at, format: '%H:%M')}"} do
+                  = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at), class: "btn btn-light mr-1 mb-1 w-100", aria: { label: "Choisir le créneau de #{l(creneau.starts_at, format: '%H:%M')}"} do
                     = l(creneau.starts_at, format: "%H:%M")
                     - if creneau.motif.follow_up?
                       br

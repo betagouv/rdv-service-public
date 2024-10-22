@@ -19,8 +19,6 @@ class CalendarRdvSolidarites {
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
 
-    document.addEventListener('turbolinks:before-cache', this.clearRefetchInterval);
-    document.addEventListener('turbolinks:before-render', this.clearRefetchInterval);
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         // when agent comes back to tab, refresh immediately
@@ -30,15 +28,6 @@ class CalendarRdvSolidarites {
       } else if (this.refreshCalendarInterval) {
         this.clearRefetchInterval();
       }
-    })
-    document.addEventListener("turbolinks:before-cache", () => {
-      // force calendar reload on turbolinks re-visit, otherwise event listeners
-      // are not attached
-      this.calendarEl.innerHTML = ""
-      this.currentViewType = null
-      this.currentTodayVisible = null
-      // fixes hanging tooltip on back
-      $(".tooltip").removeClass("show")
     })
     this.setRefetchInterval()
   }
@@ -242,6 +231,6 @@ class CalendarRdvSolidarites {
   }
 }
 
-document.addEventListener('turbolinks:load', function () {
+document.addEventListener('DOMContentLoaded', function () {
   new CalendarRdvSolidarites()
 });

@@ -14,7 +14,7 @@ class PlanningAgentSelect {
     let url = this.$select[0].dataset.urlTemplate;
     let agent_id = this.$select.select2("data")[0].element.value;
     url = url.replace("__AGENT__", agent_id)
-    Turbolinks.visit(url)
+    window.location = url
   }
 }
 

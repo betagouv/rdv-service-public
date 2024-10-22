@@ -22,12 +22,9 @@ By default, it renders:
       <%= content_for(:title) || 'Dashboard' %> - <%= Rails.application.class.module_parent_name.titlecase %>
     </title>
     <%= render "common/favicon" %>
-    <%= javascript_include_tag 'administrate', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag 'administrate', media: "all", 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'administrate' %>
+    <%= stylesheet_link_tag 'administrate', media: "all" %>
     <%= csrf_meta_tags %>
-
-
-    <meta name="turbolinks-root" content="/super_admins">
   </head>
   <body>
     <%= render 'layouts/rdv_solidarites_instance_name' %>
