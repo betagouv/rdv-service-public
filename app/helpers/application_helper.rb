@@ -137,4 +137,14 @@ module ApplicationHelper
   def display_inclusion_connect_button?
     !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
   end
+
+  def dsfr_svg(path, **kwargs)
+    classes = ["fr-artwork"]
+    classes += [kwargs.fetch(:class, nil)]
+    tag.svg(class: classes.compact_blank.join(" "), "aria-hidden": "true", viewBox: "0 0 80 80", width: "80px", height: "80px") do
+      tag.use(class: "fr-artwork-decorative", "xlink:href": "/dsfr/#{path}.svg#artwork-decorative") +
+        tag.use(class: "fr-artwork-minor", "xlink:href": "/dsfr/#{path}.svg#artwork-minor") +
+        tag.use(class: "fr-artwork-major", "xlink:href": "/dsfr/#{path}.svg#artwork-major")
+    end
+  end
 end

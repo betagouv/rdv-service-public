@@ -16,44 +16,46 @@
         ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md.fr-mb-0
           li= link_to("Prendre RDV avec l’équipe", team_meeting_url, class: "fr-btn fr-mb-0")
 
-.fr-py-12w
-  .fr-container.fr-grid-row.fr-grid-row--center
-    .fr-col-md-12[style="text-align: center"]
+.fr-container.fr-py-8w
+  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+    .fr-col-12.fr-col-md-8.rdv-text-align-center
       h2
-        = "Pourquoi choisir "
-        span[style="color: #{bleu_ecume}"]RDV Service Public
-        = " pour votre mairie ?"
+        | Une solution interministérielle pour toutes les organisations publiques
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
-      .fr-col-md-5
-        = dsfr_image_tag "rdv_mairie/image_1.svg", "Le logo de la république française", class: "fr-ratio-16x9"
-
-      .fr-col-md-5.fr-pt-4w
-        h3 Une solution conventionnée par l’ANTS
-
-        p RDV Service Public répond aux exigences techniques de l’ANTS (raccordement, numéro de pré-demande, gestion des doublons, principe de déterritorialisation).
-
-        p Vous pouvez choisir le branchement ou non de votre commune au moteur de recherche national de l’ANTS.
-
-    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
-      .fr-col-md-5
-        h3 Une solution publique et souveraine
-
-        p RDV Service Public est une solution numérique développée par l’État, au sein de l’Incubateur de Territoires de l’Agence Nationale de la Cohésion des Territoires.
-
-        p Vous entrez dans la communauté des utilisateurs et utilisatrices des services numériques publics et participez au développement de la souveraineté numérique de l’État.
-
-      .fr-col-md-5
-        = dsfr_image_tag "rdv_mairie/image_2.svg", "Un cercle de mains autour d'une ampoule", class: "fr-ratio-16x9"
-    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
-      .fr-col-md-5
-        = dsfr_image_tag "rdv_mairie/image_3.svg", "Le logo de la république française", class: "fr-ratio-16x9"
-      .fr-col-md-5
-        h3 Une solution gratuite
-
-        p RDV Service Public est mis à disposition gratuitement des collectivités qui sont dotées d’un dispositif de recueil (DR).
-
-        p Vous bénéficiez d’un accompagnement individualisé pour la prise en main de l’outil et d’une équipe support à votre disposition.
+      .fr-col.fr-col-md-4
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title.rdv-color-text-action-high-blue-france
+                | Administrations de l’État
+              p.fr-card__desc
+                | Administrations décentralisées, agences nationales ou ministères, la solution est ouverte à l’ensemble des services de l’État.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img.fr-px-md-8w.fr-py-md-4w
+              = dsfr_svg("artwork/pictograms/buildings/city-hall", class: "fr-responsive-img")
+      .fr-col.fr-col-md-4
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title.rdv-color-text-action-high-blue-france
+                | Opérateurs publics
+              p.fr-card__desc
+                | La solution est ouverte aux opérateurs publics nationaux comme aux structures mutualisatrices territoriales
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img.fr-px-md-8w.fr-py-md-4w
+              = dsfr_svg("artwork/pictograms/digital/avatar", class: "fr-responsive-img")
+      .fr-col.fr-col-md-4
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title.rdv-color-text-action-high-blue-france
+                | Collectivités territoriales
+              p.fr-card__desc
+                | Services communaux, départementaux ou régionaux, la solution est ouverte à toutes les compétences des collectivités territoriales.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img.fr-px-md-8w.fr-py-md-4w
+              = dsfr_svg("artwork/pictograms/map/location-france", class: "fr-responsive-img")
 
 .fr-py-7w[style="background-color:  #DEE5FD"]
   .fr-container

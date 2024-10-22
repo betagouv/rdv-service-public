@@ -2,7 +2,7 @@
   "name": "lapin",
   "private": true,
   "scripts": {
-    "build": "cp -r node_modules/@gouvfr/dsfr/dist/fonts public; cp -r node_modules/@gouvfr/dsfr/dist/icons public; cp app/assets/images/favicon/favicon.ico public/favicon.ico; webpack --config webpack.config.js"
+    "build": "cp -r node_modules/@gouvfr/dsfr/dist/fonts public; cp -r node_modules/@gouvfr/dsfr/dist/icons public; cp app/assets/images/favicon/favicon.ico public/favicon.ico; mkdir -p public/dsfr; cp -r node_modules/@gouvfr/dsfr/dist/artwork public/dsfr/artwork; webpack --config webpack.config.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",

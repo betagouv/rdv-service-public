@@ -14,6 +14,10 @@
   color: var(--text-action-high-blue-ecume);
 }
 
+.rdv-color-text-action-high-blue-france {
+  color: var(--text-action-high-blue-france);
+}
+
 .rdv-color-text-mention-grey {
   color: var(--text-mention-grey);
 }
@@ -37,6 +41,7 @@
 .rdv-max-width-60 {
   max-width: 60%;
 }
+
 .rdv-max-width-md-100 {
   @include media-breakpoint-up(md) {
     max-width: 100%;
