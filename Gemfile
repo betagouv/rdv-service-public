@@ -72,6 +72,8 @@ gem "omniauth-github"
 gem "omniauth-microsoft_graph"
 # OpenID Connect Strategy for OmniAuth
 gem "omniauth_openid_connect"
+# Oauth provider
+gem "doorkeeper"
 # Provides CSRF protection on OmniAuth request endpoint on Rails application.
 gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails

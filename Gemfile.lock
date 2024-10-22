@@ -222,6 +222,8 @@ GEM
       actionmailer (>= 5.0)
       devise (>= 4.6)
     diff-lcs (1.5.0)
+    doorkeeper (5.7.1)
+      railties (>= 5)
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
@@ -724,6 +726,7 @@ DEPENDENCIES
   devise-async
   devise_invitable
   devise_token_auth (= 1.2.3)!
+  doorkeeper
   dotenv-rails
   drb
   dsfr-view-components
