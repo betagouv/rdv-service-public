@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_22_123618) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_22_124933) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -860,10 +860,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_123618) do
   add_foreign_key "motifs", "services"
   add_foreign_key "motifs_plage_ouvertures", "motifs"
   add_foreign_key "motifs_plage_ouvertures", "plage_ouvertures"
-  add_foreign_key "oauth_access_grants", "agents", validate: false
-  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id", validate: false
-  add_foreign_key "oauth_access_tokens", "agents", validate: false
-  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id", validate: false
+  add_foreign_key "oauth_access_grants", "agents"
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "agents"
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"
