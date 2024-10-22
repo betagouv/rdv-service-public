@@ -62,6 +62,13 @@ RSpec.describe HumanAttributeValue do
       it { is_expected.to be_nil }
     end
 
+    context "string value ends with a dot (.)" do
+      it "works" do
+        user = User.new(notes: "C'est ainsi.")
+        expect(user.human_attribute_value(:notes)).to eq("C'est ainsi.")
+      end
+    end
+
     context "bool value is true" do
       let(:attr_name) { :some_bool }
       let(:value) { true }
