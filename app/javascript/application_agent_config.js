@@ -1,5 +1,4 @@
 require("@rails/ujs").start()
-require("turbolinks").start()
 import { Datetimepicker } from './components/datetimepicker';
 import { PlacesInputs } from './components/places-inputs.js'
 import { Modal } from './components/modal';
@@ -18,7 +17,7 @@ import './stylesheets/print';
 new Modal();
 new Select2Inputs();
 
-$(document).on('turbolinks:load', function () {
+document.addEventListener("DOMContentLoaded", function() {
   new ShowHidePassword();
   new Datetimepicker();
   new PlacesInputs();

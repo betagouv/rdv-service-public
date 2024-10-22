@@ -1,7 +1,7 @@
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
 
-document.addEventListener('turbolinks:load', function() {
+document.addEventListener("DOMContentLoaded", function() {
   const oldBrowser = browser.satisfies({
     chrome: "<78",
     firefox: "<68",

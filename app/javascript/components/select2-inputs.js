@@ -2,9 +2,8 @@ class Select2Inputs {
   constructor() {
     this.selector = '.select2-input'
     this.initInputs()
-    $(document).on('turbolinks:load', this.initInputs)
+    $(document).on('DOMContentLoaded', this.initInputs)
     $(document).on('shown.bs.modal', '.modal', this.initInputs)
-    $(document).on("turbolinks:before-cache", this.destroyInputs)
     $(document).on('select2:open', this.focusSearchInput)
   }
 

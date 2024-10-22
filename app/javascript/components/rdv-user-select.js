@@ -17,7 +17,7 @@ class ParticipationSelect {
     let url = new URL(window.location.href);
     let user_id = this.$select.select2("data")[0].element.value;
     url.searchParams.append("add_user[]", user_id);
-    Turbolinks.visit(url);
+    window.location = url
   }
 }
 

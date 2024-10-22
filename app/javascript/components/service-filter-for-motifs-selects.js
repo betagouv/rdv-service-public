@@ -2,8 +2,7 @@ class ServiceFilterForMotifsSelects {
   // jQuery is required to interact with select2
 
   constructor() {
-    $(document).on("turbolinks:load", this.initFilter)
-    $(document).on("turbolinks:before-cache", this.destroyFilter)
+    $(document).on("DOMContentLoaded", this.initFilter)
   }
 
   initFilter = () => {

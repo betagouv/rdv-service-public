@@ -1,5 +1,4 @@
-document.addEventListener('turbolinks:load', function() {
-
+document.addEventListener("DOMContentLoaded", function() {
   var secretField = document.getElementById("secret_field");
   if (!secretField) return;
 

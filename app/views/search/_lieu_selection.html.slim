@@ -26,7 +26,7 @@
                     .col-auto.align-self-center
                         i.fa.fa-chevron-right
               - else
-                = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{lieu.id}" } do
+                = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link", data: { toggle: "modal", target: "#js-rdv-restriction-motif#{lieu.id}" } do
                   .row
                     .col
                       = t(".next_availability")
