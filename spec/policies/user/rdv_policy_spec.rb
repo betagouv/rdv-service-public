@@ -45,6 +45,13 @@ RSpec.describe User::RdvPolicy, type: :policy do
     it_behaves_like "not included in scope"
   end
 
+  context "Rdv belongs to user but motif is not visible" do
+    let(:motif) { create(:motif, organisation: organisation, service: service, visibility_type: Motif::INVISIBLE) }
+
+    it_behaves_like "not included in scope"
+    it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :cancel?, :creneaux?, :can_change_participants?
+  end
+
   context "User signed in with an invitation token" do
     before { user.signed_in_with_invitation_token! }
 

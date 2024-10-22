@@ -13,7 +13,7 @@ module DefaultJobBehaviour
     # backoff:  1s, 16s, 81s, 4m, 10m, 21m, 40m, 68m, 109m, 166m, 4h, 6h, 8h, 11h, 14h, 18h, 23h, 29h, 36h, 44h
     # sum: (1..20).map { _1 ** 4 }.sum.to_f / 60 / 60 / 24 ~= 8 hours
     # it therefore takes more than 8 days for a job to be discarded
-    retry_on(StandardError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, priority: PRIORITY_OF_RETRIES)
+    retry_on(StandardError, wait: :polynomially_longer, attempts: MAX_ATTEMPTS, priority: PRIORITY_OF_RETRIES)
 
     before_perform :set_sentry_context
   end

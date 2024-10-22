@@ -262,7 +262,7 @@ class Rdv < ApplicationRecord
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
   def self.search_for(organisations, options)
-    rdvs = joins(:organisation).where(organisations: organisations)
+    rdvs = joins(:organisation).where(organisation: organisations)
     options = options.with_indifferent_access.select { |_, value| Array(value).compact_blank.present? }
 
     rdvs = rdvs.joins(:lieu).where(lieux: { id: options[:lieu_ids] }) if options[:lieu_ids]
