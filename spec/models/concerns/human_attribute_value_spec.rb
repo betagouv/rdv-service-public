@@ -64,8 +64,8 @@ RSpec.describe HumanAttributeValue do
 
     context "string value ends with a dot (.)" do
       it "works" do
-        user = User.new(notes: "C'est ainsi.")
-        expect(user.human_attribute_value(:notes)).to eq("C'est ainsi.")
+        expect(User.new(notes: "C'est ainsi.").human_attribute_value(:notes)).to eq("C'est ainsi.")
+        expect(User.new(notes: "Hélas...").human_attribute_value(:notes)).to eq("Hélas...")
       end
     end
 

@@ -39,7 +39,8 @@ module HumanAttributeValue
       attr = "#{attr_i18n_scope}.#{value}"
 
       # Rails does not support I18n keys ending with "." since https://github.com/rails/rails/pull/44300
-      attr = attr.delete_suffix(".")
+      # This regexp removes any number of dots from the end of the string.
+      attr = attr.sub(/\.*\z/, "")
 
       human_attribute_name(attr, options)
     end
