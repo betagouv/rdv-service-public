@@ -39,18 +39,18 @@ FactoryBot.define do
       role_in_territories { [] }
     end
 
-    after(:create) do |agent, evaluator|
+    before(:create) do |agent, evaluator|
       evaluator.basic_role_in_organisations.each do |organisation|
-        create :agent_role, agent: agent, organisation: organisation
+        agent.roles << build(:agent_role, agent: agent, organisation: organisation)
       end
       evaluator.admin_role_in_organisations.each do |organisation|
-        create :agent_role, :admin, agent: agent, organisation: organisation
+        agent.roles << build(:agent_role, :admin, agent: agent, organisation: organisation)
       end
       evaluator.intervenant_role_in_organisations.each do |organisation|
-        create :agent_role, :intervenant, agent: agent, organisation: organisation
+        agent.roles << build(:agent_role, :intervenant, agent: agent, organisation: organisation)
       end
       evaluator.role_in_territories.each do |territory|
-        create :agent_territorial_role, agent: agent, territory: territory
+        agent.territorial_roles << build(:agent_territorial_role, agent: agent, territory: territory)
       end
     end
 
