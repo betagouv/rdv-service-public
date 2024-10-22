@@ -51,6 +51,7 @@ ruby:
             .fr-card__header.rdv-background-color-alt-blue-ecume
               .fr-card__img.fr-px-md-8w.fr-py-md-4w
                 = dsfr_svg(card_content[:svg], class: "fr-responsive-img")
+
 hr
 
 ruby:
@@ -96,6 +97,50 @@ ruby:
       .fr-card__header.rdv-background-color-alt-blue-ecume
         .fr-card__img
           = dsfr_svg(card_content[:svg], class: "fr-responsive-img rdv-max-height-12rem")
+hr
+
+.fr-container.fr-py-8w.rdv-arrow-lists-wrapper
+  h2.rdv-text-align-center
+    | Vous êtes…
+  .fr-grid-row.fr-grid-row--center
+    .fr-col.fr-col-md-8
+      .fr-accordions-group
+        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent communal" do
+          markdown:
+            - __Raccordez les disponibilités__ de votre Dispositif de Recueil à l’ANTS ;
+            - __Bénéficiez__ d'une solution qui répond aux exigences techniques de l'ANTS  (n° pré-demande, raccordement au système anti-doublons...) ;
+            - __Offrez à vos administrés une expérience fluide__ en proposant la prise de rendez-vous directement depuis le site internet de votre commune.
+        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent départemental" do
+          markdown:
+            - __Fluidifiez la gestion__ de l'accueil et du secrétariat ;
+            - __Réduisez le nombre de rendez-vous non honorés__ grâce au système de notification SMS ;
+            - __Garantissez l'accompagnement de vos usagers__ grâce aux rendez-vous de suivi.
+        = render "dsfr/rdv_mairie/accordion_section", title: "Un médiateur numérique" do
+          markdown:
+            - __Publiez vos disponibilités en ligne__ depuis la Cartographie Nationale des Conseillers Numériques ;
+            - __Accédez depuis votre espace Coop__ à la solution ;
+            - __Créez des ateliers collectifs__ sur inscription pour vos apprenants.
+        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent de la justice" do
+          markdown:
+            - __Facilitez la mise en relation__ des différents structures du CDAD ;
+            - __Gérez les permanences__ des intervenants extérieurs (asso, avocats, conciliateurs...) ;
+            - __Exportez les statistiques__ de rendez-vous de votre organisation.
+        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent de l’État" do
+          markdown:
+            - __Proposez une prise de rendez-vous flexible__ via différentes modalités (téléphone, visioconférence, sur place, à domicile) ;
+            - __Connectez-vous via le SSO Agent Connect__ ;
+            - __Bénéficiez d'une interconnexion__ avec les outils interministériels (Démarches Simplifiés, la Suite).
+        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent d’un opérateur" do
+          markdown:
+            - __Intégrez la solution__ à votre système d'information par API ou webhook ;
+            - __Affichez vos disponibilités__ sur votre plateforme par API.
+        = render "dsfr/rdv_mairie/accordion_section", title: "Autres cas" do
+          markdown:
+            Pour les agents en insertion :
+
+            - __Gérez plus facilement__ votre planning ;
+            - __Convoquez les bénéficiaires__ aux rendez-vous d'accompagnement ;
+            - __Guidez le parcours de vos bénéficiaires__ grâce à la prescription.
 
 .fr-py-7w[style="background-color:  #DEE5FD"]
   .fr-container

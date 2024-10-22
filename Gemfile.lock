@@ -506,6 +506,7 @@ GEM
       ffi (~> 1.0)
     rdoc (6.7.0)
       psych (>= 4.0.0)
+    redcarpet (3.6.0)
     redis (5.2.0)
       redis-client (>= 0.22.0)
     redis-client (0.22.2)
@@ -760,6 +761,7 @@ DEPENDENCIES
   rails-controller-testing
   rails-erd
   rails_autolink
+  redcarpet
   redis
   redis-namespace
   rspec-rails

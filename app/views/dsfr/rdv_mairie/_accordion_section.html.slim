@@ -1,0 +1,8 @@
+/ locals: (title:)
+- id = "accordion-#{title.parameterize}"
+section.fr-accordion
+  h3.fr-accordion__title
+    button.fr-accordion__btn aria-expanded="false" aria-controls=id
+      = title
+  .fr-collapse id=id
+    = yield
