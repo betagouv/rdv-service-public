@@ -215,6 +215,14 @@ class Agent < ApplicationRecord
     territorial_roles.exists?(territory: territory)
   end
 
+  def participates_in?(rdv)
+    if rdv.agents_rdvs.loaded?
+      rdv.agents_rdvs.map(&:agent_id).include?(id)
+    else
+      rdv.agents_rdvs.exists?(rdv: rdv)
+    end
+  end
+
   def access_rights_for_territory(territory)
     agent_territorial_access_rights.find_by(territory: territory)
   end
