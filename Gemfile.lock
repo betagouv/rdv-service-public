@@ -323,6 +323,7 @@ GEM
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    logger (1.6.1)
     lograge (0.11.2)
       actionpack (>= 4)
       activesupport (>= 4)
@@ -353,6 +354,7 @@ GEM
       date
       net-protocol
     net-pop (0.1.2)
+      net-protocol
     net-protocol (0.2.2)
       timeout
     net-smtp (0.5.0)
@@ -402,6 +404,7 @@ GEM
       validate_url
       webfinger (~> 1.2)
     orm_adapter (0.5.0)
+    ostruct (0.6.0)
     pagy (6.5.0)
     paper_trail (15.2.0)
       activerecord (>= 6.1)
@@ -736,6 +739,7 @@ DEPENDENCIES
   kaminari
   letter_opener_web
   listen
+  logger
   lograge
   mail
   montrose
@@ -744,6 +748,7 @@ DEPENDENCIES
   omniauth-microsoft_graph
   omniauth-rails_csrf_protection
   omniauth_openid_connect
+  ostruct
   paper_trail
   parallel_tests
   parser (= 3.3.5.0)
