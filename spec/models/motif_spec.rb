@@ -104,7 +104,7 @@ RSpec.describe Motif, type: :model do
     let!(:agent_pmi1) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
     let!(:agent_pmi2) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
     let!(:agent_secretariat1) { create(:agent, basic_role_in_organisations: [org1], service: service_secretariat) }
-    let!(:intervenant_pmi) { create(:agent, :intervenant, intervenant_role_in_organisations: [org1], service: service_pmi) }
+    let!(:intervenant_pmi) { create(:agent, :intervenant, organisations: [org1], service: service_pmi) }
     let!(:motif) { create(:motif, service: service_pmi, organisation: org1) }
 
     it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1) }
