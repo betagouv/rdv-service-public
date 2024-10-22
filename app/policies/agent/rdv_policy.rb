@@ -40,7 +40,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   end
 
   def same_agent_or_has_access?
-    return true if current_agent.in?(@record.agents)
+    return true if current_agent.id.in?(@record.agents_rdvs.map(&:id))
 
     case current_agent.access_level_in(@record.organisation)
     when AgentRole::ACCESS_LEVEL_ADMIN
