@@ -5,7 +5,7 @@ RSpec.describe "Visioplainte Guichets" do
   end
 
   let!(:other_intervenant) do
-    create(:agent, services: [service_gendarmerie], organisations: [create(:organisation)])
+    create(:agent, :intervenant, services: [service_gendarmerie], organisations: [create(:organisation)])
   end
 
   let(:service_gendarmerie) do
