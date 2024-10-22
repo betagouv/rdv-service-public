@@ -2,9 +2,9 @@ module RecurrenceConcern
   extend ActiveSupport::Concern
 
   included do
-    serialize :recurrence, Montrose::Recurrence
-    serialize :start_time, Tod::TimeOfDay
-    serialize :end_time, Tod::TimeOfDay
+    serialize :recurrence, coder: Montrose::Recurrence
+    serialize :start_time, coder: Tod::TimeOfDay
+    serialize :end_time, coder: Tod::TimeOfDay
 
     before_save :clear_empty_recurrence, :set_recurrence_ends_at
 
