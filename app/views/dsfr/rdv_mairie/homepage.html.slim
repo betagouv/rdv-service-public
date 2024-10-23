@@ -20,108 +20,211 @@
       h2
         | Une solution interministérielle pour toutes les organisations publiques
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
-      = render "dsfr/rdv_mairie/homepage/carte_verticale",
-        title: "Administrations de l’État",
-        desc: "Administrations décentralisées, agences nationales ou ministères, la solution est ouverte à l’ensemble des services de l’État",
-        svg: "artwork/pictograms/buildings/city-hall"
-      = render "dsfr/rdv_mairie/homepage/carte_verticale",
-        title: "Opérateurs publics",
-        desc: "La solution est ouverte aux opérateurs publics nationaux comme aux structures mutualisatrices territoriales",
-        svg: "artwork/pictograms/digital/avatar"
-      = render "dsfr/rdv_mairie/homepage/carte_verticale",
-        title: "Collectivités territoriales",
-        desc: "Services communaux, départementaux ou régionaux, la solution est ouverte à toutes les compétences des collectivités territoriales",
-        svg: "artwork/pictograms/map/location-france"
+      .fr-col-12.fr-col-md-4
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title.rdv-color-text-action-high-blue-france
+                | Administrations de l’État
+              p.fr-card__desc
+                | Administrations décentralisées, agences nationales ou ministères, la solution est ouverte à l’ensemble des services de l’État.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img.fr-px-md-8w.fr-py-md-4w
+              = dsfr_svg "artwork/pictograms/buildings/city-hall", class: "fr-responsive-img"
+      .fr-col-12.fr-col-md-4
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title.rdv-color-text-action-high-blue-france
+                | Opérateurs publics
+              p.fr-card__desc
+                | La solution est ouverte aux opérateurs publics nationaux comme aux structures mutualisatrices territoriales
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img.fr-px-md-8w.fr-py-md-4w
+              = dsfr_svg "artwork/pictograms/digital/avatar", class: "fr-responsive-img"
+      .fr-col-12.fr-col-md-4
+        .fr-card
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title.rdv-color-text-action-high-blue-france
+                | Collectivités territoriales
+              p.fr-card__desc
+                | Services communaux, départementaux ou régionaux, la solution est ouverte à toutes les compétences des collectivités territoriales
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img.fr-px-md-8w.fr-py-md-4w
+              = dsfr_svg "artwork/pictograms/map/location-france", class: "fr-responsive-img"
 
 hr
-
-ruby:
-  cards = [
-    {
-      title: "Centralisez les informations",
-      desc: "Les informations des usagers, des disponiblités et des rendez-vous sont centralisées pour simplifier le quotidien des agents et permettre une réponse rapide aux usagers.",
-      svg: "artwork/pictograms/environment/human-cooperation",
-    },
-    {
-      title: "Éviter les rendez-vous non honorés",
-      desc: "Des notifications SMS et emails de création, de modification et de rappel de rendez-vous sont envoyées automatiquement aux usagers limitant le nombre de rendez-vous non honorés.",
-      svg: "artwork/pictograms/digital/application",
-    },
-    {
-      title: "Ouvrir vos disponibilités en ligne",
-      desc: "Votre administration peut rendre accessible ses disponibilités en ligne. Les usagers peuvent planifier des rendez-vous téléphonique, en visioconférence ou en présentiel en choisissant leur préférence selon vos disponiblités.",
-      svg: "artwork/pictograms/digital/calendar",
-    },
-    {
-      title: "Améliorer l’expérience usager",
-      desc: "L’interface (aux couleurs de la charte de l’État) propose un parcours simple et rapide pour les usagers facilitant ainsi les démarches avec vos services. Les usagers peuvent modifier ou annuler un rendez-vous en autonomie.",
-      svg: "artwork/pictograms",
-    },
-    {
-      title: "Produire des statistiques",
-      desc: "Les données des rendez-vous sont centralisées et permettent la production de statistiques pour mesurer votre activité et accompagner votre prise de décision.",
-      svg: "artwork/pictograms/digital/data-visualization",
-    },
-  ]
 
 .fr-container.fr-pt-4w.fr-pb-12w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
-    .fr-col-12.fr-col-md-8.rdv-text-align-center
-      h2
+    .fr-col-12.fr-col-md-10
+      h2.rdv-text-align-center
         | Simplifiez la gestion administrative
-  - cards.each do |card_content|
-    .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
-      .fr-card__body
-        .fr-card__content
-          h3.fr-card__title= card_content[:title]
-          p.fr-card__desc= card_content[:desc]
-      .fr-card__header.rdv-background-color-alt-blue-ecume
-        .fr-card__img
-          = dsfr_svg(card_content[:svg], class: "fr-responsive-img rdv-max-height-12rem")
+      div
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Centralisez les informations
+              p.fr-card__desc
+                | Les informations des usagers, des disponiblités et des rendez-vous sont centralisées pour simplifier le quotidien des agents et permettre une réponse rapide aux usagers.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/environment/human-cooperation", class: "fr-responsive-img rdv-max-height-12rem"
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Éviter les rendez-vous non honorés
+              p.fr-card__desc
+                | Des notifications SMS et emails de création, de modification et de rappel de rendez-vous sont envoyées automatiquement aux usagers limitant le nombre de rendez-vous non honorés.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/digital/application", class: "fr-responsive-img rdv-max-height-12rem"
+
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Ouvrir vos disponibilités en ligne
+              p.fr-card__desc
+                | Votre administration peut rendre accessible ses disponibilités en ligne. Les usagers peuvent planifier des rendez-vous téléphonique, en visioconférence ou en présentiel en choisissant leur préférence selon vos disponiblités.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/digital/calendar", class: "fr-responsive-img rdv-max-height-12rem"
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Améliorer l’expérience usager
+              p.fr-card__desc
+                | L’interface (aux couleurs de la charte de l’État) propose un parcours simple et rapide pour les usagers facilitant ainsi les démarches avec vos services. Les usagers peuvent modifier ou annuler un rendez-vous en autonomie.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms", class: "fr-responsive-img rdv-max-height-12rem"
+        .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Produire des statistiques
+              p.fr-card__desc
+                | Les données des rendez-vous sont centralisées et permettent la production de statistiques pour mesurer votre activité et accompagner votre prise de décision.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = dsfr_svg "artwork/pictograms/digital/data-visualization", class: "fr-responsive-img rdv-max-height-12rem"
+
 hr
 
-.fr-container.fr-py-8w.rdv-arrow-lists-wrapper
+.fr-container.fr-py-8w
   h2.rdv-text-align-center
     | Vous êtes…
   .fr-grid-row.fr-grid-row--center
     .fr-col.fr-col-md-8
       .fr-accordions-group
-        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent communal" do
-          markdown:
-            - __Raccordez les disponibilités__ de votre Dispositif de Recueil à l’ANTS ;
-            - __Bénéficiez__ d'une solution qui répond aux exigences techniques de l'ANTS  (n° pré-demande, raccordement au système anti-doublons...) ;
-            - __Offrez à vos administrés une expérience fluide__ en proposant la prise de rendez-vous directement depuis le site internet de votre commune.
-        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent départemental" do
-          markdown:
-            - __Fluidifiez la gestion__ de l'accueil et du secrétariat ;
-            - __Réduisez le nombre de rendez-vous non honorés__ grâce au système de notification SMS ;
-            - __Garantissez l'accompagnement de vos usagers__ grâce aux rendez-vous de suivi.
-        = render "dsfr/rdv_mairie/accordion_section", title: "Un médiateur numérique" do
-          markdown:
-            - __Publiez vos disponibilités en ligne__ depuis la Cartographie Nationale des Conseillers Numériques ;
-            - __Accédez depuis votre espace Coop__ à la solution ;
-            - __Créez des ateliers collectifs__ sur inscription pour vos apprenants.
-        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent de la justice" do
-          markdown:
-            - __Facilitez la mise en relation__ des différents structures du CDAD ;
-            - __Gérez les permanences__ des intervenants extérieurs (asso, avocats, conciliateurs...) ;
-            - __Exportez les statistiques__ de rendez-vous de votre organisation.
-        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent de l’État" do
-          markdown:
-            - __Proposez une prise de rendez-vous flexible__ via différentes modalités (téléphone, visioconférence, sur place, à domicile) ;
-            - __Connectez-vous via le SSO Agent Connect__ ;
-            - __Bénéficiez d'une interconnexion__ avec les outils interministériels (Démarches Simplifiés, la Suite).
-        = render "dsfr/rdv_mairie/accordion_section", title: "Un agent d’un opérateur" do
-          markdown:
-            - __Intégrez la solution__ à votre système d'information par API ou webhook ;
-            - __Affichez vos disponibilités__ sur votre plateforme par API.
-        = render "dsfr/rdv_mairie/accordion_section", title: "Autres cas" do
-          markdown:
-            Pour les agents en insertion :
-
-            - __Gérez plus facilement__ votre planning ;
-            - __Convoquez les bénéficiaires__ aux rendez-vous d'accompagnement ;
-            - __Guidez le parcours de vos bénéficiaires__ grâce à la prescription.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-agent-communal"
+              | Un agent communal
+          .fr-collapse id="vous-etes-agent-communal"
+            ul.rdv-arrow-list
+              li
+                b> Raccordez les disponibilités
+                span de votre Dispositif de Recueil à l’ANTS ;
+              li
+                b> Bénéficiez
+                span d'une solution qui répond aux exigences techniques de l'ANTS (n° pré-demande, raccordement au système anti-doublons...) ;
+              li
+                b> Offrez à vos administrés une expérience fluide
+                span en proposant la prise de rendez-vous directement depuis le site internet de votre commune.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-agent-departemental"
+              | Un agent départemental
+          .fr-collapse id="vous-etes-agent-departemental"
+            ul.rdv-arrow-list
+              li
+                b> Fluidifiez la gestion
+                span de l'accueil et du secrétariat ;
+              li
+                b> Réduisez le nombre de rendez-vous non honorés
+                span grâce au système de notification SMS ;
+              li
+                b> Garantissez l'accompagnement de vos usagers
+                span grâce aux rendez-vous de suivi.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-mediateur-numerique"
+              | Un médiateur numérique
+          .fr-collapse id="vous-etes-mediateur-numerique"
+            ul.rdv-arrow-list
+              li
+                b> Publiez vos disponibilités en ligne
+                span depuis la Cartographie Nationale des Conseillers Numériques ;
+              li
+                b> Accédez depuis votre espace Coop
+                span à la solution ;
+              li
+                b> Créez des ateliers collectifs
+                span sur inscription pour vos apprenants.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-agent-de-la-justice"
+              | Un agent de la justice
+          .fr-collapse id="vous-etes-agent-de-la-justice"
+            ul.rdv-arrow-list
+              li
+                b> Facilitez la mise en relation
+                span des différents structures du CDAD ;
+              li
+                b> Gérez les permanences
+                span des intervenants extérieurs (asso, avocats, conciliateurs...) ;
+              li
+                b> Exportez les statistiques
+                span de rendez-vous de votre organisation.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-agent-de-l-etat"
+              | Un agent de l’État
+          .fr-collapse id="vous-etes-agent-de-l-etat"
+            ul.rdv-arrow-list
+              li
+                b> Proposez une prise de rendez-vous flexible
+                span via différentes modalités (téléphone, visioconférence, sur place, à domicile) ;
+              li
+                b> Connectez-vous via le SSO Agent Connect
+                span ;
+              li
+                b> Bénéficiez d'une interconnexion
+                span avec les outils interministériels (Démarches Simplifiés, la Suite).
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-agent-d-un-operateur"
+              | Un agent d’un opérateur
+          .fr-collapse id="vous-etes-agent-d-un-operateur"
+            ul.rdv-arrow-list
+              li
+                b> Intégrez la solution
+                span à votre système d'information par API ou webhook ;
+              li
+                b> Affichez vos disponibilités
+                span sur votre plateforme par API.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-autres"
+              | Autres cas
+          .fr-collapse id="vous-etes-autres"
+            p Pour les agents en insertion :
+            ul.rdv-arrow-list
+              li
+                b> Gérez plus facilement
+                span votre planning ;
+              li
+                b> Convoquez les bénéficiaires
+                span aux rendez-vous d'accompagnement ;
+              li
+                b> Guidez le parcours de vos bénéficiaires
+                span grâce à la prescription.
 
 .fr-py-8w.rdv-background-color-alt-blue-ecume
   .fr-container
@@ -137,41 +240,47 @@ hr
       .fr-col-12.fr-col-md-5.rdv-text-align-center
         = image_tag "rdv_mairie/api.svg", alt: "Des fenêtres et des icônes d’applications avec des flèches", class: "rdv-height-md-0 rdv-min-height-md-100"
 
-ruby:
-  cards = [
-    {
-      title: "Publique",
-      desc: "Une solution développée par les services de l’État pour l’ensemble de la fonction publique. Nous adaptons la solution aux contraintes réglementaires publiques et intégrons l’écosystème numérique public à la solution.",
-      img: "rdv_mairie/republique-francaise-splash.png",
-    },
-    {
-      title: "Partagée",
-      desc: "Une solution utilisée dans des contextes et pour des enjeux variés. Nous mutualisons les besoins et co-construisons une vision commune pour enrichir une solution unique au bénéfice de toutes les administrations.",
-      img: "rdv_mairie/collaboration-bras-ampoules.png",
-    },
-    {
-      title: "Gratuite",
-      desc: "Une solution gratuite pour les administrations utilisatrices. Des financements interministériels garantissent la pérennité de la solution pour les administrations utilisatrices.",
-      img: "rdv_mairie/billet-0-euros.png",
-    },
-  ]
-
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
     .fr-col-12.fr-col-md-8.rdv-text-align-center
       h2
         | Pourquoi choisir RDV Service Public ?
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
-      - cards.each do |card_content|
-        .fr-col-12.fr-col-md-4
-          .fr-card.fr-p-0
-            .fr-card__body
-              .fr-card__content
-                h3.fr-card__title= card_content[:title]
-                p.fr-card__desc= card_content[:desc]
-            .fr-card__header.rdv-background-color-alt-blue-ecume
-              .fr-card__img
-                = image_tag card_content[:img], class: "fr-responsive-img"
+      .fr-col-12.fr-col-md-4
+        .fr-card.fr-p-0
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Publique
+              p.fr-card__desc
+                | Une solution développée par les services de l’État pour l’ensemble de la fonction publique. Nous adaptons la solution aux contraintes réglementaires publiques et intégrons l’écosystème numérique public à la solution.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = image_tag "rdv_mairie/republique-francaise-splash.png", class: "fr-responsive-img"
+
+      .fr-col-12.fr-col-md-4
+        .fr-card.fr-p-0
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Partagée
+              p.fr-card__desc
+                | Une solution utilisée dans des contextes et pour des enjeux variés. Nous mutualisons les besoins et co-construisons une vision commune pour enrichir une solution unique au bénéfice de toutes les administrations.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = image_tag "rdv_mairie/collaboration-bras-ampoules.png", class: "fr-responsive-img"
+
+      .fr-col-12.fr-col-md-4
+        .fr-card.fr-p-0
+          .fr-card__body
+            .fr-card__content
+              h3.fr-card__title
+                | Gratuite
+              p.fr-card__desc
+                | Une solution gratuite pour les administrations utilisatrices. Des financements interministériels garantissent la pérennité de la solution pour les administrations utilisatrices.
+          .fr-card__header.rdv-background-color-alt-blue-ecume
+            .fr-card__img
+              = image_tag "rdv_mairie/billet-0-euros.png", class: "fr-responsive-img"
 
 .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
   .fr-container.fr-py-8w
