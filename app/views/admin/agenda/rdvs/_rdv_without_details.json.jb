@@ -1,0 +1,10 @@
+{
+  start: rdv_without_details.starts_at.as_json,
+  end: rdv_without_details.ends_at.as_json,
+  title: "Occupé⋅e (en RDV)",
+  textColor: "white",
+  backgroundColor: "#757575", # Use a dark enough gray to be accessible
+  extendedProps: {
+    unauthorizedRdvExplanation: "Vous ne pouvez pas voir ce RDV parce qu'il a lieu dans un autre service ou une autre organisation",
+  },
+}

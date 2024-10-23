@@ -278,6 +278,7 @@ GEM
     irb (1.14.1)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    jb (0.8.2)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -631,6 +632,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    stackprof (0.2.26)
     stringio (3.1.1)
     strong_migrations (1.6.4)
       activerecord (>= 5.2)
@@ -734,6 +736,7 @@ DEPENDENCIES
   groupdate (~> 6.1)
   httpclient!
   icalendar (~> 2.5)
+  jb
   jbuilder
   jsbundling-rails
   kaminari
@@ -788,6 +791,7 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   sprockets-rails
+  stackprof
   strong_migrations
   tod (~> 2.2)
   turbolinks (~> 5)
