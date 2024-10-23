@@ -40,7 +40,7 @@ ruby:
         | Une solution interministérielle pour toutes les organisations publiques
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       - cards.each do |card_content|
-        .fr-col.fr-col-md-4
+        .fr-col-12.fr-col-md-4
           .fr-card
             .fr-card__body
               .fr-card__content
@@ -153,6 +153,42 @@ hr
           li= link_to "Consulter la documentation technique", "#", class: "fr-btn fr-btn--secondary"
       .fr-col-12.fr-col-md-5.rdv-text-align-center
         = image_tag "rdv_mairie/api.svg", alt: "Des fenêtres et des icônes d’applications avec des flèches", class: "rdv-height-md-0 rdv-min-height-md-100"
+
+ruby:
+  cards = [
+    {
+      title: "Publique",
+      desc: "Une solution développée par les services de l’État pour l’ensemble de la fonction publique. Nous adaptons la solution aux contraintes réglementaires publiques et intégrons l’écosystème numérique public à la solution.",
+      img: "rdv_mairie/republique-francaise-splash.png",
+    },
+    {
+      title: "Partagée",
+      desc: "Une solution utilisée dans des contextes et pour des enjeux variés. Nous mutualisons les besoins et co-construisons une vision commune pour enrichir une solution unique au bénéfice de toutes les administrations.",
+      img: "rdv_mairie/collaboration-bras-ampoules.png",
+    },
+    {
+      title: "Gratuite",
+      desc: "Une solution gratuite pour les administrations utilisatrices. Des financements interministériels garantissent la pérennité de la solution pour les administrations utilisatrices.",
+      img: "rdv_mairie/billet-0-euros.png",
+    },
+  ]
+
+.fr-container.fr-py-8w
+  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+    .fr-col-12.fr-col-md-8.rdv-text-align-center
+      h2
+        | Pourquoi choisir RDV Service Public ?
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      - cards.each do |card_content|
+        .fr-col-12.fr-col-md-4
+          .fr-card.fr-p-0
+            .fr-card__body
+              .fr-card__content
+                h3.fr-card__title= card_content[:title]
+                p.fr-card__desc= card_content[:desc]
+            .fr-card__header.rdv-background-color-alt-blue-ecume
+              .fr-card__img
+                = image_tag card_content[:img], class: "fr-responsive-img"
 
 .fr-py-7w[style="background-color:  #DEE5FD"]
   .fr-container
