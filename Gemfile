@@ -87,8 +87,6 @@ gem "good_job", "3.27.4"
 
 # JSON serialization and queries
 
-# Create JSON structures via a Builder-style DSL
-gem "jbuilder"
 # A simple and fast JSON API template engine for Ruby on Rails
 gem "jb"
 # Simple Fast Declarative Serialization Library
