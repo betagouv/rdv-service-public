@@ -16,7 +16,7 @@ class Admin::Agenda::RdvsController < Admin::Agenda::BaseController
     @rdvs = rdvs.map do |rdv|
       if Agent::RdvPolicy.new(current_agent, rdv).show?
         rdv if rdv.not_cancelled? || current_agent.display_cancelled_rdv
-      else
+      elsif rdv.not_cancelled?
         UnauthorizedRdv.new(rdv)
       end
     end.compact
