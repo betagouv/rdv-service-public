@@ -3,10 +3,19 @@ RSpec.describe Admin::UsersController, type: :controller do
 
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let!(:user) { create(:user, organisations: [organisation]) }
+  let(:user) { create(:user, organisations: [organisation]) }
 
   before do
     sign_in agent
+  end
+
+  describe "GET search" do
+    it "returns users as JSON" do
+      travel_to(Time.zone.parse("2024-10-23 16:00"))
+      francis = create(:user, first_name: "Francis", last_name: "Factice", birth_date: Date.new(1990, 4, 2), organisations: [organisation])
+      get :search, params: { term: "fra", organisation_id: organisation.id }, format: :json
+      expect(response.parsed_body).to eq({ "results" => [{ "id" => francis.id, "text" => "FACTICE Francis - 02/04/1990 - 34 ans" }] })
+    end
   end
 
   describe "DELETE destroy" do
