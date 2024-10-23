@@ -14,41 +14,24 @@
         ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md.fr-mb-0
           li= link_to("Contacter notre équipe", "https://meet.brevo.com/rdv-sp/-mairie-presentation-de-la-solution", class: "fr-btn fr-mb-0")
 
-ruby:
-  cards = [
-    {
-      title: "Administrations de l’État",
-      desc: "Administrations décentralisées, agences nationales ou ministères, la solution est ouverte à l’ensemble des services de l’État",
-      svg: "artwork/pictograms/buildings/city-hall",
-    },
-    {
-      title: "Opérateurs publics",
-      desc: "La solution est ouverte aux opérateurs publics nationaux comme aux structures mutualisatrices territoriales",
-      svg: "artwork/pictograms/digital/avatar",
-    },
-    {
-      title: "Collectivités territoriales",
-      desc: "Services communaux, départementaux ou régionaux, la solution est ouverte à toutes les compétences des collectivités territoriales",
-      svg: "artwork/pictograms/map/location-france",
-    },
-  ]
-
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
     .fr-col-12.fr-col-md-8.rdv-text-align-center
       h2
         | Une solution interministérielle pour toutes les organisations publiques
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
-      - cards.each do |card_content|
-        .fr-col-12.fr-col-md-4
-          .fr-card
-            .fr-card__body
-              .fr-card__content
-                h3.fr-card__title.rdv-color-text-action-high-blue-france= card_content[:title]
-                p.fr-card__desc= card_content[:desc]
-            .fr-card__header.rdv-background-color-alt-blue-ecume
-              .fr-card__img.fr-px-md-8w.fr-py-md-4w
-                = dsfr_svg(card_content[:svg], class: "fr-responsive-img")
+      = render "dsfr/rdv_mairie/homepage/carte_verticale",
+        title: "Administrations de l’État",
+        desc: "Administrations décentralisées, agences nationales ou ministères, la solution est ouverte à l’ensemble des services de l’État",
+        svg: "artwork/pictograms/buildings/city-hall"
+      = render "dsfr/rdv_mairie/homepage/carte_verticale",
+        title: "Opérateurs publics",
+        desc: "La solution est ouverte aux opérateurs publics nationaux comme aux structures mutualisatrices territoriales",
+        svg: "artwork/pictograms/digital/avatar"
+      = render "dsfr/rdv_mairie/homepage/carte_verticale",
+        title: "Collectivités territoriales",
+        desc: "Services communaux, départementaux ou régionaux, la solution est ouverte à toutes les compétences des collectivités territoriales",
+        svg: "artwork/pictograms/map/location-france"
 
 hr
 
