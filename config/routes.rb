@@ -1,9 +1,5 @@
 Rails.application.routes.draw do
-  use_doorkeeper do
-    # Pour le moment on n'affiche pas encore les pages qui permettent aux agents de lister les applications Oauth qu'ils ont activé
-    # Ça sera fait dans une PR suivante
-    # skip_controllers :applications, :authorized_applications # TODO: réactiver ces pages
-  end
+  use_doorkeeper
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
   ## OAUTH ##

@@ -9,26 +9,25 @@ html lang="fr"
   main
     body.pb-0
       = render "layouts/rdv_solidarites_instance_name"
+      - display_for_connected_agent = current_agent && !in_oauth_flow?
       .auth-fluid.row
-        .auth-fluid-left.text-center.col-xs-12.col-md-4 class="#{"auth-fluid-left--agent-preferences" if current_agent}"
+        .auth-fluid-left.text-center.col-xs-12.col-md-4 class="#{"auth-fluid-left--agent-preferences" if display_for_connected_agent}"
           .p-2
             = link_logo
-          - if current_agent.present?
+          - if display_for_connected_agent
             = link_to(root_path, class: "pt-1 pb-4 text-white") do
               i.fa.fa-arrow-left
               = " Retour à l'accueil"
           .align-items-center.d-flex.mt-2.mt-lg-4
             .p-1.p-lg-3.flex-grow-1.mt-lg-4
-              - if agent_path? && current_agent.nil?
-                p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
-              - elsif agent_path? && current_agent.present?
+              - if display_for_connected_agent
                 = render "agents/preferences_menu"
               - else
-                h4.mb-3 Prenez RDV en ligne avec votre département !
+                p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
 
         .auth-fluid-form-box.col-xs-12.col-md-8
           / Permet de centrer les formulaire de login, et d'aligner en haut de l'écran les formulaires de préférences
-          div class="#{"align-items-center d-flex h-100" if current_agent.blank?}"
+          div class="#{"align-items-center d-flex h-100" unless display_for_connected_agent}"
             .p-3.flex-grow-1
               = render "layouts/flash"
               .row

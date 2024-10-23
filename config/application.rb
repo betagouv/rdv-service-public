@@ -77,5 +77,12 @@ module Lapin
 
     config.active_record.async_query_executor = :global_thread_pool
     config.active_record.global_executor_concurrency = 4 # update the pool size in database.yml if you change this
+
+    config.to_prepare do
+      Doorkeeper::AuthorizationsController.layout "application_agent_config" # Lors de l'authorisation d'une application oauth
+      Doorkeeper::AuthorizedApplicationsController.layout "application_agent_config"
+
+      Doorkeeper::ApplicationController.helper DoorkeeperHelper
+    end
   end
 end

@@ -1,0 +1,33 @@
+h1.rdv-text-align-center.text-dark.mt-0.font-weight-bold.mb-4 Autorisation Requise
+
+p.rdv-text-align-center
+  | Autorisez-vous #{@pre_auth.client.name } à accéder à votre compte #{current_domain.name} ?
+
+- @pre_auth.scopes.each do |scope|
+  / TODO: ajouter des textes d'explication pour les permissions données
+  /= t(scope, scope: [:doorkeeper, :scopes])
+
+.row.rdv-text-align-center
+  .col-md-6
+    = form_tag oauth_authorization_path, method: :delete do
+      = hidden_field_tag :client_id, @pre_auth.client.uid, id: nil
+      = hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil
+      = hidden_field_tag :state, @pre_auth.state, id: nil
+      = hidden_field_tag :response_type, @pre_auth.response_type, id: nil
+      = hidden_field_tag :response_mode, @pre_auth.response_mode, id: nil
+      = hidden_field_tag :scope, @pre_auth.scope, id: nil
+      = hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil
+      = hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil
+      = submit_tag t("doorkeeper.authorizations.buttons.deny"), class: "btn btn-outline-primary"
+
+  .col-md-6
+    = form_tag oauth_authorization_path, method: :post do
+      = hidden_field_tag :client_id, @pre_auth.client.uid, id: nil
+      = hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil
+      = hidden_field_tag :state, @pre_auth.state, id: nil
+      = hidden_field_tag :response_type, @pre_auth.response_type, id: nil
+      = hidden_field_tag :response_mode, @pre_auth.response_mode, id: nil
+      = hidden_field_tag :scope, @pre_auth.scope, id: nil
+      = hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil
+      = hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil
+      = submit_tag t("doorkeeper.authorizations.buttons.authorize"), class: "btn btn-primary"

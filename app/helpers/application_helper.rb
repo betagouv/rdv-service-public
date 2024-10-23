@@ -137,4 +137,8 @@ module ApplicationHelper
   def display_inclusion_connect_button?
     !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
   end
+
+  def in_oauth_flow?
+    controller_name == "authorizations"
+  end
 end
