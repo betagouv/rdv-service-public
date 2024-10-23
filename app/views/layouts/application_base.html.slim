@@ -13,7 +13,7 @@ html lang="fr"
   body
     = render "layouts/rdv_solidarites_instance_name"
     = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-    = dsfr_header logo_text: "République<br>Française".html_safe do |header|
+    = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: {id: "header"} do |header|
       - header.with_operator_image title: "Accueil - RDV #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: "RDV #{current_domain.name}"
       - if current_user.present? && !current_user.signed_in_with_invitation_token?
         ruby:

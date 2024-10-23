@@ -11,7 +11,8 @@
         .fr-text--lg
           | Éviter les rendez-vous non honorés, gagner du temps au quotidien et améliorer la relation entre les agents et les usagers
         ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md.fr-mb-0
-          li= link_to("Contacter notre équipe", "https://meet.brevo.com/rdv-sp/-mairie-presentation-de-la-solution", class: "fr-btn fr-mb-0")
+          li
+            = link_to"Contacter notre équipe", "https://meet.brevo.com/rdv-sp/-mairie-presentation-de-la-solution", class: "fr-btn fr-mb-0"
 
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -397,4 +398,15 @@ hr
             p
               ' À l'issue de ce rendez-vous, vous obtiendrez des accès en production ou en démonstration, selon vos préférences. De plus, vous bénéficierez d'un accompagnement jusqu'à ce que vos équipes atteignent leur pleine autonomie.
               ' Pour découvrir ou déployer la solution, planifiez un rendez-vous :
-            = link_to "Prendre rendez-vous avec l’équipe", class: "fr-link fr-icon-arrow-right-line fr-link--icon-right"
+            = link_to "Prendre rendez-vous avec l’équipe", "https://meet.brevo.com/rdv-sp/-mairie-presentation-de-la-solution", class: "fr-link fr-icon-arrow-right-line fr-link--icon-right"
+
+.fr-py-8w.rdv-background-color-alt-blue-ecume.rdv-text-align-center
+  .fr-container
+    .fr-mb-4w
+      - 3.times do
+        = image_tag "rdv_mairie/carotte.png", alt: "Carotte"
+    h2 Plus de carottes, moins de lapins
+    p
+      | Votre agenda vous remerciera
+    .fr-my-4w= link_to "Prendre RDV avec l’équipe", "https://meet.brevo.com/rdv-sp/-mairie-presentation-de-la-solution", class: "fr-btn"
+    = link_to "Revenir en haut de la page", "#header", class: "fr-link fr-icon-arrow-right-line fr-link--icon-right"
