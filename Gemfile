@@ -160,7 +160,7 @@ gem "logger"
 gem "ostruct"
 
 group :development do
-  gem "stackprof"
+  #  Hot reload
 
   # Rails application preloader
   gem "spring", require: false
