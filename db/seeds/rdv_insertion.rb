@@ -97,6 +97,18 @@ motif_drome2 = Motif.create!(
   custom_cancel_warning_message: "Ce RDV est obligatoire",
   motif_category: orientation_category
 )
+motif_convoc_drome1 = Motif.create!(
+  name: "Convocation RSA - Orientation : rdv sur site",
+  color: "#00ffff",
+  default_duration_in_min: 60,
+  organisation: org_drome1,
+  bookable_by: :agents,
+  max_public_booking_delay: 2_629_746,
+  service: service_rsa,
+  for_secretariat: true,
+  custom_cancel_warning_message: "Ce RDV est obligatoire",
+  motif_category: orientation_category
+)
 
 # MOTIFS Yonne
 motif_yonne_physique = Motif.create!(
@@ -190,7 +202,7 @@ _plage_ouverture_org_drome1_lieu1_alain_classique = PlageOuverture.create!(
   organisation_id: org_drome1.id,
   agent_id: agent_orgs_rdv_insertion.id,
   lieu_id: lieu_org_drome1_valence.id,
-  motif_ids: [motif1_drome1.id, motif2_drome1.id],
+  motif_ids: [motif1_drome1.id, motif2_drome1.id, motif_convoc_drome1.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
