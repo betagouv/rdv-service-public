@@ -1,5 +1,5 @@
-json.start unauthorized_rdv.starts_at.as_json
-json.end unauthorized_rdv.ends_at.as_json
+json.start rdv_without_details.starts_at.as_json
+json.end rdv_without_details.ends_at.as_json
 
 json.title "Occupé⋅e (en RDV)"
 json.textColor "white"

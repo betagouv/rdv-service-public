@@ -17,12 +17,12 @@ class Admin::Agenda::RdvsController < Admin::Agenda::BaseController
       if Agent::RdvPolicy.new(current_agent, rdv).show?
         rdv if rdv.not_cancelled? || current_agent.display_cancelled_rdv
       elsif rdv.not_cancelled?
-        UnauthorizedRdv.new(rdv)
+        RdvWithoutDetails.new(rdv)
       end
     end.compact
   end
 
-  class UnauthorizedRdv
+  class RdvWithoutDetails
     def initialize(rdv)
       @rdv = rdv
     end
@@ -30,7 +30,7 @@ class Admin::Agenda::RdvsController < Admin::Agenda::BaseController
     delegate :starts_at, :ends_at, to: :@rdv
 
     def to_partial_path
-      "unauthorized_rdv"
+      "rdv_without_details"
     end
   end
 end
