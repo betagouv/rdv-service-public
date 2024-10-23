@@ -18,7 +18,7 @@ Doorkeeper.configure do
   #
   # By default Doorkeeper ActiveRecord ORM uses its own classes:
   #
-  access_token_class "Oauth::AccessToken"
+  # access_token_class "Dookeeper::AccessToken"
   # access_grant_class "Doorkeeper::AccessGrant"
   # application_class "Doorkeeper::Application"
   #
@@ -166,10 +166,7 @@ Doorkeeper.configure do
   # This will disable the possibility to use +reuse_access_token+
   # since plain values can no longer be retrieved.
   #
-  # Note: If you are already a user of doorkeeper and have existing tokens
-  # in your installation, they will be invalid without adding 'fallback: :plain'.
-  #
-  # hash_token_secrets
+  hash_token_secrets
   # By default, token secrets will be hashed using the
   # +Doorkeeper::Hashing::SHA256+ strategy.
   #
@@ -183,7 +180,7 @@ Doorkeeper.configure do
 
   # Hash application secrets before persisting them.
   #
-  # hash_application_secrets
+  hash_application_secrets
   #
   # By default, applications will be hashed
   # with the +Doorkeeper::SecretStoring::SHA256+ strategy.
@@ -192,18 +189,6 @@ Doorkeeper.configure do
   # this line instead:
   #
   # hash_application_secrets using: '::Doorkeeper::SecretStoring::BCrypt'
-
-  # When the above option is enabled, and a hashed token or secret is not found,
-  # you can allow to fall back to another strategy. For users upgrading
-  # doorkeeper and wishing to enable hashing, you will probably want to enable
-  # the fallback to plain tokens.
-  #
-  # This will ensure that old access tokens and secrets
-  # will remain valid even if the hashing above is enabled.
-  #
-  # This can be done by adding 'fallback: plain', e.g. :
-  #
-  # hash_application_secrets using: '::Doorkeeper::SecretStoring::BCrypt', fallback: :plain
 
   # Issue access tokens with refresh token (disabled by default), you may also
   # pass a block which accepts `context` to customize when to give a refresh
@@ -244,7 +229,7 @@ Doorkeeper.configure do
   # not in configuration, i.e. +default_scopes+ or +optional_scopes+.
   # (disabled by default)
   #
-  # enforce_configured_scopes
+  enforce_configured_scopes
 
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then

@@ -3,8 +3,7 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
     create_table :oauth_applications do |t|
       t.string  :name,    null: false
       t.string  :uid,     null: false
-      # TODO: voir si on a quand même du chiffrage avec des colonnes string
-      t.text :secret, null: false # On utilise une colonne text plutôt que de type string comme le proposer doorkeeper par défaut pour pouvoir chiffrer cette colonne
+      t.string  :secret,  null: false
 
       t.text    :redirect_uri, null: false
       t.string  :scopes,       null: false, default: ""
@@ -33,9 +32,9 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
 
       t.references :application, null: false
 
-      t.text :token, null: false # On utilise une colonne text plutôt que de type string comme le proposer doorkeeper par défaut pour pouvoir chiffrer cette colonne
+      t.string :token, null: false
 
-      t.text :refresh_token # On utilise une colonne text plutôt que de type string comme le proposer doorkeeper par défaut pour pouvoir chiffrer cette colonne
+      t.string :refresh_token
       t.integer  :expires_in
       t.string   :scopes
       t.datetime :created_at, null: false
@@ -54,7 +53,7 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
       #
       # Comment out this line if you want refresh tokens to be instantly
       # revoked after use.
-      t.text :previous_refresh_token, null: false, default: ""
+      t.string :previous_refresh_token, null: false, default: ""
     end
 
     add_index :oauth_access_tokens, :token, unique: true
