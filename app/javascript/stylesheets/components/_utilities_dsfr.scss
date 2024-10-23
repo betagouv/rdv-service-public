@@ -10,6 +10,12 @@
   }
 }
 
+.rdv-text-align-md-right {
+  @include media-breakpoint-up(md) {
+    text-align: right;
+  }
+}
+
 .rdv-color-blue-ecume-sun-247-moon-675-hover {
   color: var(--blue-ecume-sun-247-moon-675-hover);
 }
@@ -32,6 +38,10 @@
 
 .rdv-color-text-title-grey {
   color: var(--text-title-grey);
+}
+
+.rdv-font-size-1-6rem {
+  font-size: 1.6rem;
 }
 
 // FLEX
