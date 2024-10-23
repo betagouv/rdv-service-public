@@ -78,7 +78,7 @@ a[disabled] {
   align-items: center;
 }
 
-.grid-first-column-empty>*:nth-child(1) {
+.grid-first-column-empty > *:nth-child(1) {
   grid-column-start: 2;
 }
 
@@ -121,7 +121,7 @@ ul.horizontal-border-between-items {
   }
 }
 
-.bordered-divs>div {
+.bordered-divs > div {
   border-bottom: 1px solid #ccc;
 
   &:last-child {
