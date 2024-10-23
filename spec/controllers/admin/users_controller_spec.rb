@@ -3,7 +3,6 @@ RSpec.describe Admin::UsersController, type: :controller do
 
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let(:user) { create(:user, organisations: [organisation]) }
 
   before do
     sign_in agent
@@ -19,6 +18,8 @@ RSpec.describe Admin::UsersController, type: :controller do
   end
 
   describe "DELETE destroy" do
+    let!(:user) { create(:user, organisations: [organisation]) }
+
     it "removes user from organisation" do
       expect do
         delete :destroy, params: { organisation_id: organisation.id, id: user.id }
@@ -26,7 +27,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       end.to change(user, :organisation_ids).from([organisation.id]).to([])
     end
 
-    it "appaers to destroy user" do
+    it "appears to destroy user" do
       expect do
         delete :destroy, params: { organisation_id: organisation.id, id: user.id }
       end.to change(User, :count)
