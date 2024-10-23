@@ -1,4 +1,3 @@
-- bleu_ecume = "#4E68BB"
 .fr-py-8w.rdv-background-color-alt-blue-ecume
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -321,3 +320,81 @@ hr
             | Mairie de Chomérac (07)
           .fr-quote__image
             = image_tag "rdv_mairie/partenaire-chomerac.png", alt: "Blason de la mairie de Chomérac (07)"
+
+hr
+
+.fr-container.fr-py-8w
+  h2.rdv-text-align-center
+    | Questions fréquentes
+  .fr-grid-row.fr-grid-row--center
+    .fr-col.fr-col-md-8
+      .fr-accordions-group
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-difference-rdv"
+              | RDV Solidarités, RDV Aide Numérique et RDV Service Public, quelles différences ?
+          .fr-collapse id="faq-difference-rdv"
+            p
+              ' Notre solution est déployée sur trois noms de domaine distincts :  
+              = link_to "rdv-solidarites.fr", "https://www.rdv-solidarites.fr", target: "_blank", rel: "noopener"
+              ',
+              = link_to "rdv-aide-numerique.fr", "https://www.rdv-aide-numerique.fr", target: "_blank", rel: "noopener"
+              ',
+              = link_to "rdv.anct.gouv.fr", "https://www.rdv.anct.gouv.fr", target: "_blank", rel: "noopener"
+              '.
+              ' Il est important de noter que ces noms de domaine n'affectent en rien les fonctionnalités de la solution.
+            p
+              ' En effet, toutes les fonctionnalités reposent sur une base de code unique, répartie sur deux instances pour renforcer la sécurité informatique.
+              ' L'utilisation de ces différents noms de domaine permet une distribution efficace des comptes en fonction du type d'administration utilisatrice.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-donnees-protegees"
+              | Mes données sont-elles protégées ?
+          .fr-collapse id="faq-donnees-protegees"
+            p
+              ' La solution RDV Service Public est conçue pour s'adapter aux réalités variées des administrations publiques. Elle propose une architecture basée sur quatre concepts clés :
+              b> Territoire > Organisation > Service > Agent.
+            p
+              ' Cette structure permet un déploiement flexible, que ce soit au sein d'une petite commune rurale avec quelques agents ou d'un conseil départemental comptant plusieurs centaines d’agents.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-acces-agenda"
+              | Qui peut voir et modifier mon agenda ?
+          .fr-collapse id="faq-acces-agenda"
+            p
+              ' Par défaut, seuls les agents de votre service et de votre organisation peuvent consulter et planifier des rendez-vous dans votre agenda.
+              ' Les agents d'autres services, même s'ils appartiennent à la même organisation, n'y auront pas accès.
+            p.rdv-font-weight-bold
+              | Ces droits d'accès par défaut peuvent être modifiés individuellement pour décloisonner la visibilité et les droits d'accès des agents.
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-notifs-sms"
+              | À quelle heure sont envoyées les notitifications SMS ?
+          .fr-collapse id="faq-notifs-sms"
+            p
+              | Les notifications SMS sont déclenchées par plusieurs événements :
+            ul
+              li
+                b' Confirmation de rendez-vous
+                | : envoyée immédiatement après la création du rendez-vous
+              li
+                b' Rappel
+                | : envoyée à l'usager deux jours avant le rendez-vous à 9h (sauf les dimanches et jours fériés)
+              li
+                b' Modification de rendez-vous
+                | : l'usager est notifié immédiatement de tout changement
+              li
+                b' Annulation de rendez-vous
+                | : l'usager est notifié immédiatement. S'il souhaite annuler lui-même, il doit le faire au moins 4 heures avant l'heure prévue
+        section.fr-accordion
+          h3.fr-accordion__title
+            button.fr-accordion__btn aria-expanded="false" aria-controls="faq-mise-en-place"
+              | Comment puis-je mettre en place la solution ?
+          .fr-collapse id="faq-mise-en-place"
+            p
+              ' Pour déployer la solution dans votre administration, nous vous invitons à planifier un rendez-vous avec notre équipe.
+              | Nous consacrerons le temps nécessaire à l'étude de vos besoins et à la configuration de la solution selon votre organisation.
+            p
+              ' À l'issue de ce rendez-vous, vous obtiendrez des accès en production ou en démonstration, selon vos préférences. De plus, vous bénéficierez d'un accompagnement jusqu'à ce que vos équipes atteignent leur pleine autonomie.
+              ' Pour découvrir ou déployer la solution, planifiez un rendez-vous :
+            = link_to "Prendre rendez-vous avec l’équipe", class: "fr-link fr-icon-arrow-right-line fr-link--icon-right"
