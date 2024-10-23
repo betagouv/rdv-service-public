@@ -1,0 +1,8 @@
+{
+  results: @agents.map do |agent|
+    {
+      id: agent.id,
+      text: agent.reverse_full_name,
+    }
+  end
+}
