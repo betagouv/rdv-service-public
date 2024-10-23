@@ -15,9 +15,19 @@ RSpec.describe Admin::AgentsController, type: :controller do
   after { Devise.mailer.deliveries.clear }
 
   describe "GET #index" do
-    it "returns a success response" do
-      get :index, params: { organisation_id: organisation.id }
-      expect(response).to be_successful
+    describe "HTML version" do
+      it "returns a success response" do
+        get :index, params: { organisation_id: organisation.id }
+        expect(response).to be_successful
+      end
+    end
+
+    describe "JSON version" do
+      it "returns agents as JSON" do
+        francis = create(:agent, first_name: "Francis", last_name: "Factice", organisations: [organisation])
+        get :index, params: { term: "fra", organisation_id: organisation.id }, format: :json
+        expect(response.parsed_body).to eq({ "results" => [{ "id" => francis.id, "text" => "FACTICE Francis" }] })
+      end
     end
   end
 
