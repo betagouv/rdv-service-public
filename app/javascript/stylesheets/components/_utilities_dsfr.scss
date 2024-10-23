@@ -56,6 +56,19 @@
   max-height: 12rem;
 }
 
+.rdv-height-md-0 {
+  @include media-breakpoint-up(md) {
+    height: 0;
+  }
+}
+
+.rdv-min-height-md-100 {
+  @include media-breakpoint-up(md) {
+    min-height: 100%;
+  }
+}
+
+
 // OTHERS
 
 // utile pour désactiver le soulignement des liens du DSFR
@@ -69,4 +82,11 @@
   position: relative;
   padding: 0;
   width: auto;
+}
+
+// pour pouvoir aligner le groupe de boutons à gauche sur desktop mais centré sur mobile
+.rdv-btns-group--left-md,
+.rdv-btns-group--left-md li {
+  justify-content: flex-start;
+  text-align: left;
 }
