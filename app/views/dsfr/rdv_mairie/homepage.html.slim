@@ -206,14 +206,13 @@ ruby:
     h2.rdv-text-align-center
       | Ils nous font confiance
     .rdv-logos-partenaires-wrapper
-      ruby:
-        partenaires = [
-          { img: "rdv_mairie/partenaire-msa.png", alt: "Logo MSA : Santé Famille Retraite Services" },
-          { img: "rdv_mairie/partenaire-asp.png", alt: "Logo ASP : Agence de Services et de Paiement" },
-          { img: "rdv_mairie/partenaire-62.jpg", alt: "Logo du département Pas-de-Calais" },
-          { img: "rdv_mairie/partenaire-wavignies.jpg", alt: "Logo de la ville de Wavignies : un W vert dans un cercle" },
-          { img: "rdv_mairie/partenaire-mdph.png", alt: "Logo MDPH : Maison Départementale des Personnes Handicapées" },
-        ]
-      - partenaires.each do |partenaire_content|
-        .rdv-logo-partenaire
-          = image_tag partenaire_content[:img], alt: partenaire_content[:alt]
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-msa.png", alt: "Logo MSA : Santé Famille Retraite Services"
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-asp.png", alt: "Logo ASP : Agence de Services et de Paiement"
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-62.jpg", alt: "Logo du département Pas-de-Calais"
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-wavignies.jpg", alt: "Logo de la ville de Wavignies : un W vert dans un cercle"
+      .rdv-logo-partenaire
+        = image_tag "rdv_mairie/partenaire-mdph.png", t: "Logo MDPH : Maison Départementale des Personnes Handicapées"
