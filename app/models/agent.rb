@@ -219,7 +219,7 @@ class Agent < ApplicationRecord
     if rdv.agents_rdvs.loaded?
       rdv.agents_rdvs.map(&:agent_id).include?(id)
     else
-      rdv.agents_rdvs.exists?(rdv: rdv)
+      rdv.agents_rdvs.exists?(agent_id: id)
     end
   end
 
