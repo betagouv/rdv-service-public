@@ -131,12 +131,11 @@ class Motif < ApplicationRecord
     name
   end
 
-  def name_with_status
-    if archived?
-      "#{name} (archivé)"
-    else
-      name
-    end
+  def name_with(location_type: false, status: false)
+    label = name
+    label += " (#{human_attribute_value(:location_type)})" if location_type
+    label += " (archivé)" if status
+    label
   end
 
   def soft_delete
