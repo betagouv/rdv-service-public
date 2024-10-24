@@ -15,9 +15,9 @@ tr
       - elsif motif.sectorisation_level_departement?
         | Tout le #{current_organisation.departement_number}
       - elsif motif.sectorisation_level_organisation?
-        = t("motifs.index.sectorisation_level_organisation", count: @sectors_attributed_to_organisation_count)
+        = t("motifs.index.sectorisation_level_organisation", count: Sector.attributed_to_organisation(current_organisation).count)
       - elsif motif.sectorisation_level_agent?
-        - counts = @sectorisation_level_agent_counts_by_service.fetch(motif.service_id, {agents_count: 0})
+        - counts = SectorAttribution.level_agent_grouped_by_service(current_organisation).fetch(motif.service_id, {agents_count: 0})
         = t("motifs.index.sectorisation_level_agent", count: counts[:agents_count], sectors_count_human: \
             t("motifs.index.sectorisation_level_organisation", count: counts[:sectors_count]))
   td= motif.service.short_name
