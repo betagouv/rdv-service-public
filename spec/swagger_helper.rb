@@ -27,6 +27,17 @@ RSpec.configure do |config|
           ```
           curl --request GET --url "https://demo.rdv.anct.gouv.fr/api/visioplainte/creneaux" --header "X-VISIOPLAINTE-API-KEY: LA_CLE_D_API"
           ```
+
+          # Réinitialisation des données sur l'environnement de staging
+
+          La staging de RDV Service Public a vocation à être utilisée par l'environnement de qualification du téléservice Visioplainte.
+          Afin de faciliter les tests sur l'environnement de staging, un endpoint permet de réinitialiser les données.
+          Cet endpoint n'est disponible qu'en staging, pas en production, ni en démo, ni en local.
+
+          Cet appel ce fait avec un POST sur le path /api/visioplainte/reset, par exemple :
+          ```
+          curl -X POST --url "https://staging.rdv-service-public.fr/api/visioplainte/reset" --header "X-VISIOPLAINTE-API-KEY: LA_CLE_D_API"
+          ```
         MARKDOWN
       },
     },

@@ -169,6 +169,10 @@ class Motif < ApplicationRecord
       .ordered_by_last_name
   end
 
+  def visible?
+    visibility_type != INVISIBLE
+  end
+
   def visible_and_notified?
     visibility_type == VISIBLE_AND_NOTIFIED
   end

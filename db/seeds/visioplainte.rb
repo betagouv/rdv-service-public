@@ -2,7 +2,7 @@ territory = Territory.create(name: "placeholder")
 
 territory.update_columns(name: Territory::VISIOPLAINTE_NAME) # rubocop:disable Rails/SkipsModelValidations
 
-service_gendarmerie = Service.create!(name: "Gendarmerie Nationale", short_name: "Gendarmerie")
+service_gendarmerie = Service.find_or_create_by!(name: "Gendarmerie Nationale", short_name: "Gendarmerie")
 
 territory.services << service_gendarmerie
 
@@ -23,10 +23,10 @@ Motif.create!(
 )
 
 superviseur_gendarmerie = Agent.new(
-  first_name: "Gaston",
-  last_name: "Bidon",
-  email: "gaston.bidon@visioplainte.sandbox.gouv.fr",
-  uid: "gaston.bidon@visioplainte.sandbox.gouv.fr",
+  first_name: "Superviseur",
+  last_name: "Fictif",
+  email: "superviseur.fictif@staging.rdv-service-public.fr",
+  uid: "superviseur.fictif@staging.rdv-service-public.fr",
   password: "Rdvservicepublictest1!",
   services: [service_gendarmerie],
   roles_attributes: [
@@ -37,18 +37,12 @@ superviseur_gendarmerie.skip_confirmation!
 superviseur_gendarmerie.save!
 AgentTerritorialAccessRight.create(agent: superviseur_gendarmerie, territory: territory)
 
-Agent.create!(
-  last_name: "Guichet 1",
-  services: [service_gendarmerie],
-  roles_attributes: [
-    { organisation: orga_gendarmerie, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
-  ]
-)
-
-Agent.create!(
-  last_name: "Guichet 2",
-  services: [service_gendarmerie],
-  roles_attributes: [
-    { organisation: orga_gendarmerie, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
-  ]
-)
+30.times do |i|
+  Agent.create!(
+    last_name: "Guichet #{i}",
+    services: [service_gendarmerie],
+    roles_attributes: [
+      { organisation: orga_gendarmerie, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
+    ]
+  )
+end

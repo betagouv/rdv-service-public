@@ -36,7 +36,7 @@ module Lapin
     config.i18n.default_locale = :fr
     config.i18n.raise_on_missing_translations = true
     config.i18n.load_path += Rails.root.glob("config/locales/**/*.{rb,yml}")
-    config.action_mailer.preview_path = Rails.root.join("spec/mailers/previews")
+    config.action_mailer.preview_paths = [Rails.root.join("spec/mailers/previews")]
     config.active_model.i18n_customize_full_message = true
 
     config.x.redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379" }
