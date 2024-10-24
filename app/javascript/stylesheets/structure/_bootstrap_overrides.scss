@@ -11,6 +11,13 @@ a.stretched-link[href] {
   // pour éviter le soulignement des boutons et liens bootstrap
 }
 
+.fr-btn:hover {
+  color: var(--text-inverted-blue-france);
+}
+.fr-btn.fr-btn--secondary:hover {
+  color: var(--text-action-high-blue-france);
+}
+
 footer {
   background-color: var(
     --background-default-grey
