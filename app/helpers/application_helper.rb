@@ -139,6 +139,7 @@ module ApplicationHelper
   end
 
   def dsfr_svg(path, **kwargs)
+    # cf https://www.systeme-de-design.gouv.fr/fondamentaux/pictogramme
     classes = ["fr-artwork"]
     classes += [kwargs.fetch(:class, nil)]
     tag.svg(class: classes.compact_blank.join(" "), "aria-hidden": "true", viewBox: "0 0 80 80", width: "80px", height: "80px") do
