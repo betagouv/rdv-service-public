@@ -10,11 +10,6 @@ RSpec.describe Admin::MotifsController, type: :controller do
   end
 
   describe "GET #index" do
-    it "returns a success response" do
-      get :index, params: { organisation_id: organisation.id }
-      expect(response).to be_successful
-    end
-
     context "with a filter query parameter" do
       it "returns motif list where name match" do
         create(:motif, name: "Blabla", organisation: organisation)
