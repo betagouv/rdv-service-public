@@ -56,20 +56,40 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
     end
   end
 
-  describe "showing an agent's RDVs for a service in which I am not" do
-    let(:current_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  describe "showing RDVs without details" do
+    describe "showing an agent's RDVs for a service in which I am not" do
+      let(:current_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-    it "does not show any info about the RDV and does not provide a link" do
-      other_service = create(:service)
-      given_agent = create(:agent, basic_role_in_organisations: [organisation], service: current_agent.services.first)
-      rdv_of_another_service = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: mercredi_15h, motif: create(:motif, service: other_service))
-      get :index, params: fullcalendar_time_range_params.merge(agent_id: given_agent.id, organisation_id: organisation.id, format: :json)
-      expect(response.parsed_body.size).to eq(1)
-      expect(response.parsed_body[0].keys).to eq(%w[start end title textColor backgroundColor extendedProps])
-      expect(response.parsed_body[0]["title"]).to eq("Occupé⋅e (en RDV)")
-      expect(Time.zone.parse(response.parsed_body[0]["start"])).to eq(rdv_of_another_service.starts_at)
-      expect(Time.zone.parse(response.parsed_body[0]["end"])).to eq(rdv_of_another_service.ends_at)
-      expect(response.parsed_body[0]["extendedProps"]["unauthorizedRdvExplanation"]).to include("Vous ne pouvez pas voir ce RDV")
+      it "does not show any info about the RDV and does not provide a link" do
+        other_service = create(:service)
+        given_agent = create(:agent, basic_role_in_organisations: [organisation], service: current_agent.services.first)
+        rdv_of_another_service = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: mercredi_15h, motif: create(:motif, service: other_service))
+        get :index, params: fullcalendar_time_range_params.merge(agent_id: given_agent.id, organisation_id: organisation.id, format: :json)
+        expect(response.parsed_body.size).to eq(1)
+        expect(response.parsed_body[0].keys).to eq(%w[start end title textColor backgroundColor extendedProps])
+        expect(response.parsed_body[0]["title"]).to eq("Occupé⋅e (en RDV)")
+        expect(Time.zone.parse(response.parsed_body[0]["start"])).to eq(rdv_of_another_service.starts_at)
+        expect(Time.zone.parse(response.parsed_body[0]["end"])).to eq(rdv_of_another_service.ends_at)
+        expect(response.parsed_body[0]["extendedProps"]["unauthorizedRdvExplanation"]).to include("Vous ne pouvez pas voir ce RDV")
+      end
+    end
+
+    describe "showing an agent's RDVs for an organisation where I don't belongs" do
+      let(:current_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+      it "does not show any info about the RDV and does not provide a link" do
+        other_org = create(:organisation)
+        given_agent = create(:agent, basic_role_in_organisations: [organisation, other_org], service: current_agent.services.first)
+        motif_of_other_org = create(:motif, organisation: other_org, service: current_agent.services.first)
+        rdv_of_another_org_same_service = create(:rdv, agents: [given_agent], organisation: other_org, starts_at: aujourdhui_lundi_15h, motif: motif_of_other_org)
+        get :index, params: fullcalendar_time_range_params.merge(agent_id: given_agent.id, organisation_id: organisation.id, format: :json)
+        expect(response.parsed_body.size).to eq(1)
+        expect(response.parsed_body[0].keys).to eq(%w[start end title textColor backgroundColor extendedProps])
+        expect(response.parsed_body[0]["title"]).to eq("Occupé⋅e (en RDV)")
+        expect(Time.zone.parse(response.parsed_body[0]["start"])).to eq(rdv_of_another_org_same_service.starts_at)
+        expect(Time.zone.parse(response.parsed_body[0]["end"])).to eq(rdv_of_another_org_same_service.ends_at)
+        expect(response.parsed_body[0]["extendedProps"]["unauthorizedRdvExplanation"]).to include("Vous ne pouvez pas voir ce RDV")
+      end
     end
   end
 end
