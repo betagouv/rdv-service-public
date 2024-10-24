@@ -25,7 +25,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
     describe "JSON version" do
       it "returns agents as JSON" do
         francis = create(:agent, first_name: "Francis", last_name: "Factice", organisations: [organisation])
-        get :index, params: { term: "fra", organisation_id: organisation.id }, format: :json
+        get :index, params: { term: "fra", organisation_id: organisation.id, format: :json }
         expect(response.parsed_body).to eq({ "results" => [{ "id" => francis.id, "text" => "FACTICE Francis" }] })
       end
     end
