@@ -2,7 +2,20 @@ module MotifsHelper
   YIQ_DARK_LIGHT_FRONTIER = 128
 
   def motif_name_and_location_type(motif)
-    motif.name_with(motif, location_type: true)
+    motif.name_with_location_type
+  end
+
+  def motif_name_with_status(motif)
+    label = motif.name
+    label += " (archivé)" if motif.archived?
+    label
+  end
+
+  def motif_name_with_location_type_and_status(motif)
+    label = motif.name
+    label += " (#{human_attribute_value(:location_type)})"
+    label += " (archivé)" if motif.archived?
+    label
   end
 
   def motif_name_with_location_and_group_type(motif)

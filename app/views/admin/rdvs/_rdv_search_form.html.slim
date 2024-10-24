@@ -62,7 +62,7 @@
             collection: @motifs.includes(:service).to_a.group_by { _1.service.name },
             as: :grouped_select,
             group_method: :last,
-            label_method: ->(motif) { motif.name_with(location_type: true, status: true) },
+            label_method: ->(motif) { motif_name_with_location_type_and_status(motif) },
             input_html: { class: "select2-input", multiple: true },
             wrapper: "horizontal_form"
       - temporal_statuses = Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"]
