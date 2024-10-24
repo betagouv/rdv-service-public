@@ -1,0 +1,9 @@
+@absence_occurrences.map do |absence, occurrence|
+  {
+    title: absence.title,
+    start: occurrence.starts_at.as_json,
+    end: occurrence.ends_at.as_json,
+    backgroundColor: "rgba(127, 140, 141, 0.7)",
+    url: edit_admin_organisation_absence_path(@organisation, absence),
+  }
+end
