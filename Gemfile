@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.3"
+ruby "3.3.5"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -148,12 +148,14 @@ gem "lograge"
 gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
 
 # Ces gems ne seront plus intégrées à Ruby en version 3.4.0 Lors de l'upgrade
-# depuis 3.3.3, on pourra vérifier si les gems qui en dépendent implicitement
+# depuis 3.3.5, on pourra vérifier si les gems qui en dépendent implicitement
 # ont ajouté dans leur gemspec une dépendance explicite.
 gem "bigdecimal"
 gem "csv"
 gem "drb"
 gem "observer"
+gem "logger"
+gem "ostruct"
 
 group :development do
   #  Hot reload
@@ -172,8 +174,8 @@ group :development do
   # Automatic Ruby code style checking tool.
   gem "rubocop", "~> 1.65", require: false
   # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
-  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.3)
-  gem "parser", "3.3.3.0", require: false
+  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.5)
+  gem "parser", "3.3.5.0", require: false
   # Code style checking for RSpec files
   gem "rubocop-rspec", "~> 3.0", require: false
   # Automatic Rails code style checking tool.
