@@ -132,7 +132,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         end
 
         it "skips notification after create when agent has disabled it" do
-          agent.update!(plage_ouverture_notification_level: "none")
+          agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
           expect { post(:create, params: valid_params) }.not_to change { ActionMailer::Base.deliveries.size }
         end
       end
@@ -189,7 +189,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
 
         it "skips notification after update when agent has disabled it" do
           ActionMailer::Base.deliveries.clear
-          agent.update!(plage_ouverture_notification_level: "none")
+          agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
           expect(ActionMailer::Base.deliveries.size).to eq(0)
         end
@@ -239,7 +239,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       end
 
       it "skips notification after destroy when agent has disabled it" do
-        agent.update!(plage_ouverture_notification_level: "none")
+        agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect(ActionMailer::Base.deliveries.size).to eq(0)
