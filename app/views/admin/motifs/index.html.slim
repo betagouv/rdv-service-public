@@ -8,14 +8,30 @@
     = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"
 
 = simple_form_for "", url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+  = f.hidden_field :current_tab, value: @current_tab
 
   .container-fluid.card
 
     .m-3.d-flex.justify-content-end
-      - search = params[:search].blank? ? "d-none" : ""
-      div= link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation), class: "btn btn-link #{search}"
+      - if [params[:search], params[:online_filter], params[:service_filter], params[:location_type_filter]].compact_blank.any?
+        div = link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation, current_tab: @current_tab), class: "btn btn-link"
       = f.input :search, placeholder: "ex. Être appelé par la MDS", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
       = f.button :submit, "Rechercher"
+
+    ul.nav.nav-tabs
+      - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
+        li.nav-item
+          ruby:
+            tab_url_params = request.query_parameters.merge({ current_tab: value }) # keep filters when changing tab
+            tab_attrs = { href: admin_organisation_motifs_path(current_organisation, tab_url_params) }
+            if @current_tab == value
+              tab_attrs[:class] = "active"
+              tab_attrs[:"aria-current"] = "page"
+            end
+          a.nav-link *tab_attrs
+            = label
+            span.badge.badge-light.badge-pill.ml-1 = count
+
     table.table
       thead
         tr
@@ -27,7 +43,7 @@
             div
               - options = options_for_select(["En ligne", "Hors ligne"], params[:online_filter])
               = select_tag("online_filter", options, include_blank: "Tous", class: "js-submit-on-change select2-input")
-          - if @display_sectorisation_level
+          - if display_sectorisation_level?
             th= Motif.human_attribute_name("sectorisation_level")
           th
             div
@@ -45,20 +61,20 @@
           - if @motif_policy.edit? || @motif_policy.destroy?
             th Actions
       tbody
-        - if @motifs.any?
-          = render partial: "admin/motifs/motif", collection: @motifs, as: :motif
+        - if @motifs_page.any?
+          = render partial: "admin/motifs/motif", collection: @motifs_page, as: :motif
           .d-flex.justify-content-center
-            = paginate @motifs, theme: "twitter-bootstrap-4"
+            = paginate @motifs_page, theme: "twitter-bootstrap-4"
         - else
           tr
             td(colspan=6)
               .row.justify-content-md-center
                 .col-md-6.rdv-text-align-center.my-5
-                  - if @unfiltered_motifs.any?
-                    p.mb-2.lead Aucun motif ne correspond à votre filtre
-                  - else
+                  - if current_organisation.motifs.none?
                     p.mb-2.lead Vous n'avez pas encore créé de motif.
                     p Les motifs sont les types de RDV que vous proposez dans votre organisation. Chaque motif a des options indépendantes : durée, format (à domicile, par téléphone, sur place), prise de RDV en ligne activée etc...
+                  - else
+                    p.mb-2.lead Aucun motif ne correspond à votre filtre
                   span.fa-stack.fa-4x
                     i.fa.fa-circle.fa-stack-2x.text-primary
                     i.far.fa-calendar.fa-stack-1x.text-white
@@ -66,9 +82,9 @@
                     .rdv-text-align-center.m-3
                       = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
 
-    - if @motifs.any?
+    - if @motifs_page.any?
       .d-flex.justify-content-center
-        = paginate @motifs, theme: "twitter-bootstrap-4"
-      - if @motif_policy.create?
+        = paginate @motifs_page, theme: "twitter-bootstrap-4"
+      - if @motif_policy.create? && @current_tab == :active
         .rdv-text-align-center.m-3
           = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"

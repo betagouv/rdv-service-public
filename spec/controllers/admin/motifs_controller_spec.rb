@@ -10,17 +10,13 @@ RSpec.describe Admin::MotifsController, type: :controller do
   end
 
   describe "GET #index" do
-    it "returns a success response" do
-      get :index, params: { organisation_id: organisation.id }
-      expect(response).to be_successful
-    end
-
     context "with a filter query parameter" do
       it "returns motif list where name match" do
-        bla_motif = create(:motif, name: "Bla", organisation: organisation)
+        create(:motif, name: "Blabla", organisation: organisation)
+        create(:motif, name: "Bloublou", organisation: organisation)
         get :index, params: { organisation_id: organisation.id, search: "bla" }
-        expect(assigns(:motifs)).to eq([bla_motif])
-        expect(assigns(:unfiltered_motifs)).to contain_exactly(bla_motif, motif)
+        expect(response.body).to include("Blabla")
+        expect(response.body).not_to include("Bloublou")
       end
     end
   end

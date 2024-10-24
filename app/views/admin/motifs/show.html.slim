@@ -4,7 +4,10 @@
   .col-md-12.col-lg-8
     .card.mt-2
       .card-header
-        h3.rdv-text-align-center Motif #{@motif.name} (#{@motif.service.short_name})
+        h3.rdv-text-align-center
+          | Motif #{@motif.name} (#{@motif.service.short_name})
+          - if @motif.archived?
+            h3.text-bold.rdv-text-align-center = "(archivé)"
       .card-body
         = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
         = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service.name)
@@ -90,12 +93,21 @@
       - if @motif_policy.edit? || @motif_policy.destroy?
         .card-footer
           .d-flex.justify-content-end.flex-gap-1em
+            - if @motif.archived?
+              - if @motif_policy.unarchive?
+                div= link_to "Réactiver", unarchive_admin_organisation_motif_path(current_organisation, @motif), method: :post, class: "btn btn-light w-100"
+            - else
+              - if @motif_policy.archive?
+                div= link_to "Archiver", archive_admin_organisation_motif_path(current_organisation, @motif), method: :post, data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" }, class: "btn btn-light w-100"
+
             - if @motif_policy.destroy?
               div= link_to "Supprimer", admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce motif ?"}, class: "btn btn-danger w-100"
-            - if @motif_policy.duplicate?
-              div= link_to "Dupliquer", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "btn btn-primary w-100"
-            - if @motif_policy.edit?
-              div= link_to "Modifier", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
+
+            - unless @motif.archived?
+              - if @motif_policy.duplicate?
+                div= link_to "Dupliquer", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "btn btn-primary w-100"
+              - if @motif_policy.edit?
+                div= link_to "Modifier", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
 
 .row.justify-content-center
   .col-md-12.col-lg-8

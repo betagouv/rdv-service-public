@@ -8,16 +8,16 @@ tr
     = motif_badges(motif, only: %i[for_secretariat follow_up collectif])
   td
     = motif_badges(motif, only: %i[bookable_by_everyone bookable_by_agents_and_prescripteurs bookable_by_invited_users])
-  - if @display_sectorisation_level
+  - if display_sectorisation_level?
     td
       - if !motif.bookable_outside_of_organisation? || motif.follow_up?
         | &nbsp;
       - elsif motif.sectorisation_level_departement?
         | Tout le #{current_organisation.departement_number}
       - elsif motif.sectorisation_level_organisation?
-        = t("motifs.index.sectorisation_level_organisation", count: @sectors_attributed_to_organisation_count)
+        = t("motifs.index.sectorisation_level_organisation", count: Sector.attributed_to_organisation(current_organisation).count)
       - elsif motif.sectorisation_level_agent?
-        - counts = @sectorisation_level_agent_counts_by_service.fetch(motif.service_id, {agents_count: 0})
+        - counts = SectorAttribution.level_agent_grouped_by_service(current_organisation).fetch(motif.service_id, {agents_count: 0})
         = t("motifs.index.sectorisation_level_agent", count: counts[:agents_count], sectors_count_human: \
             t("motifs.index.sectorisation_level_organisation", count: counts[:sectors_count]))
   td= motif.service.short_name
@@ -26,12 +26,22 @@ tr
   - if motif_policy.edit? || motif_policy.destroy?
     td
       .d-flex.flex-gap-1em
-        - if motif_policy.edit?
-          div= link_to edit_admin_organisation_motif_path(current_organisation, motif), title: "Modifier" do
-            i.fa.fa-edit
-        - if motif_policy.duplicate?
-          div= link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), title: "Dupliquer" do
-            i.fa.fa-copy
-        - if motif_policy.destroy?
-          div= link_to admin_organisation_motif_path(current_organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
-            i.fa.fa-trash-alt
+        - if @current_tab != :archived
+          - if motif_policy.edit?
+            div= link_to edit_admin_organisation_motif_path(current_organisation, motif), title: "Modifier" do
+              i.fa.fa-edit
+          - if motif_policy.duplicate?
+            div= link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), title: "Dupliquer" do
+              i.fa.fa-copy
+
+        - if motif.archived?
+          - if motif_policy.unarchive?
+            div= link_to unarchive_admin_organisation_motif_path(current_organisation, motif), method: :post, title: "Réactiver" do
+              i.fa.fa-arrow-up-from-bracket
+          - if motif_policy.destroy? && motif.destroyable?
+            div= link_to admin_organisation_motif_path(current_organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
+              i.fa.fa-trash-alt
+        - else
+          - if motif_policy.archive?
+            div= link_to archive_admin_organisation_motif_path(current_organisation, motif), method: :post, title: "Archiver", data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" } do
+              i.fa.fa-box-archive

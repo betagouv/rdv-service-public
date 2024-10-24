@@ -2,7 +2,20 @@ module MotifsHelper
   YIQ_DARK_LIGHT_FRONTIER = 128
 
   def motif_name_and_location_type(motif)
-    "#{motif.name} (#{motif.human_attribute_value(:location_type)})"
+    motif.name_with_location_type
+  end
+
+  def motif_name_with_status(motif)
+    label = motif.name
+    label += " (archivé)" if motif.archived?
+    label
+  end
+
+  def motif_name_with_location_type_and_status(motif)
+    label = motif.name
+    label += " (#{human_attribute_value(:location_type)})"
+    label += " (archivé)" if motif.archived?
+    label
   end
 
   def motif_name_with_location_and_group_type(motif)
@@ -23,12 +36,6 @@ module MotifsHelper
 
   def motif_badges(motif, only: %i[bookable_by_invited_users bookable_by_everyone bookable_by_agents_and_prescripteurs for_secretariat follow_up collectif])
     safe_join(only.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) })
-  end
-
-  def motif_name_with_location_type_and_status(motif)
-    return motif_name_and_location_type(motif) if motif.deleted_at.blank?
-
-    "#{motif_name_and_location_type(motif)} (supprimé)"
   end
 
   def build_badge_tag_for(badge_name)
