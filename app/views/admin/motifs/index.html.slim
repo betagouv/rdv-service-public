@@ -19,7 +19,7 @@
       = f.button :submit, "Rechercher"
 
     ul.nav.nav-tabs
-      - [[:active, "Actifs", @active_motifs_count], [:archived, "Archivés", @archived_motifs_count]].each do |value, label, count|
+      - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
         li.nav-item
           ruby:
             tab_url_params = request.query_parameters.merge({ current_tab: value }) # keep filters when changing tab
@@ -61,10 +61,10 @@
           - if @motif_policy.edit? || @motif_policy.destroy?
             th Actions
       tbody
-        - if @motifs.any?
-          = render partial: "admin/motifs/motif", collection: @motifs, as: :motif
+        - if @motifs_page.any?
+          = render partial: "admin/motifs/motif", collection: @motifs_page, as: :motif
           .d-flex.justify-content-center
-            = paginate @motifs, theme: "twitter-bootstrap-4"
+            = paginate @motifs_page, theme: "twitter-bootstrap-4"
         - else
           tr
             td(colspan=6)
@@ -82,9 +82,9 @@
                     .rdv-text-align-center.m-3
                       = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
 
-    - if @motifs.any?
+    - if @motifs_page.any?
       .d-flex.justify-content-center
-        = paginate @motifs, theme: "twitter-bootstrap-4"
+        = paginate @motifs_page, theme: "twitter-bootstrap-4"
       - if @motif_policy.create? && @current_tab == :active
         .rdv-text-align-center.m-3
           = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"

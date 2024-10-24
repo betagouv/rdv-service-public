@@ -8,12 +8,9 @@ class Admin::MotifsController < AgentAuthController
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
 
     unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
-    filtered_motifs = filtered(unfiltered_motifs, params)
+    @filtered_motifs = filtered(unfiltered_motifs, params)
 
-    @active_motifs_count = filtered_motifs.active.count
-    @archived_motifs_count = filtered_motifs.archived.count
-
-    @motifs = filtered_motifs.active(@current_tab == :active)
+    @motifs_page = @filtered_motifs.active(@current_tab == :active)
       .includes(:organisation, :service).page(page_number)
 
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
