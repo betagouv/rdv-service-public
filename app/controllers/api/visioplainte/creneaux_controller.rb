@@ -1,3 +1,5 @@
+# cf docs/interconnexions/visioplainte.md
+
 class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   before_action :validate_date_debut
   before_action :validate_date_range, only: [:index]
