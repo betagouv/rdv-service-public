@@ -78,6 +78,11 @@
   }
 }
 
+.rdv-object-fit-contain,
+.fr-card .fr-card__img img.rdv-object-fit-contain {
+  object-fit: contain;
+}
+
 // OTHERS
 
 // utile pour désactiver le soulignement des liens du DSFR
