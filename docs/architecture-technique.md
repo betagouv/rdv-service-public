@@ -395,14 +395,16 @@ Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas 
 
 #### Les super admins
 
-Une interface CRUD permettant de gérer l'ensemble des organisations, services, motifs, lieux, territoires et
-usagers est proposée en interne à l'équipe.
+Une interface CRUD permettant de gérer l'ensemble des organisations, services, motifs, lieux, territoires, agents et
+usagers est proposée à :
+- toute l'équipe RDV Service Public
+- toute l'équipe RDV Insertion
 
 Afin de s'y connecter, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alors fournie par GitHub doit être
 présente dans une table `super_admins`, où les entrées sont crées et supprimées à la main lors de l'arrivée et
-du départ de membres de l'équipe;
+du départ de membres de l'équipe.
 
-Tous les membres de l'équipe faisant partie de [l'organisation `betagouv` sur Github](https://github.com/betagouv), ils utilisent une authentification à 2 facteurs.
+Tous les membres de l'équipe faisant partie de [l'organisation `betagouv` sur Github](https://github.com/betagouv), ils utilisent forcément une authentification à 2 facteurs (car cette politique est imposée au niveau de l'organisation GitHub).
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
@@ -449,6 +451,25 @@ communication principal Mattermost. Nous utilisons l'instance Sentry de l'incuba
 
 Notre hébergeur Scalingo propose aussi un système d'alerting déclenché selon des métriques diverses, mais
 celui-ci n'est pas utilisé actuellement car sa calibration est difficile.
+
+### Envoi d'e-mails transactionnels
+
+Nous utilisons Brevo afin de traiter les envois d'e-mails transactionnels.
+
+Nous y avons configuré une période de rétention de 6 mois, durant laquelle une copie
+de chaque email envoyé est gardée. Cela permet aux équipes de support de déterminer
+si un e-mail a bien été envoyé, en cas de problème remontée par un usager ou un agent.
+
+L'accès à Brevo est fait à travers
+- des comptes nominatifs pour l'équipe support RDV Service Public et RDV Insertion
+- un compte admin non nominatif lié à une boite mail uniquement accessible aux devs
+
+Les e-mails envoyés sont délibérément dépourvus de tracking (ni sur les liens ni comme image),
+afin qu'aucune requête ne soit faite à Brevo à l'ouverture de l'e-mail. Cela permet d'éviter que
+Brevo soit une dépendance à l'usage des liens, et évite que des données soient récoltées par Brevo.
+
+Note : indépendamment des usages transactionnels, les fonctionnalités de mailing marketing de Brevo
+sont utilisées par les bizdev afin de promouvoir le produit auprès des administrations.
 
 ### Politique de mise à jour des applicatifs
 
