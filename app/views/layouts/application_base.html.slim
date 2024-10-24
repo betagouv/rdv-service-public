@@ -13,17 +13,22 @@ html lang="fr"
   body
     = render "layouts/rdv_solidarites_instance_name"
     = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-    = dsfr_header logo_text: "République<br>Française".html_safe do |header|
-      - header.with_operator_image title: "Accueil - RDV #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: "RDV #{current_domain.name}"
-      - if current_user.present? && !current_user.signed_in_with_invitation_token?
-        ruby:
+    = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: {id: "header"} do |header|
+      ruby:
+        header.with_operator_image title: "Accueil - RDV #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: "RDV #{current_domain.name}"
+        if current_user.present? && !current_user.signed_in_with_invitation_token?
           header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, classes: "fr-icon-calendar-fill"
           header.with_tool_link title: "Vos informations", path: users_informations_path
           header.with_tool_link title: "Votre compte", path: edit_user_registration_path
           header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-icon-lock-fill", html_attributes: { "data-method": "delete" }
-      - elsif !stats_path?
-        - header.with_tool_link title: "Espace Agent", path: new_agent_session_path
-        - header.with_tool_link title: "Se connecter", path: new_user_session_path, classes: "fr-fi-account-fill"
+        elsif current_domain == Domain::RDV_MAIRIE && request.path == "/"
+          header.with_tool_link title: "Centre d’aide", path: "https://rdv-service-public-1.gitbook.io/rdv-service-public", classes: "fr-icon-questionnaire-line", html_attributes: { target: "_blank", rel: "noopener" }
+          header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, classes: "fr-icon-admin-line"
+          header.with_tool_link title: "Connexion Usager", path: new_user_session_path, classes: "fr-icon-account-line"
+        elsif !stats_path?
+          header.with_tool_link title: "Espace Agent", path: new_agent_session_path
+          header.with_tool_link title: "Se connecter", path: new_user_session_path, classes: "fr-fi-account-fill"
+        end
 
     main
       - if content_for :main_content

@@ -36,6 +36,10 @@ a[disabled] {
   font-weight: bold;
 }
 
+.rdv-font-weight-bold {
+  font-weight: bold;
+}
+
 .rdv-font-weight-700 {
   font-weight: 700;
 }
@@ -65,12 +69,15 @@ a[disabled] {
 .d-grid {
   display: grid;
 }
+
 .grid-three-columns {
   grid-template-columns: 1fr 1fr 1fr;
 }
+
 .grid-align-center {
   align-items: center;
 }
+
 .grid-first-column-empty > *:nth-child(1) {
   grid-column-start: 2;
 }
@@ -108,6 +115,7 @@ ul.horizontal-border-between-items {
   li {
     border-bottom: 1px solid #eee;
   }
+
   li:last-child {
     border-bottom: none;
   }

@@ -1,0 +1,10 @@
+ul.rdv-arrow-list {
+  list-style-type: none;
+
+  li::before {
+    content: "→";
+    margin-right: 1rem;
+    font-size: 1.3rem;
+    color: var(--text-action-high-blue-ecume);
+  }
+}
