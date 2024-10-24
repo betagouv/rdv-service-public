@@ -12,6 +12,8 @@ On s’est mis d’accords sur cette API et le fichier [swagger a été défini]
 
 Le service de Visioplainte fonctionne en décidant d’un nombre de guichets ouverts a priori puis assigne les agents à ces guichets tardivement selon les RDV pris.
 On a décidé de modéliser ça en créant des agents anonymes « Guichet 1 » qui ont des plages d’ouvertures.
+Ces agents anonymes sont des « intervenants », c’est à dire des agents sans email.
+Ils et elles ne peuvent donc pas se connecter à RDV Service Public.
 
 Un autre besoin identifié est un environnement de staging pouvant être réinitialisé sur demande.
 
