@@ -43,7 +43,7 @@
             div
               - options = options_for_select(["En ligne", "Hors ligne"], params[:online_filter])
               = select_tag("online_filter", options, include_blank: "Tous", class: "js-submit-on-change select2-input")
-          - if @display_sectorisation_level
+          - if display_sectorisation_level?
             th= Motif.human_attribute_name("sectorisation_level")
           th
             div

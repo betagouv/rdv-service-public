@@ -6,16 +6,14 @@ class Admin::MotifsController < AgentAuthController
 
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
+    @motif_policy = Agent::MotifPolicy.new(current_agent, Motif.new(organisation: current_organisation))
 
     unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
     @filtered_motifs = filtered(unfiltered_motifs, params)
 
-    @motifs_page = @filtered_motifs.active(@current_tab == :active)
+    @motifs_page = @filtered_motifs
+      .active(@current_tab == :active)
       .includes(:organisation, :service).page(page_number)
-
-    @display_sectorisation_level = current_organisation.motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
-
-    @motif_policy = Agent::MotifPolicy.new(current_agent, Motif.new(organisation: current_organisation))
   end
 
   def new
@@ -92,6 +90,11 @@ class Admin::MotifsController < AgentAuthController
   end
 
   private
+
+  def display_sectorisation_level?
+    @display_sectorisation_level ||= current_organisation.motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
+  end
+  helper_method :display_sectorisation_level?
 
   FORM_ATTRIBUTES = %i[
     name

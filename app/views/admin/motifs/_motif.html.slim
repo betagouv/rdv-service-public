@@ -8,7 +8,7 @@ tr
     = motif_badges(motif, only: %i[for_secretariat follow_up collectif])
   td
     = motif_badges(motif, only: %i[bookable_by_everyone bookable_by_agents_and_prescripteurs bookable_by_invited_users])
-  - if @display_sectorisation_level
+  - if display_sectorisation_level?
     td
       - if !motif.bookable_outside_of_organisation? || motif.follow_up?
         | &nbsp;
