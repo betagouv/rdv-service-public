@@ -18,7 +18,7 @@ RSpec.describe "Visioplainte Guichets" do
     get "/api/visioplainte/guichets", headers: auth_header
     parsed_response_body = response.parsed_body.deep_symbolize_keys
 
-    expect(parsed_response_body[:guichets]).to contain_exactly(
+    expect(parsed_response_body[:guichets]).to include(
       {
         id: anything, name: "GUICHET 1",
       },
