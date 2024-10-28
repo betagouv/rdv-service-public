@@ -28,8 +28,8 @@ module Ants
       return false unless ants_status["status"] == "validated"
 
       # on n’utilise pas de regex ci-dessous pour éviter un faux-positif de Brakeman
+      protocol = Rails.env.production? ? "https" : "http"
       ants_appointments = ants_status["appointments"].select do |appointment|
-        protocol = Rails.env.production? ? "https" : "http"
         appointment["management_url"].start_with?("#{protocol}://#{Domain::RDV_MAIRIE.host_name}")
       end
 
