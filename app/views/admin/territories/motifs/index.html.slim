@@ -45,6 +45,10 @@
 
 .row
   .col-12
+
+    .float-right
+      a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] Créer un motif
+
     ul.nav.nav-tabs
       - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
         li.nav-item
@@ -58,8 +62,7 @@
           a.nav-link *tab_attrs
             = label
             span.badge.badge-light.badge-pill.ml-1 = count
-    .float-right
-      a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] Créer un motif
+
     - if @motifs_page.any?
       = paginate @motifs_page, theme: "twitter-bootstrap-4"
 
@@ -119,5 +122,5 @@
 
     - else
       .rdv-text-align-center
-        p.mb-2.lead
+        p.m-2.lead
           | Aucun résultat
