@@ -73,9 +73,5 @@ class AntsApi
 
       JSON.parse(response.body)
     end
-
-    def load_appointments(application_id)
-      status(application_id: application_id).fetch("appointments")
-    end
   end
 end
