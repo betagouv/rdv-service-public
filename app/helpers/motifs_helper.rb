@@ -1,5 +1,4 @@
 module MotifsHelper
-  YIQ_DARK_LIGHT_FRONTIER = 128
   def motif_name_and_location_type(motif)
     "#{motif.name} (#{motif.human_attribute_value(:location_type)})"
   end
@@ -73,7 +72,7 @@ module MotifsHelper
   end
 
   def dark_or_light?(color)
-    convert_hexa_color_to_yiq(color) >= YIQ_DARK_LIGHT_FRONTIER
+    convert_hexa_color_to_yiq(color) >= 128 # 128 is the frontier between dark and light
   end
 
   def convert_hexa_color_to_yiq(color)
