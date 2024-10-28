@@ -32,7 +32,10 @@ module Ants
       ants_appointments = ants_status["appointments"]
         .select { _1["management_url"].match(RDV_MAIRIE_URL_REGEX) }
 
-      rdv = Rdv.joins(:users)
+      rdv = Rdv
+        .joins(:users)
+        .joins(motif: [:motif_category])
+        .merge(MotifCategory.requires_ants_predemande_number)
         .where(users: { ants_pre_demande_number: application_id })
         .where.not(status: Rdv::CANCELLED_STATUSES)
         .where("starts_at >= ?", Time.zone.now)
