@@ -87,9 +87,9 @@ hr
           .fr-card__body
             .fr-card__content
               h3.fr-card__title
-                | Ouvrir vos disponibilités en ligne
+                | Activer la prise de rendez-vous en ligne
               p.fr-card__desc
-                | Votre administration peut rendre accessible ses disponibilités en ligne. Les usagers peuvent planifier des rendez-vous téléphonique, en visioconférence ou en présentiel en choisissant leur préférence selon vos disponiblités.
+                | Votre administration peut rendre ses disponibilités accessibles en ligne. Vos usagers peuvent planifier des rendez-vous en toute autonomie via une URL spécifique à votre administration.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
               = dsfr_svg "artwork/pictograms/digital/calendar", class: "fr-responsive-img rdv-max-height-12rem"
@@ -99,7 +99,7 @@ hr
               h3.fr-card__title
                 | Améliorer l’expérience usager
               p.fr-card__desc
-                | L’interface (aux couleurs de la charte de l’État) propose un parcours simple et rapide pour les usagers facilitant ainsi les démarches avec vos services. Les usagers peuvent modifier ou annuler un rendez-vous en autonomie.
+                | L'interface ergonomique, aux couleurs de la charte de l'État, offre un parcours simple et rapide permettant aux usagers d’être autonomes quant à la planification et la modification de leur rendez-vous.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
               = image_tag "rdv_mairie/self-training.svg", alt: "Une silhouette rouge regardant un écran d’ordinateur bleu", class: "fr-responsive-img rdv-max-height-12rem rdv-object-fit-contain"
@@ -109,7 +109,7 @@ hr
               h3.fr-card__title
                 | Produire des statistiques
               p.fr-card__desc
-                | Les données des rendez-vous sont centralisées et permettent la production de statistiques pour mesurer votre activité et accompagner votre prise de décision.
+                | Les données des rendez-vous, centralisées sur la plateforme, génèrent des statistiques d’activités. Vous pouvez visualiser ou exporter les données.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
               = dsfr_svg "artwork/pictograms/digital/data-visualization", class: "fr-responsive-img rdv-max-height-12rem"
@@ -130,13 +130,13 @@ hr
             ul.rdv-arrow-list
               li
                 b> Raccorder les disponibilités
-                span de votre Dispositif de Recueil à l’ANTS
-              li
-                b> Bénéficier
-                span d'une solution qui répond aux exigences techniques de l'ANTS (n° pré-demande, raccordement au système anti-doublons...)
+                span de votre Dispositif de Recueil à l’ANTS (n° pré-demande, raccordement au système anti-doublons)
               li
                 b> Offrir à vos administrés une expérience fluide
                 span en proposant la prise de rendez-vous directement depuis le site internet de votre commune
+              li
+                b> Déployer
+                span la solution dans les différents sites et services de votre commune (l’état civil à la mairie, l’action sociale au CCAS…)
         section.fr-accordion
           h3.fr-accordion__title
             button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-agent-departemental"
@@ -147,11 +147,11 @@ hr
                 b> Fluidifier la gestion
                 span de l'accueil et du secrétariat
               li
-                b> Réduire le nombre de rendez-vous non honorés
-                span grâce au système de notification SMS
+                b> Faciliter
+                span l’accompagnement médico-social de vos usagers grâce aux rendez-vous de suivi
               li
-                b> Garantir l'accompagnement de vos usagers
-                span grâce aux rendez-vous de suivi
+                b> Inviter
+                span les bénéficiaires RSA aux rendez-vous d'orientation et d'accompagnement (en intéropérabilité avec RDV Insertion)
         section.fr-accordion
           h3.fr-accordion__title
             button.fr-accordion__btn aria-expanded="false" aria-controls="vous-etes-mediateur-numerique"
@@ -175,10 +175,10 @@ hr
             ul.rdv-arrow-list
               li
                 b> Faciliter la mise en relation
-                span des différents structures du CDAD
+                span des différents services de la justice (CDAD, tribunal judiciaire…)
               li
                 b> Gérer les permanences
-                span des intervenants extérieurs (asso, avocats, conciliateurs...)
+                span des intervenants extérieurs (associations, avocats, conciliateurs…)
               li
                 b> Exporter les statistiques
                 span de rendez-vous de votre organisation
@@ -218,13 +218,13 @@ hr
             ul.rdv-arrow-list
               li
                 b> Gérer plus facilement
-                span votre planning
+                span vos plannings multi-sites et multi-services
               li
-                b> Convoquer les bénéficiaires
-                span aux rendez-vous d'accompagnement
+                b> Créer des parcours d’orientation
+                span avec vos partenaires territoriaux par la prise de rendez-vous par prescription
               li
-                b> Guider le parcours de vos bénéficiaires
-                span grâce à la prescription
+                b> Adapter la solution
+                span aux réalités de votre organisation
 
 .fr-py-8w.rdv-background-color-alt-blue-ecume
   .fr-container
@@ -352,7 +352,7 @@ hr
         section.fr-accordion
           h3.fr-accordion__title
             button.fr-accordion__btn aria-expanded="false" aria-controls="faq-donnees-protegees"
-              | Mes données sont-elles protégées ?
+              | Comment la solution s’adapte-t-elle à mon organisation ?
           .fr-collapse id="faq-donnees-protegees"
             p
               ' La solution RDV Service Public est conçue pour s'adapter aux réalités variées des administrations publiques. Elle propose une architecture basée sur quatre concepts clés :
@@ -382,10 +382,10 @@ hr
                 | : envoyée immédiatement après la création du rendez-vous
               li
                 b> Rappel
-                | : envoyée à l'usager deux jours avant le rendez-vous à 9h (sauf les dimanches et jours fériés)
+                | : envoyée à l’usager 48H avant son rendez-vous (sauf les dimanches et jours fériés)
               li
                 b> Modification de rendez-vous
-                | : l'usager est notifié immédiatement de tout changement
+                | : l’usager est notifié immédiatement de tout changement
               li
                 b> Annulation de rendez-vous
                 | : l'usager est notifié immédiatement. S'il souhaite annuler lui-même, il doit le faire au moins 4 heures avant l'heure prévue
