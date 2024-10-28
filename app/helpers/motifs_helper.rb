@@ -1,8 +1,7 @@
 module MotifsHelper
   YIQ_DARK_LIGHT_FRONTIER = 128
-
   def motif_name_and_location_type(motif)
-    motif.name_with_location_type
+    "#{motif.name} (#{motif.human_attribute_value(:location_type)})"
   end
 
   def motif_name_with_status(motif)
