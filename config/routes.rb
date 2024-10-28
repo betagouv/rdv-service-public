@@ -139,7 +139,12 @@ Rails.application.routes.draw do
             end
           end
           resources :teams, except: :show
-          resources :motifs, only: %i[index new create destroy]
+          resources :motifs, only: %i[index new create destroy] do
+            member do
+              post :archive
+              post :unarchive
+            end
+          end
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]

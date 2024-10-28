@@ -32,6 +32,21 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       expect(page).to have_content("Aucun résultat")
     end
 
+    it "displays archived motifs in separate tab" do
+      visit admin_territory_motifs_path(territory)
+      expect(page).to have_content("Consultation prénatale")
+      expect(page).to have_content("Suivi après naissance")
+
+      motif_suivi_apres_naissance.archive!
+      visit admin_territory_motifs_path(territory)
+      expect(page).to have_content("Consultation prénatale")
+      expect(page).not_to have_content("Suivi après naissance")
+
+      click_on "Archivés"
+      expect(page).not_to have_content("Consultation prénatale")
+      expect(page).to have_content("Suivi après naissance")
+    end
+
     it "shows buttons to edit and delete" do
       visit admin_territory_motifs_path(territory)
       expect(page.body).to include(%(href="#{edit_admin_organisation_motif_path(org_arques, motif_consultation_prenatale)}"))
@@ -108,7 +123,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
   end
 
-  describe "Deleting a motif" do
+  describe "archiving" do
     let!(:organisation) { create(:organisation, territory: territory) }
     let!(:motif) { create(:motif, organisation: organisation) }
 
@@ -118,8 +133,68 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
 
     it "works" do
       visit admin_territory_motifs_path(territory)
-      expect { click_on "Supprimer" }.to change { Motif.exists?(id: motif.id) }.from(true).to(false)
-      expect(page).to have_content("Le motif a été supprimé")
+      expect(page).to have_content(motif.name)
+      expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
+      expect(page).to have_content("Le motif #{motif.name} a été archivé")
+    end
+  end
+
+  describe "un-archiving" do
+    let!(:organisation) { create(:organisation, territory: territory) }
+    let!(:motif) { create(:motif, organisation: organisation).tap(&:archive!) }
+
+    before do
+      agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+    end
+
+    it "works" do
+      visit admin_territory_motifs_path(territory, current_tab: "archived")
+      expect(page).to have_content(motif.name)
+      expect { click_on "Réactiver" }.to change { motif.reload.archived? }.from(true).to(false)
+      expect(page).to have_content("Le motif #{motif.name} a été réactivé")
+    end
+
+    context "when an active duplicate exists" do
+      before do
+        duplicate = motif.dup
+        duplicate.deleted_at = nil
+        duplicate.save!
+      end
+
+      it "explains why the motif can't be un-archived" do
+        visit admin_territory_motifs_path(territory, current_tab: "archived")
+        expect { click_on "Réactiver" }.not_to change { motif.reload.archived? }.from(true)
+        expect(page).to have_content("Nom est déjà utilisé pour un motif avec le même type de RDV")
+      end
+    end
+  end
+
+  describe "destroying a motif" do
+    let!(:organisation) { create(:organisation, territory: territory) }
+    let!(:motif) { create(:motif, organisation: organisation).tap(&:archive!) }
+
+    before do
+      agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+    end
+
+    context "when it was not used for any RDV" do
+      it "removes it from the database" do
+        motif.archive!
+
+        visit admin_territory_motifs_path(territory, current_tab: "archived")
+        expect { click_on "Supprimer" }.to change { Motif.exists?(motif.id) }.from(true).to(false)
+        expect(page).to have_content("Le motif #{motif.name} a été supprimé")
+      end
+    end
+
+    context "when it was used for some RDVs" do
+      it "displays an error" do
+        create_list(:rdv, 2, organisation: motif.organisation, motif: motif)
+
+        visit admin_territory_motifs_path(territory, current_tab: "archived")
+        expect { click_on "Supprimer" }.not_to change { Motif.exists?(motif.id) }.from(true)
+        expect(page).to have_content("Impossible de supprimer le motif : il est lié à 2 rendez-vous.")
+      end
     end
   end
 end

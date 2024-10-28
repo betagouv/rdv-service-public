@@ -3,6 +3,8 @@
 .card.pl-4.pr-4.pt-2.pb-3
   h1 Filtres
   = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
+    = form.hidden_field :current_tab, value: @current_tab
+
     .form-row
       .form-group.col-md-4
         label for="search"
@@ -37,18 +39,29 @@
           = options_for_select(bookable_by_filter_options(rdvi_mode: @organisations.any?(&:rdv_insertion?)), params[:bookable_by])
     .form-row.justify-content-end.flex-gap-1em
       .form-group
-        a.btn.btn-link[href=url_for({})] Réinitialiser
+        a.btn.btn-link[href=admin_territory_motifs_path(current_territory, current_tab: @current_tab)] Réinitialiser
       .form-group
         button.btn.btn-primary[type="submit"] Filtrer
-    .text-right
-    = "#{@motifs_count} résultats"
 
 .row
   .col-12
+    ul.nav.nav-tabs
+      - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
+        li.nav-item
+          ruby:
+            tab_url_params = request.query_parameters.merge({ current_tab: value }) # keep filters when changing tab
+            tab_attrs = { href: admin_territory_motifs_path(current_territory, tab_url_params) }
+            if @current_tab == value
+              tab_attrs[:class] = "active"
+              tab_attrs[:"aria-current"] = "page"
+            end
+          a.nav-link *tab_attrs
+            = label
+            span.badge.badge-light.badge-pill.ml-1 = count
     .float-right
       a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] Créer un motif
-    - if @motifs_count > 0
-      = paginate @motifs, theme: "twitter-bootstrap-4"
+    - if @motifs_page.any?
+      = paginate @motifs_page, theme: "twitter-bootstrap-4"
 
       table.table.table-bordered.table-hover.table-sm.mb-0
         thead.thead-light
@@ -68,7 +81,7 @@
               th[scope="col"]
                 | Action
         tbody
-          - @motifs.each do |motif|
+          - @motifs_page.each do |motif|
             - display_actions = Agent::MotifPolicy.agent_can_manage_motif?(motif, current_agent)
             tr
               td
@@ -90,12 +103,19 @@
               td
                 - if display_actions
                   .d-flex.flex-gap-1em
-                    div= link_to edit_admin_organisation_motif_path(motif.organisation, motif), title: "Modifier", target: :_blank do
-                      i.fa.fa-edit
-                    div= link_to admin_territory_motif_path(current_territory, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
-                      i.fa.fa-trash-alt
+                    - if @current_tab != :archived
+                      div= link_to edit_admin_organisation_motif_path(motif.organisation, motif), title: "Modifier", target: :_blank do
+                        i.fa.fa-edit
+                    - if motif.archived?
+                      div= link_to unarchive_admin_territory_motif_path(current_territory, motif), method: :post, title: "Réactiver" do
+                        i.fa.fa-arrow-up-from-bracket
+                      div= link_to admin_territory_motif_path(current_territory, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
+                        i.fa.fa-trash-alt
+                    - else
+                      div= link_to archive_admin_territory_motif_path(current_territory, motif), method: :post, title: "Archiver", data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" } do
+                        i.fa.fa-box-archive
 
-      .mt-2 = paginate @motifs, theme: "twitter-bootstrap-4"
+      .mt-2 = paginate @motifs_page, theme: "twitter-bootstrap-4"
 
     - else
       .rdv-text-align-center
