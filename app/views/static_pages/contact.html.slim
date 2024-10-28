@@ -23,6 +23,10 @@ ul.list-group.mb-2
     .alert.alert-warning.my-4.d-flex.align-items-center
       i.fa.fa-exclamation-triangle>
       .ml-2
-        b> Nous ne sommes pas travailleurs médico-sociaux,
-        span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
-        | nous pouvons seulement aider avec les sujets techniques
+        - if current_domain == Domain::RDV_MAIRIE
+          ' Nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
+          | nous pouvons seulement aider avec les sujets techniques
+        - else
+          b> Nous ne sommes pas travailleurs médico-sociaux,
+          span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
+          | nous pouvons seulement aider avec les sujets techniques
