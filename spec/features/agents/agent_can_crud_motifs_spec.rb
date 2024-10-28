@@ -23,7 +23,7 @@ RSpec.describe "Agent can CRUD motifs" do
 
     expect(page).to have_content("Suivi bonsoir")
     click_link("Archiver")
-    expect(page).to have_content("Suivi bonsoir (archivé)")
+    expect(page).to have_content("Suivi bonsoir (PMI)\n(archivé)")
     click_link("Supprimer")
 
     expect_page_title("Motifs de l'organisation")

@@ -12,7 +12,7 @@ module MotifsHelper
 
   def motif_name_with_location_type_and_status(motif)
     label = motif.name
-    label += " (#{human_attribute_value(:location_type)})"
+    label += " (#{motif.human_attribute_value(:location_type)})"
     label += " (archivé)" if motif.archived?
     label
   end
