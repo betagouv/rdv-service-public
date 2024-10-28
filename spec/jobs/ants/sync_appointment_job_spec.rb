@@ -5,13 +5,13 @@ RSpec.describe Ants::SyncAppointmentJob do
     let!(:user3) { create(:user, ants_pre_demande_number: "1020304050") }
 
     it "met en attente de nouveaux jobs avec les nouveaux arguments" do
-      expect(described_class).to receive(:perform_later).with(application_id: "AABBCCDDEE")
-      expect(described_class).not_to receive(:perform_later).with(application_id: nil)
-      expect(described_class).to receive(:perform_later).with(application_id: "1020304050")
-      expect(described_class).to receive(:perform_later).with(application_id: "FOOBARFOO1")
+      expect(described_class).to receive(:perform_later).with(ants_pre_demande_number: "AABBCCDDEE")
+      expect(described_class).not_to receive(:perform_later).with(ants_pre_demande_number: nil)
+      expect(described_class).to receive(:perform_later).with(ants_pre_demande_number: "1020304050")
+      expect(described_class).to receive(:perform_later).with(ants_pre_demande_number: "FOOBARFOO1")
 
       described_class.perform_now(
-        rdv_attributes: { id: 10, status: "canceled", users_ids: [user1.id, user2.id, user3.id], obsolete_application_id: "FOOBARFOO1" },
+        rdv_attributes: { id: 10, status: "canceled", users_ids: [user1.id, user2.id, user3.id], obsolete_ants_pre_demande_number: "FOOBARFOO1" },
         appointment_data: { meeting_point: "gare du nord" }
       )
     end
@@ -28,11 +28,11 @@ RSpec.describe Ants::SyncAppointmentJob do
 
     it "créé un appointment" do
       allow(AntsApi).to receive(:status)
-        .with(hash_including(application_id: "A123456789"))
+        .with(hash_including(ants_pre_demande_number: "A123456789"))
         .and_return({ "status" => "validated", "appointments" => [] })
       expect(AntsApi).not_to receive(:delete)
-      expect(AntsApi).to receive(:create).with(hash_including(application_id: "A123456789"))
-      described_class.perform_now(application_id: "A123456789")
+      expect(AntsApi).to receive(:create).with(hash_including(ants_pre_demande_number: "A123456789"))
+      described_class.perform_now(ants_pre_demande_number: "A123456789")
     end
   end
 
@@ -47,7 +47,7 @@ RSpec.describe Ants::SyncAppointmentJob do
 
     it "supprime l’appointment existant et n’en re-créé pas" do
       allow(AntsApi).to receive(:status)
-        .with(hash_including(application_id: "A123456789"))
+        .with(hash_including(ants_pre_demande_number: "A123456789"))
         .and_return(
           {
             "status" => "validated",
@@ -64,18 +64,18 @@ RSpec.describe Ants::SyncAppointmentJob do
       expect(AntsApi).to receive(:delete)
         .with(
           {
-            application_id: "A123456789",
+            ants_pre_demande_number: "A123456789",
             meeting_point: "Mairie de Saumur",
             meeting_point_id: lieu.id,
             appointment_date: "2020-04-20 08:00:00",
           }
         )
       expect(AntsApi).not_to receive(:create)
-      described_class.perform_now(application_id: "A123456789")
+      described_class.perform_now(ants_pre_demande_number: "A123456789")
     end
   end
 
-  context "Synchro pour un application_id correspondant à un usager ayant un RDV mais qui n’est pas un RDV ANTS" do
+  context "Synchro pour un ants_pre_demande_number correspondant à un usager ayant un RDV mais qui n’est pas un RDV ANTS" do
     let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
     let!(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
@@ -85,11 +85,11 @@ RSpec.describe Ants::SyncAppointmentJob do
 
     it "ne créé pas d’appointment" do
       allow(AntsApi).to receive(:status)
-        .with(hash_including(application_id: "A123456789"))
+        .with(hash_including(ants_pre_demande_number: "A123456789"))
         .and_return({ "status" => "validated", "appointments" => [] })
       expect(AntsApi).not_to receive(:delete)
       expect(AntsApi).not_to receive(:create)
-      described_class.perform_now(application_id: "A123456789")
+      described_class.perform_now(ants_pre_demande_number: "A123456789")
     end
   end
 end
