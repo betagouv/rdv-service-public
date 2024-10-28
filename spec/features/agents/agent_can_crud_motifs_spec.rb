@@ -132,6 +132,12 @@ RSpec.describe "Agent can CRUD motifs" do
       motif.archive!
     end
 
+    it "can be done from the index page in the dedicated tab" do
+      visit admin_organisation_motifs_path(motif.organisation, current_tab: "archived")
+      expect { click_on "Réactiver" }.to change { motif.reload.archived? }.from(true).to(false)
+      expect(page).to have_content("Le motif Suivi bonjour a été réactivé")
+    end
+
     it "can be done from the show page" do
       visit admin_organisation_motif_path(motif.organisation, motif)
       expect { click_on "Réactiver" }.to change { motif.reload.archived? }.from(true).to(false)
