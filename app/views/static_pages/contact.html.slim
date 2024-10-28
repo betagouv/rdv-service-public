@@ -1,14 +1,16 @@
 - content_for :title, "Contact"
 
-h2 Votre département
-ul.list-group.mb-2
-  - Territory.where.not(phone_number: nil).each do |territory|
-    li
-      span> #{territory}
-      = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"
-  li
-    span> Autres départements, voir
-    = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
+- Territory.where.not(phone_number_formatted: nil).order(:departement_number, :name).group_by(&:departement_number).each do |department_number, territories|
+  h2 #{department_number}
+  ul.list-group.mb-2
+    - territories.each do |territory|
+      li
+        span> #{territory.name}
+        = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"
+
+h2 Autres contacts
+span> Voir
+= link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
 
 .fr-grid-row.mt-4#tech-support
   .fr-col-md-8
