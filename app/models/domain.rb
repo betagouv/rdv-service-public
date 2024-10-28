@@ -107,6 +107,12 @@ class Domain
         # Les review apps utilisent un domaine de Scalingo, elles
         # ne permettent donc pas d'utiliser plusieurs domaines.
         URI.parse(ENV.fetch("HOST", nil)).host
+      elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
+        {
+          RDV_SOLIDARITES => "staging.rdv-solidarites.fr",
+          RDV_AIDE_NUMERIQUE => "staging.rdv-aide-numerique.fr",
+          RDV_MAIRIE => "staging.rdv-service-public.fr",
+        }.fetch(self)
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
         {
           RDV_SOLIDARITES => "demo.rdv-solidarites.fr",
