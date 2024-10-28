@@ -53,7 +53,7 @@ RSpec.describe Ants::SyncAppointmentJob do
             "status" => "validated",
             "appointments" => [
               {
-                "management_url" => "https://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                "management_url" => "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
                 "meeting_point" => "Mairie de Saumur",
                 "meeting_point_id" => lieu.id,
                 "appointment_date" => "2020-04-20 08:00:00",

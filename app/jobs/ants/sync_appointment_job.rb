@@ -1,7 +1,5 @@
 module Ants
   class SyncAppointmentJob < ApplicationJob
-    RDV_MAIRIE_URL_REGEX = %r{^https?://#{Domain::RDV_MAIRIE.host_name}.*}
-
     # empêcher deux jobs parallèles avec le même ants_pre_demande_number
     include GoodJob::ActiveJobExtensions::Concurrency
     good_job_control_concurrency_with(
@@ -29,8 +27,11 @@ module Ants
 
       return false unless ants_status["status"] == "validated"
 
-      ants_appointments = ants_status["appointments"]
-        .select { _1["management_url"].match(RDV_MAIRIE_URL_REGEX) }
+      # on n’utilise pas de regex ci-dessous pour éviter un faux-positif de Brakeman
+      ants_appointments = ants_status["appointments"].select do |appointment|
+        protocol = Rails.env.production? ? "https" : "http"
+        appointment["management_url"].start_with?("#{protocol}://#{Domain::RDV_MAIRIE.host_name}")
+      end
 
       rdv = Rdv
         .joins(:users)
@@ -39,6 +40,7 @@ module Ants
         .where(users: { ants_pre_demande_number: ants_pre_demande_number })
         .where.not(status: Rdv::CANCELLED_STATUSES)
         .where("starts_at >= ?", Time.zone.now)
+        .order(id: :desc) # choix arbitraire pour éviter un comportement aléatoire
         .first
 
       # on ne fait rien si les infos sont déjà identiques
