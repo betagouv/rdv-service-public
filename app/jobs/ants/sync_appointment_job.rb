@@ -35,6 +35,7 @@ module Ants
       rdv = Rdv.joins(:users)
         .where(users: { ants_pre_demande_number: application_id })
         .where.not(status: Rdv::CANCELLED_STATUSES)
+        .where("starts_at >= ?", Time.zone.now)
         .first
 
       # on ne fait rien si les infos sont déjà identiques
