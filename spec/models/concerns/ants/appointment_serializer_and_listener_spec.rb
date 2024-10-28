@@ -6,6 +6,11 @@
 #
 # note : dans les stubs, Webmock reconnaît les requêtes qui ont des query params
 # uniquement si on passe explicitement un with(query: hash_including({...}))
+#
+# note : les requêtes à l’API ANTS sont attendues plusieurs fois dans ces specs car
+# plusieurs hooks AR peuvent être déclenchés. En pratique, les requêtes ne se passeraient
+# pas exactement comme ça, car les requêtes ultérieures sur status donneraient des informations
+# à jour.
 
 RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
@@ -56,8 +61,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         rdv.save!
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(create_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
+      expect(create_stub).to have_been_requested.at_least_once
     end
   end
 
@@ -136,8 +141,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       perform_enqueued_jobs do
         rdv.destroy
       end
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
+      expect(delete_stub).to have_been_requested.at_least_once
     end
   end
 
@@ -189,8 +194,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         rdv.excused!
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
+      expect(delete_stub).to have_been_requested.at_least_once
     end
   end
 
@@ -217,7 +222,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         rdv.excused!
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
       expect(WebMock).not_to have_requested(:post, "#{api_url}/appointments")
     end
   end
@@ -285,9 +290,9 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         rdv.seen!
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(create_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
+      expect(delete_stub).to have_been_requested.at_least_once
+      expect(create_stub).to have_been_requested.at_least_once
     end
   end
 
@@ -326,7 +331,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         user.update(ants_pre_demande_number: "AABBCCDDEE")
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
       expect(create_stub).to have_been_requested.once
     end
   end
@@ -366,7 +371,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         lieu.update(name: "Nouveau Lieu")
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
       expect(create_stub).to have_been_requested.once
     end
   end
@@ -406,7 +411,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         lieu.update(name: "Nouveau Lieu")
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
       expect(create_stub).not_to have_been_requested
     end
   end
