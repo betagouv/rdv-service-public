@@ -48,7 +48,7 @@ RSpec.describe Admin::Agenda::PlageOuverturesController, type: :controller do
 
           expected_response = [
             {
-              "title" => plage_ouverture.description,
+              "title" => plage_ouverture.title_with_default,
               "start" => plage_ouverture.starts_at.as_json,
               "end" => plage_ouverture.ends_at.as_json,
               "backgroundColor" => "#6fceff80",

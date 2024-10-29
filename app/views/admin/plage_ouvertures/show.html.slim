@@ -1,7 +1,7 @@
 - content_for(:menu_item) { "menu-plages-ouvertures" }
 
 - content_for :title do
-  = truncate(@plage_ouverture.description, length: 40)
+  = truncate(@plage_ouverture.title_with_default, length: 40)
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0.p-0
@@ -12,7 +12,7 @@
         - else
           | Plages d'ouverture de #{@plage_ouverture.agent.full_name}
     li.breadcrumb-item.active
-      = truncate(@plage_ouverture.description, length: 30)
+      = truncate(@plage_ouverture.title_with_default, length: 30)
 
 .row.justify-content-center
   .col-md-6.mb-3
