@@ -65,6 +65,9 @@ class Territory < ApplicationRecord
     where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(territories.name))")) }
+  scope :with_phone_number_formatted, -> { where.not(phone_number_formatted: nil) }
+  scope :with_valid_department, -> { where(departement_number: DEPARTEMENTS_NAMES.keys) }
+  scope :with_invalid_department, -> { where.not(departement_number: DEPARTEMENTS_NAMES.keys) }
 
   ## -
 
@@ -123,6 +126,10 @@ class Territory < ApplicationRecord
     OPTIONAL_RDV_WAITING_ROOM_FIELD_TOGGLES.keys.any? do |waiting_room_field|
       send(waiting_room_field)
     end
+  end
+
+  def department_name
+    DEPARTEMENTS_NAMES[departement_number]
   end
 
   private
