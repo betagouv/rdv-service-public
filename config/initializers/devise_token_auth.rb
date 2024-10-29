@@ -1,4 +1,10 @@
 DeviseTokenAuth.setup do |config|
+  # By default DeviseTokenAuth will not check user's #active_for_authentication?
+  # which includes confirmation check on each call (it will do it only on sign in).
+  # If you want it to be validated on each request (for example, to be able to deactivate logged in users on the fly),
+  # set it to false.
+  config.bypass_sign_in = false
+
   # By default the authorization headers will change after each request. The
   # client is responsible for keeping track of the changing tokens. Change
   # this to false to prevent the Authorization header from changing after
