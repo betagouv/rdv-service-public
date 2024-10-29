@@ -1,6 +1,6 @@
 json.cache! [@plage_ouverture_occurrences, :all_occurrences_for, date_range_params, @organisation.id], expires_in: 8.hours do
   json.array! @plage_ouverture_occurrences do |plage_ouverture, occurrence|
-    json.title plage_ouverture.title
+    json.title plage_ouverture.description
     json.start occurrence.starts_at.as_json
     json.end occurrence.ends_at.as_json
     if plage_ouverture.organisation == @organisation

@@ -36,7 +36,7 @@ class PlageOuverture < ApplicationRecord
   validate :end_after_start
   validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
-  validates :motifs, :title, presence: true
+  validates :motifs, presence: true
   validate :warn_overlapping_plage_ouvertures
   validate :warn_overflow_motifs_duration
   validates :first_day, realistic_date: true
@@ -60,6 +60,10 @@ class PlageOuverture < ApplicationRecord
   delegate :domain, to: :organisation
 
   ## -
+
+  def description
+    title.presence || "Plage d'ouverture ##{id}"
+  end
 
   def ical_uid
     "plage_ouverture_#{id}@#{IcalFormatters::Ics::ICS_UID_SUFFIX}"

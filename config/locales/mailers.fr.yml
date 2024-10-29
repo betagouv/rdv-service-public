@@ -26,15 +26,15 @@ fr:
         description_2: Vous pouvez supprimer l’évènement correspondant de votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
     plage_ouverture_mailer:
       plage_ouverture_created:
-        title: "%{domain_name} - Plage d’ouverture créée - %{title}"
+        title: "%{domain_name} - Plage d’ouverture créée - %{description}"
         description_1: Vous venez de créer une plage d’ouverture sur votre planning.
         description_2: Vous pouvez synchroniser l’évènement sur votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
       plage_ouverture_updated:
-        title: "%{domain_name} - Plage d’ouverture modifiée - %{title}"
+        title: "%{domain_name} - Plage d’ouverture modifiée - %{description}"
         description_1: Une de vos plages d’ouvertures a été modifiée.
         description_2: Vous pouvez synchroniser l’évènement sur votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
       plage_ouverture_destroyed:
-        title: "%{domain_name} - Plage d’ouverture supprimée - %{title}"
+        title: "%{domain_name} - Plage d’ouverture supprimée - %{description}"
         description_1: Une de vos plages d’ouvertures a été supprimée.
         description_2: Vous pouvez supprimer l’évènement de votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
     rdv_mailer:

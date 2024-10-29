@@ -12,7 +12,7 @@ RSpec.describe Agents::PlageOuvertureMailer, type: :mailer do
 
       it "have a good subject" do
         mail = described_class.with(plage_ouverture: plage_ouverture).send("plage_ouverture_#{action}")
-        expect(mail.subject).to eq("RDV Solidarités - Plage d’ouverture #{verb} - #{plage_ouverture.title}")
+        expect(mail.subject).to eq("RDV Solidarités - Plage d’ouverture #{verb} - #{plage_ouverture.description}")
       end
 
       it "has a ICS file join with UID" do
