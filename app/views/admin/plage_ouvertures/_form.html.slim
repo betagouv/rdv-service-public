@@ -8,9 +8,9 @@
           .card-body
             h3.card-title Motifs
             - if plage_ouverture.agent == current_agent
-              p.mb-4 Pour quels motifs de rendez-vous serez-vous disponible ?
+              p.mb-4 Pour quels motifs de rendez-vous êtes-vous disponible ?
             - else
-              p.mb-4 Pour quels motifs de rendez-vous l'agent sera-t-il disponible ?
+              p.mb-4 Pour quels motifs de rendez-vous l'agent est-t-il disponible ?
 
             = collapsible_form_fields_for_warnings(plage_ouverture) do
               = f.hidden_field :agent_id

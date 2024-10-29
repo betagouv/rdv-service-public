@@ -61,7 +61,7 @@ class PlageOuverture < ApplicationRecord
 
   ## -
 
-  def description
+  def title_with_default
     title.presence || "Plage d'ouverture ##{id}"
   end
 
