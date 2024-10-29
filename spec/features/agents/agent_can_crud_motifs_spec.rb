@@ -21,7 +21,7 @@ RSpec.describe "Agent can CRUD motifs" do
     fill_in "Nom", with: "Suivi bonsoir"
     click_button("Enregistrer")
 
-    expect(page).to have_content("Suivi bonsoir")
+    expect(page).to have_content("Suivi bonsoir (PMI)")
     click_link("Archiver")
     expect(page).to have_content("Suivi bonsoir (PMI)\n(archivé)")
     click_link("Supprimer")
