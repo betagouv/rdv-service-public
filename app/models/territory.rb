@@ -1,6 +1,9 @@
 class Territory < ApplicationRecord
   has_paper_trail
 
+  DEPARTEMENTS_NAMES = CSV.read(Rails.root.join("lib/assets/departements_fr.csv"), headers: :first_row)
+    .to_h { [_1["number"], _1["name"]] }.freeze
+
   SPECIAL_NAMES = [
     MAIRIES_NAME = "Mairies".freeze,
     CNFS_NAME = "Conseillers Numériques".freeze,
@@ -65,9 +68,6 @@ class Territory < ApplicationRecord
     where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(territories.name))")) }
-  scope :with_phone_number_formatted, -> { where.not(phone_number_formatted: nil) }
-  scope :with_valid_department, -> { where(departement_number: DEPARTEMENTS_NAMES.keys) }
-  scope :with_invalid_department, -> { where.not(departement_number: DEPARTEMENTS_NAMES.keys) }
 
   ## -
 
@@ -133,9 +133,6 @@ class Territory < ApplicationRecord
   end
 
   private
-
-  DEPARTEMENTS_NAMES = CSV.read(Rails.root.join("lib/assets/departements_fr.csv"), headers: :first_row)
-    .to_h { [_1["number"], _1["name"]] }.freeze
 
   def fill_name_for_departements
     return if name.present? || departement_number.blank?
