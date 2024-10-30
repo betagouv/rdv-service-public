@@ -3,6 +3,8 @@ DeviseTokenAuth.setup do |config|
   # which includes confirmation check on each call (it will do it only on sign in).
   # If you want it to be validated on each request (for example, to be able to deactivate logged in users on the fly),
   # set it to false.
+  # Passer cette option à true risque de causer un cookie overflow au moment de logger l'agent via la gem.
+  # Plus de détails sur ce sujet ici: https://github.com/betagouv/rdv-service-public/pull/4753
   config.bypass_sign_in = false
 
   # By default the authorization headers will change after each request. The
