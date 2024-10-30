@@ -6,7 +6,7 @@ FactoryBot.define do
     agent { association(:agent, basic_role_in_organisations: [organisation]) }
     lieu { association(:lieu, organisation: organisation) }
 
-    title { generate(:plage_title) }
+    title { [generate(:plage_title), nil].sample } # fuzzing title so it is sometimes empty
     sequence(:first_day) { |n| Time.zone.today.next_week(:monday) + n.days }
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }
