@@ -85,7 +85,7 @@
                 | Action
         tbody
           - @motifs_page.each do |motif|
-            - display_actions = Agent::MotifPolicy.agent_can_manage_motif?(motif, current_agent)
+            - motif_policy = Agent::MotifPolicy.new(current_agent, motif)
             tr
               td
                 span.badge.badge-pill style="background: #{motif.color};" &nbsp;
@@ -95,7 +95,7 @@
               td
                 = motif.service.short_name
               td
-                - if display_actions
+                - if motif_policy.show?
                   = link_to(motif.organisation.name, admin_organisation_motifs_path(organisation_id: motif.organisation.id))
                 - else
                   = motif.organisation.name
@@ -104,17 +104,20 @@
               td
                 = "#{motif.default_duration_in_min}"
               td
-                - if display_actions
-                  .d-flex.flex-gap-1em
-                    - if @current_tab != :archived
-                      div= link_to edit_admin_organisation_motif_path(motif.organisation, motif), title: "Modifier", target: :_blank do
-                        i.fa.fa-edit
-                    - if motif.archived?
+                .d-flex.flex-gap-1em
+                  - if @current_tab != :archived
+                    div= link_to edit_admin_organisation_motif_path(motif.organisation, motif), title: "Modifier", target: :_blank do
+                      i.fa.fa-edit
+
+                  - if motif.archived?
+                    - if motif_policy.unarchive?
                       div= link_to unarchive_admin_territory_motif_path(current_territory, motif), method: :post, title: "Réactiver" do
                         i.fa.fa-arrow-up-from-bracket
+                    - if motif_policy.destroy? && motif.destroyable?
                       div= link_to admin_territory_motif_path(current_territory, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
                         i.fa.fa-trash-alt
-                    - else
+                  - else
+                    - if motif_policy.archive?
                       div= link_to archive_admin_territory_motif_path(current_territory, motif), method: :post, title: "Archiver", data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" } do
                         i.fa.fa-box-archive
 

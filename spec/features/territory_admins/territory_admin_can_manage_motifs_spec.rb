@@ -189,9 +189,11 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
 
     context "when it was used for some RDVs" do
       it "displays an error" do
+        # On visite l'index avant de créer les RDVs pour faire en sorte que le bouton
+        # "Supprimer" s'affiche, pour pouvoir cliquer dessus et obtenir l'erreur.
+        visit admin_territory_motifs_path(territory, current_tab: "archived")
         create_list(:rdv, 2, organisation: motif.organisation, motif: motif)
 
-        visit admin_territory_motifs_path(territory, current_tab: "archived")
         expect { click_on "Supprimer" }.not_to change { Motif.exists?(motif.id) }.from(true)
         expect(page).to have_content("Impossible de supprimer le motif : il est lié à 2 rendez-vous.")
       end

@@ -6,7 +6,6 @@ class Admin::MotifsController < AgentAuthController
 
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
-    @motif_policy = Agent::MotifPolicy.new(current_agent, Motif.new(organisation: current_organisation))
 
     unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
     @filtered_motifs = filtered(unfiltered_motifs, params)
@@ -147,4 +146,9 @@ class Admin::MotifsController < AgentAuthController
   def link_to_motif(motif)
     helpers.link_to(motif.name, admin_organisation_motif_path(motif.organisation, motif))
   end
+
+  def agent_can_create_motif?
+    @agent_can_create_motif ||= Agent::MotifPolicy.new(current_agent, Motif.new(organisation: current_organisation)).create?
+  end
+  helper_method :agent_can_create_motif?
 end
