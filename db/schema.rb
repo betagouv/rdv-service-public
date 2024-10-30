@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_15_131717) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_29_151445) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -506,7 +506,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_15_131717) do
 
   create_table "plage_ouvertures", force: :cascade do |t|
     t.bigint "agent_id", null: false
-    t.string "title", null: false
+    t.string "title"
     t.bigint "organisation_id", null: false
     t.date "first_day", null: false
     t.time "start_time", null: false

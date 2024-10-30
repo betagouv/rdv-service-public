@@ -15,6 +15,6 @@
         - else
           | Plages d'ouverture de #{@plage_ouverture.agent.full_name}
     li.breadcrumb-item.active
-      = link_to truncate(@plage_ouverture.title, length: 20), admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
+      = link_to truncate(@plage_ouverture.title_with_default, length: 30), admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
 
 = render "form", plage_ouverture: @plage_ouverture, agent: @agent
