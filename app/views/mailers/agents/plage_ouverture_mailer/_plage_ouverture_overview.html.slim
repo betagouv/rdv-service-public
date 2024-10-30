@@ -1,9 +1,5 @@
 .overview
-  h3.aligncenter Plage d’ouverture ##{plage_ouverture.id}
-  div.row-result
-    span.title Description :
-    span.float-right= plage_ouverture.title
-    .clear
+  h3.aligncenter = plage_ouverture.title_with_default
   div.row-result
     span.title Agent :
     span.float-right= plage_ouverture.agent.full_name

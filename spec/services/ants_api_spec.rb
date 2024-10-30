@@ -16,7 +16,7 @@ RSpec.describe AntsApi, type: :service do
 
       it "raises an error" do
         expect do
-          described_class.status(application_id: "1122334455")
+          described_class.status(ants_pre_demande_number: "1122334455")
         end.to raise_error(AntsApi::ApiRequestError, "code:401, body:{\n  \"detail\": \"X-RDV-OPT-AUTH-TOKEN header invalid\"\n}\n")
       end
     end
@@ -37,7 +37,7 @@ RSpec.describe AntsApi, type: :service do
 
       it "returns request body" do
         result = described_class.create(
-          application_id: "XXXX",
+          ants_pre_demande_number: "XXXX",
           management_url: "https://gerer-rdv.com",
           meeting_point_id: "123456",
           meeting_point: "Mairie de Sannois",

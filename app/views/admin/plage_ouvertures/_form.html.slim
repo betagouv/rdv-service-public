@@ -2,16 +2,22 @@
   = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
     .row.justify-content-center
       .col-md-6
+        = render("model_errors", model: plage_ouverture, f: f)
+
         .card
           .card-body
-            = render("model_errors", model: plage_ouverture, f: f)
+            h3.card-title Motifs
+            - if plage_ouverture.agent == current_agent
+              p.mb-4 Pour quels motifs de rendez-vous êtes-vous disponible ?
+            - else
+              p.mb-4 Pour quels motifs de rendez-vous l'agent est-t-il disponible ?
+
             = collapsible_form_fields_for_warnings(plage_ouverture) do
               = f.hidden_field :agent_id
-              = f.input :title, placeholder: "Saisissez le nom de la plage d'ouverture"
               - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
               - motifs_by_services.each do |service, motifs|
                 .form-group
-                  p Motifs de #{service.name}
+                  h4 Motifs de #{service.name}
                   - motifs.each do |motif|
                     .pl-3
                       = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}" }, motif.id, false
@@ -28,6 +34,13 @@
                         "allow-clear": true, \
                       }, \
                     }
+
+    .row.justify-content-center
+      .col-md-6
+        .card
+          .card-body
+            = f.input :title, placeholder: "ex: Permanence hebdo"
+
     .row.justify-content-center
       .col-md-6
         .card

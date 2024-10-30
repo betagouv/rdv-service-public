@@ -8,9 +8,9 @@ RSpec.describe "Admin can configure the organisation" do
 
     visit admin_organisation_agent_plage_ouvertures_path(organisation, agent)
 
-    expect(page).to have_content(plage_ouverture.title)
+    expect(page).to have_content(plage_ouverture.title_with_default)
 
     click_on("Supprimer")
-    expect(page).not_to have_content(plage_ouverture.title)
+    expect(page).not_to have_content(plage_ouverture.title_with_default)
   end
 end
