@@ -19,6 +19,12 @@ main .fr-btn.fr-btn--secondary:hover {
   color: var(--text-action-high-blue-france);
 }
 
+.fr-connect-group {
+  .fr-connect {
+    color: var(--text-inverted-blue-france);
+  }
+}
+
 footer {
   background-color: var(
     --background-default-grey

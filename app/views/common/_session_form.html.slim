@@ -1,14 +1,20 @@
 = form_for resource, as: resource_name, url: session_path(resource_name) do |f|
   = render "devise/shared/error_messages", resource: resource
-  .form-group
-    = f.label :email
-    = f.email_field :email, autofocus: true, class: "form-control", placeholder: "nom.prenom@email.com"
-  .form-group
-    = f.label :password
-    = f.password_field :password, autocomplete: "current-password", required: true, class: "form-control ", placeholder: "Votre mot de passe", id: "password"
-    span.fa.fa-fw.fa-eye.toggle-password role="button" aria-hidden="true" tabindex="-1"
+  .fr-input-group
+    = f.label :email, class: "fr-label" do
+      = "Adresse email"
+      span.fr-hint-text Format attendu : nom@domaine.fr
+    = f.email_field :email, autofocus: true, class: "fr-input"
+  .fr-password
+    = f.label :password, class: "fr-label", for: "password"
+    .fr-input-wrap
+      = f.password_field :password, autocomplete: "current-password", required: true, class: "fr-password__input fr-input", id: "password"
+    .fr-password__checkbox.fr-checkbox-group.fr-checkbox-group--sm
+      input type="checkbox" aria-label="Afficher le mot de passe" id="password-show"
+      label for="password-show" class="fr-password__checkbox fr-label" Afficher
 
-    .mt-1.mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name)
+    = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "fr-link"
 
-  .form-group.mb-0.rdv-text-align-center
-    = f.submit "Se connecter", class: "btn btn-primary"
+  ul.fr-btns-group.fr-mt-2w
+    li
+      = f.submit "Se connecter", class: "fr-mt-2v fr-btn"

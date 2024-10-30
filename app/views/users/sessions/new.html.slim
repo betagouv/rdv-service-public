@@ -5,17 +5,15 @@
 
   .card-body
     = render "common/franceconnect_button"
-    .rdv-text-align-center.w-75.m-auto
-      p.rdv-color-text-mention-grey.mb-4 Entrez votre email et votre mot de passe
+    h2 Se connecter avec son compte
 
     = render "common/session_form", resource: resource, resource_name: resource_name
 
     hr.fr-my-2w
-    .rdv-text-align-center
-      p.rdv-color-text-mention-grey
-        | Vous n'avez pas de compte ?&nbsp;
-        = link_to new_registration_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)) do
-          b Je m’inscris
+    h2 Vous n'avez pas de compte ?
+    ul.fr-btns-group
+      li
+        = link_to "Créer un compte", new_user_registration_path, class: "fr-btn fr-btn--secondary"
 
     - if @rdv_wizard
       hr.fr-my-2w
