@@ -1,3 +1,5 @@
+# cf docs/interconnexions/visioplainte.md
+
 class Api::Visioplainte::GuichetsController < Api::Visioplainte::BaseController
   def self.guichets
     Agent.joins(roles: { organisation: :territory }).where(territories: { name: Territory::VISIOPLAINTE_NAME })
