@@ -39,16 +39,13 @@
       .col-md-6
         .card
           .card-body
-            = f.input :title, label: "Nom de la plage d’ouverture (facultatif)", placeholder: "ex: Permanence hebdo"
-            p.text-muted
-              ' Ce nom peut-être utile pour distinguer les plages d’ouvertures.
-              | Il sera affiché aux agents mais jamais aux usagers.
+            = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
 
     .row.justify-content-center
       .col-md-6
         .card
           .card-body
-            = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
+            = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
 
     .row.justify-content-center
       .col-md-6
