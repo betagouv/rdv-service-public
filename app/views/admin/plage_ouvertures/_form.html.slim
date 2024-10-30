@@ -39,7 +39,10 @@
       .col-md-6
         .card
           .card-body
-            = f.input :title, placeholder: "ex: Permanence hebdo"
+            = f.input :title, label: "Nom de la plage d’ouverture (facultatif)", placeholder: "ex: Permanence hebdo"
+            p.text-muted
+              ' Ce nom peut-être utile pour distinguer les plages d’ouvertures.
+              | Il sera affiché aux agents mais jamais aux usagers.
 
     .row.justify-content-center
       .col-md-6
