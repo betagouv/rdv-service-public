@@ -10,11 +10,11 @@ class StaticPagesController < ApplicationController
     territories_with_phone_number = Territory.where.not(phone_number_formatted: nil)
     territories_group_by_department = territories_with_phone_number
       .where(departement_number: Territory::DEPARTEMENTS_NAMES.keys)
-      .order(:departement_number, :name).group_by(&:departement_number)
+      .order(:departement_number).ordered_by_name.group_by(&:departement_number)
 
     territories_without_department = territories_with_phone_number
       .where.not(departement_number: Territory::DEPARTEMENTS_NAMES.keys)
-      .order(:name)
+      .ordered_by_name
 
     render locals: {
       territories_group_by_department: territories_group_by_department,
