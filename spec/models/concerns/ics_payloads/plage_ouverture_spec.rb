@@ -15,9 +15,27 @@ RSpec.describe IcsPayloads::PlageOuverture do
     end
 
     describe ":name" do
-      let(:plage_ouverture) { build(:plage_ouverture, title: "something", start_time: Time.zone.parse("12h30"), first_day: Date.new(2020, 11, 13)) }
+      let(:plage_ouverture) { build(:plage_ouverture, title: "something", start_time: Tod::TimeOfDay.new(9), first_day: Date.new(2020, 11, 13)) }
 
-      it { expect(plage_ouverture.payload[:name]).to eq("plage-ouverture-something-2020-11-13-12-30-00-0100.ics") }
+      it { expect(plage_ouverture.payload[:name]).to eq("plage-ouverture-something-2020-11-13-09-00-00-0100.ics") }
+
+      context "when title is empty" do
+        let(:plage_ouverture) { create(:plage_ouverture, title: nil, start_time: Tod::TimeOfDay.new(9), first_day: Date.new(2020, 11, 13)) }
+
+        it { expect(plage_ouverture.payload[:name]).to eq("plage-ouverture-#{plage_ouverture.id}-2020-11-13-09-00-00-0100.ics") }
+      end
+    end
+
+    describe ":summary" do
+      let(:plage_ouverture) { build(:plage_ouverture, title: "something") }
+
+      it { expect(plage_ouverture.payload[:summary]).to eq("RDV Solidarités something") }
+
+      context "when title is empty" do
+        let(:plage_ouverture) { create(:plage_ouverture, title: nil) }
+
+        it { expect(plage_ouverture.payload[:summary]).to eq("RDV Solidarités Plage d'ouverture ##{plage_ouverture.id}") }
+      end
     end
 
     describe ":starts_at" do
