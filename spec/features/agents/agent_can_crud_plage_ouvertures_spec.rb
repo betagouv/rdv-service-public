@@ -21,7 +21,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Modifier"
 
       expect_page_title("Modifier votre plage d'ouverture")
-      fill_in "Nom de la plage d'ouverture", with: "La belle plage"
+      fill_in "Titre", with: "La belle plage"
       click_button("Enregistrer")
 
       expect_page_title("La belle plage")
@@ -38,7 +38,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Créer une plage d'ouverture", match: :first
       expect_page_title("Nouvelle plage d'ouverture")
 
-      fill_in "Nom de la plage d'ouverture", with: "Accueil"
+      fill_in "Titre", with: "Accueil"
       select(lieu.full_name, from: "plage_ouverture_lieu_id") if lieu
       check "Suivi bonjour"
       click_button "Créer la plage d'ouverture"
@@ -108,7 +108,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Modifier"
 
       expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
-      fill_in "Nom de la plage d'ouverture", with: "La belle plage"
+      fill_in "Titre", with: "La belle plage"
       click_button("Enregistrer")
 
       expect_page_title("La belle plage")
@@ -122,7 +122,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first
 
       expect_page_title("Nouvelle plage d'ouverture")
-      fill_in "Nom de la plage d'ouverture", with: "Accueil"
+      fill_in "Titre", with: "Accueil"
       check "Suivi bonjour"
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
       click_button "Créer la plage d'ouverture"
@@ -145,7 +145,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         click_link "Modifier"
 
         expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
-        fill_in "Nom de la plage d'ouverture", with: "La belle plage"
+        fill_in "Titre", with: "La belle plage"
         click_button("Enregistrer")
 
         expect_page_title("La belle plage")
@@ -157,7 +157,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first
 
         expect_page_title("Nouvelle plage d'ouverture")
-        fill_in "Nom de la plage d'ouverture", with: "Accueil"
+        fill_in "Titre", with: "Accueil"
         check "Suivi bonjour"
         click_button "Créer la plage d'ouverture"
 
@@ -174,8 +174,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect { click_link("Supprimer") }.to change(enqueued_jobs, :size).by(1)
       expect { perform_enqueued_jobs }.to change { emails_sent_to(plage_ouverture.agent.email).size }.by(1)
       open_email(plage_ouverture.agent.email)
-      expect(current_email.subject).to eq("RDV Solidarités - Plage d’ouverture supprimée - #{plage_ouverture.title}")
-      expect(current_email.body).to include(plage_ouverture.title)
+      expect(current_email.subject).to eq("RDV Solidarités - Plage d’ouverture supprimée - #{plage_ouverture.title_with_default}")
+      expect(current_email.body).to include(plage_ouverture.title_with_default)
       expect(current_email.body).to include(plage_ouverture.agent.full_name)
       expect(current_email.body).to include(plage_ouverture.motifs.first.name)
       expect(current_email.body).to include("de 08:30 à 09:30") # on s'assure que les heures sont bien sérialisées et dé-sérialisées (objets Tod::TimeOfDay)
@@ -193,7 +193,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
     it "works" do
       visit admin_organisation_plage_ouverture_path(organisation, plage_ouverture)
-      expect(page).to have_content(plage_ouverture.title)
+      expect(page).to have_content(plage_ouverture.title_with_default)
       expect(page).to have_content("Conflit de dates et d'horaires avec d'autres plages d'ouvertures\nPlage d'ouverture #{overlapping_plage.id}")
     end
   end
