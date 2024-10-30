@@ -17,7 +17,7 @@ RSpec.describe "Agent can CRUD absences" do
       click_link absence.title
 
       expect_page_title("Modifier votre indisponibilité")
-      fill_in "Titre", with: "La belle indisponibilité"
+      fill_in "Description", with: "La belle indisponibilité"
       click_button("Enregistrer")
 
       expect_page_title("Vos indisponibilités")
@@ -30,7 +30,7 @@ RSpec.describe "Agent can CRUD absences" do
       click_link "Créer une indisponibilité", match: :first
 
       expect_page_title("Nouvelle indisponibilité")
-      fill_in "Titre", with: "Nouvelle indisponibilité"
+      fill_in "Description", with: "Nouvelle indisponibilité"
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
@@ -51,7 +51,7 @@ RSpec.describe "Agent can CRUD absences" do
       click_link absence.title
 
       expect_page_title("Modifier l'indisponibilité de Jane FAROU")
-      fill_in "Titre", with: "La belle indisponibilité"
+      fill_in "Description", with: "La belle indisponibilité"
       click_button("Enregistrer")
 
       expect_page_title("Indisponibilités de Jane FAROU (PMI)")
@@ -64,7 +64,7 @@ RSpec.describe "Agent can CRUD absences" do
       click_link "Créer une indisponibilité", match: :first
 
       expect_page_title("Nouvelle indisponibilité")
-      fill_in "Titre", with: "Nouvelle indisponibilité"
+      fill_in "Description", with: "Nouvelle indisponibilité"
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
