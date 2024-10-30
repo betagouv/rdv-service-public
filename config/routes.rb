@@ -219,7 +219,11 @@ Rails.application.routes.draw do
         resources :agent_intervenants, only: %i[update]
         resources :agents, except: %i[show] do
           resources :absences, only: %i[index new]
-          resources :plage_ouvertures, only: %i[index new]
+          resources :plage_ouvertures, only: %i[index new] do
+            collection do
+              get :calendar
+            end
+          end
           resources :stats, only: :index do
             collection do
               get :rdvs

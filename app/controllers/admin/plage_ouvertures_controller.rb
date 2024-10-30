@@ -19,6 +19,12 @@ class Admin::PlageOuverturesController < AgentAuthController
     @plage_ouvertures = @plage_ouvertures.page(page_number) unless params[:view_mode] == "calendar"
     @plage_ouvertures = @plage_ouvertures.search_by_text(params[:search]) if params[:search].present?
     @display_tabs = all_plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
+    @display_tabs = false if params[:view_mode] == "calendar"
+  end
+
+  def calendar
+    # cette page ne charge pas de plages, on setup juste le FullCalendar
+    authorize(@agent, :show?, policy_class: Agent::AgentPolicy)
   end
 
   def new
