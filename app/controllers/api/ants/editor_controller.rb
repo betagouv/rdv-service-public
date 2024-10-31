@@ -1,17 +1,5 @@
 # voir docs/interconnexions/ants.md
 class Api::Ants::EditorController < Api::Ants::BaseController
-  ANTS_MOTIF_CATEGORY_NAMES = [
-    CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS".freeze,
-    PASSPORT_MOTIF_CATEGORY_NAME = "Passeport disponible sur le site de l'ANTS".freeze,
-    CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS".freeze,
-  ].freeze
-
-  ANTS_MOTIF_CATEGORY_IDS_TO_NAMES = {
-    "CNI" => CNI_MOTIF_CATEGORY_NAME,
-    "PASSPORT" => PASSPORT_MOTIF_CATEGORY_NAME,
-    "CNI-PASSPORT" => CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME,
-  }.freeze
-
   def get_managed_meeting_points # rubocop:disable Naming/AccessorMethodName
     render json: lieux.map { |lieu| lieu_infos(lieu) }
   end
@@ -49,6 +37,18 @@ class Api::Ants::EditorController < Api::Ants::BaseController
 
     render json: application_ids.index_with { |_application_id| [] }
   end
+
+  ANTS_MOTIF_CATEGORY_NAMES = [
+    CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS".freeze,
+    PASSPORT_MOTIF_CATEGORY_NAME = "Passeport disponible sur le site de l'ANTS".freeze,
+    CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS".freeze,
+  ].freeze
+
+  ANTS_MOTIF_CATEGORY_IDS_TO_NAMES = {
+    "CNI" => CNI_MOTIF_CATEGORY_NAME,
+    "PASSPORT" => PASSPORT_MOTIF_CATEGORY_NAME,
+    "CNI-PASSPORT" => CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME,
+  }.freeze
 
   private
 
