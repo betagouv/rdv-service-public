@@ -100,8 +100,8 @@ fr:
         agents: >
           Seuls vous et les agents de votre organisation peuvent ajouter des rendez-vous à votre agenda.
         agents_and_prescripteurs: >
-          Les agents et prescripteurs d’autres organisations peuvent ajouter des rendez-vous à votre agenda. Voir la 
-          <a href="https://rdvs.notion.site/Travailler-avec-les-prescripteurs-de-mon-territoire-b44f509920a34b5fbfa9b47bb57a7c28">documentation</a>
+          Les agents et prescripteurs d’autres organisations peuvent ajouter des rendez-vous à votre agenda. Voir la
+          <a href="https://rdv-service-public-1.gitbook.io/rdv-service-public/toutes-les-notions/utiliser-la-prescription-externe" target="_blank">documentation  <i class="fa fa-external-link" /></a>
           pour plus d’informations.
         agents_and_prescripteurs_and_invited_users: >
           Les agents, prescripteurs, et usagers peuvent ajouter des rendez-vous dans votre agenda.

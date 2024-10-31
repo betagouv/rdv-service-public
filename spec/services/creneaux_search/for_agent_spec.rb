@@ -21,6 +21,7 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
     let(:lieu2) { create(:lieu, organisation: organisation, name: "MDS Arquest") }
 
     before do
+      travel_to(Date.new(2024, 10, 15)) # On fixe la date pour éviter de tomber sur un lundi férié
       create(:plage_ouverture, :weekly_on_monday, agent: agent, motifs: [motif], lieu: lieu2, organisation: organisation, first_day: 2.weeks.from_now)
       create(:plage_ouverture, :weekly_on_monday, agent: agent, motifs: [motif], lieu: lieu1, organisation: organisation, first_day: 1.week.from_now, recurrence_ends_at: 13.days.from_now)
     end

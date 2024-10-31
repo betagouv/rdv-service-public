@@ -90,7 +90,7 @@ module PlageOuverturesHelper
   end
 
   def filter_plage_ouvertures_in_departement_scope(plage_ouvertures)
-    Agent::PlageOuverturePolicy::DepartementScope
+    Agent::PlageOuverturePolicy::Scope
       .new(pundit_user, PlageOuverture)
       .resolve
       .merge(plage_ouvertures)
