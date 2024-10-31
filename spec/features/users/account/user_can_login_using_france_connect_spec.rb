@@ -17,9 +17,9 @@ RSpec.describe "User can login using FranceConnect" do
   context "visiting rdv-solidarites domain" do
     it "allows a user to create an account using the FranceConnect button" do
       visit "http://www.rdv-solidarites-test.localhost/users/sign_in"
-      expect(page).to have_link("S'identifier avec FranceConnect")
+      expect(page).to have_link(href: "/omniauth/franceconnect")
 
-      expect { click_on "S'identifier avec FranceConnect" }.to change(User, :count).by(1)
+      expect { click_on "S’identifier avec" }.to change(User, :count).by(1)
 
       expect(User.last).to have_attributes(
         email: "france@monopolis.fr",

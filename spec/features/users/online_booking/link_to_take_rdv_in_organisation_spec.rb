@@ -48,7 +48,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       click_on("08:00")
 
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
-      click_on("Je m’inscris")
+      click_on("Créer un compte")
 
       fill_in "user_first_name", with: "David"
       fill_in "user_last_name", with: "Nchicode"
