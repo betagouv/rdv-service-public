@@ -6,6 +6,11 @@
 #
 # note : dans les stubs, Webmock reconnaît les requêtes qui ont des query params
 # uniquement si on passe explicitement un with(query: hash_including({...}))
+#
+# note : les requêtes à l’API ANTS sont attendues plusieurs fois dans ces specs car
+# plusieurs hooks AR peuvent être déclenchés. En pratique, les requêtes ne se passeraient
+# pas exactement comme ça, car les requêtes ultérieures sur status donneraient des informations
+# à jour.
 
 RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
@@ -49,13 +54,15 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         .to_return(status: 200, body: { success: true }.to_json)
     end
 
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
+
     it "Créé l’appointment via l’API ANTS" do
       perform_enqueued_jobs do
         rdv.save!
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(create_stub).to have_been_requested.once
+      expect(status_stub).to have_been_requested.at_least_once
+      expect(create_stub).to have_been_requested.at_least_once
     end
   end
 
@@ -65,6 +72,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
     let(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
 
     it "n’appelle pas du tout l’API ANTS" do
       perform_enqueued_jobs do
@@ -126,12 +135,14 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
 
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
+
     it "supprime l’appointment via l’API ANTS" do
       perform_enqueued_jobs do
         rdv.destroy
       end
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
+      expect(delete_stub).to have_been_requested.at_least_once
     end
   end
 
@@ -176,13 +187,15 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
 
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
+
     it "supprime l’appointment via l’API ANTS" do
       perform_enqueued_jobs do
         rdv.excused!
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
+      expect(delete_stub).to have_been_requested.at_least_once
     end
   end
 
@@ -202,12 +215,14 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         )
     end
 
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
+
     it "ne déclenche pas la création d’un nouvel appointment via l’API ANTS" do
       perform_enqueued_jobs do
         rdv.excused!
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
       expect(WebMock).not_to have_requested(:post, "#{api_url}/appointments")
     end
   end
@@ -267,6 +282,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         .to_return(status: 200, body: { success: true }.to_json)
     end
 
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
     before { rdv.excused! }
 
     it "créé l’appointment via l’API ANTS" do
@@ -274,9 +290,9 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         rdv.seen!
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(create_stub).to have_been_requested.once
+      expect(status_stub).to have_been_requested.at_least_once
+      expect(delete_stub).to have_been_requested.at_least_once
+      expect(create_stub).to have_been_requested.at_least_once
     end
   end
 
@@ -307,6 +323,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         .to_return(status: 200, body: { success: true }.to_json)
     end
 
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
     before { user.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
 
     it "créé un nouvel appointment via l’API ANTS" do
@@ -314,7 +331,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         user.update(ants_pre_demande_number: "AABBCCDDEE")
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
       expect(create_stub).to have_been_requested.once
     end
   end
@@ -346,6 +363,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         .to_return(status: 200, body: { success: true }.to_json)
     end
 
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
     before { lieu.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
 
     it "déclenche une synchronisation avec l’ANTS" do
@@ -353,8 +371,48 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         lieu.update(name: "Nouveau Lieu")
       end
 
-      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(status_stub).to have_been_requested.at_least_once
       expect(create_stub).to have_been_requested.once
+    end
+  end
+
+  describe "Le lieu change de nom mais le RDV ANTS de l’usager est dans le passé" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    let!(:status_stub) do
+      stub_request(:get, "#{api_url}/status")
+        .with(query: { application_ids: "A123456789" }, headers:)
+        .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
+    end
+    let!(:create_stub) do
+      stub_request(:post, "#{api_url}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            meeting_point: "Nouveau Lieu",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers:
+        )
+        .to_return(status: 200, body: { success: true }.to_json)
+    end
+
+    before { travel_to Time.zone.parse("2020-06-30") } # le RDV est dans le passé
+    before { lieu.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
+
+    it "déclenche une synchronisation avec l’ANTS mais aucun appointment n’est créé" do
+      perform_enqueued_jobs do
+        lieu.update(name: "Nouveau Lieu")
+      end
+
+      expect(status_stub).to have_been_requested.at_least_once
+      expect(create_stub).not_to have_been_requested
     end
   end
 
@@ -399,6 +457,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
 
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
     before { user.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
 
     it "supprime l’appointment via l’API ANTS" do

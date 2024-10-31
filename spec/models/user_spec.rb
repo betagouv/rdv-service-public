@@ -260,7 +260,6 @@ RSpec.describe User, type: :model do
 
       travel_to(today)
       expect(user.rdvs_future_without_ongoing(organisation)).to eq([next_rdv])
-      travel_back
     end
 
     it "returns only future rdv" do
@@ -276,7 +275,6 @@ RSpec.describe User, type: :model do
       travel_to(now)
 
       expect(user.rdvs_future_without_ongoing(organisation)).to eq([future_rdv])
-      travel_back
     end
   end
 
@@ -310,7 +308,6 @@ RSpec.describe User, type: :model do
       travel_to(now)
       user = build(:user, birth_date: Date.new(2016, 5, 30))
       expect(user.minor?).to be true
-      travel_back
     end
 
     it "return false when user birth is 2000 and we are in 2020" do
@@ -318,7 +315,6 @@ RSpec.describe User, type: :model do
       travel_to(now)
       user = build(:user, birth_date: Date.new(2000, 5, 30))
       expect(user.minor?).to be false
-      travel_back
     end
 
     it "return false when no birthdate" do
