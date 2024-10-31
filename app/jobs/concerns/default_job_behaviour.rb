@@ -44,5 +44,6 @@ module DefaultJobBehaviour
     end
 
     Sentry.set_context :job, context
+    Sentry.set_tags(executions: executions)
   end
 end
