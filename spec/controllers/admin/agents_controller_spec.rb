@@ -16,14 +16,11 @@ RSpec.describe Admin::AgentsController, type: :controller do
 
   describe "GET #index" do
     context "quand un des agents n'a pas encore accepté son invitation" do
-      before { create(:agent, :not_confirmed, admin_role_in_organisations: [organisation]) }
+      let!(:unconfirmed_agent) { create(:agent, :not_confirmed, admin_role_in_organisations: [organisation]) }
 
       it "renvoie son adresse mail" do
         get :index, params: { organisation_id: organisation.id }, format: :json
-        expect(response.parsed_body).to eq [
-          {},
-          {},
-        ]
+        expect(response.body).to include unconfirmed_agent.email
       end
     end
   end
