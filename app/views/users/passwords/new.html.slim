@@ -3,12 +3,16 @@
 .card
   .card-body
     = form_for resource, as: resource_name, url: password_path(resource_name) do |f|
-      .rdv-text-align-center.w-75.m-auto
       = render "devise/shared/error_messages", resource: resource
-      .form-group
-        = f.email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com", class: "form-control"
-      .form-group.mb-0.rdv-text-align-center
-        = f.submit "Envoyer", class: "btn btn btn-primary"
+      .fr-input-group
+        = f.label :email, "Adresse e-mail", class: "fr-label" do
+          = "Adresse email"
+          span.fr-hint-text Format attendu : nom@domaine.fr
+        = f.email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com", class: "fr-input"
+
+      ul.fr-btns-group.fr-mt-2w
+        li
+          = f.submit "Envoyer", class: "fr-mt-2v fr-btn"
 
     hr
     .rdv-text-align-center
