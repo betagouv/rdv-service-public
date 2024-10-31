@@ -13,7 +13,7 @@ module FullNameConcern
              last_name&.upcase,
              ("(#{birth_name})" if show_birth_name?),]
 
-    names.compact.join(" ")
+    names.compact.join(" ").presence || email
   end
 
   # Curie (Skłodowska) Marie
@@ -22,7 +22,7 @@ module FullNameConcern
              ("(#{birth_name})" if show_birth_name?),
              first_name,]
 
-    names.compact.join(" ")
+    names.compact.join(" ").presence || email
   end
 
   # M. Curie
