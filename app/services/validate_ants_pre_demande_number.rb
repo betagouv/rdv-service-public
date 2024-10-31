@@ -9,7 +9,7 @@ module ValidateAntsPreDemandeNumber
       return
     end
 
-    application_hash = AntsApi.status(application_id: ants_pre_demande_number, timeout: 4)
+    application_hash = AntsApi.status(ants_pre_demande_number:, timeout: 4)
 
     status = application_hash["status"]
 
