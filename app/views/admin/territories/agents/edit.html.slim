@@ -1,7 +1,7 @@
 = territory_navigation(t(".agent_title", name: @agent.full_name), [link_to(t(".territory_agents_title"), admin_territory_agents_path(current_territory))])
 
 h1
-  = @agent.full_name
+  = @agent.full_name_or_email
 
 .container-fluid
   - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
