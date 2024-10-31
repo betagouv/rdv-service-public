@@ -27,17 +27,15 @@ sequenceDiagram
     participant rdvsp as Serveurs<br>RDV Service Public
     participant brevo as Serveurs<br>Brevo
     actor agent as Agent
-    rdvsp ->>+ brevo: déclencher email usager
-    brevo ->>- usager: envoyer email
+    rdvsp ->> usager: envoyer email usager
 
     usager ->> brevo: réponse à l’email
     activate brevo
     brevo ->> rdvsp: requête webhook
     deactivate brevo
     activate rdvsp
-    rdvsp ->>+ brevo: déclencher email agent
+    rdvsp ->>+ agent: envoyer email
     deactivate rdvsp
-    brevo ->>- agent: envoyer email
 ```
 
 Les emails envoyés aux usagers concernant des RDV contiennent un header `REPLY-TO` avec une adresse comme `rdv+abcd-efgh@reply.rdv-solidarites.fr` :
