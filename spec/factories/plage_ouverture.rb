@@ -4,7 +4,7 @@ FactoryBot.define do
     agent { association(:agent, basic_role_in_organisations: [organisation]) }
     lieu { association(:lieu, organisation: organisation) }
 
-    sequence(:title) { |n| ["Plage #{n}", nil].sample } # fuzzing title so it is sometimes empty
+    sequence(:title) { |n| random_value_in(["Plage #{n}", nil]) }
     sequence(:first_day) { |n| Time.zone.today.next_week(:monday) + n.days }
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }
