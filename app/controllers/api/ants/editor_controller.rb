@@ -22,10 +22,12 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     unless params[:reason].in?(ANTS_MOTIF_CATEGORY_IDS_TO_NAMES.keys)
       Sentry.capture_message("ANTS provided invalid reason: #{params[:reason].inspect}", fingerprint: ["ants_invalid_reason"])
       render status: :bad_request, json: { error: { code: 400, message: "Invalid reason param" } }
+      return
     end
 
     if params[:start_date] > params[:end_date]
       render status: :bad_request, json: { error: { code: 400, message: "start_date is after end_date" } }
+      return
     end
 
     # On ne peut pas utiliser params[:meeting_point_ids] car l'ants passe une liste de paramètres sans crochets.
