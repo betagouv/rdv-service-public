@@ -1,0 +1,22 @@
+.rdv-logos-partenaires-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+
+  .rdv-logo-partenaire {
+    width: 180px;
+    height: 135px;
+    padding: 0.5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+
+    img {
+      object-fit: contain;
+      max-height: 100%;
+    }
+  }
+}
