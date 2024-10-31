@@ -66,6 +66,9 @@ FactoryBot.define do
     end
     trait :not_confirmed do
       confirmed_at { nil }
+      first_name { nil }
+      last_name { nil }
+      allow_blank_name { true }
     end
     trait :invitation_not_accepted do
       sequence(:invitation_token) { |n| "invitation-t0k3n-#{n}" }

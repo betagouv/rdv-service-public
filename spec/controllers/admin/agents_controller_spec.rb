@@ -15,9 +15,16 @@ RSpec.describe Admin::AgentsController, type: :controller do
   after { Devise.mailer.deliveries.clear }
 
   describe "GET #index" do
-    it "returns a success response" do
-      get :index, params: { organisation_id: organisation.id }
-      expect(response).to be_successful
+    context "quand un des agents n'a pas encore accepté son invitation" do
+      before { create(:agent, :not_confirmed, admin_role_in_organisations: [organisation]) }
+
+      it "renvoie son adresse mail" do
+        get :index, params: { organisation_id: organisation.id }, format: :json
+        expect(response.parsed_body).to eq [
+          {},
+          {},
+        ]
+      end
     end
   end
 
