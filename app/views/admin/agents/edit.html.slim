@@ -1,7 +1,7 @@
 - content_for(:menu_item) { "menu-agents" }
 
 - content_for :title do
-  | Modifier le niveau de permission de l'agent #{@agent.full_name}
+  | Modifier le niveau de permission de l'agent #{@agent.full_name_or_email}
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
