@@ -9,7 +9,7 @@ class Api::Rdvinsertion::UsersController < Api::Rdvinsertion::AgentAuthBaseContr
 
   def set_user
     @user = User.find(params[:id])
-    authorize @user
+    authorize(@user, policy_class: Agent::UserPolicy)
   end
 
   # Pour pouvoir récupérer les ids de toutes les organisations rdv_insertion auxquelles l'usager appartient,

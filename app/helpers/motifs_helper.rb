@@ -117,7 +117,7 @@ module MotifsHelper
     if motif.collectif?
       motif.rdvs.collectif_and_available_for_reservation.count
     else
-      policy_scope(PlageOuverture).joins(:motifs).where(
+      policy_scope(PlageOuverture, policy_scope_class: Agent::PlageOuverturePolicy::Scope).joins(:motifs).where(
         organisation: current_organisation,
         motifs: { id: motif.id }
       ).in_range(Time.zone.now..).count

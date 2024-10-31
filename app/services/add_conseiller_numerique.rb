@@ -2,7 +2,7 @@ class AddConseillerNumerique
   class ConseillerNumerique
     include ActiveModel::Model
 
-    attr_accessor :email, :first_name, :last_name, :external_id, :secondary_email
+    attr_accessor :email, :first_name, :last_name, :external_id, :secondary_email, :old_email
   end
 
   class Structure
@@ -44,6 +44,15 @@ class AddConseillerNumerique
         Rails.logger.info("#{@conseiller_numerique.email} existe déjà mais semble avoir changé d'organisation. Ajoutons-le dans #{organisation.name}")
         existing_agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       end
+
+      # supprimer cette mise à jour une fois que tous les agents ont confirmé leur changement d'email
+      agent_with_old_email = Agent.active.find_by(
+        external_id: @conseiller_numerique.external_id,
+        email: @conseiller_numerique.old_email,
+        unconfirmed_email: nil
+      )
+
+      agent_with_old_email&.update(email: @conseiller_numerique.email)
     else
       Rails.logger.info "Invitation de #{@conseiller_numerique.email}..."
       invite_agent(organisation)
@@ -52,14 +61,19 @@ class AddConseillerNumerique
 
   def invite_agent(organisation)
     Agent.invite!(
-      email: @conseiller_numerique.email,
-      cnfs_secondary_email: @conseiller_numerique.secondary_email,
-      first_name: @conseiller_numerique.first_name.capitalize,
-      last_name: @conseiller_numerique.last_name,
-      external_id: @conseiller_numerique.external_id,
-      services: [service],
-      password: SecureRandom.base64(32),
-      roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
+      {
+        email: @conseiller_numerique.email,
+        first_name: @conseiller_numerique.first_name.capitalize,
+        last_name: @conseiller_numerique.last_name,
+        external_id: @conseiller_numerique.external_id,
+        services: [service],
+        password: SecureRandom.base64(32),
+        roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
+      },
+      nil, # cet argument est le invited_by, qui n'a pas de sens dans ce contexte
+      { # ce troisième argument permet de passer des options au mailer Devise
+        cnfs_secondary_email: @conseiller_numerique.secondary_email,
+      }
     ).tap do |agent|
       agent.agent_territorial_access_rights.find_or_create_by!(territory: territory)
     end

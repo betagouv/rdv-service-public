@@ -88,7 +88,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(created_rdv.created_by_prescripteur?).to be(true)
     expect(created_rdv.participations.first.created_by_prescripteur?).to be(true)
 
-    perform_enqueued_jobs(queue: "devise")
+    perform_enqueued_jobs(queue: "mailers")
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
     expect(email_sent_to("alex@prescripteur.fr").subject).to include("RDV confirmé")
     expect(email_sent_to("alex@prescripteur.fr").body).to include("RDV Aide Numérique")

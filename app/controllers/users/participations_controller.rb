@@ -6,7 +6,7 @@ class Users::ParticipationsController < UserAuthController
   include TokenInvitable
 
   def index
-    @rdv = policy_scope(Rdv).find(params[:rdv_id])
+    @rdv = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).find(params[:rdv_id])
   end
 
   def create
@@ -14,7 +14,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def cancel
-    authorize(existing_participation)
+    authorize(existing_participation, policy_class: User::ParticipationPolicy)
     change_participation_status("excused")
   end
 
@@ -33,7 +33,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def existing_participation
-    @existing_participation ||= policy_scope(Participation).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
+    @existing_participation ||= policy_scope(Participation, policy_scope_class: User::ParticipationPolicy::Scope).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
   end
 
   def new_participation
@@ -42,14 +42,14 @@ class Users::ParticipationsController < UserAuthController
 
   def add_participation
     if existing_participation.present?
-      authorize(existing_participation)
+      authorize(existing_participation, policy_class: User::ParticipationPolicy)
       if existing_participation.excused?
         change_participation_status("unknown")
       else
         participation_changed? ? create_participation : user_is_already_participating
       end
     else
-      authorize(new_participation)
+      authorize(new_participation, policy_class: User::ParticipationPolicy)
       create_participation
     end
   end

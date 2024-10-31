@@ -119,14 +119,6 @@ module ApplicationHelper
       tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
   end
 
-  def admin_link_to_if_permitted(organisation, object, name = object.to_s)
-    if policy([:agent, object]).show?
-      link_to name, polymorphic_path([:admin, organisation, object])
-    else
-      name
-    end
-  end
-
   def self_anchor(identifier, &block)
     tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
   end
@@ -144,5 +136,16 @@ module ApplicationHelper
 
   def display_inclusion_connect_button?
     !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
+  end
+
+  def dsfr_svg(path, **kwargs)
+    # cf https://www.systeme-de-design.gouv.fr/fondamentaux/pictogramme
+    classes = ["fr-artwork"]
+    classes += [kwargs.fetch(:class, nil)]
+    tag.svg(class: classes.compact_blank.join(" "), "aria-hidden": "true", viewBox: "0 0 80 80", width: "80px", height: "80px") do
+      tag.use(class: "fr-artwork-decorative", "xlink:href": "/dsfr/#{path}.svg#artwork-decorative") +
+        tag.use(class: "fr-artwork-minor", "xlink:href": "/dsfr/#{path}.svg#artwork-minor") +
+        tag.use(class: "fr-artwork-major", "xlink:href": "/dsfr/#{path}.svg#artwork-major")
+    end
   end
 end

@@ -1,6 +1,9 @@
 class Territory < ApplicationRecord
   has_paper_trail
 
+  DEPARTEMENTS_NAMES = CSV.read(Rails.root.join("lib/assets/departements_fr.csv"), headers: :first_row)
+    .to_h { [_1["number"], _1["name"]] }.freeze
+
   SPECIAL_NAMES = [
     MAIRIES_NAME = "Mairies".freeze,
     CNFS_NAME = "Conseillers Numériques".freeze,
@@ -125,10 +128,11 @@ class Territory < ApplicationRecord
     end
   end
 
-  private
+  def department_name
+    DEPARTEMENTS_NAMES[departement_number]
+  end
 
-  DEPARTEMENTS_NAMES = CSV.read(Rails.root.join("lib/assets/departements_fr.csv"), headers: :first_row)
-    .to_h { [_1["number"], _1["name"]] }.freeze
+  private
 
   def fill_name_for_departements
     return if name.present? || departement_number.blank?

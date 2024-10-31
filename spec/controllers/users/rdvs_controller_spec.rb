@@ -69,7 +69,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         it "doesn't find a creneau" do
           post_create
           expect(Rdv.count).to eq(0)
-          expect(flash[:error]).to eq "Vous ne pouvez pas effectuer cette action."
+          expect(flash[:error]).to eq "Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action"
         end
       end
     end
@@ -130,7 +130,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
           put :cancel, params: { id: rdv.id }
           expect(response).to redirect_to(users_rdvs_path)
-          expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.")
+          expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
         end
       end
     end
@@ -138,14 +138,14 @@ RSpec.describe Users::RdvsController, type: :controller do
     context "when user does not belongs to rdv" do
       let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
 
-      it "raises an error" do
+      it "redirects and adds an error message" do
         other_user = create(:user)
 
         sign_in other_user
 
-        expect do
-          put :cancel, params: { id: rdv.id }
-        end.to raise_error(ActiveRecord::RecordNotFound)
+        put :cancel, params: { id: rdv.id }
+        expect(response.status).to be(302)
+        expect(flash[:error]).to include("Vous n’avez pas les droits suffisants")
       end
     end
   end
@@ -160,10 +160,10 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
     let(:motif) { build(:motif, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
-    def raise_error_for_others_rdvs
-      expect do
-        get :show, params: { id: rdv2.id }
-      end.to raise_error(ActiveRecord::RecordNotFound)
+    def prevents_access_to_others_rdvs
+      get :show, params: { id: rdv2.id }
+      expect(response.status).to be(302)
+      expect(flash[:error]).to include("Vous n’avez pas les droits suffisants")
     end
 
     before do
@@ -195,7 +195,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       it "doesnt shows other's users rdv" do
-        raise_error_for_others_rdvs
+        prevents_access_to_others_rdvs
       end
     end
 
@@ -212,7 +212,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       it "doesnt shows other's users rdv" do
-        raise_error_for_others_rdvs
+        prevents_access_to_others_rdvs
       end
     end
 
@@ -229,7 +229,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       it "doesnt shows other's users rdv" do
-        raise_error_for_others_rdvs
+        prevents_access_to_others_rdvs
       end
     end
 
@@ -246,7 +246,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       it "doesnt shows other's users rdv" do
-        raise_error_for_others_rdvs
+        prevents_access_to_others_rdvs
       end
     end
 
@@ -263,7 +263,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       it "doesnt shows other's users rdv" do
-        raise_error_for_others_rdvs
+        prevents_access_to_others_rdvs
       end
     end
 
@@ -281,7 +281,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       it "doesnt shows other's users rdv" do
-        raise_error_for_others_rdvs
+        prevents_access_to_others_rdvs
       end
     end
 
@@ -372,7 +372,7 @@ RSpec.describe Users::RdvsController, type: :controller do
           get :index
 
           expect(response).to redirect_to(root_path)
-          expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.")
+          expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
         end
       end
     end
@@ -448,7 +448,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       before { subject }
 
       it { expect(response).to redirect_to(users_rdvs_path) }
-      it { expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.") }
+      it { expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action") }
     end
   end
 
@@ -506,7 +506,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "is not authorized" do
         subject
         expect(response).to redirect_to(users_rdvs_path)
-        expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.")
+        expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
       end
     end
   end

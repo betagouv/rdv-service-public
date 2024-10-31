@@ -25,4 +25,4 @@
 
 .row.justify-content-center
   .col-md-12.col-lg-8
-    = render "admin/versions/resource_versions_row", resource_policy: policy([:agent, @absence]), resource: @absence
+    = render "admin/versions/resource_versions_row", resource_policy: policy(@absence, policy_class: Agent::AbsencePolicy), resource: @absence

@@ -100,7 +100,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
       it "rejects the change and redirects" do
         subject
         expect(response.status).to eq 302
-        expect(flash[:error]).to eq "Vous ne pouvez pas accéder à cette organisation"
+        expect(flash[:error]).to eq "Vous n’avez pas les droits suffisants pour accéder à cette organisation"
         expect(Agent.last.email).not_to eq "hacker@renard.com"
       end
     end

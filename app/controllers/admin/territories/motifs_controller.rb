@@ -52,7 +52,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
 
   def destroy
     motif = Motif.active.find(params[:id])
-    authorize_agent motif
+    authorize(motif, policy_class: Agent::MotifPolicy)
     if motif.soft_delete
       flash[:notice] = "Le motif a été supprimé."
     else

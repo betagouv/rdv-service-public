@@ -9,7 +9,7 @@ require "csv"
 conseillers_numeriques = CSV.read("/tmp/uploads/embauches.csv", headers: true, col_sep: ";", liberal_parsing: true)
 
 conseillers_numeriques.each do |conseiller_numerique|
-  next if conseiller_numerique["email professionnel"].blank? || conseiller_numerique["Compte activé"]&.strip != "oui"
+  next if conseiller_numerique["email professionnel secondaire"].blank? || conseiller_numerique["Compte activé"]&.strip != "oui"
 
   external_id = "conseiller-numerique-#{conseiller_numerique['ID conseiller']}"
 
@@ -19,8 +19,9 @@ conseillers_numeriques.each do |conseiller_numerique|
   Sentry.with_scope do |scope|
     processed_params = {
       external_id: external_id,
-      email: conseiller_numerique["email professionnel"],
+      email: conseiller_numerique["email professionnel secondaire"],
       secondary_email: conseiller_numerique["email"],
+      old_email: conseiller_numerique["email professionnel"],
       first_name: conseiller_numerique["prenom"],
       last_name: conseiller_numerique["nom"],
       structure: {

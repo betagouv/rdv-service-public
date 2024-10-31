@@ -1,5 +1,5 @@
 class Api::V1::AgentAuthBaseController < Api::V1::BaseController
-  include Pundit::Authorization
+  include ExplicitPunditConcern
   include DeviseTokenAuth::Concerns::SetUserByToken
 
   skip_before_action :verify_authenticity_token
@@ -16,10 +16,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       else
         current_agent.organisations.find_by(id: params[:organisation_id])
       end
-  end
-
-  def authorize(record, *args)
-    super([:agent, record], *args)
   end
 
   # Rescuable exceptions
@@ -66,16 +62,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   end
 
   private
-
-  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
-  # A terme, on voudra forcer l'argument policy_scope_class
-  def policy_scope(scope, policy_scope_class: nil)
-    if policy_scope_class
-      super
-    else
-      super([:agent, scope])
-    end
-  end
 
   def authenticate_agent
     if request.headers.include?("X-Agent-Auth-Signature")

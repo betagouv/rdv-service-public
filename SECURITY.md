@@ -1,1 +1,3 @@
-[Cf docs/0-docs.md#Security Policy](docs/0-docs.md#Security Policy)
+Please [contact us](mailto:contact@rdv-solidarites.fr) to report any security vulnerability.
+
+Thank you!

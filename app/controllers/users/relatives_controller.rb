@@ -7,7 +7,7 @@ class Users::RelativesController < UserAuthController
 
   def new
     @user = current_user.relatives.new
-    authorize(@user)
+    authorize(@user, policy_class: User::UserPolicy)
     respond_modal_with @user
   end
 
@@ -16,7 +16,7 @@ class Users::RelativesController < UserAuthController
     @user.created_through = "user_relative_creation"
     @user.responsible_id = current_user.id
     @user.organisation_ids = current_user.organisation_ids
-    authorize(@user)
+    authorize(@user, policy_class: User::UserPolicy)
     return_location = request.referer
     if @user.save
       flash[:success] = "#{@user.full_name} a été ajouté comme proche."
@@ -26,11 +26,11 @@ class Users::RelativesController < UserAuthController
   end
 
   def edit
-    authorize(@user)
+    authorize(@user, policy_class: User::UserPolicy)
   end
 
   def update
-    authorize(@user)
+    authorize(@user, policy_class: User::UserPolicy)
     if @user.update(user_params)
       flash[:success] = "Les informations de votre proche #{@user.full_name} ont été mises à jour."
       redirect_to users_informations_path
@@ -40,7 +40,7 @@ class Users::RelativesController < UserAuthController
   end
 
   def destroy
-    authorize(@user)
+    authorize(@user, policy_class: User::UserPolicy)
     flash[:notice] = "Votre proche a été supprimé." if @user.soft_delete
     redirect_to users_informations_path
   end
@@ -48,7 +48,7 @@ class Users::RelativesController < UserAuthController
   private
 
   def set_user
-    @user = policy_scope(User).find(params.require(:id))
+    @user = policy_scope(User, policy_scope_class: User::UserPolicy::Scope).find(params.require(:id))
   end
 
   def user_params

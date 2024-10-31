@@ -94,12 +94,11 @@ En attendant, voici comment procéder.
 
 ## Tester les invitations
 
-Pour le moment, il y a un système d'invitation avancé qui est utilisé par RDV-Insertion et qui n'est pas encore intégré dans RDV-Solidarités. Pour tester le cheminement coté RDV-Solidarités, voici comment faire :
+Pour le moment, il y a un système d'invitation avancé qui est utilisé par RDV-Insertion et qui n'est pas encore intégré dans RDV Service Public.
 
-- créer un rdv pour un nouvel utilisateur créé à la volée,
-- inviter cet utilisateur
-- récupérer le token dans le mail d‘invitation de letter_opener
-- aller sur l’url du rdv en rajoutant le token en paramètre, ça donne quelque chose comme http://localhost:5000/users/rdvs/1234?invitation_token=MON_TOKEN
+Le code qui génère le lien d'invitation dans le service de RDVI `Invitations::ComputeLink` dédié est présent dans ce fichier https://github.com/betagouv/rdv-insertion/blob/9c03e5a6c720a88826e84ca854fd5ccb6135569a/app/services/invitations/compute_link.rb#L2
+
+Pour tester en local **depuis RDVSP** vous pouvez utiliser le script `scripts/invite_user.rb`.
 
 ## Montée en version des dépendances
 
@@ -171,14 +170,14 @@ Nous utilisons Metabase pour donner à l'ensemble de l'équipe une visibilité s
 Notre dossier d'architecture technique fournit une description haut niveau de notre usage de Metabase :
 [architecture-technique.md](architecture-technique.md)
 
-Le script [scripts/etl.sh](scripts/etl.sh) permet de lancer la procédure de copie du dernier backup de la prod vers la base de donnée de l'app `rdv-service-public-etl`.
+Le code qui gère notre pipeline d'ETL est disponible [ici](https://github.com/betagouv/rdv-service-public-etl)
 
 ### Mettre à jour Metabase
 
 Nous avons utilisé le déploiement en un clic décrit dans cette doc de Scalingo :
 https://doc.scalingo.com/platform/getting-started/getting-started-with-metabase
 
-Pour mettre à jour Metabase il faut déclencher un deploy en utilisant la commande ci-dessous. 
+Pour mettre à jour Metabase il faut déclencher un deploy en utilisant la commande ci-dessous.
 
 ⚠️ Attention, une mise à jour de Metabase peut mal se passer et rendre notre Metabase indisponible.
 

@@ -2,7 +2,7 @@
 
 - content_for(:title, "Agents de #{current_organisation.name}")
 
-- if current_agent_can?(:create, Agent)
+- if current_agent_can_create_agent_in?(current_organisation)
   - content_for :breadcrumb do
     = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class:"btn btn-outline-primary"
 
@@ -31,7 +31,7 @@
           = paginate @agents, theme: "twitter-bootstrap-4"
         .rdv-text-align-center= page_entries_info @agents
 
-    - if current_agent_can?(:create, Agent)
+    - if current_agent_can_create_agent_in?(current_organisation)
       .m-3.d-flex.justify-content-center.align-items-center
         = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class: "btn btn-primary"
         - if @invited_agents_count > 0

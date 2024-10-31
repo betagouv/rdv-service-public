@@ -1,8 +1,9 @@
 - agent_role = agent.role_in_organisation(current_organisation)
+- agent_policy = policy(agent, policy_class: Agent::AgentPolicy)
 
 tr id="agent_#{agent.id}"
   td
-    - if policy([:agent, agent]).edit?
+    - if agent_policy.edit?
       = link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "mr-2"
       - if agent.inactive? && agent.complete?
         = tag.span("Inactif", class: "badge badge-warning")
@@ -20,14 +21,14 @@ tr id="agent_#{agent.id}"
       i.fa.fa-user-cog
   td
     .d-flex
-      - if policy([:agent, agent]).create? && !agent.invitation_accepted? && !agent.is_an_intervenant?
+      - if agent_policy.create? && !agent.invitation_accepted? && !agent.is_an_intervenant?
         div.mr-3= link_to t("devise.invitations.reinvite"),
                 reinvite_admin_organisation_invitation_path(current_organisation, agent),
                 method: :post
-      - if policy([:agent, agent]).edit?
+      - if agent_policy.edit?
         div.mr-3= link_to edit_admin_organisation_agent_path(current_organisation, agent), title: t("helpers.edit") do
           i.fa.fa-edit
-      - if policy([:agent, agent]).destroy?
+      - if agent_policy.destroy?
         - agent_removal_presenter = AgentRemovalPresenter.new(agent, current_organisation)
         - path = admin_organisation_agent_path(current_organisation, agent)
         = link_to path,
