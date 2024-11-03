@@ -117,7 +117,7 @@ RSpec.describe UserRdvWizard do
           expect(form.errors.first.attribute).to eq(:ants_pre_demande_number)
           expect(form.errors.first.message).to eq("doit comporter 10 chiffres et lettres")
           # le message affiché est en fait celui sur le user
-          expect(form.user.errors.first.full_message).to eq("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+          expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
         end
       end
 
@@ -147,7 +147,7 @@ RSpec.describe UserRdvWizard do
           expect(res).to be false
           expect(form.errors.count).to eq(1)
           expect(form.errors.first.attribute).to eq(:ants_pre_demande_number)
-          expect(form.user.errors.first.full_message).to eq("Numéro de pré-demande ANTS n'est pas reconnu par l'ANTS")
+          expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS n'est pas reconnu par l'ANTS")
         end
       end
 
@@ -252,7 +252,7 @@ RSpec.describe UserRdvWizard do
           expect(res).to be false
           expect(form.errors.count).to eq(1)
           expect(form.errors.first.attribute).to eq(:ants_pre_demande_number)
-          expect(form.user.errors.first.full_message).to eq("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
+          expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
         end
       end
     end
