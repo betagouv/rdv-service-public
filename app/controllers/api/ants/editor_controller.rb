@@ -88,10 +88,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     private
 
     def time_slots_for_lieu(lieu)
-      lieu
-        .organisation
-        .motifs
-        .where(motif_category_id: motif_category_id)
+      Motif
+        .where(organisation_id: lieu.organisation_id, motif_category_id:)
         .map { |motif| time_slots_for_lieu_and_motif(lieu:, motif:) }
         .flatten
         .uniq { _1[:datetime] }
