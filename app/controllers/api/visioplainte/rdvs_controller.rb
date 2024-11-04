@@ -1,3 +1,5 @@
+# cf docs/interconnexions/visioplainte.md
+
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   def index # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
     if params[:ids].blank? && (params[:date_debut].blank? || params[:date_fin].blank?)

@@ -24,10 +24,7 @@ RSpec.describe "public pages", js: true do
   it "home page for RDV Mairie is accessible" do
     visit "http://www.rdv-mairie-test.localhost/"
     expect(page).to have_current_path("/")
-    # TODO: investiguer si les résultats de ce test d'accessibilité sont valides
-    # axe indique que l'attribut aria-labelledby n'est pas valide, alors qu'il est documenté par mozilla
-    # et utilisé par le dsfr.
-    # expect(page).to be_axe_clean
+    expect(page).to be_axe_clean
   end
 
   it "presentation page for RDV Mairie is accessible" do
