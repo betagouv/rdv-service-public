@@ -1,12 +1,10 @@
 FactoryBot.define do
-  sequence(:plage_title) { |n| "Plage #{n}" }
-
   factory :plage_ouverture do
     organisation { association(:organisation) }
     agent { association(:agent, basic_role_in_organisations: [organisation]) }
     lieu { association(:lieu, organisation: organisation) }
 
-    title { generate(:plage_title) }
+    sequence(:title) { |n| random_value_in(["Plage #{n}", nil]) }
     sequence(:first_day) { |n| Time.zone.today.next_week(:monday) + n.days }
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }

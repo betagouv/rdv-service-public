@@ -1,3 +1,5 @@
+# cf /docs/interconnexions/brevo.md
+
 class TransferEmailReplyJob < ApplicationJob
   queue_as :mailers
 
