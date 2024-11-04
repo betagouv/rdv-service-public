@@ -18,10 +18,10 @@ class Api::Ants::EditorController < Api::Ants::BaseController
       return
     end
 
-    # On ne peut pas utiliser params[:meeting_point_ids] car l'ants passe une liste de paramètres sans crochets.
-    # Autrement dit, ils utilisent la syntaxe meeting_point_ids=1&meeting_point_ids=2 pour envoyer un tableau d'ids
     time_slots_search = TimeSlotsSearch.new(
       meeting_point_ids: request.query_string.scan(/meeting_point_ids=(\d+)/).flatten,
+      # On ne peut pas utiliser params[:meeting_point_ids] car l'ants passe une liste de paramètres sans crochets.
+      # Autrement dit, ils utilisent la syntaxe meeting_point_ids=1&meeting_point_ids=2 pour envoyer un tableau d'ids
       date_range: (Date.parse(params[:start_date])..Date.parse(params[:end_date])),
       users_count: params.fetch(:documents_number, 1).to_i,
       reason: params[:reason],
@@ -51,8 +51,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   }.freeze
 
   def self.lieux
-    Lieu
-      .joins(:organisation)
+    Lieu.joins(:organisation)
       .where(organisations: { territory_id: Territory.mairies&.id })
   end
 
