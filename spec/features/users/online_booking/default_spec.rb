@@ -423,7 +423,7 @@ RSpec.describe "User can search for rdvs" do
 
   def sign_up
     # Login page
-    click_link("Je m'inscris")
+    click_link("Je m’inscris")
 
     # Sign up page
     expect(page).to have_content("Inscription")
@@ -431,7 +431,7 @@ RSpec.describe "User can search for rdvs" do
     fill_in(:user_last_name, with: "Lapin")
     fill_in("Email", with: "michel@lapin.fr")
     fill_in("Téléphone", with: "0612345678")
-    click_button("Je m'inscris")
+    click_button("Je m’inscris")
 
     # Confirmation email
     open_email("michel@lapin.fr")
