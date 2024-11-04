@@ -60,6 +60,7 @@ RSpec.describe PrescripteurRdvWizard do
       expect { wizard.create! }.to change(Rdv, :count).by(1)
 
       expect(Rdv.last.users.first).to eq(user)
+      expect(user.reload.created_through).to eq("user_sign_up")
     end
   end
 
@@ -73,6 +74,7 @@ RSpec.describe PrescripteurRdvWizard do
     it "creates a new user" do
       wizard = described_class.new(attributes, Domain::ALL.first)
       expect { wizard.create! }.to change(User, :count).by(1)
+      expect(User.last.created_through).to eq("prescripteur")
     end
   end
 end

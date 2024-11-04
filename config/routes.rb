@@ -263,6 +263,7 @@ Rails.application.routes.draw do
   end
   get "/.well-known/microsoft-identity-association" => "static_pages#microsoft_domain_verification", format: :json
 
+  get "long_request" => "health#long_request"
   get "health_check" => "health#db_connection"
   get "health/jobs_queues" => "health#jobs_queues"
   get "health/jobs_scheduled" => "health#jobs_scheduled"
