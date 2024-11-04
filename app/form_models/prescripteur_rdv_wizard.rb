@@ -57,7 +57,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     @user = duplicate || user_from_params
 
     @user.skip_confirmation_notification! # Désactivation du mail Devise de confirmation de compte
-    @user.created_through = "prescripteur"
+    @user.created_through = "prescripteur" if @user.new_record?
     User.transaction do
       @user.save!
       @user.user_profiles.find_or_create_by!(organisation_id: rdv.motif.organisation_id)
