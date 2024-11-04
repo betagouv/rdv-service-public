@@ -83,14 +83,22 @@ ANTS_RDV_API_URL=https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/a
 Dans les seeds, la mairie de Sannois est configurée pour ouvrir des créneaux de passeports.
 Vous pouvez donc chercher et réserver un RDV en suivant ce lien <http://www.rdv-mairie.localhost:3000/prendre_rdv?departement=95&city_code=95582&street_ban_id=&latitude=48.973523&longitude=2.253694&address=Sannois%2C+95110&button=>
 
-Utilisez des application ID de tests, trouvés sur [cette issue GitLab](https://gitlab.com/france-titres/rendez-vous-mairie/interaction-avec-les-editeurs/-/issues/83#note_2154079306) :
+Utilisez ces application ID de tests, partagés par l’équipe support [sur cette issue GitLab](https://gitlab.com/france-titres/rendez-vous-mairie/interaction-avec-les-editeurs/-/issues/85) :
 
 status | application_id
 -|-
-validated | SOLOCAL001 à 5
-declared | SOLOCAL004 à 6
-consumed | SOLOCAL007 à 9
-expired | SOLOCAL010 à 12
+validated | RDVSPUB001
+validated | RDVSPUB002
+validated | RDVSPUB003
+consumed | RDVSPUB004
+consumed | RDVSPUB005
+consumed | RDVSPUB006
+declared | RDVSPUB007
+declared | RDVSPUB008
+declared | RDVSPUB009
+expired | RDVSPUB010
+expired | RDVSPUB011
+expired | RDVSPUB012
 
 Pour vérifier simplement l’état dans la DB de l’ANTS : `rails runner 'puts AntsApi.status(application_id: "SOLOCAL002")'`
 
