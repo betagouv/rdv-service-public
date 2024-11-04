@@ -66,7 +66,7 @@
     - if @motifs_page.any?
       = paginate @motifs_page, theme: "twitter-bootstrap-4"
 
-      table.table.table-bordered.table-hover.table-sm.mb-0
+      table.table.table-centered.table-bordered.table-hover.table-sm.mb-0
         thead.thead-light
           = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
             tr
@@ -103,22 +103,22 @@
                 = Motif.human_attribute_value(:location_type, motif.location_type)
               td
                 = "#{motif.default_duration_in_min}"
-              td
-                .d-flex.flex-gap-1em
+              td.p-0
+                .d-flex
                   - if @current_tab != :archived
-                    div= link_to edit_admin_organisation_motif_path(motif.organisation, motif), title: "Modifier", target: :_blank do
+                    = link_to edit_admin_organisation_motif_path(motif.organisation, motif), class: "btn btn-link", title: "Modifier", target: :_blank do
                       i.fa.fa-edit
 
                   - if motif.archived?
                     - if motif_policy.unarchive?
-                      div= link_to unarchive_admin_territory_motif_path(current_territory, motif), method: :post, title: "Réactiver" do
+                      = link_to unarchive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: "Réactiver" do
                         i.fa.fa-arrow-up-from-bracket
                     - if motif_policy.destroy? && motif.destroyable?
-                      div= link_to admin_territory_motif_path(current_territory, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
+                      = link_to admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
                         i.fa.fa-trash-alt
                   - else
                     - if motif_policy.archive?
-                      div= link_to archive_admin_territory_motif_path(current_territory, motif), method: :post, title: "Archiver", data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" } do
+                      = link_to archive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: "Archiver", data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" } do
                         i.fa.fa-box-archive
 
       .mt-2 = paginate @motifs_page, theme: "twitter-bootstrap-4"
