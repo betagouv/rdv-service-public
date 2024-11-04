@@ -18,12 +18,8 @@ main .fr-btn:hover {
 main .fr-btn.fr-btn--secondary:hover {
   color: var(--text-action-high-blue-france);
 }
-
-.fr-connect-group {
-  .fr-connect {
-    color: var(--text-inverted-blue-france);
-  }
-}
+// Règle permettant de corriger le hover du bouton FranceConnect en attendant la suppression de bootstrap
+main .fr-btn:hover, .fr-connect-group, .fr-connect:hover { color: var(--text-inverted-blue-france); }
 
 footer {
   background-color: var(
