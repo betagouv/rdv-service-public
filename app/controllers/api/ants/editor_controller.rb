@@ -1,7 +1,7 @@
 # voir docs/interconnexions/ants.md
 class Api::Ants::EditorController < Api::Ants::BaseController
   def get_managed_meeting_points # rubocop:disable Naming/AccessorMethodName
-    render json: lieux.map { |lieu| lieu_infos(lieu) }
+    render(json: self.class.lieux.map { |lieu| lieu_infos(lieu) })
   end
 
   def available_time_slots
@@ -50,6 +50,12 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     "CNI-PASSPORT" => CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME,
   }.freeze
 
+  def self.lieux
+    Lieu
+      .joins(:organisation)
+      .where(organisations: { territory_id: Territory.mairies&.id })
+  end
+
   private
 
   def lieu_infos(lieu)
@@ -78,9 +84,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     end
 
     def time_slots_by_lieu_id
-      Lieu
-        .joins(:organisation)
-        .where(organisations: { territory_id: Territory.mairies&.id })
+      Api::Ants::EditorController
+        .lieux
         .where(id: meeting_point_ids)
         .to_h { |lieu| [lieu.id, time_slots_for_lieu(lieu)] }
     end
