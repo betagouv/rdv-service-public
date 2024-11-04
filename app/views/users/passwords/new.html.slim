@@ -8,20 +8,17 @@
         = f.label :email, "Adresse e-mail", class: "fr-label" do
           = "Adresse email"
           span.fr-hint-text Format attendu : nom@domaine.fr
-        = f.email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com", class: "fr-input"
+        = f.email_field :email, autofocus: true, required: true, class: "fr-input"
 
-      ul.fr-btns-group.fr-mt-2w
-        li
-          = f.submit "Envoyer", class: "fr-mt-2v fr-btn"
+      .rdv-text-align-center
+        = f.submit "Envoyer", class: "fr-mb-4v fr-btn"
 
     hr
     .rdv-text-align-center
       p.rdv-color-text-mention-grey
         | Vous avez un compte ?&nbsp;
-        = link_to new_session_path(resource_name) do
-          b Se connecter
+        = link_to "Se connecter", new_session_path(resource_name), class: "fr-link"
 
       p.rdv-color-text-mention-grey
         | Vous n'avez pas de compte ?&nbsp;
-        = link_to new_registration_path(resource_name) do
-          b Je m'inscris
+        = link_to "Je m’inscris", new_registration_path(resource_name), class: "fr-link"
