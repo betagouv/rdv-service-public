@@ -19,7 +19,7 @@
 
     .card.mb-5
       .card-header
-        = "#{@territories.count} structures utilisent RDV-Solidarités"
+        = "#{@territories.count} structures utilisent #{current_domain.name}"
       .card-body
         ul
           - @territories.ordered_by_name.each do |territory|
