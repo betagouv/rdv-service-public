@@ -1,12 +1,8 @@
 RSpec.describe "ANTS API: availableTimeSlots" do
   include_context "rdv_mairie_api_authentication"
 
-  let(:lieu1) do
-    create(:lieu, organisation: organisation)
-  end
-  let(:lieu2) do
-    create(:lieu, organisation: organisation2)
-  end
+  let(:lieu1) { create(:lieu, organisation: organisation) }
+  let(:lieu2) { create(:lieu, organisation: organisation2) }
   let(:mairies_territory) { create(:territory, :mairies) }
   let(:organisation) { create(:organisation, territory: mairies_territory) }
   let(:organisation2) { create(:organisation, territory: mairies_territory) }
@@ -116,6 +112,38 @@ RSpec.describe "ANTS API: availableTimeSlots" do
 
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"error":{"code":400,"message":"start_date is after end_date"}}')
+    end
+  end
+
+  context "missing meeting_point_ids param" do
+    it "returns a bad request" do
+      expect do
+        get "/api/ants/availableTimeSlots?start_date=2022-11-20&end_date=2022-11-24&documents_number=1&reason=CNI"
+      end.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "missing start_date param" do
+    it "returns a bad request" do
+      expect do
+        get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&end_date=2022-11-24&documents_number=1&reason=CNI"
+      end.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "missing end_date param" do
+    it "returns a bad request" do
+      expect do
+        get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&start_date=2022-11-24&documents_number=1&reason=CNI"
+      end.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "missing reason param" do
+    it "returns a bad request" do
+      expect do
+        get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&start_date=2022-11-24&end_date=2022-11-28&documents_number=1"
+      end.to raise_error(ActionController::ParameterMissing)
     end
   end
 
