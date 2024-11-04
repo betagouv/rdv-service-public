@@ -458,18 +458,18 @@ Nous utilisons Brevo afin de traiter les envois d'e-mails transactionnels.
 
 Nous y avons configuré une période de rétention de 6 mois, durant laquelle une copie
 de chaque email envoyé est gardée. Cela permet aux équipes de support de déterminer
-si un e-mail a bien été envoyé, en cas de problème remontée par un usager ou un agent.
+si un e-mail a bien été envoyé, en cas de problème remonté par un usager ou un agent.
 
 L'accès à Brevo est fait à travers
-- des comptes nominatifs pour l'équipe support RDV Service Public et RDV Insertion
-- un compte admin non nominatif lié à une boite mail uniquement accessible aux devs
+- des comptes nominatifs pour l'équipe support RDV Service Public
+- un compte admin non nominatif lié à une boite mail uniquement accessible aux développeur·ses
 
 Les e-mails envoyés sont délibérément dépourvus de tracking (ni sur les liens ni comme image),
 afin qu'aucune requête ne soit faite à Brevo à l'ouverture de l'e-mail. Cela permet d'éviter que
 Brevo soit une dépendance à l'usage des liens, et évite que des données soient récoltées par Brevo.
 
 Note : indépendamment des usages transactionnels, les fonctionnalités de mailing marketing de Brevo
-sont utilisées par les bizdev afin de promouvoir le produit auprès des administrations.
+sont utilisées par les chargé·es de déploiement afin de promouvoir le produit auprès des administrations.
 
 ### Politique de mise à jour des applicatifs
 
