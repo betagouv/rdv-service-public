@@ -6,14 +6,14 @@
     - territories.each do |territory|
       li
         span> #{territory.name}
-        = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"
+        = link_to territory.humanized_phone_number, "tel:#{territory.phone_number_formatted}"
 
 h2 Autres contacts
 ul.list-group.mb-2
   - territories_without_department.each do |territory|
     li
       span> #{territory.name}
-      = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"
+      = link_to territory.humanized_phone_number, "tel:#{territory.phone_number_formatted}"
 span> Voir
 = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
 

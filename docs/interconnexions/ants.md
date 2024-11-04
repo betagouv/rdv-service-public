@@ -70,12 +70,37 @@ Les éditeurs logiciels peuvent voir les appointments posés par d’autres édi
 
 Nous nous authentifions à l’API de l’ANTS via un token passé en header et stocké dans une variable d’environnement : `ANTS_RDV_OPT_AUTH_TOKEN`.
 
+### Environnement de développement
 
-### Environnement de staging
+L’ANTS fournit un environnement de développement (aussi dit d’intégration) disponible sur [int.api-coordination.rendezvouspasseport.ants.gouv.fr](https://int.api-coordination.rendezvouspasseport.ants.gouv.fr)
+Pour tester en local, renseignez les variables d’environnement suivantes :
 
-L’ANTS fournit un environnement de staging - préproduction :
+```env
+ANTS_RDV_OPT_AUTH_TOKEN=[récupérer dans vaultwarden]
+ANTS_RDV_API_URL=https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api
+```
 
-- L’API est disponible sur [int.api-coordination.rendezvouspasseport.ants.gouv.fr](https://int.api-coordination.rendezvouspasseport.ants.gouv.fr)
+Dans les seeds, la mairie de Sannois est configurée pour ouvrir des créneaux de passeports.
+Vous pouvez donc chercher et réserver un RDV en suivant ce lien <http://www.rdv-mairie.localhost:3000/prendre_rdv?departement=95&city_code=95582&street_ban_id=&latitude=48.973523&longitude=2.253694&address=Sannois%2C+95110&button=>
+
+Utilisez ces application ID de tests, partagés par l’équipe support [sur cette issue GitLab](https://gitlab.com/france-titres/rendez-vous-mairie/interaction-avec-les-editeurs/-/issues/85) :
+
+status | application_id
+-|-
+validated | RDVSPUB001
+validated | RDVSPUB002
+validated | RDVSPUB003
+consumed | RDVSPUB004
+consumed | RDVSPUB005
+consumed | RDVSPUB006
+declared | RDVSPUB007
+declared | RDVSPUB008
+declared | RDVSPUB009
+expired | RDVSPUB010
+expired | RDVSPUB011
+expired | RDVSPUB012
+
+Pour vérifier simplement l’état dans la DB de l’ANTS : `rails runner 'puts AntsApi.status(application_id: "SOLOCAL002")'`
 
 ## Liens externes
 
