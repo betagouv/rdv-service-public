@@ -1,5 +1,4 @@
 - if current_domain.france_connect_enabled || params[:force_franceconnect].present?
-  h2 Se connecter avec FranceConnect
   .rdv-text-align-center
     .fr-connect-group
       = link_to "/omniauth/franceconnect", class: "fr-connect", method: :post, title: "S’identifier avec FranceConnect" do

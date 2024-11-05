@@ -4,7 +4,9 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
+    h2 Se connecter avec FranceConnect
     = render "common/franceconnect_button"
+
     h2 Se connecter avec son compte
 
     = form_for resource, as: resource_name, url: session_path(resource_name) do |f|
