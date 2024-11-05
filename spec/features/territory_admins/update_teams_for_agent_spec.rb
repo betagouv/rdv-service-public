@@ -24,10 +24,11 @@ RSpec.describe "update an agent's teams" do
   it "allows changing the agent teams in this territory" do
     visit edit_admin_territory_agent_path(agent.id, territory_id: territory.id)
     unselect "Equipe actuelle", from: "Équipes"
-    # find(".select2-search__field").send_keys("Nouv")
-    # expect(page).to have_content("Nouvelle")
     select "Nouvelle équipe", from: "Équipes"
 
     click_on "Enregistrer"
+
+    expect(page).to have_content("Les équipes de l’agent ont été mises à jour")
+    expect(agent.reload.teams).to contain_exactly(other_team_in_first_territory, other_team_in_other_territory)
   end
 end
