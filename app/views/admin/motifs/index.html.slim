@@ -5,7 +5,7 @@
 
 - if agent_can_create_motif?
   - content_for :breadcrumb do
-    = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"
+    = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"
 
 = simple_form_for "", url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
   = f.hidden_field :current_tab, value: @current_tab
@@ -36,7 +36,7 @@
       .row
         .col-12
           .alert.alert-info.d-flex.align-items-center.mt-2
-            |  Nouveau : vous pouvez désormais archiver les motifs que vous ne souhaitez plus utiliser. Un motif archivé ne sera plus proposé lors de la prise de RDV. Il peut être réactivé à tout moment ou supprimé définitivement si aucun RDV n'est rattaché.
+            = t("admin.motifs.archiving_explanation")
 
     table.table.table-centered
       thead
@@ -85,11 +85,11 @@
                     i.far.fa-calendar.fa-stack-1x.text-white
                   - if agent_can_create_motif?
                     .rdv-text-align-center.m-3
-                      = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
+                      = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
 
     - if @motifs_page.any?
       .d-flex.justify-content-center
         = paginate @motifs_page, theme: "twitter-bootstrap-4"
       - if agent_can_create_motif? && @current_tab == :active
         .rdv-text-align-center.m-3
-          = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
+          = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"

@@ -47,7 +47,7 @@
   .col-12
 
     .float-right
-      a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] Créer un motif
+      a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
 
     ul.nav.nav-tabs
       - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
@@ -69,7 +69,7 @@
       .row
         .col-12
           .alert.alert-info.d-flex.align-items-center
-            |  Nouveau : vous pouvez désormais archiver les motifs que vous ne souhaitez plus utiliser. Un motif archivé ne sera plus proposé lors de la prise de RDV. Il peut être réactivé à tout moment ou supprimé définitivement si aucun RDV n'est rattaché.
+            = t("admin.motifs.archiving_explanation")
 
     - if @motifs_page.any?
       = paginate @motifs_page, theme: "twitter-bootstrap-4"
@@ -114,19 +114,19 @@
               td.p-0
                 .d-flex
                   - if @current_tab != :archived
-                    = link_to edit_admin_organisation_motif_path(motif.organisation, motif), class: "btn btn-link", title: "Modifier", target: :_blank do
+                    = link_to edit_admin_organisation_motif_path(motif.organisation, motif), class: "btn btn-link", title: t("admin.motifs.actions.edit"), target: :_blank do
                       i.fa.fa-edit
 
                   - if motif.archived?
                     - if motif_policy.unarchive?
-                      = link_to unarchive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: "Réactiver" do
+                      = link_to unarchive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.unarchive") do
                         i.fa.fa-arrow-up-from-bracket
                     - if motif_policy.destroy? && motif.destroyable?
-                      = link_to admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
+                      = link_to admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :delete, title: t("admin.motifs.actions.destroy"), data: { confirm: t("admin.motifs.actions.destroy_confirm") } do
                         i.fa.fa-trash-alt
                   - else
                     - if motif_policy.archive?
-                      = link_to archive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: "Archiver", data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" } do
+                      = link_to archive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.archive"), data: { confirm: t("admin.motifs.actions.archive_confirm") } do
                         i.fa.fa-box-archive
 
       .mt-2 = paginate @motifs_page, theme: "twitter-bootstrap-4"

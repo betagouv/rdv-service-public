@@ -27,20 +27,20 @@ tr
     .d-flex
       - if @current_tab != :archived
         - if motif_policy.edit?
-          = link_to edit_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", title: "Modifier" do
+          = link_to edit_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", title: t("admin.motifs.actions.edit") do
             i.fa.fa-edit
         - if motif_policy.duplicate?
-          = link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), class: "btn btn-link", title: "Dupliquer" do
+          = link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), class: "btn btn-link", title: t("admin.motifs.actions.duplicate") do
             i.fa.fa-copy
 
       - if motif.archived?
         - if motif_policy.unarchive?
-          = link_to unarchive_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :post, title: "Réactiver" do
+          = link_to unarchive_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.unarchive") do
             i.fa.fa-arrow-up-from-bracket
         - if motif_policy.destroy? && motif.destroyable?
-          = link_to admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
+          = link_to admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :delete, title: t("admin.motifs.actions.destroy"), data: { confirm: t("admin.motifs.actions.destroy_confirm") } do
             i.fa.fa-trash-alt
       - else
         - if motif_policy.archive?
-          = link_to archive_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :post, title: "Archiver", data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" } do
+          = link_to archive_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.archive"), data: { confirm: t("admin.motifs.actions.archive_confirm") } do
             i.fa.fa-box-archive

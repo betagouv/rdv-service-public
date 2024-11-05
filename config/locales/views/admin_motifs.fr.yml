@@ -8,3 +8,13 @@ fr:
         agents_and_prescripteurs: Uniquement par les agents et prescripteurs
         agents_and_prescripteurs_and_invited_users: Par les agents, prescripteurs et les usagers sur invitation
         everyone: Par les agents, prescripteurs et les usagers
+      archiving_explanation: "Nouveau : vous pouvez désormais archiver les motifs que vous ne souhaitez plus utiliser. Un motif archivé ne sera plus proposé lors de la prise de RDV. Il peut être réactivé à tout moment ou supprimé définitivement si aucun RDV n'est rattaché."
+      actions:
+        new: Créer un motif
+        edit: Modifier
+        duplicate: Dupliquer
+        archive: Archiver
+        archive_confirm: En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?
+        unarchive: Réactiver
+        destroy: Supprimer
+        destroy_confirm: Confirmez-vous la suppression de ce motif ?
