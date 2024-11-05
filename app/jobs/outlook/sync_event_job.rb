@@ -34,9 +34,9 @@ module Outlook
     end
 
     def capture_sentry_warning_for_retry?(exception)
-      # Cette erreur se produit parfois à la première exécution, puis le job passe au retry.
-      if exception.is_a?(Outlook::ApiClient::RefreshTokenError)
-        executions > 4
+      # Ces erreurs se produisent parfois à la première exécution, puis le job passe au retry.
+      if exception.class.in?([Outlook::ApiClient::RefreshTokenError, Outlook::ApiClient::RateLimitingError])
+        executions > 3
       else
         super
       end
