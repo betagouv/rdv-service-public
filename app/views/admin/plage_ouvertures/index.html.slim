@@ -65,4 +65,5 @@
                 - else
                   = t(".create_plage_ouverture_for", full_name: @agent.full_name)
 
-  .rdv-text-align-center.text-muted = t(".hint_delete_old")
+  - if params[:current_tab] == "expired"
+    .rdv-text-align-center.text-muted = t(".hint_delete_old")
