@@ -63,6 +63,14 @@
             = label
             span.badge.badge-light.badge-pill.ml-1 = count
 
+.row
+  .col-12
+    - if @current_tab == :archived
+      .row
+        .col-12
+          .alert.alert-info.d-flex.align-items-center
+            |  Nouveau : vous pouvez désormais archiver les motifs que vous ne souhaitez plus utiliser. Un motif archivé ne sera plus proposé lors de la prise de RDV. Il peut être réactivé à tout moment ou supprimé définitivement si aucun RDV n'est rattaché.
+
     - if @motifs_page.any?
       = paginate @motifs_page, theme: "twitter-bootstrap-4"
 

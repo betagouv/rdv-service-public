@@ -32,6 +32,12 @@
             = label
             span.badge.badge-light.badge-pill.ml-1 = count
 
+    - if current_agent.admin_in_organisation?(current_organisation) && @current_tab == :archived
+      .row
+        .col-12
+          .alert.alert-info.d-flex.align-items-center.mt-2
+            |  Nouveau : vous pouvez désormais archiver les motifs que vous ne souhaitez plus utiliser. Un motif archivé ne sera plus proposé lors de la prise de RDV. Il peut être réactivé à tout moment ou supprimé définitivement si aucun RDV n'est rattaché.
+
     table.table.table-centered
       thead
         tr
