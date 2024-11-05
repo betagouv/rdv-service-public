@@ -164,7 +164,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       it "explains why the motif can't be un-archived" do
         visit admin_territory_motifs_path(territory, current_tab: "archived")
         expect { click_on "Réactiver" }.not_to change { motif.reload.archived? }.from(true)
-        expect(page).to have_content("Nom est déjà utilisé pour un motif avec le même type de RDV")
+        expect(page).to have_content("Nom est déjà utilisé : un motif du même type et du même service porte déjà ce nom dans cette organisation.")
       end
     end
   end
