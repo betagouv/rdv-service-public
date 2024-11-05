@@ -423,7 +423,7 @@ RSpec.describe "User can search for rdvs" do
 
   def sign_up
     # Login page
-    click_link("Je m’inscris")
+    click_link("Créer un compte")
 
     # Sign up page
     expect(page).to have_content("Inscription")
