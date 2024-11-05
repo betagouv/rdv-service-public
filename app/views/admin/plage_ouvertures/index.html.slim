@@ -58,10 +58,11 @@
               i.fa.fa-circle.fa-stack-2x.text-primary
               i.far.fa-calendar.fa-stack-1x.text-white
 
-  .rdv-text-align-center.py-2
-    = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
-      - if current_agent == @agent
-        = t(".create_plage_ouverture")
-      - else
-        = t(".create_plage_ouverture_for", full_name: @agent.full_name)
-    .mt-2.text-muted = t(".hint_delete_old")
+            .mt-3
+              = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
+                - if current_agent == @agent
+                  = t(".create_plage_ouverture")
+                - else
+                  = t(".create_plage_ouverture_for", full_name: @agent.full_name)
+
+  .rdv-text-align-center.text-muted = t(".hint_delete_old")
