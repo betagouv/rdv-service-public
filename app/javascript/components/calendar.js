@@ -66,7 +66,7 @@ class CalendarRdvSolidarites {
         localStorage.setItem("calendarDefaultView", info.view.type);
       },
       hiddenDays: this.data.displaySaturdays === "true" ? [0] : [6, 0],
-      height: "auto",
+      height: 700,
       selectable: true,
       select: this.selectEvent,
       header: {

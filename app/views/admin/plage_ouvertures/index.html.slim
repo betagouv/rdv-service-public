@@ -9,12 +9,19 @@
 
 - content_for :breadcrumb do
   .text-right
-    = link_to calendar_admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom mr-3" do
-      span.mr-1= t(".calendar_view")
-      i.fa.fa-calendar-alt
     = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
 
-.card.pb-3
+- if @agent.plage_ouvertures.any?
+  .row.justify-content-md-center
+    .col-xl-10
+      #calendar [
+        data-agent-id="#{@agent.id}"
+        data-organisation-id="#{@current_organisation.id}"
+        data-display-saturdays="#{current_agent.display_saturdays}"
+        data-event-sources-json="#{[admin_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id), OffDays.to_full_calendar_array].to_json}"
+      ]
+
+.card.pb-3.my-4
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
