@@ -51,7 +51,7 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
     end
   end
 
-  context "when there is an error while destroying one of the events" do
+  context "when there is an ErrorItemNotFound error while destroying one of the events" do
     before do
       stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
         .with(headers: expected_headers)
@@ -59,21 +59,44 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
       stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/def")
         .with(headers: expected_headers)
         .to_return(
-          status: 403,
-          body: {
-            "error" => {
-              "message" => "The specified object was not found in the store.",
-            },
-          }.to_json,
+          status: 404,
+          body: { error: { code: "ErrorItemNotFound", message: "The specified object was not found in the store." } }.to_json,
           headers: {}
         )
     end
 
-    it "unsyncs the agent" do
+    it "unsyncs the agent and clears the agents_rdvs.outlook_id column" do
       expect do
         described_class.perform_now(agent)
       end.to change { agent.reload.microsoft_graph_token }.to(nil)
         .and change { agent.reload.refresh_microsoft_graph_token }.to(nil)
+        .and change { agents_rdv.reload.outlook_id }.to(nil)
+        .and change { agents_rdv2.reload.outlook_id }.to(nil)
+    end
+  end
+
+  context "when there is an unknown error while destroying one of the events" do
+    before do
+      stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
+        .with(headers: expected_headers)
+        .to_return(status: 204, body: "", headers: {})
+      stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/def")
+        .with(headers: expected_headers)
+        .to_return(
+          status: 500,
+          body: { error: { code: "NeverSeenBeforeError", message: "Did not expect that one, did you?" } }.to_json,
+          headers: {}
+        )
+    end
+
+    it "retries the job but does no unlink agent nor agents_rdvs.outlook_id column for the RDV that triggered the error" do
+      expect do
+        described_class.perform_now(agent)
+      end.to change(enqueued_jobs, :size).by(1) # job is re-enqueued
+
+      expect(agent.reload.microsoft_graph_token).not_to be_nil
+      expect(agent.reload.refresh_microsoft_graph_token).not_to be_nil
+      expect(agents_rdv2.reload.outlook_id).not_to be_nil
     end
   end
 end

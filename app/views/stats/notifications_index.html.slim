@@ -17,7 +17,7 @@
           h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}
           = column_chart receipts_stats_path(group_by: attribute, departement: @departement, territory: @territory), stacked: true
 
-    .card.mb-5
+    .card.mb-3
       .card-header
         = "#{@territories.count} structures utilisent #{current_domain.name}"
       .card-body
@@ -25,7 +25,13 @@
           - @territories.ordered_by_name.each do |territory|
             li = link_to territory, stats_path(territory: territory)
         .m-3 = link_to "Retour aux statistiques de la plateforme", stats_path
-        .alert.alert-info.d-flex.align-items-center
-          .mr-3
-            i.fa.fa-info
-          = "Les chiffres donnés sur cette page englobent les plateformes #{Domain::ALL.map(&:name).join(' et ')} indifféremment."
+
+    .fr-alert.fr-alert--info.fr-mb-5v
+      - if ENV["APP"] == "production-rdv-solidarites"
+        | Les statistiques données sur cette page sont le cumul de RDV Solidarités et RDV Aide Numérique.&#32;
+        | Vous pouvez consulter les statistiques de l'instance RDV Service Public sur&#32;
+        = link_to "rdv.anct.gouv.fr/stats", "https://rdv.anct.gouv.fr/stats", title: "Page de statistiques RDV Service Public - Nouvelle fenêtre", class: "fr-link", target: "_blank", rel: "noopener external"
+      - else
+        | Les statistiques données sur cette page sont uniquement celles de l'instance RDV Service Public.&#32;
+        | Vous pouvez consulter les statistiques de RDV Solidarités et RDV Aide Numérique sur&#32;
+        = link_to "rdv-solidarites.fr/stats", "https://rdv-solidarites.fr/stats", title: "Page de statistiques RDV Solidarités et RDV Aide Némurique - Nouvelle fenêtre", class: "fr-link", target: "_blank", rel: "noopener external"
