@@ -18,3 +18,4 @@ fr:
         unarchive: Réactiver
         destroy: Supprimer
         destroy_confirm: Confirmez-vous la suppression de ce motif ?
+        not_destroyable_explanation: "Impossible de supprimer le motif : il est lié à des rendez-vous."

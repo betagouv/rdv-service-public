@@ -121,9 +121,13 @@
                     - if motif_policy.unarchive?
                       = link_to unarchive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.unarchive") do
                         i.fa.fa-arrow-up-from-bracket
-                    - if motif_policy.destroy? && motif.destroyable?
-                      = link_to admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :delete, title: t("admin.motifs.actions.destroy"), data: { confirm: t("admin.motifs.actions.destroy_confirm") } do
-                        i.fa.fa-trash-alt
+                    - if motif_policy.destroy?
+                      - if motif.destroyable?
+                        = link_to admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :delete, title: t("admin.motifs.actions.destroy"), data: { confirm: t("admin.motifs.actions.destroy_confirm") } do
+                          i.fa.fa-trash-alt
+                      - else
+                        button.btn.btn-link [disabled="disabled" title=t("admin.motifs.actions.not_destroyable_explanation")]
+                          i.fa.fa-trash-alt
                   - else
                     - if motif_policy.archive?
                       = link_to archive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.archive"), data: { confirm: t("admin.motifs.actions.archive_confirm") } do
