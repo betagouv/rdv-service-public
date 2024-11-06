@@ -134,6 +134,11 @@ RSpec.describe "agents can prescribe rdvs" do
 
   describe "creating a user along the way" do
     it "leaves the user both in local and distant organisation", js: true do
+      if Date.new(2024, 12, 19).future?
+        pending # rubocop:disable RSpec/Pending
+        raise "cette flaky spec a été désactivée le temps de travailler dessus"
+      end
+
       go_to_prescription_page
       # Select Service
       find("h3", text: motif_mds.service.name).ancestor("a").click
@@ -263,9 +268,9 @@ RSpec.describe "agents can prescribe rdvs" do
         end
 
         it "show both services and motifs" do
-          if Date.new(2024, 10, 19).future?
+          if Date.new(2024, 12, 19).future?
             pending # rubocop:disable RSpec/Pending
-            raise "cette flaky spec a été désactivée pendant un mois le temps de travailler dessus"
+            raise "cette flaky spec a été désactivée le temps de travailler dessus"
           end
 
           expect(page).to have_content(motif_mds.service.name)

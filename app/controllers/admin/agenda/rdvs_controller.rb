@@ -4,7 +4,7 @@ class Admin::Agenda::RdvsController < Admin::Agenda::BaseController
     @organisation = Organisation.find(params[:organisation_id])
 
     # Nous voulons afficher tous les RDVs de l'agent en question.
-    # La façon dont ils sont affichés sera dictée par leur classe.
+    # Pour chacun des RDV, nous appelons ci-dessous la policy pour déterminer son affichage.
     skip_authorization
     rdvs = agent.rdvs.includes(:organisation, :motif, :users, :agents_rdvs, motif: [:service])
     rdvs = rdvs.where(starts_at: time_range_params)

@@ -1,11 +1,11 @@
 - if current_domain.france_connect_enabled || params[:force_franceconnect].present?
-  .rdv-text-align-center.mb-3
-    p FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion à vos services en ligne
-    = link_to "/omniauth/franceconnect", class: "france-connect-link", method: :post do
-      .normal = image_tag("franceconnect-bouton.svg", alt: "S'identifier avec FranceConnect")
-      .hover = image_tag("franceconnect-bouton-hover.svg", alt: "S'identifier avec FranceConnect")
-    .france-connect-details= link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/"
+  .rdv-text-align-center
+    .fr-connect-group
+      = link_to "/omniauth/franceconnect", class: "fr-connect", method: :post, title: "S’identifier avec FranceConnect" do
+        span.fr_connect__login S’identifier avec
+        span.fr-connect__brand FranceConnect
 
-  hr.fr-my-2w
-  .rdv-text-align-center.w-75.m-auto
-    .rdv-text-align-center.mt-0.rdv-font-weight-700 OU
+    p
+      = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "fr-link", title: "Qu’est-ce que FranceConnect ? - Nouvelle fenêtre"
+
+  p.fr-hr-or ou

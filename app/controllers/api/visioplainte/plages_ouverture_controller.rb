@@ -1,3 +1,5 @@
+# cf docs/interconnexions/visioplainte.md
+
 class Api::Visioplainte::PlagesOuvertureController < Api::Visioplainte::BaseController
   def index
     if params[:date_debut].blank? || params[:date_fin].blank?

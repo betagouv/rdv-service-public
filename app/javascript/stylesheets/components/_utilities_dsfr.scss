@@ -10,8 +10,22 @@
   }
 }
 
+.rdv-text-align-md-right {
+  @include media-breakpoint-up(md) {
+    text-align: right;
+  }
+}
+
+.rdv-color-blue-ecume-sun-247-moon-675-hover {
+  color: var(--blue-ecume-sun-247-moon-675-hover);
+}
+
 .rdv-color-text-action-high-blue-ecume {
   color: var(--text-action-high-blue-ecume);
+}
+
+.rdv-color-text-action-high-blue-france {
+  color: var(--text-action-high-blue-france);
 }
 
 .rdv-color-text-mention-grey {
@@ -26,6 +40,10 @@
   color: var(--text-title-grey);
 }
 
+.rdv-font-size-1-6rem {
+  font-size: 1.6rem;
+}
+
 // FLEX
 
 .rdv-flex-wrap-wrap-reverse {
@@ -37,10 +55,32 @@
 .rdv-max-width-60 {
   max-width: 60%;
 }
+
 .rdv-max-width-md-100 {
   @include media-breakpoint-up(md) {
     max-width: 100%;
   }
+}
+
+.rdv-max-height-12rem {
+  max-height: 12rem;
+}
+
+.rdv-height-md-0 {
+  @include media-breakpoint-up(md) {
+    height: 0;
+  }
+}
+
+.rdv-min-height-md-100 {
+  @include media-breakpoint-up(md) {
+    min-height: 100%;
+  }
+}
+
+.rdv-object-fit-contain,
+.fr-card .fr-card__img img.rdv-object-fit-contain {
+  object-fit: contain;
 }
 
 // OTHERS
@@ -56,4 +96,11 @@
   position: relative;
   padding: 0;
   width: auto;
+}
+
+// pour pouvoir aligner le groupe de boutons à gauche sur desktop mais centré sur mobile
+.rdv-btns-group--left-md,
+.rdv-btns-group--left-md li {
+  justify-content: flex-start;
+  text-align: left;
 }

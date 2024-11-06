@@ -17,7 +17,8 @@
             = f.radio_button(:bookable_by, :agents_and_prescripteurs, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
             span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs"))
             p.text-muted.font-14.mt-1
-              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"))
+              / Le scrubber: :prune permet de conserver le target _blank sur un lien
+              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"), scrubber: :prune)
 
     - if rdvi_mode
       .form-row
@@ -101,7 +102,7 @@
                 count: attributions_group[:agents_count], \
                 service: motif.service.name, \
                 sectors_count_human: t("motifs.index.sectorisation_level_organisation", count: attributions_group[:sectors_count]), \
-                sectors: attributions_group[:attributions].map { "#{_1.agent.full_name} -> #{_1.sector.name}" }.to_sentence.truncate(100) \
+                sectors: attributions_group[:attributions].map { "#{_1.agent.full_name_or_email} -> #{_1.sector.name}" }.to_sentence.truncate(100) \
               )
       - if current_agent.territorial_admin_in?(current_territory)
         = link_to "Configuration des secteurs", admin_territory_sectors_path(current_territory)
