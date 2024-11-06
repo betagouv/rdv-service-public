@@ -139,7 +139,12 @@ Rails.application.routes.draw do
             end
           end
           resources :teams, except: :show
-          resources :motifs, only: %i[index new create destroy]
+          resources :motifs, only: %i[index new create destroy] do
+            member do
+              post :archive
+              post :unarchive
+            end
+          end
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]
@@ -176,7 +181,12 @@ Rails.application.routes.draw do
 
         resources :plage_ouvertures, except: %i[index new]
         resources :lieux, except: :show
-        resources :motifs
+        resources :motifs do
+          member do
+            post :archive
+            post :unarchive
+          end
+        end
         resources :rdvs_collectifs, only: %i[index new create edit update] do
           collection do
             resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
@@ -267,7 +277,6 @@ Rails.application.routes.draw do
   end
   get "/.well-known/microsoft-identity-association" => "static_pages#microsoft_domain_verification", format: :json
 
-  get "long_request" => "health#long_request"
   get "health_check" => "health#db_connection"
   get "health/jobs_queues" => "health#jobs_queues"
   get "health/jobs_scheduled" => "health#jobs_scheduled"
