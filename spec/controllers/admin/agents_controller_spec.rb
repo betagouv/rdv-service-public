@@ -258,7 +258,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
 
         it "displays an error about the mismatch" do
           subject
-          expect(flash[:alert]).to match(/Attention : le\(s\) service\(s\) demandé\(s\) .* ne correspondent pas/)
+          expect(flash[:alert]).to match(/Attention : le\(s\) service\(s\) demandé\(s\) .* ne correspondent pas/)
         end
       end
 
