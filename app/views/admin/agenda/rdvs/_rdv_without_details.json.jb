@@ -5,6 +5,6 @@
   textColor: "white",
   backgroundColor: "#757575", # Use a dark enough gray to be accessible
   extendedProps: {
-    unauthorizedRdvExplanation: "Vous ne pouvez pas voir ce RDV parce qu'il a lieu dans un autre service ou une autre organisation",
+    unauthorizedRdvExplanation: "Vous n'avez pas accès à ce RDV parce qu'il a lieu dans un autre service ou une autre organisation.",
   },
 }

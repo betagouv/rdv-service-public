@@ -2,7 +2,7 @@
   results: @agents.map do |agent|
     {
       id: agent.id,
-      text: agent.reverse_full_name,
+      text: agent.reverse_full_name_or_email,
     }
   end,
 }

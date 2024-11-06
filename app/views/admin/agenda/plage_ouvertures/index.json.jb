@@ -1,6 +1,6 @@
 @plage_ouverture_occurrences.map do |plage_ouverture, occurrence|
   {
-    title: plage_ouverture.title,
+    title: plage_ouverture.title_with_default,
     start: occurrence.starts_at.as_json,
     end: occurrence.ends_at.as_json,
     backgroundColor: plage_ouverture.organisation == @organisation ? "#6fceff80" : "grey",
