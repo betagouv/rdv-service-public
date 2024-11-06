@@ -15,8 +15,8 @@ RSpec.describe "update an agent's teams" do
   before do
     create(:agent_territorial_access_right, agent: territory_admin, territory: territory, allow_to_manage_teams: true)
     create(:agent_territorial_access_right, agent:, territory: territory)
-    AgentTeam.create!(agent:, team:)
-    AgentTeam.create!(agent:, team: other_team_in_other_territory)
+    AgentTeam.create!(agent: agent, team: team)
+    AgentTeam.create!(agent: agent, team: other_team_in_other_territory)
 
     login_as(territory_admin, scope: :agent)
   end
