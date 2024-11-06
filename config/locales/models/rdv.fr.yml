@@ -9,9 +9,6 @@ fr:
               missing_mobile_phone_or_email: "Vous devez indiquer un numéro de téléphone mobile ou une adresse email pour que l'usager puisse recevoir le lien de visioconférence."
             starts_at:
               format: "L’horaire du RDV %{message}"
-            phone_number:
-              missing_for_phone_motif: "Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique."
-              format: "%{message}"
             duration_in_min:
               must_be_positive: doit être supérieur à 0
             lieu:
