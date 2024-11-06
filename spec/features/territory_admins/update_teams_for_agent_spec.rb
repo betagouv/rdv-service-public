@@ -8,7 +8,7 @@ RSpec.describe "update an agent's teams" do
 
   let(:team) { create(:team, territory: territory, name: "Equipe actuelle") }
   let!(:other_team_in_first_territory)  { create(:team, territory: territory, name: "Nouvelle équipe") }
-  let!(:other_team_in_other_territory)  { create(:team, territory: other_territory) }
+  let(:other_team_in_other_territory) { create(:team, territory: other_territory) }
 
   let(:multi_territory_agent) { create(:agent) }
 
