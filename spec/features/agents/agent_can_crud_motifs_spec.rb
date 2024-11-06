@@ -31,6 +31,8 @@ RSpec.describe "Agent can CRUD motifs" do
     click_link "Créer un motif", match: :first
 
     expect_page_title("Créer un motif")
+    ## Check secretariat is unavailable
+    expect(page.all("select#motif_service_id option").map(&:value)).to contain_exactly("", service.id.to_s)
     find("#motif_service_id").find(:option, service.name).select_option
     fill_in "Nom", with: "Suivi bonne nuit"
     fill_in "Couleur associée", with: "#000"

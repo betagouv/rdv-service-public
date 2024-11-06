@@ -67,35 +67,4 @@ RSpec.describe "Admin can configure the organisation" do
 
     expect(page).to have_content("L’organisation a été modifiée.")
   end
-
-  it "CRUD on motifs" do
-    click_link "Motifs"
-    expect_page_title("Motifs de l'organisation")
-
-    click_link motif.name
-    expect(page).to have_content("Motif 1")
-    click_link "Modifier"
-    fill_in :motif_name, with: "Être appelé par"
-    click_button("Enregistrer")
-    expect(page).to have_content("Être appelé par")
-    expect(page).to have_selector("h3", text: "Être appelé par (PMI)")
-
-    click_link "Motifs"
-    click_link "Être appelé par"
-    expect(page).to have_content("Être appelé par")
-    click_link("Supprimer")
-
-    expect_page_title("Motifs de l'organisation")
-    expect(page).to have_content("Vous n'avez pas encore créé de motif.")
-
-    click_link "Créer un motif", match: :first
-    expect(page).to have_content("Configuration générale")
-    ## Check secretariat is unavailable
-    expect(page.all("select#motif_service_id option").map(&:value)).to contain_exactly("", pmi.id.to_s, service_social.id.to_s)
-    select(service_social.name, from: :motif_service_id)
-    fill_in :motif_name, with: "truc"
-    fill_in "Couleur associée", with: le_nouveau_motif.color
-    click_button "Créer le motif"
-    expect(page).to have_link("truc")
-  end
 end
