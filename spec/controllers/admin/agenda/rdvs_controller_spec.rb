@@ -70,7 +70,7 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
         expect(response.parsed_body[0]["title"]).to eq("Occupé⋅e (en RDV)")
         expect(Time.zone.parse(response.parsed_body[0]["start"])).to eq(rdv_of_another_service.starts_at)
         expect(Time.zone.parse(response.parsed_body[0]["end"])).to eq(rdv_of_another_service.ends_at)
-        expect(response.parsed_body[0]["extendedProps"]["unauthorizedRdvExplanation"]).to include("Vous ne pouvez pas voir ce RDV")
+        expect(response.parsed_body[0]["extendedProps"]["unauthorizedRdvExplanation"]).to include("Vous n'avez pas accès à ce RDV")
       end
     end
 
@@ -88,7 +88,7 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
         expect(response.parsed_body[0]["title"]).to eq("Occupé⋅e (en RDV)")
         expect(Time.zone.parse(response.parsed_body[0]["start"])).to eq(rdv_of_another_org_same_service.starts_at)
         expect(Time.zone.parse(response.parsed_body[0]["end"])).to eq(rdv_of_another_org_same_service.ends_at)
-        expect(response.parsed_body[0]["extendedProps"]["unauthorizedRdvExplanation"]).to include("Vous ne pouvez pas voir ce RDV")
+        expect(response.parsed_body[0]["extendedProps"]["unauthorizedRdvExplanation"]).to include("Vous n'avez pas accès à ce RDV")
       end
     end
   end
