@@ -5,16 +5,10 @@ class Api::AccountsController < ActionController::Base
   before_action :authenticate_with_api_key
 
   def create
-    AddConseillerNumerique.process!(params.require(
-                                      {
-                                        agent: %i[
-                                          first_name last_name email external_id
-                                        ],
-                                        organisation: %i[
-                                          name address external_id
-                                        ],
-                                      }
-                                    ))
+    AddConseillerNumerique.process!(
+      agent: params.require(:agent).permit(%i[first_name last_name email external_id]),
+      organisation: params.require(:organisation).permit(%i[name address external_id])
+    )
 
     render json: {}, status: :created
   end
@@ -23,8 +17,8 @@ class Api::AccountsController < ActionController::Base
 
   def authenticate_with_api_key
     authorized = ActiveSupport::SecurityUtils.secure_compare(
-      request.headers["X-CONUM-API-KEY"] || "",
-      ENV.fetch("CONUM_API_KEY")
+      request.headers["X-COOP-MEDIATION-NUMERIQUE-API-KEY"] || "",
+      ENV.fetch("COOP_MEDIATION_NUMERIQUE_API_KEY")
     )
 
     unless authorized
