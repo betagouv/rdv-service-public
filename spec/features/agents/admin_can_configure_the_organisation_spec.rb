@@ -68,8 +68,7 @@ RSpec.describe "Admin can configure the organisation" do
     expect(page).to have_content("L’organisation a été modifiée.")
   end
 
-  it "CRUD on motifs", js: true do
-    click_link "Paramètres"
+  it "CRUD on motifs" do
     click_link "Motifs"
     expect_page_title("Motifs de l'organisation")
 
@@ -85,12 +84,6 @@ RSpec.describe "Admin can configure the organisation" do
     click_link "Être appelé par"
     expect(page).to have_content("Être appelé par")
     click_link("Supprimer")
-    begin
-      page.driver.browser.switch_to.alert.accept
-    rescue Selenium::WebDriver::Error::NoSuchAlertError
-      click_link("Supprimer")
-      retry
-    end
 
     expect_page_title("Motifs de l'organisation")
     expect(page).to have_content("Vous n'avez pas encore créé de motif.")
