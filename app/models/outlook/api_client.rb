@@ -4,6 +4,7 @@ module Outlook
     class NotFoundError < ApiError; end
     class AlreadyExistsError < ApiError; end
     class RefreshTokenError < ApiError; end
+    class RateLimitingError < ApiError; end
 
     def initialize(agent)
       @agent = agent
@@ -102,6 +103,8 @@ module Outlook
                           NotFoundError
                         when "ErrorDuplicateTransactionId"
                           AlreadyExistsError
+                        when "ApplicationThrottled"
+                          RateLimitingError
                         else
                           ApiError
                         end

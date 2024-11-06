@@ -9,51 +9,39 @@
 
 - content_for :breadcrumb do
   .text-right
-    - if params[:view_mode] == "calendar"
-      = link_to admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search], current_tab: params[:current_tab]), class: "btn btn-outline-primary align-bottom mr-3" do
-        span.mr-1= t(".list_view")
-        i.fa.fa-calendar-alt
-    - else
-      = link_to admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, view_mode: "calendar", search: params[:search], current_tab: params[:current_tab]), class: "btn btn-outline-primary align-bottom mr-3" do
-        span.mr-1= t(".calendar_view")
-        i.fa.fa-calendar-alt
+    = link_to calendar_admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom mr-3" do
+      span.mr-1= t(".calendar_view")
+      i.fa.fa-calendar-alt
     = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
-    .mt-3.mb-2.d-flex.justify-content-end
-      div= link_to t("helpers.reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
-      = simple_form_for "", url: admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-        = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control mr-2", value: params[:search] }, required: false
-        = f.hidden_field :current_tab, value: params[:current_tab]
-        = f.button :submit, t("helpers.search")
 
 .card.pb-3
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        = active_link_to t(".in_progress"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search], view_mode: params[:view_mode]), class: "nav-link", active: params[:current_tab] != "expired"
+        = active_link_to t(".in_progress"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search]), class: "nav-link", active: params[:current_tab] != "expired"
       li.nav-item
-        = active_link_to t(".past"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired", search: params[:search], view_mode: params[:view_mode]), class: "nav-link", active: { current_tab: "expired" }
+        = active_link_to t(".past"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired", search: params[:search]), class: "nav-link", active: { current_tab: "expired" }
+
+  .m-2.d-flex.justify-content-end
+    div= link_to t("helpers.reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
+    = simple_form_for "", url: admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+      = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control mr-2", value: params[:search] }, required: false
+      = f.hidden_field :current_tab, value: params[:current_tab]
+      = f.button :submit, t("helpers.search")
 
   - if @plage_ouvertures.any?
-    - if params[:view_mode] == "calendar"
-      #calendar.mx-5.my-2 [
-        data-agent-id="#{@agent.id}"
-        data-organisation-id="#{@current_organisation.id}"
-        data-display-saturdays="#{current_agent.display_saturdays}"
-        data-event-sources-json="#{[admin_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, plages_ids: @plage_ouvertures.pluck(:id)), OffDays.to_full_calendar_array].to_json}"
-      ]
-    - else
-      table.table
-        thead
-          tr
-            th = PlageOuverture.human_attribute_name(:title)
-            th = t(".motifs")
-            th = t(".place")
-            th = t(".dates")
-            th = t("helpers.actions")
-        tbody
-          = render partial: "admin/plage_ouvertures/plage_ouverture", collection: @plage_ouvertures, as: :plage_ouverture
-      .d-flex.justify-content-center
-        = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
+    table.table
+      thead
+        tr
+          th = t(".title")
+          th = t(".motifs")
+          th = t(".place")
+          th = t(".dates")
+          th = t("helpers.actions")
+      tbody
+        = render partial: "admin/plage_ouvertures/plage_ouverture", collection: @plage_ouvertures, as: :plage_ouverture
+    .d-flex.justify-content-center
+      = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
   - else
     .row.justify-content-md-center.p-2.mt-3
       .col-md-6.rdv-text-align-center.mb-2
@@ -64,16 +52,18 @@
             - if current_agent == @agent
               = t(".not_yet_created_plage_ouverture")
             - else
-              =t(".this_agent_not_yet_created_plage_ouverture", full_name: @agent.full_name)
+              =t(".this_agent_not_yet_created_plage_ouverture", full_name: @agent.full_name_or_email)
             p = t(".explanation_plage_ouverture")
             span.fa-stack.fa-4x
               i.fa.fa-circle.fa-stack-2x.text-primary
               i.far.fa-calendar.fa-stack-1x.text-white
 
-  .rdv-text-align-center.py-2
-    = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
-      - if current_agent == @agent
-        = t(".create_plage_ouverture")
-      - else
-        = t(".create_plage_ouverture_for", full_name: @agent.full_name)
-    .mt-2.text-muted = t(".hint_delete_old")
+            .mt-3
+              = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
+                - if current_agent == @agent
+                  = t(".create_plage_ouverture")
+                - else
+                  = t(".create_plage_ouverture_for", full_name: @agent.full_name_or_email)
+
+  - if params[:current_tab] == "expired"
+    .rdv-text-align-center.text-muted = t(".hint_delete_old")
