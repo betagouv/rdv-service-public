@@ -4,7 +4,7 @@
   - if @absence.agent == current_agent
     = t(".update_your_absence")
   - else
-    = t(".update_absences_of", full_name: @absence.agent.full_name)
+    = t(".update_absences_of", full_name: @absence.agent.full_name_or_email)
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
@@ -13,7 +13,7 @@
         - if @absence.agent == current_agent
           = t(".your_absences")
         - else
-          = t(".absences_of", full_name: @absence.agent.full_name)
+          = t(".absences_of", full_name: @absence.agent.full_name_or_email)
     li.breadcrumb-item.active
       = truncate(@absence.title, length: 20)
 

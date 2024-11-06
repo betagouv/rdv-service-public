@@ -37,7 +37,7 @@
           - if current_agent == @agent
             = t(".you_not_yet_create_absence")
           - else
-            = t(".has_no_absence_yet", full_name: @agent.full_name)
+            = t(".has_no_absence_yet", full_name: @agent.full_name_or_email)
         p = t(".explanation_html")
         span.fa-stack.fa-4x
           i.fa.fa-circle.fa-stack-2x.text-primary
@@ -47,4 +47,4 @@
       - if @agent == current_agent
         = t(".create_absence")
       - else
-        = t(".create_absence_for", full_name: @agent.full_name)
+        = t(".create_absence_for", full_name: @agent.full_name_or_email)
