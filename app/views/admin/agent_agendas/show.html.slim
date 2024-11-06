@@ -41,6 +41,6 @@
         - else
           ' 🖨 Liste détaillée des RDVs du
           span.js-date>
-          | pour #{@agent.full_name}
+          | pour #{@agent.full_name_or_email}
 
     = render "admin/rdvs/rdv_visibility"

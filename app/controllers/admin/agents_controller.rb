@@ -9,7 +9,6 @@ class Admin::AgentsController < AgentAuthController
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
     @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
 
-    @agents.where("(invitation_sent_at IS NULL AND invitation_accepted_at is NULL) OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)")
     @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.ordered_by_last_name
     @agents = @agents.page(page_number)
   end
