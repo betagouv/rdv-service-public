@@ -11,14 +11,13 @@ class AddConseillerNumerique
     attr_accessor :name, :address, :external_id
   end
 
-  def initialize(conseiller_numerique_attributes)
-    structure_attributes = conseiller_numerique_attributes.delete(:structure)
-    @conseiller_numerique = ConseillerNumerique.new(conseiller_numerique_attributes)
-    @structure = Structure.new(structure_attributes)
+  def initialize(agent:, organisation:)
+    @conseiller_numerique = ConseillerNumerique.new(agent)
+    @structure = Structure.new(organisation)
   end
 
-  def self.process!(conseiller_numerique_attributes)
-    new(conseiller_numerique_attributes).process!
+  def self.process!(agent:, organisation:)
+    new(agent:, organisation:).process!
   end
 
   def process!

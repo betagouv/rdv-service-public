@@ -20,7 +20,7 @@ RSpec.describe AddConseillerNumerique do
     create(:service, :conseiller_numerique)
     stub_request(
       :get,
-      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20Loire,%20Paris,%2075019"
+      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20loire,%20paris,%2075019"
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
