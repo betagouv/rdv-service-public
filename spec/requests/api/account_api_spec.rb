@@ -10,28 +10,6 @@ RSpec.describe "Api de création de comptes", swagger_doc: "accounts_api.json" d
   path "/api/accounts" do
     post "Créer un compte pour un agent" do
       description "Permet de créer un compte et une organisation pour un agent. Si le compte ou l'organisation existe déjà, il sera réutilisé"
-      parameter
-      parameter request_body required: true, schema: {
-        type: :object, properties: {
-          agent: {
-            type: :object, properties: {
-              email: { type: :string },
-              first_name: { type: :string },
-              last_name: { type: :string },
-              external_id: { type: :string },
-
-            },
-
-          },
-          organisation: {
-            type: :object, properties: {
-              name: { type: :string },
-              address: { type: :string },
-              external_id: { type: :string },
-            }, required: true, in: :query,
-          },
-        },
-      }
       with_examples
       produces "application/json"
       stub_env_with(COOP_MEDIATION_NUMERIQUE: "coop-mediation-numerique-api-test-key-123456")
