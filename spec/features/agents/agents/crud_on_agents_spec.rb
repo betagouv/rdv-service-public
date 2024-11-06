@@ -9,11 +9,13 @@ RSpec.describe "Agents can be managed by organisation admins" do
   around { |example| perform_enqueued_jobs { example.run } }
 
   context "inviting an agent in an existing service" do
-    before do
-      stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
-      stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
-      stub_const("InclusionConnect::IC_BASE_URL", "https://test.inclusion.connect.fr")
+    stub_env_with(
+      AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
+      AGENT_CONNECT_RDVS_CLIENT_SECRET: "un faux secret de test",
+      AGENT_CONNECT_RDVS_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
+    )
 
+    before do
       login_as(organisation_admin, scope: :agent)
       visit admin_organisation_agents_path(organisation1)
     end
@@ -100,20 +102,16 @@ RSpec.describe "Agents can be managed by organisation admins" do
       open_email("jean@paul.com")
       expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
 
-      # On évite que l'agent se connecte à InclusionConnect avec
-      # une adresse e-mail qui n'est pas celle de l'invitation
       current_email.click_link("Accepter l'invitation")
 
       begin
-        find("a.btn-inclusion-connect").click
+        click_on "S’identifier avecProConnect"
       rescue ActionController::RoutingError
-        # Capybara essaye de suivre une redirection vers https://test.inclusion.connect.fr/authorize
+        # Capybara essaye de suivre une redirection vers "https://fca.integ01.dev-agentconnect.fr/
         # ce qui n'est pas possible dans l'env de test (il ignore le host et il cherche /authorize dans nos routes).
       end
 
-      expect(page.current_url).to start_with("https://test.inclusion.connect.fr/authorize/?")
-      redirect_url_query_params = Rack::Utils.parse_query(URI.parse(page.current_url).query)
-      expect(redirect_url_query_params["login_hint"]).to eq("jean@paul.com")
+      expect(page.current_url).to start_with("https://fca.integ01.dev-agentconnect.fr/")
     end
   end
 

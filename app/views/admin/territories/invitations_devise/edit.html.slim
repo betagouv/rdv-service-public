@@ -3,13 +3,10 @@
     .fr-col-xs-12.fr-col-md-8.fr-py-5w
       h1.fr-pb-3w Création de compte sur #{current_domain.name}
 
-      - if display_agent_connect_button? || display_inclusion_connect_button?
+      - if display_agent_connect_button?
         .fr-grid-row--gutters.centered-flex
           - if display_agent_connect_button?
             .fr-col-md-6= render "common/proconnect_button_dsfr"
-
-          - if display_inclusion_connect_button?
-            .fr-col-md-6= render "common/inclusionconnect_button", login_hint: resource.email
 
         p.fr-mt-3w.fr-hr-or = "ou"
 
