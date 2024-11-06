@@ -4,13 +4,14 @@
       h1.fr-pb-3w Création de compte sur #{current_domain.name}
 
       - if display_agent_connect_button?
-        .fr-grid-row--gutters.centered-flex
+        h2 Se créer un compte avec ProConnect
+        .rdv-text-align-center
           - if display_agent_connect_button?
-            .fr-col-md-6= render "common/proconnect_button_dsfr"
+            = render "common/proconnect_button_dsfr"
 
         p.fr-mt-3w.fr-hr-or = "ou"
 
-      h6 Créer un compte avec email et mot de passe
+      h2 Se créer un compte avec un mot de passe
       = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, wrapper: :dsfr_wrapper do |f|
         p.fr-hint-text Tous les champs sont obligatoires.
         = render "devise/shared/dsfr_error_messages", resource: resource
@@ -19,7 +20,7 @@
           .fr-col-md-6= f.input :first_name, required: true
           .fr-col-md-6= f.input :last_name, required: true
         .fr-password.fr-mt-2w[data-component="js_dsfr_new_password"]
-          = f.label :password, class: "fr-label fr-password__label" do
+          = f.label :password, class: "fr-label fr-password__label", for: :password do
             = "Mot de passe"
             span.fr-hint-text Choisissez votre mot de passe
           .fr-input-wrap
