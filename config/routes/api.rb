@@ -60,6 +60,8 @@ namespace :api do
       post :reset, to: "base#reset"
     end
   end
+
+  post "/accounts", to: "accounts#create"
 end
 
 # This one has been published before versioning the public API and unification with auth API:
