@@ -1,0 +1,91 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API RDV Service Public pour la création de comptes agents"
+  },
+  "paths": {
+    "/api/accounts": {
+      "post": {
+        "summary": "Créer un compte pour un agent",
+        "description": "Permet de créer un compte et une organisation pour un agent. Si le compte ou l'organisation existe déjà, il sera réutilisé",
+        "parameters": [
+          {
+            "name": "params",
+            "in": "query",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "agent": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "first_name": {
+                      "type": "string"
+                    },
+                    "last_name": {
+                      "type": "string"
+                    },
+                    "external_id": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "organisation": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "address": {
+                      "type": "string"
+                    },
+                    "external_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "agent"
+              ]
+            }
+          },
+          {
+            "name": "X-COOP-MEDIATION-NUMERIQUE-API-KEY",
+            "in": "header",
+            "description": "Clé d'API",
+            "example": "coop-mediation-numerique-api-test-key-123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "X-COOP-MEDIATION-NUMERIQUE-API-KEY": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Crée le compte",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
