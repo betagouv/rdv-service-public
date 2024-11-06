@@ -1,10 +1,10 @@
 require "swagger_helper"
 
 RSpec.describe "Api de création de comptes", swagger_doc: "accounts_api.json" do
-  stub_env_with(CONUM: "conum-api-test-key-123456")
+  stub_env_with(COOP_MEDIATION_NUMERIQUE: "conum-api-test-key-123456")
 
   let(:auth_header) do
-    { "X-CONUM-API-KEY": "conum-api-test-key-123456" }
+    { "X-COOP-MEDIATION-NUMERIQUE-API-KEY": "conum-api-test-key-123456" }
   end
 
   path "/api/accounts" do
@@ -24,11 +24,11 @@ RSpec.describe "Api de création de comptes", swagger_doc: "accounts_api.json" d
 
       with_examples
       produces "application/json"
-      stub_env_with(CONUM_API_KEY: "conum-api-test-key-123456")
-      let(:"X-CONUM-API-KEY") { "conum-api-test-key-123456" }
+      stub_env_with(COOP_MEDIATION_NUMERIQUE: "coop-mediation-numerique-api-test-key-123456")
+      let(:"X-COOP-MEDIATION-NUMERIQUE-API-KEY") { "coop-mediation-numerique-api-test-key-123456" }
 
-      security [{ "X-CONUM-API-KEY": [] }]
-      parameter name: "X-CONUM-API-KEY", in: :header, type: :string, description: "Clé d'API", example: "conum-api-test-key-123456", required: true
+      security [{ "X-COOP-MEDIATION-NUMERIQUE-API-KEY": [] }]
+      parameter name: "X-COOP-MEDIATION-NUMERIQUE-API-KEY", in: :header, type: :string, description: "Clé d'API", example: "coop-mediation-numerique-api-test-key-123456", required: true
 
       response 201, "Crée le compte" do
         run_test!
