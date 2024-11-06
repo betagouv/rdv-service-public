@@ -2,22 +2,22 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
   before_action :set_organisations
 
   def index
+    @current_tab = params[:current_tab] == "archived" ? :archived : :active
     @services = current_territory.services.reject(&:secretariat?)
 
-    @motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy::Scope)
+    unfiltered_motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy::Scope)
+    @filtered_motifs = filter_motifs(unfiltered_motifs)
       .where(organisation: @organisations)
-      .active
-      .order({ name: :asc, service_id: :asc, location_type: :asc, organisation_id: :asc })
-      .page(page_number)
+
+    @motifs_page = @filtered_motifs.page(page_number)
+      .active(@current_tab == :active)
       .per(100)
+      .order({ name: :asc, service_id: :asc, location_type: :asc, organisation_id: :asc })
       .includes(:organisation)
 
     if params[:search].present?
-      @motifs = @motifs.per(500)
+      @motifs_page = @motifs_page.per(500)
     end
-
-    @motifs = filter_motifs(@motifs)
-    @motifs_count = @motifs.total_count
   end
 
   def new
@@ -50,18 +50,43 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     end
   end
 
-  def destroy
+  def archive
     motif = Motif.active.find(params[:id])
     authorize(motif, policy_class: Agent::MotifPolicy)
-    if motif.soft_delete
-      flash[:notice] = "Le motif a été supprimé."
+    motif.archive!
+    flash[:notice] = "Le motif #{link_to_motif(motif)} a été archivé."
+    redirect_back fallback_location: admin_territory_motifs_path(current_territory)
+  end
+
+  def unarchive
+    motif = Motif.find(params[:id])
+    authorize(motif, policy_class: Agent::MotifPolicy)
+    if motif.unarchive
+      flash[:notice] = "Le motif #{link_to_motif(motif)} a été réactivé."
     else
-      flash[:error] = "Impossible de supprimer le motif : #{motif.errors.full_messages.join(', ')}"
+      flash[:error] = motif.errors.full_messages.join(", ")
     end
     redirect_back fallback_location: admin_territory_motifs_path(current_territory)
   end
 
+  def destroy
+    motif = Motif.find(params[:id])
+    authorize(motif, policy_class: Agent::MotifPolicy)
+    if motif.destroyable?
+      motif.destroy!
+      flash[:notice] = "Le motif #{motif.name} a été supprimé."
+      redirect_to admin_organisation_motifs_path(motif.organisation)
+    else
+      flash[:error] = "Impossible de supprimer le motif : il est lié à #{motif.rdvs.count} rendez-vous."
+      redirect_back fallback_location: admin_organisation_motifs_path(motif.organisation)
+    end
+  end
+
   private
+
+  def link_to_motif(motif)
+    helpers.link_to(motif.name, admin_organisation_motif_path(motif.organisation, motif))
+  end
 
   def set_organisations
     @organisations = Agent::MotifPolicy.organisations_i_can_manage(current_agent).where(territory: current_territory).ordered_by_name
