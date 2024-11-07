@@ -11,12 +11,15 @@ Sentry.init do |config|
   # et https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
   config.excluded_exceptions -= ["ActiveRecord::RecordNotFound"]
 
-  config.before_send = lambda do |event, hint|
+  config.before_send = lambda do |event, _hint|
+    next unless event.exception
+
     referer = event.request&.headers&.fetch("Referer", "")
     internal_referer = Domain::ALL.map(&:host_name).any? { referer&.include?(_1) }
+    record_not_found = event.exception&.values&.map(&:type)&.include?("ActiveRecord::RecordNotFound")
 
     # On ne veut pas de notification si l'erreur 404 est causée par un lien à l'extérieur de l'application
-    return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && !internal_referer
+    return if record_not_found && !internal_referer
 
     # On ne veut pas de notification si l'agent vient de se connecter, car ça signifie probablement que le lien
     # n'était pas dans l'application (on ignore le cas d'un agent qui laisse une page ouverte et dont la session a expiré)
@@ -24,7 +27,7 @@ Sentry.init do |config|
     if host
       agent_sign_in_url = Rails.application.routes.url_helpers.new_agent_session_url(host: host)
       redirected_from_sign_in = referer == agent_sign_in_url
-      return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && redirected_from_sign_in
+      return if record_not_found && redirected_from_sign_in
     end
 
     event
