@@ -10,49 +10,6 @@
         "description": "Permet de créer un compte et une organisation pour un agent. Si le compte ou l'organisation existe déjà, il sera réutilisé",
         "parameters": [
           {
-            "name": "params",
-            "in": "query",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "agent": {
-                  "type": "object",
-                  "properties": {
-                    "email": {
-                      "type": "string"
-                    },
-                    "first_name": {
-                      "type": "string"
-                    },
-                    "last_name": {
-                      "type": "string"
-                    },
-                    "external_id": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "organisation": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "address": {
-                      "type": "string"
-                    },
-                    "external_id": {
-                      "type": "string"
-                    }
-                  }
-                }
-              },
-              "required": [
-                "agent"
-              ]
-            }
-          },
-          {
             "name": "X-COOP-MEDIATION-NUMERIQUE-API-KEY",
             "in": "header",
             "description": "Clé d'API",
@@ -81,6 +38,51 @@
                     }
                   }
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "agent": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string"
+                      },
+                      "first_name": {
+                        "type": "string"
+                      },
+                      "last_name": {
+                        "type": "string"
+                      },
+                      "external_id": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "organisation": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "address": {
+                        "type": "string"
+                      },
+                      "external_id": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "agent"
+                ]
               }
             }
           }

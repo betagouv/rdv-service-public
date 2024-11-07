@@ -21,27 +21,44 @@ RSpec.describe "Api de création de comptes", swagger_doc: "accounts_api.json" d
     post "Créer un compte pour un agent" do
       description "Permet de créer un compte et une organisation pour un agent. Si le compte ou l'organisation existe déjà, il sera réutilisé"
 
-      parameter name: :params, in: :query, schema: {
-        type: :object,
-        properties: {
-          agent: {
-            type: :object, properties: {
-              email: { type: :string },
-              first_name: { type: :string },
-              last_name: { type: :string },
-              external_id: { type: :string },
+      parameter(
+        name: :params, # ce nom n'est pas utilisé, car tous les paramètres sont dans le body de la requête
+        in: :body,
+        schema: {
+          type: :object,
+          properties: {
+            agent: {
+              type: :object, properties: {
+                email: { type: :string },
+                first_name: { type: :string },
+                last_name: { type: :string },
+                external_id: { type: :string },
+              },
             },
+            organisation: {
+              type: :object, properties: {
+                name: { type: :string },
+                address: { type: :string },
+                external_id: { type: :string },
+              },
+            },
+          },
+          required: ["agent"],
+        },
+        example: {
+          agent: {
+            email: "francis.factice@france-service.fr",
+            first_name: "Francis",
+            last_name: "Factice",
+            external_id: "123456",
           },
           organisation: {
-            type: :object, properties: {
-              name: { type: :string },
-              address: { type: :string },
-              external_id: { type: :string },
-            },
+            external_id: "345678",
+            name: "France Service 19e",
+            address: "21 rue des Ardennes, Paris, 75019",
           },
-        },
-        required: ["agent"],
-      }
+        }
+      )
 
       with_examples
       produces "application/json"
