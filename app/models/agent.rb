@@ -200,19 +200,27 @@ class Agent < ApplicationRecord
   end
 
   def admin_in_organisation?(organisation)
-    role_in_organisation(organisation).admin?
+    access_level_in(organisation) == AgentRole::ACCESS_LEVEL_ADMIN
   end
 
   def access_level_in(organisation)
-    role_in_organisation(organisation)&.access_level
+    if roles.loaded?
+      roles.find { _1.organisation == organisation }&.access_level
+    else
+      roles.where(organisation: organisation).pick(:access_level)
+    end
   end
 
   def territorial_admin_in?(territory)
-    territorial_role_in(territory).present?
+    territorial_roles.exists?(territory: territory)
   end
 
-  def territorial_role_in(territory)
-    territorial_roles.find_by(territory: territory)
+  def participates_in?(rdv)
+    if rdv.agents_rdvs.loaded?
+      rdv.agents_rdvs.map(&:agent_id).include?(id)
+    else
+      rdv.agents_rdvs.exists?(agent_id: id)
+    end
   end
 
   def access_rights_for_territory(territory)

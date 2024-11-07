@@ -74,7 +74,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         end
 
         it "skips notification after create when agent has disabled it" do
-          agent.update!(absence_notification_level: "none")
+          agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
 
           expect do
             post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
@@ -137,7 +137,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         end
 
         it "skips notification after update when agent has disabled it" do
-          agent.update!(absence_notification_level: "none")
+          agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
 
           expect do
             put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
@@ -188,7 +188,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       end
 
       it "skips notification after delete when agent has disabled it" do
-        agent.update!(absence_notification_level: "none")
+        agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
 
         expect do
           delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
