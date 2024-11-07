@@ -39,9 +39,8 @@ RSpec.describe AddConseillerNumerique do
 
   context "when the conseiller numerique and their structure have never been imported before" do
     it "creates the agent for the conseiller numerique and notifies them" do
-      described_class.process!(**params)
-      expect(Agent.count).to eq 1
-      expect(Agent.last).to have_attributes(
+      agent = described_class.process!(**params)
+      expect(agent).to have_attributes(
         external_id: "conseiller-numerique-123456",
         email: "exemple@tierslieuxettransitions.fr",
         first_name: "Camille",
@@ -65,6 +64,14 @@ RSpec.describe AddConseillerNumerique do
         to: ["exemple@tierslieuxettransitions.fr"],
         from: ["support@rdv-aide-numerique.fr"]
       )
+
+      # And when trying a second time, it doesn't re-create the agent or the organisation
+      expect do
+        new_agent = described_class.process!(**params)
+        expect(new_agent).to eq(agent)
+      end.not_to change {
+        [Agent.count, Organisation.count]
+      }
     end
   end
 
@@ -125,16 +132,6 @@ RSpec.describe AddConseillerNumerique do
           described_class.process!(**params)
           expect(agent.organisations.reload).to contain_exactly(old_organisation, Organisation.find_by(external_id: "123456"))
         end
-      end
-    end
-  end
-
-  describe "special cases for organisations" do
-    context "when there is already an organisation with this external id" do
-      before { create(:organisation, external_id: "123456", territory: Territory.find_by!(name: "Conseillers Numériques")) }
-
-      it "does nothing" do
-        expect { described_class.process!(**params) }.not_to change(Organisation, :count)
       end
     end
   end

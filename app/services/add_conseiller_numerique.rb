@@ -48,6 +48,7 @@ class AddConseillerNumerique
       unless organisation.in?(existing_agent.organisations)
         existing_agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       end
+      existing_agent
     else
       invite_agent(organisation)
     end
