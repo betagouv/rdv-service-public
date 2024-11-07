@@ -12,7 +12,7 @@ Sentry.init do |config|
   config.excluded_exceptions -= ["ActiveRecord::RecordNotFound"]
 
   config.before_send = lambda do |event, _hint|
-    next unless event.exception
+    return event unless event.exception
 
     referer = event.request&.headers&.fetch("Referer", "")
     internal_referer = Domain::ALL.map(&:host_name).any? { referer&.include?(_1) }
