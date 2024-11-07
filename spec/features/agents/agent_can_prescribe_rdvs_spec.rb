@@ -268,11 +268,6 @@ RSpec.describe "agents can prescribe rdvs" do
         end
 
         it "show both services and motifs" do
-          if Date.new(2024, 12, 19).future?
-            pending # rubocop:disable RSpec/Pending
-            raise "cette flaky spec a été désactivée le temps de travailler dessus"
-          end
-
           expect(page).to have_content(motif_mds.service.name)
           expect(page).to have_content(motif_insertion.service.name)
           click_on motif_mds.service.name
