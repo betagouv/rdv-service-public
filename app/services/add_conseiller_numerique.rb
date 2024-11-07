@@ -38,23 +38,12 @@ class AddConseillerNumerique
   def find_or_invite_agent(organisation)
     existing_agent = Agent.where(deleted_at: nil).find_by(external_id: @conseiller_numerique.external_id)
     if existing_agent
-      if organisation.in?(existing_agent.organisations)
-        Rails.logger.info("#{@conseiller_numerique.email} existe déjà et est déjà dans l'orga #{organisation.name}.")
-      else
-        Rails.logger.info("#{@conseiller_numerique.email} existe déjà mais semble avoir changé d'organisation. Ajoutons-le dans #{organisation.name}")
+      unless organisation.in?(existing_agent.organisations)
         existing_agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       end
 
-      # supprimer cette mise à jour une fois que tous les agents ont confirmé leur changement d'email
-      agent_with_old_email = Agent.active.find_by(
-        external_id: @conseiller_numerique.external_id,
-        email: @conseiller_numerique.old_email,
-        unconfirmed_email: nil
-      )
-
       agent_with_old_email&.update(email: @conseiller_numerique.email)
     else
-      Rails.logger.info "Invitation de #{@conseiller_numerique.email}..."
       invite_agent(organisation)
     end
   end
