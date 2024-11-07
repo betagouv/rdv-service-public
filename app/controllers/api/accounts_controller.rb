@@ -1,4 +1,4 @@
-class Api::AccountsController < ActionController::Base
+class Api::AccountsController < ActionController::Base # rubocop:disable Rails/ApplicationController
   respond_to :json
   skip_forgery_protection # L'authentification par clé d'api nous protège des csfr
 
