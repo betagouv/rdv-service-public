@@ -9,21 +9,19 @@
       = render "common/franceconnect_button"
 
       h2 Se créer un compte avec un email
-      = render "devise/shared/error_messages", resource: resource
-      - if resource.errors[:email]&.include?(I18n.t("errors.messages.taken"))
-        .fr-mb-3v= link_to "Mot de passe oublié ?", new_password_path(resource_name, "email": resource.email), class: "fr-link"
+      = render "devise/shared/dsfr_error_messages", resource: resource
       .fr-grid-row.fr-grid-row--gutters.fr-mb-5v
         .fr-col-6
           = f.dsfr_text_field :first_name, label: "Prénom", required: true
         .fr-col-6
           = f.dsfr_text_field :last_name, label: "Nom", required: true
       = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true
-      = f.dsfr_text_field :phone_number, label: "Numéro de téléphone", hint: "Vous recevrez les rappels et les informations du RDV sur ce numéro."
+      = f.dsfr_phone_field :phone_number, label: "Numéro de téléphone", hint: "Vous recevrez les rappels et les informations du RDV sur ce numéro."
 
       .form-group
         small
-        span> En vous inscrivant, vous acceptez les
-        = link_to("conditions générales d'utilisation", cgu_path, class: "fr-link")
+        span
+          | En vous inscrivant, vous acceptez les #{link_to("conditions générales d'utilisation", cgu_path, class: "fr-link")}.
 
       .rdv-text-align-center
         = f.submit "Je m’inscris", class: "fr-btn"
@@ -31,5 +29,5 @@
     hr.fr-my-2w
     .rdv-text-align-center
       p
-        | Vous avez un compte ?&nbsp;
+        | Vous avez un compte ?
         = link_to "Se connecter", new_session_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)), class: "fr-link"

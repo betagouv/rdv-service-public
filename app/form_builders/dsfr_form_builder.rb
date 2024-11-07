@@ -12,6 +12,10 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
     dsfr_input_field(attribute, :email_field, opts)
   end
 
+  def dsfr_phone_field(attribute, opts = {})
+    dsfr_input_field(attribute, :phone_field, opts)
+  end
+
   def dsfr_date_field(attribute, opts = {})
     dsfr_input_field(attribute, :date_field, opts)
   end
@@ -139,7 +143,7 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def required_tag
-    @template.content_tag(:span, "*", class: "fr-ml-1w fr-text-error")
+    @template.content_tag(:span, "*", class: "fr-text-error")
   end
 
   def hint(text)
