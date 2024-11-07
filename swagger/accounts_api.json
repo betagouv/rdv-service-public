@@ -35,6 +35,7 @@
                 "examples": {
                   "example": {
                     "value": {
+                      "id": 1
                     }
                   }
                 }
@@ -71,13 +72,13 @@
                       "name": {
                         "type": "string"
                       },
-                      "address": {
-                        "type": "string"
-                      },
                       "external_id": {
                         "type": "string"
                       }
                     }
+                  },
+                  "lieux": {
+                    "type": "array"
                   }
                 },
                 "required": [
