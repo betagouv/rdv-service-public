@@ -195,6 +195,8 @@ group :development do
   gem "binding_of_caller" # Enable the REPL in better_errors
   # Profiles loading speed for rack applications.
   gem "rack-mini-profiler"
+  # Used by rack-mini-profiler to display flamegraphs: trigger by adding "?pp=flamegraph" to your URL
+  gem "stackprof"
 
   # Other
 
