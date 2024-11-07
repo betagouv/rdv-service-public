@@ -9,4 +9,7 @@ title
 = csrf_meta_tags
 = csp_meta_tag
 
+/ Le cache turbolinks est seulement pertinent sur les sites qui ont des pages statiques
+meta[name="turbolinks-cache-control" content="no-cache"]
+
 = render "common/favicon"
