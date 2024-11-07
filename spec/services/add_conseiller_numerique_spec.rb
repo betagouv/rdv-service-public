@@ -2,17 +2,26 @@ RSpec.describe AddConseillerNumerique do
   let!(:territory) { create(:territory, :conseillers_numeriques) }
   let(:params) do
     {
-      external_id: "conseiller-numerique-123456",
-      email: "exemple@tierslieuxettransitions.fr",
-      secondary_email: "mail_perso@gemelle.com",
-      old_email: "agent@conseiller-numerique.fr",
-      first_name: "Camille",
-      last_name: "Clavier",
-      structure: {
+      agent: {
+        external_id: "123456",
+        email: "exemple@tierslieuxettransitions.fr",
+        first_name: "Camille",
+        last_name: "Clavier",
+      },
+      organisation: {
         external_id: "123456",
         name: "France Service 19e",
-        address: "16 quai de la Loire, Paris, 75019",
       },
+      lieux: [
+        {
+          name: "Bureaux PIX",
+          address: "21 rue des Ardennes, Paris, 75019",
+        },
+        {
+          name: "Dinum",
+          address: "20 avenue de Ségur, Paris, 75007",
+        },
+      ],
     }
   end
 
@@ -20,13 +29,17 @@ RSpec.describe AddConseillerNumerique do
     create(:service, :conseiller_numerique)
     stub_request(
       :get,
-      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20loire,%20paris,%2075019"
+      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=21%20rue%20des%20Ardennes,%20Paris,%2075019"
+    ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
+    stub_request(
+      :get,
+      "https://api-adresse.data.gouv.fr/search/?postcode=75007&q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
   context "when the conseiller numerique and their structure have never been imported before" do
     it "creates the agent for the conseiller numerique and notifies them" do
-      described_class.process!(params)
+      described_class.process!(**params)
       expect(Agent.count).to eq 1
       expect(Agent.last).to have_attributes(
         external_id: "conseiller-numerique-123456",
@@ -50,8 +63,7 @@ RSpec.describe AddConseillerNumerique do
 
       expect(invitation_email).to have_attributes(
         to: ["exemple@tierslieuxettransitions.fr"],
-        from: ["support@rdv-aide-numerique.fr"],
-        cc: ["mail_perso@gemelle.com"]
+        from: ["support@rdv-aide-numerique.fr"]
       )
     end
   end

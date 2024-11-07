@@ -2,7 +2,12 @@ class AddConseillerNumerique
   class ConseillerNumerique
     include ActiveModel::Model
 
-    attr_accessor :email, :first_name, :last_name, :external_id, :secondary_email, :old_email
+    attr_accessor :email, :first_name, :last_name, :secondary_email, :old_email
+    attr_writer :external_id
+
+    def external_id
+      "conseiller-numerique-#{@external_id}"
+    end
   end
 
   class Structure
@@ -14,7 +19,9 @@ class AddConseillerNumerique
   def initialize(agent:, organisation:, lieux:)
     @conseiller_numerique = ConseillerNumerique.new(agent)
     @structure = Structure.new(organisation)
-    @lieux_params = lieux
+    @lieux = lieux.map do |lieu_hash|
+      OpenStruct.new(lieu_hash)
+    end
   end
 
   def self.process!(agent:, organisation:, lieux:)
@@ -58,10 +65,6 @@ class AddConseillerNumerique
         services: [service],
         password: SecureRandom.base64(32),
         roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
-      },
-      nil, # cet argument est le invited_by, qui n'a pas de sens dans ce contexte
-      { # ce troisième argument permet de passer des options au mailer Devise
-        cnfs_secondary_email: @conseiller_numerique.secondary_email,
       }
     ).tap do |agent|
       agent.agent_territorial_access_rights.find_or_create_by!(territory: territory)
@@ -117,15 +120,15 @@ class AddConseillerNumerique
   end
 
   def create_lieux(organisation)
-    @lieux_params.each do |lieu_hash|
-      longitude, latitude = coordinates(lieu_hash["address"])
+    @lieux.each do |lieu|
+      longitude, latitude = coordinates(lieu.address)
 
       Lieu.create!(
-        name: lieu_hash["name"],
+        name: lieu.name,
         organisation: organisation,
         latitude: latitude,
         longitude: longitude,
-        address: lieu_hash["address"],
+        address: lieu.address,
         availability: :enabled
       )
     end
@@ -136,7 +139,7 @@ class AddConseillerNumerique
   end
 
   def city_name
-    adresse_api_response(@lieux_params.first["address"]).dig("features", 0, "properties", "city")
+    adresse_api_response(@lieux.first.address).dig("features", 0, "properties", "city")
   end
 
   def adresse_api_response(address)
