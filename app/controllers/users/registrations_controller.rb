@@ -5,7 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   after_action :allow_iframe
 
   layout "application"
-  layout "application_narrow", only: %i[new edit pending]
+  layout "application_narrow", only: %i[new create edit pending]
 
   def create
     return invite_and_redirect(existing_unconfirmed_user) if existing_unconfirmed_user
