@@ -77,7 +77,7 @@ RSpec.describe AddConseillerNumerique do
         new_agent = described_class.process!(**params)
         expect(new_agent).to eq(agent)
       end.not_to change {
-        [Agent.count, Organisation.count]
+        [Agent.count, Organisation.count, Lieu.count]
       }
     end
   end
