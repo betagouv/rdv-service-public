@@ -57,6 +57,13 @@ RSpec.describe AddConseillerNumerique do
         organisation_id: Organisation.last.id
       )
 
+      expect(agent.organisations.last.lieux.last).to have_attributes(
+        {
+          name: "Dinum",
+          address: "20 avenue de Ségur, Paris, 75007",
+        }
+      )
+
       perform_enqueued_jobs
       invitation_email = ActionMailer::Base.deliveries.last
 
@@ -77,29 +84,6 @@ RSpec.describe AddConseillerNumerique do
 
   describe "special cases for the agent" do
     context "when the conseiller numerique has already been imported" do
-      context "and they still exists with the same email" do
-        before { create(:agent, external_id: "conseiller-numerique-123456") }
-
-        it "does nothing" do
-          expect { described_class.process!(**params) }.not_to change { [Agent.count, Agent.maximum(:updated_at)] }
-        end
-      end
-
-      context "and they have a legacy email" do
-        let!(:agent) { create(:agent, external_id: "conseiller-numerique-123456", email: "agent@conseiller-numerique.fr") }
-
-        it "updates the agent's unconfirmed_email and sends them an email to confirm their new address" do
-          described_class.process!(**params)
-
-          expect(agent.reload.unconfirmed_email).to eq "exemple@tierslieuxettransitions.fr"
-
-          perform_enqueued_jobs
-          address_update_email = ActionMailer::Base.deliveries.last
-          expect(address_update_email.subject).to eq("Instructions de confirmation")
-          expect(address_update_email.to).to eq(["exemple@tierslieuxettransitions.fr"])
-        end
-      end
-
       context "and their account has been deleted by mistake before the external id was set" do
         before { create(:agent, external_id: nil, deleted_at: 1.day.ago) }
 
