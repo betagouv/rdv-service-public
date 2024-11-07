@@ -15,6 +15,10 @@ RSpec.describe "Api de création de comptes", swagger_doc: "accounts_api.json" d
       :get,
       "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=21%20rue%20des%20Ardennes,%20Paris,%2075019"
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
+    stub_request(
+      :get,
+      "https://api-adresse.data.gouv.fr/search/?postcode=75007&q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
+    ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
   path "/api/accounts" do
@@ -38,9 +42,11 @@ RSpec.describe "Api de création de comptes", swagger_doc: "accounts_api.json" d
             organisation: {
               type: :object, properties: {
                 name: { type: :string },
-                address: { type: :string },
                 external_id: { type: :string },
               },
+            },
+            lieux: {
+              type: :array,
             },
           },
           required: ["agent"],
@@ -55,8 +61,17 @@ RSpec.describe "Api de création de comptes", swagger_doc: "accounts_api.json" d
           organisation: {
             external_id: "345678",
             name: "France Service 19e",
-            address: "21 rue des Ardennes, Paris, 75019",
           },
+          lieux: [
+            {
+              name: "Bureaux PIX",
+              address: "21 rue des Ardennes, Paris, 75019",
+            },
+            {
+              name: "Dinum",
+              address: "20 avenue de Ségur, Paris, 75007",
+            },
+          ],
         }
       )
 
@@ -82,9 +97,18 @@ RSpec.describe "Api de création de comptes", swagger_doc: "accounts_api.json" d
             },
             organisation: {
               external_id: "123456",
-              name: "France Service 19e",
-              address: "21 rue des Ardennes, Paris, 75019",
+              name: "ANCT",
             },
+            lieux: [
+              {
+                name: "Bureaux PIX",
+                address: "21 rue des Ardennes, Paris, 75019",
+              },
+              {
+                name: "Dinum",
+                address: "20 avenue de Ségur, Paris, 75007",
+              },
+            ],
           }
         end
       end

@@ -11,13 +11,14 @@ class AddConseillerNumerique
     attr_accessor :name, :address, :external_id
   end
 
-  def initialize(agent:, organisation:)
+  def initialize(agent:, organisation:, lieux:)
     @conseiller_numerique = ConseillerNumerique.new(agent)
     @structure = Structure.new(organisation)
+    @lieux_params = lieux
   end
 
-  def self.process!(agent:, organisation:)
-    new(agent:, organisation:).process!
+  def self.process!(agent:, organisation:, lieux:)
+    new(agent:, organisation:, lieux:).process!
   end
 
   def process!
@@ -86,7 +87,7 @@ class AddConseillerNumerique
       verticale: :rdv_aide_numerique
     )
     create_motifs(organisation)
-    create_lieu(organisation)
+    create_lieux(organisation)
     organisation
   end
 
@@ -126,37 +127,39 @@ class AddConseillerNumerique
     )
   end
 
-  def create_lieu(organisation)
-    longitude, latitude = coordinates
+  def create_lieux(organisation)
+    @lieux_params.each do |lieu_hash|
+      longitude, latitude = coordinates(lieu_hash["address"])
 
-    Lieu.create!(
-      name: @structure.name,
-      organisation: organisation,
-      latitude: latitude,
-      longitude: longitude,
-      address: @structure.address,
-      availability: :enabled
-    )
+      Lieu.create!(
+        name: lieu_hash["name"],
+        organisation: organisation,
+        latitude: latitude,
+        longitude: longitude,
+        address: lieu_hash["address"],
+        availability: :enabled
+      )
+    end
   end
 
-  def coordinates
-    adresse_api_response.dig("features", 0, "geometry", "coordinates")
+  def coordinates(address)
+    adresse_api_response(address).dig("features", 0, "geometry", "coordinates")
   end
 
   def city_name
-    adresse_api_response.dig("features", 0, "properties", "city")
+    adresse_api_response(@lieux_params.first["address"]).dig("features", 0, "properties", "city")
   end
 
-  def adresse_api_response
+  def adresse_api_response(address)
     zipcode_regex = /\d{5}/
-    zipcode = @structure.address[zipcode_regex]
+    zipcode = address[zipcode_regex]
 
-    @adresse_api_response ||= Faraday.get(
+    response = Faraday.get(
       "https://api-adresse.data.gouv.fr/search/",
-      q: @structure.address,
+      q: address,
       postcode: zipcode
     )
-    JSON.parse(@adresse_api_response.body)
+    JSON.parse(response.body)
   end
 
   def territory

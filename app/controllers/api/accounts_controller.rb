@@ -5,12 +5,13 @@ class Api::AccountsController < ActionController::Base
   before_action :authenticate_with_api_key
 
   def create
-    AddConseillerNumerique.process!(
+    agent = AddConseillerNumerique.process!(
       agent: params.require(:agent).permit(%i[first_name last_name email external_id]),
-      organisation: params.require(:organisation).permit(%i[name address external_id])
+      organisation: params.require(:organisation).permit(%i[name external_id]),
+      lieux: params.permit(lieux: %i[name address]).require(:lieux)
     )
 
-    render json: {}, status: :created
+    render json: { id: agent.id }, status: :created
   end
 
   private
