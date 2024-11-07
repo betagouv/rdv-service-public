@@ -1,11 +1,7 @@
 require "swagger_helper"
 
 RSpec.describe "Api de création de comptes", swagger_doc: "conseillers_numeriques/api.json" do # rubocop:disable RSpec/EmptyExampleGroup
-  stub_env_with(COOP_MEDIATION_NUMERIQUE: "conum-api-test-key-123456")
-
-  let(:auth_header) do
-    { "X-COOP-MEDIATION-NUMERIQUE-API-KEY": "conum-api-test-key-123456" }
-  end
+  stub_env_with(COOP_MEDIATION_NUMERIQUE_API_KEY: "coop-mediation-numerique-api-test-key-123456")
 
   before do
     create(:territory, :conseillers_numeriques)
