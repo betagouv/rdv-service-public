@@ -74,7 +74,7 @@ RSpec.describe AddConseillerNumerique do
         before { create(:agent, external_id: "conseiller-numerique-123456") }
 
         it "does nothing" do
-          expect { described_class.process!(params) }.not_to change { [Agent.count, Agent.maximum(:updated_at)] }
+          expect { described_class.process!(**params) }.not_to change { [Agent.count, Agent.maximum(:updated_at)] }
         end
       end
 
@@ -82,7 +82,7 @@ RSpec.describe AddConseillerNumerique do
         let!(:agent) { create(:agent, external_id: "conseiller-numerique-123456", email: "agent@conseiller-numerique.fr") }
 
         it "updates the agent's unconfirmed_email and sends them an email to confirm their new address" do
-          described_class.process!(params)
+          described_class.process!(**params)
 
           expect(agent.reload.unconfirmed_email).to eq "exemple@tierslieuxettransitions.fr"
 
@@ -97,7 +97,7 @@ RSpec.describe AddConseillerNumerique do
         before { create(:agent, external_id: nil, deleted_at: 1.day.ago) }
 
         it "creates a new agent, and assigns them to the organisation" do
-          described_class.process!(params)
+          described_class.process!(**params)
           expect(Agent.count).to eq 2
           expect(Agent.last).to have_attributes(
             external_id: "conseiller-numerique-123456",
@@ -122,7 +122,7 @@ RSpec.describe AddConseillerNumerique do
 
         it "adds the agent to the new org" do
           expect(agent.organisations).to eq([old_organisation])
-          described_class.process!(params)
+          described_class.process!(**params)
           expect(agent.organisations.reload).to contain_exactly(old_organisation, Organisation.find_by(external_id: "123456"))
         end
       end
@@ -134,7 +134,7 @@ RSpec.describe AddConseillerNumerique do
       before { create(:organisation, external_id: "123456", territory: Territory.find_by!(name: "Conseillers Numériques")) }
 
       it "does nothing" do
-        expect { described_class.process!(params) }.not_to change(Organisation, :count)
+        expect { described_class.process!(**params) }.not_to change(Organisation, :count)
       end
     end
   end

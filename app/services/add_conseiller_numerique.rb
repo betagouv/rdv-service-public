@@ -48,8 +48,6 @@ class AddConseillerNumerique
       unless organisation.in?(existing_agent.organisations)
         existing_agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       end
-
-      agent_with_old_email&.update(email: @conseiller_numerique.email)
     else
       invite_agent(organisation)
     end
