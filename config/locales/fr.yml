@@ -74,6 +74,10 @@ fr:
             Vous ne pouvez pas supprimer l'enregistrement parce que les %{record}
             dépendants existent
       models:
+        user:
+          attributes:
+            email:
+              taken: "L’email que vous avez saisi est déjà utilisé"
         team:
           attributes:
             agents:

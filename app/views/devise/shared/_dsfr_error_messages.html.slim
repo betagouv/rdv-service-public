@@ -1,7 +1,10 @@
 - if resource.errors.any?
   .fr-alert.fr-alert--error.fr-mb-2w
     ul
-      - resource.errors.full_messages.uniq.each do |message|
-        li = "#{message}."
-    - if resource.errors[:email]&.include?(I18n.t("errors.messages.taken"))
-      .fr-mb-3v= link_to "Mot de passe oublié ?", new_password_path(resource_name, "email": resource.email), class: "fr-link"
+      - resource.errors.each do |error|
+        - if error.match?(:email, t("activerecord.errors.models.user.attributes.email.taken"))
+          li
+            = "#{t('activerecord.errors.models.user.attributes.email.taken')}. "
+            = link_to('Avez-vous oublié votre mot de passe ?', new_password_path(resource_name, "email": resource.email), class: 'fr-link')
+        - else
+          li= error.full_message
