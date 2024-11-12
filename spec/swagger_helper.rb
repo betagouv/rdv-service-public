@@ -17,7 +17,7 @@ RSpec.configure do |config|
     "conseillers_numeriques/api.json" => {
       openapi: "3.0.1",
       info: {
-        title: "API RDV Service Public pour la création de comptes agents",
+        title: "API de création de comptes agents pour conseillers numériques",
       },
     },
     "visioplainte/api.json" => {

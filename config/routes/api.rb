@@ -61,7 +61,7 @@ namespace :api do
     end
   end
 
-  post "/accounts", to: "accounts#create"
+  post "/coop-mediation-numerique/accounts", to: "accounts#create"
 end
 
 # This one has been published before versioning the public API and unification with auth API:

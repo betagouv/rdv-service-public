@@ -17,7 +17,7 @@ RSpec.describe "Api de création de comptes", swagger_doc: "conseillers_numeriqu
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
-  path "/api/accounts" do
+  path "/api/coop-mediation-numerique/accounts" do
     post "Créer un compte pour un agent" do
       description "Permet de créer un compte et une organisation pour un agent. Si le compte ou l'organisation existe déjà, il sera réutilisé"
 

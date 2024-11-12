@@ -1,10 +1,10 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "API RDV Service Public pour la création de comptes agents"
+    "title": "API de création de comptes agents pour conseillers numériques"
   },
   "paths": {
-    "/api/accounts": {
+    "/api/coop-mediation-numerique/accounts": {
       "post": {
         "summary": "Créer un compte pour un agent",
         "description": "Permet de créer un compte et une organisation pour un agent. Si le compte ou l'organisation existe déjà, il sera réutilisé",

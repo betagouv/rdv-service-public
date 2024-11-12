@@ -31,7 +31,7 @@ RSpec.describe "Création de comptes de conseillers numériques" do
     stub_env_with(COOP_MEDIATION_NUMERIQUE_API_KEY: "coop-mediation-numerique-api-test-key-123456")
     context "without the api key header" do
       before do
-        post "/api/accounts", params: params
+        post "/api/coop-mediation-numerique/accounts", params: params
       end
 
       it "returns a 401 response" do
@@ -42,7 +42,7 @@ RSpec.describe "Création de comptes de conseillers numériques" do
 
     context "with the wrong api key" do
       before do
-        post "/api/accounts", params: params, headers: { "X-COOP-MEDIATION-NUMERIQUE-API-KEY": "wrong key" }
+        post "/api/coop-mediation-numerique/accounts", params: params, headers: { "X-COOP-MEDIATION-NUMERIQUE-API-KEY": "wrong key" }
       end
 
       it "returns a 401 response" do
@@ -53,7 +53,7 @@ RSpec.describe "Création de comptes de conseillers numériques" do
 
     context "with the correct api key" do
       before do
-        post "/api/accounts", params: params, headers: { "X-COOP-MEDIATION-NUMERIQUE-API-KEY": "coop-mediation-numerique-api-test-key-123456" }
+        post "/api/coop-mediation-numerique/accounts", params: params, headers: { "X-COOP-MEDIATION-NUMERIQUE-API-KEY": "coop-mediation-numerique-api-test-key-123456" }
       end
 
       it "returns a 201 response" do
@@ -68,7 +68,7 @@ RSpec.describe "Création de comptes de conseillers numériques" do
 
     it "raises an error" do
       expect do
-        post "/api/accounts", params: params, headers: { "X-COOP-MEDIATION-NUMERIQUE-API-KEY": "test-api-key" }
+        post "/api/coop-mediation-numerique/accounts", params: params, headers: { "X-COOP-MEDIATION-NUMERIQUE-API-KEY": "test-api-key" }
       end.to raise_error(KeyError)
 
       expect(response).to be_nil
