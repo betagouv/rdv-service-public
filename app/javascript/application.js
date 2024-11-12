@@ -17,7 +17,7 @@ $(document).on('turbolinks:load', function() {
   new ShowHidePassword();
   new PlacesInputs();
   new NameInitialsForm();
-  new DsfrNewPassword();
+  DsfrNewPassword();
 
   const whereInput = document.querySelector('#search_where');
   const submitButton = document.querySelector('#search_submit');
