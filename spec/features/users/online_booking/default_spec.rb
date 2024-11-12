@@ -406,7 +406,7 @@ RSpec.describe "User can search for rdvs" do
         # cette ligne n’est nécessaire que si on passe le test en JS, ou pour reproduire le test dans votre navigateur
         click_button("Continuer")
         expect(page).not_to have_content("Pour qui prenez-vous rendez-vous")
-        expect(page).to have_content("Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique")
+        expect(page).to have_content("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
       end
     end
   end
