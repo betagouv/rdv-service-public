@@ -16,11 +16,17 @@ class AddConseillerNumerique
     attr_accessor :name, :external_id
   end
 
+  class LieuConum
+    include ActiveModel::Model
+
+    attr_accessor :name, :address
+  end
+
   def initialize(agent:, organisation:, lieux:)
     @conseiller_numerique = ConseillerNumerique.new(agent)
     @structure = Structure.new(organisation)
     @lieux = lieux.map do |lieu_hash|
-      OpenStruct.new(lieu_hash)
+      LieuConum.new(lieu_hash)
     end
   end
 
