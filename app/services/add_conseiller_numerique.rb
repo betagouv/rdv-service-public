@@ -2,7 +2,7 @@ class AddConseillerNumerique
   class ConseillerNumerique
     include ActiveModel::Model
 
-    attr_accessor :email, :first_name, :last_name, :secondary_email, :old_email
+    attr_accessor :email, :first_name, :last_name
     attr_writer :external_id
 
     def external_id
