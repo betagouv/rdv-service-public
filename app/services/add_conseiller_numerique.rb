@@ -13,7 +13,7 @@ class AddConseillerNumerique
   class Structure
     include ActiveModel::Model
 
-    attr_accessor :name, :address, :external_id
+    attr_accessor :name, :external_id
   end
 
   def initialize(agent:, organisation:, lieux:)
