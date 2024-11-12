@@ -33,13 +33,13 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def edit; end
 
   def update_teams
-    # cf PR https://github.com/betagouv/rdv-service-public/pull/4525
-    raise TeamsInMultipleTerritoriesError if @agent.teams.where.not(territory: current_territory).exists?
-
     team_ids = Team
       .where(id: params[:agent][:team_ids].compact_blank, territory: current_territory) # filtering on territory is not done in policy anymore
       .pluck(:id)
-    if @agent.update(team_ids:)
+
+    team_ids_from_other_territories = @agent.agent_teams.joins(:team).where.not(teams: { territory_id: current_territory.id }).pluck(:team_id)
+
+    if @agent.update(team_ids: team_ids + team_ids_from_other_territories)
       flash[:success] = "Les équipes de l’agent ont été mises à jour"
       redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
     else

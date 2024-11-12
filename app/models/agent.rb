@@ -107,7 +107,7 @@ class Agent < ApplicationRecord
   }
   scope :active, -> { where(deleted_at: nil) }
   scope :in_any_of_these_services, lambda { |services|
-    joins(:agent_services).where(agent_services: { service_id: services.map(&:id) })
+    joins(:agent_services).where(agent_services: { service_id: services.select(:id) })
   }
 
   ## -
