@@ -63,7 +63,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
     end
   end
 
-  describe "POST create" do
+  describe "POST step4" do
     render_views
 
     subject(:create_request) { post :create, params: params }
@@ -99,6 +99,60 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
         expect { create_request }.not_to change(Rdv, :count)
         expect(response.body).to include("Ce rendez-vous a une date située dans le passé")
       end
+    end
+  end
+
+  context "POST step2 avec motif téléphonique et l’usager a un numéro de téléphone" do
+    render_views
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :by_phone, organisation:) }
+    let!(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
+    let!(:user) { create(:user, organisations: [organisation], first_name: "François", last_name: "Fictif", phone_number: "0606060606") }
+
+    it "passe à l’étape suivante" do
+      post(
+        :create,
+        params: {
+          organisation_id: organisation.id,
+          step: 2,
+          rdv: {
+            duration_in_min: 30,
+            motif_id: motif.id,
+            starts_at: 2.days.from_now,
+            user_ids: [user.id],
+          },
+        }
+      )
+      expect(response.status).to eq(302)
+      redirect_params = Rack::Utils.parse_query(URI.parse(response.location).query)
+      expect(redirect_params["step"]).to eq("3")
+      expect(flash[:error]).to be_nil
+    end
+  end
+
+  context "POST step2 avec motif téléphonique mais l’usager n’a pas de numéro de téléphone" do
+    render_views
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, :by_phone, organisation:) }
+    let!(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
+    let!(:user) { create(:user, organisations: [organisation], first_name: "François", last_name: "Fictif", phone_number: nil) }
+
+    it "affiche une erreur et ne passe pas à l’étape suivante" do
+      post(
+        :create,
+        params: {
+          organisation_id: organisation.id,
+          step: 2,
+          rdv: {
+            duration_in_min: 30,
+            motif_id: motif.id,
+            starts_at: 2.days.from_now,
+            user_ids: [user.id],
+          },
+        }
+      )
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique")
     end
   end
 end
