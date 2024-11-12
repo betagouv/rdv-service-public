@@ -7,8 +7,9 @@ class Admin::RdvWizardForm::Step2
   def phone_number_present_for_motif_by_phone
     return unless rdv.motif.phone?
 
-    users_to_notify = users.map(&:user_to_notify)
-    errors.add(:phone_number, :missing_for_phone_motif) if users_to_notify.none? { _1.phone_number.present? }
+    return if users.map(&:user_to_notify).any? { _1.phone_number.present? }
+
+    errors.add :base, "Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique"
   end
 
   def can_receive_notification_for_motif_by_visio
