@@ -5,6 +5,12 @@ RSpec.describe "agents page", js: true do
   #   expect_page_to_be_axe_clean(path)
   # end
 
+  it "invitation page is accessible" do
+    agent = create(:agent)
+    agent.deliver_invitation
+    expect_page_to_be_axe_clean(accept_agent_invitation_path(invitation_token: agent.raw_invitation_token))
+  end
+
   it "agenda without event page is accessible" do
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)
