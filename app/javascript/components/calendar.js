@@ -243,8 +243,12 @@ class CalendarRdvSolidarites {
     return now >= activeStart && now <= activeEnd;
   }
 
-  handleAjaxError = () => {
-    alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr.`);
+  handleAjaxError = (error) => {
+    if (error.xhr.status === 401) {
+      window.location.reload();
+    } else {
+      alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr.`);
+    }
   }
 }
 

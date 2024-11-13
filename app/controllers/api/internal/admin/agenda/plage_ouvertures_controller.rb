@@ -1,4 +1,4 @@
-class Admin::Agenda::PlageOuverturesController < Admin::Agenda::BaseController
+class Api::Internal::Admin::Agenda::PlageOuverturesController < Api::Internal::BaseController
   def index
     @agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])

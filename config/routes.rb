@@ -172,12 +172,6 @@ Rails.application.routes.draw do
         end
       end
 
-      namespace :agenda do
-        resources :plage_ouvertures, only: [:index]
-        resources :rdvs, only: [:index]
-        resources :absences, only: [:index]
-      end
-
       resources :organisations do
         get "creneaux_search" => "creneaux_search#index"
         get "creneaux_search/selection_creneaux" => "creneaux_search#selection_creneaux"
