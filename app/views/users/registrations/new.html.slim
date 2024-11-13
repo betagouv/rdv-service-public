@@ -5,8 +5,11 @@
 
   .card-body
     = form_for resource, as: :user, url: registration_path(resource_name), builder: DsfrFormBuilder do |f|
-      h2 Se créer un compte avec FranceConnect
-      = render "common/franceconnect_button"
+      - if current_domain.france_connect_enabled || params[:force_franceconnect].present?
+        h2 Se créer un compte avec FranceConnect
+        = render "common/franceconnect_button"
+
+        p.fr-hr-or ou
 
       h2 Se créer un compte avec un email
       = render "devise/shared/dsfr_error_messages", resource: resource
@@ -30,4 +33,4 @@
     .rdv-text-align-center
       p
         | Vous avez un compte ?
-        = link_to "Se connecter", new_session_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)), class: "fr-link"
+        =< link_to "Se connecter", new_session_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)), class: "fr-link"
