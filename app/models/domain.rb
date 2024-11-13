@@ -143,6 +143,46 @@ class Domain
     end
   end
 
+  def reply_host_name
+    case Rails.env.to_sym
+    when :production
+      if ENV["IS_REVIEW_APP"] == "true"
+        nil
+      elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
+        {
+          RDV_MAIRIE => "reply.staging.rdv-service-public.fr",
+          # c’est le seul staging réellement ouvert pour l’instant
+        }.fetch(self, nil)
+      elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
+        {
+          RDV_SOLIDARITES => "reply.demo.rdv-solidarites.fr",
+          RDV_AIDE_NUMERIQUE => "reply.demo.rdv-aide-numerique.fr",
+          RDV_MAIRIE => "reply.demo.rdv-service-public.fr",
+        }.fetch(self)
+      else
+        {
+          RDV_SOLIDARITES => "reply.rdv-solidarites.fr",
+          RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique.fr",
+          RDV_MAIRIE => "reply.rdv-service-public.fr", # TODO: remplacer par anct.gouv.fr une fois les DNS déployés
+        }.fetch(self)
+      end
+    when :development
+      {
+        RDV_SOLIDARITES => "reply.rdv-solidarites.localhost",
+        RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique.localhost",
+        RDV_MAIRIE => "reply.rdv-mairie.localhost",
+      }.fetch(self)
+    when :test
+      {
+        RDV_SOLIDARITES => "reply.rdv-solidarites-test.localhost",
+        RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique-test.localhost",
+        RDV_MAIRIE => "reply.rdv-mairie-test.localhost",
+      }.fetch(self)
+    else
+      raise "Rails.env not recognized: #{Rails.env.inspect}"
+    end
+  end
+
   def default?
     self == RDV_MAIRIE
   end

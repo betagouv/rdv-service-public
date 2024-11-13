@@ -1,4 +1,43 @@
 RSpec.describe TransferEmailReplyJob do
+  describe "#uuid_from_email_address" do
+    %w[
+      rdv+b1a2-3c4f@reply.rdv-solidarites.fr
+      rdv+b1a2-3c4f@reply.rdv-aide-numerique.fr
+      rdv+b1a2-3c4f@reply.rdv-service-public.fr
+      rdv+b1a2-3c4f@reply.staging.rdv-service-public.fr
+      rdv+b1a2-3c4f@reply.demo.rdv-solidarites.fr
+      rdv+b1a2-3c4f@reply.demo.rdv-aide-numerique.fr
+      rdv+b1a2-3c4f@reply.demo.rdv-service-public.fr
+    ].each do |email_address|
+      it "should extract UUID from #{email_address}" do
+        expect(described_class.uuid_from_email_address(email_address)).to eq("b1a2-3c4f")
+      end
+    end
+  end
+
+  describe "#reply_address_for_rdv" do
+    it "uses rdv domain reply_host_name" do
+      rdv = build(:rdv)
+      domain = instance_double(Domain)
+
+      allow(rdv).to receive(:uuid).and_return("aabb-1122")
+      allow(rdv).to receive(:domain).and_return(domain)
+      allow(domain).to receive(:reply_host_name).and_return "reply.rdv-solidarites.fr"
+
+      expect(described_class.reply_address_for_rdv(rdv)).to eq("rdv+aabb-1122@reply.rdv-solidarites.fr")
+    end
+
+    it "returns nil for a rdv whose domain reply_host_name is nil" do
+      rdv = build(:rdv)
+      domain = instance_double(Domain)
+
+      allow(rdv).to receive(:domain).and_return(domain)
+      allow(domain).to receive(:reply_host_name).and_return nil
+
+      expect(described_class.reply_address_for_rdv(rdv)).to be_nil
+    end
+  end
+
   describe "#perform" do
     subject(:perform_job) { described_class.perform_now(sendinblue_payload) }
 
@@ -70,6 +109,18 @@ RSpec.describe TransferEmailReplyJob do
         transferred_email = ActionMailer::Base.deliveries.last
         expect(transferred_email.to).to eq(["support@rdv-solidarites.fr"])
         expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
+      end
+    end
+
+    context "when an e-mail address matches our pattern for a demo host" do
+      let(:sendinblue_payload) do
+        sendinblue_valid_payload.tap { |hash| hash[:Headers][:To] = "rdv+8fae4d5f-4d63-4f60-b343-854d939881a3@reply.demo.rdv-solidarites.fr" }
+      end
+
+      it "sends a notification email to the agent" do
+        expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
+        transferred_email = ActionMailer::Base.deliveries.last
+        expect(transferred_email.to).to eq(["je_suis_un_agent@departement.fr"])
       end
     end
 
