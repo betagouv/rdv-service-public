@@ -1,9 +1,11 @@
 // ce code vient de la documentation ProConnect : https://github.com/numerique-gouv/proconnect-documentation/blob/main/doc_fs/bouton_proconnect.md
-.fr-connect {
+// le code proposé override le logo du bouton FranceConnect par celui de ProConnect
+// afin de faire cohabiter les deux la class qui override est fr-proconnect et s’utilise en complément de la class fr-connect
+.fr-proconnect {
   padding-left: 4.375em !important;
 }
 
-.fr-connect:before {
+.fr-proconnect:before {
   width: 3.375em !important;
   background-size: 3.375em 3em !important;
   left: 0.625em !important;
