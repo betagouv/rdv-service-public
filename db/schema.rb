@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_29_151445) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_04_154539) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -458,6 +458,49 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_29_151445) do
     t.index ["plage_ouverture_id"], name: "index_motifs_plage_ouvertures_on_plage_ouverture_id"
   end
 
+  create_table "oauth_access_grants", force: :cascade do |t|
+    t.bigint "resource_owner_id", null: false
+    t.bigint "application_id", null: false
+    t.string "token", null: false
+    t.integer "expires_in", null: false, comment: "Le nombre de seconds avant l'expiration du grant, par rapport à sa date de création.\n"
+    t.text "redirect_uri", null: false
+    t.string "scopes", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "revoked_at"
+    t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
+    t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
+  end
+
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.bigint "resource_owner_id", comment: "L'id de l'agent qui a autorisé l'application.\n"
+    t.bigint "application_id", null: false
+    t.string "token", null: false, comment: "Le token qui perment d'authentifier des appels à notre api. Il est chiffré de manière similaire aux mots de passe.\n"
+    t.string "refresh_token"
+    t.integer "expires_in", comment: "Le nombre de seconds avant l'expiration du token, par rapport à sa date de création.\n"
+    t.string "scopes", comment: "La liste des scopes d'autorisation liés au token. Pour le moment ça peut seulement être le scope unique `write`.\n"
+    t.datetime "created_at", null: false
+    t.datetime "revoked_at"
+    t.string "previous_refresh_token", default: "", null: false
+    t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
+  end
+
+  create_table "oauth_applications", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "uid", null: false, comment: "Un identifiant unique de l'appication OAuth. Contrairement à la colonne `secret`, cette information est publique.\n"
+    t.string "secret", null: false, comment: "Le secret de cette application, stocké de manière chiffrée comme les mots de passe.\n"
+    t.text "redirect_uri", null: false, comment: "La liste des url de callback de cette application, séparés par des retours à la ligne. Attention à ne pas oublier de mettre ou d'enlever les slash de fin d'adresse en fonction du comportement de l'application cliente.\n"
+    t.string "scopes", default: "", null: false, comment: "Pour le moment, on utilise uniquement le scope par défaut `write` pour toutes les applications, donc cette colonne sera toujours vide. Quand on commencera à affiner les permissions, on pourra commencer à utiliser cette colonne.\n"
+    t.boolean "confidential", default: true, null: false, comment: "Cette colonne n'est pas utilisée, et sa valeur doit toujours être à true. Elle est prévue par la gem Doorkeeper pour être à false pour les applications dont le secret est public (SPA et applis mobiles). Ce n'est pas encore un cas d'usage qui nous concerne.\n"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "logo_base64"
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+  end
+
   create_table "organisations", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -818,6 +861,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_29_151445) do
   add_foreign_key "motifs", "services"
   add_foreign_key "motifs_plage_ouvertures", "motifs"
   add_foreign_key "motifs_plage_ouvertures", "plage_ouvertures"
+  add_foreign_key "oauth_access_grants", "agents", column: "resource_owner_id"
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"

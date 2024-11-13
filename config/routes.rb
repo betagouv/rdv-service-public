@@ -17,6 +17,13 @@ Rails.application.routes.draw do
     get "omniauth/github/callback" => "omniauth_callbacks#github"
   end
 
+  ## OAUTH PROVIDER ##
+  use_doorkeeper do
+    skip_controllers :applications # Ces routes permettent de configurer les applications OAuth autorisées
+    # Par soucis de sécurité, on préfère les fermer, et permettre la configuration de ces applications uniquement par des devs en console.
+    # voir scripts/create_oauth_application.rb
+  end
+
   ## ADMIN ##
   get "connexion_super_admins", to: "welcome#super_admin"
 
@@ -90,6 +97,9 @@ Rails.application.routes.draw do
     sessions: "agents/sessions",
     passwords: "agents/passwords",
   }
+  devise_scope :agent do
+    get "agents/sign_out", to: "agents/sessions#destroy" # Utilisé par les clients Oauth pour se déconnecter
+  end
 
   devise_scope :agent do
     get "agents/edit" => "agents/registrations#edit", as: "edit_agent_registration"

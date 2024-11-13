@@ -1,0 +1,45 @@
+h1.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
+
+.card
+  .card-body
+    .d-flex.justify-content-center
+      = image_tag(@pre_auth.client.application.logo_base64, width: 200, alt: "Le logo de #{@pre_auth.client.application.name}")
+
+      = image_tag(current_domain.dark_logo_path, width: 200, alt: "Le logo de #{current_domain.name}")
+
+    p.rdv-text-align-center
+      i.fa-solid.fa-circle-check.color-scheme-green.mr-1
+      | #{@pre_auth.client.name} est une application partenaire de #{current_domain.name}.
+
+    p.rdv-text-align-center
+      ' En continuant, vous allez permettre à <b>#{@pre_auth.client.application.name}</b> d'accéder à votre compte <b>#{current_domain.name}</b>
+      ' lié à l'adresse #{current_agent.email}
+
+    - @pre_auth.scopes.each do |scope|
+      / Quand on affinera les scopes, il faudra ajouter des textes d'explication pour les permissions données ici
+      /= t(scope, scope: [:doorkeeper, :scopes])
+
+    .row.rdv-text-align-center
+      .col-md-6
+        = form_tag oauth_authorization_path, method: :delete do
+          = hidden_field_tag :client_id, @pre_auth.client.uid, id: nil
+          = hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil
+          = hidden_field_tag :state, @pre_auth.state, id: nil
+          = hidden_field_tag :response_type, @pre_auth.response_type, id: nil
+          = hidden_field_tag :response_mode, @pre_auth.response_mode, id: nil
+          = hidden_field_tag :scope, @pre_auth.scope, id: nil
+          = hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil
+          = hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil
+          = submit_tag "Annuler", class: "btn btn-outline-primary"
+
+      .col-md-6
+        = form_tag oauth_authorization_path, method: :post do
+          = hidden_field_tag :client_id, @pre_auth.client.uid, id: nil
+          = hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil
+          = hidden_field_tag :state, @pre_auth.state, id: nil
+          = hidden_field_tag :response_type, @pre_auth.response_type, id: nil
+          = hidden_field_tag :response_mode, @pre_auth.response_mode, id: nil
+          = hidden_field_tag :scope, @pre_auth.scope, id: nil
+          = hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil
+          = hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil
+          = submit_tag "Continuer", class: "btn btn-primary"
