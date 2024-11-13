@@ -1,11 +1,9 @@
-- if current_domain.france_connect_enabled || params[:force_franceconnect].present?
-  .rdv-text-align-center
-    .fr-connect-group
-      = link_to "/omniauth/franceconnect", class: "fr-connect", method: :post, title: "S’identifier avec FranceConnect" do
-        span.fr-connect__login S’identifier avec
-        span.fr-connect__brand FranceConnect
+.rdv-text-align-center
+  .fr-connect-group
+    = link_to "/omniauth/franceconnect", class: "fr-connect", method: :post, title: "S’identifier avec FranceConnect" do
+      span.fr-connect__login S’identifier avec
+      span.fr-connect__brand FranceConnect
 
-    p
-      = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "fr-link", title: "Qu’est-ce que FranceConnect ? - Nouvelle fenêtre"
+  p
+    = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "fr-link", title: "Qu’est-ce que FranceConnect ? - Nouvelle fenêtre"
 
-  p.fr-hr-or ou
