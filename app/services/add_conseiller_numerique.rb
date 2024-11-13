@@ -2,23 +2,36 @@ class AddConseillerNumerique
   class ConseillerNumerique
     include ActiveModel::Model
 
-    attr_accessor :email, :first_name, :last_name, :external_id, :secondary_email, :old_email
+    attr_accessor :email, :first_name, :last_name
+    attr_writer :external_id
+
+    def external_id
+      "conseiller-numerique-#{@external_id}"
+    end
   end
 
   class Structure
     include ActiveModel::Model
 
-    attr_accessor :name, :address, :external_id
+    attr_accessor :name, :external_id
   end
 
-  def initialize(conseiller_numerique_attributes)
-    structure_attributes = conseiller_numerique_attributes.delete(:structure)
-    @conseiller_numerique = ConseillerNumerique.new(conseiller_numerique_attributes)
-    @structure = Structure.new(structure_attributes)
+  class LieuConum
+    include ActiveModel::Model
+
+    attr_accessor :name, :address
   end
 
-  def self.process!(conseiller_numerique_attributes)
-    new(conseiller_numerique_attributes).process!
+  def initialize(agent:, organisation:, lieux:)
+    @conseiller_numerique = ConseillerNumerique.new(agent)
+    @structure = Structure.new(organisation)
+    @lieux = lieux.map do |lieu_hash|
+      LieuConum.new(lieu_hash)
+    end
+  end
+
+  def self.process!(agent:, organisation:, lieux:)
+    new(agent:, organisation:, lieux:).process!
   end
 
   def process!
@@ -38,23 +51,11 @@ class AddConseillerNumerique
   def find_or_invite_agent(organisation)
     existing_agent = Agent.where(deleted_at: nil).find_by(external_id: @conseiller_numerique.external_id)
     if existing_agent
-      if organisation.in?(existing_agent.organisations)
-        Rails.logger.info("#{@conseiller_numerique.email} existe déjà et est déjà dans l'orga #{organisation.name}.")
-      else
-        Rails.logger.info("#{@conseiller_numerique.email} existe déjà mais semble avoir changé d'organisation. Ajoutons-le dans #{organisation.name}")
+      unless organisation.in?(existing_agent.organisations)
         existing_agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       end
-
-      # supprimer cette mise à jour une fois que tous les agents ont confirmé leur changement d'email
-      agent_with_old_email = Agent.active.find_by(
-        external_id: @conseiller_numerique.external_id,
-        email: @conseiller_numerique.old_email,
-        unconfirmed_email: nil
-      )
-
-      agent_with_old_email&.update(email: @conseiller_numerique.email)
+      existing_agent
     else
-      Rails.logger.info "Invitation de #{@conseiller_numerique.email}..."
       invite_agent(organisation)
     end
   end
@@ -69,10 +70,6 @@ class AddConseillerNumerique
         services: [service],
         password: SecureRandom.base64(32),
         roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
-      },
-      nil, # cet argument est le invited_by, qui n'a pas de sens dans ce contexte
-      { # ce troisième argument permet de passer des options au mailer Devise
-        cnfs_secondary_email: @conseiller_numerique.secondary_email,
       }
     ).tap do |agent|
       agent.agent_territorial_access_rights.find_or_create_by!(territory: territory)
@@ -87,7 +84,7 @@ class AddConseillerNumerique
       verticale: :rdv_aide_numerique
     )
     create_motifs(organisation)
-    create_lieu(organisation)
+    create_lieux(organisation)
     organisation
   end
 
@@ -127,37 +124,39 @@ class AddConseillerNumerique
     )
   end
 
-  def create_lieu(organisation)
-    longitude, latitude = coordinates
+  def create_lieux(organisation)
+    @lieux.each do |lieu|
+      longitude, latitude = coordinates(lieu.address)
 
-    Lieu.create!(
-      name: @structure.name,
-      organisation: organisation,
-      latitude: latitude,
-      longitude: longitude,
-      address: @structure.address,
-      availability: :enabled
-    )
+      Lieu.create!(
+        name: lieu.name,
+        organisation: organisation,
+        latitude: latitude,
+        longitude: longitude,
+        address: lieu.address,
+        availability: :enabled
+      )
+    end
   end
 
-  def coordinates
-    adresse_api_response.dig("features", 0, "geometry", "coordinates")
+  def coordinates(address)
+    adresse_api_response(address).dig("features", 0, "geometry", "coordinates")
   end
 
   def city_name
-    adresse_api_response.dig("features", 0, "properties", "city")
+    adresse_api_response(@lieux.first.address).dig("features", 0, "properties", "city")
   end
 
-  def adresse_api_response
+  def adresse_api_response(address)
     zipcode_regex = /\d{5}/
-    zipcode = @structure.address[zipcode_regex]
+    zipcode = address[zipcode_regex]
 
-    @adresse_api_response ||= Faraday.get(
+    response = Faraday.get(
       "https://api-adresse.data.gouv.fr/search/",
-      q: @structure.address,
+      q: address,
       postcode: zipcode
     )
-    JSON.parse(@adresse_api_response.body)
+    JSON.parse(response.body)
   end
 
   def territory
