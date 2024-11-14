@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :agent do
-    email { Faker::Internet.email(name: full_name, domain: "agent.gouv.fr") }
+    sequence(:email) { |n| Faker::Internet.email(name: "last_name #{n}", domain: "agent.gouv.fr") }
     uid { email }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
-    password { Faker::Internet.password(min_length: 12, max_length: 32, mix_case: true, special_characters: true) }
+    password { generate(:valid_password) }
     confirmed_at { 2.days.ago }
     invitation_accepted_at { 2.days.ago }
 

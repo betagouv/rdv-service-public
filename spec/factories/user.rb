@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user do
-    email { Faker::Internet.email(name: user.full_name) }
+    email { Faker::Internet.email }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name.upcase }
     phone_number do
@@ -10,7 +10,7 @@ FactoryBot.define do
     end
     birth_date { Faker::Date.birthday(min_age: 1, max_age: 120) }
     address { Faker::Address.full_address }
-    password { Faker::Internet.password(min_length: 12, max_length: 32, mix_case: true, special_characters: true) }
+    password { generate(:valid_password) }
     password_confirmation { password }
     confirmed_at { Time.zone.now }
     caisse_affiliation { "caf" }
