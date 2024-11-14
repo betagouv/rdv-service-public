@@ -109,8 +109,8 @@ class Domain
         URI.parse(ENV.fetch("HOST", nil)).host
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
         {
-          RDV_SOLIDARITES => "staging.rdv-solidarites.fr",
-          RDV_AIDE_NUMERIQUE => "staging.rdv-aide-numerique.fr",
+          RDV_SOLIDARITES => "staging.rdv-solidarites.fr", # sous-domaine pas configuré
+          RDV_AIDE_NUMERIQUE => "staging.rdv-aide-numerique.fr", # sous-domaine pas configuré
           RDV_MAIRIE => "staging.rdv-service-public.fr",
         }.fetch(self)
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
