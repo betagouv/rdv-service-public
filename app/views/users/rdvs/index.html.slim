@@ -6,7 +6,8 @@
         = link_to "Voir vos prochains RDV", users_rdvs_path, class: "btn btn-outline-primary"
       - else
         = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "btn btn-outline-primary"
-      = render "prendre_rdv_button"
+      - if current_domain != Domain::RDV_MAIRIE
+        = render "prendre_rdv_button"
 
     - if @rdvs.any?
           - @rdvs.each do |rdv|
