@@ -16,8 +16,13 @@ class SearchController < ApplicationController
                else
                  WebSearchContext.new(user: current_user, query_params: query_params)
                end
-    if current_domain == Domain::RDV_MAIRIE && request.path == "/"
-      render "dsfr/rdv_mairie/homepage"
+
+    if current_domain == Domain::RDV_MAIRIE && request.query_parameters.empty?
+      if request.path == "/prendre_rdv"
+        redirect_to root_path
+      else
+        render "dsfr/rdv_mairie/homepage"
+      end
     end
   end
 
