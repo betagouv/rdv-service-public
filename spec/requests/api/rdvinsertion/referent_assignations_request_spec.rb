@@ -79,4 +79,26 @@ RSpec.describe "Referent Assignation authentified API" do
       end
     end
   end
+
+  describe "GET /api/rdvinsertion/users/:id/referent_assignations" do
+    let(:agent) { create(:agent, basic_role_in_organisations: [organisation_rdv_insertion]) }
+    let(:user) { create(:user, organisations: [organisation_rdv_insertion], referent_agents: [agent, other_agent]) }
+    let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation_rdv_solidarites]) }
+    let(:organisation_rdv_insertion) { create(:organisation, verticale: "rdv_insertion") }
+    let(:organisation_rdv_solidarites) { create(:organisation, verticale: "rdv_solidarites") }
+    let(:shared_secret) { "S3cr3T" }
+    let(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
+
+    before do
+      allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
+    end
+
+    it "returns the referent assignations" do
+      get api_rdvinsertion_user_referent_assignations_path(user.id), headers: auth_headers
+      expect(response.status).to eq(200)
+      response_referent_assignations = response.parsed_body["referent_assignations"]
+      response_referent_assignations_agent_ids = response_referent_assignations.map { |referent_assignation| referent_assignation.dig("agent", "id") }
+      expect(response_referent_assignations_agent_ids).to contain_exactly(agent.id)
+    end
+  end
 end
