@@ -46,7 +46,7 @@ class AgentConnectController < ApplicationController
 
       bypass_sign_in agent, scope: :agent
       session[:agent_connect_id_token] = callback_client.id_token_for_logout
-      redirect_to root_path
+      redirect_to after_sign_in_path_for(agent)
     else
       # On pourrait améliorer le cas d'erreur décrit dans https://github.com/betagouv/rdv-service-public/issues/4360
       flash[:error] = "Il n'y a pas de compte agent pour l'adresse mail #{callback_client.user_email}.<br />" \

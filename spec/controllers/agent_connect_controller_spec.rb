@@ -49,6 +49,8 @@ RSpec.describe AgentConnectController do
     before do
       session[:agent_connect_state] = state
       AgentConnectStubs.stub_callback_requests(code, user_info)
+
+      session[:agent_return_to] = "/agents/edit" # Pour simuler le retour vers la page demandée avant la connexion
     end
 
     it "updates and logs in the agent" do
@@ -62,6 +64,8 @@ RSpec.describe AgentConnectController do
         last_sign_in_at: be_within(10.seconds).of(Time.zone.now)
       )
       expect(session["agent_connect_id_token"]).to be_present
+
+      expect(response).to redirect_to("/agents/edit")
     end
 
     context "when the agent has a name with two words" do
