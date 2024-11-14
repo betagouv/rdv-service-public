@@ -16,7 +16,7 @@ FactoryBot.define do
       channel { :mail }
       sms_count { nil }
       sms_phone_number { nil }
-      email_address { user.email || Faker::Internet.email(name: user.full_name) }
+      email_address { user.email || Faker::Internet.email }
     end
   end
 end
