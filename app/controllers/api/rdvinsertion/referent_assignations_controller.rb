@@ -5,11 +5,8 @@ class Api::Rdvinsertion::ReferentAssignationsController < Api::Rdvinsertion::Age
   def index
     referent_assignations = ReferentAssignation
       .where(user: @user)
-      .where(
-        agent_id: Agent.joins(:organisations)
-                       .where(organisations: { verticale: "rdv_insertion" })
-                       .select(:id)
-      )
+      .joins(agent: :organisations)
+      .where(organisations: { verticale: "rdv_insertion" })
       .distinct
 
     render_collection referent_assignations
