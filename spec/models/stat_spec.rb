@@ -70,7 +70,7 @@ RSpec.describe Stat, type: :model do
       home_motif = create(:motif, location_type: :home)
       create(:rdv, motif: home_motif, created_at: now)
       stats = described_class.new(rdvs: Rdv.all)
-      expect(stats.rdvs_group_by_territory_name).to eq({ ["Territoire n°2", "23/01/2022"] => 1 })
+      expect(stats.rdvs_group_by_territory_name).to eq({ [home_motif.organisation.territory.name, "23/01/2022"] => 1 })
     end
   end
 
