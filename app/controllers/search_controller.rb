@@ -6,6 +6,7 @@ class SearchController < ApplicationController
   # utilisé par le Pas-de-Calais pour prendre rdv depuis leur site : https://www.pasdecalais.fr/Solidarite-Sante/Enfance-et-famille/La-Protection-Maternelle-et-Infantile/Prendre-rendez-vous-en-ligne-en-MDS-PMI-ou-service-social
   after_action :allow_iframe
 
+  # rubocop:disable Metrics/PerceivedComplexity
   def search_rdv
     # TODO : public_link_organisation_id has to work if agent is logged in ?
     if current_agent && params[:prescripteur] == Prescripteur::INTERNE && session[:agent_prescripteur_organisation_id]
@@ -25,6 +26,7 @@ class SearchController < ApplicationController
       end
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def public_link_with_internal_organisation_id
     organisation = Organisation.find(params[:organisation_id])
