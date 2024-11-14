@@ -1,14 +1,12 @@
 FactoryBot.define do
-  sequence(:agent_email) { |n| "agent_#{n}@lapin.fr" }
-
   factory :agent do
-    email { generate(:agent_email) }
+    email { Faker::Internet.email(name: full_name, domain: "agent.gouv.fr") }
     uid { email }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
-    password { "Correcth0rse!" }
-    confirmed_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
-    invitation_accepted_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
+    password { Faker::Internet.password(min_length: 12, max_length: 32, mix_case: true, special_characters: true) }
+    confirmed_at { 2.days.ago }
+    invitation_accepted_at { 2.days.ago }
 
     transient do
       service { build(:service) }

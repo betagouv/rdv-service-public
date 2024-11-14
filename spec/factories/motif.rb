@@ -7,10 +7,10 @@ FactoryBot.define do
     motif_category { association(:motif_category) }
 
     name { generate(:motif_name) }
-    default_duration_in_min { 45 }
-    min_public_booking_delay { 30.minutes.seconds }
-    max_public_booking_delay { 6.months.seconds }
-    sequence(:color) { |n| ["#bff3c8", "#336650", "#0066ee", "#3300ee"][n % 4] }
+    default_duration_in_min { random_value_in([15, 30, 45, 60, 90]) }
+    min_public_booking_delay { random_value_in([30.minutes, 4.hours, 2.days]) }
+    max_public_booking_delay { random_value_in([3.days, 3.weeks, 6.months]) }
+    color { random_value_in(["#bff3c8", "#336650", "#0066ee", "#3300ee"]) }
     bookable_by { :everyone }
     location_type { :public_office }
     visibility_type { Motif::VISIBLE_AND_NOTIFIED }

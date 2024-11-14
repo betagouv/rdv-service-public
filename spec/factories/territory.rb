@@ -1,10 +1,10 @@
 FactoryBot.define do
   sequence(:territory_name) { |n| "Territoire n°#{n}" }
-  sequence(:departement_number)
+  sequence(:departement_number) { |n| n.to_s.rjust(2, "0") }
 
   factory :territory do
     name { generate(:territory_name) }
-    departement_number { generate(:departement_number).to_s.rjust(2, "0") }
+    departement_number { generate(:departement_number) }
     sms_provider { "netsize" }
     sms_configuration { "a_key" }
   end

@@ -5,8 +5,8 @@ FactoryBot.define do
     motif { build(:motif, organisation: organisation) }
     agents { [build(:agent, organisations: [organisation])] }
 
-    duration_in_min { 45 }
-    starts_at { 3.days.from_now }
+    duration_in_min { motif&.default_duration_in_min || random_value_in([15, 30, 45, 60, 90]) }
+    starts_at { Faker::Time.forward(days: 7) }
 
     status { "unknown" }
 
@@ -21,23 +21,23 @@ FactoryBot.define do
       lieu { nil }
     end
     trait :past do
-      starts_at { 1.day.ago.at_noon }
+      starts_at { Faker::Time.backward(days: 30) }
     end
     trait :future do
-      starts_at { 2.days.from_now.at_noon }
+      starts_at { Faker::Time.forward(days: 7) }
     end
     trait :at_home do
       motif { build(:motif, :at_home, organisation: organisation) }
       lieu { nil }
     end
     trait :excused do
-      cancelled_at { Time.zone.parse("2020-01-15 10:30").in_time_zone }
+      cancelled_at { 2.days.ago }
       status { "excused" }
     end
 
     trait(:with_fake_timestamps) do
-      created_at { Time.zone.parse("2020-06-05 13:51") }
-      updated_at { Time.zone.parse("2020-06-05 13:51") }
+      created_at { 2.days.ago }
+      updated_at { created_at }
     end
 
     # by default, attach a new user when building a RDV

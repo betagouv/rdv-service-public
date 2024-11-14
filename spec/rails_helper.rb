@@ -81,7 +81,11 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
+
     Rack::Attack.enabled = false
+
+    Faker::Config.locale = :fr
+    Faker::Config.random = Random.new(config.seed)
   end
 
   config.around do |example|

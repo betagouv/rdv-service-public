@@ -5,7 +5,7 @@ FactoryBot.define do
     agent { association(:agent) }
 
     title { generate(:absence_title) }
-    first_day { Time.zone.tomorrow }
+    first_day { Faker::Date.forward(days: 7) }
     start_time { Tod::TimeOfDay.new(10) }
     end_time { Tod::TimeOfDay.new(15, 30) }
     no_recurrence

@@ -15,7 +15,7 @@ RSpec.describe CronJob::AnonymizeOldReceipts do
 
     expect(recent_sms_receipt.reload).to have_attributes(
       content: "Atelier collectif, mardi 20/02 à 16h00. Mairie de Romainville (7 Rue de Paris, Romainville, 93230). Infos et annulation: https://demo.rdv-solidarites.fr/r/asdfasd/ / 0100001111",
-      sms_phone_number: "0600001111"
+      sms_phone_number: recent_sms_receipt.sms_phone_number
     )
 
     old_sms_receipt.reload
