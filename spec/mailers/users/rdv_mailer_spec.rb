@@ -8,7 +8,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     it "renders the headers" do
       expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
       expect(mail.to).to eq([user.email])
-      expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
+      expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites-test.localhost"])
     end
 
     it "renders the subject" do
@@ -82,7 +82,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       mail = described_class.with(rdv: rdv, user: user, token: token).rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
       expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
       expect(mail.to).to eq([user.email])
-      expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
+      expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites-test.localhost"])
     end
 
     it "indicates the previous and current values" do
@@ -118,7 +118,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
       expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
       expect(mail.to).to eq([user.email])
-      expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
+      expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites-test.localhost"])
     end
 
     it "subject contains date of cancelled rdv" do
@@ -176,7 +176,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       mail = described_class.with(rdv: rdv, user: user, token: token).rdv_upcoming_reminder
       expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
       expect(mail.to).to eq([user.email])
-      expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
+      expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites-test.localhost"])
       expect(mail.html_part.body).to include("Nous vous rappellons que vous avez un RDV prévu")
       expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}?invitation_token=12345")
     end
