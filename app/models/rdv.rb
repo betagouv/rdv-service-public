@@ -211,11 +211,6 @@ class Rdv < ApplicationRecord
     CreneauxSearch::Calculator.available_slots(motif, lieu, date_range)
   end
 
-  def user_for_home_rdv
-    responsibles = users.loaded? ? users.select(&:responsible_id) : users.where.not(responsible_id: [nil])
-    [responsibles, users].flatten.select(&:address).first || users.first
-  end
-
   # Ces plages d'ouvertures sont utilisé pour afficher des infos
   # s'il y a un chevauchement avec le RDV.
   #
