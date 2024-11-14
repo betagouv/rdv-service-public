@@ -5,7 +5,7 @@ RSpec.describe "Handling an email reply from a user" do
          headers: { "Content-Type" => "application/json" }
   end
 
-  stub_env_with(SENDINBLUE_INBOUND_PASSWORD: "S3cr3T")
+  stub_env_with(BREVO_INBOUND_PASSWORD: "S3cr3T")
 
   context "when using a valid password" do
     let(:password_param) { "S3cr3T" }
@@ -26,7 +26,7 @@ RSpec.describe "Handling an email reply from a user" do
 
     it "warns Sentry" do
       receive_sendinblue_callback
-      expect(sentry_events.last.message).to eq("Sendinblue inbound controller was called without valid password")
+      expect(sentry_events.last.message).to eq("Brevo inbound controller was called without valid password")
     end
   end
 end

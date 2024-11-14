@@ -4,7 +4,7 @@
 class InboundEmailsController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
-  before_action :authenticate_sendinblue
+  before_action :authenticate_brevo
 
   def sendinblue
     payload = request.params["items"].first
@@ -13,10 +13,10 @@ class InboundEmailsController < ActionController::Base
 
   private
 
-  def authenticate_sendinblue
-    return if ActiveSupport::SecurityUtils.secure_compare(ENV["SENDINBLUE_INBOUND_PASSWORD"], params[:password])
+  def authenticate_brevo
+    return if ActiveSupport::SecurityUtils.secure_compare(ENV["BREVO_INBOUND_PASSWORD"], params[:password])
 
-    Sentry.capture_message("Sendinblue inbound controller was called without valid password", fingerprint: ["sib_inbound_pw_invalid"])
+    Sentry.capture_message("Brevo inbound controller was called without valid password", fingerprint: ["brevo_inbound_pw_invalid"])
     head :unauthorized
   end
 end
