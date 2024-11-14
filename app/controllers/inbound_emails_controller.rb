@@ -6,7 +6,7 @@ class InboundEmailsController < ActionController::Base
 
   before_action :authenticate_brevo
 
-  def sendinblue
+  def brevo
     payload = request.params["items"].first
     TransferEmailReplyJob.perform_later(payload)
   end
