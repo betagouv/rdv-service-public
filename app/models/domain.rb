@@ -81,7 +81,7 @@ class Domain
   ].freeze
 
   def documentation_url
-    "https://rdvs.notion.site/Centre-d-aide-f0a2bf87ca854fbc8855a2a20d6eb4d1"
+    "https://rdv-service-public-1.gitbook.io/rdv-service-public"
   end
 
   def agent_connect_client_id
