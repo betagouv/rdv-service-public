@@ -74,20 +74,20 @@ RSpec.describe "Agents can be managed by organisation admins" do
       create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation1], invitation_accepted_at: nil)
 
       click_link "Agents"
-      expect_page_title("Agents de Organisation n°1")
+      expect_page_title("Agents de #{organisation1.name}")
 
       click_link "PATRICK Tony"
       expect_page_title("Modifier le niveau de permission de l'agent Tony PATRICK")
       choose "Administrateur"
       click_button("Enregistrer")
 
-      expect_page_title("Agents de Organisation n°1")
+      expect_page_title("Agents de #{organisation1.name}")
       expect(page).to have_content("Administrateur", count: 2)
 
       click_link "PATRICK Tony"
       click_link("Supprimer le compte")
 
-      expect_page_title("Agents de Organisation n°1")
+      expect_page_title("Agents de #{organisation1.name}")
       expect(page).to have_no_content("Tony PATRICK")
 
       click_link "Ajouter un agent", match: :first
@@ -95,7 +95,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
       check(pmi.name)
       click_button "Enregistrer"
 
-      expect_page_title("Invitations en cours pour Organisation n°1")
+      expect_page_title("Invitations en cours pour #{organisation1.name}")
       expect(page).to have_content("jean@paul.com")
 
       click_on "Se déconnecter"

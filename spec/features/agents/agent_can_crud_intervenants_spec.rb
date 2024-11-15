@@ -9,7 +9,7 @@ RSpec.describe "Agent can CRUD intervenants" do
 
   specify "full intervenant lifecycle", js: true do
     visit admin_organisation_agents_path(organisation)
-    expect_page_title("Agents de Organisation n°1")
+    expect_page_title("Agents de #{organisation.name}")
 
     # Create an intervenant
     click_link "Ajouter un agent", match: :first
@@ -18,7 +18,7 @@ RSpec.describe "Agent can CRUD intervenants" do
     find("label", text: "Intervenant").click
     fill_in "Nom", with: "Avocat 1"
     click_button("Enregistrer")
-    expect_page_title("Agents de Organisation n°1")
+    expect_page_title("Agents de #{organisation.name}")
     expect(page).to have_content("AVOCAT 1")
     expect(Agent.last).to have_attributes(
       plage_ouverture_notification_level: "none",
@@ -31,7 +31,7 @@ RSpec.describe "Agent can CRUD intervenants" do
     expect_page_title("Modifier le niveau de permission de l'agent INTERVENANT1")
     fill_in "Nom", with: "Nouveau nom"
     click_button("Modifier le nom")
-    expect_page_title("Agents de Organisation n°1")
+    expect_page_title("Agents de #{organisation.name}")
     expect(page).to have_content("AVOCAT 1")
 
     # Change the intervenant into an admin agent
@@ -60,7 +60,7 @@ RSpec.describe "Agent can CRUD intervenants" do
       absence_notification_level: "all"
     )
 
-    expect_page_title("Invitations en cours pour Organisation n°1")
+    expect_page_title("Invitations en cours pour #{organisation.name}")
     expect(page).to have_content("ancien_intervenant1@invitation.com")
     expect(page).to have_content("FICTIF Bob")
 
@@ -80,7 +80,7 @@ RSpec.describe "Agent can CRUD intervenants" do
       click_button("Enregistrer")
     end
 
-    expect_page_title("Agents de Organisation n°1")
+    expect_page_title("Agents de #{organisation.name}")
 
     expect(Agent.last.roles.pluck(:access_level)).to eq ["intervenant"]
     expect(Agent.last).to have_attributes(
@@ -111,7 +111,7 @@ RSpec.describe "Agent can CRUD intervenants" do
     accept_alert do
       click_link("Supprimer le compte")
     end
-    expect_page_title("Agents de Organisation n°1")
+    expect_page_title("Agents de #{organisation.name}")
     expect(page).to have_no_content("FICTIF")
   end
 
