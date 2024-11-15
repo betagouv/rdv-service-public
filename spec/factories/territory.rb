@@ -14,6 +14,7 @@ FactoryBot.define do
   end
 
   trait :conseillers_numeriques do
+    name { SecureRandom.uuid }
     departement_number { Territory::CN_DEPARTEMENT_NUMBER }
     after(:create) do |territory, _|
       # Les contraintes de validations sur les noms spéciaux obligent à faire un update_columns ici
