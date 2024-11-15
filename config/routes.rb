@@ -308,7 +308,6 @@ Rails.application.routes.draw do
     "users/rdvs/#{path_params[:id]}#{query_params}"
   end), as: "rdv_short"
 
-  # TODO: remplacer `prendre_rdv` par le root_path
   get "prdv", to: (redirect do |_path_params, req|
     query_params = format_redirect_params(req.params)
     "prendre_rdv#{query_params}"
@@ -342,9 +341,9 @@ Rails.application.routes.draw do
   get "presentation_agent" => "static_pages#presentation_for_agents"
 
   resources :lieux, only: %i[index show]
-  root "search#search_rdv"
 
-  # TODO: remplacer `prendre_rdv` par le root_path
+  root "search#home"
+
   get "/prendre_rdv", to: "search#search_rdv"
 
   # temporary route after admin namespace introduction

@@ -14,8 +14,9 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(resource)
-    return "https://#{ENV['FRANCECONNECT_HOST']}/api/v1/logout" \
-      if @connected_with_franceconnect
+    if @connected_with_franceconnect
+      return "https://#{ENV['FRANCECONNECT_HOST']}/api/v1/logout"
+    end
 
     super
   end

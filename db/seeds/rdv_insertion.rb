@@ -350,6 +350,7 @@ application = Doorkeeper::Application.new(
   name: "RDV Insertion",
   uid: "zC24y16rYftyrBgTj8h08g1NZKkwStXWe3E_lLMGoHc",
   redirect_uri: "http://localhost:8000/auth/rdvservicepublic/callback",
+  post_logout_redirect_uri: "http://localhost:8000/",
   logo_base64: rdv_insertion_logo_base64
 )
 

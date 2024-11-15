@@ -5,8 +5,8 @@ module OmniAuth
     class RdvServicePublic < OmniAuth::Strategies::OAuth2
       option :base_url, "https://demo.rdv.anct.gouv.fr" # L'url de base pour les appels
 
-      def self.sign_out_path
-        "/agents/sign_out"
+      def self.sign_out_path(oauth_client_app_id)
+        "/agents/sign_out?oauth_client_app_id=#{oauth_client_app_id}"
       end
 
       # On change les options passées en dernier argument par rapport à la classe mère

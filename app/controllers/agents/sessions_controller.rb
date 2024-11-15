@@ -12,14 +12,27 @@ class Agents::SessionsController < Devise::SessionsController
   end
 
   def destroy
-    if session[:agent_connect_id_token]
-      sign_out(:agent) && set_flash_message!(:notice, :signed_out)
+    if params[:oauth_client_app_id].present? && params[:oauth_client_app_id].in?(session[:oauth_app_ids])
+      oauth_app = Doorkeeper::Application.find_by(uid: params[:oauth_client_app_id])
+      @oauth_client_app_post_logout_redirect_url = oauth_app.post_logout_redirect_uri
+    end
 
-      agent_connect_client = AgentConnectOpenIdClient::Logout.new(session.delete(:agent_connect_id_token))
+    agent_connect_id_token = session.delete(:agent_connect_id_token)
+
+    sign_out(:agent)
+
+    if @oauth_client_app_post_logout_redirect_url
+      session[:post_logout_redirect_url] = @oauth_client_app_post_logout_redirect_url
+    else
+      set_flash_message!(:notice, :signed_out)
+    end
+
+    if agent_connect_id_token
+      agent_connect_client = AgentConnectOpenIdClient::Logout.new(agent_connect_id_token)
 
       redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true
     else
-      super
+      redirect_to after_sign_out_path_for(:agent)
     end
   end
 
