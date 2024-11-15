@@ -10,6 +10,7 @@ RSpec.describe "Agent can delete user" do
       last_name: "SWAN",
       birth_date: nil,
       phone_number: "01 02 03 04 05",
+      address: "rue de chez Swan, 87000 Limoges",
       logement: "locataire"
     )
   end
@@ -24,6 +25,7 @@ RSpec.describe "Agent can delete user" do
       last_name: "SWAN",
       birth_date: nil,
       phone_number: "01 09 09 09 09",
+      address: "rue de chez Swan, 87000 Limoges",
       organisations: [organisation],
       logement: "proprietaire"
     )
