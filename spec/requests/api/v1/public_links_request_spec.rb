@@ -13,7 +13,7 @@ RSpec.describe "Public links API", swagger_doc: "v1/api.json" do
       parameter name: "territory", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26"
 
       response 200, "Retourne les liens publics de recherche" do
-        let!(:terr) { create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER) }
+        let!(:terr) { create(:territory, :conseillers_numeriques) }
         let!(:organisation_a) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_A", territory: terr) }
         let!(:organisation_b) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_B", territory: terr) }
         let!(:organisation_c) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_C", territory: terr) }

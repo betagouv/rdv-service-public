@@ -19,7 +19,7 @@ RSpec.describe RdvBlueprint do
                                      "collectif" => false,
                                      "context" => nil,
                                      "created_by" => "agent",
-                                     "duration_in_min" => 45,
+                                     "duration_in_min" => rdv.duration_in_min.to_i,
                                      "max_participants_count" => nil,
                                      "name" => nil,
                                    })
