@@ -52,7 +52,7 @@ RSpec.configure do |config|
     "v1/api.json" => {
       openapi: "3.0.1",
       info: {
-        title: "API RDV Solidarités",
+        title: "API de RDV Service Public",
         version: "v1",
         description: Rails.root.join("docs/api/v1/description_api.md").read,
       },
@@ -581,7 +581,11 @@ RSpec.configure do |config|
         },
         {
           name: "PublicLink",
-          description: "Désigne des liens publics de recherche d'un territoire. Ces liens permettent d'accéder directement à la recherche, préfiltrée sur un territoire donné.",
+          description:
+          <<~DESCRIPTION,
+            Utilisé pour faire la correspondance entre des ids externes et des liens de prises de rdv au sein d'un territoire. Ces liens permettent d'accéder directement à la recherche de créneaux pour une organisation donnée.
+            Cet endpoint est rate-limité à 50 appels par minute par adresse IP.
+          DESCRIPTION
         },
         {
           name: "Absence",
@@ -601,8 +605,12 @@ RSpec.configure do |config|
           description: "Serveur de démo",
         },
         {
+          url: "https://rdv.anct.gouv.fr",
+          description: "Serveur de production pour RDV Service Public",
+        },
+        {
           url: "https://www.rdv-solidarites.fr",
-          description: "Serveur de production",
+          description: "Serveur de production pour RDV Solidarités",
         },
       ],
     },
