@@ -25,8 +25,8 @@ RSpec.describe "agents can prescribe rdvs" do
   let!(:motif_autre_service) { create(:motif, organisation: org_insertion, service: service_autre) }
 
   let!(:mds_paris_nord) { create(:lieu, organisation: org_mds) }
-  let!(:mission_locale_paris_nord) { create(:lieu, organisation: org_insertion) }
-  let!(:mission_locale_paris_sud) { create(:lieu, organisation: org_insertion) }
+  let!(:mission_locale_paris_nord) { create(:lieu, name: "ML Paris Nord", organisation: org_insertion) }
+  let!(:mission_locale_paris_sud) { create(:lieu, name: "ML Paris Sud", organisation: org_insertion) }
 
   before do
     next_month = (now + 1.month).to_date
