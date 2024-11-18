@@ -153,17 +153,25 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
+          SIMPLECOV_TEST_NAME: unit
+      - run: mv coverage/.resultset.json coverage-resultset-unit.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-resultset-unit
+          path: coverage-resultset-unit.json
   test_features:
     name: Feature Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
         # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’éxecution
-        dirname: [agents, "*"]
+        name: [agents, not-agents]
         include:
-          - dirname: agents
+          - name: agents
+            dirname: agents
             command: "parallel:spec[spec/features/agents]"
-          - dirname: "*"
+          - name: not-agents
+            dirname: "*"
             command: "parallel:spec['spec/features/(?!agents)']"
     services:
       postgres:
@@ -220,12 +228,12 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-          SIMPLECOV_TEST_NAME: Feature specs (matrix run ${{ matrix.dirname }})
-      - run: mv coverage/.resultset.json coverage-resultset-features-${{ matrix.dirname }}.json
+          SIMPLECOV_TEST_NAME: "features:${{ matrix.name }}"
+      - run: mv coverage/.resultset.json coverage-resultset-features-${{ matrix.name }}.json
       - uses: actions/upload-artifact@v4
         with:
-          name: coverage-resultset-features-${{ matrix.dirname }}
-          path: coverage-resultset-features-${{ matrix.dirname }}.json
+          name: coverage-resultset-features-${{ matrix.name }}
+          path: coverage-resultset-features-${{ matrix.name }}.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -236,6 +244,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - test_features
+      - test_unit
     steps:
       - uses: actions/checkout@v4
       - name: Set up Ruby
