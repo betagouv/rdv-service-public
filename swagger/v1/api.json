@@ -4006,34 +4006,6 @@
             }
           },
           {
-            "name": "logement",
-            "in": "query",
-            "enum": [
-              "sdf",
-              "heberge",
-              "en_accession_propriete",
-              "proprietaire",
-              "autre",
-              "locataire"
-            ],
-            "description": "Type de logement de l'utilisateur",
-            "example": "locataire",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "notes",
-            "in": "query",
-            "description": "Une note sur l'utilisateur",
-            "example": "Super note",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "notify_by_sms",
             "in": "query",
             "description": "Accepte les notifications par SMS",
