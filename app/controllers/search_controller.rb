@@ -7,7 +7,7 @@ class SearchController < ApplicationController
   after_action :allow_iframe
 
   def home
-    if search_params.compact_blank.any? || invitation?
+    if search_params.compact_blank.present? || invitation?
       redirect_to prendre_rdv_path(request.query_parameters) and return
     end
 
