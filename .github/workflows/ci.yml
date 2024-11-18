@@ -256,6 +256,8 @@ jobs:
         with:
           pattern: coverage-resultset-*
       - run: "bundle exec rake coverage:collate_reports"
+        env:
+          HOST: "http://example.com"
       - uses: joshmfrankel/simplecov-check-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -10,5 +10,5 @@ SimpleCov.start "rails" do
   add_group "Presenters", "app/presenters"
   add_group "Services", "app/services"
 
-  command_name ["Test", ENV["SIMPLECOV_TEST_NAME"], ENV["TEST_ENV_NUMBER"]].join(" - ")
+  command_name ["tests", ENV["SIMPLECOV_TEST_NAME"], ENV["TEST_ENV_NUMBER"]].compact.join(":")
 end
