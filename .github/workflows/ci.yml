@@ -246,7 +246,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           pattern: coverage-resultset-*
-      - run: "rake coverage:collate_reports"
+      - run: "bundle exec rake coverage:collate_reports"
       - uses: joshmfrankel/simplecov-check-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
