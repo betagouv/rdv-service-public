@@ -264,4 +264,7 @@ group :test do
 
   # Dépendence indirecte de axe-core-api
   gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
+
+  # Code Coverage analysis
+  gem "simplecov", require: false
 end

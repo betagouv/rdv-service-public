@@ -217,6 +217,7 @@ GEM
       devise (> 3.5.2, < 5)
       rails (>= 4.2.0, < 7.3)
     diff-lcs (1.5.0)
+    docile (1.4.1)
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
@@ -600,6 +601,12 @@ GEM
     simple_form (5.1.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
+    simplecov (0.22.0)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.13.1)
+    simplecov_json_formatter (0.1.4)
     skylight (6.0.1)
       activesupport (>= 5.2.0)
     slim (4.1.0)
@@ -773,6 +780,7 @@ DEPENDENCIES
   sentry-rails
   sentry-ruby
   simple_form (~> 5.0)
+  simplecov
   skylight
   slim
   slim_lint
