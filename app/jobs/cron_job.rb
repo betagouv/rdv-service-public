@@ -126,9 +126,9 @@ class CronJob < ApplicationJob
 
   class WarnAboutExpiringAzureAppSecrets < CronJob
     def perform
-      return if ENV["APP"] != "production-rdv-solidarites"
+      return if ENV["AZURE_SECRET_EXPIRE_DATE"].blank?
 
-      application_key_expiration_date = Date.new(2025, 3, 18)
+      application_key_expiration_date = Date.parse(ENV["AZURE_SECRET_EXPIRE_DATE"])
       key_refresh_url = "https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Credentials/appId/ad7b4a46-0051-47b6-bf31-713aa849e5d4/isMSAApp~/true"
 
       if 2.months.from_now > application_key_expiration_date
