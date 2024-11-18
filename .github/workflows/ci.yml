@@ -263,10 +263,10 @@ jobs:
         with:
           name: coverage-merged
           path: coverage
-          on_fail_status: neutral
       - uses: joshmfrankel/simplecov-check-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          on_fail_status: neutral
   test_boot_without_db:
     name: Boot web server without database
     runs-on: ubuntu-latest
