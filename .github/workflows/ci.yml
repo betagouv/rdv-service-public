@@ -220,14 +220,34 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-      - uses: joshmfrankel/simplecov-check-action@main
+          SIMPLECOV_TEST_NAME: Feature specs (matrix run ${{ matrix.dirname }})
+      - run: mv coverage/.resultset.json coverage-resultset-features-${{ matrix.dirname }}.json
+      - uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          name: coverage-resultset-features-${{ matrix.dirname }}
+          path: coverage-resultset-features-${{ matrix.dirname }}.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: artifacts-capybara
           path: tmp/capybara
+  report_simplecov:
+    name: Report Simplecov
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-resultset-*
+      - run: "rake coverage:collate_reports"
+      - uses: joshmfrankel/simplecov-check-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
   test_boot_without_db:
     name: Boot web server without database
     runs-on: ubuntu-latest
