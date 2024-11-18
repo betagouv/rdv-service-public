@@ -16,13 +16,15 @@ class SearchController < ApplicationController
     elsif current_domain == Domain::RDV_AIDE_NUMERIQUE
       render "home/rdv_aide_numerique"
     else
-      set_context # needed by address search bar
+      @context = context_service # needed by address search bar
       render "home/rdv_solidarites"
     end
   end
 
   def search_rdv
-    if !search_params? && current_domain != Domain::RDV_SOLIDARITES
+    @context = context_service
+
+    unless @context.departement
       redirect_to root_path and return
     end
 
@@ -30,17 +32,16 @@ class SearchController < ApplicationController
     if current_agent && params[:prescripteur] == Prescripteur::INTERNE && session[:agent_prescripteur_organisation_id]
       redirect_to search_creneau_admin_organisation_prescription_path(session[:agent_prescripteur_organisation_id], agent_search_params)
     else
-      set_context
       render :search_rdv
     end
   end
 
-  def set_context
-    @context = if invitation?
-                 WebInvitationSearchContext.new(user: current_user, query_params: query_params)
-               else
-                 WebSearchContext.new(user: current_user, query_params: query_params)
-               end
+  def context_service
+    if invitation?
+      WebInvitationSearchContext.new(user: current_user, query_params: query_params)
+    else
+      WebSearchContext.new(user: current_user, query_params: query_params)
+    end
   end
 
   def public_link_with_internal_organisation_id
