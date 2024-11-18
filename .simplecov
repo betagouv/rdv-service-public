@@ -12,13 +12,10 @@ SimpleCov.start "rails" do
 
   command_name ["tests", ENV["SIMPLECOV_TEST_NAME"], ENV["TEST_ENV_NUMBER"]].compact.join(":")
 
-  if ENV['CI']
+  if ENV["CI"]
     # sur la CI les tests génèrent des rapports JSON ensuite fusionnés vers un rapport HTML
     formatter SimpleCov::Formatter::SimpleFormatter
   else
-    formatter SimpleCov::Formatter::MultiFormatter.new([
-      SimpleCov::Formatter::SimpleFormatter,
-      SimpleCov::Formatter::HTMLFormatter
-    ])
+    formatter SimpleCov::Formatter::MultiFormatter.new([SimpleCov::Formatter::SimpleFormatter, SimpleCov::Formatter::HTMLFormatter])
   end
 end
