@@ -7,7 +7,7 @@ class SearchController < ApplicationController
   after_action :allow_iframe
 
   def home
-    if search_params.compact_blank.present? || invitation?
+    if search_params?
       redirect_to prendre_rdv_path(request.query_parameters) and return
     end
 
@@ -22,6 +22,10 @@ class SearchController < ApplicationController
   end
 
   def search_rdv
+    if !search_params? && current_domain != Domain::RDV_SOLIDARITES
+      redirect_to root_path and return
+    end
+
     # TODO : public_link_organisation_id has to work if agent is logged in ?
     if current_agent && params[:prescripteur] == Prescripteur::INTERNE && session[:agent_prescripteur_organisation_id]
       redirect_to search_creneau_admin_organisation_prescription_path(session[:agent_prescripteur_organisation_id], agent_search_params)
@@ -81,6 +85,10 @@ class SearchController < ApplicationController
   end
 
   private
+
+  def search_params?
+    search_params.compact_blank.present? || invitation?
+  end
 
   def redirect_to_organisation_search(organisation)
     if organisation
