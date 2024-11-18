@@ -7,10 +7,17 @@ class SearchController < ApplicationController
   after_action :allow_iframe
 
   def home
+    if search_params.compact_blank.any? || invitation?
+      redirect_to prendre_rdv_path(request.query_parameters) and return
+    end
+
     if current_domain == Domain::RDV_MAIRIE
-      render "dsfr/rdv_mairie/homepage"
+      render "home/rdv_mairie"
+    elsif current_domain == Domain::RDV_AIDE_NUMERIQUE
+      render "home/rdv_aide_numerique"
     else
-      search_rdv
+      set_context # needed by address search bar
+      render "home/rdv_solidarites"
     end
   end
 
@@ -19,13 +26,17 @@ class SearchController < ApplicationController
     if current_agent && params[:prescripteur] == Prescripteur::INTERNE && session[:agent_prescripteur_organisation_id]
       redirect_to search_creneau_admin_organisation_prescription_path(session[:agent_prescripteur_organisation_id], agent_search_params)
     else
-      @context = if invitation?
-                   WebInvitationSearchContext.new(user: current_user, query_params: query_params)
-                 else
-                   WebSearchContext.new(user: current_user, query_params: query_params)
-                 end
+      set_context
       render :search_rdv
     end
+  end
+
+  def set_context
+    @context = if invitation?
+                 WebInvitationSearchContext.new(user: current_user, query_params: query_params)
+               else
+                 WebSearchContext.new(user: current_user, query_params: query_params)
+               end
   end
 
   def public_link_with_internal_organisation_id

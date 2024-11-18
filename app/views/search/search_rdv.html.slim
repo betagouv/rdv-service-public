@@ -2,9 +2,5 @@
 
 = render "banner", context: @context
 
-/ Adress selection partials have multiple sections
-- if @context.current_step == :address_selection
-  = render(current_domain.address_selection_template_name, context: @context)
-- else
-  section.rdv-background-color-alt-grey.py-4
-    = render @context, context: @context
+section.rdv-background-color-alt-grey.py-4
+= render @context, context: @context

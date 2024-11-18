@@ -1,3 +1,12 @@
+= render "prescription_banner"
+
+span Prenez rendez-vous en ligne
+- unless context.invitation?
+  br.fr-hidden.fr-unhidden-md
+  span< avec votre département
+  - if context.departement.present?
+    span< le #{context.departement}
+
 section.rdv-background-color-flat-blue-ecume.fr-pt-4w.fr-pb-8w
   .fr-container
     #search_form
