@@ -160,7 +160,7 @@ jobs:
       matrix:
         # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’éxecution
         dirname: [agents, "*"]
-        include: 
+        include:
           - dirname: agents
             command: "parallel:spec[spec/features/agents]"
           - dirname: "*"
@@ -234,6 +234,8 @@ jobs:
   report_simplecov:
     name: Report Simplecov
     runs-on: ubuntu-latest
+    needs:
+      - test_features
     steps:
       - uses: actions/checkout@v4
       - name: Set up Ruby
