@@ -10,6 +10,7 @@ class MergeOrganisationsService
 
   def perform
     migrate_agents
+    migrate_users
   end
 
   private
@@ -29,6 +30,16 @@ class MergeOrganisationsService
       end
       AgentRole.where(id: role_in_source_org.id).delete_all
     end
+  end
+
+  def migrate_users
+    users_in_source_org = @source_organisation.users.ids.to_set
+    users_in_target_org = @target_organisation.users.ids.to_set
+    users_in_both = users_in_source_org.intersection(users_in_target_org)
+    users_only_in_source_org = users_in_source_org.difference(users_in_target_org)
+
+    UserProfile.where(organisation: @source_organisation, user_id: users_in_both).delete_all
+    UserProfile.where(organisation: @source_organisation, user_id: users_only_in_source_org).update_all(organisation_id: @target_organisation.id) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def agents_access_level_match
