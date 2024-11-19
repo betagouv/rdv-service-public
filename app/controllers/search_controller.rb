@@ -18,7 +18,7 @@ class SearchController < ApplicationController
                  WebSearchContext.new(user: current_user, query_params: query_params)
                end
 
-    if current_domain == Domain::RDV_MAIRIE && request.query_parameters.empty?
+    if !current_domain.provides_address_selection? && @context.current_step == :address_selection
       if request.path == "/prendre_rdv"
         redirect_to root_path
       else
