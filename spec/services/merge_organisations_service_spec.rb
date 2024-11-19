@@ -1,5 +1,5 @@
 RSpec.describe MergeOrganisationsService do
-  subject(:service) { described_class.new(source_organisation: source_organisation, target_organisation: target_organisation) }
+  subject(:service) { described_class.new(source_organisation: source_organisation.reload, target_organisation: target_organisation.reload) }
 
   let!(:territory) { create(:territory) }
   let!(:source_organisation) { create(:organisation, territory: territory, name: "Source Org") }
@@ -174,8 +174,8 @@ RSpec.describe MergeOrganisationsService do
   end
 
   describe "migrating webhook endpoints" do
-    let!(:webhook_endpoint_in_source_org) { create(:webhook_endpoint, organisation: source_organisation) }
-    let!(:webhook_endpoint_in_target_org) { create(:webhook_endpoint, organisation: target_organisation) }
+    let!(:webhook_endpoint_in_source_org) { create(:webhook_endpoint, organisation: source_organisation, target_url: "https://connecteur-outlook.haute-savoie.fr/") }
+    let!(:webhook_endpoint_in_target_org) { create(:webhook_endpoint, organisation: target_organisation, target_url: "https://connecteur-zimbra.haute-savoie.fr/") }
 
     it "adds webhook_endpoints to target org and removes them from source org" do
       expect(service).to be_valid
@@ -183,6 +183,29 @@ RSpec.describe MergeOrganisationsService do
 
       expect(source_organisation.webhook_endpoints.reload).to be_empty
       expect(target_organisation.webhook_endpoints.reload).to contain_exactly(webhook_endpoint_in_source_org, webhook_endpoint_in_target_org)
+    end
+
+    context "when a webhook with same URL and subscriptions exists" do
+      let!(:webhook_endpoint_in_source_org) { create(:webhook_endpoint, organisation: source_organisation, target_url: "https://connecteur-outlook.haute-savoie.fr/", subscriptions: %w[rdv]) }
+      let!(:webhook_endpoint_in_target_org) { create(:webhook_endpoint, organisation: target_organisation, target_url: "https://connecteur-zimbra.haute-savoie.fr/") }
+      let!(:strictly_identical_webhook)     { create(:webhook_endpoint, organisation: target_organisation, target_url: "https://connecteur-outlook.haute-savoie.fr/", subscriptions: %w[rdv]) }
+
+      it "just deletes the webhook in source org" do
+        expect { service.perform }.to change(WebhookEndpoint, :count).by(-1)
+        expect(WebhookEndpoint.all).to contain_exactly(webhook_endpoint_in_target_org, strictly_identical_webhook)
+      end
+    end
+
+    context "when a webhook exists with same URL but different subscriptions" do
+      let!(:webhook_endpoint_in_source_org) { create(:webhook_endpoint, organisation: source_organisation, target_url: "https://connecteur-outlook.haute-savoie.fr/", subscriptions: %w[rdv]) }
+      let!(:webhook_endpoint_in_target_org) { create(:webhook_endpoint, organisation: target_organisation, target_url: "https://connecteur-zimbra.haute-savoie.fr/") }
+      let!(:webhook_same_url)               { create(:webhook_endpoint, organisation: target_organisation, target_url: "https://connecteur-outlook.haute-savoie.fr/", subscriptions: %w[rdv absence]) }
+
+      it "raises an error" do
+        expect(service).to be_invalid
+        expect(service.errors.full_messages.map(&:squish))
+          .to include("Les webhooks #{webhook_endpoint_in_source_org.id} et #{webhook_same_url.id} ont la même URL mais des subscriptions différentes")
+      end
     end
   end
 

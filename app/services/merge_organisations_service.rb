@@ -2,6 +2,7 @@ class MergeOrganisationsService
   include ActiveModel::Validations
 
   validate :agents_access_level_match
+  validate :webhooks_are_similar
 
   def initialize(source_organisation:, target_organisation:)
     @source_organisation = source_organisation
@@ -9,12 +10,15 @@ class MergeOrganisationsService
   end
 
   def perform
+    raise "Can't perform merge if errors are present" if invalid?
+
     migrate_agents
     migrate_users
     migrate_exports
     migrate_lieux
     migrate_receipts
     migrate_sector_attributions
+    migrate_webhooks
   end
 
   private
@@ -62,6 +66,17 @@ class MergeOrganisationsService
     @source_organisation.sector_attributions.update_all(organisation_id: @target_organisation.id) # rubocop:disable Rails/SkipsModelValidations
   end
 
+  def migrate_webhooks
+    @source_organisation.webhook_endpoints.each do |source_webhook|
+      existing_webhook = @target_organisation.webhook_endpoints.find_by(target_url: source_webhook.target_url)
+      if existing_webhook
+        source_webhook.destroy!
+      else
+        source_webhook.update!(organisation_id: @target_organisation.id)
+      end
+    end
+  end
+
   def agents_access_level_match
     agents_in_both_orgs = @source_organisation.agents.to_a.intersection(@target_organisation.agents.to_a)
     agents_in_both_orgs.each do |agent|
@@ -75,6 +90,15 @@ class MergeOrganisationsService
         mais un rôle #{role_in_target_org.access_level} dans #{@target_organisation.name}
       ERROR
       errors.add(:base, error_message)
+    end
+  end
+
+  def webhooks_are_similar
+    @source_organisation.webhook_endpoints.each do |source_webhook|
+      existing_webhook = @target_organisation.webhook_endpoints.find_by(target_url: source_webhook.target_url)
+      if existing_webhook && existing_webhook.subscriptions != source_webhook.subscriptions
+        errors.add(:base, "Les webhooks #{source_webhook.id} et #{existing_webhook.id} ont la même URL mais des subscriptions différentes")
+      end
     end
   end
 end
