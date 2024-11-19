@@ -57,10 +57,8 @@ Doorkeeper.configure do
   #
   # use_polymorphic_resource_owner
 
-  # Enforce token request content type to application/x-www-form-urlencoded.
-  # It is not enabled by default to not break prior versions of the gem.
-  #
-  # enforce_content_type
+  # Enforce token request content type to application/x-www-form-urlencoded to match the exact oauth2 spec.
+  enforce_content_type
 
   # Authorization Code expiration time (default: 10 minutes).
   #
