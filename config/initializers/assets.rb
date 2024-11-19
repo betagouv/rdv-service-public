@@ -18,3 +18,18 @@ Rails.application.config.assets.css_compressor = nil # css compressor is done wi
 Rails.application.config.assets.configure do |env|
   env.export_concurrent = false
 end
+
+if Rake::Task.task_defined?("assets:precompile") # la tâche n’est définie que dans le contexte de précompilation
+  Rake::Task["assets:precompile"].enhance do
+    # copy favicon
+    FileUtils.cp_r Rails.root.join("app/assets/images/favicon/favicon.ico"), Rails.public_path.join("favicon.ico")
+    Rails.logger.info "✅ favicon.ico copied"
+
+    # DSFR fonts and icons are copied to the root public folder whereas artwork is copied to a public/dsfr/ dir
+    FileUtils.cp_r Rails.root.join("node_modules/@gouvfr/dsfr/dist/fonts"), Rails.public_path
+    FileUtils.cp_r Rails.root.join("node_modules/@gouvfr/dsfr/dist/icons"), Rails.public_path
+    Rails.public_path.join("dsfr").mkdir
+    FileUtils.cp_r Rails.root.join("node_modules/@gouvfr/dsfr/dist/artwork"), Rails.public_path.join("dsfr/artwork")
+    Rails.logger.info "✅ DSFR assets copied"
+  end
+end
