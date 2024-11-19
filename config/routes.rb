@@ -97,11 +97,10 @@ Rails.application.routes.draw do
     sessions: "agents/sessions",
     passwords: "agents/passwords",
   }
-  devise_scope :agent do
-    get "agents/sign_out", to: "agents/sessions#destroy" # Utilisé par les clients Oauth pour se déconnecter
-  end
 
   devise_scope :agent do
+    get "agents/sign_out", to: "agents/sessions#destroy" # Utilisé par les clients Oauth pour se déconnecter
+
     get "agents/edit" => "agents/registrations#edit", as: "edit_agent_registration"
     put "agents" => "agents/registrations#update", as: "agent_registration"
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
