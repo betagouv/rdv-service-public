@@ -584,7 +584,7 @@ RSpec.configure do |config|
           description:
           <<~DESCRIPTION,
             Utilisé pour faire la correspondance entre des ids externes et des liens de prises de RDV au sein d'un territoire. Ces liens permettent d'accéder directement à la recherche de créneaux pour une organisation donnée.
-            Cet endpoint est rate-limité à 50 appels par minute par adresse IP.
+            Cet endpoint est limité à 50 appels par minute par adresse IP.
           DESCRIPTION
         },
         {
