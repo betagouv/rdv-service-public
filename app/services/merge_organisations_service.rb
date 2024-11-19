@@ -14,6 +14,7 @@ class MergeOrganisationsService
     migrate_exports
     migrate_lieux
     migrate_receipts
+    migrate_sector_attributions
   end
 
   private
@@ -55,6 +56,10 @@ class MergeOrganisationsService
 
   def migrate_receipts
     @source_organisation.receipts.update_all(organisation_id: @target_organisation.id) # rubocop:disable Rails/SkipsModelValidations
+  end
+
+  def migrate_sector_attributions
+    @source_organisation.sector_attributions.update_all(organisation_id: @target_organisation.id) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def agents_access_level_match
