@@ -330,8 +330,6 @@ Rails.application.routes.draw do
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
 
-  resources :lieux, only: %i[index show]
-
   root "search#home"
 
   get "/prendre_rdv", to: "search#search_rdv"
