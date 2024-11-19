@@ -148,8 +148,8 @@ RSpec.describe MergeOrganisationsService do
   end
 
   describe "migrating receipts" do
-    let!(:receipt_in_source_org) { create(:receipt, organisation: source_organisation) }
-    let!(:receipt_in_target_org) { create(:receipt, organisation: target_organisation) }
+    let!(:receipt_in_source_org) { create(:receipt, rdv: create(:rdv, organisation: source_organisation)) }
+    let!(:receipt_in_target_org) { create(:receipt, rdv: create(:rdv, organisation: target_organisation)) }
 
     it "adds receipts to target org and removes them from source org" do
       expect(service).to be_valid
