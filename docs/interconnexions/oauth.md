@@ -1,6 +1,6 @@
 # RDV-SP comme provider OAuth
 
-Cette application peut s'interconnecter avec des clients externes via le protocol Oauth 2.0. Ce mécanisme permet à une application tierce de proposer à ses utilisateurs d'autoriser l'application tierce à faire des appels à l'API RDV-SP en son nom. Par exemple, un agent qui a un compte sur demarches-simplifiees.fr peut autoriser la plateforme à créer des RDVs en son nom sur RDV-SP.
+Cette application peut s'interconnecter avec des clients externes via le protocole Oauth 2.0. Ce mécanisme permet à une application tierce de proposer à ses utilisateurs de l’autoriser à faire des appels à l'API RDV Service Public en son nom. Par exemple, un agent qui a un compte sur demarches-simplifiees.fr peut autoriser la plateforme à créer des RDV en son nom sur RDV Service Public.
 
 Ci-dessous le processus d'autorisation par lequel un agent de demarches-simplifiees.fr lie son compte à RDV-SP :
 
