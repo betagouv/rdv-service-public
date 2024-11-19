@@ -234,12 +234,6 @@ Rails.application.routes.draw do
               get :calendar
             end
           end
-          resources :stats, only: :index do
-            collection do
-              get :rdvs
-              get :users
-            end
-          end
         end
         resources :invitations, only: [:index] do
           post :reinvite, on: :member
