@@ -109,15 +109,16 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(WebhookEndpoint.count).to eq(webhook_endpoint_count_before + 1) }
+        specify do
+          expect(WebhookEndpoint.count).to eq(webhook_endpoint_count_before + 1)
 
-        it { expect(created_webhook_endpoint.organisation).to match(organisation) }
-
-        it { expect(created_webhook_endpoint.target_url).to eq(target_url) }
-
-        it { expect(created_webhook_endpoint.secret).to eq(secret) }
-
-        it { expect(created_webhook_endpoint.subscriptions).to match_array(%w[rdv user user_profile organisation motif lieu agent agent_role]) }
+          expect(created_webhook_endpoint.reload).to have_attributes(
+            organisation: organisation,
+            target_url: target_url,
+            secret: secret,
+            subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role]
+          )
+        end
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"
@@ -173,13 +174,14 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(webhook_endpoint.reload.organisation).to eq(other_organisation) }
-
-        it { expect(webhook_endpoint.reload.target_url).to eq(target_url) }
-
-        it { expect(webhook_endpoint.reload.secret).to eq(secret) }
-
-        it { expect(webhook_endpoint.reload.subscriptions).to eq(%w[rdv user user_profile organisation motif lieu agent agent_role]) }
+        specify do
+          expect(webhook_endpoint.reload).to have_attributes(
+            organisation: other_organisation,
+            target_url: target_url,
+            secret: secret,
+            subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role]
+          )
+        end
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"
