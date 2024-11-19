@@ -12,6 +12,7 @@ class MergeOrganisationsService
     migrate_agents
     migrate_users
     migrate_exports
+    migrate_lieux
   end
 
   private
@@ -45,6 +46,10 @@ class MergeOrganisationsService
 
   def migrate_exports
     Export.for_organisation(@source_organisation).destroy_all
+  end
+
+  def migrate_lieux
+    @source_organisation.lieux.update_all(organisation_id: @target_organisation.id) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def agents_access_level_match
