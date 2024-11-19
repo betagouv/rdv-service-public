@@ -1,6 +1,7 @@
 class MergeOrganisationsService
   include ActiveModel::Validations
 
+  validate :both_orgs_from_same_territory
   validate :agents_access_level_match
   validate :webhooks_are_similar
 
@@ -74,6 +75,12 @@ class MergeOrganisationsService
       else
         source_webhook.update!(organisation_id: @target_organisation.id)
       end
+    end
+  end
+
+  def both_orgs_from_same_territory
+    if @source_organisation.territory != @target_organisation.territory
+      errors.add(:base, "Les deux organisations doivent être dans le même territoire")
     end
   end
 

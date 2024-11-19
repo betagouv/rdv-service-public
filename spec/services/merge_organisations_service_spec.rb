@@ -216,7 +216,7 @@ RSpec.describe MergeOrganisationsService do
 
       it "raises an error" do
         expect(service).to be_invalid
-        expect(service.errors).to include("Les deux organisations doivent être dans le même territoire")
+        expect(service.errors.full_messages.map(&:squish)).to include("Les deux organisations doivent être dans le même territoire")
       end
     end
   end
