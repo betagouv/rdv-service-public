@@ -22,6 +22,7 @@ Rails.application.configure do
 
   # Rails should serve static files itself, we don’t have a NGINX or Apache setup in prod
   config.public_file_server.enabled = true
+  config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}, immutable" }
 
   # Compress CSS using a preprocessor.
   # config.assets.css_compressor = :sass
