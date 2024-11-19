@@ -26,6 +26,7 @@ class Export < ApplicationRecord
 
   # Scopes
   scope :recent, -> { where("created_at > ?", 2.weeks.ago) }
+  scope :for_organisation, ->(organisation_id) { where("organisation_ids  @> :value::text::jsonb", value: [organisation_id]) }
 
   def to_s
     "#{I18n.t("export_type.#{export_type}")} du #{I18n.l(created_at, format: :dense)}"

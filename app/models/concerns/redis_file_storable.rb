@@ -1,6 +1,10 @@
 module RedisFileStorable
   extend ActiveSupport::Concern
 
+  included do
+    after_destroy :delete_from_redis
+  end
+
   class FileNotFoundError < StandardError; end
 
   def load_file
@@ -20,6 +24,14 @@ module RedisFileStorable
         redis.set(redis_file_key, compressed_file)
         redis.expire(redis_file_key, (expires_at - Time.zone.now).seconds.to_i)
       end
+    end
+  end
+
+  private
+
+  def delete_from_redis
+    Redis.with_connection do |redis|
+      redis.del(redis_file_key)
     end
   end
 end

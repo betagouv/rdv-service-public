@@ -1,4 +1,14 @@
 RSpec.describe Export do
+  describe ".for_organisation" do
+    let!(:export_for_org_1) { create(:export, organisation_ids: [1]) }
+    let!(:export_for_org_1_and_2) { create(:export, organisation_ids: [1, 2]) }
+    let!(:export_for_org_2) { create(:export, organisation_ids: [2]) }
+
+    it "returns the exports that include data from the given organisation" do
+      expect(described_class.for_organisation(1)).to contain_exactly(export_for_org_1, export_for_org_1_and_2)
+    end
+  end
+
   describe "#organisations" do
     it "returns a scope of linked orgs" do
       orgs = create_list(:organisation, 2)
@@ -55,6 +65,17 @@ RSpec.describe Export do
       export.store_file("dummy_data")
       expect(export.load_file).to eq("dummy_data")
       expect(export.computed_at).to be_within(1.second).of(Time.zone.now)
+    end
+  end
+
+  describe "#destroy" do
+    it "cleans up the data in redis" do
+      export = create(:export)
+      export.store_file("my content")
+
+      expect(export.load_file).to eq("my content")
+      export.destroy
+      expect { export.load_file }.to raise_error(RedisFileStorable::FileNotFoundError)
     end
   end
 end
