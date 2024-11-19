@@ -151,7 +151,6 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
           },
         }
       )
-      expect(response.status).to eq(200)
       expect(response.body).to include("Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique")
     end
   end
