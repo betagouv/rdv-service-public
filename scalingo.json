@@ -77,7 +77,7 @@
       "value": "change_me_if_needed"
     },
 
-    "SENDINBLUE_INBOUND_PASSWORD": {
+    "BREVO_INBOUND_PASSWORD": {
       "description": "Cette valeur est passée en paramètre dans le webhook que nous avons défini chez SendInBlue. C'est un secret, donc non hérité en review app.",
       "value": "change_me_if_needed"
     },

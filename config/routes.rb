@@ -341,7 +341,8 @@ Rails.application.routes.draw do
   get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")
   # old agenda rule was bookmarked by some agents
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
-  post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :sendinblue
+  post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :brevo # TODO: supprimer après la transition
+  post "/inbound_emails/brevo", controller: :inbound_emails, action: :brevo
 
   # This route redirects invitations to rdv-insertion so that rdv-insertion
   # can use rdvs domain name in their emails

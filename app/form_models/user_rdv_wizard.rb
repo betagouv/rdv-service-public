@@ -9,7 +9,6 @@ module UserRdvWizard
     attr_accessor :rdv, :user
 
     delegate :motif, :starts_at, :users, :service, to: :rdv
-    delegate :errors, to: :rdv
 
     def initialize(user, attributes)
       @user = user
@@ -81,6 +80,8 @@ module UserRdvWizard
   end
 
   class Step1 < Base
+    delegate :errors, to: :user
+
     validate :phone_number_present_for_motif_by_phone
     validate do
       if rdv.requires_ants_predemande_number?
@@ -89,7 +90,6 @@ module UserRdvWizard
           ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
           ignore_benign_errors: @user_attributes[:ignore_benign_errors]
         )
-        errors.merge!(@user)
       end
     end
 

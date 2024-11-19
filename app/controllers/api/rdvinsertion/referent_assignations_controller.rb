@@ -1,5 +1,16 @@
 class Api::Rdvinsertion::ReferentAssignationsController < Api::Rdvinsertion::AgentAuthBaseController
-  before_action :set_user, :set_agents, only: %i[create_many]
+  before_action :set_user, only: %i[create_many index]
+  before_action :set_agents, only: %i[create_many]
+
+  def index
+    referent_assignations = ReferentAssignation
+      .where(user: @user)
+      .joins(agent: :organisations)
+      .where(organisations: { verticale: "rdv_insertion" })
+      .distinct
+
+    render_collection referent_assignations
+  end
 
   def create_many
     @agents.each { |agent| ReferentAssignation.find_or_create_by!(user: @user, agent: agent) }
