@@ -6,9 +6,9 @@ RSpec.describe MergeOrganisationsService do
   let!(:target_organisation) { create(:organisation, territory: territory, name: "Target Org") }
 
   describe "migrating agents" do
-    let!(:agent_in_source_org) { create(:agent, basic_role_in_organisations: [source_organisation]) }
-    let!(:agent_in_target_org) { create(:agent, basic_role_in_organisations: [target_organisation]) }
-    let!(:agent_in_both) { create(:agent, basic_role_in_organisations: [source_organisation, target_organisation]) }
+    let!(:agent_in_source_org) { create(:agent, basic_role_in_organisations: [source_organisation], first_name: "Bruce", last_name: "SOURCE") }
+    let!(:agent_in_target_org) { create(:agent, basic_role_in_organisations: [target_organisation], first_name: "Ginette", last_name: "TARGET") }
+    let!(:agent_in_both) { create(:agent, basic_role_in_organisations: [source_organisation, target_organisation], first_name: "Jean-Claude", last_name: "VAN DAMME") }
 
     it "adds agents to target org and removes them from source org" do
       expect(source_organisation.agents).to contain_exactly(agent_in_source_org, agent_in_both)
@@ -23,12 +23,13 @@ RSpec.describe MergeOrganisationsService do
 
     context "when agent has a different access level in each organisation" do
       before do
-        agent_in_source_org.role_in_organisation(source_organisation).update!(access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+        agent_in_both.role_in_organisation(source_organisation).update!(access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       end
 
       it "raises an error" do
         service.validate
-        expect(service.errors).to include("L'agent #{agent_in_source_org} (ID=#{agent_in_source_org.id}) a un rôle admin dans Source Org mais un rôle basic dans Target Org")
+        expect(service.errors.full_messages.map(&:squish))
+          .to include("L'agent Jean-Claude VAN DAMME (ID=#{agent_in_both.id}) a un rôle admin dans Source Org mais un rôle basic dans Target Org")
       end
     end
   end
