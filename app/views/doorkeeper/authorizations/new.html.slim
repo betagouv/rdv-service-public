@@ -1,4 +1,4 @@
-h1.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
+h2.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
 
 .card
   .card-body
@@ -7,11 +7,11 @@ h1.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
 
       = image_tag(current_domain.dark_logo_path, width: 200, alt: "Le logo de #{current_domain.name}")
 
-    p.rdv-text-align-center
+    p
       i.fa-solid.fa-circle-check.color-scheme-green.mr-1
       | #{@pre_auth.client.name} est une application partenaire de #{current_domain.name}.
 
-    p.rdv-text-align-center
+    p
       ' En continuant, vous allez permettre à <b>#{@pre_auth.client.application.name}</b> d'accéder à votre compte <b>#{current_domain.name}</b>
       ' lié à l'adresse #{current_agent.email}
 
@@ -19,7 +19,7 @@ h1.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
       / Quand on affinera les scopes, il faudra ajouter des textes d'explication pour les permissions données ici
       /= t(scope, scope: [:doorkeeper, :scopes])
 
-    .row.rdv-text-align-center
+    .row.rdv-text-align-right
       .col-md-6
         = form_tag oauth_authorization_path, method: :delete do
           = hidden_field_tag :client_id, @pre_auth.client.uid, id: nil
@@ -32,7 +32,7 @@ h1.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
           = hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil
           = submit_tag "Annuler", class: "btn btn-outline-primary"
 
-      .col-md-6
+      .col-md-1
         = form_tag oauth_authorization_path, method: :post do
           = hidden_field_tag :client_id, @pre_auth.client.uid, id: nil
           = hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil
