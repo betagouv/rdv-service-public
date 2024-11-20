@@ -10,23 +10,21 @@ module OmniAuth
       end
 
       # On change les options passées en dernier argument par rapport à la classe mère
+      # pour avoir moins d'options à configurer au niveau de la stratégie
       def client
-        ::OAuth2::Client.new(options.client_id, options.client_secret, client_options)
+        ::OAuth2::Client.new(
+          options.client_id, options.client_secret,
+          {
+            site: options.base_url,
+            authorize_url: "#{options.base_url}/oauth/authorize",
+            token_url: "#{options.base_url}/oauth/token",
+          }
+        )
       end
 
       info do
         # Envoie une requête sur l'endpoint d'api qui donne les infos de l'agent courant
         access_token.get("/api/v1/agents/me.json").parsed
-      end
-
-      private
-
-      def client_options
-        {
-          site: options.base_url,
-          authorize_url: "#{options.base_url}/oauth/authorize",
-          token_url: "#{options.base_url}/oauth/token",
-        }
       end
     end
   end
