@@ -99,7 +99,7 @@ Doorkeeper.configure do
   # +ActionController::API+. The return value of this option must be a stringified class name.
   # See https://doorkeeper.gitbook.io/guides/configuration/other-configurations#custom-controllers
   #
-  # base_controller 'ApplicationController'
+  base_controller "ApplicationController"
 
   # Only allow one valid access token obtained via client credentials
   # per client. If a new access token is obtained before the old one

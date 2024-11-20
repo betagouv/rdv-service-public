@@ -81,8 +81,6 @@ module Lapin
     config.to_prepare do
       Doorkeeper::AuthorizationsController.layout "application_agent_config" # Lors de l'authorisation d'une application oauth
       Doorkeeper::AuthorizedApplicationsController.layout "application_agent_config"
-
-      Doorkeeper::ApplicationController.helper DoorkeeperHelper
     end
   end
 end
