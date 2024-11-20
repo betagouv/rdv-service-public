@@ -17,6 +17,8 @@ class ApplicationController < ActionController::Base
     return "https://#{ENV['FRANCECONNECT_HOST']}/api/v1/logout" \
       if @connected_with_franceconnect
 
+    return new_agent_session_path if resource == :agent
+
     super
   end
 

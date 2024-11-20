@@ -28,7 +28,7 @@ RSpec.describe Agents::SessionsController do
         expect(redirect_url_query_params.symbolize_keys).to match(
           id_token_hint: "fake_agent_connect_id_token",
           state: anything,
-          post_logout_redirect_uri: "http://test.host/"
+          post_logout_redirect_uri: new_agent_session_url
         )
       end
     end

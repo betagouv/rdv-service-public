@@ -17,7 +17,7 @@ class Agents::SessionsController < Devise::SessionsController
 
       agent_connect_client = AgentConnectOpenIdClient::Logout.new(session.delete(:agent_connect_id_token))
 
-      redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true
+      redirect_to agent_connect_client.agent_connect_logout_url(new_agent_session_url), allow_other_host: true
     else
       super
     end
