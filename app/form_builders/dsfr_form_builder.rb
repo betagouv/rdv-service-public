@@ -24,9 +24,41 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
     dsfr_input_field(attribute, :phone_field, opts)
   end
 
+  def dsfr_text_area(attribute, opts = {})
+    dsfr_input_field(attribute, :text_area, opts)
+  end
+
   def dsfr_input_group(attribute, opts, &block)
     @template.content_tag(:div, class: input_group_classes(attribute, opts), data: opts[:data]) do
       yield(block)
+    end
+  end
+
+  def dsfr_radio_buttons(attribute, choices, legend: nil, hint: nil, **opts)
+    legend_content = @template.safe_join([
+      legend || @object.class.human_attribute_name(attribute),
+      hint ? hint_tag(hint) : nil,
+    ].compact)
+    @template.content_tag(:fieldset, class: "fr-fieldset") do
+      @template.safe_join(
+        [
+          @template.content_tag(:legend, legend_content, class: "fr-fieldset__legend--regular fr-fieldset__legend"),
+          choices.map { |c| dsfr_radio_option(attribute, value: c[:value], label_text: c[:label], **opts) },
+        ]
+      )
+    end
+  end
+
+  def dsfr_radio_option(attribute, value:, label_text:, **opts)
+    @template.content_tag(:div, class: "fr-fieldset__element") do
+      @template.content_tag(:div, class: "fr-radio-group") do
+        @template.safe_join(
+          [
+            radio_button(attribute, value, **opts),
+            label([attribute, value].join("_").to_sym) { label_text },
+          ]
+        )
+      end
     end
   end
 
