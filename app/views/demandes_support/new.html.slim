@@ -1,27 +1,30 @@
+= link_to "Revenir à l’annuaire de contact", contact_path, class: "fr-link fr-link--icon-before fr-icon-arrow-left-line"
+
 .fr-grid-row.my-4#tech-support
   .fr-col-md-8
     h1 Contacter l’équipe technique
     p
-      - if current_domain == Domain::RDV_MAIRIE
-        ' Nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
-        | nous pouvons seulement aider avec les sujets techniques
-      - else
-        b> Nous ne sommes pas travailleurs médico-sociaux,
-        span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
-        | nous pouvons seulement aider avec les sujets techniques
 
-    - if @role.blank?
-      = form_with url: new_demande_support_path, method: "GET", form_builder: DsfrFormBuilder do |f|
-        fieldset.fr-fieldset
-          legend class="fr-fieldset__legend"
-            | Vous êtes :
-          .fr-fieldset__content
-            .fr-radio-group
-              input#radio-role-user type="radio" name="role"
-              label.fr-label for="radio-role-user"
-                | Je suis un particulier
-            .fr-radio-group
-              input#radio-role-user type="radio" name="role"
-              label.fr-label for="radio-role-user"
-                | Je suis un agent du service public
-        = f.submit "Envoyer", class: "fr-btn"
+    = form_for @form, url: new_demande_support_path, method: @form.method, builder: DsfrFormBuilder do |f|
+      = f.dsfr_radio_buttons :role, @form.roles_options,
+        legend: safe_join([@form.role_legend, (@form.role.present? ? link_to("modifier", new_demande_support_path) : nil)]),
+        disabled: @form.role.present?
+      - if @form.role.present?
+        = f.hidden_field :role
+      - if @form.role.present?
+        = f.dsfr_radio_buttons :raison,
+          @form.raisons_options,
+        legend: safe_join([@form.raison_legend, (@form.raison.present? ? link_to("modifier", new_demande_support_path(role: @form.role)) : nil)]),
+          disabled: @form.raison.present?
+      - if @form.display_textarea?
+        = f.dsfr_text_area :message, rows: 5
+      - if @form.warning_message
+        .fr-alert.fr-alert--warning.fr-mb-2w
+          h3.fr-alert__title
+            | Important
+          p
+            = @form.warning_message
+      - if @form.display_submit?
+        = f.submit "Contacter l’équipe technique", class: "fr-btn"
+      - else
+        = link_to "Revenir à l’annuaire de contact", contact_path, class: "fr-link fr-link--icon-before fr-icon-arrow-left-line"
