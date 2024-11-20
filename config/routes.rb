@@ -284,6 +284,7 @@ Rails.application.routes.draw do
   %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
+  resource :demande_support, only: %i[new create]
   get "/.well-known/microsoft-identity-association" => "static_pages#microsoft_domain_verification", format: :json
 
   get "health_check" => "health#db_connection"
