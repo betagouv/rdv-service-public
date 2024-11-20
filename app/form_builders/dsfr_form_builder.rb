@@ -5,6 +5,13 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::OutputSafetyHelper
 
+  attr_accessor :display_required_tags
+
+  def initialize(object_name, object, template, options)
+    super
+    self.display_required_tags = options.fetch(:display_required_tags, true)
+  end
+
   def dsfr_text_field(attribute, opts = {})
     dsfr_input_field(attribute, :text_field, opts)
   end
@@ -23,27 +30,44 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  def dsfr_input_wrap(&block)
+    @template.content_tag(:div, class: "fr-input-wrap") do
+      yield(block)
+    end
+  end
+
+  def dsfr_label_with_hint(attribute, opts = {})
+    label_class = opts[:class] || "fr-label"
+    label(attribute, class: label_class) do
+      label_and_tags = [label_value(attribute)]
+      label_and_tags.push(required_tag) if opts[:required] && display_required_tags
+      label_and_tags.push(hint_tag(opts[:hint])) if opts[:hint]
+
+      @template.safe_join(label_and_tags)
+    end
+  end
+
+  def dsfr_error_message(attr)
+    return if @object.errors[attr].none?
+
+    @template.content_tag(:p, class: "fr-messages-group") do
+      safe_join(@object.errors.full_messages_for(attr).map do |msg|
+        @template.content_tag(:span, msg, class: "fr-message fr-message--error")
+      end)
+    end
+  end
+
   private
 
   def dsfr_input_field(attribute, input_kind, opts = {})
     dsfr_input_group(attribute, opts) do
       @template.safe_join(
         [
-          label_with_hint(attribute, opts),
+          dsfr_label_with_hint(attribute, opts),
           public_send(input_kind, attribute, class: "fr-input", **opts.except(:class)),
-          error_message(attribute),
+          dsfr_error_message(attribute),
         ]
       )
-    end
-  end
-
-  def label_with_hint(attribute, opts = {})
-    label(attribute, class: "fr-label") do
-      label_and_tags = [label_value(attribute)]
-      label_and_tags.push(required_tag) if opts[:required]
-      label_and_tags.push(hint_tag(opts[:hint])) if opts[:hint]
-
-      @template.safe_join(label_and_tags)
     end
   end
 
@@ -59,16 +83,6 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
     end
 
     @template.content_tag(:span, text, class: "fr-hint-text")
-  end
-
-  def error_message(attr)
-    return if @object.errors[attr].none?
-
-    @template.content_tag(:p, class: "fr-messages-group") do
-      safe_join(@object.errors.full_messages_for(attr).map do |msg|
-        @template.content_tag(:span, msg, class: "fr-message fr-message--error")
-      end)
-    end
   end
 
   def join_classes(arr)
