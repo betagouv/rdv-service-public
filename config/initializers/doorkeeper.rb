@@ -335,8 +335,10 @@ Doorkeeper.configure do
   after_successful_authorization do |controller, context|
     oauth_application = context.issued_token.application
 
-    controller.session[:oauth_app_ids] ||= []
-    controller.session[:oauth_app_ids] << oauth_application.uid
+    # On enregistre en session les app clientes pour savoir lesquelles autoriser lors de la déconnexion
+    # (voir Agents::SessionsController#destroy)
+    controller.session[:connected_oauth_app_ids] ||= []
+    controller.session[:connected_oauth_app_ids] << oauth_application.uid
   end
 
   # Under some circumstances you might want to have applications auto-approved,

@@ -12,7 +12,15 @@ class Agents::SessionsController < Devise::SessionsController
   end
 
   def destroy
-    if params[:oauth_client_app_id].present? && params[:oauth_client_app_id].in?(session[:oauth_app_ids])
+    # oauth_client_app_id est le paramètre passé par une application OAuth cliente depuis laquelle
+    # l'agent vient de se déconnecter.
+    # Si ce paramètre est présent, on veut déconnecter l'agent de notre application
+    # (parfois en faisant aussi une déconnexion à ProConnect/AgentConnect)  puis le rediriger vers
+    # l'application cliente, depuis laquelle il a commencé la déconnexion.
+    #
+    # Dans le cas où on le déconnecte d'abord de ProConnect, on est obligés de faire la redirection
+    # vers l'appli cliente après avoir été redirigés vers notre root_url par ProConnect.
+    if params[:oauth_client_app_id].present? && params[:oauth_client_app_id].in?(session[:connected_oauth_app_ids])
       oauth_app = Doorkeeper::Application.find_by(uid: params[:oauth_client_app_id])
       @oauth_client_app_post_logout_redirect_url = oauth_app.post_logout_redirect_uri
     end
@@ -21,7 +29,9 @@ class Agents::SessionsController < Devise::SessionsController
 
     sign_out(:agent)
 
+    # Si on redirige vers l'app cliente, on n'aura pas de render pendant lequel le flash s'affichera, donc on ne l'ajoute pas.
     if @oauth_client_app_post_logout_redirect_url
+      # On est obligés de modifier la session ici puisque l'appel à `sign_out(:agent)` a effacé la session
       session[:post_logout_redirect_url] = @oauth_client_app_post_logout_redirect_url
     else
       set_flash_message!(:notice, :signed_out)
