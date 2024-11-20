@@ -17,8 +17,8 @@ RSpec.describe MergeOrganisationsService do
       expect(service).to be_valid
       service.perform
 
-      expect(source_organisation.agents.reload).to be_empty
-      expect(target_organisation.agents.reload).to contain_exactly(agent_in_source_org, agent_in_target_org, agent_in_both)
+      expect(source_organisation.reload.agents).to be_empty
+      expect(target_organisation.reload.agents).to contain_exactly(agent_in_source_org, agent_in_target_org, agent_in_both)
     end
 
     context "when agent has a different access level in each organisation" do
@@ -46,8 +46,8 @@ RSpec.describe MergeOrganisationsService do
       expect(service).to be_valid
       service.perform
 
-      expect(source_organisation.users.reload).to be_empty
-      expect(target_organisation.users.reload).to contain_exactly(user_in_source_org, user_in_target_org, user_in_both)
+      expect(source_organisation.users).to be_empty
+      expect(target_organisation.users).to contain_exactly(user_in_source_org, user_in_target_org, user_in_both)
     end
   end
 
@@ -59,8 +59,8 @@ RSpec.describe MergeOrganisationsService do
       expect(service).to be_valid
       service.perform
 
-      expect(source_organisation.motifs.reload).to be_empty
-      expect(target_organisation.motifs.reload).to contain_exactly(motif_in_source_org, motif_in_target_org)
+      expect(source_organisation.motifs).to be_empty
+      expect(target_organisation.motifs).to contain_exactly(motif_in_source_org, motif_in_target_org)
     end
 
     context "when a strictly identical motif exists in target organisation" do
@@ -77,7 +77,7 @@ RSpec.describe MergeOrganisationsService do
         expect(service).to be_valid
         service.perform
 
-        expect(plage_in_source_org.motifs.reload).to eq([strictly_identical_motif])
+        expect(plage_in_source_org.reload.motifs).to eq([strictly_identical_motif])
       end
 
       it "links all RDVs in source org to the existing motif in target org" do
@@ -134,8 +134,8 @@ RSpec.describe MergeOrganisationsService do
       expect(service).to be_valid
       service.perform
 
-      expect(source_organisation.lieux.reload).to be_empty
-      expect(target_organisation.lieux.reload).to contain_exactly(lieu_in_source_org, lieu_in_target_org)
+      expect(source_organisation.lieux).to be_empty
+      expect(target_organisation.lieux).to contain_exactly(lieu_in_source_org, lieu_in_target_org)
     end
   end
 
@@ -147,9 +147,9 @@ RSpec.describe MergeOrganisationsService do
       expect(service).to be_valid
       service.perform
 
-      expect(source_organisation.rdvs.reload).to be_empty
-      expect(target_organisation.rdvs.reload).to contain_exactly(rdv_in_source_org, rdv_in_target_org)
-      expect(rdv_in_source_org.reload.motif.organisation).to eq(target_organisation) # double check that the motif is moved as well
+      expect(source_organisation.rdvs).to be_empty
+      expect(target_organisation.rdvs).to contain_exactly(rdv_in_source_org, rdv_in_target_org)
+      expect(rdv_in_source_org.motif.reload.organisation).to eq(target_organisation) # double check that the motif is moved as well
     end
   end
 
@@ -161,8 +161,8 @@ RSpec.describe MergeOrganisationsService do
       expect(service).to be_valid
       service.perform
 
-      expect(source_organisation.receipts.reload).to be_empty
-      expect(target_organisation.receipts.reload).to contain_exactly(receipt_in_source_org, receipt_in_target_org)
+      expect(source_organisation.receipts).to be_empty
+      expect(target_organisation.receipts).to contain_exactly(receipt_in_source_org, receipt_in_target_org)
     end
   end
 
@@ -174,8 +174,8 @@ RSpec.describe MergeOrganisationsService do
       expect(service).to be_valid
       service.perform
 
-      expect(source_organisation.sector_attributions.reload).to be_empty
-      expect(target_organisation.sector_attributions.reload).to contain_exactly(sector_attribution_in_source_org, sector_attribution_in_target_org)
+      expect(source_organisation.sector_attributions).to be_empty
+      expect(target_organisation.sector_attributions).to contain_exactly(sector_attribution_in_source_org, sector_attribution_in_target_org)
     end
   end
 
