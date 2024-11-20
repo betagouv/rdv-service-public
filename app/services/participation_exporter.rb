@@ -24,6 +24,7 @@ module ParticipationExporter
     "code postal du responsable",
     "créé par",
     "email(s) professionnel.le(s)",
+    "rdv collectif",
   ].freeze
 
   def self.xls_string_from_participations_rows(participations_rows)
@@ -89,6 +90,7 @@ module ParticipationExporter
       extract_postal_code_from(user.user_to_notify.address),
       rdv.author,
       rdv.agents.map(&:email).join(", "),
+      rdv.motif.collectif ? "oui" : "non",
     ]
   end
 
