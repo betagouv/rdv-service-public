@@ -60,7 +60,7 @@ RSpec.describe MergeOrganisationsService do
       service.perform
 
       expect(source_organisation.motifs.reload).to be_empty
-      expect(target_organisation.motifs.reload).to contain_exactly(user_in_source_org, motif_in_target_org)
+      expect(target_organisation.motifs.reload).to contain_exactly(motif_in_source_org, motif_in_target_org)
     end
 
     context "when a strictly identical motif exists in target organisation" do
@@ -77,7 +77,7 @@ RSpec.describe MergeOrganisationsService do
         expect(service).to be_valid
         service.perform
 
-        expect(plage_in_source_org.motifs).to eq([strictly_identical_motif])
+        expect(plage_in_source_org.motifs.reload).to eq([strictly_identical_motif])
       end
 
       it "links all RDVs in source org to the existing motif in target org" do
@@ -86,17 +86,18 @@ RSpec.describe MergeOrganisationsService do
         expect(service).to be_valid
         service.perform
 
-        expect(rdv_in_source_org.motif).to eq(strictly_identical_motif)
+        expect(rdv_in_source_org.reload.motif).to eq(strictly_identical_motif)
       end
     end
 
     context "when a similar motif with different secondary attributes exists in target org" do
+      let!(:motif_in_source_org) { create(:motif, organisation: source_organisation, default_duration_in_min: 45, color: "#FFFFFF") }
+      let!(:motif_in_target_org) { create(:motif, organisation: target_organisation) }
       let!(:similar_motif) do
         motif_in_source_org.dup.tap do |duplicate_motif|
           duplicate_motif.organisation = target_organisation
-          duplicate_motif.color = Faker::Color.hex_color
-          duplicate_motif.default_duration_in_min += 15
-          duplicate_motif.default_duration_in_min += 15
+          duplicate_motif.color = "#000000"
+          duplicate_motif.default_duration_in_min = 60
           duplicate_motif.instruction_for_rdv = "Not the same instructions"
           duplicate_motif.save!
         end
@@ -104,7 +105,13 @@ RSpec.describe MergeOrganisationsService do
 
       it "raises an error" do
         expect(service).to be_invalid
-        expect(service.errors).to include("Les motifs sont différents (TODO: trouver une façon de décrire les différences)")
+        expected_error = <<~ERROR
+          Les motifs #{motif_in_source_org.id} et #{similar_motif.id} sont des doublons mais ont les différences suivantes :
+            color: - "#FFFFFF" + "#000000"
+            default_duration_in_min: - 45 + 60
+            instruction_for_rdv: - nil + "Not the same instructions"
+        ERROR
+        expect(service.errors.full_messages).to include(expected_error)
       end
     end
   end
@@ -143,7 +150,7 @@ RSpec.describe MergeOrganisationsService do
 
       expect(source_organisation.rdvs.reload).to be_empty
       expect(target_organisation.rdvs.reload).to contain_exactly(rdv_in_source_org, rdv_in_target_org)
-      expect(rdv_in_source_org.reload.motif.organisation).to eq(target_organisation) # double check that the motif if moved as well
+      expect(rdv_in_source_org.reload.motif.organisation).to eq(target_organisation) # double check that the motif is moved as well
     end
   end
 

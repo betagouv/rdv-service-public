@@ -1,7 +1,9 @@
+# rubocop:disable Rails/SkipsModelValidations
 class MergeOrganisationsService
   include ActiveModel::Validations
 
   validate :both_orgs_from_same_territory
+  validate :motifs_are_compatible
   validate :agents_access_level_match
   validate :webhooks_are_similar
 
@@ -13,6 +15,8 @@ class MergeOrganisationsService
   def perform
     raise "Can't perform merge if errors are present" if invalid?
 
+    migrate_motifs
+    migrate_rdvs
     migrate_agents
     migrate_users
     migrate_exports
@@ -23,6 +27,28 @@ class MergeOrganisationsService
   end
 
   private
+
+  def migrate_motifs
+    @source_organisation.motifs.each do |source_motif|
+      existing_motif = source_motif.duplicates.find_by(organisation: @target_organisation)
+      if existing_motif
+        comparator = MotifComparator.new(source_motif, existing_motif)
+        if comparator.strictly_identical?
+          Rdv.where(motif_id: source_motif.id).update_all(motif_id: existing_motif.id)
+          MotifsPlageOuverture.where(motif_id: source_motif.id).update_all(motif_id: existing_motif.id)
+          source_motif.destroy!
+        else
+          raise "Motifs #{source_motif.id} and #{existing_motif.id} have some differences that should have been caught in validation"
+        end
+      else
+        source_motif.update_columns(organisation_id: @target_organisation.id)
+      end
+    end
+  end
+
+  def migrate_rdvs
+    @source_organisation.rdvs.update_all(organisation_id: @target_organisation.id)
+  end
 
   def migrate_agents
     @source_organisation.agents.each do |agent|
@@ -48,7 +74,7 @@ class MergeOrganisationsService
     users_only_in_source_org = users_in_source_org.difference(users_in_target_org)
 
     UserProfile.where(organisation: @source_organisation, user_id: users_in_both).delete_all
-    UserProfile.where(organisation: @source_organisation, user_id: users_only_in_source_org).update_all(organisation_id: @target_organisation.id) # rubocop:disable Rails/SkipsModelValidations
+    UserProfile.where(organisation: @source_organisation, user_id: users_only_in_source_org).update_all(organisation_id: @target_organisation.id)
   end
 
   def migrate_exports
@@ -56,15 +82,15 @@ class MergeOrganisationsService
   end
 
   def migrate_lieux
-    @source_organisation.lieux.update_all(organisation_id: @target_organisation.id) # rubocop:disable Rails/SkipsModelValidations
+    @source_organisation.lieux.update_all(organisation_id: @target_organisation.id)
   end
 
   def migrate_receipts
-    @source_organisation.receipts.update_all(organisation_id: @target_organisation.id) # rubocop:disable Rails/SkipsModelValidations
+    @source_organisation.receipts.update_all(organisation_id: @target_organisation.id)
   end
 
   def migrate_sector_attributions
-    @source_organisation.sector_attributions.update_all(organisation_id: @target_organisation.id) # rubocop:disable Rails/SkipsModelValidations
+    @source_organisation.sector_attributions.update_all(organisation_id: @target_organisation.id)
   end
 
   def migrate_webhooks
@@ -81,6 +107,23 @@ class MergeOrganisationsService
   def both_orgs_from_same_territory
     if @source_organisation.territory != @target_organisation.territory
       errors.add(:base, "Les deux organisations doivent être dans le même territoire")
+    end
+  end
+
+  def motifs_are_compatible
+    @source_organisation.motifs.each do |source_motif|
+      existing_motif = @target_organisation
+        .motifs.search_by_name_with_location_type(source_motif.name_with_location_type)
+        .where(service: source_motif.service)
+        .first
+      next unless existing_motif
+
+      differences = MotifComparator.new(source_motif, existing_motif).differences
+      next unless differences.any?
+
+      error_message = "Les motifs #{source_motif.id} et #{existing_motif.id} sont des doublons mais ont les différences suivantes :\n"
+      differences.each { |attr, values| error_message += "  #{attr}: - #{values[0].inspect} + #{values[1].inspect}\n" }
+      errors.add(:base, error_message)
     end
   end
 
@@ -109,3 +152,4 @@ class MergeOrganisationsService
     end
   end
 end
+# rubocop:enable Rails/SkipsModelValidations

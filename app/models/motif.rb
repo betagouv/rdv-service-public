@@ -174,6 +174,10 @@ class Motif < ApplicationRecord
     "#{I18n.transliterate(name).downcase.gsub(NAME_SLUG_REGEXP, '_')}-#{location_type}"
   end
 
+  def duplicates
+    self.class.search_by_name_with_location_type(name_with_location_type).where(service: service)
+  end
+
   def sectorisation_level_agent?
     sectorisation_level == SECTORISATION_LEVEL_AGENT
   end
