@@ -234,12 +234,6 @@ Rails.application.routes.draw do
               get :calendar
             end
           end
-          resources :stats, only: :index do
-            collection do
-              get :rdvs
-              get :users
-            end
-          end
         end
         resources :invitations, only: [:index] do
           post :reinvite, on: :member
@@ -298,7 +292,6 @@ Rails.application.routes.draw do
     "users/rdvs/#{path_params[:id]}#{query_params}"
   end), as: "rdv_short"
 
-  # TODO: remplacer `prendre_rdv` par le root_path
   get "prdv", to: (redirect do |_path_params, req|
     query_params = format_redirect_params(req.params)
     "prendre_rdv#{query_params}"
@@ -331,10 +324,8 @@ Rails.application.routes.draw do
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
 
-  resources :lieux, only: %i[index show]
-  root "search#search_rdv"
+  root "search#home"
 
-  # TODO: remplacer `prendre_rdv` par le root_path
   get "/prendre_rdv", to: "search#search_rdv"
 
   # temporary route after admin namespace introduction
