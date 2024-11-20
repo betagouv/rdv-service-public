@@ -51,7 +51,7 @@ class DemandeSupportForm
   end
 
   def display_textarea?
-    role_agent? || (role_user? && raison_autre?)
+    (role_agent? && raison.present?) || (role_user? && raison_autre?)
   end
 
   def display_submit?
