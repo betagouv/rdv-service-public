@@ -8,7 +8,7 @@ class MotifComparator
 
   IGNORED_ATTRIBUTES = %w[
     color
-  ]
+  ].freeze
 
   def initialize(motif_a, motif_b)
     @motif_a = motif_a
