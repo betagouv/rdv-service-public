@@ -106,7 +106,7 @@ RSpec.describe MergeOrganisationsService do
       it "raises an error" do
         expect(service).to be_invalid
         expected_error = <<~ERROR
-          Les motifs #{motif_in_source_org.id} et #{similar_motif.id} sont des doublons mais ont les différences suivantes :
+          Les motifs #{motif_in_source_org.id} et #{similar_motif.id} (#{motif_in_source_org.name}) sont des doublons mais ont les différences suivantes :
             color: - "#FFFFFF" + "#000000"
             default_duration_in_min: - 45 + 60
             instruction_for_rdv: - nil + "Not the same instructions"

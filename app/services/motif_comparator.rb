@@ -1,10 +1,14 @@
 class MotifComparator
-  TECHNICAL_ATTRIBUTES = %i[
+  TECHNICAL_ATTRIBUTES = %w[
     id
     organisation_id
     created_at
     updated_at
-  ].to_set.freeze
+  ].freeze
+
+  IGNORED_ATTRIBUTES = %w[
+    color
+  ]
 
   def initialize(motif_a, motif_b)
     @motif_a = motif_a
@@ -29,13 +33,8 @@ class MotifComparator
   end
 
   def attr_is_different?(attr_name, motif_a, motif_b)
-    case attr_name.to_sym
-    when *TECHNICAL_ATTRIBUTES
-      false
-    when :name
-      motif_a.name_with_location_type != motif_b.name_with_location_type
-    else
-      motif_a.send(attr_name) != motif_b.send(attr_name)
-    end
+    return false if attr_name.in?(TECHNICAL_ATTRIBUTES + IGNORED_ATTRIBUTES)
+
+    motif_a.send(attr_name) != motif_b.send(attr_name)
   end
 end

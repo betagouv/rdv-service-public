@@ -1,0 +1,25 @@
+fr:
+  to_duration:
+    and: et
+    less_than_one_second: Moins d'une seconde
+    year:
+      one: année
+      other: années
+    month:
+      one: mois
+      other: mois
+    week:
+      one: semaine
+      other: semaines
+    day:
+      one: jour
+      other: jours
+    hour:
+      one: heure
+      other: heures
+    minute:
+      one: minute
+      other: minutes
+    second:
+      one: seconde
+      other: secondes

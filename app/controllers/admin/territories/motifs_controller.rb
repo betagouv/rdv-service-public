@@ -82,6 +82,23 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     end
   end
 
+  # sale monkey patch
+  module ::ToDuration
+    def self.t(key, options = {})
+      I18n.t("to_duration.#{key}", **options)
+    end
+  end
+
+  def compare
+    organisation_a = Organisation.find(params[:organisation_a])
+    organisation_b = Organisation.find(params[:organisation_b])
+    skip_authorization
+    raise Pundit::NotAuthorizedError, "not authorized" unless Agent::MotifPolicy.organisations_i_can_manage(current_agent).include?(organisation_a)
+    raise Pundit::NotAuthorizedError, "not authorized" unless Agent::MotifPolicy.organisations_i_can_manage(current_agent).include?(organisation_b)
+
+    @presenter = MotifsComparisonPresenter.new(organisation_a, organisation_b)
+  end
+
   private
 
   def link_to_motif(motif)

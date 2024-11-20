@@ -72,6 +72,10 @@ class Organisation < ApplicationRecord
 
   ## -
 
+  def to_s
+    name
+  end
+
   def domain
     case verticale.to_sym
     when :rdv_aide_numerique

@@ -29,7 +29,7 @@ class MergeOrganisationsService
   private
 
   def migrate_motifs
-    @source_organisation.motifs.each do |source_motif|
+    @source_organisation.motifs.active.each do |source_motif|
       existing_motif = source_motif.duplicates.find_by(organisation: @target_organisation)
       if existing_motif
         comparator = MotifComparator.new(source_motif, existing_motif)
@@ -111,17 +111,14 @@ class MergeOrganisationsService
   end
 
   def motifs_are_compatible
-    @source_organisation.motifs.each do |source_motif|
-      existing_motif = @target_organisation
-        .motifs.search_by_name_with_location_type(source_motif.name_with_location_type)
-        .where(service: source_motif.service)
-        .first
+    @source_organisation.motifs.active.each do |source_motif|
+      existing_motif = source_motif.duplicates.find_by(organisation: @target_organisation)
       next unless existing_motif
 
       differences = MotifComparator.new(source_motif, existing_motif).differences
       next unless differences.any?
 
-      error_message = "Les motifs #{source_motif.id} et #{existing_motif.id} sont des doublons mais ont les différences suivantes :\n"
+      error_message = "Les motifs #{source_motif.id} et #{existing_motif.id} (#{source_motif.name}) sont des doublons mais ont les différences suivantes :\n"
       differences.each { |attr, values| error_message += "  #{attr}: - #{values[0].inspect} + #{values[1].inspect}\n" }
       errors.add(:base, error_message)
     end

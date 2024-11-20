@@ -24,6 +24,10 @@ module MotifsHelper
     "#{motif.name} - #{motif.service.name}"
   end
 
+  def motif_name_and_location_type_and_service(motif)
+    "#{motif_name_and_location_type(motif)} - #{motif.service.short_name}"
+  end
+
   def motif_name_with_special_location_type(motif)
     motif.public_office? ? motif.name : motif_name_and_location_type(motif)
   end
