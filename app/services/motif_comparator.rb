@@ -8,7 +8,12 @@ class MotifComparator
 
   IGNORED_ATTRIBUTES = %w[
     color
+    min_public_booking_delay
   ].freeze
+
+  def self.attrs_names
+    Motif.column_names - MotifComparator::TECHNICAL_ATTRIBUTES
+  end
 
   def initialize(motif_a, motif_b)
     @motif_a = motif_a
@@ -29,7 +34,7 @@ class MotifComparator
       end
     end
 
-    hash.symbolize_keys
+    hash
   end
 
   def attr_is_different?(attr_name, motif_a, motif_b)

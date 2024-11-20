@@ -1,6 +1,4 @@
 class MotifsComparisonPresenter
-  ATTR_NAMES = Motif.column_names - MotifComparator::TECHNICAL_ATTRIBUTES
-
   def initialize(org_a, org_b)
     @org_a = org_a
     @org_b = org_b

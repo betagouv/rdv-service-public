@@ -7,26 +7,29 @@ h1 Comparaison des motifs de #{@presenter.org_a} et #{@presenter.org_b}
   - next unless comparator && !comparator.strictly_identical?
 
   .card.p-3
-    h2.mb-3 #{motif_name_and_location_type_and_service(motif_a || motif_b)}
+    h3.mb-3 #{motif_name_and_location_type_and_service(motif_a || motif_b)}
     table.table
-      ruby:
-        attrs_to_display = params[:only_diff] ? comparator.differences.keys : MotifsComparisonPresenter::ATTR_NAMES
-        attrs_to_display.each do |attr_name|
+      tr
+        th
+        th = link_to(@presenter.org_a, edit_admin_organisation_motif_path(motif_a.organisation, motif_a)) if motif_a
+        th = link_to(@presenter.org_b, edit_admin_organisation_motif_path(motif_b.organisation, motif_b)) if motif_b
+      - attrs_to_display = params[:only_diff] ? comparator.differences.keys : MotifComparator.attrs_names
+      - attrs_to_display.each do |attr_name|
+        ruby:
           value_in_a = motif_a.send(attr_name) if motif_a
           value_in_b = motif_b.send(attr_name) if motif_b
           classes = motif_a && motif_b && value_in_a != value_in_b && !params[:only_diff] ? ["text-warning"] : []
-        end
-      tr
-        th[style="width:30%"] = Motif.human_attribute_name(attr_name)
-        ruby:
-          display_logic = ->(motif) do
-            next unless motif
-            value = motif.send(attr_name)
-            if attr_name.in?(%i[min_public_booking_delay max_public_booking_delay])
-              ToDuration::Duration.new(value)
-            else
-              Motif.human_attribute_value(attr_name, motif.send(attr_name))
+        tr
+          th[style="width:30%"] = Motif.human_attribute_name(attr_name)
+          ruby:
+            display_logic = ->(motif) do
+              next unless motif
+              value = motif.send(attr_name)
+              if attr_name.in?(%w[min_public_booking_delay max_public_booking_delay])
+                ToDuration::Duration.new(value)
+              else
+                Motif.human_attribute_value(attr_name, motif.send(attr_name))
+              end
             end
-          end
-        td[class=classes style="width:40%"] = display_logic.call(motif_a)
-        td[class=classes style="width:40%"] = display_logic.call(motif_b)
+          td[class=classes style="width:40%"] = display_logic.call(motif_a)
+          td[class=classes style="width:40%"] = display_logic.call(motif_b)
