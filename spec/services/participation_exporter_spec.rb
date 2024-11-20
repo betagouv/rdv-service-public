@@ -44,7 +44,8 @@ RSpec.describe ParticipationExporter, type: :service do
         "date naissance",
         "code postal du responsable",
         "créé par",
-        "email(s) professionnel.le(s)"
+        "email(s) professionnel.le(s)",
+        "rdv collectif"
       )
 
       expect(first_data_row).to contain_exactly(
@@ -66,7 +67,8 @@ RSpec.describe ParticipationExporter, type: :service do
         "01/01/2000",
         nil,
         "Dans le cadre du RGPD, cette information n'est plus conservée au delà d'un an.",
-        "agent@mail.com"
+        "agent@mail.com",
+        "non"
       )
     end
   end
