@@ -17,11 +17,6 @@ RSpec.describe Users::RelativesController, type: :controller do
     it "returns a success response" do
       expect(response).to be_successful
     end
-
-    it "assigns relative" do
-      expect(response.body).to include("Modifier un proche")
-      expect(assigns(:user)).to eq(relative)
-    end
   end
 
   describe "GET #new" do
@@ -31,11 +26,6 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     it "returns a success response" do
       expect(response).to be_successful
-    end
-
-    it "assigns a new user" do
-      expect(response.body).to include("Ajouter un proche")
-      expect(assigns(:user)).to be_a_new(User)
     end
   end
 
@@ -51,11 +41,8 @@ RSpec.describe Users::RelativesController, type: :controller do
 
       it "creates a new User" do
         expect { subject }.to change(User, :count).by(1)
-      end
-
-      it "set organisation_ids for relative" do
-        subject
-        expect(assigns(:user).organisation_ids).to eq(user.organisation_ids)
+        created_user = User.last
+        expect(created_user.organisation_ids).to eq(user.organisation_ids)
       end
 
       it "redirects to user informations with the newly created user id as a param" do

@@ -4,35 +4,40 @@ class Users::RelativesController < UserAuthController
   respond_to :html
 
   def new
-    @user = current_user.relatives.new
-    authorize(@user, policy_class: User::UserPolicy)
-    respond_modal_with @user
+    user = current_user.relatives.new
+    authorize(user, policy_class: User::UserPolicy)
+    @form = RelativeUserForm.new(user:, **form_params)
+    respond_modal_with @form
   end
 
   def create
-    @user = User.new(user_params)
-    @user.created_through = "user_relative_creation"
-    @user.responsible_id = current_user.id
-    @user.organisation_ids = current_user.organisation_ids
-    authorize(@user, policy_class: User::UserPolicy)
+    user = User.new(
+      created_through: "user_relative_creation",
+      responsible_id: current_user.id,
+      organisation_ids: current_user.organisation_ids
+    )
+    authorize(user, policy_class: User::UserPolicy)
     return_location = request.referer
-    if @user.save
-      flash[:success] = "#{@user.full_name} a été ajouté comme proche."
-      return_location = add_query_string_params_to_url(request.referer, created_user_id: @user.id)
+    @form = RelativeUserForm.new(user:)
+    if @form.submit(**form_params)
+      flash[:success] = "#{@form.user.full_name} a été ajouté comme proche."
+      return_location = add_query_string_params_to_url(request.referer, created_user_id: @form.user.id)
     end
-    respond_modal_with @user, location: return_location
+    respond_modal_with @form, location: return_location
   end
 
   def edit
-    @user = User.find(params[:id])
-    authorize(@user, policy_class: User::UserPolicy)
+    user = User.find(params.require(:id))
+    authorize(user, policy_class: User::UserPolicy)
+    @form = RelativeUserForm.new(user:, **form_params)
   end
 
   def update
-    @user = User.find(params[:id])
-    authorize(@user, policy_class: User::UserPolicy)
-    if @user.update(user_params)
-      flash[:success] = "Les informations de votre proche #{@user.full_name} ont été mises à jour."
+    user = User.find(params.require(:id))
+    authorize(user, policy_class: User::UserPolicy)
+    @form = RelativeUserForm.new(user:)
+    if @form.submit(**form_params)
+      flash[:success] = "Les informations de votre proche #{@form.user.full_name} ont été mises à jour."
       redirect_to users_informations_path
     else
       render :edit
@@ -48,7 +53,13 @@ class Users::RelativesController < UserAuthController
 
   private
 
-  def user_params
-    params.require(:user).permit(:first_name, :last_name, :birth_date, :ants_pre_demande_number)
+  def form_params
+    {
+      ants_pre_demande_number_required: params[:ants_pre_demande_number_required]&.to_b,
+      first_name: params.dig(:user, :first_name),
+      last_name: params.dig(:user, :last_name),
+      birth_date: params.dig(:user, :birth_date),
+      ants_pre_demande_number: params.dig(:user, :ants_pre_demande_number),
+    }.compact
   end
 end

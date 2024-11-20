@@ -1,7 +1,9 @@
 .form-row
   .col-md-6= f.input :first_name
   .col-md-6= f.input :last_name
-- if params[:ants_pre_demande_number_required].to_b
-  = f.input :ants_pre_demande_number, required: true, hint: t("simple_form.hints.user.ants_pre_demande_number_html"), input_html: {style: "text-transform: uppercase;"}
+- if f.object.ants_pre_demande_number_required
+  = f.input :ants_pre_demande_number, label: "Numéro de pré-demande ANTS", required: true, hint: t("simple_form.hints.user.ants_pre_demande_number_html"), input_html: {style: "text-transform: uppercase;"}
+  = hidden_field_tag :ants_pre_demande_number_required, "true"
+  / on veut un nom niveau racine, et pas imbriqué sous user[..]
 - if current_domain != Domain::RDV_MAIRIE
   = f.input :birth_date, as: :string, input_html: { type: "date" }
