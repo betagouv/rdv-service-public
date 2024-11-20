@@ -14,23 +14,9 @@ ul.list-group.mb-2
     li
       span> #{territory.name}
       = link_to territory.humanized_phone_number, "tel:#{territory.phone_number_formatted}"
-span> Voir
-= link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
+  li
+    ' Voir
+    = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
 
-.fr-grid-row.mt-4#tech-support
-  .fr-col-md-8
-    h3
-      = mail_to current_domain.support_email,
-        subject: "[Problème Usager]",
-        body: "Code postal: \n\rNom: \n\rProblème ou Question:", class: "fr-btn fr-btn--icon-left fr-icon-mail-fill" do
-        | Contacter l'équipe technique
-
-    .fr-alert.fr-alert--warning.fr-mb-3w
-      .ml-2
-        - if current_domain == Domain::RDV_MAIRIE
-          |> Nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
-          | nous pouvons seulement aider avec les sujets techniques
-        - else
-          b> Nous ne sommes pas travailleurs médico-sociaux,
-          span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
-          | nous pouvons seulement aider avec les sujets techniques
+  li
+    = link_to "Contacter l’équipe technique", new_demande_support_path

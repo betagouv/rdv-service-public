@@ -1,0 +1,27 @@
+.fr-grid-row.my-4#tech-support
+  .fr-col-md-8
+    h1 Contacter l’équipe technique
+    p
+      - if current_domain == Domain::RDV_MAIRIE
+        ' Nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
+        | nous pouvons seulement aider avec les sujets techniques
+      - else
+        b> Nous ne sommes pas travailleurs médico-sociaux,
+        span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
+        | nous pouvons seulement aider avec les sujets techniques
+
+    - if @role.blank?
+      = form_with url: new_demande_support_path, method: "GET", form_builder: DsfrFormBuilder do |f|
+        fieldset.fr-fieldset
+          legend class="fr-fieldset__legend"
+            | Vous êtes :
+          .fr-fieldset__content
+            .fr-radio-group
+              input#radio-role-user type="radio" name="role"
+              label.fr-label for="radio-role-user"
+                | Je suis un particulier
+            .fr-radio-group
+              input#radio-role-user type="radio" name="role"
+              label.fr-label for="radio-role-user"
+                | Je suis un agent du service public
+        = f.submit "Envoyer", class: "fr-btn"
