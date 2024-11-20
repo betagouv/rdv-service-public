@@ -243,12 +243,6 @@ Rails.application.routes.draw do
               get :calendar
             end
           end
-          resources :stats, only: :index do
-            collection do
-              get :rdvs
-              get :users
-            end
-          end
         end
         resources :invitations, only: [:index] do
           post :reinvite, on: :member
@@ -339,7 +333,6 @@ Rails.application.routes.draw do
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
 
-  resources :lieux, only: %i[index show]
 
   root "search#home"
 

@@ -146,5 +146,16 @@ RSpec.describe TransferEmailReplyJob do
         expect(transferred_email.html_part.body.to_s).to include(%(Le mail de l'usager⋅e avait en pièce jointe "mon_scan.pdf".))
       end
     end
+
+    context "quand le RDV est avec un agent intervenant sans email" do
+      let!(:agent) { create(:agent, :intervenant) }
+
+      it "transfère le mail à notre support" do
+        expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
+        transferred_email = ActionMailer::Base.deliveries.last
+        expect(transferred_email.to).to eq(["support@rdv-solidarites.fr"])
+        expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
+      end
+    end
   end
 end
