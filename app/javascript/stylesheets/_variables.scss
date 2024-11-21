@@ -452,15 +452,15 @@ $shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
 $shadow-lg: 0 0 45px 0 rgba(0, 0, 0, 0.12);
 
 //Background left-sidebar
-$bg-leftbar: $primary;
+$bg-leftbar: white;
 
 // Leftbar width
 $leftbar-width: 250px;
 
 //Menu item colors (Default-dark)
-$menu-item: #cbdae2;
-$menu-item-hover: #ffffff;
-$menu-item-active: #ffffff;
+$menu-item: #161616;
+$menu-item-hover: lighten($menu-item, 5%);
+$menu-item-active: lighten($menu-item, 5%);
 
 //Menu item colors (light)
 $menu-item-light: #6c757d;
