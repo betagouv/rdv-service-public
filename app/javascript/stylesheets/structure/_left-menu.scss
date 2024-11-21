@@ -75,7 +75,8 @@
   }
 
   .current-organisation {
-    background-color: lighten($bg-leftbar, 10%);
+    border-top: 1px solid $card-border-color;
+    border-bottom: 1px solid $card-border-color;
   }
 
   .side-nav-title {
