@@ -22,6 +22,7 @@
 
 .left-side-menu-wrapper {
   background: $bg-leftbar;
+  border-right: 1px solid $card-border-color;
 }
 .left-side-menu {
   background: $bg-leftbar;
@@ -37,13 +38,13 @@
       padding: 20px 12px 20px 24px;
 
       &:hover {
-        background-color: lighten($bg-leftbar, 5%);
+        background-color: darken($bg-leftbar, 5%);
       }
 
       &.active {
         border-left-width: 2px;
         border-left-style: solid;
-        border-left-color: $white;
+        border-left-color: $menu-item;
       }
 
       &.side-menu__item--small {
@@ -96,7 +97,6 @@
 
   .left-side-menu {
     width: $leftbar-width;
-    z-index: 10;
     bottom: 0;
     position: sticky;
     top: 0;
