@@ -18,6 +18,7 @@
 
   .auth-fluid-left {
     background-color: $white;
+    border-right: 1px solid $card-border-color;
 
     @include media-breakpoint-up(lg) {
       padding: 6rem 3rem 0rem 3rem;
