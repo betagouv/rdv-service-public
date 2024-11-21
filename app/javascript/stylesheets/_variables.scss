@@ -31,7 +31,7 @@ $grays: map-merge(
 
 $blueish-light-grey: #eff2f7;
 
-$blue: #222e5c;
+$blue: rgb(0, 0, 145); // le bleu du dsfr
 $turquoise: #66d9ce;
 $lightturquoise: #cef3ef;
 $indigo: #727cf5;
@@ -71,7 +71,7 @@ $colors: map-merge(
 );
 
 $white: white;
-$primary: rgb(0, 0, 145); // le bleu du dsfr
+$primary: $blue;
 $secondary: $orange;
 $tertiary: $turquoise;
 $success: $green;
