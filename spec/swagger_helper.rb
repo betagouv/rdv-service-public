@@ -98,6 +98,7 @@ RSpec.configure do |config|
               cancelled_at: { type: "string", nullable: true },
               collectif: { type: "boolean" },
               context: { type: "string", nullable: true },
+              created_at: { type: "string" },
               created_by: { type: "string", enum: %w[agent user file_attente prescripteur] },
               created_by_type: { type: "string", enum: %w[Agent User FileAttente Prescripteur] },
               created_by_id: { type: "integer" },
