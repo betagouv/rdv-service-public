@@ -9,7 +9,6 @@
   .auth-fluid-form-box {
     z-index: 2;
     padding: 3rem 2rem;
-    background-color: $white;
 
     @include media-breakpoint-down(md) {
       min-height: 100vh;
@@ -18,8 +17,7 @@
   }
 
   .auth-fluid-left {
-    color: $white;
-    background-color: $primary;
+    background-color: $white;
 
     @include media-breakpoint-up(lg) {
       padding: 6rem 3rem 0rem 3rem;
