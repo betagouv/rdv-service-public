@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_29_151445) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_22_082916) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -435,7 +435,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_29_151445) do
     t.boolean "collectif", default: false, comment: "Indique s'il s'agit d'un rdv collectif ou individuel. Un rdv considéré comme individuel peut quand même avoir plusieurs participants, par exemple un parent et son enfant qui renouvellent tous les deux leur carte d'indentité en même temps. Un rdv collectif sera ouvert à plusieurs participants qui ne se connaissent pas entre eux.\n"
     t.enum "location_type", default: "public_office", null: false, comment: "Là où le rdv aura lieu : \"public_office\" pour \"Sur place\" (généralement dans les bureaux de l'organisation), \"phone\" pour au téléphone (l'agent appelle l'usager), \"home\" pour le domicile de l'usager\n", enum_type: "location_type"
     t.boolean "rdvs_editable_by_user", default: true, comment: "Indique si on autorise aux usagers de changer la date du rdv via l'interface web\n"
-    t.boolean "rdvs_cancellable_by_user", default: true
+    t.boolean "rdvs_cancellable_by_user", default: true, comment: "Option invisible dans l’interface agents, utilisée par RDV Insertion pour des motifs de convocations"
     t.bigint "motif_category_id"
     t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
