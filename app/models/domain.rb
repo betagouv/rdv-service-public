@@ -68,7 +68,7 @@ class Domain
       dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
       name: "RDV Service Public",
       presentation_for_agents_template_name: "presentation_for_mairie",
-      address_selection_template_name: "search/address_selection/rdv_mairie",
+      address_selection_template_name: nil,
       search_banner_template_name: "search/banners/rdv_mairie",
       online_reservation_with_public_link: true,
       can_sync_to_outlook: false,
@@ -79,6 +79,10 @@ class Domain
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),
   ].freeze
+
+  def provides_address_selection?
+    address_selection_template_name.present?
+  end
 
   def documentation_url
     "https://rdv-service-public-1.gitbook.io/rdv-service-public"

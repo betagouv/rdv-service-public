@@ -24,6 +24,7 @@ class SearchController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/PerceivedComplexity
   def search_rdv
     # TODO : public_link_organisation_id has to work if agent is logged in ?
     if current_agent && params[:prescripteur] == Prescripteur::INTERNE && session[:agent_prescripteur_organisation_id]
@@ -34,9 +35,15 @@ class SearchController < ApplicationController
                  else
                    WebSearchContext.new(user: current_user, query_params: query_params)
                  end
-      render :search_rdv
+
+      if !current_domain.provides_address_selection? && @context.current_step == :address_selection
+        redirect_to root_path
+      else
+        render :search_rdv
+      end
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def public_link_with_internal_organisation_id
     organisation = Organisation.find(params[:organisation_id])

@@ -1,6 +1,6 @@
 class CommentDoorkeeperTables < ActiveRecord::Migration[7.1]
   def change
-    change_column_comment(:oauth_applications, :uid, from: nil, to: <<~COMMENT.strip
+    change_column_comment(:oauth_applications, :uid, from: nil, to: <<~COMMENT
       Un identifiant unique de l'appication OAuth. Contrairement à la colonne `secret`, cette information est publique.
     COMMENT
     )
