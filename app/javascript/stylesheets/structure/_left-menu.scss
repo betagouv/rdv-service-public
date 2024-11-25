@@ -36,15 +36,18 @@
       display: block;
       width: 100%; //permet d'augmenter la surface du lien pour le rendre plus facilement clickable
       padding: 20px 12px 20px 24px;
+      font-weight: 500;
 
       &:hover {
         background-color: darken($bg-leftbar, 5%);
       }
 
+      &:active,
       &.active {
         border-left-width: 2px;
         border-left-style: solid;
-        border-left-color: $menu-item;
+        border-left-color: $blue;
+        color: $blue;
       }
 
       &.side-menu__item--small {
@@ -54,11 +57,9 @@
 
     &:hover,
     &:focus,
-    &:active,
-    &.active,
     &[aria-expanded="true"] {
-      color: $menu-item-hover;
       text-decoration: none;
+      background-color: rgb(246, 246, 246);
     }
   }
 
