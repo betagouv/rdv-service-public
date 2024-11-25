@@ -4,7 +4,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   before_action :validate_date_debut
   before_action :validate_date_range, only: [:index]
 
-  prepend_before_action :allow_authentication_with_read_only_api_key, only: [:index, :prochain]
+  prepend_before_action :allow_authentication_with_read_only_api_key, only: %i[index prochain]
 
   def index
     creneaux = CreneauxSearch::ForUser.new(
