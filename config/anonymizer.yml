@@ -432,6 +432,7 @@ tables:
       - name
       - uid
       - redirect_uri
+      - post_logout_redirect_uri
       - scopes
       - confidential
       - created_at

@@ -498,6 +498,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_22_082916) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "logo_base64"
+    t.text "post_logout_redirect_uri"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
@@ -861,10 +862,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_22_082916) do
   add_foreign_key "motifs", "services"
   add_foreign_key "motifs_plage_ouvertures", "motifs"
   add_foreign_key "motifs_plage_ouvertures", "plage_ouvertures"
-  add_foreign_key "oauth_access_grants", "agents", column: "resource_owner_id", validate: false
-  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id", validate: false
-  add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id", validate: false
-  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id", validate: false
+  add_foreign_key "oauth_access_grants", "agents", column: "resource_owner_id"
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"
