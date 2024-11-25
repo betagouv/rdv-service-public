@@ -36,11 +36,8 @@
       display: block;
       width: 100%; //permet d'augmenter la surface du lien pour le rendre plus facilement clickable
       padding: 20px 12px 20px 24px;
-<<<<<<< Updated upstream
-=======
       font-weight: 500;
       color: $blue;
->>>>>>> Stashed changes
 
       &:hover {
         background-color: darken($bg-leftbar, 5%);
@@ -50,10 +47,7 @@
         border-left-width: 2px;
         border-left-style: solid;
         border-left-color: $menu-item;
-<<<<<<< Updated upstream
-=======
         color: $menu-item;
->>>>>>> Stashed changes
       }
 
       &.side-menu__item--small {
