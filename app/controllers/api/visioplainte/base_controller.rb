@@ -34,6 +34,7 @@ class Api::Visioplainte::BaseController < ActionController::Base # rubocop:disab
 
   protected
 
+  # utiliser cette méthode en prepend_before_action avant le authenticate_with_api_key
   def allow_authentication_with_read_only_api_key
     @read_only_api_key_allowed = true
   end
