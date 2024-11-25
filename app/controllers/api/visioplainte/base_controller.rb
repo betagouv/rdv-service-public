@@ -8,22 +8,6 @@ class Api::Visioplainte::BaseController < ActionController::Base # rubocop:disab
 
   GENDARMERIE_SERVICE_NAME = "Gendarmerie Nationale".freeze
 
-  def authenticate_with_api_key
-    authorized = ActiveSupport::SecurityUtils.secure_compare(
-      request.headers["X-VISIOPLAINTE-API-KEY"] || "",
-      ENV.fetch("VISIOPLAINTE_API_KEY")
-    )
-
-    unless authorized
-      render(
-        status: :unauthorized,
-        json: {
-          errors: ["Authentification invalide"],
-        }
-      )
-    end
-  end
-
   def reset
     # On met plusieurs guard clauses de sécurité pour s'assurer qu'on ne peut appeler cette méthode destructive que sur la staging
     return unless ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
@@ -46,5 +30,38 @@ class Api::Visioplainte::BaseController < ActionController::Base # rubocop:disab
 
     load Rails.root.join("db/seeds/visioplainte.rb")
     head :ok
+  end
+
+  protected
+
+  # utiliser cette méthode en prepend_before_action avant le authenticate_with_api_key
+  def allow_authentication_with_read_only_api_key
+    @read_only_api_key_allowed = true
+  end
+
+  def authenticate_with_api_key
+    authorized = ActiveSupport::SecurityUtils.secure_compare(
+      request.headers["X-VISIOPLAINTE-API-KEY"] || "",
+      ENV.fetch("VISIOPLAINTE_API_KEY")
+    ) || authorized_with_read_only_api_key?
+
+    unless authorized
+      render(
+        status: :unauthorized,
+        json: {
+          errors: ["Authentification invalide"],
+        }
+      )
+    end
+  end
+
+  def authorized_with_read_only_api_key?
+    return false unless @read_only_api_key_allowed
+    return false if ENV["VISIOPLAINTE_API_KEY_READ_ONLY"].blank?
+
+    ActiveSupport::SecurityUtils.secure_compare(
+      request.headers["X-VISIOPLAINTE-API-KEY"],
+      ENV["VISIOPLAINTE_API_KEY_READ_ONLY"]
+    )
   end
 end

@@ -17,6 +17,7 @@ Ils et elles ne peuvent donc pas se connecter à RDV Service Public.
 
 Un autre besoin identifié est un environnement de staging pouvant être réinitialisé sur demande.
 
+
 ## Avancement
 
 En date d’octobre 2024, nous avons fini de développer la première version de l’API.
@@ -27,3 +28,9 @@ Les équipes de SensioLabs nous indiquent travailler sur l’intégration de leu
 
 L’API est implémenté par des contrôleurs tous regroupés dans `app/controllers/api/visioplainte`.
 Les appels à notre API sont authentifiées via un header `X-VISIOPLAINTE-API-KEY`.
+
+## Intégration avec MaSécurité
+
+Pour éviter de démarrer un processus de visioplainte alors qu'il n'y a aucun créneau de disponible, l'équipe qui gère le site MaSécurité a aussi besoin d'accéder à l'application pour savoir s'il existe des créneaux.
+Nous avons donc mis en place la possibilité de se connecter à l'api avec une clé avec des permissions en lecture seule, pour avoir le minimum de permissions.
+Il y a donc deux clés d'api, celle en lecture-écriture pour Visioplainte, et celle en lecture seule pour MaSécurité.
