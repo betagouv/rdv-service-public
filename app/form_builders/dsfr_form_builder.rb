@@ -25,39 +25,10 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def dsfr_input_group(attribute, opts, &block)
-    @template.content_tag(:div, class: input_group_classes(attribute, opts)) do
+    @template.content_tag(:div, class: input_group_classes(attribute, opts), data: opts[:data]) do
       yield(block)
     end
   end
-
-  def dsfr_input_wrap(&block)
-    @template.content_tag(:div, class: "fr-input-wrap") do
-      yield(block)
-    end
-  end
-
-  def dsfr_label_with_hint(attribute, opts = {})
-    label_class = opts[:class] || "fr-label"
-    label(attribute, class: label_class) do
-      label_and_tags = [label_value(attribute)]
-      label_and_tags.push(required_tag) if opts[:required] && display_required_tags
-      label_and_tags.push(hint_tag(opts[:hint])) if opts[:hint]
-
-      @template.safe_join(label_and_tags)
-    end
-  end
-
-  def dsfr_error_message(attr)
-    return if @object.errors[attr].none?
-
-    @template.content_tag(:p, class: "fr-messages-group") do
-      safe_join(@object.errors.full_messages_for(attr).map do |msg|
-        @template.content_tag(:span, msg, class: "fr-message fr-message--error")
-      end)
-    end
-  end
-
-  private
 
   def dsfr_input_field(attribute, input_kind, opts = {})
     dsfr_input_group(attribute, opts) do
@@ -71,8 +42,29 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  def dsfr_label_with_hint(attribute, opts = {})
+    label_class = "fr-label #{opts[:class]}"
+    label(attribute, class: label_class) do
+      label_and_tags = [label_value(attribute)]
+      label_and_tags.push(required_tag) if opts[:required] && display_required_tags
+      label_and_tags.push(hint_tag(opts[:hint])) if opts[:hint]
+
+      @template.safe_join(label_and_tags)
+    end
+  end
+
   def required_tag
     @template.content_tag(:span, "*", class: "fr-text-error")
+  end
+
+  def dsfr_error_message(attr)
+    return if @object.errors[attr].none?
+
+    @template.content_tag(:p, class: "fr-messages-group") do
+      safe_join(@object.errors.full_messages_for(attr).map do |msg|
+        @template.content_tag(:span, msg, class: "fr-message fr-message--error")
+      end)
+    end
   end
 
   def hint_tag(text)
