@@ -14,7 +14,8 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
 
     example.run
 
-    `kill -9 #{pid}`
+    Process.kill("KILL", pid)
+    Process.wait(pid) # pour éviter d'avoir un process zombie
   end
 
   let!(:agent) do
