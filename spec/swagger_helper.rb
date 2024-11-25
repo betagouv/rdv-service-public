@@ -35,6 +35,10 @@ RSpec.configure do |config|
           curl --request GET --url "https://demo.rdv.anct.gouv.fr/api/visioplainte/creneaux" --header "X-VISIOPLAINTE-API-KEY: LA_CLE_D_API"
           ```
 
+          ## Clé d'api en lecture seule
+
+          Il est possible d'avoir une clé d'api qui n'a des permissions qu'en lecture seule sur les créneaux. L'authentification se fait via le même header.
+
           # Réinitialisation des données sur l'environnement de staging
 
           La staging de RDV Service Public a vocation à être utilisée par l'environnement de qualification du téléservice Visioplainte.
