@@ -23,6 +23,8 @@ tables:
     truncated: true
   - table_name: schema_migrations
     truncated: true
+  - table_name: oauth_access_grants
+    truncated: true
   - table_name: users
     anonymized_column_names:
       - first_name
@@ -422,3 +424,27 @@ tables:
       - options
       - created_at
       - updated_at
+
+  - table_name: oauth_applications
+    anonymized_column_names:
+      - secret
+    non_anonymized_column_names:
+      - name
+      - uid
+      - redirect_uri
+      - scopes
+      - confidential
+      - created_at
+      - updated_at
+      - logo_base64
+  - table_name: oauth_access_tokens
+    anonymized_column_names:
+      - token
+      - refresh_token
+      - previous_refresh_token
+    non_anonymized_column_names:
+      - scopes
+      - created_at
+      - revoked_at
+      - expires_in
+
