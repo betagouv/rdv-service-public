@@ -8,7 +8,7 @@ class SearchController < ApplicationController
 
   def home
     # Si l'agent est redirigé vers le root_path depuis ProConnect, et qu'on veut le rediriger vers
-    # une application OAuth cliente (par exemple RDV Insertion), on utilise
+    # une application OAuth cliente (par exemple RDV Insertion)
     # après la déconnexion, on suit l'url de redirection
     post_logout_redirect_url = session.delete(:post_logout_redirect_url)
 
