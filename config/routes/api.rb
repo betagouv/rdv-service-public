@@ -64,16 +64,6 @@ namespace :api do
     end
   end
 
-  namespace :internal do
-    namespace :admin do
-      namespace :agenda do
-        resources :plage_ouvertures, only: [:index]
-        resources :rdvs, only: [:index]
-        resources :absences, only: [:index]
-      end
-    end
-  end
-
   post "/coop-mediation-numerique/accounts", to: "coop_mediation_numerique/accounts#create"
 end
 
