@@ -67,9 +67,14 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     if request.headers.include?("X-Agent-Auth-Signature")
       # Bypass DeviseTokenAuth
       authenticate_agent_with_shared_secret
-    else
+    elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"]
       # Use DeviseTokenAuth
       authenticate_api_v1_agent_with_token_auth!
+    else
+      doorkeeper_authorize!
+      if doorkeeper_token
+        @current_agent = Agent.find(doorkeeper_token.resource_owner_id)
+      end
     end
   end
 

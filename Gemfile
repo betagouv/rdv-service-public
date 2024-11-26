@@ -72,6 +72,10 @@ gem "omniauth-github"
 gem "omniauth-microsoft_graph"
 # OpenID Connect Strategy for OmniAuth
 gem "omniauth_openid_connect"
+# Oauth provider
+gem "doorkeeper"
+# Translations for Doorkeeper
+gem "doorkeeper-i18n"
 # Provides CSRF protection on OmniAuth request endpoint on Rails application.
 gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails
@@ -264,4 +268,7 @@ group :test do
 
   # Dépendence indirecte de axe-core-api
   gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
+
+  gem "sinatra"
+  gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
 end
