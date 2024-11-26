@@ -90,13 +90,13 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
   end
 
   def compare
-    organisation_a = Organisation.find(params[:organisation_a])
-    organisation_b = Organisation.find(params[:organisation_b])
+    org_a = Organisation.find(params[:org_a])
+    org_b = Organisation.find(params[:org_b])
     skip_authorization
-    raise Pundit::NotAuthorizedError, "not authorized" unless Agent::MotifPolicy.organisations_i_can_manage(current_agent).include?(organisation_a)
-    raise Pundit::NotAuthorizedError, "not authorized" unless Agent::MotifPolicy.organisations_i_can_manage(current_agent).include?(organisation_b)
+    raise Pundit::NotAuthorizedError, "not authorized" unless Agent::MotifPolicy.organisations_i_can_manage(current_agent).include?(org_a)
+    raise Pundit::NotAuthorizedError, "not authorized" unless Agent::MotifPolicy.organisations_i_can_manage(current_agent).include?(org_b)
 
-    @presenter = MotifsComparisonPresenter.new(organisation_a, organisation_b)
+    @presenter = MotifsComparisonPresenter.new(org_a, org_b, show_all_attrs: params[:show_all_attrs].to_b, only_different_pairs: params[:only_different_pairs].to_b)
   end
 
   private

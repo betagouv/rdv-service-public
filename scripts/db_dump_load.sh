@@ -30,4 +30,4 @@ bundle exec rails db:environment:set
 # vous devez au moins anonymiser les données usager avec :
 # bundle exec rails runner scripts/anonymize_user_data.rb
 
-bundle exec rails runner scripts/anonymize_database.rb
+#bundle exec rails runner scripts/anonymize_database.rb

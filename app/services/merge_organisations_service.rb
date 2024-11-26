@@ -32,8 +32,8 @@ class MergeOrganisationsService
     @source_organisation.motifs.active.each do |source_motif|
       existing_motif = source_motif.duplicates.find_by(organisation: @target_organisation)
       if existing_motif
-        comparator = MotifComparator.new(source_motif, existing_motif)
-        if comparator.strictly_identical?
+        pair = MotifsComparisonPresenter::Pair.new(source_motif, existing_motif)
+        if pair.mostly_identical?
           Rdv.where(motif_id: source_motif.id).update_all(motif_id: existing_motif.id)
           MotifsPlageOuverture.where(motif_id: source_motif.id).update_all(motif_id: existing_motif.id)
           source_motif.destroy!
@@ -115,7 +115,7 @@ class MergeOrganisationsService
       existing_motif = source_motif.duplicates.find_by(organisation: @target_organisation)
       next unless existing_motif
 
-      differences = MotifComparator.new(source_motif, existing_motif).differences
+      differences = MotifsComparisonPresenter::Pair.new(source_motif, existing_motif).differences
       next unless differences.any?
 
       error_message = "Les motifs #{source_motif.id} et #{existing_motif.id} (#{source_motif.name}) sont des doublons mais ont les différences suivantes :\n"

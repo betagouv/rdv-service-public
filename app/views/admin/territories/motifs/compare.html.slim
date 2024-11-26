@@ -1,10 +1,24 @@
 h1 Comparaison des motifs de #{@presenter.org_a} et #{@presenter.org_b}
 
-- @presenter.motifs_grouped_by_duplicates.each do |motif_a, motif_b|
-  - comparator = nil
-  - if motif_a && motif_b
-    - comparator = MotifComparator.new(motif_a, motif_b)
-  - next unless comparator && !comparator.strictly_identical?
+.row
+  .col-md-12
+    = form_for(@presenter, as: "", url: compare_admin_territory_motifs_path, method: :get) do |f|
+      = f.hidden_field :org_a, value: @presenter.org_a.id
+      = f.hidden_field :org_b, value: @presenter.org_b.id
+
+      .d-flex.flex-gap-1em.justify-content-around.m-2
+        .d-flex.flex-gap-1em
+          = f.check_box :show_all_attrs, as: :checkbox, onchange: "this.form.submit()"
+          = f.label "Afficher tous les attributs", for: :show_all_attrs, class: "mb-0"
+        .d-flex.flex-gap-1em
+          = f.check_box :only_different_pairs, as: :checkbox, onchange: "this.form.submit()"
+          = f.label "Afficher uniquement les paires différentes", for: :only_different_pairs, class: "mb-0"
+
+- @presenter.pairs.each do |pair|
+  - next if @presenter.only_different_pairs && pair.one_side? || pair.mostly_identical?
+  - motif_a, motif_b = pair.motif_a, pair.motif_b
+  - attrs_to_display = @presenter.show_all_attrs || pair.one_side? ? MotifsComparisonPresenter.attrs_names : pair.differences.keys
+  - next if attrs_to_display.none?
 
   .card.p-3
     h3.mb-3 #{motif_name_and_location_type_and_service(motif_a || motif_b)}
@@ -13,23 +27,16 @@ h1 Comparaison des motifs de #{@presenter.org_a} et #{@presenter.org_b}
         th
         th = link_to(@presenter.org_a, edit_admin_organisation_motif_path(motif_a.organisation, motif_a)) if motif_a
         th = link_to(@presenter.org_b, edit_admin_organisation_motif_path(motif_b.organisation, motif_b)) if motif_b
-      - attrs_to_display = params[:only_diff] ? comparator.differences.keys : MotifComparator.attrs_names
       - attrs_to_display.each do |attr_name|
         ruby:
           value_in_a = motif_a.send(attr_name) if motif_a
           value_in_b = motif_b.send(attr_name) if motif_b
-          classes = motif_a && motif_b && value_in_a != value_in_b && !params[:only_diff] ? ["text-warning"] : []
+          classes = motif_a && motif_b && value_in_a != value_in_b && @presenter.show_all_attrs ? ["text-warning"] : []
         tr
           th[style="width:30%"] = Motif.human_attribute_name(attr_name)
           ruby:
             display_logic = ->(motif) do
-              next unless motif
-              value = motif.send(attr_name)
-              if attr_name.in?(%w[min_public_booking_delay max_public_booking_delay])
-                ToDuration::Duration.new(value)
-              else
-                Motif.human_attribute_value(attr_name, motif.send(attr_name))
-              end
+              Motif.human_attribute_value(attr_name, motif.send(attr_name)) if motif
             end
           td[class=classes style="width:40%"] = display_logic.call(motif_a)
           td[class=classes style="width:40%"] = display_logic.call(motif_b)
