@@ -28,7 +28,7 @@
   background: $bg-leftbar;
   scrollbar-width: thin;
 
-  a {
+  a:not(.btn-primary) {
     color: $menu-item;
     transition: all 0.2s;
 
