@@ -28,6 +28,7 @@ superviseur_gendarmerie = Agent.new(
   email: "superviseur.fictif@staging.rdv-service-public.fr",
   uid: "superviseur.fictif@staging.rdv-service-public.fr",
   password: "Rdvservicepublictest1!",
+  display_saturdays: true,
   services: [service_gendarmerie],
   roles_attributes: [
     { organisation: orga_gendarmerie, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
