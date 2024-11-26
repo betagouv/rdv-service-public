@@ -169,7 +169,7 @@ RSpec.describe "Visioplainte Rdvs" do
 
     context "when filtering by guichet" do
       let(:date_params) do
-        { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-20T08:00:00+02:00" }
+        { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-27T08:00:00+02:00" }
       end
 
       let(:gendarmerie_guichet_ids) do
