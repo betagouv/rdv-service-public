@@ -10,7 +10,7 @@ RSpec.describe "Visioplainte Rdvs" do
       first_day: Date.tomorrow,
       start_time: Tod::TimeOfDay.new(8),
       end_time: Tod::TimeOfDay.new(12),
-      recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
+      recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5, 6, 0], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday saturday sunday])
     )
   end
 
@@ -21,10 +21,7 @@ RSpec.describe "Visioplainte Rdvs" do
   end
 
   let(:create_rdv_params) do
-    {
-      starts_at: "2024-08-19T08:00:00+02:00",
-      service: "Gendarmerie",
-    }
+    { starts_at: "2024-08-24T08:00:00+02:00" } # Un dimanche, pour tester que c'est possible pour visioplainte
   end
 
   describe "#create" do
@@ -35,8 +32,8 @@ RSpec.describe "Visioplainte Rdvs" do
 
       expect(created_rdv).to have_attributes(
         created_by_type: "User",
-        starts_at: Time.zone.parse("2024-08-19T08:00:00+02:00"),
-        ends_at: Time.zone.parse("2024-08-19T08:30:00+02:00"),
+        starts_at: Time.zone.parse("2024-08-24T08:00:00+02:00"),
+        ends_at: Time.zone.parse("2024-08-24T08:30:00+02:00"),
         status: "unknown"
       )
 
@@ -52,7 +49,7 @@ RSpec.describe "Visioplainte Rdvs" do
 
     context "la configuration du motif a été modifiée par erreur et le rdv nécessite un lieu" do
       let(:service) { Service.find_by(name:  "Gendarmerie Nationale") }
-      let(:motif) { Motif.find_by(name: "Dépôt de plainte par visioconférence", service: service) }
+      let(:motif) { Motif.find_by(name: "Dépôt de plainte par visioconférence (Visioplainte)", service: service) }
 
       before do
         motif.update!(location_type: :public_office)
@@ -131,15 +128,15 @@ RSpec.describe "Visioplainte Rdvs" do
     before { create_rdv }
 
     it "returns the list of rdvs" do
-      get "/api/visioplainte/rdvs/", params: { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-20T08:00:00+02:00" }, headers: auth_header
+      get "/api/visioplainte/rdvs/", params: { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-27T08:00:00+02:00" }, headers: auth_header
       expect(response.status).to eq 200
 
-      expect(response.parsed_body["rdvs"][0]["starts_at"]).to eq "2024-08-19 08:00:00 +0200"
+      expect(response.parsed_body["rdvs"][0]["starts_at"]).to eq "2024-08-24 08:00:00 +0200"
     end
 
     describe "authentication" do
       it "returns a 400 status if the auth header is missing" do
-        get "/api/visioplainte/rdvs/", params: { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-20T08:00:00+02:00" }, headers: {}
+        get "/api/visioplainte/rdvs/", params: { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-27T08:00:00+02:00" }, headers: {}
         expect(response.status).to eq 401
         expect(response.parsed_body["rdvs"]).to be_blank
       end
