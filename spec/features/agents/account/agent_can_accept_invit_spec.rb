@@ -9,7 +9,7 @@ RSpec.describe "Agent can accept invitation" do
       fill_in "Nom", with: "Doe"
       fill_in "Mot de passe", with: "c0rrecThorse!"
 
-      click_on "Enregistrer"
+      expect { click_on "Enregistrer" }.to change { agent.reload.encrypted_password }
       expect(page).to have_content("Votre mot de passe a été enregistré et votre compte est activé.")
     end
   end
