@@ -106,7 +106,7 @@ RSpec.describe UserRdvWizard do
         it "return false with a rdv by_phone and user without phone" do
           rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
           rdv_wizard.valid?
-          expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique.")
+          expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
         end
       end
     end

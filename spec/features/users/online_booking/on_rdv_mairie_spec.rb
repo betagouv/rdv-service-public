@@ -101,10 +101,12 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(user.reload.ants_pre_demande_number).to eq("1122334455")
     end
 
-    it "displays the organisation name for a public link and a generic name otherwise" do
+    it "redirects to the home page if visiting /prendre_rdv without params" do
       visit prendre_rdv_url
-      expect(page).to have_content "Prenez rendez-vous avec votre mairie"
+      expect(page).to have_current_path("/")
+    end
 
+    it "displays the organisation name for a public link" do
       visit public_link_to_org_url(organisation_id: organisation.id)
       expect(page).to have_content "Prenez rendez-vous avec Mairie de Wavignies"
     end

@@ -17,6 +17,13 @@ Rails.application.routes.draw do
     get "omniauth/github/callback" => "omniauth_callbacks#github"
   end
 
+  ## OAUTH PROVIDER ##
+  use_doorkeeper do
+    skip_controllers :applications # Ces routes permettent de configurer les applications OAuth autorisées
+    # Par soucis de sécurité, on préfère les fermer, et permettre la configuration de ces applications uniquement par des devs en console.
+    # voir scripts/create_oauth_application.rb
+  end
+
   ## ADMIN ##
   get "connexion_super_admins", to: "welcome#super_admin"
 
@@ -92,6 +99,8 @@ Rails.application.routes.draw do
   }
 
   devise_scope :agent do
+    get "agents/sign_out", to: "agents/sessions#destroy" # Utilisé par les clients Oauth pour se déconnecter
+
     get "agents/edit" => "agents/registrations#edit", as: "edit_agent_registration"
     put "agents" => "agents/registrations#update", as: "agent_registration"
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
@@ -121,6 +130,13 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
+      namespace :api, defaults: { format: :json } do
+        namespace :agenda do
+          resources :plage_ouvertures, only: [:index]
+          resources :rdvs, only: [:index]
+          resources :absences, only: [:index]
+        end
+      end
       resources :territories, only: %i[edit update show] do
         scope module: "territories" do
           resources :agent_roles, only: %i[update create destroy]
@@ -161,12 +177,6 @@ Rails.application.routes.draw do
           end
           get "sectorisation_test" => "sectorisation_tests#search"
         end
-      end
-
-      namespace :agenda do
-        resources :plage_ouvertures, only: [:index]
-        resources :rdvs, only: [:index]
-        resources :absences, only: [:index]
       end
 
       resources :organisations do
@@ -234,12 +244,6 @@ Rails.application.routes.draw do
               get :calendar
             end
           end
-          resources :stats, only: :index do
-            collection do
-              get :rdvs
-              get :users
-            end
-          end
         end
         resources :invitations, only: [:index] do
           post :reinvite, on: :member
@@ -298,7 +302,6 @@ Rails.application.routes.draw do
     "users/rdvs/#{path_params[:id]}#{query_params}"
   end), as: "rdv_short"
 
-  # TODO: remplacer `prendre_rdv` par le root_path
   get "prdv", to: (redirect do |_path_params, req|
     query_params = format_redirect_params(req.params)
     "prendre_rdv#{query_params}"
@@ -331,10 +334,8 @@ Rails.application.routes.draw do
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
 
-  resources :lieux, only: %i[index show]
-  root "search#search_rdv"
+  root "search#home"
 
-  # TODO: remplacer `prendre_rdv` par le root_path
   get "/prendre_rdv", to: "search#search_rdv"
 
   # temporary route after admin namespace introduction

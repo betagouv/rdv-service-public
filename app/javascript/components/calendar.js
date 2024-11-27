@@ -55,6 +55,13 @@ class CalendarRdvSolidarites {
   }
 
   initFullCalendar = () => {
+    var hiddenDays = []
+    if (this.data.displaySaturdays !== "true") {
+      hiddenDays.push(6);
+    }
+    if (this.data.displaySundays !== "true") {
+      hiddenDays.push(0);
+    }
     return new Calendar(this.calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
@@ -65,7 +72,7 @@ class CalendarRdvSolidarites {
       viewSkeletonRender: function (info) {
         localStorage.setItem("calendarDefaultView", info.view.type);
       },
-      hiddenDays: this.data.displaySaturdays === "true" ? [0] : [6, 0],
+      hiddenDays: hiddenDays,
       height: "auto",
       selectable: true,
       select: this.selectEvent,
@@ -81,7 +88,7 @@ class CalendarRdvSolidarites {
       },
       businessHours: {
         // days of week. an array of zero-based day of week integers (0=Sunday)
-        daysOfWeek: [1, 2, 3, 4, 5, 6],
+        daysOfWeek: [1, 2, 3, 4, 5, 6, 0],
         startTime: '07:00',
         endTime: '19:00',
       },

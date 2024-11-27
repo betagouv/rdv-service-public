@@ -39,7 +39,7 @@ rswag: ## Re-generate swagger/v1/api.json by running API specs
 .DEFAULT_GOAL := help
 
 review_app: ## Create Scalingo review app for the PR linked to the current branch
-	scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites integration-link-manual-review-app `gh pr view --json number --jq '.number'`
+	/bin/sh scripts/create_review_app.sh
 
 help: ## Display available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
