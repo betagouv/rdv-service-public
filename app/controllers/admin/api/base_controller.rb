@@ -1,4 +1,4 @@
-class Admin::Agenda::BaseController < ApplicationController
+class Admin::Api::BaseController < ApplicationController
   include Admin::AuthenticatedControllerConcern
 
   respond_to :json

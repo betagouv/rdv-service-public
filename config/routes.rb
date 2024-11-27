@@ -130,6 +130,13 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
+      namespace :api, defaults: { format: :json } do
+        namespace :agenda do
+          resources :plage_ouvertures, only: [:index]
+          resources :rdvs, only: [:index]
+          resources :absences, only: [:index]
+        end
+      end
       resources :territories, only: %i[edit update show] do
         scope module: "territories" do
           resources :agent_roles, only: %i[update create destroy]
@@ -170,12 +177,6 @@ Rails.application.routes.draw do
           end
           get "sectorisation_test" => "sectorisation_tests#search"
         end
-      end
-
-      namespace :agenda do
-        resources :plage_ouvertures, only: [:index]
-        resources :rdvs, only: [:index]
-        resources :absences, only: [:index]
       end
 
       resources :organisations do
