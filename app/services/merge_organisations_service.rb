@@ -3,7 +3,7 @@ class MergeOrganisationsService
   include ActiveModel::Validations
 
   validate :both_orgs_from_same_territory
-  validate :motifs_are_compatible
+  validate :motifs_are_compatible, on: :expect_identical_motifs
   validate :agents_access_level_match
   validate :webhooks_are_similar
 
@@ -12,7 +12,7 @@ class MergeOrganisationsService
     @target_organisation = target_organisation
   end
 
-  def perform
+  def perform(context: nil)
     raise "Can't perform merge if errors are present" if invalid?
 
     migrate_motifs

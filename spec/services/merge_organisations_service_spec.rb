@@ -56,7 +56,7 @@ RSpec.describe MergeOrganisationsService do
     let!(:motif_in_target_org) { create(:motif, organisation: target_organisation) }
 
     it "move motifs from source org to target org" do
-      expect(service).to be_valid
+      expect(service.valid?(:expect_identical_motifs)).to be(true)
       service.perform
 
       expect(source_organisation.motifs).to be_empty
@@ -74,7 +74,7 @@ RSpec.describe MergeOrganisationsService do
       it "links all plages in source org to the existing motif in target org" do
         plage_in_source_org = create(:plage_ouverture, organisation: source_organisation, motifs: [motif_in_source_org])
 
-        expect(service).to be_valid
+        expect(service.valid?(:expect_identical_motifs)).to be(true)
         service.perform
 
         expect(plage_in_source_org.reload.motifs).to eq([strictly_identical_motif])
@@ -83,7 +83,7 @@ RSpec.describe MergeOrganisationsService do
       it "links all RDVs in source org to the existing motif in target org" do
         rdv_in_source_org = create(:rdv, organisation: source_organisation, motif: motif_in_source_org)
 
-        expect(service).to be_valid
+        expect(service.valid?(:expect_identical_motifs)).to be(true)
         service.perform
 
         expect(rdv_in_source_org.reload.motif).to eq(strictly_identical_motif)
@@ -104,7 +104,7 @@ RSpec.describe MergeOrganisationsService do
       end
 
       it "raises an error" do
-        expect(service).to be_invalid
+        expect(service.valid?(:expect_identical_motifs)).to be(false)
         expected_error = <<~ERROR
           Les motifs #{motif_in_source_org.id} et #{similar_motif.id} (#{motif_in_source_org.name}) sont des doublons mais ont les différences suivantes :
             default_duration_in_min: - 45 + 60
