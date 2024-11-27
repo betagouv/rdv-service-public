@@ -19,7 +19,7 @@ class Users::RdvSms < Users::BaseSms
   end
 
   def rdv_upcoming_reminder(rdv, user, token)
-    @content = "Rappel RDV #{rdv_title(rdv)} le #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
+    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token)}"
   end
 
   def rdv_cancelled(rdv, _user, token)
@@ -48,7 +48,7 @@ class Users::RdvSms < Users::BaseSms
   private
 
   def starts_at(rdv)
-    I18n.l(rdv.starts_at, format: rdv.home? ? :short_approx : :short)
+    I18n.l(rdv.starts_at, format: rdv.home? ? :short_sms_approx : :short_sms)
   end
 
   def rdv_footer(rdv, user, token)
@@ -62,10 +62,10 @@ class Users::RdvSms < Users::BaseSms
     agents_short_names = rdv.agents.map(&:short_name).sort.to_sentence
     details += " avec #{agents_short_names}" if rdv.follow_up?
 
-    details += ".\n"
+    details += "\n"
 
-    url = rdv_short_url(rdv, host: domain_host, tkn: token)
-    links = "Infos et annulation: #{url}"
+    url = rdv_short_url(rdv, host: domain_host, tkn: token).sub(%r{https?://}, "")
+    links = "Infos: #{url}"
 
     links += " / #{rdv.phone_number}" if rdv.phone_number.present?
 
@@ -75,13 +75,13 @@ class Users::RdvSms < Users::BaseSms
   def rdv_location(rdv)
     case rdv.motif.location_type
     when "public_office"
-      rdv.address_complete
+      rdv.address
     when "phone"
-      "RDV téléphonique"
+      "Par tél"
     when "home"
-      "RDV à votre domicile"
+      "A domicile"
     when "visio"
-      "RDV par visioconférence"
+      "Par visio"
     else
       raise "Il manque un texte de rdv_location pour #{rdv.motif.location_type}"
     end
