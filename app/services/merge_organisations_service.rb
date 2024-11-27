@@ -12,7 +12,7 @@ class MergeOrganisationsService
     @target_organisation = target_organisation
   end
 
-  def perform(context: nil)
+  def perform
     raise "Can't perform merge if errors are present" if invalid?
 
     migrate_motifs

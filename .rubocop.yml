@@ -238,6 +238,9 @@ Style/MultilineBlockChain:
 Style/OpenStructUse:
   Enabled: false
 
+Style/ParallelAssignment:
+  Enabled: false
+
 Style/HashSyntax:
   Enabled: false
 
