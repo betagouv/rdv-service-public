@@ -21,7 +21,7 @@ class TransferEmailReplyJob < ApplicationJob
   def perform(sendinblue_hash)
     @sendinblue_hash = sendinblue_hash.with_indifferent_access
 
-    if rdv
+    if rdv&.agents&.pluck(:email)&.compact&.any?
       notify_agents
     else
       forward_to_default_mailbox
