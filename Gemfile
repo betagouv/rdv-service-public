@@ -140,7 +140,6 @@ gem "montrose"
 gem "tod", "~> 2.2"
 # A ruby implementation of the iCalendar specification (RFC-5545).
 gem "icalendar", "~> 2.5"
-gem "to_duration"
 
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"

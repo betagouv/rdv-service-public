@@ -82,13 +82,6 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     end
   end
 
-  # sale monkey patch
-  module ::ToDuration
-    def self.t(key, options = {})
-      I18n.t("to_duration.#{key}", **options)
-    end
-  end
-
   def compare
     org_a = Agent::MotifPolicy.organisations_i_can_manage(current_agent).find_by(id: params[:org_a])
     org_b = Agent::MotifPolicy.organisations_i_can_manage(current_agent).find_by(id: params[:org_b])
