@@ -1,6 +1,4 @@
 class MotifsComparisonPresenter
-  # include ActiveModel::Model
-
   TECHNICAL_ATTRIBUTES = %w[
     id
     organisation_id
@@ -34,6 +32,10 @@ class MotifsComparisonPresenter
   end
 
   attr_reader :org_a, :org_b, :show_all_attrs, :only_different_pairs
+
+  def organisations_selected?
+    @org_a && @org_b
+  end
 
   class Pair
     def initialize(motif_a, motif_b)
@@ -85,7 +87,15 @@ class MotifsComparisonPresenter
   end
 
   def displayed_pairs
-    pairs
+    return @displayed_pairs if defined?(@displayed_pairs)
+
+    displayed_pairs = pairs
+
+    if only_different_pairs
+      displayed_pairs = displayed_pairs.reject { |pair| pair.one_side? || pair.mostly_identical? }
+    end
+
+    @displayed_pairs = displayed_pairs
   end
 
   def pairs
