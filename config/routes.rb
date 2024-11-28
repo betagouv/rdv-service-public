@@ -156,6 +156,9 @@ Rails.application.routes.draw do
           end
           resources :teams, except: :show
           resources :motifs, only: %i[index new create destroy] do
+            collection do
+              get :batch_edit
+            end
             member do
               post :archive
               post :unarchive

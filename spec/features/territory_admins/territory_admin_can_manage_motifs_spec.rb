@@ -123,6 +123,28 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
   end
 
+  describe "batch edit" do
+    let!(:organisation) { create(:organisation, territory: territory) }
+    let!(:motif_a) { create(:motif, organisation: organisation) }
+    let!(:motif_b) { create(:motif, organisation: organisation) }
+    let!(:motif_c) { create(:motif, organisation: organisation) }
+
+    before do
+      agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+    end
+
+    it "works" do
+      visit admin_territory_motifs_path(territory)
+      find("[type=checkbox][value=#{motif_a.id}]").check
+      find("[type=checkbox][value=#{motif_c.id}]").check
+      click_on "Modifier les motifs"
+      expect(page).to have_content("Modifier les motifs")
+      expect(page).to have_content(motif_a.name)
+      expect(page).to have_content(motif_c.name)
+      expect(page).not_to have_content(motif_b.name)
+    end
+  end
+
   describe "archiving" do
     let!(:organisation) { create(:organisation, territory: territory) }
     let!(:motif) { create(:motif, organisation: organisation) }

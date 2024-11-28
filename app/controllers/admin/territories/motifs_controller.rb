@@ -20,6 +20,13 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     end
   end
 
+  def batch_edit
+    @motifs = Motif.where(id: params[:motif_ids])
+    @motifs.each do |motif|
+      authorize(motif, :edit?, policy_class: Agent::MotifPolicy)
+    end
+  end
+
   def new
     skip_authorization
     @motif = Motif.new

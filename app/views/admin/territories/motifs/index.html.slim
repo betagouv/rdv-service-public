@@ -47,7 +47,10 @@
   .col-12
 
     .float-right
-      a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
+      .d-flex.flex-gap-1em
+        form#batch_edit_form[action=batch_edit_admin_territory_motifs_path method="get"]
+          button.btn.btn-outline-primary.mb-2[role="submi"] = t("admin.motifs.actions.batch_edit")
+        a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
 
     ul.nav.nav-tabs
       - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
@@ -95,6 +98,8 @@
           - @motifs_page.each do |motif|
             - motif_policy = Agent::MotifPolicy.new(current_agent, motif)
             tr
+              td
+                input[type="checkbox" form="batch_edit_form" name="motif_ids[]" value=motif.id]
               td
                 span.badge.badge-pill style="background: #{motif.color};" &nbsp;
               td
