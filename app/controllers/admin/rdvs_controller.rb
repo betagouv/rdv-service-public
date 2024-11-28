@@ -48,7 +48,7 @@ class Admin::RdvsController < AgentAuthController
       organisation_ids: @scoped_organisations.ids,
       options: parsed_params
     )
-    flash[:notice] = t("layouts.flash.confirm_export_queued_html", exports_path: agents_exports_path)
+    flash[:success] = t("layouts.flash.confirm_export_queued_html", exports_path: agents_exports_path)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 
@@ -61,7 +61,7 @@ class Admin::RdvsController < AgentAuthController
       organisation_ids: @scoped_organisations.ids,
       options: parsed_params
     )
-    flash[:notice] = t("layouts.flash.confirm_export_queued_html", exports_path: agents_exports_path)
+    flash[:success] = t("layouts.flash.confirm_export_queued_html", exports_path: agents_exports_path)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 
@@ -86,7 +86,7 @@ class Admin::RdvsController < AgentAuthController
     respond_to do |format|
       format.js do
         if @success
-          flash.now[:notice] = "Rendez-vous mis à jour"
+          flash.now[:success] = "Rendez-vous mis à jour"
         else
           flash.now[:error] = @rdv.errors.full_messages.to_sentence
         end
@@ -107,7 +107,7 @@ class Admin::RdvsController < AgentAuthController
 
     Notifiers::RdvUpcomingReminder.perform_with(@rdv, nil)
 
-    redirect_to admin_organisation_rdv_path, flash: { notice: I18n.t("admin.receipts.reminder_manually_sent") }
+    redirect_to admin_organisation_rdv_path, flash: { success: I18n.t("admin.receipts.reminder_manually_sent") }
   end
 
   def destroy

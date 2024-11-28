@@ -34,7 +34,8 @@ class Admin::RdvsCollectifsController < AgentAuthController
     authorize(@rdv, :new?, policy_class: Agent::RdvPolicy)
     if @rdv_form.save
       Notifiers::RdvCreated.perform_with(@rdv, current_agent)
-      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation), notice: I18n.t("admin.rdvs.message.success.create")
+      flash[:success] = I18n.t("admin.rdvs.message.success.create")
+      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else
       render :new
     end
@@ -55,7 +56,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
     if @rdv.update_and_notify(current_agent, update_users_params)
-      flash[:notice] = "Participants mis à jour"
+      flash[:success] = "Participants mis à jour"
       redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else
       render :edit

@@ -29,7 +29,7 @@ RSpec.describe Admin::RdvsCollectifsController, type: :controller do
 
     it "creates the rdv and flashes success" do
       expect { create_request }.to change(Rdv, :count).by(1)
-      expect(flash[:notice]).to match(/Le rendez-vous a été créé/)
+      expect(flash[:success]).to match(/Le rendez-vous a été créé/)
     end
 
     context "when the rdv is in the past" do

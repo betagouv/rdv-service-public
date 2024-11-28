@@ -41,7 +41,7 @@ class Admin::AbsencesController < AgentAuthController
     authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.save
       Agents::AbsenceMailer.with(absence: @absence).absence_created.deliver_later if @agent.absence_notification_level == "all"
-      flash[:notice] = t(".absence_created")
+      flash[:success] = t(".absence_created")
       redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
       render :new
@@ -52,7 +52,7 @@ class Admin::AbsencesController < AgentAuthController
     authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.update(absence_params)
       Agents::AbsenceMailer.with(absence: @absence).absence_updated.deliver_later if @agent.absence_notification_level == "all"
-      flash[:notice] = t(".absence_updated")
+      flash[:success] = t(".absence_updated")
       redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
       render :edit

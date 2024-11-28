@@ -9,7 +9,7 @@ class Admin::ParticipationsController < AgentAuthController
   def update
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
     if @participation.change_status_and_notify(current_agent, participation_params[:status])
-      flash.now[:notice] = "Status de participation pour #{@participation.user.full_name} mis à jour"
+      flash.now[:success] = "Status de participation pour #{@participation.user.full_name} mis à jour"
     else
       flash.now[:error] = @participation.errors.full_messages.to_sentence
     end
