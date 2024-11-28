@@ -186,17 +186,17 @@ RSpec.describe Rdv, type: :model do
     end
 
     context "when rdv is at home" do
-      let(:responsible) { create(:user) }
-      let(:child) { create(:user, responsible: responsible) }
-      let(:rdv) { create(:rdv, :at_home, users: [child]) }
+      let(:responsable) { create(:user, address: "1 rue du Responsable, 74000 Annecy") }
+      let(:proche) { create(:user, responsible: responsable, address: "33 impasse du Proche, 42300 Roanne") }
+      let(:rdv) { create(:rdv, :at_home, users: [responsable, proche]) }
 
-      it { is_expected.to eq responsible.address }
+      it { is_expected.to eq responsable.address }
     end
 
     context "when rdv is by phone" do
-      let(:responsible) { create(:user) }
-      let(:child) { create(:user, responsible: responsible) }
-      let(:rdv) { create(:rdv, :by_phone, users: [child]) }
+      let(:responsable) { create(:user) }
+      let(:proche) { create(:user, responsible: responsable) }
+      let(:rdv) { create(:rdv, :by_phone, users: [responsable, proche]) }
 
       it { is_expected.to be_blank }
     end
