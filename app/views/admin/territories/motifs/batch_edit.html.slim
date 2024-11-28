@@ -4,7 +4,7 @@ h1 Modification en masse (#{@motifs.size} motifs)
 
 = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs }
 
-.card.mt-4.p-2
+.card.mt-4.mb-0.p-3
   = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "name_form" }) do |f|
     - @motifs.each do |motif|
       = f.hidden_field "motif_ids[]", value: motif.id
@@ -17,7 +17,7 @@ h1 Modification en masse (#{@motifs.size} motifs)
 
     = f.submit "Appliquer", class: "btn btn-primary"
 
-.card.mt-4.p-2
+.card.mt-4.mb-0.p-3
   = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "service_form" }) do |f|
     - @motifs.each do |motif|
       = f.hidden_field "motif_ids[]", value: motif.id
@@ -27,5 +27,18 @@ h1 Modification en masse (#{@motifs.size} motifs)
       = f.label "Service", for: :service_id
       = f.select :service_id, current_territory.services.reject(&:secretariat?).map { [_1.name, _1.id] }, { selected: (unique_services.size > 1 ? "" : unique_services.first.id), include_blank: true }, { class: "select2-input" }
       small.form-text.text-muted Tous les motifs listés ici seront déplacés vers ce service
+
+    = f.submit "Appliquer", class: "btn btn-primary"
+
+.card.mt-4.mb-0.p-3
+  = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "duration_form" }) do |f|
+    - @motifs.each do |motif|
+      = f.hidden_field "motif_ids[]", value: motif.id
+
+    .form-group
+      - unique_durations = @motifs.map(&:default_duration_in_min).uniq
+      = f.label "Durée par défaut en minutes", for: :default_duration_in_min
+      = f.text_field :default_duration_in_min, value: (unique_durations.size > 1 ? nil : unique_durations.first), class: "form-control"
+      small.form-text.text-muted Cette durée par défaut sera appliquée à tous les motifs listés ci-dessus
 
     = f.submit "Appliquer", class: "btn btn-primary"

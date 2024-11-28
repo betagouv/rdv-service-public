@@ -48,6 +48,12 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
       end
     end
 
+    if (default_duration_in_min = permitted_params[:default_duration_in_min].presence)
+      @motifs.each do |motif|
+        motif.update!(default_duration_in_min: default_duration_in_min)
+      end
+    end
+
     flash[:success] = "Motifs modifiés"
     redirect_to batch_edit_admin_territory_motifs_path(motif_ids: params[:motif_ids])
   end

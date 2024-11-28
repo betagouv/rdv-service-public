@@ -125,37 +125,80 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
 
   describe "batch edit" do
     let!(:organisation) { create(:organisation, territory: territory) }
-    let!(:service_pmi) { create(:service, :pmi).tap { territory << _1 } }
-    let!(:service_social) { create(:service, :social).tap { territory << _1 } }
-    let!(:motif_a) { create(:motif, organisation: organisation, service: service_pmi, location_type: :public_office) }
-    let!(:motif_b) { create(:motif, organisation: organisation, service: service_pmi, location_type: :phone) }
-    let!(:motif_c) { create(:motif, organisation: organisation, service: service_pmi, location_type: :home) }
 
     before do
       agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
     end
 
-    it "works" do
-      visit admin_territory_motifs_path(territory)
-      find("[type=checkbox][value=#{motif_a.id}]").check
-      find("[type=checkbox][value=#{motif_c.id}]").check
-      click_on "Modifier les motifs"
+    describe "motif selection" do
+      let!(:motif_a) { create(:motif, organisation: organisation) }
+      let!(:motif_b) { create(:motif, organisation: organisation) }
+      let!(:motif_c) { create(:motif, organisation: organisation) }
 
-      expect(page).to     have_content("Modifier les motifs")
-      expect(page).to     have_content(motif_a.name)
-      expect(page).not_to have_content(motif_b.name)
-      expect(page).to     have_content(motif_c.name)
+      it "works" do
+        visit admin_territory_motifs_path(territory)
+        find("[type=checkbox][value=#{motif_a.id}]").check
+        find("[type=checkbox][value=#{motif_c.id}]").check
+        click_on "Modifier les motifs"
 
-      within("#name_form") do
-        fill_in "Nom du motif", with: "Nom corrigé"
-        click_on "Appliquer"
-        expect([motif_a, motif_c].map { _1.reload.name }).to eq(["Nom corrigé", "Nom corrigé"])
+        expect(page).to     have_content("Modifier les motifs")
+        expect(page).to     have_content(motif_a.name)
+        expect(page).not_to have_content(motif_b.name)
+        expect(page).to     have_content(motif_c.name)
+
+        # On vérifie qu'on arrive sur la page de modification en masse ;
+        # cette page est testée dans les exemples ci-dessous.
+        expect(page).to have_current_path(batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_c.id]))
       end
+    end
 
-      within("#service_form") do
-        select service_social.name, from: "Service"
-        click_on "Appliquer"
-        expect([motif_a, motif_c].map { _1.reload.service }).to eq([service_social, service_social])
+    describe "updating name" do
+      let!(:motif_a) { create(:motif, organisation: organisation, name: "Nom avec faute A") }
+      let!(:motif_b) { create(:motif, organisation: organisation, name: "Nom avec faute B") }
+
+      it "works" do
+        visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
+
+        within("#name_form") do
+          fill_in "Nom du motif", with: "Nom corrigé"
+          click_on "Appliquer"
+          expect(motif_a.reload.name).to eq("Nom corrigé")
+          expect(motif_b.reload.name).to eq("Nom corrigé")
+        end
+      end
+    end
+
+    describe "updating service" do
+      let!(:service_pmi) { create(:service, :pmi).tap { territory.services << _1 } }
+      let!(:service_social) { create(:service, :social).tap { territory.services << _1 } }
+      let!(:motif_a) { create(:motif, organisation: organisation, service: service_pmi) }
+      let!(:motif_b) { create(:motif, organisation: organisation, service: service_pmi) }
+
+      it "works" do
+        visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
+
+        within("#service_form") do
+          select service_social.name, from: "Service"
+          click_on "Appliquer"
+          expect(motif_a.reload.service).to eq(service_social)
+          expect(motif_b.reload.service).to eq(service_social)
+        end
+      end
+    end
+
+    describe "updating duration" do
+      let!(:motif_a) { create(:motif, organisation: organisation, default_duration_in_min: 30) }
+      let!(:motif_b) { create(:motif, organisation: organisation, default_duration_in_min: 60) }
+
+      it "works" do
+        visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
+
+        within("#duration_form") do
+          fill_in "Durée par défaut en minutes", with: "45"
+          click_on "Appliquer"
+          expect(motif_a.reload.default_duration_in_min).to eq(45)
+          expect(motif_b.reload.default_duration_in_min).to eq(45)
+        end
       end
     end
   end
