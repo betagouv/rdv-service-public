@@ -125,9 +125,11 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
 
   describe "batch edit" do
     let!(:organisation) { create(:organisation, territory: territory) }
-    let!(:motif_a) { create(:motif, organisation: organisation) }
-    let!(:motif_b) { create(:motif, organisation: organisation) }
-    let!(:motif_c) { create(:motif, organisation: organisation) }
+    let!(:service_pmi) { create(:service, :pmi).tap { territory << _1 } }
+    let!(:service_social) { create(:service, :social).tap { territory << _1 } }
+    let!(:motif_a) { create(:motif, organisation: organisation, service: service_pmi, location_type: :public_office) }
+    let!(:motif_b) { create(:motif, organisation: organisation, service: service_pmi, location_type: :phone) }
+    let!(:motif_c) { create(:motif, organisation: organisation, service: service_pmi, location_type: :home) }
 
     before do
       agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
@@ -138,10 +140,23 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       find("[type=checkbox][value=#{motif_a.id}]").check
       find("[type=checkbox][value=#{motif_c.id}]").check
       click_on "Modifier les motifs"
-      expect(page).to have_content("Modifier les motifs")
-      expect(page).to have_content(motif_a.name)
-      expect(page).to have_content(motif_c.name)
+
+      expect(page).to     have_content("Modifier les motifs")
+      expect(page).to     have_content(motif_a.name)
       expect(page).not_to have_content(motif_b.name)
+      expect(page).to     have_content(motif_c.name)
+
+      within("#name_form") do
+        fill_in "Nom du motif", with: "Nom corrigé"
+        click_on "Appliquer"
+        expect([motif_a, motif_c].map { _1.reload.name }).to eq(["Nom corrigé", "Nom corrigé"])
+      end
+
+      within("#service_form") do
+        select service_social.name, from: "Service"
+        click_on "Appliquer"
+        expect([motif_a, motif_c].map { _1.reload.service }).to eq([service_social, service_social])
+      end
     end
   end
 
