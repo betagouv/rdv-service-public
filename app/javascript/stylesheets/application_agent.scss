@@ -52,3 +52,13 @@
     line-height: 1.5;
   }
 }
+
+@import "./structure/bootstrap_overrides";
+
+a[href] {
+  background-image: none; // pour éviter le soulignement des liens
+}
+
+ol > li::marker {
+  content: ""; //pour éviter les chiffres dans les breadcrumbs
+}

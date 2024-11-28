@@ -19,7 +19,7 @@ nav.left-side-menu-wrapper
             .d-flex.justify-content-between.w-100.text-white
               div.d-flex.align-items-center
                 div.d-flex.flex-column
-                  h4= current_organisation.name
+                  = current_organisation.name
                   - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
                     span= current_agent.services_short_names
               - if current_agent.organisations.count > 1
