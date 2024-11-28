@@ -27,6 +27,8 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     end
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def batch_update
     @motifs = Motif.where(id: params[:motif_ids])
     @motifs.each do |motif|
@@ -53,10 +55,19 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
         motif.update!(default_duration_in_min: default_duration_in_min)
       end
     end
+    %i[restriction_for_rdv instruction_for_rdv custom_cancel_warning_message].each do |instruction_attr_name|
+      next unless (new_value = permitted_params[instruction_attr_name].presence)
+
+      @motifs.each do |motif|
+        motif.update!(instruction_attr_name => new_value)
+      end
+    end
 
     flash[:success] = "Motifs modifiés"
     redirect_to batch_edit_admin_territory_motifs_path(motif_ids: params[:motif_ids])
   end
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def new
     skip_authorization

@@ -201,6 +201,54 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
         end
       end
     end
+
+    describe "updating restriction_for_rdv" do
+      let!(:motif_a) { create(:motif, organisation: organisation, restriction_for_rdv: "toto") }
+      let!(:motif_b) { create(:motif, organisation: organisation, restriction_for_rdv: "tata") }
+
+      it "works" do
+        visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
+
+        within("#restriction_for_rdv_form") do
+          fill_in "Instructions à accepter avant la prise du rendez-vous", with: "titi"
+          click_on "Appliquer"
+          expect(motif_a.reload.restriction_for_rdv).to eq("titi")
+          expect(motif_b.reload.restriction_for_rdv).to eq("titi")
+        end
+      end
+    end
+
+    describe "updating instruction_for_rdv" do
+      let!(:motif_a) { create(:motif, organisation: organisation, instruction_for_rdv: "toto") }
+      let!(:motif_b) { create(:motif, organisation: organisation, instruction_for_rdv: "tata") }
+
+      it "works" do
+        visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
+
+        within("#instruction_for_rdv_form") do
+          fill_in "Indications affichées après la confirmation du rendez-vous", with: "titi"
+          click_on "Appliquer"
+          expect(motif_a.reload.instruction_for_rdv).to eq("titi")
+          expect(motif_b.reload.instruction_for_rdv).to eq("titi")
+        end
+      end
+    end
+
+    describe "updating custom_cancel_warning_message" do
+      let!(:motif_a) { create(:motif, organisation: organisation, custom_cancel_warning_message: "toto") }
+      let!(:motif_b) { create(:motif, organisation: organisation, custom_cancel_warning_message: "tata") }
+
+      it "works" do
+        visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
+
+        within("#custom_cancel_warning_message_form") do
+          fill_in "Message d’avertissement en cas d’annulation", with: "titi"
+          click_on "Appliquer"
+          expect(motif_a.reload.custom_cancel_warning_message).to eq("titi")
+          expect(motif_b.reload.custom_cancel_warning_message).to eq("titi")
+        end
+      end
+    end
   end
 
   describe "archiving" do

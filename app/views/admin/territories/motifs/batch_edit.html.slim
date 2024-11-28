@@ -4,7 +4,7 @@ h1 Modification en masse (#{@motifs.size} motifs)
 
 = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs }
 
-.card.mt-4.mb-0.p-3
+.card.mt-4.mb-4.p-3
   = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "name_form" }) do |f|
     - @motifs.each do |motif|
       = f.hidden_field "motif_ids[]", value: motif.id
@@ -17,7 +17,7 @@ h1 Modification en masse (#{@motifs.size} motifs)
 
     = f.submit "Appliquer", class: "btn btn-primary"
 
-.card.mt-4.mb-0.p-3
+.card.p-3.mb-4
   = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "service_form" }) do |f|
     - @motifs.each do |motif|
       = f.hidden_field "motif_ids[]", value: motif.id
@@ -30,7 +30,7 @@ h1 Modification en masse (#{@motifs.size} motifs)
 
     = f.submit "Appliquer", class: "btn btn-primary"
 
-.card.mt-4.mb-0.p-3
+.card.p-3.mb-4
   = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "duration_form" }) do |f|
     - @motifs.each do |motif|
       = f.hidden_field "motif_ids[]", value: motif.id
@@ -42,3 +42,17 @@ h1 Modification en masse (#{@motifs.size} motifs)
       small.form-text.text-muted Cette durée par défaut sera appliquée à tous les motifs listés ci-dessus
 
     = f.submit "Appliquer", class: "btn btn-primary"
+
+- %i[restriction_for_rdv instruction_for_rdv custom_cancel_warning_message].each do |instruction_attr_name|
+  .card.p-3.mb-4
+    = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "#{instruction_attr_name}_form" }) do |f|
+      - @motifs.each do |motif|
+        = f.hidden_field "motif_ids[]", value: motif.id
+
+      .form-group
+        - unique_values = @motifs.map(&instruction_attr_name).uniq
+        = f.label t("activerecord.attributes.motif.#{instruction_attr_name}"), for: instruction_attr_name
+        = f.text_area instruction_attr_name, value: (unique_values.size > 1 ? nil : unique_values.first), class: "form-control"
+        small.form-text.text-muted Ces instructions seront appliquées à tous les motifs listés ci-dessus
+
+      = f.submit "Appliquer", class: "btn btn-primary"
