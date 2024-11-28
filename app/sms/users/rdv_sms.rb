@@ -62,12 +62,12 @@ class Users::RdvSms < Users::BaseSms
     agents_short_names = rdv.agents.map(&:short_name).sort.to_sentence
     details += " avec #{agents_short_names}" if rdv.follow_up?
 
-    details += "\n"
+    details += "\n\n"
 
     url = rdv_short_url(rdv, host: domain_host, tkn: token).sub(%r{https?://}, "")
-    links = "Infos: #{url}"
+    links = "Infos/annulation: #{url}"
 
-    links += " / #{rdv.phone_number}" if rdv.phone_number.present?
+    links += "\n#{rdv.phone_number}" if rdv.phone_number.present?
 
     details + links
   end
