@@ -135,10 +135,10 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       let!(:motif_b) { create(:motif, organisation: organisation) }
       let!(:motif_c) { create(:motif, organisation: organisation) }
 
-      it "works" do
+      it "works", js: true do
         visit admin_territory_motifs_path(territory)
-        find("[type=checkbox][value=#{motif_a.id}]").check
-        find("[type=checkbox][value=#{motif_c.id}]").check
+        find(%([type="checkbox"][value="#{motif_a.id}"])).check
+        find(%([type="checkbox"][value="#{motif_c.id}"])).check
         click_on "Modifier les motifs"
 
         expect(page).to     have_content("Modifier les motifs")
