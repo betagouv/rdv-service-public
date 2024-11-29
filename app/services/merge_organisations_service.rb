@@ -45,6 +45,8 @@ class MergeOrganisationsService
         source_motif.update_columns(organisation_id: @target_organisation.id)
       end
     end
+
+    @source_organisation.motifs.active(false).update_all(organisation_id: @target_organisation.id)
   end
 
   def migrate_plages

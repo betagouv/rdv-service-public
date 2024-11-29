@@ -113,6 +113,18 @@ RSpec.describe MergeOrganisationsService do
         expect(service.errors.full_messages).to include(expected_error)
       end
     end
+
+    describe "archived motifs" do
+      let!(:archived_motif_in_source_org) { create(:motif, organisation: source_organisation, deleted_at: 2.days.ago) }
+      let!(:archived_motif_in_target_org) { archived_motif_in_source_org.tap { _1.update!(organisation: target_organisation) } }
+
+      it "assigns them to the target org event if there are duplicates" do
+        expect(service.valid?).to be(true)
+        service.perform
+
+        expect(target_organisation.motifs.reload).to include(archived_motif_in_source_org, archived_motif_in_target_org)
+      end
+    end
   end
 
   describe "migrating plages" do
