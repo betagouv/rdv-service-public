@@ -48,8 +48,9 @@
 
     .float-right
       .d-flex.flex-gap-1em
-        form#batch_edit_form[action=batch_edit_admin_territory_motifs_path method="get"]
-          button.btn.btn-outline-primary.mb-2[role="submi"] = t("admin.motifs.actions.batch_edit")
+        - if @current_tab != :archived
+          form#batch_edit_form[action=batch_edit_admin_territory_motifs_path method="get"]
+            button.btn.btn-outline-primary.mb-2[role="submi"] = t("admin.motifs.actions.batch_edit")
         a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
 
     ul.nav.nav-tabs
@@ -76,7 +77,7 @@
 
     - if @motifs_page.any?
       = paginate @motifs_page, theme: "twitter-bootstrap-4"
-      = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs_page, display_actions: true }
+      = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs_page, display_actions: true, display_checkboxes: @current_tab != :archived }
       .mt-2 = paginate @motifs_page, theme: "twitter-bootstrap-4"
 
     - else

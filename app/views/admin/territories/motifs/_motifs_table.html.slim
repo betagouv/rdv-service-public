@@ -1,10 +1,9 @@
-/ # locals: (motifs:, display_actions: false)
+/ # locals: (motifs:, display_actions: false, display_checkboxes: false)
 
 table.table.table-centered.table-bordered.table-hover.table-sm.mb-0
   thead.thead-light
     tr
-      - if display_actions
-        / Checkboxes column
+      - if display_checkboxes
         th[scope="col"]
 
       th[scope="col"]
@@ -27,7 +26,7 @@ table.table.table-centered.table-bordered.table-hover.table-sm.mb-0
     - motifs.each do |motif|
       - motif_policy = Agent::MotifPolicy.new(current_agent, motif)
       tr
-        - if display_actions
+        - if display_checkboxes
           td
             input[type="checkbox" form="batch_edit_form" name="motif_ids[]" value=motif.id]
         td
