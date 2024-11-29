@@ -35,7 +35,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
       authorize(motif, :update?, policy_class: Agent::MotifPolicy)
     end
 
-    permitted_params = params.permit(:name, :service_id, :default_duration_in_min, :restriction_for_rdv, :instruction_for_rdv, :custom_cancel_warning_message)
+    permitted_params = params.permit(:name, :service_id, :default_duration_in_min, :color, :restriction_for_rdv, :instruction_for_rdv, :custom_cancel_warning_message)
 
     if (name = permitted_params[:name].presence)
       @motifs.each do |motif|
@@ -55,6 +55,13 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
         motif.update!(default_duration_in_min: default_duration_in_min)
       end
     end
+
+    if (color = permitted_params[:color].presence)
+      @motifs.each do |motif|
+        motif.update!(color: color)
+      end
+    end
+
     %i[restriction_for_rdv instruction_for_rdv custom_cancel_warning_message].each do |instruction_attr_name|
       next unless (new_value = permitted_params[instruction_attr_name].presence)
 

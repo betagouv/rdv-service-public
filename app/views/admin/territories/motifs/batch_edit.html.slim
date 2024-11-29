@@ -43,6 +43,23 @@ h1 Modification en masse (#{@motifs.size} motifs)
 
     = f.submit "Appliquer", class: "btn btn-primary"
 
+.card.p-3.mb-4
+  = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "color_form" }) do |f|
+    - @motifs.each do |motif|
+      = f.hidden_field "motif_ids[]", value: motif.id
+
+    .form-group
+      - current_colors = @motifs.map(&:color)
+      / Cette datalist permet au color picker natif de suggérer les couleurs existantes dans sa palette !
+      datalist#current_colors
+        - current_colors.each do |color|
+          option[value=color]
+      = f.label "Couleur", for: :color
+      = f.color_field :color, value: current_colors.first, class: "form-control", list: "current_colors"
+      small.form-text.text-muted Cette couleur sera appliquée à tous les motifs listés ci-dessus
+
+    = f.submit "Appliquer", class: "btn btn-primary"
+
 - %i[restriction_for_rdv instruction_for_rdv custom_cancel_warning_message].each do |instruction_attr_name|
   .card.p-3.mb-4
     = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "#{instruction_attr_name}_form" }) do |f|

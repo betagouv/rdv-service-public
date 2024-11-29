@@ -202,6 +202,23 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       end
     end
 
+    describe "updating color" do
+      let!(:motif_a) { create(:motif, organisation: organisation, color: "#FFFFFF") }
+      let!(:motif_b) { create(:motif, organisation: organisation, color: "#EEEEEE") }
+
+      it "works" do
+        visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
+
+        # Voir https://youtu.be/B0hpCzggOLM, si vous aviez la ref, bravo !
+        within("#color_form") do
+          fill_in "Couleur", with: "#000000"
+          click_on "Appliquer"
+          expect(motif_a.reload.color).to eq("#000000")
+          expect(motif_b.reload.color).to eq("#000000")
+        end
+      end
+    end
+
     describe "updating restriction_for_rdv" do
       let!(:motif_a) { create(:motif, organisation: organisation, restriction_for_rdv: "toto") }
       let!(:motif_b) { create(:motif, organisation: organisation, restriction_for_rdv: "tata") }
