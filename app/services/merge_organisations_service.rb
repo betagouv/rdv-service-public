@@ -16,6 +16,7 @@ class MergeOrganisationsService
     raise "Can't perform merge if errors are present" if invalid?
 
     migrate_motifs
+    migrate_plages
     migrate_rdvs
     migrate_agents
     migrate_users
@@ -44,6 +45,10 @@ class MergeOrganisationsService
         source_motif.update_columns(organisation_id: @target_organisation.id)
       end
     end
+  end
+
+  def migrate_plages
+    @source_organisation.plage_ouvertures.update_all(organisation_id: @target_organisation.id)
   end
 
   def migrate_rdvs

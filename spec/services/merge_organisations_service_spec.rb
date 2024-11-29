@@ -115,6 +115,19 @@ RSpec.describe MergeOrganisationsService do
     end
   end
 
+  describe "migrating plages" do
+    let!(:plage_in_source_org) { create(:plage_ouverture, organisation: source_organisation) }
+    let!(:plage_in_target_org) { create(:plage_ouverture, organisation: target_organisation) }
+
+    it "adds plages to target org and removes them from source org" do
+      expect(service).to be_valid
+      service.perform
+
+      expect(source_organisation.plage_ouvertures).to be_empty
+      expect(target_organisation.plage_ouvertures).to contain_exactly(plage_in_source_org, plage_in_target_org)
+    end
+  end
+
   describe "migrating exports" do
     let!(:export_only_of_source_org) { create(:export, organisation_ids: [source_organisation.id]) }
     let!(:export_only_of_target_org) { create(:export, organisation_ids: [target_organisation.id]) }
