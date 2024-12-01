@@ -26,7 +26,7 @@
         - if @form.status.present?
           li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
 
-  .card.border-info
+  .card
     .card-body
       = render "rdv_search_form", form: @form
 

@@ -1,13 +1,3 @@
-body.authentication-bg {
-  background-size: cover;
-  background-position: center;
-  background: linear-gradient(
-    to right,
-    lighten($primary, 30%),
-    lighten($secondary, 30%)
-  );
-}
-
 .logout-icon {
   width: 140px;
 }
@@ -19,7 +9,6 @@ body.authentication-bg {
   .auth-fluid-form-box {
     z-index: 2;
     padding: 3rem 2rem;
-    background-color: $white;
 
     @include media-breakpoint-down(md) {
       min-height: 100vh;
@@ -28,8 +17,8 @@ body.authentication-bg {
   }
 
   .auth-fluid-left {
-    color: $white;
-    background-color: $primary;
+    background-color: $white;
+    border-right: 1px solid $card-border-color;
 
     @include media-breakpoint-up(lg) {
       padding: 6rem 3rem 0rem 3rem;
