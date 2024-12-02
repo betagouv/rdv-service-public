@@ -4,6 +4,7 @@ namespace :api do
     mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
     resources :absences, except: %i[new edit]
     resources :agents, only: %i[index]
+    get "agents/me", to: "agents#me"
     resources :users, only: %i[create index show update] do
       post :rdv_invitation_token, to: "users#rdv_invitation_token", on: :member
     end
@@ -36,7 +37,9 @@ namespace :api do
     resource :referent_assignations, only: [] do
       post :create_many, on: :collection
     end
-    resources :users, only: %i[show]
+    resources :users, only: %i[show] do
+      resources :referent_assignations, only: %i[index]
+    end
     resources :motif_categories, only: %i[create]
     resources :motif_category_territories, only: %i[create]
   end

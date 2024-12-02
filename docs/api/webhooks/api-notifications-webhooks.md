@@ -16,7 +16,7 @@ Si vous avez les droits d'administration au niveau du territoire, vous pouvez me
 
 ## Démonstration
 
-Dans notre environnement de démonstration, nous pouvons envoyer des notifications sur une URL de test ou envoyer des emails qui contiennent le contenu brut des notifications envoyées par les requêtes HTTP. Pour cela, [contactez-nous](mailto:contact@rdv-solidarites.fr) !
+Dans notre environnement de démonstration, nous pouvons envoyer des notifications sur une URL de test. Pour obtenir un compte de test sur notre démo, [contactez-nous](mailto:contact@rdv-solidarites.fr) !
 
 ## Signatures des requêtes
 

@@ -1,4 +1,4 @@
-RSpec.describe Admin::Agenda::PlageOuverturesController, type: :controller do
+RSpec.describe Admin::Api::Agenda::PlageOuverturesController, type: :controller do
   describe "GET index" do
     context "with a signed in agent" do
       let(:organisation) { create(:organisation) }
@@ -64,6 +64,13 @@ RSpec.describe Admin::Agenda::PlageOuverturesController, type: :controller do
           ]
           expect(response.parsed_body).to eq(expected_response)
         end
+      end
+    end
+
+    context "when agent is not login" do
+      it "returns unauthorized" do
+        get :index, params: { agent_id: 1, organisation_id: 1, start: Date.new(2019, 8, 12), end: Date.new(2019, 8, 19), format: :json }
+        expect(response).to be_unauthorized
       end
     end
   end

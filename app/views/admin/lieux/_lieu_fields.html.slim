@@ -13,7 +13,7 @@
 / All forms
 = f.input :name, required: true
 - unless is_nested_form
-  = f.input :phone_number
+  = f.input :phone_number, hint: I18n.t("simple_form.hints.lieu.phone_number", app_name: current_domain.name)
 = f.input :address, input_html: { class: "places-js-container" }
 = f.hidden_field :latitude
 = f.hidden_field :longitude

@@ -53,6 +53,10 @@ Rails.application.configure do
       cron: "every day at 22:30 Europe/Paris",
       class: "CronJob::DestroyOldPlageOuvertureJob",
     },
+    destroy_old_oauth_objects: {
+      cron: "every day at 22:45 Europe/Paris",
+      class: "CronJob::DestroyOldOauthObjects",
+    },
     destroy_old_versions: {
       cron: "every day at 23:00 Europe/Paris",
       class: "CronJob::DestroyOldVersions",

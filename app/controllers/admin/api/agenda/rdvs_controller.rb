@@ -1,4 +1,4 @@
-class Admin::Agenda::RdvsController < Admin::Agenda::BaseController
+class Admin::Api::Agenda::RdvsController < Admin::Api::BaseController
   def index
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])

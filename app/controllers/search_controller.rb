@@ -6,20 +6,44 @@ class SearchController < ApplicationController
   # utilisé par le Pas-de-Calais pour prendre rdv depuis leur site : https://www.pasdecalais.fr/Solidarite-Sante/Enfance-et-famille/La-Protection-Maternelle-et-Infantile/Prendre-rendez-vous-en-ligne-en-MDS-PMI-ou-service-social
   after_action :allow_iframe
 
+  def home
+    # Si l'agent est redirigé vers le root_path depuis ProConnect, et qu'on veut le rediriger vers
+    # une application OAuth cliente (par exemple RDV Insertion)
+    # après la déconnexion, on suit l'url de redirection
+    post_logout_redirect_url = session.delete(:post_logout_redirect_url)
+
+    if post_logout_redirect_url
+      redirect_to post_logout_redirect_url, allow_other_host: true
+      return
+    end
+
+    if current_domain == Domain::RDV_MAIRIE
+      render "dsfr/rdv_mairie/homepage"
+    else
+      search_rdv
+    end
+  end
+
+  # rubocop:disable Metrics/PerceivedComplexity
   def search_rdv
     # TODO : public_link_organisation_id has to work if agent is logged in ?
     if current_agent && params[:prescripteur] == Prescripteur::INTERNE && session[:agent_prescripteur_organisation_id]
       redirect_to search_creneau_admin_organisation_prescription_path(session[:agent_prescripteur_organisation_id], agent_search_params)
-    end
-    @context = if invitation?
-                 WebInvitationSearchContext.new(user: current_user, query_params: query_params)
-               else
-                 WebSearchContext.new(user: current_user, query_params: query_params)
-               end
-    if current_domain == Domain::RDV_MAIRIE && request.path == "/"
-      render "dsfr/rdv_mairie/homepage"
+    else
+      @context = if invitation?
+                   WebInvitationSearchContext.new(user: current_user, query_params: query_params)
+                 else
+                   WebSearchContext.new(user: current_user, query_params: query_params)
+                 end
+
+      if !current_domain.provides_address_selection? && @context.current_step == :address_selection
+        redirect_to root_path
+      else
+        render :search_rdv
+      end
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def public_link_with_internal_organisation_id
     organisation = Organisation.find(params[:organisation_id])

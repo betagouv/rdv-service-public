@@ -3,8 +3,6 @@ class Users::RelativesController < UserAuthController
 
   respond_to :html
 
-  before_action :set_user, only: %i[edit update destroy]
-
   def new
     @user = current_user.relatives.new
     authorize(@user, policy_class: User::UserPolicy)
@@ -26,10 +24,12 @@ class Users::RelativesController < UserAuthController
   end
 
   def edit
+    @user = User.find(params[:id])
     authorize(@user, policy_class: User::UserPolicy)
   end
 
   def update
+    @user = User.find(params[:id])
     authorize(@user, policy_class: User::UserPolicy)
     if @user.update(user_params)
       flash[:success] = "Les informations de votre proche #{@user.full_name} ont été mises à jour."
@@ -40,16 +40,13 @@ class Users::RelativesController < UserAuthController
   end
 
   def destroy
+    @user = User.find(params[:id])
     authorize(@user, policy_class: User::UserPolicy)
     flash[:notice] = "Votre proche a été supprimé." if @user.soft_delete
     redirect_to users_informations_path
   end
 
   private
-
-  def set_user
-    @user = policy_scope(User, policy_scope_class: User::UserPolicy::Scope).find(params.require(:id))
-  end
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :birth_date, :ants_pre_demande_number)
