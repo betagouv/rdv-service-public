@@ -63,3 +63,7 @@ a[href] {
 ol > li::marker {
   content: ""; //pour éviter les chiffres dans les breadcrumbs
 }
+
+header.header {
+  border-bottom: 1px solid $card-border-color;
+}
