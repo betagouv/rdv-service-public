@@ -38,8 +38,16 @@ RSpec.describe "Visioplainte agents can work on sunday" do
     end
 
     describe "rdvs" do
+      # Cette spec dépend de la date utilisée en JS par full calendar, qui est indépendant des stubs ruby.
+      # On préfère donc utiliser la vrai date, et s'arranger pour que le rendez-vous soit le prochain dimanche.
+      before { travel_back }
+
+      let(:next_sunday_afternoon) do
+        Time.zone.now.at_end_of_week.to_date - 1.day + 15.hours
+      end
+
       let!(:rdv) do
-        create(:rdv, agents: [superviseur], starts_at: Time.zone.local(2024, 12, 1, 15, 0, 0))
+        create(:rdv, agents: [superviseur], starts_at: next_sunday_afternoon)
       end
 
       it "can be displayed on sunday", js: true do
