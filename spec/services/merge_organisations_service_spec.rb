@@ -35,19 +35,30 @@ RSpec.describe MergeOrganisationsService do
   end
 
   describe "migrating users" do
-    let!(:user_in_source_org) { create(:user, organisations: [source_organisation]) }
-    let!(:user_in_target_org) { create(:user, organisations: [target_organisation]) }
-    let!(:user_in_both) { create(:user, organisations: [source_organisation, target_organisation]) }
+    describe "active user" do
+      let!(:user_in_source_org) { create(:user, organisations: [source_organisation]) }
+      let!(:user_in_target_org) { create(:user, organisations: [target_organisation]) }
+      let!(:user_in_both) { create(:user, organisations: [source_organisation, target_organisation]) }
 
-    it "adds users to target org and removes them from source org" do
-      expect(source_organisation.users).to contain_exactly(user_in_source_org, user_in_both)
-      expect(target_organisation.users).to contain_exactly(user_in_target_org, user_in_both)
+      it "adds users to target org and removes them from source org" do
+        expect(source_organisation.users).to contain_exactly(user_in_source_org, user_in_both)
+        expect(target_organisation.users).to contain_exactly(user_in_target_org, user_in_both)
 
-      expect(service).to be_valid
-      service.perform
+        expect(service).to be_valid
+        service.perform
 
-      expect(source_organisation.users).to be_empty
-      expect(target_organisation.users).to contain_exactly(user_in_source_org, user_in_target_org, user_in_both)
+        expect(source_organisation.users).to be_empty
+        expect(target_organisation.users).to contain_exactly(user_in_source_org, user_in_target_org, user_in_both)
+      end
+    end
+
+    describe "soft deleted users" do
+      let!(:soft_deleted_user) { create(:user, organisations: [source_organisation], deleted_at: 2.days.ago) }
+
+      it "are also migrated to target org" do
+        expect { service.perform }
+          .to change { target_organisation.users.unscope(where: :deleted_at).find_by(id: soft_deleted_user.id) }.from(nil)
+      end
     end
   end
 

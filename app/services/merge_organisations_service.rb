@@ -75,8 +75,8 @@ class MergeOrganisationsService
   end
 
   def migrate_users
-    users_in_source_org = @source_organisation.users.ids.to_set
-    users_in_target_org = @target_organisation.users.ids.to_set
+    users_in_source_org = @source_organisation.users.unscope(where: :deleted_at).ids.to_set
+    users_in_target_org = @target_organisation.users.unscope(where: :deleted_at).ids.to_set
     users_in_both = users_in_source_org.intersection(users_in_target_org)
     users_only_in_source_org = users_in_source_org.difference(users_in_target_org)
 
