@@ -4,7 +4,6 @@
     .card
       - if local_assigns[:previous_steps]
         = render "admin/rdv_wizard_steps/stepper", rdv_wizard_form: rdv_wizard_form, steps: previous_steps
-        hr.my-0
       .card-body.px-3
         .d-flex.justify-content-between.mb-3
           h5.card-title
