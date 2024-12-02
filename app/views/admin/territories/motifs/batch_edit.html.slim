@@ -10,9 +10,13 @@ h1 Modification en masse (#{@motifs.size} motifs)
       = f.hidden_field "motif_ids[]", value: motif.id
 
     .form-group
-      - unique_names = @motifs.map(&:name).uniq
-      = f.label "Nom du motif", for: :name
-      = f.text_field :name, value: (unique_names.size > 1 ? "" : unique_names.first), class: "form-control"
+      - unique_values = @motifs.map(&:name).tally
+      = f.label "Nom du motif", for: :name, class: "text-bold"
+      - if unique_values.size > 1
+        ul.mt-0
+          - unique_values.each do |value, nb_of_occurrences|
+            li #{value} (#{nb_of_occurrences})
+      = f.text_field :name, value: (unique_values.size > 1 ? "" : unique_values.first), class: "form-control"
       small.form-text.text-muted Ce nom sera appliqué à tous les motifs listés ci-dessus
 
     = f.submit "Appliquer", class: "btn btn-primary"
@@ -23,9 +27,9 @@ h1 Modification en masse (#{@motifs.size} motifs)
       = f.hidden_field "motif_ids[]", value: motif.id
 
     .form-group
-      - unique_services = @motifs.map(&:service).uniq
+      - unique_values = @motifs.map(&:service).uniq
       = f.label "Service", for: :service_id
-      = f.select :service_id, current_territory.services.reject(&:secretariat?).map { [_1.name, _1.id] }, { selected: (unique_services.size > 1 ? "" : unique_services.first.id), include_blank: true }, { class: "select2-input" }
+      = f.select :service_id, current_territory.services.reject(&:secretariat?).map { [_1.name, _1.id] }, { selected: (unique_values.size > 1 ? "" : unique_values.first.id), include_blank: true }, { class: "select2-input" }
       small.form-text.text-muted Tous les motifs listés ici seront déplacés vers ce service
 
     = f.submit "Appliquer", class: "btn btn-primary"
@@ -36,9 +40,9 @@ h1 Modification en masse (#{@motifs.size} motifs)
       = f.hidden_field "motif_ids[]", value: motif.id
 
     .form-group
-      - unique_durations = @motifs.map(&:default_duration_in_min).uniq
+      - unique_values = @motifs.map(&:default_duration_in_min).uniq
       = f.label "Durée par défaut en minutes", for: :default_duration_in_min
-      = f.text_field :default_duration_in_min, value: (unique_durations.size > 1 ? nil : unique_durations.first), class: "form-control"
+      = f.text_field :default_duration_in_min, value: (unique_values.size > 1 ? nil : unique_values.first), class: "form-control"
       small.form-text.text-muted Cette durée par défaut sera appliquée à tous les motifs listés ci-dessus
 
     = f.submit "Appliquer", class: "btn btn-primary"
