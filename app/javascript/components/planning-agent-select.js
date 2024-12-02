@@ -13,8 +13,8 @@ class PlanningAgentSelect {
     // build the url dynamically from the passed template and the agent id.
     let url = this.$select[0].dataset.urlTemplate;
     let agent_id = this.$select.select2("data")[0].element.value;
-    url = url.replace("__AGENT__", agent_id)
-    Turbolinks.visit(url)
+    url = url.replace("__AGENT__", agent_id);
+    window.location.href = url;
   }
 }
 

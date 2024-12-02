@@ -1,5 +1,6 @@
 require("@rails/ujs").start()
-require("turbolinks").start()
+import * as Turbo from "@hotwired/turbo"
+Turbo.start()
 import 'bootstrap'
 import 'select2/dist/js/select2.full.min.js'
 import 'select2/dist/js/i18n/fr.js'
@@ -64,7 +65,8 @@ $(document).on('show.bs.modal', '.modal', function(e) {
   new PlacesInputs()
 })
 
-$(document).on('turbolinks:load', function() {
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("coucou")
   let menu = new Menu()
 
   menu.init()
