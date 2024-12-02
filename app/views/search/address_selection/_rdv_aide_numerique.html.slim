@@ -1,39 +1,39 @@
-section.bg-primary.fr-py-4w
+section.rdv-background-color-flat-blue-ecume.fr-py-4w
   .fr-container.mb-4
     .d-flex.justify-content-center
       = link_to("https://cartographie.societenumerique.gouv.fr/", target: "_blank", class: "btn btn-outline-light btn-lg") do
         | Consulter la carte des lieux d'inclusion numérique
 section.fr-py-4w
   .fr-container
-    h2.text-center  Comment ça marche ?
+    h2.rdv-text-align-center  Comment ça marche ?
     .fr-grid-row.fr-grid-row--gutters.fr-mt-10w
       .fr-col-12.fr-col-lg-3
-        .text-center.mb-3
+        .rdv-text-align-center.mb-3
           .d-flex.justify-content-center
             = image_tag "welcome/location.svg", class: "img-circle mb-3", alt: "premièrement"
-          span.text-primary.mt-3 Zoomez près de chez vous
+          span.rdv-color-text-action-high-blue-ecume.mt-3 Zoomez près de chez vous
       .fr-col-12.fr-col-lg-3
-        .text-center.mb-3
+        .rdv-text-align-center.mb-3
           .d-flex.justify-content-center
             = image_tag "welcome/service.svg", class: "img-circle mb-3", alt: "deuxièmement"
-          span.text-primary.mt-3 Choisissez un acteur présent près de chez vous
+          span.rdv-color-text-action-high-blue-ecume.mt-3 Choisissez un acteur présent près de chez vous
       .fr-col-12.fr-col-lg-3
-        .text-center.mb-3
+        .rdv-text-align-center.mb-3
           .d-flex.justify-content-center
             = image_tag "welcome/motif.svg", class: "img-circle mb-3", alt: "troisièmement"
-          span.text-primary.mt-3 Appelez la structure au numéro indiqué
+          span.rdv-color-text-action-high-blue-ecume.mt-3 Appelez la structure au numéro indiqué
       .fr-col-12.fr-col-lg-3
-        .text-center.mb-3
+        .rdv-text-align-center.mb-3
           .d-flex.justify-content-center
             = image_tag "welcome/creneau.svg", class: "img-circle mb-3", alt: "et quatrièmement"
-          span.text-primary.mt-3 ou planifiez directement un RDV si ses disponibilités sont indiquées !
+          span.rdv-color-text-action-high-blue-ecume.mt-3 ou planifiez directement un RDV si ses disponibilités sont indiquées !
 
-section.bg-lightturquoise.fr-py-8w
+section.rdv-background-color-alt-green-menthe.fr-py-8w
   .fr-container
     .fr-grid-row.fr-grid-row--gutters
       .fr-col-12.fr-col-md-3.align-items-center
         = image_tag "welcome/agent.svg", class: "mx-auto d-block", alt: ""
       .fr-col-12.fr-col-md-9
-        .fr-text--xl.mb-2.text-primary Vous êtes Conseiller numérique ?
+        .fr-text--xl.mb-2.rdv-color-text-action-high-blue-ecume Vous êtes Conseiller numérique ?
         p Faciliter la prise de rendez-vous avec vos apprenants.
         = link_to "En savoir plus", presentation_agent_path, class: "btn btn-tertiary"

@@ -2,12 +2,14 @@ p[style="margin-top:12px;"]
   - if rdv.cancellable_by_user? || rdv.editable_by_user?
     - if rdv.cancellable_by_user? && rdv.editable_by_user?
       span> Vous pouvez annuler ou modifier votre rendez-vous
+      strong>
+        | jusqu'à 4h avant celui-ci
     - elsif rdv.cancellable_by_user?
       span> Vous pouvez annuler votre rendez-vous
+      strong>
+        | jusqu'à 4h avant celui-ci
     - elsif rdv.editable_by_user?
       span> Vous pouvez modifier votre rendez-vous
-    strong>
-      | jusqu'à 4h avant celui-ci
 
   - if rdv.phone_number.present?
     span>

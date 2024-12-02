@@ -24,7 +24,7 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def creneaux_available_for_motif?(motif, lieu = nil)
-    Users::CreneauxSearch.new(
+    CreneauxSearch::ForUser.new(
       user: user,
       motif: motif,
       lieu: lieu,

@@ -1,12 +1,10 @@
 FactoryBot.define do
-  sequence(:plage_title) { |n| "Plage #{n}" }
-
   factory :plage_ouverture do
     organisation { association(:organisation) }
     agent { association(:agent, basic_role_in_organisations: [organisation]) }
     lieu { association(:lieu, organisation: organisation) }
 
-    title { generate(:plage_title) }
+    sequence(:title) { |n| random_value_in(["Plage #{n}", nil]) }
     sequence(:first_day) { |n| Time.zone.today.next_week(:monday) + n.days }
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }
@@ -16,20 +14,29 @@ FactoryBot.define do
       recurrence { nil }
     end
 
-    trait :daily do
-      recurrence { Montrose.every(:day, starts: first_day) }
+    trait :weekdays do
+      recurrence do
+        # Ce format de récurrence correspond à ce qu'on a en base
+        Montrose.every(:week, on: %i[monday tuesday wednesday thursday friday], starts: first_day, interval: 1)
+      end
     end
 
-    trait :weekly do
-      recurrence { Montrose.every(:week, on: [:monday], starts: first_day) }
+    trait :weekly_on_monday do
+      recurrence { Montrose.every(:week, on: [:monday], starts: first_day, interval: 1) }
+    end
+
+    trait :once_a_week do
+      recurrence { Montrose.every(:week, starts: first_day, interval: 1, until: 2.months.from_now) }
     end
 
     trait :monthly do
-      recurrence { Montrose.every(:month, starts: first_day) }
+      # first_day.wday est le jour dans la semaine (par exemple 3 pour le mercredi)
+      # first_day.mday/2 est le numéro de la semaine (par exemple la 2ème semaine du mois)
+      recurrence { Montrose.every(:month, starts: first_day, day: { first_day.wday => [first_day.mday / 7] }, interval: 1) }
     end
 
     trait :every_two_weeks do
-      recurrence { Montrose.every(:week, interval: 2, starts: first_day) }
+      recurrence { Montrose.every(:week, on: [:monday], starts: first_day, interval: 2) }
     end
 
     after(:build) do |plage_ouverture|

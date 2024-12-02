@@ -4,7 +4,7 @@
 
 / Adress selection partials have multiple sections
 - if @context.current_step == :address_selection
-  = render @context, context: @context
+  = render(current_domain.address_selection_template_name, context: @context)
 - else
-  section.bg-light.py-4
+  section.rdv-background-color-alt-grey.py-4
     = render @context, context: @context

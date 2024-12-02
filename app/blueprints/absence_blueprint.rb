@@ -11,8 +11,10 @@ class AbsenceBlueprint < Blueprinter::Base
     OrganisationBlueprint.render_as_hash(organisation) if organisation
   end
 
-  # rubocop:disable Style/SymbolProc
-  field(:rrule) { _1.rrule }
-  field(:ical) { _1.to_ical }
-  # rubocop:enable Style/SymbolProc
+  field(:rrule) do |absence|
+    IcalFormatters::Rrule.from_recurrence(absence.recurrence)
+  end
+  field(:ical) do |absence|
+    IcalFormatters::Ics.from_payload(absence.payload).to_ical
+  end
 end

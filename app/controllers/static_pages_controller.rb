@@ -6,13 +6,23 @@ class StaticPagesController < ApplicationController
 
   def accessibility; end
 
-  def contact; end
+  def contact
+    territories_with_phone_number = Territory.where.not(phone_number_formatted: nil)
+    territories_group_by_department = territories_with_phone_number
+      .where(departement_number: Territory::DEPARTEMENTS_NAMES.keys)
+      .order(:departement_number).ordered_by_name.group_by(&:departement_number)
+
+    territories_without_department = territories_with_phone_number
+      .where.not(departement_number: Territory::DEPARTEMENTS_NAMES.keys)
+      .ordered_by_name
+
+    render locals: {
+      territories_group_by_department: territories_group_by_department,
+      territories_without_department: territories_without_department,
+    }
+  end
 
   def domaines; end
-
-  def health_check
-    Territory.count # check connection to DB is working
-  end
 
   def presentation_for_agents
     render current_domain.presentation_for_agents_template_name, layout: "application_base"

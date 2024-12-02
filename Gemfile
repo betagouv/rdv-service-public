@@ -1,13 +1,13 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.3"
+ruby "3.3.5"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Full-stack web application framework.
-gem "rails", "~> 7.0.8"
+gem "rails", "~> 7.1.0"
 # Rack-based asset packaging system
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
@@ -32,6 +32,8 @@ gem "sentry-rails"
 gem "skylight"
 # Block & throttle abusive requests
 gem "rack-attack"
+# Dépendance interne pour anonymiser les records AR
+gem "anonymizer", path: "lib/anonymizer"
 
 # Database
 # Pg is the Ruby interface to the PostgreSQL RDBMS
@@ -47,7 +49,7 @@ gem "bootstrap4-kaminari-views"
 # A Rails engine for creating super-flexible admin dashboards
 gem "administrate"
 # Track changes to your models.
-gem "paper_trail", "< 13.0"
+gem "paper_trail"
 # Integrate PostgreSQL's enum data type into ActiveRecord's schema and migrations.
 gem "activerecord-postgres_enum"
 # A Ruby client library for Redis
@@ -70,12 +72,16 @@ gem "omniauth-github"
 gem "omniauth-microsoft_graph"
 # OpenID Connect Strategy for OmniAuth
 gem "omniauth_openid_connect"
+# Oauth provider
+gem "doorkeeper"
+# Translations for Doorkeeper
+gem "doorkeeper-i18n"
 # Provides CSRF protection on OmniAuth request endpoint on Rails application.
 gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails
 gem "pundit"
 # Token based authentication for rails. Uses Devise + OmniAuth.
-gem "devise_token_auth"
+gem "devise_token_auth", "1.2.4"
 # List of frequently used passwords
 gem "common_french_passwords"
 
@@ -85,8 +91,8 @@ gem "good_job", "3.27.4"
 
 # JSON serialization and queries
 
-# Create JSON structures via a Builder-style DSL
-gem "jbuilder"
+# A simple and fast JSON API template engine for Ruby on Rails
+gem "jb"
 # Simple Fast Declarative Serialization Library
 gem "blueprinter"
 # Parallel HTTP library on top of libcurl multi.
@@ -146,12 +152,14 @@ gem "lograge"
 gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
 
 # Ces gems ne seront plus intégrées à Ruby en version 3.4.0 Lors de l'upgrade
-# depuis 3.3.3, on pourra vérifier si les gems qui en dépendent implicitement
+# depuis 3.3.5, on pourra vérifier si les gems qui en dépendent implicitement
 # ont ajouté dans leur gemspec une dépendance explicite.
 gem "bigdecimal"
 gem "csv"
 gem "drb"
 gem "observer"
+gem "logger"
+gem "ostruct"
 
 group :development do
   #  Hot reload
@@ -168,14 +176,14 @@ group :development do
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
   # Automatic Ruby code style checking tool.
-  gem "rubocop", "1.24.1", require: false
+  gem "rubocop", "~> 1.65", require: false
   # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
-  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.3)
-  gem "parser", "3.3.3.0", require: false
+  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.5)
+  gem "parser", "3.3.5.0", require: false
   # Code style checking for RSpec files
-  gem "rubocop-rspec", "2.7.0", require: false
+  gem "rubocop-rspec", "~> 3.0", require: false
   # Automatic Rails code style checking tool.
-  gem "rubocop-rails", "2.13.1", require: false
+  gem "rubocop-rails", "~> 2.25", require: false
   # Slim template linting tool
   gem "slim_lint", require: false
 
@@ -191,6 +199,8 @@ group :development do
   gem "binding_of_caller" # Enable the REPL in better_errors
   # Profiles loading speed for rack applications.
   gem "rack-mini-profiler"
+  # Used by rack-mini-profiler to display flamegraphs: trigger by adding "?pp=flamegraph" to your URL
+  gem "stackprof"
 
   # Other
 
@@ -217,6 +227,8 @@ group :test do
   gem "rswag-specs"
   # rspec command for spring
   gem "spring-commands-rspec"
+  # Time-resilient expectations in RSpec
+  gem "rspec-wait"
 
   # Accessibility
 
@@ -256,4 +268,7 @@ group :test do
 
   # Dépendence indirecte de axe-core-api
   gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
+
+  gem "sinatra"
+  gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
 end

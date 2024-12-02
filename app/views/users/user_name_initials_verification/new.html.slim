@@ -1,12 +1,12 @@
 - content_for :title, "Vérification"
 
 .card
-  .card-header.text-center
+  .card-header.rdv-text-align-center
     h4 = t(".title")
   .card-body
     = render "form", user: current_user
-  .car-footer.text-center
-    p Par exemple :
+  .car-footer.rdv-text-align-center
+    p Par exemple&nbsp;:
     p.fw-lighter.fs-6 = t(".examples.first")
     p.fw-lighter.fs-6 = t(".examples.second")
     p.fw-lighter.fs-6 = t(".examples.third")

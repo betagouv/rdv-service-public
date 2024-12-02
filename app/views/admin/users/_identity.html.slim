@@ -1,10 +1,20 @@
 / Component: display the user identity, with their responsible, if any
 
+ruby:
+  admin_link_to_user_if_permitted = lambda do |organisation, user|
+    if policy(user, policy_class: Agent::UserPolicy).show?
+      link_to user.to_s, polymorphic_path([:admin, organisation, user])
+    else
+      user.to_s
+    end
+  end
+
+- link_to_user = admin_link_to_user_if_permitted.call(current_organisation, user)
+
 - if user.relative?
-  = t(".identity_with_responsible_html",
-          responsible: admin_link_to_if_permitted(current_organisation, user.responsible),
-          user: admin_link_to_if_permitted(current_organisation, user))
+  - link_to_responsible = admin_link_to_user_if_permitted.call(current_organisation, user.responsible)
+  = t(".identity_with_responsible_html", user: link_to_user, responsible: link_to_responsible)
 - else
-  = t(".identity_html", user: admin_link_to_if_permitted(current_organisation, user))
+  = t(".identity_html", user: link_to_user)
 
 = user_soft_deleted_tag(current_organisation, user)

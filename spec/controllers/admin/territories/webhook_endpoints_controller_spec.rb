@@ -44,7 +44,7 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
 
     it "assigns territory's webhooks" do
       get :new, params: { territory_id: territory.id }
-      expect(assigns(:webhook)).to be_kind_of(WebhookEndpoint)
+      expect(assigns(:webhook)).to be_a(WebhookEndpoint)
     end
   end
 
@@ -79,7 +79,7 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
 
       it "assigns webhook" do
         post :create, params: { territory_id: territory.id, webhook_endpoint: { organisation_id: organisation.id, target_url: "https://example.com", secret: nil } }
-        expect(assigns(:webhook)).to be_kind_of(WebhookEndpoint)
+        expect(assigns(:webhook)).to be_a(WebhookEndpoint)
       end
     end
   end
@@ -136,7 +136,7 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
     it "assigns territory's webhooks" do
       webhook = create(:webhook_endpoint, organisation: organisation)
       get :edit, params: { territory_id: territory.id, id: webhook.id }
-      expect(assigns(:webhook)).to be_kind_of(WebhookEndpoint)
+      expect(assigns(:webhook)).to be_a(WebhookEndpoint)
     end
   end
 

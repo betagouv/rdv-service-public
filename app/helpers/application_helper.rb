@@ -14,6 +14,21 @@ module ApplicationHelper
     end
   end
 
+  def alert_dsfr_class_for(alert)
+    case alert
+    when :success
+      "fr-alert--success"
+    when :alert
+      "fr-alert--warning"
+    when :error
+      "fr-alert--error"
+    when :notice
+      "fr-alert--info"
+    else
+      raise ArgumentError, "alert should be a key among :success, :alert, :error or :notice"
+    end
+  end
+
   def datetime_input(form, field, input_html: {})
     form.input(
       field,
@@ -47,7 +62,7 @@ module ApplicationHelper
 
   def link_logo
     link_to root_path do
-      image_tag current_domain.logo_path, height: 40, alt: current_domain.name, class: "d-inline logo"
+      image_tag current_domain.dark_logo_path, height: 40, alt: current_domain.name, class: "d-inline logo"
     end
   end
 
@@ -104,23 +119,33 @@ module ApplicationHelper
       tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
   end
 
-  def admin_link_to_if_permitted(organisation, object, name = object.to_s)
-    if policy([:agent, object]).show?
-      link_to name, polymorphic_path([:admin, organisation, object])
-    else
-      name
-    end
-  end
-
   def self_anchor(identifier, &block)
     tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
   end
 
   def display_agent_connect_button?
-    (ENV["AGENT_CONNECT_BASE_URL"].present? && !(ENV["AGENT_CONNECT_DISABLED"] || Rails.configuration.x.agent_connect_unreachable_at_boot_time)) || params[:force_agent_connect].present?
+    return false unless current_domain.agent_connect_client_id
+
+    return true if params[:force_agent_connect].present? # Permet de tester manuellement Agent Connect avant de désactiver la variable d'env AGENT_CONNECT_DISABLED
+
+    return false if ENV["AGENT_CONNECT_DISABLED"]
+    return false if Rails.configuration.x.agent_connect_unreachable_at_boot_time
+
+    ENV["AGENT_CONNECT_BASE_URL"].present?
   end
 
   def display_inclusion_connect_button?
     !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
+  end
+
+  def dsfr_svg(path, **kwargs)
+    # cf https://www.systeme-de-design.gouv.fr/fondamentaux/pictogramme
+    classes = ["fr-artwork"]
+    classes += [kwargs.fetch(:class, nil)]
+    tag.svg(class: classes.compact_blank.join(" "), "aria-hidden": "true", viewBox: "0 0 80 80", width: "80px", height: "80px") do
+      tag.use(class: "fr-artwork-decorative", "xlink:href": "/dsfr/#{path}.svg#artwork-decorative") +
+        tag.use(class: "fr-artwork-minor", "xlink:href": "/dsfr/#{path}.svg#artwork-minor") +
+        tag.use(class: "fr-artwork-major", "xlink:href": "/dsfr/#{path}.svg#artwork-major")
+    end
   end
 end

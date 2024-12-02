@@ -24,7 +24,7 @@ class ExportZonesService
 
   def add_zone_row(sheet, zone, index)
     row = sheet.row(index + 1)
-    row.concat(
+    row.concat( # rubocop:disable Style/ConcatArrayLiterals
       [
         zone.sector.name,
         zone.sector.human_id,

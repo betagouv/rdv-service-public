@@ -121,7 +121,7 @@ module UsersHelper
     [
       "Confirmez-vous la suppression de cet usager ?",
       (I18n.t("users.soft_delete_confirm_message.relatives", count: relatives.size) if relatives.any?),
-    ].select(&:present?).join("\n\n")
+    ].compact_blank.join("\n\n")
   end
 
   def users_inline_list_for_agents(users, display_links_to_users: false)

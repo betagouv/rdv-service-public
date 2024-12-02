@@ -15,9 +15,21 @@ RSpec.describe Admin::AgentsController, type: :controller do
   after { Devise.mailer.deliveries.clear }
 
   describe "GET #index" do
-    it "returns a success response" do
-      get :index, params: { organisation_id: organisation.id }
-      expect(response).to be_successful
+    context "quand un des agents n'a pas encore accepté son invitation" do
+      let!(:unconfirmed_agent) { create(:agent, :not_confirmed, admin_role_in_organisations: [organisation]) }
+
+      it "renvoie son adresse mail" do
+        get :index, params: { organisation_id: organisation.id }, format: :json
+        expect(response.body).to include unconfirmed_agent.email
+      end
+    end
+
+    describe "JSON version" do
+      it "returns agents as JSON" do
+        francis = create(:agent, first_name: "Francis", last_name: "Factice", organisations: [organisation])
+        get :index, params: { term: "fra", organisation_id: organisation.id, format: :json }
+        expect(response.parsed_body["results"]).to include({ "id" => francis.id, "text" => "FACTICE Francis" })
+      end
     end
   end
 
@@ -100,7 +112,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
       it "rejects the change and redirects" do
         subject
         expect(response.status).to eq 302
-        expect(flash[:error]).to eq "Vous ne pouvez pas accéder à cette organisation"
+        expect(flash[:error]).to eq "Vous n’avez pas les droits suffisants pour accéder à cette organisation"
         expect(Agent.last.email).not_to eq "hacker@renard.com"
       end
     end

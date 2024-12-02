@@ -6,7 +6,7 @@ class Lieu < ApplicationRecord
 
   # Attributes
   auto_strip_attributes :name
-  enum availability: { enabled: "enabled", disabled: "disabled", single_use: "single_use" }
+  enum :availability, { enabled: "enabled", disabled: "disabled", single_use: "single_use" }
 
   attribute :enabled, :boolean
 

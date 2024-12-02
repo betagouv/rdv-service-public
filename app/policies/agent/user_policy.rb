@@ -71,7 +71,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
     # returns ids for persisted join records so it doesn't work for new records
     # nor updates. we cannot either use pluck for the same reason
 
-    authorized_organisation_ids = \
+    authorized_organisation_ids =
       if current_organisation
         if current_organisation.territory.visible_users_throughout_the_territory
           current_organisation.territory.organisation_ids
@@ -82,7 +82,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
         current_agent.organisation_ids
       end
 
-    (@record.user_profiles.map(&:organisation_id) & authorized_organisation_ids).present?
+    (@record.user_profiles.map(&:organisation_id) & authorized_organisation_ids).present? # rubocop:disable Style/ArrayIntersect
 
     # also, this is not strictly speaking correct. this only checks that the
     # resulting user will belong to the current organisation, but it should also

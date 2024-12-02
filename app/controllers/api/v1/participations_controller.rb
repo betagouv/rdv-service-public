@@ -1,6 +1,6 @@
 class Api::V1::ParticipationsController < Api::V1::AgentAuthBaseController
   def update
-    participation = policy_scope(Participation).find(params[:id])
+    participation = policy_scope(Participation, policy_scope_class: Agent::ParticipationPolicy::Scope).find(params[:id])
 
     if participation_params[:status].present?
       participation.change_status_and_notify(current_agent, participation_params[:status])

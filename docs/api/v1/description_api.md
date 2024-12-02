@@ -1,10 +1,9 @@
-L'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.
+L'API de RDV Service Public permet à nos partenaires, comme par exemple Démarches Simplifiées et RDV Insertion,d'ajouter de la gestion de rendez-vous dans leurs applications métier.
+Elle peut aussi être utilisée pour synchroniser les calendriers des agents de votre administration avec ceux qu'ils ont sur leur compte RDV Service Public.
 
-Toutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.
+L'API est disponible pour nos trois marques : RDV Service Public, RDV Solidarités, et RDV Aide Numérique.
 
-# Dépréciations
-
-**ATTENTION le champ `created_by` des `rdvs` et des `participations` est déprécié au profit du champ `created_by_type`.**
+Toutes les fonctionnalités de l'application ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.
 
 # Requêtes
 
@@ -23,20 +22,7 @@ Les paramètres doivent respecter les formats suivants :
 - `DATE` : "YYYY-MM-DD" par exemple : "2021-10-21"
 - `TIME` : H:m[:s], par exemple : "10:30"
 
-# Versionnage
-
-L'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).
-
 # Routes
-
-Les points de terminaison de l'API sont accessibles par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.
-
-Avec :
-
-- `version` est la version de l'API
-- `endpoint` est le nom du point de terminaison
-
-Par exemple, on aura : `https://<domain>/api/v1/absences`
 
 Pour la version production, les requêtes doivent être adressées à https://www.rdv-solidarites.fr et non à https://rdv-solidarites.fr.
 
@@ -44,7 +30,7 @@ Pour la version démo, les requêtes doivent être adressées à https://demo.rd
 
 # Authentification
 
-Certains points de terminaison sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.
+Presque tous les points de terminaison sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.
 
 ## Headers d'authentification
 
@@ -145,9 +131,10 @@ La réponse contient en outre un objet meta qui indique le nombre total de pages
 }
 ```
 
-# Rate limiting
+# Dépréciations
 
-L'utilisation de l'API est limitée pour les points de terminaison sans authentification. Vous pouvez effectuer au maximum 50 appels par minutes. Si vous dépassez cette limite, une erreur 429 vous sera renvoyée et vous trouverez le temps que vous devez attendre avant de relancer une requête dans le header (`Retry-After`).
+**ATTENTION le champ `created_by` des `rdvs` et des `participations` est déprécié au profit du champ `created_by_type`.**
+
 
 # Codes de retour
 

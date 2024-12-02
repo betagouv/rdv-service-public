@@ -23,6 +23,6 @@ class Admin::TerritoriesController < Admin::Territories::BaseController
 
   def set_territory_with_id
     @territory = Territory.find(params[:id])
-    authorize_agent @territory
+    authorize(@territory, policy_class: Agent::TerritoryPolicy)
   end
 end

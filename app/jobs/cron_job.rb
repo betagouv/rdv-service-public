@@ -24,16 +24,6 @@ class CronJob < ApplicationJob
     end
   end
 
-  class WarmUpOccurrencesCache < CronJob
-    def perform
-      [PlageOuverture, Absence].each do |klass|
-        klass.regulieres.not_expired.find_each do |model|
-          model.earliest_future_occurrence_time(refresh: true)
-        end
-      end
-    end
-  end
-
   class DestroyOldRdvsAndInactiveAccountsJob < CronJob
     def perform
       two_years_ago = 2.years.ago
@@ -55,7 +45,7 @@ class CronJob < ApplicationJob
 
   class DestroyInactiveUsers < CronJob
     def perform(date_limit)
-      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).left_outer_joins(:participations).where(participations: { id: nil })
+      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).where.missing(:participations)
         .where("users.rdv_invitation_token_updated_at is null or users.rdv_invitation_token_updated_at < ?", date_limit)
 
       old_users_without_rdvs_or_relatives = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id").where(relatives: { id: nil })
@@ -77,7 +67,7 @@ class CronJob < ApplicationJob
     protected
 
     def inactive_agents(date_limit)
-      agents_without_rdvs = Agent.left_outer_joins(:agents_rdvs).where(agents_rdvs: { id: nil })
+      agents_without_rdvs = Agent.where.missing(:agents_rdvs)
 
       agents_without_rdvs.where("created_at < ?", date_limit).where("last_sign_in_at IS NULL OR last_sign_in_at < ?", date_limit)
     end
@@ -118,7 +108,7 @@ class CronJob < ApplicationJob
 
   class AnonymizeOldReceipts < CronJob
     def perform
-      Anonymizer::Core.anonymize_records_in_scope!(Receipt.where("created_at < ?", 6.months.ago))
+      Anonymizer.anonymize_records!("receipts", scope: Receipt.arel_table[:created_at].lt(6.months.ago))
     end
   end
 
@@ -136,15 +126,18 @@ class CronJob < ApplicationJob
 
   class WarnAboutExpiringAzureAppSecrets < CronJob
     def perform
-      application_key_expiration_date = Date.new(2025, 1, 10)
-      key_refresh_url = "https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Credentials/appId/ad7b4a46-0051-47b6-bf31-713aa849e5d4/isMSAApp~/true"
+      return if ENV["AZURE_APPLICATION_CLIENT_ID"].blank?
+      return if ENV["AZURE_SECRET_EXPIRE_DATE"].blank?
+
+      application_key_expiration_date = Date.parse(ENV["AZURE_SECRET_EXPIRE_DATE"])
+      key_refresh_url = "https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Credentials/appId/#{ENV['AZURE_APPLICATION_CLIENT_ID']}/isMSAApp~/true"
 
       if 2.months.from_now > application_key_expiration_date
         error_message = <<~ERROR
           Le secret de client de l'application d'oauth Microsoft expire dans moins de 2 mois.
           Pour que la synchro Outlook continue de fonctionner, vous générez un nouveau secret via #{key_refresh_url}
-          Les identifiants pour se connecter sont dans Passbolt sous le nom "Compte Dev pour Oauth Microsoft".
-          Vous devrez ensuite mettre la valeur du secret dans la variable d'env AZURE_APPLICATION_CLIENT_SECRET, et mettre à jour la date de cet avertissement.
+          Les identifiants pour se connecter sont dans Vaultwarden sous le nom "Compte Dev pour Oauth Microsoft".
+          Vous devrez ensuite mettre la valeur du secret dans la variable d'env AZURE_APPLICATION_CLIENT_SECRET, et "AZURE_SECRET_EXPIRE_DATE".
         ERROR
         Sentry.capture_message(error_message, fingerprint: ["WarnAboutExpiringAzureAppSecrets"])
       end

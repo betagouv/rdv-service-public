@@ -90,7 +90,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       let!(:plage_ouverture) do
         create(
           :plage_ouverture,
-          :weekly,
+          :weekly_on_monday,
           first_day: Date.new(2020, 11, 16),
           start_time: Tod::TimeOfDay(9),
           end_time: Tod::TimeOfDay(12),
@@ -132,7 +132,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         end
 
         it "skips notification after create when agent has disabled it" do
-          agent.update!(plage_ouverture_notification_level: "none")
+          agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
           expect { post(:create, params: valid_params) }.not_to change { ActionMailer::Base.deliveries.size }
         end
       end
@@ -189,7 +189,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
 
         it "skips notification after update when agent has disabled it" do
           ActionMailer::Base.deliveries.clear
-          agent.update!(plage_ouverture_notification_level: "none")
+          agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
           expect(ActionMailer::Base.deliveries.size).to eq(0)
         end
@@ -234,26 +234,15 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       it "send notification after destroy" do
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
-        expect(ActionMailer::Base.deliveries.size).to eq(1)
+        expect { perform_enqueued_jobs }.to change { ActionMailer::Base.deliveries.size }.by(1)
         expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Plage d’ouverture supprimée")
       end
 
       it "skips notification after destroy when agent has disabled it" do
-        agent.update!(plage_ouverture_notification_level: "none")
+        agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect(ActionMailer::Base.deliveries.size).to eq(0)
-      end
-
-      it "remove plage ouverture without delay" do
-        # Difficile de tester le delai qui avait été
-        # introduit ici, c'est pourtant la source d'un problème.
-        # En attendant de pouvoir tester dans une spec de feature
-        # je pose ce test comme justification de la suppresion de
-        # l'utilisation du `delay`
-        expect do
-          delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
-        end.not_to have_enqueued_job
       end
     end
   end

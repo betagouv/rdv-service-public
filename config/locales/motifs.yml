@@ -14,6 +14,8 @@ fr:
       sectorisation_level_departement: "Sectorisé au département"
     follow_up_need_signed_user: "Le RDV '%{motif_name}' est disponible uniquement pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV."
     form:
+      title:
+        new: Créer un motif
       sectorisation_level:
         sectors_attributed_to_orga:
           zero: "Aucun secteur n'est attribué à l'organisation %{organisation}, ce motif n'apparaîtra donc dans aucune recherche usager"
@@ -24,6 +26,7 @@ fr:
           one: "Un seul agent du service %{service} est attribué à %{sectors_count_human} : %{sectors}"
           other: "%{count} agents du service %{service} sont attribués à %{sectors_count_human} : %{sectors}"
     index:
+      title: Motifs de l'organisation
       sectorisation_level_organisation:
         zero: "⚠️ aucun secteur"
         one: "1 secteur"

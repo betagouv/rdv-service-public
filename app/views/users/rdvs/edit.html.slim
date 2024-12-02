@@ -3,7 +3,7 @@
 .card
   .card-body
     p= t(".recap_message", motif_name_and_service: (@can_see_rdv_motif ? motif_name_and_service(@rdv.motif) : nil), rdv_human_date: I18n.l(@rdv.starts_at, format: :human))
-    .my-5.text-center
+    .my-5.rdv-text-align-center
       h4 Nouveau créneau selectionné
 
       p= l(@starts_at, format: :human).capitalize
@@ -11,5 +11,5 @@
     .row
       .col
         = link_to "Retour à la liste des créneaux", creneaux_users_rdv_path(@rdv)
-      .col.text-right
-        = link_to "Confirmer le nouveau créneau", users_rdv_path(@rdv, starts_at: @starts_at.to_s), class:"btn btn-primary", method: :put
+      .col.rdv-text-align-right
+        = link_to "Confirmer le nouveau créneau", users_rdv_path(@rdv, starts_at: @starts_at.to_s), class: "btn btn-primary", method: :put

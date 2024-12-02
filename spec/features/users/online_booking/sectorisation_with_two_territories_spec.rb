@@ -13,8 +13,8 @@ RSpec.describe "Prise de rdv avec sectorisations pour deux territoires dans le m
   let!(:lieu_insertion) { create(:lieu, name: "Pole Emploi Valence", organisation: orga_insertion) }
 
   before do
-    create(:plage_ouverture, :daily, first_day: 8.days.from_now, motifs: [motif_social], lieu: lieu_social, organisation: orga_social)
-    create(:plage_ouverture, :daily, first_day: 8.days.from_now, motifs: [motif_insertion], lieu: lieu_insertion, organisation: orga_insertion)
+    create(:plage_ouverture, :weekdays, first_day: 8.days.from_now, motifs: [motif_social], lieu: lieu_social, organisation: orga_social)
+    create(:plage_ouverture, :weekdays, first_day: 8.days.from_now, motifs: [motif_insertion], lieu: lieu_insertion, organisation: orga_insertion)
   end
 
   it "allows two territories in the same departement to use sectorisation and shows the organisations alongside one another", js: true do

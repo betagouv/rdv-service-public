@@ -1,4 +1,4 @@
-class Notifiers::RdvCollectifParticipations < ::BaseService
+class Notifiers::RdvCollectifParticipations < BaseService
   attr_reader :participations_tokens_by_user_id
 
   def initialize(rdv, author, previous_participations)

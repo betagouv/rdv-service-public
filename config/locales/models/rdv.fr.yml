@@ -8,10 +8,7 @@ fr:
               duplicate: Il existe déjà un RDV au même moment, au même lieu, pour le même motif, avec les mêmes participant⋅es
               missing_mobile_phone_or_email: "Vous devez indiquer un numéro de téléphone mobile ou une adresse email pour que l'usager puisse recevoir le lien de visioconférence."
             starts_at:
-              must_be_within_two_years: "doit être dans moins de deux ans."
-            phone_number:
-              missing_for_phone_motif: "Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique."
-              format: "%{message}"
+              format: "L’horaire du RDV %{message}"
             duration_in_min:
               must_be_positive: doit être supérieur à 0
             lieu:
@@ -110,9 +107,9 @@ fr:
                 in_scope_html: "%{agent_name} a <a href='%{path}'>un RDV</a> finissant à %{ends_at_time} avec %{user_names}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans son agenda"
                 out_of_scope_html: "%{agent_name} a un RDV finissant à %{ends_at_time}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans son agenda (ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
               rdvs_overlapping_rdv:
-                current_agent_html: "Vous avez <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci"
-                in_scope_html: "%{agent_name} a <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci"
-                out_of_scope_html: "Ce rendez-vous en chevauche un autre. %{agent_name} a un RDV dans une autre organisation (ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
-              rdv_duplicate_suspected_html: L'usager⋅e <a href="%{user_path}">%{user_name}</a> a un autre RDV pour le même motif le même jour
+                current_agent_html: "Vous avez <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci."
+                in_scope_html: "%{agent_name} a <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci."
+                out_of_scope_html: "Ce rendez-vous en chevauche un autre. %{agent_name} a un RDV dans une autre organisation ou un autre service auquel vous n'avez pas accès."
+              rdv_duplicate_suspected_html: L'usager⋅e <a href="%{user_path}">%{user_name}</a> a un autre RDV pour le même motif le même jour.
             starts_at:
               in_the_past:  Ce rendez-vous a une date située dans le passé (il y a %{distance})

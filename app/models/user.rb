@@ -23,11 +23,10 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include StrongPasswordConcern
-  include User::Ants
 
   def self.search_options
     {
-      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "text_search_terms" } },
+      using: { tsearch: { prefix: true, tsvector_column: "text_search_terms" } },
     }
   end
 
@@ -35,13 +34,13 @@ class User < ApplicationRecord
   ONGOING_MARGIN = 1.hour.freeze
   auto_strip_attributes :email, :first_name, :last_name, :birth_name
 
-  enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
-  enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
-  enum created_through: { agent_creation: "agent_creation", user_sign_up: "user_sign_up",
-                          franceconnect_sign_up: "franceconnect_sign_up", user_relative_creation: "user_relative_creation",
-                          unknown: "unknown", agent_creation_api: "agent_creation_api", prescripteur: "prescripteur", }
-  enum invited_through: { devise_email: "devise_email", external: "external" }
-  enum logement: { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
+  enum :caisse_affiliation, { aucune: 0, caf: 1, msa: 2 }
+  enum :family_situation, { single: 0, in_a_relationship: 1, divorced: 2 }
+  enum :created_through, { agent_creation: "agent_creation", user_sign_up: "user_sign_up",
+                           franceconnect_sign_up: "franceconnect_sign_up", user_relative_creation: "user_relative_creation",
+                           unknown: "unknown", agent_creation_api: "agent_creation_api", prescripteur: "prescripteur", }
+  enum :invited_through, { devise_email: "devise_email", external: "external" }
+  enum :logement, { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
 
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
@@ -84,6 +83,11 @@ class User < ApplicationRecord
 
   def to_s
     full_name
+  end
+
+  def email=(value)
+    # On corriger automatiquement ces fautes de frappe courantes
+    super(value&.gsub(".@", "@")&.gsub("..", "."))
   end
 
   def add_organisation(organisation)
@@ -196,13 +200,13 @@ class User < ApplicationRecord
     nil
   end
 
-  def only_invited!(rdv: nil)
-    @only_invited = true
+  def signed_in_with_invitation_token!(rdv: nil)
+    @signed_in_with_invitation_token = true
     @invitation_rdv = rdv
   end
 
-  def only_invited?
-    @only_invited == true
+  def signed_in_with_invitation_token?
+    @signed_in_with_invitation_token
   end
 
   def invited_for_rdv?(rdv)
@@ -219,8 +223,19 @@ class User < ApplicationRecord
     end
   end
 
-  def assign_rdv_invitation_token
-    self.rdv_invitation_token = generate_rdv_invitation_token
+  def set_rdv_invitation_token!
+    self.rdv_invitation_token_updated_at = Time.zone.now
+
+    if rdv_invitation_token.nil?
+      assign_attributes(
+        rdv_invitation_token: generate_rdv_invitation_token,
+        invited_through: "external"
+      )
+    end
+
+    save!
+
+    rdv_invitation_token
   end
 
   def ants_pre_demande_number=(value)
@@ -245,13 +260,13 @@ class User < ApplicationRecord
   end
 
   def confirmation_required?
-    return false if only_invited?
+    return false if signed_in_with_invitation_token?
 
     super
   end
 
   def reconfirmation_required?
-    return false if only_invited?
+    return false if signed_in_with_invitation_token?
 
     super
   end
@@ -274,9 +289,9 @@ class User < ApplicationRecord
     end
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
-    Anonymizer::Core.anonymize_record!(self)
-    receipts.each { |r| Anonymizer::Core.anonymize_record!(r) }
-    rdvs.each { |r| Anonymizer::Core.anonymize_record!(r) }
+    Anonymizer.anonymize_record!(self)
+    receipts.each { |r| Anonymizer.anonymize_record!(r) }
+    rdvs.each { |r| Anonymizer.anonymize_record!(r) }
     versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",
@@ -284,5 +299,6 @@ class User < ApplicationRecord
       deleted_at: Time.zone.now,
       email: deleted_email
     )
+    reload # anonymizer operates outside the realm of rails knowledge
   end
 end

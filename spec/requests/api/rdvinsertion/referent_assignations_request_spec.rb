@@ -1,8 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
-  with_examples
-
+RSpec.describe "Referent Assignation authentified API" do
   path "/api/rdvinsertion/referent_assignations/create_many" do
     post "Ajouter un ou plusieurs référents à un utilisateur" do
       with_shared_secret_authentication
@@ -53,19 +51,54 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
         end
       end
 
-      it_behaves_like "an endpoint that returns 401 - unauthorized" do
+      context "when authentication fails" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
         let(:user_id) { user.id }
 
         before do
           allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
         end
+
+        it "returns a 401 unauthorized response" do
+          post "/api/rdvinsertion/referent_assignations/create_many", params: { "agent_ids[]": [agent1.id, agent2.id], user_id: user.id }, headers: auth_headers
+
+          expect(response).to have_http_status(:unauthorized)
+        end
       end
 
-      it_behaves_like "an endpoint that returns 404 - not found", "l'utilisateur n'a pas été trouvé" do
+      context "when user is not found" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
         let(:user_id) { User.last.id + 1 }
+
+        it "returns a 404 not found" do
+          post "/api/rdvinsertion/referent_assignations/create_many", params: { "agent_ids[]": [agent1.id, agent2.id], user_id: user_id }, headers: auth_headers
+
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).to include("not_found")
+        end
       end
+    end
+  end
+
+  describe "GET /api/rdvinsertion/users/:id/referent_assignations" do
+    let(:agent) { create(:agent, basic_role_in_organisations: [organisation_rdv_insertion]) }
+    let(:user) { create(:user, organisations: [organisation_rdv_insertion], referent_agents: [agent, other_agent]) }
+    let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation_rdv_solidarites]) }
+    let(:organisation_rdv_insertion) { create(:organisation, verticale: "rdv_insertion") }
+    let(:organisation_rdv_solidarites) { create(:organisation, verticale: "rdv_solidarites") }
+    let(:shared_secret) { "S3cr3T" }
+    let(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
+
+    before do
+      allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
+    end
+
+    it "returns the referent assignations" do
+      get api_rdvinsertion_user_referent_assignations_path(user.id), headers: auth_headers
+      expect(response.status).to eq(200)
+      response_referent_assignations = response.parsed_body["referent_assignations"]
+      response_referent_assignations_agent_ids = response_referent_assignations.map { |referent_assignation| referent_assignation.dig("agent", "id") }
+      expect(response_referent_assignations_agent_ids).to contain_exactly(agent.id)
     end
   end
 end

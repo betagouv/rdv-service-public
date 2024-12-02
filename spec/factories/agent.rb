@@ -32,40 +32,41 @@ FactoryBot.define do
     end
 
     transient do
-      intervenant_role_in_organisations { [] }
-    end
-
-    transient do
       role_in_territories { [] }
     end
 
-    after(:create) do |agent, evaluator|
+    after(:build) do |agent, evaluator|
       evaluator.basic_role_in_organisations.each do |organisation|
-        create :agent_role, agent: agent, organisation: organisation
+        agent.roles << build(:agent_role, agent: agent, organisation: organisation)
       end
       evaluator.admin_role_in_organisations.each do |organisation|
-        create :agent_role, :admin, agent: agent, organisation: organisation
-      end
-      evaluator.intervenant_role_in_organisations.each do |organisation|
-        create :agent_role, :intervenant, agent: agent, organisation: organisation
+        agent.roles << build(:agent_role, :admin, agent: agent, organisation: organisation)
       end
       evaluator.role_in_territories.each do |territory|
-        create :agent_territorial_role, agent: agent, territory: territory
+        agent.territorial_roles << build(:agent_territorial_role, agent: agent, territory: territory)
       end
     end
 
     trait :with_basic_org do
       basic_role_in_organisations { [build(:organisation)] }
     end
+
     trait :with_territory_access_rights do
-      agent_territorial_access_rights do
+      after(:build) do |agent, _evaluator|
+        organisations = agent.roles.map(&:organisation)
+        raise "Using trait :with_territory_access_rights requires agent to have organisations" if organisations.none?
+
         organisations.map(&:territory_id).uniq.map do |territory_id|
-          build(:agent_territorial_access_rights, agent: self, territory_id: territory_id)
+          agent.agent_territorial_access_rights << build(:agent_territorial_access_right, agent: agent, territory_id: territory_id)
         end
       end
     end
+
     trait :not_confirmed do
       confirmed_at { nil }
+      first_name { nil }
+      last_name { nil }
+      allow_blank_name { true }
     end
     trait :invitation_not_accepted do
       sequence(:invitation_token) { |n| "invitation-t0k3n-#{n}" }

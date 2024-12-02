@@ -20,7 +20,7 @@ RSpec.describe "Admin can configure the territory", type: :feature do
       agent = create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [])
       login_as(agent, scope: :agent)
       visit edit_admin_territory_path(territory, agent)
-      expect(page).to have_content("Vous ne pouvez pas effectuer cette action")
+      expect(page).to have_content("Vous n’avez pas les droits suffisants")
     end
   end
 end

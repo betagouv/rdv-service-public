@@ -10,10 +10,10 @@
     p La réservation en ligne peut être configurée pour chaque motif de rendez-vous.
 
     - if current_organisation.sectorized?
-      p Cette organisation est sectorisée, les usagers peuvent prendre rendez-vous en saisissant leur adresse sur la page d'accueil :
+      p Cette organisation est sectorisée, les usagers peuvent prendre rendez-vous en saisissant leur adresse sur la page d'accueil&nbsp;:
       = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: prendre_rdv_url }
     - else
-      p Une fois qu'elle est activée, vous pouvez envoyer ce lien à vos usagers pour qu'ils prennent rendez-vous :
+      p Une fois qu'elle est activée, vous pouvez envoyer ce lien à vos usagers pour qu'ils prennent rendez-vous&nbsp;:
       - org_booking_link = public_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug)
       = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: org_booking_link }
 

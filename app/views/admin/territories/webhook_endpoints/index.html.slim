@@ -4,22 +4,25 @@
   .col-md-10
     .card
       .card-body
-        table.table
-          thead
-            tr
-              th = t(".table-header.organisation")
-              th = t(".table-header.url")
-              th = t(".table-header.actions")
-          tbody
-            - @webhooks.each do |webhook|
+        - if @webhooks.any?
+          table.table
+            thead
               tr
-                td = webhook.organisation.name
-                td = webhook.target_url
-                td
-                  .d-flex
-                    div.mr-3= link_to edit_admin_territory_webhook_endpoint_path(current_territory, webhook), title: t("helpers.edit") do
+                th = t(".table-header.organisation")
+                th = t(".table-header.url")
+                th = t(".table-header.actions")
+            tbody
+              - @webhooks.each do |webhook|
+                tr
+                  td = webhook.organisation.name
+                  td = webhook.target_url
+                  td
+                    .d-flex
+                      div.mr-3= link_to edit_admin_territory_webhook_endpoint_path(current_territory, webhook), title: t("helpers.edit") do
                         i.fa.fa-edit
-                    = link_to admin_territory_webhook_endpoint_path(current_territory, webhook), title: t("helpers.delete"), method: :delete, data: { confirm: t(".confirm_destroy") } do
+                      = link_to admin_territory_webhook_endpoint_path(current_territory, webhook), title: t("helpers.delete"), method: :delete, data: { confirm: t(".confirm_destroy") } do
                         i.fa.fa-trash-alt
 
-        = link_to "Ajouter", new_admin_territory_webhook_endpoint_path(current_territory), class: "btn btn-primary"
+        .d-flex.flex-gap-1em
+          = link_to "Ajouter un webhook", new_admin_territory_webhook_endpoint_path(current_territory), class: "btn btn-primary"
+          = link_to "Voir la documentation", "https://github.com/betagouv/rdv-service-public/blob/production/docs/api/webhooks/api-notifications-webhooks.md", target: "_blank", class: "btn btn-link"

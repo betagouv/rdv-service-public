@@ -1,4 +1,14 @@
 RSpec.describe User, type: :model do
+  describe "#email=" do
+    it %(automatically fixes ".@" typo) do
+      expect(described_class.new(email: "francis.@exemple.fr").email).to eq("francis@exemple.fr")
+    end
+
+    it %(automatically fixes ".." typo) do
+      expect(described_class.new(email: "francis..factice@exemple.fr").email).to eq("francis.factice@exemple.fr")
+    end
+  end
+
   describe "#add_organisation" do
     subject do
       user.add_organisation(organisation)
@@ -74,9 +84,9 @@ RSpec.describe User, type: :model do
       expect(user.email).to end_with("deleted.rdv-solidarites.fr")
       expect(user).to have_attributes(
         first_name: "Usager supprimé",
-        last_name: "Usager supprimé",
-        address: "[valeur anonymisée]"
+        last_name: "Usager supprimé"
       )
+      expect(user.address).to match %([valeur unique anonymisée \\d+])
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
 
       # on n'anonymise pas un autre utilisateur
@@ -90,8 +100,8 @@ RSpec.describe User, type: :model do
       receipt = create(:receipt, user: user, rdv: rdv, sms_phone_number: "0611111111")
       user.soft_delete
 
-      expect(receipt.reload.sms_phone_number).to eq "[valeur anonymisée]"
-      expect(rdv.reload.context).to eq "[valeur anonymisée]"
+      expect(receipt.reload.sms_phone_number).to match %([valeur unique anonymisée \\d+])
+      expect(rdv.reload.context).to match %([valeur unique anonymisée \\d+])
       expect(user.versions).to be_empty
     end
 
@@ -136,7 +146,7 @@ RSpec.describe User, type: :model do
             relative = create(:user, responsible: responsible)
 
             responsible.soft_delete(organisation)
-            expect(relative.reload.deleted_at).to eq(nil)
+            expect(relative.reload.deleted_at).to be_nil
           end
         end
 
@@ -224,7 +234,7 @@ RSpec.describe User, type: :model do
       expect(described_class.count).to eq(2)
       expect(loulou.responsible).not_to be_nil
       expect(loulou.responsible.first_name).to eq("Jean")
-      expect(loulou.responsible.notify_by_sms).to eq(false)
+      expect(loulou.responsible.notify_by_sms).to be(false)
     end
   end
 
@@ -250,7 +260,6 @@ RSpec.describe User, type: :model do
 
       travel_to(today)
       expect(user.rdvs_future_without_ongoing(organisation)).to eq([next_rdv])
-      travel_back
     end
 
     it "returns only future rdv" do
@@ -266,7 +275,6 @@ RSpec.describe User, type: :model do
       travel_to(now)
 
       expect(user.rdvs_future_without_ongoing(organisation)).to eq([future_rdv])
-      travel_back
     end
   end
 
@@ -290,7 +298,7 @@ RSpec.describe User, type: :model do
     before { travel_to(Time.zone.parse("2022-04-05 13:45")) }
 
     it "is valid" do
-      expect(subject).to eq(true)
+      expect(subject).to be(true)
     end
   end
 
@@ -300,7 +308,6 @@ RSpec.describe User, type: :model do
       travel_to(now)
       user = build(:user, birth_date: Date.new(2016, 5, 30))
       expect(user.minor?).to be true
-      travel_back
     end
 
     it "return false when user birth is 2000 and we are in 2020" do
@@ -308,7 +315,6 @@ RSpec.describe User, type: :model do
       travel_to(now)
       user = build(:user, birth_date: Date.new(2000, 5, 30))
       expect(user.minor?).to be false
-      travel_back
     end
 
     it "return false when no birthdate" do

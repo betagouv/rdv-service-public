@@ -1,0 +1,8 @@
+{
+  results: @users.map do |user|
+    {
+      id: user.id,
+      text: reverse_full_name_and_birthdate(user),
+    }
+  end,
+}

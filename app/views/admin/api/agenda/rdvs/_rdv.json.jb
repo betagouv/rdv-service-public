@@ -1,0 +1,32 @@
+json = {
+  start: rdv.starts_at.as_json,
+  end: rdv.ends_at.as_json,
+
+  id: rdv.id,
+  title: rdv_title_in_agenda(rdv),
+  url: admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: params[:agent_id]),
+
+  extendedProps: {
+    organisationName: rdv.organisation.name,
+    status: rdv.status,
+    readableStatus: rdv.human_attribute_value(:status),
+    motif: rdv.motif_name,
+    lieu: rdv.public_office? && rdv.lieu&.name,
+    past: rdv.past?,
+    duration: rdv.duration_in_min,
+  },
+}
+
+if @organisation.territory.enable_waiting_room_color_field
+  json[:extendedProps][:userInWaitingRoom] = rdv.user_in_waiting_room?
+end
+
+if rdv.organisation == @organisation
+  json[:textColor] = text_color(rdv.motif&.color)
+  json[:backgroundColor] = rdv.motif&.color
+else
+  json[:textColor] = "white"
+  json[:backgroundColor] = "#757575" # Use a dark enough gray to be accessible
+end
+
+json

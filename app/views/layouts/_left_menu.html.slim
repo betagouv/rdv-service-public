@@ -13,10 +13,10 @@ nav.left-side-menu-wrapper
       ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0
         li.p-2
           .d-flex.justify-content-center
-            = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "btn bg-white align-bottom text-dark"
+            = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "btn btn-primary align-bottom text-white"
         li.current-organisation
           = current_organisation_in_left_menu do
-            .d-flex.justify-content-between.w-100.text-white
+            .d-flex.justify-content-between.w-100
               div.d-flex.align-items-center
                 div.d-flex.flex-column
                   h4= current_organisation.name
@@ -52,7 +52,7 @@ nav.left-side-menu-wrapper
             li
               = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
             li
-              = active_link_to t(".busy_times"), admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
+              = active_link_to "Indisponibilités", admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
             li
               = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item side-menu__item--small"
 
@@ -111,7 +111,7 @@ nav.left-side-menu-wrapper
               - if current_agent.territorial_admin_in?(current_organisation.territory)
                 = link_to admin_territory_path(current_organisation.territory), class: "side-menu__item side-menu__item--small" do
                   i.fa.fa-cog>
-                  = t(".configuration")
+                  ' Espace Admin
         li
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
             i.fa.fa-question-circle>

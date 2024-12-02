@@ -21,7 +21,7 @@ class Agent < ApplicationRecord
           id: "D",
         },
       ignoring: :accents,
-      using: { tsearch: { prefix: true, any_word: true } },
+      using: { tsearch: { prefix: true } },
     }
   end
 
@@ -40,22 +40,22 @@ class Agent < ApplicationRecord
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
 
-  enum rdv_notifications_level: {
+  enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
     others: "others", # notify of changes made by other agents or users
     soon: "soon",     # notify of change (made by others) less than a day before the rdv
     none: "none", # never send rdv notifications
-  }, _prefix: true
+  }, prefix: true
 
-  enum plage_ouverture_notification_level: {
+  enum :plage_ouverture_notification_level, {
     all: "all", # notify of all changes
     none: "none", # never send plage_ouverture notifications
-  }, _prefix: true
+  }, prefix: true
 
-  enum absence_notification_level: {
+  enum :absence_notification_level, {
     all: "all", # notify of all changes
     none: "none", # never send absence notifications
-  }, _prefix: true
+  }, prefix: true
 
   # Relations
   has_many :agent_services, dependent: :destroy
@@ -86,6 +86,11 @@ class Agent < ApplicationRecord
   has_many :territories_through_organisations, source: :territory, through: :organisations
   has_many :webhook_endpoints, through: :organisations
 
+  # Associations pour être provider d'OAuth
+  # On désactive le cop pour inverse_of car les modèles sont gérés dans Doorkeeper, et on ne se sert pas de l'association inverse
+  has_many :access_grants, class_name: "Doorkeeper::AccessGrant", foreign_key: :resource_owner_id, dependent: :delete_all # rubocop:disable Rails/InverseOf
+  has_many :access_tokens, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id, dependent: :delete_all # rubocop:disable Rails/InverseOf
+
   attr_accessor :allow_blank_name
 
   # Validation
@@ -97,6 +102,7 @@ class Agent < ApplicationRecord
   validates :agent_services, presence: true
 
   # Hooks
+  before_destroy :prevent_destroy_if_rdvs
 
   # Scopes
   scope :complete, lambda {
@@ -106,7 +112,7 @@ class Agent < ApplicationRecord
   }
   scope :active, -> { where(deleted_at: nil) }
   scope :in_any_of_these_services, lambda { |services|
-    joins(:agent_services).where(agent_services: { service_id: services.map(&:id) })
+    joins(:agent_services).where(agent_services: { service_id: services.select(:id) })
   }
 
   ## -
@@ -122,11 +128,11 @@ class Agent < ApplicationRecord
   end
 
   def reverse_full_name_and_service
-    services.present? ? "#{reverse_full_name} (#{services_short_names})" : full_name
+    services.present? ? "#{reverse_full_name_or_email} (#{services_short_names})" : full_name
   end
 
   def full_name_and_service
-    services.present? ? "#{full_name} (#{services_short_names})" : full_name
+    services.present? ? "#{full_name_or_email} (#{services_short_names})" : full_name
   end
 
   def services_short_names
@@ -199,15 +205,27 @@ class Agent < ApplicationRecord
   end
 
   def admin_in_organisation?(organisation)
-    role_in_organisation(organisation).admin?
+    access_level_in(organisation) == AgentRole::ACCESS_LEVEL_ADMIN
+  end
+
+  def access_level_in(organisation)
+    if roles.loaded?
+      roles.find { _1.organisation == organisation }&.access_level
+    else
+      roles.where(organisation: organisation).pick(:access_level)
+    end
   end
 
   def territorial_admin_in?(territory)
-    territorial_role_in(territory).present?
+    territorial_roles.exists?(territory: territory)
   end
 
-  def territorial_role_in(territory)
-    territorial_roles.find_by(territory: territory)
+  def participates_in?(rdv)
+    if rdv.agents_rdvs.loaded?
+      rdv.agents_rdvs.map(&:agent_id).include?(id)
+    else
+      rdv.agents_rdvs.exists?(agent_id: id)
+    end
   end
 
   def access_rights_for_territory(territory)
@@ -268,5 +286,12 @@ class Agent < ApplicationRecord
 
   def read_only_profile_infos?
     inclusion_connect_open_id_sub.present? || connected_with_agent_connect?
+  end
+
+  def prevent_destroy_if_rdvs
+    if rdvs.any?
+      errors.add(:base, "Un agent ne peut pas être définitivement supprimé si il a des RDVs")
+      throw :abort
+    end
   end
 end

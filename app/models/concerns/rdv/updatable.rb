@@ -11,6 +11,8 @@ module Rdv::Updatable
     Rdv.transaction do
       self.updated_at = Time.zone.now
       previous_participations = participations.select(&:persisted?)
+      remove_duplicate_participations
+
       set_created_by_for_new_participations(author)
 
       if status_changed? && valid?
@@ -68,6 +70,17 @@ module Rdv::Updatable
   end
 
   private
+
+  def remove_duplicate_participations
+    existing_participations = Participation.where(rdv_id: id).to_a # pour éviter une requête N+1
+
+    participations.each do |participation|
+      existing_participation = existing_participations.find { |p| p.user_id == participation.user_id }
+      next unless existing_participation
+
+      participation.id = existing_participation.id
+    end.uniq!
+  end
 
   def notify!(author, previous_participations)
     if rdv_cancelled?

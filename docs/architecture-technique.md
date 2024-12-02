@@ -126,7 +126,7 @@ Notre application est accessible sous 3 "marques" différentes :
 Nous avons actuellement 3 instances :
 - `production-rdv-solidarites` : serveur de production pour `www.rdv-solidarites.fr` et `www.rdv-aide-numerique.fr`
 - `production-rdv-mairie` : serveur de production pour `rdv.anct.gouv.fr`
-- `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.rdv-mairie.fr`
+- `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.anct.gouv.fr`
 
 ```mermaid
 flowchart TD
@@ -138,7 +138,7 @@ flowchart TD
     %% Domaines de demo
     demo.rdv-solidarites.fr
     demo.rdv-aide-numerique.fr
-    demo.rdv-mairie.fr
+    demo.rdv.anct.gouv.fr
 
     %% Apps Scalingo
     production-rdv-solidarites((production-rdv-solidarites))
@@ -151,12 +151,12 @@ flowchart TD
     rdv.anct.gouv.fr --> production-rdv-mairie
     demo.rdv-solidarites.fr --> demo-rdv-solidarites
     demo.rdv-aide-numerique.fr --> demo-rdv-solidarites
-    demo.rdv-mairie.fr --> demo-rdv-solidarites
+    demo.rdv.anct.gouv.fr --> demo-rdv-solidarites
 ```
 
 `production-rdv-solidarites` est notre instance de production actuelle. Elle est représentée fidèlement dans les
-schémas ci-dessous. `production-rdv-mairie` est une nouvelle instance que nous venons de créer (mai 2023). Nous avons
-créé cette instance afin de séparer les données de la future plateforme `rdv.anct.gouv.fr` de nos données existantes.
+schémas ci-dessous. `production-rdv-mairie` est une instance plus récente créée en mai 2023. Nous avons
+créé cette instance afin de séparer les données de plateforme `rdv.anct.gouv.fr` de nos données existantes.
 
 L'instance `demo-rdv-solidarites` sert de plateforme de démo pour nos 3 domaines.
 
@@ -395,14 +395,16 @@ Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas 
 
 #### Les super admins
 
-Une interface CRUD permettant de gérer l'ensemble des organisations, services, motifs, lieux, territoires et
-usagers est proposée en interne à l'équipe.
+Une interface CRUD permettant de gérer l'ensemble des organisations, services, motifs, lieux, territoires, agents et
+usagers est proposée à :
+- toute l'équipe RDV Service Public
+- toute l'équipe RDV Insertion
 
 Afin de s'y connecter, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alors fournie par GitHub doit être
 présente dans une table `super_admins`, où les entrées sont crées et supprimées à la main lors de l'arrivée et
-du départ de membres de l'équipe;
+du départ de membres de l'équipe.
 
-Tous les membres de l'équipe faisant partie de [l'organisation `betagouv` sur Github](https://github.com/betagouv), ils utilisent une authentification à 2 facteurs.
+Tous les membres de l'équipe faisant partie de [l'organisation `betagouv` sur Github](https://github.com/betagouv), ils utilisent forcément une authentification à 2 facteurs (car cette politique est imposée au niveau de l'organisation GitHub).
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
@@ -449,6 +451,25 @@ communication principal Mattermost. Nous utilisons l'instance Sentry de l'incuba
 
 Notre hébergeur Scalingo propose aussi un système d'alerting déclenché selon des métriques diverses, mais
 celui-ci n'est pas utilisé actuellement car sa calibration est difficile.
+
+### Envoi d'e-mails transactionnels
+
+Nous utilisons Brevo afin de traiter les envois d'e-mails transactionnels.
+
+Nous y avons configuré une période de rétention de 6 mois, durant laquelle une copie
+de chaque email envoyé est gardée. Cela permet aux équipes de support de déterminer
+si un e-mail a bien été envoyé, en cas de problème remonté par un usager ou un agent.
+
+L'accès à Brevo est fait à travers
+- des comptes nominatifs pour l'équipe support RDV Service Public
+- un compte admin non nominatif lié à une boite mail uniquement accessible aux développeur·ses
+
+Les e-mails envoyés sont délibérément dépourvus de tracking (ni sur les liens ni comme image),
+afin qu'aucune requête ne soit faite à Brevo à l'ouverture de l'e-mail. Cela permet d'éviter que
+Brevo soit une dépendance à l'usage des liens, et évite que des données soient récoltées par Brevo.
+
+Note : indépendamment des usages transactionnels, les fonctionnalités de mailing marketing de Brevo
+sont utilisées par les chargé·es de déploiement afin de promouvoir le produit auprès des administrations.
 
 ### Politique de mise à jour des applicatifs
 
@@ -512,6 +533,8 @@ Pour les membres de l'équipe technique, on prend ces mesures supplémentaires :
 Voici les suppressions automatiques mises en place :
 - Suppression des RDVs de plus de 2 ans
 - Suppression des plages d'ouverture de plus de 1 an
-- Suppression des logs PaperTrail (auditing) de plus de 2 ans
+- Suppression des logs PaperTrail (auditing) de plus de 1 an contenant des données personnelles autres que l'identité de la personne dont on journalise l'action.
+- Anonymisation des logs PaperTrail(auditing) de plus de 1 an ne contenant pas données personnelles autre que l'identité de la personne dont on journalise l'action
+- Suppression des logs PaperTrail (auditing) de plus de 5 ans
 - Suppression des usagers inactifs pendant au moins 2 ans (pas de rdv dans les 2 dernières années, et compte créé depuis plus de 2 ans)
 - Suppression des agents inactifs pendant au moins 2 ans (pas de rdv dans les 2 dernières années, et compte créé depuis plus de 2 ans, pas de connexion depuis 2 ans)

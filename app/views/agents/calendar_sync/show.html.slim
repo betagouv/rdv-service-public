@@ -8,17 +8,17 @@ div.d-flex.justify-content-center.align-items-center.flex-wrap
       div.card-body
         h5.card-title Connexion Outlook
         p Vos rendez-vous seront synchronisés automatiquement et en temps réel dans votre agenda Outlook.
-        div.text-center
+        div.rdv-text-align-center
           = link_to "Connecter mon compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
 
   div.card.w-100
     div.card-body
       h5.card-title Lien Webcal
       p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Vos rendez-vous seront visibles sur votre agenda externe, mais parfois avec quelques heures de retard.
-      div.text-center
+      div.rdv-text-align-center
         = link_to "Synchronisation par lien Webcal", agents_calendar_sync_webcal_sync_path, class: "btn btn-primary m-2"
 
   p.lead.font-weight-bold.mt-4 Notifications par email
   p Vous pouvez aussi recevoir un email avec une invitation ics pour chaque rendez-vous, absence et plage d'ouverture.
-  div.text-center
+  div.rdv-text-align-center
     = link_to t("agents.preferences.show.title"), agents_preferences_path, class: "btn btn-tertiary m-2"

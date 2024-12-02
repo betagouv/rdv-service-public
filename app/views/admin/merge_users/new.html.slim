@@ -13,7 +13,7 @@
   = render "model_errors", model: @merge_users_form
   .card
     table.table.table-bordered.merge-users-table[style="table-layout:fixed"]
-      tr.text-center
+      tr.rdv-text-align-center
         th[style="width:20%"]
         th[style="width:40%"]
           i.fa.fa-user>
@@ -21,7 +21,7 @@
         th[style="width:40%"]
           i.fa.fa-user>
           | Usager B
-      tr.text-center
+      tr.rdv-text-align-center
         td
         td= render "user_selection", user: @merge_users_form.user1, attribute: "user1_id", f: f, other_user_id: @merge_users_form.user2&.id
         td= render "user_selection", user: @merge_users_form.user2, attribute: "user2_id", f: f, other_user_id: @merge_users_form.user1&.id

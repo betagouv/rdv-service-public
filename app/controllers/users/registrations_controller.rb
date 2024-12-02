@@ -5,7 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   after_action :allow_iframe
 
   layout "application"
-  layout "application_narrow", only: %i[new edit pending]
+  layout "application_narrow", only: %i[new create update edit pending]
 
   def create
     return invite_and_redirect(existing_unconfirmed_user) if existing_unconfirmed_user
@@ -14,7 +14,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def destroy
-    authorize([:user, resource])
+    authorize(resource, policy_class: User::UserPolicy)
     # users from rdv-insertion have to be monitored wether they want it or not, so we don't allow them to destroy themselves
     if @rdv_insertion_organisations.empty?
       resource.soft_delete

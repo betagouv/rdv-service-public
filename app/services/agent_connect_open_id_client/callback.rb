@@ -4,11 +4,13 @@ module AgentConnectOpenIdClient
     class OpenIdFlowError < StandardError; end
     class ApiRequestError < StandardError; end
 
-    def initialize(session_state:, params_state:, callback_url:, nonce:)
+    def initialize(session_state:, params_state:, callback_url:, nonce:, client_id:, client_secret:) # rubocop:disable Metrics/ParameterLists
       @session_state = session_state
       @params_state = params_state
       @callback_url = callback_url
       @nonce = nonce
+      @client_id = client_id
+      @client_secret = client_secret
     end
 
     attr_reader :id_token_for_logout
@@ -59,8 +61,8 @@ module AgentConnectOpenIdClient
 
     def fetch_token(code, agent_connect_callback_url)
       data = {
-        client_id: ENV["AGENT_CONNECT_CLIENT_ID"],
-        client_secret: ENV["AGENT_CONNECT_CLIENT_SECRET"],
+        client_id: @client_id,
+        client_secret: @client_secret,
         code: code,
         grant_type: "authorization_code",
         redirect_uri: agent_connect_callback_url,
@@ -86,7 +88,7 @@ module AgentConnectOpenIdClient
       decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, agent_connect_config.jwks)
       decoded_id_token.verify!(
         issuer: agent_connect_config.issuer,
-        client_id: ENV["AGENT_CONNECT_CLIENT_ID"],
+        client_id: @client_id,
         nonce: @nonce
       )
     end

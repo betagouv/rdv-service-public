@@ -67,42 +67,4 @@ RSpec.describe "Admin can configure the organisation" do
 
     expect(page).to have_content("L’organisation a été modifiée.")
   end
-
-  it "CRUD on motifs", js: true do
-    click_link "Paramètres"
-    click_link "Motifs"
-    expect_page_title("Vos motifs")
-
-    click_link motif.name
-    expect(page).to have_content("Motif 1")
-    click_link "Éditer"
-    fill_in :motif_name, with: "Être appelé par"
-    click_button("Enregistrer")
-    expect(page).to have_content("Être appelé par")
-    expect(page).to have_selector("h3", text: "Être appelé par (PMI)")
-
-    click_link "Motifs"
-    click_link "Être appelé par"
-    expect(page).to have_content("Être appelé par")
-    click_link("Supprimer")
-    begin
-      page.driver.browser.switch_to.alert.accept
-    rescue Selenium::WebDriver::Error::NoSuchAlertError
-      click_link("Supprimer")
-      retry
-    end
-
-    expect_page_title("Vos motifs")
-    expect(page).to have_content("Vous n'avez pas encore créé de motif.")
-
-    click_link "Créer un motif", match: :first
-    expect(page).to have_content("Création d’un nouveau motif")
-    ## Check secretariat is unavailable
-    expect(page.all("select#motif_service_id option").map(&:value)).to match_array ["", pmi.id.to_s, service_social.id.to_s]
-    select(service_social.name, from: :motif_service_id)
-    fill_in :motif_name, with: "truc"
-    fill_in "Couleur associée", with: le_nouveau_motif.color
-    click_button "Créer le motif"
-    expect(page).to have_link("truc")
-  end
 end

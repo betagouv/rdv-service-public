@@ -3,7 +3,7 @@
 .card
   .card-body
     p = t("devise.invitations.invitation.click_on_link_sent")
-    .text-center
+    .rdv-text-align-center
       - unless email_tld_infos(@email_tld).blank?
         = link_to email_tld_infos(@email_tld)[:url], target: "blank", class: "btn btn-link" do
           span.mr-2 #{email_tld_infos(@email_tld)[:name]}

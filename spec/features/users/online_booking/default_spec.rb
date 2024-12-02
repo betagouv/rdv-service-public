@@ -16,11 +16,11 @@ RSpec.describe "User can search for rdvs" do
     let!(:autre_motif) { create(:motif, name: "Consultation", organisation: organisation, restriction_for_rdv: nil, service: service) }
     let!(:motif_autre_service) { create(:motif, :by_phone, name: "Télé consultation", organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-    let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
-    let!(:plage_ouverture_autre_service) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif_autre_service], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:autre_plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture_autre_service) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif_autre_service], lieu: lieu, organisation: organisation) }
     let!(:lieu2) { create(:lieu, organisation: organisation) }
-    let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
+    let!(:plage_ouverture2) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
     it "default", js: true do
       visit root_path
@@ -214,7 +214,7 @@ RSpec.describe "User can search for rdvs" do
     ## POs
     let!(:plage_ouverture) do
       create(
-        :plage_ouverture, :daily,
+        :plage_ouverture, :weekdays,
         agent: agent, motifs: [motif1], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
         start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12)
       )
@@ -228,7 +228,7 @@ RSpec.describe "User can search for rdvs" do
     end
     let!(:plage_ouverture3) do
       create(
-        :plage_ouverture, :daily,
+        :plage_ouverture, :weekdays,
         agent: agent, motifs: [motif3], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
         start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(17)
       )
@@ -236,7 +236,7 @@ RSpec.describe "User can search for rdvs" do
     # Available PO for selected motif on other agent
     let!(:plage_ouverture4) do
       create(
-        :plage_ouverture, :daily,
+        :plage_ouverture, :weekdays,
         agent: agent2, motifs: [motif1], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
         start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(15)
       )
@@ -375,6 +375,42 @@ RSpec.describe "User can search for rdvs" do
     end
   end
 
+  describe "validation du numéro de téléphone pour les motifs téléphoniques" do
+    let!(:territory) { create(:territory, departement_number: "24") }
+    let!(:organisation) { create(:organisation, territory:) }
+    let!(:user) { create(:user, phone_number: nil) }
+    let!(:motif) { create(:motif, :by_phone, organisation:) }
+    let!(:lieu) { create(:lieu, organisation:) }
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, :weekdays, first_day: Date.parse("2024-11-04"), motifs: [motif], lieu: lieu, organisation:, start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12))
+    end
+
+    before { travel_to Date.parse("2024-11-03").in_time_zone + 8.hours }
+    before { login_as(user, scope: :user) }
+
+    context "numéro de tel renseigné et valide" do
+      it "passe à l’étape suivante" do
+        visit(new_users_rdv_wizard_step_path(step: 1, departement: "24", motif_id: motif.id, lieu_id: lieu.id, starts_at: Time.zone.parse("2024-11-05 08:00")))
+        expect(page).to have_content("Vos informations")
+        fill_in :user_phone_number, with: "0130303030"
+        click_button("Continuer")
+        expect(page).to have_content("Pour qui prenez-vous rendez-vous")
+      end
+    end
+
+    context "numéro de tel non renseigné" do
+      it "reste à l’étape 1 et montre une erreur" do
+        visit(new_users_rdv_wizard_step_path(step: 1, departement: "24", motif_id: motif.id, lieu_id: lieu.id, starts_at: Time.zone.parse("2024-11-05 08:00")))
+        expect(page).to have_content("Vos informations")
+        # page.execute_script(%{document.querySelector('#user_phone_number').removeAttribute("required")})
+        # cette ligne n’est nécessaire que si on passe le test en JS, ou pour reproduire le test dans votre navigateur
+        click_button("Continuer")
+        expect(page).not_to have_content("Pour qui prenez-vous rendez-vous")
+        expect(page).to have_content("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
+      end
+    end
+  end
+
   private
 
   def execute_search
@@ -423,7 +459,7 @@ RSpec.describe "User can search for rdvs" do
 
   def sign_up
     # Login page
-    click_link("Je m'inscris")
+    click_link("Créer un compte")
 
     # Sign up page
     expect(page).to have_content("Inscription")
@@ -431,7 +467,7 @@ RSpec.describe "User can search for rdvs" do
     fill_in(:user_last_name, with: "Lapin")
     fill_in("Email", with: "michel@lapin.fr")
     fill_in("Téléphone", with: "0612345678")
-    click_button("Je m'inscris")
+    click_button("Je m’inscris")
 
     # Confirmation email
     open_email("michel@lapin.fr")
@@ -441,7 +477,7 @@ RSpec.describe "User can search for rdvs" do
     # Password reset page after confirmation
     expect(page).to have_content("Votre compte a été validé")
     expect(page).to have_content("Définir mon mot de passe")
-    fill_in(:password, with: "Rdvservicepublictest1!")
+    fill_in("Mot de passe", with: "Rdvservicepublictest1€")
     click_button("Enregistrer")
   end
 
@@ -463,7 +499,10 @@ RSpec.describe "User can search for rdvs" do
     fill_in("Nom", with: "Lapin")
     fill_in("Date de naissance", with: Date.yesterday) if birth_date
     click_button("Enregistrer")
-    expect(page).to have_content("Mathieu LAPIN")
+
+    # Pour éviter une flaky spec (causée par l'animation CSS de la modale ?),
+    # on vérifie directement que le proche est bien enregistré dans la base.
+    wait_for { User.exists?(first_name: "Mathieu", last_name: "Lapin") }.to be(true)
 
     click_button("Continuer")
   end
@@ -477,7 +516,9 @@ RSpec.describe "User can search for rdvs" do
     expect(page).to have_content(lieu.address) if lieu.present?
     expect(page).to have_content(motif.name)
     expect(page).to have_content("11h00")
-    expect(Rdv.first.participations.first.created_by_user?).to be(true)
+    expect(Rdv.last.participations.all?(&:created_by_user?)).to be(true)
+    relative = User.find_by(first_name: "Mathieu", last_name: "Lapin")
+    expect(Rdv.last.users).to include(relative)
   end
 
   def expect_page_h1(title)

@@ -4,28 +4,33 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
-    = simple_form_for resource, as: :user, url: registration_path(resource_name) do |f|
-      .mb-3= render "common/franceconnect_button"
-      = render "devise/shared/error_messages", resource: resource
-      - if resource.errors[:email]&.include?(I18n.t("errors.messages.taken"))
-        .mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name, "email": resource.email)
-      .form-row
-        .col-6= f.input :first_name, required: true
-        .col-6= f.input :last_name, required: true
-      = f.input :email, as: :email, placeholder: "nom.prenom@email.com", required: true
-      = f.input :phone_number, as: :tel, placeholder: "06 39 98 12 34", hint: "Vous recevrez les rappels et les informations du RDV sur ce numéro."
+    = form_for resource, as: :user, url: registration_path(resource_name), builder: DsfrFormBuilder do |f|
+      - if current_domain.france_connect_enabled || params[:force_franceconnect].present?
+        h2 Se créer un compte avec FranceConnect
+        = render "common/franceconnect_button"
+
+        p.fr-hr-or ou
+
+      h2 Se créer un compte avec un email
+      = render "devise/shared/dsfr_error_messages", resource: resource
+      .fr-grid-row.fr-grid-row--gutters.fr-mb-5v
+        .fr-col-6
+          = f.dsfr_text_field :first_name, label: "Prénom", required: true
+        .fr-col-6
+          = f.dsfr_text_field :last_name, label: "Nom", required: true
+      = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true
+      = f.dsfr_phone_field :phone_number, label: "Numéro de téléphone", hint: "Vous recevrez les rappels et les informations du RDV sur ce numéro."
 
       .form-group
         small
-        span> En vous inscrivant, vous acceptez les
-        = link_to("conditions générales d'utilisation", cgu_path)
+        span
+          | En vous inscrivant, vous acceptez les #{link_to("conditions générales d'utilisation", cgu_path, class: "fr-link")}.
 
-      .form-group.mb-0.text-center
-        = f.button :submit, "Je m'inscris"
+      .rdv-text-align-center
+        = f.submit "Je m’inscris", class: "fr-btn"
 
     hr.fr-my-2w
-    .text-center
-      p.text-muted
-        | Vous avez un compte ?&nbsp;
-        = link_to new_session_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)) do
-          b Se connecter
+    .rdv-text-align-center
+      p
+        | Vous avez un compte ?
+        =< link_to "Se connecter", new_session_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)), class: "fr-link"

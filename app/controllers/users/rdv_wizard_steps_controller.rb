@@ -14,7 +14,7 @@ class Users::RdvWizardStepsController < UserAuthController
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
     @rdv = @rdv_wizard.rdv
-    authorize(@rdv)
+    authorize(@rdv, policy_class: User::RdvPolicy)
     if @rdv_wizard.creneau.present?
       render current_step
     else
@@ -47,13 +47,13 @@ class Users::RdvWizardStepsController < UserAuthController
 
   def next_step_index
     idx = current_step_index + 2 # steps start at 1 + increment
-    idx += 1 if current_step_index.zero? && current_user.only_invited? # we skip the step 2 in the context of an invitation
+    idx += 1 if current_step_index.zero? && current_user.signed_in_with_invitation_token? # we skip the step 2 in the context of an invitation
     idx
   end
 
   def set_step_titles
     @step_titles = (0..3).map do |idx|
-      I18n.t("users.rdv_wizard_steps.step#{idx}.title") unless idx == 2 && current_user.only_invited?
+      I18n.t("users.rdv_wizard_steps.step#{idx}.title") unless idx == 2 && current_user.signed_in_with_invitation_token?
     end.compact
   end
 

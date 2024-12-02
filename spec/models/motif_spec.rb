@@ -26,7 +26,7 @@ RSpec.describe Motif, type: :model do
     it do
       expect(subject).not_to be_valid
       expect(subject.errors.details).to eq({ name: [{ error: :taken, value: "name" }] })
-      expect(subject.errors.full_messages.to_sentence).to eq "Nom est déjà utilisé pour un motif avec le même type de RDV."
+      expect(subject.errors.full_messages.to_sentence).to eq "Nom est déjà utilisé : un motif du même type et du même service porte déjà ce nom dans cette organisation."
     end
   end
 
@@ -48,6 +48,29 @@ RSpec.describe Motif, type: :model do
 
       expect(described_class.all).to eq [motif_with_rdv]
       expect(motif_with_rdv.reload.deleted_at).to eq(now)
+    end
+  end
+
+  describe "#archive!" do
+    it "marks it deleted" do
+      motif = create(:motif)
+      expect { motif.archive! }.to change { motif.reload.deleted_at }.from(nil)
+    end
+  end
+
+  describe "#destroyable?" do
+    it "returns true if motif has rdvs" do
+      motif_without_rdv = create(:motif)
+      motif_with_rdv = create(:rdv).motif
+      expect(motif_without_rdv).to be_destroyable
+      expect(motif_with_rdv).not_to be_destroyable
+    end
+  end
+
+  describe "#destroy!" do
+    it "raises an error if motif is not destroyable" do
+      motif_with_rdv = create(:rdv).motif
+      expect { motif_with_rdv.destroy! }.to raise_error(ActiveRecord::DeleteRestrictionError, "Cannot delete record because of dependent rdvs")
     end
   end
 
@@ -104,15 +127,15 @@ RSpec.describe Motif, type: :model do
     let!(:agent_pmi1) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
     let!(:agent_pmi2) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
     let!(:agent_secretariat1) { create(:agent, basic_role_in_organisations: [org1], service: service_secretariat) }
-    let!(:intervenant_pmi) { create(:agent, :intervenant, intervenant_role_in_organisations: [org1], service: service_pmi) }
+    let!(:intervenant_pmi) { create(:agent, :intervenant, organisations: [org1], service: service_pmi) }
     let!(:motif) { create(:motif, service: service_pmi, organisation: org1) }
 
-    it { is_expected.to match_array([agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1]) }
+    it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1) }
 
     context "motif is available for secretariat" do
       let!(:motif) { create(:motif, service: service_pmi, organisation: org1, for_secretariat: true) }
 
-      it { is_expected.to match_array([agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1]) }
+      it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1) }
     end
 
     context "agent from same service but different orga" do
@@ -138,17 +161,17 @@ RSpec.describe Motif, type: :model do
   describe "visible_and_notified?" do
     it "vrai quand visible_type == visible_and_notified" do
       motif = build(:motif, :visible_and_notified)
-      expect(motif.visible_and_notified?).to eq(true)
+      expect(motif.visible_and_notified?).to be(true)
     end
 
     it "faux quand visible_type == visible_and_not_notified" do
       motif = build(:motif, :visible_and_not_notified)
-      expect(motif.visible_and_notified?).to eq(false)
+      expect(motif.visible_and_notified?).to be(false)
     end
 
     it "faux quand visible_type == invisible" do
       motif = build(:motif, :invisible)
-      expect(motif.visible_and_notified?).to eq(false)
+      expect(motif.visible_and_notified?).to be(false)
     end
   end
 
@@ -225,12 +248,12 @@ RSpec.describe Motif, type: :model do
 
   describe "#requires_lieu?" do
     it "returns false if the location_type doesn't require a lieu" do
-      expect(build(:motif, :by_phone).requires_lieu?).to eq(false)
-      expect(build(:motif, :at_home).requires_lieu?).to eq(false)
+      expect(build(:motif, :by_phone).requires_lieu?).to be(false)
+      expect(build(:motif, :at_home).requires_lieu?).to be(false)
     end
 
     it "returns true if the location_type requires a lieu" do
-      expect(build(:motif, :at_public_office).requires_lieu?).to eq(true)
+      expect(build(:motif, :at_public_office).requires_lieu?).to be(true)
     end
   end
 
@@ -259,7 +282,7 @@ RSpec.describe Motif, type: :model do
         motif = create(:motif, collectif: false).tap { create(:rdv, motif: _1) }
         motif.update(collectif: true)
         expect(motif.errors[:collectif]).to include("ne peut être modifié car le motif est utilisé pour un RDV")
-        expect(motif.reload.collectif).to eq(false)
+        expect(motif.reload.collectif).to be(false)
       end
     end
   end

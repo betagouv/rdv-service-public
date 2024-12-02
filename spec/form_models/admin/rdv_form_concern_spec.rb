@@ -43,7 +43,7 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is not valid" do
-        expect(form.valid?).to eq false
+        expect(form.valid?).to be false
         expect(form.errors[:base]).to include "not cool"
       end
     end
@@ -58,7 +58,7 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is valid" do
-        expect(form.valid?).to eq true
+        expect(form.valid?).to be true
       end
     end
 
@@ -78,13 +78,13 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is not valid" do
-        expect(form.valid?).to eq false
+        expect(form.valid?).to be false
         expect(form.errors).not_to be_empty
       end
 
       it "includes warnings" do
         form.valid?
-        expect(form.errors_are_all_benign?).to eq true
+        expect(form.errors_are_all_benign?).to be true
         expect(form.benign_errors).not_to be_empty
         expect(form.benign_errors).to include("alerte RDV proche !")
       end
@@ -114,15 +114,15 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is not valid" do
-        expect(form.valid?).to eq false
+        expect(form.valid?).to be false
         expect(form.errors).not_to be_empty
       end
 
       it "includes warnings" do
         form.valid?
-        expect(form.errors_are_all_benign?).to eq true
+        expect(form.errors_are_all_benign?).to be true
         expect(form.benign_errors).not_to be_empty
-        expect(form.benign_errors).to match_array(["alerte RDV Giono !", "alerte RDV Maceo !"])
+        expect(form.benign_errors).to contain_exactly("alerte RDV Giono !", "alerte RDV Maceo !")
       end
     end
 
@@ -142,13 +142,13 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is not valid" do
-        expect(form.valid?).to eq false
+        expect(form.valid?).to be false
         expect(form.errors).not_to be_empty
       end
 
       it "includes warnings" do
         form.valid?
-        expect(form.errors_are_all_benign?).to eq true
+        expect(form.errors_are_all_benign?).to be true
         expect(form.benign_errors).not_to be_empty
         expect(form.benign_errors).to include("alerte RDV se chevauchant !")
       end

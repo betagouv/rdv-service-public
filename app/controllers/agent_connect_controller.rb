@@ -3,7 +3,11 @@ class AgentConnectController < ApplicationController
   before_action :log_params_to_sentry
 
   def auth
-    auth_client = AgentConnectOpenIdClient::Auth.new(login_hint: params[:login_hint])
+    auth_client = AgentConnectOpenIdClient::Auth.new(
+      login_hint: params[:login_hint],
+      client_id: current_domain.agent_connect_client_id,
+      client_secret: current_domain.agent_connect_client_secret
+    )
     session[:agent_connect_state] = auth_client.state
     session[:nonce] = auth_client.nonce
 
@@ -15,7 +19,9 @@ class AgentConnectController < ApplicationController
       session_state: session.delete(:agent_connect_state),
       params_state: params[:state],
       callback_url: agent_connect_callback_url,
-      nonce: session.delete(:nonce)
+      nonce: session.delete(:nonce),
+      client_id: current_domain.agent_connect_client_id,
+      client_secret: current_domain.agent_connect_client_secret
     )
 
     unless callback_client.fetch_user_info_from_code!(params[:code])
@@ -40,11 +46,11 @@ class AgentConnectController < ApplicationController
 
       bypass_sign_in agent, scope: :agent
       session[:agent_connect_id_token] = callback_client.id_token_for_logout
-      redirect_to root_path
+      redirect_to after_sign_in_path_for(agent)
     else
       # On pourrait améliorer le cas d'erreur décrit dans https://github.com/betagouv/rdv-service-public/issues/4360
       flash[:error] = "Il n'y a pas de compte agent pour l'adresse mail #{callback_client.user_email}.<br />" \
-                      "Vous devez utiliser Agent Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />" \
+                      "Vous devez utiliser ProConnect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />" \
                       "Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste."
       redirect_to new_agent_session_path
     end

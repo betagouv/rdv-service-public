@@ -22,7 +22,10 @@ module CanHaveRdvWizardContext
     end
 
     @rdv_wizard = rdv_wizard
-  rescue StandardError => e
+  rescue ArgumentError => e
+    # on a des erreurs sur la recherche de créneau et j’aimerais avoir plus de contexte pour comprendre ce qui se passe
+    # https://sentry.incubateur.net/organizations/betagouv/issues/108784
+    Sentry.set_context(:rdv_wizard_context, { user_return_to: session[:user_return_to] })
     Sentry.capture_exception(e)
   end
 end

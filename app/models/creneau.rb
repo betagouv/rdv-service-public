@@ -6,6 +6,17 @@ class Creneau
 
   delegate :full_name, to: :lieu, prefix: true, allow_nil: true
 
+  def build_rdv
+    Rdv.new(
+      agents: [agent],
+      duration_in_min: duration_in_min,
+      starts_at: starts_at,
+      organisation: motif.organisation,
+      motif: motif,
+      lieu: lieu
+    )
+  end
+
   def ends_at
     starts_at + duration_in_min.minutes
   end
@@ -29,12 +40,5 @@ class Creneau
 
   def respects_max_public_booking_delay?
     starts_at <= (Time.zone.now + motif.max_public_booking_delay.seconds)
-  end
-
-  # Return the first event in the passed array that overlaps with the receiver
-  def last_overlapping_event_ends_at(events)
-    events.select do |event|
-      (starts_at...ends_at).overlaps?(event.starts_at...event.ends_at) # `a...b` is the “[a, b) range” (a included, b excluded)
-    end.map(&:ends_at).max
   end
 end

@@ -17,13 +17,20 @@ Rails.application.routes.draw do
     get "omniauth/github/callback" => "omniauth_callbacks#github"
   end
 
+  ## OAUTH PROVIDER ##
+  use_doorkeeper do
+    skip_controllers :applications # Ces routes permettent de configurer les applications OAuth autorisées
+    # Par soucis de sécurité, on préfère les fermer, et permettre la configuration de ces applications uniquement par des devs en console.
+    # voir scripts/create_oauth_application.rb
+  end
+
   ## ADMIN ##
   get "connexion_super_admins", to: "welcome#super_admin"
 
   delete "super_admins/sign_out" => "super_admins/sessions#destroy"
 
   namespace :super_admins do
-    resources :agents do
+    resources :agents, except: [:destroy] do
       get "sign_in_as", on: :member
       post :invite, on: :member
       resources :migrations, only: %i[new create]
@@ -92,6 +99,8 @@ Rails.application.routes.draw do
   }
 
   devise_scope :agent do
+    get "agents/sign_out", to: "agents/sessions#destroy" # Utilisé par les clients Oauth pour se déconnecter
+
     get "agents/edit" => "agents/registrations#edit", as: "edit_agent_registration"
     put "agents" => "agents/registrations#update", as: "agent_registration"
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
@@ -121,6 +130,13 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
+      namespace :api, defaults: { format: :json } do
+        namespace :agenda do
+          resources :plage_ouvertures, only: [:index]
+          resources :rdvs, only: [:index]
+          resources :absences, only: [:index]
+        end
+      end
       resources :territories, only: %i[edit update show] do
         scope module: "territories" do
           resources :agent_roles, only: %i[update create destroy]
@@ -139,7 +155,12 @@ Rails.application.routes.draw do
             end
           end
           resources :teams, except: :show
-          resources :motifs, only: %i[index destroy]
+          resources :motifs, only: %i[index new create destroy] do
+            member do
+              post :archive
+              post :unarchive
+            end
+          end
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]
@@ -158,20 +179,22 @@ Rails.application.routes.draw do
         end
       end
 
-      namespace :agenda do
-        resources :plage_ouvertures, only: [:index]
-        resources :rdvs, only: [:index]
-        resources :absences, only: [:index]
-      end
-
       resources :organisations do
+        get "creneaux_search" => "creneaux_search#index"
+        get "creneaux_search/selection_creneaux" => "creneaux_search#selection_creneaux"
+        # Lien très utilisé pour la duplication de RDV
+        # il permet de reprendre un RDV, éventuellement pour un autre motif
+        # https://zammad10.ethibox.fr/#ticket/zoom/3044
+        # On le garde pour la rétrocompatibilité après le renommage de la route.
+        get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
+        get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
+
         resources :plage_ouvertures, except: %i[index new]
-        resources :agent_searches, only: :index, module: "creneaux"
-        resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs do
           member do
-            get :duplicate
+            post :archive
+            post :unarchive
           end
         end
         resources :rdvs_collectifs, only: %i[index new create edit update] do
@@ -216,11 +239,9 @@ Rails.application.routes.draw do
         resources :agent_intervenants, only: %i[update]
         resources :agents, except: %i[show] do
           resources :absences, only: %i[index new]
-          resources :plage_ouvertures, only: %i[index new]
-          resources :stats, only: :index do
+          resources :plage_ouvertures, only: %i[index new] do
             collection do
-              get :rdvs
-              get :users
+              get :calendar
             end
           end
         end
@@ -255,10 +276,14 @@ Rails.application.routes.draw do
     get "confirmation"
   end
 
-  %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines health_check].each do |page_name|
+  %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
   get "/.well-known/microsoft-identity-association" => "static_pages#microsoft_domain_verification", format: :json
+
+  get "health_check" => "health#db_connection"
+  get "health/jobs_queues" => "health#jobs_queues"
+  get "health/jobs_scheduled" => "health#jobs_scheduled"
 
   get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Service-Public", status: 302)
 
@@ -277,7 +302,6 @@ Rails.application.routes.draw do
     "users/rdvs/#{path_params[:id]}#{query_params}"
   end), as: "rdv_short"
 
-  # TODO: remplacer `prendre_rdv` par le root_path
   get "prdv", to: (redirect do |_path_params, req|
     query_params = format_redirect_params(req.params)
     "prendre_rdv#{query_params}"
@@ -310,25 +334,21 @@ Rails.application.routes.draw do
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
 
-  resources :lieux, only: %i[index show]
-  root "search#search_rdv"
+  root "search#home"
 
-  # TODO: remplacer `prendre_rdv` par le root_path
   get "/prendre_rdv", to: "search#search_rdv"
 
-  # rubocop:disable Style/FormatStringToken
   # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")
   # old agenda rule was bookmarked by some agents
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
-  # rubocop:enable Style/FormatStringToken
-
-  post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :sendinblue
+  post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :brevo # TODO: supprimer après la transition
+  post "/inbound_emails/brevo", controller: :inbound_emails, action: :brevo
 
   # This route redirects invitations to rdv-insertion so that rdv-insertion
   # can use rdvs domain name in their emails
   get "/i/r/:uuid", to: redirect { |path_params, _|
-    "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]}"
+    "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]&.strip}"
   }
 
   if Rails.env.development?

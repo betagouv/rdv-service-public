@@ -11,14 +11,13 @@ class Rdv < ApplicationRecord
   include Rdv::Updatable
   include Rdv::UsingWaitingRoom
   include Rdv::HardcodedAttributeNamesConcern
-  include IcalHelpers::Ics
-  include Payloads::Rdv
+  include IcsPayloads::Rdv
   include Ants::AppointmentSerializerAndListener
   include CreatedByConcern
 
   # Attributes
   auto_strip_attributes :name
-  enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  enum :status, { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
   # Commentaire pour les status explications
   # unknown : "A renseigner" ou "A venir" (si le rdv est passé ou pas)
   # seen : Présent au rdv
@@ -62,7 +61,7 @@ class Rdv < ApplicationRecord
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
   validate :lieu_is_not_disabled_if_needed
-  validate :starts_at_is_plausible
+  validates :starts_at, realistic_date: true
   validate :duration_is_plausible
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
@@ -206,15 +205,10 @@ class Rdv < ApplicationRecord
   end
 
   def creneaux_available(date_range)
-    date_range = Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
+    date_range = CreneauxSearch::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
     return [] if date_range.blank?
 
-    SlotBuilder.available_slots(motif, lieu, date_range)
-  end
-
-  def user_for_home_rdv
-    responsibles = users.loaded? ? users.select(&:responsible_id) : users.where.not(responsible_id: [nil])
-    [responsibles, users].flatten.select(&:address).first || users.first
+    CreneauxSearch::Calculator.available_slots(motif, lieu, date_range)
   end
 
   # Ces plages d'ouvertures sont utilisé pour afficher des infos
@@ -263,7 +257,7 @@ class Rdv < ApplicationRecord
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
   def self.search_for(organisations, options)
-    rdvs = joins(:organisation).where(organisations: organisations)
+    rdvs = joins(:organisation).where(organisation: organisations)
     options = options.with_indifferent_access.select { |_, value| Array(value).compact_blank.present? }
 
     rdvs = rdvs.joins(:lieu).where(lieux: { id: options[:lieu_ids] }) if options[:lieu_ids]
@@ -386,13 +380,6 @@ class Rdv < ApplicationRecord
     else
       unknown!
     end
-  end
-
-  def starts_at_is_plausible
-    return unless will_save_change_to_attribute?("starts_at")
-    return unless starts_at > Time.zone.now + 2.years
-
-    errors.add(:starts_at, :must_be_within_two_years)
   end
 
   def duration_is_plausible

@@ -12,7 +12,7 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
     it "creates a user" do
       service = described_class.new(omniauth_info)
       expect { service.perform }.to change(User, :count).by(1)
-      expect(service.new_user?).to eq(true)
+      expect(service.new_user?).to be(true)
       user = service.user.reload
       expect(user.email).to eq("jeanne@longo.fr")
       expect(user.first_name).to eq("jeanne")
@@ -39,7 +39,7 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
     it "finds and return the user without updating its info" do
       service = described_class.new(omniauth_info)
       expect { service.perform }.not_to change(User, :count)
-      expect(service.new_user?).to eq(false)
+      expect(service.new_user?).to be(false)
       user = service.user.reload
       expect(user.email).to eq("jeanne@longo.fr")
       expect(user.first_name).to eq("Jeannine")
@@ -64,7 +64,7 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
     it "updates the existing identity fields" do
       service = described_class.new(omniauth_info)
       expect { service.perform }.not_to change(User, :count)
-      expect(service.new_user?).to eq(false)
+      expect(service.new_user?).to be(false)
       user = service.user.reload
       expect(user.email).to eq("jeanne@longo.fr")
       expect(user.first_name).to eq("jeanne")
@@ -87,7 +87,7 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
     it "fills the missing fields" do
       service = described_class.new(omniauth_info)
       expect { service.perform }.not_to change(User, :count)
-      expect(service.new_user?).to eq(false)
+      expect(service.new_user?).to be(false)
       user = service.user.reload
       expect(user.birth_date).to eq(Date.parse("1971-06-20"))
       expect(user.franceconnect_openid_sub).to eq("hvdiuds4357")

@@ -3,11 +3,8 @@ class PlageOuverture < ApplicationRecord
   has_paper_trail
   include RecurrenceConcern
   include WebhookDeliverable
-  include IcalHelpers::Ics
-  include IcalHelpers::Rrule
-  include Payloads::PlageOuverture
+  include IcsPayloads::PlageOuverture
   include Expiration
-  include EnsuresRealisticDate
 
   include TextSearch
   def self.search_options
@@ -18,7 +15,7 @@ class PlageOuverture < ApplicationRecord
           id: "D",
         },
       ignoring: :accents,
-      using: { tsearch: { prefix: true, any_word: true } },
+      using: { tsearch: { prefix: true } },
     }
   end
 
@@ -39,9 +36,11 @@ class PlageOuverture < ApplicationRecord
   validate :end_after_start
   validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
-  validates :motifs, :title, presence: true
+  validates :motifs, presence: true
   validate :warn_overlapping_plage_ouvertures
   validate :warn_overflow_motifs_duration
+  validates :first_day, realistic_date: true
+  validates :recurrence_ends_at, realistic_date: true
 
   # Scopes
   scope :in_range, lambda { |range|
@@ -62,8 +61,12 @@ class PlageOuverture < ApplicationRecord
 
   ## -
 
+  def title_with_default
+    title.presence || "Plage d'ouverture ##{id}"
+  end
+
   def ical_uid
-    "plage_ouverture_#{id}@#{IcalHelpers::ICS_UID_SUFFIX}"
+    "plage_ouverture_#{id}@#{IcalFormatters::Ics::ICS_UID_SUFFIX}"
   end
 
   def available_motifs

@@ -5,9 +5,9 @@ module SlotsHelper
 
   def search_rdv_slot_url_with(user)
     if user.present?
-      admin_organisation_agent_searches_path(current_organisation, user_ids: [user.id])
+      admin_organisation_creneaux_search_path(current_organisation, user_ids: [user.id])
     else
-      admin_organisation_agent_searches_path(current_organisation)
+      admin_organisation_creneaux_search_path(current_organisation)
     end
   end
 end

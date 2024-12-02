@@ -55,6 +55,13 @@ class CalendarRdvSolidarites {
   }
 
   initFullCalendar = () => {
+    var hiddenDays = []
+    if (this.data.displaySaturdays !== "true") {
+      hiddenDays.push(6);
+    }
+    if (this.data.displaySundays !== "true") {
+      hiddenDays.push(0);
+    }
     return new Calendar(this.calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
@@ -65,7 +72,7 @@ class CalendarRdvSolidarites {
       viewSkeletonRender: function (info) {
         localStorage.setItem("calendarDefaultView", info.view.type);
       },
-      hiddenDays: this.data.displaySaturdays === "true" ? [0] : [6, 0],
+      hiddenDays: hiddenDays,
       height: "auto",
       selectable: true,
       select: this.selectEvent,
@@ -81,7 +88,7 @@ class CalendarRdvSolidarites {
       },
       businessHours: {
         // days of week. an array of zero-based day of week integers (0=Sunday)
-        daysOfWeek: [1, 2, 3, 4, 5, 6],
+        daysOfWeek: [1, 2, 3, 4, 5, 6, 0],
         startTime: '07:00',
         endTime: '19:00',
       },
@@ -169,6 +176,9 @@ class CalendarRdvSolidarites {
     if (extendedProps.duration <= 30) {
       $el.addClass("fc-event-small");
     };
+    if (extendedProps.unauthorizedRdvExplanation) {
+      $el.addClass("fc-unauthorized-rdv");
+    };
 
     if (this.data.selectedEventId && info.event.id == this.data.selectedEventId)
       $el.addClass("selected");
@@ -224,6 +234,9 @@ class CalendarRdvSolidarites {
       if (extendedProps.readableStatus) {
         title += `<br><strong>Statut:</strong> ${extendedProps.readableStatus}`;
       }
+      if (extendedProps.unauthorizedRdvExplanation) {
+        title += `<br>${extendedProps.unauthorizedRdvExplanation}`;
+      }
     }
 
     $el.attr("title", title);
@@ -237,7 +250,12 @@ class CalendarRdvSolidarites {
     return now >= activeStart && now <= activeEnd;
   }
 
-  handleAjaxError = () => {
+  handleAjaxError = (response) => {
+    if (response.xhr.status === 401) {
+      window.location = this.calendarEl.attributes["data-sign-in-path"].value;
+      return;
+    }
+
     alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr.`);
   }
 }

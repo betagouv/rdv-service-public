@@ -1,12 +1,8 @@
 RSpec.describe "ANTS API: availableTimeSlots" do
   include_context "rdv_mairie_api_authentication"
 
-  let(:lieu1) do
-    create(:lieu, organisation: organisation)
-  end
-  let(:lieu2) do
-    create(:lieu, organisation: organisation2)
-  end
+  let(:lieu1) { create(:lieu, organisation: organisation) }
+  let(:lieu2) { create(:lieu, organisation: organisation2) }
   let(:mairies_territory) { create(:territory, :mairies) }
   let(:organisation) { create(:organisation, territory: mairies_territory) }
   let(:organisation2) { create(:organisation, territory: mairies_territory) }
@@ -40,7 +36,7 @@ RSpec.describe "ANTS API: availableTimeSlots" do
     # sans crochets donc on encode la querystring d'une manière similaire ici pour reproduire ce comportement
     get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=CNI"
 
-    expect(JSON.parse(response.body)).to eq(
+    expect(response.parsed_body).to eq(
       {
         lieu1.id.to_s => [
           {
@@ -80,7 +76,7 @@ RSpec.describe "ANTS API: availableTimeSlots" do
     it "returns slots with a duration matching the number of participants" do
       get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=#{participants_count}&reason=CNI"
 
-      expect(JSON.parse(response.body)).to eq(
+      expect(response.parsed_body).to eq(
         {
           lieu1.id.to_s => [
             {
@@ -119,9 +115,41 @@ RSpec.describe "ANTS API: availableTimeSlots" do
     end
   end
 
+  context "missing meeting_point_ids param" do
+    it "returns a bad request" do
+      expect do
+        get "/api/ants/availableTimeSlots?start_date=2022-11-20&end_date=2022-11-24&documents_number=1&reason=CNI"
+      end.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "missing start_date param" do
+    it "returns a bad request" do
+      expect do
+        get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&end_date=2022-11-24&documents_number=1&reason=CNI"
+      end.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "missing end_date param" do
+    it "returns a bad request" do
+      expect do
+        get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&start_date=2022-11-24&documents_number=1&reason=CNI"
+      end.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "missing reason param" do
+    it "returns a bad request" do
+      expect do
+        get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&start_date=2022-11-24&end_date=2022-11-28&documents_number=1"
+      end.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
   context "when a 500 occurs" do
     before do
-      allow(Users::CreneauxSearch).to receive(:new).and_raise(NoMethodError)
+      allow(CreneauxSearch::ForUser).to receive(:new).and_raise(NoMethodError)
     end
 
     it "adds crumb with request details to Sentry" do

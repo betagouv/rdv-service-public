@@ -11,7 +11,6 @@ class CustomDeviseMailer < Devise::Mailer
     @user_params = opts[:user_params] || {}
     if record.is_a?(Agent) && record.conseiller_numerique? && record.invited_by.nil?
       opts[:subject] = "📧 Invitation sur RDV Aide Numérique"
-      opts[:cc] = record.cnfs_secondary_email if record.cnfs_secondary_email.present?
       devise_mail(record, :invitation_instructions_cnfs, opts)
     else
       opts[:reply_to] = record.invited_by&.email

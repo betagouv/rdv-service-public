@@ -36,7 +36,7 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
     end
 
     it "shows the list of lieux before the list of rdvs" do
-      visit admin_organisation_agent_searches_path(organisation)
+      visit admin_organisation_creneaux_search_path(organisation)
 
       select "Atelier participatif", from: "Motif"
       click_button "Afficher les créneaux"

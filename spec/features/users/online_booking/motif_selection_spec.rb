@@ -10,9 +10,9 @@ RSpec.describe "Motif selection" do
     let(:organisation) { create(:organisation) }
     let(:autre_organisation) { create(:organisation, territory: organisation.territory) }
 
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-    let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [autre_motif], lieu: autre_lieu, organisation: autre_organisation) }
-    let!(:encore_autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [encore_autre_motif], lieu: encore_autre_lieu, organisation: autre_organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:autre_plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [autre_motif], lieu: autre_lieu, organisation: autre_organisation) }
+    let!(:encore_autre_plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [encore_autre_motif], lieu: encore_autre_lieu, organisation: autre_organisation) }
 
     let(:lieu) { create(:lieu, organisation: organisation, name: "Premier lieu") }
     let(:autre_lieu) { create(:lieu, organisation: autre_organisation, name: "Deuxième lieu") }
@@ -38,7 +38,7 @@ RSpec.describe "Motif selection" do
     let(:service) { create(:service) }
     let(:lieu) { create(:lieu, organisation: organisation, name: "MDS Centre") }
     let!(:motif) { create(:motif, name: "premier contact", organisation: organisation, service: service) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
 
     it "le choix de motif est quand même présenté et on peut revenir depuis l’étape suivante" do
       visit prendre_rdv_path(service_id: service.id, departement: organisation.territory.departement_number)

@@ -30,7 +30,7 @@ RSpec.describe "Agent can create user" do
       click_button "Créer"
       expect(page).not_to have_content("déjà utilisé")
       expect_page_title("Marco LEBRETON")
-      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to eq(true)
+      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to be(true)
     end
   end
 
@@ -71,7 +71,7 @@ RSpec.describe "Agent can create user" do
       )
       click_button("Confirmer en ignorant les avertissements")
       expect_page_title("Marco LEBRETON")
-      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to eq(true)
+      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to be(true)
     end
   end
 

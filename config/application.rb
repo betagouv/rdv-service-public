@@ -35,8 +35,8 @@ module Lapin
     config.i18n.available_locales = %i[fr]
     config.i18n.default_locale = :fr
     config.i18n.raise_on_missing_translations = true
-    config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
-    config.action_mailer.preview_path = Rails.root.join("spec/mailers/previews")
+    config.i18n.load_path += Rails.root.glob("config/locales/**/*.{rb,yml}")
+    config.action_mailer.preview_paths = [Rails.root.join("spec/mailers/previews")]
     config.active_model.i18n_customize_full_message = true
 
     config.x.redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379" }
@@ -74,5 +74,13 @@ module Lapin
     config.x.rack_attack.limit = 50
 
     config.exceptions_app = routes # Permet les pages d'erreur custom
+
+    config.active_record.async_query_executor = :global_thread_pool
+    config.active_record.global_executor_concurrency = 4 # update the pool size in database.yml if you change this
+
+    config.to_prepare do
+      Doorkeeper::AuthorizationsController.layout "application_agent_config" # Lors de l'authorisation d'une application oauth
+      Doorkeeper::AuthorizedApplicationsController.layout "application_agent_config"
+    end
   end
 end

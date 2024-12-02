@@ -12,14 +12,14 @@ div id="creneaux-lieu-#{lieu&.id}"
       .row
         - date_range.each do |date|
           .col-6.col-md-3.col-lg
-            p.text-center
+            p.rdv-text-align-center
               strong= l(date, format: "%A")
               br
               = l(date, format: "%d %b")
             - creneaux_for_date = creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
 
             - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_public_booking_delay?
-              - creneaux_for_date.each do |date, creneaux|
+              - creneaux_for_date.each_value do |creneaux|
                 - creneaux.sort.each do |creneau|
                   = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at), "data-turbolinks": false, class: "btn btn-light mr-1 mb-1 w-100", aria: { label: "Choisir le créneau de #{l(creneau.starts_at, format: '%H:%M')}"} do
                     = l(creneau.starts_at, format: "%H:%M")
@@ -27,11 +27,11 @@ div id="creneaux-lieu-#{lieu&.id}"
                       br
                       small= creneau.agent.short_name
             - elsif date >= (Time.now + max_public_booking_delay.seconds).to_date
-              p.text-center.text-muted
+              p.rdv-text-align-center.rdv-color-text-mention-grey
                 | Date fermée à la reservation
             - elsif creneaux.any?
-              p.text-center
-                i.fa.fa-minus.text-muted
+              p.rdv-text-align-center
+                i.fa.fa-minus.rdv-color-text-mention-grey
 
         - if next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center

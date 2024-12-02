@@ -1,0 +1,34 @@
+- if @search_result.present?
+  .card
+    .card-header
+     .d-flex.justify-content-between.flex-wrap
+       span
+         h3= t(".available_slots_title_html", motif: "#{@form.motif.name.downcase} (#{@form.motif.service.short_name})")
+         - if @form.motif.requires_lieu?
+           = t(".place_informations_html", place_name: @search_result.lieu.name, place_address: @search_result.lieu.address)
+         - else
+           = t(@form.motif.location_type)
+       span
+         / lien très utilisé pour la duplication de RDV
+         / il permet de reprendre un RDV, éventuellement pour un autre motif
+         / https://zammad10.ethibox.fr/#ticket/zoom/3044
+         = link_to t(".place_index"), admin_organisation_creneaux_search_path(current_organisation, creneaux_search_params(@form)), class: "btn btn-outline-primary m-2"
+
+    - if @form.motif.individuel?
+      .card-body
+        = render "/admin/creneaux_search/slots", \
+          lieu: @search_result.lieu, \
+          creneaux: @search_result.creneaux, \
+          form: @form, \
+          next_availability: @search_result.next_availability
+
+  - if  @form.motif.collectif?
+    .row.justify-content-center.pb-3
+      .col-md-12.col-lg-8
+        - @search_result.creneaux.each do |search_result|
+          = render "admin/rdvs_collectifs/rdv", rdv: search_result
+
+  = render "admin/creneaux_search/prescription_cta"
+
+- else
+  = render partial: "admin/creneaux_search/no_slot_available"

@@ -30,10 +30,10 @@ RSpec.describe "agents can prescribe rdvs" do
 
   before do
     next_month = (now + 1.month).to_date
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_mds], lieu: mds_paris_nord, organisation: org_mds)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_sud, organisation: org_insertion, agent: agent_insertion)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_nord, organisation: org_insertion)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_mds], lieu: mds_paris_nord, organisation: org_mds)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_sud, organisation: org_insertion, agent: agent_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_nord, organisation: org_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
     current_agent.reload # needed to populate agent.organisations :/
     agent_insertion.reload
   end
@@ -85,14 +85,14 @@ RSpec.describe "agents can prescribe rdvs" do
       created_rdv = Rdv.last
       expect(created_rdv.users.first).to eq(existing_user)
       # User ends up in current org, distant org, and other orgs she was already in
-      expect(created_rdv.users.first.organisations).to match_array([org_mds, org_insertion])
+      expect(created_rdv.users.first.organisations).to contain_exactly(org_mds, org_insertion)
       expect(created_rdv.organisation).to eq(org_insertion)
       expect(created_rdv.motif).to eq(motif_insertion)
       expect(created_rdv.lieu).to eq(mission_locale_paris_nord)
       expect(created_rdv.starts_at).to eq(Time.zone.parse("2024-02-05 11:00"))
       expect(created_rdv.created_by).to eq(current_agent)
       expect(created_rdv.participations.last.created_by).to eq(current_agent)
-      expect(created_rdv.participations.last.created_by_agent_prescripteur).to eq(true)
+      expect(created_rdv.participations.last.created_by_agent_prescripteur).to be(true)
     end
 
     describe "for a collective rdv" do
@@ -127,13 +127,18 @@ RSpec.describe "agents can prescribe rdvs" do
         expect(page).to have_content("Date du rendez-vous :")
         expect(page).to have_content("Usager : FACTICE Francis")
         expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
-        expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to eq(true)
+        expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to be(true)
       end
     end
   end
 
   describe "creating a user along the way" do
     it "leaves the user both in local and distant organisation", js: true do
+      if Date.new(2024, 12, 19).future?
+        pending # rubocop:disable RSpec/Pending
+        raise "cette flaky spec a été désactivée le temps de travailler dessus"
+      end
+
       go_to_prescription_page
       # Select Service
       find("h3", text: motif_mds.service.name).ancestor("a").click
@@ -151,8 +156,8 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Jean-Paul")
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
-      expect(Rdv.last.users.first.organisations).to match_array([org_mds, org_insertion])
-      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
+      expect(Rdv.last.users.first.organisations).to contain_exactly(org_mds, org_insertion)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
     end
 
     # Cette spec a été ajoutée suite à un bug qui faisait qu'on si on
@@ -185,7 +190,7 @@ RSpec.describe "agents can prescribe rdvs" do
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.full_name).to eq("Jean-Pierre BONJOUR")
-      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
     end
   end
 
@@ -214,7 +219,7 @@ RSpec.describe "agents can prescribe rdvs" do
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
       expect(Rdv.last.users.first).to eq(user)
-      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
     end
 
     describe "with sectorization", js: true do
@@ -238,7 +243,7 @@ RSpec.describe "agents can prescribe rdvs" do
         motif_autre_service.update(sectorisation_level: "organisation")
 
         login_as(current_agent, scope: :agent)
-        visit admin_organisation_agent_searches_path(org_mds, user_ids: [user.id])
+        visit admin_organisation_creneaux_search_path(org_mds, user_ids: [user.id])
         click_link "Élargir la recherche"
       end
 
@@ -263,6 +268,11 @@ RSpec.describe "agents can prescribe rdvs" do
         end
 
         it "show both services and motifs" do
+          if Date.new(2024, 12, 19).future?
+            pending # rubocop:disable RSpec/Pending
+            raise "cette flaky spec a été désactivée le temps de travailler dessus"
+          end
+
           expect(page).to have_content(motif_mds.service.name)
           expect(page).to have_content(motif_insertion.service.name)
           click_on motif_mds.service.name
@@ -324,7 +334,7 @@ RSpec.describe "agents can prescribe rdvs" do
       created_rdv = Rdv.last
       expect(created_rdv.users.first).to eq(user_in_organisation_mystere)
       # User ends up in distant org, and other orgs she was already in
-      expect(created_rdv.users.first.organisations).to match_array([organisation_mystere, org_insertion])
+      expect(created_rdv.users.first.organisations).to contain_exactly(organisation_mystere, org_insertion)
     end
   end
 

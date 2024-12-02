@@ -1,7 +1,7 @@
 class Admin::Territories::AgentRolesController < Admin::Territories::BaseController
   def update
     agent_role = AgentRole.find(params[:id])
-    authorize_agent(agent_role)
+    authorize(agent_role, policy_class: Agent::AgentRolePolicy)
     if agent_role.update(agent_role_params)
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
     else
@@ -13,7 +13,7 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
 
   def create
     agent_role = AgentRole.new(agent_role_params)
-    authorize_agent(agent_role)
+    authorize(agent_role, policy_class: Agent::AgentRolePolicy)
     if agent_role.save
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
     else
@@ -25,7 +25,7 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
 
   def destroy
     agent_role = AgentRole.find(params[:id])
-    authorize_agent(agent_role)
+    authorize(agent_role, policy_class: Agent::AgentRolePolicy)
 
     agent = Agent.find(agent_role.agent_id)
     organisation = Organisation.find(agent_role.organisation_id)

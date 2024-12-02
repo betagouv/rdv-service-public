@@ -66,5 +66,13 @@ RSpec.describe SmsJob do
       expect(sentry_events.last.exception.values.last.type).to eq("RuntimeError")
       expect(sentry_events.last.exception.values.last.value).to eq("erreur inattendue (RuntimeError)")
     end
+
+    it "does not warn sentry if RDV was deleted" do
+      rdv = create(:rdv)
+      described_class.perform_later(receipt_params: { rdv: rdv })
+      rdv.destroy!
+      expect { perform_enqueued_jobs }.to change(enqueued_jobs, :size).by(-1)
+      expect(sentry_events).to be_empty
+    end
   end
 end

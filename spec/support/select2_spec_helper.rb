@@ -3,7 +3,7 @@ module Select2SpecHelper
     find(".collapse-add-user-selection .select2-selection").click
     find(".select2-search__field").send_keys(user.last_name[0..2])
     find(".select2-results li.select2-results__option li", text: user.reverse_full_name).click
-    expect(page).to have_selector("a[title='Modifier']")
+    expect(page).to have_content(user.reverse_full_name)
   end
 
   def add_user(user)

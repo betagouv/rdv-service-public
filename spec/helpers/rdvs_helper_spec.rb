@@ -63,7 +63,6 @@ RSpec.describe RdvsHelper do
       travel_to(now)
       rdv = build(:rdv, starts_at: now + 3.hours, duration_in_min: 30)
       expect(rdv_title(rdv)).to eq("Aujourd’hui à 15h54 (durée : 30 minutes)")
-      travel_back
     end
   end
 
@@ -208,7 +207,7 @@ RSpec.describe RdvsHelper do
       let(:params) { { start: "invalid_date", end: "invalid_date" } }
 
       it "displays nothing" do
-        expect(dates_interval).to eq(nil)
+        expect(dates_interval).to be_nil
       end
     end
   end

@@ -20,7 +20,7 @@ main.container
                         class: "select2-input",
                         data: { \
                                 width: "auto", \
-                                "select-options": { ajax: { url: search_agents_users_path(organisation_id: current_organisation.id, exclude_ids: @rdv_wizard.query_params[:user_ids]), dataType: "json", delay: 250 } }, \
+                                "select2-config": { ajax: { url: search_agents_users_path(organisation_id: current_organisation.id, exclude_ids: @rdv_wizard.query_params[:user_ids]), dataType: "json", delay: 250 } }, \
                         }
               span.small.text-muted
                 | L'usager n'existe pas ?&nbsp;

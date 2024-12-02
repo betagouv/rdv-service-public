@@ -18,6 +18,11 @@ class Agents::AbsenceMailer < ApplicationMailer
   end
 
   def absence_destroyed
+    # On passe l'absence au job sous forme sérialisée puisqu'elle n'existe plus en base.
+    if @absence.is_a?(Hash)
+      @absence = Absence.deserialize_for_active_job(@absence).tap(&:readonly!)
+    end
+
     self.ics_payload = @absence.payload(:destroy)
     mail(subject: t("agents.absence_mailer.absence_destroyed.title", domain_name: domain.name, title: @absence.title))
   end

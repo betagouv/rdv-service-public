@@ -1,7 +1,5 @@
 Closes #XXXX
 
-Review app : https://demo-rdv-solidarites-prXXXX.osc-secnum-fr1.scalingo.io/
-
 # Contexte
 
 Décrire le pourquoi des modifications

@@ -1,6 +1,4 @@
 class ImportZoneRowsService < BaseService
-  include DataUtils
-
   REQUIRED_FIELDS = {
     Zone::LEVEL_CITY => %w[sector_id city_name city_code],
     Zone::LEVEL_STREET => %w[sector_id city_name city_code street_name street_code],
@@ -35,7 +33,7 @@ class ImportZoneRowsService < BaseService
   def valid?
     return @valid unless @valid.nil? # avoid computing multiple times
 
-    @valid = \
+    @valid =
       validate_rows_present? &&
       validate_columns? &&
       validate_inner_conflicts_cities? &&
@@ -59,7 +57,7 @@ class ImportZoneRowsService < BaseService
   end
 
   def validate_inner_conflicts_cities?
-    conflicts = value_counts(rows_cities.pluck("city_code")).filter { |_city_code, count| count > 1 }
+    conflicts = rows_cities.pluck("city_code").tally.filter { |_city_code, count| count > 1 }
     return true if conflicts.empty?
 
     conflicts.each do |city_code, count|
@@ -69,7 +67,7 @@ class ImportZoneRowsService < BaseService
   end
 
   def validate_inner_conflicts_streets?
-    conflicts = value_counts(rows_streets.pluck("street_code")).filter { |_street_ban_id, count| count > 1 }
+    conflicts = rows_streets.pluck("street_code").tally.filter { |_street_ban_id, count| count > 1 }
     return true if conflicts.empty?
 
     conflicts.each do |street_ban_id, count|
@@ -104,8 +102,7 @@ class ImportZoneRowsService < BaseService
   def sectors_by_human_id
     @sectors_by_human_id ||= Sector
       .where(territory: @territory, human_id: @rows.pluck("sector_id"))
-      .map { [_1.human_id, _1] }
-      .to_h
+      .to_h { [_1.human_id, _1] }
   end
 
   def zone_import_row_for(row)

@@ -1,7 +1,7 @@
 class ZonesMap {
 
   constructor() {
-    this.mapElement = document.querySelector('#zones-map')
+    this.mapElement = document.querySelector('#js-zones-map')
     if (!this.mapElement) return
 
     this.hoveredCityElt = document.querySelector("#js-hovered-city")
@@ -26,7 +26,7 @@ class ZonesMap {
 
   initMap = (centerCoordinates, zoom) => {
     var map = new mapboxgl.Map({
-      container: 'zones-map',
+      container: 'js-zones-map',
       hash: true,
       center: centerCoordinates,
       zoom: zoom,

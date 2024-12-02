@@ -7,18 +7,18 @@ RSpec.describe "User signs up and signs in" do
     it ".sign_up, .confirm, .sign_in and then signs out" do
       visit "http://www.rdv-solidarites-test.localhost/"
       click_link "Se connecter"
-      click_link "Je m'inscris"
+      click_link "Créer un compte"
       fill_in :user_first_name, with: user.first_name
       fill_in :user_last_name, with: user.last_name
       fill_in :user_email, with: user.email
-      click_on "Je m'inscris"
+      click_on "Je m’inscris"
       expect(page).to have_current_path(users_pending_registration_path, ignore_query: true)
       expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
       open_email(user.email)
       current_email.click_link "Confirmer mon compte"
       expect_flash_info(I18n.t("devise.confirmations.confirmed"))
       expect(page).to have_content("Définir mon mot de passe")
-      fill_in :password, with: user.password
+      fill_in "Mot de passe", with: user.password
       click_on "Enregistrer"
       expect_flash_info(I18n.t("devise.passwords.updated")) # auto-connected
       click_link "Déconnexion"
@@ -32,11 +32,11 @@ RSpec.describe "User signs up and signs in" do
     it ".sign_up, .invite!, accept_invite and then signs out" do
       visit "http://www.rdv-solidarites-test.localhost/"
       click_link "Se connecter"
-      click_link "Je m'inscris"
+      click_link "Créer un compte"
       fill_in :user_first_name, with: invited_user.first_name
       fill_in :user_last_name, with: invited_user.last_name
       fill_in :user_email, with: invited_user.email
-      click_on "Je m'inscris"
+      click_on "Je m’inscris"
       expect(page).to have_current_path(users_pending_registration_path, ignore_query: true)
       expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
       open_email(invited_user.email)
@@ -57,11 +57,11 @@ RSpec.describe "User signs up and signs in" do
     it "sends a new invite" do
       visit "http://www.rdv-aide-numerique-test.localhost/"
       click_link "Se connecter"
-      click_link "Je m'inscris"
+      click_link "Créer un compte"
       fill_in :user_first_name, with: unconfirmed_user.first_name
       fill_in :user_last_name, with: unconfirmed_user.last_name
       fill_in :user_email, with: unconfirmed_user.email
-      click_on "Je m'inscris"
+      click_on "Je m’inscris"
 
       open_email(unconfirmed_user.email)
       expect(current_email.subject).to eq("Vous avez été invité sur RDV Aide Numérique")
@@ -91,7 +91,7 @@ RSpec.describe "User signs up and signs in" do
 
       it "shows a warning and advises to change the password" do
         visit new_user_session_path
-        fill_in "Email", with: agent.email
+        fill_in "Adresse email", with: agent.email
         fill_in "password", with: "tropfaible"
         within("main") { click_on "Se connecter" }
         expect(page).to have_content("Votre mot de passe est trop faible")
@@ -100,6 +100,6 @@ RSpec.describe "User signs up and signs in" do
   end
 
   def expect_flash_info(message)
-    expect(page).to have_selector(".alert.alert-info", text: message)
+    expect(page).to have_selector(".fr-alert.fr-alert--info", text: message)
   end
 end

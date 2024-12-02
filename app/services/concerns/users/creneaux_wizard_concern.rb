@@ -37,7 +37,7 @@ module Users::CreneauxWizardConcern
   end
 
   def user_selected_organisation
-    @user_selected_organisation ||= \
+    @user_selected_organisation ||=
       @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
   end
 

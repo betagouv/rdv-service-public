@@ -13,6 +13,12 @@
           = rdv.motif_name
         .rdv-status.px-2.py-2 class="rdv-status-#{rdv.status}" id="rdv-#{rdv.id}-status"
           = rdv.human_attribute_value(:status).upcase
+      - if rdv.motif.visio?
+        .pl-3.pt-2
+          .fa.fa-video-camera>
+          = "RDV par visioconférence "
+          = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
+
       .card-body
         - rdv.participations.each do |participation|
           ruby:
@@ -46,7 +52,7 @@
             = render "admin/rdvs/print/user_details", user: user
         - if current_organisation.territory.enable_context_field
           .mt-2
-            | Contexte :
+            | Contexte&nbsp;:
             | &nbsp
             - if rdv.context.present?
               = rdv.context
@@ -57,6 +63,6 @@
           i.fa.fa-map-marker-alt>
           = human_location(rdv)
         .mt-2
-          | Agent(s) :
+          | Agent(s)&nbsp;:
           | &nbsp
           = agents_to_sentence(rdv.agents)

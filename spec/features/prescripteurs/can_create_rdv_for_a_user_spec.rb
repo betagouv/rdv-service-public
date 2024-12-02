@@ -88,7 +88,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(created_rdv.created_by_prescripteur?).to be(true)
     expect(created_rdv.participations.first.created_by_prescripteur?).to be(true)
 
-    perform_enqueued_jobs(queue: "devise")
+    perform_enqueued_jobs(queue: "mailers")
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
     expect(email_sent_to("alex@prescripteur.fr").subject).to include("RDV confirmé")
     expect(email_sent_to("alex@prescripteur.fr").body).to include("RDV Aide Numérique")
@@ -213,7 +213,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
       find_all("a", text: "modifier").last.click # Retour en arrière au choix de créneau
 
-      expect(page).to have_content("Sélectionnez un créneau :")
+      expect(page).to have_content("Sélectionnez un créneau")
 
       click_on(lieu.name)
 
@@ -246,8 +246,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
       click_on "08:00"
 
       expect(page).to have_content("Vos coordonnées de prescripteur")
-      expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque" \
-                                   " nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent")
+      expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque " \
+                                   "nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent")
       expect(page).to have_link("en cliquant ici")
       click_on "en cliquant ici"
       expect(page).to have_current_path("/admin/organisations/#{agent_prescripteur.organisations.find_by(territory: territory).id}/prescription/user_selection", ignore_query: true)
@@ -273,8 +273,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
         click_on "Formation emails" # choix du motif
         click_on "Prochaine disponibilité le", match: :first
         click_on "08:00"
-        expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque" \
-                                     " nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent.")
+        expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque " \
+                                     "nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent.")
         expect(page).not_to have_link("en cliquant ici")
       end
     end

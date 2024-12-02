@@ -1,3 +1,5 @@
+# cf /docs/interconnexions/brevo.md
+
 class TransferEmailReplyJob < ApplicationJob
   queue_as :mailers
 
@@ -5,15 +7,21 @@ class TransferEmailReplyJob < ApplicationJob
   self.log_arguments = false
 
   def self.reply_address_for_rdv(rdv)
-    "rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"
+    return nil if rdv.domain.reply_host_name.nil?
+
+    "rdv+#{rdv.uuid}@#{rdv.domain.reply_host_name}"
   end
 
-  UUID_EXTRACTOR = /rdv\+([a-f0-9\-]*)@reply\.rdv-solidarites\.fr/
+  UUID_EXTRACTOR = /rdv\+([a-f0-9\-]*)@reply\.[a-z\-\.]+$/
+
+  def self.uuid_from_email_address(email_address)
+    email_address.match(UUID_EXTRACTOR)&.captures&.first
+  end
 
   def perform(sendinblue_hash)
     @sendinblue_hash = sendinblue_hash.with_indifferent_access
 
-    if rdv
+    if rdv&.agents&.pluck(:email)&.compact&.any?
       notify_agents
     else
       forward_to_default_mailbox
@@ -48,7 +56,7 @@ class TransferEmailReplyJob < ApplicationJob
   end
 
   def uuid
-    source_mail.to.first.match(UUID_EXTRACTOR)&.captures&.first
+    self.class.uuid_from_email_address(source_mail.to.first)
   end
 
   def extracted_response

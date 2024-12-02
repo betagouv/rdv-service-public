@@ -26,7 +26,7 @@ RSpec.describe UserRdvWizard do
       allow(Users::GeoSearch).to receive(:new)
         .with(departement: "62", city_code: "62100")
         .and_return(mock_geo_search)
-      allow(Users::CreneauSearch).to receive(:creneau_for).with(
+      allow(CreneauxSearch::ForUser).to receive(:creneau_for).with(
         user: user,
         motif: motif,
         lieu: lieu,
@@ -106,7 +106,7 @@ RSpec.describe UserRdvWizard do
         it "return false with a rdv by_phone and user without phone" do
           rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
           rdv_wizard.valid?
-          expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique.")
+          expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
         end
       end
     end

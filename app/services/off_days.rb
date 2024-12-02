@@ -53,7 +53,7 @@ class OffDays
   def self.all_in_date_range(date_range)
     return [] if date_range.blank?
 
-    date_range = Lapin::Range.ensure_range_is_date(date_range)
+    date_range = CreneauxSearch::Range.ensure_range_is_date(date_range)
 
     JOURS_FERIES.intersection(date_range)
   end

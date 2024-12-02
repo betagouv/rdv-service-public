@@ -1,5 +1,5 @@
 class AddCommentsForMetabase < ActiveRecord::Migration[7.0]
-  def change # rubocop:disable Metrics/MethodLength
+  def change
     change_column_comment(
       :agents,
       :display_saturdays,

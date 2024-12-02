@@ -17,7 +17,7 @@ RSpec.describe Zone, type: :model do
 
       it "allows creating a new zone" do
         zone = described_class.new(zone_attributes)
-        expect(zone.valid?).to eq true
+        expect(zone.valid?).to be true
         expect(zone.errors).to be_empty
       end
 
@@ -29,7 +29,7 @@ RSpec.describe Zone, type: :model do
           city_name: "Paris 20e",
           city_code: "75120"
         )
-        expect(duplicate_zone.valid?).to eq false
+        expect(duplicate_zone.valid?).to be false
         expect(duplicate_zone.errors).to include(:city_code)
       end
 
@@ -42,7 +42,7 @@ RSpec.describe Zone, type: :model do
           city_code: "75120"
         )
         expect(duplicate_zone.errors).to be_empty
-        expect(duplicate_zone.valid?).to eq true
+        expect(duplicate_zone.valid?).to be true
       end
     end
   end
@@ -55,7 +55,7 @@ RSpec.describe Zone, type: :model do
         city_name: "Paris XXe",
         city_code: "62120"
       )
-      expect(zone.valid?).to eq false
+      expect(zone.valid?).to be false
       expect(zone.errors.attribute_names).to eq([:base])
     end
   end

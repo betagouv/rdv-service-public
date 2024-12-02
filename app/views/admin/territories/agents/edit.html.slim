@@ -1,7 +1,7 @@
-= territory_navigation(t(".agent_title", name: @agent.full_name), [link_to(t(".territory_agents_title"), admin_territory_agents_path(current_territory))])
+= territory_navigation(t(".agent_title", name: @agent.full_name_or_email), [link_to(t(".territory_agents_title"), admin_territory_agents_path(current_territory))])
 
 h1
-  = @agent.full_name
+  = @agent.full_name_or_email
 
 .container-fluid
   - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
@@ -60,7 +60,7 @@ h1
         = t(".agent_teams_legend")
       = simple_form_for @agent, url: update_teams_admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
-          = f.input :team_ids, collection: current_territory.teams,
+          = f.input :team_ids, collection: current_territory.teams.ordered_by_name,
                 label: t(".teams"),
                 label_method: :name,
                 input_html: { \
@@ -94,7 +94,7 @@ h1
                 .card-footer
                   .row
                     .col.text-left
-                      = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name} de l'organisation #{role.organisation.name} ?"}
+                      = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?"}
                     .col.text-right
                       = f.button :submit, t(".submit")
 

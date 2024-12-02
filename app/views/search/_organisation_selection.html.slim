@@ -3,13 +3,13 @@
   - if context.next_availability_by_motifs_organisations.empty?
     = render "search/nothing_to_show", context: context
   - else
-    h3.font-weight-bold Sélectionnez la structure avec laquelle prendre RDV:
+    h3.rdv-font-weight-700 Sélectionnez la structure avec laquelle prendre RDV:
     - context.next_availability_by_motifs_organisations.each do |organisation, next_availability|
       .card.mb-3 class="card-hoverable"
         .card-body
           .row
             .col-md
-              h3.card-title.mb-3.mt-0.text-success.font-weight-bold= organisation.name
+              h3.card-title.mb-3.mt-0.rdv-color-text-default-success.rdv-font-weight-700= organisation.name
               = render "search/organisation_card_subtitles", organisation: organisation
             .col-md.align-self-center.pt-3.pt-md-0.position-static
               = link_to prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at)), class: "d-block stretched-link" do

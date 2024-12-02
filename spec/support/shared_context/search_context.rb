@@ -131,12 +131,12 @@ RSpec.shared_examples "SearchContext" do
 
   describe "#creneaux_search" do
     context "when lieu is present" do
-      it "returns a Users::CreneauxSearch using the lieu and the first matching motif" do
+      it "returns a CreneauxSearch::ForUser using the lieu and the first matching motif" do
         plage_ouverture = create(:plage_ouverture, motifs: [motif, motif2], organisation: organisation)
         lieu = plage_ouverture.lieu
         search_context = described_class.new(user:, query_params: query_params.merge(lieu_id: lieu.id))
 
-        expect(Users::CreneauxSearch).to receive(:new).with(
+        expect(CreneauxSearch::ForUser).to receive(:new).with(
           user: user,
           motif: motif,
           lieu: lieu,
@@ -150,14 +150,14 @@ RSpec.shared_examples "SearchContext" do
     context "when lieu is nil" do
       let!(:motif) { create(:motif, :by_phone, organisation: organisation) }
 
-      it "returns a Users::CreneauxSearch using no lieu and the selected motif" do
+      it "returns a CreneauxSearch::ForUser using no lieu and the selected motif" do
         create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
         search_context = described_class.new(
           user:,
           query_params: query_params
         )
 
-        expect(Users::CreneauxSearch).to receive(:new).with(
+        expect(CreneauxSearch::ForUser).to receive(:new).with(
           user: user,
           motif: motif,
           lieu: nil,

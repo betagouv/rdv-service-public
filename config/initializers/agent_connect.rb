@@ -2,7 +2,7 @@ require_relative "sentry"
 
 Rails.configuration.x.agent_connect_unreachable_at_boot_time = false
 
-if ENV["AGENT_CONNECT_BASE_URL"].present? && !ENV["AGENT_CONNECT_DISABLED"]
+if ENV["AGENT_CONNECT_BASE_URL"].present?
   begin
     # la méthode .discover! fait un appel à l'api d'Agent Connect
     Rails.configuration.x.agent_connect_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["AGENT_CONNECT_BASE_URL"])

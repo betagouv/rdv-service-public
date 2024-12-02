@@ -1,8 +1,8 @@
-RSpec.describe AgentConnectController, type: :controller do
+RSpec.describe AgentConnectController do
   stub_env_with(
     AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
-    AGENT_CONNECT_CLIENT_SECRET: "un faux secret de test",
-    AGENT_CONNECT_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
+    AGENT_CONNECT_RDVS_CLIENT_SECRET: "un faux secret de test",
+    AGENT_CONNECT_RDVS_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
   )
 
   describe "#auth" do
@@ -19,14 +19,20 @@ RSpec.describe AgentConnectController, type: :controller do
         redirect_uri: "http://test.host/agent_connect/callback",
         response_type: "code",
         scope: "openid email given_name usual_name",
-        state: be_a_kind_of(String),
-        nonce: be_a_kind_of(String)
+        state: be_a(String),
+        nonce: be_a(String)
       )
     end
   end
 
   describe "#callback" do
-    let(:state) { AgentConnectOpenIdClient::Auth.new.state }
+    let(:state) { auth_client.state }
+    let(:auth_client) do
+      AgentConnectOpenIdClient::Auth.new(
+        client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
+        client_secret: "un faux secret de test"
+      )
+    end
     let(:code) { "IDej8hpYou2rZLsDgTzZ_nMl1aXmNajpByd20dig4e8" }
 
     let(:user_info) do
@@ -43,6 +49,8 @@ RSpec.describe AgentConnectController, type: :controller do
     before do
       session[:agent_connect_state] = state
       AgentConnectStubs.stub_callback_requests(code, user_info)
+
+      session[:agent_return_to] = "/agents/edit" # Pour simuler le retour vers la page demandée avant la connexion
     end
 
     it "updates and logs in the agent" do
@@ -56,6 +64,8 @@ RSpec.describe AgentConnectController, type: :controller do
         last_sign_in_at: be_within(10.seconds).of(Time.zone.now)
       )
       expect(session["agent_connect_id_token"]).to be_present
+
+      expect(response).to redirect_to("/agents/edit")
     end
 
     context "when the agent has a name with two words" do

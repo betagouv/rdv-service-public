@@ -4,6 +4,7 @@ namespace :api do
     mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
     resources :absences, except: %i[new edit]
     resources :agents, only: %i[index]
+    get "agents/me", to: "agents#me"
     resources :users, only: %i[create index show update] do
       post :rdv_invitation_token, to: "users#rdv_invitation_token", on: :member
     end
@@ -36,9 +37,34 @@ namespace :api do
     resource :referent_assignations, only: [] do
       post :create_many, on: :collection
     end
+    resources :users, only: %i[show] do
+      resources :referent_assignations, only: %i[index]
+    end
     resources :motif_categories, only: %i[create]
     resources :motif_category_territories, only: %i[create]
   end
+
+  namespace :visioplainte do
+    resources :guichets, only: %i[index]
+    resources :plages_ouverture, only: %i[index]
+    resources :creneaux, only: %i[index] do
+      collection do
+        get :prochain
+      end
+    end
+    resources :rdvs, only: %i[create destroy index] do
+      member do
+        put :cancel
+      end
+    end
+
+    # Une route pour réinitialiser les données en staging
+    if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
+      post :reset, to: "base#reset"
+    end
+  end
+
+  post "/coop-mediation-numerique/accounts", to: "coop_mediation_numerique/accounts#create"
 end
 
 # This one has been published before versioning the public API and unification with auth API:

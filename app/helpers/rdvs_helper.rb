@@ -108,11 +108,11 @@ module RdvsHelper
   end
 
   def cancel_rdv_to_not_notify?(rdv, status)
-    Rdv::CANCELLED_STATUSES.include?(status) && rdv.participations.select(&:send_lifecycle_notifications?).empty?
+    Rdv::CANCELLED_STATUSES.include?(status) && rdv.participations.none?(&:send_lifecycle_notifications?)
   end
 
   def cancel_rdv_to_notify?(rdv, status)
-    Rdv::CANCELLED_STATUSES.include?(status) && rdv.participations.select(&:send_lifecycle_notifications?).any?
+    Rdv::CANCELLED_STATUSES.include?(status) && rdv.participations.any?(&:send_lifecycle_notifications?)
   end
 
   def reset_futur_rdv?(rdv, status)

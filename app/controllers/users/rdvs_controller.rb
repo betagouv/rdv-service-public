@@ -11,8 +11,8 @@ class Users::RdvsController < UserAuthController
   include TokenInvitable
 
   def index
-    authorize Rdv
-    @rdvs = policy_scope(Rdv).includes(:motif, :participations, :users).user_with_relatives(current_user.id).for_domain(current_domain)
+    authorize(Rdv, policy_class: User::RdvPolicy)
+    @rdvs = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).includes(:motif, :participations, :users).user_with_relatives(current_user.id).for_domain(current_domain)
     @rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
     @rdvs = @rdvs.order(starts_at: :desc).page(page_number)
   end
@@ -24,7 +24,7 @@ class Users::RdvsController < UserAuthController
     # Cela permet d'effectuer une recherche de créneaux, avec une durée différente
     motif.default_duration_in_min = params[:duration] if params[:duration]
     ActiveRecord::Base.transaction do
-      @creneau = Users::CreneauSearch.creneau_for(
+      @creneau = CreneauxSearch::ForUser.creneau_for(
         user: current_user,
         starts_at: Time.zone.parse(rdv_params[:starts_at]),
         motif: motif,
@@ -33,7 +33,7 @@ class Users::RdvsController < UserAuthController
       )
       if @creneau.present?
         @rdv = build_rdv_from_creneau(@creneau)
-        authorize(@rdv)
+        authorize(@rdv, policy_class: User::RdvPolicy)
         @save_succeeded = @rdv.save
       end
     end
@@ -42,11 +42,12 @@ class Users::RdvsController < UserAuthController
       notifier = Notifiers::RdvCreated.new(@rdv, current_user)
       notifier.perform
       set_user_name_initials_verified
-      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
+      flash[:success] = t(".rdv_confirmed")
+      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
     else
       # TODO: cette liste de paramètres devrait ressembler a SearchController#search_params, mais sans certains paramètres de choix du wizard de créneaux
       query = {
-        address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
+        address: new_rdv_extra_params[:address] || new_rdv_extra_params[:where],
         city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
         service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type,
         departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids],
@@ -96,7 +97,7 @@ class Users::RdvsController < UserAuthController
 
   def build_creneau
     @starts_at = Time.zone.parse(params[:starts_at])
-    @creneau = Users::CreneauSearch.creneau_for(
+    @creneau = CreneauxSearch::ForUser.creneau_for(
       user: current_user,
       starts_at: @starts_at,
       motif: @rdv.motif,
@@ -109,12 +110,12 @@ class Users::RdvsController < UserAuthController
   end
 
   def set_rdv
-    @rdv = policy_scope(Rdv).find(params[:id])
-    authorize(@rdv)
+    @rdv = Rdv.find(params[:id])
+    authorize(@rdv, policy_class: User::RdvPolicy)
   end
 
   def set_can_see_rdv_motif
-    @can_see_rdv_motif = !current_user.only_invited?
+    @can_see_rdv_motif = !current_user.signed_in_with_invitation_token?
   end
 
   def redirect_if_creneau_not_available
@@ -133,23 +134,19 @@ class Users::RdvsController < UserAuthController
   end
 
   def build_rdv_from_creneau(creneau)
-    Rdv.new(
-      agents: [creneau.agent],
-      duration_in_min: creneau.duration_in_min,
-      starts_at: creneau.starts_at,
-      organisation: creneau.motif.organisation,
-      motif: creneau.motif,
-      lieu_id: creneau.lieu&.id,
-      users: [user_for_rdv],
+    rdv = creneau.build_rdv
+    rdv.assign_attributes(
+      users: users_for_rdv,
       created_by: current_user
     )
+    rdv
   end
 
-  def user_for_rdv
+  def users_for_rdv
     if rdv_params[:user_ids]
-      current_user.available_users_for_rdv.find(rdv_params[:user_ids]).first
+      current_user.available_users_for_rdv.find(rdv_params[:user_ids])
     else
-      current_user
+      [current_user]
     end
   end
 

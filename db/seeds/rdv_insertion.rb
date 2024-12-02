@@ -5,6 +5,19 @@
 orientation_category = MotifCategory.create!(short_name: "rsa_orientation", name: "RSA orientation")
 accompagnement_category = MotifCategory.create!(short_name: "rsa_accompagnement", name: "RSA accompagnement")
 
+MotifCategory.create!(short_name: "rsa_accompagnement_sociopro", name: "RSA accompagnement socio-pro")
+MotifCategory.create!(short_name: "rsa_accompagnement_social", name: "RSA accompagnement social")
+MotifCategory.create!(short_name: "rsa_cer_signature", name: "RSA signature CER")
+MotifCategory.create!(short_name: "rsa_follow_up", name: "RSA suivi")
+MotifCategory.create!(short_name: "rsa_insertion_offer", name: "RSA offre insertion pro")
+MotifCategory.create!(short_name: "rsa_orientation_on_phone_platform", name: "RSA orientation sur plateforme téléphonique")
+MotifCategory.create!(short_name: "rsa_atelier_collectif_mandatory", name: "RSA Atelier collectif obligatoire")
+MotifCategory.create!(short_name: "rsa_atelier_rencontres_pro", name: "RSA Atelier rencontres professionnelles")
+MotifCategory.create!(short_name: "rsa_atelier_competences", name: "RSA Atelier compétences")
+MotifCategory.create!(short_name: "rsa_main_tendue", name: "RSA Main Tendue")
+MotifCategory.create!(short_name: "rsa_spie", name: "RSA SPIE")
+MotifCategory.create!(short_name: "rsa_integration_information", name: "RSA Information d'intégration")
+
 # Territories
 territory_drome = Territory.create!(
   departement_number: "26",
@@ -78,6 +91,18 @@ motif_drome2 = Motif.create!(
   default_duration_in_min: 60,
   organisation: org_drome2,
   bookable_by: :agents_and_prescripteurs_and_invited_users,
+  max_public_booking_delay: 2_629_746,
+  service: service_rsa,
+  for_secretariat: true,
+  custom_cancel_warning_message: "Ce RDV est obligatoire",
+  motif_category: orientation_category
+)
+motif_convoc_drome1 = Motif.create!(
+  name: "Convocation RSA - Orientation : rdv sur site",
+  color: "#00ffff",
+  default_duration_in_min: 60,
+  organisation: org_drome1,
+  bookable_by: :agents,
   max_public_booking_delay: 2_629_746,
   service: service_rsa,
   for_secretariat: true,
@@ -177,7 +202,7 @@ _plage_ouverture_org_drome1_lieu1_alain_classique = PlageOuverture.create!(
   organisation_id: org_drome1.id,
   agent_id: agent_orgs_rdv_insertion.id,
   lieu_id: lieu_org_drome1_valence.id,
-  motif_ids: [motif1_drome1.id, motif2_drome1.id],
+  motif_ids: [motif1_drome1.id, motif2_drome1.id, motif_convoc_drome1.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
@@ -219,20 +244,20 @@ _plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
 
 # WEBHOOKS
 WebhookEndpoint.create!(
-  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
-  secret: "rdv-solidarites",
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
   organisation_id: org_drome1.id,
   subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
 WebhookEndpoint.create!(
-  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
-  secret: "rdv-solidarites",
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
   organisation_id: org_drome2.id,
   subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
 WebhookEndpoint.create!(
-  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
-  secret: "rdv-solidarites",
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
   organisation_id: org_yonne.id,
   subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
@@ -249,7 +274,7 @@ user1 = User.create!(
   birth_date: 30.years.ago,
   organisations: [org_drome1, org_drome2]
 )
-user1.assign_rdv_invitation_token
+user1.set_rdv_invitation_token!
 user1.save!
 
 user2 = User.create!(
@@ -262,7 +287,7 @@ user2 = User.create!(
   birth_date: 30.years.ago,
   organisations: [org_yonne]
 )
-user2.assign_rdv_invitation_token
+user2.set_rdv_invitation_token!
 user2.save!
 
 # On reprend ci dessous les paramêtres que Rdvi utilise pour générer l'url d'invitation.
@@ -318,3 +343,17 @@ dataset.each do |data|
   # jean.rsavalence@testinvitation.fr et jean.rsaAuxerre@testinvitation.fr
   user.update!(notes: link)
 end
+
+rdv_insertion_logo_base64 = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgaWQ9IkNhbHF1ZV8xIgogICB2aWV3Qm94PSIwIDAgNDgzLjMzIDQ4My4zMyIKICAgdmVyc2lvbj0iMS4xIgogICB3aWR0aD0iNDgzLjMyOTk5IgogICBoZWlnaHQ9IjQ4My4zMjk5OSIKICAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogICB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcwogICAgIGlkPSJkZWZzMSI+CiAgICA8c3R5bGUKICAgICAgIGlkPSJzdHlsZTEiPi5jbHMtMXtmaWxsOiNlYzRjNGM7fS5jbHMtMntmaWxsOiMwODNiNjY7fTwvc3R5bGU+CiAgPC9kZWZzPgogIDxnCiAgICAgaWQ9ImcxOCI+CiAgICA8ZwogICAgICAgaWQ9ImcxOSIKICAgICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMC45MTcyMTMsLTAuMDAzMDUwMDYpIj4KICAgICAgPHBhdGgKICAgICAgICAgY2xhc3M9ImNscy0yIgogICAgICAgICBkPSJtIDE5My45Nyw0MTEuMzkgOC4wMywtMS45NyBjIDAsMCAxOS4xNiwtNy42OSAyNC41NCwtMzYuNzEgNS4zOCwtMjkuMDEgMzAuNTMsLTQ4LjU2IDU4LjY2LC00MC4yNyAyMC4yNCwtMi44OCA1LjQyLC0zMy45NyAtMjUuNjYsLTI1LjU0IC0yNS42OCw2Ljk3IC0zOC42NCwxMi45NiAtNDguNywxMC4wOCAtMy4zMSwtMC45NiAtNS44MSwtMy42NyAtNi41MSwtNy4wNCAtOC4zOCwtNDAuNyAtMjUuMTcsLTEyMS45NiAtMjcuMTcsLTEyOC45NiAtMi40LC04LjM2IC03LjkzLC0xMC44IC0xMy45MiwtOS42MyAtNy4wMywwLjg5IC03LjQ4LDguMTkgLTcuNjMsMTIuOTEgMCw2LjA2IDQuMDksNTQuMTggNi4yOCw3OS40NyAtMS45MiwtNy45NyAtNi4zOSwtMTUuODkgLTE2LjYsLTE1LjAxIC0xMC40OCwwLjg4IC0xMi4zNSwxMy44MSAtMTIuMTEsMjQuMjUgLTIuMTIsLTguMjIgLTcuNDQsLTE2LjQ5IC0yMC42NiwtMTIuNDkgLTQuNjQsMS4zOSAtNi43OCw4LjE1IC03LjUxLDE2Ljc2IGwgLTAuMzIsLTAuNDcgLTI3LjA0LC00MS4yMyBDIDY1LjIzLDIxNi41OSA3MC41MSwxOTEuMTcgODkuNDYsMTc4Ljc0IEwgMjYyLjQ3LDY1LjI4IGMgMTUuNDMsLTEwLjEzIDM1LjU5LC03LjMxIDQ3LjczLDUuNzkgbCAtNC44OCwxLjIgYyAwLDAgLTE5LjIxLDcuNzIgLTI0LjYxLDM2Ljg3IC01LjM5LDI5LjEzIC0zMC42LDQ4Ljc2IC01OC43OSw0MC40MyAtMjAuMjksMi45IC01LjQ0LDM0LjEyIDI1LjcxLDI1LjY2IDI1Ljc2LC03LjAxIDM4Ljc1LC0xMy4wMyA0OC44NSwtMTAuMTEgMy4zLDAuOTUgNS44LDMuNjYgNi41LDcuMDQgOC4zOSw0MC44NiAyNS4yMywxMjIuNDkgMjcuMjMsMTI5LjUxIDIuNDEsOC40MSA3Ljk1LDEwLjg2IDEzLjk2LDkuNjcgNy4wNSwtMC45IDcuNSwtOC4yMiA3LjY0LC0xMi45NyAwLC02LjA4IC00LjEsLTU0LjQgLTYuMjksLTc5LjggMS45Myw4LjAxIDYuNCwxNS45NSAxNi42NCwxNS4wOCAxMC41MSwtMC44OSAxMi4zOCwtMTMuODcgMTIuMTQsLTI0LjM2IDIuMTIsOC4yNSA3LjQ2LDE2LjU2IDIwLjcyLDEyLjU1IDMuNzEsLTEuMTIgNS44MiwtNS42NyA2LjksLTExLjg1IGwgMC40MSwwLjYzIDYuMjIsOS40OCB2IDAgYyAwLDAgMTguOTYsMjguOTEgMTguOTYsMjguOTEgMTIuNDMsMTguOTQgNy4xNCw0NC4zNyAtMTEuODEsNTYuOCBMIDI0NS4zMSw0MTcuNTUgYyAtMTUuODcsMTAuNDEgLTM2LjM2LDguMTkgLTQ5LjY1LC00LjE5IC0wLjY2LC0wLjYxIC0xLjMsLTEuMjUgLTEuOTIsLTEuOTEgeiIKICAgICAgICAgaWQ9InBhdGgxNSIgLz4KICAgICAgPGcKICAgICAgICAgaWQ9ImcxNyI+CiAgICAgICAgPHBhdGgKICAgICAgICAgICBjbGFzcz0iY2xzLTEiCiAgICAgICAgICAgZD0ibSAyNTIuMzIsMjM4LjY5IC0zOS4wNCwtMzAuMzYgaCA4MS4wOCBsIC0zOS4wNCwzMC4zNiBjIC0wLjg4LDAuNjkgLTIuMTIsMC42OSAtMywwIHoiCiAgICAgICAgICAgaWQ9InBhdGgxNiIgLz4KICAgICAgICA8cGF0aAogICAgICAgICAgIGNsYXNzPSJjbHMtMSIKICAgICAgICAgICBkPSJtIDI5OS45NywyMTMuNDYgdiA0OS45NCBjIDAsNi40IC01LjE5LDExLjU5IC0xMS41OSwxMS41OSBoIC02OS4xMyBjIC02LjQsMCAtMTEuNTksLTUuMTkgLTExLjU5LC0xMS41OSB2IC00OS45NCBjIDAsLTAuMjQgMC4wMiwtMC40OCAwLjA1LC0wLjcyIGwgNDIuMTMsMzIuNzcgYyAyLjMzLDEuODEgNS42LDEuODEgNy45MywwIGwgNDIuMTMsLTMyLjc3IGMgMC4wNCwwLjI0IDAuMDUsMC40OCAwLjA1LDAuNzMgeiIKICAgICAgICAgICBpZD0icGF0aDE3IiAvPgogICAgICA8L2c+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4K" # rubocop:disable Layout/LineLength
+
+application = Doorkeeper::Application.new(
+  name: "RDV Insertion",
+  uid: "zC24y16rYftyrBgTj8h08g1NZKkwStXWe3E_lLMGoHc",
+  redirect_uri: "http://localhost:8000/auth/rdvservicepublic/callback",
+  post_logout_redirect_uri: "http://localhost:8000/",
+  logo_base64: rdv_insertion_logo_base64
+)
+
+test_secret = "development-EdtuETfEK5Lr_--kx6S_QlItIJov-iThILw6M8IyTus" # Pour le développement en local uniquement
+application.secret_strategy.store_secret(application, :secret, test_secret)
+application.save!

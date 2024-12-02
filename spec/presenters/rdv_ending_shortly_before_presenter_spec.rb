@@ -5,8 +5,8 @@ RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
     subject { presenter.warning_message }
 
     before do
-      dbl = instance_double(Agent::RdvPolicy::DepartementScope, in_scope?: in_scope_mock_value)
-      allow(Agent::RdvPolicy::DepartementScope).to receive(:new).with(agent_context, Rdv).and_return(dbl)
+      dbl = instance_double(Agent::RdvPolicy::Scope, in_scope?: in_scope_mock_value)
+      allow(Agent::RdvPolicy::Scope).to receive(:new).with(agent_context, Rdv).and_return(dbl)
     end
 
     context "same agent (=> in scope)" do
@@ -43,7 +43,7 @@ RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
       let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], users: [user], starts_at: rdv_context.starts_at - 1.hour, duration_in_min: 30) }
 
       it {
-        expect(subject).to eq "Maya JOAO a un RDV finissant à 08h30, vous allez laisser un trou de 30 minutes dans son agenda "\
+        expect(subject).to eq "Maya JOAO a un RDV finissant à 08h30, vous allez laisser un trou de 30 minutes dans son agenda " \
                               "(ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
       }
     end

@@ -47,7 +47,7 @@
     .m-3
       .d-flex.justify-content-center
         = paginate @agents, theme: "twitter-bootstrap-4"
-      .text-center= page_entries_info @agents
+      .rdv-text-align-center= page_entries_info @agents
 
   .m-3
     = link_to "Fiche #{@user.full_name}", admin_organisation_user_path(current_organisation, @user, anchor: "agents-referents"), class: "btn btn-outline-primary"

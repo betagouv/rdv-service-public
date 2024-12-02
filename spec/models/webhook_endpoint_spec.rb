@@ -10,7 +10,7 @@ RSpec.describe WebhookEndpoint, type: :model do
       let(:target_url) { "https://www.rdv-insertion.fr/rdv_solidarites_webhooks" }
 
       it "is valid" do
-        expect(subject).to eq(true)
+        expect(subject).to be(true)
       end
     end
 
@@ -18,7 +18,7 @@ RSpec.describe WebhookEndpoint, type: :model do
       let(:target_url) { "https://www.taken_url.com" }
 
       it "is not valid" do
-        expect(subject).to eq(false)
+        expect(subject).to be(false)
       end
     end
   end
@@ -33,7 +33,7 @@ RSpec.describe WebhookEndpoint, type: :model do
       let(:subscriptions) { %w[rdv absence plage_ouverture user motif lieu agent agent_role referent_assignation] }
 
       it "is valid" do
-        expect(subject).to eq(true)
+        expect(subject).to be(true)
       end
     end
 
@@ -41,7 +41,7 @@ RSpec.describe WebhookEndpoint, type: :model do
       let(:subscriptions) { %w[user organisation wrong_value] }
 
       it "is not valid" do
-        expect(subject).to eq(false)
+        expect(subject).to be(false)
       end
     end
   end

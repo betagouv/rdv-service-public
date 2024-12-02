@@ -36,20 +36,16 @@ a[disabled] {
   font-weight: bold;
 }
 
+.rdv-font-weight-bold {
+  font-weight: bold;
+}
+
+.rdv-font-weight-700 {
+  font-weight: 700;
+}
+
 .text-underline {
   text-decoration: underline;
-}
-
-html .rdv-text-align-md-left {
-  @include media-breakpoint-up(md) {
-    text-align: left;
-  }
-}
-
-html .rdv-text-align-md-right {
-  @include media-breakpoint-up(md) {
-    text-align: right;
-  }
 }
 
 .rdv-text-align-right {
@@ -64,17 +60,24 @@ html .rdv-text-align-md-right {
   white-space: nowrap;
 }
 
+.rdv-color-white {
+  color: white;
+}
+
 // GRID
 
 .d-grid {
   display: grid;
 }
+
 .grid-three-columns {
   grid-template-columns: 1fr 1fr 1fr;
 }
+
 .grid-align-center {
   align-items: center;
 }
+
 .grid-first-column-empty > *:nth-child(1) {
   grid-column-start: 2;
 }
@@ -106,16 +109,13 @@ html .rdv-text-align-md-right {
   }
 }
 
-.rdv-align-items-center {
-  align-items: center;
-}
-
 // OTHER
 
 ul.horizontal-border-between-items {
   li {
     border-bottom: 1px solid #eee;
   }
+
   li:last-child {
     border-bottom: none;
   }
@@ -135,4 +135,10 @@ ul.horizontal-border-between-items {
 
 .no-transition {
   transition: none !important;
+}
+
+.btn-link:disabled,
+.btn-link.disabled,
+button:disabled {
+  pointer-events: auto; // needed for a disabled button to show a tooltip
 }

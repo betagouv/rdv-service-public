@@ -24,7 +24,7 @@ RSpec.describe Agents::UsersController, "#search" do
     end
 
     context "when in CN territory" do
-      let(:territory) { create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER) }
+      let(:territory) { create(:territory, :conseillers_numeriques) }
 
       it "does not include users from other orgs in the territory" do
         sign_in agent
@@ -44,7 +44,7 @@ RSpec.describe Agents::UsersController, "#search" do
       sign_in agent
       get search_agents_users_path(organisation_id: other_organisation)
       expect(response).to have_http_status(:found) # 302 redirects
-      expect(flash[:error]).to eq("Vous ne pouvez pas accéder à cette organisation")
+      expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette organisation")
     end
   end
 end

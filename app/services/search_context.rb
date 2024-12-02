@@ -49,7 +49,7 @@ class SearchContext
     motifs = available_motifs
     motifs = motifs.where(follow_up: follow_up?)
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
-    motifs = motifs.with_availability_for_agents(referent_agents.map(&:id)) if follow_up?
+    motifs = motifs.with_availability_for_agents(referent_agents.select(:id)) if follow_up?
     motifs
   end
 
@@ -80,7 +80,7 @@ class SearchContext
   end
 
   def creneaux_search_for(lieu, date_range, motif)
-    Users::CreneauxSearch.new(
+    CreneauxSearch::ForUser.new(
       user: @user,
       motif: motif,
       lieu: lieu,
@@ -90,7 +90,7 @@ class SearchContext
   end
 
   def retrieve_referent_agents
-    return [] if @referent_ids.blank? || @user.nil?
+    return Agent.none if @referent_ids.blank? || @user.nil?
 
     @user.referent_agents.where(id: @referent_ids)
   end

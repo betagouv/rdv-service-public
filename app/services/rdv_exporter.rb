@@ -23,6 +23,7 @@ module RdvExporter
     "code postal du premier responsable",
     "créé par",
     "email(s) professionnel.le(s)",
+    "rdv collectif",
   ].freeze
 
   def self.xls_string_from_rdvs_rows(rdvs_rows)
@@ -84,6 +85,7 @@ module RdvExporter
       code_postal_premier_responsable(rdv),
       rdv.author,
       rdv.agents.map(&:email).join(", "),
+      rdv.motif.collectif ? "oui" : "non",
     ]
   end
   # rubocop:enable Metrics/PerceivedComplexity

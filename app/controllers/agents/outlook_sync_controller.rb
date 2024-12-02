@@ -5,11 +5,11 @@ class Agents::OutlookSyncController < AgentAuthController
   before_action { @active_agent_preferences_menu_item = :synchronisation }
 
   def show
-    authorize current_agent
+    authorize(current_agent, policy_class: Agent::AgentPolicy)
   end
 
   def destroy
-    authorize current_agent, :current_agent_or_admin_in_record_organisation?
+    authorize(current_agent, :current_agent_or_admin_in_record_organisation?, policy_class: Agent::AgentPolicy)
     current_agent.update!(outlook_disconnect_in_progress: true)
     Outlook::MassDestroyEventJob.perform_later(current_agent)
     flash[:notice] = "Votre compte Outlook est bien en cours de déconnexion. " \

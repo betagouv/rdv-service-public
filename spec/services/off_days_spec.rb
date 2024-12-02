@@ -10,25 +10,25 @@ RSpec.describe OffDays, type: :service do
     context "when jour ferie is the first day of the range" do
       let(:range) { Date.new(2023, 1, 1)..Date.new(2023, 1, 7) }
 
-      it { is_expected.to match_array([Date.new(2023, 1, 1)]) }
+      it { is_expected.to contain_exactly(Date.new(2023, 1, 1)) }
     end
 
     context "when jour ferie is the last day of the range" do
       let(:range) { Date.new(2019, 12, 20)..Date.new(2023, 1, 1) }
 
-      it { is_expected.to match_array([Date.new(2023, 1, 1)]) }
+      it { is_expected.to contain_exactly(Date.new(2023, 1, 1)) }
     end
 
     context "when date range is only one day" do
       let(:range) { Date.new(2023, 1, 1)..Date.new(2023, 1, 1) }
 
-      it { is_expected.to match_array([Date.new(2023, 1, 1)]) }
+      it { is_expected.to contain_exactly(Date.new(2023, 1, 1)) }
     end
 
     context "it works with datetime" do
       let(:range) { Time.zone.parse("20230101 16:00")..Time.zone.parse("20230107 18:00") }
 
-      it { is_expected.to match_array([Date.new(2023, 1, 1)]) }
+      it { is_expected.to contain_exactly(Date.new(2023, 1, 1)) }
     end
 
     context "with a nil date_range given" do

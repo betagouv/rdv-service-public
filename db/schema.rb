@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_22_082916) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -232,7 +232,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
     t.datetime "last_sign_in_at"
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
-    t.string "cnfs_secondary_email"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
     t.string "inclusion_connect_open_id_sub"
@@ -322,13 +321,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
     t.datetime "finished_at"
     t.text "error"
     t.integer "error_event", limit: 2
+    t.text "error_backtrace", array: true
+    t.uuid "process_id"
+    t.interval "duration"
     t.index ["active_job_id", "created_at"], name: "index_good_job_executions_on_active_job_id_and_created_at"
+    t.index ["process_id", "created_at"], name: "index_good_job_executions_on_process_id_and_created_at"
   end
 
   create_table "good_job_processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "state"
+    t.integer "lock_type", limit: 2
   end
 
   create_table "good_job_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -361,6 +365,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
     t.text "job_class"
     t.integer "error_event", limit: 2
     t.text "labels", array: true
+    t.uuid "locked_by_id"
+    t.datetime "locked_at"
     t.index ["active_job_id", "created_at"], name: "index_good_jobs_on_active_job_id_and_created_at"
     t.index ["batch_callback_id"], name: "index_good_jobs_on_batch_callback_id", where: "(batch_callback_id IS NOT NULL)"
     t.index ["batch_id"], name: "index_good_jobs_on_batch_id", where: "(batch_id IS NOT NULL)"
@@ -369,8 +375,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
     t.index ["cron_key", "cron_at"], name: "index_good_jobs_on_cron_key_and_cron_at_cond", unique: true, where: "(cron_key IS NOT NULL)"
     t.index ["finished_at"], name: "index_good_jobs_jobs_on_finished_at", where: "((retried_good_job_id IS NULL) AND (finished_at IS NOT NULL))"
     t.index ["labels"], name: "index_good_jobs_on_labels", where: "(labels IS NOT NULL)", using: :gin
+    t.index ["locked_by_id"], name: "index_good_jobs_on_locked_by_id", where: "(locked_by_id IS NOT NULL)"
     t.index ["priority", "created_at"], name: "index_good_job_jobs_for_candidate_lookup", where: "(finished_at IS NULL)"
     t.index ["priority", "created_at"], name: "index_good_jobs_jobs_on_priority_created_at_when_unfinished", order: { priority: "DESC NULLS LAST" }, where: "(finished_at IS NULL)"
+    t.index ["priority", "scheduled_at"], name: "index_good_jobs_on_priority_scheduled_at_unfinished_unlocked", where: "((finished_at IS NULL) AND (locked_by_id IS NULL))"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
@@ -427,7 +435,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
     t.boolean "collectif", default: false, comment: "Indique s'il s'agit d'un rdv collectif ou individuel. Un rdv considéré comme individuel peut quand même avoir plusieurs participants, par exemple un parent et son enfant qui renouvellent tous les deux leur carte d'indentité en même temps. Un rdv collectif sera ouvert à plusieurs participants qui ne se connaissent pas entre eux.\n"
     t.enum "location_type", default: "public_office", null: false, comment: "Là où le rdv aura lieu : \"public_office\" pour \"Sur place\" (généralement dans les bureaux de l'organisation), \"phone\" pour au téléphone (l'agent appelle l'usager), \"home\" pour le domicile de l'usager\n", enum_type: "location_type"
     t.boolean "rdvs_editable_by_user", default: true, comment: "Indique si on autorise aux usagers de changer la date du rdv via l'interface web\n"
-    t.boolean "rdvs_cancellable_by_user", default: true
+    t.boolean "rdvs_cancellable_by_user", default: true, comment: "Option invisible dans l’interface agents, utilisée par RDV Insertion pour des motifs de convocations"
     t.bigint "motif_category_id"
     t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
@@ -448,6 +456,50 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
     t.index ["motif_id", "plage_ouverture_id"], name: "index_motifs_plage_ouvertures_primary_keys", unique: true
     t.index ["motif_id"], name: "index_motifs_plage_ouvertures_on_motif_id"
     t.index ["plage_ouverture_id"], name: "index_motifs_plage_ouvertures_on_plage_ouverture_id"
+  end
+
+  create_table "oauth_access_grants", force: :cascade do |t|
+    t.bigint "resource_owner_id", null: false
+    t.bigint "application_id", null: false
+    t.string "token", null: false
+    t.integer "expires_in", null: false, comment: "Le nombre de seconds avant l'expiration du grant, par rapport à sa date de création.\n"
+    t.text "redirect_uri", null: false
+    t.string "scopes", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "revoked_at"
+    t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
+    t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
+  end
+
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.bigint "resource_owner_id", comment: "L'id de l'agent qui a autorisé l'application.\n"
+    t.bigint "application_id", null: false
+    t.string "token", null: false, comment: "Le token qui perment d'authentifier des appels à notre api. Il est chiffré de manière similaire aux mots de passe.\n"
+    t.string "refresh_token"
+    t.integer "expires_in", comment: "Le nombre de seconds avant l'expiration du token, par rapport à sa date de création.\n"
+    t.string "scopes", comment: "La liste des scopes d'autorisation liés au token. Pour le moment ça peut seulement être le scope unique `write`.\n"
+    t.datetime "created_at", null: false
+    t.datetime "revoked_at"
+    t.string "previous_refresh_token", default: "", null: false
+    t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
+  end
+
+  create_table "oauth_applications", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "uid", null: false, comment: "Un identifiant unique de l'appication OAuth. Contrairement à la colonne `secret`, cette information est publique.\n"
+    t.string "secret", null: false, comment: "Le secret de cette application, stocké de manière chiffrée comme les mots de passe.\n"
+    t.text "redirect_uri", null: false, comment: "La liste des url de callback de cette application, séparés par des retours à la ligne. Attention à ne pas oublier de mettre ou d'enlever les slash de fin d'adresse en fonction du comportement de l'application cliente.\n"
+    t.string "scopes", default: "", null: false, comment: "Pour le moment, on utilise uniquement le scope par défaut `write` pour toutes les applications, donc cette colonne sera toujours vide. Quand on commencera à affiner les permissions, on pourra commencer à utiliser cette colonne.\n"
+    t.boolean "confidential", default: true, null: false, comment: "Cette colonne n'est pas utilisée, et sa valeur doit toujours être à true. Elle est prévue par la gem Doorkeeper pour être à false pour les applications dont le secret est public (SPA et applis mobiles). Ce n'est pas encore un cas d'usage qui nous concerne.\n"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "logo_base64"
+    t.text "post_logout_redirect_uri"
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
   create_table "organisations", force: :cascade do |t|
@@ -498,7 +550,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
 
   create_table "plage_ouvertures", force: :cascade do |t|
     t.bigint "agent_id", null: false
-    t.string "title", null: false
+    t.string "title"
     t.bigint "organisation_id", null: false
     t.date "first_day", null: false
     t.time "start_time", null: false
@@ -810,6 +862,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
   add_foreign_key "motifs", "services"
   add_foreign_key "motifs_plage_ouvertures", "motifs"
   add_foreign_key "motifs_plage_ouvertures", "plage_ouvertures"
+  add_foreign_key "oauth_access_grants", "agents", column: "resource_owner_id"
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"

@@ -74,7 +74,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         end
 
         it "skips notification after create when agent has disabled it" do
-          agent.update!(absence_notification_level: "none")
+          agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
 
           expect do
             post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
@@ -137,7 +137,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         end
 
         it "skips notification after update when agent has disabled it" do
-          agent.update!(absence_notification_level: "none")
+          agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
 
           expect do
             put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
@@ -181,15 +181,14 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
       end
 
-      it "send notification after delete" do
-        expect do
-          delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
-        end.to change { ActionMailer::Base.deliveries.size }.by(1)
+      it "enqueues notification after delete" do
+        delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
+        expect { perform_enqueued_jobs }.to change { ActionMailer::Base.deliveries.size }.by(1)
         expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité supprimée")
       end
 
       it "skips notification after delete when agent has disabled it" do
-        agent.update!(absence_notification_level: "none")
+        agent.update_columns(absence_notification_level: "none") # rubocop:disable Rails/SkipsModelValidations
 
         expect do
           delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }

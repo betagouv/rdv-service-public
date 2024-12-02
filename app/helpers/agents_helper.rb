@@ -48,7 +48,7 @@ module AgentsHelper
     # path_helper_name lets us build the path of the current subsection (Agenda, PlageOuverture, Absence)
     url_template = send(path_helper_name, current_organisation, "__AGENT__")
     preselected_option = [
-      agent.reverse_full_name,
+      agent.reverse_full_name_or_email,
       agent.id,
       {
         "data-url": send(path_helper_name, current_organisation, agent),
@@ -60,7 +60,7 @@ module AgentsHelper
                          selected: agent.id),
       class: "select2-input form-control js-planning-agent-select",
       data: {
-        "select-options": {
+        "select2-config": {
           ajax: {
             url: admin_organisation_agents_path(current_organisation),
             dataType: "json",

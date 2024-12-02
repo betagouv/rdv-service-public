@@ -13,7 +13,7 @@ RSpec.describe "API auth", type: :request do
         headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
       )
       expect(response.status).to eq(401)
-      expect(response.has_header?("access-token")).to eq(false)
+      expect(response.has_header?("access-token")).to be(false)
     end
   end
 
@@ -25,7 +25,7 @@ RSpec.describe "API auth", type: :request do
         headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
       )
       expect(response.status).to eq(401)
-      expect(response.has_header?("access-token")).to eq(false)
+      expect(response.has_header?("access-token")).to be(false)
     end
   end
 
@@ -58,7 +58,7 @@ RSpec.describe "API auth", type: :request do
         headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
       )
       expect(response.status).to eq(200)
-      expect(response.has_header?("access-token")).to eq(true)
+      expect(response.has_header?("access-token")).to be(true)
       get(
         api_v1_absences_path,
         headers: {

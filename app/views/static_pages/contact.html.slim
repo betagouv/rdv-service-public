@@ -1,14 +1,21 @@
 - content_for :title, "Contact"
 
-h2 Votre département
+- territories_group_by_department.each do |department_number, territories|
+  h2 #{department_number} - #{territories.first.department_name}
+  ul.list-group.mb-2
+    - territories.each do |territory|
+      li
+        span> #{territory.name}
+        = link_to territory.humanized_phone_number, "tel:#{territory.phone_number_formatted}"
+
+h2 Autres contacts
 ul.list-group.mb-2
-  - Territory.all.where.not(phone_number: nil).each do |territory|
+  - territories_without_department.each do |territory|
     li
-      span> #{territory}
-      = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"
-  li
-    span> Autres départements, voir
-    = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
+      span> #{territory.name}
+      = link_to territory.humanized_phone_number, "tel:#{territory.phone_number_formatted}"
+span> Voir
+= link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
 
 .fr-grid-row.mt-4#tech-support
   .fr-col-md-8
@@ -23,6 +30,10 @@ ul.list-group.mb-2
     .alert.alert-warning.my-4.d-flex.align-items-center
       i.fa.fa-exclamation-triangle>
       .ml-2
-        b> Nous ne sommes pas travailleurs médico-sociaux,
-        span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
-        | nous pouvons seulement aider avec les sujets techniques
+        - if current_domain == Domain::RDV_MAIRIE
+          ' Nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
+          | nous pouvons seulement aider avec les sujets techniques
+        - else
+          b> Nous ne sommes pas travailleurs médico-sociaux,
+          span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
+          | nous pouvons seulement aider avec les sujets techniques

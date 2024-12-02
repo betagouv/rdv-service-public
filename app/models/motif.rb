@@ -26,8 +26,8 @@ class Motif < ApplicationRecord
   SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
-  enum location_type: { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
-  enum bookable_by: {
+  enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
+  enum :bookable_by, {
     agents: "agents",
     agents_and_prescripteurs: "agents_and_prescripteurs",
     agents_and_prescripteurs_and_invited_users: "agents_and_prescripteurs_and_invited_users",
@@ -75,6 +75,7 @@ class Motif < ApplicationRecord
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
   }
+  scope :archived, -> { active(false) }
   scope :bookable_by_everyone, -> { where(bookable_by: %i[everyone]) }
   scope :bookable_by_everyone_or_bookable_by_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
   scope :bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs agents_and_prescripteurs_and_invited_users]) }
@@ -115,10 +116,6 @@ class Motif < ApplicationRecord
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
   scope :sectorisation_level_agent, -> { where(sectorisation_level: SECTORISATION_LEVEL_AGENT) }
-  scope :in_departement, lambda { |departement_number|
-    joins(organisation: :territory)
-      .where(organisations: { territories: { departement_number: departement_number } })
-  }
   scope :visible, -> { where(visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED]) }
   scope :collectif, -> { where(collectif: true) }
   scope :individuel, -> { where(collectif: false) }
@@ -138,6 +135,22 @@ class Motif < ApplicationRecord
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
+  def archive!
+    update!(deleted_at: Time.zone.now)
+  end
+
+  def unarchive
+    update(deleted_at: nil)
+  end
+
+  def archived?
+    !!deleted_at
+  end
+
+  def destroyable?
+    rdvs.none?
+  end
+
   def authorized_agents
     Agent
       .joins(:organisations)
@@ -146,6 +159,10 @@ class Motif < ApplicationRecord
       .complete
       .active
       .ordered_by_last_name
+  end
+
+  def visible?
+    visibility_type != INVISIBLE
   end
 
   def visible_and_notified?

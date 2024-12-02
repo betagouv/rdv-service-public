@@ -18,14 +18,14 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def recapitulatif
-    authorize(user, :prescribe?)
-    authorize(@rdv_wizard.rdv.motif, :bookable?)
+    authorize(user, :prescribe?, policy_class: Agent::UserPolicy)
+    authorize(@rdv_wizard.rdv.motif, :bookable?, policy_class: Agent::MotifPolicy)
   end
 
   def create_rdv
     # TODO: Autoriser sur la participation (vérifier que le current_agent accéde au user et au motif)
-    authorize(user, :prescribe?)
-    authorize(@rdv_wizard.rdv.motif, :bookable?)
+    authorize(user, :prescribe?, policy_class: Agent::UserPolicy)
+    authorize(@rdv_wizard.rdv.motif, :bookable?, policy_class: Agent::MotifPolicy)
 
     @rdv_wizard.create!
     redirect_to confirmation_admin_organisation_prescription_path(participation_id: @rdv_wizard.participation.id)
@@ -34,7 +34,7 @@ class Admin::PrescriptionController < AgentAuthController
   def confirmation
     participation = Participation.find(params[:participation_id])
     @rdv = participation.rdv
-    authorize(participation, :show?)
+    authorize(participation, :show?, policy_class: Agent::ParticipationPolicy)
   end
 
   private

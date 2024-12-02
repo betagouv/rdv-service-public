@@ -84,9 +84,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       parameter name: "family_situation", in: :query, type: :string, description: "Situation familiale", example: "single", required: false
       parameter name: "number_of_children", in: :query, type: :integer, description: "Nombre d'enfants", example: "3", required: false
 
-      parameter name: "logement", in: :query, type: :string, enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire], description: "Type de logement de l'utilisateur",
-                example: "locataire", required: false
-      parameter name: "notes", in: :query, type: :string, description: "Une note sur l'utilisateur", example: "Super note", required: false
       parameter name: "notify_by_sms", in: :query, type: :boolean, description: "Accepte les notifications par SMS", example: "true", required: false
       parameter name: "notify_by_email", in: :query, type: :boolean, description: "Accepte les notifications par email", example: "true", required: false
       parameter name: "responsible_id", in: :query, type: :integer, description: "ID de l'usager·ère responsable", example: 123, required: false
@@ -111,8 +108,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:affiliation_number) { "101010" }
         let(:family_situation) { "single" }
         let(:number_of_children) { 3 }
-        let(:notes) { "Super note" }
-        let(:logement) { "locataire" }
         let(:notify_by_sms) { false }
         let(:notify_by_email) { false }
         let!(:user_responsible) { create(:user) }
@@ -122,7 +117,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(user.reload.organisations).to match_array([organisation]) }
+        it { expect(user.reload.organisations).to contain_exactly(organisation) }
 
         it { expect(user.reload.first_name).to eq(first_name) }
 
@@ -145,10 +140,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.family_situation).to eq(family_situation) }
 
         it { expect(user.reload.number_of_children).to eq(number_of_children) }
-
-        it { expect(user.reload.notes).to eq(notes) }
-
-        it { expect(user.reload.logement).to eq(logement) }
 
         it { expect(user.reload.notify_by_sms).to eq(notify_by_sms) }
 
@@ -349,8 +340,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:caisse_affiliation) { "caf" }
         let(:affiliation_number) { "101010" }
         let(:family_situation) { "single" }
-        let(:notes) { "Quelques remarques" }
-        let(:logement) { :locataire }
         let(:number_of_children) { 3 }
         let(:notify_by_sms) { false }
         let(:notify_by_email) { false }
@@ -400,7 +389,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
         it { expect(User.count).to eq(user_count_before + 1) }
 
-        it { expect(created_user.organisations).to match_array([organisation]) }
+        it { expect(created_user.organisations).to contain_exactly(organisation) }
 
         it { expect(created_user.first_name).to eq(first_name) }
 

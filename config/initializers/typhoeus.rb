@@ -14,7 +14,7 @@ Typhoeus.before do |request|
   if request.on_failure.blank?
     request.on_failure do |response|
       if response.timed_out?
-        raise Typhoeus::Errors::TimeoutError, "Timed out calling #{response.request.url}"
+        raise Typhoeus::Errors::TimeoutError, "Timed out calling #{response.request.base_url}"
       end
     end
   end

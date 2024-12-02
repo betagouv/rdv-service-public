@@ -8,6 +8,8 @@ Rswag::Ui.configure do |c|
   # correspond to the relative paths for those endpoints.
 
   c.openapi_endpoint "/api-docs/v1/api.json", "API V1 Docs"
+  c.openapi_endpoint "/api-docs/visioplainte/api.json", "Documentation API pour Visioplainte"
+  c.openapi_endpoint "/api-docs/conseillers_numeriques/api.json", "Création de comptes de conseillers numériques"
 
   # Add Basic Auth in case your API is private
   # c.basic_auth_enabled = true

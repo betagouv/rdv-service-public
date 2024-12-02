@@ -13,12 +13,52 @@ RSpec.configure do |config|
   # document below. You can override this behavior by adding a swagger_doc tag to the
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
   config.openapi_specs = {
+
+    "conseillers_numeriques/api.json" => {
+      openapi: "3.0.1",
+      info: {
+        title: "API de création de comptes agents pour conseillers numériques",
+      },
+    },
+    "visioplainte/api.json" => {
+      openapi: "3.0.1",
+      info: {
+        title: "API RDV Service Public pour Visioplainte",
+        version: "v1",
+        description: <<~MARKDOWN,
+          # Authentification
+
+          L'authentification à l'api se fait en passant la clé d'api dans le header `X-VISIOPLAINTE-API-KEY`.
+
+          Par exemple:
+          ```
+          curl --request GET --url "https://demo.rdv.anct.gouv.fr/api/visioplainte/creneaux" --header "X-VISIOPLAINTE-API-KEY: LA_CLE_D_API"
+          ```
+
+          ## Clé d'api en lecture seule
+
+          Il est possible d'avoir une clé d'api qui n'a des permissions qu'en lecture seule sur les créneaux. L'authentification se fait via le même header.
+
+          # Réinitialisation des données sur l'environnement de staging
+
+          La staging de RDV Service Public a vocation à être utilisée par l'environnement de qualification du téléservice Visioplainte.
+          Afin de faciliter les tests sur l'environnement de staging, un endpoint permet de réinitialiser les données.
+          Cet endpoint n'est disponible qu'en staging, pas en production, ni en démo, ni en local.
+
+          Cet appel ce fait avec un POST sur le path /api/visioplainte/reset, par exemple :
+          ```
+          curl -X POST --url "https://staging.rdv-service-public.fr/api/visioplainte/reset" --header "X-VISIOPLAINTE-API-KEY: LA_CLE_D_API"
+          ```
+        MARKDOWN
+      },
+    },
+
     "v1/api.json" => {
       openapi: "3.0.1",
       info: {
-        title: "API RDV Solidarités",
+        title: "API de RDV Service Public",
         version: "v1",
-        description: File.read(Rails.root.join("docs/api/v1/description_api.md")),
+        description: Rails.root.join("docs/api/v1/description_api.md").read,
       },
       components: {
         securitySchemes: {
@@ -62,6 +102,7 @@ RSpec.configure do |config|
               cancelled_at: { type: "string", nullable: true },
               collectif: { type: "boolean" },
               context: { type: "string", nullable: true },
+              created_at: { type: "string" },
               created_by: { type: "string", enum: %w[agent user file_attente prescripteur] },
               created_by_type: { type: "string", enum: %w[Agent User FileAttente Prescripteur] },
               created_by_id: { type: "integer" },
@@ -545,7 +586,11 @@ RSpec.configure do |config|
         },
         {
           name: "PublicLink",
-          description: "Désigne des liens publics de recherche d'un territoire. Ces liens permettent d'accéder directement à la recherche, préfiltrée sur un territoire donné.",
+          description:
+          <<~DESCRIPTION,
+            Utilisé pour faire la correspondance entre des ids externes et des liens de prises de RDV au sein d'un territoire. Ces liens permettent d'accéder directement à la recherche de créneaux pour une organisation donnée.
+            Cet endpoint est limité à 50 appels par minute par adresse IP.
+          DESCRIPTION
         },
         {
           name: "Absence",
@@ -565,8 +610,12 @@ RSpec.configure do |config|
           description: "Serveur de démo",
         },
         {
+          url: "https://rdv.anct.gouv.fr",
+          description: "Serveur de production pour RDV Service Public",
+        },
+        {
           url: "https://www.rdv-solidarites.fr",
-          description: "Serveur de production",
+          description: "Serveur de production pour RDV Solidarités",
         },
       ],
     },

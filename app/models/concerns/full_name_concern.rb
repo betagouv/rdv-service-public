@@ -16,6 +16,10 @@ module FullNameConcern
     names.compact.join(" ")
   end
 
+  def full_name_or_email
+    full_name.presence || email
+  end
+
   # Curie (Skłodowska) Marie
   def reverse_full_name
     names = [last_name&.upcase,
@@ -23,6 +27,10 @@ module FullNameConcern
              first_name,]
 
     names.compact.join(" ")
+  end
+
+  def reverse_full_name_or_email
+    reverse_full_name.presence || email
   end
 
   # M. Curie

@@ -1,12 +1,12 @@
 module SuperAdmins
   class MigrationsController < SuperAdmins::ApplicationController
     def new
-      authorize :migration, :new?, policy_class: SuperAdmin::MigrationPolicy
+      authorize(:migration, :new?, policy_class: SuperAdmin::MigrationPolicy)
       @agent = Agent.find(params[:agent_id])
     end
 
     def create
-      authorize :migration, :create?, policy_class: SuperAdmin::MigrationPolicy
+      authorize(:migration, :create?, policy_class: SuperAdmin::MigrationPolicy)
       agent = Agent.find(params[:agent_id])
 
       new_organisation = Organisation.find(params[:new_organisation_id])
