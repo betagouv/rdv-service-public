@@ -5,14 +5,10 @@
     - if @from_confirmation
       p.rdv-color-text-mention-grey Pour finaliser votre inscription, veuillez définir un mot de passe.
 
-    = simple_form_for resource, as: resource_name, url: password_path(resource_name), html: { method: :put } do |f|
-      = render "devise/shared/error_messages", resource: resource
-      = f.input :reset_password_token, as: :hidden
+    = form_for resource, as: resource_name, url: password_path(resource_name), html: { method: :put }, builder: DsfrFormBuilder do |f|
+      = f.hidden_field :reset_password_token
       .form-group
-        = f.password_field :password, as: :password, label: "Mot de passe", class: "form-control", autocomplete: "new-password", required: true, id: "password"
-        span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
-
-        = render "agents/mot_de_passes/new_password_hints"
+        = render "common/form/password_input", f: f, live_validation: true
 
       .rdv-text-align-center
-        = f.submit "Enregistrer", class: "btn btn btn-primary"
+        = f.submit "Enregistrer", class: "fr-btn"
