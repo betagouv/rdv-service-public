@@ -3,13 +3,13 @@ h1.rdv-text-align-center.text-dark.mt-0.font-weight-bold.mb-4 Connexion à #{cur
 - if display_agent_connect_button?
   = render "common/proconnect_button"
 
+- if display_inclusion_connect_button?
   .row.p-2
     .alert.alert-info.d-flex
       .mr-3
         i.fa.fa-info
       span
-        - if display_inclusion_connect_button?
-          | Si nécessaire, #{link_to("cliquez ici", inclusion_connect_auth_path)} pour continuer d'utiliser Inclusion Connect.
+        | Si nécessaire, #{link_to("cliquez ici", inclusion_connect_auth_path)} pour continuer d'utiliser Inclusion Connect.
   .row.pt-2.pb-2
     .col
       hr
