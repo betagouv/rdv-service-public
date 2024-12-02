@@ -15,15 +15,15 @@ RSpec.describe "User resets his password spec" do
     current_email.click_link("Changer")
     expect(page).to have_content("Définir mon mot de passe")
 
-    fill_in "password", with: "q1w2e3r4t5y6"
+    fill_in "Mot de passe", with: "q1w2e3r4t5y6"
     expect { click_on "Enregistrer" }.not_to change { user.reload.encrypted_password }
     expect(page).to have_content("Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés")
 
-    fill_in "password", with: "pasassezfort"
+    fill_in "Mot de passe", with: "pasassezfort"
     expect { click_on "Enregistrer" }.not_to change { user.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe doit comporter au moins un chiffre.")
 
-    fill_in "password", with: "Corr3ctHorse,"
+    fill_in "Mot de passe", with: "Corr3ctHorse,"
 
     expect { click_on "Enregistrer" }.to change { user.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
