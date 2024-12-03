@@ -91,7 +91,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
     expect(page).to have_selector(".list-group-item", text: /Agent\(s\), horaires & lieu/)
 
-    click_button("Créer RDV")
+    click_button("Confirmer le RDV")
   end
 
   describe "create a RDV with an existing lieu" do
@@ -167,7 +167,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         visit_step4
 
         stub_request(:post, "https://example.com/")
-        click_button("Créer RDV")
+        click_button("Confirmer le RDV")
         expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
           JSON.parse(req.body)["data"]["users"].pluck("id") == [user.id]
         end)

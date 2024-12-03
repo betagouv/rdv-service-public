@@ -43,7 +43,7 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
     expect(page).to have_selector(".list-group-item", text: /Agent\(s\), horaires & lieu/)
 
-    click_button("Créer RDV")
+    click_button("Confirmer le RDV")
     sleep 1
 
     rdv = Rdv.last
