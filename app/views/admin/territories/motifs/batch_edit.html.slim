@@ -50,7 +50,7 @@ h1 Modification en masse (#{@motifs.size} motifs)
         ul.mt-0
           - unique_values.each do |value, nb_of_occurrences|
             li #{value} (#{nb_of_occurrences})
-      = f.text_field :default_duration_in_min, value: (unique_values.keys.size > 1 ? nil : unique_values.first), class: "form-control"
+      = f.text_field :default_duration_in_min, value: (unique_values.keys.size > 1 ? nil : unique_values.keys.first), class: "form-control"
       small.form-text.text-muted Cette durée par défaut sera appliquée à tous les motifs listés ci-dessus
 
     = f.submit "Appliquer", class: "btn btn-primary"
