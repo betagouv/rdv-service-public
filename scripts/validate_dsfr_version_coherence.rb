@@ -13,3 +13,14 @@ if symlinks.size == 1 && File.symlink?(symlinks.first) && symlinks.first == "pub
 else
   raise "Error: Expected one symbolic link for version #{version}, found #{symlinks}"
 end
+
+rails_config_versions = File
+  .read("config/application.rb")
+  .scan(/config.x.dsfr.version = "(\d+\.\d+\.\d+)"/)
+  .flatten
+  .uniq
+if rails_config_versions.size == 1 && rails_config_versions.first == version
+  puts "✅ Correct version used in Rails.configuration.x.dsfr.version"
+else
+  raise "Error: incorrect version(s) used in Rails.configuration.x.dsfr.version : #{rails_config_versions}"
+end
