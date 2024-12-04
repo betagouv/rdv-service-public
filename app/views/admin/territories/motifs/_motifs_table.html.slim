@@ -21,7 +21,6 @@ table.table.table-centered.table-bordered.table-sm.mb-0[class=(display_checkboxe
         | Durée
 
       - if display_actions
-        / Actions column
         th[scope="col"]
   tbody
     - motifs.each do |motif|
@@ -37,15 +36,18 @@ table.table.table-centered.table-bordered.table-sm.mb-0[class=(display_checkboxe
             = motif.name
             = motif_badges(motif)
         td
-          = motif.service.short_name
+          label.mb-0[for="edit_checkbox#{motif.id}"]
+            = motif.service.short_name
         td
           - if motif_policy.show? && display_actions
             = link_to(motif.organisation.name, admin_organisation_motifs_path(organisation_id: motif.organisation.id))
           - else
             = motif.organisation.name
         td
-          = Motif.human_attribute_value(:location_type, motif.location_type)
+          label.mb-0[for="edit_checkbox#{motif.id}"]
+            = Motif.human_attribute_value(:location_type, motif.location_type)
         td
+          label.mb-0[for="edit_checkbox#{motif.id}"]
           = "#{motif.default_duration_in_min}"
         - if display_actions
           td.p-0
