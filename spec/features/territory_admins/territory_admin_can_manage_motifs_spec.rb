@@ -135,7 +135,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       let!(:motif_b) { create(:motif, organisation: organisation) }
       let!(:motif_c) { create(:motif, organisation: organisation) }
 
-      it "works", js: true do
+      it "works manually", js: true do
         visit admin_territory_motifs_path(territory)
         find(%([type="checkbox"][value="#{motif_a.id}"])).check
         find(%([type="checkbox"][value="#{motif_c.id}"])).check
@@ -149,6 +149,21 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
         # On vérifie qu'on arrive sur la page de modification en masse ;
         # cette page est testée dans les exemples ci-dessous.
         expect(page).to have_current_path(batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_c.id]))
+      end
+
+      it "works with batch check", js: true do
+        visit admin_territory_motifs_path(territory)
+        find("input.js-trigger-checkbox").check
+        click_on "Modifier les motifs"
+
+        expect(page).to have_content("Modifier les motifs")
+        expect(page).to have_content(motif_a.name)
+        expect(page).to have_content(motif_b.name)
+        expect(page).to have_content(motif_c.name)
+
+        # On vérifie qu'on arrive sur la page de modification en masse ;
+        # cette page est testée dans les exemples ci-dessous.
+        expect(page).to have_current_path(batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id, motif_c.id]))
       end
     end
 
