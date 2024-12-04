@@ -11,7 +11,9 @@ document.addEventListener("turbolinks:load", function () {
 });
 
 function refreshButtonState() {
-  batchEditButton().disabled = Array.from(batchEditCheckboxes()).filter(c => c.checked).length < 2;
+  const disabled = Array.from(batchEditCheckboxes()).filter(c => c.checked).length < 2;
+  batchEditButton().disabled = disabled;
+  batchEditButton().classList.toggle("btn-outline-primary", !disabled)
 }
 
 function batchEditCheckboxes() {

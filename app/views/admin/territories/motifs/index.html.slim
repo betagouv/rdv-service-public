@@ -50,7 +50,7 @@
       .d-flex.flex-gap-1em
         - if @current_tab != :archived
           form#batch_edit_form[action=batch_edit_admin_territory_motifs_path method="get"]
-            button.btn.btn-outline-primary.mb-2.js-batch-edit-button[role="submit" disabled=true] = t("admin.motifs.actions.batch_edit")
+            button.btn.mb-2.js-batch-edit-button[role="submit" disabled=true] = t("admin.motifs.actions.batch_edit")
 
         a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
 
