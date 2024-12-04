@@ -49,15 +49,8 @@
     .float-right
       .d-flex.flex-gap-1em
         - if @current_tab != :archived
-          javascript:
-            document.addEventListener("DOMContentLoaded", function () {
-              const checkboxes = document.querySelectorAll("input[type=checkbox][form=batch_edit_form]");
-              checkboxes.forEach(e => e.addEventListener("change", event => {
-                document.querySelector("#batch_edit_form button[role=submit]").disabled = Array.from(checkboxes).filter(c => c.checked).length < 2;
-              }))
-            });
           form#batch_edit_form[action=batch_edit_admin_territory_motifs_path method="get"]
-            button.btn.btn-outline-primary.mb-2[role="submit" disabled=true] = t("admin.motifs.actions.batch_edit")
+            button.btn.btn-outline-primary.mb-2.js-batch-edit-button[role="submit" disabled=true] = t("admin.motifs.actions.batch_edit")
 
         a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
 

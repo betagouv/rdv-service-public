@@ -28,7 +28,7 @@ table.table.table-centered.table-bordered.table-hover.table-sm.mb-0
       tr
         - if display_checkboxes
           td
-            input[type="checkbox" form="batch_edit_form" name="motif_ids[]" value=motif.id]
+            input.js-batch-edit-checkbox[type="checkbox" form="batch_edit_form" name="motif_ids[]" value=motif.id]
         td
           span.badge.badge-pill style="background: #{motif.color};" &nbsp;
         td
