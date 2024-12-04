@@ -1,5 +1,7 @@
 spec
 docs
 /tmp/cache
-/node_modules
+/node_modules/@[a-f]*
+/node_modules/@[h-z]*
+/node_modules/[a-z]*
 /.cache/yarn
