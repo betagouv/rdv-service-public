@@ -27,8 +27,6 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     end
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def batch_update
     @motifs = Motif.where(id: params[:motif_ids])
     @motifs.each do |motif|
@@ -37,44 +35,20 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
 
     permitted_params = params.permit(:name, :service_id, :default_duration_in_min, :color, :restriction_for_rdv, :instruction_for_rdv, :custom_cancel_warning_message)
 
-    if (name = permitted_params[:name].presence)
-      @motifs.each do |motif|
-        motif.update!(name: name)
-      end
-    end
+    Motif.transaction do
+      permitted_params.each_key do |attr_name|
+        new_value = permitted_params[attr_name].presence
+        next unless new_value
 
-    if (service_id = permitted_params[:service_id].presence)
-      service = current_territory.services.find(service_id)
-      @motifs.each do |motif|
-        motif.update!(service: service)
-      end
-    end
-
-    if (default_duration_in_min = permitted_params[:default_duration_in_min].presence)
-      @motifs.each do |motif|
-        motif.update!(default_duration_in_min: default_duration_in_min)
-      end
-    end
-
-    if (color = permitted_params[:color].presence)
-      @motifs.each do |motif|
-        motif.update!(color: color)
-      end
-    end
-
-    %i[restriction_for_rdv instruction_for_rdv custom_cancel_warning_message].each do |instruction_attr_name|
-      next unless (new_value = permitted_params[instruction_attr_name].presence)
-
-      @motifs.each do |motif|
-        motif.update!(instruction_attr_name => new_value)
+        @motifs.each do |motif|
+          motif.update!(attr_name => new_value)
+        end
       end
     end
 
     flash[:success] = "Motifs modifiés"
     redirect_to batch_edit_admin_territory_motifs_path(motif_ids: params[:motif_ids])
   end
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def new
     skip_authorization
