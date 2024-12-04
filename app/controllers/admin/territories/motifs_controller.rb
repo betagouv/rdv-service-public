@@ -27,40 +27,41 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     end
   end
 
-  def batch_update
+  UPDATABLE_ATTRS = %i[
+    name
+    service_id
+    default_duration_in_min
+    color
+    restriction_for_rdv
+    instruction_for_rdv
+    custom_cancel_warning_message
+  ].freeze
+
+  def batch_update # rubocop:disable Metrics/PerceivedComplexity
     @motifs = Motif.where(id: params[:motif_ids])
     @motifs.each do |motif|
       authorize(motif, :update?, policy_class: Agent::MotifPolicy)
     end
 
-    permitted_params = params.permit(:name, :service_id, :default_duration_in_min, :color, :restriction_for_rdv, :instruction_for_rdv, :custom_cancel_warning_message)
-
-    errors = {}
+    permitted_params = params.permit(*UPDATABLE_ATTRS).compact_blank
     Motif.transaction do
-      permitted_params.each_key do |attr_name|
-        new_value = permitted_params[attr_name].presence
-        next unless new_value
-
-        @motifs.each do |motif|
-          motif.assign_attributes(attr_name => new_value)
-          if motif.valid?
-            motif.save!
-          else
-            errors[motif] = motif.errors
-          end
-        end
+      @motifs.each do |motif|
+        motif.update(permitted_params)
       end
 
-      raise ActiveRecord::Rollback if errors.present?
+      raise ActiveRecord::Rollback unless @motifs.all?(&:valid?)
     end
 
-    if errors.empty?
+    invalid_motifs = @motifs.select(&:invalid?)
+
+    if invalid_motifs.none?
       flash[:success] = "Motifs modifiés"
     else
-      flash[:error] = errors.map do |motif, errors|
-        "Motif #{motif.id} : #{errors.full_messages.join(', ')}"
+      flash[:error] = invalid_motifs.map do |invalid_motif|
+        "Motif #{invalid_motif.id} : #{invalid_motif.errors.full_messages.join(', ')}"
       end.join("<br>")
     end
+
     redirect_to batch_edit_admin_territory_motifs_path(motif_ids: params[:motif_ids])
   end
 

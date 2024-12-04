@@ -124,16 +124,20 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
   end
 
   describe "batch edit" do
-    let!(:organisation) { create(:organisation, territory: territory) }
+    let!(:organisation_a) { create(:organisation, territory: territory) }
+    let!(:organisation_b) { create(:organisation, territory: territory) }
+    let!(:organisation_c) { create(:organisation, territory: territory) }
 
     before do
-      agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+      agent.roles.create!(organisation: organisation_a, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+      agent.roles.create!(organisation: organisation_b, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+      agent.roles.create!(organisation: organisation_c, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
     end
 
     describe "motif selection" do
-      let!(:motif_a) { create(:motif, organisation: organisation) }
-      let!(:motif_b) { create(:motif, organisation: organisation) }
-      let!(:motif_c) { create(:motif, organisation: organisation) }
+      let!(:motif_a) { create(:motif, organisation: organisation_a) }
+      let!(:motif_b) { create(:motif, organisation: organisation_b) }
+      let!(:motif_c) { create(:motif, organisation: organisation_c) }
 
       it "works manually", js: true do
         visit admin_territory_motifs_path(territory)
@@ -168,8 +172,8 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
 
     describe "updating name" do
-      let!(:motif_a) { create(:motif, organisation: organisation, name: "Nom avec faute A") }
-      let!(:motif_b) { create(:motif, organisation: organisation, name: "Nom avec faute B") }
+      let!(:motif_a) { create(:motif, organisation: organisation_a, name: "Nom avec faute A") }
+      let!(:motif_b) { create(:motif, organisation: organisation_b, name: "Nom avec faute B") }
 
       it "works" do
         visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
@@ -186,8 +190,8 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     describe "updating service" do
       let!(:service_pmi) { create(:service, :pmi).tap { territory.services << _1 } }
       let!(:service_social) { create(:service, :social).tap { territory.services << _1 } }
-      let!(:motif_a) { create(:motif, organisation: organisation, service: service_pmi) }
-      let!(:motif_b) { create(:motif, organisation: organisation, service: service_pmi) }
+      let!(:motif_a) { create(:motif, organisation: organisation_a, service: service_pmi) }
+      let!(:motif_b) { create(:motif, organisation: organisation_b, service: service_pmi) }
 
       it "works" do
         visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
@@ -202,8 +206,8 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
 
     describe "updating duration" do
-      let!(:motif_a) { create(:motif, organisation: organisation, default_duration_in_min: 30) }
-      let!(:motif_b) { create(:motif, organisation: organisation, default_duration_in_min: 60) }
+      let!(:motif_a) { create(:motif, organisation: organisation_a, default_duration_in_min: 30) }
+      let!(:motif_b) { create(:motif, organisation: organisation_b, default_duration_in_min: 60) }
 
       it "works" do
         visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
@@ -218,8 +222,8 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
 
     describe "updating color" do
-      let!(:motif_a) { create(:motif, organisation: organisation, color: "#FFFFFF") }
-      let!(:motif_b) { create(:motif, organisation: organisation, color: "#EEEEEE") }
+      let!(:motif_a) { create(:motif, organisation: organisation_a, color: "#FFFFFF") }
+      let!(:motif_b) { create(:motif, organisation: organisation_b, color: "#EEEEEE") }
 
       it "works" do
         visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
@@ -235,8 +239,8 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
 
     describe "updating restriction_for_rdv" do
-      let!(:motif_a) { create(:motif, organisation: organisation, restriction_for_rdv: "toto") }
-      let!(:motif_b) { create(:motif, organisation: organisation, restriction_for_rdv: "tata") }
+      let!(:motif_a) { create(:motif, organisation: organisation_a, restriction_for_rdv: "toto") }
+      let!(:motif_b) { create(:motif, organisation: organisation_b, restriction_for_rdv: "tata") }
 
       it "works" do
         visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
@@ -251,8 +255,8 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
 
     describe "updating instruction_for_rdv" do
-      let!(:motif_a) { create(:motif, organisation: organisation, instruction_for_rdv: "toto") }
-      let!(:motif_b) { create(:motif, organisation: organisation, instruction_for_rdv: "tata") }
+      let!(:motif_a) { create(:motif, organisation: organisation_a, instruction_for_rdv: "toto") }
+      let!(:motif_b) { create(:motif, organisation: organisation_b, instruction_for_rdv: "tata") }
 
       it "works" do
         visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
@@ -267,8 +271,8 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
 
     describe "updating custom_cancel_warning_message" do
-      let!(:motif_a) { create(:motif, organisation: organisation, custom_cancel_warning_message: "toto") }
-      let!(:motif_b) { create(:motif, organisation: organisation, custom_cancel_warning_message: "tata") }
+      let!(:motif_a) { create(:motif, organisation: organisation_a, custom_cancel_warning_message: "toto") }
+      let!(:motif_b) { create(:motif, organisation: organisation_b, custom_cancel_warning_message: "tata") }
 
       it "works" do
         visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])

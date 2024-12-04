@@ -1,6 +1,6 @@
 = territory_navigation(t("admin.territories.motifs.batch_edit.title"), [link_to(t("admin.territories.motifs.index.title"), admin_territory_motifs_path)])
 
-h1 Modification en masse (#{@motifs.size} motifs)
+h1 Modification en masse de #{@motifs.size} motifs
 
 = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs }
 
