@@ -28,12 +28,13 @@ table.table.table-centered.table-bordered.table-hover.table-sm.mb-0
       tr
         - if display_checkboxes
           td
-            input.js-batch-edit-checkbox[type="checkbox" form="batch_edit_form" name="motif_ids[]" value=motif.id]
+            input.js-batch-edit-checkbox[id="edit_checkbox#{motif.id}" type="checkbox" form="batch_edit_form" name="motif_ids[]" value=motif.id]
         td
           span.badge.badge-pill style="background: #{motif.color};" &nbsp;
         td
-          = motif.name
-          = motif_badges(motif)
+          label.mb-0[for="edit_checkbox#{motif.id}"]
+            = motif.name
+            = motif_badges(motif)
         td
           = motif.service.short_name
         td
