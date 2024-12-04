@@ -1,4 +1,4 @@
-ul.list-group.list-group-flush
+ul.list-group.list-group-flush.mb-3
   li.list-group-item
     .fa.fa-calendar>
     = rdv_title(rdv)
@@ -66,32 +66,32 @@ ul.list-group.list-group-flush
       i.fa.fa-ban>
       | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
 
-.py-2.d-flex.justify-content-between.align-items-center
-  .mt-2
+ul.fr-btns-group.fr-btns-group--inline.fr-mb-0
+  li
     - if policy(rdv, policy_class: User::RdvPolicy).edit?
-       = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
-  .mt-2
+      = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "fr-btn fr-btn--secondary"
+  li
     - if policy(rdv, policy_class: User::RdvPolicy).cancel?
-        = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
+      button.fr-btn.fr-btn--tertiary[data-fr-opened="false" aria-controls="js-cancel-rdv-modal-#{rdv.id}"] Annuler le RDV
     - if policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel?
-        = link_to "Annuler votre participation", "#", data: { toggle: "modal", target: "#js-cancel-participation-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
+      = link_to "Annuler votre participation", "#", data: { toggle: "modal", target: "#js-cancel-participation-modal-#{rdv.id}" }, class: "fr-btn fr-btn--tertiary"
 
 = render( \
-  "common/modal_confirmation", \
+        "common/modal_confirmation", \
   id: "js-cancel-rdv-modal-#{rdv.id}", \
   body_message: rdv.motif.cancellation_warning, \
   cancel_message: "Non", \
   confirm_path: cancel_users_rdv_path(rdv), \
   confirm_message: "Oui, annuler le rendez-vous", \
-  confirm_link_options: { class: "btn btn-danger", method: :put } \
+  confirm_link_options: { method: :put } \
 )
 
 = render( \
-  "common/modal_confirmation", \
+        "common/modal_confirmation", \
   id: "js-cancel-participation-modal-#{rdv.id}", \
   body_message: rdv.motif.cancellation_warning, \
   cancel_message: "Non", \
   confirm_path: users_rdv_participations_cancel_path(rdv), \
   confirm_message: "Oui, annuler votre participation", \
-  confirm_link_options: { class: "btn btn-danger", method: :put } \
+  confirm_link_options: { method: :put } \
 )
