@@ -66,3 +66,7 @@ ol > li::marker {
 header.header {
   border-bottom: 1px solid $card-border-color;
 }
+
+li.nav-item {
+  padding-bottom: 0; // Pour les onglets bootstrap
+}
