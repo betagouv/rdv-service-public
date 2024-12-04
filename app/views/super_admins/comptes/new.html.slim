@@ -19,6 +19,8 @@ section.main-content__body
 
     = f.simple_fields_for :organisation do |ff|
       = ff.input :name, label: "Nom de la première organisation et du premier lieu"
+      div[style="margin: 16px 0 8px 0"]
+        = ff.input :ants_connectable, as: :boolean, label: "Autoriser le branchement au moteur de recherche de l'ANTS", hint: "En cochant cette case, vous permettrez à cette organisation (probablement une mairie) d'apparaitre sur https://rendezvouspasseport.ants.gouv.fr/"
 
     = f.simple_fields_for :lieu do |ff|
       = ff.input :address, label: "Adresse du premier lieu", hint: "", input_html: { class: "places-js-container"}
@@ -28,7 +30,7 @@ section.main-content__body
     = f.simple_fields_for :territory do |ff|
       = ff.input :departement_number, label: "Numéro du département", hint: "Si ce projet est sur plusieurs départements, mettez juste les initiales du projet, par exemple CN pour Conseillers Numériques"
 
-    h4 Admin de territoire
+    h2[style="margin: 32px 0 16px 0"] Admin de territoire
     = f.simple_fields_for :agent do |ff|
       = ff.input :first_name, label: "Prénom"
       = ff.input :last_name, label: "Nom"
