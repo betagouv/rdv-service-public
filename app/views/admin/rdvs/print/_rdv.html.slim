@@ -13,6 +13,12 @@
           = rdv.motif_name
         .rdv-status.px-2.py-2 class="rdv-status-#{rdv.status}" id="rdv-#{rdv.id}-status"
           = rdv.human_attribute_value(:status).upcase
+      - if rdv.motif.visio?
+        .pl-3.pt-2
+          .fa.fa-video-camera>
+          = "RDV par visioconférence "
+          = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
+
       .card-body
         - rdv.participations.each do |participation|
           ruby:

@@ -477,7 +477,7 @@ RSpec.describe "User can search for rdvs" do
     # Password reset page after confirmation
     expect(page).to have_content("Votre compte a été validé")
     expect(page).to have_content("Définir mon mot de passe")
-    fill_in(:password, with: "Rdvservicepublictest1!")
+    fill_in("Mot de passe", with: "Rdvservicepublictest1€")
     click_button("Enregistrer")
   end
 
