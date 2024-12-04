@@ -30,6 +30,7 @@ module SuperAdmins
     def create_organisation
       Organisation.create!(
         name: resource_params[:name],
+        ants_connectable: resource_params[:ants_connectable],
         territory: Territory.mairies,
         verticale: :rdv_mairie
       )
@@ -45,12 +46,6 @@ module SuperAdmins
         roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
         invited_by: current_super_admin
       )
-    end
-
-    def create_motifs(organisation, service)
-      create_motif(organisation, service, "Carte d'identité", Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME)
-      create_motif(organisation, service, "Passeport", Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME)
-      create_motif(organisation, service, "Passeport et carte d'identité", Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME)
     end
 
     def create_motif(organisation, service, name, motif_category_name)
