@@ -138,14 +138,18 @@ module ApplicationHelper
     !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
   end
 
+  def dsfr_path
+    "/dsfr-v#{Rails.configuration.x.dsfr.version}"
+  end
+
   def dsfr_svg(path, **kwargs)
     # cf https://www.systeme-de-design.gouv.fr/fondamentaux/pictogramme
     classes = ["fr-artwork"]
     classes += [kwargs.fetch(:class, nil)]
     tag.svg(class: classes.compact_blank.join(" "), "aria-hidden": "true", viewBox: "0 0 80 80", width: "80px", height: "80px") do
-      tag.use(class: "fr-artwork-decorative", "xlink:href": "/dsfr/#{path}.svg#artwork-decorative") +
-        tag.use(class: "fr-artwork-minor", "xlink:href": "/dsfr/#{path}.svg#artwork-minor") +
-        tag.use(class: "fr-artwork-major", "xlink:href": "/dsfr/#{path}.svg#artwork-major")
+      tag.use(class: "fr-artwork-decorative", "xlink:href": "#{dsfr_path}/#{path}.svg#artwork-decorative") +
+        tag.use(class: "fr-artwork-minor", "xlink:href": "#{dsfr_path}/#{path}.svg#artwork-minor") +
+        tag.use(class: "fr-artwork-major", "xlink:href": "#{dsfr_path}/#{path}.svg#artwork-major")
     end
   end
 end

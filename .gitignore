@@ -47,9 +47,6 @@ coverage/
 !/app/assets/builds/.keep
 
 /public/assets/*
-/public/fonts/*
-/public/icons/*
-/public/dsfr/*
 /public/favicon.ico
 
 # Postgres dumps

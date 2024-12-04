@@ -82,5 +82,7 @@ module Lapin
       Doorkeeper::AuthorizationsController.layout "application_agent_config" # Lors de l'authorisation d'une application oauth
       Doorkeeper::AuthorizedApplicationsController.layout "application_agent_config"
     end
+
+    config.x.dsfr.version = "1.11.2"
   end
 end
