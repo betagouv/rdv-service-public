@@ -1,3 +1,10 @@
+# Teste la cohérence entre les numéros de versions :
+# - du package `dsfr` installé via yarn
+# - du lien symbolique depuis public
+# - et des chemins dans les helpers via la config rails
+#
+# appelé dans /.github/workflows/ci.yml
+
 require "json"
 
 yarn_lock_content = File.read("yarn.lock")
@@ -14,6 +21,8 @@ else
   raise "Error: Expected one symbolic link for version #{version}, found #{symlinks}"
 end
 
+# on ne peut pas appeler Rails.configuration.x.dsfr.version ici car on lance ce script dans la CI
+# sans avoir installé les gems et configuré l’environnement
 rails_config_versions = File
   .read("config/application.rb")
   .scan(/config.x.dsfr.version = "(\d+\.\d+\.\d+)"/)
