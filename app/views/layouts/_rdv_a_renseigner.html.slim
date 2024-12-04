@@ -5,6 +5,4 @@
       div.mr-4
         .fa.fa-exclamation-triangle.alert-link>
         span.ml-1.alert-link = t(".unknown_past_rdv_count", count: agent.unknown_past_rdv_count )
-        - if agent.organisations.size > 1
-          span.ml-1.alert-link = t(".agent_organisations")
       button.btn.rdv-status-unknown_past.float-right = t(".link_to_unknown_past_rdv")
