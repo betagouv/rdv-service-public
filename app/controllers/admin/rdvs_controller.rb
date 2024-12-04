@@ -3,7 +3,7 @@ class Admin::RdvsController < AgentAuthController
 
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index create export participations_export]
+  before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner create export participations_export]
   # Ce mécanisme temporaire est mis en place afin d'assurer une rétro-compatibilité du fait
   # du changement de noms (ou ajout des s) aux paramètres motif_id, lieu_id et scoped_organisation_id
   # Pour plus de contexte, voir https://github.com/betagouv/rdv-service-public/pull/4054#discussion_r1489720373
@@ -37,6 +37,14 @@ class Admin::RdvsController < AgentAuthController
     @form = Admin::RdvSearchForm.new(parsed_params)
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
     @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).ordered_by_name
+  end
+
+  def a_renseigner
+    @hide_rdv_a_renseigner_in_main_layout = true
+    skip_authorization # on fait un policy scope à la ligne suivante
+    @rdvs = policy_scope(current_agent.rdvs, policy_scope_class: Agent::RdvPolicy::Scope)
+      .past.where(status: "unknown")
+      .order({ starts_at: :desc }).page(page_number).per(20)
   end
 
   def export

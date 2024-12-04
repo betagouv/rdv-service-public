@@ -1,0 +1,56 @@
+- rdv = rdv_a_renseigner
+.card[id= "rdv-#{rdv.id}"]
+  .mx-3[id= "rdv-updated-flash-message-#{rdv.id}"]
+  .card-header.border-white
+    .d-flex.flex-wrap.align-items-center.flex-gap-1em
+      .flex-grow-1
+        h5.header
+          span
+            = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
+      - if rdv.collectif?
+        = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
+      - else
+        = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
+  hr.my-0.mx-3
+  .card-body.py-3.row
+    .col-md-8.col-sm-12
+      = render "admin/rdvs/rdv_details", rdv: rdv
+
+    .col-md-4.col-sm-12
+      div.d-flex.justify-content-end.mt-1
+        = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
+
+  .mx-3
+  - if rdv.users.any?
+    div class=("users-details collapse p-3 pt-0")
+      h5.rdv-text-align-center.strong.mb-3> Participants&nbsp;:
+      .row
+        - rdv.users.sort_by { _1.last_name.downcase }.each do |user|
+          .col-4
+            .card.light-gray-card
+              .card-body.p-2
+                .mb-1
+                  = render "admin/participations/user_details", user: user
+
+  div class=("users-details collapse show")
+    hr.my-0.mx-3
+    .card-footer.border-white
+      - if rdv.users.any?
+        .d-none.d-sm-block
+          = render "admin/rdvs/users_table", rdv: rdv, agent: local_assigns[:agent]
+        .d-md-none.d-print-none
+          - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
+            = render "admin/participations/user_card", participation: participation, agent: local_assigns[:agent]
+      - else
+        p Il n'y a pas encore de participant pour ce RDV
+
+      - if rdv.collectif?
+        .d-flex.justify-content-start.mb-2
+          - if rdv.remaining_seats? && rdv.not_cancelled?
+            = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "btn btn-outline-primary btn-sm" do
+              span.ml-1
+                i.fa.fa-fw.fa-user-plus>
+              span
+                = "Ajouter un participant"
+          .text-muted.align-self-center.ml-2
+            = render "admin/rdvs/participants_count", rdv: rdv

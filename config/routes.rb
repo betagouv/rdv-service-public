@@ -215,6 +215,7 @@ Rails.application.routes.draw do
           collection do
             post :participations_export
             post :export
+            get :a_renseigner
           end
         end
         scope module: "organisations" do
