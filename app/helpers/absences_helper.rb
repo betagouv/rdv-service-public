@@ -1,6 +1,5 @@
 module AbsencesHelper
-
-  CALENDAR_BACKGROUND_COLOR = "rgba(127, 140, 141, 0.7)"
+  CALENDAR_BACKGROUND_COLOR = "rgba(127, 140, 141, 0.7)".freeze
 
   def absence_tag(absence)
     if absence.expired?
