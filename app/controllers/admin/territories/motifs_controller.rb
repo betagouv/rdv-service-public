@@ -35,18 +35,32 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
 
     permitted_params = params.permit(:name, :service_id, :default_duration_in_min, :color, :restriction_for_rdv, :instruction_for_rdv, :custom_cancel_warning_message)
 
+    errors = {}
     Motif.transaction do
       permitted_params.each_key do |attr_name|
         new_value = permitted_params[attr_name].presence
         next unless new_value
 
         @motifs.each do |motif|
-          motif.update!(attr_name => new_value)
+          motif.assign_attributes(attr_name => new_value)
+          if motif.valid?
+            motif.save!
+          else
+            errors[motif] = motif.errors
+          end
         end
       end
+
+      raise ActiveRecord::Rollback if errors.present?
     end
 
-    flash[:success] = "Motifs modifiés"
+    if errors.empty?
+      flash[:success] = "Motifs modifiés"
+    else
+      flash[:error] = errors.map do |motif, errors|
+        "Motif #{motif.id} : #{errors.full_messages.join(', ')}"
+      end.join("<br>")
+    end
     redirect_to batch_edit_admin_territory_motifs_path(motif_ids: params[:motif_ids])
   end
 
