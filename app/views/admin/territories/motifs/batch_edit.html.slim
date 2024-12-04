@@ -20,7 +20,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       - else
         small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont le même nom
       .input-group
-        = f.text_field :name, value: (unique_values.size > 1 ? "" : unique_values.keys.first), class: "form-control"
+        = f.text_field :name, value: (unique_values.size > 1 ? "" : unique_values.keys.first), class: "form-control", required: true
         .input-group-append
           = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
 
@@ -40,7 +40,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       - else
         small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs sont associés au même service
       .input-group
-        = f.select :service_id, current_territory.services.reject(&:secretariat?).map { [_1.name, _1.id] }, { selected: (unique_values.size > 1 ? "" : unique_values.keys.first.id), include_blank: true }, { class: "custom-select" }
+        = f.select :service_id, current_territory.services.reject(&:secretariat?).map { [_1.name, _1.id] }, { selected: (unique_values.size > 1 ? "" : unique_values.keys.first.id), include_blank: true, required: true }, { class: "custom-select" }
         .input-group-append
           = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
 
@@ -60,7 +60,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       - else
         small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont la même durée par défaut
       .input-group
-        = f.text_field :default_duration_in_min, value: (unique_values.keys.size > 1 ? nil : unique_values.keys.first), class: "form-control"
+        = f.number_field :default_duration_in_min, value: (unique_values.keys.size > 1 ? nil : unique_values.keys.first), class: "form-control", required: true
         .input-group-append
           = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
 
@@ -77,7 +77,7 @@ h1 Modification en masse de #{@motifs.size} motifs
           option[value=color]
       = f.label "Couleur associée", for: :color, class: "text-bold"
       .input-group
-        = f.color_field :color, value: current_colors.first, class: "form-control", list: "current_colors"
+        = f.color_field :color, value: current_colors.first, class: "form-control", list: "current_colors", required: true
         .input-group-append
           = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
 
