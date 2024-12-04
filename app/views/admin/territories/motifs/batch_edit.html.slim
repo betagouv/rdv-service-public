@@ -31,7 +31,7 @@ h1 Modification en masse de #{@motifs.size} motifs
 
     .form-group
       - unique_values = @motifs.map(&:service).tally
-      = f.label "Service", for: :service_id, class: "text-bold"
+      = f.label "Service associé", for: :service_id, class: "text-bold"
       - if unique_values.size > 1
         p.mb-1 Ces motifs sont associés à des services différents :
         ul.mt-0
@@ -75,7 +75,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       datalist#current_colors
         - current_colors.each do |color|
           option[value=color]
-      = f.label "Couleur", for: :color, class: "text-bold"
+      = f.label "Couleur associée", for: :color, class: "text-bold"
       .input-group
         = f.color_field :color, value: current_colors.first, class: "form-control", list: "current_colors"
         .input-group-append
@@ -103,7 +103,10 @@ h1 Modification en masse de #{@motifs.size} motifs
         - else
           small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont le même texte
         = f.text_area instruction_attr_name, value: (unique_values.size > 1 ? nil : unique_values.keys.first), class: "form-control"
-        small.form-text.text-muted Ces instructions seront appliquées à tous les motifs listés ci-dessus
+        .mt-1
+          = link_to image_path("motif_form/#{instruction_attr_name}.png"), target: "_blank" do
+            span> Voir un exemple
+            i.fa.fa-external-link-alt>
 
       .float-right
         = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
