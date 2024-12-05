@@ -24,7 +24,6 @@ class Compte
     ActiveRecord::Base.transaction do
       territory.save!
       organisation.save!
-
       lieu.save!
 
       self.agent = Agent.invite!(@attributes[:agent].merge(
