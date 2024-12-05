@@ -3,6 +3,9 @@
 
 - content_for(:menu_item) { "menu-rdvs-list" }
 
+- if current_agent.organisations.count > 1
+  p Cette page liste les rendez-vous à renseigner de toutes vos organisations.
+
 - if @rdvs.total_count > 0
   .row.justify-content-center.pb-3
     .col-md-12.col-lg-8
