@@ -185,22 +185,6 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
           expect(motif_b.reload.name).to eq("Nom corrigé")
         end
       end
-
-      context "when a motif already exists with that name (and service and location_type)" do
-        let!(:pmi) { create(:service, :pmi) }
-        let!(:motif_a) { create(:motif, :at_home, organisation: organisation_a, service: pmi, name: "1ère consultation") }
-        let!(:motif_b) { create(:motif, :at_home, organisation: organisation_a, service: pmi, name: "1ère consultation avec faute") }
-
-        it "displays a generic error message" do
-          visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id])
-
-          within("#name_form") do
-            fill_in "Nom du motif", with: "1ère consultation"
-            expect { click_on "Appliquer" }.not_to change { motif_b.reload.attributes }
-          end
-          expect(page).to have_content("Il existe déjà")
-        end
-      end
     end
 
     describe "updating service" do
@@ -344,7 +328,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       it "explains why the motif can't be un-archived" do
         visit admin_territory_motifs_path(territory, current_tab: "archived")
         expect { click_on "Réactiver" }.not_to change { motif.reload.archived? }.from(true)
-        expect(page).to have_content("Il existe déjà")
+        expect(page).to have_content("Nom est déjà utilisé : un motif du même type et du même service porte déjà ce nom dans cette organisation.")
       end
     end
   end

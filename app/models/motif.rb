@@ -58,7 +58,9 @@ class Motif < ApplicationRecord
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
   validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: { scope: %i[organisation location_type service],
+                                                 conditions: -> { where(deleted_at: nil) }, }
+
   validates :color, :default_duration_in_min, :min_public_booking_delay, :max_public_booking_delay, presence: true
   validates :min_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validates :max_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
@@ -68,7 +70,6 @@ class Motif < ApplicationRecord
   validate :not_at_home_if_collectif
   validate :cant_change_once_rdvs_exist
   validate :cant_be_for_secretariat_and_follow_up
-  validate :unique_in_org
 
   # Scopes
   scope :active, lambda { |active = true|
@@ -290,16 +291,6 @@ class Motif < ApplicationRecord
   def cant_be_for_secretariat_and_follow_up
     if for_secretariat && follow_up
       errors.add(:for_secretariat, :cant_be_enabled_if_follow_up)
-    end
-  end
-
-  def unique_in_org
-    if Motif.active.where.not(id: id).exists?(organisation_id:, name:, service_id:, location_type:)
-      errors.add(
-        :base,
-        :duplicate_detected,
-        message: %(Il existe déjà dans #{organisation.name} un motif #{human_attribute_value(:location_type)} nommé "#{name}" pour le service #{service.name})
-      )
     end
   end
 end

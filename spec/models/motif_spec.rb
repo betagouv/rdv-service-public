@@ -1,7 +1,7 @@
 RSpec.describe Motif, type: :model do
   let(:secretariat) { create(:service, :secretariat) }
   let(:motif) { create(:motif, organisation: organisation) }
-  let!(:organisation) { create(:organisation, name: "Mon orga") }
+  let!(:organisation) { create(:organisation) }
 
   it "have a valid factory" do
     expect(build(:motif)).to be_valid
@@ -20,13 +20,13 @@ RSpec.describe Motif, type: :model do
   describe "uniqueness" do
     subject { motif.dup }
 
-    let(:service) { build(:service, name: "PMI") }
+    let(:service) { build(:service) }
     let(:motif) { create(:motif, name: "name", location_type: :home, service: service, organisation: organisation) }
 
     it do
       expect(subject).not_to be_valid
-      expect(subject.errors.details.keys).to eq([:base])
-      expect(subject.errors.full_messages.to_sentence).to eq(%(Il existe déjà dans Mon orga un motif À domicile nommé "name" pour le service PMI))
+      expect(subject.errors.details).to eq({ name: [{ error: :taken, value: "name" }] })
+      expect(subject.errors.full_messages.to_sentence).to eq "Nom est déjà utilisé : un motif du même type et du même service porte déjà ce nom dans cette organisation."
     end
   end
 
