@@ -20,6 +20,51 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     end
   end
 
+  def batch_edit
+    @motifs = Motif.where(id: params[:motif_ids])
+    @motifs.each do |motif|
+      authorize(motif, :edit?, policy_class: Agent::MotifPolicy)
+    end
+  end
+
+  UPDATABLE_ATTRS = %i[
+    name
+    service_id
+    default_duration_in_min
+    color
+    restriction_for_rdv
+    instruction_for_rdv
+    custom_cancel_warning_message
+  ].freeze
+
+  def batch_update # rubocop:disable Metrics/PerceivedComplexity
+    @motifs = Motif.where(id: params[:motif_ids])
+    @motifs.each do |motif|
+      authorize(motif, :update?, policy_class: Agent::MotifPolicy)
+    end
+
+    permitted_params = params.permit(*UPDATABLE_ATTRS).compact_blank
+    Motif.transaction do
+      @motifs.each do |motif|
+        motif.update(permitted_params)
+      end
+
+      raise ActiveRecord::Rollback unless @motifs.all?(&:valid?)
+    end
+
+    invalid_motifs = @motifs.select(&:invalid?)
+
+    if invalid_motifs.none?
+      flash[:success] = "Motifs modifiés"
+    else
+      flash[:error] = invalid_motifs.map do |invalid_motif|
+        "Motif #{invalid_motif.id} : #{invalid_motif.errors.full_messages.join(', ')}"
+      end.join("<br>")
+    end
+
+    redirect_to batch_edit_admin_territory_motifs_path(motif_ids: params[:motif_ids])
+  end
+
   def new
     skip_authorization
     @motif = Motif.new
