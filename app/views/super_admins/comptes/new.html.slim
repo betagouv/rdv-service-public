@@ -12,7 +12,7 @@ section.main-content__body
   p
     | Ce formulaire vous permet de créer un territoire, une organisation, et un lieu pour un agent qui en sera admin (généralement la personne référente du projet).
   p
-    | Un motif d'exemple "Mon premier motif" sera créé.
+    | Un motif d'exemple "Mon premier motif" sera créé, sauf s'il s'agit d'une ouverture de compte pour une mairie.
   = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
     = f.simple_fields_for :territory do |ff|
       = ff.input :name, label: "Nom du territoire"

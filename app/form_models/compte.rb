@@ -25,10 +25,6 @@ class Compte
       territory.save!
       organisation.save!
 
-      if organisation.ants_connectable
-        create_mairie_ressources!
-      end
-
       lieu.save!
 
       self.agent = Agent.invite!(@attributes[:agent].merge(
@@ -40,7 +36,11 @@ class Compte
         TerritoryService.create!(service: service, territory: territory)
       end
 
-      create_motif!
+      if organisation.ants_connectable
+        create_mairie_motifs!
+      else
+        create_example_motif!
+      end
 
       AgentTerritorialRole.create!(agent: agent, territory: territory)
       AgentTerritorialAccessRight.create!(
@@ -65,7 +65,7 @@ class Compte
 
   private
 
-  def create_mairie_ressources!
+  def create_mairie_motifs!
     service = Service.find_by(name: Service::MAIRIE)
 
     create_mairie_motif!(service, "Carte d'identité", Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME)
@@ -86,7 +86,7 @@ class Compte
     )
   end
 
-  def create_motif!
+  def create_example_motif!
     Motif.create!(
       organisation: organisation,
       name: "Mon premier motif",

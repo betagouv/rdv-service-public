@@ -109,6 +109,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
       )
 
       expect(Organisation.last.motifs.requires_ants_predemande_number.count).to eq(3)
+      expect(Organisation.last.motifs.count).to eq 3
     end
   end
 end
