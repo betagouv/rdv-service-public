@@ -9,7 +9,7 @@ class Compte
     @current_domain = current_domain
   end
 
-  def save
+  def save!
     self.territory = Territory.new(@attributes[:territory])
     self.organisation = Organisation.new(@attributes[:organisation].merge(
                                            territory: territory,
@@ -24,6 +24,11 @@ class Compte
     ActiveRecord::Base.transaction do
       territory.save!
       organisation.save!
+
+      if organisation.ants_connectable
+        create_mairie_ressources!
+      end
+
       lieu.save!
 
       self.agent = Agent.invite!(@attributes[:agent].merge(
@@ -59,6 +64,27 @@ class Compte
   end
 
   private
+
+  def create_mairie_ressources!
+    service = Service.find_by(name: Service::MAIRIE)
+
+    create_mairie_motif!(service, "Carte d'identité", Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME)
+    create_mairie_motif!(service, "Passeport", Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME)
+    create_mairie_motif!(service, "Passeport et carte d'identité", Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME)
+  end
+
+  def create_mairie_motif!(service, name, motif_category_name)
+    Motif.create!(
+      name: name,
+      color: "#99CC99",
+      default_duration_in_min: 15,
+      location_type: :public_office,
+      organisation: organisation,
+      service: service,
+      motif_category: MotifCategory.find_by(name: motif_category_name),
+      bookable_by: :everyone
+    )
+  end
 
   def create_motif!
     Motif.create!(

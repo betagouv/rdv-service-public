@@ -1,4 +1,4 @@
-RSpec.describe "Creating a new account for a new project, other than a mairie", js: true do
+RSpec.describe "Creating a new account for a new project, which can be a mairie", js: true do
   let(:super_admin) { create(:super_admin, :support) }
 
   let(:autocomplete_response) do
@@ -84,6 +84,11 @@ RSpec.describe "Creating a new account for a new project, other than a mairie", 
   end
 
   describe "ouverture de compte pour une mairie" do
+    let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
+    let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
+    let!(:cni_passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME) }
+    let!(:service) { create(:service, name: "Mairie") }
+
     it "crée un territoire avec une organisation qui a les catégories de motif pour se brancher à l'ANTS" do
       login_as(super_admin, scope: :super_admin)
       visit super_admins_root_url(host: "http://www.rdv-mairie-test.localhost")
