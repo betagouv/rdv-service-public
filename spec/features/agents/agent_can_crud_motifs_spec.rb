@@ -156,7 +156,7 @@ RSpec.describe "Agent can CRUD motifs" do
       it "explains why the motif can't be un-archived" do
         visit admin_organisation_motif_path(motif.organisation, motif)
         expect { click_on "Réactiver" }.not_to change { motif.reload.archived? }.from(true)
-        expect(page).to have_content("Nom est déjà utilisé : un motif du même type et du même service porte déjà ce nom dans cette organisation.")
+        expect(page).to have_content("Il existe déjà")
       end
     end
   end
