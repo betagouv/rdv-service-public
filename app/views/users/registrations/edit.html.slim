@@ -10,7 +10,7 @@
       - if devise_mapping.confirmable? && resource.pending_reconfirmation?
         .form-text.rdv-color-text-mention-grey.mb-2
           | En attente de confirmation pour #{resource.unconfirmed_email}
-      = render "common/form/new_password_input", f: f, live_validation: true, hint: "Choisissez votre mot de passe ou laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.", password_label: "Nouveau mot de passe"
+      = render "common/form/new_password_input", f:, hint: "Choisissez votre mot de passe ou laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.", password_label: "Nouveau mot de passe"
       = render "common/form/current_password_input", f: f, name: :current_password, hint: "Renseignez votre mot de passe actuel pour tout changement.", password_label: "Mot de passe actuel"
       .rdv-text-align-right= f.submit "Modifier", class: "fr-btn"
       .mt-5.rdv-text-align-center

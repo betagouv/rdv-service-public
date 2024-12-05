@@ -76,7 +76,7 @@ RSpec.describe "User signs up and signs in" do
       click_link "Se connecter"
       within("form") do
         fill_in :user_email, with: agent.email
-        fill_in :password, with: agent.password
+        fill_in :user_password, with: agent.password
         click_on "Se connecter"
       end
       expect(page).to have_current_path(admin_organisation_agent_agenda_path(agent.organisations.first, agent), ignore_query: true)
@@ -91,8 +91,8 @@ RSpec.describe "User signs up and signs in" do
 
       it "shows a warning and advises to change the password" do
         visit new_user_session_path
-        fill_in "Adresse email", with: agent.email
-        fill_in "password", with: "tropfaible"
+        fill_in :user_email, with: agent.email
+        fill_in :user_password, with: "tropfaible"
         within("main") { click_on "Se connecter" }
         expect(page).to have_content("Votre mot de passe est trop faible")
       end
