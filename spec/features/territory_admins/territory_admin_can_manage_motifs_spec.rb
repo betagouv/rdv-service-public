@@ -118,7 +118,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
         fill_in "Couleur associée", with: "#123456"
 
         expect { click_on "Créer le motif" }.not_to change(Motif, :count)
-        expect(page).to have_content("Un motif du même nom, même service et même type existe déjà dans Arques")
+        expect(page).to have_content(%(Il existe déjà dans Arques un motif Sur place nommé "Consultation prénatale" pour le service PMI))
       end
     end
   end
@@ -164,7 +164,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       it "explains why the motif can't be un-archived" do
         visit admin_territory_motifs_path(territory, current_tab: "archived")
         expect { click_on "Réactiver" }.not_to change { motif.reload.archived? }.from(true)
-        expect(page).to have_content("Nom est déjà utilisé : un motif du même type et du même service porte déjà ce nom dans cette organisation.")
+        expect(page).to have_content(%(Il existe déjà dans #{organisation.name} un motif))
       end
     end
   end

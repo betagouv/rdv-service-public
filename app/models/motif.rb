@@ -298,7 +298,7 @@ class Motif < ApplicationRecord
       errors.add(
         :base,
         :duplicate_detected,
-        message: %(Il existe déjà dans #{organisation.name} un motif #{human_attribute_value(:location_type)} nommé "#{name}" pour le service #{service.name}),
+        message: %(Il existe déjà dans #{organisation.name} un motif #{human_attribute_value(:location_type)} nommé "#{name}" pour le service #{service.name})
       )
     end
   end
