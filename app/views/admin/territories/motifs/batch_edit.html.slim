@@ -15,7 +15,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       - if unique_values.size > 1
         p Ces motifs ont des noms différents :
         ul.mt-0
-          - unique_values.each do |value, nb_of_occurrences|
+          - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
             li #{value} (#{nb_of_occurrences})
       - else
         small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont le même nom
@@ -35,7 +35,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       - if unique_values.size > 1
         p.mb-1 Ces motifs sont associés à des services différents :
         ul.mt-0
-          - unique_values.each do |value, nb_of_occurrences|
+          - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
             li #{value.name} (#{nb_of_occurrences})
       - else
         small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs sont associés au même service
@@ -55,7 +55,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       - if unique_values.size > 1
         p.mb-1 Ces motifs on des durées par défaut différentes :
         ul.mt-0
-          - unique_values.each do |value, nb_of_occurrences|
+          - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
             li #{value} (#{nb_of_occurrences})
       - else
         small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont la même durée par défaut
@@ -93,7 +93,7 @@ h1 Modification en masse de #{@motifs.size} motifs
         - if unique_values.size > 1
           p.mb-1 Ces motifs ont des textes différents :
           ul.mt-0
-            - unique_values.each do |value, nb_of_occurrences|
+            - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
               li
                 - if value.present?
                   = "#{value}"
