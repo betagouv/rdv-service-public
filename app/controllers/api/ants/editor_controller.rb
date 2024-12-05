@@ -51,8 +51,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   }.freeze
 
   def self.lieux
-    Lieu.joins(plage_ouvertures: { motifs: :motif_categories })
-      .merge(MotifCategory.requires_ants_predemande_number)
+    Lieu.joins(:organisation)
+      .where(organisations: { ants_connectable: true })
   end
 
   private
