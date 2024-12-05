@@ -37,11 +37,7 @@ class Admin::CreateMotifs
   def motifs_are_valid
     motifs.select(&:invalid?).each do |motif|
       motif.errors.each do |motif_error|
-        if motif_error.attribute == :name && motif_error.type == :taken
-          errors.add(:base, "Un motif du même nom, même service et même type existe déjà dans #{motif.organisation.name}")
-        else
-          errors.import(motif_error) unless errors.added?(motif_error.attribute, motif_error.type) # deduplicate errors
-        end
+        errors.import(motif_error) unless errors.added?(motif_error.attribute, motif_error.type, **motif_error.options) # deduplicate errors
       end
     end
   end
