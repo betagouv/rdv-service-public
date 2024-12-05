@@ -62,7 +62,7 @@ class PlageOuverture < ApplicationRecord
   ## -
 
   def title_with_default
-    if title
+    if title.present?
       title
     elsif starts_at && ends_at
       "Plage de #{human_time_range}"
