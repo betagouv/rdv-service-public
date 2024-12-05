@@ -111,6 +111,8 @@ fr:
       motifs:
         index:
           title: Motifs
+        batch_edit:
+          title: Modifier les motifs
       motif_fields:
         edit:
           title: Champs des motifs

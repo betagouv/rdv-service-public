@@ -47,7 +47,12 @@
   .col-12
 
     .float-right
-      a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
+      .d-flex.flex-gap-1em
+        - if @current_tab != :archived
+          form#batch_edit_form[action=batch_edit_admin_territory_motifs_path method="get"]
+            button.btn.mb-2.js-batch-edit-button[role="submit" disabled=true] = t("admin.motifs.actions.batch_edit")
+
+        a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] = t("admin.motifs.actions.new")
 
     ul.nav.nav-tabs
       - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
@@ -73,66 +78,7 @@
 
     - if @motifs_page.any?
       = paginate @motifs_page, theme: "twitter-bootstrap-4"
-
-      table.table.table-centered.table-bordered.table-hover.table-sm.mb-0
-        thead.thead-light
-          = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
-            tr
-              th[scope="col"]
-              th[scope="col"]
-                | Nom
-              th[scope="col"]
-                | Service
-              th[scope="col"]
-                | Organisation
-              th[scope="col"]
-                | Type
-              th[scope="col"]
-                | Durée
-              th[scope="col"]
-                | Action
-        tbody
-          - @motifs_page.each do |motif|
-            - motif_policy = Agent::MotifPolicy.new(current_agent, motif)
-            tr
-              td
-                span.badge.badge-pill style="background: #{motif.color};" &nbsp;
-              td
-                = motif.name
-                = motif_badges(motif)
-              td
-                = motif.service.short_name
-              td
-                - if motif_policy.show?
-                  = link_to(motif.organisation.name, admin_organisation_motifs_path(organisation_id: motif.organisation.id))
-                - else
-                  = motif.organisation.name
-              td
-                = Motif.human_attribute_value(:location_type, motif.location_type)
-              td
-                = "#{motif.default_duration_in_min}"
-              td.p-0
-                .d-flex
-                  - if @current_tab != :archived
-                    = link_to edit_admin_organisation_motif_path(motif.organisation, motif), class: "btn btn-link", title: t("admin.motifs.actions.edit"), target: :_blank do
-                      i.fa.fa-edit
-
-                  - if motif.archived?
-                    - if motif_policy.unarchive?
-                      = link_to unarchive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.unarchive") do
-                        i.fa.fa-arrow-up-from-bracket
-                    - if motif_policy.destroy?
-                      - if motif.destroyable?
-                        = link_to admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :delete, title: t("admin.motifs.actions.destroy"), data: { confirm: t("admin.motifs.actions.destroy_confirm") } do
-                          i.fa.fa-trash-alt
-                      - else
-                        button.btn.btn-link [disabled="disabled" title=t("admin.motifs.actions.not_destroyable_explanation")]
-                          i.fa.fa-trash-alt
-                  - else
-                    - if motif_policy.archive?
-                      = link_to archive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.archive"), data: { confirm: t("admin.motifs.actions.archive_confirm") } do
-                        i.fa.fa-box-archive
-
+      = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs_page, display_actions: true, display_checkboxes: @current_tab != :archived }
       .mt-2 = paginate @motifs_page, theme: "twitter-bootstrap-4"
 
     - else
