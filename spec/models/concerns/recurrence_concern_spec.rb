@@ -199,6 +199,16 @@ RSpec.describe RecurrenceConcern do
     end
   end
 
+  shared_examples "#human_time_range" do
+    it "does not show minutes if the are zero" do
+      object = build(factory, start_time: Tod::TimeOfDay("09:00"), end_time: Tod::TimeOfDay("12:00"))
+      expect(object.human_time_range).to eq("9h-12h")
+
+      object = build(factory, start_time: Tod::TimeOfDay("09:15"), end_time: Tod::TimeOfDay("12:45"))
+      expect(object.human_time_range).to eq("9h15-12h45")
+    end
+  end
+
   [Absence, PlageOuverture].each do |klass|
     describe(klass) do
       let(:factory) { described_class.name.underscore }
@@ -207,6 +217,7 @@ RSpec.describe RecurrenceConcern do
       include_examples "#in_range"
       include_examples "#recurrence_ends_after_first_day"
       include_examples "#set_recurrence_ends_at"
+      include_examples "#human_time_range"
     end
   end
 end

@@ -62,7 +62,13 @@ class PlageOuverture < ApplicationRecord
   ## -
 
   def title_with_default
-    title.presence || "Plage d'ouverture ##{id}"
+    if title.present?
+      title
+    elsif starts_at && ends_at
+      "Plage de #{human_time_range}"
+    else
+      "Plage d'ouverture"
+    end
   end
 
   def ical_uid
