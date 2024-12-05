@@ -1,0 +1,115 @@
+= territory_navigation(t("admin.territories.motifs.batch_edit.title"), [link_to(t("admin.territories.motifs.index.title"), admin_territory_motifs_path)])
+
+h1 Modification en masse de #{@motifs.size} motifs
+
+= render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs }
+
+.card.mt-4.mb-4.p-3
+  = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "name_form" }) do |f|
+    - @motifs.each do |motif|
+      = f.hidden_field "motif_ids[]", value: motif.id
+
+    .form-group
+      - unique_values = @motifs.map(&:name).tally
+      = f.label "Nom du motif", for: :name, class: "text-bold"
+      - if unique_values.size > 1
+        p Ces motifs ont des noms différents :
+        ul.mt-0
+          - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
+            li #{value} (#{nb_of_occurrences})
+      - else
+        small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont le même nom
+      .input-group
+        = f.text_field :name, value: (unique_values.size > 1 ? "" : unique_values.keys.first), class: "form-control", required: true
+        .input-group-append
+          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+
+.card.p-3.mb-4
+  = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "service_form" }) do |f|
+    - @motifs.each do |motif|
+      = f.hidden_field "motif_ids[]", value: motif.id
+
+    .form-group
+      - unique_values = @motifs.map(&:service).tally
+      = f.label "Service associé", for: :service_id, class: "text-bold"
+      - if unique_values.size > 1
+        p.mb-1 Ces motifs sont associés à des services différents :
+        ul.mt-0
+          - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
+            li #{value.name} (#{nb_of_occurrences})
+      - else
+        small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs sont associés au même service
+      .input-group
+        = f.select :service_id, current_territory.services.reject(&:secretariat?).map { [_1.name, _1.id] }, { selected: (unique_values.size > 1 ? "" : unique_values.keys.first.id), include_blank: true, required: true }, { class: "custom-select" }
+        .input-group-append
+          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+
+.card.p-3.mb-4
+  = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "duration_form" }) do |f|
+    - @motifs.each do |motif|
+      = f.hidden_field "motif_ids[]", value: motif.id
+
+    .form-group
+      - unique_values = @motifs.map(&:default_duration_in_min).tally
+      = f.label "Durée par défaut en minutes", for: :default_duration_in_min, class: "text-bold"
+      - if unique_values.size > 1
+        p.mb-1 Ces motifs on des durées par défaut différentes :
+        ul.mt-0
+          - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
+            li #{value} (#{nb_of_occurrences})
+      - else
+        small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont la même durée par défaut
+      .input-group
+        = f.number_field :default_duration_in_min, value: (unique_values.keys.size > 1 ? nil : unique_values.keys.first), class: "form-control", required: true
+        .input-group-append
+          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+
+.card.p-3.mb-4
+  = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "color_form" }) do |f|
+    - @motifs.each do |motif|
+      = f.hidden_field "motif_ids[]", value: motif.id
+
+    .form-group
+      - current_colors = @motifs.map(&:color).uniq
+      / Cette datalist permet au color picker natif de suggérer les couleurs existantes dans sa palette !
+      datalist#current_colors
+        - current_colors.each do |color|
+          option[value=color]
+      = f.label "Couleur associée", for: :color, class: "text-bold"
+      .input-group
+        = f.color_field :color, value: current_colors.first, class: "form-control", list: "current_colors", required: true
+        .input-group-append
+          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+
+- %i[restriction_for_rdv instruction_for_rdv custom_cancel_warning_message].each do |instruction_attr_name|
+  .card.p-3.mb-4
+    = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "#{instruction_attr_name}_form" }) do |f|
+      - @motifs.each do |motif|
+        = f.hidden_field "motif_ids[]", value: motif.id
+
+      .form-group
+        - unique_values = @motifs.map(&instruction_attr_name).tally
+        = f.label t("activerecord.attributes.motif.#{instruction_attr_name}"), for: instruction_attr_name, class: "text-bold"
+        - if unique_values.size > 1
+          p.mb-1 Ces motifs ont des textes différents :
+          ul.mt-0
+            - unique_values.sort_by(&:last).reverse.each do |value, nb_of_occurrences|
+              li
+                - if value.present?
+                  = "#{value}"
+                - else
+                  em pas de texte
+                = " (#{nb_of_occurrences})"
+        - else
+          small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont le même texte
+        = f.text_area instruction_attr_name, value: (unique_values.size > 1 ? nil : unique_values.keys.first), class: "form-control"
+        .mt-1
+          = link_to image_path("motif_form/#{instruction_attr_name}.png"), target: "_blank" do
+            span> Voir un exemple
+            i.fa.fa-external-link-alt>
+
+      .float-right
+        = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+
+.rdv-text-align-center.mb-4
+    = link_to("Retour", admin_territory_motifs_path, class: "btn btn-outline-primary")
