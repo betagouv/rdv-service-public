@@ -11,9 +11,7 @@
       .card-body
         p
           span> Explorez les fonctionnalités de l'outil à travers la
-          = link_to current_domain.documentation_url do
-            span> documentation
-            i.fa.fa-external-link-alt>
+          = link_to "documentation", current_domain.documentation_url, target: "_blank"
 
     .card
       .card-header

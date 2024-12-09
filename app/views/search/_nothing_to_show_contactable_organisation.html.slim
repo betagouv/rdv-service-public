@@ -14,6 +14,4 @@
         - if organisation.website.present?
           li.mb-2
             strong> Site web&nbsp;:
-            = link_to organisation.website, target: "_blank" do
-              span> #{organisation.website}
-              i.fa.fa-external-link-alt>
+            = link_to organisation.website, organisation.website, target: "_blank"
