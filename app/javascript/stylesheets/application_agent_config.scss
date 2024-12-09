@@ -32,3 +32,9 @@
 @import "./structure/left-menu";
 @import "./structure/misc";
 @import "./structure/misc_agent_config";
+
+@import "./structure/bootstrap_overrides";
+
+a[href] {
+  background-image: none; // pour éviter le soulignement des liens
+}
