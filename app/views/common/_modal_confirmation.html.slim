@@ -7,7 +7,7 @@ dialog id="#{local_assigns[:id]}" class="fr-modal" aria-labelledby="#{local_assi
             button aria-controls="#{local_assigns[:id]}" class="fr-btn--close fr-btn" Fermer
           .fr-modal__content
             h1.fr-modal__title id="#{local_assigns[:id]}-title"
-              span.fr-icon-arrow-right-line.fr-icon--lg aria-hidden="true"
+              span aria-hidden="true"
               | Confirmation
             p
               = local_assigns[:body_message]

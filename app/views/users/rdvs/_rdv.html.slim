@@ -78,20 +78,20 @@ ul.fr-btns-group.fr-btns-group--inline.fr-mb-0
 
 = render( \
         "common/modal_confirmation", \
-  id: "js-cancel-rdv-modal-#{rdv.id}", \
-  body_message: rdv.motif.cancellation_warning, \
-  cancel_message: "Non", \
-  confirm_path: cancel_users_rdv_path(rdv), \
-  confirm_message: "Oui, annuler le rendez-vous", \
-  confirm_link_options: { method: :put } \
+        id: "js-cancel-rdv-modal-#{rdv.id}", \
+        body_message: rdv.motif.cancellation_warning, \
+        cancel_message: "Non", \
+        confirm_path: cancel_users_rdv_path(rdv), \
+        confirm_message: "Oui, annuler le rendez-vous", \
+        confirm_link_options: { method: :put } \
 )
 
 = render( \
         "common/modal_confirmation", \
-  id: "js-cancel-participation-modal-#{rdv.id}", \
-  body_message: rdv.motif.cancellation_warning, \
-  cancel_message: "Non", \
-  confirm_path: users_rdv_participations_cancel_path(rdv), \
-  confirm_message: "Oui, annuler votre participation", \
-  confirm_link_options: { method: :put } \
+        id: "js-cancel-participation-modal-#{rdv.id}", \
+        body_message: rdv.motif.cancellation_warning, \
+        cancel_message: "Non", \
+        confirm_path: users_rdv_participations_cancel_path(rdv), \
+        confirm_message: "Oui, annuler votre participation", \
+        confirm_link_options: { method: :put } \
 )
