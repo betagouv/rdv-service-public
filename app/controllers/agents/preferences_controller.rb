@@ -13,7 +13,7 @@ class Agents::PreferencesController < AgentAuthController
     authorize(@agent, policy_class: Agent::AgentPolicy)
 
     if @agent.update(update_params)
-      redirect_to agents_preferences_path, flash: { notice: t(".update.done") }
+      redirect_to agents_preferences_path, flash: { success: t(".update.done") }
     else
       render :show
     end
