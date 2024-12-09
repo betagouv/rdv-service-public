@@ -157,8 +157,9 @@ jobs:
     name: Feature Tests
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’éxecution
+        # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’exécution
         dirname: [agents, "*"]
         include: 
           - dirname: agents

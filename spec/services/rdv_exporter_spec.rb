@@ -34,11 +34,12 @@ RSpec.describe RdvExporter, type: :service do
           "code postal du premier responsable", # S
           "créé par", # T
           "email(s) professionnel.le(s)", # U
+          "rdv collectif", # V
         ]
       )
 
       expect(first_data_row.first).to eq(2023)
-      expect(first_data_row.last).to eq("agent@mail.com")
+      expect(first_data_row.last).to eq("non")
     end
   end
 

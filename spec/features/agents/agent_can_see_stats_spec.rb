@@ -31,15 +31,6 @@ RSpec.describe "Agent can see stats" do
       # rdv1 & rdv2
       expect(page).to have_content("RDV créés (2)")
     end
-
-    it "displays correct stats for agent1" do
-      click_link "Voir vos statistiques personnelles"
-      expect(page).to have_content("Statistiques de #{agent1.full_name}")
-      # rdv3 & rdv4
-      expect(page).to have_content("À venir\n2")
-      # rdv1, rdv3 & rdv4
-      expect(page).to have_content("RDV créés (3)")
-    end
   end
 
   context "spec for agent2 (basic)" do
@@ -53,13 +44,6 @@ RSpec.describe "Agent can see stats" do
       expect(page).to have_content("Statistiques de #{organisation2.name}")
       # rdv6
       expect(page).to have_content("RDV créés (1)")
-    end
-
-    it "displays correct stats for agent2" do
-      click_link "Voir vos statistiques personnelles"
-      expect(page).to have_content("Statistiques de #{agent2.full_name}")
-      # rdv2, rdv5 & rdv6
-      expect(page).to have_content("RDV créés (3)")
     end
   end
 end

@@ -61,12 +61,10 @@ class OffDays
   def self.to_full_calendar_array
     JOURS_FERIES.map do |jour_ferie|
       {
-        title: "Jour férié 🎉",
+        title: "Jour férié",
         start: jour_ferie.beginning_of_day.as_json,
         end: jour_ferie.end_of_day.as_json,
-        backgroundColor: "#6F6F71",
-        allDay: true,
-        extendedProps: { jour_feries: true },
+        backgroundColor: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
       }
     end
   end

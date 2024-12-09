@@ -39,8 +39,8 @@ RSpec.describe Admin::CreateMotifs do
       expect(form).to be_invalid
       expected_errors = [
         "Default duration in min doit être rempli(e)",
-        "Un motif du même nom, même service et même type existe déjà dans Ma première orga",
-        "Un motif du même nom, même service et même type existe déjà dans Ma seconde orga",
+        "Il existe déjà dans Ma première orga un motif Sur place nommé \"#{valid_motif.name}\" pour le service #{valid_motif.service.name}",
+        "Il existe déjà dans Ma seconde orga un motif Sur place nommé \"#{valid_motif.name}\" pour le service #{valid_motif.service.name}",
       ]
       expect(form.errors.to_a).to match_array(expected_errors)
       expect(form.save).to be_falsey

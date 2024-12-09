@@ -23,7 +23,9 @@
           = n.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: false, class: "custom-select js-recurrence-every js-recurrence-input", data: { target: "recurrence.every", action: "recurrence#updateRecurrence" }
 
       .weekly-select
-        = n.input :on, as: :check_boxes, label: "Répéter les", collection: { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }, include_blank: false, input_html: { data: { target: "recurrence.on", action: "recurrence#updateRecurrence" }, class: "js-recurrence-on js-recurrence-input" }
+        - weekdays = { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }
+        - weekdays[:Dimanche] = "sunday" if current_territory.name == Territory::VISIOPLAINTE_NAME
+        = n.input :on, as: :check_boxes, label: "Répéter les", collection: weekdays, include_blank: false, input_html: { data: { target: "recurrence.on", action: "recurrence#updateRecurrence" }, class: "js-recurrence-on js-recurrence-input" }
 
       .monthly-select.form-group
         span.js-recurrence-monthly data-target="recurrence.monthly" Tous les X du mois

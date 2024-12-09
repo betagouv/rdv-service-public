@@ -12,7 +12,7 @@ orga_gendarmerie = Organisation.create!(
 )
 
 Motif.create!(
-  name: "Dépôt de plainte par visioconférence",
+  name: "Dépôt de plainte par visioconférence (Visioplainte)",
   default_duration_in_min: 30,
   min_public_booking_delay: 2 * 60 * 60,
   color: "#FF7C00",
@@ -28,6 +28,7 @@ superviseur_gendarmerie = Agent.new(
   email: "superviseur.fictif@staging.rdv-service-public.fr",
   uid: "superviseur.fictif@staging.rdv-service-public.fr",
   password: "Rdvservicepublictest1!",
+  display_saturdays: true,
   services: [service_gendarmerie],
   roles_attributes: [
     { organisation: orga_gendarmerie, access_level: AgentRole::ACCESS_LEVEL_ADMIN },

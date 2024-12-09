@@ -22,12 +22,13 @@
 
 .left-side-menu-wrapper {
   background: $bg-leftbar;
+  border-right: 1px solid $card-border-color;
 }
 .left-side-menu {
   background: $bg-leftbar;
   scrollbar-width: thin;
 
-  a {
+  a:not(.btn-primary) {
     color: $menu-item;
     transition: all 0.2s;
 
@@ -35,15 +36,18 @@
       display: block;
       width: 100%; //permet d'augmenter la surface du lien pour le rendre plus facilement clickable
       padding: 20px 12px 20px 24px;
+      font-weight: 500;
 
       &:hover {
-        background-color: lighten($bg-leftbar, 5%);
+        background-color: darken($bg-leftbar, 5%);
       }
 
+      &:active,
       &.active {
         border-left-width: 2px;
         border-left-style: solid;
-        border-left-color: $white;
+        border-left-color: $blue;
+        color: $blue;
       }
 
       &.side-menu__item--small {
@@ -53,11 +57,9 @@
 
     &:hover,
     &:focus,
-    &:active,
-    &.active,
     &[aria-expanded="true"] {
-      color: $menu-item-hover;
       text-decoration: none;
+      background-color: rgb(246, 246, 246);
     }
   }
 
@@ -74,7 +76,8 @@
   }
 
   .current-organisation {
-    background-color: lighten($bg-leftbar, 10%);
+    border-top: 1px solid $card-border-color;
+    border-bottom: 1px solid $card-border-color;
   }
 
   .side-nav-title {
@@ -96,7 +99,6 @@
 
   .left-side-menu {
     width: $leftbar-width;
-    z-index: 10;
     bottom: 0;
     position: sticky;
     top: 0;

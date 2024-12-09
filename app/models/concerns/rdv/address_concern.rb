@@ -53,4 +53,9 @@ module Rdv::AddressConcern
       Motif.human_attribute_value(:location_type, :phone)
     end
   end
+
+  def user_for_home_rdv
+    proches, responsables = users.partition(&:responsible_id)
+    (responsables + proches).select(&:address).first || users.first
+  end
 end

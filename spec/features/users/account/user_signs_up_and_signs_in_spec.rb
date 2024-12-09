@@ -18,7 +18,7 @@ RSpec.describe "User signs up and signs in" do
       current_email.click_link "Confirmer mon compte"
       expect_flash_info(I18n.t("devise.confirmations.confirmed"))
       expect(page).to have_content("Définir mon mot de passe")
-      fill_in :password, with: user.password
+      fill_in "Mot de passe", with: user.password
       click_on "Enregistrer"
       expect_flash_info(I18n.t("devise.passwords.updated")) # auto-connected
       click_link "Déconnexion"
