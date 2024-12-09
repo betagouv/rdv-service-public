@@ -169,7 +169,7 @@ class Rdv < ApplicationRecord
       rdv_date = starts_at.to_date
       if rdv_date > Time.zone.today # future
         "unknown_future"
-      elsif rdv_date == Time.zone.today # today
+      elsif rdv_date == Time.zone.today && starts_at > Time.zone.now
         "unknown_today"
       else # past
         "unknown_past"
