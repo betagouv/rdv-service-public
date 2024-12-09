@@ -33,13 +33,15 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
 
     if removal_service.valid?
       removal_service.remove!
+      flash[:notice] = removal_service.confirmation_message
       if agent.organisations.count >= 1
-        redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent), notice: removal_service.confirmation_message
+        redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent)
       else
-        redirect_to admin_territory_agents_path(current_territory), notice: removal_service.confirmation_message
+        redirect_to admin_territory_agents_path(current_territory)
       end
     else
-      redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent), flash: { error: removal_service.errors.full_messages.join }
+      flash[:error] = removal_service.errors.full_messages.join
+      redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent)
     end
   end
 

@@ -22,7 +22,7 @@ class Admin::LieuxController < AgentAuthController
 
     authorize(@lieu, policy_class: Agent::LieuPolicy)
     if @lieu.save
-      flash.notice = "Le lieu a été créé."
+      flash[:success] = "Le lieu a été créé."
       redirect_to admin_organisation_lieux_path(@lieu.organisation)
     else
       render :new
@@ -36,7 +36,7 @@ class Admin::LieuxController < AgentAuthController
   def update
     set_and_authorize_lieu
     if @lieu.update(lieu_params)
-      flash[:notice] = "Le lieu a été modifié."
+      flash[:success] = "Le lieu a été modifié."
       redirect_to admin_organisation_lieux_path(@lieu.organisation)
     else
       render :edit

@@ -2,7 +2,6 @@
 @import "~bootstrap/scss/variables";
 @import "./_variables";
 @import "./fontawesome_imports";
-@import "./fonts";
 
 @import "~bootstrap/scss/bootstrap";
 @import "~select2/dist/css/select2";
@@ -39,6 +38,7 @@
 @import "./components/recurrence";
 @import "./components/settings";
 @import "./components/utilities";
+@import "./components/utilities_dsfr";
 @import "./components/autocomplete";
 @import "./components/pagination";
 @import "./components/select2";
@@ -53,6 +53,20 @@
   }
 }
 
+@import "./structure/bootstrap_overrides";
+
+a[href] {
+  background-image: none; // pour éviter le soulignement des liens
+}
+
+ol > li::marker {
+  content: ""; //pour éviter les chiffres dans les breadcrumbs
+}
+
 header.header {
   border-bottom: 1px solid $card-border-color;
+}
+
+li.nav-item {
+  padding-bottom: 0; // Pour les onglets bootstrap
 }

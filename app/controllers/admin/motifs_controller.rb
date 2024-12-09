@@ -42,7 +42,7 @@ class Admin::MotifsController < AgentAuthController
     @motif.organisation ||= current_organisation
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.save
-      flash[:notice] = "Motif #{link_to_motif(@motif)} créé."
+      flash[:success] = "Motif #{link_to_motif(@motif)} créé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
     else
       render :new
@@ -52,7 +52,7 @@ class Admin::MotifsController < AgentAuthController
   def update
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.update(params.require(:motif).permit(*FORM_ATTRIBUTES))
-      flash[:notice] = "Le motif #{link_to_motif(@motif)} a été modifié."
+      flash[:success] = "Le motif #{link_to_motif(@motif)} a été modifié."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
       render :edit
@@ -62,14 +62,14 @@ class Admin::MotifsController < AgentAuthController
   def archive
     authorize(@motif, policy_class: Agent::MotifPolicy)
     @motif.archive!
-    flash[:notice] = "Le motif #{link_to_motif(@motif)} a été archivé."
+    flash[:success] = "Le motif #{link_to_motif(@motif)} a été archivé."
     redirect_back fallback_location: admin_organisation_motif_path(@motif.organisation, @motif)
   end
 
   def unarchive
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.unarchive
-      flash[:notice] = "Le motif #{link_to_motif(@motif)} a été réactivé."
+      flash[:success] = "Le motif #{link_to_motif(@motif)} a été réactivé."
     else
       flash[:error] = @motif.errors.full_messages.join(", ")
     end
