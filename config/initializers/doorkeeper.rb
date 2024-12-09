@@ -215,7 +215,11 @@ Doorkeeper.configure do
   # #call can be used in order to allow conditional checks (to allow non-SSL
   # redirects to localhost for example).
   #
-  force_ssl_in_redirect_uri(!Rails.env.local? && ENV["RDV_SOLIDARITES_INSTANCE_NAME"] != "DEMO")
+  force_ssl_in_redirect_uri(
+    !Rails.env.local? &&
+      ENV["RDV_SOLIDARITES_INSTANCE_NAME"] != "DEMO" &&
+      ENV["IS_REVIEW_APP"] != "true"
+  )
   #
   # force_ssl_in_redirect_uri { |uri| uri.host != 'localhost' }
 
