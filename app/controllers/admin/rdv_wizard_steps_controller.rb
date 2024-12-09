@@ -2,6 +2,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
   include RdvsHelper
 
   before_action :set_agent
+  before_action { @hide_rdv_a_renseigner_in_main_layout = true } # L'agent ne va pas interrompre sa création de rdv pour renseigner des rdvs
 
   PERMITTED_PARAMS = [
     :motif_id, :duration_in_min, :starts_at, :lieu_id, :context, :service_id,
