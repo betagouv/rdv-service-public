@@ -45,7 +45,7 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
   def dsfr_label_with_hint(attribute, opts = {})
     label_class = "fr-label #{opts[:class]}"
     label(attribute, class: label_class) do
-      label_and_tags = [label_value(attribute)]
+      label_and_tags = [label_value(attribute, opts)]
       label_and_tags.push(required_tag) if opts[:required] && display_required_tags
       label_and_tags.push(hint_tag(opts[:hint])) if opts[:hint]
 
@@ -91,7 +91,9 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
     )
   end
 
-  def label_value(attribute)
+  def label_value(attribute, opts)
+    return opts[:label] if opts[:label]
+
     (@object.try(:object) || @object).class.human_attribute_name(attribute)
   end
 end

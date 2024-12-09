@@ -9,7 +9,7 @@ RSpec.describe "User is redirected back to requested page after login" do
     expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
 
     fill_in("user_email", with: user.email)
-    fill_in("password", with: user.password)
+    fill_in("user_password", with: user.password)
     click_button("Se connecter")
     expect(page).to have_current_path("/users/rdvs")
   end

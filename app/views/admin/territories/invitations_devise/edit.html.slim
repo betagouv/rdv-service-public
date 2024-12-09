@@ -19,7 +19,7 @@
         .fr-grid-row.fr-grid-row--gutters
           .fr-col-md-6= f.dsfr_text_field :first_name, required: true
           .fr-col-md-6= f.dsfr_text_field :last_name, required: true
-        = render "common/form/password_input", f: f, live_validation: true
+        = render "common/form/new_password_input", f: , hint: "Choisissez votre mot de passe"
 
         .fr-btns-group.fr-btns-group--inline.fr-btns-group--right
           .fr-mt-2w= f.submit t("devise.invitations.edit.submit_button"), class: "fr-btn"
