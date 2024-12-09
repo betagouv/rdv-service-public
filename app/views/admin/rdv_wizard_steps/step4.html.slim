@@ -3,6 +3,7 @@ ruby:
   content_for(:title) { t(".page_title", starts_at: l(@rdv.starts_at, format: :dense)) }
 
 = render "card", rdv_wizard_form: @rdv_wizard, previous_steps: [ { step: 1, value: motif_name_and_location_type(@rdv.motif) }, { step: 2, value: users_inline_list_for_agents(@rdv.users) }, { step: 3, value: "#{agents_to_sentence(@rdv.agents)}, #{human_location(@rdv)}" } ], step_title: t(".step_title") \
+, current_step: 4 \
 do
   = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
     = render("model_errors", model: @rdv_wizard, f: f)
@@ -17,4 +18,4 @@ do
       = f.fields_for :participations, @rdv.participations do |participation_form|
         = render "participation_form", form: participation_form, modals_return_location: new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 4))
 
-      = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Créer RDV", f: f
+      = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Confirmer le RDV", f: f
