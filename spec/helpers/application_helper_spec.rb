@@ -1,5 +1,7 @@
 RSpec.describe ApplicationHelper do
   describe "#dsfr_path" do
+    # cf /docs/4-notes-techniques.md la procédure de mise à jour du DSFR
+
     it "correspond à la version du node package" do
       yarn_lock_content = File.read("yarn.lock")
       version_match = yarn_lock_content.match(%r{@gouvfr/dsfr@[^:]+:\n\s+version\s+"([^"]+)"})
