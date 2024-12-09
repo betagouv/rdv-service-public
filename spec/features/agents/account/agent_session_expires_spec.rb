@@ -16,8 +16,8 @@ RSpec.describe "Agent session expiration" do
     login_time = Time.zone.parse("2024-01-01 12:00")
     travel_to(login_time)
     visit new_agent_session_path
-    fill_in "Email", with: agent.email
-    fill_in "password", with: password
+    fill_in "Adresse email", with: agent.email
+    fill_in "Mot de passe", with: password
     click_on "Se connecter"
     expect_to_be_logged_in
 
@@ -33,8 +33,8 @@ RSpec.describe "Agent session expiration" do
 
   it "is done when the agent is deleted" do
     visit new_agent_session_path
-    fill_in "Email", with: agent.email
-    fill_in "password", with: password
+    fill_in "Adresse email", with: agent.email
+    fill_in "Mot de passe", with: password
     click_on "Se connecter"
     expect_to_be_logged_in
 
