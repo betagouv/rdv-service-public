@@ -22,7 +22,7 @@ RSpec.describe BeneficiaireForm do
       }
     end
 
-    specify do
+    it do
       expect(form).to be_invalid
       expect(form.errors.first.full_message).to eq("Prénom doit être rempli(e)")
     end
@@ -37,7 +37,7 @@ RSpec.describe BeneficiaireForm do
       }
     end
 
-    specify do
+    it do
       expect(form).to be_invalid
       expect(form.errors.first.full_message).to eq("Nom d’usage doit être rempli(e)")
     end
@@ -52,7 +52,7 @@ RSpec.describe BeneficiaireForm do
       }
     end
 
-    specify do
+    it do
       expect(form).to be_invalid
       expect(form.benign_errors.first).to eq("Sans numéro de téléphone, aucune notification ne sera envoyée au bénéficiaire")
     end
@@ -67,7 +67,7 @@ RSpec.describe BeneficiaireForm do
       }
     end
 
-    specify do
+    it do
       expect(form).to be_invalid
       expect(form.errors.first.full_message).to eq("Téléphone n'est pas valide")
     end
