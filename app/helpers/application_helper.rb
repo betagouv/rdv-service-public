@@ -139,7 +139,7 @@ module ApplicationHelper
   end
 
   def dsfr_path
-    "/dsfr-v#{Rails.configuration.x.dsfr.version}"
+    "/dsfr-v1.11.2"
   end
 
   def dsfr_svg(path, **kwargs)
