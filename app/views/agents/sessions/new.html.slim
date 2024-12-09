@@ -19,17 +19,11 @@ h1.rdv-text-align-center.text-dark.mt-0.font-weight-bold.mb-4 Connexion à #{cur
     hr
 
 p.text-muted.mb-2 Entrez votre email et votre mot de passe.
-= form_for resource, as: resource_name, url: session_path(resource_name) do |f|
+= form_for resource, as: resource_name, url: session_path(resource_name), builder: DsfrFormBuilder do |f|
   = render "devise/shared/error_messages", resource: resource
   .form-group
-    = f.label :email
-    = f.email_field :email, autofocus: true, class: "form-control", placeholder: "nom.prenom@email.com"
-  .form-group
-    = f.label :password
-    = f.password_field :password, autocomplete: "current-password", required: true, class: "form-control ", placeholder: "Votre mot de passe", id: "password"
-    span.fa.fa-fw.fa-eye.toggle-password role="button" aria-hidden="true" tabindex="-1"
-
-    .mt-1.mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name)
+    = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true
+    = render "common/form/current_password_input", f:, forgotten_password_link: true
 
   .form-group.mb-0.rdv-text-align-center
-    = f.submit "Se connecter", class: "btn btn-primary"
+    = f.submit "Se connecter", class: "fr-btn"
