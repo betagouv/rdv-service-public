@@ -67,7 +67,7 @@ class Domain
       public_logo_path: "/logo_rdv_service_public.png",
       dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
       name: "RDV Service Public",
-      presentation_for_agents_template_name: "presentation_for_mairie",
+      presentation_for_agents_template_name: nil, # C'est la homepage qui joue ce rôle pour ce domaine
       address_selection_template_name: nil,
       search_banner_template_name: "search/banners/rdv_mairie",
       online_reservation_with_public_link: true,

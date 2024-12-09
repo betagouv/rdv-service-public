@@ -34,7 +34,7 @@ RSpec.describe IcsPayloads::PlageOuverture do
       context "when title is empty" do
         let(:plage_ouverture) { create(:plage_ouverture, title: nil) }
 
-        it { expect(plage_ouverture.payload[:summary]).to eq("RDV Solidarités Plage d'ouverture ##{plage_ouverture.id}") }
+        it { expect(plage_ouverture.payload[:summary]).to eq("RDV Solidarités Plage de 8h-12h") }
       end
     end
 

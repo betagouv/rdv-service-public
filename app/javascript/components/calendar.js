@@ -68,6 +68,7 @@ class CalendarRdvSolidarites {
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: this.handleAjaxError,
       defaultDate: this.getDefaultDate(),
+      allDaySlot: false,
       defaultView: this.getDefaultView(),
       viewSkeletonRender: function (info) {
         localStorage.setItem("calendarDefaultView", info.view.type);
