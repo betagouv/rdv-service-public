@@ -62,7 +62,7 @@ class Admin::UsersController < AgentAuthController
     if from_modal?
       respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id, modal: true)
     elsif user_persisted
-      redirect_to admin_organisation_user_path(@organisation, @user), flash: { notice: "L'usager a été créé." }
+      redirect_to admin_organisation_user_path(@organisation, @user), flash: { success: "L'usager a été créé." }
     else
       render :new
     end
@@ -87,7 +87,7 @@ class Admin::UsersController < AgentAuthController
     if from_modal?
       respond_modal_with @user_form, location: modal_return_location
     elsif user_updated
-      redirect_to admin_organisation_user_path(current_organisation, @user), flash: { notice: "L'usager a été modifié" }
+      redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L'usager a été modifié" }
     else
       render :edit
     end
@@ -95,7 +95,7 @@ class Admin::UsersController < AgentAuthController
 
   def invite
     @user.invite!(domain: current_domain)
-    redirect_to admin_organisation_user_path(current_organisation, @user), notice: "L’usager a été invité."
+    redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L’usager a été invité." }
   end
 
   def destroy
@@ -116,12 +116,12 @@ class Admin::UsersController < AgentAuthController
   def link_to_organisation
     @user = User.find(params.require(:id))
     authorize(current_organisation, policy_class: Agent::OrganisationPolicy)
-    flash[:notice] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
+    flash[:success] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
 
     if from_modal?
       redirect_to add_query_string_params_to_url(modal_return_location, "user_ids[]": @user.id)
     else
-      redirect_to admin_organisation_user_path(current_organisation, @user), flash: { notice: "L'usager a été créé." }
+      redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L'usager a été créé." }
     end
   end
 

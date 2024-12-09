@@ -8,7 +8,7 @@
     = form_for resource, as: resource_name, url: password_path(resource_name), html: { method: :put }, builder: DsfrFormBuilder do |f|
       = f.hidden_field :reset_password_token
       .form-group
-        = render "common/form/password_input", f: f, live_validation: true
+        = render "common/form/new_password_input", f: f
 
       .rdv-text-align-center
         = f.submit "Enregistrer", class: "fr-btn"

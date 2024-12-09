@@ -94,6 +94,15 @@ module RecurrenceConcern
     recurrence.to_hash[:interval] || 1 # when interval is nil, it means 1
   end
 
+  def human_time_range
+    [human_time(starts_at), human_time(ends_at)].join("-")
+  end
+
+  def human_time(datetime)
+    minutes = datetime.min.zero? ? nil : datetime.min
+    "#{datetime.hour}h#{minutes}"
+  end
+
   class_methods do
     def all_occurrences_for(period)
       # defined as a class method, but typically used on ActiveRecord::Relation

@@ -22,14 +22,14 @@ RSpec.describe "Agent can create a Rdv with wizard" do
 
   def step1
     expect_page_title("Nouveau RDV pour le 02/10/2019 à 00:00")
-    expect(page).to have_selector(".card-title", text: "1. Motif")
+    expect(page).to have_selector("h2", text: "Motif")
     select(motif.name, from: "rdv_motif_id")
     expect(page).to have_select("rdv_motif_id", text: "Super Motif (Sur place - RDV collectif)", exact: true)
     click_button("Continuer")
   end
 
   def step2
-    expect(page).to have_selector(".card-title", text: "2. Usager(s)")
+    expect(page).to have_selector("h2", text: "Usager")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     select_user(user)
     click_link("Ajouter")
@@ -55,9 +55,9 @@ RSpec.describe "Agent can create a Rdv with wizard" do
   end
 
   def step3(lieu_availability)
-    expect(page).to have_selector(".card-title", text: "3. Agent(s), horaires & lieu")
+    expect(page).to have_selector("h2", text: "Agent, horaires & lieu")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
-    expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
+    expect(page).to have_selector(".list-group-item", text: /Usager/)
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
 
     if lieu_availability == :enabled
@@ -86,12 +86,12 @@ RSpec.describe "Agent can create a Rdv with wizard" do
   end
 
   def step4
-    expect(page).to have_selector(".card-title", text: "4. Notifications")
+    expect(page).to have_selector("h2", text: "Notifications")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
-    expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
-    expect(page).to have_selector(".list-group-item", text: /Agent\(s\), horaires & lieu/)
+    expect(page).to have_selector(".list-group-item", text: /Usager/)
+    expect(page).to have_selector(".list-group-item", text: /Agent, horaires & lieu/)
 
-    click_button("Créer RDV")
+    click_button("Confirmer le RDV")
   end
 
   describe "create a RDV with an existing lieu" do
@@ -167,7 +167,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         visit_step4
 
         stub_request(:post, "https://example.com/")
-        click_button("Créer RDV")
+        click_button("Confirmer le RDV")
         expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
           JSON.parse(req.body)["data"]["users"].pluck("id") == [user.id]
         end)

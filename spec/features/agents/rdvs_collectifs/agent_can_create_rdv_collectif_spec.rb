@@ -29,21 +29,21 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
 
     # Step 2
     # First we don't add any users
-    expect(page).to have_selector(".card-title", text: "2. Usager(s)")
+    expect(page).to have_selector("h2", text: "Usager")
     click_button("Continuer")
 
     # Step 3
-    expect(page).to have_selector(".card-title", text: "3. Agent(s), horaires & lieu")
+    expect(page).to have_selector("h2", text: "Agent, horaires & lieu")
     select(lieu.full_name, from: "rdv_lieu_id")
     click_button("Continuer")
 
     # Step 4
-    expect(page).to have_selector(".card-title", text: "4. Notifications")
+    expect(page).to have_selector("h2", text: "Notifications")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
-    expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
-    expect(page).to have_selector(".list-group-item", text: /Agent\(s\), horaires & lieu/)
+    expect(page).to have_selector(".list-group-item", text: /Usager/)
+    expect(page).to have_selector(".list-group-item", text: /Agent, horaires & lieu/)
 
-    click_button("Créer RDV")
+    click_button("Confirmer le RDV")
     sleep 1
 
     rdv = Rdv.last

@@ -465,8 +465,8 @@ RSpec.describe "User can search for rdvs" do
     expect(page).to have_content("Inscription")
     fill_in(:user_first_name, with: "Michel")
     fill_in(:user_last_name, with: "Lapin")
-    fill_in("Email", with: "michel@lapin.fr")
-    fill_in("Téléphone", with: "0612345678")
+    fill_in("Adresse email", with: "michel@lapin.fr")
+    fill_in("Numéro de téléphone", with: "0612345678")
     click_button("Je m’inscris")
 
     # Confirmation email

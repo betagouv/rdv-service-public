@@ -18,6 +18,6 @@ class Admin::RdvWizardForm::Step4
   end
 
   def success_flash
-    { notice: I18n.t("admin.rdvs.message.success.create") }
+    { flash: { success: I18n.t("admin.rdvs.message.success.create") } }
   end
 end

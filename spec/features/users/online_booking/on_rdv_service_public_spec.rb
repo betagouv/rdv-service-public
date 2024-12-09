@@ -33,7 +33,7 @@ RSpec.describe "User can search rdv on rdv service public" do
     expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
 
     fill_in("user_email", with: user.email)
-    fill_in("password", with: user.password)
+    fill_in("user_password", with: user.password)
     click_button("Se connecter")
 
     expect(page).not_to have_field("Numéro de pré-demande ANTS")

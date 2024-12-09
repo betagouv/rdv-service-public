@@ -156,6 +156,10 @@ Rails.application.routes.draw do
           end
           resources :teams, except: :show
           resources :motifs, only: %i[index new create destroy] do
+            collection do
+              get :batch_edit
+              post :batch_update
+            end
             member do
               post :archive
               post :unarchive
@@ -211,6 +215,7 @@ Rails.application.routes.draw do
           collection do
             post :participations_export
             post :export
+            get :a_renseigner
           end
         end
         scope module: "organisations" do
