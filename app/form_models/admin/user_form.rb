@@ -5,17 +5,9 @@ class Admin::UserForm
 
   validate :validate_duplicates
 
-  delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :user
+  delegate :ants_pre_demande_number, :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :user
   validate :warn_duplicates
-  validate do
-    if @user.ants_pre_demande_number.present?
-      ValidateAntsPreDemandeNumber.perform(
-        user: @user,
-        ants_pre_demande_number: @user.ants_pre_demande_number,
-        ignore_benign_errors: ignore_benign_errors
-      )
-    end
-  end
+  validates_with AntsPreDemandeNumberValidation, if: -> { @user.ants_pre_demande_number.present? }
 
   delegate :errors, to: :user
 
