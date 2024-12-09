@@ -83,29 +83,28 @@ module UserRdvWizard
     delegate :errors, to: :user
 
     validate :phone_number_present_for_motif_by_phone
-    validate do
-      if rdv.requires_ants_predemande_number?
-        ValidateAntsPreDemandeNumber.perform(
-          user: @user,
-          ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
-          ignore_benign_errors: @user_attributes[:ignore_benign_errors]
-        )
-      end
-    end
 
     def phone_number_present_for_motif_by_phone
-      errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && @user_attributes[:phone_number].blank?
+      errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
     end
 
     def initialize(user, attributes)
       super
-      @user_attributes = @attributes[:user]&.with_indifferent_access
+      @user&.assign_attributes(@attributes.fetch(:user, {}))
     end
 
     def save
       # we make sure the email can be updated only if it is blank
       @user.skip_reconfirmation! if @user.email_was.blank?
-      valid? && @user.update(@user_attributes)
+
+      # dans la vue on appelle form_for(user) plutôt que form_for(user_rdv_wizard) les erreurs doivent donc être
+      # définies sur le user et on ne peut pas simplement appeler `validates_with AntsPreDemandeNumberValidation`
+      # dans ce form model
+      if rdv.requires_ants_predemande_number?
+        @user.singleton_class.validates_with(AntsPreDemandeNumberValidation)
+      end
+
+      valid? && @user.save
     end
   end
 
