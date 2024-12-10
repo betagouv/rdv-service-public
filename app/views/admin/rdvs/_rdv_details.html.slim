@@ -27,9 +27,7 @@
     i.fa.fa-video-camera.text-primary-blue>
     = "Par visioconférence "
     - if should_display_link
-      = link_to(rdv.visio_url, target: :_blank) do
-        = "démarrer la visioconférence "
-        i.fa.fa-external-link[aria-hidden="true"]
+      = link_to("démarrer la visioconférence ", rdv.visio_url, target: :_blank)
     - else
       br
       small.text-muted = "Le lien de visioconférence s'affiche uniquement pour l'agent qui assure le RDV et les secrétaires."
