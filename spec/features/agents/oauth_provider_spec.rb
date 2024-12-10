@@ -40,8 +40,8 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
     click_button "Se connecter avec RDV Service Public"
 
     expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
-    fill_in "Email", with: agent.email
-    fill_in "password", with: agent.password
+    fill_in "Adresse email", with: agent.email
+    fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
     expect(page).to have_content("Connexion réussie")
@@ -61,8 +61,8 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
     # La fois suivante, il y a uniquement besoin de se connecter, pas de reconfirmer qu'on donne la permission à l'appli
     # Et on peut se connecter avant de faire l'oauth
     click_on "Espace Agent"
-    fill_in "Email", with: agent.email
-    fill_in "password", with: agent.password
+    fill_in "Adresse email", with: agent.email
+    fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
     visit "http://localhost:4567/"
@@ -79,8 +79,8 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"
 
-    fill_in "Email", with: agent.email
-    fill_in "password", with: agent.password
+    fill_in "Adresse email", with: agent.email
+    fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
     expect(page).to have_content("Votre email est francis@factice.org")
@@ -94,8 +94,8 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"
 
-    fill_in "Email", with: agent.email
-    fill_in "password", with: agent.password
+    fill_in "Adresse email", with: agent.email
+    fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
     expect(page).to have_content("Connexion réussie")

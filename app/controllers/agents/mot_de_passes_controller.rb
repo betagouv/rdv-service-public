@@ -13,7 +13,7 @@ class Agents::MotDePassesController < AgentAuthController
     authorize(current_agent, policy_class: Agent::AgentPolicy)
     if current_agent.update_with_password(agent_params)
       bypass_sign_in(current_agent) # Pour des raisons mystérieuses, Devise déconnecte l'agent après un changement de mot de passe
-      flash[:notice] = "Votre mot de passe a été changé"
+      flash[:success] = "Votre mot de passe a été changé"
       redirect_to edit_agent_registration_path
     else
       render :edit
