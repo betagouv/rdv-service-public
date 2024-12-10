@@ -46,7 +46,7 @@ L’ANTS authentifie ses requêtes vers nos endpoints via un token passé en hea
 ## Environnement de préproduction
 
 L’ANTS fournit un environnement de préproduction : [ppd.rendezvouspasseport.ants.gouv.fr](https://ppd.rendezvouspasseport.ants.gouv.fr/).
-Cet environnement est configuré pour requêter demo.rdv.anct.gouv.fr, c’est à dire l’instance que demo-rdv-solidarites (pour l’instant, l’instance staging-rdv-service-public n’est pas adaptée à cet usage).
+Cet environnement est configuré pour requêter demo.rdv.anct.gouv.fr, c’est à dire l’instance `demo-rdv-solidarites` (pour l’instant, l’instance `staging-rdv-service-public` n’est pas adaptée à cet usage).
 
 On peut donc configurer des organisations, motifs et plages d’ouverture sur [demo.rdv.anct.gouv.fr](https://demo.rdv.anct.gouv.fr) pour les retrouver en recherchant sur [ppd.rendezvouspasseport.ants.gouv.fr](https://ppd.rendezvouspasseport.ants.gouv.fr/).
 Il peut y avoir un délai après la création de l’organisation et du lieu, il faut que l’ANTS requête une première fois pour découvrir les nouveaux lieux ouverts.
