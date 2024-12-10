@@ -1,5 +1,9 @@
 .card[id= "rdv-#{rdv.id}"]
   .mx-3[id= "rdv-updated-flash-message-#{rdv.id}"]
+  - if local_assigns[:success_message]
+    .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mx-3w.fr-my-2w
+      p.fr-mb-0= local_assigns[:success_message]
+
   .card-header.border-white
     .d-flex.flex-wrap.align-items-center.flex-gap-1em
       .flex-grow-1
