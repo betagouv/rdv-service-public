@@ -8,16 +8,16 @@
 
 - if @rdvs.total_count > 0
   .row.justify-content-center.pb-3
-    .col-md-12.col-lg-8
+    .col-md-12
       - @rdvs.group_by { |r| r.starts_at.to_date }.each do |date, rdvs|
         h4 = "Le #{l(date, format: :human)}"
         - rdvs.sort_by(&:starts_at).each do |rdv|
-          = render "rdv", rdv: rdv, agent: current_agent, quick_update: true
+          = render "rdv_with_quick_update", rdv: rdv, agent: current_agent
 
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
 - else
   .row.justify-content-center.pb-3
-    .col-md-12.col-lg-8
+    .col-md-12
       .card
         .card-body
           .row.justify-content-md-center

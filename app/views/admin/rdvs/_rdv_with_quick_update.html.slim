@@ -1,0 +1,49 @@
+.card[id= "rdv-#{rdv.id}"]
+  div[id= "js-rdv-error-message-#{rdv.id}"]
+  .card-header.border-white.d-flex.justify-content-between.align-items-center
+    = link_to rdv_starts_at_and_duration(rdv, :time_only), admin_organisation_rdv_path(rdv.organisation, rdv)
+    .d-flex.float-right
+      - if local_assigns[:success_message]
+        .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mr-2w
+          p.fr-mb-0= local_assigns[:success_message]
+      - if rdv.status != "unknown"
+        = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true, quick_update: true
+      - else
+        = link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: "seen", ignore_benign_errors: true }, quick_update: true), method: :put, remote: true do
+          .fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-checkbox-circle-line.mr-2
+            = Rdv.human_attribute_value(:status, "seen", context: :action)
+        = link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: "noshow", ignore_benign_errors: true}, quick_update: true), method: :put, remote: true do
+          .fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-error-line.mr-2
+            = Rdv.human_attribute_value(:status, "noshow", context: :action)
+        .dropdown id="rdv-status-#{rdv.id}"
+          .dropdown-toggle.fr-btn.fr-btn--secondary[data-toggle="dropdown"]
+            = "Autre"
+          .dropdown-menu
+            = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: current_agent, status: "excused", remote: true, quick_update: true
+            = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: current_agent, status: "revoked", remote: true, quick_update: true
+  hr.my-0.mx-3
+  .card-body.py-3.row
+    .col-sm-12
+       = render "admin/rdvs/rdv_details", rdv: rdv
+
+  hr.my-0.mx-3
+  .card-footer.border-white
+    - if rdv.users.any?
+      .d-none.d-sm-block
+        = render "admin/rdvs/users_table", rdv: rdv, agent: local_assigns[:agent]
+      .d-md-none.d-print-none
+        - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
+          = render "admin/participations/user_card", participation: participation, agent: local_assigns[:agent]
+    - else
+      p Il n'y a pas encore de participant pour ce RDV
+
+    - if rdv.collectif?
+      .d-flex.justify-content-start.mb-2
+        - if rdv.remaining_seats? && rdv.not_cancelled?
+          = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "btn btn-outline-primary btn-sm" do
+            span.ml-1
+              i.fa.fa-fw.fa-user-plus>
+            span
+              = "Ajouter un participant"
+        .text-muted.align-self-center.ml-2
+          = render "admin/rdvs/participants_count", rdv: rdv
