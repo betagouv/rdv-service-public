@@ -17,7 +17,7 @@ p.text-muted.mb-2 Entrez votre email et votre mot de passe.
 = form_for resource, as: resource_name, url: session_path(resource_name), builder: DsfrFormBuilder do |f|
   = render "devise/shared/error_messages", resource: resource
   .form-group
-    = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true
+    = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr"
     = render "common/form/current_password_input", f:, forgotten_password_link: true
 
   .form-group.mb-0.rdv-text-align-center
