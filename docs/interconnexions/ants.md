@@ -43,11 +43,13 @@ Tous ces endpoints sont définis par `Api::Ants::EditorController`.
 
 L’ANTS authentifie ses requêtes vers nos endpoints via un token passé en header `X-HUB-RDV-AUTH-TOKEN`.
 
-## Environnement de staging
+## Environnement de préproduction
 
-L’ANTS fournit un environnement de staging - préproduction :
+L’ANTS fournit un environnement de préproduction : [ppd.rendezvouspasseport.ants.gouv.fr](https://ppd.rendezvouspasseport.ants.gouv.fr/).
+Cet environnement est configuré pour requêter demo.rdv.anct.gouv.fr, c’est à dire l’instance que demo-rdv-solidarites (pour l’instant, l’instance staging-rdv-service-public n’est pas adaptée à cet usage).
 
-- Le site de recherche de créneaux [ppd.rendezvouspasseport.ants.gouv.fr](https://ppd.rendezvouspasseport.ants.gouv.fr/)
+On peut donc configurer des organisations, motifs et plages d’ouverture sur [demo.rdv.anct.gouv.fr](https://demo.rdv.anct.gouv.fr) pour les retrouver en recherchant sur [ppd.rendezvouspasseport.ants.gouv.fr](https://ppd.rendezvouspasseport.ants.gouv.fr/).
+Il peut y avoir un délai après la création de l’organisation et du lieu, il faut que l’ANTS requête une première fois pour découvrir les nouveaux lieux ouverts.
 
 ## Dédoublonnage
 
@@ -72,7 +74,10 @@ Nous nous authentifions à l’API de l’ANTS via un token passé en header et 
 
 ### Environnement de développement
 
-L’ANTS fournit un environnement de développement (aussi dit d’intégration) disponible sur [int.api-coordination.rendezvouspasseport.ants.gouv.fr](https://int.api-coordination.rendezvouspasseport.ants.gouv.fr)
+L’ANTS fournit un environnement de développement (aussi dit d’intégration) disponible sur [int.api-coordination.rendezvouspasseport.ants.gouv.fr](https://int.api-coordination.rendezvouspasseport.ants.gouv.fr).
+
+L’instance demo-rdv-solidarites (et donc le domaine demo.rdv.anct.gouv.fr) est configurée pour requêter cette API d’intégration.
+
 Pour tester en local, renseignez les variables d’environnement suivantes :
 
 ```env
