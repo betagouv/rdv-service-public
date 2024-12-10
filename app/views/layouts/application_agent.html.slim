@@ -16,7 +16,6 @@ html lang="fr"
             = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
           .fr-mx-2w= render "layouts/flash_dsfr"
           .container-fluid
-            = render "admin/agents/cnfs_email_change_banner"
             - if content_for :title
               .page-title-box
                 h1.page-title.pb-2= yield :title
