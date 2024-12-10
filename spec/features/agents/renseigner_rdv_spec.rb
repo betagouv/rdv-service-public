@@ -11,8 +11,7 @@ RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nou
     visit root_path
     expect(page).to have_content "Vous avez 1 rendez-vous à renseigner"
     click_link "Voir ces RDV"
-    find(".btn", text: "À renseigner").click
-    find("span", text: "Rendez-vous honoré").click
+    find(".fr-btn", text: "Rendez-vous honoré").click
     expect(page).to have_content("Rendez-vous mis à jour") # Cet expect permet d'attendre la requête ajax
     expect(rdv.reload.status).to eq("seen")
   end
