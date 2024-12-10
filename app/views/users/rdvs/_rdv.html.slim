@@ -1,4 +1,4 @@
-ul.list-group.list-group-flush.mb-3
+ul.list-group.list-group-flush.fr-mb-3w
   li.list-group-item
     .fa.fa-calendar>
     = rdv_title(rdv)
@@ -67,13 +67,14 @@ ul.list-group.list-group-flush.mb-3
       | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
 
 ul.fr-btns-group.fr-btns-group--inline.fr-mb-0
-  li
-    - if policy(rdv, policy_class: User::RdvPolicy).edit?
+  - if policy(rdv, policy_class: User::RdvPolicy).edit?
+    li
       = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "fr-btn fr-btn--secondary"
-  li
-    - if policy(rdv, policy_class: User::RdvPolicy).cancel?
+  - if policy(rdv, policy_class: User::RdvPolicy).cancel?
+    li
       button.fr-btn.fr-btn--tertiary[data-fr-opened="false" aria-controls="js-cancel-rdv-modal-#{rdv.id}"] Annuler le RDV
-    - if policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel?
+  - if policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel?
+    li
       button.fr-btn.fr-btn--tertiary[data-fr-opened="false" aria-controls="js-cancel-participation-modal-#{rdv.id}"] Annuler votre participation
 
 = render( \

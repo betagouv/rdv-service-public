@@ -1,18 +1,20 @@
-dialog id="#{local_assigns[:id]}" class="fr-modal" aria-labelledby="#{local_assigns[:id]}-title"
+/# locals: (id:, body_message:, confirm_message: "Confirmer", cancel_message: "Annuler", confirm_path:, confirm_link_options: {})
+
+dialog id="#{id}" class="fr-modal" aria-labelledby="#{id}-title"
   .fr-container.fr-container--fluid.fr-container-md
     .fr-grid-row.fr-grid-row--center
       .fr-col-12.fr-col-md-8.fr-col-lg-6
         .fr-modal__body
           .fr-modal__header
-            button aria-controls="#{local_assigns[:id]}" class="fr-btn--close fr-btn" Fermer
+            button aria-controls="#{id}" class="fr-btn--close fr-btn" Fermer
           .fr-modal__content
-            h1.fr-modal__title id="#{local_assigns[:id]}-title"
+            h1.fr-modal__title id="#{id}-title"
               span aria-hidden="true"
               | Confirmation
             p
-              = local_assigns[:body_message]
+              = body_message
           .fr-modal__footer
             .fr-btns-group.fr-btns-group--right.fr-btns-group--inline-reverse.fr-btns-group--inline-lg.fr-btns-group--icon-left
-              = link_to local_assigns[:confirm_message] || "Confirmer", confirm_path, class: "fr-btn", **local_assigns[:confirm_link_options]
-              button type='button' class='fr-btn fr-btn--secondary' aria-controls="#{local_assigns[:id]}"
-                = local_assigns[:cancel_message] || "Annuler"
+              = link_to confirm_message, confirm_path, class: "fr-btn", **confirm_link_options
+              button type='button' class='fr-btn fr-btn--secondary' aria-controls="#{id}"
+                = cancel_message
