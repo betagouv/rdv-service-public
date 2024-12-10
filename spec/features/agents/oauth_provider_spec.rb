@@ -49,6 +49,8 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
     click_on "Continuer"
     expect(page).to have_content("Votre email est francis@factice.org")
 
+    expect(Doorkeeper::AccessToken.last.refresh_token).to be_present
+
     click_on "Déconnexion"
 
     # On est déconnecté du client et de RDV Service Public
