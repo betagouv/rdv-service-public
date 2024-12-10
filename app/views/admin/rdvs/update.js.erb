@@ -7,5 +7,5 @@
     }
   })();
 <% else %>
-    $("#rdv-updated-flash-message-<%= @rdv.id %>").html('<%= j render partial: "layouts/flash" %>');
+    $("#js-rdv-error-message-<%= @rdv.id %>").html('<%= j render partial: "admin/rdvs/update_error" %>');
 <% end %>
