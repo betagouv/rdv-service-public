@@ -1,5 +1,5 @@
 <% if @rdv.errors.empty? %>
-  <% rdv_html = render "admin/rdvs/rdv", rdv: @rdv, locals: { agent: @agent }, success_message: "Rendez-vous mis à jour" %>
+  <% rdv_html = render "admin/rdvs/rdv", rdv: @rdv, locals: { agent: @agent }, success_message: "Rendez-vous mis à jour", quick_update: params[:quick_update] %>
   (function() {
     let element = document.getElementById('rdv-<%= @rdv.id %>');
     if(element) {

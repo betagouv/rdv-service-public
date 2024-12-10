@@ -1,39 +1,63 @@
 .card[id= "rdv-#{rdv.id}"]
   div[id= "js-rdv-error-message-#{rdv.id}"]
-  - if local_assigns[:success_message]
+  - if local_assigns[:success_message] && !params.permit(:quick_update)
     .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mx-3w.fr-my-2w
       p.fr-mb-0= local_assigns[:success_message]
 
-  .card-header.border-white
-    .d-flex.flex-wrap.align-items-center.flex-gap-1em
-      .flex-grow-1
-        h5.header
-          span
-            = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
-      = render "admin/rdvs/waiting_room", rdv: rdv
-      - if rdv.collectif?
-        = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
-      - else
-        = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
+  .card-header.border-white.d-flex.justify-content-between.align-items-center
+    - if local_assigns[:quick_update]
+      = link_to rdv_starts_at_and_duration(rdv, :time_only), admin_organisation_rdv_path(rdv.organisation, rdv)
+      .d-flex.float-right
+        - if local_assigns[:success_message]
+          .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mr-2w
+            p.fr-mb-0= local_assigns[:success_message]
+        - if rdv.status != "unknown"
+          = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true, quick_update: true
+        - else
+          = link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: "seen", ignore_benign_errors: true }, quick_update: true), method: :put, remote: true do
+            .fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-checkbox-circle-line.mr-2
+              = Rdv.human_attribute_value(:status, "seen", context: :action)
+          = link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: "noshow", ignore_benign_errors: true}, quick_update: true), method: :put, remote: true do
+            .fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-error-line.mr-2
+              = Rdv.human_attribute_value(:status, "noshow", context: :action)
+          .dropdown id="rdv-status-#{rdv.id}"
+            .dropdown-toggle.fr-btn.fr-btn--secondary[data-toggle="dropdown"]
+              = "Autre"
+            .dropdown-menu
+              = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: current_agent, status: "excused", remote: true, quick_update: true
+              = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: current_agent, status: "revoked", remote: true, quick_update: true
+    - else
+      .d-flex.flex-wrap.align-items-center.flex-gap-1em
+        .flex-grow-1
+          h5.header
+            span
+              = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
+        = render "admin/rdvs/waiting_room", rdv: rdv
+        - if rdv.collectif?
+          = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
+        - else
+          = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
   hr.my-0.mx-3
   .card-body.py-3.row
     .col-md-8.col-sm-12
-      .d-flex.justify-content-between.flex-wrap.mb-1
-        p.card-text
-          i.fa.fa-fw.fa-calendar.mr-1.text-primary-blue
-          = rdv_starts_at_and_duration(rdv, :time_only)
-          - if rdv.agents.first
-            |&nbsp;
-            = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, rdv.agents.first, selected_event_id: rdv.id, date: rdv.starts_at.to_date)
+      - unless local_assigns[:quick_update]
+        .d-flex.justify-content-between.flex-wrap.mb-1
+          p.card-text
+            i.fa.fa-fw.fa-calendar.mr-1.text-primary-blue
+            = rdv_starts_at_and_duration(rdv, :time_only)
+            - if rdv.agents.first
+              |&nbsp;
+              = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, rdv.agents.first, selected_event_id: rdv.id, date: rdv.starts_at.to_date)
       = render "admin/rdvs/rdv_details", rdv: rdv
 
-    .col-md-4.col-sm-12
-      div.d-flex.justify-content-end.mt-1
-        = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
-        - if rdv.individuel?
-          = link_to t("admin.rdvs.show.duplicate"), admin_organisation_creneaux_search_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
-        - else
-          = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
+    - unless local_assigns[:quick_update]
+      .col-md-4.col-sm-12
+        div.d-flex.justify-content-end.mt-1
+          = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
+          - if rdv.individuel?
+            = link_to t("admin.rdvs.show.duplicate"), admin_organisation_creneaux_search_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
+          - else
+            = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
 
   .mx-3
   - if rdv.users.any?
