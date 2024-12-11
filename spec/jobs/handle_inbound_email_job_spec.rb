@@ -1,4 +1,4 @@
-RSpec.describe TransferEmailReplyJob do
+RSpec.describe HandleInboundEmailJob do
   describe "#uuid_from_email_address" do
     %w[
       rdv+b1a2-3c4f@reply.rdv-solidarites.fr

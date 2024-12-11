@@ -55,6 +55,6 @@ class Users::RdvMailer < ApplicationMailer
   end
 
   def default_from
-    TransferEmailReplyJob.reply_address_for_rdv(@rdv)
+    HandleInboundEmailJob.reply_address_for_rdv(@rdv)
   end
 end

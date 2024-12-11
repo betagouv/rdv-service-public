@@ -8,7 +8,7 @@ class InboundEmailsController < ActionController::Base
 
   def brevo
     payload = request.params["items"].first
-    TransferEmailReplyJob.perform_later(payload)
+    HandleInboundEmailJob.perform_later(payload)
   end
 
   private
