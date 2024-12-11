@@ -15,7 +15,7 @@ org_mairie_de_sannois = Organisation.create!(
 )
 
 # Service
-service_titres = Service.create!(name: "Service Titres Sécurisés", short_name: "STS")
+service_titres = Service.create!(name: "Mairie", short_name: "Mairie")
 
 territory_val_doise.services << service_titres
 

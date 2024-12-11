@@ -34,7 +34,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def microsoft_graph
     if current_agent.update(microsoft_graph_token: microsoft_graph_token, refresh_microsoft_graph_token: refresh_microsoft_graph_token)
       Outlook::MassCreateEventJob.perform_later(current_agent)
-      flash[:notice] = "Votre compte Outlook a bien été connecté"
+      flash[:success] = "Votre compte Outlook a bien été connecté"
     else
       flash[:alert] = "Votre compte Outlook n'a pas pu être connecté"
       Sentry.capture_message("Microsoft Graph OmniAuth failed for #{microsoft_graph_email}: #{request.env}", fingerprint: ["ms_graph_omniauth_failure"])

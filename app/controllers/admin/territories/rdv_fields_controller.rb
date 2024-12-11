@@ -6,7 +6,7 @@ class Admin::Territories::RdvFieldsController < Admin::Territories::BaseControll
   def update
     authorize(current_territory, policy_class: Agent::TerritoryPolicy)
     current_territory.update(rdv_fields_params)
-    flash[:alert] = "Configuration enregistrée"
+    flash[:success] = "Configuration enregistrée"
     redirect_to action: :edit
   end
 

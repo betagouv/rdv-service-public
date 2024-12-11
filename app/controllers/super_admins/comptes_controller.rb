@@ -5,7 +5,7 @@ module SuperAdmins
       compte = Compte.new(compte_params, current_domain)
       authorize_resource(compte)
 
-      if compte.save
+      if compte.save!
         redirect_to(
           super_admins_agent_path(compte.agent),
           notice: "Le nouveau compte a été créé, et une invitation a été envoyée à #{compte_params.dig(:agent, :email)}"
@@ -22,7 +22,7 @@ module SuperAdmins
     def compte_params
       params.require(:compte).permit(
         territory: %i[name departement_number],
-        organisation: :name,
+        organisation: %i[name ants_connectable],
         lieu: %i[address latitude longitude],
         agent: %i[first_name last_name email service_ids]
       )
