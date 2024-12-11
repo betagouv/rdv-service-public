@@ -18,8 +18,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     login_as(super_admin, scope: :super_admin)
     visit super_admins_root_url(host: "http://www.rdv-mairie-test.localhost")
 
-    click_link "Comptes"
-    click_link "Création compte"
+    click_link "Ouverture de compte"
 
     fill_in_form
 
@@ -93,8 +92,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
       login_as(super_admin, scope: :super_admin)
       visit super_admins_root_url(host: "http://www.rdv-mairie-test.localhost")
 
-      click_link "Comptes"
-      click_link "Création compte"
+      click_link "Ouverture de compte"
 
       fill_in_form
 

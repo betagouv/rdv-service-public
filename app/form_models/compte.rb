@@ -37,6 +37,7 @@ class Compte
 
       if organisation.ants_connectable
         create_mairie_motifs!
+        add_mairie_motifs_categories!
       else
         create_example_motif!
       end
@@ -83,6 +84,12 @@ class Compte
       motif_category: MotifCategory.find_by(name: motif_category_name),
       bookable_by: :everyone
     )
+  end
+
+  def add_mairie_motifs_categories!
+    Api::Ants::EditorController::ANTS_MOTIF_CATEGORY_NAMES.each do |name|
+      organisation.territory.motif_categories << MotifCategory.find_by(name: name)
+    end
   end
 
   def create_example_motif!
