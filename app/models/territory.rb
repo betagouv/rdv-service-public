@@ -94,10 +94,6 @@ class Territory < ApplicationRecord
     enable_logement_field: :logement,
   }.merge(SOCIAL_FIELD_TOGGLES).freeze
 
-  def self.mairies
-    find_by(name: MAIRIES_NAME)
-  end
-
   def mairies?
     name == MAIRIES_NAME
   end
