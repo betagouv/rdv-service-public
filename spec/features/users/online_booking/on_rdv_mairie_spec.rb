@@ -91,7 +91,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
         departement: organisation.territory.departement_number,
         lieu_id: lieu.id,
         motif_name_with_location_type: passport_motif.name_with_location_type,
-        public_link_organisation_id: organisation.id, duration: 50
+        public_link_organisation_id: organisation.id,
+        duration: 50
       ))
 
       fill_in("user_email", with: user.email)

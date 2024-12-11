@@ -20,7 +20,22 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
     click_link "Ouverture de compte"
 
-    fill_in_form
+    fill_in("Nom du territoire", with: "France Rénov")
+    fill_in("Nom de la première organisation", with: "Agence de Romainville")
+    fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
+
+    # Fake autocomplete
+    page.execute_script("document.querySelector('#compte_lieu_latitude').value = '48.880505'")
+    page.execute_script("document.querySelector('#compte_lieu_longitude').value = '2.429639'")
+
+    fill_in("Numéro du département", with: "FR")
+
+    expect(page).to have_content("Admin de territoire")
+
+    fill_in("Prénom", with: "Francis")
+    fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input
+    fill_in("Adresse mail", with: "francis@factice.org")
+    select("Urbanisme", from: "Service")
 
     click_button("Enregistrer")
     expect(page).to have_content("Le nouveau compte a été créé, et une invitation a été envoyée à francis@factice.org")
@@ -63,25 +78,6 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     )
   end
 
-  def fill_in_form
-    fill_in("Nom du territoire", with: "France Rénov")
-    fill_in("Nom de la première organisation", with: "Agence de Romainville")
-    fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
-
-    # Fake autocomplete
-    page.execute_script("document.querySelector('#compte_lieu_latitude').value = '48.880505'")
-    page.execute_script("document.querySelector('#compte_lieu_longitude').value = '2.429639'")
-
-    fill_in("Numéro du département", with: "FR")
-
-    expect(page).to have_content("Admin de territoire")
-
-    fill_in("Prénom", with: "Francis")
-    fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input
-    fill_in("Adresse mail", with: "francis@factice.org")
-    select("Urbanisme", from: "Service")
-  end
-
   describe "ouverture de compte pour une mairie" do
     let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
     let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
@@ -94,7 +90,22 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
       click_link "Ouverture de compte"
 
-      fill_in_form
+      fill_in("Nom du territoire", with: "Romainville")
+      fill_in("Nom de la première organisation", with: "Mairie de Romainville")
+      fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
+
+      # Fake autocomplete
+      page.execute_script("document.querySelector('#compte_lieu_latitude').value = '48.880505'")
+      page.execute_script("document.querySelector('#compte_lieu_longitude').value = '2.429639'")
+
+      fill_in("Numéro du département", with: "93")
+
+      expect(page).to have_content("Admin de territoire")
+
+      fill_in("Prénom", with: "Francis")
+      fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input
+      fill_in("Adresse mail", with: "francis@factice.org")
+      select("Mairie", from: "Service")
 
       find(:label, text: "Autoriser le branchement au moteur de recherche de l'ANTS").click
 
