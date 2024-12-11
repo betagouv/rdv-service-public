@@ -6,13 +6,38 @@ RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nou
     create(:rdv, :past, status: :unknown, agents: [agent], motif: create(:motif, service: service), organisation: organisation)
   end
 
-  it "works", js: true do
-    login_as(agent, scope: :agent)
+  before { login_as(agent, scope: :agent) }
+
+  it "works from the main page", js: true do
     visit root_path
     expect(page).to have_content "Vous avez 1 rendez-vous à renseigner"
     click_link "Voir ces RDV"
     find(".fr-btn", text: "Rendez-vous honoré").click
-    expect(page).to have_content("Rendez-vous mis à jour") # Cet expect permet d'attendre la requête ajax
+    sleep 1 # Pour attendre que la requête ajax se finisse
+    expect(page).to have_content("Rendez-vous mis à jour")
     expect(rdv.reload.status).to eq("seen")
+
+    # Et on peut faire un reset
+    find(".btn", text: "Rendez-vous honoré").click
+    find("span", text: "Réinitialiser").click
+    sleep 1 # Pour attendre que la requête ajax se finisse
+    expect(page).to have_content("Rendez-vous mis à jour")
+    expect(rdv.reload.status).to eq("unknown")
+  end
+
+  it "works from the rdv details page", js: true do
+    visit admin_organisation_rdv_path(rdv.organisation, rdv)
+    find(".btn", text: "À renseigner").click
+    find("span", text: "Rendez-vous honoré").click
+    sleep 1 # Pour attendre que la requête ajax se finisse
+    expect(page).to have_content("Rendez-vous mis à jour")
+    expect(rdv.reload.status).to eq("seen")
+
+    # Et on peut faire un reset
+    find(".btn", text: "Rendez-vous honoré").click
+    find("span", text: "Réinitialiser").click
+    sleep 1 # Pour attendre que la requête ajax se finisse
+    expect(page).to have_content("Rendez-vous mis à jour")
+    expect(rdv.reload.status).to eq("unknown")
   end
 end
