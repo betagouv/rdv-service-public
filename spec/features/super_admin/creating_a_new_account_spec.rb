@@ -104,12 +104,15 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
       expect(page).to have_content("Le nouveau compte a été créé, et une invitation a été envoyée à francis@factice.org")
 
-      expect(Organisation.last).to have_attributes(
+      mairie_organisation = Organisation.last
+      expect(mairie_organisation).to have_attributes(
         ants_connectable: true
       )
 
-      expect(Organisation.last.motifs.requires_ants_predemande_number.count).to eq(3)
-      expect(Organisation.last.motifs.count).to eq 3
+      expect(mairie_organisation.motifs.requires_ants_predemande_number.count).to eq(3)
+      expect(mairie_organisation.motifs.count).to eq 3
+
+      expect(mairie_organisation.territory.motif_categories.pluck(:name)).to match_array(Api::Ants::EditorController::ANTS_MOTIF_CATEGORY_NAMES)
     end
   end
 end
