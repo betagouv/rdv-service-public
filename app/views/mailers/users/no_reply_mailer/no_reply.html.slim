@@ -1,0 +1,10 @@
+div
+  p
+    ' Votre réponse email n’a pas pu être délivrée.
+    | Cette adresse n’est pas destinée à recevoir des réponses.
+  p
+    ' Si vous souhaitez annuler ou décaler un RDV, vous pouvez cliquer sur les liens reçus dans les précédents emails ou bien
+    = link_to "retrouver tous vos RDV en vous connectant ici", new_user_session_url(host: domain.host_name)
+    '.
+  .btn-wrapper
+    = link_to("J’ai besoin d’aide", contact_url(host: domain.host_name), class: "btn btn-primary")

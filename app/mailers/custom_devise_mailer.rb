@@ -24,12 +24,7 @@ class CustomDeviseMailer < Devise::Mailer
   private
 
   def set_no_reply_for_users
-    if @resource.is_a?(User)
-      mail.from = rfc5322_name_and_email(
-        "Ne pas répondre - #{domain.name}",
-        "ne-pas-repondre@#{domain.reply_host_name}"
-      )
-    end
+    mail.from = no_reply_from if @resource.is_a?(User)
   end
 
   def domain

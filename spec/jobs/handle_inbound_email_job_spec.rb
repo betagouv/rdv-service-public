@@ -38,7 +38,7 @@ RSpec.describe HandleInboundEmailJob do
     end
   end
 
-  describe "#perform" do
+  describe "#perform - pour des réponses à des mails transactionnels de RDV" do
     subject(:perform_job) { described_class.perform_now(sendinblue_payload) }
 
     before do
@@ -156,6 +156,38 @@ RSpec.describe HandleInboundEmailJob do
         expect(transferred_email.to).to eq(["support@rdv-solidarites.fr"])
         expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
       end
+    end
+  end
+
+  describe "#perform - pour des réponses au emails ne-pas-repondre" do
+    subject(:perform_job) { described_class.perform_now(sendinblue_payload) }
+
+    let(:sendinblue_payload) do
+      {
+        Cc: [],
+        ReplyTo: nil,
+        Subject: "",
+        Attachments: [],
+        Headers: {
+          "Message-ID": "<d6c8663e3763aa750345a76c17f435a2bd14eded.camel@lapin.fr>",
+          Subject: "",
+          From: "Bénédicte Ficiaire <bene_ficiaire@lapin.fr>",
+          To: "ne-pas-repondre@reply.rdv-solidarites.fr",
+          Date: "Thu, 12 May 2022 12:22:15 +0200",
+        },
+        ExtractedMarkdownMessage: "Je souhaite annuler mon RDV",
+        ExtractedMarkdownSignature: nil,
+        RawHtmlBody: %(<html dir="ltr"><head></head><body style="text-align:left; direction:ltr;"><div>Je souhaite annuler mon RDV</div>\n</body></html>\n),
+        RawTextBody: "Je souhaite annuler mon RDV\n",
+      }
+    end
+
+    it "répond automatiquement à l’usager" do
+      expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
+      transferred_email = ActionMailer::Base.deliveries.last
+      expect(transferred_email.to).to eq(["bene_ficiaire@lapin.fr"])
+      expect(transferred_email.from).to eq(["ne-pas-repondre@reply.rdv-solidarites-test.localhost"])
+      expect(transferred_email.html_part.body.to_s).to include(%(Votre réponse email n’a pas pu être délivrée))
     end
   end
 end

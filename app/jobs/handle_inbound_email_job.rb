@@ -21,7 +21,9 @@ class HandleInboundEmailJob < ApplicationJob
   def perform(sendinblue_hash)
     @sendinblue_hash = sendinblue_hash.with_indifferent_access
 
-    if rdv&.agents&.pluck(:email)&.compact&.any?
+    if source_mail.to.first.match(/ne-pas-repondre@reply\.[a-z\-\.]+$/)
+      reply_no_reply
+    elsif rdv&.agents&.pluck(:email)&.compact&.any?
       notify_agents
     else
       forward_to_default_mailbox
@@ -29,6 +31,10 @@ class HandleInboundEmailJob < ApplicationJob
   end
 
   private
+
+  def reply_no_reply
+    Users::NoReplyMailer.with(source_mail:).no_reply.deliver_now
+  end
 
   def notify_agents
     Agents::ReplyTransferMailer.notify_agent_of_user_reply(

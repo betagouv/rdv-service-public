@@ -28,4 +28,11 @@ class ApplicationMailer < ActionMailer::Base
   def default_from
     domain.support_email
   end
+
+  def no_reply_from
+    rfc5322_name_and_email(
+      "Ne pas répondre - #{domain.name}",
+      "ne-pas-repondre@#{domain.reply_host_name}"
+    )
+  end
 end
