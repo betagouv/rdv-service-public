@@ -29,7 +29,9 @@
   scrollbar-width: thin;
 
   a.fr-btn:hover {
-    color: var(--text-inverted-blue-france); // Pour corriger l'état au hover du bouton 'Trouver un RDV'
+    color: var(
+      --text-inverted-blue-france
+    ); // Pour corriger l'état au hover du bouton 'Trouver un RDV'
   }
   a:not(.fr-btn) {
     color: $menu-item;
