@@ -3,36 +3,24 @@
   - if context.shown_lieux.empty?
     = render "search/nothing_to_show", context: context
   - else
-    h3.rdv-font-weight-700 = t(".select_lieu")
-    p = t(".lieu_available", count: context.shown_lieux.count)
+    h3.fr-col-lg-10.fr-col-offset-lg-1 = t(".select_lieu")
+    p.fr-col-lg-10.fr-col-offset-lg-1 = t(".lieu_available", count: context.shown_lieux.count)
+    ul.fr-raw-list
     - context.next_availability_by_lieux.each do |lieu, next_availability|
-      .card.mb-3 class=("card-hoverable" if next_availability)
-        .card-body
-          .row
-            .col-md
-              h4.card-title.mb-0.mt-0.rdv-color-text-default-success.rdv-font-weight-700= lieu.name
-              .mb-3.mt-0.rdv-color-text-default-success.rdv-font-weight-700.larger=lieu.organisation.name
-              .card-subtitle= lieu.address
-              .card-subtitle= context.service.name
-            .col-md.align-self-center.pt-3.pt-md-0.position-static
-              - motif = next_availability.motif
-              - if motif.restriction_for_rdv.blank?
-                = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
-                  .row
-                    .col
-                      = t(".next_availability")
-                      br
-                      strong= l(next_availability.starts_at, format: :human)
-                    .col-auto.align-self-center
-                        i.fa.fa-chevron-right
-              - else
-                = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{lieu.id}" } do
-                  .row
-                    .col
-                      = t(".next_availability")
-                      br
-                      strong= l(next_availability.starts_at, format: :human)
-                    .col-auto.align-self-center
-                        i.fa.fa-chevron-right
-                = render "/common/modal", id: "js-rdv-restriction-motif#{lieu.id}" , title: "À lire avant de prendre un rendez-vous", confirm_path: prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)) do
-                  = restriction_for_rdv_to_html(motif)
+      - motif = next_availability.motif
+      - if motif.restriction_for_rdv.blank?
+        - link = link_to "#{lieu.name} - #{lieu.address}", prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at))
+      - else
+        - link = link_to "#{lieu.name} - #{lieu.address}", prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{lieu.id}" }
+        = render "/common/modal", id: "js-rdv-restriction-motif#{lieu.id}", title: "À lire avant de prendre un rendez-vous", confirm_path: prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)) do
+          = restriction_for_rdv_to_html(motif)
+      li.fr-card.fr-enlarge-link.fr-card--lg.fr-card--horizontal.fr-mb-3w.fr-col-lg-10.fr-col-offset-lg-1
+        .fr-card__body
+          .fr-card__content
+            .fr-card__title = link
+            p.fr-card__desc = lieu.organisation.name
+            .fr-card__end
+              .fr-card__detail.fr-icon-calendar-2-fill
+                p
+                  = "#{t('.next_availability')} "
+                  strong= l(next_availability.starts_at, format: :human)

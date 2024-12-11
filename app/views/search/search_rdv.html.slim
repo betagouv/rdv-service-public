@@ -1,10 +1,14 @@
 = render "prescription_banner"
 
-= render "banner", context: @context
-
 / Adress selection partials have multiple sections
 - if @context.current_step == :address_selection
+  // On fait du spécifique pour la bannière de la page de sélection d'adresse en attendant qu’on fasse la refonte au DSFR
+  section.py-2.rdv-background-color-flat-blue-ecume
+    .fr-container
+      h1.mb-3.rdv-color-white
+        = render(current_domain.search_banner_template_name, context: @context)
   = render(current_domain.address_selection_template_name, context: @context)
 - else
-  section.rdv-background-color-alt-grey.py-4
+  = render("banner", context: @context)
+  section.py-4
     = render @context, context: @context

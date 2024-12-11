@@ -1,7 +1,7 @@
 .fr-container
   = render "search/selected_motif_recap", context: context
   - if context.lieu.present?
-    .card
+    .card.fr-col-lg-10.fr-col-offset-lg-1
       .card-body
         = link_to path_to_lieu_selection(params), class: "d-block stretched-link", title: "Retour à la sélection du lieu" do
           .row
@@ -11,7 +11,7 @@
               h2.pb-1.mb-1.card-title= context.lieu.name
               .card-subtitle= context.lieu.address
   - elsif context.user_selected_organisation.present?
-    .card
+    .card.fr-col-lg-10.fr-col-offset-lg-1
       .card-body
         = link_to path_to_organisation_selection(params), class: "d-block stretched-link", title: "Retour à la sélection de l’organisation" do
           .row
