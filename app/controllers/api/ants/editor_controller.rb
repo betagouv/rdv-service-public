@@ -52,7 +52,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
 
   def self.lieux
     Lieu.joins(:organisation)
-      .where(organisations: { territory_id: Territory.mairies&.id })
+      .where(organisations: { ants_connectable: true })
   end
 
   private

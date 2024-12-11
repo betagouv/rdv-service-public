@@ -1,6 +1,6 @@
 class SuperAdmin::ComptePolicy < ApplicationPolicy
   def index?
-    true
+    false
   end
 
   def create?

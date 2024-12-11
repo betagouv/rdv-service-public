@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_22_082916) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_04_093704) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -513,6 +513,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_22_082916) do
     t.bigint "territory_id", null: false
     t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
     t.enum "verticale", default: "rdv_solidarites", null: false, enum_type: "verticale"
+    t.boolean "ants_connectable", default: false, null: false, comment: "Autorise l'organisation à être branchée sur le moteur de recherche de l'ANTS sur https://rendezvouspasseport.ants.gouv.fr/. Pour éviter de brancher n'importe qui sur ce moteur de recherche, cette option n'est pas activable par les agents.\n"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["name"], name: "index_organisations_on_name"

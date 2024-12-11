@@ -3,9 +3,8 @@ RSpec.describe "ANTS API: availableTimeSlots" do
 
   let(:lieu1) { create(:lieu, organisation: organisation) }
   let(:lieu2) { create(:lieu, organisation: organisation2) }
-  let(:mairies_territory) { create(:territory, :mairies) }
-  let(:organisation) { create(:organisation, territory: mairies_territory) }
-  let(:organisation2) { create(:organisation, territory: mairies_territory) }
+  let(:organisation) { create(:organisation, ants_connectable: true) }
+  let(:organisation2) { create(:organisation, ants_connectable: true) }
   let(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30, motif_category: cni_motif_category) }
   let(:motif2) { create(:motif, organisation: organisation2, default_duration_in_min: 30, motif_category: cni_motif_category) }
   let(:motif3) { create(:motif, organisation: organisation2, default_duration_in_min: 30, motif_category: cni_motif_category) }
