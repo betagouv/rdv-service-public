@@ -53,7 +53,7 @@ table.table.table-centered.table-bordered.table-sm.mb-0[class=(display_checkboxe
           td.p-0
             .d-flex
               - if @current_tab != :archived
-                = link_to edit_admin_organisation_motif_path(motif.organisation, motif), class: "btn btn-link", title: t("admin.motifs.actions.edit"), target: :_blank do
+                = link_to edit_admin_organisation_motif_path(motif.organisation, motif), class: "btn btn-link fr-raw-link", title: "#{t('admin.motifs.actions.edit')} - Ouvre une ouvelle fenêtre", target: :_blank do
                   i.fa.fa-edit
               - if motif.archived?
                 - if motif_policy.unarchive?
