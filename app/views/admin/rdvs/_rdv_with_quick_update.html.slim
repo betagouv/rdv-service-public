@@ -1,8 +1,8 @@
 .card[id= "rdv-#{rdv.id}"]
   div[id= "js-rdv-error-message-#{rdv.id}"]
-  .card-header.border-white.d-flex.justify-content-between.align-items-center
+  .card-header.border-white.d-flex.justify-content-between.align-items-center.flex-column.flex-lg-row
     = link_to rdv_starts_at_and_duration(rdv, :time_only), admin_organisation_rdv_path(rdv.organisation, rdv)
-    .d-flex.float-right
+    .d-flex.float-right.flex-column.flex-lg-row
       - if local_assigns[:success_message]
         .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mr-2w
           p.fr-mb-0= local_assigns[:success_message]
