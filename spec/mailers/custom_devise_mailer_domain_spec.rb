@@ -3,7 +3,7 @@ RSpec.describe CustomDeviseMailer, "#domain" do
 
   def expect_to_use_domain(domain)
     expect(sent_email.body).to include(domain.host_name)
-    expect(sent_email[:from].unparsed_value).to match(%("#{domain.name}" <#{domain.support_email}>))
+    expect(sent_email[:from].unparsed_value).to match(%("Ne pas répondre - #{domain.name}" <ne-pas-repondre@#{domain.reply_host_name}>))
   end
 
   context "when user has no RDV" do

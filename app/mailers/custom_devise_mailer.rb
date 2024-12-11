@@ -6,6 +6,8 @@ class CustomDeviseMailer < Devise::Mailer
   helper :application
   default template_path: "devise/mailer"
 
+  after_action :set_no_reply_for_users
+
   def invitation_instructions(record, token, opts = {})
     @token = token
     @user_params = opts[:user_params] || {}
@@ -20,6 +22,15 @@ class CustomDeviseMailer < Devise::Mailer
   end
 
   private
+
+  def set_no_reply_for_users
+    if @resource.is_a?(User)
+      mail.from = rfc5322_name_and_email(
+        "Ne pas répondre - #{domain.name}",
+        "ne-pas-repondre@#{domain.reply_host_name}"
+      )
+    end
+  end
 
   def domain
     resource.domain
