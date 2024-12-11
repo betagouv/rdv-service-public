@@ -14,6 +14,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     agent_roles: Field::HasMany,
     motifs: Field::HasMany,
     lieux: Field::HasMany,
+    ants_connectable: Field::Boolean,
     horaires: Field::String,
     phone_number: Field::String,
     email: Field::String,
@@ -46,6 +47,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     email
     motifs
     lieux
+    ants_connectable
     verticale
     created_at
     updated_at
@@ -59,6 +61,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     horaires
     phone_number
     email
+    ants_connectable
     verticale
     territory
   ].freeze
