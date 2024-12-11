@@ -55,7 +55,7 @@
 
 @import "./structure/bootstrap_overrides";
 
-a[href] {
+a[href]:not(.fc-event-waiting) {
   background-image: none; // pour éviter le soulignement des liens
 }
 
