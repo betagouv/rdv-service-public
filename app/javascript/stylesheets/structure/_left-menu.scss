@@ -28,7 +28,10 @@
   background: $bg-leftbar;
   scrollbar-width: thin;
 
-  a:not(.btn-primary) {
+  a.fr-btn:hover {
+    color: var(--text-inverted-blue-france); // Pour corriger l'état au hover du bouton 'Trouver un RDV'
+  }
+  a:not(.fr-btn) {
     color: $menu-item;
     transition: all 0.2s;
 
