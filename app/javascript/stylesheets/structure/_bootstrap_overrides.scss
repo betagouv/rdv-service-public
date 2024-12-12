@@ -23,6 +23,12 @@ main .fr-btn:hover,  // Ce sélecteur vise tous les boutons du corps de page
 main .fr-btn.fr-btn--secondary:hover {
   color: var(--text-action-high-blue-france);
 }
+main .fr-btn.fr-btn--tertiary:hover {
+  color: var(--text-action-high-blue-france);
+}
+main .fr-btn.fr-btn--close:hover {
+  color: var(--text-action-high-blue-france);
+}
 // Règle permettant de corriger le hover du bouton FranceConnect en attendant la suppression de bootstrap
 main .fr-btn:hover,
 .fr-connect-group,

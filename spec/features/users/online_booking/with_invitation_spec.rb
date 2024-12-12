@@ -75,7 +75,7 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content("Votre RDV")
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
-      expect(page).to have_link("Annuler le RDV")
+      expect(page).to have_content("Annuler le RDV")
 
       # Clearing Cookies
       page.cookies.clear
