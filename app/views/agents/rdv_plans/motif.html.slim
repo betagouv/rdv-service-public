@@ -1,0 +1,23 @@
+.row.justify-content-md-center
+  .col-md-12.col-lg-8
+    h1.fr-h2 Nouveau rendez-vous
+    = render "common/stepper", step_count: 4, current_step: 1, step_title: "Motif", next_step_title: "Créneau"
+    .card
+      .card-body
+        = simple_form_for @rdv_plan, url: agents_rdv_plans_path(@rdv_plan) do |f|
+          = render "model_errors", model: @rdv_plan
+          - @motifs = current_agent.motifs.where(organisation_id: current_agent.roles.select(:organisation_id))
+
+          = f.input :motif_id, \
+            label: "Motif du rendez-vous", \
+              required: true, \
+              include_blank: true, \
+              collection: @motifs, \
+              label_method: -> { _1.name_with_location_type }, \
+              input_html: { \
+                data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true },
+                class: "select2-input", \
+              }
+
+          = f.submit "Continuer", class: "fr-btn float-right"
+

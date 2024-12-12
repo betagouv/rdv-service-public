@@ -1,0 +1,24 @@
+.row.justify-content-md-center
+  .col-md-12.col-lg-8
+    h1.fr-h2 Nouveau rendez-vous
+    = render "common/stepper", step_count: 4, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
+    - @form = @rdv_plan
+    - if @next_availabilities&.any?
+      h3.font-weight-bold Choisissez un lieu
+    - @next_availabilities.each do |next_availability|
+      .card.mb-3
+        .card-body
+          .row
+            .col-md
+              h4.card-title.mb-3.mt-0.text-success.font-weight-bold= next_availability.lieu.name
+              h6.card-subtitle.text-black-50= next_availability.lieu.address
+            .col-md.align-self-center.pt-3.pt-md-0.position-static
+              = link_to admin_organisation_creneaux_search_selection_creneaux_path(@form.motif.organisation,creneaux_search_params(@form).merge(lieu_ids: [next_availability.lieu.id])),
+                      class: "d-block stretched-link" do
+                .row
+                  .col
+                    | Prochaine disponibilité le
+                    br
+                    strong= l(next_availability.starts_at, format: :human)
+                  .col-auto.align-self-center
+                    i.fa.fa-chevron-right

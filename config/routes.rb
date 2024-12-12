@@ -111,6 +111,18 @@ Rails.application.routes.draw do
     put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
 
     namespace :agents do
+      resources :rdv_plans, only: %i[new create] do
+        get :motif
+        post :update_motif
+
+        member do
+          get :motif
+          post :update_motif
+
+          get :creneau
+          post :update_creneau
+        end
+      end
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
