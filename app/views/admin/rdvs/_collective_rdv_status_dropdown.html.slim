@@ -1,17 +1,14 @@
 .dropdown.text-right id="rdv-status-#{rdv.id}"
   = collective_rdv_status_dropdown_toggle(rdv)
   .dropdown-menu
-    - case rdv.temporal_status
-      - when "unknown_future"
-        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "revoked"
-
-      - when "unknown_today", "unknown_past"
+    - if rdv.status == "unknown"
+      - if rdv.starts_at < Time.zone.now
         = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "seen"
         .dropdown-divider
-        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "revoked"
+      = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "revoked"
 
-      - else
-        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "unknown"
+    - else
+      = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "unknown"
 
     - if policy(rdv, policy_class: Agent::RdvPolicy).destroy?
       .dropdown-divider

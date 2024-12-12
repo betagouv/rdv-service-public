@@ -1,28 +1,17 @@
 .dropdown id="rdv-status-#{rdv.id}"
   = individual_rdv_status_dropdown_toggle(rdv)
   .dropdown-menu
-    - case rdv.temporal_status
-      - when "unknown_future"
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "excused",  quick_update: local_assigns[:quick_update]
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "revoked",  quick_update: local_assigns[:quick_update]
-
-      - when "unknown_today"
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "seen",  quick_update: local_assigns[:quick_update]
-        - if rdv.in_the_past? # See issue #1642, I’d rather get rid of `temporal_status` than adding more variants.
-          = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "noshow",  quick_update: local_assigns[:quick_update]
-        .dropdown-divider
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "excused",  quick_update: local_assigns[:quick_update]
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "revoked",  quick_update: local_assigns[:quick_update]
-
-      - when "unknown_past"
+    - if rdv.status == "unknown"
+      - if rdv.starts_at < Time.zone.now
         = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "seen",  quick_update: local_assigns[:quick_update]
         = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "noshow",  quick_update: local_assigns[:quick_update]
         .dropdown-divider
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "excused",  quick_update: local_assigns[:quick_update]
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "revoked",  quick_update: local_assigns[:quick_update]
 
-      - else
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "unknown",  quick_update: local_assigns[:quick_update]
+      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "excused",  quick_update: local_assigns[:quick_update]
+      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "revoked",  quick_update: local_assigns[:quick_update]
+
+    - else
+      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "unknown",  quick_update: local_assigns[:quick_update]
 
     - if policy(rdv, policy_class: Agent::RdvPolicy).destroy?
       .dropdown-divider
