@@ -7,7 +7,7 @@
         .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mr-2w
           p.fr-mb-0= local_assigns[:success_message]
       - if rdv.status != "unknown"
-        = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], quick_update: true
+        = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, quick_update: true
       - else
         = link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: "seen", ignore_benign_errors: true }, quick_update: true), method: :put, remote: true do
           .fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-checkbox-circle-line.fr-mr-2w
@@ -19,8 +19,8 @@
           .dropdown-toggle.fr-btn.fr-btn--secondary[data-toggle="dropdown"]
             = "Autre"
           .dropdown-menu
-            = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: current_agent, status: "excused", quick_update: true
-            = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: current_agent, status: "revoked", quick_update: true
+            = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "excused", quick_update: true
+            = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "revoked", quick_update: true
   hr.my-0.mx-3
   .card-body.py-3.row
     .col-sm-12
