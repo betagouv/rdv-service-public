@@ -1,5 +1,5 @@
 <% if @rdv.errors.empty? %>
-  <% template = params[:quick_update] ? "admin/rdvs/rdv_with_quick_update" : "admin/rdvs/rdv" %>
+  <% template = params[:quick_update].to_bool ? "admin/rdvs/rdv_with_quick_update" : "admin/rdvs/rdv" %>
   <% rdv_html = render template, rdv: @rdv, locals: { agent: @agent }, success_message: "Rendez-vous mis à jour" %>
   (function() {
     let element = document.getElementById('rdv-<%= @rdv.id %>');
