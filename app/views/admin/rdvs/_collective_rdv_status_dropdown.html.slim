@@ -1,3 +1,5 @@
+/# locals: (rdv:)
+
 .dropdown.text-right id="rdv-status-#{rdv.id}"
   .dropdown-toggle.btn[data-toggle="dropdown" class="rdv-status-#{rdv.temporal_status}"]
      = Rdv.human_attribute_value(:collective_status, rdv.temporal_status, disable_cast: true)

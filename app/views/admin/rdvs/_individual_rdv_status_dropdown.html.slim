@@ -1,18 +1,20 @@
+/# locals: (rdv:, quick_update: false)
+
 .dropdown id="rdv-status-#{rdv.id}"
   .dropdown-toggle.btn[data-toggle="dropdown" class="rdv-status-#{rdv.temporal_status}"]
     = Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
   .dropdown-menu
     - if rdv.status == "unknown"
       - if rdv.starts_at < Time.zone.now
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "seen",  quick_update: local_assigns[:quick_update]
-        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "noshow",  quick_update: local_assigns[:quick_update]
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "seen",  quick_update: quick_update
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "noshow",  quick_update: quick_update
         .dropdown-divider
 
-      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "excused",  quick_update: local_assigns[:quick_update]
-      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "revoked",  quick_update: local_assigns[:quick_update]
+      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "excused",  quick_update: quick_update
+      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "revoked",  quick_update: quick_update
 
     - else
-      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "unknown",  quick_update: local_assigns[:quick_update]
+      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "unknown",  quick_update: :quick_update
 
     - if policy(rdv, policy_class: Agent::RdvPolicy).destroy?
       .dropdown-divider
