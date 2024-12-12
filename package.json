@@ -11,7 +11,7 @@
     "@fullcalendar/interaction": "^4.4.2",
     "@fullcalendar/list": "^4.4.2",
     "@fullcalendar/timegrid": "^4.4.2",
-    "@gouvfr/dsfr": "^1.9.2",
+    "@gouvfr/dsfr": "^1.13.0",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/stimulus-webpack-helpers": "^1.0.1",
     "@rails/ujs": "^6.0.0",
