@@ -22,12 +22,12 @@
             = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "excused", quick_update: true
             = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "revoked", quick_update: true
   hr.my-0.mx-3
-  .card-body.py-3.row
+  .card-body.py-2.row
     .col-sm-12
        = render "admin/rdvs/rdv_details", rdv: rdv
 
   hr.my-0.mx-3
-  .card-footer.border-white
+  .card-footer.py-1.border-white
     - if rdv.users.any?
       .d-none.d-sm-block
         = render "admin/rdvs/users_table", rdv: rdv, agent: local_assigns[:agent]
