@@ -14,7 +14,7 @@
       - if rdv.collectif?
         = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv
       - else
-        = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent]
+        = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv
   hr.my-0.mx-3
   .card-body.py-3.row
     .col-md-8.col-sm-12
