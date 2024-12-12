@@ -84,13 +84,6 @@ module RdvsHelper
     end
   end
 
-  def individual_rdv_status_dropdown_toggle(rdv)
-    tag.div(data: { toggle: "dropdown" },
-            class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
-      Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
-    end
-  end
-
   def collective_rdv_status_dropdown_toggle(rdv)
     tag.div(data: { toggle: "dropdown" },
             class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do

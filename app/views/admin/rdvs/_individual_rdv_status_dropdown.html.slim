@@ -1,5 +1,6 @@
 .dropdown id="rdv-status-#{rdv.id}"
-  = individual_rdv_status_dropdown_toggle(rdv)
+  .dropdown-toggle.btn[data-toggle="dropdown" class="rdv-status-#{rdv.temporal_status}"]
+    = Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
   .dropdown-menu
     - if rdv.status == "unknown"
       - if rdv.starts_at < Time.zone.now
