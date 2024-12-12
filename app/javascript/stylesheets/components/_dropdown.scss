@@ -3,6 +3,10 @@
   min-width: 30rem;
 }
 
+.dropdown-toggle {
+  cursor: pointer;
+}
+
 .show {
   > .dropdown-menu {
     visibility: visible;

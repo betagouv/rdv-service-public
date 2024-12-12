@@ -93,11 +93,6 @@ class Admin::RdvsController < AgentAuthController
     @success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
     respond_to do |format|
       format.js do
-        if @success
-          flash.now[:success] = "Rendez-vous mis à jour"
-        else
-          flash.now[:error] = @rdv.errors.full_messages.to_sentence
-        end
         render "admin/rdvs/update"
       end
       format.html do

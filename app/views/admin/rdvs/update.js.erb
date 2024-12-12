@@ -1,12 +1,12 @@
 <% if @rdv.errors.empty? %>
-  <% rdv_html = render "admin/rdvs/rdv", rdv: @rdv, locals: { agent: @agent } %>
+  <% template = params[:quick_update].to_bool ? "admin/rdvs/rdv_with_quick_update" : "admin/rdvs/rdv" %>
+  <% rdv_html = render template, rdv: @rdv, locals: { agent: @agent }, success_message: "Rendez-vous mis à jour" %>
   (function() {
     let element = document.getElementById('rdv-<%= @rdv.id %>');
     if(element) {
       element.outerHTML = "<%= escape_javascript rdv_html %>";
     }
-    $("#rdv-updated-flash-message-<%= @rdv.id %>").html('<%= j render partial: "layouts/flash" %>');
   })();
 <% else %>
-    $("#rdv-updated-flash-message-<%= @rdv.id %>").html('<%= j render partial: "layouts/flash" %>');
+    $("#js-rdv-error-message-<%= @rdv.id %>").html('<%= j render partial: "admin/rdvs/update_error" %>');
 <% end %>
