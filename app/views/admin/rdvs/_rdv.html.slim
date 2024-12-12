@@ -12,7 +12,7 @@
             = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
       = render "admin/rdvs/waiting_room", rdv: rdv
       - if rdv.collectif?
-        = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent]
+        = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv
       - else
         = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent]
   hr.my-0.mx-3

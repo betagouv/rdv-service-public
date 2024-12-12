@@ -3,16 +3,16 @@
   .dropdown-menu
     - case rdv.temporal_status
       - when "unknown_future"
-        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked"
+        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "revoked"
 
       - when "unknown_today", "unknown_past"
-        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen"
+        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "seen"
         .dropdown-divider
-        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked"
+        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "revoked"
 
       - else
-        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "unknown"
+        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, status: "unknown"
 
     - if policy(rdv, policy_class: Agent::RdvPolicy).destroy?
       .dropdown-divider
-      = rdv_status_delete_dropdown_item(rdv, agent)
+      = rdv_status_delete_dropdown_item(rdv)

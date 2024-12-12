@@ -119,8 +119,8 @@ module RdvsHelper
     status == "unknown" && !rdv.past?
   end
 
-  def rdv_status_delete_dropdown_item(rdv, agent)
-    link_to admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: agent&.id),
+  def rdv_status_delete_dropdown_item(rdv)
+    link_to admin_organisation_rdv_path(rdv.organisation, rdv),
             method: :delete,
             class: "dropdown-item",
             data: { confirm: t("admin.rdvs.delete.confirm") } do
