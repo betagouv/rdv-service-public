@@ -197,6 +197,7 @@ tables:
       - website
       - external_id
       - verticale
+      - ants_connectable
 
   - table_name: absences
     anonymized_column_names:

@@ -2,8 +2,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
-  let!(:territory) { create(:territory, :mairies, departement_number: "MA") }
-  let!(:organisation) { create(:organisation, :with_contact, territory: territory, name: "Mairie de Wavignies") }
+  let!(:organisation) { create(:organisation, :with_contact, ants_connectable: true, name: "Mairie de Wavignies") }
   let(:service) { create(:service) }
   let!(:cni_motif) do
     create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: cni_motif_category, default_duration_in_min: 25)
@@ -74,13 +73,27 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("Motif : Passeport")
       expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
       expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (50 minutes)")
-      expect(page).to have_link("modifier", href: prendre_rdv_path(departement: "MA", public_link_organisation_id: organisation.id, duration: 50))
-      expect(page).to have_link("modifier",
-                                href: prendre_rdv_path(departement: "MA", motif_name_with_location_type: passport_motif.name_with_location_type, public_link_organisation_id: organisation.id,
-                                                       duration: 50))
-      expect(page).to have_link("modifier",
-                                href: prendre_rdv_path(departement: "MA", lieu_id: lieu.id, motif_name_with_location_type: passport_motif.name_with_location_type,
-                                                       public_link_organisation_id: organisation.id, duration: 50))
+
+      expect(page).to have_link("modifier", href: prendre_rdv_path(
+        departement: organisation.territory.departement_number,
+        public_link_organisation_id: organisation.id,
+        duration: 50
+      ))
+
+      expect(page).to have_link("modifier", href: prendre_rdv_path(
+        departement: organisation.territory.departement_number,
+        motif_name_with_location_type: passport_motif.name_with_location_type,
+        public_link_organisation_id: organisation.id,
+        duration: 50
+      ))
+
+      expect(page).to have_link("modifier", href: prendre_rdv_path(
+        departement: organisation.territory.departement_number,
+        lieu_id: lieu.id,
+        motif_name_with_location_type: passport_motif.name_with_location_type,
+        public_link_organisation_id: organisation.id,
+        duration: 50
+      ))
 
       fill_in("user_email", with: user.email)
       fill_in("user_password", with: user.password)

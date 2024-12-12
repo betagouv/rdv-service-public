@@ -12,10 +12,21 @@ a.stretched-link[href] {
 }
 
 // ces règles sont nécessaires pour corriger certains défauts venant du bootstrap reset
-main .fr-btn:hover {
+
+main .fr-btn:hover,  // Ce sélecteur vise tous les boutons du corps de page
+.left-side-menu .fr-btn:hover // ce sélecteur vise le bouton Trouver un RDV côté agent
+{
   color: var(--text-inverted-blue-france);
+  // note: on met des préfixes main et left-side-menu car on ne veut pas que cet override s’applique dans le header DSFR
 }
+
 main .fr-btn.fr-btn--secondary:hover {
+  color: var(--text-action-high-blue-france);
+}
+main .fr-btn.fr-btn--tertiary:hover {
+  color: var(--text-action-high-blue-france);
+}
+main .fr-btn.fr-btn--close:hover {
   color: var(--text-action-high-blue-france);
 }
 // Règle permettant de corriger le hover du bouton FranceConnect en attendant la suppression de bootstrap

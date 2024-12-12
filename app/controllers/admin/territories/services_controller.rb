@@ -11,7 +11,7 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   def update
     authorize(current_territory, policy_class: Agent::TerritoryPolicy)
     current_territory.update!(services_params)
-    flash[:alert] = "Liste des services disponibles mise à jour"
+    flash[:success] = "Liste des services disponibles mise à jour"
 
     if params[:redirect_to_organisation_id].present?
       redirect_to new_admin_organisation_agent_path(params[:redirect_to_organisation_id])
