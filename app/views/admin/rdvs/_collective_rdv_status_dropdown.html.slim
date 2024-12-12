@@ -1,6 +1,5 @@
 .dropdown.text-right id="rdv-status-#{rdv.id}"
   = collective_rdv_status_dropdown_toggle(rdv)
-  - remote = true
   .dropdown-menu
     - case rdv.temporal_status
       - when "unknown_future"
