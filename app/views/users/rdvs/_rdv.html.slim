@@ -99,17 +99,16 @@ ul.fr-btns-group.fr-btns-group--inline.fr-mb-0
 
 hr
 
-h2 Contact de #{rdv.organisation.name}
-- if rdv.lieu&.phone_number.present?
-  p
-    span.fr-icon-phone-fill[aria-hidden="true"]
-    = phone_to(rdv.lieu.humanized_phone_number)
-- elsif rdv.organisation.phone_number.present?
-  p
-    span.fr-icon-phone-fill[aria-hidden="true"]
-    = phone_to(rdv.organisation.humanized_phone_number)
-- if rdv.organisation.website.present?
-  p
-    span.fr-icon-phone-fill[aria-hidden="true"]
-    = "Site web : "
-    = link_to rdv.organisation.website, rdv.organisation.website, target: "_blank"
+- phone_number =rdv.lieu&.phone_number.presence || rdv.organisation.phone_number.presence
+
+- if phone_number || rdv.organisation.website.present?
+  h2 Contact de #{rdv.organisation.name}
+  - if phone_number
+    p
+      span.fr-icon-phone-fill[aria-hidden="true"]
+      = phone_to(rdv.organisation.humanized_phone_number)
+  - if rdv.organisation.website.present?
+    p
+      span.fr-icon-computer-fill[aria-hidden="true"]
+      = "Site web : "
+      = link_to rdv.organisation.website, rdv.organisation.website, target: "_blank"
