@@ -3,6 +3,7 @@ class AddRdvPlans < ActiveRecord::Migration[7.1]
     create_table :rdv_plans do |t|
       t.references :rdv
       t.references :agent
+      t.references :rdv_agent
       t.references :motif
       t.references :lieu
       t.datetime :starts_at

@@ -112,15 +112,21 @@ Rails.application.routes.draw do
 
     namespace :agents do
       resources :rdv_plans, only: %i[new create] do
-        get :motif
-        post :update_motif
-
         member do
           get :motif
           post :update_motif
 
+          get :lieu
+          post :update_lieu
+
           get :creneau
           post :update_creneau
+
+          get :user
+          post :update_user
+
+          get :notifications
+          post :create_rdv
         end
       end
       resource :preferences, only: %i[show update]

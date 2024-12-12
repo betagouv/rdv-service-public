@@ -1,24 +1,52 @@
 .row.justify-content-md-center
-  .col-md-12.col-lg-8
+  .col-12
     h1.fr-h2 Nouveau rendez-vous
     = render "common/stepper", step_count: 4, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
-    - @form = @rdv_plan
-    - if @next_availabilities&.any?
-      h3.font-weight-bold Choisissez un lieu
-    - @next_availabilities.each do |next_availability|
-      .card.mb-3
-        .card-body
-          .row
-            .col-md
-              h4.card-title.mb-3.mt-0.text-success.font-weight-bold= next_availability.lieu.name
-              h6.card-subtitle.text-black-50= next_availability.lieu.address
-            .col-md.align-self-center.pt-3.pt-md-0.position-static
-              = link_to admin_organisation_creneaux_search_selection_creneaux_path(@form.motif.organisation,creneaux_search_params(@form).merge(lieu_ids: [next_availability.lieu.id])),
-                      class: "d-block stretched-link" do
-                .row
-                  .col
-                    | Prochaine disponibilité le
-                    br
-                    strong= l(next_availability.starts_at, format: :human)
-                  .col-auto.align-self-center
-                    i.fa.fa-chevron-right
+
+    .row.position-relative[style="min-height: 200px"]
+      - if @rdv_plan.date_range.begin > Time.zone.today
+        - previous_from_date = @rdv_plan.date_range.begin - 7.days
+        .col-auto.d-flex.align-items-center
+          / TODO: make this link work
+          = link_to "#", class: "btn btn-primary" do
+            i.fa.fa-arrow-left
+      .col
+        .row.no-gutters.creneaux-row.lieu-creneaux-card
+          - @rdv_plan.date_range.each do |date|
+            .col.position-relative
+              p.rdv-text-align-center.sticky-top.bg-white
+                strong= l(date, format: "%A")
+                br
+                = l(date, format: "%d %b")
+
+              - if @results.creneaux.empty?
+                p.rdv-text-align-center
+                  small aucune disponibilité
+              - else
+                - agents = @results.creneaux.map(&:agent).uniq
+                - creneaux_for_date = @results.creneaux.select { |c| c.starts_at.to_date == date }.sort
+                - creneaux_for_date.each do |creneau|
+                  = link_to update_creneau_agents_rdv_plan_path(@rdv_plan, rdv_plan: {rdv_agent_id: creneau.agent.id, starts_at: creneau.starts_at}), method: :post, class: "creneau bg-light d-block w-100 text-center p-1 mb-1 rounded" do
+                    .m-1
+                      span.strong.font-weight-bold= l(creneau.starts_at, format: "%H:%M")
+                      br
+                      i class= "mr-1 fa fa-user-alt #{agent_color(agents.index(creneau.agent))}"
+                      small.text-dark= creneau.agent.short_name
+
+      - if @results.next_availability
+        - if @rdv_plan.date_range.end < @results.next_availability.starts_at.to_date && @results.creneaux.empty?
+          .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
+            / TODO: faire aussi marcher ça
+            = link_to "#", class: "btn btn-light" do
+              .d-flex.align-items-center
+                div
+                  | Prochaine disponibilité le
+                  br
+                  strong= l(next_availability.starts_at, format: :human)
+                .ml-2
+                  i.fa.fa-chevron-right
+
+        .col-auto.d-flex.align-items-center
+          / TODO: faire aussi marcher ça
+          = link_to "#", class: "btn btn-primary" do
+            i.fa.fa-arrow-right

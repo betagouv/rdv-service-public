@@ -8,7 +8,7 @@ class RdvPlan < ApplicationRecord
   delegate :organisation, :service_id, to: :motif
 
   def lieu_ids
-    nil
+    [lieu_id].compact
   end
 
   def agent_ids
@@ -20,11 +20,11 @@ class RdvPlan < ApplicationRecord
   end
 
   def date_range
-    (from_date..1.week.from_now)
+    (from_date..(from_date + 6.days))
   end
 
   def from_date
-    Time.zone.now
+    Time.zone.now.to_date
   end
 
   def context

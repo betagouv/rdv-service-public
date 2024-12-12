@@ -594,6 +594,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_12_181220) do
   create_table "rdv_plans", force: :cascade do |t|
     t.bigint "rdv_id"
     t.bigint "agent_id"
+    t.bigint "rdv_agent_id"
     t.bigint "motif_id"
     t.bigint "lieu_id"
     t.datetime "starts_at"
@@ -602,6 +603,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_12_181220) do
     t.index ["agent_id"], name: "index_rdv_plans_on_agent_id"
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
+    t.index ["rdv_agent_id"], name: "index_rdv_plans_on_rdv_agent_id"
     t.index ["rdv_id"], name: "index_rdv_plans_on_rdv_id"
   end
 

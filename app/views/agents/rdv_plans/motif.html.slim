@@ -1,5 +1,5 @@
 .row.justify-content-md-center
-  .col-md-12.col-lg-8
+  .col-12
     h1.fr-h2 Nouveau rendez-vous
     = render "common/stepper", step_count: 4, current_step: 1, step_title: "Motif", next_step_title: "Créneau"
     .card
@@ -13,11 +13,10 @@
               required: true, \
               include_blank: true, \
               collection: @motifs, \
-              label_method: -> { _1.name_with_location_type }, \
+              label_method: -> { "#{_1.name} - #{'RDV collectif ' if _1.collectif?}#{_1.human_attribute_value(:location_type)}" }, \
               input_html: { \
                 data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true },
                 class: "select2-input", \
               }
 
           = f.submit "Continuer", class: "fr-btn float-right"
-
