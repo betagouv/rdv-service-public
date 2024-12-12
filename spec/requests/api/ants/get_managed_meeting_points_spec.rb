@@ -23,9 +23,17 @@ RSpec.describe "ANTS API: getManagedMeetingPoints" do
              longitude: 4.0348016639327,
              latitude: 60.549140395451)
     end
+    let!(:single_use_lieu) do
+      create(:lieu, organisation: organisation, availability: :single_use)
+    end
+
+    let!(:disabled_lieu) do
+      create(:lieu, organisation: organisation, availability: :disabled)
+    end
+
     let(:organisation) { create(:organisation, ants_connectable: true) }
 
-    it "returns a list of lieux" do
+    it "returns a list of enabled lieux" do
       get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "" }
       expect(response.parsed_body).to contain_exactly({
         id: lieu1.id.to_s,

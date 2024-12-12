@@ -51,8 +51,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   }.freeze
 
   def self.lieux
-    Lieu.joins(:organisation)
-      .where(organisations: { ants_connectable: true })
+    Lieu.enabled.joins(:organisation).where(organisations: { ants_connectable: true })
   end
 
   private
