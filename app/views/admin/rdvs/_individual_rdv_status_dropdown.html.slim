@@ -14,7 +14,7 @@
       = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "revoked",  quick_update: quick_update
 
     - else
-      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "unknown",  quick_update: :quick_update
+      = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "unknown",  quick_update: quick_update
 
     - if policy(rdv, policy_class: Agent::RdvPolicy).destroy?
       .dropdown-divider
