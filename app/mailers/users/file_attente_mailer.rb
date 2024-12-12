@@ -24,6 +24,6 @@ class Users::FileAttenteMailer < ApplicationMailer
   end
 
   def default_from
-    HandleInboundEmailJob.reply_address_for_rdv(@rdv)
+    TransferEmailReplyJob.reply_address_for_rdv(@rdv)
   end
 end
