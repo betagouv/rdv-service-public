@@ -5,7 +5,7 @@
     = Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
   .dropdown-menu
     - if rdv.status == "unknown"
-      - if rdv.starts_at < Time.zone.now
+      - if rdv.starts_at < Time.zone.now.end_of_day # On veut permettre de renseigner un rendez-vous si l'usage arrive en avance
         = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "seen",  quick_update: quick_update
         = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, status: "noshow",  quick_update: quick_update
         .dropdown-divider
