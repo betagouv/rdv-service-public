@@ -30,10 +30,19 @@ class Agents::RdvPlansController < AgentAuthController
       # TODO: ajouter un check sur la policy des users
       @rdv_plan.participations.build(user_id: user_id)
     end
+    # On réinitialise le lieu si on change le motif
+    if params.dig(:rdv_plan, :motif_id).to_i != @rdv_plan.motif_id
+      @rdv_plan.lieu_id = nil
+    end
+
     @rdv_plan.assign_attributes(params.require(:rdv_plan).permit(:motif_id).merge(agent: current_agent))
 
     if @rdv_plan.save
-      redirect_to lieu_agents_rdv_plan_path(@rdv_plan)
+      if @rdv_plan.motif.requires_lieu?
+        redirect_to lieu_agents_rdv_plan_path(@rdv_plan)
+      else
+        redirect_to creneau_agents_rdv_plan_path(@rdv_plan)
+      end
     else
       render "motif"
     end

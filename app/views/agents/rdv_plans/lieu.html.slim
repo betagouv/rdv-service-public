@@ -1,26 +1,30 @@
 .row.justify-content-md-center
   .col-12
-    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan
-    = render "common/stepper", step_count: 3, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
-    - @form = @rdv_plan
-    - if @next_availabilities.empty?
-      p Il n'y a pas de créneaux disponibles pour ce motif. Vous pouvez essayer un autre motif, ou chercher directement dans le calendrier d'un agent.
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
+    .card
+      .card-body
+        = render "agents/rdv_plans/motif_recap", rdv_plan: @rdv_plan
+        hr.fr-mt-2w
 
-    - elsif @next_availabilities.count > 1
-      h3.font-weight-bold Choisissez un lieu
-      - @next_availabilities.each do |next_availability|
-        .card.mb-3
-          .card-body
-            .row
-              .col-md
-                h4.card-title.mb-3.mt-0.text-success.font-weight-bold= next_availability.lieu.name
-                h6.card-subtitle.text-black-50= next_availability.lieu.address
-              .col-md.align-self-center.pt-3.pt-md-0.position-static
-                = link_to update_lieu_agents_rdv_plan_path(@rdv_plan, rdv_plan: {lieu_id: next_availability.lieu.id}), method: :post, class: "d-block stretched-link" do
-                  .row
-                    .col
-                      | Prochaine disponibilité le
-                      br
-                      strong= l(next_availability.starts_at, format: :human)
-                    .col-auto.align-self-center
-                      i.fa.fa-chevron-right
+        - if @next_availabilities.empty?
+          p Il n'y a pas de créneaux disponibles pour ce motif. Vous pouvez essayer un autre motif, ou chercher directement dans le calendrier d'un agent.
+
+        - elsif @next_availabilities.count > 1
+          h3.font-weight-bold Choisissez un lieu
+          - @next_availabilities.each do |next_availability|
+            .card.mb-3
+              .card-body
+                .row
+                  .col-md
+                    h4.card-title.mb-3.mt-0.text-success.font-weight-bold= next_availability.lieu.name
+                    h6.card-subtitle.text-black-50= next_availability.lieu.address
+                  .col-md.align-self-center.pt-3.pt-md-0.position-static
+                    = link_to update_lieu_agents_rdv_plan_path(@rdv_plan, rdv_plan: {lieu_id: next_availability.lieu.id}), method: :patch, class: "d-block stretched-link" do
+                      .row
+                        .col
+                          | Prochaine disponibilité le
+                          br
+                          strong= l(next_availability.starts_at, format: :human)
+                        .col-auto.align-self-center
+                          i.fa.fa-chevron-right
+        = link_to "retour", motif_agents_rdv_plan_path(@rdv_plan)

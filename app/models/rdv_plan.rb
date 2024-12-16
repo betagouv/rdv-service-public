@@ -1,6 +1,7 @@
 class RdvPlan < ApplicationRecord
   belongs_to :agent
   belongs_to :motif
+  belongs_to :lieu
 
   has_many :participations, class_name: "RdvPlanParticipation", dependent: :destroy
   has_many :users, through: :participations

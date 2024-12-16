@@ -1,10 +1,9 @@
-.row.justify-content-md-center
-  .col-12
-    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan
-    = render "common/stepper", step_count: 3, current_step: 1, step_title: "Motif", next_step_title: "Créneau"
+.fr-row.justify-content-md-center.fr-mb-16w
+  .fr-col-12
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Motif", next_step_title: "Créneau"
     .card
       .card-body
-        = simple_form_for @rdv_plan, url: agents_rdv_plans_path(@rdv_plan) do |f|
+        = simple_form_for @rdv_plan, url: (@rdv_plan.persisted? ? update_motif_agents_rdv_plan_path(@rdv_plan) : agents_rdv_plans_path(@rdv_plan)) do |f|
           = render "model_errors", model: @rdv_plan
           = f.hidden_field :user_id, value: params[:user_id]
           - @motifs = current_agent.motifs.where(organisation_id: current_agent.roles.select(:organisation_id))

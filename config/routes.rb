@@ -114,16 +114,16 @@ Rails.application.routes.draw do
       resources :rdv_plans, only: %i[new create] do
         member do
           get :motif
-          post :update_motif
+          patch :update_motif
 
           get :lieu
-          post :update_lieu
+          patch :update_lieu
 
           get :creneau
-          post :update_creneau
+          patch :update_creneau
 
           get :user
-          post :update_user
+          patch :update_user
 
           get :notifications
           post :create_rdv
