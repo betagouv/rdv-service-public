@@ -3,13 +3,25 @@
     .card
       .card-body
         h1.fr-h2 Rendez-vous confirmé
-        = render "agents/rdv_plans/motif_recap", rdv_plan: @rdv_plan
-        = render "agents/rdv_plans/lieu_recap", rdv_plan: @rdv_plan
-        = render "agents/rdv_plans/creneau_recap", rdv_plan: @rdv_plan
-        br
-        span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
-        = @rdv_plan.users.first.full_name
-        = link_to "modifier", user_agents_rdv_plan_path(@rdv_plan), class: "fr-ml-2w"
+        span.fr-icon-information-fill.fr-mr-1w[aria-hidden="true"]
+        = @rdv_plan.motif.name
+
+        - if @rdv_plan.motif.requires_lieu?
+          .fr-mt-2w
+            span.fr-icon-government-fill.fr-mr-1w[aria-hidden="true"]
+            = @rdv_plan.lieu.name
+
+        .fr-mt-2w
+          span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
+          = "#{l(@rdv_plan.starts_at, format: :human)} (#{@rdv_plan.motif.default_duration_in_min} minutes)"
+
+        .fr-mt-2w
+          span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
+          = @rdv_plan.users.first.full_name
+          br
+          .fr-ml-4w= @rdv_plan.users.first.email
+            br
+          .fr-ml-4w= @rdv_plan.users.first.phone_number
 
     = link_to "Retour sur Mon Suivi Social", "https://monsuivisocial.incubateur.anct.gouv.fr/"
     br
