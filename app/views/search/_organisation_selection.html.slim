@@ -1,20 +1,19 @@
-.fr-container
-  = render "search/selected_motif_recap", context: context
-  - if context.next_availability_by_motifs_organisations.empty?
-    = render "search/nothing_to_show", context: context
-  - else
-    h3.fr-col-lg-10.fr-col-offset-lg-1 Sélectionnez la structure avec laquelle prendre RDV&nbsp;:
-    ul.fr-raw-list
-      - context.next_availability_by_motifs_organisations.each do |organisation, next_availability|
-        li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w.fr-col-lg-10.fr-col-offset-lg-1
-          .fr-card__body
-            .fr-card__content
-              .fr-card__title
-                = link_to organisation.name, prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at))
-              .fr-card__start
-              .fr-card__end
-                = render "search/organisation_card_subtitles", organisation: organisation
-                .fr-card__detail
-                  p.fr-icon-calendar-2-fill.fr-mt-3w
-                    = "Prochaine disponibilité le "
-                    strong= l(next_availability.starts_at, format: :human)
+= render "search/selected_motif_recap", context: context
+- if context.next_availability_by_motifs_organisations.empty?
+  = render "search/nothing_to_show", context: context
+- else
+  h3 Sélectionnez la structure avec laquelle prendre RDV&nbsp;:
+  ul.fr-raw-list
+    - context.next_availability_by_motifs_organisations.each do |organisation, next_availability|
+      li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
+        .fr-card__body
+          .fr-card__content
+            .fr-card__title
+              = link_to organisation.name, prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at))
+            .fr-card__start
+            .fr-card__end
+              = render "search/organisation_card_subtitles", organisation: organisation
+              .fr-card__detail
+                p.fr-icon-calendar-2-fill.fr-mt-3w
+                  = "Prochaine disponibilité le "
+                  strong= l(next_availability.starts_at, format: :human)

@@ -1,13 +1,12 @@
-.fr-container
-  - if context.unique_motifs_by_name_and_location_type.empty?
-    = render "search/nothing_to_show", context: context
-  - else
-    h2.fr-col-lg-10.fr-col-offset-lg-1 Sélectionnez le service avec qui vous voulez prendre un RDV&nbsp;:
-    - unless context.invitation?
-    - context.services.each do |service|
-      .fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w.fr-col-lg-10.fr-col-offset-lg-1
-        .fr-card__body
-          .fr-card__content
-            .fr-card__title
-              = link_to service.name, prendre_rdv_path(context.query_params.merge(service_id: service.id))
-            .fr-card__start
+- if context.unique_motifs_by_name_and_location_type.empty?
+  = render "search/nothing_to_show", context: context
+- else
+  h2 Sélectionnez le service avec qui vous voulez prendre un RDV&nbsp;:
+  - unless context.invitation?
+  - context.services.each do |service|
+    .fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
+      .fr-card__body
+        .fr-card__content
+          .fr-card__title
+            = link_to service.name, prendre_rdv_path(context.query_params.merge(service_id: service.id))
+          .fr-card__start
