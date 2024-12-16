@@ -1,7 +1,7 @@
 .row.justify-content-md-center
   .col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan
-    = render "common/stepper", step_count: 4, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
+    = render "common/stepper", step_count: 3, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
 
     .row.position-relative[style="min-height: 200px"]
       - if @rdv_plan.date_range.begin > Time.zone.today

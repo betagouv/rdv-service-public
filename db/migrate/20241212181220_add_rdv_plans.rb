@@ -14,6 +14,8 @@ class AddRdvPlans < ActiveRecord::Migration[7.1]
     create_table :rdv_plan_participations do |t|
       t.references :rdv_plan
       t.references :user
+      t.boolean "send_lifecycle_notifications", null: false, default: true
+      t.boolean "send_reminder_notification", null: false, default: true
 
       t.timestamps null: false
     end

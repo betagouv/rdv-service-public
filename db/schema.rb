@@ -585,6 +585,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_12_181220) do
   create_table "rdv_plan_participations", force: :cascade do |t|
     t.bigint "rdv_plan_id"
     t.bigint "user_id"
+    t.boolean "send_lifecycle_notifications", default: true, null: false
+    t.boolean "send_reminder_notification", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["rdv_plan_id"], name: "index_rdv_plan_participations_on_rdv_plan_id"
