@@ -17,7 +17,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
     click_on "Formation emails" # choix du motif
-    click_on "Prochaine disponibilité le" # choix du lieu
+    click_on lieu.name
     click_on "08:00" # choix du créneau
     click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
 
@@ -112,7 +112,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
       click_on "Formation emails" # choix du motif
-      click_on "Prochaine disponibilité le" # choix du lieu
+      click_on lieu.name
       click_on "08:00" # choix du créneau
       click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
 
@@ -149,7 +149,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       fill_address_form
 
       click_on "Formation emails" # choix du motif
-      click_on "Prochaine disponibilité le", match: :first # choix du lieu
+      click_on lieu.name, match: :first # choix du lieu
       click_on "08:00" # choix du créneau
 
       fill_prescripteur_form
@@ -180,7 +180,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
         fill_address_form
 
         click_on "Formation emails" # choix du motif
-        click_on "Prochaine disponibilité le", match: :first # choix du lieu
+        click_on lieu.name
         click_on "08:00" # choix du créneau
 
         fill_prescripteur_form
@@ -206,7 +206,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       fill_address_form
 
       click_on "Formation emails" # choix du motif
-      click_on "Prochaine disponibilité le", match: :first # choix du lieu
+      click_on lieu.name
       click_on "08:00" # choix du créneau
 
       expect(page).to have_content("Vos coordonnées de prescripteur")
@@ -218,7 +218,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       click_on(lieu.name)
 
       expect(page).to have_content("Sélectionnez un lieu de RDV")
-      click_on("Prochaine disponibilité", match: :first)
+      click_on lieu.name
 
       click_on "08:00" # choix du créneau
 
@@ -242,7 +242,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       fill_address_form
 
       click_on "Formation emails" # choix du motif
-      click_on "Prochaine disponibilité le", match: :first
+      click_on lieu.name
       click_on "08:00"
 
       expect(page).to have_content("Vos coordonnées de prescripteur")
@@ -271,7 +271,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
         visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
         fill_address_form
         click_on "Formation emails" # choix du motif
-        click_on "Prochaine disponibilité le", match: :first
+        click_on lieu.name
         click_on "08:00"
         expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque " \
                                      "nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent.")

@@ -17,7 +17,7 @@ RSpec.describe "Agents can try the user-facing online booking pages" do
     expect(page).to have_content("Sélectionnez le motif de votre RDV :")
     click_link("Accompagnement Formation")
     expect(page).to have_content("Sélectionnez un lieu de RDV")
-    click_link("Prochaine disponibilité")
+    click_on(organisation.lieux.first.name)
     expect(page).to have_content("Sélectionnez un créneau")
   end
 

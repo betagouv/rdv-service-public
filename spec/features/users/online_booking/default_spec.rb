@@ -97,7 +97,7 @@ RSpec.describe "User can search for rdvs" do
 
         expect(page).not_to have_content(organisation_without_po.name)
 
-        find(".card-title", text: /#{first_organisation_with_po.name}/).ancestor(".card").find("a.stretched-link").click
+        find(".fr-card__title", text: /#{first_organisation_with_po.name}/).ancestor(".fr-card__body").find("a").click
 
         choose_creneau
         sign_up
@@ -133,7 +133,7 @@ RSpec.describe "User can search for rdvs" do
 
         expect(page).not_to have_content(organisation_without_po.name)
 
-        find(".card-title", text: /#{first_organisation_with_po.name}/).ancestor(".card").find("a.stretched-link").click
+        find(".fr-card__title", text: /#{first_organisation_with_po.name}/).ancestor(".fr-card__body").find("a").click
 
         choose_creneau
         sign_up
@@ -158,7 +158,7 @@ RSpec.describe "User can search for rdvs" do
 
         expect(page).not_to have_content(organisation_without_po.name)
 
-        find(".card-title", text: /#{first_organisation_with_po.name}/).ancestor(".card").find("a.stretched-link").click
+        find(".fr-card__title", text: /#{first_organisation_with_po.name}/).ancestor(".fr-card__body").find("a").click
 
         choose_creneau
         expect(page).to have_content("RDV par visioconférence")
@@ -263,10 +263,10 @@ RSpec.describe "User can search for rdvs" do
       expect(page).not_to have_content(motif2.name)
       expect(page).not_to have_content(motif3.name)
 
-      find(".card-title", text: /#{motif1.name}/).click
+      find(".fr-card__title", text: /#{motif1.name}/).ancestor(".fr-card__body").find("a").click
 
       expect(page).to have_content(lieu.name)
-      find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
+      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("a").click
       click_link("Accepter")
 
       ### Creneau selection
@@ -428,19 +428,19 @@ RSpec.describe "User can search for rdvs" do
     expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
     expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
 
-    find("h3", text: service.name).click
+    find("a", text: service.name).click
   end
 
   def choose_motif(motif)
     expect(page).to have_content("Sélectionnez le motif de votre RDV")
-    find("h3", text: motif.name).click
+    find("a", text: motif.name).click
   end
 
   def choose_lieu(lieu)
     expect(page).to have_content(lieu.name)
     expect(page).to have_content(lieu2.name)
 
-    find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
+    find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("a").click
 
     expect(page).to have_content(lieu.name)
   end
