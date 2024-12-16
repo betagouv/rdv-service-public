@@ -21,6 +21,8 @@ html lang="fr"
           header.with_tool_link title: "Vos informations", path: users_informations_path
           header.with_tool_link title: "Votre compte", path: edit_user_registration_path
           header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-icon-lock-fill", html_attributes: { "data-method": "delete" }
+        elsif current_agent
+          header.with_tool_link title: current_agent.full_name, path: edit_agent_registration_path
         elsif current_domain == Domain::RDV_MAIRIE && request.path == "/"
           header.with_tool_link title: "Centre d’aide", path: "https://rdv-service-public-1.gitbook.io/rdv-service-public", classes: "fr-icon-questionnaire-line"
           header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, classes: "fr-icon-admin-line"
