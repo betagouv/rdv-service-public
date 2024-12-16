@@ -15,13 +15,13 @@
               .col-6
                 = ff.input :last_name
             .row
-              .col-12
+              .col-6
                 = ff.input :email
-              .col-12
+              .col-6
                 = ff.input :phone_number
           = f.fields_for :participation, (@rdv_plan.participations.first) do |ff|
-            = ff.input :send_lifecycle_notifications
-            = ff.input :send_reminder_notification
+            = ff.input :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
+            = ff.input :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
 
-          = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right"
+          = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right fr-btn--lg"
 
