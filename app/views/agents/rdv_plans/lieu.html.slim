@@ -1,6 +1,6 @@
 .row.justify-content-md-center
   .col-12
-    h1.fr-h2 Nouveau rendez-vous
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan
     = render "common/stepper", step_count: 4, current_step: 2, step_title: "Créneau", next_step_title: "Usager"
     - @form = @rdv_plan
     - if @next_availabilities.empty?

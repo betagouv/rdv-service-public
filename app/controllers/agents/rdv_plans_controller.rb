@@ -3,6 +3,12 @@ class Agents::RdvPlansController < AgentAuthController
 
   def new
     @rdv_plan = current_agent.rdv_plans.new
+
+    if params[:user_id]
+      # TODO: use a proper policy without current context here
+      @rdv_plan.users = [User.find(params[:user_id])]
+    end
+
     authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
     render "motif"
   end
@@ -19,7 +25,14 @@ class Agents::RdvPlansController < AgentAuthController
     @rdv_plan = RdvPlan.find_by(id: params[:id]) || RdvPlan.new
     authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
 
-    if @rdv_plan.update(params.require(:rdv_plan).permit(:motif_id).merge(agent: current_agent))
+    user_id = params.require(:rdv_plan).dig(:user_id)
+    if user_id.present?
+      # TODO: ajouter un check sur la policy des users
+      @rdv_plan.participations.build(user_id: user_id)
+    end
+    @rdv_plan.assign_attributes(params.require(:rdv_plan).permit(:motif_id).merge(agent: current_agent))
+
+    if @rdv_plan.save
       redirect_to lieu_agents_rdv_plan_path(@rdv_plan)
     else
       render "motif"

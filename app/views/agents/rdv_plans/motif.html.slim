@@ -1,11 +1,12 @@
 .row.justify-content-md-center
   .col-12
-    h1.fr-h2 Nouveau rendez-vous
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan
     = render "common/stepper", step_count: 4, current_step: 1, step_title: "Motif", next_step_title: "Créneau"
     .card
       .card-body
         = simple_form_for @rdv_plan, url: agents_rdv_plans_path(@rdv_plan) do |f|
           = render "model_errors", model: @rdv_plan
+          = f.hidden_field :user_id, value: params[:user_id]
           - @motifs = current_agent.motifs.where(organisation_id: current_agent.roles.select(:organisation_id))
 
           = f.input :motif_id, \

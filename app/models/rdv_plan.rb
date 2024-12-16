@@ -2,8 +2,8 @@ class RdvPlan < ApplicationRecord
   belongs_to :agent
   belongs_to :motif
 
-  has_many :rdv_plan_participations
-  has_many :users, through: :rdv_plan_participations
+  has_many :participations, class_name: "RdvPlanParticipation", dependent: :destroy
+  has_many :users, through: :participations
 
   delegate :organisation, :service_id, to: :motif
 

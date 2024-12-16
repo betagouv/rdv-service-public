@@ -1,0 +1,5 @@
+/ locals(rdv_plan:)
+h1.fr-h2
+  | Nouveau rendez-vous
+  - if rdv_plan.users.any?
+    = " avec #{rdv_plan.users.first.full_name}"
