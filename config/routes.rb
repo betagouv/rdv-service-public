@@ -123,10 +123,9 @@ Rails.application.routes.draw do
           patch :update_creneau
 
           get :user
-          patch :update_user
-
-          get :notifications
           post :create_rdv
+
+          get :rdv
         end
       end
       resource :preferences, only: %i[show update]

@@ -9,7 +9,7 @@
         hr.fr-mt-2w
         - if @rdv_plan.users.any?
           h3= @rdv_plan.users.first.full_name
-        = simple_form_for @rdv_plan, url: agents_rdv_plans_path(@rdv_plan) do |f|
+        = simple_form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post do |f|
           = f.fields_for :user, (@rdv_plan.users.first) do |ff|
             .row
               .col-6

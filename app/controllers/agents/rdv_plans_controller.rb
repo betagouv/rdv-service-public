@@ -90,15 +90,15 @@ class Agents::RdvPlansController < AgentAuthController
     find_rdv_plan
   end
 
-  def update_user
-    find_rdv_plan
-  end
-
-  def notifications
-    find_rdv_plan
-  end
-
   def create_rdv
+    find_rdv_plan
+
+    flash[:success] = "Le rendez-vous a été créé."
+
+    redirect_to rdv_agents_rdv_plan_path(@rdv_plan)
+  end
+
+  def rdv
     find_rdv_plan
   end
 
