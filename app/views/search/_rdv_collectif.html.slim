@@ -1,26 +1,25 @@
-.card
-  .card-header
-    = rdv_title(rdv)
+li.card
   .card-body
-    .card-text
-      - if rdv.name.present?
-        p
-          strong= rdv.name
-      i.fa.fa-fw.fa-user>
-      strong> Animé par
-      = agents_to_sentence(rdv.agents)
+    - if rdv.name.present?
+      h4.rdv-color-active-blue = rdv.name
+    ul.fr-raw-list
+      li.card-text.fr-icon-user-fill.fr-mb-1w
+        strong> Animé par
+        = agents_to_sentence(rdv.agents)
 
-    .card-text
-      i.fa.fa-fw.fa-clock>
-      = "#{rdv.duration_in_min} minutes"
-    .card-text
-      i.fa.fa-fw.fa-users>
-      = show_participants_count(rdv)
+      li.card-text.fr-icon-calendar-2-fill.fr-mb-1w
+        strong = "Date : "
+        = l(rdv.starts_at, format: :human)
+      li.card-text.fr-icon-timer-fill.fr-mb-1w
+        strong = "Durée : "
+        = "#{rdv.duration_in_min} minutes"
+      li.card-text.fr-icon-team-fill.fr-mb-1w
+        strong = "Nombre de participants : "
+        = "#{show_participants_count(rdv)}"
 
   .card-footer
     - if current_user&.participation_for(rdv)&.not_cancelled?
-      .rdv-color-text-mention-grey Vous êtes déjà inscrit pour cet atelier.
+      .fr-icon-success-line.rdv-color-text-default-success
+        = "Vous êtes déjà inscrit pour cet atelier."
     - else
-      = link_to @context.wizard_after_creneau_selection_path(rdv_collectif_id: rdv.id), class: "d-flex card-text mb-2" do
-        i.fa.fa-fw.fa-user-plus>
-        | &nbsp;S'inscrire
+      = link_to "S'inscrire", @context.wizard_after_creneau_selection_path(rdv_collectif_id: rdv.id), class: "fr-btn fr-btn--secondary fr-icon-user-add-line fr-btn--icon-left"
