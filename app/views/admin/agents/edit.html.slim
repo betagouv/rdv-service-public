@@ -21,7 +21,7 @@
           = render "model_errors", model: @agent
           - allowed_to_change_services = Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
 
-          = f.association :services, collection: @services, disabled: true, input_html: { class: "select2-input" }, wrapper_html: { class: "mb-0" }, hint: allowed_to_change_services ? nil : "Le changement de service est réservé aux admins de territoire"
+          = f.association :services, collection: @services, disabled: true, input_html: { class: "select2-input" }, wrapper_html: { class: "mb-0" }, hint: allowed_to_change_services ? nil : "Vous n’avez pas les droits nécessaires pour modifier les services de l’agent. Il faut être administrateur de territoire avec gestion des droits d’accès."
           - if allowed_to_change_services
             span.small.text-muted
               | Vous pouvez désormais attribuer plusieurs services à un agent, via votre interface de Configuration - Admin de territoire.&nbsp;
