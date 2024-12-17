@@ -254,6 +254,11 @@ fr:
       territory:
         roles: "Admins du Territoire"
         admin_agents: "Admins du Territoire"
+      agent_territorial_access_right:
+        allow_to_manage_teams: "Peut gérer les équipes"
+        allow_to_manage_access_rights: "Peut gérer les droits d’accès"
+        allow_to_invite_agents: "Peut inviter d’autres agents"
+
     add: Ajouter
     back: Retour
     clone: Dupliquer
