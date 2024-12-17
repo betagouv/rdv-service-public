@@ -9,6 +9,7 @@ header.header.bg-white
       i.fa.fa-bars.text-primary-blue
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
+        = render "layouts/rdv_a_renseigner", organisation: current_organisation
         li.list-inline-item
           #js-headway-anchor.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center
             | Nouveautés

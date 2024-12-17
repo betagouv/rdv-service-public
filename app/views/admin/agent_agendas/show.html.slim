@@ -7,9 +7,6 @@
   - else
     | Agenda de #{@agent.full_name_and_service}
 
-- content_for :breadcrumb do
-  = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: current_organisation
-
 #calendar[
   data-default-date-json="#{@date&.to_json}"
   data-agent-id="#{@agent.id}"
