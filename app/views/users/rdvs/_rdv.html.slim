@@ -102,13 +102,13 @@ hr
 - phone_number =rdv.lieu&.phone_number.presence || rdv.organisation.phone_number.presence
 
 - if phone_number || rdv.organisation.website.present?
-  h2 Contact de #{rdv.organisation.name}
+  h2.fr-h3 Contact de #{rdv.organisation.name}
   - if phone_number
     p
-      span.fr-icon-phone-fill[aria-hidden="true"]
+      span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
       = phone_to(rdv.organisation.humanized_phone_number)
   - if rdv.organisation.website.present?
     p
-      span.fr-icon-computer-fill[aria-hidden="true"]
+      span.fr-icon-computer-fill.fr-mr-1w[aria-hidden="true"]
       = "Site web : "
       = link_to rdv.organisation.website, rdv.organisation.website, target: "_blank"
