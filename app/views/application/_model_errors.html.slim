@@ -11,13 +11,13 @@
       = f.input :ignore_benign_errors, as: :hidden, input_html: {class: "js-ignore-benign-errors", value: "1" }
       .d-flex.justify-content-between.align-items-center
         div
-          a[
+          a.fr-btn.fr-btn--secondary[
             data-toggle="collapse"
             data-target=".js-collapse-warning-confirmation"
             href="#"
             onclick="document.querySelector('.js-ignore-benign-errors').setAttribute('disabled', 'disabled');"
           ] Annuler et modifier
-        div= f.submit "Confirmer en ignorant les avertissements", class: "fr-btn fr-btn--secondary"
+        div= f.submit "Confirmer en ignorant les avertissements", class: "fr-btn fr-btn--tertiary"
       hr
 
 - elsif model.errors.any?
