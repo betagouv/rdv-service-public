@@ -1,14 +1,13 @@
 - if model.respond_to?(:errors_are_all_benign?) && model.errors_are_all_benign?
   / warnings only appear if there are no other errors
-  .fr-alert.fr-alert--warning
-    ul.fr-m-0.list-unstyled
+  .fr-alert.fr-alert--warning.fr-mb-2w
+    ul.list-unstyled.fr-mb-0
       - model.benign_errors.each do |msg|
         li
           = msg
 
   - if local_assigns[:f]
     .collapse.show.js-collapse-warning-confirmation
-      small.form-text.rdv-color-text-mention-grey.fr-mb-3w Ces avertissements ne sont pas bloquants, vous pouvez les ignorer en confirmant.
       = f.input :ignore_benign_errors, as: :hidden, input_html: {class: "js-ignore-benign-errors", value: "1" }
       .d-flex.justify-content-between.align-items-center
         div
