@@ -55,6 +55,19 @@ ul.list-group.list-group-flush.fr-mb-3w
         = instruction_for_rdv_to_html(rdv.motif)
   = render "/users/rdvs/file_attente", rdv: rdv
 
+
+  - if rdv.phone_number || rdv.organisation.website.present?
+    h2.fr-h6.fr-mt-2w Contact de #{rdv.organisation.name}
+    .d-flex
+      - if rdv.phone_number
+        p.fr-mr-2w
+          span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
+          = phone_to(rdv.organisation.humanized_phone_number)
+      - if rdv.organisation.website.present?
+        p
+          span.fr-icon-global-fill.fr-mr-1w[aria-hidden="true"]
+          = link_to rdv.organisation.website, rdv.organisation.website, target: "_blank"
+
   / Check for authorizations and already cancelled rdv/participation
   - unless policy(rdv, policy_class: User::RdvPolicy).cancel? || \
       policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel? || \
@@ -97,18 +110,4 @@ ul.fr-btns-group.fr-btns-group--inline.fr-mb-0
         confirm_link_options: { method: :put } \
 )
 
-hr
 
-- phone_number =rdv.lieu&.phone_number.presence || rdv.organisation.phone_number.presence
-
-- if phone_number || rdv.organisation.website.present?
-  h2.fr-h3 Contact de #{rdv.organisation.name}
-  - if phone_number
-    p
-      span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-      = phone_to(rdv.organisation.humanized_phone_number)
-  - if rdv.organisation.website.present?
-    p
-      span.fr-icon-computer-fill.fr-mr-1w[aria-hidden="true"]
-      = "Site web : "
-      = link_to rdv.organisation.website, rdv.organisation.website, target: "_blank"
