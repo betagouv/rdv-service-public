@@ -1,7 +1,7 @@
 - if model.respond_to?(:errors_are_all_benign?) && model.errors_are_all_benign?
   / warnings only appear if there are no other errors
   .fr-alert.fr-alert--warning.fr-mb-2w
-    ul.list-unstyled.fr-mb-0
+    ul.fr-mb-0[class="#{'list-unstyled' if model.benign_errors&.count == 1}"]
       - model.benign_errors.each do |msg|
         li
           = msg
@@ -22,6 +22,7 @@
 
 - elsif model.errors.any?
   .fr-alert.fr-alert--error.fr-mb-1w
-    ul.fr-m-0.fr-pl-2w
-      - errors_full_messages(model).uniq.each do |msg|
+    - error_messages = errors_full_messages(model).uniq
+    ul.fr-m-0.fr-pl-2w[class="#{'list-unstyled' if error_messages.count == 1}"]
+      - error_messages.each do |msg|
         li= msg
