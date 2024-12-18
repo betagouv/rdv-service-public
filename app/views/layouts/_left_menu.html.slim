@@ -35,8 +35,8 @@ nav.left-side-menu-wrapper
           ]
             .d-flex.justify-content-between
               div
-                i.far.fa-clock>
-                span.ml-1 Planning
+                span.fr-icon-calendar-fill.fr-mr-1v[aria-hidden="true"]
+                | Planning
               div
                 i.fa.fa-angle-down.menu-arrow.mt-1
           ul.list-unstyled.ml-4.pr-2.left-submenu-planning.collapse[
@@ -58,28 +58,28 @@ nav.left-side-menu-wrapper
 
         li
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
-            i.fa.fa-user>
-            span.ml-1 Usagers
+            span.fr-icon-group-fill.fr-mr-1v[aria-hidden="true"]
+            | Usagers
 
         li
           = active_link_to(admin_organisation_rdvs_path(current_organisation), class: "side-menu__item")
-            i.fa.fa-list>
-            span.ml-1 Liste des RDV
+            span.fr-icon-survey-fill.fr-mr-1v[aria-hidden="true"]
+            | Liste des RDV
 
         li
           = active_link_to(admin_organisation_stats_path(current_organisation), class: "side-menu__item")
-            i.fa.fa-chart-bar>
-            span.ml-1 Statistiques
+            span.fr-icon-bar-chart-box-fill.fr-mr-1v[aria-hidden="true"]
+            | Statistiques
 
         - unless current_agent_role.admin?
           li
             = active_link_to admin_organisation_lieux_path(current_organisation), class: "side-menu__item"
-              i.fa.fa-building>
-              span.ml-1 Lieux
+              span.fr-icon-map-pin-2-fill.fr-mr-1v[aria-hidden="true"]
+              | Lieux
           li
             = active_link_to admin_organisation_motifs_path(current_organisation), class: "side-menu__item"
-              i.fa.fa-paste>
-              span.ml-1 Motifs
+              span.fr-icon-draft-fill.fr-mr-1v[aria-hidden="true"]
+              | Motifs
 
         - if current_agent_role.admin?
           li
@@ -91,8 +91,8 @@ nav.left-side-menu-wrapper
             ]
               .d-flex.justify-content-between
                 div
-                  i.fa.fa-cog>
-                  span.ml-1 Paramètres
+                  span.fr-icon-settings-5-fill.fr-mr-1v[aria-hidden="true"]
+                  | Paramètres
                 div
                   i.fa.fa-angle-down.menu-arrow.mt-1
             ul.list-unstyled.ml-4.left-submenu-settings.collapse[
@@ -114,5 +114,5 @@ nav.left-side-menu-wrapper
                   ' Espace Admin
         li
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
-            i.fa.fa-question-circle>
-            span.ml-1 Support
+            span.fr-icon-question-fill.fr-mr-1v[aria-hidden="true"]
+            | Support
