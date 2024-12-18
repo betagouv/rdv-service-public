@@ -6,23 +6,22 @@ li.card
       h4.rdv-color-active-blue = rdv.motif.name
     ul.fr-raw-list
       li.card-text.fr-mb-1w
-        span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
-        strong> Animé par
-        = agents_to_sentence(rdv.agents)
-
-      li.card-text.fr-mb-1w
         span.fr-icon-calendar-2-fill.fr-mr-1w[aria-hidden="true"]
-        strong = "Date : "
-        = l(rdv.starts_at, format: :human)
+        = "Date : "
+        strong = l(rdv.starts_at, format: :human)
       li.card-text.fr-mb-1w
         span.fr-icon-timer-fill.fr-mr-1w[aria-hidden="true"]
-        strong = "Durée : "
-        = "#{rdv.duration_in_min} minutes"
+        = "Durée : "
+        strong = "#{rdv.duration_in_min} minutes"
+      li.card-text.fr-mb-1w
+        span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
+        = "Animé par "
+        strong = agents_to_sentence(rdv.agents)
       li.card-text.fr-mb-1w
         span.fr-icon-team-fill.fr-mr-1w[aria-hidden="true"]
         = I18n.t("rdvs.participants", count: rdv.users_count)
 
-  .card-footer
+  .card-footer.rdv-text-align-right
     - if current_user&.participation_for(rdv)&.not_cancelled?
       .rdv-color-text-default-success
         span.fr-icon-success-line.fr-mr-1w[aria-hidden="true"]
