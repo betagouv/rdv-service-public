@@ -35,7 +35,7 @@ nav.left-side-menu-wrapper
           ]
             .d-flex.justify-content-between
               div
-                span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1v[aria-hidden="true"]
+                span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
                 | Planning
               div
                 i.fa.fa-angle-down.menu-arrow.mt-1
@@ -58,27 +58,27 @@ nav.left-side-menu-wrapper
 
         li
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
-            span.fr-icon-group-fill.fr-icon--sm.fr-mr-1v[aria-hidden="true"]
+            span.fr-icon-group-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Usagers
 
         li
           = active_link_to(admin_organisation_rdvs_path(current_organisation), class: "side-menu__item")
-            span.fr-icon-survey-fill.fr-icon--sm.fr-mr-1v[aria-hidden="true"]
+            span.fr-icon-survey-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Liste des RDV
 
         li
           = active_link_to(admin_organisation_stats_path(current_organisation), class: "side-menu__item")
-            span.fr-icon-bar-chart-box-fill.fr-icon--sm.fr-mr-1v[aria-hidden="true"]
+            span.fr-icon-bar-chart-box-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Statistiques
 
         - unless current_agent_role.admin?
           li
             = active_link_to admin_organisation_lieux_path(current_organisation), class: "side-menu__item"
-              span.fr-icon-building-fill.fr-icon--sm.fr-mr-1v[aria-hidden="true"]
+              span.fr-icon-building-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
               | Lieux
           li
             = active_link_to admin_organisation_motifs_path(current_organisation), class: "side-menu__item"
-              span.fr-icon-draft-fill.fr-icon--sm.fr-mr-1v[aria-hidden="true"]
+              span.fr-icon-draft-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
               | Motifs
 
         - if current_agent_role.admin?
@@ -91,7 +91,7 @@ nav.left-side-menu-wrapper
             ]
               .d-flex.justify-content-between
                 div
-                  span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1v[aria-hidden="true"]
+                  span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
                   | Paramètres
                 div
                   i.fa.fa-angle-down.menu-arrow.mt-1
@@ -114,5 +114,5 @@ nav.left-side-menu-wrapper
                   ' Espace Admin
         li
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
-            span.fr-icon-question-fill.fr-icon--sm.fr-mr-1v[aria-hidden="true"]
+            span.fr-icon-question-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Support
