@@ -1,21 +1,21 @@
 ul.list-group.list-group-flush.fr-mb-3w
-  li.list-group-item
+  li.list-group-item.fr-pl-0
     .fa.fa-calendar>
     = rdv_title(rdv)
     = rdv_tag(rdv)
 
   - if rdv.motif.restriction_for_rdv.present?
-    li.list-group-item.alert.alert-warning
+    li.list-group-item.fr-pl-0.alert.alert-warning
       .fa.fa-warning>
       = restriction_for_rdv_to_html(rdv.motif)
 
   - if rdv.home?
-    li.list-group-item
+    li.list-group-item.fr-pl-0
       .fa.fa-home>
       | Ce RDV se déroulera à domicile
 
   - elsif rdv.public_office?
-    li.list-group-item
+    li.list-group-item.fr-pl-0
       .fa.fa-map-marker-alt>
       = human_location(rdv)
       - if rdv.lieu&.phone_number
@@ -24,17 +24,17 @@ ul.list-group.list-group-flush.fr-mb-3w
         = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
 
   - elsif rdv.phone?
-    li.list-group-item
+    li.list-group-item.fr-pl-0
       .fa.fa-phone>
       | RDV Téléphonique
 
   - elsif rdv.motif.visio?
-    li.list-group-item
+    li.list-group-item.fr-pl-0
       .fa.fa-video-camera>
       = "RDV par visioconférence "
       = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
 
-  li.list-group-item
+  li.list-group-item.fr-pl-0
     .row
       .col
         .fa.fa-user>
@@ -44,17 +44,16 @@ ul.list-group.list-group-flush.fr-mb-3w
         span>
         = link_to "modifier", users_rdv_participations_path(rdv)
   - if @can_see_rdv_motif
-    li.list-group-item
+    li.list-group-item.fr-pl-0
       i.fa.fa-info-circle>
       = rdv.motif_name
   - if rdv.motif.instruction_for_rdv.present?
-    li.list-group-item
+    li.list-group-item.fr-pl-0
       i.fa.fa-exclamation-triangle>
       strong Informations supplémentaires&nbsp;:
       .pl-3.pt-1
         = instruction_for_rdv_to_html(rdv.motif)
   = render "/users/rdvs/file_attente", rdv: rdv
-
 
   - if rdv.phone_number || rdv.organisation.website.present?
     h2.fr-h6.fr-mt-2w Contact de #{rdv.organisation.name}
