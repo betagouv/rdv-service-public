@@ -19,16 +19,21 @@
       .card-body.js_agent_role_form
         = simple_form_for [:admin, current_organisation, @agent] do |f|
           = render "model_errors", model: @agent
-          - allowed_to_change_services = Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
 
-          = f.association :services, collection: @services, disabled: true, input_html: { class: "select2-input" }, wrapper_html: { class: "mb-0" }, hint: allowed_to_change_services ? nil : "Vous n’avez pas les droits nécessaires pour modifier les services de l’agent. Il faut être administrateur de territoire avec gestion des droits d’accès."
-          - if allowed_to_change_services
-            span.small.text-muted
-              | Vous pouvez désormais attribuer plusieurs services à un agent, via votre interface de Configuration - Admin de territoire.&nbsp;
-              = link_to "Accéder à la configuration des agents", edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id)
+          p
+            - if @agent.services.count == 1
+              | #{@agent.full_name} appartient à un seul service :
+            - else
+              | #{@agent.full_name} appartient à #{@agent.services.count} services :
+            ul.fr-pl-2w
+            - @agent.services.each do |service|
+              li.rdv-font-weight-bold= service.name
+
+          - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
+            = link_to "Ajouter ou retirer des services", edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id), class: "fr-link fr-icon-pencil-line fr-link--icon-left"
           - else
-            span.small.text-muted
-              | En tant qu’agent, vous pouvez désormais être rattaché à plusieurs services d’une même organisation. Pour cela, contacter un agent admin du territoire.
+            .fr-mb-0.fr-text--sm.text-muted
+              | Le changement ou l’ajout de service est réservé aux admins de territoire avec ce droit d’accès
 
           hr
 
