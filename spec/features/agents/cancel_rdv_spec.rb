@@ -18,7 +18,7 @@ RSpec.describe "Agent can cancel a RDV", js: true do
     expect(rdv.reload.status).to eq("revoked")
 
     perform_enqueued_jobs
-    # expect(ActionMailer::Base.deliveries.map(&:to)).to be_empty
+    expect(ActionMailer::Base.deliveries.map(&:to)).to be_empty
     expect(Receipt.all).to be_empty
   end
 end

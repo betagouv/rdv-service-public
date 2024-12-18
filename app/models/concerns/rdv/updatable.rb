@@ -38,7 +38,7 @@ module Rdv::Updatable
 
   def new_cancelled_notifier(author, previous_participations)
     # Don't notify RDV cancellation to users that had previously cancelled their individual participation
-    available_users_for_notif = previous_participations.select(&:not_cancelled?).map(&:user)
+    available_users_for_notif = previous_participations.select(&:send_lifecycle_notifications?).select(&:not_cancelled?).map(&:user)
     Notifiers::RdvCancelled.new(self, author, available_users_for_notif)
   end
 
