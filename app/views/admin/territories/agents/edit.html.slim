@@ -18,13 +18,14 @@ h1
                 class: "select2-input",\
               },
               disabled: !can_edit_services
-        - unless can_edit_services
-          .fr-alert.fr-alert--info
-            | Vous n’avez pas les droits nécessaires pour modifier les services des agents
       .card-footer
         .row
           .col.text-right
-            = f.submit class: "btn btn-primary", value: "Enregistrer les services", disabled: !can_edit_services
+            - if can_edit_services
+              = f.submit class: "btn btn-primary", value: "Enregistrer les services", disabled: !can_edit_services
+            - else
+              .fr-mb-0.fr-text--sm.text-muted
+                | Vous n’avez pas les droits nécessaires pour modifier les services des agents
 
   - can_edit_access_rights = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, @agent.agent_territorial_access_rights.find_by(territory: current_territory)).edit?
   .card.m-2.rounded
@@ -35,13 +36,14 @@ h1
         = f.input :allow_to_manage_teams, as: :boolean, hint: t(".hint_allow_to_manage_teams"), disabled: !can_edit_access_rights
         = f.input :allow_to_manage_access_rights, as: :boolean, hint: t(".hint_allow_to_manage_access_rights"), disabled: !can_edit_access_rights
         = f.input :allow_to_invite_agents, as: :boolean, hint: t(".hint_allow_to_invite_agents"), disabled: !can_edit_access_rights
-        - unless can_edit_access_rights
-          .fr-alert.fr-alert--info
-            | Vous n’avez pas les droits nécessaires pour modifier les droits d’accès des agents
       .card-footer
         .row
           .col.text-right
-            = f.submit class: "btn btn-primary", value: "Enregistrer les droits d'accès", disabled: !can_edit_access_rights
+            - if can_edit_access_rights
+              = f.submit class: "btn btn-primary", value: "Enregistrer les droits d'accès", disabled: !can_edit_access_rights
+            - else
+              .fr-mb-0.fr-text--sm.text-muted
+                | Vous n’avez pas les droits nécessaires pour modifier les droits d’accès des agents
 
   - if Agent::AgentTerritorialRolePolicy.new(current_agent, AgentTerritorialRole.new(agent: @agent, territory: current_territory)).create_or_destroy?
     .card.m-2.rounded.agent-territorial
