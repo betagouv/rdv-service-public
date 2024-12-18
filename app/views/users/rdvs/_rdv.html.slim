@@ -18,15 +18,16 @@ ul.list-group.list-group-flush.fr-mb-3w
     li.list-group-item.fr-pl-0
       .fa.fa-map-marker-alt>
       = human_location(rdv)
-      - if rdv.lieu&.phone_number
-        span>
-        span.fa.fa-phone>
-        = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
 
   - elsif rdv.phone?
     li.list-group-item.fr-pl-0
       .fa.fa-phone>
       | RDV Téléphonique
+      p.fr-mb-1v
+        - if current_user.signed_in_with_invitation_token?
+          | L'agent vous appellera au numéro que vous lui avez indiqué.
+        - else
+          | L'agent vous appellera au #{current_user.phone_number}.
 
   - elsif rdv.motif.visio?
     li.list-group-item.fr-pl-0
@@ -61,7 +62,7 @@ ul.list-group.list-group-flush.fr-mb-3w
       - if rdv.phone_number
         p.fr-mr-2w
           span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-          = phone_to(rdv.organisation.humanized_phone_number)
+          = phone_to(rdv.phone_number)
       - if rdv.organisation.website.present?
         p
           span.fr-icon-global-fill.fr-mr-1w[aria-hidden="true"]
