@@ -65,7 +65,7 @@ module Users::CreneauxWizardConcern
   end
 
   def follow_up_motifs?
-    Motif.where(service: services).exists?(follow_up: true, deleted_at: nil)
+    @follow_up_motifs ||= Motif.where(service: services).exists?(follow_up: true, deleted_at: nil)
   end
 
   def next_availability_by_lieux
