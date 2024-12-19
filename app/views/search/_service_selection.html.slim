@@ -10,3 +10,4 @@
           .fr-card__title
             = link_to service.name, prendre_rdv_path(context.query_params.merge(service_id: service.id))
           .fr-card__start
+= render "search/referent_booking_card", context: context

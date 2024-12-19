@@ -32,3 +32,4 @@
                   li.fr-badge.fr-badge--blue-cumulus = motif.human_attribute_value(:location_type)
                 - if motif.collectif?
                   li.fr-badge.fr-badge--purple-glycine.fr-icon-team-fill.fr-badge--icon-left = "RDV collectif"
+= render "search/referent_booking_card", context: context

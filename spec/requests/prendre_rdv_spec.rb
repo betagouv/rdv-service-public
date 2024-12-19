@@ -44,6 +44,11 @@ RSpec.describe "Search", type: :request do
         get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
         expect(response.body).to include("Sélectionnez le service avec qui vous voulez prendre un RDV")
       end
+
+      it "shows a hint to help find a rdv with a referent agent in case the user is looking for the service of a follow_up motifs" do
+        get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+        expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référent")
+      end
     end
 
     context "motif selection" do
@@ -56,6 +61,11 @@ RSpec.describe "Search", type: :request do
       it "show text to invite to select motif" do
         get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
         expect(response.body).to include("Sélectionnez le motif de votre RDV")
+      end
+
+      it "shows a hint to help find a rdv with a referent agent in case the user is looking for follow_up motifs" do
+        get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+        expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référent")
       end
     end
   end
