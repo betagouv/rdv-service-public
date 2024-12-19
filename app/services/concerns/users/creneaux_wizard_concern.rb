@@ -96,7 +96,7 @@ module Users::CreneauxWizardConcern
   def after_max_public_booking_delay?(date)
     # On a déjà le first_matching_motif en mémoire au moment où on appelle cette méthode
     # Dans la plupart des cas, tous les motifs ont le même max_booking_delay
-    # On s'en sert donc pour éviter de faire le tri sur tous les matching_motifs si possible
+    # On s'en sert donc pour éviter de chercher le maximum sur tous les matching_motifs si possible
     if date < (Time.zone.now + first_matching_motif.max_public_booking_delay.seconds).to_date
       return false
     end
