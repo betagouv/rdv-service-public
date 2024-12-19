@@ -30,7 +30,7 @@ class SearchContext
   end
 
   def first_matching_motif
-    matching_motifs.first
+    @first_matching_motif ||= matching_motifs.first
   end
 
   def referent_agents

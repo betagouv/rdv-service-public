@@ -26,7 +26,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                     - if creneau.motif.follow_up?
                       br
                       small= creneau.agent.short_name
-            - elsif date >= (Time.now + max_public_booking_delay.seconds).to_date
+            - elsif context.after_max_public_booking_delay?(date)
               p.rdv-text-align-center.rdv-color-text-mention-grey
                 | Date fermée à la reservation
             - elsif creneaux.any?
@@ -43,7 +43,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                   strong= l(next_availability.starts_at, format: :human)
                 .ml-2
                   i.fa.fa-chevron-right
-    - if params[:date].blank? || (params[:date].to_date + 6.days) < (Time.now + max_public_booking_delay.seconds).to_date
+    - if params[:date].blank? || !context.after_max_public_booking_delay?(params[:date].to_date + 6.days)
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
         = link_to prendre_rdv_path(query_params.merge(date: date_range.end + 1.day)), class: "btn btn-primary", data: { disable_with: "..." }, aria: { label: "semaine suivante"} do
           span.d-md-none.mr-1

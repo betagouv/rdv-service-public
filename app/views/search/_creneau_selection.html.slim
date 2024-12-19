@@ -34,7 +34,7 @@
     - elsif context.unique_motifs_by_name_and_location_type.present?
       .card.mb-3
         .card-body
-          = render "search/creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_public_booking_delay: context.max_public_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query_params: context.query_params, context: context
+          = render "search/creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, city_code: context.city_code, next_availability: context.next_availability, query_params: context.query_params, context: context
     - else
       .card.mb-3
         .card-body
