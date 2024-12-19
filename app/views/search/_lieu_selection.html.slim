@@ -20,6 +20,7 @@
             p.fr-card__desc = lieu.organisation.name
             .fr-card__end
               .fr-card__detail
-                p.fr-icon-calendar-2-fill
+                p.fr-text.rdv-color-text-default-grey
+                  span.fr-icon-calendar-2-fill.fr-mr-1w
                   = "#{t('.next_availability')} "
                   strong= l(next_availability.starts_at, format: :human)

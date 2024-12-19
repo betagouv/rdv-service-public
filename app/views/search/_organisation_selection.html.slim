@@ -10,10 +10,10 @@
           .fr-card__content
             .fr-card__title
               = link_to organisation.name, prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at))
-            .fr-card__start
             .fr-card__end
               = render "search/organisation_card_subtitles", organisation: organisation
               .fr-card__detail
-                p.fr-icon-calendar-2-fill.fr-mt-3w
-                  = "Prochaine disponibilité le "
+                p.fr-text.fr-mt-3w.rdv-color-text-default-grey
+                  span.fr-icon-calendar-2-fill.fr-mr-1w
+                  ' Prochaine disponibilité le
                   strong= l(next_availability.starts_at, format: :human)
