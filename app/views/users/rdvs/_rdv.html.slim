@@ -67,7 +67,7 @@ ul.list-group.list-group-flush.fr-mb-3w
       - if rdv.organisation.website.present?
         p
           span.fr-icon-global-fill.fr-mr-1w[aria-hidden="true"]
-          = link_to rdv.organisation.website, rdv.organisation.website, target: "_blank"
+          = link_to "Site web", rdv.organisation.website, target: "_blank"
 
   / Check for authorizations and already cancelled rdv/participation
   - unless policy(rdv, policy_class: User::RdvPolicy).cancel? || \
