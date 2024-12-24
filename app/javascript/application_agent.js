@@ -1,3 +1,5 @@
+import DsfrNewPassword from "./components/dsfr-new-password";
+
 require("@rails/ujs").start()
 require("turbolinks").start()
 import 'bootstrap'

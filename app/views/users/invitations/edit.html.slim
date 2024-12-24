@@ -4,26 +4,17 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
-    = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put } do |f|
+    = form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, builder: DsfrFormBuilder do |f|
       .rdv-text-align-center.w-75.m-auto
-      = render "devise/shared/error_messages", resource: resource
+      = render "devise/shared/dsfr_error_messages", resource: resource
       = f.hidden_field :invitation_token
-      .form-row
-        .col-md-6= f.input :first_name, placeholder: "Prénom"
-        .col-md-6= f.input :last_name, placeholder: "Nom"
-      .form-row
+      .fr-grid-row.fr-grid-row--gutters
+        .fr-col-md-6= f.dsfr_text_field :first_name, label: "Prénom"
+        .fr-col-md-6= f.dsfr_text_field :last_name, label: "Nom"
         - if resource.email.present?
-          .col-md-12= f.input :email, value: resource.email, disabled: true
+          .fr-col-md-12= f.dsfr_email_field :email, value: resource.email, disabled: true
         - else
-          .col-md-12= f.input :email, required: true
-      .form-row
-        .col-md-12= f.input :phone_number, as: :tel
-      .form-group
-        = f.label :password
-        = f.password_field :password, required: true, class: "form-control", id: "password", autocomplete: "new-password"
-        span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
-        .form-text.small.rdv-color-text-mention-grey.mb-2
-          | Choisissez votre mot de passe
-
-        = render "agents/mot_de_passes/new_password_hints"
-      .rdv-text-align-center= f.button :submit, t("devise.invitations.edit.submit_button")
+          .fr-col-md-12= f.dsfr_email_field :email, required: true
+        .fr-col-md-12= f.dsfr_phone_field :phone_number
+      = render "common/form/new_password_input", f: f
+      .rdv-text-align-center= f.submit "Enregistrer", class: "fr-btn"
