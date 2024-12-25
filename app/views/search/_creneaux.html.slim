@@ -3,15 +3,13 @@ div id="creneaux-lieu-#{lieu&.id}"
     - previous_from_date = date_range.begin - 7.days
     - if date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
-        = link_to prendre_rdv_path(query_params.merge(date: previous_from_date)), class: "btn btn-primary", data: { disable_with: "..." }, aria: { label: "Semaine précédente" } do
-          i.fa.fa-chevron-left
-          span.d-md-none.ml-1<
-            | sem. précédente
+        = link_to "", prendre_rdv_path(query_params.merge(date: previous_from_date)), class: "fr-btn fr-icon-arrow-left-s-line fr-hidden fr-unhidden-md", aria: { label: "Semaine précédente" }
+        = link_to "sem. précédente", prendre_rdv_path(query_params.merge(date: previous_from_date)), class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md fr-hidden-lg", aria: { label: "Semaine précédente" }
 
     .col
       .row
         - date_range.each do |date|
-          .col-6.col-md-3.col-lg
+          .fr-col-6.fr-col-md-3.fr-col-lg.fr-pl-1w.fr-pr-1w
             p.rdv-text-align-center
               strong= l(date, format: "%A")
               br
@@ -19,33 +17,30 @@ div id="creneaux-lieu-#{lieu&.id}"
             - creneaux_for_date = creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
 
             - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_public_booking_delay?
-              - creneaux_for_date.each_value do |creneaux|
-                - creneaux.sort.each do |creneau|
-                  = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at), "data-turbolinks": false, class: "btn btn-light mr-1 mb-1 w-100", aria: { label: "Choisir le créneau de #{l(creneau.starts_at, format: '%H:%M')}"} do
-                    = l(creneau.starts_at, format: "%H:%M")
-                    - if creneau.motif.follow_up?
-                      br
-                      small= creneau.agent.short_name
+              .fr-grid-row
+                - creneaux_for_date.each_value do |creneaux|
+                  - creneaux.sort.each do |creneau|
+                    = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at), "data-turbolinks": false, class: "fr-col-12 fr-btn fr-btn--secondary fr-mb-1w rdv-justify-center", aria: { label: "Choisir le créneau de #{l(creneau.starts_at, format: '%H:%M')}"} do
+                      = l(creneau.starts_at, format: "%H:%M")
+                      - if creneau.motif.follow_up?
+                        br
+                        small= creneau.agent.short_name
             - elsif context.after_max_public_booking_delay?(date)
               p.rdv-text-align-center.rdv-color-text-mention-grey
                 | Date fermée à la reservation
             - elsif creneaux.any?
               p.rdv-text-align-center
-                i.fa.fa-minus.rdv-color-text-mention-grey
+                span.fr-icon-subtract-line
 
         - if next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
-            = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at)), class: "btn btn-light", data: { disable_with: "..." } do
+            = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at)), class: "fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-s-line", data: { disable_with: "..." } do
               .d-flex.align-items-center
                 div
                   | Prochaine disponibilité le
                   br
                   strong= l(next_availability.starts_at, format: :human)
-                .ml-2
-                  i.fa.fa-chevron-right
     - if params[:date].blank? || !context.after_max_public_booking_delay?(params[:date].to_date + 6.days)
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
-        = link_to prendre_rdv_path(query_params.merge(date: date_range.end + 1.day)), class: "btn btn-primary", data: { disable_with: "..." }, aria: { label: "semaine suivante"} do
-          span.d-md-none.mr-1
-            | sem. prochaine
-          i.fa.fa-chevron-right
+        = link_to "", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day)), class: "fr-btn fr-icon-arrow-right-s-line fr-hidden fr-unhidden-md", aria: { label: "semaine suivante"}
+        = link_to "sem. prochaine", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day)), class:  "fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line fr-hidden-md fr-hidden-lg", aria: { label: "semaine suivante"}
