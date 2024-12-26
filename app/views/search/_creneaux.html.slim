@@ -20,7 +20,7 @@ div id="creneaux-lieu-#{lieu&.id}"
               .fr-grid-row
                 - creneaux_for_date.each_value do |creneaux|
                   - creneaux.sort.each do |creneau|
-                    = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at), "data-turbolinks": false, class: "fr-col-12 fr-btn fr-btn--secondary fr-mb-1w rdv-justify-center", aria: { label: "Choisir le créneau de #{l(creneau.starts_at, format: '%H:%M')}"} do
+                    = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at), "data-turbolinks": false, class: "fr-col-12 fr-btn fr-btn--tertiary fr-mb-1w rdv-justify-center", aria: { label: "Choisir le créneau de #{l(creneau.starts_at, format: '%H:%M')}"} do
                       = l(creneau.starts_at, format: "%H:%M")
                       - if creneau.motif.follow_up?
                         br
@@ -29,8 +29,8 @@ div id="creneaux-lieu-#{lieu&.id}"
               p.rdv-text-align-center.rdv-color-text-mention-grey
                 | Date fermée à la reservation
             - elsif creneaux.any?
-              p.rdv-text-align-center
-                span.fr-icon-subtract-line
+              p.rdv-text-align-center.fr-text--sm
+                | Pas de créneaux disponibles
 
         - if next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
