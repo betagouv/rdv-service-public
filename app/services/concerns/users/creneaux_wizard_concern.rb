@@ -64,6 +64,10 @@ module Users::CreneauxWizardConcern
     @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
+  def follow_up_motifs?
+    @follow_up_motifs ||= Motif.where(service: services).where.not(bookable_by: :agents).exists?(follow_up: true, deleted_at: nil)
+  end
+
   def next_availability_by_lieux
     return @next_availability_by_lieux if @next_availability_by_lieux
 
