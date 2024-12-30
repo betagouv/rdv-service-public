@@ -22,7 +22,7 @@ h1
         .row
           .col.text-right
             - if can_edit_services
-              = f.submit class: "btn btn-primary", value: "Enregistrer les services", disabled: !can_edit_services
+              = f.submit class: "btn btn-primary", value: "Enregistrer les services"
             - else
               .fr-mb-0.fr-text--sm.text-muted
                 | Vous n’avez pas les droits nécessaires pour modifier les services des agents
@@ -40,7 +40,7 @@ h1
         .row
           .col.text-right
             - if can_edit_access_rights
-              = f.submit class: "btn btn-primary", value: "Enregistrer les droits d'accès", disabled: !can_edit_access_rights
+              = f.submit class: "btn btn-primary", value: "Enregistrer les droits d'accès"
             - else
               .fr-mb-0.fr-text--sm.text-muted
                 | Vous n’avez pas les droits nécessaires pour modifier les droits d’accès des agents
