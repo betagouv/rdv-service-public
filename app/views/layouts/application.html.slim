@@ -3,6 +3,8 @@
     - if content_for :container_content
       = yield :container_content
     - else
+      - if content_for :breadcrumbs
+        = yield :breadcrumbs
       - if content_for :title
         h1= yield :title
       = render "layouts/flash_dsfr"
