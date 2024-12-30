@@ -1,2 +1,3 @@
 class HasManyWithNamesField < Administrate::Field::HasMany
+  # L’intérêt de ce field custom Administrate est d’afficher les noms des agents et des usagers dans les collections
 end

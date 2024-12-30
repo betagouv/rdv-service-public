@@ -75,10 +75,10 @@ class RdvDashboard < Administrate::BaseDashboard
   #   }.freeze
   COLLECTION_FILTERS = {}.freeze
 
-  # Overwrite this method to customize how lieux are displayed
+  # Overwrite this method to customize how rdvs are displayed
   # across all pages of the admin dashboard.
   #
-  # def display_resource(lieu)
-  #   "Lieu ##{lieu.id}"
+  # def display_resource(rdv)
+  #   "Rdv ##{rdv.id}"
   # end
 end
