@@ -1,0 +1,30 @@
+- content_for :title, "Aide pour les usagers"
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.breadcrumb label: "Contact", href: contact_path
+    = b.breadcrumb label: "Aide pour les usagers"
+
+.fr-grid-row.fr-mb-4w
+  .fr-col-md-8
+    h2 Questions fréquentes
+    .fr-accordions-group.fr-mb-4w
+      = render "static_pages/aide_usager/faq_annuler_rdv"
+      = render "static_pages/aide_usager/faq_annuler_rdv_sms"
+      = render "static_pages/aide_usager/faq_annuler_rdv_email"
+
+    h2 Coordonées utiles des administrations
+
+    p
+      ' Pour des demandes de contact vers une administration en particulier, vous pouvez consulter l'annuaire.
+      ' Vous y trouverez les coordonnées directes des services concernés
+
+    p
+      = link_to "Consulter l’annuaire", annuaire_path, class: "fr-link fr-link--icon-right fr-icon-arrow-right-line"
+
+    h2 Demande de support
+
+    p
+      | Si vous ne trouvez pas de réponse dans la documentation ou auprès d'une administration, nous vous invitons à prendre contact avec l'équipe technique de RDV Service Public.
+
+    p= link_to "Envoyer une demande de support", new_demande_support_path, class: "fr-btn"

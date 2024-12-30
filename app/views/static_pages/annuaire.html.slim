@@ -1,0 +1,25 @@
+- content_for :title, "Annuaire"
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.breadcrumb label: "Contact", href: contact_path
+    = b.breadcrumb label: "Aide pour les usagers", href: aide_usager_path
+    = b.breadcrumb label: yield(:title)
+
+- territories_group_by_department.each do |department_number, territories|
+  h2 #{department_number} - #{territories.first.department_name}
+  ul.list-group.mb-2
+    - territories.each do |territory|
+      li
+        span> #{territory.name}
+        = link_to territory.humanized_phone_number, "tel:#{territory.phone_number_formatted}"
+
+h2 Autres contacts
+ul.list-group.mb-2
+  - territories_without_department.each do |territory|
+    li
+      span> #{territory.name}
+      = link_to territory.humanized_phone_number, "tel:#{territory.phone_number_formatted}"
+  li
+    ' Voir
+    = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"

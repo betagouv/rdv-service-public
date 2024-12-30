@@ -66,6 +66,10 @@
   max-height: 12rem;
 }
 
+.rdv-max-height-80vh {
+  max-height: 80vh;
+}
+
 .rdv-height-md-0 {
   @include media-breakpoint-up(md) {
     height: 0;

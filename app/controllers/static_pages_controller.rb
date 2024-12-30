@@ -5,8 +5,11 @@ class StaticPagesController < ApplicationController
   end
 
   def accessibility; end
+  def contact; end
+  def aide_agent; end
+  def aide_usager; end
 
-  def contact
+  def annuaire
     territories_with_phone_number = Territory.where.not(phone_number_formatted: nil)
     territories_group_by_department = territories_with_phone_number
       .where(departement_number: Territory::DEPARTEMENTS_NAMES.keys)
