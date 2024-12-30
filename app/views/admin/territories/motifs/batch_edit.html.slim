@@ -22,7 +22,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       .input-group
         = f.text_field :name, value: (unique_values.size > 1 ? "" : unique_values.keys.first), class: "form-control", required: true
         .input-group-append
-          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "fr-btn"
 
 .card.p-3.mb-4
   = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "service_form" }) do |f|
@@ -42,7 +42,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       .input-group
         = f.select :service_id, current_territory.services.reject(&:secretariat?).map { [_1.name, _1.id] }, { selected: (unique_values.size > 1 ? "" : unique_values.keys.first.id), include_blank: true, required: true }, { class: "custom-select" }
         .input-group-append
-          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "fr-btn"
 
 .card.p-3.mb-4
   = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "duration_form" }) do |f|
@@ -62,7 +62,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       .input-group
         = f.number_field :default_duration_in_min, value: (unique_values.keys.size > 1 ? nil : unique_values.keys.first), class: "form-control", required: true
         .input-group-append
-          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "fr-btn"
 
 .card.p-3.mb-4
   = form_with(url: batch_update_admin_territory_motifs_path, method: :post, html: { id: "color_form" }) do |f|
@@ -79,7 +79,7 @@ h1 Modification en masse de #{@motifs.size} motifs
       .input-group
         = f.color_field :color, value: current_colors.first, class: "form-control", list: "current_colors", required: true
         .input-group-append
-          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+          = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "fr-btn"
 
 - %i[restriction_for_rdv instruction_for_rdv custom_cancel_warning_message].each do |instruction_attr_name|
   .card.p-3.mb-4
@@ -104,12 +104,10 @@ h1 Modification en masse de #{@motifs.size} motifs
           small.form-text.text-muted.mb-2 Ces #{@motifs.size} motifs ont le même texte
         = f.text_area instruction_attr_name, value: (unique_values.size > 1 ? nil : unique_values.keys.first), class: "form-control"
         .mt-1
-          = link_to image_path("motif_form/#{instruction_attr_name}.png"), target: "_blank" do
-            span> Voir un exemple
-            i.fa.fa-external-link-alt>
+          = link_to "Voir un exemple", image_path("motif_form/#{instruction_attr_name}.png"), target: "_blank", class: "fr-link"
 
       .float-right
-        = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "btn btn-primary"
+        = f.submit "Appliquer à ces #{@motifs.size} motifs", class: "fr-btn"
 
-.rdv-text-align-center.mb-4
-    = link_to("Retour", admin_territory_motifs_path, class: "btn btn-outline-primary")
+.rdv-text-align-center
+    = link_to("Retour", admin_territory_motifs_path, class: "fr-btn fr-btn--secondary fr-mb-3w")
