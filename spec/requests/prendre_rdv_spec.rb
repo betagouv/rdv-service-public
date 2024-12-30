@@ -45,9 +45,30 @@ RSpec.describe "Search", type: :request do
         expect(response.body).to include("Sélectionnez le service avec qui vous voulez prendre un RDV")
       end
 
-      it "shows a hint to help find a rdv with a referent agent in case the user is looking for the service of a follow_up motifs" do
-        get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
-        expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référent")
+      context "lorsqu’il n’y a pas de motif de suivi associé aux services" do
+        it "n’affiche pas l’invitation à se connecter pour prendre un RDV de suivi" do
+          get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+          expect(response.body).not_to include("Pour prendre un RDV de suivi avec un de vos agents référents")
+        end
+      end
+
+      context "lorsqu’il y a un motif de suivi associé aux services" do
+        let(:bookable_by) { :everyone }
+        let!(:follow_up_motif) { create(:motif, organisation: organisation, service: motif.service, follow_up: true, bookable_by:) }
+
+        it "affiche l’invitation à se connecter pour prendre un RDV de suivi" do
+          get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+          expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référents")
+        end
+
+        context "lorsque le motif est réservable que par un agent" do
+          let(:bookable_by) { :agents }
+
+          it "n’affiche pas l’invitation à se connecter" do
+            get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+            expect(response.body).not_to include("Pour prendre un RDV de suivi avec un de vos agents référents")
+          end
+        end
       end
     end
 
@@ -63,9 +84,30 @@ RSpec.describe "Search", type: :request do
         expect(response.body).to include("Sélectionnez le motif de votre RDV")
       end
 
-      it "shows a hint to help find a rdv with a referent agent in case the user is looking for follow_up motifs" do
-        get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
-        expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référent")
+      context "lorsqu’il n’y a pas de motif de suivi associé aux services" do
+        it "n’affiche pas l’invitation à se connecter" do
+          get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+          expect(response.body).not_to include("Pour prendre un RDV de suivi avec un de vos agents référents")
+        end
+      end
+
+      context "lorsqu’il y a un motif de suivi associé aux services" do
+        let(:bookable_by) { :everyone }
+        let!(:follow_up_motif) { create(:motif, organisation: organisation, service: motif.service, follow_up: true, bookable_by:) }
+
+        it "affiche l’invitation à se connecter pour prendre un RDV de suivi" do
+          get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+          expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référents")
+        end
+
+        context "lorsque le motif est réservable que par un agent" do
+          let(:bookable_by) { :agents }
+
+          it "n’affiche pas l’invitation à se connecter" do
+            get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+            expect(response.body).not_to include("Pour prendre un RDV de suivi avec un de vos agents référents")
+          end
+        end
       end
     end
   end

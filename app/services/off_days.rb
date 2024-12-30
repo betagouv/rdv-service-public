@@ -65,6 +65,7 @@ class OffDays
         start: jour_ferie.beginning_of_day.as_json,
         end: jour_ferie.end_of_day.as_json,
         backgroundColor: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
+        textColor: "white",
       }
     end
   end

@@ -16,15 +16,13 @@ ruby:
   - if rdv_wizard&.rdv&.requires_ants_predemande_number?
     = f.input :ants_pre_demande_number, required: true, hint: t("simple_form.hints.user.ants_pre_demande_number_html"), input_html: {style: "text-transform: uppercase;"}
   - if user.logged_once_with_franceconnect?
-    .alert.alert-info.d-flex.align-items-center
-      .mr-3
-        .fa.fa-info
-      div= I18n.t("users.franceconnect_frozen_fields")
+    .fr-alert.fr-alert--info.fr-mb-1w
+      = I18n.t("users.franceconnect_frozen_fields")
   - if current_user.signed_in_with_invitation_token?
     = f.input :email, disabled: user.email.present? && !user.email_changed?, required: true
   = f.input :phone_number, as: :tel, required: rdv_wizard&.motif&.phone?
   - if user.phone_number.present? && !user.phone_number_mobile?
-    .alert.alert-warning Vous ne recevrez pas de SMS avec ce numéro non-mobile
+    .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
   div.mb-2 Préférences de notifications
   div= f.input :notify_by_email
   div= f.input :notify_by_sms

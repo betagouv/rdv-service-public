@@ -64,6 +64,10 @@ module Users::CreneauxWizardConcern
     @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
+  def follow_up_motifs?
+    @follow_up_motifs ||= Motif.where(service: services).where.not(bookable_by: :agents).exists?(follow_up: true, deleted_at: nil)
+  end
+
   def next_availability_by_lieux
     return @next_availability_by_lieux if @next_availability_by_lieux
 
@@ -93,8 +97,19 @@ module Users::CreneauxWizardConcern
     creneaux.empty? && next_availability.nil?
   end
 
-  def max_public_booking_delay
-    matching_motifs.maximum("max_public_booking_delay")
+  def after_max_public_booking_delay?(date)
+    # On a déjà le first_matching_motif en mémoire au moment où on appelle cette méthode
+    # Dans la plupart des cas, tous les motifs ont le même max_booking_delay
+    # On s'en sert donc pour éviter de chercher le maximum sur tous les matching_motifs si possible
+    if date < (Time.zone.now + first_matching_motif.max_public_booking_delay.seconds).to_date
+      return false
+    end
+
+    # TODO: on pourrait peut-être rendre cette requête plus rapide avec un index sur motifs.max_public_booking_delay
+    # Elle peut etre assez longue, donc on fait un memoize pour éviter de la faire plusieurs fois
+    @max_public_booking_delay ||= matching_motifs.maximum("max_public_booking_delay")
+
+    date >= (Time.zone.now + @max_public_booking_delay.seconds).to_date
   end
 
   private

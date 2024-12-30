@@ -1,29 +1,28 @@
 - if model.respond_to?(:errors_are_all_benign?) && model.errors_are_all_benign?
   / warnings only appear if there are no other errors
-  .alert.alert-warning.show.mb-0
-    ul.m-0.pl-1.list-unstyled
+  .fr-alert.fr-alert--warning.fr-mb-2w
+    ul.fr-mb-0[class="#{"list-unstyled" if model.benign_errors&.count == 1}"]
       - model.benign_errors.each do |msg|
         li
-          i.fa-solid.fa-triangle-exclamation.mr-2
           = msg
 
   - if local_assigns[:f]
     .collapse.show.js-collapse-warning-confirmation
-      small.form-text.rdv-color-text-mention-grey.mb-3 Ces avertissements ne sont pas bloquants, vous pouvez les ignorer en confirmant.
       = f.input :ignore_benign_errors, as: :hidden, input_html: {class: "js-ignore-benign-errors", value: "1" }
-      .d-flex.justify-content-between
+      .d-flex.justify-content-between.align-items-center
         div
-          a.btn.btn-outline-dark[
+          a.fr-btn.fr-btn--secondary[
             data-toggle="collapse"
             data-target=".js-collapse-warning-confirmation"
             href="#"
             onclick="document.querySelector('.js-ignore-benign-errors').setAttribute('disabled', 'disabled');"
           ] Annuler et modifier
-        div= f.submit "Confirmer en ignorant les avertissements", class: "btn btn-link"
+        div= f.submit "Confirmer en ignorant les avertissements", class: "fr-btn fr-btn--tertiary"
       hr
 
 - elsif model.errors.any?
-  .alert.alert-danger.fade.show
-    ul.m-0.pl-2
-      - errors_full_messages(model).uniq.each do |msg|
+  .fr-alert.fr-alert--error.fr-mb-1w
+    - error_messages = errors_full_messages(model).uniq
+    ul.fr-m-0.fr-pl-2w[class="#{"list-unstyled" if error_messages.count == 1}"]
+      - error_messages.each do |msg|
         li= msg
