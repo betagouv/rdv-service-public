@@ -14,6 +14,7 @@ class DemandesSupportController < ApplicationController
     {
       raison: params.dig(:demande_support_form, :raison) || params[:raison],
       message: params.dig(:demande_support_form, :message) || params[:message],
+      besoin_contact: params.dig(:demande_support_form, :besoin_contact) || params[:besoin_contact],
       current_domain:,
     }
   end

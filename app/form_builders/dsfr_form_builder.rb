@@ -43,19 +43,26 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
       @template.safe_join(
         [
           @template.content_tag(:legend, legend_content, class: "fr-fieldset__legend--regular fr-fieldset__legend"),
-          choices.map { |c| dsfr_radio_option(attribute, value: c[:value], label_text: c[:label], **opts) },
+          choices.map { |c| dsfr_radio_option(attribute, value: c[:value], label_text: c[:label], hint: c[:hint], **opts) },
         ]
       )
     end
   end
 
-  def dsfr_radio_option(attribute, value:, label_text:, **opts)
+  def dsfr_radio_option(attribute, value:, label_text:, hint:, **opts)
     @template.content_tag(:div, class: "fr-fieldset__element") do
       @template.content_tag(:div, class: "fr-radio-group") do
         @template.safe_join(
           [
             radio_button(attribute, value, **opts),
-            label([attribute, value].join("_").to_sym) { label_text },
+            label([attribute, value].join("_").to_sym) do
+              @template.safe_join(
+                [
+                  label_text,
+                  hint.present? ? @template.content_tag(:span, hint, class: "fr-hint-text") : nil,
+                ]
+              )
+            end,
           ]
         )
       end

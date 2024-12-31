@@ -22,9 +22,12 @@
     p
       = link_to "Consulter l’annuaire", annuaire_path, class: "fr-link fr-link--icon-right fr-icon-arrow-right-line"
 
-    h2 Demande de support
+    h2.fr-mt-4w Contacter l’équipe de RDV Service Public
 
     p
-      | Si vous ne trouvez pas de réponse dans la documentation ou auprès d'une administration, nous vous invitons à prendre contact avec l'équipe technique de RDV Service Public.
+      ' Vous pouvez contacter directement l'équipe de RDV Service Public en cas de besoin d’aide.
 
-    p= link_to "Envoyer une demande de support", new_demande_support_path, class: "fr-btn"
+    p
+      = link_to "Contacter l’équipe de RDV Service Public",
+          new_demande_support_path,
+          class: "fr-link fr-link--icon-right fr-icon-arrow-right-line"

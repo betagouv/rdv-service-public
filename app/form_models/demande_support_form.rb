@@ -2,22 +2,23 @@ class DemandeSupportForm
   include ActiveModel::Model
   attr_accessor :raison, :message, :besoin_contact
 
-  def initialize(current_domain:, raison: nil, message: nil)
+  def initialize(current_domain:, raison: nil, message: nil, besoin_contact: false)
+    @current_domain = current_domain
     @raison = raison&.to_sym
     @message = message
-    @current_domain = current_domain
+    @besoin_contact = besoin_contact
   end
 
   def method
-    display_textarea? ? "POST" : "GET"
+    display_message_form? ? "POST" : "GET"
   end
 
   def raison_legend = "La raison pour laquelle vous nous contactez"
 
   def raisons_options
     [
-      { value: :creneaux, label: "Je ne trouve pas de créneaux de RDV" },
-      { value: :annuler, label: "Je n’arrive pas à annuler mon RDV" },
+      { value: :creneaux, label: "Vous ne trouvez pas de créneaux disponibles" },
+      { value: :annuler, label: "Vous n’arrivez pas à annuler votre RDV" },
       { value: :autre, label: "Autre raison" },
     ]
   end
@@ -25,10 +26,11 @@ class DemandeSupportForm
   def raison_creneaux? = raison == :creneaux
   def raison_annuler? = raison == :annuler
   def raison_autre? = raison == :autre
+  def besoin_contact? = besoin_contact.present?
 
-  def display_textarea? = raison_autre?
+  def raison_label = raisons_options.find { _1[:value] == raison }[:label]
 
-  def display_submit?
-    raison.nil? || display_textarea?
+  def display_message_form?
+    raison_autre? || besoin_contact?
   end
 end

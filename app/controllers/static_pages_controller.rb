@@ -5,7 +5,15 @@ class StaticPagesController < ApplicationController
   end
 
   def accessibility; end
-  def contact; end
+
+  def contact
+    if params[:role] == "usager"
+      redirect_to aide_usager_path
+    elsif params[:role] == "agent"
+      redirect_to aide_agent_path
+    end
+  end
+
   def aide_agent; end
   def aide_usager; end
 
