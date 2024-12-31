@@ -100,7 +100,7 @@ Rails.application.config.active_record.sqlite3_adapter_strict_strings_by_default
 # Options are `true`, and `false`. If `false`, the exception will be reported
 # as `handled` and logged instead.
 #++
-# Rails.application.config.active_support.raise_on_invalid_cache_expiration_time = true
+Rails.application.config.active_support.raise_on_invalid_cache_expiration_time = true
 
 ###
 # Specify whether Query Logs will format tags using the SQLCommenter format
@@ -167,7 +167,7 @@ Rails.application.config.active_record.sqlite3_adapter_strict_strings_by_default
 # behavior would allow assignment but silently not persist changes to the
 # database.
 #++
-# Rails.application.config.active_record.raise_on_assign_to_attr_readonly = true
+Rails.application.config.active_record.raise_on_assign_to_attr_readonly = true
 
 ###
 # Enable validating only parent-related columns for presence when the parent is mandatory.
@@ -180,7 +180,7 @@ Rails.application.config.active_record.sqlite3_adapter_strict_strings_by_default
 # Enable precompilation of `config.filter_parameters`. Precompilation can
 # improve filtering performance, depending on the quantity and types of filters.
 #++
-# Rails.application.config.precompile_filter_parameters = true
+Rails.application.config.precompile_filter_parameters = true
 
 ###
 # Enable before_committed! callbacks on all enrolled records in a transaction.
@@ -223,7 +223,7 @@ Rails.application.config.active_record.sqlite3_adapter_strict_strings_by_default
 ###
 # Controls when to generate a value for <tt>has_secure_token</tt> declarations.
 #++
-# Rails.application.config.active_record.generate_secure_token_on = :initialize
+Rails.application.config.active_record.generate_secure_token_on = :initialize
 
 ###
 # ** Please read carefully, this must be configured in config/application.rb **
