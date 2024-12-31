@@ -5,13 +5,10 @@
     p = t("devise.invitations.invitation.click_on_link_sent")
     .rdv-text-align-center
       - unless email_tld_infos(@email_tld).blank?
-        = link_to email_tld_infos(@email_tld)[:url], target: "blank", class: "btn btn-link" do
-          span #{email_tld_infos(@email_tld)[:name]}
+        = link_to "Ouvrir #{email_tld_infos(@email_tld)[:name]}", email_tld_infos(@email_tld)[:url], target: "_blank", class: "fr-link"
 
       - if apple_mobile_device? # could not find android equivalent
-        .mt-2
+        .fr-mt-2w
           - if email_tld_infos(@email_tld).present?
-            .mb-2 OU
-          = link_to "message://", target: "blank", class: "btn btn-primary d-block" do
-            i.fa.fa-envelope>
-            span> = t("devise.invitations.invitation.open_app_mail")
+            .fr-hr-or.fr-mb-2w ou
+          = link_to "#{t('devise.invitations.invitation.open_app_mail')}", "message://", target: "_blank", class: "fr-icon"
