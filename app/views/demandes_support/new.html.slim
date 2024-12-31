@@ -1,39 +1,70 @@
-- content_for :title, "Demande de support"
+- content_for :title, "Contacter l’équipe de RDV Service Public"
 
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
     = b.breadcrumb label: "Contact", href: contact_path
     = b.breadcrumb label: "Aide pour les usagers", href: aide_usager_path
-    = b.breadcrumb label: "Demande de support"
+    = b.breadcrumb label: "Contacter l’équipe de RDV Service Public"
 
 .fr-grid-row.fr-mb-4w
-  .fr-col-md-8
-    p.fr-mb-4w
-      ' Ce formulaire permet de recevoir du support de la part de l’équipe technique de RDV Service Public.
+  .fr-col-12.fr-col-md-8
+    - if @form.raison.blank?
+      p.fr-mb-4w
+        ' Ce formulaire permet de contacter l’équipe de RDV Service Public.
+
     = form_for @form, url: new_demande_support_path, method: @form.method, builder: DsfrFormBuilder do |f|
-      = f.dsfr_radio_buttons :raison,
-        @form.raisons_options,
-        legend: safe_join([@form.raison_legend, (@form.raison.present? ? link_to("modifier", new_demande_support_path) : nil)]),
-        disabled: @form.raison.present?
+      - if @form.raison.blank?
+        = f.dsfr_radio_buttons :raison,
+          @form.raisons_options,
+          legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :"
+        = f.submit "Valider cette raison", class: "fr-btn"
+      - else
+        = f.hidden_field :raison, value: @form.raison
+        .fr-mb-4w
+          .fr-mb-1w Raison de votre demande de contact :
+          .fr-mb-1w.fr-text--bold= @form.raison_label
+          .fr-mb-1w
+            = link_to "Modifier cette raison", new_demande_support_path, class: "fr-btn fr-btn--secondary"
 
-      - if @form.raison_annuler?
-        .fr-accordions-group.fr-mb-4w
-          = render "static_pages/aide_usager/faq_annuler_rdv", expanded: true
-          = render "static_pages/aide_usager/faq_annuler_rdv_sms"
-          = render "static_pages/aide_usager/faq_annuler_rdv_email"
-
-        p
-          ' Si vous n’arrivez toujours pas à annuler votre RDV, vous pouvez contacter l’équipe technique :
-        = f.hidden_field :besoin_contact, value: true
-        div= f.submit "Contacter l’équipe technique", class: "fr-btn fr-mb-2w"
-        p ou
-        div= link_to "Revenir à l’accueil", contact_path, class: "fr-btn fr-btn--secondary"
-
-      - if @form.display_textarea?
+      - if @form.display_message_form?
         = f.dsfr_text_area :message, rows: 5
-        .fr-alert.fr-alert--info.fr-mb-2w
-          p Merci de ne pas inclure d’informations sensibles dans ce message.
-          p En effet, ce message sera reçu par l’équipe technique de RDV Service Public, et non pas par les agents publics avec qui vous avez RDV.
+        ul.fr-btns-group.fr-btns-group--inline
+          li= link_to "Annuler", aide_usager_path, class: "fr-btn fr-btn--secondary"
+          li= f.submit "Envoyer votre demande", class: "fr-btn"
+        .fr-alert.fr-alert--info.fr-my-2w
+          p Merci de ne pas inclure d’informations sensibles (par exemple des informations de santé) dans votre message.
+          p Ce message sera reçu par l’équipe de RDV Service Public, et non pas par les agents publics avec qui vous avez RDV.
 
-      - if @form.display_submit?
-        = f.submit "Envoyer ma demande à l’équipe technique", class: "fr-btn"
+      - else
+        - if @form.raison_creneaux?
+          .fr-alert.fr-alert--info.fr-mb-2w
+            p
+              ' L’équipe de RDV Service Public ne peut pas débloquer de nouvelles disponibilités dans les administrations.
+
+          p
+            ' Nous vous invitons à prendre contact avec l’organisme avec lequel vous souhaitez prendre RDV.
+            ' Les numéros de téléphone des organismes sont généralement affichés lors de la recherche de RDV accessible depuis l’accueil
+          .fr-mb-8w
+            = link_to "Faire une recherche de RDV depuis l’accueil", root_path, class: "fr-btn"
+
+          p
+            ' Vous pouvez aussi chercher les coordonnées de l’organisme avec lequel vous souhaitez prendre RDV dans l’annuaire.
+          .fr-mb-4w
+            = link_to "Consulter l’annuaire des organismes de RDV", root_path, class: "fr-btn fr-btn--secondary"
+
+        - if @form.raison_annuler?
+          .fr-mb-1w
+            | Avez-vous consulté ces informations qui peuvent vous guider pour annuler votre RDV ?
+          .fr-accordions-group.fr-mb-4w
+            = render "static_pages/aide_usager/faq_annuler_rdv"
+            = render "static_pages/aide_usager/faq_annuler_rdv_sms"
+            = render "static_pages/aide_usager/faq_annuler_rdv_email"
+
+        - if @form.raison_creneaux? || @form.raison_annuler?
+          p
+            ' Si votre problème persiste, vous pouvez contacter l’équipe de RDV Service Public :
+          = f.hidden_field :besoin_contact, value: true
+          div
+            = f.submit "Contacter l’équipe de RDV Service Public", class: "fr-btn fr-btn--secondary fr-mb-2w"
+          .fr-mt-8w
+            = link_to "Revenir à l’accueil", root_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line"
