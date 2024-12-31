@@ -4,6 +4,10 @@
   text-align: center;
 }
 
+.rdv-justify-content-center {
+  justify-content: center;
+}
+
 .rdv-text-align-md-left {
   @include media-breakpoint-up(md) {
     text-align: left;
