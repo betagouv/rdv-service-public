@@ -3,8 +3,8 @@ RSpec.describe "public pages", js: true do
     expect_page_to_be_axe_clean(accessibility_path)
   end
 
-  it "contact_path page is accessible" do
-    expect_page_to_be_axe_clean(contact_path)
+  it "aide/aiguillage_role page is accessible" do
+    expect_page_to_be_axe_clean(aide_aiguillage_role_path)
   end
 
   it "accueil_mds_path page is accessible" do
