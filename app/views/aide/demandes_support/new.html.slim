@@ -4,8 +4,8 @@
   = dsfr_breadcrumbs do |b|
     = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
     - if @form.role_usager?
-      = b.breadcrumb label: "Aide pour les usagers", href: aide_documentation_usager_path
-      = b.breadcrumb label: "Contacter l’équipe de RDV Service Public", href: aide_aiguillage_usager_path
+      = b.breadcrumb label: "Documentation usagers", href: aide_documentation_usager_path
+      = b.breadcrumb label: "Contact - votre situation", href: aide_aiguillage_usager_path
     - else
       = b.breadcrumb label: yield(:title)
 
@@ -18,6 +18,11 @@
         label: "Vous êtes…",
         required: true
       = f.dsfr_text_field :sujet, value: @form.sujet, label: "La raison de votre message", required: true
+      - if @form.role_usager?
+        .fr-alert.fr-alert--info.fr-my-2w
+          p Merci de ne pas inclure d’informations sensibles (par exemple des informations de santé) dans votre message.
+          p Ce message sera reçu par l’équipe de RDV Service Public, et non pas par les agents publics avec qui vous avez RDV.
+      = f.dsfr_text_area :message, rows: 5, label: "Votre message", required: true
       .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
         .fr-col-12.fr-col-md-6
           = f.dsfr_text_field :first_name, label: "Votre prénom", required: true
@@ -28,7 +33,6 @@
           = f.dsfr_email_field :email, label: "Votre email", required: true
         .fr-col-12.fr-col-md-6
           = f.dsfr_phone_field :phone_number, label: "Votre numéro de téléphone (facultatif)"
-      = f.dsfr_text_area :message, rows: 5, label: "Votre message", required: true
 
       ul.fr-btns-group.fr-btns-group--inline
         li
@@ -37,8 +41,3 @@
             class: "fr-btn fr-btn--secondary"
         li
           = f.submit "Envoyer votre demande", class: "fr-btn"
-
-      - if @form.role_usager?
-        .fr-alert.fr-alert--info.fr-my-2w
-          p Merci de ne pas inclure d’informations sensibles (par exemple des informations de santé) dans votre message.
-          p Ce message sera reçu par l’équipe de RDV Service Public, et non pas par les agents publics avec qui vous avez RDV.

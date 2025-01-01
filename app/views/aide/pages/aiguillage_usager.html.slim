@@ -1,30 +1,24 @@
-- content_for :title, "Qualification du contact"
+- content_for :title, "Contact - votre situation"
 
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
     = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
-    = b.breadcrumb label: "Aide pour les usagers", href: aide_documentation_usager_path
+    = b.breadcrumb label: "Documentation usagers", href: aide_documentation_usager_path
     = b.breadcrumb label: yield(:title)
 
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
-    - if @form.raison.blank?
-      p.fr-mb-4w
-        ' Ce formulaire permet de contacter l’équipe de RDV Service Public.
-
     = form_for @form, url: aide_aiguillage_usager_path, method: :GET, builder: DsfrFormBuilder do |f|
+      = f.dsfr_radio_buttons :raison,
+        @form.raisons_options,
+        legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :",
+        disabled: @form.raison.present? do
+        - if @form.raison.present?
+          = f.hidden_field :raison, value: @form.raison
+          .fr-mb-4w
+            = link_to "Modifier cette raison", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line"
       - if @form.raison.blank?
-        = f.dsfr_radio_buttons :raison,
-          @form.raisons_options,
-          legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :"
-        = f.submit "Valider cette raison", class: "fr-btn"
-      - else
-        = f.hidden_field :raison, value: @form.raison
-        .fr-mb-4w
-          .fr-mb-1w Raison de votre demande de contact :
-          .fr-mb-1w.fr-text--bold= @form.raison_label
-          .fr-mb-1w
-            = link_to "Modifier cette raison", aide_aiguillage_usager_path, class: "fr-btn fr-btn--secondary"
+        = f.submit "Valider", class: "fr-btn"
 
       - if @form.raison_creneaux?
         .fr-alert.fr-alert--info.fr-mb-2w
@@ -34,13 +28,13 @@
         p
           ' Nous vous invitons à prendre contact avec l’organisme avec lequel vous souhaitez prendre RDV.
           ' Les numéros de téléphone des organismes sont généralement affichés lors de la recherche de RDV accessible depuis l’accueil
-        .fr-mb-8w
+        .fr-mb-4w
           = link_to "Faire une recherche de RDV depuis l’accueil", root_path, class: "fr-btn"
 
         p
           ' Vous pouvez aussi chercher les coordonnées de l’organisme avec lequel vous souhaitez prendre RDV dans l’annuaire.
-        .fr-mb-4w
-          = link_to "Consulter l’annuaire des organismes de RDV", aide_annuaire_path, class: "fr-btn fr-btn--secondary"
+        .fr-mb-8w
+          = link_to "Consulter l’annuaire des organismes de RDV", aide_annuaire_path, class: "fr-link "
 
       - if @form.raison_annuler?
         .fr-mb-1w
@@ -53,8 +47,9 @@
       - if @form.raison.present?
         p
           ' Si votre problème persiste, vous pouvez contacter l’équipe de RDV Service Public :
-        = f.hidden_field :besoin_contact, value: true
         div
-          = f.submit "Contacter l’équipe de RDV Service Public", class: "fr-btn fr-btn--secondary fr-mb-2w"
+          = link_to "Contacter l’équipe de RDV Service Public",
+            new_aide_demande_support_path(role: :usager, sujet: @form.raison_label),
+            class: "fr-btn fr-btn--secondary fr-mb-2w"
         .fr-mt-8w
           = link_to "Revenir à l’accueil", root_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line"

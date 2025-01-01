@@ -34,7 +34,7 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
-  def dsfr_radio_buttons(attribute, choices, legend: nil, hint: nil, **opts)
+  def dsfr_radio_buttons(attribute, choices, legend: nil, hint: nil, **opts, &block)
     legend_content = @template.safe_join([
       legend || @object.class.human_attribute_name(attribute),
       hint ? hint_tag(hint) : nil,
@@ -44,6 +44,7 @@ class DsfrFormBuilder < ActionView::Helpers::FormBuilder
         [
           @template.content_tag(:legend, legend_content, class: "fr-fieldset__legend--regular fr-fieldset__legend"),
           choices.map { |c| dsfr_radio_option(attribute, value: c[:value], label_text: c[:label], hint: c[:hint], **opts) },
+          block_given? ? @template.content_tag(:div, class: "fr-fieldset__element", &block) : nil,
         ]
       )
     end
