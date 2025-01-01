@@ -24,6 +24,8 @@ class Aide::DemandesSupportController < ApplicationController
     demande_params = params
       .require(:demande_support_form)
       .permit(:role, :sujet, :email, :first_name, :last_name, :phone_number, :message)
+    raise unless demande_params[:role].in?(%w[agent usager]) # pour éviter un faux positif brakeman
+
     @form = DemandeSupportForm.new(**demande_params.to_h.symbolize_keys, current_domain:)
     if @form.submit
       redirect_to(
