@@ -19,6 +19,7 @@ RSpec.describe ZammadApiClient, type: :service do
             JSON
           )
         result = described_class.create_ticket(
+          sender_role: :usager,
           subject: "J’ai besoin d’aide",
           email: "jean@jacques.fr",
           body: "Je ne sais plus comment annuler mon RDV\nmerci!"
@@ -40,6 +41,7 @@ RSpec.describe ZammadApiClient, type: :service do
           )
         expect do
           described_class.create_ticket(
+            sender_role: :usager,
             subject: "J’ai besoin d’aide",
             email: "jean@jacques.fr",
             body: "Je ne sais plus comment annuler mon RDV\nmerci!"
