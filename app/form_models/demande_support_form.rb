@@ -1,16 +1,17 @@
 class DemandeSupportForm
   include ActiveModel::Model
-  attr_accessor :role, :sujet, :first_name, :last_name, :phone, :email, :message
+  ATTRIBUTES = %i[role sujet first_name last_name phone_number email message].freeze
+  attr_accessor(*ATTRIBUTES)
 
-  validates :role, :sujet, :first_name, :last_name, :email, :message, presence: true
+  validates(*ATTRIBUTES.excluding(:phone_number), presence: true)
 
-  def initialize(current_domain:, role:, sujet: nil, first_name: nil, last_name: nil, phone: nil, email: nil, message: nil)
+  def initialize(current_domain:, role:, sujet: nil, first_name: nil, last_name: nil, phone_number: nil, email: nil, message: nil)
     @current_domain = current_domain
     @role = role.to_sym
     @sujet = sujet
     @first_name = first_name
     @last_name = last_name
-    @phone = phone
+    @phone_number = phone_number
     @email = email
     @message = message
   end
@@ -43,7 +44,7 @@ class DemandeSupportForm
       Prénom : #{first_name}
       Nom: #{last_name}
       Email: #{email}
-      Téléphone: #{phone || 'N/A'}
+      Téléphone: #{phone_number || 'N/A'}
 
       Message envoyé depuis le formulaire de contact
     BODY
