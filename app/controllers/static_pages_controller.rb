@@ -17,6 +17,16 @@ class StaticPagesController < ApplicationController
   def aide_agent; end
   def aide_usager; end
 
+  def aiguillage_usager
+    @form = AiguillageUsagerForm.new(
+      raison: params.dig(:aiguillage_usager_form, :raison) || params[:raison],
+      besoin_contact: params.dig(:aiguillage_usager_form, :besoin_contact) || params[:besoin_contact]
+    )
+    if @form.should_redirect_to_demande_support?
+      redirect_to new_demande_support_path(role: :usager, sujet: @form.raison_label)
+    end
+  end
+
   def annuaire
     territories_with_phone_number = Territory.where.not(phone_number_formatted: nil)
     territories_group_by_department = territories_with_phone_number

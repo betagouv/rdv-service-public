@@ -283,7 +283,7 @@ Rails.application.routes.draw do
     get "confirmation"
   end
 
-  %w[annuaire aide_agent aide_usager contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
+  %w[annuaire aide_agent aide_usager aiguillage_usager contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
   resource :demande_support, only: %i[new create]
