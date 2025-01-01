@@ -6,47 +6,47 @@ main.container
       .card
         .card-body
           h3
-            span.fr-icon--lg.fr-icon-success-fill[aria-hidden="true"]
-            |< Rendez-vous confirmé
+            i.fa.fa-check-circle
+            = " Rendez-vous confirmé"
           - rdv = @prescripteur.rdv
           ul.list-group.list-group-flush
             li.list-group-item
-              span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
+              .fa.fa-calendar>
               = rdv_title(rdv)
               = rdv_tag(rdv)
 
             - if rdv.public_office?
               li.list-group-item
-                span.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
+                .fa.fa-map-marker-alt>
                 = human_location(rdv)
                 - if rdv.lieu&.phone_number
-                  br
-                  span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
+                  span>
+                  span.fa.fa-phone>
                   = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
 
             - elsif rdv.phone?
               li.list-group-item
-                span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
+                .fa.fa-phone>
                 | RDV Téléphonique
 
             li.list-group-item
-              span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
+              .fa.fa-user>
               = @prescripteur.user.full_name
               = " (#{@prescripteur.user.phone_number})" if @prescripteur.user.phone_number.present?
             li.list-group-item
-              span.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
+              i.fa.fa-info-circle>
               = rdv.motif.name
             - if rdv.motif.instruction_for_rdv.present?
               li.list-group-item
-                span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
+                i.fa.fa-exclamation-triangle>
                 strong Informations supplémentaires&nbsp;:
                 .pl-3.pt-1
                   = instruction_for_rdv_to_html(rdv.motif)
             li.list-group-item
-              |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
-              = mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
+              = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
+              =< link_to "Contactez-nous", new_aide_demande_support_path(role: :agent, sujet: "Déplacer ou corriger un RDV pris via prescription", first_name: @prescripteur.first_name, last_name: @prescripteur.last_name, phone_number: @prescripteur.phone_number, email: @prescripteur.phone_number)
             li.list-group-item
-              |> Vous pouvez aussi
-              => mail_to(current_domain.support_email, "nous écrire",target: "_blank")
-              | pour nous donner votre avis sur la prise de rendez-vous.
+              = "Vous pouvez aussi "
+              =< link_to "nous écrire", new_aide_demande_support_path(role: :agent, sujet: "Avis sur la prise de RDV par prescription", first_name: @prescripteur.first_name, last_name: @prescripteur.last_name, phone_number: @prescripteur.phone_number, email: @prescripteur.phone_number)
+              = " pour nous donner votre avis sur la prise de rendez-vous."
           .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(rdv.territory.departement_number)

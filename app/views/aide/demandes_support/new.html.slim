@@ -12,22 +12,12 @@
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
     = form_for @form, url: aide_demande_support_path, method: :POST, builder: DsfrFormBuilder do |f|
-      = f.hidden_field :role
-
-      - if @form.role_usager?
-        = f.hidden_field :sujet
-        -# rubocop:disable Rails/OutputSafety
-        = f.dsfr_text_field :sujet,
-          value: @form.sujet,
-          label: "La raison de votre message",
-          disabled: true,
-          hint: "Pour modifier cette raison, <a href='#{aide_aiguillage_usager_path}'>veuillez revenir en arrière</a>".html_safe
-        -# rubocop:enable Rails/OutputSafety
-      - elsif @form.role_agent?
-        = f.dsfr_text_field :sujet, value: @form.sujet, label: "La raison de votre message", required: true
-      - else
-        - raise StandardError, "Le rôle de ce formulaire de support n’est pas correct"
-
+      = f.dsfr_select :role,
+        [["Vous êtes usager", :usager], ["Vous êtes agent du service public", :agent]],
+        value: @form.role,
+        label: "Vous êtes…",
+        required: true
+      = f.dsfr_text_field :sujet, value: @form.sujet, label: "La raison de votre message", required: true
       .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
         .fr-col-12.fr-col-md-6
           = f.dsfr_text_field :first_name, label: "Votre prénom", required: true
@@ -37,12 +27,16 @@
         .fr-col-12.fr-col-md-6
           = f.dsfr_email_field :email, label: "Votre email", required: true
         .fr-col-12.fr-col-md-6
-          = f.dsfr_phone_field :phone, label: "Votre numéro de téléphone (facultatif)"
+          = f.dsfr_phone_field :phone_number, label: "Votre numéro de téléphone (facultatif)"
       = f.dsfr_text_area :message, rows: 5, label: "Votre message", required: true
 
       ul.fr-btns-group.fr-btns-group--inline
-        li= link_to "Annuler", aide_documentation_usager_path, class: "fr-btn fr-btn--secondary"
-        li= f.submit "Envoyer votre demande", class: "fr-btn"
+        li
+          = link_to "Annuler",
+            @form.role_usager? ? aide_documentation_usager_path : root_path,
+            class: "fr-btn fr-btn--secondary"
+        li
+          = f.submit "Envoyer votre demande", class: "fr-btn"
 
       - if @form.role_usager?
         .fr-alert.fr-alert--info.fr-my-2w
