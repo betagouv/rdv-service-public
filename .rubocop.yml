@@ -61,6 +61,9 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Enabled: false
 
+Metrics/ParameterList:
+  Enabled: false
+
 Rails/ApplicationController:
   Exclude:
     - 'app/controllers/api/v1/base_controller.rb'
