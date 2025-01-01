@@ -2,14 +2,14 @@
 
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
-    = b.breadcrumb label: "Contact", href: contact_path
-    = b.breadcrumb label: "Aide pour les usagers", href: aide_usager_path
-    = b.breadcrumb label: "Contacter l’équipe de RDV Service Public", href: aiguillage_usager_path
+    = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
+    = b.breadcrumb label: "Aide pour les usagers", href: aide_documentation_usager_path
+    = b.breadcrumb label: "Contacter l’équipe de RDV Service Public", href: aide_aiguillage_usager_path
     = b.breadcrumb label: yield(:title)
 
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
-    = form_for @form, url: demande_support_path, method: :POST, builder: DsfrFormBuilder do |f|
+    = form_for @form, url: aide_demande_support_path, method: :POST, builder: DsfrFormBuilder do |f|
       = f.hidden_field :role
       = f.hidden_field :sujet
 
@@ -18,7 +18,7 @@
         value: @form.sujet,
         label: "La raison de votre message",
         disabled: true,
-        hint: "Pour modifier cette raison, <a href='#{aiguillage_usager_path}'>veuillez revenir en arrière</a>".html_safe
+        hint: "Pour modifier cette raison, <a href='#{aide_aiguillage_usager_path}'>veuillez revenir en arrière</a>".html_safe
       -# rubocop:enable Rails/OutputSafety
 
       .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
@@ -34,7 +34,7 @@
       = f.dsfr_text_area :message, rows: 5, label: "Votre message", required: true
 
       ul.fr-btns-group.fr-btns-group--inline
-        li= link_to "Annuler", aide_usager_path, class: "fr-btn fr-btn--secondary"
+        li= link_to "Annuler", aide_documentation_usager_path, class: "fr-btn fr-btn--secondary"
         li= f.submit "Envoyer votre demande", class: "fr-btn"
 
       - if @form.role_usager?
