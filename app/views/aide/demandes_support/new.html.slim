@@ -3,9 +3,11 @@
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
     = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
-    = b.breadcrumb label: "Aide pour les usagers", href: aide_documentation_usager_path
-    = b.breadcrumb label: "Contacter l’équipe de RDV Service Public", href: aide_aiguillage_usager_path
-    = b.breadcrumb label: yield(:title)
+    - if @form.role_usager?
+      = b.breadcrumb label: "Aide pour les usagers", href: aide_documentation_usager_path
+      = b.breadcrumb label: "Contacter l’équipe de RDV Service Public", href: aide_aiguillage_usager_path
+    - else
+      = b.breadcrumb label: yield(:title)
 
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8

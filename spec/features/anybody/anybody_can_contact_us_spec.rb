@@ -1,5 +1,5 @@
 RSpec.describe "Tout le monde peut nous contacter" do
-  context "un usager nous contacte car il n’arrive pas à annuler son RDV", js: true do
+  context "un usager nous contacte car il n’arrive pas à annuler son RDV" do
     it "créé un ticket Zammad" do
       visit "/"
       click_on "Contact"
@@ -38,7 +38,32 @@ RSpec.describe "Tout le monde peut nous contacter" do
         body: %({"id": 123, "number": 456, "customer_id": 789, "title": "Contact usager"}),
         headers: { content_type: "application/json" }
       )
-      click_on "Envoyer votre demande" # on clique avant d’avoir rempli le nom de famille
+      click_on "Envoyer votre demande"
+      expect(stub).to have_been_requested
+    end
+  end
+
+  context "un agent non connecté nous contacte depuis le formulaire de contact", js: true do
+    it "créé un ticket Zammad" do
+      visit "/"
+      click_on "Contact"
+
+      # étape d’aiguillage basée sur le rôle
+      expect(page).to have_content("Vous êtes…")
+      find(:label, text: /Vous êtes agent du service public/).click
+      click_on "Valider"
+
+      expect(page).to have_content("Formulaire de contact")
+      fill_in "La raison de votre message", with: "Connexion"
+      fill_in "Votre prénom", with: "Inès"
+      fill_in "Votre nom de famille", with: "Erdo"
+      fill_in "Votre email", with: "ines.erdo@aude.fr"
+      fill_in "Votre message", with: "Je n’arrive plus à me connecter"
+      stub = stub_request(:post, "https://zammad10.ethibox.fr/api/v1/tickets").to_return(
+        body: %({"id": 123, "number": 456, "customer_id": 789, "title": "Contact agent"}),
+        headers: { content_type: "application/json" }
+      )
+      click_on "Envoyer votre demande"
       expect(stub).to have_been_requested
     end
   end
