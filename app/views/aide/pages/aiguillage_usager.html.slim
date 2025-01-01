@@ -2,8 +2,8 @@
 
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
-    = b.breadcrumb label: "Contact", href: contact_path
-    = b.breadcrumb label: "Aide pour les usagers", href: aide_usager_path
+    = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
+    = b.breadcrumb label: "Aide pour les usagers", href: aide_documentation_usager_path
     = b.breadcrumb label: yield(:title)
 
 .fr-grid-row.fr-mb-4w
@@ -12,7 +12,7 @@
       p.fr-mb-4w
         ' Ce formulaire permet de contacter l’équipe de RDV Service Public.
 
-    = form_for @form, url: aiguillage_usager_path, method: :GET, builder: DsfrFormBuilder do |f|
+    = form_for @form, url: aide_aiguillage_usager_path, method: :GET, builder: DsfrFormBuilder do |f|
       - if @form.raison.blank?
         = f.dsfr_radio_buttons :raison,
           @form.raisons_options,
@@ -24,7 +24,7 @@
           .fr-mb-1w Raison de votre demande de contact :
           .fr-mb-1w.fr-text--bold= @form.raison_label
           .fr-mb-1w
-            = link_to "Modifier cette raison", aiguillage_usager_path, class: "fr-btn fr-btn--secondary"
+            = link_to "Modifier cette raison", aide_aiguillage_usager_path, class: "fr-btn fr-btn--secondary"
 
       - if @form.raison_creneaux?
         .fr-alert.fr-alert--info.fr-mb-2w
@@ -40,15 +40,15 @@
         p
           ' Vous pouvez aussi chercher les coordonnées de l’organisme avec lequel vous souhaitez prendre RDV dans l’annuaire.
         .fr-mb-4w
-          = link_to "Consulter l’annuaire des organismes de RDV", root_path, class: "fr-btn fr-btn--secondary"
+          = link_to "Consulter l’annuaire des organismes de RDV", aide_annuaire_path, class: "fr-btn fr-btn--secondary"
 
       - if @form.raison_annuler?
         .fr-mb-1w
           | Avez-vous consulté ces informations qui peuvent vous guider pour annuler votre RDV ?
         .fr-accordions-group.fr-mb-4w
-          = render "static_pages/aide_usager/faq_annuler_rdv"
-          = render "static_pages/aide_usager/faq_annuler_rdv_sms"
-          = render "static_pages/aide_usager/faq_annuler_rdv_email"
+          = render "aide/pages/documentation_usager/faq_annuler_rdv"
+          = render "aide/pages/documentation_usager/faq_annuler_rdv_sms"
+          = render "aide/pages/documentation_usager/faq_annuler_rdv_email"
 
       - if @form.raison.present?
         p

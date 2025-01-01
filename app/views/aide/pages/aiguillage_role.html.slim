@@ -6,7 +6,7 @@
       ' L’équipe de RDV Service Public essaie de fournir un support adapté à tous les usagers et agents du service public.
       | Pour vous aider le plus efficacement possible, veuillez nous indiquer votre rôle ci-dessous.
 
-    = form_with url: contact_path, method: :GET, builder: DsfrFormBuilder do |f|
+    = form_with url: aide_aiguillage_role_path, method: :GET, builder: DsfrFormBuilder do |f|
       = f.dsfr_radio_buttons :role,
         [{value: "usager",
           label: "Vous êtes usager",
