@@ -43,5 +43,5 @@ main.container
                   = instruction_for_rdv_to_html(rdv.motif)
             li.list-group-item
               |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
-              = mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
+              = link_to "Contactez-nous", new_aide_demande_support_path(role: :agent, sujet: "Déplacer ou corriger un RDV pris via prescription")
           .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", admin_organisation_agent_agenda_path(current_organisation, current_agent)
