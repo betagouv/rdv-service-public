@@ -9,20 +9,20 @@ RSpec.describe "Tout le monde peut nous contacter" do
       find(:label, text: /Vous êtes usager/).click # on ne peut pas utiliser choose car le radio input est caché par le CSS du DSFR
       click_on "Valider"
 
-      expect(page).to have_content("Aide pour les usagers")
+      expect(page).to have_content("Documentation usagers")
       click_on("Comment annuler votre RDV ?")
       expect(page).to have_content("Si le rendez-vous a lieu dans moins de 4 heures, vous ne pouvez plus annuler le RDV")
       click_on "Contacter l’équipe de RDV Service Public"
 
       expect(page).to have_content("Veuillez sélectionner la raison qui correspond le mieux à votre situation")
       find(:label, text: /Vous ne trouvez pas de créneaux disponibles/).click
-      click_on "Valider cette raison"
+      click_on "Valider"
 
       expect(page).to have_content("L’équipe de RDV Service Public ne peut pas débloquer de nouvelles disponibilités dans les administrations")
       click_on "Modifier cette raison"
 
       find(:label, text: /Vous n’arrivez pas à annuler votre RDV/).click
-      click_on "Valider cette raison"
+      click_on "Valider"
 
       expect(page).to have_content("Avez-vous consulté ces informations qui peuvent vous guider pour annuler votre RDV ?")
       click_on "Contacter l’équipe de RDV Service Public"
