@@ -3,7 +3,7 @@
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
     = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
-    = b.breadcrumb label: "Aide pour les usagers", href: aide_documentation_usager_path
+    = b.breadcrumb label: "Documentation usagers", href: aide_documentation_usager_path
     = b.breadcrumb label: yield(:title)
 
 - territories_group_by_department.each do |department_number, territories|
