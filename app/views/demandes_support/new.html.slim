@@ -9,12 +9,17 @@
 
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
-    = form_for @form, url: new_demande_support_path, method: :POST, builder: DsfrFormBuilder do |f|
+    = form_for @form, url: demande_support_path, method: :POST, builder: DsfrFormBuilder do |f|
+      = f.hidden_field :role
+      = f.hidden_field :sujet
+
+      -# rubocop:disable Rails/OutputSafety
       = f.dsfr_text_field :sujet,
         value: @form.sujet,
         label: "La raison de votre message",
         disabled: true,
-        hint: "Pour modifier cette raison, <a href='#{aiguillage_usager_path}'>veuillez revenir en arrière</a>".html_safe # rubocop:disable Rails/OutputSafety
+        hint: "Pour modifier cette raison, <a href='#{aiguillage_usager_path}'>veuillez revenir en arrière</a>".html_safe
+      -# rubocop:enable Rails/OutputSafety
 
       .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
         .fr-col-12.fr-col-md-6
