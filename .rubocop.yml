@@ -61,7 +61,7 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Enabled: false
 
-Metrics/ParameterList:
+Metrics/ParameterLists:
   Enabled: false
 
 Rails/ApplicationController:
