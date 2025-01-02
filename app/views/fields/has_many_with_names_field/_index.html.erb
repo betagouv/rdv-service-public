@@ -1,2 +1,8 @@
 <%# Permet d’afficher les noms des agents et des usagers dans les collections %>
-<%= field.data.map(&:full_name).to_sentence %>
+<ul>
+  <% field.data.each do |agent_or_user| %>
+    <li>
+      <%= link_to(agent_or_user.full_name, [namespace, agent_or_user]) %>
+    </li>
+  <% end %>
+</ul>
