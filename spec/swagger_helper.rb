@@ -403,6 +403,27 @@ RSpec.configure do |config|
             },
             required: %w[motif_category],
           },
+          teams: {
+            properties: {
+              teams: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/team" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+          },
+          team: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              name: { type: "string" },
+              territory_id: { type: "integer" },
+              agents: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/agent" },
+              },
+            },
+          },
           territory: {
             type: "object",
             properties: {
