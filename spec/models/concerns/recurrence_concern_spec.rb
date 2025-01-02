@@ -41,8 +41,8 @@ RSpec.describe RecurrenceConcern do
       recurrence = Montrose.every(:week, interval: 2, starts: first_day)
       create(factory,
              recurrence: recurrence,
-             first_day: first_day, \
-             start_time: Time.zone.parse("8h00"), \
+             first_day: first_day,
+             start_time: Time.zone.parse("8h00"),
              end_time: Time.zone.parse("12h00"))
       period = Date.new(2019, 8, 12)..Date.new(2019, 8, 19)
 
@@ -55,8 +55,8 @@ RSpec.describe RecurrenceConcern do
       first_day = Date.new(2019, 7, 31)
       create(factory,
              recurrence: nil,
-             first_day: first_day, \
-             start_time: Time.zone.parse("8h00"), \
+             first_day: first_day,
+             start_time: Time.zone.parse("8h00"),
              end_time: Time.zone.parse("12h00"))
       period = Date.new(2019, 7, 29)..Date.new(2019, 8, 4)
 
