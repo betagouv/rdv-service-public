@@ -23,13 +23,9 @@ class Aide::DemandesSupportController < ApplicationController
   def create
     demande_params = params
       .require(:demande_support_form)
-      .permit(:sujet, :email, :first_name, :last_name, :phone_number, :message)
+      .permit(:role, :sujet, :email, :first_name, :last_name, :phone_number, :message)
       .to_h
       .symbolize_keys
-
-    # pour éviter un faux positif brakeman
-    demande_params[:role] = :agent if params[:demande_support_form][:role] == "agent"
-    demande_params[:role] = :usager if params[:demande_support_form][:role] == "usage"
 
     @form = DemandeSupportForm.new(**demande_params, current_domain:)
     if @form.submit
