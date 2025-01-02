@@ -23,10 +23,15 @@ class Aide::DemandesSupportController < ApplicationController
   def create
     demande_params = params
       .require(:demande_support_form)
-      .permit(:role, :sujet, :email, :first_name, :last_name, :phone_number, :message)
-    raise unless demande_params[:role].in?(%w[agent usager]) # pour éviter un faux positif brakeman
+      .permit(:sujet, :email, :first_name, :last_name, :phone_number, :message)
+      .to_h
+      .symbolize_keys
 
-    @form = DemandeSupportForm.new(**demande_params.to_h.symbolize_keys, current_domain:)
+    # pour éviter un faux positif brakeman
+    demande_params[:role] = :agent if params[:demande_support_form][:role] == "agent"
+    demande_params[:role] = :usager if params[:demande_support_form][:role] == "usage"
+
+    @form = DemandeSupportForm.new(**demande_params, current_domain:)
     if @form.submit
       redirect_to(
         @form.role_usager? ? aide_documentation_usager_path : root_path,
