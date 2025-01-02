@@ -11,4 +11,4 @@
         .fr-mt-2w
           - if email_tld_infos(@email_tld).present?
             .fr-hr-or.fr-mb-2w ou
-          = link_to "#{t('devise.invitations.invitation.open_app_mail')}", "message://", target: "_blank", class: "fr-icon"
+          = link_to t("devise.invitations.invitation.open_app_mail"), "message://", target: "_blank", class: "fr-icon"
