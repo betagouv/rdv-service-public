@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     resources :territories, except: %i[new create]
     resources :users
     resources :comptes, only: %i[index new create]
+    resources :rdvs, only: %i[show]
     root to: "agents#index"
 
     authenticate :super_admin do
