@@ -19,11 +19,11 @@ class AgentCreneauxSearchForm
   end
 
   def users
-    organisation.users.where(id: user_ids) if user_ids.present?
+    organisation.users.where(id: user_ids)
   end
 
   def teams
-    organisation.territory.teams.where(id: team_ids) if team_ids.present?
+    organisation.territory.teams.where(id: team_ids)
   end
 
   def date_range
