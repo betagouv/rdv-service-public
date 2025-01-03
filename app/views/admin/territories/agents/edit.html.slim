@@ -69,7 +69,7 @@ h1
         = t(".agent_teams_legend")
       = simple_form_for @agent, url: update_teams_admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
-          = f.input :team_ids, collection: current_territory.teams.ordered_by_name,
+          = f.input :team_ids, collection: Agent::TeamPolicy::Scope.apply(current_agent, current_territory.teams).ordered_by_name,
                 label: t(".teams"),
                 label_method: :name,
                 input_html: { \
