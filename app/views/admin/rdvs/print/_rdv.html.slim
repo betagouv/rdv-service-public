@@ -45,6 +45,10 @@
               - else
                 span.font-weight-light.font-italic.text-muted
                   | Téléphone non renseigné
+              | &nbsp - &nbsp
+            span.mx-1
+              - if current_organisation.ants_connectable? && user.ants_pre_demande_number.present?
+                = "Dossier ANTS n°#{user.ants_pre_demande_number}"
           .users-details.collapse
             - if user.responsible.present?
               div.mb-2
