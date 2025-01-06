@@ -20,6 +20,22 @@ RSpec.describe Users::RegistrationForm, type: :form_model do
       expect(form.errors.attribute_names).to contain_exactly(:email)
     end
 
+    it "does not allow invalid email with single letter domain name" do
+      form = described_class.new(first_name: "Jean", last_name: "Jacques", email: "jean@j.f")
+      expect(form.valid?).to be(false)
+      expect(form.user.errors.count).to eq 1
+      expect(form.user.errors.first.attribute).to eq :email
+      expect(form.user.errors.first.type).to eq :invalid
+    end
+
+    it "does not allow invalid email that starts with a dot" do
+      form = described_class.new(first_name: "Jean", last_name: "Jacques", email: ".jean@jacques.fr")
+      expect(form.valid?).to be(false)
+      expect(form.user.errors.count).to eq 1
+      expect(form.user.errors.first.attribute).to eq :email
+      expect(form.user.errors.first.type).to eq :invalid
+    end
+
     it "also validates user model errors" do
       form = described_class.new(attributes.except(:first_name))
       form.save
