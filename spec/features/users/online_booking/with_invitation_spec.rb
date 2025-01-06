@@ -51,7 +51,7 @@ RSpec.describe "User can be invited" do
 
       # Lieu selection
       expect(page).to have_content(lieu.name)
-      find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
+      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("a").click
 
       # Creneau selection
       expect(page).to have_content(lieu.name)
@@ -163,11 +163,11 @@ RSpec.describe "User can be invited" do
       # Motif selection
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif2.name)
-      find(".card-title", text: /#{motif.name}/).click
+      find(".fr-card", text: /#{motif.name}/).click
 
       # Lieu selection
       expect(page).to have_content(lieu.name)
-      find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
+      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("a").click
 
       # Restriction Page
       expect(page).to have_content("À lire avant de prendre un rendez-vous")
@@ -207,7 +207,7 @@ RSpec.describe "User can be invited" do
 
         # It directly selects the first motif and goes to lieu selection
         expect(page).to have_content(lieu.name)
-        find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
+        find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("a").click
       end
     end
 
@@ -239,7 +239,7 @@ RSpec.describe "User can be invited" do
 
         # Organisation selection
         expect(page).to have_content(organisation.name)
-        find(".card-title", text: /#{organisation.name}/).ancestor(".card").find("a.stretched-link").click
+        find(".fr-card__title", text: /#{organisation.name}/).ancestor(".fr-card__body").find("a").click
 
         # Creneau selection
         first(:link, "11:00").click
