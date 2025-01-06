@@ -14,7 +14,7 @@ module CreneauxSearch::Calculator
       scope = PlageOuverture.not_expired
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
-        .includes(:agent)
+        .includes(:agent, :organisation, organisation: :territory)
       scope = scope.where(agent: agents) if agents&.any?
       scope = scope.where(lieu: lieu) if lieu.present?
       scope
@@ -173,6 +173,8 @@ module CreneauxSearch::Calculator
     end
 
     def busy_times_from_off_days
+      return [] if @plage_ouverture.organisation.territory.visioplainte?
+
       OffDays.all_in_date_range(range).map do |off_day|
         BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
       end
