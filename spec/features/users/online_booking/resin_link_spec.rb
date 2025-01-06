@@ -31,7 +31,7 @@ RSpec.describe "Rés'In specific public link" do
     expect(page).to have_content(motif_a.name)
     expect(page).to have_content(motif_b.name)
 
-    click_on "Prochaine disponibilité lemardi 07 février 2023 à 08h00"
+    click_on lieu_a.name
     click_on "08:00"
     expect(page).to have_content("Vos coordonnées de prescripteur")
   end

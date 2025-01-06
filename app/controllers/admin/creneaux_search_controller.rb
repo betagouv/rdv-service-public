@@ -59,9 +59,9 @@ class Admin::CreneauxSearchController < AgentAuthController
 
   def prepare_form
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, current_organisation.motifs).active.ordered_by_name
-    @services = Service.where(id: @motifs.pluck(:service_id).uniq)
+    @services = Service.where(id: @motifs.map(&:service_id).uniq)
     @form.service_id = @services.first.id if @services.count == 1
-    @teams = current_organisation.territory.teams
+    @teams = Agent::TeamPolicy::Scope.apply(current_agent, current_territory.teams)
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
       .complete.active.ordered_by_last_name

@@ -358,6 +358,19 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       expected_ranges = [prev_rdv.ends_at..rdv.starts_at, rdv.ends_at..ends_at]
       expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
+
+    it "truncates off days (jours féries) from the ranges" do
+      xmas_week = Date.new(2024, 12, 23)..Date.new(2024, 12, 27)
+      plage_ouverture = create(:plage_ouverture, :weekdays, first_day: Date.new(2024, 12, 23), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      computed_dates = proc { described_class.calculate_free_times(plage_ouverture, xmas_week).map(&:begin).map(&:to_date) }
+
+      # Par défaut les jours fériés ne sont pas travaillés
+      expect(computed_dates.call).to eq(xmas_week.to_a - [Date.new(2024, 12, 25)])
+
+      # Les agents de visioplainte travaillent les jours fériés
+      plage_ouverture.organisation.territory.update_columns(name: Territory::VISIOPLAINTE_NAME) # rubocop:disable Rails/ SkipsModelValidations
+      expect(computed_dates.call).to eq(xmas_week.to_a)
+    end
   end
 
   describe "#split_range_recursively" do

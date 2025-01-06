@@ -1,7 +1,7 @@
 RSpec.describe OffDays, type: :service do
   it "is up to date" do
     # Il faut ajouter de nouveaux jours fériés si cette spec échoue
-    expect(described_class::JOURS_FERIES.to_a.last).to be > 3.months.from_now
+    expect(described_class::JOURS_FERIES.max).to be > 3.months.from_now
   end
 
   describe ".all_in_date_range" do
