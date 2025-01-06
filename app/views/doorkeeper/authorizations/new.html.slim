@@ -12,8 +12,8 @@ h2.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
       | #{@pre_auth.client.name} est une application partenaire de #{current_domain.name}.
 
     p
-      ' En continuant, vous allez permettre à <b>#{@pre_auth.client.application.name}</b> d'accéder à votre compte <b>#{current_domain.name}</b>
-      ' lié à l'adresse #{current_agent.email}
+      |> En continuant, vous allez permettre à <b>#{@pre_auth.client.application.name}</b> d'accéder à votre compte <b>#{current_domain.name}</b>
+      |> lié à l'adresse #{current_agent.email}
 
     - @pre_auth.scopes.each do |scope|
       / Quand on affinera les scopes, il faudra ajouter des textes d'explication pour les permissions données ici
