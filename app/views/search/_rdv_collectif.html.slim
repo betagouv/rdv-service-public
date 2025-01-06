@@ -7,15 +7,15 @@ li.card
     ul.fr-raw-list
       li.card-text.fr-mb-1w
         span.fr-icon-calendar-2-fill.fr-mr-1w[aria-hidden="true"]
-        = "Date : "
+        |> Date :
         strong = l(rdv.starts_at, format: :human)
       li.card-text.fr-mb-1w
         span.fr-icon-timer-fill.fr-mr-1w[aria-hidden="true"]
-        = "Durée : "
+        |> Durée :
         strong = "#{rdv.duration_in_min} minutes"
       li.card-text.fr-mb-1w
         span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
-        = "Animé par "
+        |> Animé par
         strong = agents_to_sentence(rdv.agents)
       li.card-text.fr-mb-1w
         span.fr-icon-team-fill.fr-mr-1w[aria-hidden="true"]

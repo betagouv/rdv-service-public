@@ -7,7 +7,7 @@ main.container
         .card-body
           h3
             i.fa.fa-check-circle
-            = " Rendez-vous confirmé"
+            |< Rendez-vous confirmé
           - rdv = @prescripteur.rdv
           ul.list-group.list-group-flush
             li.list-group-item
@@ -43,10 +43,10 @@ main.container
                 .pl-3.pt-1
                   = instruction_for_rdv_to_html(rdv.motif)
             li.list-group-item
-              = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
-              =< mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
+              |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
+              = mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
             li.list-group-item
-              = "Vous pouvez aussi "
-              = mail_to(current_domain.support_email, "nous écrire",target: "_blank")
-              = " pour nous donner votre avis sur la prise de rendez-vous."
+              |> Vous pouvez aussi
+              => mail_to(current_domain.support_email, "nous écrire",target: "_blank")
+              | pour nous donner votre avis sur la prise de rendez-vous.
           .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(rdv.territory.departement_number)

@@ -31,7 +31,7 @@ ul.list-group.list-group-flush.fr-mb-3w
   - elsif rdv.motif.visio?
     li.list-group-item
       .fa.fa-video-camera>
-      = "RDV par visioconférence "
+      |> RDV par visioconférence
       = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
 
   li.list-group-item

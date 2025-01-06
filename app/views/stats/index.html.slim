@@ -131,7 +131,7 @@
         = self_anchor "notifications"
           h2.card-title #{Receipt.model_name.human(count: 2)}
       .card-body
-        = "Vous pouvez consulter les statistiques sur les notifications envoyées "
+        |> Vous pouvez consulter les statistiques sur les notifications envoyées
         = link_to("ici", notifications_index_stats_path(params.permit(:territory)))
 
     .card.mb-5

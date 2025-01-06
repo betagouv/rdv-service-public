@@ -25,7 +25,7 @@
   p.card-text.mb-0
     - should_display_link = current_agent.in?(rdv.agents) || current_agent.secretaire?
     i.fa.fa-video-camera.text-primary-blue>
-    = "Par visioconférence "
+    |> Par visioconférence
     - if should_display_link
       = link_to("démarrer la visioconférence ", rdv.visio_url, target: :_blank)
     - else
