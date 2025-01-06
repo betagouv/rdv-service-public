@@ -2,7 +2,7 @@
 
 ul.list-group.fr-mb-3w
   li.list-group-item
-    span.fr-icon.fr-icon-info-fill.fr-mr-1w[aria-hidden="true"]
+    span.fr-icon.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
     = @rdv.motif_name
 
   li.list-group-item
@@ -17,7 +17,7 @@ ul.list-group.fr-mb-3w
 
   - elsif @rdv.public_office?
     li.list-group-item
-      span.fr-icon.fr-icon-map-pin-2-fill.fr-mr-1w[aria-hidden="true"]
+      span.fr-icon.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
       = human_location(@rdv)
       - if @rdv.lieu&.phone_number
         br
