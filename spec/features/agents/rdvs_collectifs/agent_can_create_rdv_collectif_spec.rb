@@ -18,6 +18,10 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
     stub_netsize_ok
     travel_to(now)
     login_as(agent, scope: :agent)
+    # Depuis que les jours fériés sont affichés sur la journée complète dans le calendrier,
+    # cela peut nous empêcher de cliquer sur une plage horaire et générer une flaky.
+    # On les retire pour ce test
+    allow(OffDays).to receive(:to_full_calendar_array).and_return([])
     visit admin_organisation_agent_agenda_path(organisation, agent)
   end
 

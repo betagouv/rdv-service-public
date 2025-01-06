@@ -14,7 +14,7 @@ class Api::Visioplainte::BaseController < ActionController::Base # rubocop:disab
     return unless ENV["VISIOPLAINTE_API_KEY"].start_with?("visioplainte-staging-api-key-")
     return unless ENV["FRANCECONNECT_HOST"] == "fcp.integ01.dev-franceconnect.fr"
 
-    territory = Territory.find_by(name: Territory::VISIOPLAINTE_NAME)
+    territory = Territory.visioplainte.first
 
     territory.organisations.find_each do |organisation|
       organisation.plage_ouvertures.delete_all

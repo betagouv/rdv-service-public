@@ -10,7 +10,6 @@ class PasswordChecker
 
   def error_message(app_name)
     <<~MESSAGE
-      <div class="fa fa-exclamation-triangle mr-1" />
       Votre mot de passe est trop faible, vous devez le mettre à jour pour continuer d'utiliser #{app_name}.
       <a href="#{Rails.application.routes.url_helpers.edit_agent_mot_de_passes_path}">Changer de mot de passe</a>
     MESSAGE

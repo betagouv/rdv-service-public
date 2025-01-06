@@ -47,10 +47,12 @@ Rails.application.routes.draw do
     resources :territories, except: %i[new create]
     resources :users
     resources :comptes, only: %i[index new create]
+    resources :rdvs, only: %i[show]
     root to: "agents#index"
 
     authenticate :super_admin do
       mount GoodJob::Engine => "good_job"
+      mount Coverband::Reporters::Web.new, at: "/coverage"
     end
   end
   get "super_admin", to: redirect("super_admins", status: 301)

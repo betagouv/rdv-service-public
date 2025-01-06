@@ -4,37 +4,46 @@ h1
   = @agent.full_name_or_email
 
 .container-fluid
-  - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
-    .card.m-2.rounded
-      h2.card-header
-        = t(".agent_services_legend")
-      = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
-        .card-body
-          = f.input :service_ids, collection: current_territory.services,
-                label: t(".services"),
-                label_method: :name,
-                input_html: { \
-                  multiple: true, \
-                  class: "select2-input",\
-                }
-        .card-footer
-          .row
-            .col.text-right
+  - can_edit_services = Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
+  .card.m-2.rounded
+    h2.card-header
+      = t(".agent_services_legend")
+    = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
+      .card-body
+        = f.input :service_ids, collection: current_territory.services,
+              label: t(".services"),
+              label_method: :name,
+              input_html: { \
+                multiple: true, \
+                class: "select2-input",\
+              },
+              disabled: !can_edit_services
+      .card-footer
+        .row
+          .col.text-right
+            - if can_edit_services
               = f.submit class: "btn btn-primary", value: "Enregistrer les services"
+            - else
+              .fr-mb-0.fr-text--sm.text-muted
+                | Vous n’avez pas les droits nécessaires pour modifier les services des agents
 
-  - if Agent::AgentTerritorialAccessRightPolicy.new(current_agent, @agent.agent_territorial_access_rights.find_by(territory: current_territory)).edit?
-    .card.m-2.rounded
-      h2.card-header
-        = t(".agent_access_rights_legend")
-      = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
-        .card-body
-          = f.input :allow_to_manage_teams, as: :boolean, hint: t(".hint_allow_to_manage_teams")
-          = f.input :allow_to_manage_access_rights, as: :boolean, hint: t(".hint_allow_to_manage_access_rights")
-          = f.input :allow_to_invite_agents, as: :boolean, hint: t(".hint_allow_to_invite_agents")
-        .card-footer
-          .row
-            .col.text-right
+  - can_edit_access_rights = Agent::AgentTerritorialAccessRightPolicy.new(current_agent, @agent.agent_territorial_access_rights.find_by(territory: current_territory)).edit?
+  .card.m-2.rounded
+    h2.card-header
+      = t(".agent_access_rights_legend")
+    = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
+      .card-body
+        = f.input :allow_to_manage_teams, as: :boolean, hint: t(".hint_allow_to_manage_teams"), disabled: !can_edit_access_rights
+        = f.input :allow_to_manage_access_rights, as: :boolean, hint: t(".hint_allow_to_manage_access_rights"), disabled: !can_edit_access_rights
+        = f.input :allow_to_invite_agents, as: :boolean, hint: t(".hint_allow_to_invite_agents"), disabled: !can_edit_access_rights
+      .card-footer
+        .row
+          .col.text-right
+            - if can_edit_access_rights
               = f.submit class: "btn btn-primary", value: "Enregistrer les droits d'accès"
+            - else
+              .fr-mb-0.fr-text--sm.text-muted
+                | Vous n’avez pas les droits nécessaires pour modifier les droits d’accès des agents
 
   - if Agent::AgentTerritorialRolePolicy.new(current_agent, AgentTerritorialRole.new(agent: @agent, territory: current_territory)).create_or_destroy?
     .card.m-2.rounded.agent-territorial
@@ -60,7 +69,7 @@ h1
         = t(".agent_teams_legend")
       = simple_form_for @agent, url: update_teams_admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
-          = f.input :team_ids, collection: current_territory.teams.ordered_by_name,
+          = f.input :team_ids, collection: Agent::TeamPolicy::Scope.apply(current_agent, current_territory.teams).ordered_by_name,
                 label: t(".teams"),
                 label_method: :name,
                 input_html: { \
