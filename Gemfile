@@ -178,16 +178,16 @@ group :development do
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
   # Automatic Ruby code style checking tool.
-  gem "rubocop", "~> 1.65", require: false
+  gem "rubocop", "~> 1.69.2", require: false
   # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
   # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.6)
   gem "parser", "3.3.6.0", require: false
   # Code style checking for RSpec files
-  gem "rubocop-rspec", "~> 3.0", require: false
+  gem "rubocop-rspec", "~> 3.0.4", require: false
   # Automatic Rails code style checking tool.
-  gem "rubocop-rails", "~> 2.25", require: false
+  gem "rubocop-rails", "~> 2.26.0", require: false
   # Slim template linting tool
-  gem "slim_lint", require: false
+  gem "slim_lint", "~> 0.22.1", require: false
 
   #  Debug
 
