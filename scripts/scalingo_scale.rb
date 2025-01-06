@@ -57,7 +57,7 @@ res = JSON.parse(
     )
   ).body
 )
-error_string = \
+error_string =
   if res["error"]
     res["error"]
   elsif res["errors"]
