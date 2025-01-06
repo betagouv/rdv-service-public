@@ -17,7 +17,7 @@ class Agents::RdvPlansController < AgentAuthController
     update_motif
   end
 
-  def motif
+  def edit_motif
     find_rdv_plan
   end
 
@@ -48,7 +48,7 @@ class Agents::RdvPlansController < AgentAuthController
     end
   end
 
-  def lieu
+  def edit_lieu
     find_rdv_plan
     @rdv_plan.lieu_id = nil
     @next_availabilities = if @rdv_plan.motif.individuel?
@@ -67,7 +67,7 @@ class Agents::RdvPlansController < AgentAuthController
     end
   end
 
-  def creneau
+  def edit_creneau
     find_rdv_plan
 
     @results = if @rdv_plan.motif.individuel?
@@ -86,7 +86,7 @@ class Agents::RdvPlansController < AgentAuthController
     end
   end
 
-  def user
+  def edit_user
     find_rdv_plan
   end
 
