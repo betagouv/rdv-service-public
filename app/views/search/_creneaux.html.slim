@@ -4,7 +4,7 @@ div id="creneaux-lieu-#{lieu&.id}"
     - if date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
         = link_to "", prendre_rdv_path(query_params.merge(date: previous_from_date)), class: "fr-btn fr-icon-arrow-left-s-line fr-hidden fr-unhidden-md", aria: { label: "Semaine précédente" }
-        = link_to "sem. précédente", prendre_rdv_path(query_params.merge(date: previous_from_date)), class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md fr-hidden-lg", aria: { label: "Semaine précédente" }
+        = link_to "sem. précédente", prendre_rdv_path(query_params.merge(date: previous_from_date)), class: "fr-btn fr-btn--icon-left fr-icon-arrow-left-s-line fr-hidden-md", aria: { label: "Semaine précédente" }
 
     .col
       .row
@@ -43,4 +43,4 @@ div id="creneaux-lieu-#{lieu&.id}"
     - if params[:date].blank? || !context.after_max_public_booking_delay?(params[:date].to_date + 6.days)
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
         = link_to "", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day)), class: "fr-btn fr-icon-arrow-right-s-line fr-hidden fr-unhidden-md", aria: { label: "semaine suivante"}
-        = link_to "sem. prochaine", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day)), class:  "fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line fr-hidden-md fr-hidden-lg", aria: { label: "semaine suivante"}
+        = link_to "sem. prochaine", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day)), class:  "fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line fr-hidden-md", aria: { label: "semaine suivante"}
