@@ -2,7 +2,7 @@
 
 class Api::Visioplainte::GuichetsController < Api::Visioplainte::BaseController
   def self.guichets
-    Agent.joins(roles: { organisation: :territory }).where(territories: { name: Territory::VISIOPLAINTE_NAME })
+    Agent.joins(roles: { organisation: :territory }).merge(Territory.visioplainte)
       .where(roles: { access_level: AgentRole::ACCESS_LEVEL_INTERVENANT })
       .joins(:services).where(services: { name: GENDARMERIE_SERVICE_NAME })
   end

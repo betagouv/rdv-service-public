@@ -38,7 +38,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   end
 
   def self.find_motif
-    Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
+    Motif.joins(organisation: :territory).merge(Territory.visioplainte)
       .joins(:service).find_by(service: { name: GENDARMERIE_SERVICE_NAME })
   end
 
