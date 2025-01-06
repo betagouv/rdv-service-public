@@ -788,6 +788,39 @@
           "motif_category"
         ]
       },
+      "teams": {
+        "properties": {
+          "teams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/team"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/meta"
+          }
+        }
+      },
+      "team": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "territory_id": {
+            "type": "integer"
+          },
+          "agents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/agent"
+            }
+          }
+        }
+      },
       "territory": {
         "type": "object",
         "properties": {
@@ -1110,15 +1143,9 @@
         "summary": "Lister les absences",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -1191,15 +1218,9 @@
         "summary": "Créer une absence",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -1314,14 +1335,14 @@
                         "agent": {
                           "id": 12,
                           "email": "agent@example.com",
-                          "first_name": "Alphée",
+                          "first_name": "Audouin",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Gauthier"
+                          "last_name": "Blanchard"
                         },
                         "end_day": "2023-11-20",
                         "end_time": "15:00:00",
                         "first_day": "2023-11-20",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20241121T093048Z\r\nUID:absence_18@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250106T100909Z\r\nUID:absence_18@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_18@RDV Solidarités",
                         "organisation": {
                           "id": 149,
@@ -1438,15 +1459,9 @@
         "summary": "Récupérer une absence",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -1506,14 +1521,14 @@
                         "agent": {
                           "id": 173,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Acanthe",
+                          "first_name": "Aleth",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Fernandez"
+                          "last_name": "Garcia"
                         },
-                        "end_day": "2024-11-22",
+                        "end_day": "2025-01-07",
                         "end_time": "15:30:00",
-                        "first_day": "2024-11-22",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20241121T093049Z\r\nUID:absence_27@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20241122T100000\r\nDTEND;TZID=Europe/Paris:20241122T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "first_day": "2025-01-07",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250106T100909Z\r\nUID:absence_27@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250107T100000\r\nDTEND;TZID=Europe/Paris:20250107T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_27@RDV Solidarités",
                         "organisation": {
                           "id": 163,
@@ -1601,15 +1616,9 @@
         "summary": "Modifier une absence",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -1719,14 +1728,14 @@
                         "agent": {
                           "id": 185,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Manon",
+                          "first_name": "Ronan",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Laporte"
+                          "last_name": "Jacquet"
                         },
-                        "end_day": "2024-11-22",
+                        "end_day": "2025-01-07",
                         "end_time": "15:30:00",
-                        "first_day": "2024-11-22",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20241121T093050Z\r\nUID:absence_39@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20241122T100000\r\nDTEND;TZID=Europe/Paris:20241122T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "first_day": "2025-01-07",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250106T100910Z\r\nUID:absence_39@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250107T100000\r\nDTEND;TZID=Europe/Paris:20250107T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_39@RDV Solidarités",
                         "organisation": {
                           "id": 175,
@@ -1814,15 +1823,9 @@
         "summary": "Détruire une absence",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -1950,15 +1953,9 @@
         "summary": "Lister les agent·es",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -2027,9 +2024,9 @@
                         {
                           "id": 209,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Laurène",
+                          "first_name": "Perceval",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Philippe"
+                          "last_name": "Durand"
                         }
                       ],
                       "meta": {
@@ -2080,15 +2077,9 @@
         "description": "Renvoie tous les motifs à partir d'une organisation",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -2257,15 +2248,9 @@
         "summary": "Lister les organisations",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -2420,15 +2405,9 @@
         "summary": "Récupérer une organisation",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -2515,15 +2494,9 @@
         "summary": "Mettre à jour une organisation",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -2781,15 +2754,9 @@
         "summary": "Lister les rendez-vous d'une organisation",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -2872,22 +2839,22 @@
                             {
                               "id": 292,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Luc",
+                              "first_name": "Leufroy",
                               "inclusion_connect_open_id_sub": null,
-                              "last_name": "Laurent"
+                              "last_name": "Bertrand"
                             }
                           ],
                           "cancelled_at": null,
                           "collectif": false,
                           "context": null,
-                          "created_at": "2024-11-21 10:30:55 +0100",
+                          "created_at": "2025-01-06 11:09:15 +0100",
                           "created_by": "agent",
                           "created_by_id": 292,
                           "created_by_type": "Agent",
                           "duration_in_min": 45,
                           "ends_at": "2022-01-01 08:45:00 +0100",
                           "lieu": {
-                            "id": 108,
+                            "id": 110,
                             "address": "1 rue de l'adresse, Ville, 12345",
                             "name": "Lieu n°1",
                             "organisation_id": 324,
@@ -2940,20 +2907,20 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2024-11-21 10:30:55 +0100",
+                                "created_at": "2025-01-06 11:09:15 +0100",
                                 "email": "usager_1@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Arcadie",
+                                "first_name": "Abel",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "DUPONT",
+                                "last_name": "GUILLOT",
                                 "logement": "locataire",
                                 "notes": "Super note",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "07 45 60 55 12",
-                                "phone_number_formatted": "+33745605512",
+                                "phone_number": "6 10 85 71 22",
+                                "phone_number_formatted": "+33610857122",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
@@ -2972,27 +2939,27 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2024-11-21 10:30:55 +0100",
+                              "created_at": "2025-01-06 11:09:15 +0100",
                               "email": "usager_1@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Arcadie",
+                              "first_name": "Abel",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "DUPONT",
+                              "last_name": "GUILLOT",
                               "logement": "locataire",
                               "notes": "Super note",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "07 45 60 55 12",
-                              "phone_number_formatted": "+33745605512",
+                              "phone_number": "6 10 85 71 22",
+                              "phone_number_formatted": "+33610857122",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "cf91d166-980c-40ea-a0a1-161f851b7693"
+                          "uuid": "d0260987-bde2-45b6-86d8-45f99213881b"
                         }
                       ],
                       "meta": {
@@ -3038,15 +3005,9 @@
         "summary": "Créer une assignation à un référent",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -3113,9 +3074,9 @@
                         "agent": {
                           "id": 393,
                           "email": "agent_2@lapin.fr",
-                          "first_name": "Hincmar",
+                          "first_name": "Frédérique",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Schneider"
+                          "last_name": "Sanchez"
                         },
                         "user": {
                           "id": 146,
@@ -3126,20 +3087,20 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-11-21 10:31:00 +0100",
+                          "created_at": "2025-01-06 11:09:19 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Eugène",
+                          "first_name": "Colin",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "CARLIER",
+                          "last_name": "DURAND",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "07 66 40 82 40",
-                          "phone_number_formatted": "+33766408240",
+                          "phone_number": "731949040",
+                          "phone_number_formatted": "+33731949040",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -3203,15 +3164,9 @@
         "summary": "Détruit une assignation à un référent",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -3342,20 +3297,139 @@
         }
       }
     },
+    "/api/v1/teams": {
+      "get": {
+        "summary": "Lister les équipes",
+        "security": [
+          {
+            "access_token": [],
+            "uid": [],
+            "client": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Teams"
+        ],
+        "operationId": "getTeams",
+        "description": "Renvoie toutes les équipes de tous les territoires auquel l'agent authentifié a accès.",
+        "responses": {
+          "200": {
+            "description": "Renvoie les équipes",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "teams": [
+                        {
+                          "id": 5,
+                          "agents": [
+                            {
+                              "id": 425,
+                              "email": "agent_2@lapin.fr",
+                              "first_name": "Maguelone",
+                              "inclusion_connect_open_id_sub": null,
+                              "last_name": "Prévost"
+                            },
+                            {
+                              "id": 426,
+                              "email": "agent_3@lapin.fr",
+                              "first_name": "Acacie",
+                              "inclusion_connect_open_id_sub": null,
+                              "last_name": "Lamy"
+                            },
+                            {
+                              "id": 427,
+                              "email": "agent_4@lapin.fr",
+                              "first_name": "Colin",
+                              "inclusion_connect_open_id_sub": null,
+                              "last_name": "Collet"
+                            }
+                          ],
+                          "name": "Île-de-France vampires 8b8a7ec6",
+                          "territory": {
+                            "id": 362,
+                            "departement_number": "01",
+                            "motif_categories": [],
+                            "name": "Territoire n°1"
+                          }
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 1
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/teams"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/user_profiles": {
       "post": {
         "summary": "Créer un profil utilisateur",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -3420,7 +3494,7 @@
                     "value": {
                       "user_profile": {
                         "organisation": {
-                          "id": 417,
+                          "id": 421,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
@@ -3435,20 +3509,20 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-11-21 10:31:01 +0100",
+                          "created_at": "2025-01-06 11:09:21 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Maurice",
+                          "first_name": "Séverin",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "PASQUIER",
+                          "last_name": "LEMAITRE",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "06 41 86 69 90",
-                          "phone_number_formatted": "+33641866990",
+                          "phone_number": "06 86 89 30 38",
+                          "phone_number_formatted": "+33686893038",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -3539,15 +3613,9 @@
         "summary": "Détruit le profil utilisateur de l'organisation",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -3683,15 +3751,9 @@
         "summary": "Récupérer un·e usager·ère",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -3755,7 +3817,7 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2024-11-21 10:31:02 +0100",
+                        "created_at": "2025-01-06 11:09:22 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
@@ -3767,14 +3829,14 @@
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "7 96 38 63 01",
-                        "phone_number_formatted": "+33796386301",
+                        "phone_number": "0771989661",
+                        "phone_number_formatted": "+33771989661",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
                           {
                             "organisation": {
-                              "id": 438,
+                              "id": 442,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null,
@@ -3841,15 +3903,9 @@
         "summary": "Mettre à jour un·e usager·ère",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -4066,7 +4122,7 @@
                         "birth_name": "Fripouille",
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2024-11-21 10:31:03 +0100",
+                        "created_at": "2025-01-06 11:09:23 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "single",
                         "first_name": "Alain",
@@ -4089,20 +4145,20 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-11-21 10:31:03 +0100",
+                          "created_at": "2025-01-06 11:09:23 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Sidoine",
+                          "first_name": "Bon",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "FOURNIER",
+                          "last_name": "MENARD",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "06 61 82 64 72",
-                          "phone_number_formatted": "+33661826472",
+                          "phone_number": "07 32 97 54 67",
+                          "phone_number_formatted": "+33732975467",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4179,15 +4235,9 @@
         "summary": "Récupérer le token d'invitation à prendre un rdv d'un usager·ère",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -4243,7 +4293,7 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "invitation_token": "EXERVVAY"
+                      "invitation_token": "1S80OH33"
                     }
                   }
                 },
@@ -4304,15 +4354,9 @@
         "summary": "Récupérer une liste d'usager·rès",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -4390,20 +4434,20 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-11-21 10:31:04 +0100",
+                          "created_at": "2025-01-06 11:09:24 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Fortunée",
+                          "first_name": "Alban",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "DUVAL",
+                          "last_name": "ETIENNE",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "6 44 89 62 61",
-                          "phone_number_formatted": "+33644896261",
+                          "phone_number": "6 85 16 79 21",
+                          "phone_number_formatted": "+33685167921",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4450,15 +4494,9 @@
         "summary": "Créer un·e usager·ère",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -4674,7 +4712,7 @@
                         "birth_name": "Fripouille",
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2024-11-21 10:31:05 +0100",
+                        "created_at": "2025-01-06 11:09:24 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "single",
                         "first_name": "Johnny",
@@ -4697,20 +4735,20 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-11-21 10:31:05 +0100",
+                          "created_at": "2025-01-06 11:09:24 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Athalie",
+                          "first_name": "Madeleine",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "SANCHEZ",
+                          "last_name": "NICOLAS",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "0613789921",
-                          "phone_number_formatted": "+33613789921",
+                          "phone_number": "7 49 92 42 77",
+                          "phone_number_formatted": "+33749924277",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4787,15 +4825,9 @@
         "summary": "Récupérer une liste d'usager·rès d'une organisation",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -4870,20 +4902,20 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2024-11-21 10:31:05 +0100",
+                          "created_at": "2025-01-06 11:09:25 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Enguerrand",
+                          "first_name": "Marine",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "PHILIPPE",
+                          "last_name": "LEGRAND",
                           "logement": "locataire",
                           "notes": "Super note",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "06 49 06 78 71",
-                          "phone_number_formatted": "+33649067871",
+                          "phone_number": "07 66 44 99 05",
+                          "phone_number_formatted": "+33766449905",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4932,15 +4964,9 @@
         "summary": "Récupérer un·e usager·ère d'une organisation",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -5014,7 +5040,7 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2024-11-21 10:31:06 +0100",
+                        "created_at": "2025-01-06 11:09:25 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
@@ -5026,14 +5052,14 @@
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "07 99 09 63 08",
-                        "phone_number_formatted": "+33799096308",
+                        "phone_number": "799597570",
+                        "phone_number_formatted": "+33799597570",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
                           {
                             "organisation": {
-                              "id": 508,
+                              "id": 512,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null,
@@ -5119,15 +5145,9 @@
         "summary": "Lister les webhook_endpoints d'une organisation",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -5202,9 +5222,7 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "webhook_endpoints": [
-
-                      ],
+                      "webhook_endpoints": [],
                       "meta": {
                         "current_page": 1,
                         "next_page": null,
@@ -5246,15 +5264,9 @@
         "summary": "Créer un webhook_endpoint",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -5354,7 +5366,7 @@
                     "value": {
                       "webhook_endpoint": {
                         "id": 26,
-                        "organisation_id": 528,
+                        "organisation_id": 532,
                         "subscriptions": [
                           "rdv",
                           "user",
@@ -5440,15 +5452,9 @@
         "summary": "Mettre à jour un webhook_endpoint",
         "security": [
           {
-            "access_token": [
-
-            ],
-            "uid": [
-
-            ],
-            "client": [
-
-            ]
+            "access_token": [],
+            "uid": [],
+            "client": []
           }
         ],
         "parameters": [
@@ -5558,7 +5564,7 @@
                     "value": {
                       "webhook_endpoint": {
                         "id": 28,
-                        "organisation_id": 535,
+                        "organisation_id": 539,
                         "subscriptions": [
                           "rdv",
                           "user",
