@@ -25,8 +25,10 @@ class RdvPlan < ApplicationRecord
     (from_date..(from_date + 6.days))
   end
 
+  attr_writer :from_date
+
   def from_date
-    Time.zone.now.to_date
+    @from_date || Time.zone.now.to_date
   end
 
   def context

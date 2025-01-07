@@ -62,7 +62,7 @@ class Agents::RdvPlansController < AgentAuthController
   def update_lieu
     find_rdv_plan
     if @rdv_plan.update(params.require(:rdv_plan).permit(:lieu_id))
-      redirect_to edit_creneau_agents_rdv_plan_path(@rdv_plan)
+      redirect_to edit_creneau_agents_rdv_plan_path(@rdv_plan, from: params.dig(:rdv_plan, :from_date))
     else
       render "edit_lieu"
     end
@@ -70,6 +70,11 @@ class Agents::RdvPlansController < AgentAuthController
 
   def edit_creneau
     find_rdv_plan
+    @rdv_plan.from_date = begin
+      Date.parse(params[:from])
+    rescue StandardError
+      Time.zone.today
+    end
 
     @results = if @rdv_plan.motif.individuel?
                  CreneauxSearch::ForAgent.new(@rdv_plan).build_result

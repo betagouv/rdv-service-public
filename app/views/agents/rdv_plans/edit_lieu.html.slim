@@ -19,7 +19,7 @@
                     h4.card-title.mb-3.mt-0.text-success.font-weight-bold= next_availability.lieu.name
                     h6.card-subtitle.text-black-50= next_availability.lieu.address
                   .col-md.align-self-center.pt-3.pt-md-0.position-static
-                    = link_to update_lieu_agents_rdv_plan_path(@rdv_plan, rdv_plan: {lieu_id: next_availability.lieu.id}), method: :patch, class: "d-block stretched-link" do
+                    = link_to update_lieu_agents_rdv_plan_path(@rdv_plan, rdv_plan: {lieu_id: next_availability.lieu.id, from_date: next_availability.starts_at.to_date}), method: :patch, class: "d-block stretched-link" do
                       .row
                         .col
                           | Prochaine disponibilité le

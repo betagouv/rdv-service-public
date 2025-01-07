@@ -20,6 +20,6 @@
             = ff.input :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
             = ff.input :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
 
-          = link_to "retour", creneau_agents_rdv_plan_path(@rdv_plan)
+          = link_to "retour", edit_creneau_agents_rdv_plan_path(@rdv_plan)
           = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right fr-btn--lg"
 
