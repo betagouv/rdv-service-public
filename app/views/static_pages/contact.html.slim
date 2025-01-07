@@ -22,13 +22,10 @@ span> Voir
     h3
       = mail_to current_domain.support_email,
         subject: "[Problème Usager]",
-        body: "Code postal: \n\rNom: \n\rProblème ou Question:", class: "btn btn-primary" do
-        span>
-          i.fa.fa-envelope
+        body: "Code postal: \n\rNom: \n\rProblème ou Question:", class: "fr-btn fr-btn--icon-left fr-icon-mail-fill" do
         | Contacter l'équipe technique
 
-    .alert.alert-warning.my-4.d-flex.align-items-center
-      i.fa.fa-exclamation-triangle>
+    .fr-alert.fr-alert--warning.fr-mb-3w
       .ml-2
         - if current_domain == Domain::RDV_MAIRIE
           ' Nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,

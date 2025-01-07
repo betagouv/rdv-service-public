@@ -24,7 +24,7 @@
 
       .weekly-select
         - weekdays = { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }
-        - weekdays[:Dimanche] = "sunday" if current_territory.name == Territory::VISIOPLAINTE_NAME
+        - weekdays[:Dimanche] = "sunday" if current_territory.visioplainte?
         = n.input :on, as: :check_boxes, label: "Répéter les", collection: weekdays, include_blank: false, input_html: { data: { target: "recurrence.on", action: "recurrence#updateRecurrence" }, class: "js-recurrence-on js-recurrence-input" }
 
       .monthly-select.form-group

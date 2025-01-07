@@ -7,14 +7,22 @@
   - else
     | Agenda de #{@agent.full_name_and_service}
 
+ruby:
+  event_sources = [
+    admin_api_agenda_rdvs_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
+    admin_api_agenda_absences_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
+    admin_api_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, in_background: true, format: :json),
+  ]
+  event_sources.push(OffDays.to_full_calendar_array) unless current_territory.visioplainte?
+
 #calendar[
   data-default-date-json="#{@date&.to_json}"
   data-agent-id="#{@agent.id}"
   data-selected-event-id="#{@selected_event_id}"
   data-organisation-id="#{@organisation.id}"
   data-display-saturdays="#{current_agent.display_saturdays}"
-  data-display-sundays="#{current_territory.name == Territory::VISIOPLAINTE_NAME}"
-  data-event-sources-json="#{[admin_api_agenda_absences_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json), admin_api_agenda_rdvs_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json), admin_api_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, in_background: true, format: :json), OffDays.to_full_calendar_array].to_json}"
+  data-display-sundays="#{current_territory.visioplainte?}"
+  data-event-sources-json="#{event_sources.to_json}"
   data-sign-in-path="#{new_agent_session_path}"
 ]
 .mt-3.flex-grow-1.text-right

@@ -1,7 +1,7 @@
 require("@rails/ujs").start()
 require("turbolinks").start()
+import { DsfrNewPassword } from "./components/dsfr-new-password";
 import { Modal } from './components/modal';
-import { ShowHidePassword } from './components/show-hide-password.js';
 import './components/browser-detection';
 import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
@@ -16,6 +16,7 @@ new Modal();
 new Select2Inputs();
 
 $(document).on('turbolinks:load', function () {
-  new ShowHidePassword();
+  DsfrNewPassword();
+
   new Clipboard();
 });

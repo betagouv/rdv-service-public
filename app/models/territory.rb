@@ -68,6 +68,7 @@ class Territory < ApplicationRecord
     where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(territories.name))")) }
+  scope :visioplainte, -> { where(name: VISIOPLAINTE_NAME) }
 
   ## -
 
@@ -100,6 +101,10 @@ class Territory < ApplicationRecord
 
   def cn?
     name == CNFS_NAME
+  end
+
+  def visioplainte?
+    name == VISIOPLAINTE_NAME
   end
 
   def sectorized?

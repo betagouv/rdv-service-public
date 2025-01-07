@@ -10,6 +10,7 @@ class UserDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     organisations: Field::HasMany,
     user_profiles: Field::HasMany,
+    rdvs: Field::HasMany.with_options(sort_by: :starts_at, direction: :desc),
     id: Field::Number,
     first_name: Field::String,
     last_name: Field::String,
@@ -43,6 +44,7 @@ class UserDashboard < Administrate::BaseDashboard
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = %i[
+    rdvs
     user_profiles
     id
     first_name
