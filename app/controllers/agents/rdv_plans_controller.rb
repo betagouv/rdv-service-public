@@ -42,14 +42,9 @@ class Agents::RdvPlansController < AgentAuthController
         else
           @rdv_plan.update(lieu: @rdv_plan.organisation.lieux.enabled.first)
 
-          # TODO: extraire ça dans une méthode ?
-          @search_form = AgentCreneauxSearchForm.build_from(@rdv_plan)
+          search_form = AgentCreneauxSearchForm.build_from(@rdv_plan)
 
-          @next_availabilities = if @rdv_plan.motif.individuel?
-                                   CreneauxSearch::ForAgent.new(@search_form).next_availabilities
-                                 else
-                                   CreneauxSearch::RdvCollectifForAgent.new(@search_form).next_availabilities
-                                 end
+          @next_availabilities = get_next_availabilities(search_form)
 
           # TODO: gérer le cas de pas de créneaux
           redirect_to edit_creneau_agents_rdv_plan_path(@rdv_plan, from: @next_availabilities.first.starts_at.to_date)
@@ -68,11 +63,7 @@ class Agents::RdvPlansController < AgentAuthController
 
     @search_form = AgentCreneauxSearchForm.build_from(@rdv_plan)
 
-    @next_availabilities = if @rdv_plan.motif.individuel?
-                             CreneauxSearch::ForAgent.new(@search_form).next_availabilities
-                           else
-                             CreneauxSearch::RdvCollectifForAgent.new(@search_form).next_availabilities
-                           end
+    @next_availabilities = get_next_availabilities(@search_form)
   end
 
   def update_lieu
@@ -88,7 +79,7 @@ class Agents::RdvPlansController < AgentAuthController
     find_rdv_plan
     @search_form = AgentCreneauxSearchForm.build_from(@rdv_plan, from_date: params[:from])
 
-    @results = if @rdv_plan.motif.individuel?
+    @results = if @search_form.motif.individuel?
                  CreneauxSearch::ForAgent.new(@search_form).build_result
                else
                  CreneauxSearch::RdvCollectifForAgent.new(@search_form).slot_search
@@ -134,6 +125,14 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   private
+
+  def get_next_availabilities(search_form)
+    if search_form.motif.individuel?
+      CreneauxSearch::ForAgent.new(search_form).next_availabilities
+    else
+      CreneauxSearch::RdvCollectifForAgent.new(search_form).next_availabilities
+    end
+  end
 
   def find_rdv_plan
     @rdv_plan = current_agent.rdv_plans.find(params[:id])
