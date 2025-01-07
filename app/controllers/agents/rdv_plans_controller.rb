@@ -86,7 +86,7 @@ class Agents::RdvPlansController < AgentAuthController
   def update_creneau
     find_rdv_plan
     if @rdv_plan.update(params.require(:rdv_plan).permit(:starts_at, :rdv_agent_id))
-      redirect_to user_agents_rdv_plan_path(@rdv_plan)
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
     else
       render "edit_creneau"
     end

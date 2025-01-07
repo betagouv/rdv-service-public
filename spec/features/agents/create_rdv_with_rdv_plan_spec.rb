@@ -16,6 +16,16 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     select motif.name
     click_on "Continuer"
     click_on "Prochaine disponibilité"
-    save_and_open_screenshot
+    click_on "08:00", match: :first
+    click_on "Confirmer le rendez-vous"
+    expect(page).to have_content("Le rendez-vous a été créé")
+
+    expect(Rdv.last).to have_attributes(
+      users: [user],
+      agents: [agent],
+      lieu: lieu,
+      motif: motif,
+      organisation: organisation
+    )
   end
 end
