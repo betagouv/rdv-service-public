@@ -1,10 +1,5 @@
-class PlageOuverture {
-  constructor() {
-    this.toggleLieuSelectionField(true);
-    $(".plage-ouverture-form .form-check-input[name='plage_ouverture[motif_ids][]']").on("change", () => { this.toggleLieuSelectionField(); })
-  }
 
-  toggleLieuSelectionField(noTransition = false) {
+const toggleLieuSelectionField = (noTransition = false) => {
     const selectedMotifsPublicOffice = $(".plage-ouverture-form .form-check-input.public_office[name='plage_ouverture[motif_ids][]']:checked");
     const lieuSelectionField = $(".plage-ouverture-form .collapse.js-lieu-field").toggleClass("no-transition", noTransition);
 
@@ -15,6 +10,12 @@ class PlageOuverture {
       lieuSelectionField.collapse("hide");
     }
   }
+
+class PlageOuverture {
+  constructor() {
+    toggleLieuSelectionField(true);
+    $(".plage-ouverture-form .form-check-input[name='plage_ouverture[motif_ids][]']").on("change", () => { toggleLieuSelectionField(); })
+  }
 }
 
-export { PlageOuverture };
+export { PlageOuverture, toggleLieuSelectionField };
