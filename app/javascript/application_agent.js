@@ -33,11 +33,13 @@ import './components/browser-detection'
 import './components/clear-field-on-focus.js'
 
 import { Application } from "@hotwired/stimulus"
+import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
 import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers"
 
 window.Stimulus = Application.start()
 const context = require.context("./controllers", true, /\.js$/)
-Stimulus.load(definitionsFromContext(context))
+window.Stimulus.load(definitionsFromContext(context))
+window.Stimulus.register('checkbox-select-all', CheckboxSelectAll)
 
 import './stylesheets/print'
 import './stylesheets/application_agent'
