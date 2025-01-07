@@ -34,12 +34,11 @@ import './components/clear-field-on-focus.js'
 
 import { Application } from "@hotwired/stimulus"
 import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
-import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers"
+import MotifFormController from './controllers/motif_form_controller'
 
 window.Stimulus = Application.start()
-const context = require.context("./controllers", true, /\.js$/)
-Stimulus.load(definitionsFromContext(context))
 Stimulus.register('checkbox-select-all', CheckboxSelectAll)
+Stimulus.register('motif-form', MotifFormController)
 
 import './stylesheets/print'
 import './stylesheets/application_agent'
