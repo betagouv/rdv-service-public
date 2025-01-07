@@ -177,11 +177,11 @@ group :development do
   gem "active_record_doctor"
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
-  # Automatic Ruby code style checking tool.
-  gem "rubocop", require: false
   # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
   # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.6)
   gem "parser", "3.3.6.0", require: false
+  # Automatic Ruby code style checking tool.
+  gem "rubocop", require: false
   # Code style checking for RSpec files
   gem "rubocop-rspec", require: false
   # Automatic Rails code style checking tool.
