@@ -798,9 +798,9 @@ DEPENDENCIES
   rswag-api
   rswag-specs
   rswag-ui
-  rubocop (~> 1.69.2)
-  rubocop-rails (~> 2.26.0)
-  rubocop-rspec (~> 3.0.4)
+  rubocop
+  rubocop-rails
+  rubocop-rspec
   rubyzip
   selenium-webdriver
   sentry-rails
