@@ -224,8 +224,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "ANTS responds with an unexpected error" do
       before do
-        stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status")
-          .with(query: hash_including(application_ids: "5544332211"))
+        stub_request_ants_status("5544332211")
           .to_return(status: 500, body: "Internal Server Error")
       end
 
