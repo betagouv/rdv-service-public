@@ -10,7 +10,7 @@ h1
       = t(".agent_services_legend")
     = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
       .card-body
-        = f.input :service_ids, collection: current_territory.services,
+        = f.input :service_ids, collection: @available_services,
               label: t(".services"),
               label_method: :name,
               input_html: { \
