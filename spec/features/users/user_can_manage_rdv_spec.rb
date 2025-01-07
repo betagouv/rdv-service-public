@@ -16,7 +16,7 @@ RSpec.describe "User can manage their rdvs" do
         click_on("Annuler le RDV")
         expect(page).to have_content("Confirmation")
         click_link("Oui, annuler le rendez-vous")
-        expect(page).to have_selector(".badge", text: "Annulé")
+        expect(page).to have_selector(".fr-badge", text: "ANNULÉ")
       end
     end
 

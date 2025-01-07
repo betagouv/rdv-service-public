@@ -26,7 +26,7 @@ RSpec.describe "User can search rdv on rdv service public" do
   it "allows booking a rdv" do
     visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
     click_on("Clarification du dossier")
-    click_on("Prochaine disponibilité le") # choix du lieu
+    click_on(lieu.name) # choix du lieu
 
     first(:link, "09:00").click
     expect(page).to have_current_path("/users/sign_in")

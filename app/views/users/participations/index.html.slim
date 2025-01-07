@@ -2,42 +2,42 @@
 
 ul.list-group.fr-mb-3w
   li.list-group-item
-    i.fa.fa-info-circle>
+    span.fr-icon.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
     = @rdv.motif_name
 
   li.list-group-item
-    .fa.fa-calendar>
+    span.fr-icon.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
     = rdv_title(@rdv)
     = rdv_tag(@rdv)
 
   - if @rdv.home?
     li.list-group-item
-      .fa.fa-home>
+      span.fr-icon.fr-icon-home-4-fill.fr-mr-1w[aria-hidden="true"]
       | Ce RDV se déroulera à domicile
 
   - elsif @rdv.public_office?
     li.list-group-item
-      .fa.fa-map-marker-alt>
+      span.fr-icon.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
       = human_location(@rdv)
       - if @rdv.lieu&.phone_number
-        span>
-        span.fa.fa-phone>
+        br
+        span.fr-icon.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
         = link_to @rdv.lieu.phone_number, "tel:#{@rdv.lieu.phone_number_formatted}"
 
   - elsif @rdv.phone?
     li.list-group-item
-      .fa.fa-phone>
+      span.fr-icon.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
       | RDV Téléphonique
 
   - if @rdv.motif.instruction_for_rdv.present?
     li.list-group-item
-      i.fa.fa-exclamation-triangle>
+      span.fr-icon.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
       strong Informations supplémentaires&nbsp;:
       .pl-3.pt-1
         = instruction_for_rdv_to_html(@rdv.motif)
 
   li.list-group-item
-    i.fa.fa-users>
+    span.fr-icon.fr-icon-team-fill.fr-mr-1w[aria-hidden="true"]
     | Participant
 
     = form_tag users_rdv_participations_path(@rdv) do
@@ -51,4 +51,4 @@ ul.list-group.fr-mb-3w
       .form-group
         = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?), data: { modal: true }
       .form-group
-        = submit_tag "Enregistrer", class: "btn btn-primary"
+        = submit_tag "Enregistrer", class: "fr-btn"
