@@ -4,14 +4,16 @@ RSpec.describe AntsApi, type: :service do
   describe ".status" do
     context "when credentials are incorrect" do
       before do
-        stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
-          status: 401,
-          body: <<~JSON
-            {
-              "detail": "X-RDV-OPT-AUTH-TOKEN header invalid"
-            }
-          JSON
-        )
+        stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status")
+          .with(query: hash_including(application_ids: "1122334455"))
+          .to_return(
+            status: 401,
+            body: <<~JSON
+              {
+                "detail": "X-RDV-OPT-AUTH-TOKEN header invalid"
+              }
+            JSON
+          )
       end
 
       it "raises an error" do

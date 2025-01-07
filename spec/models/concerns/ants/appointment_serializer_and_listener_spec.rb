@@ -36,7 +36,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+        .with(query: hash_including(application_ids: "A123456789"), headers:)
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -103,7 +103,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+        .with(query: hash_including(application_ids: "A123456789"), headers:)
         .to_return(
           status: 200,
           body: {
@@ -155,7 +155,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+        .with(query: hash_including(application_ids: "A123456789"), headers:)
         .to_return(
           status: 200,
           body: {
@@ -208,7 +208,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+        .with(query: hash_including(application_ids: "A123456789"), headers:)
         .to_return(
           status: 200,
           body: { "A123456789" => { status: "consumed", appointments: [] } }.to_json
@@ -236,7 +236,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+        .with(query: hash_including(application_ids: "A123456789"), headers:)
         .to_return(
           status: 200,
           body: {
@@ -305,7 +305,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "AABBCCDDEE" }, headers:)
+        .with(query: hash_including(application_ids: "AABBCCDDEE"), headers:)
         .to_return(status: 200, body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -345,7 +345,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+        .with(query: hash_including(application_ids: "A123456789"), headers:)
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -385,7 +385,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+        .with(query: hash_including(application_ids: "A123456789"), headers:)
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -425,7 +425,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+        .with(query: hash_including(application_ids: "A123456789"), headers:)
         .to_return(
           status: 200,
           body: {
