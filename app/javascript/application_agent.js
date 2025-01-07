@@ -38,8 +38,8 @@ import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers"
 
 window.Stimulus = Application.start()
 const context = require.context("./controllers", true, /\.js$/)
-window.Stimulus.load(definitionsFromContext(context))
-window.Stimulus.register('checkbox-select-all', CheckboxSelectAll)
+Stimulus.load(definitionsFromContext(context))
+Stimulus.register('checkbox-select-all', CheckboxSelectAll)
 
 import './stylesheets/print'
 import './stylesheets/application_agent'
