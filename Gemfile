@@ -187,7 +187,7 @@ group :development do
   # Automatic Rails code style checking tool.
   gem "rubocop-rails", require: false
   # Slim template linting tool
-  gem "slim_lint", "~> 0.31.1", require: false
+  gem "slim_lint", require: false
 
   #  Debug
 
