@@ -7,9 +7,6 @@
   - else
     | Agenda de #{@agent.full_name_and_service}
 
-- content_for :breadcrumb do
-  = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: current_organisation
-
 ruby:
   event_sources = [
     admin_api_agenda_rdvs_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
