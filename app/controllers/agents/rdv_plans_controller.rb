@@ -113,10 +113,19 @@ class Agents::RdvPlansController < AgentAuthController
 
   def create_rdv
     find_rdv_plan
+    rdv_plan_params = params.require(:rdv_plan)
 
-    flash[:success] = "Le rendez-vous a été créé."
+    rdv = @rdv_plan.create_rdv(current_agent,
+                               user_attributes: rdv_plan_params.require(:user).permit(:email, :phone_number),
+                               participation: rdv_plan_params.require(:participation).permit(:send_lifecycle_notifications, :send_reminder_notification))
 
-    redirect_to rdv_agents_rdv_plan_path(@rdv_plan)
+    if rdv.valid?
+      flash[:success] = "Le rendez-vous a été créé."
+      redirect_to rdv_agents_rdv_plan_path(@rdv_plan)
+    else
+      flash[:error] = rdv.errors.full_messages.to_sentence
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
+    end
   end
 
   def rdv
