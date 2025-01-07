@@ -6,6 +6,19 @@ class AgentCreneauxSearchForm
 
   validates :organisation_id, :motif, presence: true
 
+  def self.build_from(rdv_plan, from_date: nil)
+    new(
+      organisation_id: rdv_plan.motif.organisation_id,
+      service_id: rdv_plan.motif.service_id,
+      motif_id: rdv_plan.motif_id,
+      agent_ids: [],
+      team_ids: [],
+      user_ids: rdv_plan.user_ids,
+      from_date: from_date 
+
+    )
+  end
+
   def organisation
     Organisation.find_by(id: organisation_id) if organisation_id.present?
   end

@@ -8,14 +8,14 @@
         = render "agents/rdv_plans/lieu_recap", rdv_plan: @rdv_plan
         hr.fr-mt-2w
         .row.position-relative[style="min-height: 200px"]
-          - if @rdv_plan.date_range.begin > Time.zone.today
-            - previous_from_date = @rdv_plan.date_range.begin - 7.days
+          - if @search_form.date_range.begin > Time.zone.today
+            - previous_from_date = @search_form.date_range.begin - 7.days
             .col-auto.d-flex.align-items-center
-              = link_to edit_creneau_agents_rdv_plan_path(@rdv_plan, from: @rdv_plan.date_range.begin - 7.days), class: "fr-btn" do
+              = link_to edit_creneau_agents_rdv_plan_path(@rdv_plan, from: @search_form.date_range.begin - 7.days), class: "fr-btn" do
                 i.fa.fa-arrow-left
           .col
             .row.no-gutters.creneaux-row.lieu-creneaux-card
-              - @rdv_plan.date_range.each do |date|
+              - @search_form.date_range.each do |date|
                 .col.position-relative
                   p.rdv-text-align-center.sticky-top.bg-white
                     strong= l(date, format: "%A")
@@ -37,9 +37,9 @@
                           small.text-dark= creneau.agent.short_name
 
           - if @results.next_availability
-            - if @rdv_plan.date_range.end < @results.next_availability.starts_at.to_date && @results.creneaux.empty?
+            - if @search_form.date_range.end < @results.next_availability.starts_at.to_date && @results.creneaux.empty?
               .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
-                = link_to edit_creneau, class: "btn btn-light" do
+                = link_to edit_creneau_agents_rdv_plan_path, class: "btn btn-light" do
                   .d-flex.align-items-center
                     div
                       | Prochaine disponibilité le
@@ -49,7 +49,7 @@
                       i.fa.fa-chevron-right
 
             .col-auto.d-flex.align-items-center
-              = link_to edit_creneau_agents_rdv_plan_path(@rdv_plan, from: @rdv_plan.date_range.end + 1.day), class: "fr-btn" do
+              = link_to edit_creneau_agents_rdv_plan_path(@rdv_plan, from: @search_form.date_range.end + 1.day), class: "fr-btn" do
                 i.fa.fa-arrow-right
         - if @rdv_plan.motif.requires_lieu?
           = link_to "retour", edit_lieu_agents_rdv_plan_path(@rdv_plan)

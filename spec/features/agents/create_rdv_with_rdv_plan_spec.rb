@@ -15,7 +15,8 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     visit new_agents_rdv_plan_path(user_id: user.id)
     select motif.name
     click_on "Continuer"
-    click_on "Prochaine disponibilité"
+    # TODO: faire un cas avec 2 lieux pour ajouter cette étape
+    # click_on "Prochaine disponibilité"
     click_on "08:00", match: :first
     click_on "Confirmer le rendez-vous"
     expect(page).to have_content("Le rendez-vous a été créé")

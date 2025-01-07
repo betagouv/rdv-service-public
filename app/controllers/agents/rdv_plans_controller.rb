@@ -39,7 +39,23 @@ class Agents::RdvPlansController < AgentAuthController
 
     if @rdv_plan.save
       if @rdv_plan.motif.requires_lieu?
-        redirect_to edit_lieu_agents_rdv_plan_path(@rdv_plan)
+        if @rdv_plan.organisation.lieux.enabled.count > 1
+          redirect_to edit_lieu_agents_rdv_plan_path(@rdv_plan)
+        else
+          @rdv_plan.update(lieu: @rdv_plan.organisation.lieux.enabled.first)
+
+          # TODO: extraire ça dans une méthode ?
+          @search_form = AgentCreneauxSearchForm.build_from(@rdv_plan)
+
+          @next_availabilities = if @rdv_plan.motif.individuel?
+                                   CreneauxSearch::ForAgent.new(@search_form).next_availabilities
+                                 else
+                                   CreneauxSearch::RdvCollectifForAgent.new(@search_form).next_availabilities
+                                 end
+
+          # TODO: gérer le cas de pas de créneaux
+          redirect_to edit_creneau_agents_rdv_plan_path(@rdv_plan, from: @next_availabilities.first.starts_at.to_date)
+        end
       else
         redirect_to edit_creneau_agents_rdv_plan_path(@rdv_plan)
       end
@@ -52,10 +68,13 @@ class Agents::RdvPlansController < AgentAuthController
     # TODO: est-ce que cette étape est nécessaire s'il n'y a qu'un seul lieu ? ça peut être une amélioration plus tard
     find_rdv_plan
     @rdv_plan.lieu_id = nil
+
+    @search_form = AgentCreneauxSearchForm.build_from(@rdv_plan)
+
     @next_availabilities = if @rdv_plan.motif.individuel?
-                             CreneauxSearch::ForAgent.new(@rdv_plan).next_availabilities
+                             CreneauxSearch::ForAgent.new(@search_form).next_availabilities
                            else
-                             CreneauxSearch::RdvCollectifForAgent.new(@rdv_plan).next_availabilities
+                             CreneauxSearch::RdvCollectifForAgent.new(@search_form).next_availabilities
                            end
   end
 
@@ -70,16 +89,12 @@ class Agents::RdvPlansController < AgentAuthController
 
   def edit_creneau
     find_rdv_plan
-    @rdv_plan.from_date = begin
-      Date.parse(params[:from])
-    rescue StandardError
-      Time.zone.today
-    end
+    @search_form = AgentCreneauxSearchForm.build_from(@rdv_plan, from_date: params[:from])
 
     @results = if @rdv_plan.motif.individuel?
-                 CreneauxSearch::ForAgent.new(@rdv_plan).build_result
+                 CreneauxSearch::ForAgent.new(@search_form).build_result
                else
-                 CreneauxSearch::RdvCollectifForAgent.new(@rdv_plan).slot_search
+                 CreneauxSearch::RdvCollectifForAgent.new(@search_form).slot_search
                end
   end
 
