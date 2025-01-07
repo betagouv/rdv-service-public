@@ -10,7 +10,7 @@ class Agents::RdvPlansController < AgentAuthController
     end
 
     authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
-    render "motif"
+    render "edit_motif"
   end
 
   def create
@@ -25,7 +25,7 @@ class Agents::RdvPlansController < AgentAuthController
     @rdv_plan = RdvPlan.find_by(id: params[:id]) || RdvPlan.new
     authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
 
-    user_id = params.require(:rdv_plan).dig(:user_id)
+    user_id = params.require(:rdv_plan)[:user_id]
     if user_id.present?
       # TODO: ajouter un check sur la policy des users
       @rdv_plan.participations.build(user_id: user_id)
@@ -39,16 +39,17 @@ class Agents::RdvPlansController < AgentAuthController
 
     if @rdv_plan.save
       if @rdv_plan.motif.requires_lieu?
-        redirect_to lieu_agents_rdv_plan_path(@rdv_plan)
+        redirect_to edit_lieu_agents_rdv_plan_path(@rdv_plan)
       else
-        redirect_to creneau_agents_rdv_plan_path(@rdv_plan)
+        redirect_to edit_creneau_agents_rdv_plan_path(@rdv_plan)
       end
     else
-      render "motif"
+      render "edit_motif"
     end
   end
 
   def edit_lieu
+    # TODO: est-ce que cette étape est nécessaire s'il n'y a qu'un seul lieu ? ça peut être une amélioration plus tard
     find_rdv_plan
     @rdv_plan.lieu_id = nil
     @next_availabilities = if @rdv_plan.motif.individuel?
@@ -61,9 +62,9 @@ class Agents::RdvPlansController < AgentAuthController
   def update_lieu
     find_rdv_plan
     if @rdv_plan.update(params.require(:rdv_plan).permit(:lieu_id))
-      redirect_to creneau_agents_rdv_plan_path(@rdv_plan)
+      redirect_to edit_creneau_agents_rdv_plan_path(@rdv_plan)
     else
-      render "lieu"
+      render "edit_lieu"
     end
   end
 
@@ -82,7 +83,7 @@ class Agents::RdvPlansController < AgentAuthController
     if @rdv_plan.update(params.require(:rdv_plan).permit(:starts_at, :rdv_agent_id))
       redirect_to user_agents_rdv_plan_path(@rdv_plan)
     else
-      render "creneau"
+      render "edit_creneau"
     end
   end
 

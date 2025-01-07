@@ -46,7 +46,7 @@
                     div
                       | Prochaine disponibilité le
                       br
-                      strong= l(next_availability.starts_at, format: :human)
+                      strong= l(@results.next_availability.starts_at, format: :human)
                     .ml-2
                       i.fa.fa-chevron-right
 
@@ -55,6 +55,6 @@
               = link_to "#", class: "btn btn-primary" do
                 i.fa.fa-arrow-right
         - if @rdv_plan.motif.requires_lieu?
-          = link_to "retour", lieu_agents_rdv_plan_path(@rdv_plan)
+          = link_to "retour", edit_lieu_agents_rdv_plan_path(@rdv_plan)
         - else
-          = link_to "retour", motif_agents_rdv_plan_path(@rdv_plan)
+          = link_to "retour", edit_motif_agents_rdv_plan_path(@rdv_plan)

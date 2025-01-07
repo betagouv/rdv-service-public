@@ -113,16 +113,16 @@ Rails.application.routes.draw do
     namespace :agents do
       resources :rdv_plans, only: %i[new create] do
         member do
-          get "motif", to: "#edit_motif"
+          get :edit_motif
           patch :update_motif
 
-          get :lieu
+          get :edit_lieu
           patch :update_lieu
 
-          get :creneau
+          get :edit_creneau
           patch :update_creneau
 
-          get :user
+          get :edit_user
           post :create_rdv
 
           get :rdv

@@ -9,7 +9,7 @@
         - if @next_availabilities.empty?
           p Il n'y a pas de créneaux disponibles pour ce motif. Vous pouvez essayer un autre motif, ou chercher directement dans le calendrier d'un agent.
 
-        - elsif @next_availabilities.count > 1
+        - else
           h3.font-weight-bold Choisissez un lieu
           - @next_availabilities.each do |next_availability|
             .card.mb-3
@@ -27,4 +27,4 @@
                           strong= l(next_availability.starts_at, format: :human)
                         .col-auto.align-self-center
                           i.fa.fa-chevron-right
-        = link_to "retour", motif_agents_rdv_plan_path(@rdv_plan)
+        = link_to "retour", edit_motif_agents_rdv_plan_path(@rdv_plan)
