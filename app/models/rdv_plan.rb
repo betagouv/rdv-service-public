@@ -17,7 +17,7 @@ class RdvPlan < ApplicationRecord
   def create_rdv(current_agent, user_attributes:, participation:)
     users.first.update!(user_attributes)
 
-    Rdv.create(
+    rdv = Rdv.create(
       agents: [agent],
       participations: [Participation.new(participation.merge(user_id: user.id))],
       motif: motif,
@@ -27,5 +27,11 @@ class RdvPlan < ApplicationRecord
       created_by: current_agent,
       ends_at: starts_at + motif.default_duration_in_min.minutes
     )
+
+    if rdv.persisted
+      Notifiers::RdvCreated.perform_with(rdv, current_agent)
+    end
+
+    rdv
   end
 end
