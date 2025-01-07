@@ -21,8 +21,11 @@ class AntsApi
 
   class << self
     def status(ants_pre_demande_number:, timeout: nil)
-      response_body = request(:get, "status", params: { application_ids: ants_pre_demande_number }, timeout: timeout)
-
+      params = {
+        application_ids: ants_pre_demande_number,
+        meeting_point_id: nil, # required but unused cf https://github.com/betagouv/rdv-service-public/pull/4940
+      }
+      response_body = request(:get, "status", params:, timeout:)
       response_body.fetch(ants_pre_demande_number)
     end
 
