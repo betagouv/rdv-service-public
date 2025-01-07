@@ -21,7 +21,7 @@
                     input.mr-1 type="checkbox" data-checkbox-select-all-target="checkboxAll"
                     h4.d-inline Motifs de #{service.name}
                   - motifs.each do |motif|
-                    .pl-3
+                    .pl-4
                       = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}", data: { checkbox_select_all_target: "checkbox" } }, motif.id, false
                       = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
               .collapse.js-lieu-field
