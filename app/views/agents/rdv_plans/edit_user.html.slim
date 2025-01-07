@@ -7,16 +7,15 @@
         = render "agents/rdv_plans/lieu_recap", rdv_plan: @rdv_plan
         = render "agents/rdv_plans/creneau_recap", rdv_plan: @rdv_plan
         hr.fr-mt-2w
-        - if @rdv_plan.users.any?
-          h3= @rdv_plan.users.first.full_name
+        h3= @rdv_plan.user.full_name
         = simple_form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post do |f|
-          = f.fields_for :user, (@rdv_plan.users.first) do |ff|
+          = f.fields_for :user, @rdv_plan.user do |ff|
             .row
               .col-6
                 = ff.input :email
               .col-6
                 = ff.input :phone_number
-          = f.fields_for :participation, (@rdv_plan.participations.first) do |ff|
+          = f.fields_for :participation, (Participation.new) do |ff|
             = ff.input :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
             = ff.input :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
 

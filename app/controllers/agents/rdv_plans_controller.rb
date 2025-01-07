@@ -2,18 +2,22 @@ class Agents::RdvPlansController < AgentAuthController
   layout "application"
 
   def new
-    @rdv_plan = current_agent.rdv_plans.new
-
-    if params[:user_id]
-      # TODO: use a proper policy without current context here
-      @rdv_plan.users = [User.find(params[:user_id])]
-    end
+    @rdv_plan = RdvPlan.new(
+      planning_agent: current_agent,
+      user_id: params[:user_id]
+    )
 
     authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
     render "edit_motif"
   end
 
   def create
+    @rdv_plan = RdvPlan.create!(
+      planning_agent: current_agent,
+      user_id: params.require(:rdv_plan)[:user_id]
+    )
+
+    params[:id] = @rdv_plan.id # audacieux
     update_motif
   end
 
@@ -22,20 +26,14 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def update_motif
-    @rdv_plan = RdvPlan.find_by(id: params[:id]) || RdvPlan.new
-    authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
+    find_rdv_plan
 
-    user_id = params.require(:rdv_plan)[:user_id]
-    if user_id.present?
-      # TODO: ajouter un check sur la policy des users
-      @rdv_plan.participations.build(user_id: user_id)
-    end
     # On réinitialise le lieu si on change le motif
     if params.dig(:rdv_plan, :motif_id).to_i != @rdv_plan.motif_id
       @rdv_plan.lieu_id = nil
     end
 
-    @rdv_plan.assign_attributes(params.require(:rdv_plan).permit(:motif_id).merge(agent: current_agent))
+    @rdv_plan.assign_attributes(params.require(:rdv_plan).permit(:motif_id))
 
     if @rdv_plan.save
       if @rdv_plan.motif.requires_lieu?
@@ -65,7 +63,6 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_lieu
-    # TODO: est-ce que cette étape est nécessaire s'il n'y a qu'un seul lieu ? ça peut être une amélioration plus tard
     find_rdv_plan
     @rdv_plan.lieu_id = nil
 
@@ -108,6 +105,7 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_user
+    # TODO: gérer les différents niveaux de notification des motifs
     find_rdv_plan
   end
 
@@ -115,9 +113,12 @@ class Agents::RdvPlansController < AgentAuthController
     find_rdv_plan
     rdv_plan_params = params.require(:rdv_plan)
 
-    rdv = @rdv_plan.create_rdv(current_agent,
-                               user_attributes: rdv_plan_params.require(:user).permit(:email, :phone_number),
-                               participation: rdv_plan_params.require(:participation).permit(:send_lifecycle_notifications, :send_reminder_notification))
+    user_attributes = rdv_plan_params.require(:user).permit(:email, :phone_number)
+    participation_attributes = rdv_plan_params.require(:participation).permit(
+      :send_lifecycle_notifications, :send_reminder_notification
+    )
+
+    rdv = @rdv_plan.create_rdv(user_attributes:, participation_attributes:)
 
     if rdv.valid?
       flash[:success] = "Le rendez-vous a été créé."

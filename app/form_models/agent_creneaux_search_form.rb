@@ -13,9 +13,8 @@ class AgentCreneauxSearchForm
       motif_id: rdv_plan.motif_id,
       agent_ids: [],
       team_ids: [],
-      user_ids: rdv_plan.user_ids,
-      from_date: from_date 
-
+      user_ids: [rdv_plan.user_id],
+      from_date: from_date
     )
   end
 

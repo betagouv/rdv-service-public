@@ -582,31 +582,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_12_181220) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "rdv_plan_participations", force: :cascade do |t|
-    t.bigint "rdv_plan_id"
-    t.bigint "user_id"
-    t.boolean "send_lifecycle_notifications", default: true, null: false
-    t.boolean "send_reminder_notification", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["rdv_plan_id"], name: "index_rdv_plan_participations_on_rdv_plan_id"
-    t.index ["user_id"], name: "index_rdv_plan_participations_on_user_id"
-  end
-
   create_table "rdv_plans", force: :cascade do |t|
+    t.bigint "planning_agent_id", comment: "L'id de l'agent qui planifie le rdv"
     t.bigint "rdv_id"
-    t.bigint "agent_id"
-    t.bigint "rdv_agent_id"
+    t.bigint "user_id"
+    t.bigint "rdv_agent_id", comment: "L'id de l'agent qui assurera le rdv"
     t.bigint "motif_id"
     t.bigint "lieu_id"
     t.datetime "starts_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["agent_id"], name: "index_rdv_plans_on_agent_id"
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
+    t.index ["planning_agent_id"], name: "index_rdv_plans_on_planning_agent_id"
     t.index ["rdv_agent_id"], name: "index_rdv_plans_on_rdv_agent_id"
     t.index ["rdv_id"], name: "index_rdv_plans_on_rdv_id"
+    t.index ["user_id"], name: "index_rdv_plans_on_user_id"
   end
 
   create_table "rdvs", force: :cascade do |t|
