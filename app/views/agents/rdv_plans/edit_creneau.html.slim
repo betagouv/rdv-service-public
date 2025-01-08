@@ -7,7 +7,7 @@
         = render "agents/rdv_plans/motif_recap", rdv_plan: @rdv_plan
         = render "agents/rdv_plans/lieu_recap", rdv_plan: @rdv_plan
         hr.fr-mt-2w
-        h2.fr-h3.font-weight-bold Choisissez un lieu
+        h2.fr-h3.font-weight-bold Choisissez un créneau
         .row.position-relative[style="min-height: 200px"]
           - if @search_form.date_range.begin > Time.zone.today
             - previous_from_date = @search_form.date_range.begin - 7.days
