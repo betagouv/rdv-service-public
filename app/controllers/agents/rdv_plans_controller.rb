@@ -96,7 +96,6 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_user
-    # TODO: gérer les différents niveaux de notification des motifs
     find_rdv_plan
   end
 
@@ -105,9 +104,13 @@ class Agents::RdvPlansController < AgentAuthController
     rdv_plan_params = params.require(:rdv_plan)
 
     user_attributes = rdv_plan_params.require(:user).permit(:email, :phone_number)
-    participation_attributes = rdv_plan_params.require(:participation).permit(
-      :send_lifecycle_notifications, :send_reminder_notification
-    )
+    participation_attributes = if @rdv_plan.motif.visible_and_notified?
+                                 rdv_plan_params.require(:participation).permit(
+                                   :send_lifecycle_notifications, :send_reminder_notification
+                                 )
+                               else
+                                 { send_lifecycle_notifications: false, send_reminder_notification: false }
+                               end
 
     rdv = @rdv_plan.create_rdv(user_attributes:, participation_attributes:)
 

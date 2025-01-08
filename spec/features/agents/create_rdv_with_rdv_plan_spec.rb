@@ -29,4 +29,29 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       organisation: organisation
     )
   end
+
+  describe "pré-rempli les préférences de notification en fonction du niveau de confidentialité du motif" do
+    context "motif non notifié" do
+      before do
+        motif.update(visibility_type: Motif::VISIBLE_AND_NOT_NOTIFIED)
+      end
+
+      let!(:rdv_plan) do
+        create(:rdv_plan, starts_at: 5.days.from_now, lieu: lieu, motif: motif, planning_agent: agent, rdv_agent: agent, user: user)
+      end
+
+      it "n'envoie pas de notifications" do
+        visit edit_user_agents_rdv_plan_path(rdv_plan)
+        expect(page).to have_content("Les notifications ne sont pas envoyées pour ce motif de rendez-vous")
+        click_on "Confirmer le rendez-vous"
+        expect(page).to have_content("Le rendez-vous a été créé")
+
+        expect(Participation.last).to have_attributes(
+          user: user,
+          send_lifecycle_notifications: false,
+          send_reminder_notification: false
+        )
+      end
+    end
+  end
 end

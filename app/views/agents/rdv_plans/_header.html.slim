@@ -1,4 +1,4 @@
 / locals(rdv_plan:, current_step:, step_title:, next_step_title:)
 h1.fr-h2
-  | Nouveau rendez-vous avec #{rdv_plan.user.full_name}"
+  | Nouveau rendez-vous avec #{rdv_plan.user.full_name}
 = render "common/stepper", step_count: 3, current_step:, step_title:, next_step_title:
