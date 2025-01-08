@@ -3,6 +3,10 @@ class Admin::Api::Agenda::PlageOuverturesController < Admin::Api::BaseController
     @agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
 
+    if date_range_params.to_a.size.between?(28, 45)
+      @month_view_detected = true
+    end
+
     plage_ouvertures = policy_scope(@agent.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation)
     plage_ouvertures = plage_ouvertures.where(id: params[:plages_ids]) if params[:plages_ids].present?
