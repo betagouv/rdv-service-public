@@ -1,0 +1,6 @@
+.row.justify-content-md-center
+  .col-12
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Modalités", next_step_title: "Usager"
+    .card
+      .card-body
+        = link_to "retour", calendar_agents_rdv_plans_path(user_id: params[:user_id])

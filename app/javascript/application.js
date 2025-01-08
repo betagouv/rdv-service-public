@@ -6,6 +6,7 @@ import { NameInitialsForm } from './components/name-initials-form';
 import DsfrNewPassword from "./components/dsfr-new-password";
 import './components/browser-detection';
 import 'bootstrap';
+import './components/rdv-plan-calendar';
 
 import './stylesheets/application';
 import './stylesheets/print';

@@ -1,6 +1,25 @@
 class Agents::RdvPlansController < AgentAuthController
   layout "application"
 
+  def calendar
+    @rdv_plan = RdvPlan.new(
+      planning_agent: current_agent,
+      user_id: params[:user_id]
+    )
+
+    authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
+  end
+
+  def modalites
+    @rdv_plan = RdvPlan.new(
+      planning_agent: current_agent,
+      starts_at: params[:starts_at],
+      user_id: params[:user_id]
+    )
+
+    authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
+  end
+
   def new
     @rdv_plan = RdvPlan.new(
       planning_agent: current_agent,
@@ -8,7 +27,7 @@ class Agents::RdvPlansController < AgentAuthController
     )
 
     authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
-    render "edit_motif"
+    render "edit_creneau"
   end
 
   def create

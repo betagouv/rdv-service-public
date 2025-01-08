@@ -112,6 +112,10 @@ Rails.application.routes.draw do
 
     namespace :agents do
       resources :rdv_plans, only: %i[new create] do
+        collection do
+          get :calendar
+          get :modalites
+        end
         member do
           get :edit_motif
           patch :update_motif

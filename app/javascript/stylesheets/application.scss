@@ -77,6 +77,11 @@
 
 @import "vendor/proconnect_button_dsfr";
 
+// Plugins
+@import "@fullcalendar/core/main";
+@import "@fullcalendar/daygrid/main";
+@import "@fullcalendar/timegrid/main";
+
 // Structure
 @import "./structure/footer_dsfr";
 @import "./structure/authentication";
@@ -84,3 +89,4 @@
 
 // Pour les rdv_plans
 @import "./components/creneaux";
+@import "./components/calendar";
