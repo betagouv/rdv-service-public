@@ -15,7 +15,7 @@
             .col-12
               | Comment souhaitez-vous faire le rendez-vous ?
 
-              = f.collection_radio_buttons :modalite, [["phone", "#{dsfr_icon()} Par téléphone"], ["visio", 'Par visioconférence']], :first, :last, item_wrapper_tag: :div
+              = f.collection_radio_buttons :modalite, ([["phone", sanitize(" #{icon("fr-icon-mac-fill")} Par téléphone")], ["visio", 'Par visioconférence']] + Lieu.enabled.where(organisation_id: current_agent.organisations.select(:id)).map do |l| ["onsite-#{l.id}", "à #{ l.name }"] end), :first, :last, item_wrapper_tag: :div
 
           = f.submit "Continuer", class: "fr-btn float-right"
         = link_to "retour", calendar_agents_rdv_plans_path(user_id: params[:user_id])
