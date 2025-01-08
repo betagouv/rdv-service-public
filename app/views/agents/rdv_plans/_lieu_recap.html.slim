@@ -1,7 +1,7 @@
 / locals(rdv_plan:)
 - if rdv_plan.motif.requires_lieu?
   br
-  span.fr-icon-government-fill.fr-mr-1w[aria-hidden="true"]
+  = lieu_icon(class: "fr-mr-1w")
   = rdv_plan.lieu.name
   - if rdv_plan.organisation.lieux.enabled.count > 1
     = link_to "modifier", edit_lieu_agents_rdv_plan_path(rdv_plan), class: "fr-ml-2w"

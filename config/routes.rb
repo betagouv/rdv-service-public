@@ -116,9 +116,12 @@ Rails.application.routes.draw do
           get :calendar
           get :modalites
 
-          put :create_from_modalites
+          post :create_from_modalites
         end
         member do
+          get :edit_user_from_calendar
+
+          # Routes pour la version recherche de créneaux
           get :edit_motif
           patch :update_motif
 

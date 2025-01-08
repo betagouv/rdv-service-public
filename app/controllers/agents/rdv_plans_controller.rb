@@ -14,7 +14,8 @@ class Agents::RdvPlansController < AgentAuthController
     @rdv_plan = RdvPlan.new(
       planning_agent: current_agent,
       starts_at: params[:starts_at],
-      user_id: params[:user_id]
+      user_id: params[:user_id],
+      duration_in_minutes: 30
     )
 
     authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
@@ -25,11 +26,28 @@ class Agents::RdvPlansController < AgentAuthController
 
     @rdv_plan = RdvPlan.create!(
       planning_agent: current_agent,
+      rdv_agent: current_agent,
       user_id: rdv_plan_params[:user_id]
     )
+    authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
 
-    @rdv.plan.update(rdv_plan_params.permit(:starts_at))
+    @rdv_plan.update(rdv_plan_params.permit(:starts_at))
+
+    location_type, lieu_id = rdv_plan_params["modalite"].split("-")
+
+    @rdv_plan.update!(
+      motif: Motif.where(organisation: current_agent.organisations).find_by(location_type: location_type),
+      lieu_id: lieu_id
+    )
+
+    redirect_to edit_user_from_calendar_agents_rdv_plan_path(@rdv_plan)
   end
+
+  def edit_user_from_calendar
+    find_rdv_plan
+  end
+
+  # Version recherche de créneaux
 
   def new
     @rdv_plan = RdvPlan.new(

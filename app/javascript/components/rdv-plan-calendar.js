@@ -28,14 +28,15 @@ class RdvPlanCalendar {
     if (this.data.displaySundays !== "true") {
       hiddenDays.push(0);
     }
-    return new Calendar(this.calendarEl, {
+
+    const options = {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: this.handleAjaxError,
       defaultDate: this.getDefaultDate(),
       allDaySlot: false,
-      defaultView: 'timeGridWeek',
+      defaultView: this.data.singleDay ? 'timeGridDay' : 'timeGridWeek',
       viewSkeletonRender: function (info) {
         localStorage.setItem("calendarDefaultView", info.view.type);
       },
@@ -49,8 +50,8 @@ class RdvPlanCalendar {
         startTime: '07:00',
         endTime: '19:00',
       },
-      minTime: '07:00:00',
-      maxTime: '20:00:00',
+      minTime: this.data.minTime || '07:00:00',
+      maxTime: this.data.maxTime || '20:00:00',
       datesRender: this.datesRender,
       eventRender: this.eventRender,
       eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
@@ -65,7 +66,13 @@ class RdvPlanCalendar {
       // There is one case for which this fix would fail: if the local time of the user and the agent is not the same (for example the agent is
       // in the métropole and the user is at la réunion), they will not see the same time
       // see the same time for the rdv. This seems unlikely for now.
-    });
+    }
+
+    if (this.data.singleDay) {
+      options.header = { left:  '', center: '', right:  '' };
+    }
+
+    return new Calendar(this.calendarEl, options);
   }
 
   getDefaultView = () => {

@@ -1,8 +1,39 @@
 .row.justify-content-md-center
   .col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Modalités", next_step_title: "Usager"
-    .card
-      .card-body
+    .row
+      .col-4
+        ruby:
+          current_organisation = current_agent.organisations.first
+          event_sources = [
+            admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
+            admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
+            admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: current_organisation.id, in_background: true, format: :json),
+            OffDays.to_full_calendar_array,
+            [{
+              title: @rdv_plan.user.full_name,
+              start: @rdv_plan.starts_at.as_json,
+              end: (@rdv_plan.starts_at + 30.minutes).as_json,
+              textColor: "black",
+              backgroundColor: "white"
+            }]
+          ]
+
+        #rdvPlanCalendar.fr-mb-4w[
+          data-default-date-json="#{Date.parse(params[:starts_at]).to_date.to_json}"
+          data-user-id="#{params[:user_id]}"
+          data-selected-event-id="#{@selected_event_id}"
+          data-organisation-id="#{current_agent.organisations.first.id}"
+          data-display-saturdays="#{current_agent.display_saturdays}"
+          data-display-sundays="false"
+          data-event-sources-json="#{event_sources.to_json}"
+          data-sign-in-path="#{new_agent_session_path}"
+          data-min-time="#{I18n.l(@rdv_plan.starts_at - 2.hours, format: "%H:%M:%S")}"
+          data-max-time="#{I18n.l(@rdv_plan.starts_at + 4.hours, format: "%H:%M:%S")}"
+          data-single-day="true"
+          style="margin-top: -40px"
+        ]
+      .col-8
         = simple_form_for @rdv_plan, url: create_from_modalites_agents_rdv_plans_path do |f|
           = f.hidden_field :user_id, value: params[:user_id]
 
@@ -15,7 +46,7 @@
             .col-12
               | Comment souhaitez-vous faire le rendez-vous ?
 
-              = f.collection_radio_buttons :modalite, ([["phone", sanitize(" #{icon("fr-icon-mac-fill")} Par téléphone")], ["visio", 'Par visioconférence']] + Lieu.enabled.where(organisation_id: current_agent.organisations.select(:id)).map do |l| ["onsite-#{l.id}", "à #{ l.name }"] end), :first, :last, item_wrapper_tag: :div
+              = f.collection_radio_buttons :modalite, modalites_collection, :first, :last, item_wrapper_tag: :div, item_wrapper_class: "fr-m-2w"
 
           = f.submit "Continuer", class: "fr-btn float-right"
-        = link_to "retour", calendar_agents_rdv_plans_path(user_id: params[:user_id])
+    = link_to "retour", calendar_agents_rdv_plans_path(user_id: params[:user_id])

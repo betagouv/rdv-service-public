@@ -15,6 +15,10 @@ module DsfrHelper
     icon("fr-icon-draft-fill", html_options)
   end
 
+  def lieu_icon(html_options = {})
+    icon("fr-icon-building-fill", html_options)
+  end
+
   def external_link_to(name, url, html_options = {})
     link_to(name, url, { target: "_blank", rel: "noopener", title: "#{name} - nouvel onglet" }.merge(html_options))
   end

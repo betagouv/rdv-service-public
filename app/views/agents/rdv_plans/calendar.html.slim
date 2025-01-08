@@ -1,26 +1,25 @@
 .row.justify-content-md-center
   .col-12
-    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Modalités"
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Choisissez un créneau dans votre calendrier", next_step_title: "Modalités"
 
-    .card
-      .card-body
-        h2.fr-h3.font-weight-bold Choisissez un créneau
-        ruby:
-          current_organisation = current_agent.organisations.first
-          event_sources = [
-            admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
-            admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
-            admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: current_organisation.id, in_background: true, format: :json),
-            OffDays.to_full_calendar_array
-          ]
+    p Vous pouvez aussi #{link_to "chercher les créneaux disponibles", new_agents_rdv_plan_path(user_id: params[:user_id])} dans les agendas de vos collègues.
 
-        #rdvPlanCalendar[
-          data-default-date-json="#{Date.today&.to_json}"
-          data-user-id="#{params[:user_id]}"
-          data-selected-event-id="#{@selected_event_id}"
-          data-organisation-id="#{current_agent.organisations.first.id}"
-          data-display-saturdays="#{current_agent.display_saturdays}"
-          data-display-sundays="false"
-          data-event-sources-json="#{event_sources.to_json}"
-          data-sign-in-path="#{new_agent_session_path}"
-        ]
+    ruby:
+      current_organisation = current_agent.organisations.first
+      event_sources = [
+        admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
+        admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
+        admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: current_organisation.id, in_background: true, format: :json),
+        OffDays.to_full_calendar_array
+      ]
+
+    #rdvPlanCalendar.fr-mb-4w[
+      data-default-date-json="#{Date.today&.to_json}"
+      data-user-id="#{params[:user_id]}"
+      data-selected-event-id="#{@selected_event_id}"
+      data-organisation-id="#{current_agent.organisations.first.id}"
+      data-display-saturdays="#{current_agent.display_saturdays}"
+      data-display-sundays="false"
+      data-event-sources-json="#{event_sources.to_json}"
+      data-sign-in-path="#{new_agent_session_path}"
+    ]
