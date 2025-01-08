@@ -62,26 +62,10 @@ class CalendarRdvSolidarites {
     if (this.data.displaySundays !== "true") {
       hiddenDays.push(0);
     }
-    const eventSources = JSON.parse(this.data.eventSourcesJson).map(source => {
-      if(Array.isArray(source)) {
-        return source
-      }
-      else {
-        return {
-          url: source,
-          extraParams: () => {
-            debugger
-            return {
-              viewType: this.view.type, // Send the current view type to the server
-            };
-          }
-        }
-      }
-    })
     return new Calendar(this.calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
-      eventSources: eventSources,
+      eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: this.handleAjaxError,
       defaultDate: this.getDefaultDate(),
       allDaySlot: false,
