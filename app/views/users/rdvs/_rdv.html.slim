@@ -1,8 +1,10 @@
 ul.list-group.list-group-flush.fr-mb-3w
   li.list-group-item.fr-pl-0.fr-pb-2w
-    span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
-    = rdv_title(rdv)
-    = rdv_tag(rdv)
+    .fr-mb-1w
+      span.fr-icon.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
+      = rdv_title(rdv)
+    .fr-ml-3w
+      = rdv_tag(rdv)
 
   - if rdv.motif.restriction_for_rdv.present?
     li.list-group-item.fr-pl-0.fr-py-2w.alert.alert-warning
@@ -25,9 +27,10 @@ ul.list-group.list-group-flush.fr-mb-3w
 
   - elsif rdv.phone?
     li.list-group-item.fr-pl-0.fr-py-2w
-      span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-      | RDV Téléphonique
-      p.fr-mb-1v
+      .fr-mb-1w
+        span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
+        | RDV Téléphonique
+      .fr-ml-4w
         - if current_user.signed_in_with_invitation_token?
           | L'agent vous appellera au numéro que vous lui avez indiqué.
         - else
@@ -35,19 +38,20 @@ ul.list-group.list-group-flush.fr-mb-3w
 
   - elsif rdv.motif.visio?
     li.list-group-item.fr-pl-0.fr-py-2w
-      span.fr-icon-mac-fill.fr-mr-1w[aria-hidden="true"]
-      |> RDV par visioconférence
-      = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
+      .fr-mb-1w
+        span.fr-icon-mac-fill.fr-mr-1w[aria-hidden="true"]
+        = "RDV par visioconférence "
+      .fr-ml-4w
+        = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
 
   li.list-group-item.fr-pl-0.fr-py-2w
-    .row
-      .col
-        span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
-        = users_to_sentence(rdv.users)
+    .fr-mb-1w
+      span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
+      = users_to_sentence(rdv.users)
     - if policy(rdv, policy_class: User::RdvPolicy).can_change_participants?
-      .col-auto
-        span>
+      .fr-ml-4w
         = link_to "modifier", users_rdv_participations_path(rdv)
+
   - if @can_see_rdv_motif
     li.list-group-item.fr-pl-0.fr-py-2w
       span.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
@@ -55,9 +59,10 @@ ul.list-group.list-group-flush.fr-mb-3w
 
   - if rdv.motif.instruction_for_rdv.present?
     li.list-group-item.fr-pl-0.fr-py-2w
-      span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
-      strong Informations supplémentaires&nbsp;:
-      .pl-3.pt-1
+      .fr-mb-1w
+        span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
+        strong Informations supplémentaires&nbsp;:
+      .fr-ml-4w
         = instruction_for_rdv_to_html(rdv.motif)
 
   = render "/users/rdvs/file_attente", rdv: rdv
