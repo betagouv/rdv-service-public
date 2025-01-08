@@ -12,6 +12,15 @@
           = lieu_icon(class: "fr-mr-1w")
           = @rdv_plan.lieu.name
           = link_to "modifier", edit_lieu_agents_rdv_plan_path(@rdv_plan), class: "fr-ml-2w"
+        - elsif @rdv_plan.motif.visio?
+          = visio_icon(class: "fr-mr-1w")
+          = "Par visio conférence"
+          = link_to "modifier", edit_lieu_agents_rdv_plan_path(@rdv_plan), class: "fr-ml-2w"
+        - elsif @rdv_plan.motif.phone?
+          = phone_icon(class: "fr-mr-1w")
+          = "Par téléphone"
+          = link_to "modifier", edit_lieu_agents_rdv_plan_path(@rdv_plan), class: "fr-ml-2w"
+
         hr.fr-mt-2w
         h3= @rdv_plan.user.full_name
         = simple_form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post do |f|

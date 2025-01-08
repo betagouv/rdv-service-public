@@ -95,7 +95,27 @@ class Compte
   def create_example_motif!
     Motif.create!(
       organisation: organisation,
-      name: "Mon premier motif",
+      name: "Suivi de dossier",
+      color: "#99CC99",
+      location_type: :phone,
+      default_duration_in_min: 30,
+      bookable_by: :agents,
+      service: agent.services.first
+    )
+
+    Motif.create!(
+      organisation: organisation,
+      name: "Suivi de dossier",
+      color: "#99CC99",
+      location_type: :visio,
+      default_duration_in_min: 30,
+      bookable_by: :agents,
+      service: agent.services.first
+    )
+
+    Motif.create!(
+      organisation: organisation,
+      name: "Suivi de dossier",
       color: "#99CC99",
       location_type: :public_office,
       default_duration_in_min: 30,
