@@ -10,19 +10,17 @@ main.container
           / Incitation à l'utilisation de la prescription interne
           - if @rdv_wizard.present? && show_agent_prescription_incitation?
             - territory = @rdv_wizard.motif.organisation.territory
-            .alert.alert-success
-              p.mb-0
-                i.fas.fa-lightbulb>
-                | Nouvelle fonctionnalité&nbsp;: Pour ne pas avoir à remplir ce formulaire pour chaque nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent
-                / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
-                - if !territory.sectorized?
-                  / Le lien de prescription interne redirige vers la premiére organisation de l'agent dans le même territoire
-                  = link_to user_selection_admin_organisation_prescription_path( \
-                      current_agent.organisations.find_by(territory: territory), session[:rdv_wizard_attributes].merge(prescripteur: "interne") \
-                    ) do
-                    | &nbsp;en cliquant ici.
-                - else
-                  | .
+            .fr-alert.fr-alert--info.fr-mb-2w
+              | Nouvelle fonctionnalité&nbsp;: Pour ne pas avoir à remplir ce formulaire pour chaque nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent
+              / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
+              - if !territory.sectorized?
+                / Le lien de prescription interne redirige vers la premiére organisation de l'agent dans le même territoire
+                = link_to user_selection_admin_organisation_prescription_path( \
+                    current_agent.organisations.find_by(territory: territory), session[:rdv_wizard_attributes].merge(prescripteur: "interne") \
+                  ) do
+                  | &nbsp;en cliquant ici.
+              - else
+                | .
 
               p.mb-0
               span> Pour en savoir plus consultez
