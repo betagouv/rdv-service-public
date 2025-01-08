@@ -7,6 +7,10 @@ module DsfrHelper
     end
   end
 
+  def icon(icon_name, html_options = {})
+    tag.span("",  class: "#{icon_name} #{html_options.delete(:class)}", "aria-hidden": "true", **html_options)
+  end
+
   def external_link_to(name, url, html_options = {})
     link_to(name, url, { target: "_blank", rel: "noopener", title: "#{name} - nouvel onglet" }.merge(html_options))
   end
