@@ -6,47 +6,47 @@ main.container
       .card
         .card-body
           h3
-            i.fa.fa-check-circle
-            = " Rendez-vous confirmé"
+            span.fr-icon--lg.fr-icon-success-fill[aria-hidden="true"]
+            |< Rendez-vous confirmé
           - rdv = @prescripteur.rdv
           ul.list-group.list-group-flush
             li.list-group-item
-              .fa.fa-calendar>
+              span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
               = rdv_title(rdv)
               = rdv_tag(rdv)
 
             - if rdv.public_office?
               li.list-group-item
-                .fa.fa-map-marker-alt>
+                span.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
                 = human_location(rdv)
                 - if rdv.lieu&.phone_number
-                  span>
-                  span.fa.fa-phone>
+                  br
+                  span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
                   = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
 
             - elsif rdv.phone?
               li.list-group-item
-                .fa.fa-phone>
+                span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
                 | RDV Téléphonique
 
             li.list-group-item
-              .fa.fa-user>
+              span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
               = @prescripteur.user.full_name
               = " (#{@prescripteur.user.phone_number})" if @prescripteur.user.phone_number.present?
             li.list-group-item
-              i.fa.fa-info-circle>
+              span.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
               = rdv.motif.name
             - if rdv.motif.instruction_for_rdv.present?
               li.list-group-item
-                i.fa.fa-exclamation-triangle>
+                span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
                 strong Informations supplémentaires&nbsp;:
                 .pl-3.pt-1
                   = instruction_for_rdv_to_html(rdv.motif)
             li.list-group-item
-              = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
-              =< mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
+              |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
+              = mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
             li.list-group-item
-              = "Vous pouvez aussi "
-              = mail_to(current_domain.support_email, "nous écrire",target: "_blank")
-              = " pour nous donner votre avis sur la prise de rendez-vous."
+              |> Vous pouvez aussi
+              => mail_to(current_domain.support_email, "nous écrire",target: "_blank")
+              | pour nous donner votre avis sur la prise de rendez-vous.
           .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(rdv.territory.departement_number)
