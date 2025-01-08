@@ -56,7 +56,7 @@ class Agents::RdvPlansController < AgentAuthController
     )
 
     authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
-    render "edit_creneau"
+    render "edit_motif"
   end
 
   def create
