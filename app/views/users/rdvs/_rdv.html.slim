@@ -49,16 +49,17 @@ ul.list-group.list-group-flush.fr-mb-3w
         span>
         = link_to "modifier", users_rdv_participations_path(rdv)
   - if @can_see_rdv_motif
-
-  li.list-group-item.fr-pl-0.fr-py-2w
+    li.list-group-item.fr-pl-0.fr-py-2w
       span.fr-icon.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
       = rdv.motif_name
+
   - if rdv.motif.instruction_for_rdv.present?
     li.list-group-item.fr-pl-0.fr-py-2w
       span.fr-icon.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
       strong Informations supplémentaires&nbsp;:
       .pl-3.pt-1
         = instruction_for_rdv_to_html(rdv.motif)
+
   = render "/users/rdvs/file_attente", rdv: rdv
 
 - if rdv.phone_number || rdv.organisation.website.present?
