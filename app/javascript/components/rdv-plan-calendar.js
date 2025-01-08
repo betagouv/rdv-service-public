@@ -70,6 +70,8 @@ class RdvPlanCalendar {
 
     if (this.data.singleDay) {
       options.header = { left:  '', center: '', right:  '' };
+    } else {
+      options.header = { left:  '', center: '', right:  'prev,next' };
     }
 
     return new Calendar(this.calendarEl, options);
