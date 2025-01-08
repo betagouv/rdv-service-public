@@ -4,7 +4,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   respond_to :html, :json, only: :index
 
   before_action :set_agent, only: %i[edit update_teams update_services]
-  before_action :set_available_services, only: %i[edit update_services]
 
   def index
     @agents = find_agents(params[:q]).page(page_number)
@@ -88,17 +87,5 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def set_agent
     @agent = Agent.active.find(params[:id])
     authorize(@agent, policy_class: ::Configuration::AgentPolicy)
-  end
-
-  def set_available_services
-    # permet de proposer les services désactivés auquel appartient l’agent dans le multi-select
-    @available_services = current_territory.services.to_a
-    @agent.services.each do |service|
-      next if @available_services.include? service
-
-      service.readonly! # pour éviter des manipulations erronées sur cet objet monkey-patché
-      def service.name = "#{super} (désactivé dans le territoire courant)"
-      @available_services << service
-    end
   end
 end

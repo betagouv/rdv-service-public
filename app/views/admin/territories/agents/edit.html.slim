@@ -10,9 +10,10 @@ h1
       = t(".agent_services_legend")
     = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
       .card-body
-        = f.input :service_ids, collection: @available_services,
+        = f.input :service_ids,
+              collection: (current_territory.services + @agent.services).uniq,
               label: t(".services"),
-              label_method: :name,
+              label_method: lambda { |service| [service.name, (current_territory.services.include?(service) ? nil : "(désactivé dans le territoire courant)") ].compact.join(" ") },
               input_html: { \
                 multiple: true, \
                 class: "select2-input",\
