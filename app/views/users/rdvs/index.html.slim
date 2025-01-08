@@ -22,7 +22,7 @@
           .rdv-text-align-center.fr-my-4v
             p.fr-mb-2v.fr-text--lead= no_rdv_for_users
             .fr-col-4.fr-col-offset-4
-              = dsfr_svg "artwork/pictograms/digital/calendar", class: "fr-responsive-img"
+              = dsfr_svg (image_path "custom-artworks/calendar_cross.svg"), custom: true, class: "fr-responsive-img"
   .col-md-6
     h1.mb-3 Vos référents
     - if current_user.referent_agents.any?
