@@ -20,6 +20,17 @@ class Agents::RdvPlansController < AgentAuthController
     authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
   end
 
+  def create_from_modalites
+    rdv_plan_params = params.require(:rdv_plan)
+
+    @rdv_plan = RdvPlan.create!(
+      planning_agent: current_agent,
+      user_id: rdv_plan_params[:user_id]
+    )
+
+    @rdv.plan.update(rdv_plan_params.permit(:starts_at))
+  end
+
   def new
     @rdv_plan = RdvPlan.new(
       planning_agent: current_agent,

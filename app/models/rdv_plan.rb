@@ -31,4 +31,6 @@ class RdvPlan < ApplicationRecord
 
     rdv
   end
+
+  def modalite; end
 end

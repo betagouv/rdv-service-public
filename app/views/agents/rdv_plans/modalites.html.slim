@@ -3,4 +3,19 @@
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Modalités", next_step_title: "Usager"
     .card
       .card-body
+        = simple_form_for @rdv_plan, url: create_from_modalites_agents_rdv_plans_path do |f|
+          = f.hidden_field :user_id, value: params[:user_id]
+
+          .row
+            .col-6
+              = datetime_input(f, :starts_at)
+            .col-6
+              = f.input :duration_in_minutes, label: "Durée en minutes"
+          .row.fr-mt-2w
+            .col-12
+              | Comment souhaitez-vous faire le rendez-vous ?
+
+              = f.collection_radio_buttons :modalite, [["phone", "#{dsfr_icon()} Par téléphone"], ["visio", 'Par visioconférence']], :first, :last, item_wrapper_tag: :div
+
+          = f.submit "Continuer", class: "fr-btn float-right"
         = link_to "retour", calendar_agents_rdv_plans_path(user_id: params[:user_id])

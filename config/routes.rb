@@ -115,6 +115,8 @@ Rails.application.routes.draw do
         collection do
           get :calendar
           get :modalites
+
+          put :create_from_modalites
         end
         member do
           get :edit_motif
