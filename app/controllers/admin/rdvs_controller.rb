@@ -40,10 +40,8 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def a_renseigner
-    @hide_rdv_a_renseigner_in_main_layout = true
     skip_authorization # on fait un policy scope à la ligne suivante
-    @rdvs = policy_scope(current_agent.rdvs, policy_scope_class: Agent::RdvPolicy::Scope)
-      .past.where(status: "unknown")
+    @rdvs = policy_scope(current_agent.rdvs.a_renseigner, policy_scope_class: Agent::RdvPolicy::Scope)
       .order({ starts_at: :desc }).page(page_number).per(20)
   end
 

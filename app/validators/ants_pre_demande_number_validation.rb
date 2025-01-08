@@ -30,6 +30,7 @@ class AntsPreDemandeNumberValidation < ActiveModel::Validator
     # Si l'API de l'ANTS est fiable, donc si elle renvoie une erreur ou un timeout,
     # on préfère bloquer la réservation et logguer l'erreur.
     record.errors.add(:ants_pre_demande_number, "n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
+    Rails.logger.error e
     Sentry.capture_exception(e)
   end
 
