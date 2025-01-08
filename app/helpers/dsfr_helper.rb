@@ -8,7 +8,11 @@ module DsfrHelper
   end
 
   def icon(icon_name, html_options = {})
-    tag.span("",  class: "#{icon_name} #{html_options.delete(:class)}", "aria-hidden": "true", **html_options)
+    tag.span("", class: "#{icon_name} #{html_options.delete(:class)}", "aria-hidden": "true", **html_options)
+  end
+
+  def motif_icon(html_options = {})
+    icon("fr-icon-draft-fill", html_options)
   end
 
   def external_link_to(name, url, html_options = {})
