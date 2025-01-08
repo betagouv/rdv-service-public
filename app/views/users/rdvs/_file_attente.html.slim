@@ -1,7 +1,7 @@
 - if rdv.available_to_file_attente?
   li.list-group-item.fr-pl-0.fr-py-2w
     .fr-mb-2w
-      span.fr-icon.fr-icon-notification-3-fill.fr-mr-1w[aria-hidden="true"]
+      span.fr-icon-notification-3-fill.fr-mr-1w[aria-hidden="true"]
       | Vous souhaitez prendre RDV plus tôt ?
     .fr-ml-4w
       - fa = rdv.file_attentes.where(user: current_user).first || FileAttente.new(user: current_user, rdv: rdv)

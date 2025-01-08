@@ -16,7 +16,7 @@
       - if rdv.motif.visio?
         .pl-3.pt-2
           .fa.fa-video-camera>
-          = "RDV par visioconférence "
+          |> RDV par visioconférence
           = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
 
       .card-body

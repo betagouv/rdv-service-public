@@ -11,9 +11,8 @@
     = render "admin/static_pages/instatus_iframe"
 
     p.mt-4
-      = "Essayez de rafraîchir la page ou bien réessayez plus tard."
-
-      = " Si vous avez besoin d’une aide immédiate, merci de nous contacter avec le bouton ci-dessous ou en nous écrivant directement à l’adresse "
+      |> Essayez de rafraîchir la page ou bien réessayez plus tard.
+      |> Si vous avez besoin d’une aide immédiate, merci de nous contacter avec le bouton ci-dessous ou en nous écrivant directement à l’adresse
 
       = mail_to(current_domain.support_email, current_domain.support_email)
 
