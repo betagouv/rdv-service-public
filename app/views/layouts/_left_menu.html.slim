@@ -111,7 +111,7 @@ nav.left-side-menu-wrapper
               - if current_agent.territorial_admin_in?(current_organisation.territory)
                 = link_to admin_territory_path(current_organisation.territory), class: "side-menu__item side-menu__item--small" do
                   i.fa.fa-cog>
-                  ' Espace Admin
+                  |> Espace Admin
         li
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
             span.fr-icon-question-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]

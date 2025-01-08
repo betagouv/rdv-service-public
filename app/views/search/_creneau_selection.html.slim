@@ -39,7 +39,7 @@
       .card.mb-3
         .card-body
           .alert.alert-warning
-            = "Le motif "
-            b= context.first_matching_motif.name
-            = " n'est plus disponible à la réservation à "
+            |> Le motif
+            b=> context.first_matching_motif.name
+            |>  n'est plus disponible à la réservation à
             b= context.lieu.name
