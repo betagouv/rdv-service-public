@@ -125,6 +125,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def rdv
     find_rdv_plan
+    @rdv = @rdv_plan.rdv
   end
 
   private

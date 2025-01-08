@@ -449,4 +449,9 @@ tables:
       - created_at
       - revoked_at
       - expires_in
+  - table_name: rdv_plans
+    non_anonymized_column_names:
+      - starts_at
+      - created_at
+      - updated_at
 

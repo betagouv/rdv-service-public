@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_12_181220) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_08_115309) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -891,6 +891,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_12_181220) do
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
+  add_foreign_key "rdv_plans", "agents", column: "planning_agent_id"
+  add_foreign_key "rdv_plans", "agents", column: "rdv_agent_id"
+  add_foreign_key "rdv_plans", "lieux"
+  add_foreign_key "rdv_plans", "motifs"
+  add_foreign_key "rdv_plans", "rdvs"
+  add_foreign_key "rdv_plans", "users"
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"

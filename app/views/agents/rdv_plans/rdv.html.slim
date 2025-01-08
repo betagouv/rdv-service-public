@@ -1,19 +1,23 @@
 .row.justify-content-md-center.fr-mb-16w
-  .col-12
+  .col-8
+    h1.fr-h2 Rendez-vous confirmé
     .card
       .card-body
-        h1.fr-h2 Rendez-vous confirmé
-        span.fr-icon-information-fill.fr-mr-1w[aria-hidden="true"]
-        = @rdv_plan.motif.name
 
-        - if @rdv_plan.motif.requires_lieu?
-          .fr-mt-2w
-            span.fr-icon-government-fill.fr-mr-1w[aria-hidden="true"]
-            = @rdv_plan.lieu.name
+        div
+          span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
+          = "#{l(@rdv.starts_at, format: :human)} (#{@rdv.duration_in_min} minutes)"
+          = " "
+          = dsfr_link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(@rdv.organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date), target: :blank
 
         .fr-mt-2w
-          span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
-          = "#{l(@rdv_plan.starts_at, format: :human)} (#{@rdv_plan.motif.default_duration_in_min} minutes)"
+          = motif_icon(class: "fr-mr-1w")
+          = @rdv.motif.name
+
+        - if @rdv.lieu
+          .fr-mt-2w
+            span.fr-icon-government-fill.fr-mr-1w[aria-hidden="true"]
+            = @rdv.lieu.name
 
         .fr-mt-2w
           span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
@@ -23,6 +27,6 @@
             br
           .fr-ml-4w= @rdv_plan.user.phone_number
 
-    = link_to "Retour sur Mon Suivi Social", "https://monsuivisocial.incubateur.anct.gouv.fr/"
-    br
-    = link_to "Aller à mon espace agent RDV Service Public", root_path
+        .fr-mt-4w
+          = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv), class: "fr-btn fr-btn--secondary"
+    = link_to "Retour sur Mon Suivi Social", "https://monsuivisocial.incubateur.anct.gouv.fr/", class: "fr-btn fr-btn--secondary"

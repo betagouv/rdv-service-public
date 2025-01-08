@@ -5,10 +5,12 @@ class RdvPlan < ApplicationRecord
   belongs_to :rdv_agent, class_name: "Agent", optional: true
   belongs_to :motif, optional: true
   belongs_to :lieu, optional: true
+  belongs_to :rdv, optional: true
 
   delegate :organisation, to: :motif
 
   def create_rdv(user_attributes:, participation_attributes:)
+    # TODO: le changement d'adresse email ne marche pas toujours, probablement à cause de unconfirmed_email. A vérifier.
     user.update!(user_attributes)
 
     rdv = Rdv.create(
@@ -23,6 +25,7 @@ class RdvPlan < ApplicationRecord
     )
 
     if rdv.persisted?
+      update(rdv: rdv)
       Notifiers::RdvCreated.perform_with(rdv, planning_agent)
     end
 
