@@ -113,6 +113,7 @@ class Rdv < ApplicationRecord
     end
   }
   scope :requires_ants_predemande_number, -> { joins(:motif).merge(Motif.requires_ants_predemande_number) }
+  scope :a_renseigner, -> { past.where(status: "unknown").where("starts_at > ?", 2.weeks.ago) }
 
   # Delegations
   delegate :domain, to: :organisation

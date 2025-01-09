@@ -123,7 +123,7 @@ RSpec.describe BeneficiaireForm do
     end
 
     context "numéro de pré-demande ANTS valide" do
-      before { stub_ants_status("VALID12345", status: "validated", appointments: []) }
+      before { stub_ants_status_ok("VALID12345", status: "validated", appointments: []) }
 
       let(:ants_pre_demande_number) { "VALID12345" }
 
@@ -133,7 +133,7 @@ RSpec.describe BeneficiaireForm do
     end
 
     context "numéro de pré-demande ANTS non-reconnu (status unknown)" do
-      before { stub_ants_status("VALID12345", status: "unknown", appointments: []) }
+      before { stub_ants_status_ok("VALID12345", status: "unknown", appointments: []) }
 
       let(:ants_pre_demande_number) { "VALID12345" }
 
@@ -145,7 +145,7 @@ RSpec.describe BeneficiaireForm do
 
     context "numéro de pré-demande ANTS a déjà un appointment" do
       before do
-        stub_ants_status(
+        stub_ants_status_ok(
           "VALID12345",
           status: "validated",
           appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "http://rdvsympa.fr/123" }]
@@ -168,7 +168,7 @@ RSpec.describe BeneficiaireForm do
 
     context "numéro de pré-demande ANTS a déjà un appointment mais les avertissements sont ignorés" do
       before do
-        stub_ants_status(
+        stub_ants_status_ok(
           "VALID12345",
           status: "validated",
           appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "http://rdvsympa.fr/123" }]

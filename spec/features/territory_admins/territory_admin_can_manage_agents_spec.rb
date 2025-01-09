@@ -131,6 +131,31 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     end
   end
 
+  describe "un agent appartient à un service désactivé" do
+    let!(:service_a) { create(:service, name: "A", territories: [territory]) }
+    let!(:service_b) { create(:service, name: "B") }
+    let!(:edited_agent) { create(:agent, admin_role_in_organisations: [organisation], services: [service_b]) }
+
+    before do
+      current_agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], services: [service_a])
+      # l'agent qui édite doit avoir les droits d'édition
+      create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_access_rights: true)
+      # l'agent édité doit avoir un agent_territorial_access_right car sinon le formulaire plante
+      create(:agent_territorial_access_right, agent: edited_agent, territory: territory)
+
+      login_as(current_agent, scope: :agent)
+      visit edit_admin_territory_agent_path(territory_id: territory.id, id: edited_agent.id)
+    end
+
+    it "permet de supprimer le service désactivé de l’agent et le réaffecter à un autre" do
+      unselect "B (désactivé dans le territoire courant)", from: "Services"
+      select "A", from: "Services"
+      expect { click_on "Enregistrer les services" }.to change { edited_agent.reload.services.to_set }
+        .from([service_b])
+        .to([service_a])
+    end
+  end
+
   describe "setting access rights" do
     let(:current_agent) do
       create(:agent, role_in_territories: [territory])

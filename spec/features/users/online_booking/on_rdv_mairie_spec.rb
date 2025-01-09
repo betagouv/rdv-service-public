@@ -36,7 +36,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     before do
-      stub_ants_status("1122334455", appointments: appointments)
+      stub_ants_status_ok("1122334455", appointments: appointments)
     end
 
     it "allows booking a rdv through the full lifecycle of api calls" do
@@ -129,8 +129,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
     let(:appointments) { [] }
 
     before do
-      stub_ants_status("1122334455", appointments: appointments)
-      stub_ants_status("5544332211", appointments: [])
+      stub_ants_status_ok("1122334455", appointments: appointments)
+      stub_ants_status_ok("5544332211", appointments: [])
     end
 
     it "can add a relative with their ants_pre_demande_number", js: true do
@@ -186,7 +186,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     context "when using a pre-demande number in lowercase" do
-      let!(:call_to_status_with_upcased_number) { stub_ants_status("ABCD1234EF", appointments: []) }
+      let!(:call_to_status_with_upcased_number) { stub_ants_status_ok("ABCD1234EF", appointments: []) }
 
       it "considers it as uppercase when calling ANTS API and saving it in user" do
         time = Time.zone.now.change(hour: 9, min: 0)
@@ -224,10 +224,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "ANTS responds with an unexpected error" do
       before do
-        stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=5544332211").to_return(
-          status: 500,
-          body: "Internal Server Error"
-        )
+        stub_request_ants_status("5544332211")
+          .to_return(status: 500, body: "Internal Server Error")
       end
 
       it "detects wrong format without calling ANTS API an warns user" do
