@@ -13,5 +13,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency "omniauth-oauth2", "~> 1.8"
   gem.metadata["source_code_uri"] = "https://github.com/betagouv/rdv-service-public/tree/production/lib/omniauth-rdv-service-public"
   gem.metadata["rubygems_mfa_required"] = "true" # this is auto-added by Rubocop
-  gem.required_ruby_version = ">= 3.1.0"
+  gem.required_ruby_version = ">= 3.3.0"
 end
