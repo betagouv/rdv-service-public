@@ -1,8 +1,10 @@
 .row.justify-content-md-center
   .col-12
-    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Choisissez un créneau dans votre calendrier", next_step_title: "Motif"
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
 
-    p Vous pouvez aussi #{link_to "chercher les créneaux disponibles", new_agents_rdv_plan_path(user_id: params[:user_id])} dans les agendas de vos collègues.
+
+    h2.fr-h3 Calendrier de #{current_agent.full_name}
+    p Cliquez sur l'horaire auquel vous voulez faire le rendez-vous :
 
     ruby:
       current_organisation = current_agent.organisations.first
@@ -22,5 +24,5 @@
       data-display-sundays="false"
       data-event-sources-json="#{event_sources.to_json}"
       data-sign-in-path="#{new_agent_session_path}"
-      style="margin-top: -50px"
+      style="margin-top: -60px"
     ]
