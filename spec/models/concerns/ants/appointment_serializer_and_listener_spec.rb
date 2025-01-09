@@ -35,8 +35,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+      stub_request_ants_status("A123456789")
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -102,24 +101,22 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
-        .to_return(
-          status: 200,
-          body: {
-            "A123456789" => {
-              status: "validated",
-              appointments: [
-                {
-                  management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: "Mairie de Saumur",
-                  meeting_point_id: rdv.lieu.id,
-                  appointment_date: "2020-04-20 08:00:00",
-                },
-              ],
-            },
-          }.to_json
-        )
+      stub_request_ants_status("A123456789").to_return(
+        status: 200,
+        body: {
+          "A123456789" => {
+            status: "validated",
+            appointments: [
+              {
+                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                meeting_point: "Mairie de Saumur",
+                meeting_point_id: rdv.lieu.id,
+                appointment_date: "2020-04-20 08:00:00",
+              },
+            ],
+          },
+        }.to_json
+      )
     end
     let!(:delete_stub) do
       stub_request(:delete, "#{api_url}/appointments")
@@ -154,24 +151,22 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
-        .to_return(
-          status: 200,
-          body: {
-            "A123456789" => {
-              status: "validated",
-              appointments: [
-                {
-                  management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: "Mairie de Saumur",
-                  meeting_point_id: rdv.lieu.id,
-                  appointment_date: "2020-04-20 08:00:00",
-                },
-              ],
-            },
-          }.to_json
-        )
+      stub_request_ants_status("A123456789").to_return(
+        status: 200,
+        body: {
+          "A123456789" => {
+            status: "validated",
+            appointments: [
+              {
+                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                meeting_point: "Mairie de Saumur",
+                meeting_point_id: rdv.lieu.id,
+                appointment_date: "2020-04-20 08:00:00",
+              },
+            ],
+          },
+        }.to_json
+      )
     end
     let!(:delete_stub) do
       stub_request(:delete, "#{api_url}/appointments")
@@ -207,12 +202,10 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
-        .to_return(
-          status: 200,
-          body: { "A123456789" => { status: "consumed", appointments: [] } }.to_json
-        )
+      stub_request_ants_status("A123456789").to_return(
+        status: 200,
+        body: { "A123456789" => { status: "consumed", appointments: [] } }.to_json
+      )
     end
 
     before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
@@ -235,24 +228,22 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
-        .to_return(
-          status: 200,
-          body: {
-            "A123456789" => {
-              status: "validated",
-              appointments: [
-                {
-                  management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: "Mairie de Saumur",
-                  meeting_point_id: rdv.lieu.id,
-                  appointment_date: "2020-04-20 08:00:00",
-                },
-              ],
-            },
-          }.to_json
-        )
+      stub_request_ants_status("A123456789").to_return(
+        status: 200,
+        body: {
+          "A123456789" => {
+            status: "validated",
+            appointments: [
+              {
+                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                meeting_point: "Mairie de Saumur",
+                meeting_point_id: rdv.lieu.id,
+                appointment_date: "2020-04-20 08:00:00",
+              },
+            ],
+          },
+        }.to_json
+      )
     end
     let!(:delete_stub) do
       stub_request(:delete, "#{api_url}/appointments")
@@ -304,8 +295,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "AABBCCDDEE" }, headers:)
+      stub_request_ants_status("AABBCCDDEE")
         .to_return(status: 200, body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -344,8 +334,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+      stub_request_ants_status("A123456789")
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -384,8 +373,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
+      stub_request_ants_status("A123456789")
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -424,24 +412,22 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{api_url}/status")
-        .with(query: { application_ids: "A123456789" }, headers:)
-        .to_return(
-          status: 200,
-          body: {
-            "A123456789" => {
-              status: "validated",
-              appointments: [
-                {
-                  management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: "Mairie de Saumur",
-                  meeting_point_id: rdv.lieu.id,
-                  appointment_date: "2020-04-20 08:00:00",
-                },
-              ],
-            },
-          }.to_json
-        )
+      stub_request_ants_status("A123456789").to_return(
+        status: 200,
+        body: {
+          "A123456789" => {
+            status: "validated",
+            appointments: [
+              {
+                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                meeting_point: "Mairie de Saumur",
+                meeting_point_id: rdv.lieu.id,
+                appointment_date: "2020-04-20 08:00:00",
+              },
+            ],
+          },
+        }.to_json
+      )
     end
     let!(:delete_stub) do
       stub_request(:delete, "#{api_url}/appointments")

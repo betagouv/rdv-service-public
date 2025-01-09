@@ -4,7 +4,9 @@
 
 / Adress selection partials have multiple sections
 - if @context.current_step == :address_selection
+  // On fait du spécifique pour la bannière de la page de sélection d'adresse en attendant qu’on fasse la refonte au DSFR
   = render(current_domain.address_selection_template_name, context: @context)
 - else
-  section.rdv-background-color-alt-grey.py-4
-    = render @context, context: @context
+  .fr-container
+    section.py-4.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
+      = render @context, context: @context

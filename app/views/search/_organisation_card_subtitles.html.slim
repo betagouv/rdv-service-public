@@ -1,12 +1,12 @@
 - if organisation.website?
-  .card-subtitle.my-2
-    .fa.fa-earth-europe>
+  .fr-card__detail.fr-text--sm
+    span.fr-icon-global-fill.fr-mr-1w
     = organisation.website
 - if organisation.phone_number?
-  .card-subtitle.my-2
-    .fa.fa-phone>
+  .fr-card__detail.fr-text--sm
+    span.fr-icon-phone-fill.fr-mr-1w
     = organisation.phone_number
 - if organisation.email?
-  .card-subtitle.my-2
-    .fa.fa-envelope>
+  .fr-card__detail.fr-text--sm
+    span.fr-icon-mail-fill.fr-mr-1w
     = organisation.email

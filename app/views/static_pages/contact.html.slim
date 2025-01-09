@@ -28,7 +28,7 @@ span> Voir
     .fr-alert.fr-alert--warning.fr-mb-3w
       .ml-2
         - if current_domain == Domain::RDV_MAIRIE
-          ' Nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
+          |> Nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
           | nous pouvons seulement aider avec les sujets techniques
         - else
           b> Nous ne sommes pas travailleurs médico-sociaux,
