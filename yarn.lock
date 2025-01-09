@@ -44,11 +44,6 @@
   resolved "https://registry.yarnpkg.com/@gouvfr/dsfr/-/dsfr-1.13.0.tgz#5f9661d3093acea8fd4fa9154ad948f051ad5998"
   integrity sha512-I6JLYfE63dogk5qOx69gMfW/bKsm+daFgfx2QX75isbKBy5khlJdVxOD0A6ohvywvUJlEcZTmVK8rNHeVvGmgw==
 
-"@hotwired/stimulus-webpack-helpers@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@hotwired/stimulus-webpack-helpers/-/stimulus-webpack-helpers-1.0.1.tgz#4cd74487adeca576c9865ac2b9fe5cb20cef16dd"
-  integrity sha512-wa/zupVG0eWxRYJjC1IiPBdt3Lruv0RqGN+/DTMmUWUyMAEB27KXmVY6a8YpUVTM7QwVuaLNGW4EqDgrS2upXQ==
-
 "@hotwired/stimulus@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@hotwired/stimulus/-/stimulus-3.2.2.tgz#071aab59c600fed95b97939e605ff261a4251608"
@@ -108,6 +103,11 @@
   version "6.1.4"
   resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.4.tgz#093d5341595a02089ed309dec40f3c37da7b1b10"
   integrity sha512-O3lEzL5DYbxppMdsFSw36e4BHIlfz/xusynwXGv3l2lhSlvah41qviRpsoAlKXxl37nZAqK+UUF5cnGGK45Mfw==
+
+"@stimulus-components/checkbox-select-all@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@stimulus-components/checkbox-select-all/-/checkbox-select-all-6.1.0.tgz#81da1ae620c2591ca247b32938a80e8c18b8b357"
+  integrity sha512-FTwLyYBrVw7WneVJy9sP/J3sCVxx8/mz7U+tDJhQsVrlfM2sCyVXRNMexzb7vt/STTqz9+crN9MeWFv52hxh5Q==
 
 "@types/estree@^1.0.5":
   version "1.0.5"

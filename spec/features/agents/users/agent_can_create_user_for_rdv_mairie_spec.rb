@@ -20,7 +20,7 @@ RSpec.describe "Agent can create user" do
 
   context "ants_pre_demander number is validated and has no appointment declared yet" do
     before do
-      stub_ants_status("1122334455")
+      stub_ants_status_ok("1122334455")
     end
 
     it "creates user with no warning" do
@@ -35,7 +35,7 @@ RSpec.describe "Agent can create user" do
   end
 
   context "when using a pre-demande number in lowercase" do
-    let!(:call_to_status_with_upcased_number) { stub_ants_status("ABCD1234EF", appointments: []) }
+    let!(:call_to_status_with_upcased_number) { stub_ants_status_ok("ABCD1234EF", appointments: []) }
 
     it "considers it as uppercase when calling ANTS API and saving it in user" do
       fill_in :user_first_name, with: "Marco"
@@ -49,7 +49,7 @@ RSpec.describe "Agent can create user" do
 
   context "ants_pre_demander number is validated but already has appointments" do
     before do
-      stub_ants_status(
+      stub_ants_status_ok(
         "1122334455",
         appointments: [
           {
@@ -77,7 +77,7 @@ RSpec.describe "Agent can create user" do
 
   context "ants_pre_demander number is consumed (dossier déjà envoyé et instruit en préfecture)" do
     before do
-      stub_ants_status("1122334455", status: "consumed")
+      stub_ants_status_ok("1122334455", status: "consumed")
     end
 
     it "prevents agent from creating the user / RDV" do

@@ -22,7 +22,7 @@ html lang="fr"
           header.with_tool_link title: "Votre compte", path: edit_user_registration_path
           header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-icon-lock-fill", html_attributes: { "data-method": "delete" }
         elsif current_domain == Domain::RDV_MAIRIE && request.path == "/"
-          header.with_tool_link title: "Centre d’aide", path: "https://rdv-service-public-1.gitbook.io/rdv-service-public", classes: "fr-icon-questionnaire-line"
+          header.with_tool_link title: "Centre d’aide", path: "https://aide.rdv-service-public.fr", classes: "fr-icon-questionnaire-line"
           header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, classes: "fr-icon-admin-line"
           header.with_tool_link title: "Connexion Usager", path: new_user_session_path, classes: "fr-icon-account-line"
         elsif !stats_path?
@@ -53,9 +53,9 @@ html lang="fr"
               = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "fr-footer__logo", width: "150"
           .fr-footer__content
             p.fr-footer__content-desc
-              ' RDV Service Public est un service porté par la
+              |> RDV Service Public est un service porté par la
               => link_to "Direction Interministérielle du Numérique (DINUM)", "https://www.numerique.gouv.fr/dinum/", target: "_blank", rel: "noopener"
-              ' et
+              |> et
               = link_to "l’Agence Nationale de la Cohésion des Territoires (ANCT)", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noopener"
               '
             p.fr-footer__content-desc

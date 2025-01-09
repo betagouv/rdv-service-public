@@ -83,7 +83,7 @@ ruby:
       .col.text-left
         = link_to(@rdv_wizard.previous_step_path) do
           i.fa.fa-arrow-left
-          = " Revenir en arrière"
+          |< Revenir en arrière
 
       - if (@rdv_wizard.validate || @rdv_wizard.errors[:users].empty?)
         .col.text-right

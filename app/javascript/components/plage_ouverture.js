@@ -1,7 +1,7 @@
 class PlageOuverture {
   constructor() {
     this.toggleLieuSelectionField(true);
-    $(".plage-ouverture-form .form-check-input[name='plage_ouverture[motif_ids][]']").on("change", () => { this.toggleLieuSelectionField(); })
+    $(".plage-ouverture-form .form-check-input[name='plage_ouverture[motif_ids][]']").on("input", () => { this.toggleLieuSelectionField(); })
   }
 
   toggleLieuSelectionField(noTransition = false) {

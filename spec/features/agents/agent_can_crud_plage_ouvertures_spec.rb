@@ -197,4 +197,25 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(page).to have_content("Conflit de dates et d'horaires avec d'autres plages d'ouvertures\nPlage d'ouverture #{overlapping_plage.id}")
     end
   end
+
+  describe "selecting motifs for a plage" do
+    let!(:avocat) { create(:service, name: "Avocat") }
+    let!(:notaire) { create(:service, name: "Notaire") }
+
+    let!(:motif_1_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
+    let!(:motif_2_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
+
+    it "works", js: true do
+      visit new_admin_organisation_agent_plage_ouverture_path(organisation, agent)
+      expect(page).not_to have_content("Lieu")
+      check avocat.name
+      expect(page).to have_checked_field(motif_1_service_avocat.name)
+      expect(page).to have_checked_field(motif_2_service_avocat.name)
+      expect(page).not_to have_checked_field(motif.name)
+      expect(page).to have_content("Lieu")
+      select(lieu.full_name, from: "plage_ouverture_lieu_id")
+      click_on "Créer la plage d'ouverture"
+      expect(PlageOuverture.last.motifs).to contain_exactly(motif_1_service_avocat, motif_2_service_avocat)
+    end
+  end
 end

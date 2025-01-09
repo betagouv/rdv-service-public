@@ -16,11 +16,13 @@
               = f.hidden_field :agent_id
               - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
               - motifs_by_services.each do |service, motifs|
-                .form-group
-                  h4 Motifs de #{service.name}
+                .form-group data-controller="checkbox-select-all"
+                  label.h4.d-flex
+                    input.mr-1 type="checkbox" data-checkbox-select-all-target="checkboxAll"
+                    span.cursor-pointer Motifs de #{service.name}
                   - motifs.each do |motif|
-                    .pl-3
-                      = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}" }, motif.id, false
+                    .pl-4
+                      = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}", data: { checkbox_select_all_target: "checkbox" } }, motif.id, false
                       = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
               .collapse.js-lieu-field
                 = f.association :lieu,

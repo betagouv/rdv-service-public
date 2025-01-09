@@ -23,8 +23,8 @@ $(document).on('turbolinks:load', function() {
   if (departementInput) {
     departementInput.addEventListener('change', event => {
       const valid = [2, 3].includes(departementInput.value.length)
-      whereInput.classList.toggle('is-valid', valid)
-      whereInput.classList.toggle('is-invalid', !valid)
+      whereInput.classList.toggle('fr-input--valid', valid)
+      whereInput.classList.toggle('fr-input--error', !valid)
       $(submitButton).attr('disabled', !valid)
     })
   }

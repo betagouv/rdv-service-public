@@ -6,7 +6,7 @@ main.container
         .card-body
           h3
             i.fa.fa-check-circle
-            = " Rendez-vous confirmé"
+            |< Rendez-vous confirmé
           - rdv = @rdv
           ul.list-group.list-group-flush
             li.list-group-item
@@ -42,6 +42,6 @@ main.container
                 .pl-3.pt-1
                   = instruction_for_rdv_to_html(rdv.motif)
             li.list-group-item
-              = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
-              =< mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
+              |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
+              = mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
           .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", admin_organisation_agent_agenda_path(current_organisation, current_agent)
