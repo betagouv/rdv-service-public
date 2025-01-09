@@ -27,3 +27,7 @@
               }
 
           = f.submit "Continuer", class: "fr-btn float-right"
+
+    = link_to new_from_calendar_agents_rdv_plans_path(user_id: params[:user_id]) do
+      = back_icon(class: "fr-mr-1w")
+      = "retour"
