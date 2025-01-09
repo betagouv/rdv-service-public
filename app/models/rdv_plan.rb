@@ -9,6 +9,7 @@ class RdvPlan < ApplicationRecord
 
   delegate :organisation, to: :motif
 
+  # TODO: ajouter validation de synchro avec location type du motif
   enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
 
   def create_rdv(user_attributes:, participation_attributes:)
@@ -23,7 +24,7 @@ class RdvPlan < ApplicationRecord
       lieu: lieu,
       starts_at: starts_at,
       created_by: planning_agent,
-      ends_at: starts_at + motif.default_duration_in_min.minutes
+      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
     )
 
     if rdv.persisted?

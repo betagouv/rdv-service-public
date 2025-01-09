@@ -19,7 +19,10 @@
               collection: @motifs, \
               label_method: -> { "#{_1.name} #{'- RDV collectif ' if _1.collectif?}" }, \
               input_html: { \
-                data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true },
+                data: { \
+                  placeholder: "Sélectionnez un motif", "auto-select-sole-option": true, \
+                  "select2-config": { disableSearch: true }, \
+                }, \
                 class: "select2-input", \
               }
 

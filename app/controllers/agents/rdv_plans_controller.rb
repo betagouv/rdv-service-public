@@ -51,6 +51,13 @@ class Agents::RdvPlansController < AgentAuthController
 
   def update_motif_from_calendar
     find_rdv_plan
+
+    @rdv_plan.assign_attributes(params.require(:rdv_plan).permit(:motif_id))
+    if @rdv_plan.save
+      redirect_to edit_user_from_calendar_agents_rdv_plan_path(@rdv_plan)
+    else
+      render "edit_motif_from_calendar"
+    end
   end
 
   def edit_user_from_calendar

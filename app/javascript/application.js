@@ -6,12 +6,18 @@ import { NameInitialsForm } from './components/name-initials-form';
 import DsfrNewPassword from "./components/dsfr-new-password";
 import './components/browser-detection';
 import 'bootstrap';
-import './components/rdv-plan-calendar';
 
 import './stylesheets/application';
 import './stylesheets/print';
 
+// Pour les rdv_plan
+import 'select2/dist/js/select2.full.min.js'
+import 'select2/dist/js/i18n/fr.js'
+import { Select2Inputs } from './components/select2-inputs'
+import './components/rdv-plan-calendar';
+
 new Modal();
+new Select2Inputs()
 
 $(document).on('turbolinks:load', function() {
   new PlacesInputs();
