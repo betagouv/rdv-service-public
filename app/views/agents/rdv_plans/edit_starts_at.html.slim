@@ -2,7 +2,6 @@
   .col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
 
-
     h2.fr-h3 Calendrier de #{current_agent.full_name}
     p Cliquez sur l'horaire auquel vous voulez faire le rendez-vous :
 
@@ -12,11 +11,11 @@
         admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
         admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
         admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: current_organisation.id, in_background: true, format: :json),
-        OffDays.to_full_calendar_array
+        OffDays.to_full_calendar_array,
       ]
 
     #rdvPlanCalendar.fr-mb-4w[
-      data-default-date-json="#{Date.today&.to_json}"
+      data-default-date-json="#{Time.zone.today.to_json}"
       data-user-id="#{params[:user_id]}"
       data-selected-event-id="#{@selected_event_id}"
       data-organisation-id="#{current_agent.organisations.first.id}"
@@ -26,3 +25,6 @@
       data-sign-in-path="#{new_agent_session_path}"
       style="margin-top: -60px"
     ]
+
+    = simple_form_for @rdv_plan, url: update_starts_at_agents_rdv_plan_path(@rdv_plan),html: { id: "rdvPlanCalendarForm"} do |f|
+      = f.hidden_field :starts_at, id: "rdvPlanCalendarField"

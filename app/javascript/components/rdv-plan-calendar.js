@@ -33,7 +33,6 @@ class RdvPlanCalendar {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
       eventSources: JSON.parse(this.data.eventSourcesJson),
-      eventSourceFailure: this.handleAjaxError,
       defaultDate: this.getDefaultDate(),
       allDaySlot: false,
       defaultView: this.data.singleDay ? 'timeGridDay' : 'timeGridWeek',
@@ -96,7 +95,10 @@ class RdvPlanCalendar {
       user_id: this.data.userId,
       starts_at: info.startStr,
     });
-    window.location = `/agents/rdv_plans/modalites?${urlSearchParams.toString()}`;;
+    const field = document.getElementById('rdvPlanCalendarField')
+    field.value = info.startStr
+    const form = document.getElementById('rdvPlanCalendarForm')
+    form.submit()
   }
 
   datesRender = (info) => {
@@ -214,15 +216,6 @@ class RdvPlanCalendar {
   isTodayVisible = ({ activeStart, activeEnd }) => {
     const now = new Date()
     return now >= activeStart && now <= activeEnd;
-  }
-
-  handleAjaxError = (response) => {
-    if (response.xhr.status === 401) {
-      window.location = this.calendarEl.attributes["data-sign-in-path"].value;
-      return;
-    }
-
-    alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr.`);
   }
 }
 

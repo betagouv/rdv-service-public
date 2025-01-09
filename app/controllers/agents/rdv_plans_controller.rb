@@ -6,7 +6,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def update_starts_at
     if @rdv_plan.update(params.require(:rdv_plan).permit(:starts_at))
-      redirect_to edit_modalites_from_calendar_agents_rdv_plan_path(@rdv_plan)
+      redirect_to edit_modalites_agents_rdv_plan_path(@rdv_plan)
     else
       render "edit_modalites"
     end
@@ -27,7 +27,7 @@ class Agents::RdvPlansController < AgentAuthController
     @rdv_plan.assign_attributes(rdv_plan_params.permit(:starts_at, :duration_in_minutes, :user_id))
 
     if @rdv_plan.save
-      redirect_to edit_motif_from_calendar_agents_rdv_plan_path(@rdv_plan)
+      redirect_to edit_motif_agents_rdv_plan_path(@rdv_plan)
     else
       render "edit_modalites"
     end

@@ -20,7 +20,7 @@
           ]
 
         #rdvPlanCalendar.fr-mb-4w[
-          data-default-date-json="#{Date.parse(params[:starts_at]).to_date.to_json}"
+          data-default-date-json="#{@rdv_plan.starts_at.to_date.to_json}"
           data-user-id="#{params[:user_id]}"
           data-selected-event-id="#{@selected_event_id}"
           data-organisation-id="#{current_agent.organisations.first.id}"
@@ -34,13 +34,11 @@
           style="margin-top: -40px"
         ]
 
-        = link_to new_from_calendar_agents_rdv_plans_path(user_id: params[:user_id]) do
+        = link_to edit_starts_at_agents_rdv_plan_path(@rdv_plan) do
           = back_icon(class: "fr-mr-1w")
           = "retour"
       .col-8
-        = simple_form_for @rdv_plan, url: create_from_modalites_agents_rdv_plans_path do |f|
-          = f.hidden_field :user_id, value: params[:user_id]
-
+        = simple_form_for @rdv_plan, url: update_modalites_agents_rdv_plan_path(@rdv_plan) do |f|
           .fr-mb-4w
             .input-group
               = datetime_input(f, :starts_at, options: { label_html: { style: "flex-shrink: 0;", class: "fr-mr-2w" }, wrapper_html: { class: "d-flex", style: "align-items: baseline;" }})
