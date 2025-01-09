@@ -112,12 +112,6 @@ Rails.application.routes.draw do
 
     namespace :agents do
       resources :rdv_plans, only: %i[new create] do
-        collection do
-          get :new_from_calendar
-          get :modalites
-
-          post :create_from_modalites
-        end
         member do
           get :edit_starts_at
           patch :update_starts_at
@@ -125,20 +119,8 @@ Rails.application.routes.draw do
           get :edit_modalites
           patch :update_modalites
 
-          get :edit_motif_from_calendar
-          patch :update_motif_from_calendar
-
-          get :edit_user_from_calendar
-
-          # Routes pour la version recherche de créneaux
           get :edit_motif
           patch :update_motif
-
-          get :edit_lieu
-          patch :update_lieu
-
-          get :edit_creneau
-          patch :update_creneau
 
           get :edit_user
           post :create_rdv
