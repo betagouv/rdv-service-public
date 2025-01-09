@@ -9,6 +9,8 @@ class RdvPlan < ApplicationRecord
 
   delegate :organisation, to: :motif
 
+  enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
+
   def create_rdv(user_attributes:, participation_attributes:)
     # TODO: le changement d'adresse email ne marche pas toujours, probablement à cause de unconfirmed_email. A vérifier.
     user.update!(user_attributes)

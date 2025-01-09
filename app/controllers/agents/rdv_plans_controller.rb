@@ -1,7 +1,7 @@
 class Agents::RdvPlansController < AgentAuthController
   layout "application"
 
-  def calendar
+  def new_from_calendar
     @rdv_plan = RdvPlan.new(
       planning_agent: current_agent,
       user_id: params[:user_id]
@@ -24,23 +24,33 @@ class Agents::RdvPlansController < AgentAuthController
   def create_from_modalites
     rdv_plan_params = params.require(:rdv_plan)
 
-    @rdv_plan = RdvPlan.create!(
-      planning_agent: current_agent,
-      rdv_agent: current_agent,
-      user_id: rdv_plan_params[:user_id]
-    )
-    authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
-
-    @rdv_plan.update(rdv_plan_params.permit(:starts_at))
-
     location_type, lieu_id = rdv_plan_params["modalite"].split("-")
 
-    @rdv_plan.update!(
-      motif: Motif.where(organisation: current_agent.organisations).find_by(location_type: location_type),
+    @rdv_plan = RdvPlan.new(
+      planning_agent: current_agent,
+      rdv_agent: current_agent,
+      location_type: location_type,
       lieu_id: lieu_id
     )
+    @rdv_plan.assign_attributes(rdv_plan_params.permit(:starts_at, :duration_in_minutes, :user_id))
 
-    redirect_to edit_user_from_calendar_agents_rdv_plan_path(@rdv_plan)
+    authorize @rdv_plan, :edit?, policy_class: Agent::RdvPlanPolicy
+
+    if @rdv_plan.save
+      redirect_to edit_motif_from_calendar_agents_rdv_plan_path(@rdv_plan)
+    else
+      render "modalites"
+    end
+  end
+
+  def edit_motif_from_calendar
+    find_rdv_plan
+    @motifs = current_agent.motifs.where(organisation_id: current_agent.roles.select(:organisation_id))
+      .where(location_type: @rdv_plan.location_type)
+  end
+
+  def update_motif_from_calendar
+    find_rdv_plan
   end
 
   def edit_user_from_calendar

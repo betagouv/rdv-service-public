@@ -593,6 +593,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_08_170817) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "duration_in_minutes"
+    t.enum "location_type", enum_type: "location_type"
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
     t.index ["planning_agent_id"], name: "index_rdv_plans_on_planning_agent_id"

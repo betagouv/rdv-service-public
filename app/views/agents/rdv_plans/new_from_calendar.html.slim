@@ -1,6 +1,6 @@
 .row.justify-content-md-center
   .col-12
-    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Choisissez un créneau dans votre calendrier", next_step_title: "Modalités"
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Choisissez un créneau dans votre calendrier", next_step_title: "Motif"
 
     p Vous pouvez aussi #{link_to "chercher les créneaux disponibles", new_agents_rdv_plan_path(user_id: params[:user_id])} dans les agendas de vos collègues.
 

@@ -1,6 +1,6 @@
 .row.justify-content-md-center.fr-mb-4w
   .col-12
-    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Modalités", next_step_title: "Usager"
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Choisissez un créneau dans votre calendrier", next_step_title: "Motif"
     .row
       .col-4
         ruby:
@@ -47,4 +47,4 @@
           = f.collection_radio_buttons :modalite, modalites_collection, :first, :last, item_wrapper_tag: :div, item_wrapper_class: "fr-m-2w"
 
           = f.submit "Continuer", class: "fr-btn float-right"
-    = link_to "retour", calendar_agents_rdv_plans_path(user_id: params[:user_id])
+    = link_to "retour", new_from_calendar_agents_rdv_plans_path(user_id: params[:user_id])
