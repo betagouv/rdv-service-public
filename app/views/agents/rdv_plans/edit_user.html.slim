@@ -3,11 +3,7 @@
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 3, step_title: "Usager", next_step_title: ""
     .card
       .card-body
-        span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
-        = "#{l(@rdv_plan.starts_at, format: :human)} (#{@rdv_plan.duration_in_minutes} minutes)"
-        = link_to "modifier", edit_creneau_agents_rdv_plan_path(@rdv_plan), class: "fr-ml-2w"
-        br
-
+        = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
         - if @rdv_plan.motif.requires_lieu?
           = lieu_icon(class: "fr-mr-1w")
           = @rdv_plan.lieu.name

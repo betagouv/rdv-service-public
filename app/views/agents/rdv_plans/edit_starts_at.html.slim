@@ -6,23 +6,19 @@
     p Cliquez sur l'horaire auquel vous voulez faire le rendez-vous :
 
     ruby:
-      current_organisation = current_agent.organisations.first
+      organisation = current_agent.organisations.first
       event_sources = [
-        admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
-        admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
-        admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: current_organisation.id, in_background: true, format: :json),
+        admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: organisation.id, format: :json),
+        admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: organisation.id, format: :json),
+        admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: organisation.id, in_background: true, format: :json),
         OffDays.to_full_calendar_array,
       ]
 
     #rdvPlanCalendar.fr-mb-4w[
       data-default-date-json="#{Time.zone.today.to_json}"
-      data-user-id="#{params[:user_id]}"
-      data-selected-event-id="#{@selected_event_id}"
-      data-organisation-id="#{current_agent.organisations.first.id}"
       data-display-saturdays="#{current_agent.display_saturdays}"
       data-display-sundays="false"
       data-event-sources-json="#{event_sources.to_json}"
-      data-sign-in-path="#{new_agent_session_path}"
       style="margin-top: -60px"
     ]
 
