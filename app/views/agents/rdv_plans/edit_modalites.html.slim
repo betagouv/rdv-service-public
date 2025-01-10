@@ -3,37 +3,8 @@
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
     .row
       .col-4
-        ruby:
-          current_organisation = current_agent.organisations.first
-          event_sources = [
-            admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
-            admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: current_organisation.id, format: :json),
-            admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: current_organisation.id, in_background: true, format: :json),
-            OffDays.to_full_calendar_array,
-            [{
-              title: @rdv_plan.user.full_name,
-              start: @rdv_plan.starts_at.as_json,
-              end: (@rdv_plan.starts_at + 30.minutes).as_json,
-              textColor: "white",
-              backgroundColor: "#6a6af4"
-            }]
-          ]
 
-        #rdvPlanCalendar.fr-mb-4w[
-          data-default-date-json="#{@rdv_plan.starts_at.to_date.to_json}"
-          data-user-id="#{params[:user_id]}"
-          data-selected-event-id="#{@selected_event_id}"
-          data-organisation-id="#{current_agent.organisations.first.id}"
-          data-display-saturdays="#{current_agent.display_saturdays}"
-          data-display-sundays="false"
-          data-event-sources-json="#{event_sources.to_json}"
-          data-sign-in-path="#{new_agent_session_path}"
-          data-min-time="#{I18n.l(@rdv_plan.starts_at - 2.hours, format: "%H:%M:%S")}"
-          data-max-time="#{I18n.l(@rdv_plan.starts_at + 3.hours, format: "%H:%M:%S")}"
-          data-single-day="true"
-          style="margin-top: -40px"
-        ]
-
+        = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: true
         = link_to edit_starts_at_agents_rdv_plan_path(@rdv_plan) do
           = back_icon(class: "fr-mr-1w")
           = "retour"

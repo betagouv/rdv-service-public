@@ -31,7 +31,7 @@ class RdvPlanCalendar {
       defaultDate: JSON.parse(this.data.defaultDateJson),
       allDaySlot: false,
       nowIndicator: true,
-      defaultView: this.data.singleDay ? 'timeGridDay' : 'timeGridWeek',
+      defaultView: this.data.singleDay === "true" ? 'timeGridDay' : 'timeGridWeek',
       hiddenDays: hiddenDays,
       height: "auto",
       selectable: true,
@@ -59,7 +59,7 @@ class RdvPlanCalendar {
       // see the same time for the rdv. This seems unlikely for now.
     }
 
-    if (this.data.singleDay) {
+    if (this.data.singleDay === "true") {
       options.header = { left:  '', center: '', right:  '' };
     } else {
       options.header = { left:  '', center: '', right:  'prev,next' };

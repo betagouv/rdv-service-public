@@ -4,23 +4,6 @@
 
     h2.fr-h3 Calendrier de #{current_agent.full_name}
     p Cliquez sur l'horaire auquel vous voulez faire le rendez-vous :
+    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: false
 
-    ruby:
-      organisation = current_agent.organisations.first
-      event_sources = [
-        admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: organisation.id, format: :json),
-        admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: organisation.id, format: :json),
-        admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: organisation.id, in_background: true, format: :json),
-        OffDays.to_full_calendar_array,
-      ]
 
-    #rdvPlanCalendar.fr-mb-4w[
-      data-default-date-json="#{Time.zone.today.to_json}"
-      data-display-saturdays="#{current_agent.display_saturdays}"
-      data-display-sundays="false"
-      data-event-sources-json="#{event_sources.to_json}"
-      style="margin-top: -60px"
-    ]
-
-    = simple_form_for @rdv_plan, url: update_starts_at_agents_rdv_plan_path(@rdv_plan),html: { id: "rdvPlanCalendarForm"} do |f|
-      = f.hidden_field :starts_at, id: "rdvPlanCalendarField"
