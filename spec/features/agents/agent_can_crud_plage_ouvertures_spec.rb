@@ -95,7 +95,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       create(:plage_ouverture, :weekdays, first_day: Time.zone.today.prev_week(:monday), motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence")
     end
 
-    xit "can crud a plage_ouverture", js: true do
+    it "can crud a plage_ouverture", js: true do
       visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
 
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)") # vue liste
@@ -205,7 +205,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     let!(:motif_1_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
     let!(:motif_2_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
 
-    xit "works", js: true do
+    it "works", js: true do
       visit new_admin_organisation_agent_plage_ouverture_path(organisation, agent)
       expect(page).not_to have_content("Lieu")
       check avocat.name
