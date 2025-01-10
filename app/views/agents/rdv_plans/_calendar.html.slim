@@ -19,7 +19,7 @@ ruby:
   end
 
 #rdvPlanCalendar[
-  data-default-date-json="#{(rdv_plan.starts_at.to_date || Time.zone.today).to_json}"
+  data-default-date-json="#{(rdv_plan.starts_at&.to_date || Time.zone.today).to_json}"
   data-display-saturdays="#{current_agent.display_saturdays}"
   data-display-sundays="false"
   data-event-sources-json="#{event_sources.to_json}"

@@ -12,7 +12,9 @@ class Agents::RdvPlansController < AgentAuthController
     end
   end
 
-  def edit_modalites; end
+  def edit_modalites
+    @rdv_plan.duration_in_minutes ||= 30
+  end
 
   def update_modalites
     rdv_plan_params = params.require(:rdv_plan)

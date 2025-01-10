@@ -29,4 +29,5 @@
 
         .fr-mt-4w
           = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv), class: "fr-btn fr-btn--secondary", target: :blank
-    = link_to "Retour sur Mon Suivi Social", "https://monsuivisocial.incubateur.anct.gouv.fr/"
+    - if @rdv_plan.return_url
+      = link_to "Retour sur Mon Suivi Social", @rdv_plan.return_url
