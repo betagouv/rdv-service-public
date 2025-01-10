@@ -34,4 +34,13 @@ class RdvPlan < ApplicationRecord
 
     rdv
   end
+
+  # TODO: remplacer cette méthode et #modalites_collection par un form object
+  def modalite
+    if location_type == "public_office"
+      "#{location_type}-#{lieu&.id}"
+    else
+      location_type
+    end
+  end
 end

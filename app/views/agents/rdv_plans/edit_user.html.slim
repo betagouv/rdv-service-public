@@ -4,21 +4,8 @@
     .card
       .card-body
         = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
-        - if @rdv_plan.motif.requires_lieu?
-          = lieu_icon(class: "fr-mr-1w")
-          = @rdv_plan.lieu.name
-          = link_to "modifier", edit_lieu_agents_rdv_plan_path(@rdv_plan), class: "fr-ml-2w"
-        - elsif @rdv_plan.motif.visio?
-          = visio_icon(class: "fr-mr-1w")
-          = "Par visio conférence"
-          = link_to "modifier", edit_lieu_agents_rdv_plan_path(@rdv_plan), class: "fr-ml-2w"
-        - elsif @rdv_plan.motif.phone?
-          = phone_icon(class: "fr-mr-1w")
-          = "Par téléphone"
-          = link_to "modifier", edit_lieu_agents_rdv_plan_path(@rdv_plan), class: "fr-ml-2w"
-
-        br
-        = render "agents/rdv_plans/motif_recap", rdv_plan: @rdv_plan
+        = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
+        = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
 
         hr.fr-mt-2w
         h3= @rdv_plan.user.full_name
@@ -33,10 +20,10 @@
             = f.fields_for :participation, (Participation.new(send_lifecycle_notifications: true, send_reminder_notification: true)) do |ff|
               = ff.input :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
               = ff.input :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
-
-            = link_to edit_creneau_agents_rdv_plan_path(@rdv_plan) do
-              = back_icon(class: "fr-mr-1w")
-              = "retour"
           - else
             | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
           = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right fr-btn--lg"
+
+        = link_to edit_motif_agents_rdv_plan_path(@rdv_plan) do
+          = back_icon(class: "fr-mr-1w")
+          = "retour"

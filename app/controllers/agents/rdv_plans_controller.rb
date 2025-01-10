@@ -40,7 +40,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def update_motif
     if @rdv_plan.update(params.require(:rdv_plan).permit(:motif_id))
-      redirect_to edit_user_from_calendar_agents_rdv_plan_path(@rdv_plan)
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
     else
       render "edit_motif_from_calendar"
     end
