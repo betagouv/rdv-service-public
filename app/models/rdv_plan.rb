@@ -12,6 +12,8 @@ class RdvPlan < ApplicationRecord
   # TODO: ajouter validation de synchro avec location type du motif
   enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
 
+  validate :return_url_is_authorized
+
   def create_rdv(user_attributes:, participation_attributes:)
     # TODO: le changement d'adresse email ne marche pas toujours, probablement à cause de unconfirmed_email. A vérifier.
     user.update!(user_attributes)
@@ -42,5 +44,14 @@ class RdvPlan < ApplicationRecord
     else
       location_type
     end
+  end
+
+  def return_url_is_authorized
+    return if return_url.blank?
+
+    uri = URI.parse(return_url)
+    return if uri.host&.end_with?(".gouv.fr")
+
+    errors.add(:return_url, "N'est pas un nom de domaine autorisé")
   end
 end
