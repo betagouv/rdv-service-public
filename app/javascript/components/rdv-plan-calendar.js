@@ -1,12 +1,7 @@
 import { Calendar } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
-
-import Bowser from "bowser";
-const browser = Bowser.getParser(window.navigator.userAgent);
 
 class RdvPlanCalendar {
 
@@ -30,10 +25,10 @@ class RdvPlanCalendar {
     }
 
     const options = {
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+      plugins: [timeGridPlugin, interactionPlugin],
       locale: frLocale,
       eventSources: JSON.parse(this.data.eventSourcesJson),
-      defaultDate: this.getDefaultDate(),
+      defaultDate: JSON.parse(this.data.defaultDateJson),
       allDaySlot: false,
       defaultView: this.data.singleDay ? 'timeGridDay' : 'timeGridWeek',
       viewSkeletonRender: function (info) {
@@ -51,7 +46,6 @@ class RdvPlanCalendar {
       },
       minTime: this.data.minTime || '07:00:00',
       maxTime: this.data.maxTime || '20:00:00',
-      datesRender: this.datesRender,
       eventRender: this.eventRender,
       eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
       timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
@@ -76,20 +70,6 @@ class RdvPlanCalendar {
     return new Calendar(this.calendarEl, options);
   }
 
-  getDefaultView = () => {
-    let defaultView = "timeGridOneDay";
-    if (!browser.is("mobile")) {
-      let viewFromLocalStorage = localStorage.getItem("calendarDefaultView");
-
-      defaultView = ['dayGridMonth', 'timeGridWeek', 'timeGridOneDay'].includes(viewFromLocalStorage) ? viewFromLocalStorage : "timeGridWeek";
-    }
-    return defaultView;
-  }
-
-  getDefaultDate = () => {
-    return JSON.parse(this.data.defaultDateJson || sessionStorage.getItem('calendarStartDate'))
-  }
-
   selectEvent = (info) => {
     const urlSearchParams = new URLSearchParams({
       user_id: this.data.userId,
@@ -99,39 +79,6 @@ class RdvPlanCalendar {
     field.value = info.startStr
     const form = document.getElementById('rdvPlanCalendarForm')
     form.submit()
-  }
-
-  datesRender = (info) => {
-    if (
-      this.currentTodayVisible && !this.isTodayVisible(info.view) &&
-      this.currentViewType &&
-      (
-        (this.currentViewType == 'dayGridMonth' && info.view.type == 'timeGridWeek') ||
-        (['dayGridMonth', 'timeGridWeek'].indexOf(this.currentViewType) >= 0 && info.view.type == 'timeGridOneDay')
-      )
-    ) {
-      this.fullCalendarInstance.gotoDate(new Date())
-      return false // unfortunately this does not cancel the current rendering but it's fast
-    }
-    this.currentTodayVisible = this.isTodayVisible(info.view);
-    this.currentViewType = info.view.type;
-
-    sessionStorage.setItem("calendarStartDate", JSON.stringify(info.view.currentStart))
-    const printLinkElt = document.querySelector(".js-link-print-rdvs")
-
-    if (printLinkElt) {
-      printLinkElt.classList.toggle("d-none", info.view.type != "timeGridOneDay")
-      if (info.view.type != "timeGridOneDay") return
-
-      const url = new URL(printLinkElt.href)
-      printLinkElt.querySelector(".js-date").innerHTML = Intl.DateTimeFormat("fr", { day: "numeric", month: "numeric", year: "numeric" }).format(info.view.currentStart)
-      const currentStart = info.view.currentStart.toISOString().split('T')[0]
-      url.searchParams.set("start", currentStart)
-      url.searchParams.set("end", currentStart)
-
-
-      printLinkElt.href = url.toString()
-    }
   }
 
   eventRender = (info) => {
@@ -211,11 +158,6 @@ class RdvPlanCalendar {
     $el.attr("data-toggle", "tooltip");
     $el.attr("data-html", "true");
     $el.tooltip()
-  }
-
-  isTodayVisible = ({ activeStart, activeEnd }) => {
-    const now = new Date()
-    return now >= activeStart && now <= activeEnd;
   }
 }
 
