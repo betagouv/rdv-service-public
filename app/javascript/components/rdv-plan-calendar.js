@@ -30,6 +30,7 @@ class RdvPlanCalendar {
       eventSources: JSON.parse(this.data.eventSourcesJson),
       defaultDate: JSON.parse(this.data.defaultDateJson),
       allDaySlot: false,
+      nowIndicator: true,
       defaultView: this.data.singleDay ? 'timeGridDay' : 'timeGridWeek',
       hiddenDays: hiddenDays,
       height: "auto",
