@@ -31,9 +31,6 @@ class RdvPlanCalendar {
       defaultDate: JSON.parse(this.data.defaultDateJson),
       allDaySlot: false,
       defaultView: this.data.singleDay ? 'timeGridDay' : 'timeGridWeek',
-      viewSkeletonRender: function (info) {
-        localStorage.setItem("calendarDefaultView", info.view.type);
-      },
       hiddenDays: hiddenDays,
       height: "auto",
       selectable: true,
@@ -81,6 +78,7 @@ class RdvPlanCalendar {
     form.submit()
   }
 
+  // TODO: extraire cette fonction pour la partager avec l'autre calendrier
   eventRender = (info) => {
     let $el = $(info.el);
     let extendedProps = info.event.extendedProps;
