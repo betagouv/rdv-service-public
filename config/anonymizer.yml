@@ -451,6 +451,9 @@ tables:
       - expires_in
   - table_name: rdv_plans
     non_anonymized_column_names:
+      - duration_in_minutes
+      - location_type
+      - return_url
       - starts_at
       - created_at
       - updated_at
