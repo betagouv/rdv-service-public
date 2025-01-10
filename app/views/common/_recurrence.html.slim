@@ -7,8 +7,8 @@
         = date_input(f, :end_day)
 
   .row
-    .col = f.input :start_time, as: :time, ignore_date: true
-    .col = f.input :end_time,   as: :time, ignore_date: true
+    .col = f.input :start_time, as: :time, ignore_date: true, minute_step: 5
+    .col = f.input :end_time,   as: :time, ignore_date: true, minute_step: 5
 
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
 
