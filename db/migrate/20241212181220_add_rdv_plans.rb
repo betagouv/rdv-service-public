@@ -7,7 +7,11 @@ class AddRdvPlans < ActiveRecord::Migration[7.1]
       t.references :rdv_agent
       t.references :motif
       t.references :lieu
+
       t.datetime :starts_at
+      t.integer :duration_in_minutes
+      t.enum :location_type, enum_type: :location_type
+      t.text :return_url
 
       t.timestamps null: false
     end
