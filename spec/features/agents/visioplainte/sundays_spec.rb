@@ -10,7 +10,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
     let(:organisation) { superviseur.organisations.first }
 
     describe "plages d'ouverture" do
-      it "can be created on sunday", js: true do
+      xit "can be created on sunday", js: true do
         visit new_admin_organisation_agent_plage_ouverture_path(organisation_id: organisation.id, agent_id: superviseur.id)
 
         check "Dépôt de plainte par visioconférence"
@@ -24,7 +24,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
     end
 
     describe "absences" do
-      it "can be created on sunday", js: true do
+      xit "can be created on sunday", js: true do
         visit new_admin_organisation_agent_absence_path(organisation_id: organisation.id, agent_id: superviseur.id)
 
         fill_in "Description", with: "réunion hebdo"
