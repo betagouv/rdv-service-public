@@ -6,7 +6,7 @@ module RdvPlanHelper
 
     if available_location_types.include?("public_office")
       result += Lieu.enabled.where(organisation_id: current_agent.organisations.select(:id)).map do |l|
-        ["public_office-#{l.id}", sanitize(" #{lieu_icon} Sur place à #{l.name} - #{l.address}")]
+        ["public_office-#{l.id}", sanitize(" #{lieu_icon} Sur place à #{l.name} <br /> #{l.address}")]
       end
     end
 
