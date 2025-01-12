@@ -111,7 +111,7 @@ Rails.application.routes.draw do
     put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
 
     namespace :agents do
-      resources :rdv_plans, only: %i[new create] do
+      resources :rdv_plans, only: %i[create] do
         member do
           get :edit_starts_at
           patch :update_starts_at

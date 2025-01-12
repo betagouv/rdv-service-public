@@ -8,7 +8,7 @@ ruby:
     OffDays.to_full_calendar_array,
   ]
 
-  if rdv_plan.starts_at
+  if rdv_plan.starts_at && single_day
     event_sources << [{
       title: rdv_plan.user.full_name,
       start: rdv_plan.starts_at.as_json,

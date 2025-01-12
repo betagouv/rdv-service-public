@@ -1,6 +1,6 @@
 class Agents::RdvPlansController < AgentAuthController
   layout "application"
-  before_action :find_rdv_plan
+  before_action :find_rdv_plan, except: [:create]
 
   def edit_starts_at; end
 
@@ -73,6 +73,13 @@ class Agents::RdvPlansController < AgentAuthController
 
   def rdv
     @rdv = @rdv_plan.rdv
+  end
+
+  # juste pour la démo
+  def create
+    rdv_plan = RdvPlan.create!(planning_agent: current_agent, user_id: params.dig(:rdv_plan, :user_id))
+    authorize rdv_plan, :create?, policy_class: Agent::RdvPlanPolicy
+    redirect_to edit_starts_at_agents_rdv_plan_path(rdv_plan)
   end
 
   private
