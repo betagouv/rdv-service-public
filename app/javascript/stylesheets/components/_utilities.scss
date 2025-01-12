@@ -146,3 +146,7 @@ ul.horizontal-border-between-items {
 button:disabled {
   pointer-events: auto; // needed for a disabled button to show a tooltip
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

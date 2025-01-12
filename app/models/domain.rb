@@ -85,7 +85,7 @@ class Domain
   end
 
   def documentation_url
-    "https://rdv-service-public-1.gitbook.io/rdv-service-public"
+    "https://aide.rdv-service-public.fr"
   end
 
   def agent_connect_client_id

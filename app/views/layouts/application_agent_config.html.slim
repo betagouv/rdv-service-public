@@ -21,7 +21,7 @@ html lang="fr"
           - if current_agent.present?
             = link_to(root_path, class: "pt-1 pb-4") do
               i.fa.fa-arrow-left
-              = " Retour à l'accueil"
+              |< Retour à l'accueil
           .align-items-center.d-flex.mt-2.mt-lg-4
             .p-1.p-lg-3.flex-grow-1.mt-lg-4
               - if agent_path? && current_agent.nil?

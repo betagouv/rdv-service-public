@@ -11,7 +11,7 @@ AllCops:
     - "db/migrate/*good_job*.rb"
     - "scripts/screenshots/**/*"
   NewCops: enable
-  TargetRubyVersion: 3.1.2
+  TargetRubyVersion: 3.3.6
   SuggestExtensions: false
 
 Bundler/OrderedGems:

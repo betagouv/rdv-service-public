@@ -10,7 +10,7 @@ p.mb-1 Allez dans votre agenda externe et ajoutez un nouveau calendrier avec cet
       | Copier
 
 p
-  ' Tous vos rendez-vous de #{current_domain.name} seront affichés automatiquement au fur et à mesure de leur création (ou modification).
+  |> Tous vos rendez-vous de #{current_domain.name} seront affichés automatiquement au fur et à mesure de leur création (ou modification).
   | Vous ne pourrez en revanche pas les modifier depuis votre agenda externe.
 p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la documentation", current_domain.documentation_url, target: :blank)}.
 
@@ -22,4 +22,4 @@ div.rdv-text-align-center
 
 = link_to agents_calendar_sync_path, class: "mt-5" do
   i.fa.fa-arrow-left
-  = " Retour à la synchronisation d'agenda"
+  |< Retour à la synchronisation d'agenda
