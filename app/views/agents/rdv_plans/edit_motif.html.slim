@@ -1,38 +1,38 @@
-.fr-row.justify-content-md-center.fr-mb-16w
+.fr-row
   .fr-col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Motif", next_step_title: "Usager"
-    .row
-      .col-4
-        = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: true
-        = link_to edit_modalites_agents_rdv_plan_path(@rdv_plan) do
-          = back_icon(class: "fr-mr-1w")
-          = "retour"
+.row.fr-mb-16w
+  .col-4
+    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: true
+    = link_to edit_modalites_agents_rdv_plan_path(@rdv_plan) do
+      = back_icon(class: "fr-mr-1w")
+      = "retour"
 
-      .col-12.col-md-8
-        = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
-        = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
-        hr.fr-mt-2w.fr-mb-4w
+  .col-12.col-md-8
+    = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
+    = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
+    hr.fr-mt-2w.fr-mb-4w
 
-        = simple_form_for @rdv_plan, url: update_motif_agents_rdv_plan_path(@rdv_plan) do |f|
-          = render "model_errors", model: @rdv_plan
+    = simple_form_for @rdv_plan, url: update_motif_agents_rdv_plan_path(@rdv_plan) do |f|
+      = render "model_errors", model: @rdv_plan
 
-          .input-group
-            = f.input :motif_id, \
-              label: "Motif du rendez-vous", \
-                required: true, \
-                include_blank: true, \
-                collection: @motifs, \
-                label_method: -> { "#{_1.name} #{'- RDV collectif ' if _1.collectif?}" }, \
-                label_html: { class: "fr-mr-2w" }, \
-                input_html: { \
-                  data: { \
-                    placeholder: "Sélectionnez un motif", "auto-select-sole-option": true, \
-                    "select2-config": { disableSearch: true }, \
-                  }, \
-                  class: "select2-input", \
-                }
+      .input-group.fr-mb-3w
+        = f.input :motif_id, \
+          label: "Motif du rendez-vous", \
+            required: true, \
+            include_blank: true, \
+            collection: @motifs, \
+            label_method: -> { "#{_1.name} #{'- RDV collectif ' if _1.collectif?}" }, \
+            label_html: { class: "fr-mr-2w" }, \
+            input_html: { \
+              data: { \
+                placeholder: "Sélectionnez un motif", "auto-select-sole-option": true, \
+                "select2-config": { disableSearch: true }, \
+              }, \
+              class: "select2-input", \
+            }
 
-          .input-group
-            = f.input :duration_in_minutes, label: "Durée en minutes", label_html: { style: "flex-shrink: 0;", class: "fr-mr-2w" }, wrapper_html: { class: "d-flex", style: "align-items: baseline;" }
-          = f.submit "Continuer", class: "fr-btn float-right"
+      .input-group
+        = f.input :duration_in_minutes, label: "Durée en minutes", label_html: { style: "flex-shrink: 0;", class: "fr-mr-2w" }, wrapper_html: { class: "d-flex", style: "align-items: baseline;" }
+      = f.submit "Continuer", class: "fr-btn float-right"
 
