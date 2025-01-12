@@ -5,16 +5,14 @@ class Agents::RdvPlansController < AgentAuthController
   def edit_starts_at; end
 
   def update_starts_at
-    if @rdv_plan.update(params.require(:rdv_plan).permit(:starts_at))
+    if @rdv_plan.update(params.require(:rdv_plan).permit(:starts_at).merge(rdv_agent: current_agent))
       redirect_to edit_modalites_agents_rdv_plan_path(@rdv_plan)
     else
       render "edit_modalites"
     end
   end
 
-  def edit_modalites
-    @rdv_plan.duration_in_minutes ||= 30
-  end
+  def edit_modalites; end
 
   def update_modalites
     rdv_plan_params = params.require(:rdv_plan)
@@ -22,11 +20,10 @@ class Agents::RdvPlansController < AgentAuthController
     location_type, lieu_id = rdv_plan_params["modalite"].split("-")
 
     @rdv_plan.assign_attributes(
-      rdv_agent: current_agent,
       location_type: location_type,
       lieu_id: lieu_id
     )
-    @rdv_plan.assign_attributes(rdv_plan_params.permit(:starts_at, :duration_in_minutes, :user_id))
+    @rdv_plan.assign_attributes(rdv_plan_params.permit(:starts_at))
 
     if @rdv_plan.save
       redirect_to edit_motif_agents_rdv_plan_path(@rdv_plan)
@@ -38,10 +35,11 @@ class Agents::RdvPlansController < AgentAuthController
   def edit_motif
     @motifs = current_agent.motifs.where(organisation_id: current_agent.roles.select(:organisation_id))
       .where(location_type: @rdv_plan.location_type)
+    @rdv_plan.duration_in_minutes ||= @motifs.first.default_duration_in_min
   end
 
   def update_motif
-    if @rdv_plan.update(params.require(:rdv_plan).permit(:motif_id))
+    if @rdv_plan.update(params.require(:rdv_plan).permit(:motif_id, :duration_in_minutes))
       redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
     else
       render "edit_motif_from_calendar"
