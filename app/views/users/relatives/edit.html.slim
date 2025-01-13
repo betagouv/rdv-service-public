@@ -2,7 +2,7 @@
 
 .card
   .card-body
-    = simple_form_for @form, url: relative_path(@form.user), as: :user do |f|
+    = simple_form_for @form, url: relative_path(@form.user) do |f|
       = render "model_errors", model: @form
       = render "form_fields", f: f
       .d-flex.justify-content-between

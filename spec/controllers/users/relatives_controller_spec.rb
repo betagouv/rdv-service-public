@@ -88,7 +88,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "quand le numéro de pré-demande ANTS est requis mais pas passé" do
       let(:attributes) do
-        { user: { first_name: "Eliott", last_name: "Le Dragon" }, ants_pre_demande_number_required: "true" }
+        { user: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number_required: "true" } }
       end
 
       it "ne créé pas de proche" do
@@ -100,7 +100,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "quand le numéro de pré-demande ANTS est requis mais invalide" do
       let(:attributes) do
-        { user: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "blah" }, ants_pre_demande_number_required: "true" }
+        { user: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "blah", ants_pre_demande_number_required: "true" } }
       end
 
       it "ne créé pas de proche" do

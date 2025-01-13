@@ -6,7 +6,7 @@ class Users::RelativesController < UserAuthController
   def new
     user = current_user.relatives.new
     authorize(user, policy_class: User::UserPolicy)
-    @form = RelativeUserForm.new(user:, **form_params)
+    @form = RelativeUserForm.new(user:, ants_pre_demande_number_required: params[:ants_pre_demande_number_required])
     respond_modal_with @form
   end
 
@@ -19,7 +19,7 @@ class Users::RelativesController < UserAuthController
     authorize(user, policy_class: User::UserPolicy)
     return_location = request.referer
     @form = RelativeUserForm.new(user:)
-    if @form.submit(**form_params)
+    if @form.submit(**form_params.to_h.symbolize_keys)
       flash[:success] = "#{@form.user.full_name} a été ajouté comme proche."
       return_location = add_query_string_params_to_url(request.referer, created_user_id: @form.user.id)
     end
@@ -29,14 +29,14 @@ class Users::RelativesController < UserAuthController
   def edit
     user = User.find(params.require(:id))
     authorize(user, policy_class: User::UserPolicy)
-    @form = RelativeUserForm.new(user:, **form_params)
+    @form = RelativeUserForm.new(user:, ants_pre_demande_number_required: params[:ants_pre_demande_number_required])
   end
 
   def update
     user = User.find(params.require(:id))
     authorize(user, policy_class: User::UserPolicy)
     @form = RelativeUserForm.new(user:)
-    if @form.submit(**form_params)
+    if @form.submit(**form_params.to_h.symbolize_keys)
       flash[:success] = "Les informations de votre proche #{@form.user.full_name} ont été mises à jour."
       redirect_to users_informations_path
     else
@@ -54,12 +54,6 @@ class Users::RelativesController < UserAuthController
   private
 
   def form_params
-    {
-      ants_pre_demande_number_required: params[:ants_pre_demande_number_required]&.to_b,
-      first_name: params.dig(:user, :first_name),
-      last_name: params.dig(:user, :last_name),
-      birth_date: params.dig(:user, :birth_date),
-      ants_pre_demande_number: params.dig(:user, :ants_pre_demande_number),
-    }.compact
+    params.require(:relative_user_form).permit(:first_name, :last_name, :birth_date, :ants_pre_demande_number, :ants_pre_demande_number_required)
   end
 end
