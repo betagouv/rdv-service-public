@@ -8,7 +8,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
       user ||= User.new(user_params.permit(:first_name, :last_name, :phone_number).merge(created_through: :agent_creation))
 
       user.skip_confirmation_notification!
-      user.update!(user_params.permit(:email))
+      user.update!(user_params.permit(:email, :address))
 
       RdvPlan.create!(
         planning_agent: current_agent,
@@ -16,7 +16,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
         return_url: params[:return_url]
       )
     end
-    render_record rdv_plan
+    render json: RdvPlanBlueprint.render(rdv_plan, root: "rdv_plan"), status: :created
   end
 
   def show
