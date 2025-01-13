@@ -30,7 +30,7 @@ class Aide::DemandesSupportController < ApplicationController
     @form = DemandeSupportForm.new(**demande_params, current_domain:)
     if @form.submit
       redirect_to(
-        @form.role_usager? ? aide_documentation_usager_path : root_path,
+        root_path,
         flash: { success: "Votre demande de support a bien été envoyée, nous essaierons de vous répondre au plus vite par email ou par téléphone" }
       )
     else
