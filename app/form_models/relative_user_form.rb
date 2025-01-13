@@ -3,13 +3,14 @@ class RelativeUserForm
 
   attr_reader :user, :ants_pre_demande_number_required
 
-  DELEGATED_ATTRIBUTES = %i[first_name last_name birth_date ants_pre_demande_number].freeze
+  USER_ATTRIBUTES = %i[first_name last_name birth_date ants_pre_demande_number].freeze
 
-  delegate(*DELEGATED_ATTRIBUTES, to: :user)
+  delegate(*USER_ATTRIBUTES, to: :user)
   delegate :persisted?, to: :user # pour que form_for utilise la bonne route PUT ou POST
 
   validate :validate_user
-  validates_with AntsPreDemandeNumberValidation, if: :ants_pre_demande_number_required
+  validates :ants_pre_demande_number, presence: true, if: :ants_pre_demande_number_required
+  validates_with AntsPreDemandeNumberValidation, if: -> { ants_pre_demande_number_required && user.ants_pre_demande_number.present? }
 
   def initialize(user:, **params)
     @user = user
@@ -24,8 +25,8 @@ class RelativeUserForm
   private
 
   def assign_attributes_from_params(params)
-    @ants_pre_demande_number_required = params[:ants_pre_demande_number_required]
-    @user.assign_attributes(params.slice(*DELEGATED_ATTRIBUTES))
+    @ants_pre_demande_number_required = params.fetch(:ants_pre_demande_number_required, @ants_pre_demande_number_required) # pour préserver la valeur de l’initialisation
+    @user.assign_attributes(params.slice(*USER_ATTRIBUTES))
   end
 
   def validate_user
