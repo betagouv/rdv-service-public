@@ -9,8 +9,6 @@ class RdvPlan < ApplicationRecord
 
   delegate :organisation, to: :motif
 
-  enum :location_type, Motif::LOCATION_TYPES_HASH
-
   validate :return_url_is_authorized
 
   private
