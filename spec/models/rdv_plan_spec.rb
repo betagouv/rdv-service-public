@@ -12,19 +12,4 @@ RSpec.describe RdvPlan do
       expect(rdv_plan).to be_valid
     end
   end
-
-  describe "#location_type" do
-    let(:motif) { create(:motif, location_type: :phone) }
-
-    it "matches the motif" do
-      rdv_plan = build(:rdv_plan, location_type: :public_office)
-      expect(rdv_plan).to be_valid
-
-      rdv_plan.motif = motif
-      expect(rdv_plan).not_to be_valid
-
-      rdv_plan.location_type = "phone"
-      expect(rdv_plan).to be_valid
-    end
-  end
 end

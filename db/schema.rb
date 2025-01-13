@@ -591,7 +591,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_08_115309) do
     t.bigint "lieu_id"
     t.datetime "starts_at"
     t.integer "duration_in_minutes"
-    t.enum "location_type", enum_type: "location_type"
     t.text "return_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

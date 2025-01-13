@@ -11,7 +11,7 @@ class RdvPlan < ApplicationRecord
 
   enum :location_type, Motif::LOCATION_TYPES_HASH
 
-  validate :return_url_is_authorized, :location_type_matches
+  validate :return_url_is_authorized
 
   private
 
@@ -22,13 +22,5 @@ class RdvPlan < ApplicationRecord
     return if uri.host&.end_with?(".gouv.fr")
 
     errors.add(:return_url, "N'est pas un nom de domaine autorisé")
-  end
-
-  def location_type_matches
-    return unless motif && location_type
-
-    if motif.location_type != location_type
-      errors.add(:location_type, "ne correspond pas au motif")
-    end
   end
 end
