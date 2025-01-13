@@ -4,7 +4,7 @@
   = dsfr_breadcrumbs do |b|
     = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
     - if @form.role_usager?
-      = b.breadcrumb label: "Contact - votre situation", href: aide_aiguillage_usager_path
+      = b.breadcrumb label: "Aide usagers", href: aide_aiguillage_usager_path
     = b.breadcrumb label: yield(:title)
 
 .fr-grid-row.fr-mb-4w
@@ -17,7 +17,7 @@
         required: true
       = f.dsfr_text_field :sujet, value: @form.sujet, label: "La raison de votre message", required: true
       - if @form.role_usager?
-        .fr-alert.fr-alert--info.fr-my-2w
+        .fr-callout.fr-my-2w
           p Merci de ne pas inclure d’informations sensibles (par exemple des informations de santé) dans votre message.
           p Ce message sera reçu par l’équipe de RDV Service Public, et non pas par les agents publics avec qui vous avez RDV.
       = f.dsfr_text_area :message, rows: 5, label: "Votre message", required: true

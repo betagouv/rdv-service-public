@@ -12,13 +12,13 @@
         = f.dsfr_radio_buttons :raison, @form.raisons_options, legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :"
         = f.submit "Valider", class: "fr-btn"
     - else
-      .fr-mb-1w
+      .fr-mb-4w
         |> Votre situation :
-        = @form.raison_label
-      .fr-mb-4w= link_to "Modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line"
+        b=> @form.raison_label
+        = link_to "modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line"
 
     - if @form.raison_creneaux?
-      .fr-alert.fr-alert--info.fr-mb-2w
+      .fr-callout.fr-mb-2w
         p
           ' L’équipe de RDV Service Public ne peut pas débloquer de nouvelles disponibilités dans les administrations.
 
@@ -31,7 +31,7 @@
       p
         ' Vous pouvez aussi chercher les coordonnées de l’organisme avec lequel vous souhaitez prendre RDV dans l’annuaire des services publics.
       .fr-mb-8w
-        = link_to "Consulter l’annuaire du Service Public", "https://lannuaire.service-public.fr/", class: "fr-btn fr-btn--secondary"
+        = link_to "Consulter l’annuaire du Service Public", "https://lannuaire.service-public.fr/", class: "fr-btn fr-btn--secondary", target: "_blank"
 
     - if @form.raison_annuler?
       .fr-accordions-group.fr-mb-4w
@@ -47,4 +47,4 @@
           new_aide_demande_support_path(role: :usager, sujet: @form.raison_label),
           class: "fr-link fr-mb-2w"
       .fr-mt-8w
-        = link_to "Revenir à l’accueil", root_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line"
+        = link_to "Revenir à l’accueil", root_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line fr-link--sm"
