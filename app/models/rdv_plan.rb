@@ -50,6 +50,7 @@ class RdvPlan < ApplicationRecord
     return if return_url.blank?
 
     uri = URI.parse(return_url)
+    return if uri.host == "www.rdv-mairie.localhost"
     return if uri.host&.end_with?(".gouv.fr")
 
     errors.add(:return_url, "N'est pas un nom de domaine autorisé")

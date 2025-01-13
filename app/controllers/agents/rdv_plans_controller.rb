@@ -77,7 +77,12 @@ class Agents::RdvPlansController < AgentAuthController
 
   # juste pour la démo
   def create
-    rdv_plan = RdvPlan.create!(planning_agent: current_agent, user_id: params.dig(:rdv_plan, :user_id))
+    user_id = params.dig(:rdv_plan, :user_id)
+    rdv_plan = RdvPlan.create!(
+      planning_agent: current_agent,
+      user_id: user_id,
+      return_url: request.referer
+    )
     authorize rdv_plan, :create?, policy_class: Agent::RdvPlanPolicy
     redirect_to edit_starts_at_agents_rdv_plan_path(rdv_plan)
   end
