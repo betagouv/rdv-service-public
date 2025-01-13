@@ -3,7 +3,9 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
     rdv_plan = RdvPlan.transaction do
       user_params = params.require(:user)
 
-      user = User.find_by(user_params.permit(:first_name, :last_name, :phone_number))
+      user = User.find_by(user_params.permit(:email))
+
+      user ||= User.find_by(user_params.permit(:first_name, :last_name, :phone_number))
 
       user ||= User.new(user_params.permit(:first_name, :last_name, :phone_number).merge(created_through: :agent_creation))
 
