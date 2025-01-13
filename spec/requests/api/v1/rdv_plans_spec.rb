@@ -62,7 +62,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
               email: "francis.factice@gmail.com",
               phone_number: "0611223344",
             },
-            return_url: "https://https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123",
+            return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123",
           }
         end
 
