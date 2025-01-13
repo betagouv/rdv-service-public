@@ -106,11 +106,6 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def plage_ouverture_params
-    if params[:plage_ouverture].keys.any? { _1.to_s.include?("i)") }
-      params[:plage_ouverture]["start_time(6i)"] = "00"
-      params[:plage_ouverture]["end_time(6i)"] = "00"
-    end
-
     params.require(:plage_ouverture).permit(:title, :agent_id, :first_day, :start_time, :end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: [])
   end
 

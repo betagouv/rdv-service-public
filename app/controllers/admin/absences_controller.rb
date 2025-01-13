@@ -87,10 +87,6 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def absence_params
-    if params[:absence].keys.any? { _1.to_s.include?("i)") }
-      params[:absence]["start_time(6i)"] = "00"
-      params[:absence]["end_time(6i)"] = "00"
-    end
     params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
   end
 
