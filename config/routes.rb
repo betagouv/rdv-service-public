@@ -290,8 +290,6 @@ Rails.application.routes.draw do
   get "contact", to: redirect("/aide/aiguillage_role")
   namespace :aide do
     get "aiguillage_role" => "pages#aiguillage_role"
-    get "annuaire" => "pages#annuaire"
-    get "documentation_usager" => "pages#documentation_usager"
     get "aiguillage_usager" => "pages#aiguillage_usager"
     resource :demande_support, only: %i[new create]
   end

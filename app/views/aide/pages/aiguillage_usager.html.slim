@@ -1,55 +1,50 @@
-- content_for :title, "Contact - votre situation"
+- content_for :title, "Aide usagers"
 
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
     = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
-    = b.breadcrumb label: "Documentation usagers", href: aide_documentation_usager_path
     = b.breadcrumb label: yield(:title)
 
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
-    = form_for @form, url: aide_aiguillage_usager_path, method: :GET, builder: DsfrFormBuilder do |f|
-      = f.dsfr_radio_buttons :raison,
-        @form.raisons_options,
-        legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :",
-        disabled: @form.raison.present? do
-        - if @form.raison.present?
-          = f.hidden_field :raison, value: @form.raison
-          .fr-mb-4w
-            = link_to "Modifier cette raison", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line"
-      - if @form.raison.blank?
+    - if @form.raison.blank?
+      = form_for @form, url: aide_aiguillage_usager_path, method: :GET, builder: DsfrFormBuilder do |f|
+        = f.dsfr_radio_buttons :raison, @form.raisons_options, legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :"
         = f.submit "Valider", class: "fr-btn"
+    - else
+      .fr-mb-1w
+        |> Votre situation :
+        = @form.raison_label
+      .fr-mb-4w= link_to "Modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line"
 
-      - if @form.raison_creneaux?
-        .fr-alert.fr-alert--info.fr-mb-2w
-          p
-            ' L’équipe de RDV Service Public ne peut pas débloquer de nouvelles disponibilités dans les administrations.
-
+    - if @form.raison_creneaux?
+      .fr-alert.fr-alert--info.fr-mb-2w
         p
-          ' Nous vous invitons à prendre contact avec l’organisme avec lequel vous souhaitez prendre RDV.
-          ' Les numéros de téléphone des organismes sont généralement affichés lors de la recherche de RDV accessible depuis l’accueil
-        .fr-mb-4w
-          = link_to "Faire une recherche de RDV depuis l’accueil", root_path, class: "fr-btn"
+          ' L’équipe de RDV Service Public ne peut pas débloquer de nouvelles disponibilités dans les administrations.
 
-        p
-          ' Vous pouvez aussi chercher les coordonnées de l’organisme avec lequel vous souhaitez prendre RDV dans l’annuaire.
-        .fr-mb-8w
-          = link_to "Consulter l’annuaire des organismes de RDV", aide_annuaire_path, class: "fr-link "
+      p
+        ' Nous vous invitons à prendre contact avec l’organisme avec lequel vous souhaitez prendre RDV.
+        ' Les numéros de téléphone des organismes sont généralement affichés lors de la recherche de RDV accessible depuis l’accueil
+      .fr-mb-4w
+        = link_to "Faire une recherche de RDV depuis l’accueil", root_path, class: "fr-btn"
 
-      - if @form.raison_annuler?
-        .fr-mb-1w
-          | Avez-vous consulté ces informations qui peuvent vous guider pour annuler votre RDV ?
-        .fr-accordions-group.fr-mb-4w
-          = render "aide/pages/documentation_usager/faq_annuler_rdv"
-          = render "aide/pages/documentation_usager/faq_annuler_rdv_sms"
-          = render "aide/pages/documentation_usager/faq_annuler_rdv_email"
+      p
+        ' Vous pouvez aussi chercher les coordonnées de l’organisme avec lequel vous souhaitez prendre RDV dans l’annuaire des services publics.
+      .fr-mb-8w
+        = link_to "Consulter l’annuaire du Service Public", "https://lannuaire.service-public.fr/", class: "fr-btn fr-btn--secondary"
 
-      - if @form.raison.present?
-        p
-          ' Si votre problème persiste, vous pouvez contacter l’équipe de RDV Service Public :
-        div
-          = link_to "Contacter l’équipe de RDV Service Public",
-            new_aide_demande_support_path(role: :usager, sujet: @form.raison_label),
-            class: "fr-btn fr-btn--secondary fr-mb-2w"
-        .fr-mt-8w
-          = link_to "Revenir à l’accueil", root_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line"
+    - if @form.raison_annuler?
+      .fr-accordions-group.fr-mb-4w
+        = render "aide/pages/documentation_usager/faq_annuler_rdv"
+        = render "aide/pages/documentation_usager/faq_annuler_rdv_sms"
+        = render "aide/pages/documentation_usager/faq_annuler_rdv_email"
+
+    - if @form.raison.present?
+      p
+        ' Si votre problème persiste, vous pouvez contacter l’équipe de RDV Service Public :
+      div
+        = link_to "Contacter l’équipe de RDV Service Public",
+          new_aide_demande_support_path(role: :usager, sujet: @form.raison_label),
+          class: "fr-link fr-mb-2w"
+      .fr-mt-8w
+        = link_to "Revenir à l’accueil", root_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line"

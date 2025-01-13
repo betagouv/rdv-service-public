@@ -4,10 +4,8 @@
   = dsfr_breadcrumbs do |b|
     = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
     - if @form.role_usager?
-      = b.breadcrumb label: "Documentation usagers", href: aide_documentation_usager_path
       = b.breadcrumb label: "Contact - votre situation", href: aide_aiguillage_usager_path
-    - else
-      = b.breadcrumb label: yield(:title)
+    = b.breadcrumb label: yield(:title)
 
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
@@ -37,7 +35,7 @@
       ul.fr-btns-group.fr-btns-group--inline
         li
           = link_to "Annuler",
-            @form.role_usager? ? aide_documentation_usager_path : root_path,
+            @form.role_usager? ? aide_aiguillage_usager_path : root_path,
             class: "fr-btn fr-btn--secondary"
         li
           = f.submit "Envoyer votre demande", class: "fr-btn"
