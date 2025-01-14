@@ -36,7 +36,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "with valid params" do
       let(:attributes) do
-        { user: { first_name: "Eliott", last_name: "Le Dragon" } }
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon" } }
       end
 
       it "creates a new User" do
@@ -53,7 +53,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "with invalid params" do
       let(:attributes) do
-        { user: { first_name: "Eliott" } }
+        { relative_user_form: { first_name: "Eliott" } }
       end
 
       it "does not creates a new User" do
@@ -71,7 +71,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "quand le numéro de pré-demande ANTS est requis et passé et valide" do
       let(:attributes) do
-        { user: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345" }, ants_pre_demande_number_required: "true" }
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345" }, ants_pre_demande_number_required: "true" }
       end
 
       include_context "rdv_mairie_api_authentication"
@@ -88,7 +88,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "quand le numéro de pré-demande ANTS est requis mais pas passé" do
       let(:attributes) do
-        { user: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number_required: "true" } }
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number_required: "true" } }
       end
 
       it "ne créé pas de proche" do
@@ -100,7 +100,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "quand le numéro de pré-demande ANTS est requis mais invalide" do
       let(:attributes) do
-        { user: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "blah", ants_pre_demande_number_required: "true" } }
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "blah", ants_pre_demande_number_required: "true" } }
       end
 
       it "ne créé pas de proche" do
@@ -119,7 +119,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "with valid params" do
       let(:attributes) do
-        { id: relative.id, user: { first_name: "Eliott" } }
+        { id: relative.id, relative_user_form: { first_name: "Eliott" } }
       end
 
       it "creates a new User" do
@@ -136,7 +136,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "with invalid params" do
       let(:attributes) do
-        { id: relative.id, user: { first_name: " " } }
+        { id: relative.id, relative_user_form: { first_name: " " } }
       end
 
       it "does not creates a new User" do
