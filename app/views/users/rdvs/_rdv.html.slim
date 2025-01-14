@@ -39,7 +39,7 @@ ul.list-group.list-group-flush.fr-mb-3w
   - elsif rdv.motif.visio?
     li.list-group-item.fr-pl-0.fr-py-2w
       .fr-mb-1w
-        span.fr-icon-mac-fill.fr-mr-1w[aria-hidden="true"]
+        = visio_icon(class: "fr-mr-1w")
         = "RDV par visioconférence "
       .fr-ml-4w
         = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
