@@ -143,7 +143,7 @@ gem "rubyzip" # zip export files
 # Recurring events in Ruby
 gem "montrose"
 # Supplies TimeOfDay and Shift class
-gem "tod", "~> 2.2"
+gem "tod"
 # A ruby implementation of the iCalendar specification (RFC-5545).
 gem "icalendar", "~> 2.5"
 

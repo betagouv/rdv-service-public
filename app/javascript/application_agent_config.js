@@ -1,6 +1,6 @@
 require("@rails/ujs").start()
 require("turbolinks").start()
-import { DsfrNewPassword } from "./components/dsfr-new-password";
+import DsfrNewPassword from "./components/dsfr-new-password";
 import { Modal } from './components/modal';
 import './components/browser-detection';
 import 'select2/dist/js/select2.min.js';
