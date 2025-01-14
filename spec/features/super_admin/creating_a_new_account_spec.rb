@@ -66,7 +66,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
     new_motif = new_organisation.motifs.first
     expect(new_motif).to have_attributes(
-      name: "Mon premier motif"
+      name: "Suivi de dossier"
     )
 
     perform_enqueued_jobs
