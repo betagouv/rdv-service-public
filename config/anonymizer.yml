@@ -450,9 +450,10 @@ tables:
       - revoked_at
       - expires_in
   - table_name: rdv_plans
+    anonymized_column_names:
+      - return_url
     non_anonymized_column_names:
       - duration_in_minutes
-      - return_url
       - starts_at
       - created_at
       - updated_at
