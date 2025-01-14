@@ -1,33 +1,6 @@
 RSpec.describe PlageOuverture, type: :model do
   let!(:organisation) { create(:organisation) }
 
-  describe "#end_after_start" do
-    subject { plage_ouverture.send(:end_after_start) }
-
-    let(:plage_ouverture) { build(:plage_ouverture, start_time: start_time, end_time: end_time, organisation: organisation) }
-
-    context "start_time < end_time" do
-      let(:start_time) { Tod::TimeOfDay.new(7) }
-      let(:end_time) { Tod::TimeOfDay.new(8) }
-
-      it { expect(subject).to be_nil }
-    end
-
-    context "start_time = end_time" do
-      let(:start_time) { Tod::TimeOfDay.new(7) }
-      let(:end_time) { start_time }
-
-      it { expect(subject&.type).to eq(:must_be_after_start_time) }
-    end
-
-    context "start_time > end_time" do
-      let(:start_time) { Tod::TimeOfDay.new(7, 30) }
-      let(:end_time) { Tod::TimeOfDay.new(7) }
-
-      it { expect(subject&.type).to eq(:must_be_after_start_time) }
-    end
-  end
-
   describe "lieu presence" do
     context "when no motif requires a lieu" do
       it "is valid without a lieu" do

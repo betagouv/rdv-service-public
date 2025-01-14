@@ -33,7 +33,6 @@ class PlageOuverture < ApplicationRecord
   has_many :motifs, -> { distinct }, through: :motifs_plage_ouvertures
 
   # Validations
-  validate :end_after_start
   validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
   validates :motifs, presence: true
@@ -134,12 +133,6 @@ class PlageOuverture < ApplicationRecord
 
   def valid_date_and_times?
     [first_day, start_time, end_time].all?(&:present?)
-  end
-
-  def end_after_start
-    return if end_time.blank? || start_time.blank?
-
-    errors.add(:end_time, :must_be_after_start_time) if end_time <= start_time
   end
 
   def lieu_is_enabled

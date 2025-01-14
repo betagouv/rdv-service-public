@@ -201,11 +201,19 @@ RSpec.describe RecurrenceConcern do
 
   shared_examples "#human_time_range" do
     it "does not show minutes if the are zero" do
-      object = build(factory, start_time: Tod::TimeOfDay("09:00"), end_time: Tod::TimeOfDay("12:00"))
+      object = build(factory, start_time: "09:00", end_time: "12:00")
       expect(object.human_time_range).to eq("9h-12h")
 
-      object = build(factory, start_time: Tod::TimeOfDay("09:15"), end_time: Tod::TimeOfDay("12:45"))
+      object = build(factory, start_time: "09:15", end_time: "12:45")
       expect(object.human_time_range).to eq("9h15-12h45")
+    end
+  end
+
+  shared_examples "#end_time_must_be_after_start_time" do
+    it "validates that end_time is strictly greater than start_time" do
+      expect(build(factory, start_time: "09:00", end_time: "12:00")).to be_valid    # start_time < end_time
+      expect(build(factory, start_time: "09:00", end_time: "09:00")).to be_invalid  # start_time = end_time
+      expect(build(factory, start_time: "09:00", end_time: "08:00")).to be_invalid  # start_time > end_time
     end
   end
 
@@ -218,6 +226,7 @@ RSpec.describe RecurrenceConcern do
       include_examples "#recurrence_ends_after_first_day"
       include_examples "#set_recurrence_ends_at"
       include_examples "#human_time_range"
+      include_examples "#end_time_must_be_after_start_time"
     end
   end
 end

@@ -1,0 +1,11 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        plage_ouverture:
+          attributes: &error_messages
+            end_time:
+              format: "%{message}"
+              must_be_after_start_time: "L'heure de fin doit être ultérieure à l'heure de début."
+        absence:
+          attributes: *error_messages
