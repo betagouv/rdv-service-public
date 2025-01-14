@@ -5,7 +5,7 @@ module Admin::RdvWizardFormConcern
     include ActiveModel::Model
     include Rails.application.routes.url_helpers
 
-    attr_accessor :rdv, :service_id
+    attr_accessor :rdv, :service_id, :rdv_plan_id
     attr_reader :agent_author
 
     # delegates all getters and setters to rdv
@@ -17,7 +17,7 @@ module Admin::RdvWizardFormConcern
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
 
     def initialize(agent_author, organisation, attributes)
-      rdv_attributes = attributes.to_h.symbolize_keys.except(:service_id)
+      rdv_attributes = attributes.to_h.symbolize_keys.except(:service_id, :rdv_plan_id)
       rdv_defaults = {
         agent_ids: [agent_author.id],
         organisation_id: organisation.id,
@@ -30,6 +30,7 @@ module Admin::RdvWizardFormConcern
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
       @rdv.participations.each(&:set_default_notifications_flags)
       @service_id = attributes.to_h.symbolize_keys[:service_id]
+      @rdv_plan_id = attributes.to_h.symbolize_keys[:rdv_plan_id]
     end
   end
 
@@ -42,6 +43,7 @@ module Admin::RdvWizardFormConcern
       agent_ids: rdv.agents&.map(&:id),
       context: rdv.context,
       service_id: service_id,
+      rdv_plan_id: rdv_plan_id,
     }
 
     if rdv.lieu.present?

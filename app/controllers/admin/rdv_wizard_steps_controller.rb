@@ -4,7 +4,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
   before_action :set_agent
 
   PERMITTED_PARAMS = [
-    :motif_id, :duration_in_min, :starts_at, :lieu_id, :context, :service_id,
+    :motif_id, :duration_in_min, :starts_at, :lieu_id, :context, :service_id, :rdv_plan_id,
     :organisation_id, :ignore_benign_errors,
     { agent_ids: [], user_ids: [], participations_attributes: {}, lieu_attributes: Rdv::ACCEPTED_NESTED_LIEU_ATTRIBUTES },
   ].freeze

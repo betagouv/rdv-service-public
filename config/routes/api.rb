@@ -20,6 +20,7 @@ namespace :api do
     # Doesn't need authentication
     resources :public_links, only: [:index]
     resources :teams, only: %i[index]
+    resources :rdv_plans, only: [:create]
   end
 
   namespace :ants do

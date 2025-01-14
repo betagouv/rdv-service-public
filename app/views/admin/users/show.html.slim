@@ -1,7 +1,7 @@
 - content_for(:menu_item) { "menu-users" }
 
 - content_for :title do
-  | #{@user.full_name}
+  | Mon Suivi Social >  #{@user.full_name}
 
 - content_for :breadcrumb do
   ol.breadcrumb.mr-2.d-inline-flex
@@ -12,7 +12,9 @@
         = link_to @user.responsible.full_name, admin_organisation_user_path(current_organisation, @user.responsible)
     li.breadcrumb-item.active #{@user.full_name}
 
-  = link_to t(".find_rdv"), admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "btn btn-outline-primary"
+  = simple_form_for RdvPlan.new, url: agents_rdv_plans_path do |f|
+    = f.hidden_field :user_id, value: @user.id
+    = f.submit "Prendre rendez-vous", class: "btn btn-outline-primary"
 
 .row
   .col-md-6

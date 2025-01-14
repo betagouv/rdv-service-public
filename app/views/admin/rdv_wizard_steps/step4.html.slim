@@ -12,6 +12,7 @@ do
         fields: %i[motif_id lieu_id context starts_at duration_in_min ignore_benign_errors], \
         agent_ids: @rdv.agent_ids,
         lieu_attributes: @rdv.nested_lieu_attributes
+      = hidden_field :rdv, :rdv_plan_id, value: params[:rdv_plan_id] || params.dig(:rdv, :rdv_plan_id)
 
       = render "admin/motifs/visibility", motif: @rdv.motif
 
