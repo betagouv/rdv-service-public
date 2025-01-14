@@ -39,7 +39,7 @@ class Compte
         create_mairie_motifs!
         add_mairie_motifs_categories!
       else
-        create_example_motif!
+        create_example_motifs!
       end
 
       AgentTerritorialRole.create!(agent: agent, territory: territory)
@@ -92,15 +92,17 @@ class Compte
     end
   end
 
-  def create_example_motif!
-    Motif.create!(
+  def create_example_motifs!
+    default_motif_attributes = {
       organisation: organisation,
-      name: "Mon premier motif",
+      name: "Suivi de dossier",
       color: "#99CC99",
-      location_type: :public_office,
       default_duration_in_min: 30,
       bookable_by: :agents,
-      service: agent.services.first
-    )
+      service: agent.services.first,
+    }
+    Motif.create!(default_motif_attributes.merge(location_type: :phone))
+    Motif.create!(default_motif_attributes.merge(location_type: :visio))
+    Motif.create!(default_motif_attributes.merge(location_type: :public_office))
   end
 end
