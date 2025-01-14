@@ -663,7 +663,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.5.0)
     timeout (0.4.1)
-    tod (2.2.0)
+    tod (3.1.2)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -816,7 +816,7 @@ DEPENDENCIES
   sprockets-rails
   stackprof
   strong_migrations
-  tod (~> 2.2)
+  tod
   turbolinks (~> 5)
   typhoeus
   wannabe_bool
