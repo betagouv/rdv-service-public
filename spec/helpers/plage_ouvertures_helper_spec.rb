@@ -5,16 +5,6 @@ RSpec.describe PlageOuverturesHelper do
     travel_to(now)
   end
 
-  describe "#every_5_minutes_of_the_day" do
-    it "return 288 entries for all times of the day by 5 minutes increment" do
-      expect(every_5_minutes_of_the_day.count).to eq(288)
-      expect(every_5_minutes_of_the_day.first).to eq("00:00")
-      expect(every_5_minutes_of_the_day.last).to eq("23:55")
-      expect(every_5_minutes_of_the_day[12 * 18]).to eq("18:00")
-      expect(every_5_minutes_of_the_day[(12 * 18) + 5]).to eq("18:25")
-    end
-  end
-
   describe "#display_recurrence" do
     it "with a weekly recurrence" do
       plage_ouverture = build(:plage_ouverture, recurrence: Montrose.every(:week))
