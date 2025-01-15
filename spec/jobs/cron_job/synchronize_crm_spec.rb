@@ -1,4 +1,4 @@
-RSpec.describe CronJob::CrmSync, type: :job do
+RSpec.describe CronJob::SynchronizeCrm, type: :job do
   let(:compte_prod_url) { "https://demo.rdv-solidarites.fr/territories/1" }
   let(:notion_page) { Notion::Messages::Message.new(id: "page_id", properties: { "COMPTE PROD": { url: compte_prod_url } }) }
   let(:notion_client) { instance_double(Notion::Client) }

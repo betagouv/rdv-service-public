@@ -101,7 +101,7 @@ gem "blueprinter"
 gem "typhoeus"
 
 # External services
-gem "notion-ruby-client", "1.2.2"
+gem "notion-ruby-client", "~> 1.2"
 
 # API documentation
 

@@ -1,4 +1,7 @@
-class CronJob::CrmSync < ApplicationJob
+class CronJob::SynchronizeCrm < ApplicationJob
+  # Base de données "Activation"
+  # ID récupéré dans l’URL de la page
+  # Cf: https://developers.notion.com/reference/retrieve-a-database
   NOTION_DATABASE_ID = "81a35c7b2490464590a408bbbb78ca2e".freeze
 
   def perform
