@@ -12,7 +12,7 @@ class Admin::RdvWizardForm::Step4
     if @rdv_plan_id.present?
       rdv_plan = RdvPlan.find(@rdv_plan_id)
       rdv_plan.update!(rdv: rdv)
-      admin_organisation_rdv_path(rdv.organisation, rdv)
+      admin_organisation_rdv_path(rdv.organisation, rdv, clear_session_current_rdv_plan: true)
     else
       admin_organisation_agent_agenda_path(
         rdv.organisation,

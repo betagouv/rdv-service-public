@@ -128,17 +128,16 @@ class CalendarRdvSolidarites {
   }
 
   selectEvent = (info) => {
-    const currentUrlParams = new URLSearchParams(window.location.search);
-
     const urlSearchParams = new URLSearchParams({
       starts_at: info.startStr,
       "agent_ids[]": this.data.agentId,
     });
 
+    const currentUrlParams = new URLSearchParams(window.location.search);
     if (currentUrlParams.has("user_ids[]"))
-      urlSearchParams['user_ids[]'] = currentUrlParams.getAll("user_ids[]")
+      urlSearchParams.append('user_ids[]', currentUrlParams.getAll("user_ids[]"))
     if (currentUrlParams.has("rdv_plan_id"))
-      urlSearchParams['rdv_plan_id'] = currentUrlParams.get("rdv_plan_id")
+      urlSearchParams.append('rdv_plan_id',  currentUrlParams.get("rdv_plan_id"))
 
     window.location = `/admin/organisations/${this.data.organisationId}/rdv_wizard_step/new?${urlSearchParams.toString()}`;
   }

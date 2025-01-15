@@ -8,6 +8,10 @@ nav.left-side-menu-wrapper
             i.fa.fa-bars
     - if content_for? :side_nav_menu
       = yield :side_nav_menu
+    - elsif session[:hide_sidebar].present?
+      ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0
+        li.p-2
+          = link_to "Afficher le menu", url_for(request.params.merge(clear_session_hide_sidebar: true)), class: "fr-btn"
     - else
 
       ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0

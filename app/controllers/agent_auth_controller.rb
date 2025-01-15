@@ -6,6 +6,8 @@ class AgentAuthController < ApplicationController
   before_action :authorize_organisation, if: -> { params[:organisation_id].present? }
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
+  before_action :clear_session_hide_sidebar, if: -> { params[:clear_session_hide_sidebar].present? }
+  before_action :clear_session_current_rdv_plan, if: -> { params[:clear_session_current_rdv_plan].present? }
 
   helper_method :current_organisation, :current_territory, :policy_scope, :from_modal?
 
@@ -36,5 +38,13 @@ class AgentAuthController < ApplicationController
     # on n’utilise pas le helper authorize directement car le pundit_user défini plus haut a comme contexte
     # l’organisation elle même, ici on veut un contexte d’agent sans organisation
     Pundit.authorize(AgentContext.new(current_agent), current_organisation, :show?, policy_class: Agent::OrganisationPolicy)
+  end
+
+  def clear_session_hide_sidebar
+    session.delete(:hide_sidebar)
+  end
+
+  def clear_session_current_rdv_plan
+    session.delete(:current_rdv_plan)
   end
 end

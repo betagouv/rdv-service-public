@@ -9,6 +9,11 @@ header.header.bg-white
       i.fa.fa-bars.text-primary-blue
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
+        - if session[:current_rdv_plan].present? && params[:rdv_plan_id].nil?
+          li.list-inline-item
+            = link_to "Reprendre la prise de RDV pour #{session[:current_rdv_plan]['user_name']}",
+              session[:current_rdv_plan]["url"],
+              class: "btn text-primary-blue link-dsfr"
         = render "layouts/rdv_a_renseigner", organisation: defined?(current_organisation) && current_organisation
         li.list-inline-item
           #js-headway-anchor.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center

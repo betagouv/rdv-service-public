@@ -8,6 +8,10 @@ class Admin::AgentAgendasController < AgentAuthController
     @date = params[:date].present? ? Date.parse(params[:date]) : nil
     @rdv_plan = RdvPlan.find(params[:rdv_plan_id]) if params[:rdv_plan_id]
     @users = User.where(id: params[:user_ids]) if params[:user_ids].present?
+    if @rdv_plan.present? && @users.present? && session[:current_rdv_plan].blank?
+      session[:current_rdv_plan] = { "id" => params[:rdv_plan_id], "url" => request.url, "user_name" => @users.first.to_s }
+      session[:hide_sidebar] ||= true
+    end
   end
 
   def toggle_displays
