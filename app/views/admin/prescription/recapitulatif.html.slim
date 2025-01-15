@@ -17,6 +17,20 @@ main.container
                   = UsersHelper.reverse_full_name_and_notification_coordinates(@rdv_wizard.participation.user)
                 .col-auto
                   = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
+            - if current_territory.enable_context_field
+              li.list-group-item
+                .row
+                  .col
+                    i.fa.fa-check.fa-fw.mr-1.text-success
+                    |> Contexte :
+                    - if @rdv_wizard.context.present?
+                      - parts = @rdv_wizard.context.strip.split("\n")
+                      = parts.first.strip
+                      = "…" if parts.size > 1
+                    - else
+                      | N/A
+                  .col-auto
+                    = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
 
           .row.mt-2
             .col.text-right
