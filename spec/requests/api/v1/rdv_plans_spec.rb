@@ -24,11 +24,9 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
               },
             },
             return_url: { type: :string },
-            lieux: {
-              type: :array,
-            },
+            dossier_url: { type: :string },
           },
-          required: %w[user return_url],
+          required: %w[user],
         },
         example: {
           user: {

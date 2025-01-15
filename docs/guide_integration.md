@@ -38,7 +38,7 @@ POST /api/v1/rdv_plans
 }
 ```
 
-Seuls les champs `user.first_name` et `user.last_name` sont obligatoires, les autres sont facultatifs
+Seuls les champs `user.first_name` et `user.last_name` sont obligatoires, les autres sont facultatifs.
 
 Vous obtiendrez une réponse à ce format :
 ```
