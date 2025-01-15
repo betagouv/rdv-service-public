@@ -82,7 +82,7 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Contexte : N/A")
       # retour page selection usager pour modifier le contexte
       find(".col", text: "Contexte : N/A").ancestor(".list-group-item").click_on "modifier"
-      fill_in "Contexte", with: "L’usager est pressé\nMerci"
+      fill_in "Contexte", with: "L’usager est pressé\r\nMerci"
       # deuxième passage page récap
       click_on "Continuer"
       expect(page).to have_content("L’usager est pressé…")
@@ -100,7 +100,7 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(created_rdv.created_by).to eq(current_agent)
       expect(created_rdv.participations.last.created_by).to eq(current_agent)
       expect(created_rdv.participations.last.created_by_agent_prescripteur).to be(true)
-      expect(created_rdv.context).to eq("L’usager est pressé\nMerci")
+      expect(created_rdv.context).to eq("L’usager est pressé\r\nMerci")
     end
 
     describe "for a collective rdv" do
