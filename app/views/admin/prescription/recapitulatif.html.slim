@@ -23,12 +23,7 @@ main.container
                   .col
                     i.fa.fa-check.fa-fw.mr-1.text-success
                     |> Contexte :
-                    - if @rdv_wizard.context.present?
-                      - parts = @rdv_wizard.context.strip.split("\n")
-                      = parts.first.strip
-                      = "…" if parts.size > 1
-                    - else
-                      | N/A
+                    = @rdv_wizard.context&.strip&.truncate_words(6)&.presence || "N/A"
                   .col-auto
                     = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
 
