@@ -33,8 +33,11 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_motif
-    @motifs = current_agent.motifs.where(organisation_id: current_agent.roles.select(:organisation_id))
-      .where(location_type: @rdv_plan.location_type)
+    @motifs = current_agent.motifs.individuels.where(
+      organisation_id: current_agent.roles.select(:organisation_id),
+      location_type: @rdv_plan.location_type,
+      service: @rdv_plan.rdv_agent.services
+    )
     @rdv_plan.duration_in_minutes ||= @motifs.first.default_duration_in_min
   end
 
