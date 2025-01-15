@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr" data-fr-scheme="system">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
+
+  <meta name="theme-color" content="#000091"><!-- Défini la couleur de thème du navigateur (Safari/Android) -->
+  <link rel="stylesheet" href="/dsfr-v1.13.0/dsfr.min.css">
+  <link rel="stylesheet" href="/dsfr-v1.13.0/utility/utility.min.css">
+
+  <title>Mon Suivi Social</title>
+</head>
+
+<body>
+
+  <div class="fr-container">
+    <main>
+      <h1> Mon Suivi Social</h1>
+      <h2> Page usager</h2>
+
+      <form>
+        <fieldset class="fr-fieldset">
+          <div class="fr-input-group">
+            <label class="fr-label" for="first_name">Prénom</label>
+            <input type="text" class="fr-input" id="first_name" name="first_name" value="Jean">
+          </div>
+          <div class="fr-input-group">
+            <label class="fr-label" for="last_name">Nom</label>
+            <input type="text" class="fr-input" id="last_name" name="last_name" value="Jacques">
+          </div>
+          <div class="fr-input-group">
+            <input type="submit" class="fr-btn" value="Prendre un RDV">
+          </div>
+        </fieldset>
+      </form>
+    </main>
+  </div>
+
+  <!-- Script en version es6 module et nomodule pour les navigateurs le ne supportant pas -->
+  <script type="module" src="/dsfr-v1.13.0/dsfr.module.min.js"></script>
+  <script type="text/javascript" nomodule src="/dsfr-v1.13.0/dsfr.nomodule.min.js"></script>
+
+  <script>
+    document.querySelector("form").addEventListener("submit", (e) => {
+      e.preventDefault()
+      const form = e.currentTarget
+
+      fetch('/api/v1/auth/sign_in', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: 'martine@demo.rdv-solidarites.fr',
+          password: 'Rdvservicepublictest1!',
+        }),
+      }).then(response => {
+        const accessToken = response.headers.get('access-token')
+        const client = response.headers.get('client')
+        const uid = response.headers.get('uid')
+        console.log('Access-Token:', accessToken)
+        console.log('Client:', client)
+        console.log('UID:', uid)
+
+        // POST to /api/v1/rdv_plans with form data and headers
+        fetch('/api/v1/rdv_plans', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'access-token': accessToken,
+            'client': client,
+            'uid': uid,
+          },
+          body: JSON.stringify({
+            user: {
+              first_name: form.first_name.value,
+              last_name: form.last_name.value,
+            },
+            return_url: "/mss.html"
+          }),
+        }).then(response => response.json())
+          .then(rdvPlan => window.location = rdvPlan.url)
+      })
+    })
+  </script>
+</body>
+
+</html>

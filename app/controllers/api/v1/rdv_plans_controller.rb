@@ -18,7 +18,15 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
         return_url: params[:return_url]
       )
     end
-    render json: RdvPlanBlueprint.render(rdv_plan, root: "rdv_plan"), status: :created
+    json = RdvPlanBlueprint.render_as_hash(rdv_plan, root: "rdv_plan")
+    json["url"] = admin_organisation_agent_agenda_url(
+      current_agent.organisations.first.id,
+      current_agent.id,
+      host: ENV["HOST"],
+      user_ids: [rdv_plan.user.id],
+      rdv_plan_id: rdv_plan.id
+    )
+    render json:, status: :created
   end
 
   def show
