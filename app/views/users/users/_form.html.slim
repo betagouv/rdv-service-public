@@ -4,7 +4,7 @@ ruby:
   form_method = rdv_wizard.present? ? "post" : "patch"
   territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
 
-= form_for user, url: form_url, method: form_method, builder: DsfrFormBuilder do |f|
+= form_for user, url: form_url, method: form_method, builder: Dsfr::FormBuilder do |f|
   = render "model_errors", model: user, f: f
   .fr-grid-row.fr-grid-row--gutters.fr-mb-5v
     .fr-col-md-6= f.dsfr_text_field :first_name, disabled: user.logged_once_with_franceconnect?
