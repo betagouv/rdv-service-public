@@ -30,7 +30,7 @@ RSpec.describe "RDV Plan API" do
 
     context "when the user doesn't already exist" do
       it "creates the user and the rdv plan" do
-        post "/api/v1/rdv_plans", headers: headers, params: params
+        post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
       end
     end
   end
