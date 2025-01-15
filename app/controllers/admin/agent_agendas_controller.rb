@@ -6,6 +6,8 @@ class Admin::AgentAgendasController < AgentAuthController
     @organisation = current_organisation
     @selected_event_id = params[:selected_event_id]
     @date = params[:date].present? ? Date.parse(params[:date]) : nil
+    @rdv_plan = RdvPlan.find(params[:rdv_plan_id]) if params[:rdv_plan_id]
+    @users = User.where(id: params[:user_ids]) if params[:user_ids].present?
   end
 
   def toggle_displays

@@ -9,7 +9,7 @@ class Admin::RdvWizardForm::Step4
   end
 
   def success_path
-    if @rdv_plan_id
+    if @rdv_plan_id.present?
       rdv_plan = RdvPlan.find(@rdv_plan_id)
       rdv_plan.update!(rdv: rdv)
       admin_organisation_rdv_path(rdv.organisation, rdv)
@@ -24,7 +24,7 @@ class Admin::RdvWizardForm::Step4
   end
 
   def success_flash
-    if @rdv_plan_id
+    if @rdv_plan_id.present?
       rdv_plan = RdvPlan.find(@rdv_plan_id)
       message = "Le rendez-vous a été créé. <a href='#{rdv_plan.return_url}'>Retour vers Mon Suivi Social</a>"
     else

@@ -11,9 +11,9 @@ class Agents::RdvPlansController < AgentAuthController
       return_url: request.referer
     )
     authorize rdv_plan, :create?, policy_class: Agent::RdvPlanPolicy
-    redirect_to new_admin_organisation_rdv_wizard_step_path(
+    redirect_to admin_organisation_agent_agenda_path(
       current_agent.organisations.first.id,
-      agent_ids: [current_agent.id],
+      current_agent.id,
       user_ids: [user_id],
       rdv_plan_id: rdv_plan.id
     )
