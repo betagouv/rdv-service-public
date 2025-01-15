@@ -33,7 +33,7 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_motif
-    @motifs = current_agent.motifs.individuels.where(
+    @motifs = current_agent.motifs.individuel.where(
       organisation_id: current_agent.roles.select(:organisation_id),
       location_type: @rdv_plan.location_type,
       service: @rdv_plan.rdv_agent.services
