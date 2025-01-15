@@ -100,6 +100,9 @@ gem "blueprinter"
 # Parallel HTTP library on top of libcurl multi.
 gem "typhoeus"
 
+# External services
+gem "notion-ruby-client", "1.2.2"
+
 # API documentation
 
 # A Rails Engine that exposes OpenAPI (formerly called Swagger) files as JSON endpoints

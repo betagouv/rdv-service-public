@@ -73,5 +73,9 @@ Rails.application.configure do
       cron: "every day at 10:00 Europe/Paris",
       class: "CronJob::WarnAboutExpiringAzureAppSecrets",
     },
+    crm_sync: {
+      cron: "every day at 00:30 Europe/Paris",
+      class: "CronJob::CrmSync",
+    },
   }
 end
