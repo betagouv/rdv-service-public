@@ -3,11 +3,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
     rdv_plan = RdvPlan.transaction do
       user_params = params.require(:user)
 
-      user = User.find_by(user_params.permit(:email))
-
-      user ||= User.find_by(user_params.permit(:first_name, :last_name, :phone_number))
-
-      user ||= User.new(user_params.permit(:first_name, :last_name, :phone_number).merge(created_through: :agent_creation))
+      user = find_user(user_params) || User.new(user_params.permit(:first_name, :last_name, :email, :address))
 
       user.skip_confirmation_notification!
       user.update!(user_params.permit(:email, :address))
@@ -25,5 +21,29 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
     rdv_plan = policy_scope(RdvPlan, policy_scope_class: Agent::RdvPlanPolicy::Scope).find(params[:id])
 
     render_record rdv_plan
+  end
+
+  private
+
+  def find_user(user_params)
+    if user_params.permit(:id).present?
+
+      # Peut-être qu'on pourrait utiliser Agent::UserPolicy::TerritoryScope ici si on le
+      # refactore pour ne pas utiliser de current organisation
+      profile = UserProfile.joins(:organisation).find_by(
+        organisations: { territory_id: current_agent.agent_territorial_access_rights.select(:territory_id) },
+        user_id: user_params[:id]
+      )
+
+      if profile
+        profile.user
+      else
+        raise Pundit::NotAuthorizedError
+      end
+
+    else
+      user = User.find_by(user_params.permit(:email))
+      user || User.find_by(user_params.permit(:first_name, :last_name, :phone_number))
+    end
   end
 end
