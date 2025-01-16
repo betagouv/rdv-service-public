@@ -69,7 +69,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         specify do
           rdv_plan = RdvPlan.last
-          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/2/edit_starts_at"
+          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}/edit_starts_at"
           expect(parsed_response_body.dig("rdv_plan", "user_id")).to eq User.last.id
           expect(rdv_plan.user).to have_attributes(
             first_name: "Francis",
@@ -82,6 +82,38 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
             planning_agent: agent,
             return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123"
           )
+        end
+      end
+    end
+  end
+
+  path "/api/v1/rdv_plans/{rdv_plan_id}" do
+    get "Consulter un rdv plan" do
+      with_authentication
+      description "Permet de savoir si un rendez-vous a été pris pour ce rdv plan"
+
+      with_examples
+      produces "application/json"
+      consumes "application/json"
+      parameter name: :rdv_plan_id, in: :path, type: :integer, example: 123
+
+      let(:organisation) { create(:organisation) }
+      let!(:agent) { create(:agent, id: 12, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      response 200, "Retourne un rdv plan" do
+        run_test!
+
+        let(:rdv_plan_id) { rdv_plan.id }
+        let!(:rdv_plan) do
+          create(:rdv_plan, planning_agent: agent)
+        end
+
+        specify do
+          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}/edit_starts_at"
         end
       end
     end
