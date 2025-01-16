@@ -11,13 +11,50 @@ RSpec.describe Absence, type: :model do
     end
   end
 
-  describe "no reccurence for absence for several days" do
+  describe "no recurrence for absence for several days" do
     it "invalid with recurrence and absence on more than one day" do
       expect(build(:absence, :once_a_week, first_day: Date.new(2019, 7, 20), end_day: Date.new(2019, 7, 23))).to be_invalid
     end
 
     it "valid without recurrence and absence on more than one day" do
       expect(build(:absence, first_day: Date.new(2019, 7, 20), end_day: Date.new(2019, 7, 23))).to be_valid
+    end
+  end
+
+  describe "time validation" do
+    it "allows absence to span on multiple days if no recurrence" do
+      # Sur un seul jour, on valide que l'heure de fin est > à l'heure de début
+      single_day = build(:absence, :no_recurrence, first_day: Time.zone.today, end_day: Time.zone.today)
+      expect(single_day.tap { _1.assign_attributes(start_time: "09:00", end_time: "12:00") }).to be_valid    # start_time < end_time
+      expect(single_day.tap { _1.assign_attributes(start_time: "09:00", end_time: "09:00") }).to be_invalid  # start_time = end_time
+      expect(single_day.tap { _1.assign_attributes(start_time: "09:00", end_time: "08:00") }).to be_invalid  # start_time > end_time
+    end
+
+    it "validates start and and datetimes when spanning several days" do
+      # Sur plusieurs jours (sans recurrence), l'heure de fin peut être inférieure à l'heure de début
+      spanning_two_days = build(:absence, :no_recurrence, first_day: Time.zone.today, end_day: Time.zone.tomorrow)
+      expect(spanning_two_days.tap { _1.assign_attributes(start_time: "09:00", end_time: "12:00") }).to be_valid  # start_time < end_time
+      expect(spanning_two_days.tap { _1.assign_attributes(start_time: "09:00", end_time: "09:00") }).to be_valid  # start_time = end_time
+      expect(spanning_two_days.tap { _1.assign_attributes(start_time: "09:00", end_time: "08:00") }).to be_valid  # start_time > end_time
+    end
+
+    it "validates that the start and en date are in the right order" do
+      # Bien sûr, on valide que le jour de fin est supérieur ou égal au jour de début
+      first_day_after_end_day = build(:absence, :no_recurrence, first_day: Time.zone.tomorrow, end_day: Time.zone.today)
+      expect(first_day_after_end_day).to be_invalid
+    end
+
+    it "validates that times are in order if using recurrence" do
+      next_monday = 7.days.from_now.beginning_of_week
+      recurrent_absence = build(:absence, :once_a_week, first_day: next_monday)
+      expect(recurrent_absence.tap { _1.assign_attributes(start_time: "09:00", end_time: "12:00") }).to be_valid    # start_time < end_time
+      expect(recurrent_absence.tap { _1.assign_attributes(start_time: "09:00", end_time: "09:00") }).to be_invalid  # start_time = end_time
+      expect(recurrent_absence.tap { _1.assign_attributes(start_time: "09:00", end_time: "08:00") }).to be_invalid  # start_time > end_time
+    end
+
+    it "provides an error message" do
+      expected_message = "L'heure de fin doit être ultérieure à l'heure de début."
+      expect(build(:plage_ouverture, start_time: "09:00", end_time: "08:00").tap(&:validate).errors.full_messages).to include(expected_message)
     end
   end
 
@@ -35,7 +72,7 @@ RSpec.describe Absence, type: :model do
       end
     end
 
-    context "if the abence has many occurrences in range" do
+    context "if the absence has many occurrences in range" do
       let(:absence) { create(:absence, :once_a_week, first_day: Date.new(2019, 7, 22)) }
       let(:date_range) { Date.new(2019, 7, 29)..Date.new(2019, 8, 11) }
 
@@ -72,7 +109,7 @@ RSpec.describe Absence, type: :model do
       expect(absence.expired?).to be true
     end
 
-    it "return stil works for plage_ouverture" do
+    it "return still works for plage_ouverture" do
       today = Time.zone.parse("20210323 13:45")
       travel_to(today)
       plage_ouverture = build(:plage_ouverture, first_day: today - 3.days)

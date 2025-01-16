@@ -9,7 +9,6 @@ module RecurrenceConcern
     before_save :clear_empty_recurrence, :set_recurrence_ends_at
 
     validates :first_day, :start_time, :end_time, presence: true
-    validate :end_time_must_be_after_start_time
     validate :recurrence_starts_matches_first_day, if: :recurring?
     validate :recurrence_ends_after_first_day, if: :recurring?
 

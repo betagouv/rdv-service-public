@@ -33,6 +33,7 @@ class PlageOuverture < ApplicationRecord
   has_many :motifs, -> { distinct }, through: :motifs_plage_ouvertures
 
   # Validations
+  validate :end_time_must_be_after_start_time
   validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
   validates :motifs, presence: true

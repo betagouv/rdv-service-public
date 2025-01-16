@@ -209,14 +209,6 @@ RSpec.describe RecurrenceConcern do
     end
   end
 
-  shared_examples "#end_time_must_be_after_start_time" do
-    it "validates that end_time is strictly greater than start_time" do
-      expect(build(factory, start_time: "09:00", end_time: "12:00")).to be_valid    # start_time < end_time
-      expect(build(factory, start_time: "09:00", end_time: "09:00")).to be_invalid  # start_time = end_time
-      expect(build(factory, start_time: "09:00", end_time: "08:00")).to be_invalid  # start_time > end_time
-    end
-  end
-
   [Absence, PlageOuverture].each do |klass|
     describe(klass) do
       let(:factory) { described_class.name.underscore }
@@ -226,7 +218,6 @@ RSpec.describe RecurrenceConcern do
       include_examples "#recurrence_ends_after_first_day"
       include_examples "#set_recurrence_ends_at"
       include_examples "#human_time_range"
-      include_examples "#end_time_must_be_after_start_time"
     end
   end
 end

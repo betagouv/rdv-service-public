@@ -1,6 +1,17 @@
 RSpec.describe PlageOuverture, type: :model do
   let!(:organisation) { create(:organisation) }
 
+  describe "time validation" do
+    it "validates that end_time is strictly greater than start_time" do
+      expect(build(:plage_ouverture, start_time: "09:00", end_time: "12:00")).to be_valid    # start_time < end_time
+      expect(build(:plage_ouverture, start_time: "09:00", end_time: "09:00")).to be_invalid  # start_time = end_time
+      expect(build(:plage_ouverture, start_time: "09:00", end_time: "08:00")).to be_invalid  # start_time > end_time
+
+      expected_message = "L'heure de fin doit être ultérieure à l'heure de début."
+      expect(build(:plage_ouverture, start_time: "09:00", end_time: "08:00").tap(&:validate).errors.full_messages).to include(expected_message)
+    end
+  end
+
   describe "lieu presence" do
     context "when no motif requires a lieu" do
       it "is valid without a lieu" do

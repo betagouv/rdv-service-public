@@ -18,6 +18,7 @@ fr:
             first_day:
               format: "Le premier jour %{message}"
             end_time:
+              format: "%{message}"
               must_be_after_start_time: "doit être après l’heure de début."
             lieu:
               must_be_enabled: "doit être ouvert."
