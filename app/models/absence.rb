@@ -25,7 +25,7 @@ class Absence < ApplicationRecord
   validates :recurrence_ends_at, realistic_date: true
 
   # Hooks
-  before_validation :set_end_day
+  before_validation { self.end_day ||= first_day }
 
   # Scopes
   scope :by_starts_at, -> { order(first_day: :desc, start_time: :desc) }
@@ -49,12 +49,6 @@ class Absence < ApplicationRecord
   end
 
   private
-
-  def set_end_day
-    return unless end_day.nil?
-
-    self.end_day = first_day
-  end
 
   def no_recurrence_for_absence_for_several_days
     return if recurrence.blank? || end_day.blank? || first_day == end_day
