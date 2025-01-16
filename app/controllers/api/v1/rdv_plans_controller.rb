@@ -3,7 +3,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
     rdv_plan = RdvPlan.transaction do
       user_params = params.require(:user)
 
-      user = find_user(user_params) || User.new(user_params.permit(:first_name, :last_name, :email, :address))
+      user = find_or_build_user(user_params)
 
       user.skip_confirmation_notification!
       user.update!(user_params.permit(:email, :address))
@@ -25,6 +25,11 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
   private
 
+  def find_or_build_user(user_params)
+    find_user(user_params) ||
+      User.new(user_params.permit(:first_name, :last_name, :email, :address))
+  end
+
   def find_user(user_params)
     if user_params.permit(:id).present?
 
@@ -41,9 +46,8 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
         raise Pundit::NotAuthorizedError
       end
 
-    else
-      user = User.find_by(user_params.permit(:email))
-      user || User.find_by(user_params.permit(:first_name, :last_name, :phone_number))
+    elsif user_params[:email].present?
+      User.find_by(user_params.permit(:email))
     end
   end
 end
