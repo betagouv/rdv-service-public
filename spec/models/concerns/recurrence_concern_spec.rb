@@ -201,10 +201,10 @@ RSpec.describe RecurrenceConcern do
 
   shared_examples "#human_time_range" do
     it "does not show minutes if the are zero" do
-      object = build(factory, start_time: "09:00", end_time: "12:00")
+      object = build(factory, start_time: Tod::TimeOfDay("09:00"), end_time: Tod::TimeOfDay("12:00"))
       expect(object.human_time_range).to eq("9h-12h")
 
-      object = build(factory, start_time: "09:15", end_time: "12:45")
+      object = build(factory, start_time: Tod::TimeOfDay("09:15"), end_time: Tod::TimeOfDay("12:45"))
       expect(object.human_time_range).to eq("9h15-12h45")
     end
   end
