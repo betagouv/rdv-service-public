@@ -19,6 +19,6 @@ fr:
               format: "Le premier jour %{message}"
             end_time:
               format: "%{message}"
-              must_be_after_start_time: "L'heure de fin doit être ultérieure à l'heure de début."
+              must_be_after_start_time: "L’heure de fin doit être après l'heure de début."
             lieu:
               must_be_enabled: "doit être ouvert."
