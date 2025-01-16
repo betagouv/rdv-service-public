@@ -5,9 +5,6 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
       user = find_or_build_user(user_params)
 
-      user.skip_confirmation_notification!
-      user.update!(user_params.permit(:email, :address))
-
       RdvPlan.create!(
         planning_agent: current_agent,
         user: user,
@@ -26,8 +23,12 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   private
 
   def find_or_build_user(user_params)
-    find_user(user_params) ||
-      User.new(user_params.permit(:first_name, :last_name, :email, :address, :phone_number, :birth_date))
+    find_user(user_params) || build_user(user_params)
+  end
+
+  def build_user(user_params)
+    User.new(user_params.permit(:first_name, :last_name, :email, :address, :phone_number, :birth_date))
+      .tap(&:skip_confirmation_notification!)
   end
 
   def find_user(user_params)
@@ -41,6 +42,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
       )
 
       if profile
+        # TODO: gérer la mise à jour d'un usager en fonction des autres params
         profile.user
       else
         raise Pundit::NotAuthorizedError
