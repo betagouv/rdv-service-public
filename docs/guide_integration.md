@@ -34,7 +34,7 @@ POST /api/v1/rdv_plans
         "birth_date": "1990-12-31"
     },
     "return_url": "https://monsuivisocial.incubateur.anct.gouv.fr/callback/123",
-    "dossier_url": "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123" // sera affiché sur la page de détail du rdv et la
+    "dossier_url": "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123" // sera affiché sur la page de détail du rdv et la pièce jointe ICS. Pas encore implémenté
 }
 ```
 
