@@ -116,6 +116,7 @@ Rails.application.routes.draw do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
+      resources :rdv_plans, only: %i[show]
       resources :users, only: [] do
         collection do
           get "search"
