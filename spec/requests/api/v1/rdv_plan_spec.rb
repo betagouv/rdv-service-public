@@ -18,6 +18,14 @@ RSpec.describe "RDV Plan API" do
     )
   end
 
+  let(:agent) do
+    create(:agent, basic_role_in_organisations: [create(:organisation)])
+  end
+
+  before do
+    create(:agent_territorial_access_right, agent: agent, territory: agent.organisations.last.territory)
+  end
+
   describe "#create" do
     let(:params) do
       {
@@ -26,13 +34,6 @@ RSpec.describe "RDV Plan API" do
           last_name: "Factice",
         },
       }
-    end
-    let(:agent) do
-      create(:agent, basic_role_in_organisations: [create(:organisation)])
-    end
-
-    before do
-      create(:agent_territorial_access_right, agent: agent, territory: agent.organisations.last.territory)
     end
 
     context "when the user doesn't already exist" do
@@ -128,6 +129,35 @@ RSpec.describe "RDV Plan API" do
           address: "21 rue des Ardennes, 75019 Paris",
           birth_date: Date.parse("1990-12-31")
         )
+      end
+    end
+  end
+
+  describe "#show" do
+    context "when there is a rdv" do
+      let(:rdv_plan) do
+        create(:rdv_plan, rdv: create(:rdv), planning_agent: agent)
+      end
+
+      it "returns the minimum information about the rdv" do
+        get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
+        expect(parsed_response_body.dig("rdv_plan", "rdv")).to match(
+          {
+            id: rdv_plan.rdv_id,
+            status: "unknown",
+          }
+        )
+      end
+    end
+
+    context "when the rdv_plan belongs to a different user" do
+      let(:rdv_plan) do
+        create(:rdv_plan, planning_agent: create(:agent))
+      end
+
+      it "returns an error" do
+        get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
+        expect(response.status).to eq 404
       end
     end
   end

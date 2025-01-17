@@ -7,5 +7,12 @@ class RdvPlanBlueprint < Blueprinter::Base
     Rails.application.routes.url_helpers.edit_starts_at_agents_rdv_plan_url(rdv_plan, host: rdv_plan.planning_agent.domain.host_name)
   end
 
-  association :rdv, blueprint: RdvBlueprint
+  field :rdv do |rdv_plan, _options|
+    next if rdv_plan.rdv.nil?
+
+    {
+      id: rdv_plan.rdv_id,
+      status: rdv_plan.rdv.status,
+    }
+  end
 end
