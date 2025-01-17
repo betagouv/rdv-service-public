@@ -70,7 +70,13 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
         specify do
           rdv_plan = RdvPlan.last
           expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
-          expect(parsed_response_body.dig("rdv_plan", "user_id")).to eq User.last.id
+
+          expect(parsed_response_body["rdv_plan"]).to include(
+            "user_id" => User.last.id,
+            "created_at" => rdv_plan.created_at.to_s,
+            "updated_at" => rdv_plan.updated_at.to_s
+          )
+
           expect(rdv_plan.user).to have_attributes(
             first_name: "Francis",
             last_name: "Factice",
