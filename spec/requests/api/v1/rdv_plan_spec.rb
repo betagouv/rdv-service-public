@@ -51,11 +51,11 @@ RSpec.describe "RDV Plan API" do
         { user: { id: user.id } }
       end
 
-      context "when the user is in a different territory" do
+      context "when the user is not in any of the agent's organisations" do
         let(:user) do
-          create(:user, organisations: [organisation_from_other_territory])
+          create(:user, organisations: [other_organisation])
         end
-        let(:organisation_from_other_territory) { create(:organisation) }
+        let(:other_organisation) { create(:organisation) }
 
         it "raises an error" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
@@ -64,7 +64,7 @@ RSpec.describe "RDV Plan API" do
         end
       end
 
-      context "when the user is in one of the agent's territories" do
+      context "when the user is in one of the agent's organisations" do
         let(:user) do
           create(:user, organisations: [agent.organisations.last])
         end
