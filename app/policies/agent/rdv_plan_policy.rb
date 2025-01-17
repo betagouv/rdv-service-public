@@ -4,7 +4,7 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
   end
   alias show? create?
 
-  class Scope
+  class Scope < Scope
     def resolve
       scope.where(planning_agent: pundit_user)
     end

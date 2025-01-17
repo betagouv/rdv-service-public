@@ -22,6 +22,10 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
   private
 
+  def pundit_user
+    current_agent
+  end
+
   def find_or_build_user(user_params)
     find_user(user_params) || build_user(user_params)
   end
