@@ -38,20 +38,14 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   def find_user(user_params)
     if user_params.permit(:id).present?
 
-      # Peut-être qu'on pourrait utiliser Agent::UserPolicy::TerritoryScope ici si on le
-      # refactore pour ne pas utiliser de current organisation
-      profile = UserProfile.joins(:organisation).find_by(
-        organisations: { territory_id: current_agent.agent_territorial_access_rights.select(:territory_id) },
-        user_id: user_params[:id]
-      )
+      user = User.find(user_params[:id])
 
-      if profile
-        # TODO: gérer la mise à jour d'un usager en fonction des autres params
-        profile.user
-      else
+      if user.organisation_ids.intersection(current_agent.organisation_ids).blank?
+        # L'agent et l'usager n'ont pas d'organisations en commun
         raise Pundit::NotAuthorizedError
       end
 
+      user
     elsif user_params[:email].present?
       User.find_by(user_params.permit(:email))
     end

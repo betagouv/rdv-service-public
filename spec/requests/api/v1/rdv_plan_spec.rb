@@ -22,10 +22,6 @@ RSpec.describe "RDV Plan API" do
     create(:agent, basic_role_in_organisations: [create(:organisation)])
   end
 
-  before do
-    create(:agent_territorial_access_right, agent: agent, territory: agent.organisations.last.territory)
-  end
-
   describe "#create" do
     let(:params) do
       {
