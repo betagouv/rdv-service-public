@@ -33,8 +33,8 @@ POST /api/v1/rdv_plans
         "address": "21 rue des Ardennes, 75019 Paris",
         "birth_date": "1990-12-31"
     },
-    "return_url": "https://monsuivisocial.incubateur.anct.gouv.fr/callback/123",
-    "dossier_url": "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123" // sera affiché sur la page de détail du rdv et la pièce jointe ICS. Pas encore implémenté
+    "return_url": "https://monsuivisocial.incubateur.anct.gouv.fr/callback/123", // l'agent sera redirigé vers cette url après la page de confirmation du rdv.
+    "dossier_url": "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123" // sera affiché à l'agent (mais pas à l'usager) sur la page de détail du rdv et la pièce jointe ICS de l'email de confirmation. Pas encore implémenté
 }
 ```
 
@@ -47,7 +47,7 @@ Vous obtiendrez une réponse à ce format :
         "id": 23,
         "rdv": null,
         "user_id": 345,
-        "url": "http://demo.anct.gouv.fr/agents/rdv_plans/23/edit_starts_at"
+        "url": "http://demo.anct.gouv.fr/agents/rdv_plans/23"
     }
 }
 ```
