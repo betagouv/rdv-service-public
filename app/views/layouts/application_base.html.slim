@@ -5,6 +5,8 @@ html lang="fr"
     = stylesheet_link_tag "#{dsfr_path}/dsfr.min.css", "data-turbo-track": "reload"
     = stylesheet_link_tag "#{dsfr_path}/utility/icons/icons.min.css", "data-turbo-track": "reload"
     = stylesheet_link_tag "application", media: "all", "data-turbolinks-track": "reload"
+    = content_for(:additional_stylesheets)
+
     = javascript_include_tag "application", "data-turbolinks-track": "reload"
     = javascript_include_tag "#{dsfr_path}/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
     = javascript_include_tag "#{dsfr_path}/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
@@ -21,6 +23,9 @@ html lang="fr"
           header.with_tool_link title: "Vos informations", path: users_informations_path
           header.with_tool_link title: "Votre compte", path: edit_user_registration_path
           header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-icon-lock-fill", html_attributes: { "data-method": "delete" }
+        elsif current_agent
+          header.with_tool_link title: "Espace Agent", path: root_path
+          header.with_tool_link title: current_agent.full_name, path: edit_agent_registration_path
         elsif current_domain == Domain::RDV_MAIRIE && request.path == "/"
           header.with_tool_link title: "Centre d’aide", path: "https://aide.rdv-service-public.fr", classes: "fr-icon-questionnaire-line"
           header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, classes: "fr-icon-admin-line"

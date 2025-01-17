@@ -2,7 +2,7 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
   def create?
     pundit_user == record.planning_agent
   end
-  alias show? create?
+  alias edit? create?
 
   class Scope < Scope
     def resolve
