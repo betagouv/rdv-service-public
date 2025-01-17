@@ -69,7 +69,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         specify do
           rdv_plan = RdvPlan.last
-          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}/edit_starts_at"
+          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
           expect(parsed_response_body.dig("rdv_plan", "user_id")).to eq User.last.id
           expect(rdv_plan.user).to have_attributes(
             first_name: "Francis",
@@ -111,7 +111,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
         let!(:rdv_plan) { create(:rdv_plan, planning_agent: agent) }
 
         specify do
-          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}/edit_starts_at"
+          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
         end
       end
     end
