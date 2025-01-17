@@ -46,6 +46,8 @@ class RdvPlan < ApplicationRecord
     end
   end
 
+  private
+
   def return_url_is_authorized
     return if return_url.blank?
 

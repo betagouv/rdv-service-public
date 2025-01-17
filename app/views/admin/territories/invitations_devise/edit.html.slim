@@ -16,7 +16,7 @@
         p.fr-hint-text Tous les champs sont obligatoires.
         = render "devise/shared/dsfr_error_messages", resource: resource
         = f.hidden_field :invitation_token
-        .fr-grid-row.fr-grid-row--gutters
+        .fr-grid-row.fr-grid-row--gutters.fr-mb-5v
           .fr-col-md-6= f.dsfr_text_field :first_name, required: true
           .fr-col-md-6= f.dsfr_text_field :last_name, required: true
         = render "common/form/new_password_input", f: , hint: "Choisissez votre mot de passe"
