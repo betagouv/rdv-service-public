@@ -17,8 +17,12 @@ class RdvPlan < ApplicationRecord
     return if return_url.blank?
 
     uri = URI.parse(return_url)
-    return if uri.host&.end_with?(".gouv.fr")
 
-    errors.add(:return_url, "N'est pas un nom de domaine autorisé")
+    unless uri.scheme.in(%w[http https])
+      errors.add(:return_url, "Doit utiliser http ou https")
+    end
+    unless uri.host&.end_with?(".gouv.fr")
+      errors.add(:return_url, "N'est pas un nom de domaine autorisé")
+    end
   end
 end

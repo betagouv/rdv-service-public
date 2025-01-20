@@ -21,7 +21,7 @@ class RdvPlanCalendar {
       eventSources: JSON.parse(dataset.eventSourcesJson),
       defaultDate: JSON.parse(dataset.defaultDateJson),
       defaultView: dataset.singleDay === "true" ? 'timeGridDay' : 'timeGridWeek',
-      hiddenDays: [],
+      hiddenDays: [0],
       header: { left:  '', center: '', right:  '' },
       select: this.selectEvent,
       minTime: dataset.minTime || '07:00:00',
@@ -40,10 +40,8 @@ class RdvPlanCalendar {
   }
 
   selectEvent = (info) => {
-    const field = document.getElementById('rdvPlanCalendarField')
-    field.value = info.startStr
-    const form = document.getElementById('rdvPlanCalendarForm')
-    form.submit()
+    document.getElementById('rdvPlanCalendarField').value = info.startStr
+    document.getElementById('rdvPlanCalendarForm').submit()
   }
 }
 
