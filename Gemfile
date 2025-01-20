@@ -100,6 +100,9 @@ gem "blueprinter"
 # Parallel HTTP library on top of libcurl multi.
 gem "typhoeus"
 
+# External services
+gem "notion-ruby-client", "~> 1.2"
+
 # API documentation
 
 # A Rails Engine that exposes OpenAPI (formerly called Swagger) files as JSON endpoints
@@ -143,7 +146,7 @@ gem "rubyzip" # zip export files
 # Recurring events in Ruby
 gem "montrose"
 # Supplies TimeOfDay and Shift class
-gem "tod", "~> 2.2"
+gem "tod"
 # A ruby implementation of the iCalendar specification (RFC-5545).
 gem "icalendar", "~> 2.5"
 

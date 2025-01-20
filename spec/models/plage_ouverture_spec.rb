@@ -1,30 +1,14 @@
 RSpec.describe PlageOuverture, type: :model do
   let!(:organisation) { create(:organisation) }
 
-  describe "#end_after_start" do
-    subject { plage_ouverture.send(:end_after_start) }
+  describe "time validation" do
+    it "validates that end_time is strictly greater than start_time" do
+      expect(build(:plage_ouverture, start_time: "09:00", end_time: "12:00")).to be_valid    # start_time < end_time
+      expect(build(:plage_ouverture, start_time: "09:00", end_time: "09:00")).to be_invalid  # start_time = end_time
+      expect(build(:plage_ouverture, start_time: "09:00", end_time: "08:00")).to be_invalid  # start_time > end_time
 
-    let(:plage_ouverture) { build(:plage_ouverture, start_time: start_time, end_time: end_time, organisation: organisation) }
-
-    context "start_time < end_time" do
-      let(:start_time) { Tod::TimeOfDay.new(7) }
-      let(:end_time) { Tod::TimeOfDay.new(8) }
-
-      it { expect(subject).to be_nil }
-    end
-
-    context "start_time = end_time" do
-      let(:start_time) { Tod::TimeOfDay.new(7) }
-      let(:end_time) { start_time }
-
-      it { expect(subject&.type).to eq(:must_be_after_start_time) }
-    end
-
-    context "start_time > end_time" do
-      let(:start_time) { Tod::TimeOfDay.new(7, 30) }
-      let(:end_time) { Tod::TimeOfDay.new(7) }
-
-      it { expect(subject&.type).to eq(:must_be_after_start_time) }
+      expected_message = "L’heure de fin doit être après l'heure de début."
+      expect(build(:plage_ouverture, start_time: "09:00", end_time: "08:00").tap(&:validate).errors.full_messages).to include(expected_message)
     end
   end
 
