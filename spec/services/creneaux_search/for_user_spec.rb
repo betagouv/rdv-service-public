@@ -73,7 +73,7 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
       agent2 = create(:agent, basic_role_in_organisations: [organisation])
       motif = create(:motif, :sectorisation_level_agent, organisation: organisation)
       mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => Agent.where(id: [agent1.id, agent2.id]) })
-      expect(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, contain_exactly(agent1, agent2)).and_return([creneau_double])
+      allow(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, contain_exactly(agent1, agent2)).and_return([creneau_double])
       creneaux = described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
       expect(creneaux).to eq [creneau_double]
     end
