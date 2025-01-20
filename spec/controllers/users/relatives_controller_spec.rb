@@ -71,7 +71,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "quand le numéro de pré-demande ANTS est requis et passé et valide" do
       let(:attributes) do
-        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345" }, ants_pre_demande_number_required: "true" }
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345", ants_pre_demande_number_required: "true" } }
       end
 
       include_context "rdv_mairie_api_authentication"
