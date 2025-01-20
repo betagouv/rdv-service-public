@@ -93,20 +93,13 @@ RSpec.describe Users::RelativesController, type: :controller do
 
       include_context "rdv_mairie_api_authentication"
       before do
-        appointments = [
-          {
-            management_url: "https://gerer-rdv.com/1234",
-            meeting_point: "Mairie de Sannois",
-            appointment_date: "2023-04-03T08:45:00",
-          },
-        ]
-        stub_ants_status_ok("VALID12345", status: "validated", appointments:)
+        stub_ants_status_ok("VALID12345", status: "validated", appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "https://rdvsympa.fr/123" }])
       end
 
       it "créé le proche avec le numéro de pré-demande" do
         expect { subject }.not_to change(User, :count)
-        expect(response.body).to include(%(Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois.))
-        expect(response.body).to include(%(Veuillez <a href='https://gerer-rdv.com/1234' target="_blank">annuler ce RDV<a> avant d'en prendre un nouveau.))
+        expect(response.body).to include(%(Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.))
+        expect(response.body).to include(%(Veuillez <a href="https://rdvsympa.fr/123" target="_blank">annuler ce RDV<a> avant d'en prendre un nouveau.))
       end
     end
 

@@ -186,7 +186,7 @@ RSpec.describe UserRdvWizard do
           expect(form.errors.first.message).to eq(
             <<-TXT.squish
               Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.
-              Veuillez <a href='http://rdvsympa.fr/123' target="_blank">annuler ce RDV<a> avant d'en prendre un nouveau.
+              Veuillez <a href="http://rdvsympa.fr/123" target="_blank">annuler ce RDV<a> avant d'en prendre un nouveau.
           TXT
           )
         end
