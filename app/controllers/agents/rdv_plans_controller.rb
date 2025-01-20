@@ -6,7 +6,9 @@ class Agents::RdvPlansController < AgentAuthController
     redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
   end
 
-  def edit_starts_at; end
+  def edit_starts_at
+    @rdv_plan.starts_at = nil
+  end
 
   def update_starts_at
     @rdv_plan.update!(params.require(:rdv_plan).permit(:starts_at).merge(rdv_agent: current_agent))
