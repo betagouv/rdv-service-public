@@ -10,6 +10,9 @@ module Ants
     # discard_on(StandardError) { |_job, ex| raise ex }
 
     def perform(ants_pre_demande_number:)
+      # Nous avons parfois dans les jobs des numéros qui finissent par un espace
+      ants_pre_demande_number = ants_pre_demande_number.strip
+
       ants_status = AntsApi.status(ants_pre_demande_number:, timeout: 4)
 
       return false unless ants_status["status"] == "validated"
