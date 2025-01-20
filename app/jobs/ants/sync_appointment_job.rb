@@ -10,10 +10,11 @@ module Ants
     # discard_on(StandardError) { |_job, ex| raise ex }
 
     def perform(ants_pre_demande_number:)
-      # Nous avons parfois dans les jobs des numéros qui finissent par un espace
-      ants_pre_demande_number = ants_pre_demande_number.strip
+      # Nous avons parfois dans les jobs des numéros qui finissent par un espace.
+      # Le temps d'investiguer, nous évitons ici que les jobs soient bloqués à cause d'un espace.
+      stripped_ants_pre_demande_number = ants_pre_demande_number.strip
 
-      ants_status = AntsApi.status(ants_pre_demande_number:, timeout: 4)
+      ants_status = AntsApi.status(ants_pre_demande_number: stripped_ants_pre_demande_number, timeout: 4)
 
       return false unless ants_status["status"] == "validated"
 
@@ -27,7 +28,7 @@ module Ants
         .joins(:users)
         .joins(motif: [:motif_category])
         .merge(MotifCategory.requires_ants_predemande_number)
-        .where(users: { ants_pre_demande_number: ants_pre_demande_number })
+        .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number] })
         .where.not(status: Rdv::CANCELLED_STATUSES)
         .where("starts_at >= ?", Time.zone.now)
         .order(id: :desc) # choix arbitraire pour éviter un comportement aléatoire
@@ -40,7 +41,7 @@ module Ants
       # en effet l’API de l’ANTS ne permet pas de faire de mises à jour, on fait donc un delete puis un update
       ants_appointments.each do |appointment|
         AntsApi.delete(
-          ants_pre_demande_number:,
+          ants_pre_demande_number: stripped_ants_pre_demande_number,
           **appointment.symbolize_keys.slice(:meeting_point, :appointment_date, :meeting_point_id)
         )
       end
@@ -48,7 +49,7 @@ module Ants
       # S’il n’y a aucun RDV non-annulé dans notre DB, on s’arrête ici. Il n’y a plus aucun appointment ANTS
       return unless rdv
 
-      AntsApi.create(ants_pre_demande_number:, **rdv.serialize_for_ants_api)
+      AntsApi.create(ants_pre_demande_number: stripped_ants_pre_demande_number, **rdv.serialize_for_ants_api)
     end
   end
 end
