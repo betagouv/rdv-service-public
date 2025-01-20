@@ -1,29 +1,26 @@
-fieldset.fr-fieldset.radio-hint-element-messages[id="radio-hint-element" aria-labelledby="radio-hint-element-legend"]
-  legend.fr-fieldset__legend--regular.fr-fieldset__legend[id="radio-hint-element-legend"]
-  | Comment souhaitez-vous faire le rendez-vous ?
-  .fr-fieldset__element
-    .fr-radio-group
-      input[type="radio" id="radio-hint-element-1" name="radio-hint-element"]
-      label.fr-label[for="radio-hint-element-1"]
-      Sur place
-      span.fr-hint-text
-      | Texte de description additionnel
-    .fr-radio-group
-      input[type="radio" id="radio-hint-element-1" name="radio-hint-element"]
-      label.fr-label[for="radio-hint-element-1"]
-      Libellé bouton radio
-      span.fr-hint-text
-      | Texte de description additionnel
-    .fr-radio-group
-      input[type="radio" id="radio-hint-element-1" name="radio-hint-element"]
-      label.fr-label[for="radio-hint-element-1"]
-      Libellé bouton radio
-      span.fr-hint-text
-      | Texte de description additionnel
-    .fr-radio-group
-      input[type="radio" id="radio-hint-element-1" name="radio-hint-element"]
-      label.fr-label[for="radio-hint-element-1"]
-      Libellé bouton radio
-      span.fr-hint-text
-      | Texte de description additionnel
+- available_location_types = rdv_plan.rdv_agent.motifs.individuel.active.where(organisation_id: rdv_plan.rdv_agent.roles.select(:organisation_id)).pluck(:location_type)
 
+fieldset[class="fr-fieldset" id="radio-rich-no-pictogram-inline" aria-labelledby="radio-rich-no-pictogram-inline-legend radio-rich-no-pictogram-inline-messages"]
+  legend[class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-rich-no-pictogram-inline-legend"]
+    | Comment souhaitez-vous faire le rendez-vous ?
+
+  - if available_location_types.include?("public_office")
+    .fr-fieldset__element
+      .fr-radio-group.fr-radio-rich
+        input[value="1" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
+        label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+          | Libellé bouton radio
+          <span class="fr-hint-text">Texte de description additionnel</span>
+
+  .fr-fieldset__element
+    .fr-radio-group.fr-radio-rich
+      input[value="1" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
+      label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+        Libellé bouton radio
+  .fr-fieldset__element
+    .fr-radio-group.fr-radio-rich
+      input[value="1" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
+      label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+        Libellé bouton radio
+  <div class="fr-messages-group" id="radio-rich-no-pictogram-inline-messages" aria-live="polite">
+  </div>

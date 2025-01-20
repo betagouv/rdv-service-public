@@ -13,8 +13,7 @@
         .input-group
           = datetime_input(f, :starts_at, options: { label_html: { style: "flex-shrink: 0;", class: "fr-mr-2w" }, wrapper_html: { class: "d-flex", style: "align-items: baseline;" }})
 
-      = "Comment souhaitez-vous faire le rendez-vous ?"
       = f.collection_radio_buttons :modalite, modalites_collection, :first, :last, item_wrapper_tag: :div, item_wrapper_class: "fr-m-2w"
-      = render "agents/rdv_plans/modalites_field"
+      = render "agents/rdv_plans/modalites_field", rdv_plan: @rdv_plan
 
       = f.submit "Continuer", class: "fr-btn float-right"

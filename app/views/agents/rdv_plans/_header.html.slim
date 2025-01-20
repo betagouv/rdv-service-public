@@ -2,5 +2,5 @@
 - content_for(:additional_scripts) { javascript_include_tag "rdv_plan", "data-turbolinks-track": "reload" }
 - content_for(:additional_stylesheets) { stylesheet_link_tag "rdv_plan", media: "all", "data-turbolinks-track": "reload" }
 h1.fr-h2
-  | Nouveau rendez-vous avec #{rdv_plan.user.full_name}
+  | Nouveau rendez-vous par téléphone avec #{rdv_plan.user.full_name}
 = render "common/stepper", step_count: 3, current_step:, step_title:, next_step_title:
