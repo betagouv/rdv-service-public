@@ -1,5 +1,6 @@
 class RelativeUserForm
   include ActiveModel::Model
+  include BenignErrors
 
   attr_reader :user, :ants_pre_demande_number_required
 
