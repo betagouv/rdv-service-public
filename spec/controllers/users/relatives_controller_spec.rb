@@ -86,6 +86,30 @@ RSpec.describe Users::RelativesController, type: :controller do
       end
     end
 
+    context "quand le numéro de pré-demande ANTS est requis et passé et valide mais qu'il existe déjà des RDVs pris ailleurs pour ce numéro" do
+      let(:attributes) do
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345", ants_pre_demande_number_required: "true" } }
+      end
+
+      include_context "rdv_mairie_api_authentication"
+      before do
+        appointments = [
+          {
+            management_url: "https://gerer-rdv.com/1234",
+            meeting_point: "Mairie de Sannois",
+            appointment_date: "2023-04-03T08:45:00",
+          },
+        ]
+        stub_ants_status_ok("VALID12345", status: "validated", appointments:)
+      end
+
+      it "créé le proche avec le numéro de pré-demande" do
+        expect { subject }.not_to change(User, :count)
+        expect(response.body).to include(%(Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois.))
+        expect(response.body).to include(%(Veuillez <a href='https://gerer-rdv.com/1234' target="_blank">annuler ce RDV<a> avant d'en prendre un nouveau.))
+      end
+    end
+
     context "quand le numéro de pré-demande ANTS est requis mais pas passé" do
       let(:attributes) do
         { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number_required: "true" } }
