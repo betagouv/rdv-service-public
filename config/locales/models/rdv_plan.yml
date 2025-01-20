@@ -1,0 +1,5 @@
+fr:
+  activerecord:
+    attributes:
+      rdv_plan:
+        starts_at: "Date et heure"
