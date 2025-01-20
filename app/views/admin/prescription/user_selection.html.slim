@@ -31,6 +31,12 @@ main.container
                                 current_organisation, modal: true, return_location: return_url, role: default_service_selection_from(@rdv_wizard.rdv.motif.service) \
                         ), \
                         data: { modal: true }
+
+            - if current_territory.enable_context_field
+              .form-group.mt-3
+                = f.label :context, Rdv.human_attribute_name(:context)
+                = f.text_area :context,  rows: 4, class: "form-control", value: @rdv_wizard.context
+
             .form-group
               .float-right
                 = submit_tag "Continuer", class: "btn btn-primary"
