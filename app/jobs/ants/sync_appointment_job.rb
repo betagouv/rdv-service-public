@@ -51,5 +51,13 @@ module Ants
 
       AntsApi.create(ants_pre_demande_number: stripped_ants_pre_demande_number, **rdv.serialize_for_ants_api)
     end
+
+    def capture_sentry_warning_for_retry?(exception)
+      if exception.is_a?(Typhoeus::Errors::TimeoutError)
+        false
+      else
+        super
+      end
+    end
   end
 end
