@@ -1,2 +1,2 @@
 https://github.com/Scalingo/nodejs-buildpack.git
-https://github.com/Scalingo/ruby-buildpack.git
+https://github.com/adipasquale/ruby-buildpack.git#precompile-manifest-js
