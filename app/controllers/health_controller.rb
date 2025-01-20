@@ -1,3 +1,5 @@
+class JobsNotScheduledCorrectly < StandardError; end
+
 class HealthController < ApplicationController
   def db_connection
     Territory.count # cette ligne raisera en cas de problème de connexion
@@ -20,13 +22,23 @@ class HealthController < ApplicationController
 
   def jobs_scheduled
     time_range = (1.hour.ago..2.minutes.ago) # petit délai pour laisser le temps au scheduler d’enqueue les jobs
-    jobs_missed = Rails.configuration.good_job.cron.values.select do |job_config|
-      expected_enqueued_count = CronMonitor.expected_enqueued_count(job_config[:cron], time_range)
-      actual_enqueued_count = GoodJob::Job.where(job_class: job_config[:class], queue_name: "cron", scheduled_at: (1.hour.ago..Time.zone.now)).count
-      actual_enqueued_count < expected_enqueued_count
-    end.pluck(:class)
+    jobs_ok, jobs_missed = Rails.configuration.good_job.cron.map do |cron_key, cron_config|
+      expected_enqueued_ats = CronMonitor.expected_enqueued_ats(cron_config[:cron], time_range).map(&:to_s)
+      # on utilise cron_key et cron_at pour utiliser l’index existant. cron_at ~= enqueued_at
+      actual_enqueued_ats = GoodJob::Job.where(cron_key:, cron_at: (1.hour.ago..Time.zone.now)).pluck(:cron_at).map(&:to_s)
+      missed_jobs_count = expected_enqueued_ats.count - actual_enqueued_ats.count
 
-    render(status: (jobs_missed.any? ? :service_unavailable : :ok), json: { jobs_missed: })
+      cron_config.merge(missed_jobs_count:, expected_enqueued_ats:, actual_enqueued_ats:)
+    end.partition { _1[:missed_jobs_count] <= 0 }
+
+    context = { time_range_start: time_range.begin, time_range_end: time_range.end, jobs_ok:, jobs_missed: }
+    if jobs_missed.any?
+      Sentry.set_context("jobs_missed", context.except(:jobs_ok)) # pour alléger le contexte sentry
+      Sentry.capture_exception(JobsNotScheduledCorrectly.new)
+      render status: :service_unavailable, json: context
+    else
+      render status: :ok, json: context
+    end
   end
 
   private
