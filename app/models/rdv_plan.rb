@@ -18,7 +18,7 @@ class RdvPlan < ApplicationRecord
 
     uri = URI.parse(return_url)
 
-    unless uri.scheme.in(%w[http https])
+    unless uri.scheme&.in?(%w[http https])
       errors.add(:return_url, "Doit utiliser http ou https")
     end
     unless uri.host&.end_with?(".gouv.fr")
