@@ -17,7 +17,7 @@ class SearchContext
   end
 
   def creneaux
-    @creneaux ||= creneaux_search.unique_creneaux
+    @creneaux ||= creneaux_search.creneaux
   end
 
   def available_collective_rdvs

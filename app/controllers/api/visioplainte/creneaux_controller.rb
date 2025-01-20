@@ -10,7 +10,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     creneaux = CreneauxSearch::ForUser.new(
       motif: motif,
       date_range: date_range
-    ).unique_creneaux
+    ).creneaux
 
     render json: {
       creneaux: creneaux.map do |creneau|
