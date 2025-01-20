@@ -146,9 +146,9 @@ RSpec.describe "User can search rdv on rdv mairie" do
       click_button("Continuer")
 
       click_link("Ajouter un proche")
-      fill_in("user_first_name", with: "Alain")
-      fill_in("user_last_name", with: "Mairie")
-      fill_in("user_ants_pre_demande_number", with: "5544332211")
+      fill_in("Prénom", with: "Alain")
+      fill_in("Nom d’usage", with: "Mairie")
+      fill_in("Numéro de pré-demande ANTS", with: "5544332211")
       click_button("Enregistrer")
 
       # Pour éviter une flaky spec (causée par l'animation CSS de la modale ?),
