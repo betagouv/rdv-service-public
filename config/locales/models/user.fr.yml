@@ -74,6 +74,8 @@ fr:
   # BeneficiaireForm
   activemodel:
     attributes:
+      relative_user_form:
+        ants_pre_demande_number: *ants_pre_demande_number_label
       beneficiaire_form:
         ants_pre_demande_number: *ants_pre_demande_number_label
     errors:
