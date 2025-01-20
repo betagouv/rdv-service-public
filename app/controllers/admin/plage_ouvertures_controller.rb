@@ -36,6 +36,7 @@ class Admin::PlageOuverturesController < AgentAuthController
         first_day: Time.zone.now,
         start_time: Tod::TimeOfDay.new(9),
         end_time: Tod::TimeOfDay.new(12),
+        recurrence: Montrose::Recurrence.new(every: :week, interval: 1),
       }
     end
     @plage_ouverture = PlageOuverture.new(
