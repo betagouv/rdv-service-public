@@ -36,7 +36,7 @@ class CronJob::SynchronizeCrm < ApplicationJob
     elsif account_url.match('organisations/(\d+)')
       [account_url.match('organisations/(\d+)')[1]]
     else
-      raise "Unrecognized account URL: #{account_url}"
+      Sentry.capture_message("Unrecognized account URL: #{account_url}", fingerprint: ["CronJob::SynchronizeCrm"])
     end
   end
 
