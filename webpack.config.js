@@ -10,6 +10,7 @@ module.exports = {
     application_agent: "./app/javascript/application_agent",
     application_agent_config: "./app/javascript/application_agent_config",
     charts: "./app/javascript/charts",
+    rdv_plan: "./app/javascript/rdv_plan",
     mail: "./app/javascript/mail",
     instance_name: "./app/javascript/instance_name",
   },

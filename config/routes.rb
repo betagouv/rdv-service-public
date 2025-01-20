@@ -116,7 +116,14 @@ Rails.application.routes.draw do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
-      resources :rdv_plans, only: %i[show]
+      resources :rdv_plans, only: %i[show] do
+        member do
+          get :edit_starts_at
+          patch :update_starts_at
+
+          get :show_starts_at # Route temporaire qui sera supprimée quand on implémentera la suite du parcours
+        end
+      end
       resources :users, only: [] do
         collection do
           get "search"
