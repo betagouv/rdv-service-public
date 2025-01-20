@@ -27,6 +27,11 @@ class CreneauxSearch::ForUser
     CreneauxSearch::NextAvailability.find(motif, @lieu, attributed_agents, from: from, to: @motif.end_booking_delay)
   end
 
+  def unique_creneaux
+    # On n'affiche qu'un créneau par horaire, même si plusieurs agents sont dispos
+    creneaux.uniq(&:starts_at)
+  end
+
   def creneaux
     return available_collective_rdvs if motif.collectif?
 
