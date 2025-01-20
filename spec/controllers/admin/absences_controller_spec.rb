@@ -168,7 +168,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
     end
 
     describe "DELETE #destroy" do
-      let!(:absence) { create(:absence, agent_id: agent.id) }
+      let!(:absence) { create(:absence, :once_a_week, agent_id: agent.id) }
 
       it "destroys the requested absence" do
         expect do

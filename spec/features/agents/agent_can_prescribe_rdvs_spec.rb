@@ -8,7 +8,7 @@ RSpec.describe "agents can prescribe rdvs" do
   end
 
   let(:now) { Time.zone.parse("2024-01-05 16h00") }
-  let!(:territory) { create(:territory, departement_number: "75") }
+  let!(:territory) { create(:territory, departement_number: "75", enable_context_field: true) }
 
   let!(:service_rsa) { create(:service, name: "Service RSA") }
   let!(:service_autre) { create(:service, name: "Service autre") }
@@ -79,6 +79,13 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Lieu : #{mission_locale_paris_nord.name}")
       expect(page).to have_content("Date du rendez-vous :")
       expect(page).to have_content("Usager : FACTICE Francis")
+      expect(page).to have_content("Contexte : N/A")
+      # retour page selection usager pour modifier le contexte
+      find(".col", text: "Contexte : N/A").ancestor(".list-group-item").click_on "modifier"
+      fill_in "Contexte", with: "L’usager est pressé il a besoin d’aide\r\nMerci"
+      # deuxième passage page récap
+      click_on "Continuer"
+      expect(page).to have_content("L’usager est pressé il a besoin...")
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
@@ -93,6 +100,7 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(created_rdv.created_by).to eq(current_agent)
       expect(created_rdv.participations.last.created_by).to eq(current_agent)
       expect(created_rdv.participations.last.created_by_agent_prescripteur).to be(true)
+      expect(created_rdv.context).to eq("L’usager est pressé il a besoin d’aide\r\nMerci")
     end
 
     describe "for a collective rdv" do

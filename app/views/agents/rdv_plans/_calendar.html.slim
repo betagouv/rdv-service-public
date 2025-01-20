@@ -1,0 +1,33 @@
+/ locals(rdv_plan:, single_day: false)
+ruby:
+  organisation = current_agent.organisations.first
+  event_sources = [
+    admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: organisation.id, format: :json),
+    admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: organisation.id, format: :json),
+    admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: organisation.id, in_background: true, format: :json),
+    OffDays.to_full_calendar_array,
+  ]
+
+  if rdv_plan.starts_at
+    event_sources << [{
+      title: rdv_plan.user.full_name,
+      start: rdv_plan.starts_at.as_json,
+      end: (rdv_plan.starts_at + (rdv_plan.duration_in_minutes || 30).minutes).as_json,
+      textColor: "white",
+      backgroundColor: "#6a6af4",
+    }]
+  end
+
+#rdvPlanCalendar[
+  data-default-date-json="#{(rdv_plan.starts_at&.to_date || Time.zone.today).to_json}"
+  data-display-saturdays="#{current_agent.display_saturdays}"
+  data-display-sundays="false"
+  data-event-sources-json="#{event_sources.to_json}"
+  data-min-time="#{I18n.l(rdv_plan.starts_at - 2.hours, format: "%H:%M:%S") if single_day}"
+  data-max-time="#{I18n.l(rdv_plan.starts_at + 3.hours, format: "%H:%M:%S") if single_day}"
+  data-single-day="#{single_day}"
+  style="margin-top: -60px; margin-bottom: 24px;"
+]
+
+= simple_form_for rdv_plan, url: update_starts_at_agents_rdv_plan_path(rdv_plan),html: { id: "rdvPlanCalendarForm"} do |f|
+  = f.hidden_field :starts_at, id: "rdvPlanCalendarField"

@@ -40,7 +40,7 @@ RSpec.describe "health checks" do
         expect(Rails.configuration.good_job).to receive(:cron)
         get "/health/jobs_scheduled"
         expect(response).to have_http_status(503)
-        expect(response.parsed_body).to eq("jobs_missed" => ["CronJob::FileAttenteJob"])
+        expect(response.parsed_body["jobs_missed"][0]["class"]).to eq("CronJob::FileAttenteJob")
       end
     end
   end
