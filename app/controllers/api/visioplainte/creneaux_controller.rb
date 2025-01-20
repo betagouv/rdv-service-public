@@ -15,7 +15,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     render json: {
       creneaux: creneaux.map do |creneau|
         creneau_to_hash(creneau)
-      end,
+      end.uniq,
     }
   end
 
