@@ -9,20 +9,7 @@ module Ants
     # useful to debug tests and avoid retries
     # discard_on(StandardError) { |_job, ex| raise ex }
 
-    def perform(rdv_attributes: nil, ants_pre_demande_number: nil, **_kwargs)
-      return perform_for_ants_pre_demande_number(ants_pre_demande_number) if ants_pre_demande_number
-
-      # Ce code gère la rétrocompatibilité avec l'ancienne signature de ce job
-      # TODO: supprimer ce code 2 semaines après le merge
-      raise ArgumentError("missing ants_pre_demande_number or rdv_attributes") if rdv_attributes.blank?
-
-      (
-        User.where(id: rdv_attributes[:users_ids]).pluck(:ants_pre_demande_number) +
-        [rdv_attributes[:obsolete_ants_pre_demande_number]]
-      ).compact_blank.each { self.class.perform_later(ants_pre_demande_number: _1) }
-    end
-
-    def perform_for_ants_pre_demande_number(ants_pre_demande_number)
+    def perform(ants_pre_demande_number:)
       ants_status = AntsApi.status(ants_pre_demande_number:, timeout: 4)
 
       return false unless ants_status["status"] == "validated"
