@@ -31,7 +31,7 @@ Rails.application.configure do
   config.assets.compile = false
 
   # Assets are already compiled by default by the nodejs-buildpack
-  config.assets.enabled = false
+  Rake::Task["assets:precompile"].clear
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
