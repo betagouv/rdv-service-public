@@ -5,22 +5,44 @@ fieldset[class="fr-fieldset" id="radio-rich-no-pictogram-inline" aria-labelledby
     | Comment souhaitez-vous faire le rendez-vous ?
 
   - if available_location_types.include?("public_office")
+    - lieux = Lieu.enabled.where(organisation_id: current_agent.organisations.select(:id))
+    - lieux.each do |lieu|
+      .fr-fieldset__element
+        .fr-radio-group.fr-radio-rich
+          input[value="public_office-#{lieu.id}" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
+          label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+            span
+              = lieu_icon
+              = " Sur place à #{lieu.name}"
+            span.fr-hint-text = lieu.address
+
+  - if available_location_types.include?("phone")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
-        input[value="1" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
+        input[value="phone" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
         label.fr-label[for="radio-rich-no-pictogram-inline-1"]
-          | Libellé bouton radio
-          <span class="fr-hint-text">Texte de description additionnel</span>
+          span
+            = phone_icon
+            = " Par téléphone"
 
-  .fr-fieldset__element
-    .fr-radio-group.fr-radio-rich
-      input[value="1" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
-      label.fr-label[for="radio-rich-no-pictogram-inline-1"]
-        Libellé bouton radio
-  .fr-fieldset__element
-    .fr-radio-group.fr-radio-rich
-      input[value="1" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
-      label.fr-label[for="radio-rich-no-pictogram-inline-1"]
-        Libellé bouton radio
-  <div class="fr-messages-group" id="radio-rich-no-pictogram-inline-messages" aria-live="polite">
-  </div>
+  - if available_location_types.include?("visio")
+    .fr-fieldset__element
+      .fr-radio-group.fr-radio-rich
+        input[value="visio" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
+        label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+          span
+            = visio_icon
+            = " Par visioconférence"
+          span.fr-hint-text
+            | Nous vous fournirons un lien de visio
+
+  - if available_location_types.include?("home")
+    .fr-fieldset__element
+      .fr-radio-group.fr-radio-rich
+        input[value="phone" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
+        label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+          span
+            = home_icon
+            | Au domicile de l'usager
+
+  div[class="fr-messages-group" id="radio-rich-no-pictogram-inline-messages" aria-live="polite"]
