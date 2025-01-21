@@ -13,10 +13,10 @@ header.header.bg-white
         li.list-inline-item
           #js-headway-anchor.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center
             | Nouveautés
-        li.list-inline-item.dropdown.mr-2
+        li#account_drop_down.list-inline-item.dropdown.mr-2
           button.link-dsfr.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
             = current_agent.full_name
-          ul.dropdown-menu.dropdown-menu-right style="min-width: auto"
+          ul.dropdown-menu.dropdown-menu-right
             li = link_to edit_agent_registration_path, class: "link-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-1v.fr-icon-account-line[aria-hidden="true"]
               = "Mon compte"

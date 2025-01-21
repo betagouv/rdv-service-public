@@ -70,9 +70,21 @@ header {
   }
 }
 
-a.link-dsfr.dropdown-item {
-  &:hover {
-    background-color: rgb(246, 246, 246) !important;
+#account_drop_down {
+  .dropdown-menu {
+    min-width: auto;
+    max-width: 30rem;
+
+    .dropdown-item {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    a.link-dsfr.dropdown-item {
+      &:hover {
+        background-color: rgb(246, 246, 246) !important;
+      }
+    }
   }
 }
 
