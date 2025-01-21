@@ -2,7 +2,8 @@ class Agent::RdvPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def create?
-    true
+    Agent::UserPolicy::TerritoryScope.new(pundit_user, User).resolve
+      .where(id: record.user_ids).pluck(:id).sort == record.user_ids.sort
   end
   alias new? create?
 
