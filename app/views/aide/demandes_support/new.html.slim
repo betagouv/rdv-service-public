@@ -18,8 +18,7 @@
       = f.dsfr_text_field :sujet, value: @form.sujet, label: "La raison de votre message", required: true
       - if @form.role_usager?
         .fr-callout.fr-my-2w
-          p Merci de ne pas inclure d’informations sensibles (par exemple des informations de santé) dans votre message.
-          p Ce message sera reçu par l’équipe de RDV Service Public, et non pas par les agents publics avec qui vous avez RDV.
+          | L’équipe RDV Service Public n’est pas en mesure de traiter tous les éléments concernant le rendez-vous (transmissions de documents, prise et annulation de rendez-vous et/ou ouverture des créneaux).
       = f.dsfr_text_area :message, rows: 5, label: "Votre message", required: true
       .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
         .fr-col-12.fr-col-md-6

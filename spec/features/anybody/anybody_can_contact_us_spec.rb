@@ -10,13 +10,13 @@ RSpec.describe "Tout le monde peut nous contacter" do
       click_on "Valider"
 
       expect(page).to have_content("Veuillez sélectionner la raison qui correspond le mieux à votre situation")
-      find(:label, text: /Vous ne trouvez pas de créneaux disponibles/).click
+      find(:label, text: /Vous souhaitez prendre un RDV/).click
       click_on "Valider"
 
-      expect(page).to have_content("L’équipe de RDV Service Public ne peut pas débloquer de nouvelles disponibilités dans les administrations")
+      expect(page).to have_content("Sélectionnez un service puis un motif")
       click_on "modifier"
 
-      find(:label, text: /Vous n’arrivez pas à annuler votre RDV/).click
+      find(:label, text: /Vous souhaitez annuler votre RDV/).click
       click_on "Valider"
 
       expect(page).to have_content("Comment annuler votre RDV ?")

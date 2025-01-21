@@ -18,18 +18,24 @@
         = link_to "modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line"
 
     - if @form.raison_creneaux?
-      .fr-callout.fr-mb-2w
-        p
-          ' L’équipe de RDV Service Public ne peut pas débloquer de nouvelles disponibilités dans les administrations.
 
-      p
-        ' Nous vous invitons à prendre contact avec l’organisme avec lequel vous souhaitez prendre RDV.
-        ' Les numéros de téléphone des organismes sont généralement affichés lors de la recherche de RDV accessible depuis l’accueil
+      h6 Étapes pour prendre un RDV
+      ol
+        li Sélectionnez un service puis un motif
+        li Choisissez un lieu : pour les rendez-vous physiques, plusieurs options peuvent être proposées. Si le rendez-vous est téléphonique, en visioconférence ou à domicile, cette étape ne sera pas proposée
+        li Prenez en compte les instructions: certaines informations peuvent s'afficher avant de valider le rendez-vous, assurez-vous de les prendre en compte
+        li Choisissez un créneau horaire: Si aucun créneau ne convient, explorez les dates futures
+        li Identifiez-vous : la connexion se fait par la création d'un compte ou via France Connect
+        li Confirmez le rendez-vous : un SMS et/ou un email seront envoyés quelques minutes après la confirmation du rendez-vous. Pour les emails, pensez à vérifier vos spams si besoin
+
       .fr-mb-4w
         = link_to "Faire une recherche de RDV depuis l’accueil", root_path, class: "fr-btn"
 
+      .fr-callout.fr-mb-2w
+        ' Si vous ne trouvez pas de créneaux, nous vous invitons à prendre contact avec l’organisation avec laquelle vous souhaitez prendre RDV
+
       p
-        ' Vous pouvez aussi chercher les coordonnées de l’organisme avec lequel vous souhaitez prendre RDV dans l’annuaire des services publics.
+        ' Vous pouvez chercher les coordonnées de l’organisation avec lequel vous souhaitez prendre RDV dans l’annuaire des services publics :
       .fr-mb-8w
         = link_to "Consulter l’annuaire du Service Public", "https://lannuaire.service-public.fr/", class: "fr-btn fr-btn--secondary", target: "_blank"
 
@@ -41,7 +47,7 @@
 
     - if @form.raison.present?
       p
-        ' Si votre problème persiste, vous pouvez contacter l’équipe de RDV Service Public :
+        ' Si vous rencontrez des difficultés, vous pouvez contacter l’équipe de RDV Service Public :
       div
         = link_to "Contacter l’équipe de RDV Service Public",
           new_aide_demande_support_path(role: :usager, sujet: @form.raison_label),
