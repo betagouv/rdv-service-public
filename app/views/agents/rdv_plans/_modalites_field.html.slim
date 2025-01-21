@@ -1,6 +1,6 @@
 - available_location_types = rdv_plan.rdv_agent.motifs.individuel.active.where(organisation_id: rdv_plan.rdv_agent.roles.select(:organisation_id)).pluck(:location_type)
 
-fieldset[class="fr-fieldset" id="radio-rich-no-pictogram-inline" aria-labelledby="radio-rich-no-pictogram-inline-legend radio-rich-no-pictogram-inline-messages"]
+fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich-no-pictogram-inline-legend radio-rich-no-pictogram-inline-messages"]
   legend[class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-rich-no-pictogram-inline-legend"]
     | Comment souhaitez-vous faire le rendez-vous ?
 
@@ -9,8 +9,8 @@ fieldset[class="fr-fieldset" id="radio-rich-no-pictogram-inline" aria-labelledby
     - lieux.each do |lieu|
       .fr-fieldset__element
         .fr-radio-group.fr-radio-rich
-          input[value="public_office-#{lieu.id}" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
-          label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+          input[value="public_office-#{lieu.id}" type="radio" id="public_office-#{lieu.id}" name="rdv_plan[modalite]"]
+          label.fr-label[for="public_office-#{lieu.id}"]
             span
               = lieu_icon
               = " Sur place à #{lieu.name}"
@@ -19,8 +19,8 @@ fieldset[class="fr-fieldset" id="radio-rich-no-pictogram-inline" aria-labelledby
   - if available_location_types.include?("phone")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
-        input[value="phone" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
-        label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+        input[value="phone" type="radio" id="rdv_plan_modalite_phone" name="rdv_plan[modalite]"]
+        label.fr-label[for="rdv_plan_modalite_phone"]
           span
             = phone_icon
             = " Par téléphone"
@@ -28,8 +28,8 @@ fieldset[class="fr-fieldset" id="radio-rich-no-pictogram-inline" aria-labelledby
   - if available_location_types.include?("visio")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
-        input[value="visio" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
-        label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+        input[value="visio" type="radio" id="rdv_plan_modalite_visio" name="rdv_plan[modalite]"]
+        label.fr-label[for="rdv_plan_modalite_visio"]
           span
             = visio_icon
             = " Par visioconférence"
@@ -39,8 +39,8 @@ fieldset[class="fr-fieldset" id="radio-rich-no-pictogram-inline" aria-labelledby
   - if available_location_types.include?("home")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
-        input[value="phone" type="radio" id="radio-rich-no-pictogram-inline-1" name="radio-rich-no-pictogram-inline"]
-        label.fr-label[for="radio-rich-no-pictogram-inline-1"]
+        input[value="home" type="radio" id="rdv_plan_modalite_home" name="rdv_plan[modalite]"]
+        label.fr-label[for="rdv_plan_modalite_home"]
           span
             = home_icon
             | Au domicile de l'usager

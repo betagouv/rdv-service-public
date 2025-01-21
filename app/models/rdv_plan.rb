@@ -11,7 +11,7 @@ class RdvPlan < ApplicationRecord
 
   validate :return_url_is_authorized
 
-  # TODO: remplacer cette méthode et #modalites_collection par un form object
+  # TODO: remplacer cette méthode
   def modalite
     if location_type == "public_office"
       "#{location_type}-#{lieu&.id}"

@@ -35,6 +35,25 @@ class Agents::RdvPlansController < AgentAuthController
     end
   end
 
+  def edit_motif
+    @motifs = current_agent.motifs.individuel.where(
+      organisation_id: current_agent.roles.select(:organisation_id),
+      location_type: @rdv_plan.location_type,
+      service: @rdv_plan.rdv_agent.services
+    )
+    @rdv_plan.duration_in_minutes ||= @motifs.first.default_duration_in_min
+  end
+
+  def update_motif
+    if @rdv_plan.update(params.require(:rdv_plan).permit(:motif_id, :duration_in_minutes))
+      redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
+    else
+      render "edit_motif_from_calendar"
+    end
+  end
+
+  def edit_user; end
+
   private
 
   def find_rdv_plan
