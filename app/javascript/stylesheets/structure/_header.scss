@@ -70,6 +70,12 @@ header {
   }
 }
 
+a.link-dsfr.dropdown-item {
+  &:hover {
+    background-color: rgb(246, 246, 246) !important;
+  }
+}
+
 // Responsive Mobile
 
 @media (max-width: 991px) {
