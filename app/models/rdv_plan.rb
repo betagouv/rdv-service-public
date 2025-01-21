@@ -26,6 +26,29 @@ class RdvPlan < ApplicationRecord
     self.location_type, self.lieu_id = modalite.split("-")
   end
 
+  def create_rdv(user_attributes:, participation_attributes:)
+    # TODO: le changement d'adresse email ne marche pas toujours, probablement à cause de unconfirmed_email. A vérifier.
+    user.update!(user_attributes)
+
+    rdv = Rdv.create(
+      agents: [rdv_agent],
+      participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
+      motif: motif,
+      organisation: organisation,
+      lieu: lieu,
+      starts_at: starts_at,
+      created_by: planning_agent,
+      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
+    )
+
+    if rdv.persisted?
+      update(rdv: rdv)
+      Notifiers::RdvCreated.perform_with(rdv, planning_agent)
+    end
+
+    rdv
+  end
+
   private
 
   def return_url_is_authorized
