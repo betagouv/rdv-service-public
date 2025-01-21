@@ -24,7 +24,7 @@ header.header.bg-white
             - territories_i_admin.each do |territory|
               li = link_to admin_territory_path(territory), class: "link-dsfr dropdown-item" do
                 span.fr-icon--sm.fr-mr-1v.fr-icon-settings-5-line[aria-hidden="true"]
-                | Configurer le territoire "#{territory.name}"
+                | Espace Admin de Territoire : #{territory.name}
             .dropdown-divider.m-0[aria-hidden="true"]
             li = link_to edit_agent_registration_path, class: "link-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-1v.fr-icon-logout-box-r-line[aria-hidden="true"]
