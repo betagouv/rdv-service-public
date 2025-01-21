@@ -170,6 +170,42 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
       it { is_expected.to eq(mock_creneaux[0]) }
     end
 
+    context "when there are multiple creneaux with the same starts_at" do
+      let(:agent1) { create(:agent) }
+      let(:agent2) { create(:agent) }
+
+      let(:mock_creneaux) do
+        [
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 09:30"), agent: agent1),
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 09:30"), agent: agent2),
+        ]
+      end
+
+      before { allow(mock_creneaux).to receive(:select).and_return(mock_creneaux) }
+
+      it "randomly picks one" do
+        allow(mock_creneaux).to receive(:sample).and_return(mock_creneaux.first)
+
+        creneau = described_class.creneau_for(
+          user: user,
+          motif: motif,
+          lieu: lieu,
+          starts_at: starts_at
+        )
+        expect(creneau.agent).to eq agent1
+
+        allow(mock_creneaux).to receive(:sample).and_return(mock_creneaux.last)
+
+        creneau = described_class.creneau_for(
+          user: user,
+          motif: motif,
+          lieu: lieu,
+          starts_at: starts_at
+        )
+        expect(creneau.agent).to eq agent2
+      end
+    end
+
     context "no matching creneaux" do
       let(:mock_creneaux) do
         [
