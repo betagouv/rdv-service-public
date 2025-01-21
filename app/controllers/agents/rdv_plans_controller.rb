@@ -20,15 +20,7 @@ class Agents::RdvPlansController < AgentAuthController
   def update_modalites
     rdv_plan_params = params.require(:rdv_plan)
 
-    location_type, lieu_id = rdv_plan_params["modalite"].split("-")
-
-    @rdv_plan.assign_attributes(
-      location_type: location_type,
-      lieu_id: lieu_id
-    )
-    @rdv_plan.assign_attributes(rdv_plan_params.permit(:starts_at))
-
-    if @rdv_plan.save
+    if @rdv_plan.update(rdv_plan_params.permit(:starts_at, :modalite))
       redirect_to edit_motif_agents_rdv_plan_path(@rdv_plan)
     else
       render "edit_modalites"

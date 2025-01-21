@@ -11,13 +11,19 @@ class RdvPlan < ApplicationRecord
 
   validate :return_url_is_authorized
 
-  # TODO: remplacer cette méthode
+  # TODO: mettre en commun avec les motifs et ajouter une validation de synchro
+  enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
+
   def modalite
     if location_type == "public_office"
       "#{location_type}-#{lieu&.id}"
     else
       location_type
     end
+  end
+
+  def modalite=(modalite)
+    self.location_type, self.lieu_id = modalite.split("-")
   end
 
   private
