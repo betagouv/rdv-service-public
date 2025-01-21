@@ -26,6 +26,6 @@ header.header.bg-white
                 span.fr-icon--sm.fr-mr-1v.fr-icon-settings-5-line[aria-hidden="true"]
                 | Espace Admin de Territoire : #{territory.name}
             .dropdown-divider.m-0[aria-hidden="true"]
-            li = link_to edit_agent_registration_path, class: "link-dsfr dropdown-item" do
+            li = link_to destroy_agent_session_path, method: :delete, class: "link-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-1v.fr-icon-logout-box-r-line[aria-hidden="true"]
               | Se déconnecter
