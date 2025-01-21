@@ -16,7 +16,7 @@ class CreneauxSearch::ForUser
       geo_search: geo_search
     )
 
-    search.creneaux.select { _1.starts_at == starts_at }.sample
+    search.all_creneaux.select { _1.starts_at == starts_at }.sample
   end
 
   def next_availability
@@ -42,8 +42,6 @@ class CreneauxSearch::ForUser
     rdvs
   end
 
-  private
-
   def all_creneaux
     return available_collective_rdvs if motif.collectif?
 
@@ -51,6 +49,8 @@ class CreneauxSearch::ForUser
 
     CreneauxSearch::Calculator.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
   end
+
+  private
 
   attr_reader :motif, :date_range
 
