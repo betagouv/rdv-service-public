@@ -51,7 +51,9 @@ header {
   max-width: 6rem;
 }
 
-.link-dsfr {
+// L'usage spécifique su sélecteur "a[href].link-dsfr" sert à prendre la priorité
+// sur les déclarations faites dans le DSFR sur le styling de "a[href]".
+.link-dsfr, a[href].link-dsfr {
   padding: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -78,12 +80,6 @@ header {
     .dropdown-item {
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    a.link-dsfr.dropdown-item {
-      &:hover {
-        background-color: rgb(246, 246, 246) !important;
-      }
     }
   }
 }
