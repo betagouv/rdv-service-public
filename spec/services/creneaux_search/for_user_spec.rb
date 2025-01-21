@@ -181,6 +181,8 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
         ]
       end
 
+      before { allow(mock_creneaux).to receive(:select).and_return(mock_creneaux) }
+
       it "randomly picks one" do
         allow(mock_creneaux).to receive(:sample).and_return(mock_creneaux.first)
 
