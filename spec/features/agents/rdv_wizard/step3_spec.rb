@@ -16,7 +16,7 @@ RSpec.describe "Step 3 of the rdv wizard" do
   let(:organisation) { create(:organisation) }
   let(:organisation_from_other_territory) { create(:organisation, territory: other_territory) }
   let(:user_from_other_territory) do
-    create(:user, organisations: [organisation], first_name: "Gaston", last_name: "Bidon")
+    create(:user, organisations: [organisation_from_other_territory], first_name: "Gaston", last_name: "Bidon")
   end
 
   let(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
@@ -41,7 +41,7 @@ RSpec.describe "Step 3 of the rdv wizard" do
       default_params.merge(user_ids: [user.id])
     end
 
-    it "doesn't displays the user info" do
+    it "displays the user info" do
       visit new_admin_organisation_rdv_wizard_step_path(params)
       expect(page).to have_content(user.full_name)
     end
