@@ -53,7 +53,8 @@ header {
 
 // L'usage spécifique su sélecteur "a[href].link-dsfr" sert à prendre la priorité
 // sur les déclarations faites dans le DSFR sur le styling de "a[href]".
-.link-dsfr, a[href].link-dsfr {
+.link-dsfr,
+a[href].link-dsfr {
   padding: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
