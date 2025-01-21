@@ -32,6 +32,5 @@
               class: "select2-input", \
             }
 
-      .input-group
-        = f.input :duration_in_minutes, label: "Durée en minutes", label_html: { style: "flex-shrink: 0;", class: "fr-mr-2w" }, wrapper_html: { class: "d-flex", style: "align-items: baseline;" }
+      = f.input :duration_in_minutes, label: "Durée en minutes"
       = f.submit "Continuer", class: "fr-btn float-right"
