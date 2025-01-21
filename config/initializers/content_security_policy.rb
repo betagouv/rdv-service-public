@@ -13,6 +13,9 @@ api_adresse_data_gouv = "api-adresse.data.gouv.fr"
 # Nous utilisons mapbox et les tiles etalab pour les interfaces de config de sectorisation
 api_mapbox = "api.mapbox.com"
 tiles_etalab = "etalab-tiles.fr"
+# Nous utilisons unpkg et les tiles OSM pour utiliser Leaflet et afficher une carte des lieux
+unpkg_cdn = "unpkg.com"
+tiles_osm = "tile.openstreetmap.org"
 # Bouton "Je donne mon avis sur cette démarche"
 voxusagers = "voxusagers.numerique.gouv.fr"
 # Utilisé sur nos pages statiques (404.html, 500.html)
@@ -31,10 +34,10 @@ Rails.application.config.content_security_policy do |policy|
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, headway_widget, metabase
   policy.media_src :self, s3_de_rdv_insertion
-  policy.img_src :self, :data, voxusagers
-  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd
+  policy.img_src :self, :data, voxusagers, tiles_osm, unpkg_cdn
+  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_data_gouv, tiles_etalab
-  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd
+  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
