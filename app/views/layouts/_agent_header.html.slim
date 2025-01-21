@@ -13,9 +13,19 @@ header.header.bg-white
         li.list-inline-item
           #js-headway-anchor.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center
             | Nouveautés
-        li.list-inline-item
-          = link_to current_agent.full_name, edit_agent_registration_path, class: "btn text-primary-blue link-dsfr"
-        li.list-inline-item
-          = link_to destroy_agent_session_path, method: :delete, class: "btn text-primary-blue link-dsfr" do
-            i.fa.fa-sign-out-alt>
-            span> Se déconnecter
+        li.list-inline-item.dropdown.mr-2
+          button.link-dsfr.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+            = current_agent.full_name
+          .dropdown-menu.dropdown-menu-right style="min-width: auto"
+            = link_to edit_agent_registration_path, class: "btn text-primary-blue link-dsfr dropdown-item" do
+              span.fr-icon--sm.fr-mr-1v.fr-icon-account-line[aria-hidden="true"]
+              = "Mon compte"
+            - territories_i_admin = defined?(current_organisation) ? [current_organisation.territory] : current_agent.territories
+            - territories_i_admin.each do |territory|
+              = link_to admin_territory_path(territory), class: "btn text-primary-blue link-dsfr dropdown-item" do
+                span.fr-icon--sm.fr-mr-1v.fr-icon-settings-5-line[aria-hidden="true"]
+                | Configurer le territoire "#{territory.name}"
+            .dropdown-divider.m-0
+            = link_to edit_agent_registration_path, class: "btn text-primary-blue link-dsfr dropdown-item" do
+              span.fr-icon--sm.fr-mr-1v.fr-icon-logout-box-r-line[aria-hidden="true"]
+              | Se déconnecter
