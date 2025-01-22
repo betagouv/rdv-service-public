@@ -15,7 +15,7 @@ RSpec.describe "Step 4 of the rdv wizard" do
   end
 
   context "when booking a rdv for a relative" do
-    let(:user) { create(:user, :relative, responsible: responsible, organisations: [organisation]) }
+    let(:user) { create(:user, :relative, responsible: responsible) }
     let(:responsible) { create(:user, email: nil) }
 
     before do
