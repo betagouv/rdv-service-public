@@ -18,6 +18,10 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       end
   end
 
+  def rdvinsertion_request?
+    request.headers.include?("X-Agent-Auth-Signature")
+  end
+
   # Rescuable exceptions
 
   rescue_from Pundit::NotAuthorizedError, with: :not_authorized
@@ -65,7 +69,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   def authenticate_agent
     if request.headers.include?("X-Agent-Auth-Signature")
-      # Bypass DeviseTokenAuth
+      # Bypass DeviseTokenAuth for rdv-insertion
       authenticate_agent_with_shared_secret
     elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"]
       # Use DeviseTokenAuth

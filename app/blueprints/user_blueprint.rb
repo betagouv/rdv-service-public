@@ -6,6 +6,8 @@ class UserBlueprint < Blueprinter::Base
           :notify_by_email, :invitation_created_at, :invitation_accepted_at, :created_at, :case_number, :address_details,
           :logement, :notes
 
+  field :notification_email, if: ->(_field_name, _user, options) { options[:include_notification_email] }
+
   association :responsible, blueprint: UserBlueprint
 
   association :user_profiles, blueprint: UserProfileBlueprint, view: :without_user do |user, options|

@@ -77,6 +77,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       parameter name: "birth_name", in: :query, type: :string, description: "Nom de naissance", example: "Fripouille", required: false
       parameter name: "birth_date", in: :query, type: :string, description: "Date de naissance", example: "1976-10-01", required: false
       parameter name: "email", in: :query, type: :string, description: "Email", example: "johnny@77.com", required: false
+      parameter name: "notification_email", in: :query, type: :string, description: "Email de notification", required: false, document: false
       parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33600008012", required: false
       parameter name: "address", in: :query, type: :string, description: "Adresse", example: "10 rue du Havre, Paris, 75016", required: false
       parameter name: "caisse_affiliation", in: :query, type: :string, description: "Caisse d'affiliation", example: "caf", required: false
@@ -146,6 +147,47 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.notify_by_email).to eq(notify_by_email) }
 
         it { expect(user.reload.responsible).to eq(user_responsible) }
+      end
+
+      response 200, "cannot update notification_email field without shared secret auth", document: false do
+        before do
+          user.update(email: nil) # notification_email can't be set if devise email is set
+        end
+
+        let(:notification_email) { "notif@example.com" }
+        let(:first_name) { "Alain" }
+        let(:last_name) { "Verse" }
+
+        run_test!
+
+        it { expect(user.reload.first_name).to eq(first_name) }
+        it { expect(user.reload.last_name).to eq(last_name) }
+        it { expect(user.reload.notification_email).to be_nil }
+      end
+
+      response 200, "updates notification_email when authenticated through rdvinsertion", document: false do
+        with_shared_secret_authentication
+
+        before do
+          allow(Agent).to receive(:find_by).and_return(agent)
+          allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
+          allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
+          user.update(email: nil) # notification_email can't be set if devise email is set
+        end
+
+        let!(:shared_secret) { "S3cr3T" }
+        let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
+        let!(:uid) { auth_headers["uid"].to_s }
+        let!(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
+
+        let(:notification_email) { "notif@example.com" }
+        let(:first_name) { "Alain" }
+        let(:last_name) { "Verse" }
+
+        run_test!
+
+        it { expect(parsed_response_body["user"]["notification_email"]).to eq(notification_email) }
+        it { expect(user.reload.notification_email).to eq(notification_email) }
       end
 
       response 200, "updates a user with a minimal set of params", document: false do

@@ -32,7 +32,7 @@ class User < ApplicationRecord
 
   # Attributes
   ONGOING_MARGIN = 1.hour.freeze
-  auto_strip_attributes :email, :first_name, :last_name, :birth_name
+  auto_strip_attributes :email, :notification_email, :first_name, :last_name, :birth_name
 
   enum :caisse_affiliation, { aucune: 0, caf: 1, msa: 2 }
   enum :family_situation, { single: 0, in_a_relationship: 1, divorced: 2 }
@@ -72,6 +72,7 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
+  before_save :clear_notification_email_if_email_present
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -87,6 +88,11 @@ class User < ApplicationRecord
 
   def email=(value)
     # On corriger automatiquement ces fautes de frappe courantes
+    super(value&.gsub(".@", "@")&.gsub("..", "."))
+  end
+
+  def notification_email=(value)
+    # On applique les mêmes corrections pour notification_email
     super(value&.gsub(".@", "@")&.gsub("..", "."))
   end
 
@@ -275,6 +281,10 @@ class User < ApplicationRecord
     self.email = nil if email.blank?
   end
 
+  def clear_notification_email_if_email_present
+    self.notification_email = nil if email.present?
+  end
+
   def birth_date_validity
     return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
@@ -297,7 +307,8 @@ class User < ApplicationRecord
       first_name: "Usager supprimé",
       last_name: "Usager supprimé",
       deleted_at: Time.zone.now,
-      email: deleted_email
+      email: deleted_email,
+      notification_email: nil
     )
     reload # anonymizer operates outside the realm of rails knowledge
   end
