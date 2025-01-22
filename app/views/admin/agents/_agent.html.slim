@@ -5,8 +5,7 @@ tr id="agent_#{agent.id}"
   td
     - if agent_policy.edit?
       = link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "mr-2"
-      - if agent.inactive? && agent.complete?
-        = tag.span("Inactif", class: "badge badge-warning")
+      = inactive_tag(agent)
     - else
       span.mr-2= agent.reverse_full_name
     = me_tag(agent)
