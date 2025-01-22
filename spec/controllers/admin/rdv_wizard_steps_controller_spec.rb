@@ -2,7 +2,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
   let(:motif) { create(:motif) }
   let(:organisation) { motif.organisation }
   let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
-  let(:user) { create(:user, organisations: [organisation]) }
+  let(:user) { create(:user) }
 
   before { sign_in agent }
 
@@ -51,7 +51,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
       end
 
       context "when the user has no email nor phone_number" do
-        let!(:user) { create(:user, :with_no_email, :with_no_phone_number, organisations: [organisation]) }
+        let!(:user) { create(:user, :with_no_email, :with_no_phone_number) }
 
         it "doesn't show the notification preferences" do
           get :new, params: params
