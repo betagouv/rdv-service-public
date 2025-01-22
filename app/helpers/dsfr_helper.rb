@@ -7,6 +7,34 @@ module DsfrHelper
     end
   end
 
+  def icon(icon_name, html_options = {})
+    tag.span("", class: "#{icon_name} #{html_options.delete(:class)}", "aria-hidden": "true", **html_options)
+  end
+
+  def motif_icon(html_options = {})
+    icon("fr-icon-draft-fill", html_options)
+  end
+
+  def lieu_icon(html_options = {})
+    icon("fr-icon-building-fill", html_options)
+  end
+
+  def visio_icon(html_options = {})
+    icon("fr-icon-mac-fill", html_options)
+  end
+
+  def phone_icon(html_options = {})
+    icon("fr-icon-phone-fill", html_options)
+  end
+
+  def back_icon(html_options = {})
+    icon("fr-icon-arrow-left-line", html_options)
+  end
+
+  def home_icon(html_options = {})
+    icon("fr-icon-home-4-fill", html_options)
+  end
+
   def external_link_to(name, url, html_options = {})
     link_to(name, url, { target: "_blank", rel: "noopener", title: "#{name} - nouvel onglet" }.merge(html_options))
   end
