@@ -14,7 +14,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
   let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
   let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
-  let(:user) { create(:user, email: "jeanmairie@example.com") }
+  let(:user) { create(:user, first_name: "Marco", last_name: "Polo", email: "marcopolo@example.com") }
 
   def json_response
     JSON.parse(page.html)
@@ -125,47 +125,109 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
   end
 
-  context "with no previous appointments" do
-    let(:appointments) { [] }
-
+  context "ajout d’un proche avec des numéros ANTS problématiques puis avec un numéro ANTS valide" do
     before do
-      stub_ants_status_ok("1122334455", appointments: appointments)
+      stub_ants_status_ok("1122334455", appointments: [])
       stub_ants_status_ok("5544332211", appointments: [])
+      stub_ants_status_ok("66CONSUMED", status: "consumed")
     end
 
-    it "can add a relative with their ants_pre_demande_number", js: true do
+    it "permet de réserver sans avertissement", js: true do
       time = Time.zone.now.change(hour: 9, min: 0)
       creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
       visit creneaux_url
 
-      fill_in("user_email", with: user.email)
-      fill_in("user_password", with: user.password)
-      click_button("Se connecter")
+      fill_in "user_email", with: user.email
+      fill_in "user_password", with: user.password
+      click_button "Se connecter"
 
-      fill_in("user_ants_pre_demande_number", with: "1122334455")
-      click_button("Continuer")
+      fill_in "user_ants_pre_demande_number", with: "1122334455"
+      click_button "Continuer"
 
-      click_link("Ajouter un proche")
-      fill_in("Prénom", with: "Alain")
-      fill_in("Nom d’usage", with: "Mairie")
-      fill_in("Numéro de pré-demande ANTS", with: "5544332211")
-      click_button("Enregistrer")
+      click_link "Ajouter un proche"
+      fill_in "Prénom", with: "Alain"
+      fill_in "Nom d’usage", with: "Mairie"
 
-      # Pour éviter une flaky spec (causée par l'animation CSS de la modale ?),
-      # on vérifie directement que le proche est bien enregistré dans la base.
+      # soumission sans numéro ANTS
+      click_button "Enregistrer"
+      ants_input_elt = find("label", text: /Numéro de pré-demande ANTS/).sibling("input")
+      expect(ants_input_elt.native.attribute("validationMessage")).to eq "Please fill in this field." # client side HTML5 validation
+
+      # soumission avec un numéro invalide
+      fill_in "Numéro de pré-demande ANTS", with: "inva lide"
+      click_button "Enregistrer"
+      expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+
+      # soumission avec un numéro valide mais déjà consommé selon l’API de l’ANTS
+      fill_in "Numéro de pré-demande ANTS", with: "66CONSUMED"
+      click_button "Enregistrer"
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+
+      # soumission avec un numéro valide, pas consommé et sans appointments
+      fill_in "Numéro de pré-demande ANTS", with: "5544332211"
+      click_button "Enregistrer"
+      # on attend que le proche soit bien enregistré dans la DB pour éviter une flaky spec (causée par l'animation CSS de la modale ?)
       wait_for { User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211") }.to be(true)
-
       alain = User.find_by(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")
       expect(alain).to be_present
 
-      check(user.full_name)
-      check(alain.full_name)
-      click_button("Continuer")
+      check "Marco POLO"
+      check "Alain MAIRIE"
+      click_button "Continuer"
 
-      click_link("Confirmer mon RDV")
+      click_link "Confirmer mon RDV"
       expect(page).to have_content("Votre rendez vous a été confirmé.")
-      created_rdv = Rdv.last
-      expect(created_rdv.users).to contain_exactly(user, alain)
+      expect(page).to have_content("Alain MAIRIE")
+      expect(page).to have_content("Marco POLO")
+    end
+  end
+
+  context "ajout d’un proche avec un numéro ANTS différent mais qui a des appointments" do
+    before do
+      stub_ants_status_ok("1122334455", appointments: [])
+      stub_ants_status_ok(
+        "5544332211",
+        appointments: [{
+          management_url: "https://gerer-rdv.com",
+          meeting_point: "Mairie de Sannois",
+          appointment_date: "2023-04-03T08:45:00",
+        }]
+      )
+    end
+
+    it "permet de réserver avec un avertissement contournable", js: true do
+      time = Time.zone.now.change(hour: 9, min: 0)
+      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+      visit creneaux_url
+
+      fill_in "user_email", with: user.email
+      fill_in "user_password", with: user.password
+      click_button "Se connecter"
+
+      fill_in "user_ants_pre_demande_number", with: "1122334455"
+      click_button "Continuer"
+
+      click_link "Ajouter un proche"
+      fill_in "Prénom", with: "Alain"
+      fill_in "Nom d’usage", with: "Mairie"
+      fill_in "Numéro de pré-demande ANTS", with: "5544332211"
+      click_button "Enregistrer"
+
+      expect(page).to have_content(
+        "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
+      )
+      click_button "Confirmer en ignorant les avertissements"
+      # on attend que le proche soit bien enregistré dans la DB pour éviter une flaky spec (causée par l'animation CSS de la modale ?)
+      wait_for { User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211") }.to be(true)
+
+      check "Marco POLO"
+      check "Alain MAIRIE"
+      click_button "Continuer"
+
+      click_link "Confirmer mon RDV"
+      expect(page).to have_content("Votre rendez vous a été confirmé.")
+      expect(page).to have_content("Alain MAIRIE")
+      expect(page).to have_content("Marco POLO")
     end
   end
 
