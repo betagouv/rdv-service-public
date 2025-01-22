@@ -18,5 +18,22 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     find(".fc-widget-content", match: :first).click
     expect(page).to have_content "Nouveau"
     expect(rdv_plan.reload.starts_at).to be_present
+    find("label", text: "Sur place").click
+    click_on "Continuer"
+    expect(page).to have_content "Motif du rendez-vous "
+    click_on "Continuer"
+
+    expect(page).to have_content "Envoyer une notification de confirmation"
+    click_on "Confirmer le rendez-vous"
+
+    expect(page).to have_content "Rendez-vous confirmé"
+    rdv = Rdv.last
+    expect(rdv).to have_attributes(
+      users: [user],
+      agents: [agent],
+      motif: motif,
+      lieu: lieu,
+      organisation: organisation
+    )
   end
 end

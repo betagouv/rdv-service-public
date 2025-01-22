@@ -9,7 +9,7 @@ fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich
     - lieux.each do |lieu|
       .fr-fieldset__element
         .fr-radio-group.fr-radio-rich
-          input[value="public_office-#{lieu.id}" type="radio" id="public_office-#{lieu.id}" name="rdv_plan[modalite]"]
+          input[value="public_office-#{lieu.id}" type="radio" id="public_office-#{lieu.id}" name="rdv_plan[modalite]" required]
           label.fr-label[for="public_office-#{lieu.id}"]
             span
               = lieu_icon
@@ -19,7 +19,7 @@ fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich
   - if available_location_types.include?("phone")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
-        input[value="phone" type="radio" id="rdv_plan_modalite_phone" name="rdv_plan[modalite]"]
+        input[value="phone" type="radio" id="rdv_plan_modalite_phone" name="rdv_plan[modalite]" required]
         label.fr-label[for="rdv_plan_modalite_phone"]
           span
             = phone_icon
@@ -28,7 +28,7 @@ fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich
   - if available_location_types.include?("visio")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
-        input[value="visio" type="radio" id="rdv_plan_modalite_visio" name="rdv_plan[modalite]"]
+        input[value="visio" type="radio" id="rdv_plan_modalite_visio" name="rdv_plan[modalite]" required]
         label.fr-label[for="rdv_plan_modalite_visio"]
           span
             = visio_icon
@@ -39,7 +39,7 @@ fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich
   - if available_location_types.include?("home")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
-        input[value="home" type="radio" id="rdv_plan_modalite_home" name="rdv_plan[modalite]"]
+        input[value="home" type="radio" id="rdv_plan_modalite_home" name="rdv_plan[modalite]" required]
         label.fr-label[for="rdv_plan_modalite_home"]
           span
             = home_icon
