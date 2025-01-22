@@ -33,6 +33,7 @@ RSpec.describe "Step 3 of the rdv wizard" do
     it "raises an error and doesn't displays the user info" do
       visit new_admin_organisation_rdv_wizard_step_path(params)
       expect(page).not_to have_content(user_from_other_territory.full_name)
+      expect(page).to have_content("Vous n’avez pas les droits suffisants")
     end
   end
 
@@ -50,7 +51,7 @@ RSpec.describe "Step 3 of the rdv wizard" do
       before do
         other_organisation = create(:organisation, territory: organisation.territory)
         user.organisations << other_organisation
-        user.save
+        user.save!
       end
 
       it "displays the user info" do
