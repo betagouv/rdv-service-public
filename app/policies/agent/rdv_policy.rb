@@ -2,8 +2,9 @@ class Agent::RdvPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def create?
+    rdv_user_ids = record.participations.map(&:user_id)
     users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_user, User).resolve
-      .where(id: record.user_ids).pluck(:id).to_set == record.user_ids.to_set
+      .where(id: rdv_user_ids).pluck(:id).to_set == rdv_user_ids.to_set
 
     unless users_authorized
       Sentry.capture_message("L'agent n'est pas autorisé à créer de RDV avec ces usagers", extra: { user_ids: record.user_ids, agent: current_agent.id })
@@ -16,12 +17,12 @@ class Agent::RdvPolicy < ApplicationPolicy
       Sentry.capture_message("L'agent n'est pas autorisé à créer de RDV avec ces agents", extra: { agent_ids: record.agent_ids, agent: current_agent.id })
     end
 
-    true
+    users_authorized
   end
   alias new? create?
 
   def update?
-    same_agent_or_has_access?
+    same_agent_or_has_access? && create?
   end
   alias edit? update?
   alias status? update?
