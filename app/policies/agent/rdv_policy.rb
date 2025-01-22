@@ -2,21 +2,11 @@ class Agent::RdvPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def create?
-    users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_user, User).resolve
-      .where(id: record.user_ids).pluck(:id).to_set == record.user_ids.to_set
+    # Nous monitorons les cas
+    notify_agents_unauthorized if agents_authorized?
+    notify_users_unauthorized if users_authorized?
 
-    unless users_authorized
-      Sentry.capture_message("L'agent n'est pas autorisé à créer de RDV avec ces usagers", extra: { user_ids: record.user_ids, agent: current_agent.id })
-    end
-
-    agents_authorized = Agent::AgentPolicy::Scope.new(pundit_user, Agent).resolve
-      .where(id: record.agent_ids).pluck(:id).to_set == record.agent_ids.to_set
-
-    unless agents_authorized
-      Sentry.capture_message("L'agent n'est pas autorisé à créer de RDV avec ces agents", extra: { agent_ids: record.agent_ids, agent: current_agent.id })
-    end
-
-    true
+    users_authorized?
   end
   alias new? create?
 
@@ -51,6 +41,34 @@ class Agent::RdvPolicy < ApplicationPolicy
 
   def same_service?
     @record.motif.service.in?(current_agent.services)
+  end
+
+  def agents_authorized?
+    return @agents_authorized if defined?(@agents_authorized)
+
+    @agents_authorized = Agent::AgentPolicy::Scope.new(pundit_user, Agent).resolve
+      .where(id: record.agent_ids).pluck(:id).to_set == record.agent_ids.to_set
+  end
+
+  def users_authorized?
+    return @users_authorized if defined?(@users_authorized)
+
+    @users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_user, User).resolve
+      .where(id: record.user_ids).pluck(:id).to_set == record.user_ids.to_set
+  end
+
+  def notify_agents_unauthorized
+    Sentry.capture_message(
+      "L'agent n'est pas autorisé à créer de RDV avec ces agents",
+      extra: { agent_ids: record.agent_ids, agent: current_agent.id }
+    )
+  end
+
+  def notify_users_unauthorized
+    Sentry.capture_message(
+      "L'agent n'est pas autorisé à créer de RDV avec ces usagers : mettre à jour https://www.notion.so/rdvs/1832b05ced41805e82a9cb0e2567cfc9",
+      extra: { user_ids: record.user_ids, agent: current_agent.id }
+    )
   end
 
   def same_agent_or_has_access?
