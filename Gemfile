@@ -276,4 +276,6 @@ group :test do
 
   gem "sinatra"
   gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
+
+  gem "pry"
 end
