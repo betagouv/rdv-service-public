@@ -3,8 +3,8 @@ class Agent::RdvPolicy < ApplicationPolicy
 
   def create?
     # Nous monitorons les cas
-    notify_agents_unauthorized if agents_authorized?
-    notify_users_unauthorized if users_authorized?
+    notify_agents_unauthorized unless agents_authorized?
+    notify_users_unauthorized unless users_authorized?
 
     users_authorized?
   end
