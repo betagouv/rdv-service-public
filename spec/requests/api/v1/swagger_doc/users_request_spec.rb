@@ -165,31 +165,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.notification_email).to be_nil }
       end
 
-      response 200, "updates notification_email when authenticated through rdvinsertion", document: false do
-        with_shared_secret_authentication
-
-        before do
-          allow(Agent).to receive(:find_by).and_return(agent)
-          allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
-          allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
-          user.update(email: nil) # notification_email can't be set if devise email is set
-        end
-
-        let!(:shared_secret) { "S3cr3T" }
-        let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
-        let!(:uid) { auth_headers["uid"].to_s }
-        let!(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
-
-        let(:notification_email) { "notif@example.com" }
-        let(:first_name) { "Alain" }
-        let(:last_name) { "Verse" }
-
-        run_test!
-
-        it { expect(parsed_response_body["user"]["notification_email"]).to eq(notification_email) }
-        it { expect(user.reload.notification_email).to eq(notification_email) }
-      end
-
       response 200, "updates a user with a minimal set of params", document: false do
         let(:first_name) { "Alain" }
         let(:last_name) { "Verse" }
@@ -239,6 +214,45 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "email is taken", false do
         let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
+      end
+    end
+
+    patch "Mettre à jour un·e usager·ère via l'authentification shared secret", params: { document: false } do
+      with_shared_secret_authentication
+
+      tags "User"
+      produces "application/json"
+      operationId "updateUser"
+      description "Met à jour un·e usager·ère"
+
+      parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
+      parameter name: "first_name", in: :query, type: :string, description: "Prénom", example: "Johnny", required: false
+      parameter name: "last_name", in: :query, type: :string, description: "Nom", example: "Silverhand", required: false
+      parameter name: "notification_email", in: :query, type: :string, description: "Email de notification", required: false, document: false
+
+      let(:user) { create(:user, :with_no_email, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+      let(:user_id) { user.id }
+
+      before do
+        allow(Agent).to receive(:find_by).and_return(agent)
+        allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
+        allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
+      end
+
+      let!(:shared_secret) { "S3cr3T" }
+      let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
+      let!(:uid) { auth_headers["uid"].to_s }
+      let!(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
+
+      response 200, "updates notification_email when authenticated through rdvinsertion", document: false do
+        let(:notification_email) { "notif@example.com" }
+        let(:first_name) { "Alain" }
+        let(:last_name) { "Verse" }
+
+        run_test!
+
+        it { expect(parsed_response_body["user"]["notification_email"]).to eq(notification_email) }
+        it { expect(user.reload.notification_email).to eq(notification_email) }
       end
     end
   end
