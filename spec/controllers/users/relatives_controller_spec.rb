@@ -99,7 +99,8 @@ RSpec.describe Users::RelativesController, type: :controller do
       it "créé le proche avec le numéro de pré-demande" do
         expect { subject }.not_to change(User, :count)
         expect(response.body).to include(%(Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.))
-        expect(response.body).to include(%(Veuillez <a href="https://rdvsympa.fr/123" target="_blank">annuler ce RDV<a> avant d'en prendre un nouveau.))
+        expect(response.body).to have_content(%(Veuillez annuler ce RDV avant d'en prendre un nouveau.))
+        expect(response.body).to include(%(https://rdvsympa.fr/123))
         expect(response.body).to include(%(Confirmer en ignorant les avertissements))
       end
     end
