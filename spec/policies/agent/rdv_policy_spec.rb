@@ -103,5 +103,35 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     end
   end
 
+  context "users from outside the current agent's territory" do
+    let(:organisation) { create(:organisation) }
+    let(:service) { create(:service) }
+    let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+    let(:motif) { create(:motif, organisation: organisation, service: service) }
+    let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
+
+    context "when users are arleady saved in database" do
+      before do
+        user_from_other_territory = create(:user)
+        rdv.participations.build(user_id: user_from_other_territory.id, created_by: agent)
+        rdv.save!
+      end
+
+      it_behaves_like "permit actions", :rdv, :destroy?
+      it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?
+    end
+
+    context "when users are added as participations but not yet persisted" do
+      before do
+        user_from_other_territory = create(:user)
+        rdv.participations.build(user_id: user_from_other_territory.id, created_by: agent)
+      end
+
+      it_behaves_like "permit actions", :rdv, :destroy?
+      it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?
+    end
+  end
+
   # TODO: write cases for :new? and create? which
 end
