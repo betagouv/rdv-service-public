@@ -58,9 +58,16 @@ class Agent::RdvPolicy < ApplicationPolicy
 
     participation_user_ids = record.participations.map(&:user_id)
 
-    pundit_context = pundit_user.is_a?(AgentOrganisationContext) ? pundit_user : AgentOrganisationContext.new(pundit_user, record.organisation)
-    @users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_context, User).resolve
+    @users_authorized = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
       .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
+  end
+
+  def agent_organisation_context
+    if pundit_user.respond_to?(:agent) && pundit_user.respond_to?(:organisation)
+      pundit_user
+    else
+      AgentOrganisationContext.new(pundit_user, record.organisation)
+    end
   end
 
   def notify_agents_unauthorized
