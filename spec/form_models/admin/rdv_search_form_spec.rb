@@ -25,7 +25,7 @@ RSpec.describe Admin::RdvSearchForm do
   end
 
   describe "#agent" do
-    let(:searched_agent) { create(:agent) }
+    let(:searched_agent) { create(:agent, services: agent.services) }
     let(:form) { described_class.new(current_params.merge(agent_id: searched_agent.id)) }
 
     context "when the agent can't see the other agent" do
@@ -35,7 +35,7 @@ RSpec.describe Admin::RdvSearchForm do
     end
 
     context "when the agents are in the same organisation" do
-      let(:searched_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let(:searched_agent) { create(:agent, services: agent.services, basic_role_in_organisations: [organisation]) }
 
       it "returns the agent" do
         expect(form.agent).to eq searched_agent

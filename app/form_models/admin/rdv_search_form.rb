@@ -4,7 +4,7 @@ class Admin::RdvSearchForm
   attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_ids, :status, :motif_ids, :scoped_organisation_ids, :current_organisation, :current_agent
 
   def agent
-    @agent ||= Agent.find(agent_id) if agent_id.present?
+    @agent ||= agent_scope.find_by(id: agent_id) if agent_id.present?
   end
 
   def user
@@ -22,7 +22,11 @@ class Admin::RdvSearchForm
     Agent::UserPolicy::TerritoryScope.new(pundit_user, User.all).resolve
   end
 
+  def agent_scope
+    Agent::AgentPolicy::Scope.new(pundit_user, Agent.all).resolve
+  end
+
   def pundit_user
-    AgentOrganisationContext.new(current_agent, current_organisation)
+    @pundit_user ||= AgentOrganisationContext.new(current_agent, current_organisation)
   end
 end
