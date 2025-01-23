@@ -3,20 +3,61 @@ window.addEventListener("load", () => {
     .then(response => response.json())
     .then(lieux => {
       const mapElt = document.getElementById('map')
-      var map = L.map(mapElt).setView([46.603354, 1.888334], 6) // Center of Metropolitan France
-
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      }).addTo(map)
-
-      const markers = L.markerClusterGroup()
-      lieux.forEach((lieu) => {
-        const marker = L.
-          marker([lieu.latitude, lieu.longitude]).
-          bindPopup(`<b>${lieu.name}</b><br />Organisation ${lieu.organisation_name}`)
-        markers.addLayer(marker)
+      var map = new maplibregl.Map({
+        container: mapElt,
+        style: 'https://openmaptiles.data.gouv.fr/styles/positron/style.json',
+        center: [0, 20],
+        zoom: 2
       })
-      map.addLayer(markers)
+
+      map.on('load', () => {
+        map.addControl(new maplibregl.NavigationControl());
+
+        map.addSource('lieux', {
+          type: "geojson",
+          data: {
+            "type": "FeatureCollection",
+            "features": lieux.map((lieu) => ({
+              "type": "Feature",
+              "properties": lieu,
+              "geometry": {
+                "type": "Point",
+                "coordinates": [lieu.longitude, lieu.latitude]
+              }
+            }))
+          }
+        })
+
+        map.addLayer({
+          id: 'lieux-markers',
+          type: 'circle',
+          source: 'lieux',
+          // filter: ['!', ['has', 'point_count']],
+          paint: {
+            'circle-color': '#11b4da',
+            'circle-radius': 4,
+            'circle-stroke-width': 1,
+            'circle-stroke-color': '#fff'
+          }
+        });
+
+        map.on('click', 'lieux-markers', (e) => {
+          const coordinates = e.features[0].geometry.coordinates.slice();
+          const { name, organisation_name } = e.features[0].properties;
+          new maplibregl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(`<b>${name}</b><br />Organisation ${organisation_name}`)
+            .addTo(map);
+        });
+
+        map.on('mouseenter', 'lieux-markers', () => {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+
+        map.on('mouseleave', 'lieux-markers', () => {
+          map.getCanvas().style.cursor = '';
+        });
+
+      })
     })
 })
