@@ -5,7 +5,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
   let!(:user) do
-    create(:user, organisations: [organisation]) # créé par appel d'api par l'appli qui s'intègre avec nous
+    create(:user, :unregistered, organisations: [organisation]) # créé par appel d'api par l'appli qui s'intègre avec nous
   end
   let(:rdv_plan) do
     create(:rdv_plan, user: user, planning_agent: agent)
@@ -23,6 +23,8 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(page).to have_content "Motif du rendez-vous "
     click_on "Continuer"
 
+    fill_in("Email", with: "newaddress@exemple.com")
+
     expect(page).to have_content "Envoyer une notification de confirmation"
     click_on "Confirmer le rendez-vous"
 
@@ -35,5 +37,6 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       lieu: lieu,
       organisation: organisation
     )
+    expect(user.reload.email).to eq "newaddress@exemple.com"
   end
 end

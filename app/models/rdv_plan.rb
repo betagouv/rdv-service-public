@@ -27,7 +27,7 @@ class RdvPlan < ApplicationRecord
   end
 
   def create_rdv(user_attributes:, participation_attributes:)
-    # TODO: le changement d'adresse email ne marche pas toujours, probablement à cause de unconfirmed_email. A vérifier.
+    user.skip_reconfirmation! if user.encrypted_password.blank? # Pour mettre à jour l'email sans renvoyer de mail de confirmation
     user.update!(user_attributes)
 
     rdv = Rdv.create(
