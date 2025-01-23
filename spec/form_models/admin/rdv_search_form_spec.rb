@@ -2,7 +2,7 @@ RSpec.describe Admin::RdvSearchForm do
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let(:organisation) { create(:organisation) }
   let(:current_params) do
-    { current_agent: agent, current_organisation: organisation }
+    { pundit_user: AgentOrganisationContext.new(agent, organisation) }
   end
 
   describe "#user" do

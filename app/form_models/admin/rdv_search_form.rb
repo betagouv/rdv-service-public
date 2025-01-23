@@ -1,7 +1,8 @@
 class Admin::RdvSearchForm
   include ActiveModel::Model
+  include Pundit::Authorization
 
-  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_ids, :status, :motif_ids, :scoped_organisation_ids, :current_organisation, :current_agent
+  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_ids, :status, :motif_ids, :scoped_organisation_ids, :pundit_user
 
   def agent
     @agent ||= agent_scope.find_by(id: agent_id) if agent_id.present?
@@ -19,14 +20,10 @@ class Admin::RdvSearchForm
   private
 
   def user_scope
-    Agent::UserPolicy::TerritoryScope.new(pundit_user, User.all).resolve
+    policy_scope(User, policy_scope_class: Agent::UserPolicy::TerritoryScope)
   end
 
   def agent_scope
-    Agent::AgentPolicy::Scope.new(pundit_user, Agent.all).resolve
-  end
-
-  def pundit_user
-    @pundit_user ||= AgentOrganisationContext.new(current_agent, current_organisation)
+    policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
   end
 end
