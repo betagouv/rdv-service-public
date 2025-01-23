@@ -2,7 +2,7 @@
   h1.rdv-color-white Ajouter un proche
 
 = simple_form_for @form, url: relatives_path, remote: true, data: { modal: true } do |f|
-  = render "model_errors", model: @form
+  = render "model_errors", model: @form, f: f
   = render "form_fields", f: f
   .row
     .col.rdv-text-align-right
