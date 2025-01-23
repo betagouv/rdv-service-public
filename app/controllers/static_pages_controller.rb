@@ -9,7 +9,7 @@ class StaticPagesController < ApplicationController
   def lieux_map_data
     query = <<~SQL.strip
         SELECT
-          "source"."id" AS "id",
+        -- "source"."id" AS "id",
           "source"."latitude" AS "latitude",
           "source"."longitude" AS "longitude",
           "source"."name" AS "name",
