@@ -24,6 +24,25 @@ RSpec.describe Admin::RdvSearchForm do
     end
   end
 
+  describe "#agent" do
+    let(:searched_agent) { create(:agent) }
+    let(:form) { described_class.new(current_params.merge(agent_id: searched_agent.id)) }
+
+    context "when the agent can't see the other agent" do
+      it "returns nil" do
+        expect(form.agent).to be_blank
+      end
+    end
+
+    context "when the agents are in the same organisation" do
+      let(:searched_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+      it "returns the agent" do
+        expect(form.agent).to eq searched_agent
+      end
+    end
+  end
+
   describe "#to_query" do
     it "return query with lieu" do
       lieu = create(:lieu, organisation: organisation)
