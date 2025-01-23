@@ -13,8 +13,11 @@ class Agent::RdvPolicy < ApplicationPolicy
   def update?
     same_agent_or_has_access?
   end
-  alias edit? update?
   alias status? update?
+
+  def edit?
+    same_agent_or_has_access? && users_authorized?
+  end
 
   # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV,
   # qui permet à la fois de l'afficher et de le modifier

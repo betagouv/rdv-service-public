@@ -1,7 +1,13 @@
 RSpec.describe "Agent can update a RDV", js: true do
   let!(:organisation) { create(:organisation) }
+  let(:rdv) do
+    create(:rdv, organisation: organisation, motif: motif, agents: [agent], lieu: lieu)
+  end
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, basic_role_in_organisations: [organisation]) }
+
+  let!(:motif) { create(:motif, service: service, organisation: organisation) }
+  let!(:lieu) { create(:lieu, organisation: organisation) }
 
   before do
     stub_netsize_ok
@@ -9,10 +15,6 @@ RSpec.describe "Agent can update a RDV", js: true do
   end
 
   it "update existing RDV with single_use lieu" do
-    motif = create(:motif, service: service, organisation: organisation)
-    lieu = create(:lieu, organisation: organisation)
-    rdv = create(:rdv, organisation: organisation, motif: motif, agents: [agent], lieu: lieu)
-
     visit edit_admin_organisation_rdv_path(organisation, rdv)
     click_link("Définir un lieu ponctuel.")
     fill_in "Nom", with: "Café de la gare"
@@ -27,9 +29,7 @@ RSpec.describe "Agent can update a RDV", js: true do
   end
 
   it "update existing RDV with existing lieu" do
-    motif = create(:motif, service: service, organisation: organisation)
     lieu_ponctuel = create(:lieu, organisation: organisation, availability: :single_use)
-    lieu = create(:lieu, organisation: organisation, availability: :enabled)
     rdv = create(:rdv, organisation: organisation, motif: motif, agents: [agent], lieu: lieu_ponctuel)
 
     visit edit_admin_organisation_rdv_path(organisation, rdv)
@@ -40,5 +40,18 @@ RSpec.describe "Agent can update a RDV", js: true do
 
     expect(page).to have_content(lieu.full_name)
     expect(page).not_to have_selector(".badge-info", text: /Ponctuel/)
+  end
+
+  describe "adding users" do
+    context "when injecting the id of a user that isn't visible to the agent" do
+      let(:user_from_other_territory) do
+        create(:user, organisations: [create(:organisation)])
+      end
+
+      it "doesn't show the user's information" do
+        visit edit_admin_organisation_rdv_path(organisation, rdv, add_user: [user_from_other_territory.id])
+        expect(page).not_to have_content(user_from_other_territory.full_name)
+      end
+    end
   end
 end
