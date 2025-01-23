@@ -56,8 +56,9 @@ class Agent::RdvPolicy < ApplicationPolicy
   def users_authorized?
     return @users_authorized if defined?(@users_authorized)
 
+    participation_user_ids = record.participations.map(&:user_id)
     @users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_user, User).resolve
-      .where(id: record.user_ids).pluck(:id).to_set == record.user_ids.to_set
+      .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
   end
 
   def notify_agents_unauthorized
