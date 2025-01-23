@@ -42,7 +42,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
                            current_organisation&.id || current_agent.organisation_ids
                          end
 
-      scope.where(id: UserProfile.where("user_profiles.organisation_id": organisation_ids).distinct.select(:user_id))
+      scope.joins(:user_profiles).where(user_profiles: { organisation_id: organisation_ids })
     end
   end
 
