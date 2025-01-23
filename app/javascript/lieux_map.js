@@ -32,9 +32,15 @@ window.addEventListener("load", () => {
           id: 'lieux-markers',
           type: 'circle',
           source: 'lieux',
-          // filter: ['!', ['has', 'point_count']],
           paint: {
-            'circle-color': '#11b4da',
+            'circle-color': [
+              'match',
+              ['get', 'type_organisation'],
+              'RDV Solidarités', '#f28cb1',
+              'RDV Service Public', '#3bb2d0',
+              'Mairie', '#223b53',
+              '#e55e5e',
+            ],
             'circle-radius': 4,
             'circle-stroke-width': 1,
             'circle-stroke-color': '#fff'
@@ -43,10 +49,10 @@ window.addEventListener("load", () => {
 
         map.on('click', 'lieux-markers', (e) => {
           const coordinates = e.features[0].geometry.coordinates.slice();
-          const { name, organisation_name } = e.features[0].properties;
+          const { organisation_name, type_organisation } = e.features[0].properties;
           new maplibregl.Popup()
             .setLngLat(coordinates)
-            .setHTML(`<b>${name}</b><br />Organisation ${organisation_name}`)
+            .setHTML(`${organisation_name} - ${type_organisation}`)
             .addTo(map);
         });
 
