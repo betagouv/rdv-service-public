@@ -2,7 +2,7 @@ RSpec.describe Admin::RdvSearchForm do
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let(:organisation) { create(:organisation) }
   let(:current_params) do
-    { current_agent: agent, current_organisation: organisation }
+    { pundit_user: AgentOrganisationContext.new(agent, organisation) }
   end
 
   describe "#user" do
@@ -20,6 +20,25 @@ RSpec.describe Admin::RdvSearchForm do
 
       it "return the user" do
         expect(form.user).to eq user
+      end
+    end
+  end
+
+  describe "#agent" do
+    let(:searched_agent) { create(:agent, services: agent.services) }
+    let(:form) { described_class.new(current_params.merge(agent_id: searched_agent.id)) }
+
+    context "when the agent can't see the other agent" do
+      it "returns nil" do
+        expect(form.agent).to be_blank
+      end
+    end
+
+    context "when the agents are in the same organisation" do
+      let(:searched_agent) { create(:agent, services: agent.services, basic_role_in_organisations: [organisation]) }
+
+      it "returns the agent" do
+        expect(form.agent).to eq searched_agent
       end
     end
   end
