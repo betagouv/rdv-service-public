@@ -1,11 +1,11 @@
 RSpec.describe Admin::EditRdvForm, type: :form do
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent) }
-  let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent, organisation: organisation) }
+  let(:agent_context) { AgentOrganisationContext.new(agent, organisation) }
 
   before { stub_netsize_ok }
 
-  describe "#update" do
+  describe "#submit" do
     it "updates rdv's lieu" do
       now = Time.zone.parse("2020-12-12 13h50")
       travel_to(now)
@@ -13,7 +13,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
       new_lieu = create(:lieu, organisation: organisation)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(lieu: new_lieu, ignore_benign_errors: "1")
+      edit_rdv_form.submit({ lieu: new_lieu, ignore_benign_errors: "1" })
 
       expect(rdv.reload.lieu).to eq(new_lieu)
     end
@@ -25,7 +25,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
       travel_to(now)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(status: "excused", ignore_benign_errors: "1")
+      edit_rdv_form.submit({ status: "excused", ignore_benign_errors: "1" })
 
       rdv.reload
       expect(rdv.cancelled_at).to eq(now)
@@ -39,7 +39,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
       travel_to(now)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(status: "unknown", ignore_benign_errors: "1")
+      edit_rdv_form.submit({ status: "unknown", ignore_benign_errors: "1" })
 
       rdv.reload
       expect(rdv.cancelled_at).to be_nil

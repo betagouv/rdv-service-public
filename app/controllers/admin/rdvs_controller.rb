@@ -89,7 +89,7 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv, policy_class: Agent::RdvPolicy)
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    @rdv_form.submit(rdv_params)
+    @success = @rdv_form.submit(rdv_params)
 
     respond_to do |format|
       format.js do
