@@ -4,7 +4,7 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
-    = form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, builder: DsfrFormBuilder do |f|
+    = form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, builder: Dsfr::FormBuilder do |f|
       .rdv-text-align-center.w-75.m-auto
       = render "devise/shared/dsfr_error_messages", resource: resource
       = f.hidden_field :invitation_token
