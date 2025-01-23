@@ -34,7 +34,7 @@ class Admin::RdvsController < AgentAuthController
       ]
     )
 
-    @form = Admin::RdvSearchForm.new(parsed_params)
+    @form = Admin::RdvSearchForm.new(parsed_params.merge(current_agent:, current_organisation:))
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
     @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).ordered_by_name
   end
@@ -78,7 +78,7 @@ class Admin::RdvsController < AgentAuthController
 
   def edit
     add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
-    users_to_add = User.where(id: add_user_ids)
+    users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: add_user_ids)).resolve
     users_to_add.ids.each { @rdv.participations.build(user_id: _1) }
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)

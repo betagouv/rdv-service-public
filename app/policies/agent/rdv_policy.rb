@@ -2,15 +2,22 @@ class Agent::RdvPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def create?
-    true
+    # Nous monitorons les cas
+    notify_agents_unauthorized unless agents_authorized?
+    notify_users_unauthorized unless users_authorized?
+
+    users_authorized?
   end
   alias new? create?
 
   def update?
     same_agent_or_has_access?
   end
-  alias edit? update?
   alias status? update?
+
+  def edit?
+    same_agent_or_has_access? && users_authorized?
+  end
 
   # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV,
   # qui permet à la fois de l'afficher et de le modifier
@@ -37,6 +44,35 @@ class Agent::RdvPolicy < ApplicationPolicy
 
   def same_service?
     @record.motif.service.in?(current_agent.services)
+  end
+
+  def agents_authorized?
+    return @agents_authorized if defined?(@agents_authorized)
+
+    @agents_authorized = Agent::AgentPolicy::Scope.new(pundit_user, Agent).resolve
+      .where(id: record.agent_ids).pluck(:id).to_set == record.agent_ids.to_set
+  end
+
+  def users_authorized?
+    return @users_authorized if defined?(@users_authorized)
+
+    participation_user_ids = record.participations.map(&:user_id)
+    @users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_user, User).resolve
+      .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
+  end
+
+  def notify_agents_unauthorized
+    Sentry.capture_message(
+      "L'agent n'est pas autorisé à créer de RDV avec ces agents",
+      extra: { agent_ids: record.agent_ids, agent: current_agent.id }
+    )
+  end
+
+  def notify_users_unauthorized
+    Sentry.capture_message(
+      "L'agent n'est pas autorisé à créer de RDV avec ces usagers : mettre à jour https://www.notion.so/rdvs/1832b05ced41805e82a9cb0e2567cfc9",
+      extra: { user_ids: record.user_ids, agent: current_agent.id }
+    )
   end
 
   def same_agent_or_has_access?

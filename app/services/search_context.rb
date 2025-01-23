@@ -18,7 +18,6 @@ class SearchContext
 
   def creneaux
     @creneaux ||= creneaux_search.creneaux
-      .uniq(&:starts_at) # On n'affiche qu'un créneau par horaire, même si plusieurs agents sont dispos
   end
 
   def available_collective_rdvs
