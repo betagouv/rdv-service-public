@@ -72,7 +72,7 @@ RSpec.describe "Agent can list RDVs" do
     end
 
     it "allows searching by user", js: true do
-      visit admin_organisation_rdvs_url(organisation, current_agent)
+      visit admin_organisation_rdvs_path(organisation, current_agent)
 
       find("#select2-user_id-container").click
       within(".select2-search--dropdown") do
@@ -81,7 +81,7 @@ RSpec.describe "Agent can list RDVs" do
       find("li", text: "#{user.last_name} #{user.first_name}").click
 
       # This is to make sure we wait for the user to be added before doing the next action
-      expect(page).to have_content("#{user.first_name} #{user.last_name}")
+      expect(page).to have_content(user.reverse_full_name)
       raise "lol"
     end
   end
