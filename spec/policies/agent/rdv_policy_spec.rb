@@ -111,7 +111,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif) }
     let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
 
-    context "when users are arleady saved in database" do
+    context "when users are already saved in database" do
       before do
         user_from_other_territory = create(:user)
         rdv.participations.build(user_id: user_from_other_territory.id, created_by: agent)
@@ -122,6 +122,9 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
       it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?
     end
 
+    # Certains controllers ajoutent des usagers à un RDV à travers
+    # `@rdv.participations.build(...)`, puis appellent cette policy.
+    # Cette section teste ce cas de figure.
     context "when users are added as participations but not yet persisted" do
       before do
         user_from_other_territory = create(:user)
