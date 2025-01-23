@@ -57,7 +57,9 @@ class Agent::RdvPolicy < ApplicationPolicy
     return @users_authorized if defined?(@users_authorized)
 
     participation_user_ids = record.participations.map(&:user_id)
-    @users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_user, User).resolve
+
+    pundit_context = pundit_user.is_a?(AgentOrganisationContext) ? pundit_user : AgentOrganisationContext.new(pundit_user, record.organisation)
+    @users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_context, User).resolve
       .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
   end
 
