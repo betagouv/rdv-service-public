@@ -11,7 +11,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   alias new? create?
 
   def update?
-    same_agent_or_has_access?
+    same_agent_or_has_access? && users_authorized?
   end
   alias status? update?
 
@@ -57,8 +57,17 @@ class Agent::RdvPolicy < ApplicationPolicy
     return @users_authorized if defined?(@users_authorized)
 
     participation_user_ids = record.participations.map(&:user_id)
-    @users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_user, User).resolve
+
+    @users_authorized = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
       .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
+  end
+
+  def agent_organisation_context
+    if pundit_user.respond_to?(:agent) && pundit_user.respond_to?(:organisation)
+      pundit_user
+    else
+      AgentOrganisationContext.new(pundit_user, record.organisation)
+    end
   end
 
   def notify_agents_unauthorized

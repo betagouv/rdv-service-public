@@ -118,6 +118,17 @@ RSpec.describe Admin::RdvsController, type: :controller do
         end.not_to change(Lieu, :count)
       end
     end
+
+    context "when injecting the id of a user that isn't visible to the agent" do
+      it "doesn't allow updating the RDV with this user" do
+        user_from_other_territory = create(:user, organisations: [create(:organisation, territory: create(:territory))])
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
+        new_attributes = { participations_attributes: { "0" => { user_id: user_from_other_territory.id } } }
+        expect do
+          put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
+        end.not_to change { rdv.reload.user_ids }
+      end
+    end
   end
 
   describe "GET #show" do
