@@ -5,7 +5,7 @@ RSpec.describe "Agent can edit a Rdv collectif" do
   let!(:motif) { create(:motif, :collectif, service: service, organisation: organisation, name: "Atelier Collectif") }
 
   let(:user) do
-    create(:user, phone_number: "+33611223344", email: "test@exemple.fr")
+    create(:user, phone_number: "+33611223344", email: "test@exemple.fr", organisations: [organisation])
   end
   let(:rdv) do
     create(:rdv,
