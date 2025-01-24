@@ -55,11 +55,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
     @rdv = Rdv.find(params[:id])
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
-    success = @rdv.update_and_notify(current_agent, update_users_params) do |rdv_before_save|
-      authorize(rdv_before_save, :update?, policy_class: Agent::RdvPolicy)
-    end
-
-    if success
+    if @rdv.update_and_notify(current_agent, update_users_params)
       flash[:success] = "Participants mis à jour"
       redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else

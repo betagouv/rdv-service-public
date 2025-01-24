@@ -1,10 +1,10 @@
 module Rdv::Updatable
   extend ActiveSupport::Concern
 
-  def update_and_notify(author, attributes, &block)
+  def update_and_notify(author, attributes)
     @old_agent_ids = agent_ids.to_a
     assign_attributes(attributes)
-    save_and_notify(author, &block)
+    save_and_notify(author)
   end
 
   def save_and_notify(author)
@@ -22,7 +22,8 @@ module Rdv::Updatable
         participations.reload
       end
 
-      yield self if block_given? # yield RDV before saving, can be used to run policy check
+      policy = Agent::RdvPolicy.new(author, self)
+      raise Pundit::NotAuthorizedError.new(query: :update?, record: self, policy: policy) unless policy.update?
 
       if save
         notify!(author, previous_participations)
