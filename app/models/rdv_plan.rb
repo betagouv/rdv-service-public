@@ -27,7 +27,10 @@ class RdvPlan < ApplicationRecord
   end
 
   def create_rdv(user_attributes:, participation_attributes:)
-    user.skip_reconfirmation! if user.encrypted_password.blank? # Pour mettre à jour l'email sans renvoyer de mail de confirmation
+    if user.encrypted_password.blank? # Pour mettre à jour l'email sans renvoyer de mail de confirmation
+      user.skip_confirmation_notification!
+      user.skip_reconfirmation!
+    end
     user.update!(user_attributes)
 
     rdv = Rdv.create(

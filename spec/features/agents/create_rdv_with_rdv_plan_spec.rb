@@ -1,6 +1,8 @@
 RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'interface de rdv_plan" do
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  let!(:agent) do
+    create(:agent, basic_role_in_organisations: [organisation], rdv_notifications_level: :all)
+  end
   let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation, location_type: :public_office) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
@@ -18,6 +20,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     find(".fc-widget-content", match: :first).click
     expect(page).to have_content "Nouveau"
     expect(rdv_plan.reload.starts_at).to be_present
+
     find("label", text: "Sur place").click
     click_on "Continuer"
     expect(page).to have_content "Motif du rendez-vous "
@@ -38,5 +41,9 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       organisation: organisation
     )
     expect(user.reload.email).to eq "newaddress@exemple.com"
+
+    perform_enqueued_jobs
+    emails = ActionMailer::Base.deliveries
+    expect(emails.map(&:to).flatten).to contain_exactly(user.reload.email, agent.email)
   end
 end
