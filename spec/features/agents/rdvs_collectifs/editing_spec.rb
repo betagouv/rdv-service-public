@@ -40,6 +40,16 @@ RSpec.describe "Agent can edit a Rdv collectif" do
     end
   end
 
+  describe "adding a user that belongs to several organisations" do
+    it "works" do
+      multi_org_user = create(:user, organisations: [organisation, create(:organisation, territory: organisation.territory)])
+      login_as(agent, scope: :agent)
+
+      visit edit_admin_organisation_rdvs_collectif_path(organisation, rdv, add_user: [multi_org_user.id])
+      expect { click_on "Enregistrer" }.to change { rdv.reload.user_ids }.from([]).to([multi_org_user.id])
+    end
+  end
+
   describe "injecting the ID of a user outside of the territory" do
     let!(:user) do
       create(:user, organisations: [organisation], first_name: "Francis", last_name: "Factice")

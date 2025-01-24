@@ -45,7 +45,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
     @rdv = Rdv.find(params[:id])
 
     @add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
-    users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: @add_user_ids)).resolve
+    users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: @add_user_ids)).resolve.distinct
     @participations_to_add = users_to_add.ids.map { @rdv.participations.build(user_id: _1, created_by: current_agent) }
 
     authorize(@rdv, policy_class: Agent::RdvPolicy)
