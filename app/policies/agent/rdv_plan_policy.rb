@@ -1,5 +1,4 @@
 class Agent::RdvPlanPolicy < ApplicationPolicy
-  # TODO: ajouter des contraintes sur le lieu et le rdv_agent
   def create?
     authorized_lieu && pundit_user == record.planning_agent
   end
@@ -13,6 +12,7 @@ class Agent::RdvPlanPolicy < ApplicationPolicy
 
   private
 
+  # TODO: ajouter une spec pour ce cas
   def authorized_lieu
     return true unless record.lieu_id
 
