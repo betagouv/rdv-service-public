@@ -17,20 +17,7 @@
       = render "model_errors", model: @rdv_plan
 
       .input-group.fr-mb-3w
-        = f.input :motif_id, \
-          label: "Motif du rendez-vous", \
-            required: true, \
-            include_blank: true, \
-            collection: @motifs, \
-            label_method: -> { "#{_1.name} #{'- RDV collectif ' if _1.collectif?}" }, \
-            label_html: { class: "fr-mr-2w" }, \
-            input_html: { \
-              data: { \
-                placeholder: "Sélectionnez un motif", "auto-select-sole-option": true, \
-                "select2-config": { disableSearch: true }, \
-              }, \
-              class: "select2-input", \
-            }
+        = f.input :motif_id, label: "Motif du rendez-vous", required: true, collection: @motifs, label_method: :name, label_html: { class: "fr-mr-2w" }, include_blank: @motifs.count > 1
 
       = f.input :duration_in_minutes, label: "Durée en minutes"
       = f.submit "Continuer", class: "fr-btn float-right"
