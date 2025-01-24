@@ -8,10 +8,6 @@
 @import "./variables";
 @import "./components/calendar";
 
-@import "~select2/dist/css/select2";
-@import "~select2-bootstrap4-theme/dist/select2-bootstrap4.min";
-@import "./components/select2";
-
 .fc-widget-content {
   // On suit l'exemple de Google Calendar : dans le calendrier principal même si on peut cliquer n'importe où dans le calendrier
   // pour créer un evènement, on ne passe habituellement le cursor en point que sur les évènements,
