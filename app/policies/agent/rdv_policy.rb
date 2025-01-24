@@ -2,11 +2,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def create?
-    # Nous monitorons les cas
-    notify_agents_unauthorized unless agents_authorized?
-    notify_users_unauthorized unless users_authorized?
-
-    users_authorized?
+    users_and_agents_authorized?
   end
   alias new? create?
 
@@ -42,6 +38,13 @@ class Agent::RdvPolicy < ApplicationPolicy
 
   private
 
+  def users_and_agents_authorized?
+    notify_agents_unauthorized unless agents_authorized?
+    notify_users_unauthorized unless users_authorized?
+
+    users_authorized? && agents_authorized?
+  end
+
   def same_service?
     @record.motif.service.in?(current_agent.services)
   end
@@ -49,8 +52,18 @@ class Agent::RdvPolicy < ApplicationPolicy
   def agents_authorized?
     return @agents_authorized if defined?(@agents_authorized)
 
-    @agents_authorized = Agent::AgentPolicy::Scope.new(pundit_user, Agent).resolve
-      .where(id: record.agent_ids).pluck(:id).to_set == record.agent_ids.to_set
+    @agents_authorized = (authorized_agent_ids_via_scope + authorized_agent_ids_via_motif).to_set == record.agent_ids.to_set
+  end
+
+  def authorized_agent_ids_via_scope
+    Agent::AgentPolicy::Scope.new(pundit_user, Agent).resolve
+      .where(id: record.agent_ids).pluck(:id)
+  end
+
+  def authorized_agent_ids_via_motif
+    return [] if record.motif.blank?
+
+    record.motif.authorized_agents.where(id: record.agent_ids).pluck(:id)
   end
 
   def users_authorized?
