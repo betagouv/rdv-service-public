@@ -1,10 +1,10 @@
 module Rdv::Updatable
   extend ActiveSupport::Concern
 
-  def update_and_notify(author, attributes)
+  def update_and_notify(author, attributes, &block)
     @old_agent_ids = agent_ids.to_a
     assign_attributes(attributes)
-    save_and_notify(author)
+    save_and_notify(author, &block)
   end
 
   def save_and_notify(author)
@@ -21,6 +21,8 @@ module Rdv::Updatable
         # Reload is needed after .persisted? method call.
         participations.reload
       end
+
+      yield self if block_given? # yield RDV before saving, can be used to run policy check
 
       if save
         notify!(author, previous_participations)
