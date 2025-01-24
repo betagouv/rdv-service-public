@@ -49,28 +49,29 @@ class Agent::RdvPolicy < ApplicationPolicy
   def agents_authorized?
     return @agents_authorized if defined?(@agents_authorized)
 
-    @agents_authorized = (authorized_agent_ids_via_scope + authorized_agent_ids_via_motif).to_set == record.agent_ids.to_set
+    rdv_agent_ids = record.agents_rdvs.map(&:agent).reject(&:soft_deleted?).map(&:id)
+    @agents_authorized = (authorized_agent_ids_via_scope(rdv_agent_ids) + authorized_agent_ids_via_motif(rdv_agent_ids)).to_set == rdv_agent_ids.to_set
 
     notify_agents_unauthorized unless @agents_authorized
 
     @agents_authorized
   end
 
-  def authorized_agent_ids_via_scope
+  def authorized_agent_ids_via_scope(rdv_agent_ids)
     Agent::AgentPolicy::Scope.new(pundit_user, Agent).resolve
-      .where(id: record.agent_ids).pluck(:id)
+      .where(id: rdv_agent_ids).pluck(:id)
   end
 
-  def authorized_agent_ids_via_motif
+  def authorized_agent_ids_via_motif(rdv_agent_ids)
     return [] if record.motif.blank?
 
-    record.motif.authorized_agents.where(id: record.agent_ids).pluck(:id)
+    record.motif.authorized_agents.where(id: rdv_agent_ids).pluck(:id)
   end
 
   def users_authorized?
     return @users_authorized if defined?(@users_authorized)
 
-    participation_user_ids = record.participations.map(&:user_id)
+    participation_user_ids = record.participations.map(&:user).reject(&:soft_deleted?).map(&:id)
 
     @users_authorized = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
       .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
