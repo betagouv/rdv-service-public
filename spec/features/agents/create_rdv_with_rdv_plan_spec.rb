@@ -13,7 +13,10 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     create(:rdv_plan, user: user, planning_agent: agent)
   end
 
-  before { login_as(agent, scope: :agent) }
+  before do
+    stub_netsize_ok
+    login_as(agent, scope: :agent)
+  end
 
   it "permet de prendre un rendez-vous", js: true do
     visit agents_rdv_plan_path(rdv_plan.id)
@@ -25,6 +28,10 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     click_on "Continuer"
     expect(page).to have_content "Motif du rendez-vous "
     click_on "Continuer"
+
+    # On a sélectionné le premier créneau visible du calendrier, qui est donc dans le passé
+    # Hack : on modifie à la main le starts_at
+    rdv_plan.update!(starts_at: 2.weeks.from_now)
 
     fill_in("Email", with: "newaddress@exemple.com")
 
@@ -44,6 +51,8 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
     perform_enqueued_jobs
     emails = ActionMailer::Base.deliveries
-    expect(emails.map(&:to).flatten).to contain_exactly(user.reload.email, agent.email)
+    expect(emails.size).to eq(2)
+    expect(emails.map { [_1.to, _1.subject] }).to include([["newaddress@exemple.com"], a_string_matching(/RDV confirmé le/)])
+    expect(emails.map { [_1.to, _1.subject] }).to include([[agent.email], a_string_matching(/Nouveau RDV ajouté sur votre agenda/)])
   end
 end
