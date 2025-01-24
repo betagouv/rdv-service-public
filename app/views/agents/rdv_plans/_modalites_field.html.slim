@@ -5,7 +5,7 @@ fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich
     | Comment souhaitez-vous faire le rendez-vous ?
 
   - if available_location_types.include?("public_office")
-    - lieux = Lieu.enabled.where(organisation_id: current_agent.organisations.select(:id))
+    - lieux = policy_scope(Lieu.enabled, policy_scope_class: Agent::LieuPolicy::Scope)
     - lieux.each do |lieu|
       .fr-fieldset__element
         .fr-radio-group.fr-radio-rich
