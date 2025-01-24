@@ -39,9 +39,6 @@ class Agent::RdvPolicy < ApplicationPolicy
   private
 
   def users_and_agents_authorized?
-    notify_agents_unauthorized unless agents_authorized?
-    notify_users_unauthorized unless users_authorized?
-
     users_authorized? && agents_authorized?
   end
 
@@ -53,6 +50,10 @@ class Agent::RdvPolicy < ApplicationPolicy
     return @agents_authorized if defined?(@agents_authorized)
 
     @agents_authorized = (authorized_agent_ids_via_scope + authorized_agent_ids_via_motif).to_set == record.agent_ids.to_set
+
+    notify_agents_unauthorized unless @agents_authorized
+
+    @agents_authorized
   end
 
   def authorized_agent_ids_via_scope
@@ -73,6 +74,10 @@ class Agent::RdvPolicy < ApplicationPolicy
 
     @users_authorized = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
       .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
+
+    notify_users_unauthorized unless @users_authorized
+
+    @users_authorized
   end
 
   def agent_organisation_context
