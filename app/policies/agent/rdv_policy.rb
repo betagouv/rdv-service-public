@@ -61,6 +61,8 @@ class Agent::RdvPolicy < ApplicationPolicy
   end
 
   def authorized_agent_ids_via_motif
+    return [] if record.motif.blank?
+
     record.motif.authorized_agents.where(id: record.agent_ids).pluck(:id)
   end
 
