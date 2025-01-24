@@ -2,21 +2,17 @@ class Agent::RdvPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def create?
-    # Nous monitorons les cas
-    notify_agents_unauthorized unless agents_authorized?
-    notify_users_unauthorized unless users_authorized?
-
-    users_authorized? && agents_authorized?
+    users_and_agents_authorized?
   end
   alias new? create?
 
   def update?
-    same_agent_or_has_access? && users_authorized?
+    same_agent_or_has_access? && users_and_agents_authorized?
   end
   alias status? update?
 
   def edit?
-    same_agent_or_has_access? && users_authorized?
+    same_agent_or_has_access? && users_and_agents_authorized?
   end
 
   # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV,
@@ -41,6 +37,13 @@ class Agent::RdvPolicy < ApplicationPolicy
   end
 
   private
+
+  def users_and_agents_authorized?
+    notify_agents_unauthorized unless agents_authorized?
+    notify_users_unauthorized unless users_authorized?
+
+    users_authorized? && agents_authorized?
+  end
 
   def same_service?
     @record.motif.service.in?(current_agent.services)
