@@ -35,7 +35,7 @@ class Agents::RdvPlansController < AgentAuthController
       service: @rdv_plan.rdv_agent.services
     )
     if @motifs.count == 1
-      @rdv_plan.motif_id ||= @motifs.first
+      @rdv_plan.motif_id ||= @motifs.first.id
     end
     @rdv_plan.duration_in_minutes ||= @motifs.first.default_duration_in_min
   end
