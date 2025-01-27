@@ -71,10 +71,18 @@ class Agent::RdvPolicy < ApplicationPolicy
   def users_authorized?
     return @users_authorized if defined?(@users_authorized)
 
-    participation_user_ids = record.participations.map(&:user).reject(&:soft_deleted?).map(&:id)
+    participation_user_ids = record.participations.map(&:user).reject(&:soft_deleted?).map(&:id).to_set
 
-    @users_authorized = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
-      .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
+    users_i_can_create_rdv_for = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
+      .where(id: participation_user_ids).pluck(:id).to_set
+
+    users_i_cannot_create_rdv_for = participation_user_ids.difference(users_i_can_create_rdv_for)
+    @users_authorized = if users_i_cannot_create_rdv_for.empty?
+                          true
+                        else
+                          users_of_rdvs_i_can_see = Scope.new(current_agent, Rdv.joins(:participations).where(participations: { user_id: users_i_cannot_create_rdv_for })).resolve
+                          users_of_rdvs_i_can_see.pluck(:id).to_set == users_i_cannot_create_rdv_for
+                        end
 
     notify_users_unauthorized unless @users_authorized
 

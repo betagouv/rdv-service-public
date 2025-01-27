@@ -155,5 +155,25 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     it_behaves_like "not permit actions", :rdv
   end
 
+  context "the participating user belongs to no organisation but already has a RDV in my orgs" do
+    let(:organisation) { create(:organisation) }
+    let(:service) { create(:service) }
+    let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+    let(:motif) { create(:motif, organisation: organisation, service: service) }
+
+    let(:user) { create(:user) }
+    let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], users: [user], motif: motif) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
+
+    before do
+      # On s'assure que l'usager du RDV est sans orga
+      UserProfile.where(user: user).destroy_all
+      rdv.reload
+    end
+
+    it_behaves_like "permit actions", :rdv, :new?, :create?, :show?, :edit?, :update?, :destroy?
+    it_behaves_like "not permit actions", :rdv
+  end
+
   # TODO: write cases for :new? and create? which
 end
