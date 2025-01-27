@@ -30,6 +30,7 @@ class Participation < ApplicationRecord
   before_create :set_status_from_rdv
   after_save :update_counter_cache
   after_destroy :update_counter_cache
+  after_commit :warn_missing_user_profile, on: %i[create update]
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
 
   # Scopes
@@ -99,5 +100,14 @@ class Participation < ApplicationRecord
 
   def prescription?
     created_by_prescripteur? || created_by_agent_prescripteur?
+  end
+
+  def warn_missing_user_profile
+    return if user.organisations.include?(rdv.organisation)
+
+    Sentry.capture_message(
+      "Avertissement : un usager participe à un RDV sans appartenir à l'organisation",
+      extra: { rdv_id: rdv.id, participation_id: id, user_id: user_id, organisation_id: rdv.organisation_id }
+    )
   end
 end
