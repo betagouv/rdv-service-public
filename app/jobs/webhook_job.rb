@@ -26,6 +26,11 @@ class WebhookJob < ApplicationJob
     )
 
     request.on_failure do |response|
+      # Pour ne pas polluer avec les retry, on ne loggue que le 4ème essai.
+      if executions == 4
+        WebhookExecution.record_execution!(webhook_endpoint_id: webhook_endpoint.id, http_code: response.code)
+      end
+
       # Cela permet d'identifier singulièrement l'erreur selon l'URL et le code HTTP de la réponse
       Sentry.get_current_scope.set_fingerprint(["OutgoingWebhookError", webhook_endpoint.target_url, response.code.to_s])
 
@@ -39,6 +44,8 @@ class WebhookJob < ApplicationJob
     # Le WAF du Pas-de-Calais bloque certaines requêtes et
     # renvoie une réponse en HTML avec un statut 200.
     request.on_success do |response|
+      WebhookExecution.record_execution!(webhook_endpoint_id: webhook_endpoint.id, http_code: response.code)
+
       if response.body.include?("<html>")
         fingerprint = ["OutgoingWebhookError HTML", webhook_endpoint.target_url, response.code.to_s]
         Sentry.capture_message("HTML body in HTTP #{response.code} response in webhook to [#{webhook_endpoint.target_url}]", fingerprint: fingerprint)

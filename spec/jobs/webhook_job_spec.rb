@@ -32,6 +32,24 @@ RSpec.describe WebhookJob, type: :job do
       expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
     end
 
+    it "records failure in WebhookExecution on the 4th try only" do
+      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
+      allow(WebhookExecution).to receive(:record_execution!)
+      described_class.perform_later(payload, webhook_endpoint.id)
+
+      # 3 first executions, nothing logged
+      3.times { perform_enqueued_jobs }
+      expect(WebhookExecution).not_to have_received(:record_execution!)
+
+      # retry again (4th try), the error is logged
+      perform_enqueued_jobs
+      expect(WebhookExecution).to have_received(:record_execution!).once
+
+      # retry again, no more calls, only the one
+      5.times { perform_enqueued_jobs }
+      expect(WebhookExecution).to have_received(:record_execution!).once
+    end
+
     it "retries with a lower priority" do
       stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
       described_class.perform_later(payload, webhook_endpoint.id)
