@@ -71,17 +71,21 @@ class Agent::RdvPolicy < ApplicationPolicy
   def users_authorized?
     return @users_authorized if defined?(@users_authorized)
 
-    participation_user_ids = record.participations.map(&:user).reject(&:soft_deleted?).map(&:id).to_set
+    participants = record.participations.map(&:user).reject(&:soft_deleted?).map(&:id).to_set
 
-    users_i_can_create_rdv_for = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
-      .where(id: participation_user_ids).pluck(:id).to_set
+    territory_scope_users = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
+      .where(id: participants).pluck(:id).to_set
 
-    users_i_cannot_create_rdv_for = participation_user_ids.difference(users_i_can_create_rdv_for)
-    @users_authorized = if users_i_cannot_create_rdv_for.empty?
+    participants_not_in_territory_scope = participants.difference(territory_scope_users)
+    @users_authorized = if participants_not_in_territory_scope.empty?
+                          # Tous les participants sont dans mon périmètre
                           true
                         else
-                          users_of_rdvs_i_can_see = Scope.new(current_agent, Rdv.joins(:participations).where(participations: { user_id: users_i_cannot_create_rdv_for })).resolve
-                          users_of_rdvs_i_can_see.pluck(:id).to_set == users_i_cannot_create_rdv_for
+                          # Temporaire : si un usager n'est pas dans mon périmètre (orga / territoire)
+                          # mais qu'il participe à des RDV que je peux voir, c'est OK.
+                          # Voir : https://github.com/betagouv/rdv-service-public/pull/5023
+                          users_of_rdvs_i_can_see = Scope.new(current_agent, Rdv.joins(:participations).where(participations: { user_id: participants_not_in_territory_scope })).resolve
+                          users_of_rdvs_i_can_see.pluck(:id).to_set == participants_not_in_territory_scope
                         end
 
     notify_users_unauthorized unless @users_authorized
