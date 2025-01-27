@@ -1,4 +1,6 @@
 Rails.application.config.after_initialize do
+  next unless defined?(LetterOpenerWeb)
+
   LetterOpenerWeb::Letter.class_eval do
     alias_method :original_adjust_link_targets, :adjust_link_targets
     def adjust_link_targets(contents)
