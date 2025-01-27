@@ -7,4 +7,6 @@ fr:
         target_url: URL de destination
         secret: Clé privée
         secret_hint: Cette clé vous permet de vérifier l'intégrité des données reçues, voir <a href="https://github.com/betagouv/rdv-service-public/blob/production/docs/api/webhooks/api-notifications-webhooks.md#signatures-des-requ%C3%AAtes">la documentation</a> pour plus d'infos
+        notification_email: E-mail de notification
+        notification_email_hint: Un récapitulatif hebdomadaire (pourcentage de webhooks en échec, nombre d'erreurs) sera envoyé à cette adresse
         subscriptions: Éléments déclencheurs

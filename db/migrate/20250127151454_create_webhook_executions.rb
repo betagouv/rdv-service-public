@@ -6,5 +6,7 @@ class CreateWebhookExecutions < ActiveRecord::Migration[7.1]
       t.integer :http_code
       t.integer :counter, default: 0
     end
+
+    add_column :webhook_endpoints, :notification_email, :string
   end
 end

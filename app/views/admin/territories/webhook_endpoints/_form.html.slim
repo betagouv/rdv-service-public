@@ -4,6 +4,7 @@
   = f.input :target_url
   = f.input :secret, input_html: { value: webhook.partially_hidden_secret, id: "secret_field" },
           hint: sanitize(t("activerecord.attributes.webhook_endpoint.secret_hint"))
+  = f.input :notification_email, hint: sanitize(t("activerecord.attributes.webhook_endpoint.notification_email_hint"))
   .row.col-md-6
     = f.input :subscriptions, as: :check_boxes, collection: WebhookEndpoint::ALL_SUBSCRIPTIONS,
     label_method: -> { _1.classify.constantize.model_name.human }, checked: webhook.subscriptions, include_hidden: false
