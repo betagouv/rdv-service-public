@@ -167,8 +167,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
 
     before do
       # On s'assure que l'usager du RDV est sans orga
-      UserProfile.where(user: user).destroy_all
-      rdv.reload
+      user.user_profiles.destroy_all
     end
 
     it_behaves_like "permit actions", :rdv, :new?, :create?, :show?, :edit?, :update?, :destroy?
