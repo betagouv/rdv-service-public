@@ -92,6 +92,8 @@ class Admin::RdvsController < AgentAuthController
 
     respond_to do |format|
       format.js do
+        raise params[:rdv].to_unsafe_h.inspect if params[:rdv][:status].blank?
+
         render "admin/rdvs/update"
       end
       format.html do
