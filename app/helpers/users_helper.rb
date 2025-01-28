@@ -83,7 +83,7 @@ module UsersHelper
   end
 
   def notify_by_email_description(user)
-    if user.preferred_notification_email.blank?
+    if user.preferred_email.blank?
       "🔴 pas d'email renseigné"
     elsif user.responsible_notify_by_email?
       "🟢 Activées"

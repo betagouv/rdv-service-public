@@ -11,7 +11,7 @@ class Users::RdvMailer < ApplicationMailer
     @token = params[:token]
   end
 
-  default to: -> { @user.preferred_notification_email }
+  default to: -> { @user.preferred_email }
 
   def rdv_created
     self.ics_payload = @rdv.payload(:create, @user)

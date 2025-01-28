@@ -5,7 +5,7 @@ class Users::FileAttenteMailer < ApplicationMailer
     @token = params[:token]
   end
 
-  default to: -> { @user.preferred_notification_email }
+  default to: -> { @user.preferred_email }
 
   def new_creneau_available
     subject = t("users.file_attente_mailer.new_creneau_available.title")
