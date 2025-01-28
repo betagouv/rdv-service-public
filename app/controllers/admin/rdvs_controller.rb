@@ -162,7 +162,6 @@ class Admin::RdvsController < AgentAuthController
 
   def rdv_update_params
     allowed_params = params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
-                                                 agent_ids: [],
                                                  participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
                                                  lieu_attributes: %i[name address latitude longitude id])
 
@@ -171,6 +170,12 @@ class Admin::RdvsController < AgentAuthController
     if allowed_params[:lieu_attributes].present?
       allowed_params[:lieu_attributes][:organisation] = current_organisation
       allowed_params[:lieu_attributes][:availability] = :single_use
+    end
+
+    if params[:rdv][:agent_ids].present?
+      # La méthode Motif#authorized_agents est aussi utilisée pour lister les agents du select
+      # de l'edit, c'est donc cohérent de l'utiliser ici pour sanitizer les IDs d'agent.
+      allowed_params[:agent_ids] = @rdv.motif.authorized_agents.where(id: params[:rdv][:agent_ids]).pluck(:id)
     end
 
     allowed_params
