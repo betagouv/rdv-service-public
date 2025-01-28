@@ -1,7 +1,10 @@
 class WebhookEndpoint < ApplicationRecord
   # Mixins
   has_paper_trail
+
+  # Relations
   belongs_to :organisation
+  has_many :webhook_executions, dependent: :delete_all, inverse_of: :webhook_endpoint
 
   # Validations
   validates :target_url, presence: true, uniqueness: { scope: :organisation_id }

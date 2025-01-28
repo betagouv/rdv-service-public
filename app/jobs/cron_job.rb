@@ -16,6 +16,15 @@ class CronJob < ApplicationJob
     end
   end
 
+  class SendWebhookDigestsJob < CronJob
+    def perform
+      WebhookEndpoint.select(:notification_email).distinct.compact_blank.each do |notification_email|
+        monday_of_last_week = Time.zone.yesterday.beginning_of_week.to_date
+        WebhookDigestMailer.weekly_digest(notification_email:, first_day: monday_of_last_week).perform_later
+      end
+    end
+  end
+
   class UpdateExpirationsJob < CronJob
     def perform
       [PlageOuverture, Absence].each do |klass|
