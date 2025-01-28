@@ -85,7 +85,7 @@ class Agent::RdvPolicy < ApplicationPolicy
                           # mais qu'il participe à des RDV que je peux voir, c'est OK.
                           # Voir : https://github.com/betagouv/rdv-service-public/pull/5023
                           users_of_rdvs_i_can_see = Scope.new(current_agent, Rdv.joins(:participations).where(participations: { user_id: participants_not_in_territory_scope })).resolve
-                          users_of_rdvs_i_can_see.pluck(:id).to_set == participants_not_in_territory_scope
+                          users_of_rdvs_i_can_see.pluck("participations.user_id").to_set == participants_not_in_territory_scope
                         end
 
     notify_users_unauthorized unless @users_authorized
