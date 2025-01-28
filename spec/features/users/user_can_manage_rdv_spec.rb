@@ -58,7 +58,7 @@ RSpec.describe "User can manage their rdvs" do
     let!(:agent2) { create(:agent, organisations: [organisation]) }
     let!(:user) { create(:user, organisations: [organisation]) }
     let!(:motif) { create(:motif, organisation: organisation) }
-    let!(:rdv) { create(:rdv, users: [user], agents: [agent1], starts_at: 10.days.from_now, created_by: user, motif: motif, lieu: lieu) }
+    let!(:rdv) { create(:rdv, users: [user], agents: [agent1], starts_at: 10.days.from_now, created_by: user, motif: motif, lieu: lieu, organisation:) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu, organisation: organisation, agent: agent2) }
 
     before do

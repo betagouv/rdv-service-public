@@ -6,8 +6,8 @@ RSpec.describe Outlook::EventSerializerAndListener do
   end
 
   let(:agent) { create(:agent, microsoft_graph_token: "token") }
-  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
   let(:organisation) { create(:organisation) }
+  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone, organisation:) }
   let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
 
   let(:expected_headers) do

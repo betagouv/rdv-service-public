@@ -32,7 +32,7 @@ RSpec.describe Outlook::ApiClient do
       transactionId: "agents_rdv-#{agents_rdv.id}",
     }
   end
-  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone, organisation:) }
   let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
   let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
   let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
