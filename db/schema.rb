@@ -852,7 +852,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_27_151454) do
     t.date "day"
     t.integer "http_code"
     t.integer "counter", default: 0
-    t.index ["webhook_endpoint_id"], name: "index_webhook_executions_on_webhook_endpoint_id"
+    t.index ["webhook_endpoint_id", "day", "http_code"], name: "index_webhook_executions_composite", unique: true
   end
 
   create_table "zones", force: :cascade do |t|
