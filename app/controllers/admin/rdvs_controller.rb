@@ -88,7 +88,7 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv, policy_class: Agent::RdvPolicy)
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    @success = @rdv_form.submit(rdv_params)
+    @success = @rdv_form.submit(rdv_update_params)
 
     respond_to do |format|
       format.js do
@@ -160,7 +160,7 @@ class Admin::RdvsController < AgentAuthController
     @rdv = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).find(params[:id])
   end
 
-  def rdv_params
+  def rdv_update_params
     allowed_params = params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
                                                  agent_ids: [],
                                                  participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
@@ -190,7 +190,7 @@ class Admin::RdvsController < AgentAuthController
 
   def rdv_success_flash
     {
-      notice: if rdv_params[:status].in?(Rdv::CANCELLED_STATUSES)
+      notice: if rdv_update_params[:status].in?(Rdv::CANCELLED_STATUSES)
                 I18n.t("admin.rdvs.message.success.cancel")
               else
                 I18n.t("admin.rdvs.message.success.update")
