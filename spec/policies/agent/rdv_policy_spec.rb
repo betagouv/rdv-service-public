@@ -121,6 +121,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
 
     it_behaves_like "permit actions", :rdv, :destroy?
     it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?
+    it_behaves_like "included in scope"
   end
 
   context "any participating user is soft deleted" do
@@ -140,6 +141,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
 
     it_behaves_like "permit actions", :rdv, :new?, :create?, :show?, :edit?, :update?, :destroy?
     it_behaves_like "not permit actions", :rdv
+    it_behaves_like "included in scope"
   end
 
   context "the participating user belongs to no organisation but already has a RDV in my orgs" do
@@ -159,6 +161,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
 
     it_behaves_like "permit actions", :rdv, :new?, :create?, :show?, :edit?, :update?, :destroy?
     it_behaves_like "not permit actions", :rdv
+    it_behaves_like "included in scope"
   end
 
   # TODO: write cases for :new? and create? which
