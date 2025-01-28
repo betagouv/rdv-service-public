@@ -72,7 +72,6 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def show
-    @uncollapsed_section = params[:uncollapsed_section]
     authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
