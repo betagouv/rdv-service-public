@@ -71,10 +71,22 @@ class Agent::RdvPolicy < ApplicationPolicy
   def users_authorized?
     return @users_authorized if defined?(@users_authorized)
 
-    participation_user_ids = record.participations.map(&:user).reject(&:soft_deleted?).map(&:id)
+    participants = record.participations.map(&:user).reject(&:soft_deleted?).map(&:id).to_set
 
-    @users_authorized = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
-      .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
+    territory_scope_users = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
+      .where(id: participants).pluck(:id).to_set
+
+    participants_not_in_territory_scope = participants.difference(territory_scope_users)
+    @users_authorized = if participants_not_in_territory_scope.empty?
+                          # Tous les participants sont dans mon périmètre
+                          true
+                        else
+                          # Temporaire : si un usager n'est pas dans mon périmètre (orga / territoire)
+                          # mais qu'il participe à des RDV que je peux voir, c'est OK.
+                          # Voir : https://github.com/betagouv/rdv-service-public/pull/5023
+                          users_of_rdvs_i_can_see = Scope.new(current_agent, Rdv.joins(:participations).where(participations: { user_id: participants_not_in_territory_scope })).resolve
+                          users_of_rdvs_i_can_see.pluck("participations.user_id").to_set == participants_not_in_territory_scope
+                        end
 
     notify_users_unauthorized unless @users_authorized
 

@@ -103,7 +103,10 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     end
   end
 
-  context "users from outside the current agent's territory" do
+  # Certains controllers ajoutent des usagers à un RDV à travers
+  # `@rdv.participations.build(...)`, puis appellent cette policy.
+  # Cette section teste ce cas de figure.
+  context "adding users from outside the current agent's territory" do
     let(:organisation) { create(:organisation) }
     let(:service) { create(:service) }
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
@@ -111,29 +114,14 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif) }
     let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
 
-    context "when users are already saved in database" do
-      before do
-        user_from_other_territory = create(:user)
-        rdv.participations.build(user_id: user_from_other_territory.id, created_by: agent)
-        rdv.save!
-      end
-
-      it_behaves_like "permit actions", :rdv, :destroy?
-      it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?
+    before do
+      user_from_other_territory = create(:user)
+      rdv.participations.build(user_id: user_from_other_territory.id, created_by: agent)
     end
 
-    # Certains controllers ajoutent des usagers à un RDV à travers
-    # `@rdv.participations.build(...)`, puis appellent cette policy.
-    # Cette section teste ce cas de figure.
-    context "when users are added as participations but not yet persisted" do
-      before do
-        user_from_other_territory = create(:user)
-        rdv.participations.build(user_id: user_from_other_territory.id, created_by: agent)
-      end
-
-      it_behaves_like "permit actions", :rdv, :destroy?
-      it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?
-    end
+    it_behaves_like "permit actions", :rdv, :destroy?
+    it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?
+    it_behaves_like "included in scope"
   end
 
   context "any participating user is soft deleted" do
@@ -153,6 +141,27 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
 
     it_behaves_like "permit actions", :rdv, :new?, :create?, :show?, :edit?, :update?, :destroy?
     it_behaves_like "not permit actions", :rdv
+    it_behaves_like "included in scope"
+  end
+
+  context "the participating user belongs to no organisation but already has a RDV in my orgs" do
+    let(:organisation) { create(:organisation) }
+    let(:service) { create(:service) }
+    let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+    let(:motif) { create(:motif, organisation: organisation, service: service) }
+
+    let(:user) { create(:user) }
+    let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], users: [user], motif: motif) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
+
+    before do
+      # On s'assure que l'usager du RDV est sans orga
+      user.user_profiles.destroy_all
+    end
+
+    it_behaves_like "permit actions", :rdv, :new?, :create?, :show?, :edit?, :update?, :destroy?
+    it_behaves_like "not permit actions", :rdv
+    it_behaves_like "included in scope"
   end
 
   # TODO: write cases for :new? and create? which
