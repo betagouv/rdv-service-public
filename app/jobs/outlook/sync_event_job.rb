@@ -24,6 +24,8 @@ module Outlook
       @outlook_id = outlook_id
       @agent = agent
 
+      Sentry.set_user({ id: @agent.id, role: "Agent", email: @agent.email })
+
       return unless agent.connected_to_outlook?
 
       if event_should_be_in_outlook?
