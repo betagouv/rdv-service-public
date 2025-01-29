@@ -30,9 +30,7 @@
     "select2": "^4.0.8",
     "select2-bootstrap4-theme": "^1.0.0",
     "turbolinks": "^5.2.0",
-    "whatwg-fetch": "^3.0.0"
-  },
-  "devDependencies": {
+    "whatwg-fetch": "^3.0.0",
     "css-loader": "^6.7.1",
     "fstream": "^1.0.12",
     "mini-css-extract-plugin": "^2.6.0",
