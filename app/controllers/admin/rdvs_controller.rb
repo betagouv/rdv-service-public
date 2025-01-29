@@ -75,7 +75,6 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def show
-    @uncollapsed_section = params[:uncollapsed_section]
     authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
@@ -92,7 +91,7 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv, policy_class: Agent::RdvPolicy)
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    @success = @rdv_form.submit(rdv_params)
+    @success = @rdv_form.submit(rdv_update_params)
 
     respond_to do |format|
       format.js do
@@ -164,9 +163,8 @@ class Admin::RdvsController < AgentAuthController
     @rdv = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).find(params[:id])
   end
 
-  def rdv_params
+  def rdv_update_params
     allowed_params = params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
-                                                 agent_ids: [],
                                                  participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
                                                  lieu_attributes: %i[name address latitude longitude id])
 
@@ -175,6 +173,12 @@ class Admin::RdvsController < AgentAuthController
     if allowed_params[:lieu_attributes].present?
       allowed_params[:lieu_attributes][:organisation] = current_organisation
       allowed_params[:lieu_attributes][:availability] = :single_use
+    end
+
+    if params[:rdv][:agent_ids].present?
+      # La méthode Motif#authorized_agents est aussi utilisée pour lister les agents du select
+      # de l'edit, c'est donc cohérent de l'utiliser ici pour sanitizer les IDs d'agent.
+      allowed_params[:agent_ids] = @rdv.motif.authorized_agents.where(id: params[:rdv][:agent_ids]).pluck(:id)
     end
 
     allowed_params
@@ -194,7 +198,7 @@ class Admin::RdvsController < AgentAuthController
 
   def rdv_success_flash
     {
-      notice: if rdv_params[:status].in?(Rdv::CANCELLED_STATUSES)
+      notice: if rdv_update_params[:status].in?(Rdv::CANCELLED_STATUSES)
                 I18n.t("admin.rdvs.message.success.cancel")
               else
                 I18n.t("admin.rdvs.message.success.update")

@@ -141,6 +141,18 @@ RSpec.describe Admin::RdvsController, type: :controller do
         end.not_to change { rdv.reload.user_ids }
       end
     end
+
+    context "when injecting the ID of an agent that is outside of the organisation (same territory)" do
+      it "doesn't allow updating the RDV with this agent" do
+        other_org_of_territory = create(:organisation, territory: organisation.territory)
+        agent_from_other_org_of_my_territory = create(:agent, :with_territory_access_rights, basic_role_in_organisations: [other_org_of_territory])
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
+        new_attributes = { agent_ids: [agent.id, agent_from_other_org_of_my_territory.id] }
+        expect do
+          put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
+        end.not_to change { rdv.reload.agent_ids }
+      end
+    end
   end
 
   describe "GET #show" do
