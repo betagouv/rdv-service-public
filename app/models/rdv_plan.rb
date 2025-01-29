@@ -11,6 +11,47 @@ class RdvPlan < ApplicationRecord
 
   validate :return_url_is_authorized
 
+  # TODO: mettre en commun avec les motifs et ajouter une validation de synchro
+  enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
+
+  def modalite
+    if location_type == "public_office"
+      "#{location_type}-#{lieu&.id}"
+    else
+      location_type
+    end
+  end
+
+  def modalite=(modalite)
+    self.location_type, self.lieu_id = modalite.split("-")
+  end
+
+  def create_rdv(user_attributes:, participation_attributes:)
+    if user.encrypted_password.blank? # Pour mettre à jour l'email sans renvoyer de mail de confirmation
+      user.skip_confirmation_notification!
+      user.skip_reconfirmation!
+    end
+    user.update!(user_attributes)
+
+    rdv = Rdv.create(
+      agents: [rdv_agent],
+      participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
+      motif: motif,
+      organisation: organisation,
+      lieu: lieu,
+      starts_at: starts_at,
+      created_by: planning_agent,
+      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
+    )
+
+    if rdv.persisted?
+      update(rdv: rdv)
+      Notifiers::RdvCreated.perform_with(rdv, planning_agent)
+    end
+
+    rdv
+  end
+
   private
 
   def return_url_is_authorized
