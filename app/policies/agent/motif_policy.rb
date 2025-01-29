@@ -56,4 +56,26 @@ class Agent::MotifPolicy < ApplicationPolicy
 
     alias current_agent pundit_user
   end
+
+  class ScopeForRdvsList < Scope
+    # on veut permettre aux agents de filtrer sur les motifs d’autres services pour lesquels ils ont des RDV en binôme
+    def resolve
+      super.or(
+        scope.where(
+          organisation: current_agent.basic_orgs + current_agent.admin_orgs,
+          id: motif_ids_from_other_services
+        )
+      )
+    end
+
+    private
+
+    def motif_ids_from_other_services
+      # L’exclusion des services de l’agent ci-dessous n’est pas nécessaire mais évite de retourner de nombreux motif ids dans cette sous-requête
+      AgentsRdv.joins(rdv: [:motif])
+        .where(agent: current_agent)
+        .where.not(motifs: { service_id: current_agent.service_ids })
+        .select("rdvs.motif_id")
+    end
+  end
 end
