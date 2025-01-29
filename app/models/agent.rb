@@ -145,10 +145,6 @@ class Agent < ApplicationRecord
     invitation_sent_at.nil? || invitation_accepted_at.present?
   end
 
-  def inactive?
-    last_sign_in_at.nil? || last_sign_in_at <= 1.month.ago
-  end
-
   def soft_delete
     raise SoftDeleteError, "agent still has attached orgs: #{organisations.ids.inspect}" if organisations.any?
 
@@ -182,6 +178,10 @@ class Agent < ApplicationRecord
 
   def inactive_message
     deleted_at ? :deleted_account : super
+  end
+
+  def soft_deleted?
+    deleted_at.present?
   end
 
   def name_for_paper_trail

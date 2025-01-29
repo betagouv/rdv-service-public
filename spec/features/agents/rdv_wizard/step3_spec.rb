@@ -25,25 +25,87 @@ RSpec.describe "Step 3 of the rdv wizard" do
     login_as(agent, scope: :agent)
   end
 
-  context "when passing a user_id from a different territory" do
-    let(:params) do
-      default_params.merge(user_ids: [user_from_other_territory.id])
+  describe "user" do
+    context "when passing a user_id from a different territory" do
+      let(:params) do
+        default_params.merge(user_ids: [user_from_other_territory.id])
+      end
+
+      it "raises an error and doesn't displays the user info" do
+        visit new_admin_organisation_rdv_wizard_step_path(params)
+        expect(page).not_to have_content(user_from_other_territory.full_name)
+        expect(page).to have_content("Vous n’avez pas les droits suffisants")
+      end
     end
 
-    it "raises an error and doesn't displays the user info" do
-      visit new_admin_organisation_rdv_wizard_step_path(params)
-      expect(page).not_to have_content(user_from_other_territory.full_name)
+    context "when passing a user_id from one of the agent's territories" do
+      let(:params) do
+        default_params.merge(user_ids: [user.id])
+      end
+
+      it "displays the user info" do
+        visit new_admin_organisation_rdv_wizard_step_path(params)
+        expect(page).to have_content(user.full_name)
+      end
+
+      context "and the user belongs to many of the agent's organisations" do
+        before do
+          other_organisation = create(:organisation, territory: organisation.territory)
+          user.organisations << other_organisation
+          user.save!
+        end
+
+        it "displays the user info" do
+          visit new_admin_organisation_rdv_wizard_step_path(params)
+          expect(page).to have_content(user.full_name)
+        end
+      end
     end
   end
 
-  context "when passing a user_id from one of the agent's territories" do
-    let(:params) do
-      default_params.merge(user_ids: [user.id])
+  describe "agent" do
+    context "when passing an agent_id from a different organisation" do
+      let(:other_organisation_from_same_territory) { create(:organisation, territory: organisation.territory) }
+      let(:agent_from_other_organisation) do
+        create(:agent, service: motif.service, basic_role_in_organisations: [other_organisation_from_same_territory])
+      end
+      let(:params) do
+        default_params.merge(agent_ids: [agent_from_other_organisation.id])
+      end
+
+      it "raises an error and doesn't displays the agent's info" do
+        visit new_admin_organisation_rdv_wizard_step_path(params)
+        expect(page).not_to have_content(agent_from_other_organisation.reverse_full_name)
+        expect(page).to have_content("Vous n’avez pas les droits suffisants")
+      end
     end
 
-    it "displays the user info" do
-      visit new_admin_organisation_rdv_wizard_step_path(params)
-      expect(page).to have_content(user.full_name)
+    context "when passing an agent from the same organisation" do
+      let(:agent_from_same_organisation) do
+        create(:agent, service: motif.service, basic_role_in_organisations: [organisation])
+      end
+      let(:params) do
+        default_params.merge(agent_ids: [agent_from_same_organisation.id])
+      end
+
+      it "displays the agent's info" do
+        visit new_admin_organisation_rdv_wizard_step_path(params)
+        expect(page).to have_content(agent_from_same_organisation.reverse_full_name)
+      end
+
+      context "and the agent is an admin of the organisation for a different service" do
+        let(:admin_from_other_service) do
+          create(:agent, service: create(:service), admin_role_in_organisations: [organisation])
+        end
+        let(:params) do
+          default_params.merge(agent_ids: [admin_from_other_service.id])
+        end
+
+        it "displays the agent's info" do
+          visit new_admin_organisation_rdv_wizard_step_path(params)
+          expect(page).to have_content(admin_from_other_service.reverse_full_name)
+        end
+      end
     end
   end
 end
