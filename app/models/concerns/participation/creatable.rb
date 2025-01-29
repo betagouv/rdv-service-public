@@ -5,6 +5,7 @@ module Participation::Creatable
     Participation.transaction do
       empty_rdv_from_relatives
       save!
+      user.add_organisation(organisation)
       notify_create!(author)
     end
   end
