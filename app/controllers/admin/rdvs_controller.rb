@@ -1,7 +1,8 @@
 class Admin::RdvsController < AgentAuthController
   include RdvsHelper
 
-  respond_to :html, :json
+  respond_to :html, except: :status
+  respond_to :js, only: :status
 
   before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner export participations_export]
   # Ce mécanisme temporaire est mis en place afin d'assurer une rétro-compatibilité du fait
@@ -90,20 +91,17 @@ class Admin::RdvsController < AgentAuthController
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     @success = @rdv_form.submit(rdv_update_params)
 
-    respond_to do |format|
-      format.js do
-        raise params[:rdv].to_unsafe_h.inspect if params[:rdv][:status].blank?
-
-        render "admin/rdvs/update"
-      end
-      format.html do
-        if @success
-          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash
-        else
-          render :edit
-        end
-      end
+    if @success
+      redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash
+    else
+      render :edit
     end
+  end
+
+  def status
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
+    @rdv.update!(params.require(:rdv).permit(:status))
+    render "admin/rdvs/update"
   end
 
   def send_reminder_manually
@@ -163,7 +161,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_update_params
-    allowed_params = params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
+    allowed_params = params.require(:rdv).permit(:motif_id, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
                                                  participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
                                                  lieu_attributes: %i[name address latitude longitude id])
 

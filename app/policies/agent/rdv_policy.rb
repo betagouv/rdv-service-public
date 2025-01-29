@@ -9,7 +9,10 @@ class Agent::RdvPolicy < ApplicationPolicy
   def update?
     same_agent_or_has_access? && users_authorized?
   end
-  alias status? update?
+
+  def status?
+    same_agent_or_has_access?
+  end
 
   def edit?
     same_agent_or_has_access? && users_authorized?

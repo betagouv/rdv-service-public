@@ -220,6 +220,7 @@ Rails.application.routes.draw do
           resources :participations, only: %i[update destroy]
           resource :user_in_waiting_room, only: [:create]
           member do
+            put :status
             post :send_reminder_manually
           end
           collection do
