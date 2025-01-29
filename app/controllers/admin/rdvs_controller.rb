@@ -178,7 +178,7 @@ class Admin::RdvsController < AgentAuthController
     if params[:rdv][:agent_ids].present?
       # La méthode Motif#authorized_agents est aussi utilisée pour lister les agents du select
       # de l'edit, c'est donc cohérent de l'utiliser ici pour sanitizer les IDs d'agent.
-      allowed_params[:agent_ids] = @rdv.motif.authorized_agents.where(id: params[:rdv][:agent_ids]).pluck(:id)
+      allowed_params[:agent_ids] = @rdv.motif.authorized_agents.where(id: params[:rdv][:agent_ids]).pluck(:id).uniq
     end
 
     allowed_params
