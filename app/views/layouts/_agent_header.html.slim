@@ -17,15 +17,15 @@ header.header.bg-white
           button.link-dsfr.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
             = current_agent.full_name
           ul.dropdown-menu.dropdown-menu-right
-            li = link_to edit_agent_registration_path, class: "link-dsfr dropdown-item" do
+            li = link_to edit_agent_registration_path, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-account-line[aria-hidden="true"]
               = "Mon compte"
             - territories_i_admin = defined?(current_organisation) ? [current_organisation.territory] : current_agent.territories
             - territories_i_admin.each do |territory|
-              li = link_to admin_territory_path(territory), class: "link-dsfr dropdown-item" do
+              li = link_to admin_territory_path(territory), class: "dropdown-item-dsfr dropdown-item" do
                 span.fr-icon--sm.fr-mr-2v.fr-icon-settings-5-line[aria-hidden="true"]
                 | Espace Admin de Territoire : #{territory.name}
-            .dropdown-divider.mb-2[aria-hidden="true"]
-            li = link_to destroy_agent_session_path, method: :delete, class: "link-dsfr dropdown-item" do
+            .dropdown-divider.my-1[aria-hidden="true"]
+            li = link_to destroy_agent_session_path, method: :delete, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-logout-box-r-line[aria-hidden="true"]
               | Se déconnecter
