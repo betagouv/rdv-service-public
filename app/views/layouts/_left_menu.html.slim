@@ -74,11 +74,11 @@ nav.left-side-menu-wrapper
         - unless current_agent_role.admin?
           li
             = active_link_to admin_organisation_lieux_path(current_organisation), class: "side-menu__item"
-              span.fr-icon-building-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
+              = lieu_icon(class: "fr-icon--sm fr-mr-1w")
               | Lieux
           li
             = active_link_to admin_organisation_motifs_path(current_organisation), class: "side-menu__item"
-              span.fr-icon-draft-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
+              = motif_icon(class: "fr-icon--sm fr-mr-1w")
               | Motifs
 
         - if current_agent_role.admin?

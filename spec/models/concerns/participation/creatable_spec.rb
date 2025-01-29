@@ -66,5 +66,29 @@ RSpec.describe Participation::Creatable, type: :concern do
         expect(rdv.reload.participations).to eq([participation_relative])
       end
     end
+
+    describe "l’usager ajouté n’appartient pas encore à l’organisation" do
+      let!(:organisation) { create(:organisation, rdvs: [rdv]) }
+      let(:participation) { build(:participation, rdv:, user:) }
+
+      it "ajoute l’orga à l’usager" do
+        expect(user.organisations).to be_empty
+        participation.create_and_notify!(user)
+        expect(user.organisations).to contain_exactly(organisation)
+      end
+    end
+
+    describe "l’usager ajouté appartient déjà à l’organisation" do
+      let!(:organisation) { create(:organisation, rdvs: [rdv]) }
+      let!(:user) { create(:user, organisations: [organisation]) }
+      let(:participation) { build(:participation, rdv:, user:) }
+
+      it "ne ré-ajoute pas l’orga à l’usager" do
+        expect(user.organisations).to contain_exactly(organisation)
+        participation.create_and_notify!(user)
+        expect(user.organisations).to contain_exactly(organisation)
+        expect(user.organisations.count).to eq(1)
+      end
+    end
   end
 end

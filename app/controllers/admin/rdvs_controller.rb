@@ -3,7 +3,7 @@ class Admin::RdvsController < AgentAuthController
 
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner create export participations_export]
+  before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner export participations_export]
   # Ce mécanisme temporaire est mis en place afin d'assurer une rétro-compatibilité du fait
   # du changement de noms (ou ajout des s) aux paramètres motif_id, lieu_id et scoped_organisation_id
   # Pour plus de contexte, voir https://github.com/betagouv/rdv-service-public/pull/4054#discussion_r1489720373
@@ -34,7 +34,7 @@ class Admin::RdvsController < AgentAuthController
       ]
     )
 
-    @form = Admin::RdvSearchForm.new(parsed_params)
+    @form = Admin::RdvSearchForm.new(parsed_params.merge(pundit_user:))
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
     @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).ordered_by_name
   end
@@ -78,7 +78,7 @@ class Admin::RdvsController < AgentAuthController
 
   def edit
     add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
-    users_to_add = User.where(id: add_user_ids)
+    users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: add_user_ids)).resolve.distinct
     users_to_add.ids.each { @rdv.participations.build(user_id: _1) }
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
@@ -87,8 +87,10 @@ class Admin::RdvsController < AgentAuthController
 
   def update
     authorize(@rdv, policy_class: Agent::RdvPolicy)
+
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    @success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
+    @success = @rdv_form.submit(rdv_params)
+
     respond_to do |format|
       format.js do
         render "admin/rdvs/update"
@@ -162,7 +164,6 @@ class Admin::RdvsController < AgentAuthController
   def rdv_params
     allowed_params = params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
                                                  agent_ids: [],
-                                                 user_ids: [],
                                                  participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
                                                  lieu_attributes: %i[name address latitude longitude id])
 
