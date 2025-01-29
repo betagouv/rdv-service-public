@@ -218,4 +218,22 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(PlageOuverture.last.motifs).to contain_exactly(motif_1_service_avocat, motif_2_service_avocat)
     end
   end
+
+  describe "selecting a time range" do
+    it "works" do
+      visit new_admin_organisation_agent_plage_ouverture_path(organisation, agent)
+      check motif.name
+      select(lieu.full_name, from: "plage_ouverture_lieu_id")
+
+      # Set start time at 10:30
+      select "10", from: "plage_ouverture_start_time_4i"
+      select "30", from: "plage_ouverture_start_time_5i"
+      # Set start time at 13:45
+      select "13", from: "plage_ouverture_end_time_4i"
+      select "45", from: "plage_ouverture_end_time_5i"
+
+      expect { click_on "Créer la plage d'ouverture" }.to change(PlageOuverture, :count).by(1)
+      expect(PlageOuverture.last).to have_attributes(start_time: Tod::TimeOfDay.new(10, 30), end_time: Tod::TimeOfDay.new(13, 45))
+    end
+  end
 end

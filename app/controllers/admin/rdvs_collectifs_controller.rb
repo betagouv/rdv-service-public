@@ -44,18 +44,22 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def edit
     @rdv = Rdv.find(params[:id])
 
-    authorize(@rdv, policy_class: Agent::RdvPolicy)
-
     @add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
-    users_to_add = User.where(id: @add_user_ids)
+    users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: @add_user_ids)).resolve.distinct
     @participations_to_add = users_to_add.ids.map { @rdv.participations.build(user_id: _1, created_by: current_agent) }
+
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
   def update
     @rdv = Rdv.find(params[:id])
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
-    if @rdv.update_and_notify(current_agent, update_users_params)
+    success = @rdv.update_and_notify(current_agent, update_users_params) do |rdv_before_save|
+      authorize(rdv_before_save, :update?, policy_class: Agent::RdvPolicy)
+    end
+
+    if success
       flash[:success] = "Participants mis à jour"
       redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else

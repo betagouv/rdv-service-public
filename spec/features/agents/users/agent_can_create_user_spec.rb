@@ -46,4 +46,16 @@ RSpec.describe "Agent can create user" do
       expect(existing_user.reload.organisations).to include(organisation)
     end
   end
+
+  it "permet de désactiver les préférences de notifications mails et SMS" do
+    fill_in :user_first_name, with: "Marco"
+    fill_in :user_last_name, with: "Lebreton"
+    fill_in "Email", with: "marco@lebreton.bzh"
+    fill_in "Téléphone", with: "0606060606"
+    uncheck "Accepte les notifications par email"
+    uncheck "Accepte les notifications par SMS"
+    click_button "Créer"
+    expect(find("span", text: /Accepte les notifications par email/).ancestor("li")).to have_content("Désactivées")
+    expect(find("span", text: /Accepte les notifications par SMS/).ancestor("li")).to have_content("Désactivées")
+  end
 end

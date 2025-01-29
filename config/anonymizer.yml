@@ -217,16 +217,16 @@ tables:
     anonymized_column_names:
       - phone_number
       - phone_number_formatted
+      - name # on pourrait probablement anonymiser le nom uniquement pour les lieux dont availability == single_use
+      - address # idem
     non_anonymized_column_names:
       - created_at
       - updated_at
-      - name
       - old_address
       - latitude
       - longitude
       - old_enabled
       - availability
-      - address
 
   - table_name: participations
     anonymized_column_names:
@@ -449,4 +449,11 @@ tables:
       - created_at
       - revoked_at
       - expires_in
-
+  - table_name: rdv_plans
+    anonymized_column_names:
+      - return_url
+    non_anonymized_column_names:
+      - duration_in_minutes
+      - starts_at
+      - created_at
+      - updated_at

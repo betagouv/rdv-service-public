@@ -64,4 +64,28 @@ RSpec.describe "Agent can update user" do
       expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
     end
   end
+
+  context "usager n’a pas encore confirmé son compte" do
+    # lorsqu’un usager a confirmé son compte, l’agent n’a plus la main sur ses préférences de notifs
+    let!(:user) { create(:user, :unconfirmed, organisations: [organisation]) }
+
+    it "permet de désactiver et réactiver les préférences de notifications SMS et email" do
+      expect(page).to have_content("Modifier l'usager")
+      expect(page).to have_checked_field("Accepte les notifications par email")
+      expect(page).to have_checked_field("Accepte les notifications par SMS")
+      uncheck "Accepte les notifications par email"
+      uncheck "Accepte les notifications par SMS"
+      click_button "Enregistrer"
+      expect(find("span", text: /Accepte les notifications par email/).ancestor("li")).to have_content("Désactivées")
+      expect(find("span", text: /Accepte les notifications par SMS/).ancestor("li")).to have_content("Désactivées")
+      within("#spec-primary-user-card") { click_link "Modifier" }
+      expect(page).to have_unchecked_field("Accepte les notifications par email")
+      expect(page).to have_unchecked_field("Accepte les notifications par SMS")
+      check "Accepte les notifications par email"
+      check "Accepte les notifications par SMS"
+      click_button "Enregistrer"
+      expect(find("span", text: /Accepte les notifications par email/).ancestor("li")).to have_content("Activées")
+      expect(find("span", text: /Accepte les notifications par SMS/).ancestor("li")).to have_content("Activées")
+    end
+  end
 end

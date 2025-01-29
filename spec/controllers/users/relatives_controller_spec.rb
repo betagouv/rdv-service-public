@@ -17,11 +17,6 @@ RSpec.describe Users::RelativesController, type: :controller do
     it "returns a success response" do
       expect(response).to be_successful
     end
-
-    it "assigns relative" do
-      expect(response.body).to include("Modifier un proche")
-      expect(assigns(:user)).to eq(relative)
-    end
   end
 
   describe "GET #new" do
@@ -32,11 +27,6 @@ RSpec.describe Users::RelativesController, type: :controller do
     it "returns a success response" do
       expect(response).to be_successful
     end
-
-    it "assigns a new user" do
-      expect(response.body).to include("Ajouter un proche")
-      expect(assigns(:user)).to be_a_new(User)
-    end
   end
 
   describe "POST #create" do
@@ -46,16 +36,13 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "with valid params" do
       let(:attributes) do
-        { user: { first_name: "Eliott", last_name: "Le Dragon" } }
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon" } }
       end
 
       it "creates a new User" do
         expect { subject }.to change(User, :count).by(1)
-      end
-
-      it "set organisation_ids for relative" do
-        subject
-        expect(assigns(:user).organisation_ids).to eq(user.organisation_ids)
+        created_user = User.last
+        expect(created_user.organisation_ids).to eq(user.organisation_ids)
       end
 
       it "redirects to user informations with the newly created user id as a param" do
@@ -66,7 +53,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "with invalid params" do
       let(:attributes) do
-        { user: { first_name: "Eliott" } }
+        { relative_user_form: { first_name: "Eliott" } }
       end
 
       it "does not creates a new User" do
@@ -81,6 +68,66 @@ RSpec.describe Users::RelativesController, type: :controller do
         expect(response).to render_template(:new)
       end
     end
+
+    context "quand le numéro de pré-demande ANTS est requis et passé et valide" do
+      let(:attributes) do
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345", ants_pre_demande_number_required: "true" } }
+      end
+
+      include_context "rdv_mairie_api_authentication"
+      before { stub_ants_status_ok("VALID12345", status: "validated", appointments: []) }
+
+      it "créé le proche avec le numéro de pré-demande" do
+        expect { subject }.to change(User, :count)
+        created_user = User.last
+        expect(created_user.organisation_ids).to eq(user.organisation_ids)
+        expect(created_user.ants_pre_demande_number).to eq("VALID12345")
+        expect(response).to redirect_to(users_informations_path(created_user_id: User.last.id))
+      end
+    end
+
+    context "quand le numéro de pré-demande ANTS est requis et passé et valide mais qu'il existe déjà des RDVs pris ailleurs pour ce numéro" do
+      let(:attributes) do
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345", ants_pre_demande_number_required: "true" } }
+      end
+
+      include_context "rdv_mairie_api_authentication"
+      before do
+        stub_ants_status_ok("VALID12345", status: "validated", appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "https://rdvsympa.fr/123" }])
+      end
+
+      it "créé le proche avec le numéro de pré-demande" do
+        expect { subject }.not_to change(User, :count)
+        expect(response.body).to include(%(Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.))
+        expect(response.body).to have_content(%(Veuillez annuler ce RDV avant d'en prendre un nouveau.))
+        expect(response.body).to include(%(https://rdvsympa.fr/123))
+        expect(response.body).to include(%(Confirmer en ignorant les avertissements))
+      end
+    end
+
+    context "quand le numéro de pré-demande ANTS est requis mais pas passé" do
+      let(:attributes) do
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number_required: "true" } }
+      end
+
+      it "ne créé pas de proche" do
+        expect { subject }.not_to change(User, :count)
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+      end
+    end
+
+    context "quand le numéro de pré-demande ANTS est requis mais invalide" do
+      let(:attributes) do
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "blah", ants_pre_demande_number_required: "true" } }
+      end
+
+      it "ne créé pas de proche" do
+        expect { subject }.not_to change(User, :count)
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+      end
+    end
   end
 
   describe "POST #update" do
@@ -91,7 +138,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "with valid params" do
       let(:attributes) do
-        { id: relative.id, user: { first_name: "Eliott" } }
+        { id: relative.id, relative_user_form: { first_name: "Eliott" } }
       end
 
       it "creates a new User" do
@@ -108,7 +155,7 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "with invalid params" do
       let(:attributes) do
-        { id: relative.id, user: { first_name: " " } }
+        { id: relative.id, relative_user_form: { first_name: " " } }
       end
 
       it "does not creates a new User" do

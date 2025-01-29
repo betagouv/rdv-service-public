@@ -16,7 +16,7 @@ class CreneauxSearch::ForUser
       geo_search: geo_search
     )
 
-    search.creneaux.select { _1.starts_at == starts_at }.sample
+    search.all_creneaux.select { _1.starts_at == starts_at }.sample
   end
 
   def next_availability
@@ -28,11 +28,9 @@ class CreneauxSearch::ForUser
   end
 
   def creneaux
-    return available_collective_rdvs if motif.collectif?
-
-    return [] if reduced_date_range.blank?
-
-    CreneauxSearch::Calculator.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
+    # On n'affiche qu'un créneau par horaire, même si plusieurs agents sont dispos
+    # car on ne propose pas à l'usager de choisir un agent en particulier
+    all_creneaux.uniq(&:starts_at)
   end
 
   def available_collective_rdvs
@@ -42,6 +40,14 @@ class CreneauxSearch::ForUser
 
     rdvs = rdvs.joins(:agents).where(agents: attributed_agents) if attributed_agents.any?
     rdvs
+  end
+
+  def all_creneaux
+    return available_collective_rdvs if motif.collectif?
+
+    return [] if reduced_date_range.blank?
+
+    CreneauxSearch::Calculator.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
   end
 
   private

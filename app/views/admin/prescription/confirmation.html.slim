@@ -32,9 +32,16 @@ main.container
               .fa.fa-user>
               = @rdv.users.first.full_name
               = " (#{@rdv.users.first.phone_number})" if @rdv.users.first.phone_number.present?
+
             li.list-group-item
-              i.fa.fa-info-circle>
-              = rdv.motif.name
+              .row
+                .col-auto.pr-0
+                  i.fa.fa-info-circle>
+                .col-auto.pl-1
+                  = rdv.motif.name
+                  - if current_territory.enable_context_field && @rdv.context.present?
+                    div.rdv-white-space-pre.pt-3= @rdv.context
+
             - if rdv.motif.instruction_for_rdv.present?
               li.list-group-item
                 i.fa.fa-exclamation-triangle>

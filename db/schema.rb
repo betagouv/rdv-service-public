@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_04_093704) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_08_115309) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -582,6 +582,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_04_093704) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rdv_plans", force: :cascade do |t|
+    t.bigint "planning_agent_id", comment: "L'id de l'agent qui planifie le rdv"
+    t.bigint "rdv_id"
+    t.bigint "user_id"
+    t.bigint "rdv_agent_id", comment: "L'id de l'agent qui assurera le rdv"
+    t.bigint "motif_id"
+    t.bigint "lieu_id"
+    t.datetime "starts_at"
+    t.integer "duration_in_minutes"
+    t.text "return_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
+    t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
+    t.index ["planning_agent_id"], name: "index_rdv_plans_on_planning_agent_id"
+    t.index ["rdv_agent_id"], name: "index_rdv_plans_on_rdv_agent_id"
+    t.index ["rdv_id"], name: "index_rdv_plans_on_rdv_id"
+    t.index ["user_id"], name: "index_rdv_plans_on_user_id"
+  end
+
   create_table "rdvs", force: :cascade do |t|
     t.datetime "starts_at", null: false
     t.bigint "organisation_id", null: false
@@ -873,6 +893,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_04_093704) do
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
+  add_foreign_key "rdv_plans", "agents", column: "planning_agent_id"
+  add_foreign_key "rdv_plans", "agents", column: "rdv_agent_id"
+  add_foreign_key "rdv_plans", "lieux"
+  add_foreign_key "rdv_plans", "motifs"
+  add_foreign_key "rdv_plans", "rdvs"
+  add_foreign_key "rdv_plans", "users"
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
