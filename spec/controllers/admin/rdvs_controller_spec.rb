@@ -1,11 +1,13 @@
 RSpec.describe Admin::RdvsController, type: :controller do
   let(:now) { Time.zone.parse("19/07/2019 15:00") }
-  let!(:organisation) { create(:organisation) }
-  let!(:territory) { organisation.territory }
+  let!(:territory) { create(:territory) }
+  let!(:organisation) { create(:organisation, territory:) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:user) { create(:user, first_name: "Marie", last_name: "Denis") }
   let!(:motif) { create(:motif, name: "Suivi", organisation: organisation, service: service, color: "#1010FF") }
+  let!(:motif_from_other_orga) { create(:motif, name: "Suivi", organisation: create(:organisation, territory:), service: service, color: "#1010FF") }
+  let!(:motif_from_other_service) { create(:motif, name: "Suivi", organisation: organisation, service: create(:service), color: "#1010FF") }
 
   before do
     travel_to(now)
@@ -32,6 +34,12 @@ RSpec.describe Admin::RdvsController, type: :controller do
       get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: Time.zone.parse("20/07/2019 08:00"), end: Time.zone.parse("27/07/2019 09:00") })
 
       expect(assigns(:form)).not_to be_nil
+    end
+
+    it "assigns motifs" do
+      get(:index, params: { organisation_id: organisation.id })
+
+      expect(assigns(:motifs)).to eq([motif])
     end
 
     context "with invalid dates" do
