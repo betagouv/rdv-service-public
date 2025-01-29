@@ -36,7 +36,10 @@ class Admin::RdvsController < AgentAuthController
 
     @form = Admin::RdvSearchForm.new(parsed_params.merge(pundit_user:))
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
-    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).ordered_by_name
+    @motifs = Agent::MotifPolicy::Scope.new(
+      current_agent,
+      Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).ordered_by_name
+    ).resolve
   end
 
   def a_renseigner
