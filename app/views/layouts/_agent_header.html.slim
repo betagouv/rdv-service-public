@@ -20,7 +20,7 @@ header.header.bg-white
             li = link_to edit_agent_registration_path, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-account-line[aria-hidden="true"]
               = "Mon compte"
-            - Agent::TerritoryPolicy::Scope.new(current_agent, Territory.all).resolve.each do |territory|
+            - Agent::TerritoryPolicy::Scope.new(current_agent, Territory.all).resolve.distinct.order(:name).each do |territory|
               li = link_to admin_territory_path(territory), class: "dropdown-item-dsfr dropdown-item" do
                 span.fr-icon--sm.fr-mr-2v.fr-icon-settings-5-line[aria-hidden="true"]
                 | Espace Admin de Territoire : #{territory.name}
