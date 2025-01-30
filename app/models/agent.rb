@@ -180,6 +180,10 @@ class Agent < ApplicationRecord
     deleted_at ? :deleted_account : super
   end
 
+  def soft_deleted?
+    deleted_at.present?
+  end
+
   def name_for_paper_trail
     "[Agent] #{full_name}"
   end

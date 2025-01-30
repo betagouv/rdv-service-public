@@ -1,11 +1,17 @@
 RSpec.describe Admin::RdvsController, type: :controller do
   let(:now) { Time.zone.parse("19/07/2019 15:00") }
-  let!(:organisation) { create(:organisation) }
-  let!(:territory) { organisation.territory }
+  let!(:territory) { create(:territory) }
+  let!(:organisation) { create(:organisation, territory:) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:user) { create(:user, first_name: "Marie", last_name: "Denis") }
   let!(:motif) { create(:motif, name: "Suivi", organisation: organisation, service: service, color: "#1010FF") }
+  let!(:motif_from_other_orga) { create(:motif, name: "Suivi", organisation: create(:organisation, territory:), service: service, color: "#1010FF") }
+  let!(:other_service) { create(:service) }
+  let!(:motif_from_other_service_without_rdv) { create(:motif, name: "Rencontre", organisation: organisation, service: other_service, color: "#1010FF") }
+  let!(:motif_from_other_service_with_rdv_binome) { create(:motif, name: "Parcours", organisation: organisation, service: other_service, color: "#1010FF") }
+  let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service: other_service) }
+  let!(:rdv_binome) { create(:rdv, motif: motif_from_other_service_with_rdv_binome, agents: [agent2, agent], users: [user], organisation: organisation) }
 
   before do
     travel_to(now)
@@ -25,13 +31,19 @@ RSpec.describe Admin::RdvsController, type: :controller do
       rdv = create(:rdv, agents: [agent], organisation: organisation, motif: motif)
       get(:index, params: { organisation_id: organisation.id })
 
-      expect(assigns(:rdvs)).to eq([rdv])
+      expect(assigns(:rdvs)).to contain_exactly(rdv, rdv_binome)
     end
 
     it "assign form" do
       get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: Time.zone.parse("20/07/2019 08:00"), end: Time.zone.parse("27/07/2019 09:00") })
 
       expect(assigns(:form)).not_to be_nil
+    end
+
+    it "assigns motifs" do
+      get(:index, params: { organisation_id: organisation.id })
+
+      expect(assigns(:motifs)).to contain_exactly(motif, motif_from_other_service_with_rdv_binome)
     end
 
     context "with invalid dates" do
@@ -116,6 +128,29 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect do
           put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
         end.not_to change(Lieu, :count)
+      end
+    end
+
+    context "when injecting the id of a user that isn't visible to the agent" do
+      it "doesn't allow updating the RDV with this user" do
+        user_from_other_territory = create(:user, organisations: [create(:organisation, territory: create(:territory))])
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
+        new_attributes = { participations_attributes: { "0" => { user_id: user_from_other_territory.id } } }
+        expect do
+          put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
+        end.not_to change { rdv.reload.user_ids }
+      end
+    end
+
+    context "when injecting the ID of an agent that is outside of the organisation (same territory)" do
+      it "doesn't allow updating the RDV with this agent" do
+        other_org_of_territory = create(:organisation, territory: organisation.territory)
+        agent_from_other_org_of_my_territory = create(:agent, :with_territory_access_rights, basic_role_in_organisations: [other_org_of_territory])
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
+        new_attributes = { agent_ids: [agent.id, agent_from_other_org_of_my_territory.id] }
+        expect do
+          put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
+        end.not_to change { rdv.reload.agent_ids }
       end
     end
   end
