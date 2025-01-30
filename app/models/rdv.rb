@@ -67,6 +67,7 @@ class Rdv < ApplicationRecord
 
   validates :participations, presence: true, unless: :collectif?
   validates :status, inclusion: { in: COLLECTIVE_RDV_STATUSES }, if: :collectif?
+  validate :validate_motif_organisation
 
   # Hooks
   after_save :associate_users_with_organisation
@@ -425,5 +426,11 @@ class Rdv < ApplicationRecord
 
   def set_created_by_for_participations
     participations.each { |participation| participation.created_by = created_by }
+  end
+
+  def validate_motif_organisation
+    if organisation_id != motif.organisation_id
+      errors.add(:motif_id, "n’appartient pas à l’organisation du RDV")
+    end
   end
 end

@@ -2,7 +2,7 @@ RSpec.describe Ants::SyncAppointmentJob do
   context "Nouveau RDV ANTS" do
     let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
     let!(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
-    let!(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let!(:motif) { create(:motif, motif_category: create(:motif_category, :passeport), organisation:) }
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
@@ -21,7 +21,7 @@ RSpec.describe Ants::SyncAppointmentJob do
   context "Synchro pour un RDV ANTS dans le passé" do
     let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
     let!(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
-    let!(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let!(:motif) { create(:motif, motif_category: create(:motif_category, :passeport), organisation:) }
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 

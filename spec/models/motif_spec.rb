@@ -272,14 +272,14 @@ RSpec.describe Motif, type: :model do
 
     context "when motif is used by any RDV" do
       it "is forbidden from changing location_type" do
-        motif = create(:motif, location_type: "public_office").tap { create(:rdv, motif: _1) }
+        motif = create(:motif, location_type: "public_office", organisation:).tap { create(:rdv, motif: _1, organisation:) }
         motif.update(location_type: "phone")
         expect(motif.errors[:location_type]).to include("ne peut être modifié car le motif est utilisé pour un RDV")
         expect(motif.reload.location_type).to eq("public_office")
       end
 
       it "is allowed to change :collectif" do
-        motif = create(:motif, collectif: false).tap { create(:rdv, motif: _1) }
+        motif = create(:motif, collectif: false, organisation:).tap { create(:rdv, motif: _1, organisation:) }
         motif.update(collectif: true)
         expect(motif.errors[:collectif]).to include("ne peut être modifié car le motif est utilisé pour un RDV")
         expect(motif.reload.collectif).to be(false)

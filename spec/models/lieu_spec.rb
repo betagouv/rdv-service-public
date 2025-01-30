@@ -133,15 +133,15 @@ RSpec.describe Lieu, type: :model do
       end
 
       context "for a motif collectif" do
-        let!(:motif) { create(:motif, collectif: true) }
+        let!(:motif) { create(:motif, collectif: true, organisation:) }
 
         before do
-          create(:rdv, :collectif, motif: motif, lieu: lieu) # valid rdv
-          create(:rdv, :collectif, motif: motif, status: :revoked)
-          create(:rdv, :collectif, motif: motif, max_participants_count: 3).tap do |rdv| # fully booked
+          create(:rdv, :collectif, motif: motif, lieu: lieu, organisation:) # valid rdv
+          create(:rdv, :collectif, motif: motif, status: :revoked, organisation:)
+          create(:rdv, :collectif, motif: motif, max_participants_count: 3, organisation:).tap do |rdv| # fully booked
             rdv.update_columns(users_count: 3) # rubocop:disable Rails/SkipsModelValidations
           end
-          create(:rdv, :collectif, motif: motif, starts_at: 3.days.ago) # in the past
+          create(:rdv, :collectif, motif: motif, starts_at: 3.days.ago, organisation:) # in the past
         end
 
         it "only returns lieux with a rdv that is available for reservation" do

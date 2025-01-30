@@ -1,9 +1,10 @@
 RSpec.describe RdvsHelper do
   include ActionView::Helpers::DateHelper
 
-  let(:motif) { build(:motif, name: "Consultation normale") }
+  let(:organisation) { create(:organisation) }
+  let(:motif) { build(:motif, name: "Consultation normale", organisation:) }
   let(:user) { build(:user, first_name: "Marie", last_name: "DENIS") }
-  let(:rdv) { build(:rdv, users: [user], motif: motif) }
+  let(:rdv) { build(:rdv, users: [user], motif: motif, organisation:) }
 
   describe "#rdv_title_for_agent" do
     subject { helper.rdv_title_for_agent(rdv) }
@@ -143,15 +144,15 @@ RSpec.describe RdvsHelper do
     end
 
     it "return simple confirm message for a revoked future RDV with invisible motif" do
-      motif = create(:motif, visibility_type: Motif::INVISIBLE)
-      rdv = create(:rdv, motif: motif)
+      motif = create(:motif, visibility_type: Motif::INVISIBLE, organisation:)
+      rdv = create(:rdv, motif: motif, organisation:)
       expected = I18n.t("admin.rdvs.message.confirm.simple_cancel")
       expect(change_status_confirmation_message(rdv, "revoked")).to eq(expected)
     end
 
     it "return simple confirm message for a revoked future RDV with visible and notified motif" do
-      motif = create(:motif, visibility_type: Motif::VISIBLE_AND_NOTIFIED)
-      rdv = create(:rdv, motif: motif)
+      motif = create(:motif, visibility_type: Motif::VISIBLE_AND_NOTIFIED, organisation:)
+      rdv = create(:rdv, motif: motif, organisation:)
       expected = I18n.t("admin.rdvs.message.confirm.cancel_with_notification")
       expect(change_status_confirmation_message(rdv, "revoked")).to eq(expected)
     end
