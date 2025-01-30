@@ -1,0 +1,18 @@
+.fr-row
+  .fr-col-12
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
+.row.fr-mb-16w
+  .col-12.col-md-4
+    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: true
+    = link_to edit_starts_at_agents_rdv_plan_path(@rdv_plan) do
+      = "retour"
+
+  .col-12.col-md-4
+    = simple_form_for @rdv_plan, url: update_modalites_agents_rdv_plan_path(@rdv_plan) do |f|
+      .fr-mb-4w
+        .input-group
+          = datetime_input(f, :starts_at, options: { label_html: { style: "flex-shrink: 0;", class: "fr-mr-2w" }, wrapper_html: { class: "d-flex", style: "align-items: baseline;" }})
+
+      = render "agents/rdv_plans/modalites_field", rdv_plan: @rdv_plan
+
+      = f.submit "Continuer", class: "fr-btn float-right"
