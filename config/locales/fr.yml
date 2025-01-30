@@ -14,6 +14,12 @@ fr:
         success:
           create: Le rendez-vous a été créé.
           update: Le rendez-vous a été modifié.
+          status_update:
+            unknown: Le statut du rendez-vous a réinitialisé.
+            seen: Le statut du rendez-vous a été mise à jour.
+            excused: Le rendez-vous a été annulé à l'initiative de l'usager.
+            revoked: Le rendez-vous a été annulé à l'initiative du service.
+            noshow: Le statut du rendez-vous a été mise à jour.
           cancel: Le rendez-vous a été annulé.
       edit:
         single_use_lieu_hint_html: Ce rendez-vous aura lieu à une adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>

@@ -1,0 +1,3 @@
+<%# locals: (rdv:) %>
+
+$("#js-rdv-error-message-<%= rdv.id %>").html('<%= j render partial: "admin/rdvs/update_error", locals: { errors: rdv.errors } %>');

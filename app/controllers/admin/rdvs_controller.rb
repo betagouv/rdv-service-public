@@ -92,7 +92,7 @@ class Admin::RdvsController < AgentAuthController
     @success = @rdv_form.submit(rdv_update_params)
 
     if @success
-      redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash
+      redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), notice: I18n.t("admin.rdvs.message.success.update")
     else
       render :edit
     end
@@ -100,8 +100,14 @@ class Admin::RdvsController < AgentAuthController
 
   def status
     authorize(@rdv, policy_class: Agent::RdvPolicy)
-    @rdv.update!(params.require(:rdv).permit(:status))
-    render "admin/rdvs/update"
+    status_params = params.require(:rdv).permit(:status)
+
+    if @rdv.update(status_params)
+      success_message = I18n.t("admin.rdvs.message.success.status_update.#{@rdv.status}")
+      render "admin/rdvs/update_success", locals: { rdv: @rdv, agent: @agent, success_message: }
+    else
+      render "admin/rdvs/update_failure", locals: { rdv: @rdv }
+    end
   end
 
   def send_reminder_manually
@@ -191,15 +197,5 @@ class Admin::RdvsController < AgentAuthController
         [param_name, param_value]
       end
     end
-  end
-
-  def rdv_success_flash
-    {
-      notice: if rdv_update_params[:status].in?(Rdv::CANCELLED_STATUSES)
-                I18n.t("admin.rdvs.message.success.cancel")
-              else
-                I18n.t("admin.rdvs.message.success.update")
-              end,
-    }
   end
 end
