@@ -29,15 +29,17 @@ module ApplicationHelper
     end
   end
 
-  def datetime_input(form, field, input_html: {})
+  def datetime_input(form, field, input_html: {}, options: {})
     form.input(
       field,
-      as: :string,
-      input_html: {
-        value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"),
-        data: { behaviour: "datetimepicker" },
-        autocomplete: "off",
-      }.deep_merge(input_html)
+      {
+        as: :string,
+        input_html: {
+          value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"),
+          data: { behaviour: "datetimepicker" },
+          autocomplete: "off",
+        }.deep_merge(input_html),
+      }.deep_merge(options)
     )
   end
 
