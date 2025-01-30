@@ -6,9 +6,12 @@ class AgentTerritorialAccessRight < ApplicationRecord
   belongs_to :agent
   belongs_to :territory
 
-  scope :allowing_anything, lambda {
-    where("agent_territorial_access_rights.allow_to_manage_teams         IS TRUE OR
-           agent_territorial_access_rights.allow_to_manage_access_rights IS TRUE OR
-           agent_territorial_access_rights.allow_to_invite_agents        IS TRUE")
+  scope :without_any_rights_allowed, lambda {
+    where(
+      allow_to_manage_teams: false,
+      allow_to_manage_access_rights: false,
+      allow_to_invite_agents: false
+    )
   }
+  scope :with_some_rights_allowed, -> { without_any_rights_allowed.invert_where }
 end

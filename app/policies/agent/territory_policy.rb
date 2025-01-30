@@ -43,7 +43,7 @@ class Agent::TerritoryPolicy
 
       territories_with_rights = @scope.joins(:agent_territorial_access_rights)
         .where(agent_territorial_access_rights: { agent: @current_agent })
-        .merge(AgentTerritorialAccessRight.allowing_anything)
+        .merge(AgentTerritorialAccessRight.with_some_rights_allowed)
 
       @scope.where_id_in_subqueries([territories_with_roles, territories_with_rights])
     end
