@@ -50,7 +50,7 @@ RSpec.describe "Public links API", swagger_doc: "v1/api.json" do
           create(:plage_ouverture, :expired, organisation: organisation_d)
           create(:plage_ouverture, organisation: organisation_g)
 
-          create(:rdv, :future, motif: create(:motif, :collectif), organisation: organisation_c)
+          create(:rdv, :future, motif: create(:motif, :collectif, organisation: organisation_c), organisation: organisation_c)
 
           # Organisation A has two recurring plages
           # Organisation B has a plage in 5 days

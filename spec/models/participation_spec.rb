@@ -2,11 +2,12 @@ RSpec.describe Participation, type: :model do
   describe "Participation is getting Rdv parent status" do
     %w[collectif individuel].each do |rdv_type|
       describe "For #{rdv_type} rdv" do
-        rdv_type == "collectif" ? let(:motif) { create(:motif, :collectif) } : let(:motif) { create(:motif) }
+        rdv_type == "collectif" ? let(:motif) { create(:motif, :collectif, organisation:) } : let(:motif) { create(:motif, organisation:) }
+        let(:organisation) { create(:organisation) }
         let(:agent) { create(:agent) }
         let(:user) { create(:user) }
         let(:user2) { create(:user) }
-        let(:rdv) { create(:rdv, starts_at: Time.zone.tomorrow, users: [user, user2], motif: motif, agents: [agent]) }
+        let(:rdv) { create(:rdv, starts_at: Time.zone.tomorrow, users: [user, user2], motif: motif, agents: [agent], organisation:) }
 
         describe "when rdv is created with user" do
           it do
