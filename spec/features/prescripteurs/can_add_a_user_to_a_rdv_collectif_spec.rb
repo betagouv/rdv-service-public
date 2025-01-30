@@ -84,7 +84,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
 
   context "when creneau is taken by someone else during booking process" do
     let!(:fallback_rdv_collectif_2_hours_later) do
-      create(:rdv, :without_users, motif: motif_collectif, agents: [agent], lieu: lieu, starts_at: rdv_collectif.starts_at + 2.hours)
+      create(:rdv, :without_users, motif: motif_collectif, agents: [agent], lieu: lieu, starts_at: rdv_collectif.starts_at + 2.hours, organisation:)
     end
 
     it "redirects to creneau search with error message" do

@@ -64,7 +64,7 @@ RSpec.describe Admin::Api::Agenda::RdvsController, type: :controller do
         it "does not show any info about the RDV and does not provide a link" do
           other_service = create(:service)
           given_agent = create(:agent, basic_role_in_organisations: [organisation], service: current_agent.services.first)
-          rdv_of_another_service = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: mercredi_15h, motif: create(:motif, service: other_service))
+          rdv_of_another_service = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: mercredi_15h, motif: create(:motif, service: other_service, organisation:))
           get :index, params: fullcalendar_time_range_params.merge(agent_id: given_agent.id, organisation_id: organisation.id, format: :json)
           expect(response.parsed_body.size).to eq(1)
           expect(response.parsed_body[0].keys).to eq(%w[start end title textColor backgroundColor extendedProps])

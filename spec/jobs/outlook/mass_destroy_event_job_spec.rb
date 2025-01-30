@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Outlook::MassDestroyEventJob, type: :job do
   let(:organisation) { create(:organisation) }
-  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone, organisation:) }
   # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
   let(:fake_agent) { create(:agent) }
   let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
