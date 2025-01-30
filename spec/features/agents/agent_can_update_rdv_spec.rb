@@ -58,7 +58,7 @@ RSpec.describe "Agent can update a RDV", js: true do
   context "mise à jour vers un motif d’une autre organisation", js: true do
     let!(:other_motif) { create(:motif, name: "Dȋner aux chandelles", organisation: create(:organisation)) }
 
-    it "empêche" do
+    it "empêche le changement" do
       visit edit_admin_organisation_rdv_path(organisation, rdv)
       js = <<~JS
         var selectElt = document.querySelector('select#rdv_motif_id');
@@ -67,6 +67,7 @@ RSpec.describe "Agent can update a RDV", js: true do
       JS
       page.execute_script(js)
       click_button "Enregistrer"
+      expect(rdv.reload.motif).to eq(motif)
       expect(page).not_to have_content("Dȋner aux chandelles")
     end
   end
