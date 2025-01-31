@@ -14,11 +14,11 @@ class CreateWebhookOrganisations < ActiveRecord::Migration[7.1]
       webhook_types = territory_webhooks.group_by { [_1.target_url, _1.secret, _1.subscriptions] }
       webhook_types.each_value do |webhooks|
         # On va créer un webhook et ses entrées de table de jointure, puis supprimer les webhooks existants.
-        oldest_webhook = webhooks.min_by(&:created_at)
+        oldest_webhook, *others = webhooks.sort_by(&:created_at)
         webhooks.each do |webhook|
           WebhookOrganisation.create!(webhook_endpoint: oldest_webhook, organisation_id: webhook.organisation_id, created_at: webhook.created_at)
         end
-        (webhooks.to_a - [oldest_webhook]).each(&:destroy!)
+        others.each(&:destroy!)
       end
     end
 
@@ -43,7 +43,7 @@ class CreateWebhookOrganisations < ActiveRecord::Migration[7.1]
         orgs.each do |org|
           new_webhook = webhook.dup
           new_webhook.organisation_id = org.id
-          new_webhook.save!
+          new_webhook.save!(validate: false)
         end
       end
     end
