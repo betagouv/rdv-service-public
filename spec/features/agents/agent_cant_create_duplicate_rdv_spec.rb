@@ -57,7 +57,7 @@ RSpec.describe "Agent can't create duplicate RDV" do
   end
 
   context "when the RDV has the same motif, same lieu, same agents and users and occurs at the same time" do
-    let!(:existing_rdv) { create(:rdv, organisation: organisation, starts_at: Time.zone.today.next_week.change(hour: 9)) }
+    let!(:existing_rdv) { create(:rdv, organisation: organisation, starts_at: Time.zone.today.next_week.change(hour: 9), motif:) }
 
     it "prevents creation with an error" do
       login_as(agent, scope: :agent)
