@@ -6,6 +6,7 @@ fr:
     agent/agent_agenda_policy:
       show?: Vous n’avez pas les droits suffisants pour accéder à l’agenda de cet agent
     agent/rdv_policy:
+      new?: Vous n’avez pas les droits suffisants pour créer ce RDV.
       create?: Vous n’avez pas les droits suffisants pour créer ce RDV.
       edit?: Vous n’avez pas les droits suffisants pour modifier ce RDV.
       update?: Vous n’avez pas les droits suffisants pour modifier ce RDV.
