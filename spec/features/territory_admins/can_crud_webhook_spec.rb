@@ -15,7 +15,7 @@ RSpec.describe "territory admin can crud webhooks endpoints" do
     # Create
     click_on "Webhook"
     click_on "Ajouter"
-    select(organisation.name, from: "webhook_endpoint_organisation_id")
+    check(organisation.name)
     fill_in("URL de destination", with: "https://webhook.test.com")
     fill_in("Clé privée", with: "XSECRET")
     click_on "Enregistrer"

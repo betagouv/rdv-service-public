@@ -14,7 +14,7 @@ class Absence < ApplicationRecord
 
   # Through relations
   def webhook_endpoints
-    WebhookEndpoint.where(organisation: agent.organisations)
+    WebhookEndpoint.for_organisations(agent.organisations)
   end
 
   # Validation

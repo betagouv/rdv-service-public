@@ -4,7 +4,7 @@ RSpec.describe WebhookEndpoint, type: :model do
 
     let(:organisation) { create(:organisation) }
     let(:webhook_endpoint) { build(:webhook_endpoint, organisation_id: organisation.id, target_url: target_url) }
-    let!(:other_webhook_endpoint) { create(:webhook_endpoint, organisation_id: organisation.id, target_url: "https://www.taken_url.com") }
+    let!(:other_webhook_endpoint) { create(:webhook_endpoint, organisations: [organisation], target_url: "https://www.taken_url.com") }
 
     context "when the target_url is unique in the organisation_id scope" do
       let(:target_url) { "https://www.rdv-insertion.fr/rdv_solidarites_webhooks" }

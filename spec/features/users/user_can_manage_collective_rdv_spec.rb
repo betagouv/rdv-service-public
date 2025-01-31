@@ -6,7 +6,7 @@ RSpec.describe "Adding a user to a collective RDV" do
   end
 
   let!(:territory) { create(:territory, departement_number: "75") }
-  let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"], target_url: "https://example.com") }
+  let!(:webhook_endpoint) { create(:webhook_endpoint, organisations: [organisation], subscriptions: ["rdv"], target_url: "https://example.com") }
   let!(:organisation) { create(:organisation, territory: territory) }
   let!(:agent) { create(:agent, organisations: [organisation], rdv_notifications_level: "all") }
   let!(:service) { create(:service) }

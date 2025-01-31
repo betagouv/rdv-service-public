@@ -7,22 +7,23 @@ class WebhookEndpoint < ApplicationRecord
   has_many :organisations, through: :webhook_organisations
 
   # Validations
-  validate :consistent_territory
+  validate :organisations_validity
   validate :subscriptions_validity
   validates :secret, presence: true
 
   # Scopes
 
-  scope :within_territories, lambda { |territory_ids|
-    joins(:webhook_organisations).where(webhook_organisations: { organisation_id: Organisation.where(territory_id: territory_ids) }).distinct
+  scope :for_organisations, lambda { |organisation_ids|
+    joins(:webhook_organisations).where(webhook_organisations: { organisation_id: organisation_ids }).distinct
   }
+  scope :within_territories, ->(territory_ids) { for_organisations(Organisation.where(territory_id: territory_ids)) }
 
   ALL_SUBSCRIPTIONS = %w[
     rdv absence plage_ouverture user user_profile organisation motif lieu agent agent_role referent_assignation
   ].freeze
 
   def territory
-    Territory.where(id: webhook_organisations.map(&:organisation).map(&:territory_id)).sole
+    webhook_organisations.map(&:organisation).map(&:territory).uniq.sole
   end
 
   def trigger_for_all_subscribed_resources
@@ -50,10 +51,14 @@ class WebhookEndpoint < ApplicationRecord
 
   private
 
-  def consistent_territory
-    territory
-  rescue ActiveRecord::SoleRecordExceeded
-    errors.add(:base, "Les orgas sont sur plusieurs territoires")
+  def organisations_validity
+    if webhook_organisations.empty?
+      errors.add(:base, "Aucune organisation liée")
+    end
+
+    if webhook_organisations.map(&:organisation).map(&:territory).uniq.size > 1
+      errors.add(:base, "Les orgas sont sur plusieurs territoires")
+    end
   end
 
   def subscriptions_validity

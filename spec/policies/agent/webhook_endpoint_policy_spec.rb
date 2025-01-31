@@ -3,7 +3,7 @@ RSpec.describe Agent::WebhookEndpointPolicy do
 
   let(:territory) { create(:territory) }
   let(:organisation) { create(:organisation, territory: territory) }
-  let(:webhook) { create(:webhook_endpoint, organisation: organisation) }
+  let(:webhook) { create(:webhook_endpoint, organisations: [organisation]) }
 
   context "with territory admin agent" do
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }
@@ -26,7 +26,7 @@ RSpec.describe Agent::WebhookEndpointPolicy::ApiScope do
       let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
       it "allow to see webhook from same territory" do
-        webhook = create(:webhook_endpoint, organisation: organisation)
+        webhook = create(:webhook_endpoint, organisations: [organisation])
         webhook_policy = described_class.new(agent, WebhookEndpoint)
         expect(webhook_policy.resolve).to include(webhook)
       end

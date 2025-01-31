@@ -139,7 +139,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     describe "triggers webhook" do
-      let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
+      let!(:webhook_endpoint) { create(:webhook_endpoint, organisations: [organisation], subscriptions: ["rdv"]) }
 
       it "sends a webhook" do
         rdv.reload

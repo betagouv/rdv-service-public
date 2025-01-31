@@ -15,7 +15,7 @@ RSpec.describe Participation::Creatable, type: :concern do
     let(:rdv) { create :rdv, :collectif, :without_users, starts_at: Time.zone.tomorrow, agents: [agent], organisation: }
 
     describe "triggers webhook" do
-      let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
+      let!(:webhook_endpoint) { create(:webhook_endpoint, organisations: [organisation], subscriptions: ["rdv"]) }
       let(:participation1) { build(:participation, rdv: rdv, user: user) }
 
       it "sends a webhook" do

@@ -14,7 +14,7 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
     end
 
     it "assigns territory's webhooks" do
-      webhook = create(:webhook_endpoint, organisation: organisation)
+      webhook = create(:webhook_endpoint, organisations: [organisation])
       get :index, params: { territory_id: territory.id }
       expect(assigns(:webhooks)).to eq([webhook])
     end
@@ -23,7 +23,7 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
       render_views
       let(:other_territory) { create(:territory) }
       let(:other_organisation) { create(:organisation, territory: other_territory) }
-      let!(:other_webhook) { create(:webhook_endpoint, organisation: other_organisation, target_url: "https://www.exemple.fr") }
+      let!(:other_webhook) { create(:webhook_endpoint, organisations: [other_organisation], target_url: "https://www.exemple.fr") }
 
       before do
         create(:agent_territorial_access_right, agent: agent, territory: other_territory, allow_to_manage_teams: true)
@@ -87,7 +87,7 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
   describe "#update" do
     context "when it's ok" do
       it "redirect to index" do
-        webhook = create(:webhook_endpoint, organisation: organisation)
+        webhook = create(:webhook_endpoint, organisations: [organisation])
         post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { secret: "XSECRETX" } }
         expect(response).to redirect_to(admin_territory_webhook_endpoints_path(territory))
       end
@@ -95,31 +95,31 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
 
     context "with an error" do
       it "render new" do
-        webhook = create(:webhook_endpoint, organisation: organisation)
+        webhook = create(:webhook_endpoint, organisations: [organisation])
         post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { secret: nil } }
         expect(response).to render_template(:new)
       end
 
       it "assigns webhook" do
-        webhook = create(:webhook_endpoint, organisation: organisation)
+        webhook = create(:webhook_endpoint, organisations: [organisation])
         post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { secret: nil } }
         expect(assigns(:webhook)).to eq(WebhookEndpoint.first)
       end
 
       it "doens't update the secret if it doesn't change" do
-        webhook = create(:webhook_endpoint, organisation: organisation, secret: "123456789")
+        webhook = create(:webhook_endpoint, organisations: [organisation], secret: "123456789")
         post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { secret: "******789" } }
         expect(WebhookEndpoint.first.secret).to eq(webhook.secret)
       end
 
       it "update the secret if it change" do
-        webhook = create(:webhook_endpoint, organisation: organisation, secret: "123456789")
+        webhook = create(:webhook_endpoint, organisations: [organisation], secret: "123456789")
         post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { secret: "987654321" } }
         expect(WebhookEndpoint.first.secret).to eq("987654321")
       end
 
       it "update the target_url" do
-        webhook = create(:webhook_endpoint, organisation: organisation, target_url: "https://example.com", secret: "123")
+        webhook = create(:webhook_endpoint, organisations: [organisation], target_url: "https://example.com", secret: "123")
         post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { target_url: "https://example.org" } }
         expect(WebhookEndpoint.first.target_url).to eq("https://example.org")
       end
@@ -128,13 +128,13 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
 
   describe "#edit" do
     it "respond success" do
-      webhook = create(:webhook_endpoint, organisation: organisation)
+      webhook = create(:webhook_endpoint, organisations: [organisation])
       get :edit, params: { territory_id: territory.id, id: webhook.id }
       expect(response).to be_successful
     end
 
     it "assigns territory's webhooks" do
-      webhook = create(:webhook_endpoint, organisation: organisation)
+      webhook = create(:webhook_endpoint, organisations: [organisation])
       get :edit, params: { territory_id: territory.id, id: webhook.id }
       expect(assigns(:webhook)).to be_a(WebhookEndpoint)
     end
@@ -142,13 +142,13 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
 
   describe "#destroy" do
     it "redirect to index" do
-      webhook = create(:webhook_endpoint, organisation: organisation)
+      webhook = create(:webhook_endpoint, organisations: [organisation])
       post :destroy, params: { territory_id: territory.id, id: webhook }
       expect(response).to redirect_to(admin_territory_webhook_endpoints_path(territory))
     end
 
     it "destroy the webhook endpoint" do
-      webhook = create(:webhook_endpoint, organisation: organisation)
+      webhook = create(:webhook_endpoint, organisations: [organisation])
       expect do
         post :destroy, params: { territory_id: territory.id, id: webhook }
       end.to change(WebhookEndpoint, :count).from(1).to(0)
