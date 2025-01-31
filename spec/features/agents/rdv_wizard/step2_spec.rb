@@ -58,7 +58,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
       login_as(agent, scope: :agent)
       visit new_admin_organisation_rdv_wizard_step_path(params)
       expect(page).not_to have_content("Rencontre au sommet")
-      expect(page).to have_content("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
+      expect(page).to have_content("Vous n’avez pas les droits suffisants pour créer ce RDV")
     end
   end
 end
