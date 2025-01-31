@@ -3,11 +3,12 @@ class WebhookEndpoint < ApplicationRecord
   has_paper_trail
 
   # Associations
+  belongs_to :territory
   has_many :webhook_organisations, inverse_of: :webhook_endpoint, dependent: :delete_all
   has_many :organisations, through: :webhook_organisations
 
   # Validations
-  validate :organisations_validity
+  validate :organisations_territory_validity
   validate :subscriptions_validity
   validates :secret, presence: true
 
@@ -16,15 +17,10 @@ class WebhookEndpoint < ApplicationRecord
   scope :for_organisations, lambda { |organisation_ids|
     joins(:webhook_organisations).where(webhook_organisations: { organisation_id: organisation_ids }).distinct
   }
-  scope :within_territories, ->(territory_ids) { for_organisations(Organisation.where(territory_id: territory_ids)) }
 
   ALL_SUBSCRIPTIONS = %w[
     rdv absence plage_ouverture user user_profile organisation motif lieu agent agent_role referent_assignation
   ].freeze
-
-  def territory
-    webhook_organisations.map(&:organisation).map(&:territory).uniq.sole
-  end
 
   def trigger_for_all_subscribed_resources
     transaction do
@@ -51,13 +47,9 @@ class WebhookEndpoint < ApplicationRecord
 
   private
 
-  def organisations_validity
-    if webhook_organisations.empty?
-      errors.add(:base, "Aucune organisation liée")
-    end
-
-    if webhook_organisations.map(&:organisation).map(&:territory).uniq.size > 1
-      errors.add(:base, "Les orgas sont sur plusieurs territoires")
+  def organisations_territory_validity
+    if webhook_organisations.map(&:organisation).map(&:territory).uniq == territory
+      errors.add(:base, "Les orgas ne sont pas toutes de ce territoire")
     end
   end
 

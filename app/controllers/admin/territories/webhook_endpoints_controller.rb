@@ -2,16 +2,16 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
   before_action :set_webhook_endpoint, only: %i[edit update destroy]
 
   def index
-    @webhooks = policy_scope(WebhookEndpoint.within_territories([current_territory.id]), policy_scope_class: Agent::WebhookEndpointPolicy::EspaceAdminScope)
+    @webhooks = policy_scope(WebhookEndpoint.where(territory: current_territory), policy_scope_class: Agent::WebhookEndpointPolicy::Scope)
   end
 
   def new
-    @webhook = WebhookEndpoint.new
+    @webhook = WebhookEndpoint.new(territory: current_territory)
     authorize(@webhook, policy_class: Agent::WebhookEndpointPolicy)
   end
 
   def create
-    @webhook = WebhookEndpoint.new(webhook_endpoint_params)
+    @webhook = WebhookEndpoint.new(webhook_endpoint_params.merge(territory: current_territory))
     authorize(@webhook, policy_class: Agent::WebhookEndpointPolicy)
     if @webhook.save
       flash[:success] = "Webhook créé"

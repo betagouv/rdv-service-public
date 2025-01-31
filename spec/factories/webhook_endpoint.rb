@@ -1,5 +1,7 @@
 FactoryBot.define do
   factory :webhook_endpoint do
+    territory { organisations.map(&:territory).sole }
+
     transient do
       organisations { [build(:organisation)] }
     end

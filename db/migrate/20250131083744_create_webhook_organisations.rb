@@ -7,23 +7,28 @@ class CreateWebhookOrganisations < ActiveRecord::Migration[7.1]
       t.datetime :created_at, null: false
     end
 
-    organisations_with_webhooks = Organisation.where(id: WebhookEndpoint.select(:organisation_id))
-    territories_with_webhooks = organisations_with_webhooks.map(&:territory).uniq
-    territories_with_webhooks.each do |territory|
-      territory_webhooks = WebhookEndpoint.where(organisation_id: territory.organisation_ids)
-      webhook_types = territory_webhooks.group_by { [_1.target_url, _1.secret, _1.subscriptions] }
-      webhook_types.each_value do |webhooks|
-        # On va créer un webhook et ses entrées de table de jointure, puis supprimer les webhooks existants.
-        oldest_webhook, *others = webhooks.sort_by(&:created_at)
-        webhooks.each do |webhook|
-          WebhookOrganisation.create!(webhook_endpoint: oldest_webhook, organisation_id: webhook.organisation_id, created_at: webhook.created_at)
-        end
-        others.each(&:destroy!)
+    add_index :webhook_organisations, %i[webhook_endpoint_id organisation_id], unique: true
+    remove_index :webhook_endpoints, %w[organisation_id target_url]
+
+    webhook_types = WebhookEndpoint.all.to_a.group_by { [_1.territory_id, _1.target_url, _1.secret, _1.subscriptions] }
+    webhook_types.each do |(territory_id, target_url, secret, subscriptions), existing_endpoints|
+      unique_endpoint = WebhookEndpoint.create!(
+        territory_id:, target_url:, secret:, subscriptions:,
+        organisation_id: existing_endpoints.first.organisation_id, # arbitraire, la colonne va être supprimée juste après
+        created_at: existing_endpoints.map(&:created_at).min, # on conserve la date de création du plus vieux endpoint existant
+        updated_at: existing_endpoints.map(&:updated_at).max # on conserve la date de touch du plus récent endpoint existant
+      )
+      existing_endpoints.each do |webhook|
+        WebhookOrganisation.create!(
+          webhook_endpoint: unique_endpoint,
+          organisation_id: webhook.organisation_id,
+          created_at: webhook.created_at
+        )
       end
+      existing_endpoints.each(&:destroy!)
     end
 
     safety_assured do
-      remove_index :webhook_endpoints, %w[organisation_id target_url]
       remove_column :webhook_endpoints, :organisation_id
     end
   end
@@ -32,20 +37,20 @@ class CreateWebhookOrganisations < ActiveRecord::Migration[7.1]
     add_reference :webhook_endpoints, :organisation, foreign_key: true, index: false
     add_index :webhook_endpoints, %w[organisation_id target_url]
 
-    organisations_with_webhooks = Organisation.where(id: WebhookOrganisation.select(:organisation_id))
-    territories_with_webhooks = organisations_with_webhooks.map(&:territory).uniq
-    territories_with_webhooks.each do |territory|
-      territory_webhooks = WebhookEndpoint.where(id: WebhookOrganisation.where(organisation_id: territory.organisation_ids).select(:webhook_endpoint_id))
-      territory_webhooks.each do |webhook|
-        orgs = webhook.organisations.to_a
-        WebhookOrganisation.where(webhook_endpoint_id: webhook.id).delete_all
-        WebhookEndpoint.where(id: webhook.id).delete_all
-        orgs.each do |org|
-          new_webhook = webhook.dup
-          new_webhook.organisation_id = org.id
-          new_webhook.save!(validate: false)
-        end
+    WebhookEndpoint.all.each do |webhook|
+      webhook_organisations = webhook.webhook_organisations.to_a
+
+      # On re-crée un endpoint par orga
+      webhook_organisations.each do |webhook_organisation|
+        new_webhook = webhook.dup
+        new_webhook.organisation_id = webhook_organisation.organisation_id
+        new_webhook.created_at = webhook_organisation.created_at
+        new_webhook.save!(validate: false)
       end
+
+      # On supprime les données
+      WebhookOrganisation.where(webhook_endpoint_id: webhook.id).delete_all
+      WebhookEndpoint.where(id: webhook.id).delete_all
     end
 
     drop_table :webhook_organisations

@@ -3,7 +3,7 @@ require "swagger_helper"
 RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
   with_examples
 
-  path "api/v1/organisations/{organisation_id}/webhook_endpoints" do
+  path "api/v1/webhook_endpoints" do
     get "Lister les webhook_endpoints d'une organisation" do
       with_authentication
       with_pagination
@@ -13,7 +13,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       operationId "getWebhookEndpoints"
       description "Renvoie tous les webhook_endpoints d'une organisation accessibles à l'agent·e authentifié·e, de manière paginée"
 
-      parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 123
+      parameter name: :organisation_ids, in: :path, type: :integer, description: "IDs des organisations sur lesquelles filtrer", example: 123
       parameter name: "target_url", in: :query, type: :string, description: "L'url de destination du webhook endpoint", example: "https://www.rdv-insertion.fr/rdvs_webhooks", required: false
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
@@ -22,10 +22,10 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       let(:client) { auth_headers["client"].to_s }
 
       let!(:organisation) { create(:organisation) }
-      let(:organisation_id) { organisation.id }
+      let(:organisation_ids) { [organisation.id] }
 
       response 200, "Retourne des WebhookEndpoints" do
-        let!(:webhook_endpoints) { create_list(:webhook_endpoint, 5, organisation: organisation) }
+        let!(:webhook_endpoints) { create_list(:webhook_endpoint, 5, organisations: [organisation]) }
         let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
         schema "$ref" => "#/components/schemas/webhook_endpoints"
@@ -81,7 +81,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       operationId "createWebhookEndpoint"
       description "Crée un webhook_endpoint et le renvoie"
 
-      parameter name: "organisation_id", in: :path, type: :integer, description: "ID de l'organisation", example: 123
+      parameter name: "organisation_ids", in: :path, type: :integer, description: "ID des organisations à lir au webhooks", example: 123
       parameter name: "target_url", in: :query, type: :string, description: "L'url de destination du webhook endpoint", example: "https://www.rdv-insertion.fr/rdv_solidarites_webhooks"
       parameter name: "secret", in: :query, type: :string, description: "Le secret partagé avec l'application de destination du webhook", example: "abc123", required: false
       parameter name: "subscriptions[]", in: :query, style: :form, explode: true, schema: { type: :array, items: { type: :string } },
@@ -89,7 +89,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
       let!(:territory) { create(:territory) }
       let!(:organisation) { create(:organisation, territory: territory) }
-      let(:organisation_id) { organisation.id }
+      let(:"organisation_ids[]") { [organisation.id] }
       let(:agent) { create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation]) }
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
@@ -113,7 +113,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
           expect(WebhookEndpoint.count).to eq(webhook_endpoint_count_before + 1)
 
           expect(created_webhook_endpoint.reload).to have_attributes(
-            organisation: organisation,
+            organisations: [organisation],
             target_url: target_url,
             secret: secret,
             subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role]
@@ -134,7 +134,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
     end
   end
 
-  path "api/v1/organisations/{organisation_id}/webhook_endpoints/{webhook_endpoint_id}" do
+  path "api/v1/webhook_endpoints/{webhook_endpoint_id}" do
     patch "Mettre à jour un webhook_endpoint" do
       with_authentication
 
@@ -144,7 +144,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       description "Met à jour un webhook_endpoint"
 
       parameter name: :webhook_endpoint_id, in: :path, type: :integer, description: "ID du wehbook_endpoint", example: 123
-      parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 123
+      parameter name: :organisation_ids, in: :path, type: :integer, description: "ID des organisations à lier au webhook", example: 123
       parameter name: "target_url", in: :query, type: :string, description: "L'url de destination du webhook endpoint", example: "https://www.rdv-insertion.fr/rdv_solidarites_webhooks"
       parameter name: "secret", in: :query, type: :string, description: "Le secret partagé avec l'application de destination du webhook", example: "abc123", required: false
       parameter name: "subscriptions[]", in: :query, style: :form, explode: true, schema: { type: :array, items: { type: :string } },
@@ -152,7 +152,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
       let!(:territory) { create(:territory) }
       let!(:organisation) { create(:organisation, territory: territory) }
-      let(:organisation_id) { organisation.id }
+      let(:organisation_ids) { [organisation.id] }
       let!(:webhook_endpoint) { create(:webhook_endpoint, organisations: [organisation]) }
       let(:webhook_endpoint_id) { webhook_endpoint.id }
       let(:agent) { create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation]) }
@@ -168,7 +168,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
       response 200, "Met à jour et renvoie un webhook_endpoint" do
         let(:other_organisation) { create(:organisation, territory: territory) }
-        let(:organisation_id) { other_organisation.id }
+        let(:organisation_ids) { [other_organisation.id] }
 
         schema "$ref" => "#/components/schemas/webhook_endpoint_with_root"
 
@@ -176,7 +176,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
         specify do
           expect(webhook_endpoint.reload).to have_attributes(
-            organisation: other_organisation,
+            organisations: [other_organisation],
             target_url: target_url,
             secret: secret,
             subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role]

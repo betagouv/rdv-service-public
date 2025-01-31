@@ -842,6 +842,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_31_083744) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
+    t.bigint "territory_id", null: false
+    t.index ["territory_id"], name: "index_webhook_endpoints_on_territory_id"
   end
 
   create_table "webhook_organisations", force: :cascade do |t|
@@ -849,6 +851,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_31_083744) do
     t.bigint "organisation_id"
     t.datetime "created_at", null: false
     t.index ["organisation_id"], name: "index_webhook_organisations_on_organisation_id"
+    t.index ["webhook_endpoint_id", "organisation_id"], name: "idx_on_webhook_endpoint_id_organisation_id_2c1ed4e3a8", unique: true
     t.index ["webhook_endpoint_id"], name: "index_webhook_organisations_on_webhook_endpoint_id"
   end
 
@@ -923,6 +926,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_31_083744) do
   add_foreign_key "user_profiles", "organisations"
   add_foreign_key "user_profiles", "users"
   add_foreign_key "users", "users", column: "responsible_id"
+  add_foreign_key "webhook_endpoints", "territories"
   add_foreign_key "webhook_organisations", "organisations"
   add_foreign_key "webhook_organisations", "webhook_endpoints"
   add_foreign_key "zones", "sectors"

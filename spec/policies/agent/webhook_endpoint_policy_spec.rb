@@ -18,7 +18,7 @@ RSpec.describe Agent::WebhookEndpointPolicy do
   end
 end
 
-RSpec.describe Agent::WebhookEndpointPolicy::ApiScope do
+RSpec.describe Agent::WebhookEndpointPolicy::Scope do
   describe "#resolve?" do
     let(:organisation) { create(:organisation) }
 
