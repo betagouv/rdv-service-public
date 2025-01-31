@@ -22,10 +22,20 @@ RSpec.describe Agent::WebhookEndpointPolicy::Scope do
   describe "#resolve?" do
     let(:organisation) { create(:organisation) }
 
-    context "with an admin agent" do
+    context "with an admin agent with no territory role" do
       let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
-      it "allow to see webhook from same territory" do
+      it "does not allow to see webhook from same territory" do
+        webhook = create(:webhook_endpoint, organisations: [organisation])
+        webhook_policy = described_class.new(agent, WebhookEndpoint)
+        expect(webhook_policy.resolve).not_to include(webhook)
+      end
+    end
+
+    context "with an agent with territory role but that belongs to no organisation" do
+      let(:agent) { create(:agent, role_in_territories: [organisation.territory]) }
+
+      it "allows to see webhook from the territory" do
         webhook = create(:webhook_endpoint, organisations: [organisation])
         webhook_policy = described_class.new(agent, WebhookEndpoint)
         expect(webhook_policy.resolve).to include(webhook)

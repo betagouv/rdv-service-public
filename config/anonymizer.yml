@@ -269,8 +269,14 @@ tables:
       - created_at
       - updated_at
       - target_url
-      - organisation_id
+      - territory_id
       - subscriptions
+
+  - table_name: webhook_organisations
+    non_anonymized_column_names:
+      - webhook_endpoints_id
+      - organisation_id
+      - created_at
 
   - table_name: territories
     anonymized_column_names:

@@ -14,7 +14,7 @@ class WebhookOrganisation < ApplicationRecord
   def consistent_organisation_territory
     return unless organisation
 
-    if organisation.territory_id != webhook_endpoint.territory_id
+    if organisation.territory != webhook_endpoint.territory
       errors.add(:base, "L'organisation #{organisation.name} n'est pas dans le territoire #{webhook_endpoint.territory_id}")
     end
   end
