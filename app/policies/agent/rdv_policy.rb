@@ -2,7 +2,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def create?
-    users_and_agents_authorized?
+    users_and_agents_authorized? && motif_authorized?
   end
   alias new? create?
 
@@ -91,6 +91,11 @@ class Agent::RdvPolicy < ApplicationPolicy
     notify_users_unauthorized unless @users_authorized
 
     @users_authorized
+  end
+
+  def motif_authorized?
+    record.motif.blank? ||
+      Agent::MotifPolicy.agent_can_use_motif?(record.motif, current_agent)
   end
 
   def agent_organisation_context
