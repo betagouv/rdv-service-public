@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_31_083744) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_31_152051) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -841,7 +841,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_31_083744) do
     t.string "secret", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
+    t.string "subscriptions", default: [], null: false, array: true
     t.bigint "territory_id", null: false
     t.index ["territory_id"], name: "index_webhook_endpoints_on_territory_id"
   end

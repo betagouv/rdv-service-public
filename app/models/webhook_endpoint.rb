@@ -54,10 +54,6 @@ class WebhookEndpoint < ApplicationRecord
   end
 
   def subscriptions_validity
-    if subscriptions.empty?
-      errors.add(:base, "il faut choisir un abonnement")
-    end
-
     if subscriptions.any? { !_1.in?(ALL_SUBSCRIPTIONS) }
       errors.add(:base, "la liste des abonnements choisis contient une ou plusieurs valeurs incorrectes")
     end

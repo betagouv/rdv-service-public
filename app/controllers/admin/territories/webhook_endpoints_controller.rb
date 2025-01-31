@@ -6,7 +6,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
   end
 
   def new
-    @webhook = WebhookEndpoint.new(territory: current_territory)
+    @webhook = WebhookEndpoint.new(territory: current_territory, subscriptions: %w[rdv absence plage_ouverture])
     authorize(@webhook, policy_class: Agent::WebhookEndpointPolicy)
   end
 
