@@ -17,7 +17,8 @@ class Organisation < ApplicationRecord
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
   has_many :rdvs, dependent: :restrict_with_error
-  has_many :webhook_endpoints, dependent: :destroy
+  has_many :webhook_organisations, dependent: :delete_all, inverse_of: :organisation
+  has_many :webhook_endpoints, through: :webhook_organisations
   has_many :sector_attributions, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
   has_many :agent_roles, dependent: :delete_all # skips last admin validation

@@ -4,6 +4,7 @@ fr:
       webhook_endpoint: Webhook
     attributes:
       webhook_endpoint:
+        organisation_ids: Organisations
         target_url: URL de destination
         secret: Clé privée
         secret_hint: Cette clé vous permet de vérifier l'intégrité des données reçues, voir <a href="https://github.com/betagouv/rdv-service-public/blob/production/docs/api/webhooks/api-notifications-webhooks.md#signatures-des-requ%C3%AAtes">la documentation</a> pour plus d'infos

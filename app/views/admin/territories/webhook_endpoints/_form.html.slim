@@ -1,6 +1,6 @@
 = simple_form_for webhook, url: url do |f|
   = render "model_errors", model: webhook
-  = f.input :organisation_id, collection: current_territory.organisations
+  = f.input :organisation_ids, as: :check_boxes, collection: current_territory.organisations.order(:name)
   = f.input :target_url
   = f.input :secret, input_html: { value: webhook.partially_hidden_secret, id: "secret_field" },
           hint: sanitize(t("activerecord.attributes.webhook_endpoint.secret_hint"))

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_21_133641) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_31_083744) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -839,12 +839,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_21_133641) do
   create_table "webhook_endpoints", force: :cascade do |t|
     t.string "target_url", null: false
     t.string "secret", null: false
-    t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
-    t.index ["organisation_id", "target_url"], name: "index_webhook_endpoints_on_organisation_id_and_target_url", unique: true
-    t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
+  end
+
+  create_table "webhook_organisations", force: :cascade do |t|
+    t.bigint "webhook_endpoint_id"
+    t.bigint "organisation_id"
+    t.datetime "created_at", null: false
+    t.index ["organisation_id"], name: "index_webhook_organisations_on_organisation_id"
+    t.index ["webhook_endpoint_id"], name: "index_webhook_organisations_on_webhook_endpoint_id"
   end
 
   create_table "zones", force: :cascade do |t|
@@ -918,6 +923,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_21_133641) do
   add_foreign_key "user_profiles", "organisations"
   add_foreign_key "user_profiles", "users"
   add_foreign_key "users", "users", column: "responsible_id"
-  add_foreign_key "webhook_endpoints", "organisations"
+  add_foreign_key "webhook_organisations", "organisations"
+  add_foreign_key "webhook_organisations", "webhook_endpoints"
   add_foreign_key "zones", "sectors"
 end

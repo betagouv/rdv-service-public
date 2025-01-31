@@ -33,10 +33,6 @@ fr:
         index:
           configuration_title: Configuration
           webhook_title: Webhooks
-          table-header:
-            organisation: Organisation
-            url: URL cible
-            actions: Actions
           confirm_destroy: Voulez-vous vraiment supprimer ce endpoint ?
         new:
           webhook_title: Webhooks

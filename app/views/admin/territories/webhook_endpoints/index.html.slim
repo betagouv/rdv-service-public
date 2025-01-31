@@ -8,14 +8,22 @@
           table.table
             thead
               tr
-                th = t(".table-header.organisation")
-                th = t(".table-header.url")
-                th = t(".table-header.actions")
+                th = t("activerecord.attributes.webhook_endpoint.target_url")
+                th = t("activerecord.attributes.webhook_endpoint.organisation_ids")
+                th = t("activerecord.attributes.webhook_endpoint.subscriptions")
+                th Actions
             tbody
               - @webhooks.each do |webhook|
                 tr
-                  td = webhook.organisation.name
                   td = webhook.target_url
+                  td
+                    ul
+                      - webhook.organisations.order(:name).each do |organisation|
+                        li = organisation.name
+                  td
+                    ul
+                      - webhook.subscriptions.each do |subscription|
+                        li = subscription.classify.constantize.model_name.human
                   td
                     .d-flex
                       div.mr-3= link_to edit_admin_territory_webhook_endpoint_path(current_territory, webhook), title: t("helpers.edit") do

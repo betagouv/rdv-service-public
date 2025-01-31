@@ -2,8 +2,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
   before_action :set_webhook_endpoint, only: %i[edit update destroy]
 
   def index
-    @webhooks = policy_scope(WebhookEndpoint, policy_scope_class: Agent::WebhookEndpointPolicy::EspaceAdminScope)
-      .where(organisation: current_territory.organisations)
+    @webhooks = policy_scope(WebhookEndpoint.within_territories([current_territory.id]), policy_scope_class: Agent::WebhookEndpointPolicy::EspaceAdminScope)
   end
 
   def new
@@ -15,6 +14,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
     @webhook = WebhookEndpoint.new(webhook_endpoint_params)
     authorize(@webhook, policy_class: Agent::WebhookEndpointPolicy)
     if @webhook.save
+      flash[:success] = "Webhook créé"
       redirect_to admin_territory_webhook_endpoints_path(current_territory)
     else
       render :new
@@ -27,9 +27,10 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
     params = webhook_endpoint_params[:secret] == @webhook.partially_hidden_secret ? webhook_endpoint_params.except(:secret) : webhook_endpoint_params
 
     if @webhook.update(params)
+      flash[:success] = "Webhook modifié"
       redirect_to admin_territory_webhook_endpoints_path(current_territory)
     else
-      render :new
+      render :edit
     end
   end
 
@@ -42,7 +43,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
 
   def webhook_endpoint_params
     params.require(:webhook_endpoint).permit(
-      :target_url, :secret, :organisation_id, subscriptions: []
+      :target_url, :secret, subscriptions: [], organisation_ids: []
     )
   end
 

@@ -2,7 +2,7 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def territorial_admin?
-    self.class.allowed_to_manage_webhooks_in?(record.organisation.territory, pundit_user)
+    self.class.allowed_to_manage_webhooks_in?(record.territory, pundit_user)
   end
 
   def self.allowed_to_manage_webhooks_in?(territory, agent)
@@ -41,7 +41,7 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
     end
 
     def resolve
-      @scope.joins(:organisation).where(organisations: { territory_id: @current_agent.territorial_roles.select(:territory_id) })
+      @scope.within_territories(@current_agent.territorial_roles.select(:territory_id))
     end
   end
 end
