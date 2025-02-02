@@ -8,14 +8,14 @@ RSpec.describe Participation::Creatable, type: :concern do
     let(:agent) { create :agent }
     let(:user) { create :user }
     let(:user3) { create :user }
+    let!(:organisation) { create(:organisation) }
     let(:relative) do
       create(:user, :relative, :with_no_email, responsible: user, first_name: "Petit", last_name: "Bébé")
     end
-    let(:rdv) { create :rdv, :collectif, :without_users, starts_at: Time.zone.tomorrow, agents: [agent] }
+    let(:rdv) { create :rdv, :collectif, :without_users, starts_at: Time.zone.tomorrow, agents: [agent], organisation: }
 
     describe "triggers webhook" do
       let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
-      let!(:organisation) { create(:organisation, rdvs: [rdv]) }
       let(:participation1) { build(:participation, rdv: rdv, user: user) }
 
       it "sends a webhook" do
@@ -68,7 +68,6 @@ RSpec.describe Participation::Creatable, type: :concern do
     end
 
     describe "l’usager ajouté n’appartient pas encore à l’organisation" do
-      let!(:organisation) { create(:organisation, rdvs: [rdv]) }
       let(:participation) { build(:participation, rdv:, user:) }
 
       it "ajoute l’orga à l’usager" do
@@ -79,7 +78,6 @@ RSpec.describe Participation::Creatable, type: :concern do
     end
 
     describe "l’usager ajouté appartient déjà à l’organisation" do
-      let!(:organisation) { create(:organisation, rdvs: [rdv]) }
       let!(:user) { create(:user, organisations: [organisation]) }
       let(:participation) { build(:participation, rdv:, user:) }
 

@@ -65,7 +65,7 @@ RSpec.describe "Agents can configure online booking" do
       expect(page).to have_content("Réservable en ligne")
       expect(page).to have_content("Aucun rendez-vous avec des places disponibles")
 
-      create(:rdv, motif: motif, max_participants_count: 5)
+      create(:rdv, motif: motif, max_participants_count: 5, organisation:)
 
       visit admin_organisation_online_booking_path(organisation)
       expect(page).to have_css("i.fa-solid.fa-circle-check.color-scheme-green", count: 3)

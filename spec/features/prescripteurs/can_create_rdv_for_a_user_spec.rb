@@ -33,7 +33,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Téléphone", with: "0611223344"
 
     # On simule que le créneau choisi est simultanément pris par quelqu'un d'autre
-    create(:rdv, starts_at: Time.zone.local(2022, 11, 15, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu)
+    create(:rdv, starts_at: Time.zone.local(2022, 11, 15, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu, organisation:)
     click_on "Confirmer le rendez-vous"
     expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
     # Dans ce cas, retour à l'étape de choix du lieu

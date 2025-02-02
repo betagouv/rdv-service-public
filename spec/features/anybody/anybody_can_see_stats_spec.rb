@@ -1,4 +1,7 @@
 RSpec.describe "Anybody can see stats" do
+  let(:organisation) { create(:organisation) }
+  let(:motif) { create(:motif, :collectif, organisation:) }
+
   it "displays all the stats" do
     visit root_path
     click_link "Statistiques"
@@ -12,7 +15,7 @@ RSpec.describe "Anybody can see stats" do
     expect(page).to have_content("0 ont des créneaux ouverts au public")
 
     create(:plage_ouverture, motifs: [create(:motif)]) # reservable online plage
-    create(:rdv, motif: create(:motif, :collectif)) # reservable online RDV collectif
+    create(:rdv, motif:, organisation:) # reservable online RDV collectif
 
     visit stats_path
     expect(page).to have_content("2 ont des créneaux ouverts au public")
