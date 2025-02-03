@@ -29,4 +29,4 @@ main.container
 
           .row.mt-2
             .col.text-right
-              = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "btn btn-primary")
+              = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "btn btn-primary", data: { disable_with: "Veuillez patientez..."})
