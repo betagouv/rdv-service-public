@@ -12,4 +12,4 @@
       .col
         = link_to "Retour à la liste des créneaux", creneaux_users_rdv_path(@rdv)
       .col.rdv-text-align-right
-        = link_to "Confirmer le nouveau créneau", users_rdv_path(@rdv, starts_at: @starts_at.to_s), class: "btn btn-primary", method: :put, data: { disable_with: "Veuillez patientez..."}
+        = link_to "Confirmer le nouveau créneau", users_rdv_path(@rdv, starts_at: @starts_at.to_s), class: "btn btn-primary", method: :put, data: { disable_with: "Veuillez patienter…"}
