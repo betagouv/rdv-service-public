@@ -9,9 +9,9 @@
   .fr-alert.fr-alert--info.fr-mb-5v
     - if ENV["APP"] == "production-rdv-solidarites"
       | Les territoires dont les statistiques sont accessibles ici sont ceux de RDV Solidarités et RDV Aide Numérique.&#32;
-      | Vous pouvez consulter les statistiques de l'instance RDV Service Public sur&#32;
-      = link_to "rdv.anct.gouv.fr/stats/territories", "https://rdv.anct.gouv.fr/stats", title: "Page de statistiques RDV Service Public - Nouvelle fenêtre", class: "fr-link", target: "_blank", rel: "noopener external"
+      | Vous pouvez consulter les statistiques des territoires de l'instance RDV Service Public sur&#32;
+      = link_to "rdv.anct.gouv.fr/stats/territories", "https://rdv.anct.gouv.fr/stats/territories", title: "Page de statistiques RDV Service Public - Nouvelle fenêtre", class: "fr-link", target: "_blank", rel: "noopener external"
     - else
-      | Les territoires dont les statistiques sont accessibles ici sont ceux RDV Service Public.&#32;
-      | Vous pouvez consulter les statistiques de RDV Solidarités et RDV Aide Numérique sur&#32;
-      = link_to "rdv-solidarites.fr/stats", "https://rdv-solidarites.fr/stats", title: "Page de statistiques RDV Solidarités et RDV Aide Némurique - Nouvelle fenêtre", class: "fr-link", target: "_blank", rel: "noopener external"
+      | Les territoires dont les statistiques sont accessibles ici sont ceux de RDV Service Public.&#32;
+      | Vous pouvez consulter les statistiques des territoires de RDV Solidarités et RDV Aide Numérique sur&#32;
+      = link_to "rdv-solidarites.fr/stats/territories", "https://rdv-solidarites.fr/stats/territories", title: "Page de statistiques RDV Solidarités et RDV Aide Némurique - Nouvelle fenêtre", class: "fr-link", target: "_blank", rel: "noopener external"

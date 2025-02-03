@@ -6,8 +6,6 @@ class StatsTerritoryController < ApplicationController
   end
 
   def show
-    @onglet = params.fetch(:onglet, "general")
-    @territories = Territory.all
     @stats = Stat.new(agents: @agents, organisations: @organisations, rdvs: @rdvs, users: @users, receipts: @receipts)
   end
 
