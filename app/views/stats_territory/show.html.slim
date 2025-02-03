@@ -1,41 +1,11 @@
 = render "stats_territory/layout" do
   h3 Territoire : #{@territory}
   .fr-mb-4w= link_to "Retour à la sélection du territoire", stats_territories_path, class: "fr-link fr-icon-arrow-left-line fr-link--icon-left"
+
   - if Organisation.joins(:territory).where(territories: [@territory]).empty?
     h3 Cette structure n'utilise pas #{current_domain.name}.
-  - cache([@territory, Time.zone.today], expires_in: 24.hours) do
-    .card.mb-5
-      .card-body
-        h2.card-title Nombre de RDV par statut
-        .fr-grid-row
-          .fr-col-lg-4
-            .px-1
-              - %i[seen excused revoked noshow].each do |temporal_status|
-                = render "stats/rdv_counter_without_link", \
-                  temporal_status: temporal_status, \
-                  element: "RDV".pluralize(@stats.rdvs.status(temporal_status).count), \
-                  count: @stats.rdvs.status(temporal_status).count
-          .fr-col-lg-4
-            .px-1
-              = render "stats/rdv_counter_without_link", \
-                temporal_status: :unknown_past, \
-                element: "RDV", \
-                count: @stats.rdvs.status(:unknown_past).count
-          .fr-col-lg-4
-            .px-1
-              = render "stats/rdv_counter_without_link", \
-                temporal_status: :unknown_future, \
-                element: "RDV", \
-                count: @stats.rdvs.status(:unknown_future).count
-        hr
-        .fr-grid-row
-          .fr-col-lg-4
-            .px-1
-              = render "stats/rdv_counter_without_link", \
-                element: "RDV", \
-                label: "Tous", \
-                count: @stats.rdvs.count
 
+  - cache([@territory, Time.zone.today], expires_in: 24.hours) do
     .card.mb-5
       .card-body
         h2.card-title Nombre de RDV par statut de participation
@@ -75,7 +45,7 @@
     .card.mb-5
       .card-body
         = self_anchor "rdvs"
-          h2.card-title RDV créés (#{@stats.rdvs.count})
+          h2.card-title RDV créés par type d’usager (#{@stats.rdvs.count})
         = column_chart rdvs_stats_territory_path(@territory), stacked: true
 
     .card.mb-5
@@ -93,7 +63,7 @@
     .card.mb-5
       .card-body
         = self_anchor "rdvs-status"
-          h2.card-title RDV par statut
+          h2.card-title RDV par statut de participation
         /
           Note: colors are synced manually with the status css and the order of the stats.
           From stat.rb, Stat#rdvs_group_by_status:
@@ -106,13 +76,6 @@
             "noshow": $danger, #fa5c7c
         - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
         = column_chart rdvs_stats_territory_path(@territory, by_status: true), stacked: :percent, max: 100, suffix: "%", colors: colors
-
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs-status"
-          h2.card-title RDV par statut de participation
-        - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
-        = column_chart rdvs_stats_territory_path(@territory, by_participations_status: true), stacked: :percent, max: 100, suffix: "%", colors: colors
 
     .card.mb-5
       .card-header
