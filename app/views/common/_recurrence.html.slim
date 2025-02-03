@@ -13,7 +13,7 @@
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
 
   = simple_fields_for :recurrence do |n|
-    = n.input :has_recurrence, as: :boolean, label: "Répéter...", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" }, class: "js-recurrence-toggle js-recurrence-input" }
+    = n.input :has_recurrence, as: :boolean, label: "Répéter…", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" }, class: "js-recurrence-toggle js-recurrence-input" }
 
     .all-select
       .form-group

@@ -4,9 +4,11 @@ RSpec.describe Rdv::Updatable, type: :concern do
     allow(Devise.token_generator).to receive(:generate).and_return("12345678")
   end
 
+  let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, rdv_notifications_level: "all") }
-  let(:rdv) { create(:rdv, agents: [agent]) }
-  let(:rdv_co) { create(:rdv, :collectif, users: [user_co1, user_co2], agents: [agent]) }
+  let(:rdv) { create(:rdv, agents: [agent], organisation:) }
+  let(:motif) { create(:motif, :collectif, organisation:) }
+  let(:rdv_co) { create(:rdv, motif:, users: [user_co1, user_co2], agents: [agent], organisation:) }
   let(:user_co1) { create(:user) }
   let(:user_co2) { create(:user) }
   let(:user) { rdv.users.first }
@@ -138,7 +140,6 @@ RSpec.describe Rdv::Updatable, type: :concern do
 
     describe "triggers webhook" do
       let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
-      let!(:organisation) { create(:organisation, rdvs: [rdv]) }
 
       it "sends a webhook" do
         rdv.reload
@@ -158,8 +159,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
         }
       end
       # The reload makes sure we have the proper .previous_changes
-      let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed]).reload }
-      let(:motif) { create(:motif, :collectif) }
+      let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed], organisation:).reload }
+      let(:motif) { create(:motif, :collectif, organisation:) }
       let(:user_staying) { create(:user, first_name: "Stay") }
       let(:user_added) { create(:user, first_name: "Add") }
       let(:user_removed) { create(:user, first_name: "Remove") }
@@ -171,7 +172,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
 
       context "quand un des usager qu'on ajoute est déjà inscrit comme participant au rdv" do
-        let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_added]).reload }
+        let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_added], organisation:).reload }
 
         let(:attributes) do
           {

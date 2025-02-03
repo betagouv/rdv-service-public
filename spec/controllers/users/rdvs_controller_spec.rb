@@ -90,7 +90,8 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "PUT #cancel" do
     context "when user belongs to rdv" do
       let(:token) { "12345" }
-      let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
+      let(:organisation) { create(:organisation) }
+      let(:rdv) { create(:rdv, starts_at: 5.hours.from_now, organisation:) }
 
       before { allow_any_instance_of(Participation).to receive(:new_raw_invitation_token).and_return(token) }
 
@@ -107,7 +108,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "when the motif is by phone and lieu is missing" do
-        let(:rdv) { create(:rdv, motif: create(:motif, :by_phone), lieu: nil, starts_at: 5.hours.from_now) }
+        let(:rdv) { create(:rdv, motif: create(:motif, :by_phone, organisation:), lieu: nil, starts_at: 5.hours.from_now, organisation:) }
 
         before { sign_in rdv.users.first }
 
@@ -123,7 +124,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "when rdv is not cancellable" do
-        let(:rdv) { create(:rdv, starts_at: 3.hours.from_now) }
+        let(:rdv) { create(:rdv, starts_at: 3.hours.from_now, organisation:) }
 
         it "is not authorized" do
           sign_in rdv.users.first
@@ -155,10 +156,10 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:user2) { create(:user) }
     let(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: user) }
-    let(:rdv2) { create(:rdv, users: [user2], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: user) }
+    let(:rdv) { create(:rdv, users: [user], motif:, starts_at: starts_at, created_by: user, organisation:) }
+    let(:rdv2) { create(:rdv, users: [user2], motif: create(:motif, :by_phone, organisation:), lieu: nil, starts_at: starts_at, created_by: user, organisation:) }
     let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
-    let(:motif) { build(:motif, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
+    let(:motif) { build(:motif, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true, organisation:) }
 
     def prevents_access_to_others_rdvs
       get :show, params: { id: rdv2.id }
@@ -182,7 +183,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the motif is by phone and lieu is missing" do
-      let(:rdv) { create(:rdv, users: [user], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: user) }
+      let(:rdv) { create(:rdv, users: [user], motif: create(:motif, :by_phone, organisation:), lieu: nil, starts_at: starts_at, created_by: user, organisation:) }
 
       it "shows the rdv" do
         get :show, params: { id: rdv.id }
@@ -217,7 +218,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is created by an agent" do
-      let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: agent) }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: agent, organisation:) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -234,7 +235,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv motif is not bookable_by_everone" do
-      let(:motif) { build(:motif, bookable_by: :agents, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
+      let(:motif) { build(:motif, bookable_by: :agents, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true, organisation:) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -251,7 +252,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is set as not editable" do
-      let(:motif) { build(:motif, rdvs_editable_by_user: false, rdvs_cancellable_by_user: true) }
+      let(:motif) { build(:motif, rdvs_editable_by_user: false, rdvs_cancellable_by_user: true, organisation:) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -268,7 +269,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is set as not cancellable" do
-      let(:motif) { build(:motif, rdvs_editable_by_user: true, rdvs_cancellable_by_user: false) }
+      let(:motif) { build(:motif, rdvs_editable_by_user: true, rdvs_cancellable_by_user: false, organisation:) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -315,12 +316,13 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "GET #index" do
     subject { get :index }
 
+    let(:organisation) { create(:organisation) }
     let!(:user) { create(:user) }
     let!(:user2) { create(:user) }
-    let!(:rdv1) { create(:rdv, users: [user], starts_at: 5.days.from_now) }
-    let!(:rdv2) { create(:rdv, users: [user], starts_at: 4.days.from_now) }
-    let!(:rdv3) { create(:rdv, motif: create(:motif, :by_phone), lieu: nil, users: [user], starts_at: 3.days.from_now) }
-    let!(:rdv_co) { create(:rdv, :collectif, users: [user], starts_at: 6.days.from_now) }
+    let!(:rdv1) { create(:rdv, users: [user], starts_at: 5.days.from_now, organisation:) }
+    let!(:rdv2) { create(:rdv, users: [user], starts_at: 4.days.from_now, organisation:) }
+    let!(:rdv3) { create(:rdv, motif: create(:motif, :by_phone, organisation:), lieu: nil, users: [user], starts_at: 3.days.from_now, organisation:) }
+    let!(:rdv_co) { create(:rdv, :collectif, users: [user], starts_at: 6.days.from_now, organisation:) }
     let!(:rdv_co_other_user) { create(:rdv, :collectif, users: [user2], starts_at: 8.days.from_now) }
     let!(:rdv_co_without_users) { create(:rdv, :collectif, :without_users, starts_at: 9.days.from_now) }
 
