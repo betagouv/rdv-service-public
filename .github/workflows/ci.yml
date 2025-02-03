@@ -31,18 +31,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version-file: .node-version
-          cache: yarn
+          bun-version-file: .bun-version
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
-      - run: yarn install
-      - run: yarn run prettier --check .
+          restore-keys: |
+            node-modules-
+      - run: bun install
+      - run: bun run prettier --check .
   brakeman:
     name: Security Checker
     runs-on: ubuntu-latest
@@ -116,10 +117,10 @@ jobs:
       - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version-file: .node-version
+          bun-version-file: .bun-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -130,12 +131,14 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
+          restore-keys: |
+            node-modules-
       - name: Install JS dependencies
-        run: yarn install
+        run: bun install
       - name: Precompile assets
-        run: yarn run build
+        run: bun run build
       - name: Prepare runtime log cache key
         run: ls spec/**/*.rb > tmp/spec_files.txt
       - name: Cache parallel test unit spec runtime log
@@ -161,7 +164,7 @@ jobs:
       matrix:
         # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’exécution
         dirname: [agents, "*"]
-        include: 
+        include:
           - dirname: agents
             command: "parallel:spec[spec/features/agents]"
           - dirname: "*"
@@ -184,10 +187,10 @@ jobs:
       - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version-file: .node-version
+          bun-version-file: .bun-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -198,12 +201,14 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
+          restore-keys: |
+            node-modules-
       - name: Install JS dependencies
-        run: yarn install
+        run: bun install
       - name: Precompile assets
-        run: yarn run build
+        run: bun run build
       - name: Prepare runtime log cache key
         run: "ls spec/features/${{ matrix.dirname }}/**/*.rb > tmp/feature_spec_${{ matrix.dirname }}_files.txt"
       - name: Cache parallel test feature spec runtime log
@@ -231,10 +236,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version-file: .node-version
+          bun-version-file: .bun-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -243,9 +248,11 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
-      - run: yarn install
+          restore-keys: |
+            node-modules-
+      - run: bun install
       - run: bin/test_boot
         env:
           HOST: http://www.rdv-test.fr
