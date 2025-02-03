@@ -14,7 +14,7 @@ h1.rdv-text-align-center.text-dark.mt-0.font-weight-bold.mb-4 Connexion à #{cur
 p.fr-hr-or ou
 
 p.text-muted.mb-2 Entrez votre email et votre mot de passe.
-= form_for resource, as: resource_name, url: session_path(resource_name), builder: DsfrFormBuilder do |f|
+= form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
   = render "devise/shared/error_messages", resource: resource
   .form-group
     = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr"
