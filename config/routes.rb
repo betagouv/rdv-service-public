@@ -79,11 +79,17 @@ Rails.application.routes.draw do
     resource :user_name_initials_verification, only: %i[new create], controller: "user_name_initials_verification"
     post "file_attente", to: "file_attentes#create_or_delete"
   end
-  resources :stats, only: :index
-  get "stats/rdvs", to: "stats#rdvs", as: "rdvs_stats"
-  get "stats/active_agents", to: "stats#active_agents", as: "active_agents_stats"
-  get "stats/receipts", to: "stats#receipts", as: "receipts_stats"
-  get "stats/notifications", to: "stats#notifications_index", as: "notifications_index_stats"
+  namespace :stats, module: nil do
+    get "/", to: "stats#index"
+    resources :territories, only: %i[index show], controller: "stats_territory" do
+      member do
+        get :rdvs
+        get :active_agents
+        get :receipts
+        get :notifications
+      end
+    end
+  end
 
   authenticate :user do
     get "/users/informations", to: "users/users#edit"

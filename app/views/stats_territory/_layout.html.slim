@@ -1,0 +1,7 @@
+/ Include the charts pack in the <head> section
+- content_for(:additional_scripts) { javascript_include_tag "charts", "data-turbolinks-track": "reload" }
+
+= dsfr_tabs do |tabs|
+  - tabs.with_tab title: "Statistiques générales", active: false, path: stats_path
+  - tabs.with_tab title: "Statistiques par territoire", active: true do
+    = yield
