@@ -1,0 +1,481 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "lapin",
+      "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.1.1",
+        "@fullcalendar/core": "^4.4.2",
+        "@fullcalendar/daygrid": "^4.4.2",
+        "@fullcalendar/interaction": "^4.4.2",
+        "@fullcalendar/list": "^4.4.2",
+        "@fullcalendar/timegrid": "^4.4.2",
+        "@gouvfr/dsfr": "^1.13.0",
+        "@hotwired/stimulus": "^3.2.2",
+        "@rails/ujs": "^6.0.0",
+        "@stimulus-components/checkbox-select-all": "^6.1.0",
+        "autocomplete.js": "^0.37.1",
+        "bootstrap": "^4.3.1",
+        "bowser": "^2.7.0",
+        "chart.js": "^4.2.1",
+        "chartjs-adapter-date-fns": "^3.0.0",
+        "chartkick": "^5.0.1",
+        "custom-event-polyfill": "^1.0.7",
+        "jquery": "^3.4.0",
+        "jquery-datetimepicker": "^2.5.21",
+        "kind-of": ">=6.0.3",
+        "minimist": "^1.2.6",
+        "popper.js": "^1.15.0",
+        "select2": "^4.0.8",
+        "select2-bootstrap4-theme": "^1.0.0",
+        "turbolinks": "^5.2.0",
+        "whatwg-fetch": "^3.0.0",
+      },
+      "devDependencies": {
+        "css-loader": "^6.7.1",
+        "fstream": "^1.0.12",
+        "mini-css-extract-plugin": "^2.6.0",
+        "prettier": "3.3.2",
+        "sass": "^1.51.0",
+        "sass-loader": "^12.6.0",
+        "webpack": "^5.94.0",
+        "webpack-cli": "^4.9.2",
+      },
+    },
+  },
+  "packages": {
+    "@discoveryjs/json-ext": ["@discoveryjs/json-ext@0.5.6", "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.6.tgz", {}, ""],
+
+    "@fortawesome/fontawesome-free": ["@fortawesome/fontawesome-free@6.1.1", "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.1.1.tgz", {}, ""],
+
+    "@fullcalendar/core": ["@fullcalendar/core@4.4.2", "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.4.2.tgz", {}, ""],
+
+    "@fullcalendar/daygrid": ["@fullcalendar/daygrid@4.4.2", "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-4.4.2.tgz", { "peerDependencies": { "@fullcalendar/core": "~4.4.0" } }, ""],
+
+    "@fullcalendar/interaction": ["@fullcalendar/interaction@4.4.2", "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-4.4.2.tgz", { "peerDependencies": { "@fullcalendar/core": "~4.4.0" } }, ""],
+
+    "@fullcalendar/list": ["@fullcalendar/list@4.4.2", "https://registry.yarnpkg.com/@fullcalendar/list/-/list-4.4.2.tgz", { "peerDependencies": { "@fullcalendar/core": "~4.4.0" } }, ""],
+
+    "@fullcalendar/timegrid": ["@fullcalendar/timegrid@4.4.2", "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-4.4.2.tgz", { "dependencies": { "@fullcalendar/daygrid": "~4.4.0" }, "peerDependencies": { "@fullcalendar/core": "~4.4.0" } }, ""],
+
+    "@gouvfr/dsfr": ["@gouvfr/dsfr@1.13.0", "https://registry.yarnpkg.com/@gouvfr/dsfr/-/dsfr-1.13.0.tgz", {}, ""],
+
+    "@hotwired/stimulus": ["@hotwired/stimulus@3.2.2", "https://registry.yarnpkg.com/@hotwired/stimulus/-/stimulus-3.2.2.tgz", {}, ""],
+
+    "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.5", "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.5.tgz", { "dependencies": { "@jridgewell/set-array": "^1.2.1", "@jridgewell/sourcemap-codec": "^1.4.10", "@jridgewell/trace-mapping": "^0.3.24" } }, ""],
+
+    "@jridgewell/resolve-uri": ["@jridgewell/resolve-uri@3.1.2", "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz", {}, ""],
+
+    "@jridgewell/set-array": ["@jridgewell/set-array@1.2.1", "https://registry.yarnpkg.com/@jridgewell/set-array/-/set-array-1.2.1.tgz", {}, ""],
+
+    "@jridgewell/source-map": ["@jridgewell/source-map@0.3.6", "https://registry.yarnpkg.com/@jridgewell/source-map/-/source-map-0.3.6.tgz", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.5", "@jridgewell/trace-mapping": "^0.3.25" } }, ""],
+
+    "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.0", "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.0.tgz", {}, ""],
+
+    "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.25", "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.25.tgz", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, ""],
+
+    "@kurkle/color": ["@kurkle/color@0.3.2", "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz", {}, ""],
+
+    "@rails/ujs": ["@rails/ujs@6.1.4", "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.4.tgz", {}, ""],
+
+    "@stimulus-components/checkbox-select-all": ["@stimulus-components/checkbox-select-all@6.1.0", "https://registry.yarnpkg.com/@stimulus-components/checkbox-select-all/-/checkbox-select-all-6.1.0.tgz", { "peerDependencies": { "@hotwired/stimulus": "^3" } }, ""],
+
+    "@types/estree": ["@types/estree@1.0.5", "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.5.tgz", {}, ""],
+
+    "@types/json-schema": ["@types/json-schema@7.0.9", "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.9.tgz", {}, ""],
+
+    "@types/node": ["@types/node@17.0.18", "https://registry.yarnpkg.com/@types/node/-/node-17.0.18.tgz", {}, ""],
+
+    "@webassemblyjs/ast": ["@webassemblyjs/ast@1.12.1", "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.12.1.tgz", { "dependencies": { "@webassemblyjs/helper-numbers": "1.11.6", "@webassemblyjs/helper-wasm-bytecode": "1.11.6" } }, ""],
+
+    "@webassemblyjs/floating-point-hex-parser": ["@webassemblyjs/floating-point-hex-parser@1.11.6", "https://registry.yarnpkg.com/@webassemblyjs/floating-point-hex-parser/-/floating-point-hex-parser-1.11.6.tgz", {}, ""],
+
+    "@webassemblyjs/helper-api-error": ["@webassemblyjs/helper-api-error@1.11.6", "https://registry.yarnpkg.com/@webassemblyjs/helper-api-error/-/helper-api-error-1.11.6.tgz", {}, ""],
+
+    "@webassemblyjs/helper-buffer": ["@webassemblyjs/helper-buffer@1.12.1", "https://registry.yarnpkg.com/@webassemblyjs/helper-buffer/-/helper-buffer-1.12.1.tgz", {}, ""],
+
+    "@webassemblyjs/helper-numbers": ["@webassemblyjs/helper-numbers@1.11.6", "https://registry.yarnpkg.com/@webassemblyjs/helper-numbers/-/helper-numbers-1.11.6.tgz", { "dependencies": { "@webassemblyjs/floating-point-hex-parser": "1.11.6", "@webassemblyjs/helper-api-error": "1.11.6", "@xtuc/long": "4.2.2" } }, ""],
+
+    "@webassemblyjs/helper-wasm-bytecode": ["@webassemblyjs/helper-wasm-bytecode@1.11.6", "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.11.6.tgz", {}, ""],
+
+    "@webassemblyjs/helper-wasm-section": ["@webassemblyjs/helper-wasm-section@1.12.1", "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-section/-/helper-wasm-section-1.12.1.tgz", { "dependencies": { "@webassemblyjs/ast": "1.12.1", "@webassemblyjs/helper-buffer": "1.12.1", "@webassemblyjs/helper-wasm-bytecode": "1.11.6", "@webassemblyjs/wasm-gen": "1.12.1" } }, ""],
+
+    "@webassemblyjs/ieee754": ["@webassemblyjs/ieee754@1.11.6", "https://registry.yarnpkg.com/@webassemblyjs/ieee754/-/ieee754-1.11.6.tgz", { "dependencies": { "@xtuc/ieee754": "^1.2.0" } }, ""],
+
+    "@webassemblyjs/leb128": ["@webassemblyjs/leb128@1.11.6", "https://registry.yarnpkg.com/@webassemblyjs/leb128/-/leb128-1.11.6.tgz", { "dependencies": { "@xtuc/long": "4.2.2" } }, ""],
+
+    "@webassemblyjs/utf8": ["@webassemblyjs/utf8@1.11.6", "https://registry.yarnpkg.com/@webassemblyjs/utf8/-/utf8-1.11.6.tgz", {}, ""],
+
+    "@webassemblyjs/wasm-edit": ["@webassemblyjs/wasm-edit@1.12.1", "https://registry.yarnpkg.com/@webassemblyjs/wasm-edit/-/wasm-edit-1.12.1.tgz", { "dependencies": { "@webassemblyjs/ast": "1.12.1", "@webassemblyjs/helper-buffer": "1.12.1", "@webassemblyjs/helper-wasm-bytecode": "1.11.6", "@webassemblyjs/helper-wasm-section": "1.12.1", "@webassemblyjs/wasm-gen": "1.12.1", "@webassemblyjs/wasm-opt": "1.12.1", "@webassemblyjs/wasm-parser": "1.12.1", "@webassemblyjs/wast-printer": "1.12.1" } }, ""],
+
+    "@webassemblyjs/wasm-gen": ["@webassemblyjs/wasm-gen@1.12.1", "https://registry.yarnpkg.com/@webassemblyjs/wasm-gen/-/wasm-gen-1.12.1.tgz", { "dependencies": { "@webassemblyjs/ast": "1.12.1", "@webassemblyjs/helper-wasm-bytecode": "1.11.6", "@webassemblyjs/ieee754": "1.11.6", "@webassemblyjs/leb128": "1.11.6", "@webassemblyjs/utf8": "1.11.6" } }, ""],
+
+    "@webassemblyjs/wasm-opt": ["@webassemblyjs/wasm-opt@1.12.1", "https://registry.yarnpkg.com/@webassemblyjs/wasm-opt/-/wasm-opt-1.12.1.tgz", { "dependencies": { "@webassemblyjs/ast": "1.12.1", "@webassemblyjs/helper-buffer": "1.12.1", "@webassemblyjs/wasm-gen": "1.12.1", "@webassemblyjs/wasm-parser": "1.12.1" } }, ""],
+
+    "@webassemblyjs/wasm-parser": ["@webassemblyjs/wasm-parser@1.12.1", "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.12.1.tgz", { "dependencies": { "@webassemblyjs/ast": "1.12.1", "@webassemblyjs/helper-api-error": "1.11.6", "@webassemblyjs/helper-wasm-bytecode": "1.11.6", "@webassemblyjs/ieee754": "1.11.6", "@webassemblyjs/leb128": "1.11.6", "@webassemblyjs/utf8": "1.11.6" } }, ""],
+
+    "@webassemblyjs/wast-printer": ["@webassemblyjs/wast-printer@1.12.1", "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.12.1.tgz", { "dependencies": { "@webassemblyjs/ast": "1.12.1", "@xtuc/long": "4.2.2" } }, ""],
+
+    "@webpack-cli/configtest": ["@webpack-cli/configtest@1.1.1", "https://registry.yarnpkg.com/@webpack-cli/configtest/-/configtest-1.1.1.tgz", { "peerDependencies": { "webpack": "4.x.x || 5.x.x", "webpack-cli": "4.x.x" } }, ""],
+
+    "@webpack-cli/info": ["@webpack-cli/info@1.4.1", "https://registry.yarnpkg.com/@webpack-cli/info/-/info-1.4.1.tgz", { "dependencies": { "envinfo": "^7.7.3" }, "peerDependencies": { "webpack-cli": "4.x.x" } }, ""],
+
+    "@webpack-cli/serve": ["@webpack-cli/serve@1.6.1", "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-1.6.1.tgz", { "peerDependencies": { "webpack-cli": "4.x.x" } }, ""],
+
+    "@xtuc/ieee754": ["@xtuc/ieee754@1.2.0", "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz", {}, ""],
+
+    "@xtuc/long": ["@xtuc/long@4.2.2", "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz", {}, ""],
+
+    "acorn": ["acorn@8.12.1", "https://registry.yarnpkg.com/acorn/-/acorn-8.12.1.tgz", { "bin": "bin/acorn" }, ""],
+
+    "acorn-import-attributes": ["acorn-import-attributes@1.9.5", "https://registry.yarnpkg.com/acorn-import-attributes/-/acorn-import-attributes-1.9.5.tgz", { "peerDependencies": { "acorn": "^8" } }, ""],
+
+    "ajv": ["ajv@8.10.0", "https://registry.yarnpkg.com/ajv/-/ajv-8.10.0.tgz", { "dependencies": { "fast-deep-equal": "^3.1.1", "json-schema-traverse": "^1.0.0", "require-from-string": "^2.0.2", "uri-js": "^4.2.2" } }, ""],
+
+    "ajv-formats": ["ajv-formats@2.1.1", "https://registry.yarnpkg.com/ajv-formats/-/ajv-formats-2.1.1.tgz", { "dependencies": { "ajv": "^8.0.0" }, "peerDependencies": { "ajv": "^8.0.0" } }, ""],
+
+    "ajv-keywords": ["ajv-keywords@5.1.0", "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-5.1.0.tgz", { "dependencies": { "fast-deep-equal": "^3.1.3" }, "peerDependencies": { "ajv": "^8.8.2" } }, ""],
+
+    "anymatch": ["anymatch@3.1.2", "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.2.tgz", { "dependencies": { "normalize-path": "^3.0.0", "picomatch": "^2.0.4" } }, ""],
+
+    "autocomplete.js": ["autocomplete.js@0.37.1", "https://registry.yarnpkg.com/autocomplete.js/-/autocomplete.js-0.37.1.tgz", { "dependencies": { "immediate": "^3.2.3" } }, ""],
+
+    "balanced-match": ["balanced-match@1.0.2", "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz", {}, ""],
+
+    "binary-extensions": ["binary-extensions@2.2.0", "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz", {}, ""],
+
+    "bootstrap": ["bootstrap@4.6.1", "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.1.tgz", { "peerDependencies": { "jquery": "1.9.1 - 3", "popper.js": "^1.16.1" } }, ""],
+
+    "bowser": ["bowser@2.11.0", "https://registry.yarnpkg.com/bowser/-/bowser-2.11.0.tgz", {}, ""],
+
+    "brace-expansion": ["brace-expansion@1.1.11", "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz", { "dependencies": { "balanced-match": "^1.0.0", "concat-map": "0.0.1" } }, ""],
+
+    "braces": ["braces@3.0.3", "https://registry.yarnpkg.com/braces/-/braces-3.0.3.tgz", { "dependencies": { "fill-range": "^7.1.1" } }, ""],
+
+    "browserslist": ["browserslist@4.23.3", "https://registry.yarnpkg.com/browserslist/-/browserslist-4.23.3.tgz", { "dependencies": { "caniuse-lite": "^1.0.30001646", "electron-to-chromium": "^1.5.4", "node-releases": "^2.0.18", "update-browserslist-db": "^1.1.0" }, "bin": "cli.js" }, ""],
+
+    "buffer-from": ["buffer-from@1.1.2", "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.2.tgz", {}, ""],
+
+    "caniuse-lite": ["caniuse-lite@1.0.30001690", "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001690.tgz", {}, "sha512-5ExiE3qQN6oF8Clf8ifIDcMRCRE/dMGcETG/XGMD8/XiXm6HXQgQTh1yZYLXXpSOsEUlJm1Xr7kGULZTuGtP/w=="],
+
+    "chart.js": ["chart.js@4.2.1", "https://registry.yarnpkg.com/chart.js/-/chart.js-4.2.1.tgz", { "dependencies": { "@kurkle/color": "^0.3.0" } }, ""],
+
+    "chartjs-adapter-date-fns": ["chartjs-adapter-date-fns@3.0.0", "https://registry.yarnpkg.com/chartjs-adapter-date-fns/-/chartjs-adapter-date-fns-3.0.0.tgz", { "peerDependencies": { "chart.js": ">=2.8.0", "date-fns": ">=2.0.0" } }, ""],
+
+    "chartkick": ["chartkick@5.0.1", "https://registry.yarnpkg.com/chartkick/-/chartkick-5.0.1.tgz", { "optionalDependencies": { "chart.js": "4", "chartjs-adapter-date-fns": ">=3", "date-fns": ">=2" } }, ""],
+
+    "chokidar": ["chokidar@3.5.3", "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz", { "dependencies": { "anymatch": "~3.1.2", "braces": "~3.0.2", "glob-parent": "~5.1.2", "is-binary-path": "~2.1.0", "is-glob": "~4.0.1", "normalize-path": "~3.0.0", "readdirp": "~3.6.0" }, "optionalDependencies": { "fsevents": "~2.3.2" } }, ""],
+
+    "chrome-trace-event": ["chrome-trace-event@1.0.3", "https://registry.yarnpkg.com/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz", {}, ""],
+
+    "clone-deep": ["clone-deep@4.0.1", "https://registry.yarnpkg.com/clone-deep/-/clone-deep-4.0.1.tgz", { "dependencies": { "is-plain-object": "^2.0.4", "kind-of": "^6.0.2", "shallow-clone": "^3.0.0" } }, ""],
+
+    "colorette": ["colorette@2.0.16", "https://registry.yarnpkg.com/colorette/-/colorette-2.0.16.tgz", {}, ""],
+
+    "commander": ["commander@7.2.0", "https://registry.yarnpkg.com/commander/-/commander-7.2.0.tgz", {}, ""],
+
+    "concat-map": ["concat-map@0.0.1", "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz", {}, ""],
+
+    "cross-spawn": ["cross-spawn@7.0.6", "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.6.tgz", { "dependencies": { "path-key": "^3.1.0", "shebang-command": "^2.0.0", "which": "^2.0.1" } }, ""],
+
+    "css-loader": ["css-loader@6.7.1", "https://registry.yarnpkg.com/css-loader/-/css-loader-6.7.1.tgz", { "dependencies": { "icss-utils": "^5.1.0", "postcss": "^8.4.7", "postcss-modules-extract-imports": "^3.0.0", "postcss-modules-local-by-default": "^4.0.0", "postcss-modules-scope": "^3.0.0", "postcss-modules-values": "^4.0.0", "postcss-value-parser": "^4.2.0", "semver": "^7.3.5" }, "peerDependencies": { "webpack": "^5.0.0" } }, ""],
+
+    "cssesc": ["cssesc@3.0.0", "https://registry.yarnpkg.com/cssesc/-/cssesc-3.0.0.tgz", { "bin": "bin/cssesc" }, ""],
+
+    "custom-event-polyfill": ["custom-event-polyfill@1.0.7", "https://registry.yarnpkg.com/custom-event-polyfill/-/custom-event-polyfill-1.0.7.tgz", {}, ""],
+
+    "date-fns": ["date-fns@2.29.3", "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.3.tgz", {}, ""],
+
+    "electron-to-chromium": ["electron-to-chromium@1.5.13", "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.13.tgz", {}, ""],
+
+    "enhanced-resolve": ["enhanced-resolve@5.17.1", "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.17.1.tgz", { "dependencies": { "graceful-fs": "^4.2.4", "tapable": "^2.2.0" } }, ""],
+
+    "envinfo": ["envinfo@7.8.1", "https://registry.yarnpkg.com/envinfo/-/envinfo-7.8.1.tgz", { "bin": "dist/cli.js" }, ""],
+
+    "es-module-lexer": ["es-module-lexer@1.5.4", "https://registry.yarnpkg.com/es-module-lexer/-/es-module-lexer-1.5.4.tgz", {}, ""],
+
+    "escalade": ["escalade@3.1.2", "https://registry.yarnpkg.com/escalade/-/escalade-3.1.2.tgz", {}, ""],
+
+    "eslint-scope": ["eslint-scope@5.1.1", "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-5.1.1.tgz", { "dependencies": { "esrecurse": "^4.3.0", "estraverse": "^4.1.1" } }, ""],
+
+    "esrecurse": ["esrecurse@4.3.0", "https://registry.yarnpkg.com/esrecurse/-/esrecurse-4.3.0.tgz", { "dependencies": { "estraverse": "^5.2.0" } }, ""],
+
+    "estraverse": ["estraverse@4.3.0", "https://registry.yarnpkg.com/estraverse/-/estraverse-4.3.0.tgz", {}, ""],
+
+    "events": ["events@3.3.0", "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz", {}, ""],
+
+    "execa": ["execa@5.1.1", "https://registry.yarnpkg.com/execa/-/execa-5.1.1.tgz", { "dependencies": { "cross-spawn": "^7.0.3", "get-stream": "^6.0.0", "human-signals": "^2.1.0", "is-stream": "^2.0.0", "merge-stream": "^2.0.0", "npm-run-path": "^4.0.1", "onetime": "^5.1.2", "signal-exit": "^3.0.3", "strip-final-newline": "^2.0.0" } }, ""],
+
+    "fast-deep-equal": ["fast-deep-equal@3.1.3", "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz", {}, ""],
+
+    "fast-json-stable-stringify": ["fast-json-stable-stringify@2.1.0", "https://registry.yarnpkg.com/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz", {}, ""],
+
+    "fastest-levenshtein": ["fastest-levenshtein@1.0.12", "https://registry.yarnpkg.com/fastest-levenshtein/-/fastest-levenshtein-1.0.12.tgz", {}, ""],
+
+    "fill-range": ["fill-range@7.1.1", "https://registry.yarnpkg.com/fill-range/-/fill-range-7.1.1.tgz", { "dependencies": { "to-regex-range": "^5.0.1" } }, ""],
+
+    "find-up": ["find-up@4.1.0", "https://registry.yarnpkg.com/find-up/-/find-up-4.1.0.tgz", { "dependencies": { "locate-path": "^5.0.0", "path-exists": "^4.0.0" } }, ""],
+
+    "fs.realpath": ["fs.realpath@1.0.0", "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz", {}, ""],
+
+    "fsevents": ["fsevents@2.3.2", "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz", { "os": "darwin" }, ""],
+
+    "fstream": ["fstream@1.0.12", "https://registry.yarnpkg.com/fstream/-/fstream-1.0.12.tgz", { "dependencies": { "graceful-fs": "^4.1.2", "inherits": "~2.0.0", "mkdirp": ">=0.5 0", "rimraf": "2" } }, ""],
+
+    "function-bind": ["function-bind@1.1.1", "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz", {}, ""],
+
+    "get-stream": ["get-stream@6.0.1", "https://registry.yarnpkg.com/get-stream/-/get-stream-6.0.1.tgz", {}, ""],
+
+    "glob": ["glob@7.2.0", "https://registry.yarnpkg.com/glob/-/glob-7.2.0.tgz", { "dependencies": { "fs.realpath": "^1.0.0", "inflight": "^1.0.4", "inherits": "2", "minimatch": "^3.0.4", "once": "^1.3.0", "path-is-absolute": "^1.0.0" } }, ""],
+
+    "glob-parent": ["glob-parent@5.1.2", "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz", { "dependencies": { "is-glob": "^4.0.1" } }, ""],
+
+    "glob-to-regexp": ["glob-to-regexp@0.4.1", "https://registry.yarnpkg.com/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz", {}, ""],
+
+    "graceful-fs": ["graceful-fs@4.2.11", "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz", {}, ""],
+
+    "has": ["has@1.0.3", "https://registry.yarnpkg.com/has/-/has-1.0.3.tgz", { "dependencies": { "function-bind": "^1.1.1" } }, ""],
+
+    "has-flag": ["has-flag@4.0.0", "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz", {}, ""],
+
+    "human-signals": ["human-signals@2.1.0", "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz", {}, ""],
+
+    "icss-utils": ["icss-utils@5.1.0", "https://registry.yarnpkg.com/icss-utils/-/icss-utils-5.1.0.tgz", { "peerDependencies": { "postcss": "^8.1.0" } }, ""],
+
+    "immediate": ["immediate@3.3.0", "https://registry.yarnpkg.com/immediate/-/immediate-3.3.0.tgz", {}, ""],
+
+    "immutable": ["immutable@4.0.0", "https://registry.yarnpkg.com/immutable/-/immutable-4.0.0.tgz", {}, ""],
+
+    "import-local": ["import-local@3.1.0", "https://registry.yarnpkg.com/import-local/-/import-local-3.1.0.tgz", { "dependencies": { "pkg-dir": "^4.2.0", "resolve-cwd": "^3.0.0" }, "bin": { "import-local-fixture": "fixtures/cli.js" } }, ""],
+
+    "inflight": ["inflight@1.0.6", "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz", { "dependencies": { "once": "^1.3.0", "wrappy": "1" } }, ""],
+
+    "inherits": ["inherits@2.0.4", "https://registry.yarnpkg.com/inherits/-/inherits-2.0.4.tgz", {}, ""],
+
+    "interpret": ["interpret@2.2.0", "https://registry.yarnpkg.com/interpret/-/interpret-2.2.0.tgz", {}, ""],
+
+    "is-binary-path": ["is-binary-path@2.1.0", "https://registry.yarnpkg.com/is-binary-path/-/is-binary-path-2.1.0.tgz", { "dependencies": { "binary-extensions": "^2.0.0" } }, ""],
+
+    "is-core-module": ["is-core-module@2.8.0", "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.8.0.tgz", { "dependencies": { "has": "^1.0.3" } }, ""],
+
+    "is-extglob": ["is-extglob@2.1.1", "https://registry.yarnpkg.com/is-extglob/-/is-extglob-2.1.1.tgz", {}, ""],
+
+    "is-glob": ["is-glob@4.0.3", "https://registry.yarnpkg.com/is-glob/-/is-glob-4.0.3.tgz", { "dependencies": { "is-extglob": "^2.1.1" } }, ""],
+
+    "is-number": ["is-number@7.0.0", "https://registry.yarnpkg.com/is-number/-/is-number-7.0.0.tgz", {}, ""],
+
+    "is-plain-object": ["is-plain-object@2.0.4", "https://registry.yarnpkg.com/is-plain-object/-/is-plain-object-2.0.4.tgz", { "dependencies": { "isobject": "^3.0.1" } }, ""],
+
+    "is-stream": ["is-stream@2.0.1", "https://registry.yarnpkg.com/is-stream/-/is-stream-2.0.1.tgz", {}, ""],
+
+    "isexe": ["isexe@2.0.0", "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz", {}, ""],
+
+    "isobject": ["isobject@3.0.1", "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz", {}, ""],
+
+    "jest-worker": ["jest-worker@27.5.1", "https://registry.yarnpkg.com/jest-worker/-/jest-worker-27.5.1.tgz", { "dependencies": { "@types/node": "*", "merge-stream": "^2.0.0", "supports-color": "^8.0.0" } }, ""],
+
+    "jquery": ["jquery@3.6.0", "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz", {}, ""],
+
+    "jquery-datetimepicker": ["jquery-datetimepicker@2.5.21", "https://registry.yarnpkg.com/jquery-datetimepicker/-/jquery-datetimepicker-2.5.21.tgz", { "dependencies": { "jquery": ">= 1.7.2", "jquery-mousewheel": ">= 3.1.13", "php-date-formatter": "^1.3.4" } }, ""],
+
+    "jquery-mousewheel": ["jquery-mousewheel@3.1.13", "https://registry.yarnpkg.com/jquery-mousewheel/-/jquery-mousewheel-3.1.13.tgz", {}, ""],
+
+    "json-parse-even-better-errors": ["json-parse-even-better-errors@2.3.1", "https://registry.yarnpkg.com/json-parse-even-better-errors/-/json-parse-even-better-errors-2.3.1.tgz", {}, ""],
+
+    "json-schema-traverse": ["json-schema-traverse@1.0.0", "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz", {}, ""],
+
+    "kind-of": ["kind-of@6.0.3", "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz", {}, ""],
+
+    "klona": ["klona@2.0.5", "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz", {}, ""],
+
+    "loader-runner": ["loader-runner@4.3.0", "https://registry.yarnpkg.com/loader-runner/-/loader-runner-4.3.0.tgz", {}, ""],
+
+    "locate-path": ["locate-path@5.0.0", "https://registry.yarnpkg.com/locate-path/-/locate-path-5.0.0.tgz", { "dependencies": { "p-locate": "^4.1.0" } }, ""],
+
+    "lru-cache": ["lru-cache@6.0.0", "https://registry.yarnpkg.com/lru-cache/-/lru-cache-6.0.0.tgz", { "dependencies": { "yallist": "^4.0.0" } }, ""],
+
+    "merge-stream": ["merge-stream@2.0.0", "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz", {}, ""],
+
+    "mime-db": ["mime-db@1.52.0", "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz", {}, ""],
+
+    "mime-types": ["mime-types@2.1.35", "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.35.tgz", { "dependencies": { "mime-db": "1.52.0" } }, ""],
+
+    "mimic-fn": ["mimic-fn@2.1.0", "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz", {}, ""],
+
+    "mini-css-extract-plugin": ["mini-css-extract-plugin@2.6.0", "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-2.6.0.tgz", { "dependencies": { "schema-utils": "^4.0.0" }, "peerDependencies": { "webpack": "^5.0.0" } }, ""],
+
+    "minimatch": ["minimatch@3.1.2", "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz", { "dependencies": { "brace-expansion": "^1.1.7" } }, ""],
+
+    "minimist": ["minimist@1.2.6", "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz", {}, ""],
+
+    "mkdirp": ["mkdirp@0.5.5", "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.5.tgz", { "dependencies": { "minimist": "^1.2.5" }, "bin": "bin/cmd.js" }, ""],
+
+    "nanoid": ["nanoid@3.3.8", "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.8.tgz", { "bin": "bin/nanoid.cjs" }, ""],
+
+    "neo-async": ["neo-async@2.6.2", "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz", {}, ""],
+
+    "node-releases": ["node-releases@2.0.18", "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.18.tgz", {}, ""],
+
+    "normalize-path": ["normalize-path@3.0.0", "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz", {}, ""],
+
+    "npm-run-path": ["npm-run-path@4.0.1", "https://registry.yarnpkg.com/npm-run-path/-/npm-run-path-4.0.1.tgz", { "dependencies": { "path-key": "^3.0.0" } }, ""],
+
+    "once": ["once@1.4.0", "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz", { "dependencies": { "wrappy": "1" } }, ""],
+
+    "onetime": ["onetime@5.1.2", "https://registry.yarnpkg.com/onetime/-/onetime-5.1.2.tgz", { "dependencies": { "mimic-fn": "^2.1.0" } }, ""],
+
+    "p-limit": ["p-limit@2.3.0", "https://registry.yarnpkg.com/p-limit/-/p-limit-2.3.0.tgz", { "dependencies": { "p-try": "^2.0.0" } }, ""],
+
+    "p-locate": ["p-locate@4.1.0", "https://registry.yarnpkg.com/p-locate/-/p-locate-4.1.0.tgz", { "dependencies": { "p-limit": "^2.2.0" } }, ""],
+
+    "p-try": ["p-try@2.2.0", "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz", {}, ""],
+
+    "path-exists": ["path-exists@4.0.0", "https://registry.yarnpkg.com/path-exists/-/path-exists-4.0.0.tgz", {}, ""],
+
+    "path-is-absolute": ["path-is-absolute@1.0.1", "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz", {}, ""],
+
+    "path-key": ["path-key@3.1.1", "https://registry.yarnpkg.com/path-key/-/path-key-3.1.1.tgz", {}, ""],
+
+    "path-parse": ["path-parse@1.0.7", "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.7.tgz", {}, ""],
+
+    "php-date-formatter": ["php-date-formatter@1.3.6", "https://registry.yarnpkg.com/php-date-formatter/-/php-date-formatter-1.3.6.tgz", {}, ""],
+
+    "picocolors": ["picocolors@1.0.0", "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz", {}, ""],
+
+    "picomatch": ["picomatch@2.3.1", "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz", {}, ""],
+
+    "pkg-dir": ["pkg-dir@4.2.0", "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-4.2.0.tgz", { "dependencies": { "find-up": "^4.0.0" } }, ""],
+
+    "popper.js": ["popper.js@1.16.1", "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz", {}, ""],
+
+    "postcss": ["postcss@8.4.31", "https://registry.yarnpkg.com/postcss/-/postcss-8.4.31.tgz", { "dependencies": { "nanoid": "^3.3.6", "picocolors": "^1.0.0", "source-map-js": "^1.0.2" } }, ""],
+
+    "postcss-modules-extract-imports": ["postcss-modules-extract-imports@3.0.0", "https://registry.yarnpkg.com/postcss-modules-extract-imports/-/postcss-modules-extract-imports-3.0.0.tgz", { "peerDependencies": { "postcss": "^8.1.0" } }, ""],
+
+    "postcss-modules-local-by-default": ["postcss-modules-local-by-default@4.0.0", "https://registry.yarnpkg.com/postcss-modules-local-by-default/-/postcss-modules-local-by-default-4.0.0.tgz", { "dependencies": { "icss-utils": "^5.0.0", "postcss-selector-parser": "^6.0.2", "postcss-value-parser": "^4.1.0" }, "peerDependencies": { "postcss": "^8.1.0" } }, ""],
+
+    "postcss-modules-scope": ["postcss-modules-scope@3.0.0", "https://registry.yarnpkg.com/postcss-modules-scope/-/postcss-modules-scope-3.0.0.tgz", { "dependencies": { "postcss-selector-parser": "^6.0.4" }, "peerDependencies": { "postcss": "^8.1.0" } }, ""],
+
+    "postcss-modules-values": ["postcss-modules-values@4.0.0", "https://registry.yarnpkg.com/postcss-modules-values/-/postcss-modules-values-4.0.0.tgz", { "dependencies": { "icss-utils": "^5.0.0" }, "peerDependencies": { "postcss": "^8.1.0" } }, ""],
+
+    "postcss-selector-parser": ["postcss-selector-parser@6.0.10", "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-6.0.10.tgz", { "dependencies": { "cssesc": "^3.0.0", "util-deprecate": "^1.0.2" } }, ""],
+
+    "postcss-value-parser": ["postcss-value-parser@4.2.0", "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz", {}, ""],
+
+    "prettier": ["prettier@3.3.2", "https://registry.yarnpkg.com/prettier/-/prettier-3.3.2.tgz", { "bin": "bin/prettier.cjs" }, ""],
+
+    "punycode": ["punycode@2.1.1", "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz", {}, ""],
+
+    "randombytes": ["randombytes@2.1.0", "https://registry.yarnpkg.com/randombytes/-/randombytes-2.1.0.tgz", { "dependencies": { "safe-buffer": "^5.1.0" } }, ""],
+
+    "readdirp": ["readdirp@3.6.0", "https://registry.yarnpkg.com/readdirp/-/readdirp-3.6.0.tgz", { "dependencies": { "picomatch": "^2.2.1" } }, ""],
+
+    "rechoir": ["rechoir@0.7.1", "https://registry.yarnpkg.com/rechoir/-/rechoir-0.7.1.tgz", { "dependencies": { "resolve": "^1.9.0" } }, ""],
+
+    "require-from-string": ["require-from-string@2.0.2", "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz", {}, ""],
+
+    "resolve": ["resolve@1.21.0", "https://registry.yarnpkg.com/resolve/-/resolve-1.21.0.tgz", { "dependencies": { "is-core-module": "^2.8.0", "path-parse": "^1.0.7", "supports-preserve-symlinks-flag": "^1.0.0" }, "bin": "bin/resolve" }, ""],
+
+    "resolve-cwd": ["resolve-cwd@3.0.0", "https://registry.yarnpkg.com/resolve-cwd/-/resolve-cwd-3.0.0.tgz", { "dependencies": { "resolve-from": "^5.0.0" } }, ""],
+
+    "resolve-from": ["resolve-from@5.0.0", "https://registry.yarnpkg.com/resolve-from/-/resolve-from-5.0.0.tgz", {}, ""],
+
+    "rimraf": ["rimraf@2.7.1", "https://registry.yarnpkg.com/rimraf/-/rimraf-2.7.1.tgz", { "dependencies": { "glob": "^7.1.3" }, "bin": "bin.js" }, ""],
+
+    "safe-buffer": ["safe-buffer@5.2.1", "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz", {}, ""],
+
+    "sass": ["sass@1.51.0", "https://registry.yarnpkg.com/sass/-/sass-1.51.0.tgz", { "dependencies": { "chokidar": ">=3.0.0 <4.0.0", "immutable": "^4.0.0", "source-map-js": ">=0.6.2 <2.0.0" }, "bin": "sass.js" }, ""],
+
+    "sass-loader": ["sass-loader@12.6.0", "https://registry.yarnpkg.com/sass-loader/-/sass-loader-12.6.0.tgz", { "dependencies": { "klona": "^2.0.4", "neo-async": "^2.6.2" }, "peerDependencies": { "fibers": ">= 3.1.0", "node-sass": "^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0", "sass": "^1.3.0", "sass-embedded": "*", "webpack": "^5.0.0" }, "optionalPeers": ["fibers", "node-sass", "sass-embedded"] }, ""],
+
+    "schema-utils": ["schema-utils@4.0.0", "https://registry.yarnpkg.com/schema-utils/-/schema-utils-4.0.0.tgz", { "dependencies": { "@types/json-schema": "^7.0.9", "ajv": "^8.8.0", "ajv-formats": "^2.1.1", "ajv-keywords": "^5.0.0" } }, ""],
+
+    "select2": ["select2@4.0.13", "https://registry.yarnpkg.com/select2/-/select2-4.0.13.tgz", {}, ""],
+
+    "select2-bootstrap4-theme": ["select2-bootstrap4-theme@1.0.0", "https://registry.yarnpkg.com/select2-bootstrap4-theme/-/select2-bootstrap4-theme-1.0.0.tgz", {}, ""],
+
+    "semver": ["semver@7.5.3", "https://registry.yarnpkg.com/semver/-/semver-7.5.3.tgz", { "dependencies": { "lru-cache": "^6.0.0" }, "bin": "bin/semver.js" }, ""],
+
+    "serialize-javascript": ["serialize-javascript@6.0.2", "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-6.0.2.tgz", { "dependencies": { "randombytes": "^2.1.0" } }, ""],
+
+    "shallow-clone": ["shallow-clone@3.0.1", "https://registry.yarnpkg.com/shallow-clone/-/shallow-clone-3.0.1.tgz", { "dependencies": { "kind-of": "^6.0.2" } }, ""],
+
+    "shebang-command": ["shebang-command@2.0.0", "https://registry.yarnpkg.com/shebang-command/-/shebang-command-2.0.0.tgz", { "dependencies": { "shebang-regex": "^3.0.0" } }, ""],
+
+    "shebang-regex": ["shebang-regex@3.0.0", "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz", {}, ""],
+
+    "signal-exit": ["signal-exit@3.0.7", "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.7.tgz", {}, ""],
+
+    "source-map": ["source-map@0.6.1", "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz", {}, ""],
+
+    "source-map-js": ["source-map-js@1.0.2", "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz", {}, ""],
+
+    "source-map-support": ["source-map-support@0.5.21", "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.21.tgz", { "dependencies": { "buffer-from": "^1.0.0", "source-map": "^0.6.0" } }, ""],
+
+    "strip-final-newline": ["strip-final-newline@2.0.0", "https://registry.yarnpkg.com/strip-final-newline/-/strip-final-newline-2.0.0.tgz", {}, ""],
+
+    "supports-color": ["supports-color@8.1.1", "https://registry.yarnpkg.com/supports-color/-/supports-color-8.1.1.tgz", { "dependencies": { "has-flag": "^4.0.0" } }, ""],
+
+    "supports-preserve-symlinks-flag": ["supports-preserve-symlinks-flag@1.0.0", "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz", {}, ""],
+
+    "tapable": ["tapable@2.2.1", "https://registry.yarnpkg.com/tapable/-/tapable-2.2.1.tgz", {}, ""],
+
+    "terser": ["terser@5.31.6", "https://registry.yarnpkg.com/terser/-/terser-5.31.6.tgz", { "dependencies": { "@jridgewell/source-map": "^0.3.3", "acorn": "^8.8.2", "commander": "^2.20.0", "source-map-support": "~0.5.20" }, "bin": "bin/terser" }, ""],
+
+    "terser-webpack-plugin": ["terser-webpack-plugin@5.3.10", "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-5.3.10.tgz", { "dependencies": { "@jridgewell/trace-mapping": "^0.3.20", "jest-worker": "^27.4.5", "schema-utils": "^3.1.1", "serialize-javascript": "^6.0.1", "terser": "^5.26.0" }, "peerDependencies": { "webpack": "^5.1.0" } }, ""],
+
+    "to-regex-range": ["to-regex-range@5.0.1", "https://registry.yarnpkg.com/to-regex-range/-/to-regex-range-5.0.1.tgz", { "dependencies": { "is-number": "^7.0.0" } }, ""],
+
+    "turbolinks": ["turbolinks@5.2.0", "https://registry.yarnpkg.com/turbolinks/-/turbolinks-5.2.0.tgz", {}, ""],
+
+    "update-browserslist-db": ["update-browserslist-db@1.1.0", "https://registry.yarnpkg.com/update-browserslist-db/-/update-browserslist-db-1.1.0.tgz", { "dependencies": { "escalade": "^3.1.2", "picocolors": "^1.0.1" }, "peerDependencies": { "browserslist": ">= 4.21.0" }, "bin": "cli.js" }, ""],
+
+    "uri-js": ["uri-js@4.4.1", "https://registry.yarnpkg.com/uri-js/-/uri-js-4.4.1.tgz", { "dependencies": { "punycode": "^2.1.0" } }, ""],
+
+    "util-deprecate": ["util-deprecate@1.0.2", "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz", {}, ""],
+
+    "watchpack": ["watchpack@2.4.2", "https://registry.yarnpkg.com/watchpack/-/watchpack-2.4.2.tgz", { "dependencies": { "glob-to-regexp": "^0.4.1", "graceful-fs": "^4.1.2" } }, ""],
+
+    "webpack": ["webpack@5.94.0", "https://registry.yarnpkg.com/webpack/-/webpack-5.94.0.tgz", { "dependencies": { "@types/estree": "^1.0.5", "@webassemblyjs/ast": "^1.12.1", "@webassemblyjs/wasm-edit": "^1.12.1", "@webassemblyjs/wasm-parser": "^1.12.1", "acorn": "^8.7.1", "acorn-import-attributes": "^1.9.5", "browserslist": "^4.21.10", "chrome-trace-event": "^1.0.2", "enhanced-resolve": "^5.17.1", "es-module-lexer": "^1.2.1", "eslint-scope": "5.1.1", "events": "^3.2.0", "glob-to-regexp": "^0.4.1", "graceful-fs": "^4.2.11", "json-parse-even-better-errors": "^2.3.1", "loader-runner": "^4.2.0", "mime-types": "^2.1.27", "neo-async": "^2.6.2", "schema-utils": "^3.2.0", "tapable": "^2.1.1", "terser-webpack-plugin": "^5.3.10", "watchpack": "^2.4.1", "webpack-sources": "^3.2.3" }, "bin": "bin/webpack.js" }, ""],
+
+    "webpack-cli": ["webpack-cli@4.9.2", "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-4.9.2.tgz", { "dependencies": { "@discoveryjs/json-ext": "^0.5.0", "@webpack-cli/configtest": "^1.1.1", "@webpack-cli/info": "^1.4.1", "@webpack-cli/serve": "^1.6.1", "colorette": "^2.0.14", "commander": "^7.0.0", "execa": "^5.0.0", "fastest-levenshtein": "^1.0.12", "import-local": "^3.0.2", "interpret": "^2.2.0", "rechoir": "^0.7.0", "webpack-merge": "^5.7.3" }, "peerDependencies": { "webpack": "4.x.x || 5.x.x" }, "bin": "bin/cli.js" }, ""],
+
+    "webpack-merge": ["webpack-merge@5.8.0", "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-5.8.0.tgz", { "dependencies": { "clone-deep": "^4.0.1", "wildcard": "^2.0.0" } }, ""],
+
+    "webpack-sources": ["webpack-sources@3.2.3", "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.3.tgz", {}, ""],
+
+    "whatwg-fetch": ["whatwg-fetch@3.6.2", "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz", {}, ""],
+
+    "which": ["which@2.0.2", "https://registry.yarnpkg.com/which/-/which-2.0.2.tgz", { "dependencies": { "isexe": "^2.0.0" }, "bin": { "node-which": "bin/node-which" } }, ""],
+
+    "wildcard": ["wildcard@2.0.0", "https://registry.yarnpkg.com/wildcard/-/wildcard-2.0.0.tgz", {}, ""],
+
+    "wrappy": ["wrappy@1.0.2", "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz", {}, ""],
+
+    "yallist": ["yallist@4.0.0", "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz", {}, ""],
+
+    "@jridgewell/gen-mapping/@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.4.14", "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.14.tgz", {}, ""],
+
+    "esrecurse/estraverse": ["estraverse@5.3.0", "https://registry.yarnpkg.com/estraverse/-/estraverse-5.3.0.tgz", {}, ""],
+
+    "terser/commander": ["commander@2.20.3", "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz", {}, ""],
+
+    "terser-webpack-plugin/schema-utils": ["schema-utils@3.3.0", "https://registry.yarnpkg.com/schema-utils/-/schema-utils-3.3.0.tgz", { "dependencies": { "@types/json-schema": "^7.0.8", "ajv": "^6.12.5", "ajv-keywords": "^3.5.2" } }, ""],
+
+    "update-browserslist-db/picocolors": ["picocolors@1.0.1", "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.1.tgz", {}, ""],
+
+    "webpack/schema-utils": ["schema-utils@3.3.0", "https://registry.yarnpkg.com/schema-utils/-/schema-utils-3.3.0.tgz", { "dependencies": { "@types/json-schema": "^7.0.8", "ajv": "^6.12.5", "ajv-keywords": "^3.5.2" } }, ""],
+
+    "terser-webpack-plugin/schema-utils/ajv": ["ajv@6.12.6", "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz", { "dependencies": { "fast-deep-equal": "^3.1.1", "fast-json-stable-stringify": "^2.0.0", "json-schema-traverse": "^0.4.1", "uri-js": "^4.2.2" } }, ""],
+
+    "terser-webpack-plugin/schema-utils/ajv-keywords": ["ajv-keywords@3.5.2", "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.5.2.tgz", { "peerDependencies": { "ajv": "^6.9.1" } }, ""],
+
+    "webpack/schema-utils/ajv": ["ajv@6.12.6", "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz", { "dependencies": { "fast-deep-equal": "^3.1.1", "fast-json-stable-stringify": "^2.0.0", "json-schema-traverse": "^0.4.1", "uri-js": "^4.2.2" } }, ""],
+
+    "webpack/schema-utils/ajv-keywords": ["ajv-keywords@3.5.2", "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.5.2.tgz", { "peerDependencies": { "ajv": "^6.9.1" } }, ""],
+
+    "terser-webpack-plugin/schema-utils/ajv/json-schema-traverse": ["json-schema-traverse@0.4.1", "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz", {}, ""],
+
+    "webpack/schema-utils/ajv/json-schema-traverse": ["json-schema-traverse@0.4.1", "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz", {}, ""],
+  }
+}
