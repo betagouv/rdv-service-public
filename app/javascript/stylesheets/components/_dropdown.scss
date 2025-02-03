@@ -6,26 +6,3 @@
 .dropdown-toggle {
   cursor: pointer;
 }
-
-.show {
-  > .dropdown-menu {
-    visibility: visible;
-    opacity: 1;
-    margin-top: 0 !important;
-  }
-}
-
-// Dropdown arrow hide
-.arrow-none {
-  &:after {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 640px) {
-  .show {
-    > .dropdown-menu {
-      display: contents;
-    }
-  }
-}
