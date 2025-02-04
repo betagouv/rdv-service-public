@@ -182,7 +182,7 @@ group :development do
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
   # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
-  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.6)
+  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby
   gem "parser", "3.3.7.0", require: false
   # Automatic Ruby code style checking tool.
   gem "rubocop", require: false
