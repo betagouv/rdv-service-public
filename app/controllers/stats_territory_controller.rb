@@ -13,9 +13,7 @@ class StatsTerritoryController < ApplicationController
     cache_key = ["stats_rdvs", request.query_parameters, Time.zone.today]
     chart_json = Rails.cache.fetch(cache_key, expires_in: 24.hours) do
       stats = Stat.new(rdvs: @rdvs)
-      results = if params[:by_territory].present?
-                  stats.rdvs_group_by_territory_name
-                elsif params[:by_service].present?
+      results = if params[:by_service].present?
                   stats.rdvs_group_by_service
                 elsif params[:by_location_type].present?
                   stats.rdvs_group_by_type
