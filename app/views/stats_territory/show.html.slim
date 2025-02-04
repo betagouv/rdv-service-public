@@ -1,139 +1,147 @@
-- content_for :title, "Statistiques - #{@territory}"
+/ Include the charts pack in the <head> section
+- content_for(:additional_scripts) { javascript_include_tag "charts", "data-turbolinks-track": "reload" }
 
-= render "stats_territory/layout" do
-  h3 Territoire : #{@territory}
-  .fr-mb-4w= link_to "Retour à la sélection du territoire", stats_territories_path, class: "fr-link fr-icon-arrow-left-line fr-link--icon-left"
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: "/"
+    = b.with_breadcrumb label: "Statistiques globales", href: stats_path
+    = b.with_breadcrumb label: "Statistiques par territoire", href: stats_territories_path
+    = b.with_breadcrumb label: @territory.to_s
 
-  - if Organisation.joins(:territory).where(territories: [@territory]).empty?
-    h3 Cette structure n'utilise pas #{current_domain.name}.
+- content_for :title, "Statistiques par territoire"
 
-  - cache([@territory, Time.zone.today], expires_in: 24.hours) do
-    .card.mb-5
-      .card-body
-        h2.card-title Nombre de RDV par statut de participation
-        .fr-grid-row
-          .fr-col-lg-4
-            .px-1
-              - %i[seen excused revoked noshow].each do |temporal_status|
-                - count = Participation.where(rdv: @stats.rdvs).status(temporal_status).count
-                = render "stats/rdv_counter_without_link", \
-                  temporal_status: temporal_status, \
-                  element: "Usager".pluralize(count), \
-                  count: count
-          .fr-col-lg-4
-            .px-1
-              - count = Participation.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_past).count
+h2= @territory
+
+- if Organisation.joins(:territory).where(territories: [@territory]).empty?
+  h3 Cette structure n'utilise pas #{current_domain.name}.
+
+- cache([@territory, Time.zone.today], expires_in: 24.hours) do
+  .card.mb-5
+    .card-body
+      h2.card-title Nombre de RDV par statut de participation
+      .fr-grid-row
+        .fr-col-lg-4
+          .px-1
+            - %i[seen excused revoked noshow].each do |temporal_status|
+              - count = Participation.where(rdv: @stats.rdvs).status(temporal_status).count
               = render "stats/rdv_counter_without_link", \
-                temporal_status: :unknown_past, \
+                temporal_status: temporal_status, \
                 element: "Usager".pluralize(count), \
                 count: count
-          .fr-col-lg-4
-            .px-1
-              - count = Participation.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_future).count
-              = render "stats/rdv_counter_without_link", \
-                element: "Usager".pluralize(count), \
-                temporal_status: :unknown_future, \
-                count: count
-        hr
-        .fr-grid-row
-          .fr-col-lg-4
-            .px-1
-              - count = Participation.where(rdv: @stats.rdvs).count
-              = render "stats/rdv_counter_without_link", \
-                element: "Usager".pluralize(count), \
-                label: "Tous", \
-                count: count
+        .fr-col-lg-4
+          .px-1
+            - count = Participation.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_past).count
+            = render "stats/rdv_counter_without_link", \
+              temporal_status: :unknown_past, \
+              element: "Usager".pluralize(count), \
+              count: count
+        .fr-col-lg-4
+          .px-1
+            - count = Participation.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_future).count
+            = render "stats/rdv_counter_without_link", \
+              element: "Usager".pluralize(count), \
+              temporal_status: :unknown_future, \
+              count: count
+      hr
+      .fr-grid-row
+        .fr-col-lg-4
+          .px-1
+            - count = Participation.where(rdv: @stats.rdvs).count
+            = render "stats/rdv_counter_without_link", \
+              element: "Usager".pluralize(count), \
+              label: "Tous", \
+              count: count
 
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs"
-          h2.card-title RDV créés par type d’usager (#{@stats.rdvs.count})
-        = column_chart rdvs_stats_territory_path(@territory), stacked: true
+  .card.mb-5
+    .card-body
+      = self_anchor "rdvs"
+        h2.card-title RDV créés par type d’usager (#{@stats.rdvs.count})
+      = column_chart rdvs_stats_territory_path(@territory), stacked: true
 
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs-service"
-          h2.card-title RDV créés par service (#{@stats.rdvs.count})
-        = column_chart rdvs_stats_territory_path(@territory, by_service: true), stacked: true
+  .card.mb-5
+    .card-body
+      = self_anchor "rdvs-service"
+        h2.card-title RDV créés par service (#{@stats.rdvs.count})
+      = column_chart rdvs_stats_territory_path(@territory, by_service: true), stacked: true
 
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs-type"
-          h2.card-title RDV par type (#{@stats.rdvs.count})
-        = column_chart rdvs_stats_territory_path(@territory, by_location_type: true), stacked: true
+  .card.mb-5
+    .card-body
+      = self_anchor "rdvs-type"
+        h2.card-title RDV par type (#{@stats.rdvs.count})
+      = column_chart rdvs_stats_territory_path(@territory, by_location_type: true), stacked: true
 
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs-status"
-          h2.card-title RDV par statut de participation
-        /
-          Note: colors are synced manually with the status css and the order of the stats.
-          From stat.rb, Stat#rdvs_group_by_status:
-            * stats are in this order: unknown seen excused revoked noshow
-          From _rdv_status.scss, the colors are:
-            "unknown": $info, #ffbc00
-            "seen": $success, #0acf97
-            "excused": $info, #39afd1
-            "revoked": $teal, #02a8b5
-            "noshow": $danger, #fa5c7c
-        - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
-        = column_chart rdvs_stats_territory_path(@territory, by_status: true), stacked: :percent, max: 100, suffix: "%", colors: colors
+  .card.mb-5
+    .card-body
+      = self_anchor "rdvs-status"
+        h2.card-title RDV par statut de participation
+      /
+        Note: colors are synced manually with the status css and the order of the stats.
+        From stat.rb, Stat#rdvs_group_by_status:
+          * stats are in this order: unknown seen excused revoked noshow
+        From _rdv_status.scss, the colors are:
+          "unknown": $info, #ffbc00
+          "seen": $success, #0acf97
+          "excused": $info, #39afd1
+          "revoked": $teal, #02a8b5
+          "noshow": $danger, #fa5c7c
+      - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
+      = column_chart rdvs_stats_territory_path(@territory, by_status: true), stacked: :percent, max: 100, suffix: "%", colors: colors
 
-    .card.mb-5
-      .card-header
-        = self_anchor "notifications"
-          h2.card-title #{Receipt.model_name.human(count: 2)}
-      .card-body
-        |> Vous pouvez consulter les statistiques sur les notifications envoyées
-        = link_to("ici", notifications_stats_territory_path(@territory))
+  .card.mb-5
+    .card-header
+      = self_anchor "notifications"
+        h2.card-title #{Receipt.model_name.human(count: 2)}
+    .card-body
+      |> Vous pouvez consulter les statistiques sur les notifications envoyées
+      = link_to("ici", notifications_stats_territory_path(@territory))
 
-    .card.mb-5
-      .card-body
-        = self_anchor "activations"
-          h2.card-title Activité des agents
-        - active_agents = @agents.active
+  .card.mb-5
+    .card-body
+      = self_anchor "activations"
+        h2.card-title Activité des agents
+      - active_agents = @agents.active
 
-        h5 Aujourd'hui
+      h5 Aujourd'hui
 
-        p #{active_agents.count} agents ont été invités
+      p #{active_agents.count} agents ont été invités
 
-        - accepted_count = active_agents.where.not(invitation_accepted_at: nil).count
-        p #{percent(accepted_count, active_agents.count)} ont accepté l'invitation (#{accepted_count})
+      - accepted_count = active_agents.where.not(invitation_accepted_at: nil).count
+      p #{percent(accepted_count, active_agents.count)} ont accepté l'invitation (#{accepted_count})
 
-        - first_rdv_count = active_agents.joins(:rdvs).distinct.count
-        p #{percent(first_rdv_count, active_agents.count)} ont participé à au moins un rdv (#{first_rdv_count})
+      - first_rdv_count = active_agents.joins(:rdvs).distinct.count
+      p #{percent(first_rdv_count, active_agents.count)} ont participé à au moins un rdv (#{first_rdv_count})
 
-        - active_count = active_agents.joins(:rdvs).where("rdvs.created_at > ?", 30.days.ago).distinct.count
-        p #{percent(active_count, active_agents.count)} ont participé à un rdv créé dans les 30 derniers jours (#{active_count})
+      - active_count = active_agents.joins(:rdvs).where("rdvs.created_at > ?", 30.days.ago).distinct.count
+      p #{percent(active_count, active_agents.count)} ont participé à un rdv créé dans les 30 derniers jours (#{active_count})
 
-        - agents_with_online_reservation = active_agents.with_online_reservations_at(Time.zone.now)
-        p #{agents_with_online_reservation.count} ont des créneaux ouverts au public
+      - agents_with_online_reservation = active_agents.with_online_reservations_at(Time.zone.now)
+      p #{agents_with_online_reservation.count} ont des créneaux ouverts au public
 
-        h5 Il y a 30 jours
+      h5 Il y a 30 jours
 
-        - active_agents = active_agents.where("agents.created_at < ?", 30.days.ago)
-        p #{active_agents.count} agents avaient été invités
+      - active_agents = active_agents.where("agents.created_at < ?", 30.days.ago)
+      p #{active_agents.count} agents avaient été invités
 
-        - accepted_count = active_agents.where.not(invitation_accepted_at: nil).where("agents.created_at < ?", 30.days.ago).count
-        p #{percent(accepted_count, active_agents.count)} avaient accepté l'invitation (#{accepted_count})
+      - accepted_count = active_agents.where.not(invitation_accepted_at: nil).where("agents.created_at < ?", 30.days.ago).count
+      p #{percent(accepted_count, active_agents.count)} avaient accepté l'invitation (#{accepted_count})
 
-        - first_rdv_count = active_agents.joins(:rdvs).where("rdvs.created_at < ?", 30.days.ago).distinct.count
-        p #{percent(first_rdv_count, active_agents.count)} avaient participé à au moins un rdv (#{first_rdv_count})
+      - first_rdv_count = active_agents.joins(:rdvs).where("rdvs.created_at < ?", 30.days.ago).distinct.count
+      p #{percent(first_rdv_count, active_agents.count)} avaient participé à au moins un rdv (#{first_rdv_count})
 
-        - active_count = active_agents.joins(:rdvs).where(rdvs: {created_at: 60.days.ago..30.days.ago}).distinct.count
-        p #{percent(active_count, active_agents.count)} avaient participé à un rdv créé un rdv les 30 derniers jours précédents (#{active_count})
+      - active_count = active_agents.joins(:rdvs).where(rdvs: {created_at: 60.days.ago..30.days.ago}).distinct.count
+      p #{percent(active_count, active_agents.count)} avaient participé à un rdv créé un rdv les 30 derniers jours précédents (#{active_count})
 
-        - agents_with_online_reservation = active_agents.with_online_reservations_at(30.days.ago)
-        p #{agents_with_online_reservation.count} avaient des créneaux ouverts au public
+      - agents_with_online_reservation = active_agents.with_online_reservations_at(30.days.ago)
+      p #{agents_with_online_reservation.count} avaient des créneaux ouverts au public
 
-        = self_anchor "active_agents"
-          h2.card-title Agents actifs par mois
-        p Nombre d'agents ayant participé à au moins un rdv chaque mois
-        = column_chart active_agents_stats_territory_path(@territory)
+      = self_anchor "active_agents"
+        h2.card-title Agents actifs par mois
+      p Nombre d'agents ayant participé à au moins un rdv chaque mois
+      = column_chart active_agents_stats_territory_path(@territory)
 
-    .card.mb-5
-      .card-header
-        = self_anchor "outlook_sync"
-          h2.card-title Synchronisation Outlook
-      .card-body
-        p #{@agents.where.not(microsoft_graph_token: nil).count} agents utilisent la synchronisation d'agenda avec Outlook
+  .card.mb-5
+    .card-header
+      = self_anchor "outlook_sync"
+        h2.card-title Synchronisation Outlook
+    .card-body
+      p #{@agents.where.not(microsoft_graph_token: nil).count} agents utilisent la synchronisation d'agenda avec Outlook

@@ -1,0 +1,7 @@
+.rdv-iframe-metabase {
+  height: 1900px;
+
+  @include media-breakpoint-up(md) {
+    height: 2300px;
+  }
+}
