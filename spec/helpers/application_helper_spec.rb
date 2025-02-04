@@ -3,13 +3,11 @@ RSpec.describe ApplicationHelper do
     # cf /docs/4-notes-techniques.md la procédure de mise à jour du DSFR
 
     it "correspond à la version du node package" do
-      yarn_lock_content = File.read("yarn.lock")
-      version_match = yarn_lock_content.match(%r{@gouvfr/dsfr@[^:]+:\n\s+version\s+"([^"]+)"})
-      expect(version_match).to be_truthy
-
-      node_package_version = version_match[1]
+      bun_lock_content = File.read("bun.lock")
+      bun_lock_content.gsub!(/,\s*([\]}])/, '\1') # remove trailing commas
+      bun_lock = JSON.parse(bun_lock_content)
+      node_package_version = bun_lock["packages"]["@gouvfr/dsfr"][0].split("@")[-1]
       expect(node_package_version).to match(/\d+\.\d+\.\d+/)
-
       expect(dsfr_path).to eq("/dsfr-v#{node_package_version}")
     end
 
