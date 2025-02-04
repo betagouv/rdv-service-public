@@ -202,10 +202,11 @@ scalingo --app rdv-service-public-metabase deploy https://github.com/Scalingo/me
 Une manière pratique et intéractive d’écrire ou de debugger des feature specs (end-to-end) est :
 
 - insérer un `binding.pry` dans la spec avant la ligne qui échoue
-- préfixer `DEBUG=true` avant l’appel à `bundle exec rspec ...` pour que le navigateur Chrome orchestré par Capybara soit visible (la variable d’environnement désactive le flag `headless`)
+- préfixer `HEADLESS=false` avant l’appel à `bundle exec rspec ...`
+- le test utilisera alors le driver capybara JS même si le flag `js: true` n’est pas présent
+- le navigateur Chrome orchestré par Capybara sera maintenant visible
 
 Une console s’ouvre alors et on peut appeler des commandes comme `click_button "Enregistrer"` ou bien rédiger des `expect` itérativement. On peut sortir de la console et laisser le test terminer son éxecution avec CTRL+D.
 
 Ça ne fonctionne pas avec `byebug` ou un breakpoint de debug sur RubyMine, lorsqu’on éxecute une commande dans la console ouverte, le navigateur semble bloqué.
 Je suppose que l’éxecution du serveur Rails de spec est complètement interrompue, ce qui n’est pas pratique pour itérer
-
