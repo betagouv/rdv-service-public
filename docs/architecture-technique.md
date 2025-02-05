@@ -418,7 +418,7 @@ Une interface a été développer afin de permettre aux membres de l'équipe de 
 - lister et modifier la liste référentielle des "services" proposés dans l'instance
 - trouver et modifier des motifs
 - trouver et modifier des lieux
-- trouver et modifier les territoires
+- trouver et modifier les espaces
 
 Il existe deux niveaux d'accès pour les super-admins : "complet" et "support". Les devs (RDV-SP et RDV-I) ont un
 niveau "complet", ainsi que l'équipe produit de RDV Service Public. L'équipe produit de RDV Insertion est quant à elle

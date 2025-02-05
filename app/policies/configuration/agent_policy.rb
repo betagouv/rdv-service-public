@@ -24,24 +24,24 @@ class Configuration::AgentPolicy
   end
 
   def update_teams?
-    # TODO: cette règle ici n’a pas beaucoup de sens, le contexte du territoire est indispensable
+    # TODO: cette règle ici n’a pas beaucoup de sens, le contexte de l'espace est indispensable
     agent_territories.any? { Agent::TeamPolicy.allowed_to_manage_teams_in?(_1, @current_agent) }
   end
 
   def update_services?
-    # NOTE: le service est à l’échelle de l’agent, ça aura donc un impact inter-territoires
+    # NOTE: le service est à l’échelle de l’agent, ça aura donc un impact inter-territory
     agent_territories.any? { self.class.allowed_to_manage_agents_in?(_1, @current_agent) }
   end
 
   def create?
-    agent_territories.any? && # on ne peut pas créer d’agent non rattaché à un territoire
+    agent_territories.any? && # on ne peut pas créer d’agent non rattaché à un espace
       agent_territories.all? { self.class.allowed_to_invite_agents_in?(_1, @current_agent) } # NOTE: on fait ici un all? et pas un any?
   end
 
   private
 
   def agent_territories
-    # tous les territoires où l'agent cible est admin OU a un rôle dans une orga (basic, admin ou intervenant)
+    # tous les espaces où l'agent cible est admin OU a un rôle dans une orga (basic, admin ou intervenant)
     # cette implémentation est plus explicite que via les agent_territorial_access_rights
     # passer par territory_ids et organisation_ids permet de supporter les tests sur les agents non persistés
     arel = Territory.left_joins(:organisations)

@@ -10,14 +10,14 @@ header.main-content__header
 
 section.main-content__body
   p
-    | Ce formulaire vous permet de créer un territoire, une organisation, et un lieu (facultatif) pour un agent qui en sera admin (généralement la personne référente du projet).
+    | Ce formulaire vous permet de créer un espace, une organisation, et un lieu (facultatif) pour un agent qui en sera admin (généralement la personne référente du projet).
   p
     | Des motifs "Suivi de dossier" seront créés par défaut
   = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
     - if @territory_creation_request
       = f.hidden_field :territory_creation_request_id, value: @territory_creation_request.id
     = f.simple_fields_for :territory do |ff|
-      = ff.input :name, label: "Nom du territoire", input_html: { value: @territory_creation_request&.territory_name }
+      = ff.input :name, label: "Nom de l'espace", input_html: { value: @territory_creation_request&.territory_name }
       = ff.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie du territoire"
 
     = f.simple_fields_for :organisation do |ff|
@@ -34,7 +34,7 @@ section.main-content__body
     = f.simple_fields_for :territory do |ff|
       = ff.input :departement_number, label: "Numéro du département", hint: "Facultatif", required: false
 
-    h2[style="margin: 32px 0 16px 0"] Admin de territoire
+    h2[style="margin: 32px 0 16px 0"] Admin d'espace
     = f.simple_fields_for :agent do |ff|
       - if @agent
         p = @agent.full_name

@@ -8,7 +8,7 @@ class AddAntsConnectableToOrganisations < ActiveRecord::Migration[7.1]
 
     up_only do
       mairies_territory = Territory.find_by(name: "Mairies")
-      if mairies_territory # La migration tourne aussi sur l'instance historique qui n'a pas ce territoire
+      if mairies_territory # La migration tourne aussi sur l'instance historique qui n'a pas ce territory
         Organisation.where(territory_id: mairies_territory.id).update_all(ants_connectable: true)
       end
     end
