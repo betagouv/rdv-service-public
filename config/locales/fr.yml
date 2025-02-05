@@ -3,7 +3,7 @@ fr:
   admin:
     organisations:
       index:
-        configuration: Espace Admin
+        territory_configuration: Paramètres
         create: Créer
     rdvs:
       message:

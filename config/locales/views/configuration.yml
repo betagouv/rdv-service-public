@@ -8,9 +8,9 @@ fr:
         new:
           title: Nouvelle attribution pour le secteur %{name}
       nav:
-        configuration_title: Espace Admin
+        configuration_title: Paramètres de "%{territory}"
       show:
-        title: Espace Admin
+        title: Paramètres de l'espace "%{territory}"
       index:
         configuration_title: Espace Admin
       edit:
