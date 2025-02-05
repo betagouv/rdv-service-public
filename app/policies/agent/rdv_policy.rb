@@ -81,7 +81,7 @@ class Agent::RdvPolicy < ApplicationPolicy
                           # Tous les participants sont dans mon périmètre
                           true
                         else
-                          # Temporaire : si un usager n'est pas dans mon périmètre (orga / territoire)
+                          # Temporaire : si un usager n'est pas dans mon périmètre (orga / espace)
                           # mais qu'il participe à des RDV que je peux voir, c'est OK.
                           # Voir : https://github.com/betagouv/rdv-service-public/pull/5023
                           users_of_rdvs_i_can_see = Scope.new(current_agent, Rdv.joins(:participations).where(participations: { user_id: participants_not_in_territory_scope })).resolve

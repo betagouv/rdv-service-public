@@ -46,11 +46,11 @@ class Agent::UserPolicy < DefaultAgentPolicy
     end
   end
 
-  # Scope utilisée lors des recherches usager sur tout le territoire (avec résultats tronqués)
+  # Scope utilisée lors des recherches usager sur tout l'espace (avec résultats tronqués)
   class TerritoryScope < Scope
     def resolve
-      # On a un seul territoire pour tous les CNFS, idem pour les mairies,
-      # on veut donc *pas* décloisonner la recherche sur tout le territoire.
+      # On a un seul espace pour tous les CNFS, idem pour les mairies,
+      # on veut donc *pas* décloisonner la recherche sur tout l'espace.
       if current_organisation.territory.mairies? || current_organisation.territory.cn?
         super
       else

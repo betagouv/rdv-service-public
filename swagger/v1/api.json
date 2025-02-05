@@ -1112,7 +1112,7 @@
     },
     {
       "name": "PublicLink",
-      "description": "Utilisé pour faire la correspondance entre des ids externes et des liens de prises de RDV au sein d'un territoire. Ces liens permettent d'accéder directement à la recherche de créneaux pour une organisation donnée.\nCet endpoint est limité à 50 appels par minute par adresse IP.\n"
+      "description": "Utilisé pour faire la correspondance entre des ids externes et des liens de prises de RDV au sein d'un espace. Ces liens permettent d'accéder directement à la recherche de créneaux pour une organisation donnée.\nCet endpoint est limité à 50 appels par minute par adresse IP.\n"
     },
     {
       "name": "Absence",
@@ -2294,7 +2294,7 @@
           {
             "name": "departement_number",
             "in": "query",
-            "description": "Le numéro ou code de département du territoire concerné",
+            "description": "Le numéro ou code de département de l'espace concerné",
             "example": "26",
             "required": false,
             "schema": {
@@ -2650,12 +2650,12 @@
           "PublicLink"
         ],
         "operationId": "getPublicLinks",
-        "description": "Renvoie les liens publics de recherche d'un territoire donné",
+        "description": "Renvoie les liens publics de recherche d'un espace donné",
         "parameters": [
           {
             "name": "territory",
             "in": "query",
-            "description": "Le numéro ou code de département du territoire concerné",
+            "description": "Le numéro ou code de département de l'espace concerné",
             "example": "26",
             "schema": {
               "type": "string"
@@ -3295,7 +3295,7 @@
             }
           },
           "403": {
-            "description": "Renvoie 'forbidden' quand l'agent.e n'est pas sur le même territoire que le reférent",
+            "description": "Renvoie 'forbidden' quand l'agent.e n'est pas sur le même espace que le reférent",
             "content": {
               "application/json": {
                 "examples": {
@@ -3414,7 +3414,7 @@
             }
           },
           "403": {
-            "description": "Renvoie 'forbidden' quand l'agent.e n'est pas sur le même territoire que le reférent",
+            "description": "Renvoie 'forbidden' quand l'agent.e n'est pas sur le même espace que le reférent",
             "content": {
               "application/json": {
                 "examples": {
@@ -3519,7 +3519,7 @@
           "Teams"
         ],
         "operationId": "getTeams",
-        "description": "Renvoie toutes les équipes de tous les territoires auquel l'agent authentifié a accès.",
+        "description": "Renvoie toutes les équipes de tous les espaces auquel l'agent authentifié a accès.",
         "responses": {
           "200": {
             "description": "Renvoie les équipes",
@@ -3559,7 +3559,7 @@
                             "id": 284,
                             "departement_number": "01",
                             "motif_categories": [],
-                            "name": "Territoire n°1"
+                            "name": "Espace n°1"
                           }
                         }
                       ],

@@ -13,7 +13,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       operationId "getOrganisations"
       description "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée"
 
-      parameter name: "departement_number", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26", required: false
+      parameter name: "departement_number", in: :query, type: :string, description: "Le numéro ou code de département de l'espace concerné", example: "26", required: false
       parameter name: "city_code", in: :query, type: :string, description: "Le code INSEE de la localité", example: "26323", required: false
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }

@@ -71,8 +71,7 @@ class SmsSender < BaseService
   # `Netsize Implementation Guide, REST API - SMS.pdf`
   # returns routing errors for wrong numbers
   #
-  # Utilisé par défaut pour toutes les structures (territoires) utilisant
-  # RDV-Solidarités, sauf celle cité dans les autres commentaires.
+  # Fournisseur par défaut, utilisé presque partout, sauf exceptions historiques
   #
   def send_with_netsize
     request = Typhoeus::Request.new(

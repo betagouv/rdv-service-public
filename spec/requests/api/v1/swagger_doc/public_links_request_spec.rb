@@ -8,9 +8,9 @@ RSpec.describe "Public links API", swagger_doc: "v1/api.json" do
       tags "PublicLink"
       produces "application/json"
       operationId "getPublicLinks"
-      description "Renvoie les liens publics de recherche d'un territoire donné"
+      description "Renvoie les liens publics de recherche d'un espace donné"
 
-      parameter name: "territory", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26"
+      parameter name: "territory", in: :query, type: :string, description: "Le numéro ou code de département de l'espace concerné", example: "26"
 
       response 200, "Retourne les liens publics de recherche" do
         let!(:terr) { create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER) }

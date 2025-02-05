@@ -22,7 +22,7 @@ class PaperTrailAugmentedVersion
 
   IGNORED_ATTRIBUTES = %w[id updated_at encrypted_password].freeze
 
-  # territory est le territoire dans lequel on est en train de faire l'affichage
+  # territory est l'espace dans lequel on est en train de faire l'affichage
   def changes(territory = nil)
     @changes ||= begin
       c = @version.changeset.except(*IGNORED_ATTRIBUTES).to_h

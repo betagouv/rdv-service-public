@@ -395,7 +395,7 @@ Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas 
 
 #### Les super admins
 
-Une interface CRUD permettant de gérer l'ensemble des organisations, services, motifs, lieux, territoires, agents et
+Une interface CRUD permettant de gérer l'ensemble des espaces, organisations, services, motifs, lieux, agents et
 usagers est proposée à :
 - toute l'équipe RDV Service Public
 - toute l'équipe RDV Insertion

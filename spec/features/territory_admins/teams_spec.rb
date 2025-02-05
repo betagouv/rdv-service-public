@@ -27,10 +27,10 @@ RSpec.describe "Managing teams" do
 
   it "doesn't allow seeing teams in another territory" do
     other_territory = create(:territory)
-    create(:team, territory: other_territory, name: "Equipe d'un autre territoire")
+    create(:team, territory: other_territory, name: "Equipe d'un autre espace")
 
     visit admin_territory_teams_path(territory_id: other_territory.id)
 
-    expect(page).not_to have_content("Equipe d'un autre territoire")
+    expect(page).not_to have_content("Equipe d'un autre espace")
   end
 end

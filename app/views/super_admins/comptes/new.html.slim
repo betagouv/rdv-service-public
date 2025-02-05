@@ -10,12 +10,12 @@ header.main-content__header
 
 section.main-content__body
   p
-    | Ce formulaire vous permet de créer un territoire, une organisation, et un lieu pour un agent qui en sera admin (généralement la personne référente du projet).
+    | Ce formulaire vous permet de créer un espace, une organisation, et un lieu pour un agent qui en sera admin (généralement la personne référente du projet).
   p
     | Un motif d'exemple "Mon premier motif" sera créé, sauf s'il s'agit d'une ouverture de compte pour une mairie.
   = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
     = f.simple_fields_for :territory do |ff|
-      = ff.input :name, label: "Nom du territoire"
+      = ff.input :name, label: "Nom de l'espace"
 
     = f.simple_fields_for :organisation do |ff|
       = ff.input :name, label: "Nom de la première organisation et du premier lieu"
@@ -30,7 +30,7 @@ section.main-content__body
     = f.simple_fields_for :territory do |ff|
       = ff.input :departement_number, label: "Numéro du département", hint: "Si ce projet est sur plusieurs départements, mettez juste les initiales du projet, par exemple CN pour Conseillers Numériques"
 
-    h2[style="margin: 32px 0 16px 0"] Admin de territoire
+    h2[style="margin: 32px 0 16px 0"] Admin d'espace
     = f.simple_fields_for :agent do |ff|
       = ff.input :first_name, label: "Prénom"
       = ff.input :last_name, label: "Nom"

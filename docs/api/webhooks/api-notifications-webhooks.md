@@ -12,7 +12,7 @@ Du code d’exemple est [disponible C# et en NodeJS](https://github.com/guillett
 
 ## Configuration
 
-Si vous avez les droits d'administration au niveau du territoire, vous pouvez mettre en place des webhooks en toute autonomie à partir de la page de configuration de votre organisation accessible en suivant « Mon compte », « Mes organisations » et « Configuration ». Depuis la page « Webhook », vous pourrez indiquer l'organisation concernée, l'URL à notifier, le secret partagé et les modèles pour lesquels vous souhaitez recevoir des notifications.
+Si vous avez les droits d'administration au niveau de l'espace, vous pouvez mettre en place des webhooks en toute autonomie à partir de la page de configuration de votre organisation accessible en suivant « Mon compte », « Mes organisations » et « Configuration ». Depuis la page « Webhook », vous pourrez indiquer l'organisation concernée, l'URL à notifier, le secret partagé et les modèles pour lesquels vous souhaitez recevoir des notifications.
 
 ## Démonstration
 

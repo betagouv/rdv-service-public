@@ -2,13 +2,13 @@ require "swagger_helper"
 
 RSpec.describe "Motif Category Territory API" do
   path "/api/rdvinsertion/motif_category_territories/" do
-    post "Activer une catégorie de motifs sur un territoire" do
+    post "Activer une catégorie de motifs sur un espace" do
       with_shared_secret_authentication
 
       tags "MotifCategoryTerritory"
       produces "application/json"
       operationId "createMotifCategoryTerritory"
-      description "Activer une catégorie de motifs sur un territoire"
+      description "Activer une catégorie de motifs sur un espace"
 
       parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 12
       parameter name: "motif_category_short_name", in: :query, type: :string, description: "Nom de la catégorie (généralement parametrizé)", example: "rsa_orientation"
@@ -25,7 +25,7 @@ RSpec.describe "Motif Category Territory API" do
         allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
       end
 
-      response 200, "Active une catégorie de motifs sur un territoire" do
+      response 200, "Active une catégorie de motifs sur un espace" do
         let!(:territory) { create(:territory) }
         let!(:organisation) { create(:organisation, territory: territory) }
         let!(:organisation_id) { organisation.id }

@@ -33,7 +33,7 @@ fr:
       agents:
         index:
           edit_agents: Modification des équipes de l'agent
-          territory_agents_title: Agents du territoire
+          territory_agents_title: Agents de l'espace
           reset: Reinitialiser
           search_placeholder: "ex: martine@example.com"
           search: Rechercher
@@ -77,7 +77,7 @@ fr:
         team:
           attributes:
             agents:
-              not_from_same_territory: doivent être du même territoire
+              not_from_same_territory: doivent être du même espace
         plage_ouverture:
           attributes:
             lieu:
@@ -238,8 +238,8 @@ fr:
   helpers:
     label:
       agent:
-        territories:  "Admin de Territoires"
-        territorial_roles: "Admin de Territoires"
+        territories:  "Espaces administrés"
+        territorial_roles: "Espaces administrés"
         services: "Services de l'agent"
         agent_services: "Services de l'agent"
         roles: "Rôles dans les organisations"
@@ -252,8 +252,8 @@ fr:
       service:
         agent_services: "Agents du service"
       territory:
-        roles: "Admins du Territoire"
-        admin_agents: "Admins du Territoire"
+        roles: "Admins de l'espace"
+        admin_agents: "Admins de l'espace"
       agent_territorial_access_right:
         allow_to_manage_teams: "Peut gérer les équipes"
         allow_to_manage_access_rights: "Peut gérer les droits d’accès"

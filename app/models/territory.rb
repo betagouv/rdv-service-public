@@ -51,7 +51,7 @@ class Territory < ApplicationRecord
   validates :name, presence: true, if: -> { persisted? }
   validate do
     if name_changed? && name_was.in?(SPECIAL_NAMES)
-      errors.add(:name, "Le nom de ce territoire lui donne des propriétés particulières et ne peut donc pas être changé")
+      errors.add(:name, "Le nom de cet espace lui donne des propriétés particulières et ne peut donc pas être changé")
     end
   end
   validate do
