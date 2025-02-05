@@ -2,8 +2,8 @@ FactoryBot.define do
   factory :rdv do
     organisation { association(:organisation) }
     lieu { build(:lieu, organisation: organisation) }
-    motif { build(:motif, organisation: organisation) }
     agents { [build(:agent, organisations: [organisation])] }
+    motif { build(:motif, organisation: organisation, service: agents.first.services.first) }
 
     duration_in_min { 45 }
     starts_at { 3.days.from_now }

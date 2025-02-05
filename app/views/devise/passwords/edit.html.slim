@@ -4,7 +4,7 @@
 - if @from_confirmation
   p.text-muted Pour finaliser votre inscription, veuillez définir un mot de passe.
 
-= form_for resource, as: resource_name, url: password_path(resource_name), html: { method: :put }, builder: DsfrFormBuilder do |f|
+= form_for resource, as: resource_name, url: password_path(resource_name), html: { method: :put }, builder: Dsfr::FormBuilder do |f|
   = f.hidden_field :reset_password_token
   .form-group
     = render "common/form/new_password_input", f: f

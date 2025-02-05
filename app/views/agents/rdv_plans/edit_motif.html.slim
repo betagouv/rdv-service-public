@@ -1,0 +1,23 @@
+.fr-row
+  .fr-col-12
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 2, step_title: "Motif", next_step_title: "Usager"
+.row.fr-mb-16w
+  .col-4
+    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: true
+    = link_to edit_modalites_agents_rdv_plan_path(@rdv_plan) do
+      = back_icon(class: "fr-mr-1w")
+      = "retour"
+
+  .col-12.col-md-6
+    = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
+    = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
+    hr.fr-mt-2w.fr-mb-4w
+
+    = simple_form_for @rdv_plan, url: update_motif_agents_rdv_plan_path(@rdv_plan) do |f|
+      = render "model_errors", model: @rdv_plan
+
+      .input-group.fr-mb-3w
+        = f.input :motif_id, label: "Motif du rendez-vous", required: true, collection: @motifs, label_method: :name, label_html: { class: "fr-mr-2w" }, include_blank: true
+
+      = f.input :duration_in_minutes, label: "Durée en minutes"
+      = f.submit "Continuer", class: "fr-btn float-right"
