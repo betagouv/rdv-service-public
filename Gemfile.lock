@@ -439,7 +439,7 @@ GEM
     parallel (1.26.3)
     parallel_tests (4.8.0)
       parallel
-    parser (3.3.6.0)
+    parser (3.3.7.0)
       ast (~> 2.4.1)
       racc
     pg (1.4.6)
@@ -797,7 +797,7 @@ DEPENDENCIES
   ostruct
   paper_trail
   parallel_tests
-  parser (= 3.3.6.0)
+  parser (= 3.3.7.0)
   pg
   pg_search
   phonelib
@@ -845,7 +845,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 3.3.6p108
+   ruby 3.3.7p123
 
 BUNDLED WITH
    2.5.22
