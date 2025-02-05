@@ -23,6 +23,15 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def update
+    if @user.confirmed? && user_params[:email].present?
+      render_error :unprocessable_entity, {
+        success: false,
+        errors: {},
+        error_messages: [I18n.t("users.can_not_update_email_of_confirmed_user")],
+      }
+      return
+    end
+
     @user.skip_reconfirmation!
     @user.update!(user_params)
     render_record @user
