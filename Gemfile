@@ -40,6 +40,8 @@ gem "anonymizer", path: "lib/anonymizer"
 # Database
 # Pg is the Ruby interface to the PostgreSQL RDBMS
 gem "pg"
+# Ruby PostgreSQL database performance insights. Locks, index usage, buffer cache hit ratios, vacuum stats and more.
+gem "ruby-pg-extras"
 # PgSearch builds Active Record named scopes that take advantage of PostgreSQL's full text search
 gem "pg_search"
 # Strong Migrations catches unsafe migrations in development
