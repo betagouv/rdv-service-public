@@ -23,7 +23,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def update
-    if @user.confirmed? && user_params[:email].present?
+    if email_change_not_allowed?
       render_error :unprocessable_entity, {
         success: false,
         errors: {},
@@ -43,6 +43,10 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   private
+
+  def email_change_not_allowed?
+    @user.confirmed? && user_params[:email].present? && @user.email != user_params[:email]
+  end
 
   def set_organisation
     @organisation = params[:organisation_id].present? ? Organisation.find(params[:organisation_id]) : nil
