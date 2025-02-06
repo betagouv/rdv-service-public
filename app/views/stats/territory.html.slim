@@ -56,19 +56,19 @@ h2= @territory
     .card-body
       = self_anchor "rdvs"
         h2.card-title RDV créés par type d’usager (#{@stats.rdvs.count})
-      = column_chart rdvs_stats_territory_path(@territory), stacked: true
+      = column_chart stats_territory_rdvs_path(territory: @territory), stacked: true
 
   .card.mb-5
     .card-body
       = self_anchor "rdvs-service"
         h2.card-title RDV créés par service (#{@stats.rdvs.count})
-      = column_chart rdvs_stats_territory_path(@territory, by_service: true), stacked: true
+      = column_chart stats_territory_rdvs_path(territory: @territory, by_service: true), stacked: true
 
   .card.mb-5
     .card-body
       = self_anchor "rdvs-type"
         h2.card-title RDV par type (#{@stats.rdvs.count})
-      = column_chart rdvs_stats_territory_path(@territory, by_location_type: true), stacked: true
+      = column_chart stats_territory_rdvs_path(territory: @territory, by_location_type: true), stacked: true
 
   .card.mb-5
     .card-body
@@ -85,7 +85,7 @@ h2= @territory
           "revoked": $teal, #02a8b5
           "noshow": $danger, #fa5c7c
       - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
-      = column_chart rdvs_stats_territory_path(@territory, by_status: true), stacked: :percent, max: 100, suffix: "%", colors: colors
+      = column_chart stats_territory_rdvs_path(territory: @territory, by_status: true), stacked: :percent, max: 100, suffix: "%", colors: colors
 
   .card.mb-5
     .card-header
@@ -93,7 +93,7 @@ h2= @territory
         h2.card-title #{Receipt.model_name.human(count: 2)}
     .card-body
       |> Vous pouvez consulter les statistiques sur les notifications envoyées
-      = link_to("ici", notifications_stats_territory_path(@territory))
+      = link_to("ici", stats_territory_notifications_path(territory: @territory))
 
   .card.mb-5
     .card-body
@@ -137,7 +137,7 @@ h2= @territory
       = self_anchor "active_agents"
         h2.card-title Agents actifs par mois
       p Nombre d'agents ayant participé à au moins un rdv chaque mois
-      = column_chart active_agents_stats_territory_path(@territory)
+      = column_chart stats_territory_active_agents_path(territory: @territory)
 
   .card.mb-5
     .card-header

@@ -22,4 +22,4 @@ h3 Statistiques de notifications
           h2.card-title #{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})
         - %i[event channel result].each do |attribute|
           h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}
-          = column_chart receipts_stats_territory_path(@territory, group_by: attribute, departement: @departement), stacked: true
+          = column_chart stats_territory_receipts_path(territory: @territory, group_by: attribute, departement: @departement), stacked: true
