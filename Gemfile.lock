@@ -1,4 +1,14 @@
 GIT
+  remote: https://github.com/betagouv/dsfr-form-builder
+  revision: 60a639821c2f6734c193fd9a793f9e4f58b4801b
+  branch: feature/text_area
+  specs:
+    dsfr-form_builder (0.0.2)
+      actionview (>= 6.1, < 9.0)
+      activemodel (>= 6.1, < 9.0)
+      activesupport (>= 6.1, < 9.0)
+
+GIT
   remote: https://github.com/nahi/httpclient.git
   revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
   ref: d57cc6d
@@ -240,10 +250,6 @@ GEM
       railties (>= 3.2)
     drb (2.2.1)
     dsfr-assets (1.13.0.1)
-    dsfr-form_builder (0.0.2)
-      actionview (>= 6.1, < 9.0)
-      activemodel (>= 6.1, < 9.0)
-      activesupport (>= 6.1, < 9.0)
     dsfr-view-components (2.1.1)
       dsfr-assets (~> 1.13)
       html-attributes-utils (~> 1)
@@ -769,7 +775,7 @@ DEPENDENCIES
   doorkeeper-i18n
   dotenv-rails
   drb
-  dsfr-form_builder (= 0.0.2)
+  dsfr-form_builder!
   dsfr-view-components
   factory_bot
   faker

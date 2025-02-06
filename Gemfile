@@ -132,7 +132,7 @@ gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
 gem "dsfr-view-components"
-gem "dsfr-form_builder", "= 0.0.2" # On fixe la version tant qu’on est pas en 1.0
+gem "dsfr-form_builder", git: "https://github.com/betagouv/dsfr-form-builder/", branch: "feature/text_area"
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
