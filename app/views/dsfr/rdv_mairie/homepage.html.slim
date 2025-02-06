@@ -284,15 +284,22 @@ hr
               = image_tag "rdv_mairie/billet-0-euros.png", alt: "Illustration d’un billet de 0 euros tenu par des mains", class: "fr-responsive-img"
 
 .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
-  .fr-container.fr-py-8w
+  .fr-container.fr-py-6w
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
-        | 2 715 045
+        | 2 892 616
       .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
         .rdv-font-weight-bold
           | RENDEZ-VOUS PLANIFIÉS
         div
-          | DANS 995 STRUCTURES
+          | DANS 995 STRUCTURES*
+
+.fr-container.fr-py-3w
+  .rdv-flex.d-flex.flex-gap-1em.flex-v-gap-1em.rdv-flex-justify-content-center.rdv-flex-align-items-baseline.rdv-flex-wrap-wrap-reverse
+    span
+      | *Données concernant les 24 derniers mois
+    div
+      = link_to "Consulter nos statistiques", stats_path, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-bar-chart-box-line"
 
 .rdv-background-color-alt-grey
   .fr-container.fr-py-8w
