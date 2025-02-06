@@ -79,5 +79,23 @@ RSpec.describe "/api/v1/users" do
         expect(existing_user.reload.referent_agents).to eq([myself])
       end
     end
+
+    context "quand un usager a un référent auquel je n'ai pas accès en tant qu'agent" do
+      let(:agent_from_other_org) { create(:agent) }
+      let(:params) do
+        {
+          referent_agent_ids: [myself.id],
+        }
+      end
+
+      before do
+        existing_user.referent_agents << agent_from_other_org
+      end
+
+      it "permet de modifier les référents sans supprimer ceux auxquels je n'ai pas accès" do
+        put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json
+        expect(existing_user.reload.referent_agents).to contain_exactly(myself, agent_from_other_org)
+      end
+    end
   end
 end
