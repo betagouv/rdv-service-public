@@ -188,10 +188,11 @@ RSpec.shared_examples "SearchContext" do
     end
 
     it "returns collective motif with lieu_id" do
-      lieu = create(:lieu)
+      organisation = create(:organisation)
+      lieu = create(:lieu, organisation:)
       search_context = described_class.new(user: nil, query_params: { lieu_id: lieu.id })
-      motif = create(:motif, collectif: true)
-      create(:rdv, motif: motif, lieu: lieu)
+      motif = create(:motif, collectif: true, organisation:)
+      create(:rdv, motif: motif, lieu: lieu, organisation:)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
     end
 

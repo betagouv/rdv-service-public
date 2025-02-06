@@ -121,7 +121,16 @@ Rails.application.routes.draw do
           get :edit_starts_at
           patch :update_starts_at
 
-          get :show_starts_at # Route temporaire qui sera supprimée quand on implémentera la suite du parcours
+          get :edit_modalites
+          patch :update_modalites
+
+          get :edit_motif
+          patch :update_motif
+
+          get :edit_user
+          post :create_rdv
+
+          get :rdv
         end
       end
       resources :users, only: [] do

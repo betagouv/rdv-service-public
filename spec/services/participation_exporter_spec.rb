@@ -1,15 +1,18 @@
 RSpec.describe ParticipationExporter, type: :service do
   describe "#xls_string_from_rdvs_rows" do
     it "return export with header" do
+      organisation = create(:organisation, name: "MDS Paris")
+      lieu = create(:lieu, name: "MDS Paris Nord", address: "21 rue des Ardennes, Paris, 75019", organisation:)
+      motif = build(:motif, name: "Consultation", service: build(:service, name: "PMI"), organisation:)
       rdv = create(
         :rdv,
         created_at: Time.zone.parse("2023-01-01 12h50"),
         starts_at: Time.zone.parse("2023-04-07 14h30"),
         status: :unknown,
         context: "des infos sur le rdv",
-        lieu: create(:lieu, name: "MDS Paris Nord", address: "21 rue des Ardennes, Paris, 75019"),
-        motif: build(:motif, name: "Consultation", service: build(:service, name: "PMI")),
-        organisation: create(:organisation, name: "MDS Paris"),
+        lieu:,
+        motif:,
+        organisation:,
         agents: [create(:agent, email: "agent@mail.com", first_name: "Francis", last_name: "Factice")],
         users: [create(:user, first_name: "Gaston", last_name: "Bidon", birth_date: Date.new(2000, 1, 1), address: nil)]
       )

@@ -17,7 +17,7 @@ RSpec.describe "Agent can list RDVs" do
 
     before do
       [current_agent, agent_from_same_service, agent_from_other_service].each do |agent|
-        create(:rdv, organisation: organisation, agents: [agent], motif: create(:motif, service: agent.services.first))
+        create(:rdv, organisation: organisation, agents: [agent], motif: create(:motif, service: agent.services.first, organisation:))
       end
     end
 

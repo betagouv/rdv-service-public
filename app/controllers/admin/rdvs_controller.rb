@@ -164,7 +164,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_update_params
-    allowed_params = params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
+    allowed_params = params.require(:rdv).permit(:status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
                                                  participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
                                                  lieu_attributes: %i[name address latitude longitude id])
 

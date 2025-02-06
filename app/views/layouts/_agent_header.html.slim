@@ -2,7 +2,7 @@ header.header.bg-white
   = render "layouts/rdv_solidarites_instance_name"
   = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
 
-  nav.navbar.navbar-expand-lg.bg-transparent.navbar-dsfr aria-label="navigation"
+  nav.navbar.navbar-expand-lg.bg-transparent.navbar-dsfr[role="navigation" aria-label="navigation"]
     = link_to root_path, class: "header-brand ml-4" do
       = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr logo-dsfr--compactable"
     button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
@@ -13,9 +13,18 @@ header.header.bg-white
         li.list-inline-item
           #js-headway-anchor.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center
             | Nouveautés
-        li.list-inline-item
-          = link_to current_agent.full_name, edit_agent_registration_path, class: "btn text-primary-blue link-dsfr"
-        li.list-inline-item
-          = link_to destroy_agent_session_path, method: :delete, class: "btn text-primary-blue link-dsfr" do
-            i.fa.fa-sign-out-alt>
-            span> Se déconnecter
+        li#rdv-account-dropdown.list-inline-item.dropdown.mr-2
+          button.link-dsfr.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+            = current_agent.full_name
+          ul.dropdown-menu.dropdown-menu-right
+            li = link_to edit_agent_registration_path, class: "dropdown-item-dsfr dropdown-item" do
+              span.fr-icon--sm.fr-mr-2v.fr-icon-account-line[aria-hidden="true"]
+              = "Mon compte"
+            - Agent::TerritoryPolicy::Scope.new(current_agent, Territory.all).resolve.distinct.order(:name).each do |territory|
+              li = link_to admin_territory_path(territory), class: "dropdown-item-dsfr dropdown-item" do
+                span.fr-icon--sm.fr-mr-2v.fr-icon-settings-5-line[aria-hidden="true"]
+                | Espace Admin de Territoire : #{territory.name}
+            .dropdown-divider.my-1[aria-hidden="true"]
+            li = link_to destroy_agent_session_path, method: :delete, class: "dropdown-item-dsfr dropdown-item" do
+              span.fr-icon--sm.fr-mr-2v.fr-icon-logout-box-r-line[aria-hidden="true"]
+              | Se déconnecter
