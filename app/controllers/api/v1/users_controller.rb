@@ -24,6 +24,15 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def update
+    if email_change_not_allowed?
+      render_error :unprocessable_entity, {
+        success: false,
+        errors: {},
+        error_messages: [I18n.t("users.can_not_update_email_of_confirmed_user")],
+      }
+      return
+    end
+
     @user.skip_reconfirmation!
     @user.update!(user_params)
     render_record @user
@@ -35,6 +44,10 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   private
+
+  def email_change_not_allowed?
+    @user.confirmed? && user_params.key?(:email) && @user.email != user_params[:email]
+  end
 
   def set_organisation
     @organisation = params[:organisation_id].present? ? Organisation.find(params[:organisation_id]) : nil
