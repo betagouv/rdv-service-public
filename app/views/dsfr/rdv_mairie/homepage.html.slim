@@ -294,12 +294,11 @@ hr
         div
           | DANS 995 STRUCTURES*
 
-.fr-container.fr-py-3w
-  .rdv-flex.d-flex.flex-gap-1em.flex-v-gap-1em.rdv-flex-justify-content-center.rdv-flex-align-items-baseline.rdv-flex-wrap-wrap-reverse
-    span
-      | *Données concernant les 24 derniers mois
-    div
-      = link_to "Consulter nos statistiques", stats_path, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-bar-chart-box-line"
+.fr-container.fr-py-3w.rdv-text-align-center
+  |> *Données concernant les 24 derniers mois.
+  |> Pour plus d’informations,
+  = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
+  | .
 
 .rdv-background-color-alt-grey
   .fr-container.fr-py-8w
