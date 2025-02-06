@@ -81,7 +81,8 @@ Rails.application.routes.draw do
   end
   namespace :stats, module: nil do
     get "/", to: "stats#index"
-    resources :territories, only: %i[index show], controller: "stats_territory" do
+    get "territories", to: "stats#territories"
+    resources :territories, only: %i[show], controller: "stats_territory" do
       member do
         get :rdvs
         get :active_agents

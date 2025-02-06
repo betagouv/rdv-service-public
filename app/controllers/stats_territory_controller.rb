@@ -1,9 +1,5 @@
 class StatsTerritoryController < ApplicationController
-  before_action :set_territory_and_records, except: :index
-
-  def index
-    @territories = Territory.all
-  end
+  before_action :set_territory_and_records
 
   def show
     @stats = Stat.new(agents: @agents, organisations: @organisations, rdvs: @rdvs, users: @users, receipts: @receipts)
