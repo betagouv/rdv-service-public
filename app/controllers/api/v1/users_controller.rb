@@ -55,6 +55,13 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
 
     attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
 
-    params.permit(attrs, organisation_ids: [], referent_agent_ids: [])
+    params.permit(*attrs, organisation_ids: []).merge(referent_agent_ids: safe_referent_ids)
+  end
+
+  def safe_referent_ids
+    policy_scope(
+      Agent.where(id: params[:referent_agent_ids]),
+      policy_scope_class: Agent::AgentPolicy::Scope
+    ).ids
   end
 end
