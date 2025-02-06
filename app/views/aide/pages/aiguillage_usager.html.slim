@@ -2,13 +2,14 @@
 
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
-    = b.breadcrumb label: "Contact", href: aide_aiguillage_role_path
-    = b.breadcrumb label: yield(:title)
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "Contact", href: aide_aiguillage_role_path
+    = b.with_breadcrumb label: yield(:title)
 
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
     - if @form.raison.blank?
-      = form_for @form, url: aide_aiguillage_usager_path, method: :GET, builder: DsfrFormBuilder do |f|
+      = form_for @form, url: aide_aiguillage_usager_path, method: :GET, builder: Dsfr::FormBuilder do |f|
         = f.dsfr_radio_buttons :raison, @form.raisons_options, legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :"
         = f.submit "Valider", class: "fr-btn"
     - else
