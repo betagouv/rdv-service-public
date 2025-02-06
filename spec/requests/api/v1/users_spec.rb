@@ -52,7 +52,7 @@ RSpec.describe "/api/v1/users" do
     context "simple case, update last name" do
       let(:params) do
         {
-          last_name: "Fastoche"
+          last_name: "Fastoche",
         }
       end
 
@@ -69,7 +69,7 @@ RSpec.describe "/api/v1/users" do
 
       let(:params) do
         {
-          referent_agent_ids: [agent_from_other_org.id, myself.id]
+          referent_agent_ids: [agent_from_other_org.id, myself.id],
         }
       end
 
