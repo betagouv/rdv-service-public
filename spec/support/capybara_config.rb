@@ -8,18 +8,11 @@ WebMock.disable_net_connect!(allow: [
 Capybara.register_driver :selenium do |app|
   chrome_bin = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
   binary = chrome_bin if chrome_bin
-  browser_options = Selenium::WebDriver::Chrome::Options.new(
-    # these args seem to reduce test flakyness
-    args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen],
-    "goog:loggingPrefs": { browser: "ALL" },
-    binary: binary
-  )
-
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    options: browser_options
-  )
+  # these args seem to reduce test flakyness
+  args = %w[no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen]
+  args.prepend("headless") if ENV["HEADLESS"] != "false"
+  options = Selenium::WebDriver::Chrome::Options.new(args:, "goog:loggingPrefs": { browser: "ALL" }, binary:)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 
 Capybara.javascript_driver = :selenium
@@ -38,6 +31,12 @@ Capybara.configure do |config|
   # This is necessary when using Selenium + custom .localhost domain.
   # See: https://stackoverflow.com/a/63973323/2864020
   config.always_include_port = true
+end
+
+# On force le driver JS lorsqu’on debug des tests E2E, mais ça ne
+# fonctionne pas dans tous les cas, il vaut mieux rajouter manuellement js:true
+if ENV["HEADLESS"] == "false"
+  Capybara.default_driver = Capybara.javascript_driver
 end
 
 RSpec.configure do |config|
