@@ -5,7 +5,7 @@
   = dsfr_breadcrumbs do |b|
     = b.with_breadcrumb label: "Accueil", href: "/"
     = b.with_breadcrumb label: "Statistiques globales", href: stats_path
-    = b.with_breadcrumb label: "Statistiques par territoire", href: stats_territories_path
+    = b.with_breadcrumb label: "Statistiques par structure", href: stats_territories_path
     = b.with_breadcrumb label: @territory.to_s, href: stats_territory_path(@territory)
     = b.with_breadcrumb label: "Statistiques de notifications"
 
