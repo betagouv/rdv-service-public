@@ -9,24 +9,24 @@ class UsePartialIndexes < ActiveRecord::Migration[7.1]
 
     # Je pense inutile, car aussi coûteux qu'un seq scan et
     # la table est très étroite (3 petites colonnes)
-    remove_index :agent_roles, :access_level
+    remove_index :agent_roles, :access_level, algorithm: :concurrently
 
     # déjà géré par un index composite
-    remove_index :agent_roles, :organisation_id
-    remove_index :agent_services, :agent_id
-    remove_index :agent_teams, :team_id
-    remove_index :agent_territorial_access_rights, :agent_id
-    remove_index :agent_territorial_roles, :agent_id
-    remove_index :agents_rdvs, :agent_id
-    remove_index :file_attentes, :rdv_id
-    remove_index :motifs_plage_ouvertures, :motif_id
-    remove_index :organisations, :name
-    remove_index :participations, :rdv_id
-    remove_index :referent_assignations, :user_id
-    remove_index :sectors, :human_id
-    remove_index :territory_services, :territory_id
-    remove_index :users, :invitations_count # Toutes les lignes sont à 0, il faudrait supprimer la colonne
-    remove_index :webhook_endpoints, :organisation_id
+    remove_index :agent_roles, :organisation_id, algorithm: :concurrently
+    remove_index :agent_services, :agent_id, algorithm: :concurrently
+    remove_index :agent_teams, :team_id, algorithm: :concurrently
+    remove_index :agent_territorial_access_rights, :agent_id, algorithm: :concurrently
+    remove_index :agent_territorial_roles, :agent_id, algorithm: :concurrently
+    remove_index :agents_rdvs, :agent_id, algorithm: :concurrently
+    remove_index :file_attentes, :rdv_id, algorithm: :concurrently
+    remove_index :motifs_plage_ouvertures, :motif_id, algorithm: :concurrently
+    remove_index :organisations, :name, algorithm: :concurrently
+    remove_index :participations, :rdv_id, algorithm: :concurrently
+    remove_index :referent_assignations, :user_id, algorithm: :concurrently
+    remove_index :sectors, :human_id, algorithm: :concurrently
+    remove_index :territory_services, :territory_id, algorithm: :concurrently
+    remove_index :users, :invitations_count, algorithm: :concurrently # Toutes les lignes sont à 0, il faudrait supprimer la colonne
+    remove_index :webhook_endpoints, :organisation_id, algorithm: :concurrently
 
     # Colonnes essentiellement vides, pas la peine d'indexer les NULL
     change_to_partial_index(:agents, :account_deletion_warning_sent_at)
@@ -60,30 +60,30 @@ class UsePartialIndexes < ActiveRecord::Migration[7.1]
     # on a déjà filtré sur les RDVs de l'usager, donc cet index n'est même pas utilisé.
     # Je pense que ça été ajouté par principe mais sans compréhension fine dans
     # https://github.com/betagouv/rdv-service-public/pull/2285#discussion_r831427307
-    remove_index :motifs, :visibility_type
+    remove_index :motifs, :visibility_type, algorithm: :concurrently
 
     # Entropie trop faible, et ne fait jamais un where sur le status de beaucoup de participations.
-    remove_index :participations, :status
+    remove_index :participations, :status, algorithm: :concurrently
 
-    remove_index :participations, %i[created_by_type created_by_id]
+    remove_index :participations, %i[created_by_type created_by_id], algorithm: :concurrently
     add_index :participations,    %i[created_by_type created_by_id], where: "(created_by_id IS NOT NULL)", algorithm: :concurrently
 
-    remove_index :participations, :invited_by_id
-    remove_index :participations, %i[invited_by_type invited_by_id], name: "index_participations_on_invited_by"
+    remove_index :participations, :invited_by_id, algorithm: :concurrently
+    remove_index :participations, %i[invited_by_type invited_by_id], name: "index_participations_on_invited_by", algorithm: :concurrently
     add_index :participations,    %i[invited_by_type invited_by_id], where: "(invited_by_id IS NOT NULL)", algorithm: :concurrently
 
-    remove_index :rdvs, %i[created_by_type created_by_id]
+    remove_index :rdvs, %i[created_by_type created_by_id], algorithm: :concurrently
     add_index :rdvs,    %i[created_by_type created_by_id], where: "(created_by_id IS NOT NULL)", algorithm: :concurrently
 
-    remove_index :users, :invited_by_id
-    remove_index :users,  %i[invited_by_type invited_by_id]
+    remove_index :users, :invited_by_id, algorithm: :concurrently
+    remove_index :users,  %i[invited_by_type invited_by_id], algorithm: :concurrently
     add_index :users,     %i[invited_by_type invited_by_id], where: "(invited_by_id IS NOT NULL)", algorithm: :concurrently
   end
 
   private
 
   def change_to_partial_index(table, column, where: "IS NOT NULL", unique: false)
-    remove_index table, column, unique: unique
+    remove_index table, column, unique: unique, algorithm: :concurrently
     add_index table, column, where: "(#{column} #{where})", unique: unique, algorithm: :concurrently
   end
 end
