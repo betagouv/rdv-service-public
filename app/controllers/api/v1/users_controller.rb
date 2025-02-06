@@ -45,7 +45,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   private
 
   def email_change_not_allowed?
-    @user.confirmed? && user_params[:email].present? && @user.email != user_params[:email]
+    @user.confirmed? && user_params.key?(:email) && @user.email != user_params[:email]
   end
 
   def set_organisation
