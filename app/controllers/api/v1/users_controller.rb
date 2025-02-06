@@ -15,11 +15,12 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   def create
     params.require(:organisation_ids)
 
-    user = User.new(user_params.merge(created_through: "agent_creation_api"))
-    authorize(user, policy_class: Agent::UserPolicy)
-    user.skip_confirmation_notification!
-    user.save!
-    render_record user
+    @user = User.new
+    @user.assign_attributes(user_params.merge(created_through: "agent_creation_api"))
+    authorize(@user, policy_class: Agent::UserPolicy)
+    @user.skip_confirmation_notification!
+    @user.save!
+    render_record @user
   end
 
   def update
