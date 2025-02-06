@@ -12,13 +12,13 @@ RSpec.describe "Anybody can see stats" do
   end
 
   it "displays the number of agents with public plages or RDV collectif on the territory scoped page" do
-    visit stats_territory_path(organisation.territory)
+    visit stats_territory_path(territory: organisation.territory)
     expect(page).to have_content("0 ont des créneaux ouverts au public")
 
     create(:plage_ouverture, motifs: [create(:motif, organisation:)], organisation:) # reservable online plage
     create(:rdv, motif:, organisation:) # reservable online RDV collectif
 
-    visit stats_territory_path(organisation.territory)
+    visit stats_territory_path(territory: organisation.territory)
     expect(page).to have_content("2 ont des créneaux ouverts au public")
   end
 end
