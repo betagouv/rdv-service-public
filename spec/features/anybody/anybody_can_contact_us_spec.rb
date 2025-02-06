@@ -6,7 +6,7 @@ RSpec.describe "Tout le monde peut nous contacter" do
 
       # étape d’aiguillage basée sur le rôle
       expect(page).to have_content("Vous êtes…")
-      find(:label, text: /Vous êtes usager/).click # on ne peut pas utiliser choose car le radio input est caché par le CSS du DSFR
+      find(:label, text: /Vous êtes un·e particulier·ère/).click # on ne peut pas utiliser choose car le radio input est caché par le CSS du DSFR
       click_on "Valider"
 
       expect(page).to have_content("Veuillez sélectionner la raison qui correspond le mieux à votre situation")
@@ -45,7 +45,7 @@ RSpec.describe "Tout le monde peut nous contacter" do
 
       # étape d’aiguillage basée sur le rôle
       expect(page).to have_content("Vous êtes…")
-      find(:label, text: /Vous êtes agent du service public/).click
+      find(:label, text: /Vous êtes un·e agent du service public/).click
       click_on "Valider"
 
       expect(page).to have_content("Formulaire de contact")

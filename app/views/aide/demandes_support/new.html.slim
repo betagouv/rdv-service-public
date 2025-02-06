@@ -5,14 +5,14 @@
     = b.with_breadcrumb label: "Accueil", href: root_path
     = b.with_breadcrumb label: "Contact", href: aide_aiguillage_role_path
     - if @form.role_usager?
-      = b.with_breadcrumb label: "Aide usagers", href: aide_aiguillage_usager_path
+      = b.with_breadcrumb label: "Aide particuliers", href: aide_aiguillage_usager_path
     = b.with_breadcrumb label: yield(:title)
 
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
     = form_for @form, url: aide_demande_support_path, method: :POST, builder: Dsfr::FormBuilder do |f|
       = f.dsfr_select :role,
-        [["Vous êtes usager", :usager], ["Vous êtes agent du service public", :agent]],
+        [["Vous êtes un·e particulier", :usager], ["Vous êtes un·e agent du service public", :agent]],
         value: @form.role,
         label: "Vous êtes…",
         required: true
