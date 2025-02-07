@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.summary = "Erase personal data from Postgres tables to use them for stats"
   spec.description = "Erase personal data from Postgres tables to use them for stats"
   spec.required_ruby_version = ">= 3.3.0"
+  spec.files = Dir["lib/**/*.rb"]
 
   spec.add_dependency "activerecord", ">= 7.0"
 
