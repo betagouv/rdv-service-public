@@ -23,7 +23,7 @@ section.main-content__body
         = ff.input :ants_connectable, as: :boolean, label: "Autoriser le branchement au moteur de recherche de l'ANTS", hint: "En cochant cette case, vous permettrez à cette organisation (probablement une mairie) d'apparaitre sur https://rendezvouspasseport.ants.gouv.fr/"
 
     = f.simple_fields_for :lieu do |ff|
-      = ff.input :address, label: "Adresse du premier lieu", hint: "", input_html: { class: "places-js-container"}
+      = ff.input :address, label: "Adresse du premier lieu", hint: "", input_html: { data: { "address-autocomplete": "on" } }
       = ff.input :latitude, as: :hidden
       = ff.input :longitude, as: :hidden
 
