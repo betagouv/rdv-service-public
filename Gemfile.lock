@@ -33,7 +33,7 @@ GIT
 PATH
   remote: lib/anonymizer
   specs:
-    anonymizer (0.1.1)
+    anonymizer (0.1.0)
       activerecord (>= 7.0)
 
 PATH

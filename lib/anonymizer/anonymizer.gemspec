@@ -1,7 +1,7 @@
 require_relative "lib/anonymizer/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "sql-anonymizer"
+  spec.name = "anonymizer"
   spec.version = Anonymizer::VERSION
   spec.authors = ["RDV Service Public"]
 
