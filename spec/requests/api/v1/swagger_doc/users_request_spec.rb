@@ -93,7 +93,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
-      let(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+      let(:user) { create(:user, :unconfirmed, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
       let(:user_id) { user.id }
 
       response 200, "Met à jour et renvoie un·e usager·ère" do
@@ -180,6 +180,40 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
           expect(user.reload.first_name).not_to eq(first_name)
           expect(user.address).to eq(address)
         end
+      end
+
+      response 422, "can't update email of confirmed user" do
+        let(:user) { create(:user, organisations: [organisation]) }
+        let(:email) { "new@email.fr" }
+
+        run_test!
+
+        it {
+          expect(parsed_response_body).to include(
+            success: false,
+            errors: {},
+            error_messages: ["Vous ne pouvez pas modifier l'email d'un usager ayant validé son compte."]
+          )
+        }
+
+        it { expect(user.reload.email).not_to eq(email) }
+      end
+
+      response 422, "can't nullify email of confirmed user" do
+        let(:user) { create(:user, organisations: [organisation]) }
+        let(:email) { "" }
+
+        run_test!
+
+        it {
+          expect(parsed_response_body).to include(
+            success: false,
+            errors: {},
+            error_messages: ["Vous ne pouvez pas modifier l'email d'un usager ayant validé son compte."]
+          )
+        }
+
+        it { expect(user.reload.email).not_to eq(email) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"

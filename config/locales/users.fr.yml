@@ -1,6 +1,7 @@
 fr:
   users:
     can_not_delete_because_has_future_rdvs: L'usager ou ses proches ont des rendez-vous programmés, vous ne pouvez pas le supprimer.
+    can_not_update_email_of_confirmed_user: Vous ne pouvez pas modifier l'email d'un usager ayant validé son compte.
     soft_delete_confirm_message:
       relatives:
         one: ⚠️ Cet usager a un proche qui sera aussi supprimé
