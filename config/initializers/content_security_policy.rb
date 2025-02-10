@@ -20,6 +20,8 @@ bootstrap_cdn = "*.bootstrapcdn.com"
 # Headway nous permet de publier un changelog au sein de l'app
 headway_cnd = "cdn.headwayapp.co"
 headway_widget = "headway-widget.net"
+# Metabase permet d’embedder des rapports dans l’application
+metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
 
 Rails.application.config.content_security_policy do |policy|
   policy.default_src :self
@@ -27,7 +29,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.object_src :none
   policy.worker_src :blob
   policy.child_src :blob, :self
-  policy.frame_src :self, in_status, headway_widget
+  policy.frame_src :self, in_status, headway_widget, metabase
   policy.media_src :self, s3_de_rdv_insertion
   policy.img_src :self, :data, voxusagers
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd
