@@ -1,13 +1,13 @@
 class DemandeSupportForm
   include ActiveModel::Model
-  ATTRIBUTES = %i[role sujet first_name last_name phone_number email message].freeze
+  ATTRIBUTES = %i[current_domain role sujet first_name last_name phone_number email message].freeze
   attr_accessor(*ATTRIBUTES)
 
   validates(*ATTRIBUTES.excluding(:phone_number), presence: true)
 
-  def initialize(current_domain:, role:, sujet: nil, first_name: nil, last_name: nil, phone_number: nil, email: nil, message: nil)
+  def initialize(current_domain:, role: nil, sujet: nil, first_name: nil, last_name: nil, phone_number: nil, email: nil, message: nil)
     @current_domain = current_domain
-    @role = role.to_sym
+    @role = role&.to_sym
     @sujet = sujet
     @first_name = first_name
     @last_name = last_name
@@ -22,11 +22,12 @@ class DemandeSupportForm
   def submit
     return unless valid?
 
-    ZammadApiClient.create_ticket(
+    CreateZammadTicketJob.perform_later(
       sender_role: role,
       email:,
       subject: ticket_subject,
-      body: ticket_body
+      body: ticket_body,
+      tags: [current_domain.to_s]
     )
   end
 

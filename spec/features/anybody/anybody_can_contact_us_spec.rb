@@ -23,12 +23,12 @@ RSpec.describe "Tout le monde peut nous contacter" do
       click_on "Contacter l’équipe de RDV Service Public"
 
       fill_in "Votre prénom", with: "Tamara"
-      fill_in "Votre email", with: "tamara.saadi@provider.fr"
+      fill_in "Votre email", with: "tamara.dupont@provider.fr"
       fill_in "Votre message", with: "Je suis tout à fait perdue !"
       click_on "Envoyer votre demande" # on clique avant d’avoir rempli le nom de famille
       sleep(0.5)
       expect(page).to have_content("Formulaire de contact") # on devrait toujours être sur la même page
-      fill_in "Votre nom de famille", with: "Saadi"
+      fill_in "Votre nom de famille", with: "Dupont"
       stub = stub_request(:post, "https://zammad10.ethibox.fr/api/v1/tickets").to_return(
         body: %({"id": 123, "number": 456, "customer_id": 789, "title": "Contact usager"}),
         headers: { content_type: "application/json" }
@@ -38,7 +38,7 @@ RSpec.describe "Tout le monde peut nous contacter" do
     end
   end
 
-  context "un agent non connecté nous contacte depuis le formulaire de contact", js: true do
+  context "un agent non connecté nous contacte depuis le formulaire de contact" do
     it "créé un ticket Zammad" do
       visit "/"
       click_on "Contact"

@@ -19,7 +19,6 @@
         = link_to "modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line"
 
     - if @form.raison_creneaux?
-
       h6 Étapes pour prendre un RDV
       ol
         li Sur la page d’accueil, dans la barre de recherche, saisissez votre adresse et cliquez sur « Rechercher »
@@ -43,9 +42,60 @@
 
     - if @form.raison_annuler?
       .fr-accordions-group.fr-mb-4w
-        = render "aide/pages/documentation_usager/faq_annuler_rdv"
-        = render "aide/pages/documentation_usager/faq_annuler_rdv_sms"
-        = render "aide/pages/documentation_usager/faq_annuler_rdv_email"
+        section.fr-accordion
+          h2.fr-accordion__title
+            button.fr-accordion__btn[type="button" aria-expanded="false" aria-controls="faq-annuler"]
+              | Comment annuler votre RDV ?
+          .fr-collapse#faq-annuler
+            p
+              ' Vous pouvez annuler vos rendez-vous dès la confirmation du rendez-vous et jusqu'à 4 heures avant le rendez-vous.
+            p
+              ' Vous pouvez annuler votre rendez-vous depuis les liens présents dans le SMS et/ou l’e-mail que vous avez reçu.
+            .fr-callout.fr-mb-2w
+              ' Si le rendez-vous a lieu dans moins de 4 heures, vous ne pouvez plus annuler le RDV.
+              ' Nous vous invitons à contacter directement le service pour l'informer de votre absence.
+            p
+              ' Vous trouverez ci-dessous plus de détails et des captures d’écran sur le fonctionnement de l’annulation depuis les SMS ou les emails.
+        section.fr-accordion
+          h2.fr-accordion__title
+            button.fr-accordion__btn[type="button" aria-expanded="false" aria-controls="faq-annuler-sms"]
+              | Comment annuler votre RDV depuis le SMS que vous avez reçu ?
+          .fr-collapse#faq-annuler-sms
+            .fr-grid-row.fr-grid-row--gutters
+              .fr-col-md-6
+                h3 Capture d’écran
+                = image_tag "static_pages/capture-ecran-annuler-rdv-depuis-sms.gif", class: "rdv-max-height-80vh rdv-max-width-100"
+              .fr-col-md-6
+                h3 Étapes à suivre
+                ul
+                  li Consultez le SMS reçu de RDV Service public (ou RDV Solidarités ou RDV Aide Numérique)
+                  li Cliquez sur le lien qui suit "infos/annulation"
+                  li Vous êtes redirigé sur le site de RDV Service public
+                  li Renseignez les 3 premières lettres de votre nom de famille"
+                  li Cliquez sur "Annuler le RDV"
+                  li Confirmez l'annulation en cliquant sur "Oui, annuler le rendez-vous"
+                p
+                  |> Une notif email vous est envoyée pour confirmer l'annulation du rendez-vous.
+        section.fr-accordion
+          h2.fr-accordion__title
+            button.fr-accordion__btn[type="button" aria-expanded="false" aria-controls="faq-annuler-email"]
+              | Comment annuler votre RDV depuis l’email que vous avez reçu ?
+          .fr-collapse#faq-annuler-email
+            .fr-grid-row.fr-grid-row--gutters
+              .fr-col-md-6
+                h3 Capture d’écran
+                = image_tag "static_pages/capture-ecran-annuler-rdv-depuis-email.gif", class: "rdv-max-height-80vh rdv-max-width-100"
+              .fr-col-md-6
+                h3 Procédure à suivre
+                ul
+                  li Consultez l’email reçu de RDV Service public (ou RDV Solidarités ou RDV Aide Numérique)
+                  li Cliquez sur le lien qui suit "infos/annulation"
+                  li Vous êtes redirigé sur le site de RDV Service public
+                  li Renseignez les 3 premières lettres de votre nom de famille"
+                  li Cliquez sur "Annuler le RDV"
+                  li Confirmez l'annulation en cliquant sur "Oui, annuler le rendez-vous"
+                p
+                  ' Une notification email vous est envoyée pour confirmer l'annulation du rendez-vous.
 
     - if @form.raison.present?
       p

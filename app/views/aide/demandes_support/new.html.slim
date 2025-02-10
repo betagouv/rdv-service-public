@@ -16,6 +16,10 @@
         value: @form.role,
         label: "Vous êtes…",
         required: true
+      - if @form.role_agent?
+        .fr-callout.fr-my-2w
+          | Avez-vous consulté les pages de documentation ? Elles contiennent de nombreuses informations pour aider les agents.
+          div= link_to "Documentation RDV Service Public", "https://aide.rdv-service-public.fr", class: "fr-btn fr-btn--secondary", target: "_blank"
       = f.dsfr_text_field :sujet, value: @form.sujet, label: "La raison de votre message", required: true
       - if @form.role_usager?
         .fr-callout.fr-my-2w

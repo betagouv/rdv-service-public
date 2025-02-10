@@ -9,7 +9,7 @@ class AiguillageUsagerForm
   def raisons_options
     [
       { value: :creneaux, label: "Vous souhaitez prendre un RDV" },
-      { value: :annuler, label: "Vous souhaitez annuler votre RDV" },
+      { value: :annuler, label: "Vous souhaitez annuler votre RDV" },
       { value: :autre, label: "Autre raison" },
     ]
   end

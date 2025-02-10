@@ -7,6 +7,15 @@ RSpec.describe "public pages", js: true do
     expect_page_to_be_axe_clean(aide_aiguillage_role_path)
   end
 
+  it "aide/aiguillage_usager page is accessible" do
+    expect_page_to_be_axe_clean(aide_aiguillage_usager_path)
+    expect_page_to_be_axe_clean(aide_aiguillage_usager_path(raison: "annuler"))
+  end
+
+  it "aide/demande_supports#new page is accessible", js: true do
+    expect_page_to_be_axe_clean(new_aide_demande_support_path)
+  end
+
   it "accueil_mds_path page is accessible" do
     visit "http://www.rdv-solidarites-test.localhost/accueil_mds"
     # This path now redirects to the generic /presentation_agent page

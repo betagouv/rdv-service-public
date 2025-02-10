@@ -12,7 +12,8 @@ class ZammadApiClient
     end
   end
 
-  def self.create_ticket(sender_role:, subject:, email:, body:)
+  # cf https://docs.zammad.org/en/latest/api/ticket/index.html#create
+  def self.create_ticket(sender_role:, subject:, email:, body:, tags: [])
     group = { usager: "Users", agent: "Agents" }[sender_role]
     raise Error, "Les seuls sender_role valables sont :usager et :agent" if group.nil?
 
@@ -24,7 +25,11 @@ class ZammadApiClient
     }
     response_data = connection.post("api/v1/tickets", params).body
 
-    Ticket.new(response_data)
+    ticket = Ticket.new(response_data)
+
+    tags.each do |tag|
+      connection.post("api/v1/tags/add", { item: tag, object: "Ticket", o_id: ticket.id })
+    end
   rescue Faraday::Error => e
     Rails.logger.error "Erreur lors de l’appel API pour créer un ticket Zammad : statut HTTP #{e.response[:status]} - #{e.response[:body]}"
     raise e
