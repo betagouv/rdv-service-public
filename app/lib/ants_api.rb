@@ -23,7 +23,7 @@ class AntsApi
     def status(ants_pre_demande_number:, meeting_point_id:, timeout: nil)
       params = {
         application_ids: ants_pre_demande_number,
-        meeting_point_id: meeting_point_id,
+        meeting_point_id:,
       }
       response_body = request(:get, "status", params:, timeout:)
       response_body.fetch(ants_pre_demande_number)
