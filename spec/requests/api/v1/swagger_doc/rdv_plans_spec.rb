@@ -5,7 +5,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/rdv_plans" do
     post "Créer un brouillon de rendez-vous" do
-      with_authentication
+      with_oauth_authentication
       description "Permet de créer un brouillon de rendez-vous"
 
       parameter(
@@ -63,7 +63,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
               phone_number: "0611223344",
               address: "21 rue des Ardennes, 75019 Paris",
             },
-            return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123",
           }
         end
 
@@ -85,8 +84,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
             address: "21 rue des Ardennes, 75019 Paris"
           )
           expect(rdv_plan).to have_attributes(
-            planning_agent: agent,
-            return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123"
+            planning_agent: agent
           )
         end
       end
