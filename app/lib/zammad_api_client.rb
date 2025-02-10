@@ -30,6 +30,8 @@ class ZammadApiClient
     tags.each do |tag|
       connection.post("api/v1/tags/add", { item: tag, object: "Ticket", o_id: ticket.id })
     end
+
+    ticket
   rescue Faraday::Error => e
     Rails.logger.error "Erreur lors de l’appel API pour créer un ticket Zammad : statut HTTP #{e.response[:status]} - #{e.response[:body]}"
     raise e
