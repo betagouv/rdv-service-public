@@ -10,11 +10,13 @@ module Ants
     # discard_on(StandardError) { |_job, ex| raise ex }
 
     def perform(ants_pre_demande_number:)
+      @ants_pre_demande_number = ants_pre_demande_number
       # Nous avons parfois dans les jobs des numéros qui finissent par un espace.
       # Le temps d'investiguer, nous évitons ici que les jobs soient bloqués à cause d'un espace.
-      stripped_ants_pre_demande_number = ants_pre_demande_number.strip
+      @stripped_ants_pre_demande_number = ants_pre_demande_number.strip
+      @rdv = matching_rdv(@stripped_ants_pre_demande_number, @ants_pre_demande_number)
 
-      ants_status = AntsApi.status(ants_pre_demande_number: stripped_ants_pre_demande_number, timeout: 4)
+      ants_status = AntsApi.status(ants_pre_demande_number: @stripped_ants_pre_demande_number, meeting_point_id: meeting_point_id, timeout: 4)
 
       return false unless ants_status["status"] == "validated"
 
@@ -24,32 +26,23 @@ module Ants
         appointment["management_url"].start_with?("#{protocol}://#{Domain::RDV_MAIRIE.host_name}")
       end
 
-      rdv = Rdv
-        .joins(:users)
-        .joins(motif: [:motif_category])
-        .merge(MotifCategory.requires_ants_predemande_number)
-        .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number] })
-        .where.not(status: Rdv::CANCELLED_STATUSES)
-        .where("starts_at >= ?", Time.zone.now)
-        .order(id: :desc) # choix arbitraire pour éviter un comportement aléatoire
-        .first
-
       # on ne fait rien si les infos sont déjà identiques
-      return true if ants_appointments == [rdv&.serialize_for_ants_api]
+      return true if ants_appointments == [@rdv&.serialize_for_ants_api]
 
       # on déclenche la suppression des appointments existants dans tous les cas, qu’il s’agisse d’une mise à jour ou d’une suppression
       # en effet l’API de l’ANTS ne permet pas de faire de mises à jour, on fait donc un delete puis un update
       ants_appointments.each do |appointment|
         AntsApi.delete(
-          ants_pre_demande_number: stripped_ants_pre_demande_number,
+          ants_pre_demande_number: @stripped_ants_pre_demande_number,
+          meeting_point_id: meeting_point_id,
           **appointment.symbolize_keys.slice(:meeting_point, :appointment_date, :meeting_point_id)
         )
       end
 
       # S’il n’y a aucun RDV non-annulé dans notre DB, on s’arrête ici. Il n’y a plus aucun appointment ANTS
-      return unless rdv
+      return unless @rdv
 
-      AntsApi.create(ants_pre_demande_number: stripped_ants_pre_demande_number, **rdv.serialize_for_ants_api)
+      AntsApi.create(ants_pre_demande_number: @stripped_ants_pre_demande_number, meeting_point_id: meeting_point_id, **@rdv.serialize_for_ants_api)
     end
 
     def capture_sentry_warning_for_retry?(exception)
@@ -58,6 +51,24 @@ module Ants
       else
         super
       end
+    end
+
+    private
+
+    def meeting_point_id
+      rdv.lieu_id.to_s
+    end
+
+    def matching_rdv(stripped_ants_pre_demande_number, ants_pre_demande_number)
+      Rdv
+        .joins(:users)
+        .joins(motif: [:motif_category])
+        .merge(MotifCategory.requires_ants_predemande_number)
+        .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number] })
+        .where.not(status: Rdv::CANCELLED_STATUSES)
+        .where("starts_at >= ?", Time.zone.now)
+        .order(id: :desc) # choix arbitraire pour éviter un comportement aléatoire
+        .first
     end
   end
 end

@@ -10,7 +10,7 @@ RSpec.describe Ants::SyncAppointmentJob do
 
     it "créé un appointment" do
       allow(AntsApi).to receive(:status)
-        .with(hash_including(ants_pre_demande_number: "A123456789"))
+        .with(hash_including(ants_pre_demande_number: "A123456789", meeting_point_id: lieu.id.to_s))
         .and_return({ "status" => "validated", "appointments" => [] })
       expect(AntsApi).not_to receive(:delete)
       expect(AntsApi).to receive(:create).with(hash_including(ants_pre_demande_number: "A123456789"))
@@ -29,7 +29,7 @@ RSpec.describe Ants::SyncAppointmentJob do
 
     it "supprime l’appointment existant et n’en re-créé pas" do
       allow(AntsApi).to receive(:status)
-        .with(hash_including(ants_pre_demande_number: "A123456789"))
+        .with(hash_including(ants_pre_demande_number: "A123456789", meeting_point_id: lieu.id.to_s))
         .and_return(
           {
             "status" => "validated",
