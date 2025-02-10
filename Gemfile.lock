@@ -769,7 +769,7 @@ DEPENDENCIES
   doorkeeper-i18n
   dotenv-rails
   drb
-  dsfr-form_builder
+  dsfr-form_builder (= 0.0.3)
   dsfr-view-components
   factory_bot
   faker
