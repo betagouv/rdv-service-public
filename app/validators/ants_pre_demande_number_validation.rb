@@ -16,7 +16,12 @@ class AntsPreDemandeNumberValidation < ActiveModel::Validator
       return
     end
 
-    application_hash = AntsApi.status(ants_pre_demande_number:, timeout: 4)
+    # La valeur de meeting_point_id correspond à l'ID du lieu du RDV.
+    # Pour le moment, nous n'avons pas forcément accès au RDV dans ce contexte,
+    # car cette validation a pour seule référence un User.
+    # https://github.com/betagouv/rdv-service-public/pull/4940
+    # https://github.com/betagouv/rdv-service-public/pull/5056
+    application_hash = AntsApi.status(ants_pre_demande_number:, meeting_point_id: "", timeout: 4)
 
     status = application_hash["status"]
 
