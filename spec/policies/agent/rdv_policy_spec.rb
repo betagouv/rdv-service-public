@@ -119,8 +119,8 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
       rdv.participations.build(user_id: user_from_other_territory.id, created_by: agent)
     end
 
-    it_behaves_like "permit actions", :rdv, :destroy?
-    it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?
+    it_behaves_like "permit actions", :rdv, :show?, :destroy?
+    it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?, :update?
     it_behaves_like "included in scope"
   end
 

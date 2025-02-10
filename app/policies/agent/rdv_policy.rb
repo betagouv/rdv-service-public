@@ -15,9 +15,11 @@ class Agent::RdvPolicy < ApplicationPolicy
     same_agent_or_has_access? && users_authorized?
   end
 
-  # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV,
-  # qui permet à la fois de l'afficher et de le modifier
-  alias show? update?
+  def show?
+    # Nous n'examinons pas les usagers du RDV pour un show, car parfois des
+    # usagers sont retirés de l'orga, mais on veut quand-même pouvoir afficher le RDV.
+    same_agent_or_has_access?
+  end
   alias versions? show?
 
   def destroy?
