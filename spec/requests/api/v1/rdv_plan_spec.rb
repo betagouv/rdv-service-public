@@ -12,7 +12,7 @@ RSpec.describe "RDV Plan API" do
     Doorkeeper::Application.create!(
       name: "Démarches Simplifiées",
       uid: "fake_app_id",
-      redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback",
+      redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback",
       post_logout_redirect_uri: "http://localhost:4567/",
       logo_base64: ""
     )
@@ -105,7 +105,7 @@ RSpec.describe "RDV Plan API" do
             address: "21 rue des Ardennes, 75019 Paris",
             birth_date: "1990-12-31",
           },
-          return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/callback/123",
+          return_url: "https://demo.demarches-simplifiees.fr/callback/123",
         }
       end
 
@@ -114,8 +114,11 @@ RSpec.describe "RDV Plan API" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
         end.to change(User, :count).by(1)
         rdv_plan = RdvPlan.last
-        expect(rdv_plan.planning_agent).to eq agent
-        expect(rdv_plan.return_url).to eq "https://monsuivisocial.incubateur.anct.gouv.fr/callback/123"
+        expect(rdv_plan).to have_attributes(
+          agent: agent,
+          return_url: "https://demo.demarches-simplifiees.fr/callback/123",
+          oauth_application_id: application.id
+        )
 
         expect(rdv_plan.user).to have_attributes(
           first_name: "Francis",

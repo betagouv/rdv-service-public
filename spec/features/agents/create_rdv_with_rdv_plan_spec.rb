@@ -1,5 +1,14 @@
 RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'interface de rdv_plan" do
   let!(:organisation) { create(:organisation) }
+  let(:application) do
+    Doorkeeper::Application.create!(
+      name: "Démarches Simplifiées",
+      uid: "fake_app_id",
+      redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback",
+      post_logout_redirect_uri: "http://localhost:4567/",
+      logo_base64: ""
+    )
+  end
   let!(:agent) do
     create(:agent, basic_role_in_organisations: [organisation], rdv_notifications_level: :all)
   end
@@ -10,7 +19,11 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     create(:user, :unregistered, organisations: [organisation]) # créé par appel d'api par l'appli qui s'intègre avec nous
   end
   let(:rdv_plan) do
-    create(:rdv_plan, user: user, planning_agent: agent)
+    create(:rdv_plan,
+           user: user,
+           planning_agent: agent,
+           return_url: "https://demo.demarches-simplifiees.fr/callback/123",
+           oauth_application: application)
   end
 
   before do
@@ -54,5 +67,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(emails.size).to eq(2)
     expect(emails.map { [_1.to, _1.subject] }).to include([["newaddress@exemple.com"], a_string_matching(/RDV confirmé le/)])
     expect(emails.map { [_1.to, _1.subject] }).to include([[agent.email], a_string_matching(/Nouveau RDV ajouté sur votre agenda/)])
+
+    expect(page).to have_content("Retour sur Démarches Simplifiées")
   end
 end
