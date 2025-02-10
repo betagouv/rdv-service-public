@@ -1,0 +1,25 @@
+/ Include the charts pack in the <head> section
+- content_for(:additional_scripts) { javascript_include_tag "charts", "data-turbolinks-track": "reload" }
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: "/"
+    = b.with_breadcrumb label: "Statistiques globales", href: stats_path
+    = b.with_breadcrumb label: "Statistiques par structure", href: stats_territories_path
+    = b.with_breadcrumb label: @territory.to_s, href: stats_territory_path(@territory)
+    = b.with_breadcrumb label: "Statistiques de notifications"
+
+h2= @territory
+h3 Statistiques de notifications
+
+- cache([@territory, Time.zone.today], expires_in: 24.hours) do
+  - if @territory.present? && Organisation.joins(:territory).where(territories: [@territory]).empty?
+    h3 Cette structure n'utilise pas #{current_domain.name}.
+  - else
+    .card.mb-5
+      .card-body
+        = self_anchor "notifications"
+          h2.card-title #{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})
+        - %i[event channel result].each do |attribute|
+          h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}
+          = column_chart stats_territory_receipts_path(territory: @territory, group_by: attribute, departement: @departement), stacked: true

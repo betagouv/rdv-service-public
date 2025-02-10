@@ -1,0 +1,23 @@
+- content_for :title, "Statistiques par structure"
+
+= dsfr_breadcrumbs do |b|
+  = b.with_breadcrumb label: "Accueil", href: "/"
+  = b.with_breadcrumb label: "Statistiques globales", href: stats_path
+  = b.with_breadcrumb label: yield(:title)
+
+.fr-grid-row
+  .fr-col-md-8
+    .fr-mb-2w= "#{@territories.count} structures utilisent #{current_domain.name}"
+    ul
+      - @territories.ordered_by_name.each do |territory|
+        li = link_to "Statistiques - #{territory}", stats_territory_path(territory:)
+
+    .fr-callout.fr-my-8w
+      - if ENV["APP"] == "production-rdv-solidarites"
+        | Les structures dont les statistiques sont accessibles ici sont ceux de RDV Solidarités et RDV Aide Numérique.&#32;
+        | Vous pouvez consulter les statistiques des structures de l'instance RDV Service Public sur&#32;
+        = link_to "rdv.anct.gouv.fr/stats/territories", "https://rdv.anct.gouv.fr/stats/territories", title: "Page de statistiques RDV Service Public - Nouvelle fenêtre", class: "fr-link", target: "_blank", rel: "noopener external"
+      - else
+        | Les structures dont les statistiques sont accessibles ici sont ceux de RDV Service Public.&#32;
+        | Vous pouvez consulter les statistiques des structures de RDV Solidarités et RDV Aide Numérique sur&#32;
+        = link_to "rdv-solidarites.fr/stats/territories", "https://rdv-solidarites.fr/stats/territories", title: "Page de statistiques RDV Solidarités et RDV Aide Némurique - Nouvelle fenêtre", class: "fr-link", target: "_blank", rel: "noopener external"
