@@ -6,6 +6,15 @@ class Users::SessionsController < Devise::SessionsController
   before_action :exclude_signed_in_agents, only: [:new]
   after_action :allow_iframe
 
+  def new
+    if flash[:alert] == I18n.t("devise.failure.unauthenticated")
+      flash[:notice] = flash[:alert]
+      flash[:alert] = nil
+    end
+
+    super
+  end
+
   def create
     if auth_options[:scope] == :user && (self.resource = Agent.find_by(email: params[:user]["email"])) && resource.valid_password?(params[:user]["password"])
       set_flash_message!(:notice, :signed_in)
