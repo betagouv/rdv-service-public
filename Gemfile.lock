@@ -1,14 +1,4 @@
 GIT
-  remote: https://github.com/betagouv/dsfr-form-builder
-  revision: 60a639821c2f6734c193fd9a793f9e4f58b4801b
-  branch: feature/text_area
-  specs:
-    dsfr-form_builder (0.0.2)
-      actionview (>= 6.1, < 9.0)
-      activemodel (>= 6.1, < 9.0)
-      activesupport (>= 6.1, < 9.0)
-
-GIT
   remote: https://github.com/nahi/httpclient.git
   revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
   ref: d57cc6d
@@ -250,12 +240,16 @@ GEM
       railties (>= 3.2)
     drb (2.2.1)
     dsfr-assets (1.13.0.1)
+    dsfr-form_builder (0.0.3)
+      actionview (>= 6.1, < 9.0)
+      activemodel (>= 6.1, < 9.0)
+      activesupport (>= 6.1, < 9.0)
     dsfr-view-components (2.1.1)
       dsfr-assets (~> 1.13)
       html-attributes-utils (~> 1)
       view_component (~> 3)
     dumb_delegator (1.0.0)
-    erubi (1.13.0)
+    erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
     ethon (0.16.0)
@@ -355,7 +349,7 @@ GEM
       activesupport (>= 4)
       railties (>= 4)
       request_store (~> 1.0)
-    loofah (2.23.1)
+    loofah (2.24.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.8.1)
@@ -389,7 +383,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
-    nokogiri (1.17.1)
+    nokogiri (1.18.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     notion-ruby-client (1.2.2)
@@ -523,7 +517,7 @@ GEM
       activesupport (>= 4.2)
       choice (~> 0.2.0)
       ruby-graphviz (~> 1.2)
-    rails-html-sanitizer (1.6.1)
+    rails-html-sanitizer (1.6.2)
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
     rails_autolink (1.1.8)
@@ -775,7 +769,7 @@ DEPENDENCIES
   doorkeeper-i18n
   dotenv-rails
   drb
-  dsfr-form_builder!
+  dsfr-form_builder
   dsfr-view-components
   factory_bot
   faker
