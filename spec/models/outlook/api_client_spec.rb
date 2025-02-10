@@ -136,7 +136,15 @@ RSpec.describe Outlook::ApiClient do
           .with(
             body: { "client_id" => "fake_client_id", "client_secret" => "fake_client_secret", "grant_type" => "refresh_token", "refresh_token" => "refresh_token" }
           )
-          .to_return(status: 200, body: { access_token: "abc" }.to_json, headers: {})
+          .to_return(status: 200, body: {
+            token_type: "Bearer",
+            scope: "email openid profile https://graph.microsoft.com/Calendars.ReadWrite https://graph.microsoft.com/User.Read",
+            access_token: "abc",
+            refresh_token: "123",
+            expires_in: 4365,
+            ext_expires_in: 4365,
+            id_token: "id_token",
+          }.to_json, headers: {})
 
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
           .with(body: expected_body, headers: expected_updated_headers)
@@ -150,6 +158,7 @@ RSpec.describe Outlook::ApiClient do
                          "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.twice
 
         expect(agent.reload.microsoft_graph_token).to eq("abc")
+        expect(agent.reload.refresh_microsoft_graph_token).to eq("123")
       end
     end
 
