@@ -9,13 +9,10 @@ RSpec.describe "RDV Plan API" do
     }
   end
   let(:application) do
-    Doorkeeper::Application.create!(
-      name: "Démarches Simplifiées",
-      uid: "fake_app_id",
-      redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback",
-      post_logout_redirect_uri: "http://localhost:4567/",
-      logo_base64: ""
-    )
+    create(:oauth_application,
+           name: "Démarches Simplifiées",
+           redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback",
+           post_logout_redirect_uri: "http://localhost:4567/")
   end
 
   let(:agent) do
