@@ -120,7 +120,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     end
 
     it_behaves_like "permit actions", :rdv, :show?, :destroy?
-    it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?
+    it_behaves_like "not permit actions", :rdv, :new?, :create?, :edit?, :update?
     it_behaves_like "included in scope"
   end
 
