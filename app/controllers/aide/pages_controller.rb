@@ -8,10 +8,8 @@ class Aide::PagesController < ApplicationController
   end
 
   def aiguillage_usager
-    @form = AiguillageUsagerForm.new(
-      raison: params.dig(:aiguillage_usager_form, :raison) || params[:raison],
-      besoin_contact: params.dig(:aiguillage_usager_form, :besoin_contact) || params[:besoin_contact]
-    )
+    raison = params.dig(:aiguillage_usager_form, :raison) || params[:raison]
+    @form = AiguillageUsagerForm.new(raison:)
     if @form.should_redirect_to_demande_support?
       redirect_to new_aide_demande_support_path(role: :usager, sujet: @form.raison_label)
     end

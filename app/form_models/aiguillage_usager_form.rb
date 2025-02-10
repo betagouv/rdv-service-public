@@ -1,10 +1,9 @@
 class AiguillageUsagerForm
   include ActiveModel::Model
-  attr_accessor :raison, :besoin_contact
+  attr_accessor :raison
 
-  def initialize(raison: nil, besoin_contact: false)
+  def initialize(raison: nil)
     @raison = raison&.to_sym
-    @besoin_contact = besoin_contact
   end
 
   def raisons_options
@@ -18,11 +17,8 @@ class AiguillageUsagerForm
   def raison_creneaux? = raison == :creneaux
   def raison_annuler? = raison == :annuler
   def raison_autre? = raison == :autre
-  def besoin_contact? = besoin_contact.present?
 
   def raison_label = raisons_options.find { _1[:value] == raison }[:label]
 
-  def should_redirect_to_demande_support?
-    raison_autre? || besoin_contact?
-  end
+  def should_redirect_to_demande_support? = raison_autre?
 end
