@@ -16,7 +16,11 @@ module Ants
       @stripped_ants_pre_demande_number = ants_pre_demande_number.strip
       @rdv = matching_rdv(@stripped_ants_pre_demande_number, @ants_pre_demande_number)
 
-      ants_status = AntsApi.status(ants_pre_demande_number: @stripped_ants_pre_demande_number, meeting_point_id: meeting_point_id, timeout: 4)
+      ants_status = AntsApi.status(
+        ants_pre_demande_number: @stripped_ants_pre_demande_number,
+        meeting_point_id: @rdv&.serialize_for_ants_api[:meeting_point_id],
+        timeout: 4
+      )
 
       return false unless ants_status["status"] == "validated"
 
@@ -34,7 +38,6 @@ module Ants
       ants_appointments.each do |appointment|
         AntsApi.delete(
           ants_pre_demande_number: @stripped_ants_pre_demande_number,
-          meeting_point_id: meeting_point_id,
           **appointment.symbolize_keys.slice(:meeting_point, :appointment_date, :meeting_point_id)
         )
       end
@@ -42,7 +45,7 @@ module Ants
       # S’il n’y a aucun RDV non-annulé dans notre DB, on s’arrête ici. Il n’y a plus aucun appointment ANTS
       return unless @rdv
 
-      AntsApi.create(ants_pre_demande_number: @stripped_ants_pre_demande_number, meeting_point_id: meeting_point_id, **@rdv.serialize_for_ants_api)
+      AntsApi.create(ants_pre_demande_number: @stripped_ants_pre_demande_number, **@rdv.serialize_for_ants_api)
     end
 
     def capture_sentry_warning_for_retry?(exception)
@@ -54,10 +57,6 @@ module Ants
     end
 
     private
-
-    def meeting_point_id
-      rdv.lieu_id.to_s
-    end
 
     def matching_rdv(stripped_ants_pre_demande_number, ants_pre_demande_number)
       Rdv
