@@ -1,6 +1,17 @@
 class Agents::SessionsController < Devise::SessionsController
   before_action :exclude_signed_in_users, only: [:new]
 
+  def new
+    if flash[:alert] == I18n.t("devise.failure.unauthenticated")
+      # Contrairement aux usagers, les agents ne peuvent pas créer de compte
+      # On n'utilise donc pas `I18n.t("devise.failure.unauthenticated")`, mais une variante
+      flash[:notice] = "Vous devez vous connecter pour continuer"
+      flash[:alert] = nil
+    end
+
+    super
+  end
+
   def create
     super
 
