@@ -2,6 +2,8 @@ class Agents::SessionsController < Devise::SessionsController
   before_action :exclude_signed_in_users, only: [:new]
 
   def new
+    # Le flash d'erreur est trop aggressif pour le cas d'un agent non connecté.
+    # Un flash de style info est plus adapté.
     if flash[:alert] == I18n.t("devise.failure.unauthenticated")
       # Contrairement aux usagers, les agents ne peuvent pas créer de compte
       # On n'utilise donc pas `I18n.t("devise.failure.unauthenticated")`, mais une variante

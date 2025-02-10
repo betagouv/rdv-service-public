@@ -7,6 +7,8 @@ class Users::SessionsController < Devise::SessionsController
   after_action :allow_iframe
 
   def new
+    # Le flash d'erreur est trop aggressif pour le cas d'un usager non connecté.
+    # Un flash de style info est plus adapté.
     if flash[:alert] == I18n.t("devise.failure.unauthenticated")
       flash[:notice] = flash[:alert]
       flash[:alert] = nil
