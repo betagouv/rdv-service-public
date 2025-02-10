@@ -1,3 +1,4 @@
 web: ./bin/start_web_server
 jobs: bundle exec good_job start
-js: bun run build --mode=development --watch --progress
+js_webpack: bin/bun run build --mode=development --watch --progress
+js_bun: bin/bun build --watch

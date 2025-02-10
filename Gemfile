@@ -277,3 +277,5 @@ group :test do
   gem "sinatra"
   gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
 end
+
+gem "bundlebun", "~> 0.2.0"

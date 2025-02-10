@@ -2,7 +2,9 @@
   "name": "lapin",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build_webpack": "bin/bun run webpack --config webpack.config.js",
+    "build_bun": "bin/bun bun.config.js",
+    "build": "bin/bun run webpack --config webpack.config.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
