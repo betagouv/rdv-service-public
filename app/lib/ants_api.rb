@@ -20,11 +20,8 @@ class AntsApi
   }.freeze
 
   class << self
-    def status(ants_pre_demande_number:, meeting_point_id:, timeout: nil)
-      params = {
-        application_ids: ants_pre_demande_number,
-        meeting_point_id:,
-      }
+    def status(ants_pre_demande_number:, meeting_point_id: nil, timeout: nil)
+      params = { application_ids: ants_pre_demande_number, meeting_point_id: }
       response_body = request(:get, "status", params:, timeout:)
       response_body.fetch(ants_pre_demande_number)
     end
