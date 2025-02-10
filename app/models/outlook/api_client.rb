@@ -92,13 +92,10 @@ module Outlook
 
       if refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
+      elsif refresh_token_response["access_token"].present? && refresh_token_response["refresh_token"].present?
+        @agent.update!(microsoft_graph_token: refresh_token_response["access_token"], refresh_microsoft_graph_token: refresh_token_response["refresh_token"])
       else
-        if refresh_token_response["access_token"].present?
-          @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
-        end
-        if refresh_token_response["refresh_token"].present?
-          @agent.update!(refresh_microsoft_graph_token: refresh_token_response["refresh_token"])
-        end
+        raise RefreshTokenError, "Could not refresh token, invalid response (does not contain access_token and refresh_token)"
       end
     end
 
