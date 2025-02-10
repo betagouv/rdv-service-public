@@ -68,6 +68,10 @@
   width: 100%;
 }
 
+.rdv-max-width-100 {
+  max-width: 100%;
+}
+
 .rdv-max-width-md-100 {
   @include media-breakpoint-up(md) {
     max-width: 100%;
