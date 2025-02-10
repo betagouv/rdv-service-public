@@ -21,13 +21,14 @@ class Aide::DemandesSupportController < ApplicationController
   end
 
   def create
-    demande_params = params
-      .require(:demande_support_form)
-      .permit(:role, :sujet, :email, :first_name, :last_name, :phone_number, :message)
-      .to_h
-      .symbolize_keys
-
-    @form = DemandeSupportForm.new(**demande_params, current_domain:)
+    @form = DemandeSupportForm.new(
+      current_domain:,
+      **params
+        .require(:demande_support_form)
+        .permit(:role, :sujet, :email, :first_name, :last_name, :phone_number, :message)
+        .to_h
+        .symbolize_keys
+    )
     if @form.submit
       redirect_to(
         root_path,
