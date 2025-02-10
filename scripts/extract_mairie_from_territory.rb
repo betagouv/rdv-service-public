@@ -41,7 +41,7 @@ class ExtractMairieFromTerritory
       end
 
       MotifCategory.requires_ants_predemande_number.each do |motif_category|
-        MotifCategoriesTerritory.create(
+        MotifCategoriesTerritory.create!(
           motif_category: motif_category,
           territory: @new_territory
         )
@@ -49,8 +49,8 @@ class ExtractMairieFromTerritory
 
       # On ne met que les services des agents de la mairie
       # Le territoire mairies a beaucoup de services utilisés par une seule mairie
-      organisation.agents.map(&:services).flatten.each do |service|
-        TerritoryService.create(
+      organisation.agents.map(&:services).flatten.uniq.each do |service|
+        TerritoryService.create!(
           territory: @new_territory,
           service: service
         )
@@ -58,7 +58,7 @@ class ExtractMairieFromTerritory
       AgentTerritorialRole.find_or_initialize_by(
         territory: @new_territory,
         agent_id: @admin_agent_id
-      ).save
+      ).save!
     end
   end
 
