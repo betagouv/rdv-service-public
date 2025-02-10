@@ -112,7 +112,7 @@ RSpec.describe "RDV Plan API" do
         end.to change(User, :count).by(1)
         rdv_plan = RdvPlan.last
         expect(rdv_plan).to have_attributes(
-          agent: agent,
+          planning_agent: agent,
           return_url: "https://demo.demarches-simplifiees.fr/callback/123",
           oauth_application_id: application.id
         )
