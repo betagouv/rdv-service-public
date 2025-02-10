@@ -92,8 +92,13 @@ module Outlook
 
       if refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
-      elsif refresh_token_response["access_token"].present?
-        @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
+      else
+        if refresh_token_response["access_token"].present?
+          @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
+        end
+        if refresh_token_response["refresh_token"].present?
+          @agent.update!(refresh_microsoft_graph_token: refresh_token_response["refresh_token"])
+        end
       end
     end
 
