@@ -60,7 +60,7 @@ module Ants
         next unless rdv.requires_ants_predemande_number?
 
         rdv.assign_attributes(needs_sync_to_ants: true)
-        rdv.assign_attributes(obsolete_ants_data: obsolete_ants_data) if obsolete_ants_data
+        rdv.assign_attributes(obsolete_ants_data:) if obsolete_ants_data.present?
       end
     end
 
