@@ -467,7 +467,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
     before { user.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
 
-    it "supprime l’appointment via l’API ANTS" do
+    it "ne fait rien de plus qu’appeler status" do
       perform_enqueued_jobs do
         user.participations.first.destroy
       end
