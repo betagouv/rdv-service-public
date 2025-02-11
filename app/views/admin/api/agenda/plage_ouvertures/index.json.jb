@@ -5,9 +5,8 @@
     end: occurrence.ends_at.as_json,
     backgroundColor: plage_ouverture.organisation == @organisation ? "#6fceff80" : "grey",
     textColor: "#313131",
-    rendering: nil,
+    rendering: params[:in_background] ? "background" : nil,
     url: admin_organisation_plage_ouverture_path(@organisation, plage_ouverture),
-    addExceptionPath: admin_organisation_plage_ouverture_path(@organisation, plage_ouverture),
 
     extendedProps: {
       organisationName: plage_ouverture.organisation.name,
