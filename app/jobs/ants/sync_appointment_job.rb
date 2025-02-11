@@ -8,6 +8,7 @@ module Ants
       perform_limit: 1,
       key: -> { "#{self.class.name}-rdv-#{arguments.last[:ants_pre_demande_number]}" }
     )
+    discard_on(MissingMeetingPointId) { |_job, error| Sentry.capture_exception(error) }
     # useful to debug tests and avoid retries
     # discard_on(StandardError) { |_job, ex| raise ex }
 
