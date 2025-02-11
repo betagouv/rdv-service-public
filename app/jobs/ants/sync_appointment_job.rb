@@ -33,7 +33,7 @@ module Ants
       return true if ants_appointments == [upcoming_rdv_serialized_to_ants_appointment]
 
       # on déclenche la suppression des appointments existants dans tous les cas, qu’il s’agisse d’une mise à jour ou d’une suppression
-      # en effet l’API de l’ANTS ne permet pas de faire de mises à jour, on fait donc un delete puis un update
+      # en effet l’API de l’ANTS ne permet pas de faire de mises à jour, on fait donc un delete puis un create
       ants_appointments.each do |appointment|
         AntsApi.delete(
           ants_pre_demande_number: stripped_ants_pre_demande_number,
