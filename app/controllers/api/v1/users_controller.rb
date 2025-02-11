@@ -9,7 +9,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def show
-    render_record @user, agent_context: pundit_user, include_notification_email: rdvinsertion_request?
+    render_record @user, agent_context: pundit_user
   end
 
   def create
@@ -19,13 +19,13 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     authorize(user, policy_class: Agent::UserPolicy)
     user.skip_confirmation_notification!
     user.save!
-    render_record user, include_notification_email: rdvinsertion_request?
+    render_record user
   end
 
   def update
     @user.skip_reconfirmation!
     @user.update!(user_params)
-    render_record @user, include_notification_email: rdvinsertion_request?
+    render_record @user
   end
 
   def rdv_invitation_token
@@ -47,18 +47,14 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def user_params
-    base_attrs = %i[
+    attrs = %i[
       first_name birth_name last_name email address phone_number
       birth_date responsible_id caisse_affiliation affiliation_number
-      family_situation number_of_children notify_by_sms notify_by_email
+      family_situation number_of_children notify_by_sms notify_by_email notification_email
     ]
 
-    # Seul rdv-insertion peut enregistrer l'email de notification des usagers
-    # Celui ci permet de notifier plusieurs usagers avec le même email
-    base_attrs << :notification_email if rdvinsertion_request?
+    attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
 
-    base_attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
-
-    params.permit(base_attrs, organisation_ids: [], referent_agent_ids: [])
+    params.permit(attrs, organisation_ids: [], referent_agent_ids: [])
   end
 end

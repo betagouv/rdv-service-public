@@ -149,22 +149,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.responsible).to eq(user_responsible) }
       end
 
-      response 200, "cannot update notification_email field without shared secret auth", document: false do
-        before do
-          user.update(email: nil) # notification_email can't be set if devise email is set
-        end
-
-        let(:notification_email) { "notif@example.com" }
-        let(:first_name) { "Alain" }
-        let(:last_name) { "Verse" }
-
-        run_test!
-
-        it { expect(user.reload.first_name).to eq(first_name) }
-        it { expect(user.reload.last_name).to eq(last_name) }
-        it { expect(user.reload.notification_email).to be_nil }
-      end
-
       response 200, "updates a user with a minimal set of params", document: false do
         let(:first_name) { "Alain" }
         let(:last_name) { "Verse" }

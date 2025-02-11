@@ -2,7 +2,7 @@ class Api::Rdvinsertion::UsersController < Api::Rdvinsertion::AgentAuthBaseContr
   before_action :set_user, only: [:show]
 
   def show
-    render_record @user, agent_context: fake_agent_context, include_notification_email: true
+    render_record @user, agent_context: fake_agent_context
   end
 
   private

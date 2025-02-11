@@ -18,10 +18,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       end
   end
 
-  def rdvinsertion_request?
-    request.headers.include?("X-Agent-Auth-Signature")
-  end
-
   # Rescuable exceptions
 
   rescue_from Pundit::NotAuthorizedError, with: :not_authorized
