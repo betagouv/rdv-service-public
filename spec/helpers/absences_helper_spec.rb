@@ -7,7 +7,7 @@ RSpec.describe AbsencesHelper do
       expect(absence_tag(absence)).to eq("<span class=\"badge badge-info\">En cours</span>")
     end
 
-    it "return En cours when absence have an ocurrence today" do
+    it "return En cours when absence have an occurrence today" do
       today = Time.zone.parse("2020-12-24 13:56")
       travel_to(today)
       absence = create(:absence,

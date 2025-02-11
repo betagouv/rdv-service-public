@@ -85,6 +85,10 @@ class CalendarRdvSolidarites {
       },
       datesRender: this.datesRender,
       eventRender: eventRenderer(this.data.selectedEventId),
+      eventClick: function(info) {
+        info.jsEvent.preventDefault(); // don't let the browser navigate
+        console.log(info)
+      },
     }
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
   }
