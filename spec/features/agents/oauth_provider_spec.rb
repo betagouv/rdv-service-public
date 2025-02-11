@@ -39,7 +39,9 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"
 
-    expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
+    expect(page).to have_content("Vous devez vous connecter pour continuer")
+    find(".fr-alert--info") # On vérifie que le flash est une info et pas une alerte
+
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
