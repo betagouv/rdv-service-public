@@ -94,7 +94,7 @@ RSpec.describe Ants::SyncAppointmentJob do
 
     before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
 
-    it "ne fait rien" do
+    it "ne fait pas de mise à jour de l’appointment" do
       allow(AntsApi).to receive(:status)
         .with(hash_including(ants_pre_demande_number: "A123456789", meeting_point_id: lieu.id.to_s))
         .and_return(
@@ -122,7 +122,7 @@ RSpec.describe Ants::SyncAppointmentJob do
 
     before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
 
-    it "ne fait rien" do
+    it "met à jour l’appointment" do
       allow(AntsApi).to receive(:status)
         .with(hash_including(ants_pre_demande_number: "A123456789", meeting_point_id: lieu.id.to_s))
         .and_return(

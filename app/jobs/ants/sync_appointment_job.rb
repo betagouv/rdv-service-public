@@ -30,16 +30,15 @@ module Ants
 
       # on n’utilise pas de regex ci-dessous pour éviter un faux-positif de Brakeman
       protocol = Rails.env.production? ? "https" : "http"
-      ants_appointments = ants_status["appointments"].select do |appointment|
+      @ants_appointments = ants_status["appointments"].select do |appointment|
         appointment["management_url"].start_with?("#{protocol}://#{Domain::RDV_MAIRIE.host_name}")
       end
 
-      # on ne fait rien si les infos sont déjà identiques (chacune des deux listes peut être vide ici)
-      return true if ants_appointments == [upcoming_rdv_serialized_to_ants_appointment].compact
+      return true unless needs_synchronization?
 
       # on déclenche la suppression des appointments existants dans tous les cas, qu’il s’agisse d’une mise à jour ou d’une suppression
       # en effet l’API de l’ANTS ne permet pas de faire de mises à jour, on fait donc un delete puis un create
-      ants_appointments.each do |appointment|
+      @ants_appointments.each do |appointment|
         AntsApi.delete(
           ants_pre_demande_number: stripped_ants_pre_demande_number,
           meeting_point_id:,
@@ -105,6 +104,19 @@ module Ants
             &.id
             &.to_s
         end
+    end
+
+    def needs_synchronization?
+      return false if @ants_appointments.empty? && upcoming_rdv.nil?
+
+      return true if
+        @ants_appointments.size > 1 || # ça ne devrait jamais arriver
+        (@ants_appointments.empty? && upcoming_rdv.present?) || # il faut créer un rdv
+        (@ants_appointments.present? && upcoming_rdv.nil?) # il faut supprimer l’appointment
+
+      compared_attributes = %i[management_url appointment_date meeting_point]
+      @ants_appointments.first.symbolize_keys.slice(*compared_attributes) !=
+        upcoming_rdv_serialized_to_ants_appointment.slice(*compared_attributes)
     end
   end
 end
