@@ -12,13 +12,12 @@ module Ants
     # useful to debug tests and avoid retries
     # discard_on(StandardError) { |_job, ex| raise ex }
 
-    def perform(ants_pre_demande_number:, obsolete_ants_meeting_point_id: nil)
+    def perform(ants_pre_demande_number:, meeting_point_id: nil)
       @ants_pre_demande_number = ants_pre_demande_number
-      @obsolete_ants_meeting_point_id = obsolete_ants_meeting_point_id
 
       ants_status = AntsApi.status(
         ants_pre_demande_number: stripped_ants_pre_demande_number,
-        meeting_point_id: meeting_point_id_for_status,
+        meeting_point_id: meeting_point_id || find_meeting_point_id,
         timeout: 4
       )
 
@@ -58,7 +57,7 @@ module Ants
 
     private
 
-    attr_reader :ants_pre_demande_number, :obsolete_ants_meeting_point_id
+    attr_reader :ants_pre_demande_number
 
     def upcoming_rdv
       @upcoming_rdv ||=
@@ -83,11 +82,8 @@ module Ants
       @stripped_ants_pre_demande_number ||= ants_pre_demande_number.strip
     end
 
-    def meeting_point_id_for_status
+    def find_meeting_point_id
       return upcoming_rdv.lieu_id.to_s if upcoming_rdv&.lieu_id.present?
-
-      # pour les cas où la participation est supprimée, donc on ne peut plus retrouver de RDV
-      return obsolete_ants_meeting_point_id if obsolete_ants_meeting_point_id.present?
 
       # On se replie sur n’importe quel RDV associé à ce numéro, même dans le passé
       fallback_id = Lieu
