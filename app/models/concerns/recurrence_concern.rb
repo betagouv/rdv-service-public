@@ -26,6 +26,10 @@ module RecurrenceConcern
         end_time: record.end_time.to_s,
         recurrence: Montrose::Recurrence.dump(record.recurrence),
       }
+      if record.is_a?(PlageOuverture)
+        manually_serialized_attrs[:afternoon_start_time] = record.afternoon_start_time.to_s if record.afternoon_start_time
+        manually_serialized_attrs[:afternoon_end_time] = record.afternoon_end_time.to_s if record.afternoon_end_time
+      end
       record.attributes.merge(manually_serialized_attrs.stringify_keys)
     end
 
@@ -36,6 +40,10 @@ module RecurrenceConcern
         end_time: Tod::TimeOfDay.parse(hash[:end_time]),
         recurrence: Montrose::Recurrence.load(hash[:recurrence]),
       }
+      if self == PlageOuverture
+        manually_deserialized_attrs[:afternoon_start_time] = Tod::TimeOfDay.parse(hash[:afternoon_start_time]) if hash[:afternoon_start_time]
+        manually_deserialized_attrs[:afternoon_end_time] = Tod::TimeOfDay.parse(hash[:afternoon_end_time]) if hash[:afternoon_end_time]
+      end
       new(hash.merge(manually_deserialized_attrs))
     end
   end
