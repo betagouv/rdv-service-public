@@ -55,7 +55,7 @@ class Users::RelativesController < UserAuthController
 
   def form_params
     p = params.require(:relative_user_form)
-      .permit(:first_name, :last_name, :birth_date, :ants_pre_demande_number, :ants_pre_demande_number_required)
+      .permit(:first_name, :last_name, :birth_date, :ants_pre_demande_number, :ants_pre_demande_number_required, :ignore_benign_errors)
       .to_h.symbolize_keys
     p[:ants_pre_demande_number_required] = p[:ants_pre_demande_number_required].to_b
     p

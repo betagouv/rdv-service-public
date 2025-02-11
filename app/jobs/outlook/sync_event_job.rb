@@ -20,6 +20,8 @@ module Outlook
     end
 
     def perform(agents_rdv_id, outlook_id, agent)
+      Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
+
       @agents_rdv_id = agents_rdv_id
       @outlook_id = outlook_id
       @agent = agent

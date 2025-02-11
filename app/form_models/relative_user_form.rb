@@ -19,6 +19,7 @@ class RelativeUserForm
   end
 
   def submit(**params)
+    @ignore_benign_errors = params.fetch(:ignore_benign_errors, false)
     @ants_pre_demande_number_required = params.fetch(:ants_pre_demande_number_required, @ants_pre_demande_number_required) # pour préserver la valeur de l’initialisation
     @user.assign_attributes(params.slice(*USER_ATTRIBUTES))
     valid? && user.save

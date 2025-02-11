@@ -17,7 +17,7 @@ RSpec.describe "Agent can list RDVs" do
 
     before do
       [current_agent, agent_from_same_service, agent_from_other_service].each do |agent|
-        create(:rdv, organisation: organisation, agents: [agent], motif: create(:motif, service: agent.services.first))
+        create(:rdv, organisation: organisation, agents: [agent], motif: create(:motif, service: agent.services.first, organisation:))
       end
     end
 
@@ -63,6 +63,30 @@ RSpec.describe "Agent can list RDVs" do
       expect(page).to have_content("RDV téléphonique")
       expect(page).to have_content(current_agent.first_name)
       expect(page).to have_link(user.full_name, href: user_profile_path(user))
+    end
+  end
+
+  describe "searching by user" do
+    let(:motif) { create(:motif, name: "Suivi de dossier", organisation: organisation) }
+
+    before do
+      create(:rdv, organisation: organisation, users: [user], agents: [current_agent], motif: motif)
+    end
+
+    it "allows searching by user", js: true do
+      visit admin_organisation_rdvs_path(organisation, current_agent)
+
+      find("#select2-user_id-container").click
+      within(".select2-search--dropdown") do
+        fill_in(class: "select2-search__field", with: "#{user.last_name} #{user.first_name}")
+      end
+      expect(page).to have_content(user.reverse_full_name)
+      find("li", text: "#{user.last_name} #{user.first_name}").click
+
+      # This is to make sure we wait for the user to be added before doing the next action
+      expect(page).to have_content(user.reverse_full_name)
+      click_on("Rafraîchir la liste")
+      expect(page).to have_content(motif.name) # Permet de vérifier que le rdv est bien affiché
     end
   end
 end

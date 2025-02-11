@@ -3,6 +3,8 @@ module Outlook
     queue_as :outlook_sync
 
     def perform(agent)
+      Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
+
       client = Outlook::ApiClient.new(agent)
 
       agent.agents_rdvs.where.not(outlook_id: nil).each do |agents_rdv|

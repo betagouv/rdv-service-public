@@ -33,10 +33,11 @@ RSpec.describe "Agent can duplicate a Rdv collectif" do
   end
 
   describe "when trying to duplicate a RDV the agent doesn't have access to" do
-    let(:rdv_for_other_organisation) do
-      create(:rdv, motif: motif, organisation: other_organisation, name: "Traitement de texte")
-    end
     let(:other_organisation) { create(:organisation) }
+    let!(:motif_other_organisation) { create(:motif, :collectif, service: service, organisation: other_organisation, name: "Atelier Collectif") }
+    let(:rdv_for_other_organisation) do
+      create(:rdv, motif: motif_other_organisation, organisation: other_organisation, name: "Traitement de texte")
+    end
 
     it "doesn't prefill anything" do
       login_as(agent, scope: :agent)

@@ -62,3 +62,6 @@ docs/domain_model.svg
 /config/credentials/production.key
 
 /config/credentials/test.key
+
+# Fichiers créés quand on fait un gem build sur une des gems définies dans lib
+lib/**/*.gem

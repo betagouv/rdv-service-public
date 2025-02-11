@@ -101,7 +101,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       # Une absence de 9h15 à 9h45 (par exemple une absence récurrente créée après le rdv, où on suppose que l'agent accepte de faire une exception)
       before do
         plage_ouverture = create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), lieu: lieu)
-        create(:rdv, agents: [plage_ouverture.agent], motif: motif, starts_at: Time.zone.local(2021, 5, 3, 9, 0, 0), duration_in_min: 60)
+        create(:rdv, agents: [plage_ouverture.agent], motif: motif, starts_at: Time.zone.local(2021, 5, 3, 9, 0, 0), duration_in_min: 60, organisation:)
         create(:absence, agent: plage_ouverture.agent, first_day: first_day, end_day: first_day, start_time: Tod::TimeOfDay.new(9, 15), end_time: Tod::TimeOfDay.new(9, 45))
       end
 
@@ -245,7 +245,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "return plage ouverture slot minus rdv duration" do
       starts_at = Time.zone.parse("20211027 9:00")
       ends_at = Time.zone.parse("20211027 11:00")
-      rdv = create(:rdv, motif: motif, starts_at: starts_at, agents: [agent])
+      rdv = create(:rdv, motif: motif, starts_at: starts_at, agents: [agent], organisation:)
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, motifs: [motif])
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
@@ -256,7 +256,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "return plage ouverture slot minus RDV duration that overlap po when RDV starts before PO" do
       starts_at = Time.zone.parse("20211027 9:00")
       ends_at = Time.zone.parse("20211027 11:00")
-      rdv = create(:rdv, motif: motif, starts_at: starts_at - 30.minutes, agents: [agent])
+      rdv = create(:rdv, motif: motif, starts_at: starts_at - 30.minutes, agents: [agent], organisation:)
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
@@ -267,8 +267,8 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "return plage ouverture slots minus 2 RDV duration that overlap po" do
       starts_at = Time.zone.parse("20211027 9:00")
       ends_at = Time.zone.parse("20211027 11:00")
-      rdv = create(:rdv, motif: motif, starts_at: starts_at - 30.minutes, agents: [agent])
-      other_rdv = create(:rdv, motif: motif, starts_at: starts_at + 45.minutes, agents: [agent])
+      rdv = create(:rdv, motif: motif, starts_at: starts_at - 30.minutes, agents: [agent], organisation:)
+      other_rdv = create(:rdv, motif: motif, starts_at: starts_at + 45.minutes, agents: [agent], organisation:)
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
@@ -326,7 +326,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       starts_at = friday - 1.week
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
                                                 recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5], interval: 1))
-      create(:rdv, :excused, motif: motif, starts_at: Time.zone.parse("20211112 10:00"), agents: [agent])
+      create(:rdv, :excused, motif: motif, starts_at: Time.zone.parse("20211112 10:00"), agents: [agent], organisation:)
       range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
 
       expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]
@@ -349,9 +349,9 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "return range without only range of longer overlapped RDV on same range with same duration" do
       starts_at = Time.zone.parse("20211027 9:00")
       ends_at = Time.zone.parse("20211027 11:00")
-      create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
-      prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent])
-      rdv = create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
+      create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent], organisation:)
+      prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent], organisation:)
+      rdv = create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent], organisation:)
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 

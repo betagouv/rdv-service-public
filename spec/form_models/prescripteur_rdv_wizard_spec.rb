@@ -32,7 +32,7 @@ RSpec.describe PrescripteurRdvWizard do
 
     before do
       motif.update!(collectif: true)
-      rdv = create(:rdv, motif: motif, agents: [agent])
+      rdv = create(:rdv, motif: motif, agents: [agent], organisation:)
       attributes["rdv_collectif_id"] = rdv.id
 
       stub_netsize_ok
