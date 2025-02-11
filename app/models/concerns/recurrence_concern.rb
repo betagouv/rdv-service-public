@@ -98,12 +98,12 @@ module RecurrenceConcern
 
       occurrences = []
 
-      recurrences.each do |rec, duration|
+      recurrences.each do |montrose_recurrence, duration|
         if starts_at <= inclusive_datetime_range.begin
-          rec = rec.fast_forward(inclusive_datetime_range.begin)
+          montrose_recurrence = montrose_recurrence.fast_forward(inclusive_datetime_range.begin)
         end
 
-        rec.lazy.each do |occurrence_starts_at|
+        montrose_recurrence.lazy.each do |occurrence_starts_at|
           if event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
             occurrences << Recurrence::Occurrence.new(starts_at: occurrence_starts_at, ends_at: occurrence_starts_at + duration)
           end
