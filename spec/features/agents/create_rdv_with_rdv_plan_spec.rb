@@ -1,13 +1,9 @@
 RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'interface de rdv_plan" do
   let!(:organisation) { create(:organisation) }
   let(:application) do
-    Doorkeeper::Application.create!(
-      name: "Démarches Simplifiées",
-      uid: "fake_app_id",
-      redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback",
-      post_logout_redirect_uri: "http://localhost:4567/",
-      logo_base64: ""
-    )
+    create(:oauth_application,
+           name: "Démarches Simplifiées",
+           redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback")
   end
   let!(:agent) do
     create(:agent, basic_role_in_organisations: [organisation], rdv_notifications_level: :all)
