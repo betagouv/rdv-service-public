@@ -86,14 +86,17 @@ class User < ApplicationRecord
     full_name
   end
 
-  def email=(value)
+  def sanitize_email(email)
     # On corriger automatiquement ces fautes de frappe courantes
-    super(value&.gsub(".@", "@")&.gsub("..", "."))
+    email&.gsub(".@", "@")&.gsub("..", ".")
   end
 
-  def notification_email=(value)
-    # On applique les mêmes corrections pour notification_email
-    super(value&.gsub(".@", "@")&.gsub("..", "."))
+  def email=(email)
+    super(sanitize_email(email))
+  end
+
+  def notification_email=(email)
+    super(sanitize_email(email))
   end
 
   def add_organisation(organisation)
