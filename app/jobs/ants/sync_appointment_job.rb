@@ -29,8 +29,8 @@ module Ants
         appointment["management_url"].start_with?("#{protocol}://#{Domain::RDV_MAIRIE.host_name}")
       end
 
-      # on ne fait rien si les infos sont déjà identiques (chacune des deux listes peuvent être vides ici)
-      return true if ants_appointments == [upcoming_rdv_serialized_to_ants_appointment]
+      # on ne fait rien si les infos sont déjà identiques (chacune des deux listes peut être vide ici)
+      return true if ants_appointments == [upcoming_rdv_serialized_to_ants_appointment].compact
 
       # on déclenche la suppression des appointments existants dans tous les cas, qu’il s’agisse d’une mise à jour ou d’une suppression
       # en effet l’API de l’ANTS ne permet pas de faire de mises à jour, on fait donc un delete puis un create
