@@ -1,4 +1,6 @@
 module Ants
+  class MissingMeetingPointId < StandardError; end
+
   class SyncAppointmentJob < ApplicationJob
     # empêcher deux jobs parallèles avec le même ants_pre_demande_number
     include GoodJob::ActiveJobExtensions::Concurrency
@@ -83,7 +85,7 @@ module Ants
       return upcoming_rdv.lieu_id.to_s if upcoming_rdv&.lieu_id.present?
 
       # On se replie sur n’importe quel RDV associé à ce numéro, même dans le passé
-      Lieu
+      fallback_id = Lieu
         .joins(rdvs: { users: [], motif: { motif_category: [] } })
         .merge(MotifCategory.requires_ants_predemande_number)
         .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number].uniq })
@@ -91,6 +93,10 @@ module Ants
         .first
         &.id
         &.to_s
+
+      return fallback_id if fallback_id.present?
+
+      raise MissingMeetingPointId, "aucun RDV trouvé pour le numéro ANTS '#{ants_pre_demande_number}'"
     end
   end
 end
