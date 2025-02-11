@@ -110,7 +110,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
               {
                 management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
                 meeting_point: "Mairie de Saumur",
-                meeting_point_id: rdv.lieu.id,
                 appointment_date: "2020-04-20 08:00:00",
               },
             ],
@@ -160,7 +159,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
               {
                 management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
                 meeting_point: "Mairie de Saumur",
-                meeting_point_id: rdv.lieu.id,
                 appointment_date: "2020-04-20 08:00:00",
               },
             ],
@@ -237,7 +235,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
               {
                 management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
                 meeting_point: "Mairie de Saumur",
-                meeting_point_id: rdv.lieu.id,
                 appointment_date: "2020-04-20 08:00:00",
               },
             ],
@@ -421,7 +418,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
               {
                 management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
                 meeting_point: "Mairie de Saumur",
-                meeting_point_id: rdv.lieu.id,
                 appointment_date: "2020-04-20 08:00:00",
               },
             ],
