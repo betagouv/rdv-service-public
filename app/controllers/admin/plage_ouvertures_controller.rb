@@ -2,6 +2,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
+  before_action :build_plage_ouverture, only: [:create]
   before_action :set_agent
 
   def show
@@ -51,7 +52,6 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def create
-    @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.save
@@ -101,10 +101,12 @@ class Admin::PlageOuverturesController < AgentAuthController
     @plage_ouverture = PlageOuverture.find(params[:id])
   end
 
+  def build_plage_ouverture
+    @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
+  end
+
   def plage_ouverture_params
-    params.require(:plage_ouverture).permit(
-      :title, :agent_id, :first_day, :start_time, :end_time, :afternoon_start_time, :afternoon_end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: []
-    )
+    params.require(:plage_ouverture).permit(:title, :agent_id, :first_day, :start_time, :end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: [])
   end
 
   def filter_params
