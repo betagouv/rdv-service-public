@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_11_143342) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -562,6 +562,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
     t.bigint "lieu_id"
     t.boolean "expired_cached", default: false
     t.datetime "recurrence_ends_at"
+    t.time "afternoon_start_time"
+    t.time "afternoon_end_time"
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
