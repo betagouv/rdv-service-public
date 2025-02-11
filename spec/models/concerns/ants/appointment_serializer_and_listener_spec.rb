@@ -231,29 +231,10 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         body: {
           "A123456789" => {
             status: "validated",
-            appointments: [
-              {
-                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                meeting_point: "Mairie de Saumur",
-                appointment_date: "2020-04-20 08:00:00",
-              },
-            ],
+            appointments: [],
           },
         }.to_json
       )
-    end
-    let!(:delete_stub) do
-      stub_request(:delete, "#{api_url}/appointments")
-        .with(
-          query: {
-            application_id: "A123456789",
-            appointment_date: "2020-04-20 08:00:00",
-            meeting_point: "Mairie de Saumur",
-            meeting_point_id: rdv.lieu.id,
-          },
-          headers:
-        )
-        .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
     let!(:create_stub) do
       stub_request(:post, "#{api_url}/appointments")
@@ -279,7 +260,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       end
 
       expect(status_stub).to have_been_requested.at_least_once
-      expect(delete_stub).to have_been_requested.at_least_once
+      expect(WebMock).not_to have_requested(:delete, "#{api_url}/appointments")
       expect(create_stub).to have_been_requested.at_least_once
     end
   end
