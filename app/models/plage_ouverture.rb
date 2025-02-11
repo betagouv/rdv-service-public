@@ -22,6 +22,9 @@ class PlageOuverture < ApplicationRecord
   # Attributes
   auto_strip_attributes :title
 
+  attribute :afternoon_start_time, :time_only # uses Tod::TimeOfDayType
+  attribute :afternoon_end_time,   :time_only # uses Tod::TimeOfDayType
+
   # Relations
   belongs_to :organisation
   belongs_to :agent
@@ -60,6 +63,12 @@ class PlageOuverture < ApplicationRecord
   delegate :domain, to: :organisation
 
   ## -
+
+  def afternoon_starts_at
+    return nil if afternoon_start_time.blank? || first_day.blank?
+
+    afternoon_start_time&.on(first_day)
+  end
 
   def title_with_default
     if title.present?

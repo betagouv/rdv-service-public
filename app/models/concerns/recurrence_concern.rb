@@ -83,8 +83,34 @@ module RecurrenceConcern
   def occurrences_for(inclusive_date_range)
     return [] if inclusive_date_range.nil?
 
-    occurrence_start_at_list_for(inclusive_date_range).map do |o|
-      Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration)
+    datetime_range_start = inclusive_date_range.begin.is_a?(Date) ? inclusive_date_range.begin.in_time_zone.beginning_of_day : inclusive_date_range.begin
+
+    inclusive_datetime_range = datetime_range_start..(inclusive_date_range.end.end_of_day)
+
+    if recurring?
+      min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
+
+      recurrences = []
+      recurrences << [recurrence.starting(starts_at).until(min_until), (end_time - start_time).to_i.seconds]
+      recurrences << [recurrence.starting(afternoon_starts_at).until(min_until), (afternoon_end_time - afternoon_start_time).to_i.seconds] if respond_to?(:afternoon_starts_at) && afternoon_starts_at
+
+      occurrences = []
+
+      recurrences.each do |rec, duration|
+        if starts_at <= inclusive_datetime_range.begin
+          rec = rec.fast_forward(inclusive_datetime_range.begin)
+        end
+
+        rec.lazy.each do |occurrence_starts_at|
+          if event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
+            occurrences << Recurrence::Occurrence.new(starts_at: occurrence_starts_at, ends_at: occurrence_starts_at + duration)
+          end
+        end
+      end
+
+      occurrences.sort
+    else
+      event_in_range?(starts_at, ends_at, inclusive_datetime_range) ? [Recurrence::Occurrence.new(starts_at:, ends_at:)] : []
     end
   end
 
@@ -108,35 +134,13 @@ module RecurrenceConcern
       # defined as a class method, but typically used on ActiveRecord::Relation
       current_scope ||= all
 
-      current_scope.in_range(period).flat_map do |element|
-        element.occurrences_for(period).map { |occurrence| [element, occurrence] }
+      current_scope.in_range(period).flat_map do |record|
+        record.occurrences_for(period).map { |occurrences| [record, occurrences] }
       end.sort_by(&:second)
     end
   end
 
   private
-
-  def occurrence_start_at_list_for(inclusive_date_range)
-    datetime_range_start = inclusive_date_range.begin.is_a?(Date) ? inclusive_date_range.begin.in_time_zone.beginning_of_day : inclusive_date_range.begin
-
-    inclusive_datetime_range = datetime_range_start..(inclusive_date_range.end.end_of_day)
-
-    if recurring?
-      min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
-
-      rec = recurrence.starting(starts_at).until(min_until)
-
-      if starts_at <= inclusive_datetime_range.begin
-        rec = rec.fast_forward(inclusive_datetime_range.begin)
-      end
-
-      rec.lazy.select do |occurrence_starts_at|
-        event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
-      end.to_a
-    else
-      event_in_range?(starts_at, ends_at, inclusive_datetime_range) ? [starts_at] : []
-    end
-  end
 
   def event_in_range?(event_starts_at, event_ends_at, range)
     (event_starts_at..event_ends_at).overlap?(range)

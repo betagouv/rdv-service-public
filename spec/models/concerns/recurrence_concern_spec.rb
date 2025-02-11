@@ -220,4 +220,25 @@ RSpec.describe RecurrenceConcern do
       include_examples "#human_time_range"
     end
   end
+
+  describe "plage d'ouverture avec horaires d'après-midi" do
+    describe "#occurrences_for" do
+      it "works" do
+        plage = create(:plage_ouverture, :weekly_on_monday,
+                       first_day: Date.new(2025, 2, 10),
+                       start_time: "09:00",
+                       end_time: "12:00",
+                       afternoon_start_time: "14:00",
+                       afternoon_end_time: "18:00")
+
+        expected_occurrences = [
+          [Time.zone.parse("2025-02-10 09:00"), Time.zone.parse("2025-02-10 12:00")],
+          [Time.zone.parse("2025-02-10 14:00"), Time.zone.parse("2025-02-10 18:00")],
+          [Time.zone.parse("2025-02-17 09:00"), Time.zone.parse("2025-02-17 12:00")],
+          [Time.zone.parse("2025-02-17 14:00"), Time.zone.parse("2025-02-17 18:00")],
+        ]
+        expect(plage.occurrences_for(Date.new(2025, 2, 10)..Date.new(2025, 2, 18)).map { [_1.starts_at, _1.ends_at] }).to eq(expected_occurrences)
+      end
+    end
+  end
 end
