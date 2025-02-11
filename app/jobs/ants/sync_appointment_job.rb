@@ -13,7 +13,7 @@ module Ants
       @ants_pre_demande_number = ants_pre_demande_number
 
       ants_status = AntsApi.status(
-        ants_pre_demande_number: ants_pre_demande_number_stripped,
+        ants_pre_demande_number: stripped_ants_pre_demande_number,
         meeting_point_id: meeting_point_id_for_status,
         timeout: 4
       )
@@ -33,7 +33,7 @@ module Ants
       # en effet l’API de l’ANTS ne permet pas de faire de mises à jour, on fait donc un delete puis un update
       ants_appointments.each do |appointment|
         AntsApi.delete(
-          ants_pre_demande_number: ants_pre_demande_number_stripped,
+          ants_pre_demande_number: stripped_ants_pre_demande_number,
           **appointment.symbolize_keys.slice(:meeting_point, :appointment_date, :meeting_point_id)
         )
       end
@@ -41,7 +41,7 @@ module Ants
       # S’il n’y a aucun RDV non-annulé dans notre DB, on s’arrête ici. Il n’y a plus aucun appointment ANTS
       return unless upcoming_rdv
 
-      AntsApi.create(ants_pre_demande_number: ants_pre_demande_number_stripped, **rdv_serialized_to_ants_appointment)
+      AntsApi.create(ants_pre_demande_number: stripped_ants_pre_demande_number, **upcoming_rdv_serialized_to_ants_appointment)
     end
 
     def capture_sentry_warning_for_retry?(exception)
@@ -62,7 +62,7 @@ module Ants
           .joins(:users)
           .joins(motif: [:motif_category])
           .merge(MotifCategory.requires_ants_predemande_number)
-          .where(users: { ants_pre_demande_number: [ants_pre_demande_number_stripped, ants_pre_demande_number].uniq })
+          .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number].uniq })
           .where.not(status: Rdv::CANCELLED_STATUSES)
           .where("starts_at >= ?", Time.zone.now)
           .order(id: :desc) # choix arbitraire pour éviter un comportement aléatoire
@@ -73,10 +73,10 @@ module Ants
       @upcoming_rdv_serialized_to_ants_appointment ||= upcoming_rdv&.serialize_for_ants_api
     end
 
-    def ants_pre_demande_number_stripped
+    def stripped_ants_pre_demande_number
       # Nous avons parfois dans les jobs des numéros qui finissent par un espace.
       # Le temps d'investiguer, nous évitons ici que les jobs soient bloqués à cause d'un espace.
-      @ants_pre_demande_number_stripped ||= ants_pre_demande_number.strip
+      @stripped_ants_pre_demande_number ||= ants_pre_demande_number.strip
     end
 
     def meeting_point_id_for_status
@@ -86,7 +86,7 @@ module Ants
       Lieu
         .joins(rdvs: { users: [], motif: { motif_category: [] } })
         .merge(MotifCategory.requires_ants_predemande_number)
-        .where(users: { ants_pre_demande_number: [ants_pre_demande_number_stripped, ants_pre_demande_number].uniq })
+        .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number].uniq })
         .order("rdvs.id DESC") # choix arbitraire pour éviter un comportement aléatoire
         .first
         &.id

@@ -1,6 +1,6 @@
 def stub_request_ants_status(application_id)
   stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status")
-    .with(query: { application_ids: application_id, meeting_point_id: "" })
+    .with(query: hash_including(application_ids: application_id))
 end
 
 def stub_ants_status_ok(application_id, status: "validated", appointments: [])
