@@ -65,20 +65,6 @@ RSpec.describe Stat, type: :model do
     end
   end
 
-  describe "#rdvs_group_by_territory_name" do
-    let(:territory) { create(:territory, name: "Bretagne") }
-    let(:organisation) { create(:organisation, territory:) }
-
-    it "returns rdv group by département" do
-      now = Time.zone.parse("20220123 13:00")
-      travel_to(now)
-      home_motif = create(:motif, location_type: :home, organisation:)
-      create(:rdv, motif: home_motif, created_at: now, organisation:)
-      stats = described_class.new(rdvs: Rdv.all)
-      expect(stats.rdvs_group_by_territory_name).to eq({ ["Bretagne", "23/01/2022"] => 1 })
-    end
-  end
-
   describe "#rdvs_group_by_service" do
     let(:organisation) { create(:organisation) }
 

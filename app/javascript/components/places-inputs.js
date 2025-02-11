@@ -104,7 +104,7 @@ class PlacesInput {
 
 class PlacesInputs {
   constructor() {
-    document.querySelectorAll('.places-js-container').forEach(elt => new PlacesInput(elt))
+    document.querySelectorAll('input[data-address-autocomplete="on"]').forEach(elt => new PlacesInput(elt))
   }
 }
 
