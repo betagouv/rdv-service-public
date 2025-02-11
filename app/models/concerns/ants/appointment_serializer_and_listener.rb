@@ -5,7 +5,7 @@ module Ants
     ATTRIBUTES_TO_WATCH = %w[id status starts_at lieu_id].freeze
 
     included do
-      attr_accessor :needs_sync_to_ants, :obsolete_ants_pre_demande_number
+      attr_accessor :needs_sync_to_ants, :obsolete_ants_data
 
       Rdv.before_commit do |rdv|
         Ants::AppointmentSerializerAndListener.mark_for_sync([rdv]) if rdv.watching_attributes_for_ants_api_changed?
@@ -14,7 +14,15 @@ module Ants
         Ants::AppointmentSerializerAndListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
       end
       Participation.before_commit do |participation|
-        Ants::AppointmentSerializerAndListener.mark_for_sync([participation.rdv], obsolete_ants_pre_demande_number: participation.user.ants_pre_demande_number)
+        if participation.user.ants_pre_demande_number.present?
+          Ants::AppointmentSerializerAndListener.mark_for_sync(
+            [participation.rdv],
+            obsolete_ants_data: {
+              pre_demande_number: participation.user.ants_pre_demande_number,
+              meeting_point_id: participation.rdv.lieu_id,
+            }
+          )
+        end
       end
       Lieu.before_commit do |lieu|
         Ants::AppointmentSerializerAndListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
@@ -47,12 +55,12 @@ module Ants
       saved_changes.keys & ATTRIBUTES_TO_WATCH
     end
 
-    def self.mark_for_sync(rdvs, obsolete_ants_pre_demande_number: nil)
+    def self.mark_for_sync(rdvs, obsolete_ants_data: nil)
       rdvs.each do |rdv|
         next unless rdv.requires_ants_predemande_number?
 
         rdv.assign_attributes(needs_sync_to_ants: true)
-        rdv.assign_attributes(obsolete_ants_pre_demande_number: obsolete_ants_pre_demande_number) if obsolete_ants_pre_demande_number
+        rdv.assign_attributes(obsolete_ants_data:) if obsolete_ants_data.present?
       end
     end
 
@@ -61,8 +69,11 @@ module Ants
         rdv.users.map(&:ants_pre_demande_number).compact_blank.uniq.each do |ants_pre_demande_number|
           Ants::SyncAppointmentJob.perform_later(ants_pre_demande_number:)
         end
-        if rdv.obsolete_ants_pre_demande_number.present?
-          Ants::SyncAppointmentJob.perform_later(ants_pre_demande_number: rdv.obsolete_ants_pre_demande_number)
+        if rdv.obsolete_ants_data.present?
+          Ants::SyncAppointmentJob.perform_later(
+            ants_pre_demande_number: rdv.obsolete_ants_data[:pre_demande_number],
+            meeting_point_id: rdv.obsolete_ants_data[:meeting_point_id]
+          )
         end
         rdv.assign_attributes(needs_sync_to_ants: false)
       end

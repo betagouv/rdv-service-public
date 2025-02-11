@@ -35,7 +35,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request_ants_status("A123456789")
+      stub_request_ants_status("A123456789", meeting_point_id: lieu.id)
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -101,7 +101,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request_ants_status("A123456789").to_return(
+      stub_request_ants_status("A123456789", meeting_point_id: lieu.id).to_return(
         status: 200,
         body: {
           "A123456789" => {
@@ -151,7 +151,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request_ants_status("A123456789").to_return(
+      stub_request_ants_status("A123456789", meeting_point_id: lieu.id).to_return(
         status: 200,
         body: {
           "A123456789" => {
@@ -202,7 +202,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request_ants_status("A123456789").to_return(
+      stub_request_ants_status("A123456789", meeting_point_id: lieu.id).to_return(
         status: 200,
         body: { "A123456789" => { status: "consumed", appointments: [] } }.to_json
       )
@@ -228,7 +228,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request_ants_status("A123456789").to_return(
+      stub_request_ants_status("A123456789", meeting_point_id: lieu.id).to_return(
         status: 200,
         body: {
           "A123456789" => {
@@ -295,7 +295,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request_ants_status("AABBCCDDEE")
+      stub_request_ants_status("AABBCCDDEE", meeting_point_id: lieu.id)
         .to_return(status: 200, body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -334,7 +334,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request_ants_status("A123456789")
+      stub_request_ants_status("A123456789", meeting_point_id: lieu.id)
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -373,7 +373,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request_ants_status("A123456789")
+      stub_request_ants_status("A123456789", meeting_point_id: lieu.id)
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -412,7 +412,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request_ants_status("A123456789").to_return(
+      stub_request_ants_status("A123456789", meeting_point_id: lieu.id).to_return(
         status: 200,
         body: {
           "A123456789" => {
@@ -453,6 +453,27 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
       expect(status_stub).to have_been_requested.once
       expect(delete_stub).to have_been_requested.once
+    end
+  end
+
+  describe "un usager est retiré du RDV mais l’ANTS ne renvoie aucun appointment" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport), organisation:) }
+    let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+    let!(:status_stub) { stub_ants_status_ok("A123456789", status: "validated", appointments: []) }
+
+    before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
+    before { user.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
+
+    it "ne fait rien de plus qu’appeler status" do
+      perform_enqueued_jobs do
+        user.participations.first.destroy
+      end
+
+      expect(status_stub).to have_been_requested.once
+      expect(WebMock).not_to have_requested(:delete, "#{api_url}/appointments")
     end
   end
 end
