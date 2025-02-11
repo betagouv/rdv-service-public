@@ -72,7 +72,7 @@ module Ants
         if rdv.obsolete_ants_data.present?
           Ants::SyncAppointmentJob.perform_later(
             ants_pre_demande_number: rdv.obsolete_ants_data[:pre_demande_number],
-            meeting_point_id: rdv.obsolete_ants_data[:meeting_point_id]
+            obsolete_meeting_point_id: rdv.obsolete_ants_data[:meeting_point_id]
           )
         end
         rdv.assign_attributes(needs_sync_to_ants: false)

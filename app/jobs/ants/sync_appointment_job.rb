@@ -12,12 +12,17 @@ module Ants
     # useful to debug tests and avoid retries
     # discard_on(StandardError) { |_job, ex| raise ex }
 
-    def perform(ants_pre_demande_number:, meeting_point_id: nil)
+    def perform(ants_pre_demande_number:, obsolete_meeting_point_id: nil)
       @ants_pre_demande_number = ants_pre_demande_number
+      @obsolete_meeting_point_id = obsolete_meeting_point_id
+
+      if meeting_point_id.nil?
+        raise MissingMeetingPointId, "aucun RDV trouvé pour le numéro ANTS '#{ants_pre_demande_number}'"
+      end
 
       ants_status = AntsApi.status(
         ants_pre_demande_number: stripped_ants_pre_demande_number,
-        meeting_point_id: meeting_point_id || find_meeting_point_id,
+        meeting_point_id:,
         timeout: 4
       )
 
@@ -37,7 +42,8 @@ module Ants
       ants_appointments.each do |appointment|
         AntsApi.delete(
           ants_pre_demande_number: stripped_ants_pre_demande_number,
-          **appointment.symbolize_keys.slice(:meeting_point, :appointment_date, :meeting_point_id)
+          meeting_point_id:,
+          **appointment.symbolize_keys.slice(:meeting_point, :appointment_date)
         )
       end
 
@@ -82,22 +88,23 @@ module Ants
       @stripped_ants_pre_demande_number ||= ants_pre_demande_number.strip
     end
 
-    def find_meeting_point_id
-      return upcoming_rdv.lieu_id.to_s if upcoming_rdv&.lieu_id.present?
-
-      # On se replie sur n’importe quel RDV associé à ce numéro, même dans le passé
-      fallback_id = Lieu
-        .joins(rdvs: { users: [], motif: { motif_category: [] } })
-        .merge(MotifCategory.requires_ants_predemande_number)
-        .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number].uniq })
-        .order("rdvs.id DESC") # choix arbitraire pour éviter un comportement aléatoire
-        .first
-        &.id
-        &.to_s
-
-      return fallback_id if fallback_id.present?
-
-      raise MissingMeetingPointId, "aucun RDV trouvé pour le numéro ANTS '#{ants_pre_demande_number}'"
+    def meeting_point_id
+      @meeting_point_id ||=
+        if @obsolete_meeting_point_id.present?
+          @obsolete_meeting_point_id # utilisé pour les suppressions de participations
+        elsif upcoming_rdv&.lieu_id.present?
+          return upcoming_rdv.lieu_id.to_s
+        else
+          # On se replie sur le lieu de n’importe quel RDV associé à ce numéro, même dans le passé
+          Lieu
+            .joins(rdvs: { users: [], motif: { motif_category: [] } })
+            .merge(MotifCategory.requires_ants_predemande_number)
+            .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number].uniq })
+            .order("rdvs.id DESC") # choix arbitraire pour éviter un comportement aléatoire
+            .first
+            &.id
+            &.to_s
+        end
     end
   end
 end
