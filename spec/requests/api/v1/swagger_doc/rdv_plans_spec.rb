@@ -5,7 +5,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/rdv_plans" do
     post "Créer un brouillon de rendez-vous" do
-      with_oauth_authentication
+      with_authentication
       description "Permet de créer un brouillon de rendez-vous"
 
       parameter(
