@@ -106,7 +106,9 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def plage_ouverture_params
-    params.require(:plage_ouverture).permit(:title, :agent_id, :first_day, :start_time, :end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: [])
+    params.require(:plage_ouverture).permit(
+      :title, :agent_id, :first_day, :start_time, :end_time, :afternoon_start_time, :afternoon_end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: []
+    )
   end
 
   def filter_params
