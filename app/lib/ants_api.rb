@@ -40,7 +40,7 @@ class AntsApi
       )
     end
 
-    def delete(ants_pre_demande_number:, meeting_point:, appointment_date:, meeting_point_id:)
+    def delete(ants_pre_demande_number:, meeting_point:, appointment_date:, meeting_point_id: nil)
       request(
         :delete,
         "appointments",
