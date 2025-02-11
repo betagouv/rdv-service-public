@@ -258,6 +258,8 @@ tables:
       - first_day
       - start_time
       - end_time
+      - afternoon_start_time
+      - afternoon_end_time
       - recurrence
       - expired_cached
       - recurrence_ends_at

@@ -80,6 +80,7 @@ module RecurrenceConcern
     recurrence.present?
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def occurrences_for(inclusive_date_range)
     return [] if inclusive_date_range.nil?
 
@@ -113,6 +114,7 @@ module RecurrenceConcern
       event_in_range?(starts_at, ends_at, inclusive_datetime_range) ? [Recurrence::Occurrence.new(starts_at:, ends_at:)] : []
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def recurrence_interval
     return nil if recurrence.nil?
