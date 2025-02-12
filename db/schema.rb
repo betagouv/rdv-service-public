@@ -818,7 +818,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_users_on_last_name"
-    t.index ["notification_email"], name: "index_users_on_notification_email"
+    t.index ["notification_email"], name: "index_users_on_notification_email", where: "(notification_email IS NOT NULL)"
     t.index ["phone_number_formatted"], name: "index_users_on_phone_number_formatted"
     t.index ["rdv_invitation_token"], name: "index_users_on_rdv_invitation_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
