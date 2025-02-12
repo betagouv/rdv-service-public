@@ -23,10 +23,10 @@ class PlageOuverture {
     const secondaryTimesContainer = document.querySelector(".js-plages-form-secondary-times-container")
     const secondaryTimesShownInitially = document.querySelector(".js-plages-form-secondary-times-initial-state").dataset.state === "true"
 
-    const secondaryTimesStartsAtHours = document.querySelector("#plage_ouverture_afternoon_start_time_4i")
-    const secondaryTimesStartsAtMinutes = document.querySelector("#plage_ouverture_afternoon_start_time_5i")
-    const secondaryTimesEndsAtHours = document.querySelector("#plage_ouverture_afternoon_end_time_4i")
-    const secondaryTimesEndsAtMinutes = document.querySelector("#plage_ouverture_afternoon_end_time_5i")
+    const secondaryTimesStartsAtHours = document.querySelector("#plage_ouverture_secondary_start_time_4i")
+    const secondaryTimesStartsAtMinutes = document.querySelector("#plage_ouverture_secondary_start_time_5i")
+    const secondaryTimesEndsAtHours = document.querySelector("#plage_ouverture_secondary_end_time_4i")
+    const secondaryTimesEndsAtMinutes = document.querySelector("#plage_ouverture_secondary_end_time_5i")
 
     console.log(addSecondaryTimesButton)
     console.log(removeSecondaryTimesButton)

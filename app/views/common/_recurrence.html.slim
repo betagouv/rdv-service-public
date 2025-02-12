@@ -10,15 +10,15 @@
     .col = f.input :start_time, as: :time, ignore_date: true, minute_step: 5
     .col = f.input :end_time,   as: :time, ignore_date: true, minute_step: 5
   - if model.is_a?(PlageOuverture)
-    - secondary_times_shown = model.afternoon_start_time.present?
+    - secondary_times_shown = model.secondary_start_time.present?
     .js-plages-form-secondary-times-initial-state[data-state=secondary_times_shown.inspect]
     .row.mb-2
       .col
         button.fr-btn.fr-btn--tertiary.fr-btn--sm.fr-btn--icon-left.fr-icon-settings-5-line.js-plages-form-add-secondary-times-button[type="button" style="width: 100%"]
           | Ajouter un second créneau à la plage
     .row.mb-2.hidden.js-plages-form-secondary-times-container
-      .col = f.input :afternoon_start_time, as: :time, ignore_date: true, minute_step: 5, include_blank: true
-      .col = f.input :afternoon_end_time,   as: :time, ignore_date: true, minute_step: 5, include_blank: true
+      .col = f.input :secondary_start_time, as: :time, ignore_date: true, minute_step: 5, include_blank: true
+      .col = f.input :secondary_end_time,   as: :time, ignore_date: true, minute_step: 5, include_blank: true
     .row.mb-2
       .col
         button.fr-btn.fr-btn--tertiary.fr-btn--sm.js-plages-form-remove-secondary-times-button.hidden[type="button" style="width: 100%"]

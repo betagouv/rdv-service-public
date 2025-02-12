@@ -30,14 +30,14 @@ class Admin::PlageOuverturesController < AgentAuthController
     @agent = Agent.find(params[:agent_id])
     if params[:duplicate_plage_ouverture_id].present?
       original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
-      defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :afternoon_start_time, :afternoon_end_time, :recurrence)
+      defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :recurrence)
     else
       defaults = {
         first_day: Time.zone.now,
         start_time: Tod::TimeOfDay.new(9),
         end_time: Tod::TimeOfDay.new(12),
-        afternoon_start_time: nil,
-        afternoon_end_time: nil,
+        secondary_start_time: nil,
+        secondary_end_time: nil,
       }
     end
     @plage_ouverture = PlageOuverture.new(
@@ -109,7 +109,7 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def plage_ouverture_params
     params.require(:plage_ouverture).permit(
-      :title, :agent_id, :first_day, :start_time, :end_time, :afternoon_start_time, :afternoon_end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: []
+      :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: []
     )
   end
 

@@ -228,8 +228,8 @@ RSpec.describe RecurrenceConcern do
                       first_day: Date.new(2025, 2, 10),
                       start_time: "09:00",
                       end_time: "12:00",
-                      afternoon_start_time: "14:00",
-                      afternoon_end_time: "18:00")
+                      secondary_start_time: "14:00",
+                      secondary_end_time: "18:00")
 
         expected_occurrences = [
           [Time.zone.parse("2025-02-10 09:00"), Time.zone.parse("2025-02-10 12:00")],
@@ -245,8 +245,8 @@ RSpec.describe RecurrenceConcern do
                       first_day: Date.new(2025, 2, 10),
                       start_time: "09:00",
                       end_time: "12:00",
-                      afternoon_start_time: "14:00",
-                      afternoon_end_time: "18:00")
+                      secondary_start_time: "14:00",
+                      secondary_end_time: "18:00")
 
         expected_occurrences = [
           [Time.zone.parse("2025-02-10 09:00"), Time.zone.parse("2025-02-10 12:00")],

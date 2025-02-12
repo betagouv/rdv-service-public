@@ -22,8 +22,8 @@ class PlageOuverture < ApplicationRecord
   # Attributes
   auto_strip_attributes :title
 
-  attribute :afternoon_start_time, :time_only # uses Tod::TimeOfDayType
-  attribute :afternoon_end_time,   :time_only # uses Tod::TimeOfDayType
+  attribute :secondary_start_time, :time_only # uses Tod::TimeOfDayType
+  attribute :secondary_end_time,   :time_only # uses Tod::TimeOfDayType
 
   # Relations
   belongs_to :organisation
@@ -37,7 +37,7 @@ class PlageOuverture < ApplicationRecord
 
   # Validations
   validate :end_after_start
-  validate :afternoon_times_valid
+  validate :secondary_times_valid
   validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
   validates :motifs, presence: true
@@ -65,17 +65,17 @@ class PlageOuverture < ApplicationRecord
 
   ## -
 
-  def afternoon_starts_at
-    return nil if afternoon_start_time.blank? || first_day.blank?
+  def secondary_starts_at
+    return nil if secondary_start_time.blank? || first_day.blank?
 
-    afternoon_start_time&.on(first_day)
+    secondary_start_time&.on(first_day)
   end
 
-  def afternoon_ends_at
+  def secondary_ends_at
     if recurring?
       raise "cette méthode n'a de sens que pour les plages exceptionnelles"
-    elsif afternoon_end_time && first_day
-      afternoon_end_time&.on(first_day)
+    elsif secondary_end_time && first_day
+      secondary_end_time&.on(first_day)
     end
   end
 
@@ -160,19 +160,19 @@ class PlageOuverture < ApplicationRecord
     errors.add(:end_time, :must_be_after_start_time) if end_time <= start_time
   end
 
-  def afternoon_times_valid
-    return unless afternoon_start_time && afternoon_end_time
+  def secondary_times_valid
+    return unless secondary_start_time && secondary_end_time
 
-    if afternoon_start_time >= afternoon_end_time
-      errors.add(:afternoon_end_time, :must_be_after_afternoon_start_time)
+    if secondary_start_time >= secondary_end_time
+      errors.add(:secondary_end_time, :must_be_after_secondary_start_time)
     end
 
     return unless start_time && end_time
 
     first_interval = start_time..end_time
-    second_interval = afternoon_start_time..afternoon_end_time
+    second_interval = secondary_start_time..secondary_end_time
     if first_interval.overlaps?(second_interval)
-      errors.add(:afternoon_start_time, :overlaps_primary_interval)
+      errors.add(:secondary_start_time, :overlaps_primary_interval)
     end
   end
 

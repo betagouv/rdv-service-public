@@ -27,8 +27,8 @@ module RecurrenceConcern
         recurrence: Montrose::Recurrence.dump(record.recurrence),
       }
       if record.is_a?(PlageOuverture)
-        manually_serialized_attrs[:afternoon_start_time] = record.afternoon_start_time.to_s if record.afternoon_start_time
-        manually_serialized_attrs[:afternoon_end_time] = record.afternoon_end_time.to_s if record.afternoon_end_time
+        manually_serialized_attrs[:secondary_start_time] = record.secondary_start_time.to_s if record.secondary_start_time
+        manually_serialized_attrs[:secondary_end_time] = record.secondary_end_time.to_s if record.secondary_end_time
       end
       record.attributes.merge(manually_serialized_attrs.stringify_keys)
     end
@@ -41,8 +41,8 @@ module RecurrenceConcern
         recurrence: Montrose::Recurrence.load(hash[:recurrence]),
       }
       if self == PlageOuverture
-        manually_deserialized_attrs[:afternoon_start_time] = Tod::TimeOfDay.parse(hash[:afternoon_start_time]) if hash[:afternoon_start_time]
-        manually_deserialized_attrs[:afternoon_end_time] = Tod::TimeOfDay.parse(hash[:afternoon_end_time]) if hash[:afternoon_end_time]
+        manually_deserialized_attrs[:secondary_start_time] = Tod::TimeOfDay.parse(hash[:secondary_start_time]) if hash[:secondary_start_time]
+        manually_deserialized_attrs[:secondary_end_time] = Tod::TimeOfDay.parse(hash[:secondary_end_time]) if hash[:secondary_end_time]
       end
       new(hash.merge(manually_deserialized_attrs))
     end
@@ -118,8 +118,8 @@ module RecurrenceConcern
     min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
     occurrences = []
     occurrences += compute_occurrences_for(recurrence.starting(starts_at).until(min_until), (end_time - start_time).to_i.seconds, inclusive_datetime_range)
-    if respond_to?(:afternoon_starts_at) && afternoon_starts_at
-      occurrences += compute_occurrences_for(recurrence.starting(afternoon_starts_at).until(min_until), (afternoon_end_time - afternoon_start_time).to_i.seconds, inclusive_datetime_range)
+    if respond_to?(:secondary_starts_at) && secondary_starts_at
+      occurrences += compute_occurrences_for(recurrence.starting(secondary_starts_at).until(min_until), (secondary_end_time - secondary_start_time).to_i.seconds, inclusive_datetime_range)
     end
     occurrences.sort
   end
@@ -129,8 +129,8 @@ module RecurrenceConcern
     if event_in_range?(starts_at, ends_at, inclusive_datetime_range)
       occurrences << Recurrence::Occurrence.new(starts_at:, ends_at:)
     end
-    if respond_to?(:afternoon_starts_at) && afternoon_starts_at && event_in_range?(afternoon_starts_at, afternoon_ends_at, inclusive_datetime_range)
-      occurrences << Recurrence::Occurrence.new(starts_at: afternoon_starts_at, ends_at: afternoon_ends_at)
+    if respond_to?(:secondary_starts_at) && secondary_starts_at && event_in_range?(secondary_starts_at, secondary_ends_at, inclusive_datetime_range)
+      occurrences << Recurrence::Occurrence.new(starts_at: secondary_starts_at, ends_at: secondary_ends_at)
     end
     occurrences
   end
