@@ -6,6 +6,9 @@ class RdvPlan < ApplicationRecord
   belongs_to :motif, optional: true
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
+  # Le `optional: true` sur les oauth_application est un peu anticipé : on pourra avoir ce cas quand des
+  # rdv_plans seront créés en natif depuis l'application, probablement pour enregistrer un brouillon de rdv
+  # TODO: il faudrait mettre à jour la spec swagger pour utiliser de l'oauth pour pouvoir enlever le `optional: true`
   belongs_to :oauth_application, class_name: "Doorkeeper::Application", optional: true
 
   delegate :organisation, to: :motif
