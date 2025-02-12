@@ -17,7 +17,8 @@ module Outlook
 
       # Ce logging permet d'enquêter sur https://github.com/betagouv/rdv-service-public/issues/3539
       if id.to_s.size < 10
-        Sentry.capture_message("ID outlook suspicieux: #{id}", extra: { outlook_response: outlook_event })
+        Sentry.set_extras({ outlook_response: outlook_event })
+        raise "ID outlook suspicieux: #{id}"
       end
 
       id
