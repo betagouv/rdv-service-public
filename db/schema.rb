@@ -598,6 +598,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
     t.bigint "oauth_application_id"
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
+    t.index ["oauth_application_id"], name: "index_rdv_plans_on_oauth_application_id"
     t.index ["planning_agent_id"], name: "index_rdv_plans_on_planning_agent_id"
     t.index ["rdv_agent_id"], name: "index_rdv_plans_on_rdv_agent_id"
     t.index ["rdv_id"], name: "index_rdv_plans_on_rdv_id"
