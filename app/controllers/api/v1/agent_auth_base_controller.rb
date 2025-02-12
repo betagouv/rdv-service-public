@@ -73,6 +73,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     else
       doorkeeper_authorize!
       if doorkeeper_token
+        @authentication_type = "OAuth"
         @current_agent = Agent.find(doorkeeper_token.resource_owner_id)
       end
     end
