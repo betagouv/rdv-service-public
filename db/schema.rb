@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_12_125817) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -267,6 +267,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
     t.string "controller_name", null: false
     t.string "action_name", null: false
     t.bigint "agent_id", null: false
+    t.string "authentication_type"
   end
 
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
