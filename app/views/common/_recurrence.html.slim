@@ -11,8 +11,8 @@
     .col = f.input :end_time,   as: :time, ignore_date: true, minute_step: 5
   - if model.is_a?(PlageOuverture)
     .row
-      .col = f.input :afternoon_start_time, as: :time, ignore_date: true, minute_step: 5
-      .col = f.input :afternoon_end_time,   as: :time, ignore_date: true, minute_step: 5
+      .col = f.input :afternoon_start_time, as: :time, ignore_date: true, minute_step: 5, include_blank: true
+      .col = f.input :afternoon_end_time,   as: :time, ignore_date: true, minute_step: 5, include_blank: true
 
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
 

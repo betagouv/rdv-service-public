@@ -37,6 +37,7 @@ class PlageOuverture < ApplicationRecord
 
   # Validations
   validate :end_after_start
+  validate :afternoon_times_valid
   validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
   validates :motifs, presence: true
@@ -157,6 +158,22 @@ class PlageOuverture < ApplicationRecord
     return if end_time.blank? || start_time.blank?
 
     errors.add(:end_time, :must_be_after_start_time) if end_time <= start_time
+  end
+
+  def afternoon_times_valid
+    return unless afternoon_start_time && afternoon_end_time
+
+    if afternoon_start_time >= afternoon_end_time
+      errors.add(:afternoon_end_time, :must_be_after_afternoon_start_time)
+    end
+
+    return unless start_time && end_time
+
+    first_interval = start_time..end_time
+    second_interval = afternoon_start_time..afternoon_end_time
+    if first_interval.overlaps?(second_interval)
+      errors.add(:afternoon_start_time, :overlaps_primary_interval)
+    end
   end
 
   def lieu_is_enabled
