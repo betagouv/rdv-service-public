@@ -11,23 +11,13 @@ class AntsPreDemandeNumberValidation < ActiveModel::Validator
 
     ants_pre_demande_number = record.ants_pre_demande_number.upcase
 
-    unless ants_pre_demande_number.match?(/\A[A-Z0-9]{10}\z/)
-      record.errors.add(:ants_pre_demande_number, "doit comporter 10 chiffres et lettres")
-      return
-    end
+    return unless validate_format(ants_pre_demande_number, record)
 
-    application_hash = AntsApi.status(ants_pre_demande_number:, timeout: 4)
+    status, appointments = AntsApi.status(ants_pre_demande_number:, timeout: 4).values_at("status", "appointments")
 
-    status = application_hash["status"]
+    return unless validate_status_validated(status, record)
 
-    if status == "validated"
-      if application_hash["appointments"].any?
-        appointment = OpenStruct.new(application_hash["appointments"].first)
-        record.add_benign_error(warning_message(appointment)) unless record.ignore_benign_errors
-      end
-    else
-      record.errors.add(:ants_pre_demande_number, AntsApi::ERROR_STATUSES.fetch(status))
-    end
+    validate_empty_appointments(appointments, record)
   rescue AntsApi::ApiRequestError, Typhoeus::Errors::TimeoutError => e
     # Si l'API de l'ANTS est fiable, donc si elle renvoie une erreur ou un timeout,
     # on préfère bloquer la réservation et logguer l'erreur.
@@ -36,11 +26,30 @@ class AntsPreDemandeNumberValidation < ActiveModel::Validator
     Sentry.capture_exception(e)
   end
 
-  def warning_message(appointment)
-    I18n.t(
-      "activerecord.warnings.models.user.ants_pre_demande_number_already_used_html",
-      management_url: appointment.management_url,
-      meeting_point: appointment.meeting_point
-    ).html_safe
+  def validate_format(ants_pre_demande_number, record)
+    return true if ants_pre_demande_number.match?(/\A[A-Z0-9]{10}\z/)
+
+    record.errors.add(:ants_pre_demande_number, "doit comporter 10 chiffres et lettres")
+    false
+  end
+
+  def validate_status_validated(status, record)
+    return true if status == "validated"
+
+    record.errors.add(:ants_pre_demande_number, AntsApi::ERROR_STATUSES.fetch(status))
+    false
+  end
+
+  def validate_empty_appointments(appointments, record)
+    return true if appointments.empty? || record.ignore_benign_errors
+
+    record.add_benign_error(
+      I18n.t(
+        "activerecord.warnings.models.user.ants_pre_demande_number_already_used_html",
+        management_url: appointments.first["management_url"],
+        meeting_point: appointments.first["meeting_point"]
+      ).html_safe
+    )
+    false
   end
 end
