@@ -28,6 +28,8 @@ class PlageOuverture {
     const secondaryTimesEndsAtHours = document.querySelector("#plage_ouverture_secondary_end_time_4i")
     const secondaryTimesEndsAtMinutes = document.querySelector("#plage_ouverture_secondary_end_time_5i")
 
+    const primaryTimesEndsAtHours = document.querySelector("#plage_ouverture_end_time_4i")
+
     console.log(addSecondaryTimesButton)
     console.log(removeSecondaryTimesButton)
     console.log(secondaryTimesContainer)
@@ -43,10 +45,12 @@ class PlageOuverture {
       secondaryTimesEndsAtHours.required = true
       secondaryTimesEndsAtMinutes.required = true
 
-      secondaryTimesStartsAtHours.value = ""
-      secondaryTimesStartsAtMinutes.value = "00"
-      secondaryTimesEndsAtHours.value = ""
-      secondaryTimesEndsAtMinutes.value = "00"
+      if(!secondaryTimesStartsAtHours.value) {
+        secondaryTimesStartsAtHours.value ||= parseInt(primaryTimesEndsAtHours.value) + 1
+        secondaryTimesStartsAtMinutes.value ||= "00"
+        secondaryTimesEndsAtHours.value ||= parseInt(primaryTimesEndsAtHours.value) + 5
+        secondaryTimesEndsAtMinutes.value ||= "00"
+      }
     }
     const hideSecondaryTimes = () => {
       addSecondaryTimesButton.classList.remove("hidden")
