@@ -7,7 +7,7 @@ class Admin::UserForm
 
   delegate :ants_pre_demande_number, :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :user
   validate :warn_duplicates
-  validates_with AntsPreDemandeNumberValidation, if: -> { @user.ants_pre_demande_number.present? }
+  validates_with AntsPreDemandeNumberStatusValidation, if: -> { @user.ants_pre_demande_number.present? }
 
   delegate :errors, to: :user
 

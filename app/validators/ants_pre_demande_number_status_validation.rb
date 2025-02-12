@@ -5,7 +5,7 @@
 #
 # cf /docs/interconnexions/ants.md
 
-class AntsPreDemandeNumberValidation < ActiveModel::Validator
+class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
   def validate(record)
     raise "You need to include BenignErrors to use #{self.class}" unless record.respond_to?(:add_benign_error)
 
