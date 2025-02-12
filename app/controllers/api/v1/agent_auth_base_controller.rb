@@ -65,7 +65,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   def authenticate_agent
     if request.headers.include?("X-Agent-Auth-Signature")
-      # Bypass DeviseTokenAuth
       authenticate_agent_with_shared_secret
     elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"]
       authenticate_api_v1_agent_with_token_auth!
@@ -82,6 +81,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   def authenticate_agent_with_shared_secret
     if shared_secret_is_valid?
       @current_agent = Agent.find_by(email: request.headers["uid"])
+      @authentication_type = "SharedSecret"
     else
       Sentry.capture_message("API authentication agent was called with an invalid signature !", fingerprint: ["api_agent_invalid_sig"])
       render(
