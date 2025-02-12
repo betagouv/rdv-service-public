@@ -70,6 +70,14 @@ class PlageOuverture < ApplicationRecord
     afternoon_start_time&.on(first_day)
   end
 
+  def afternoon_ends_at
+    if recurring?
+      raise "cette méthode n'a de sens que pour les plages exceptionnelles"
+    elsif afternoon_end_time && first_day
+      afternoon_end_time&.on(first_day)
+    end
+  end
+
   def title_with_default
     if title.present?
       title

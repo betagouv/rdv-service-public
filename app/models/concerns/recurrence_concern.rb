@@ -88,8 +88,6 @@ module RecurrenceConcern
     recurrence.present?
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def occurrences_for(inclusive_date_range)
     return [] if inclusive_date_range.nil?
 
@@ -98,33 +96,44 @@ module RecurrenceConcern
     inclusive_datetime_range = datetime_range_start..(inclusive_date_range.end.end_of_day)
 
     if recurring?
-      min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
-
-      recurrences = []
-      recurrences << [recurrence.starting(starts_at).until(min_until), (end_time - start_time).to_i.seconds]
-      recurrences << [recurrence.starting(afternoon_starts_at).until(min_until), (afternoon_end_time - afternoon_start_time).to_i.seconds] if respond_to?(:afternoon_starts_at) && afternoon_starts_at
-
-      occurrences = []
-
-      recurrences.each do |montrose_recurrence, duration|
-        if starts_at <= inclusive_datetime_range.begin
-          montrose_recurrence = montrose_recurrence.fast_forward(inclusive_datetime_range.begin)
-        end
-
-        montrose_recurrence.lazy.each do |occurrence_starts_at|
-          if event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
-            occurrences << Recurrence::Occurrence.new(starts_at: occurrence_starts_at, ends_at: occurrence_starts_at + duration)
-          end
-        end
-      end
-
-      occurrences.sort
+      occurrences_for_recurring_plage(inclusive_datetime_range, inclusive_datetime_range)
     else
-      event_in_range?(starts_at, ends_at, inclusive_datetime_range) ? [Recurrence::Occurrence.new(starts_at:, ends_at:)] : []
+      occurrences_for_individuelle_plage(inclusive_datetime_range)
     end
   end
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/CyclomaticComplexity
+
+  def compute_occurrences_for(montrose_recurrence, duration, inclusive_datetime_range)
+    if starts_at <= inclusive_datetime_range.begin
+      montrose_recurrence = montrose_recurrence.fast_forward(inclusive_datetime_range.begin)
+    end
+
+    montrose_recurrence.lazy.each_with_object([]) do |occurrence_starts_at, memo|
+      if event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
+        memo << Recurrence::Occurrence.new(starts_at: occurrence_starts_at, ends_at: occurrence_starts_at + duration)
+      end
+    end
+  end
+
+  def occurrences_for_recurring_plage(inclusive_date_range, inclusive_datetime_range)
+    min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
+    occurrences = []
+    occurrences += compute_occurrences_for(recurrence.starting(starts_at).until(min_until), (end_time - start_time).to_i.seconds, inclusive_datetime_range)
+    if respond_to?(:afternoon_starts_at) && afternoon_starts_at
+      occurrences += compute_occurrences_for(recurrence.starting(afternoon_starts_at).until(min_until), (afternoon_end_time - afternoon_start_time).to_i.seconds, inclusive_datetime_range)
+    end
+    occurrences.sort
+  end
+
+  def occurrences_for_individuelle_plage(inclusive_datetime_range)
+    occurrences = []
+    if event_in_range?(starts_at, ends_at, inclusive_datetime_range)
+      occurrences << Recurrence::Occurrence.new(starts_at:, ends_at:)
+    end
+    if respond_to?(:afternoon_starts_at) && afternoon_starts_at && event_in_range?(afternoon_starts_at, afternoon_ends_at, inclusive_datetime_range)
+      occurrences << Recurrence::Occurrence.new(starts_at: afternoon_starts_at, ends_at: afternoon_ends_at)
+    end
+    occurrences
+  end
 
   def recurrence_interval
     return nil if recurrence.nil?
