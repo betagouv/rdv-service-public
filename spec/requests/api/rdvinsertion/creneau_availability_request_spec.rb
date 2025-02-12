@@ -197,8 +197,6 @@ RSpec.describe "Available Creneaux Count for Invitation" do
               received_at: now
             )
             expect(ApiCall.first.raw_http["method"]).to eq("GET")
-            expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
-            expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
           end
         end
 

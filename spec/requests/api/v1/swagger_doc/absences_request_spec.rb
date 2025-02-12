@@ -100,8 +100,6 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
             received_at: be_within(10.seconds).of(Time.zone.now)
           )
           expect(ApiCall.first.raw_http["method"]).to eq("POST")
-          expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
-          expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
         end
       end
 

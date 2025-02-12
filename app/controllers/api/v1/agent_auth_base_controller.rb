@@ -68,8 +68,8 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       # Bypass DeviseTokenAuth
       authenticate_agent_with_shared_secret
     elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"]
-      # Use DeviseTokenAuth
       authenticate_api_v1_agent_with_token_auth!
+      @authentication_type = "DeviseTokenAuth"
     else
       doorkeeper_authorize!
       if doorkeeper_token
@@ -115,15 +115,14 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       method: request.method,
       path: request.fullpath,
       host: request.host,
-      # We only keep headers that are uppercase (convention for HTTP headers)
-      headers: request.headers.select { |key, _| key == key.upcase }.to_h.transform_values { |value| value.is_a?(String) ? value : value.inspect },
     }
 
     ApiCall.create!(
       raw_http: raw_http,
       controller_name: controller_name,
       action_name: action_name,
-      agent_id: current_agent.id
+      agent_id: current_agent.id,
+      authentication_type: @authentication_type
     )
   rescue StandardError => e
     Sentry.capture_exception(e, extra: {
