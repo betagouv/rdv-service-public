@@ -15,9 +15,10 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
       record.ants_pre_demande_number.blank? ||
       !record.ants_pre_demande_number.upcase.match?(AntsPreDemandeNumberFormatValidator::REGEX)
 
-    ants_pre_demande_number = record.ants_pre_demande_number.upcase
-
-    status, appointments = AntsApi.status(ants_pre_demande_number:, timeout: 4).values_at("status", "appointments")
+    status, appointments = AntsApi.status(
+      ants_pre_demande_number: record.ants_pre_demande_number.upcase,
+      timeout: 4
+    ).values_at("status", "appointments")
 
     return unless validate_status_validated(status, record)
 
