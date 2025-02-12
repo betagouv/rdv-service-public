@@ -5,7 +5,7 @@ RSpec.describe Users::RdvSms, type: :service do
 
       let(:organisation) { build(:organisation) }
       let(:pmi) { build(:service, short_name: "PMI") }
-      let(:motif) { build(:motif, service: pmi) }
+      let(:motif) { build(:motif, service: pmi, organisation:) }
       let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici, Paris, 75016") }
       let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 123, name: "Ne Doit pas s'afficher") }
       let(:user) { build(:user) }
@@ -51,10 +51,11 @@ RSpec.describe Users::RdvSms, type: :service do
 
     context "with a follow_up rdv" do
       it "contains referent name" do
+        organisation = create(:organisation)
         agent = create(:agent, first_name: "James", last_name: "Bond")
         user = create(:user, referent_agents: [agent])
-        motif = create(:motif, follow_up: true)
-        rdv = create(:rdv, motif: motif, users: [user], agents: [agent])
+        motif = create(:motif, follow_up: true, organisation:)
+        rdv = create(:rdv, motif: motif, users: [user], agents: [agent], organisation:)
         token = "12345"
 
         content = described_class.rdv_created(rdv, user, token).content

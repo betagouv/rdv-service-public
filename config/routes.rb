@@ -79,11 +79,15 @@ Rails.application.routes.draw do
     resource :user_name_initials_verification, only: %i[new create], controller: "user_name_initials_verification"
     post "file_attente", to: "file_attentes#create_or_delete"
   end
-  resources :stats, only: :index
-  get "stats/rdvs", to: "stats#rdvs", as: "rdvs_stats"
-  get "stats/active_agents", to: "stats#active_agents", as: "active_agents_stats"
-  get "stats/receipts", to: "stats#receipts", as: "receipts_stats"
-  get "stats/notifications", to: "stats#notifications_index", as: "notifications_index_stats"
+  namespace :stats, controller: "stats", module: nil do
+    get "/", action: "index"
+    get :territories
+    get :territory
+    get :territory_notifications
+    get :territory_rdvs
+    get :territory_active_agents
+    get :territory_receipts
+  end
 
   authenticate :user do
     get "/users/informations", to: "users/users#edit"
@@ -121,7 +125,16 @@ Rails.application.routes.draw do
           get :edit_starts_at
           patch :update_starts_at
 
-          get :show_starts_at # Route temporaire qui sera supprimée quand on implémentera la suite du parcours
+          get :edit_modalites
+          patch :update_modalites
+
+          get :edit_motif
+          patch :update_motif
+
+          get :edit_user
+          post :create_rdv
+
+          get :rdv
         end
       end
       resources :users, only: [] do

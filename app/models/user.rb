@@ -148,6 +148,10 @@ class User < ApplicationRecord
     deleted_at ? :deleted_account : super
   end
 
+  def soft_deleted?
+    deleted_at.present?
+  end
+
   def user_to_notify
     relative? ? responsible : self
   end

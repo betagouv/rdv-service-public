@@ -11,7 +11,7 @@ AllCops:
     - "db/migrate/*good_job*.rb"
     - "scripts/screenshots/**/*"
   NewCops: enable
-  TargetRubyVersion: 3.3.6
+  TargetRubyVersion: 3.3.7
   SuggestExtensions: false
 
 Bundler/OrderedGems:
@@ -278,6 +278,9 @@ Style/ComparableClamp:
   Enabled: false
 
 Style/SafeNavigationChainLength:
+  Enabled: false
+
+Style/MapToSet:
   Enabled: false
 
 # cette vérification serait bien à mettre en place mais il y plus de 20 specs qui ne la respectent pas aujourd’hui

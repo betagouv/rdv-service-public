@@ -7,6 +7,8 @@
 
 class AntsPreDemandeNumberValidation < ActiveModel::Validator
   def validate(record)
+    raise "You need to include BenignErrors to use #{self.class}" unless record.respond_to?(:add_benign_error)
+
     ants_pre_demande_number = record.ants_pre_demande_number.upcase
 
     unless ants_pre_demande_number.match?(/\A[A-Z0-9]{10}\z/)

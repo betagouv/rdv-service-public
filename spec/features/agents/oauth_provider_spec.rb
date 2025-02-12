@@ -39,13 +39,15 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"
 
-    expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
+    expect(page).to have_content("Vous devez vous connecter pour continuer")
+    find(".fr-alert--info") # On vérifie que le flash est une info et pas une alerte
+
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
     expect(page).to have_content("Connexion réussie")
-    expect(page).to have_content("En continuant, vous allez permettre à Démarches Simplifiées d'accéder à votre compte RDV Solidarités lié à l'adresse francis@factice.org")
+    expect(page).to have_content("En continuant, vous allez permettre à Démarches Simplifiées d'accéder à votre compte RDV Solidarités")
     click_on "Continuer"
     expect(page).to have_content("Votre email est francis@factice.org")
 
@@ -101,7 +103,8 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
     click_on "Se connecter"
 
     expect(page).to have_content("Connexion réussie")
-    expect(page).to have_content("En continuant, vous allez permettre à Démarches Simplifiées d'accéder à votre compte RDV Solidarités lié à l'adresse francis@factice.org")
+    expect(page).to have_content("En continuant, vous allez permettre à Démarches Simplifiées d'accéder à votre compte RDV Solidarités")
+    expect(page).to have_content(agent.email) # On indique à l'agent le compte utilisé pour la connexion
     click_on "Continuer"
 
     expect(page).to have_content("Votre email est francis@factice.org")

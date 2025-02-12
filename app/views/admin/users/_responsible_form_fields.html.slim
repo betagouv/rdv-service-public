@@ -47,14 +47,14 @@
     | L'usager ayant validé son compte, vous ne pouvez plus modifier ses préférences
 
 - unless current_domain == Domain::RDV_MAIRIE
-  = f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
+  = f.input :address, **(input_opts.deep_merge(input_html: { data: { "address-autocomplete": "on" } }))
 
   = f.input :city_code, as: :hidden, **input_opts
   = f.input :post_code, as: :hidden, **input_opts
   = f.input :city_name, as: :hidden, **input_opts
 
 - if current_territory.enable_address_details
-  = f.input :address_details, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
+  = f.input :address_details, **(input_opts.deep_merge(input_html: { data: { "address-autocomplete": "on" } }))
 
 - if current_territory.enable_case_number
   = f.input :case_number, **input_opts

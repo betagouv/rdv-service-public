@@ -28,8 +28,9 @@ RSpec.describe Notifiers::RdvBase, type: :service do
 
     context "rdv has one user with email notifications, but motif is not notified" do
       let(:user1) { build(:user, notify_by_email: true) }
-      let(:motif) { build(:motif, :visible_and_not_notified) }
-      let(:rdv) { create(:rdv, starts_at: 1.day.from_now, users: [user1], motif: motif) }
+      let(:organisation) { build(:organisation) }
+      let(:motif) { build(:motif, :visible_and_not_notified, organisation:) }
+      let(:rdv) { create(:rdv, starts_at: 1.day.from_now, users: [user1], motif: motif, organisation:) }
 
       it "sends email to user" do
         expect(service).not_to receive(:notify_user_by_mail).with(user1)
@@ -104,8 +105,9 @@ RSpec.describe Notifiers::RdvBase, type: :service do
     context "motif is not_notified" do
       let(:author) { build(:agent) }
       let(:agent) { build(:agent) }
-      let(:motif) { build(:motif, :visible_and_not_notified) }
-      let(:rdv) { create(:rdv, starts_at: 1.day.from_now, agents: [agent], motif: motif) }
+      let(:organisation) { build(:organisation) }
+      let(:motif) { build(:motif, :visible_and_not_notified, organisation:) }
+      let(:rdv) { create(:rdv, starts_at: 1.day.from_now, agents: [agent], motif: motif, organisation:) }
 
       it "agent is notified anyway" do
         expect(service).to receive(:notify_agent).with(agent)
