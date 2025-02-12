@@ -6,6 +6,12 @@ fr:
         other: Usagers
     attributes:
       user:
+        # Pour ne pas perturber les agents avec différentes notions d'email, les champs ont tous le même nom.
+        # Notification email et email sont mutuellement exclusifs.
+        # Preferred email est soit l'un soit l'autre.
+        notification_email: Email
+        preferred_email: Email
+        email: Email
         organisation: Organisation
         caisse_affiliation: Caisse d'affiliation
         affiliation_number: Numéro d'allocataire
@@ -16,7 +22,6 @@ fr:
         responsability_type: Type d'usager
         notify_by_sms: "Accepte les notifications par SMS"
         notify_by_email: "Accepte les notifications par email"
-        notification_email: "Email de notification"
         created_through: "Origine du compte"
         notes: Remarques
         ants_pre_demande_number: &ants_pre_demande_number_label Numéro de pré-demande ANTS

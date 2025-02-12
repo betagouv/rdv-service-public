@@ -6,11 +6,7 @@ ul.list-unstyled.mb-5
   li.mb-2= object_attribute_tag(user, :birth_name)
   li.mb-2= object_attribute_tag(user, :birth_date, birth_date_and_age(user))
   li.mb-2= object_attribute_tag(user, :address)
-  li.mb-2= object_attribute_tag(user, :email, clickable_user_email(user))
-  - if user.notification_email.present?
-    li= object_attribute_tag(user, :notification_email, clickable_user_notification_email(user))
-    .text-muted.mb-2
-      | Cette valeur n'est pas modifiable et a été renseignée par un partenaire tiers (ex : rdv-insertion...)
+  li.mb-2= object_attribute_tag(user, :preferred_email, clickable_user_email(user))
   li.mb-2= object_attribute_tag(user, :notify_by_email, notify_by_email_description(user))
   li.mb-2
     = object_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
