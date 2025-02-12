@@ -72,25 +72,24 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
         let(:end_time) { "15:00" }
 
         let!(:absence_count_before) { Absence.count }
-        let(:created_absence) { Absence.find(parsed_response_body["absence"]["id"]) }
 
         schema "$ref" => "#/components/schemas/absence_with_root"
 
         run_test!
 
-        it { expect(Absence.count).to eq(absence_count_before + 1) }
+        specify do
+          expect(Absence.count).to eq(absence_count_before + 1)
 
-        it { expect(created_absence.agent).to eq(agent) }
-
-        it { expect(created_absence.title).to eq(title) }
-
-        it { expect(created_absence.first_day).to eq(Date.new(2023, 11, 20)) }
-
-        it { expect(created_absence.start_time).to eq(Tod::TimeOfDay.new(8, 0)) }
-
-        it { expect(created_absence.end_day).to eq(Date.new(2023, 11, 20)) }
-
-        it { expect(created_absence.end_time).to eq(Tod::TimeOfDay.new(15, 0)) }
+          created_absence = Absence.find(parsed_response_body["absence"]["id"])
+          expect(created_absence).to have_attributes(
+            agent: agent,
+            title: title,
+            first_day: Date.new(2023, 11, 20),
+            start_time: Tod::TimeOfDay.new(8, 0),
+            end_day: Date.new(2023, 11, 20),
+            end_time: Tod::TimeOfDay.new(15, 0)
+          )
+        end
 
         it "logs the API call" do
           expect(ApiCall.first.attributes.symbolize_keys).to include(
