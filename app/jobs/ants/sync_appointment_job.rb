@@ -41,7 +41,7 @@ module Ants
       @ants_appointments.each do |appointment|
         AntsApi.delete(
           ants_pre_demande_number: stripped_ants_pre_demande_number,
-          meeting_point_id:,
+          meeting_point_id:, # les appointments retournés par status ne contiennent pas le meeting_point_id
           **appointment.symbolize_keys.slice(:meeting_point, :appointment_date)
         )
       end
