@@ -9,9 +9,9 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
   def validate(record)
     raise "You need to include BenignErrors to use #{self.class}" unless record.respond_to?(:add_benign_error)
 
-    ants_pre_demande_number = record.ants_pre_demande_number.upcase
+    return true if record.errors[:ants_pre_demande_number].present? # skip status checks when there are format errors
 
-    return unless validate_format(ants_pre_demande_number, record)
+    ants_pre_demande_number = record.ants_pre_demande_number.upcase
 
     status, appointments = AntsApi.status(ants_pre_demande_number:, timeout: 4).values_at("status", "appointments")
 
@@ -24,13 +24,6 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
     record.errors.add(:ants_pre_demande_number, "n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
     Rails.logger.error e
     Sentry.capture_exception(e)
-  end
-
-  def validate_format(ants_pre_demande_number, record)
-    return true if ants_pre_demande_number.match?(/\A[A-Z0-9]{10}\z/)
-
-    record.errors.add(:ants_pre_demande_number, "doit comporter 10 chiffres et lettres")
-    false
   end
 
   def validate_status_validated(status, record)

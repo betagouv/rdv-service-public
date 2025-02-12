@@ -15,6 +15,7 @@ class BeneficiaireForm
   validates_presence_of :first_name, :last_name
   validate :warn_no_contact_information
   validate :validate_phone_number
+  validates :ants_pre_demande_number, presence: true, ants_pre_demande_number_format: true, if: :requires_ants_predemande_number?
   validates_with AntsPreDemandeNumberStatusValidation, if: :requires_ants_predemande_number?
 
   def warn_no_contact_information

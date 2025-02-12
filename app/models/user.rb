@@ -67,6 +67,7 @@ class User < ApplicationRecord
   # Validations
   validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :ants_pre_demande_number, ants_pre_demande_number_format: true
 
   validate :birth_date_validity
 
