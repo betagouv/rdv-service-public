@@ -9,7 +9,11 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
   def validate(record)
     raise "You need to include BenignErrors to use #{self.class}" unless record.respond_to?(:add_benign_error)
 
-    return true if record.errors[:ants_pre_demande_number].present? # skip status checks when there are format errors
+    # filet de sécurité : on ne lance pas les vérifications API si le numéro n’est pas présent et valide
+    return if
+      record.errors[:ants_pre_demande_number].present? ||
+      record.ants_pre_demande_number.blank? ||
+      !record.ants_pre_demande_number.upcase.match?(AntsPreDemandeNumberFormatValidator::REGEX)
 
     ants_pre_demande_number = record.ants_pre_demande_number.upcase
 
@@ -25,6 +29,8 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
     Rails.logger.error e
     Sentry.capture_exception(e)
   end
+
+  private
 
   def validate_status_validated(status, record)
     return true if status == "validated"
