@@ -413,6 +413,7 @@ tables:
       - controller_name
       - action_name
       - agent_id
+      - authentication_type
 
   - table_name: exports
     non_anonymized_column_names:
