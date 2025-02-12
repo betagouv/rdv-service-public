@@ -5,6 +5,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
     perform_enqueued_jobs { example.run }
   end
 
+  let(:event_id) { "AAMkAGY3YjViMzE2LTgyMDYtNDhiNi04ZTI0LTYxMjg1ZjBjNjMwOABGAAAAAABJYMQ==" }
   let(:agent) { create(:agent, microsoft_graph_token: "token") }
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone, organisation:) }
@@ -35,7 +36,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
     it "sends requests to the Outlook api for every change on the objects that are included in the Outlook event" do
       create_request_stub = stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-        .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
+        .to_return(status: 200, body: { id: event_id }.to_json, headers: {})
 
       rdv = create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation,
                          starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30)
@@ -62,7 +63,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
       expect(create_request_stub.with(headers: expected_headers, body: expected_create_body)).to have_been_requested.once
 
-      expect(rdv.reload.agents_rdvs.first.outlook_id).to eq "event_id"
+      expect(rdv.reload.agents_rdvs.first.outlook_id).to eq(event_id)
     end
   end
 
@@ -96,18 +97,18 @@ RSpec.describe Outlook::EventSerializerAndListener do
       end
 
       before do
-        rdv.agents_rdvs.first.update!(outlook_id: "event_id")
+        rdv.agents_rdvs.first.update!(outlook_id: event_id)
         agent.update!(microsoft_graph_token: "token")
-        stub_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/event_id")
+        stub_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/#{event_id}")
           .with(body: expected_body, headers: expected_headers)
-          .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
+          .to_return(status: 200, body: { id: event_id.to_s }.to_json, headers: {})
       end
 
       it "updates the Outlook Event" do
         rdv.update(duration_in_min: 40)
 
         expect(a_request(:patch,
-                         "https://graph.microsoft.com/v1.0/me/Events/event_id").with(body: expected_body)).to have_been_made.once
+                         "https://graph.microsoft.com/v1.0/me/Events/#{event_id}").with(body: expected_body)).to have_been_made.once
         expect(sentry_events).to be_empty
       end
     end
@@ -158,7 +159,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
           .with(body: expected_updated_body, headers: expected_headers)
-          .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
+          .to_return(status: 200, body: { id: event_id.to_s }.to_json, headers: {})
       end
 
       it "creates the Outlook Event" do
@@ -167,7 +168,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
         expect(a_request(:post,
                          "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_updated_body)).to have_been_made.once
 
-        expect(agents_rdv.reload.outlook_id).to eq("event_id")
+        expect(agents_rdv.reload.outlook_id).to eq(event_id.to_s)
       end
     end
 
