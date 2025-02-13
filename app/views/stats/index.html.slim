@@ -1,15 +1,52 @@
 - content_for :title, "Statistiques globales"
 
-= dsfr_breadcrumbs do |b|
-  = b.with_breadcrumb label: "Accueil", href: "/"
-  = b.with_breadcrumb label: yield(:title)
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: "/"
+    = b.with_breadcrumb label: yield(:title)
+
+p
+  | Les statistiques présentées ici sont le cumul de RDV Service Public, RDV Solidarités, RDV Aide Numérique.
 
 .fr-mb-4w
   = link_to "Parcourir les statistiques structure par structure", stats_territories_path, class: "fr-link fr-link--icon-right fr-icon-arrow-right-line"
 
-p
-  | Les statistiques présentées ici sont le cumul de RDV Service Public, RDV Solidarités, RDV Aide Numérique.
+.fr-grid-row.fr-grid-row--gutters.rdv-flex-wrap-wrap-reverse.fr-mb-8w
+  .fr-col-12.fr-col-md-4
+    .fr-card
+      .fr-card__body
+        .fr-card__content
+          h2 Qui l’utilise ?
+          .fr-mb-2w Légende
+          ul.rdv-stats-legend
+            li.rdv-stats-legend-circle.rdv-stats-legend-circle--mairies
+              div
+                div
+                  |> Mairies avec dispositif de recueil
+                  span[data-target="map-counter-mairies"] &nbsp;
+                .fr-text--sm.rdv-color-text-mention-grey RDV Service Public
+            li.rdv-stats-legend-circle.rdv-stats-legend-circle--rdvsp
+              div
+                div
+                  |> Services de l’État, Opérateurs publics, Collectivités
+                  span[data-target="map-counter-rdvsp"] &nbsp;
+                .fr-text--sm.rdv-color-text-mention-grey RDV Service Public
+            li.rdv-stats-legend-circle.rdv-stats-legend-circle--rdvs
+              div
+                div
+                  |> Maison des solidarités, Points justice, Médiation numérique
+                  span[data-target="map-counter-rdvs"] &nbsp;
+                .fr-text--sm.rdv-color-text-mention-grey RDV Solidarités, RDV Aide Numérique
+
+  .fr-col-12.fr-col-md-8
+    .stats-map[data-controller="stats-map" data-url=stats_lieux_map_data_path]
+      | Carte en cours de chargement…
+
 iframe.rdv-width-100.fr-mb-8w.rdv-iframe-metabase.js-iframe-metabase[src="https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io/public/dashboard/4e40074b-4b97-45c3-9dff-39f7726ab4f3"
   frameborder="0"
   allowtransparency
 ]
+
+link href="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css" rel="stylesheet"
+script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js"
+= javascript_include_tag "lieux_map"

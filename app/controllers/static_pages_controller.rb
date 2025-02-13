@@ -6,33 +6,6 @@ class StaticPagesController < ApplicationController
 
   def accessibility; end
 
-  def lieux_map_data
-    query = Rails.root.join("app/lib/lieux_map_query.sql").read
-
-    res = Rails.cache.fetch("lieux_map_data", expires_in: 24.hours) do
-      Typhoeus.post(
-        "https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io/api/dataset/json",
-        params: { query: { database: 2, native: { query: }, type: "native" }.to_json },
-        headers: {
-          "x-api-key" => ENV["METABASE_API_KEY"],
-          "Content-Type" => "application/json",
-          "Accept" => "application/json",
-        }
-      )
-    end
-    if res.code != 200
-      render(
-        json: { error: "Erreur lors de la récupération des données, statut #{res.code}", body: res.body },
-        status: :internal_server_error
-      )
-      return
-    end
-
-    render json: JSON.parse(res.body)
-  end
-
-  def lieux_map; end
-
   def contact
     territories_with_phone_number = Territory.where.not(phone_number_formatted: nil)
     territories_group_by_department = territories_with_phone_number

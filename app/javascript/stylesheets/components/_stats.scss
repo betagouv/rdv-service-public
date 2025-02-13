@@ -5,3 +5,44 @@
     height: 2300px;
   }
 }
+
+ul.rdv-stats-legend {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+
+  li.rdv-stats-legend-circle {
+    margin-left: 0;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    gap: 10px;
+  }
+
+  li.rdv-stats-legend-circle:before {
+    flex-shrink: 0;
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  li.rdv-stats-legend-circle--mairies:before {
+    background-color: #2e4177;
+  }
+  li.rdv-stats-legend-circle--rdvsp:before {
+    background-color: #5fe0eb;
+  }
+  li.rdv-stats-legend-circle--rdvs:before {
+    background-color: #f983f1;
+  }
+}
+
+.stats-map {
+  border: 1px solid var(--border-default-grey);
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
