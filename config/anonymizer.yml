@@ -19,6 +19,8 @@ tables:
     truncated: true
   - table_name: user_profiles
     truncated: true
+  - table_name: annotations
+    truncated: true
   - table_name: motif_categories_territories
     truncated: true
   - table_name: schema_migrations
