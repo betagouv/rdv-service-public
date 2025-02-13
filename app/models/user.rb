@@ -50,6 +50,7 @@ class User < ApplicationRecord
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
   has_many :receipts, dependent: :destroy
+  has_many :annotations, dependent: :destroy
 
   # Through relations
   # we specify dependent: :destroy because by default user_profiles and referent_assignations
@@ -72,6 +73,8 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
+  after_create :create_annotations  # backfill temporaire, première étape de migration
+  after_update :sync_annotations    # backfill temporaire, première étape de migration
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -279,6 +282,34 @@ class User < ApplicationRecord
     self.email = nil if email.blank?
   end
 
+  def create_annotations
+    return if notes.blank?
+
+    find_or_initialize_annotations.each do |annotation|
+      annotation.content = notes
+      annotation.save!
+    end
+  end
+
+  def sync_annotations
+    return unless notes_previously_changed?
+
+    if notes.present?
+      find_or_initialize_annotations.each do |annotation|
+        annotation.content = notes
+        annotation.save!
+      end
+    else
+      annotations.destroy_all
+    end
+  end
+
+  def find_or_initialize_annotations
+    territories.map do |territory|
+      Annotation.find_or_initialize_by(user: self, territory:)
+    end
+  end
+
   def birth_date_validity
     return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
@@ -296,6 +327,7 @@ class User < ApplicationRecord
     Anonymizer.anonymize_record!(self)
     receipts.each { |r| Anonymizer.anonymize_record!(r) }
     rdvs.each { |r| Anonymizer.anonymize_record!(r) }
+    annotations.destroy_all
     versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",

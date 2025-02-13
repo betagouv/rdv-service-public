@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_12_125817) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_13_094124) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -259,6 +259,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_12_125817) do
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
+  end
+
+  create_table "annotations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "territory_id", null: false
+    t.string "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["territory_id"], name: "index_annotations_on_territory_id"
+    t.index ["user_id"], name: "index_annotations_on_user_id"
   end
 
   create_table "api_calls", force: :cascade do |t|
@@ -563,6 +573,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_12_125817) do
     t.bigint "lieu_id"
     t.boolean "expired_cached", default: false
     t.datetime "recurrence_ends_at"
+    t.time "secondary_start_time"
+    t.time "secondary_end_time"
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
@@ -875,6 +887,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_12_125817) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
+  add_foreign_key "annotations", "territories"
+  add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
   add_foreign_key "exports", "agents"
   add_foreign_key "file_attentes", "rdvs"

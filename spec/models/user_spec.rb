@@ -364,4 +364,52 @@ RSpec.describe User, type: :model do
       expect(user.reload.ants_pre_demande_number).to eq "ABCDE12345"
     end
   end
+
+  describe "#sync_annotations" do
+    describe "user creation" do
+      it "creates an annotation if needed" do
+        organisation = create(:organisation)
+        user_with_notes = create(:user, notes: "Lorem ipsum", organisations: [organisation])
+        expect(user_with_notes.notes).to eq("Lorem ipsum")
+        expect(Annotation.where(user: user_with_notes).sole).to have_attributes(territory: organisation.territory, content: "Lorem ipsum")
+
+        expect { create(:user, notes: "", organisations: [organisation]) }.not_to change(Annotation, :count)
+      end
+    end
+
+    describe "user update" do
+      it "creates an annotation if notes appear" do
+        organisation = create(:organisation)
+        user = create(:user, notes: nil, organisations: [organisation])
+        expect(Annotation.count).to eq(0)
+
+        expect { user.update!(notes: "Lorem ipsum") }.to change(Annotation, :count).by(1)
+        expect(Annotation.where(user: user).sole).to have_attributes(territory: organisation.territory, content: "Lorem ipsum")
+      end
+
+      it "updates the annotation if the notes change" do
+        organisation = create(:organisation)
+        user = create(:user, notes: "Lorem ipsum", organisations: [organisation])
+        expect { user.update!(notes: "dolor sit amet") }.to change { Annotation.where(user: user).sole.reload.updated_at }
+        expect(Annotation.where(user: user).sole.content).to eq("dolor sit amet")
+      end
+
+      it "deletes the annotation if the notes become blank" do
+        organisation = create(:organisation)
+        user = create(:user, notes: "Lorem ipsum", organisations: [organisation])
+        expect { user.update!(notes: "") }.to change { Annotation.where(user: user).first }.to(nil)
+      end
+    end
+
+    describe "user anonymization" do
+      it "deletes the annotations" do
+        organisation = create(:organisation)
+        user = create(:user, notes: "Lorem ipsum", organisations: [organisation])
+        expect(Annotation.where(user: user).sole.content).to eq("Lorem ipsum")
+
+        user.soft_delete
+        expect(Annotation.where(user: user)).to be_empty
+      end
+    end
+  end
 end
