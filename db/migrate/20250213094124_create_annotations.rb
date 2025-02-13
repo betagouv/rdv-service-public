@@ -14,7 +14,8 @@ class CreateAnnotations < ActiveRecord::Migration[7.1]
 
   private
 
-  # Migration de données à lancer séparément pour ne pas que la migration timeout :
+  # Cette migration de données a pris 11 minutes sur une copie locale de la prod, c'est
+  # pourquoi on la lance séparément pour ne pas que la migration timeout lors du deploy Scalingo.
   def a_lancer_manuellement
     User.where.not(notes: nil).where.not(notes: "").includes(:territories).find_each do |user|
       next if user.notes.blank? # pas la peine de migrer "   "
