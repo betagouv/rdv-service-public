@@ -8,11 +8,15 @@ class RdvPlanBlueprint < Blueprinter::Base
   end
 
   field :rdv do |rdv_plan, _options|
-    next if rdv_plan.rdv.nil?
+    rdv = rdv_plan.rdv
+
+    next if rdv.nil?
 
     {
-      id: rdv_plan.rdv_id,
-      status: rdv_plan.rdv.status,
+      id: rdv.id,
+      status: rdv.status,
+      starts_at: rdv.starts_at.iso8601,
+      location_type: rdv.motif.location_type,
     }
   end
 end

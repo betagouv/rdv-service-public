@@ -121,8 +121,8 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
           expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
           expect(parsed_response_body.dig("rdv_plan", "rdv").symbolize_keys).to include(
             id: rdv.id,
-            starts_at: rdv.starts_at,
             status: rdv.status,
+            starts_at: rdv.starts_at.iso8601,
             location_type: rdv.motif.location_type
           )
         end
