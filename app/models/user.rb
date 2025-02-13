@@ -289,7 +289,8 @@ class User < ApplicationRecord
   def create_annotations
     return if notes.blank?
 
-    find_or_initialize_annotations.each do |annotation|
+    territories.distinct.map.each do |territory|
+      annotation = annotations.find_or_initialize_by(territory:)
       annotation.content = notes
       annotation.save!
     end
@@ -299,18 +300,13 @@ class User < ApplicationRecord
     return unless notes_previously_changed?
 
     if notes.present?
-      find_or_initialize_annotations.each do |annotation|
+      territories.distinct.map.each do |territory|
+        annotation = annotations.find_or_initialize_by(territory:)
         annotation.content = notes
         annotation.save!
       end
     else
       annotations.destroy_all
-    end
-  end
-
-  def find_or_initialize_annotations
-    territories.distinct.map do |territory|
-      annotations.find_or_initialize_by(territory:)
     end
   end
 
