@@ -20,13 +20,11 @@ class CreateAnnotations < ActiveRecord::Migration[7.1]
       next if user.notes.blank? # pas la peine de migrer "   "
 
       user.territories.distinct.each do |territory|
-        Annotation.create!(
-          user: user,
-          territory: territory,
-          content: user.notes,
-          created_at: user.updated_at,
-          updated_at: user.updated_at
-        )
+        annotation = user.annotations.find_or_initialize_by(territory:)
+        annotation.content = user.notes
+        annotation.created_at = user.updated_at
+        annotation.updated_at = user.updated_at
+        annotation.save!
       end
     end
   end
