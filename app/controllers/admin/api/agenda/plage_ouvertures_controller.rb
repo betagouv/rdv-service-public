@@ -9,7 +9,6 @@ class Admin::Api::Agenda::PlageOuverturesController < Admin::Api::BaseController
 
     plage_ouvertures = policy_scope(@agent.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation)
-    plage_ouvertures = plage_ouvertures.where(id: params[:plages_ids]) if params[:plages_ids].present?
 
     @plage_ouverture_occurrences = plage_ouvertures.all_occurrences_for(date_range_params)
   end
