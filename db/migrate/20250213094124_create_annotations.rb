@@ -10,20 +10,24 @@ class CreateAnnotations < ActiveRecord::Migration[7.1]
     end
 
     add_index :annotations, %i[user_id territory_id], unique: true
+  end
 
-    # Migration de données à lancer séparément pour ne pas que la migration timeout
-    # User.where.not(notes: nil).where.not(notes: "").includes(:territories).find_each do |user|
-    #   next if user.notes.blank? # pas la peine de migrer "   "
-    #
-    #   user.territories.each do |territory|
-    #     Annotation.create!(
-    #       user: user,
-    #       territory: territory,
-    #       content: user.notes,
-    #       created_at: user.updated_at,
-    #       updated_at: user.updated_at
-    #     )
-    #   end
-    # end
+  private
+
+  # Migration de données à lancer séparément pour ne pas que la migration timeout :
+  def a_lancer_manuellement
+    User.where.not(notes: nil).where.not(notes: "").includes(:territories).find_each do |user|
+      next if user.notes.blank? # pas la peine de migrer "   "
+
+      user.territories.distinct.each do |territory|
+        Annotation.create!(
+          user: user,
+          territory: territory,
+          content: user.notes,
+          created_at: user.updated_at,
+          updated_at: user.updated_at
+        )
+      end
+    end
   end
 end
