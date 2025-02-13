@@ -46,7 +46,8 @@ RSpec.describe "Referent Assignation authentified API" do
           expect(ApiCall.first.attributes.symbolize_keys).to include(
             controller_name: "referent_assignations",
             action_name: "create_many",
-            agent_id: agent1.id
+            agent_id: agent1.id,
+            authentication_type: "SharedSecret"
           )
         end
       end

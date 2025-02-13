@@ -6,6 +6,10 @@ class RdvPlan < ApplicationRecord
   belongs_to :motif, optional: true
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
+  # Le `optional: true` sur les oauth_application est un peu anticipé : on pourra avoir ce cas quand des
+  # rdv_plans seront créés en natif depuis l'application, probablement pour enregistrer un brouillon de rdv
+  # TODO: il faudrait mettre à jour la spec swagger pour utiliser de l'oauth pour pouvoir enlever le `optional: true`
+  belongs_to :oauth_application, class_name: "Doorkeeper::Application", optional: true
 
   delegate :organisation, to: :motif
 
@@ -57,13 +61,17 @@ class RdvPlan < ApplicationRecord
   def return_url_is_authorized
     return if return_url.blank?
 
-    uri = URI.parse(return_url)
+    return_uri = URI.parse(return_url)
 
-    unless uri.scheme&.in?(%w[http https])
+    unless return_uri.scheme&.in?(%w[http https])
       errors.add(:return_url, "Doit utiliser http ou https")
     end
-    unless uri.host&.end_with?(".gouv.fr")
-      errors.add(:return_url, "N'est pas un nom de domaine autorisé")
+
+    authorized_domain_names = oauth_application.redirect_uri.split("\n").map do |uri|
+      URI.parse(uri).host
+    end
+    unless return_uri.host&.in?(authorized_domain_names)
+      errors.add(:return_url, "n'est pas un nom de domaine autorisé")
     end
   end
 end

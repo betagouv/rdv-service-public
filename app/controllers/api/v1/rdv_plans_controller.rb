@@ -8,6 +8,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
       RdvPlan.create!(
         planning_agent: current_agent,
         user: user,
+        oauth_application: doorkeeper_token&.application,
         return_url: params[:return_url]
       )
     end

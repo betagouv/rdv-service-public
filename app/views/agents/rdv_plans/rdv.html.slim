@@ -30,4 +30,4 @@
         .fr-mt-4w
           = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv), class: "fr-btn fr-btn--secondary", target: :blank
     - if @rdv_plan.return_url
-      = link_to "Retour sur Mon Suivi Social", @rdv_plan.return_url, class: "float-right"
+      = link_to "Retour sur #{@rdv_plan.oauth_application.name}", @rdv_plan.return_url, class: "float-right"
