@@ -90,9 +90,16 @@ window.addEventListener("load", () => {
   if (!mapElt) return
 
   fetch(mapElt.dataset.url)
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) return response.json();
+      throw new Error(`HTTP status ${response.status}`);
+    })
     .then(lieux => {
       initMap(mapElt, lieux)
       setCounters(lieux)
+    })
+    .catch(error => {
+      console.error(error)
+      mapElt.textContent = "⚠️ Erreur lors du chargement de la carte"
     })
 })
