@@ -8,6 +8,8 @@ class RdvPlanBlueprint < Blueprinter::Base
   end
 
   field :rdv do |rdv_plan, _options|
+    # L'appli partenaire a besoin des infos de base sur le rendez-vous pour permettre à l'agent
+    # de savoir quand et comment il aura lieu.
     rdv = rdv_plan.rdv
 
     next if rdv.nil?
