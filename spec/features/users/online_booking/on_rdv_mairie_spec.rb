@@ -280,7 +280,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
         fill_in("user_ants_pre_demande_number", with: "  ")
         click_button("Continuer")
-        expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+        expect(page).to have_content("Numéro de pré-demande ANTS doit être renseigné")
       end
     end
 
