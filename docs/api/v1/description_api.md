@@ -1,4 +1,4 @@
-L'API de RDV Service Public permet à nos partenaires, comme par exemple Démarches Simplifiées et RDV Insertion,d'ajouter de la gestion de rendez-vous dans leurs applications métier.
+L'API de RDV Service Public permet à nos partenaires, comme par exemple Démarches Simplifiées et RDV Insertion, d'ajouter de la gestion de rendez-vous dans leurs applications métier.
 Elle peut aussi être utilisée pour synchroniser les calendriers des agents de votre administration avec ceux qu'ils ont sur leur compte RDV Service Public.
 
 L'API est disponible pour nos trois marques : RDV Service Public, RDV Solidarités, et RDV Aide Numérique.
@@ -28,71 +28,10 @@ Pour la version production, les requêtes doivent être adressées à https://ww
 
 Pour la version démo, les requêtes doivent être adressées à https://demo.rdv-solidarites.fr.
 
-# Authentification
+# Authentification par OAuth
 
 Presque tous les points de terminaison sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.
-
-## Headers d'authentification
-
-Tous les agents peuvent utiliser l'API. Les requêtes faites sur l'API sont authentifiées grace à des tokens d'accès associés à chaque agent. Chaque action faite via l'API est donc attribuable à un agent.
-
-Pour récupérer le token d'accès d'un agent il faut faire une première requête `POST` à l'url `https://www.rdv-solidarites.fr/api/v1/auth/sign_in` en passant en paramètres JSON l'email et le mot de passe de l'agent. Par exemple (avec HTTPie) :
-
-```httpie
-http --json POST 'https://www.rdv-solidarites.fr/api/v1/auth/sign_in' \
-  email='martine@demo.rdv-solidarites.fr' password='123456'
-```
-
-En cas de succès d'authentification, la réponse à cette requête contiendra dans le corps le détail de l'agent, et dans les headers les token d'accès à l'API. Par exemple :
-
-```http
-HTTP/1.1 200 OK
-X-Frame-Options: SAMEORIGIN
-X-XSS-Protection: 1; mode=block
-X-Content-Type-Options: nosniff
-X-Download-Options: noopen
-X-Permitted-Cross-Domain-Policies: none
-Referrer-Policy: strict-origin-when-cross-origin
-Content-Type: application/json; charset=utf-8
-access-token: SFYBngO55ImjD1HOcv-ivQ< token-type: Bearer
-client: Z6EihQAY9NWsZByfZ47i_Q< expiry: 1605600758
-uid: martine@demo.rdv-solidarites.fr
-ETag: W/"0fe52663d6745c922160384e13afe1e1"
-Cache-Control: max-age=0, private, must-revalidate
-X-Meta-Request-Version: 0.7.2
-X-Request-Id: 291fab6a-043b-4b9c-b4b9-3c7fc9c9453a
-X-Runtime: 0.194743< Transfer-Encoding: chunked
-* Connection #0 to host rdv-solidarites.fr left intact
-{
-  "data": {
-    "id":1,
-    "deleted_at":null,
-    "email":"martine@demo.rdv-solidarites.fr",
-    "provider":"email",
-    "service_id":1,
-    "role":"admin",
-    "last_name":"VALIDAY",
-    "first_name":"Martine",
-    "uid":"martine@demo.rdv-solidarites.fr",
-    "allow_password_change":false
-  }
-}
-* Closing connection 0
-```
-
-Les 3 headers essentiels pour l'authentification sont les suivants :
-
-```http
-access-token: SFYBngO55ImjD1HOcv-ivQ
-client: Z6EihQAY9NWsZByfZ47i_Q
-uid: martine@demo.rdv-solidarites.fr
-```
-
-- `access-token` : c'est le jeton d'accès qui vous a été attribué. Il a une durée de vie de 24h, après ça il vous faudra reproduire cette procédure pour en récupérer un nouveau.
-- `client` : un identifiant unique associé à l'appareil depuis lequel vous avez effectué la requête
-- `uid` : l'identifiant de l'agent dans l'API, égal à l'email de l'agent.
-
-**Ces 3 headers doivent être transmis avec chacune de vos requêtes successives à l'API**, peu importe la méthode HTTP.
+Le mode d'authentification recommandé est via le protocole d'OAuth 2.0. Vous pouvez contacter notre équipe technique via le formulaire de contact de l'application pour demander la création d'une application OAuth.
 
 ## Permissions
 
@@ -134,6 +73,8 @@ La réponse contient en outre un objet meta qui indique le nombre total de pages
 # Dépréciations
 
 **ATTENTION le champ `created_by` des `rdvs` et des `participations` est déprécié au profit du champ `created_by_type`.**
+
+L'authentification via l'endpoint api/v1/auth/sign_in` en passant en paramètres JSON l'email et le mot de passe de l'agent est dépréciée en faveur de l'OAuth.
 
 
 # Codes de retour

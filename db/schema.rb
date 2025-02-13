@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_12_125817) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -267,6 +267,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
     t.string "controller_name", null: false
     t.string "action_name", null: false
     t.bigint "agent_id", null: false
+    t.string "authentication_type"
   end
 
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -595,8 +596,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "location_type", enum_type: "location_type"
+    t.bigint "oauth_application_id"
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
+    t.index ["oauth_application_id"], name: "index_rdv_plans_on_oauth_application_id"
     t.index ["planning_agent_id"], name: "index_rdv_plans_on_planning_agent_id"
     t.index ["rdv_agent_id"], name: "index_rdv_plans_on_rdv_agent_id"
     t.index ["rdv_id"], name: "index_rdv_plans_on_rdv_id"
@@ -898,6 +901,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_131404) do
   add_foreign_key "rdv_plans", "agents", column: "rdv_agent_id"
   add_foreign_key "rdv_plans", "lieux"
   add_foreign_key "rdv_plans", "motifs"
+  add_foreign_key "rdv_plans", "oauth_applications"
   add_foreign_key "rdv_plans", "rdvs"
   add_foreign_key "rdv_plans", "users"
   add_foreign_key "rdvs", "lieux"

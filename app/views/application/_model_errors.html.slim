@@ -8,7 +8,7 @@
 
   - if local_assigns[:f]
     .collapse.show.js-collapse-warning-confirmation
-      = f.input :ignore_benign_errors, as: :hidden, input_html: {class: "js-ignore-benign-errors", value: "1" }
+      = f.hidden_field :ignore_benign_errors, class: "js-ignore-benign-errors", value: "1"
       .d-flex.justify-content-between.align-items-center
         div
           a.fr-btn.fr-btn--secondary[
