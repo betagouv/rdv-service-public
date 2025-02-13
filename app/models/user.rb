@@ -249,6 +249,10 @@ class User < ApplicationRecord
     super(value&.upcase)
   end
 
+  def cleanup_annotations
+    annotations.where.not(territory: territories.reload).each(&:destroy!)
+  end
+
   protected
 
   def generate_rdv_invitation_token
@@ -305,8 +309,8 @@ class User < ApplicationRecord
   end
 
   def find_or_initialize_annotations
-    territories.map do |territory|
-      Annotation.find_or_initialize_by(user: self, territory:)
+    territories.distinct.map do |territory|
+      annotations.find_or_initialize_by(territory:)
     end
   end
 

@@ -365,7 +365,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "#sync_annotations" do
+  describe "annotations" do
     describe "user creation" do
       it "creates an annotation if needed" do
         organisation = create(:organisation)
@@ -409,6 +409,24 @@ RSpec.describe User, type: :model do
 
         user.soft_delete
         expect(Annotation.where(user: user)).to be_empty
+      end
+    end
+
+    describe "removing user from organisation" do
+      it "removes annotations for the org's territory" do
+        territory_a = create(:territory)
+        territory_b = create(:territory)
+        organisation_a_1 = create(:organisation, territory: territory_a)
+        organisation_a_2 = create(:organisation, territory: territory_a)
+        organisation_b_1 = create(:organisation, territory: territory_b)
+        organisation_b_2 = create(:organisation, territory: territory_b)
+
+        user = create(:user, notes: "Lorem ipsum", organisations: [organisation_a_1, organisation_a_2, organisation_b_1, organisation_b_2])
+        expect(Annotation.where(user: user).count).to eq(2)
+
+        expect { UserProfile.find_by!(user: user, organisation: organisation_a_1).destroy! }.not_to change(Annotation, :count)
+        expect { UserProfile.find_by!(user: user, organisation: organisation_a_2).destroy! }.to change(Annotation, :count).by(-1)
+        expect(Annotation.where(user: user).sole.territory).to eq(territory_b)
       end
     end
   end
