@@ -268,7 +268,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_13_094124) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["territory_id"], name: "index_annotations_on_territory_id"
-    t.index ["user_id"], name: "index_annotations_on_user_id"
+    t.index ["user_id", "territory_id"], name: "index_annotations_on_user_id_and_territory_id", unique: true
   end
 
   create_table "api_calls", force: :cascade do |t|
