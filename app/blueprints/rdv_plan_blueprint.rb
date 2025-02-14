@@ -17,7 +17,7 @@ class RdvPlanBlueprint < Blueprinter::Base
     {
       id: rdv.id,
       status: rdv.status,
-      starts_at: rdv.starts_at.iso8601,
+      starts_at: rdv.starts_at,
       location_type: rdv.motif.location_type,
     }
   end
