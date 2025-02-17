@@ -189,7 +189,7 @@ RSpec.describe MergeUsersService, type: :service do
     end
   end
 
-  context "both users have notes" do
+  context "both users have annotations" do
     before do
       user_target.update(notes: "Sympa")
       user_to_merge.update(notes: "thiquement")
@@ -198,6 +198,8 @@ RSpec.describe MergeUsersService, type: :service do
     it "preserves target by default" do
       perform
       expect(user_target.notes).to eq("Sympa")
+      expect(user_target.annotations.find_by(territory: organisation.territory).content).to eq("Sympa")
+      # TODO: voir ce qu'on fait pour les notes d'un autre territoire
     end
 
     context "when merging notes" do

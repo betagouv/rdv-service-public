@@ -40,13 +40,21 @@ RSpec.describe "Agent can update user" do
 
     context "when they are enabled" do
       let(:territory) { create(:territory, enable_notes_field: true, enable_caisse_affiliation_field: true) }
+      let!(:annotation_in_other_territory) { create(:annotation, user: user, territory: other_territory) }
+      let(:other_territory) { create(:territory) }
+
+      before do
+        # On ajoute l'usager dans un autre territoire pour vérifier que ses annotations sont mises à jour dans un seul territoire
+        create(:user_profile, user: user, organisation: create(:organisation, territory: other_territory))
+      end
 
       it "update user notes" do
         fill_in "Remarques", with: "souhaite participer au prochain atelier collectif"
         select "MSA", from: "Caisse d'affiliation"
         click_button "Enregistrer"
-        expect(user.reload.notes).to eq "souhaite participer au prochain atelier collectif"
+        expect(user.reload.annotation_for(territory)).to eq "souhaite participer au prochain atelier collectif"
         expect(user.reload.caisse_affiliation).to eq "msa"
+        expect(user.annotation_for(other_territory)).to eq "Remarques de l'autre territoire"
       end
     end
   end

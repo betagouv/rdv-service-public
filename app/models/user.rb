@@ -254,6 +254,10 @@ class User < ApplicationRecord
     annotations.where.not(territory: territories.reload).each(&:destroy!)
   end
 
+  def annotation_for(territory)
+    annotations.find_by(territory: territory)&.content
+  end
+
   protected
 
   def generate_rdv_invitation_token
