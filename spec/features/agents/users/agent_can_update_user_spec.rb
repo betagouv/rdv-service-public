@@ -57,6 +57,7 @@ RSpec.describe "Agent can update user" do
         expect(user.reload.annotation_for(territory)).to eq "souhaite participer au prochain atelier collectif"
         expect(user.reload.caisse_affiliation).to eq "msa"
         expect(user.reload.annotation_for(other_territory)).to eq "Remarques de l'autre territoire"
+        expect(page).to have_content("souhaite participer au prochain atelier collectif")
       end
     end
   end
