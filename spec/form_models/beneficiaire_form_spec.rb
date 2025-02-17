@@ -84,7 +84,7 @@ RSpec.describe BeneficiaireForm do
 
     specify do
       expect(form).to be_invalid
-      expect(form.errors.first.full_message).to eq("Téléphone ne permet pas de recevoir des SMS")
+      expect(form.errors.first.full_message).to eq("Téléphone doit être un numéro de mobile")
     end
   end
 
