@@ -152,7 +152,7 @@ RSpec.describe Outlook::ApiClient do
       end
 
       it "refreshes it and retries, and saves the refresh token on the agent" do
-        described_class.new(agent).create_event!(expected_body)
+        expect(described_class.new(agent).create_event!(expected_body)).to eq("event_id")
 
         expect(a_request(:post,
                          "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.twice
