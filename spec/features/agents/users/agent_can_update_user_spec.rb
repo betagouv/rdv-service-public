@@ -51,6 +51,7 @@ RSpec.describe "Agent can update user" do
       end
 
       it "update user notes" do
+        # TODO: faire marcher l'edit
         fill_in "Remarques", with: "souhaite participer au prochain atelier collectif"
         select "MSA", from: "Caisse d'affiliation"
         click_button "Enregistrer"
