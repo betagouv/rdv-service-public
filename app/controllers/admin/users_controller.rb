@@ -166,7 +166,8 @@ class Admin::UsersController < AgentAuthController
         current_organisation: current_organisation,
         from_modal: from_modal?,
         return_location: params[:return_location],
-      }
+      },
+      current_territory: current_territory
     )
   end
 

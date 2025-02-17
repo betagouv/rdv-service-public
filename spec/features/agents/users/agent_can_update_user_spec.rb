@@ -40,7 +40,9 @@ RSpec.describe "Agent can update user" do
 
     context "when they are enabled" do
       let(:territory) { create(:territory, enable_notes_field: true, enable_caisse_affiliation_field: true) }
-      let!(:annotation_in_other_territory) { create(:annotation, user: user, territory: other_territory) }
+      let!(:annotation_in_other_territory) do
+        create(:annotation, user: user, territory: other_territory, content: "Remarques de l'autre territoire")
+      end
       let(:other_territory) { create(:territory) }
 
       before do
@@ -54,7 +56,7 @@ RSpec.describe "Agent can update user" do
         click_button "Enregistrer"
         expect(user.reload.annotation_for(territory)).to eq "souhaite participer au prochain atelier collectif"
         expect(user.reload.caisse_affiliation).to eq "msa"
-        expect(user.annotation_for(other_territory)).to eq "Remarques de l'autre territoire"
+        expect(user.reload.annotation_for(other_territory)).to eq "Remarques de l'autre territoire"
       end
     end
   end

@@ -10,8 +10,9 @@ class Admin::UserForm
 
   delegate :errors, to: :user
 
-  def initialize(user, ignore_benign_errors: false, view_locals: {})
+  def initialize(user, current_territory: nil, ignore_benign_errors: false, view_locals: {})
     @user = user
+    @current_territory = current_territory
     self.ignore_benign_errors = ignore_benign_errors
     @view_locals = view_locals
   end
@@ -21,7 +22,16 @@ class Admin::UserForm
   end
 
   def save
-    valid? && user.save
+    return unless valid?
+
+    user.transaction do
+      if user.notes_changed?
+        annotation = user.annotations.find_or_initialize_by(territory: @current_territory)
+        annotation&.update(content: user.notes)
+        user.notes = user.notes_was
+      end
+      user.save
+    end
   end
 
   private
