@@ -27,8 +27,9 @@ class Admin::UserForm
     user.transaction do
       if user.notes_changed?
         annotation = user.annotations.find_or_initialize_by(territory: @current_territory)
-        annotation&.update(content: user.notes)
+        annotation&.assign_attributes(content: user.notes)
         user.notes = user.notes_was
+        annotation&.save
       end
       user.save
     end

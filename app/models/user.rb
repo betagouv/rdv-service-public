@@ -74,7 +74,7 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
-  after_create :create_annotations # backfill temporaire, première étape de migration
+  # after_create :create_annotations # backfill temporaire, première étape de migration
   # after_update :sync_annotations    # backfill temporaire, première étape de migration
 
   # Scopes

@@ -22,6 +22,11 @@ RSpec.describe "Agent can create user" do
     fill_in "Remarques", with: "souhaite participer au prochain atelier collectif"
     click_button "Créer"
     expect_page_title("Marco LEBRETON")
+
+    user = User.last
+    expect(user.notes).to be_blank
+    expect(user.annotation_for(organisation.territory)).to eq "souhaite participer au prochain atelier collectif"
+
     expect(page).to have_no_content("Inviter")
     within("#spec-primary-user-card") { click_link "Modifier" }
     fill_in "Email", with: "marco@lebreton.bzh"
@@ -29,10 +34,6 @@ RSpec.describe "Agent can create user" do
     click_link "Inviter"
     open_email("marco@lebreton.bzh")
     expect(current_email.subject).to eq("Vous avez été invité sur RDV Aide Numérique")
-
-    user = User.last
-    expect(user.notes).to be_blank
-    expect(user.annotation_for(organisation.territory)).to eq "souhaite participer au prochain atelier collectif"
   end
 
   context "user already exists in other organisation" do
