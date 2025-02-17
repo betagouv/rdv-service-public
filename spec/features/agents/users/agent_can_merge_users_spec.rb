@@ -1,6 +1,6 @@
 RSpec.describe "Agent can delete user" do
   let!(:organisation) { create(:organisation, territory: territory) }
-  let!(:territory) { create(:territory, enable_logement_field: true) }
+  let!(:territory) { create(:territory, enable_logement_field: true, enable_notes_field: true) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:user1) do
     create(
@@ -16,6 +16,9 @@ RSpec.describe "Agent can delete user" do
   let!(:user_profile1) do
     create(:user_profile, user: user1, organisation: organisation)
   end
+  let!(:user_annotations1) do
+    create(:annotation, user: user1, territory: territory, content: "Notes 1")
+  end
   let!(:user2) do
     create(
       :user,
@@ -27,6 +30,9 @@ RSpec.describe "Agent can delete user" do
       organisations: [organisation],
       logement: "proprietaire"
     )
+  end
+  let!(:user_annotations2) do
+    create(:annotation, user: user2, territory: territory, content: "Notes 2")
   end
 
   it "normal", js: true do
