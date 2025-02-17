@@ -17,4 +17,7 @@ class UserProfile < ApplicationRecord
 
   # Delegations
   delegate :territory, :territory_id, to: :organisation, allow_nil: true
+
+  # Callbacks
+  after_destroy { user.cleanup_annotations }
 end

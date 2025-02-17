@@ -13,7 +13,14 @@ module Outlook
     # @return [String] the outlook_id of the created event
     def create_event!(payload)
       outlook_event = call_events_api("POST", "me/Events", payload)
-      outlook_event["id"]
+      id = outlook_event["id"]
+
+      # Ce logging permet d'enquêter sur https://github.com/betagouv/rdv-service-public/issues/3539
+      if id.to_s.size < 10
+        Sentry.capture_message("ID outlook suspicieux: #{id}", extra: { outlook_response: outlook_event })
+      end
+
+      id
     rescue AlreadyExistsError => e
       Rails.logger.error("Outlook error while creating event: #{e.message}")
     end
@@ -92,8 +99,10 @@ module Outlook
 
       if refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
-      elsif refresh_token_response["access_token"].present?
-        @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
+      elsif refresh_token_response["access_token"].present? && refresh_token_response["refresh_token"].present?
+        @agent.update!(microsoft_graph_token: refresh_token_response["access_token"], refresh_microsoft_graph_token: refresh_token_response["refresh_token"])
+      else
+        raise RefreshTokenError, "Could not refresh token, invalid response (does not contain access_token and refresh_token)"
       end
     end
 

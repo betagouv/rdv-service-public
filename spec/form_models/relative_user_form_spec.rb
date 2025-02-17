@@ -49,7 +49,7 @@ RSpec.describe RelativeUserForm do
         expect { form.submit(first_name: "Jean", last_name: "Jacques", ants_pre_demande_number: "notval") }.not_to change(User, :count)
         expect(form.errors.count).to eq 1
         expect(form.errors.first.attribute).to eq :ants_pre_demande_number
-        expect(form.errors.first.type).to eq "doit comporter 10 chiffres et lettres"
+        expect(form.errors.first.type).to eq :invalid_format
       end
     end
   end

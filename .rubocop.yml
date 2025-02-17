@@ -250,6 +250,9 @@ Style/DateTime:
 Naming/BlockForwarding:
   Enabled: false
 
+Naming/VariableNumber:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 

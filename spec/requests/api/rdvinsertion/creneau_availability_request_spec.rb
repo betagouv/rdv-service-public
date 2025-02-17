@@ -121,16 +121,16 @@ RSpec.describe "Available Creneaux Count for Invitation" do
         end
 
         it "logs the API call" do
-          expect(ApiCall.first.attributes.symbolize_keys).to include(
+          api_call = ApiCall.first
+          expect(api_call).to have_attributes(
             controller_name: "invitations",
             action_name: "creneau_availability",
             agent_id: agent.id,
-            received_at: now
+            received_at: now,
+            authentication_type: "DeviseTokenAuth"
           )
-          expect(ApiCall.first.raw_http["method"]).to eq("GET")
-          expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
-          expect(ApiCall.first.raw_http["headers"]).not_to include("rack.session.options")
-          expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
+          expect(api_call.raw_http["method"]).to eq("GET")
+          expect(api_call.raw_http["headers"]).to be_blank
         end
 
         context "Si le lieu n'existe pas" do
@@ -197,8 +197,6 @@ RSpec.describe "Available Creneaux Count for Invitation" do
               received_at: now
             )
             expect(ApiCall.first.raw_http["method"]).to eq("GET")
-            expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
-            expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
           end
         end
 

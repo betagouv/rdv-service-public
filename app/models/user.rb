@@ -50,6 +50,7 @@ class User < ApplicationRecord
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
   has_many :receipts, dependent: :destroy
+  has_many :annotations, dependent: :destroy
 
   # Through relations
   # we specify dependent: :destroy because by default user_profiles and referent_assignations
@@ -67,11 +68,14 @@ class User < ApplicationRecord
   # Validations
   validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :ants_pre_demande_number, ants_pre_demande_number_format: true
 
   validate :birth_date_validity
 
   # Hooks
   before_save :set_email_to_null_if_blank
+  after_create :create_annotations  # backfill temporaire, première étape de migration
+  after_update :sync_annotations    # backfill temporaire, première étape de migration
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -246,6 +250,10 @@ class User < ApplicationRecord
     super(value&.upcase)
   end
 
+  def cleanup_annotations
+    annotations.where.not(territory: territories.reload).each(&:destroy!)
+  end
+
   protected
 
   def generate_rdv_invitation_token
@@ -279,6 +287,30 @@ class User < ApplicationRecord
     self.email = nil if email.blank?
   end
 
+  def create_annotations
+    return if notes.blank?
+
+    territories.distinct.map.each do |territory|
+      annotation = annotations.find_or_initialize_by(territory:)
+      annotation.content = notes
+      annotation.save!
+    end
+  end
+
+  def sync_annotations
+    return unless notes_previously_changed?
+
+    if notes.present?
+      territories.distinct.map.each do |territory|
+        annotation = annotations.find_or_initialize_by(territory:)
+        annotation.content = notes
+        annotation.save!
+      end
+    else
+      annotations.destroy_all
+    end
+  end
+
   def birth_date_validity
     return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
@@ -296,6 +328,7 @@ class User < ApplicationRecord
     Anonymizer.anonymize_record!(self)
     receipts.each { |r| Anonymizer.anonymize_record!(r) }
     rdvs.each { |r| Anonymizer.anonymize_record!(r) }
+    annotations.destroy_all
     versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",

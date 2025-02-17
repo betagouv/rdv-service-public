@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_21_133641) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_13_094124) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -261,12 +261,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_21_133641) do
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
+  create_table "annotations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "territory_id", null: false
+    t.string "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["territory_id"], name: "index_annotations_on_territory_id"
+    t.index ["user_id", "territory_id"], name: "index_annotations_on_user_id_and_territory_id", unique: true
+  end
+
   create_table "api_calls", force: :cascade do |t|
     t.datetime "received_at", null: false
     t.jsonb "raw_http", null: false
     t.string "controller_name", null: false
     t.string "action_name", null: false
     t.bigint "agent_id", null: false
+    t.string "authentication_type"
   end
 
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -595,8 +606,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_21_133641) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "location_type", enum_type: "location_type"
+    t.bigint "oauth_application_id"
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
+    t.index ["oauth_application_id"], name: "index_rdv_plans_on_oauth_application_id"
     t.index ["planning_agent_id"], name: "index_rdv_plans_on_planning_agent_id"
     t.index ["rdv_agent_id"], name: "index_rdv_plans_on_rdv_agent_id"
     t.index ["rdv_id"], name: "index_rdv_plans_on_rdv_id"
@@ -872,6 +885,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_21_133641) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
+  add_foreign_key "annotations", "territories"
+  add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
   add_foreign_key "exports", "agents"
   add_foreign_key "file_attentes", "rdvs"
@@ -898,6 +913,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_21_133641) do
   add_foreign_key "rdv_plans", "agents", column: "rdv_agent_id"
   add_foreign_key "rdv_plans", "lieux"
   add_foreign_key "rdv_plans", "motifs"
+  add_foreign_key "rdv_plans", "oauth_applications"
   add_foreign_key "rdv_plans", "rdvs"
   add_foreign_key "rdv_plans", "users"
   add_foreign_key "rdvs", "lieux"

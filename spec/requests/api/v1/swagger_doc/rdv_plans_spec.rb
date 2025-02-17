@@ -63,7 +63,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
               phone_number: "0611223344",
               address: "21 rue des Ardennes, 75019 Paris",
             },
-            return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123",
           }
         end
 
@@ -85,8 +84,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
             address: "21 rue des Ardennes, 75019 Paris"
           )
           expect(rdv_plan).to have_attributes(
-            planning_agent: agent,
-            return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123"
+            planning_agent: agent
           )
         end
       end
@@ -114,10 +112,19 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
         run_test!
 
         let(:rdv_plan_id) { rdv_plan.id }
-        let!(:rdv_plan) { create(:rdv_plan, planning_agent: agent) }
+        let!(:rdv_plan) do
+          create(:rdv_plan, planning_agent: agent, rdv: rdv)
+        end
+        let(:rdv) { create(:rdv) }
 
         specify do
           expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
+          expect(parsed_response_body.dig("rdv_plan", "rdv").symbolize_keys).to include(
+            id: rdv.id,
+            status: rdv.status,
+            location_type: rdv.motif.location_type
+          )
+          expect(Time.zone.parse(parsed_response_body.dig("rdv_plan", "rdv", "starts_at"))).to be_within(1.second).of(rdv.reload.starts_at)
         end
       end
     end
