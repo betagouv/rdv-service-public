@@ -2,7 +2,7 @@ class ZammadApiClient
   class Error < StandardError; end
 
   def self.connection
-    Faraday.new(
+    @connection ||= Faraday.new(
       url: "https://zammad10.ethibox.fr/".freeze,
       headers: { Authorization: "Token token=#{ENV['ZAMMAD_API_TOKEN']}" }
     ) do |builder|
