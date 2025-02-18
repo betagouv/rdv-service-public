@@ -35,7 +35,10 @@
       = f.dsfr_text_field :sujet, value: @form.sujet, label: "La raison de votre message", required: true
       - if @form.role_usager?
         .fr-callout.fr-my-2w
-          | L’équipe RDV Service Public n’est pas en mesure de traiter tous les éléments concernant le rendez-vous (transmissions de documents, prise et annulation de rendez-vous et/ou ouverture des créneaux).
+          |> Besoin d’aide pour les documents, la prise ou l’annulation de votre RDV, ou les créneaux ? L’équipe RDV Service Public n’est pas en mesure de traiter ces demandes. Pour cela, veuillez contacter directement la structure concernée, que vous pouvez retrouver dans
+          => link_to "l’annuaire du Service Public", "https://lannuaire.service-public.fr/", target: "_blank"
+          | . Par contre, si vous rencontrez un problème technique lors de la prise de RDV, vous êtes au bon endroit, n’hésitez à nous en parler ici !
+
       = f.dsfr_text_area :message, rows: 5, label: "Votre message", required: true
       .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
         .fr-col-12.fr-col-md-6
