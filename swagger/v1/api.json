@@ -282,24 +282,11 @@
             ],
             "nullable": true
           },
-          "case_number": {
-            "type": "string",
-            "nullable": true
-          },
           "created_at": {
             "type": "string"
           },
           "email": {
             "type": "string",
-            "nullable": true
-          },
-          "family_situation": {
-            "type": "string",
-            "enum": [
-              "single",
-              "in_a_relationship",
-              "divorced"
-            ],
             "nullable": true
           },
           "first_name": {
@@ -322,31 +309,11 @@
           "notify_by_sms": {
             "type": "boolean"
           },
-          "number_of_children": {
-            "type": "integer",
-            "nullable": true
-          },
           "phone_number": {
             "type": "string",
             "nullable": true
           },
           "phone_number_formatted": {
-            "type": "string",
-            "nullable": true
-          },
-          "logement": {
-            "type": "string",
-            "enum": [
-              "sdf",
-              "heberge",
-              "en_accession_propriete",
-              "proprietaire",
-              "autre",
-              "locataire"
-            ],
-            "nullable": true
-          },
-          "notes": {
             "type": "string",
             "nullable": true
           },
@@ -373,7 +340,6 @@
           "affiliation_number",
           "birth_date",
           "birth_name",
-          "case_number",
           "created_at",
           "first_name",
           "invitation_accepted_at",
@@ -1331,21 +1297,21 @@
                   "example": {
                     "value": {
                       "absence": {
-                        "id": 18,
+                        "id": 12,
                         "agent": {
                           "id": 12,
                           "email": "agent@example.com",
-                          "first_name": "Philippine",
+                          "first_name": "Angilbe",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Simon"
+                          "last_name": "Reynaud"
                         },
                         "end_day": "2023-11-20",
                         "end_time": "15:00:00",
                         "first_day": "2023-11-20",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250212T135810Z\r\nUID:absence_18@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
-                        "ical_uid": "absence_18@RDV Solidarités",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250217T111218Z\r\nUID:absence_12@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical_uid": "absence_12@RDV Solidarités",
                         "organisation": {
-                          "id": 27,
+                          "id": 12,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
@@ -1517,21 +1483,21 @@
                   "example": {
                     "value": {
                       "absence": {
-                        "id": 27,
+                        "id": 21,
                         "agent": {
-                          "id": 32,
+                          "id": 23,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Hermine",
+                          "first_name": "Paulette",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Roche"
+                          "last_name": "Hubert"
                         },
-                        "end_day": "2025-02-13",
+                        "end_day": "2025-02-18",
                         "end_time": "15:30:00",
-                        "first_day": "2025-02-13",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250212T135811Z\r\nUID:absence_27@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250213T100000\r\nDTEND;TZID=Europe/Paris:20250213T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
-                        "ical_uid": "absence_27@RDV Solidarités",
+                        "first_day": "2025-02-18",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250217T111219Z\r\nUID:absence_21@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250218T100000\r\nDTEND;TZID=Europe/Paris:20250218T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical_uid": "absence_21@RDV Solidarités",
                         "organisation": {
-                          "id": 41,
+                          "id": 26,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
@@ -1724,21 +1690,21 @@
                   "example": {
                     "value": {
                       "absence": {
-                        "id": 39,
+                        "id": 33,
                         "agent": {
-                          "id": 44,
+                          "id": 35,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Innocent",
+                          "first_name": "Serge",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Lévêque"
+                          "last_name": "Jacquet"
                         },
-                        "end_day": "2025-02-13",
+                        "end_day": "2025-02-18",
                         "end_time": "15:30:00",
-                        "first_day": "2025-02-13",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250212T135811Z\r\nUID:absence_39@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250213T100000\r\nDTEND;TZID=Europe/Paris:20250213T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
-                        "ical_uid": "absence_39@RDV Solidarités",
+                        "first_day": "2025-02-18",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250217T111220Z\r\nUID:absence_33@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250218T100000\r\nDTEND;TZID=Europe/Paris:20250218T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical_uid": "absence_33@RDV Solidarités",
                         "organisation": {
-                          "id": 53,
+                          "id": 38,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
@@ -2022,11 +1988,11 @@
                     "value": {
                       "agents": [
                         {
-                          "id": 68,
+                          "id": 59,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Amandine",
+                          "first_name": "Faustine",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Meunier"
+                          "last_name": "Da silva"
                         }
                       ],
                       "meta": {
@@ -2169,6 +2135,24 @@
                     "value": {
                       "motifs": [
                         {
+                          "id": 7,
+                          "bookable_by": "everyone",
+                          "bookable_publicly": true,
+                          "collectif": false,
+                          "deleted_at": null,
+                          "follow_up": false,
+                          "instruction_for_rdv": null,
+                          "location_type": "public_office",
+                          "motif_category": {
+                            "id": 7,
+                            "name": "Catégorie de motif n°1",
+                            "short_name": "1_motif_cat"
+                          },
+                          "name": "Motif 1",
+                          "organisation_id": 79,
+                          "service_id": 82
+                        },
+                        {
                           "id": 8,
                           "bookable_by": "everyone",
                           "bookable_publicly": true,
@@ -2179,30 +2163,12 @@
                           "location_type": "public_office",
                           "motif_category": {
                             "id": 8,
-                            "name": "Catégorie de motif n°1",
-                            "short_name": "1_motif_cat"
-                          },
-                          "name": "Motif 1",
-                          "organisation_id": 94,
-                          "service_id": 97
-                        },
-                        {
-                          "id": 9,
-                          "bookable_by": "everyone",
-                          "bookable_publicly": true,
-                          "collectif": false,
-                          "deleted_at": null,
-                          "follow_up": false,
-                          "instruction_for_rdv": null,
-                          "location_type": "public_office",
-                          "motif_category": {
-                            "id": 9,
                             "name": "Catégorie de motif n°2",
                             "short_name": "2_motif_cat"
                           },
                           "name": "Motif 2",
-                          "organisation_id": 94,
-                          "service_id": 97
+                          "organisation_id": 79,
+                          "service_id": 82
                         }
                       ],
                       "meta": {
@@ -2327,35 +2293,35 @@
                     "value": {
                       "organisations": [
                         {
-                          "id": 127,
+                          "id": 112,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         {
-                          "id": 128,
+                          "id": 113,
                           "email": null,
                           "name": "Organisation n°2",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         {
-                          "id": 129,
+                          "id": 114,
                           "email": null,
                           "name": "Organisation n°3",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         {
-                          "id": 130,
+                          "id": 115,
                           "email": null,
                           "name": "Organisation n°4",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         {
-                          "id": 131,
+                          "id": 116,
                           "email": null,
                           "name": "Organisation n°5",
                           "phone_number": null,
@@ -2473,7 +2439,7 @@
                   "example": {
                     "value": {
                       "organisation": {
-                        "id": 138,
+                        "id": 123,
                         "email": null,
                         "name": "Organisation n°1",
                         "phone_number": null,
@@ -2582,7 +2548,7 @@
                   "example": {
                     "value": {
                       "organisation": {
-                        "id": 142,
+                        "id": 127,
                         "email": "pole@parcours.fr",
                         "name": "Pole parcours",
                         "phone_number": "33100008012",
@@ -2673,15 +2639,15 @@
                       "public_links": [
                         {
                           "external_id": "ext_id_A",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/188"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/173"
                         },
                         {
                           "external_id": "ext_id_B",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/189"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/174"
                         },
                         {
                           "external_id": "ext_id_C",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/190"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/175"
                         }
                       ]
                     }
@@ -2798,12 +2764,12 @@
                   "example": {
                     "value": {
                       "rdv_plan": {
-                        "id": 8,
-                        "created_at": "2025-02-12 14:58:16 +0100",
+                        "id": 2,
+                        "created_at": "2025-02-17 12:12:25 +0100",
                         "rdv": null,
-                        "updated_at": "2025-02-12 14:58:16 +0100",
-                        "url": "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/8",
-                        "user_id": 19
+                        "updated_at": "2025-02-17 12:12:25 +0100",
+                        "url": "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/2",
+                        "user_id": 11
                       }
                     }
                   }
@@ -2912,12 +2878,17 @@
                   "example": {
                     "value": {
                       "rdv_plan": {
-                        "id": 10,
-                        "created_at": "2025-02-12 14:58:16 +0100",
-                        "rdv": null,
-                        "updated_at": "2025-02-12 14:58:16 +0100",
-                        "url": "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/10",
-                        "user_id": 21
+                        "id": 4,
+                        "created_at": "2025-02-17 12:12:25 +0100",
+                        "rdv": {
+                          "id": 8,
+                          "status": "unknown",
+                          "starts_at": "2025-02-20 12:12:25 +0100",
+                          "location_type": "public_office"
+                        },
+                        "updated_at": "2025-02-17 12:12:25 +0100",
+                        "url": "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/4",
+                        "user_id": 15
                       }
                     }
                   }
@@ -3012,37 +2983,37 @@
                     "value": {
                       "rdvs": [
                         {
-                          "id": 11,
+                          "id": 12,
                           "address": "1 rue de l'adresse, Ville, 12345",
                           "agents": [
                             {
-                              "id": 151,
+                              "id": 144,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Reybaud",
+                              "first_name": "Amaranthe",
                               "inclusion_connect_open_id_sub": null,
-                              "last_name": "Henry"
+                              "last_name": "Guyot"
                             }
                           ],
                           "cancelled_at": null,
                           "collectif": false,
                           "context": null,
-                          "created_at": "2025-02-12 14:58:17 +0100",
+                          "created_at": "2025-02-17 12:12:26 +0100",
                           "created_by": "agent",
-                          "created_by_id": 151,
+                          "created_by_id": 144,
                           "created_by_type": "Agent",
                           "duration_in_min": 45,
                           "ends_at": "2022-01-01 08:45:00 +0100",
                           "lieu": {
-                            "id": 26,
+                            "id": 27,
                             "address": "1 rue de l'adresse, Ville, 12345",
                             "name": "Lieu n°1",
-                            "organisation_id": 201,
+                            "organisation_id": 188,
                             "phone_number": null,
                             "single_use": false
                           },
                           "max_participants_count": null,
                           "motif": {
-                            "id": 65,
+                            "id": 66,
                             "bookable_by": "everyone",
                             "bookable_publicly": true,
                             "collectif": false,
@@ -3051,17 +3022,17 @@
                             "instruction_for_rdv": null,
                             "location_type": "public_office",
                             "motif_category": {
-                              "id": 65,
+                              "id": 66,
                               "name": "Catégorie de motif n°1",
                               "short_name": "1_motif_cat"
                             },
                             "name": "Motif 1",
-                            "organisation_id": 201,
-                            "service_id": 189
+                            "organisation_id": 188,
+                            "service_id": 176
                           },
                           "name": null,
                           "organisation": {
-                            "id": 201,
+                            "id": 188,
                             "email": null,
                             "name": "Organisation n°1",
                             "phone_number": null,
@@ -3069,37 +3040,31 @@
                           },
                           "participations": [
                             {
-                              "id": 14,
+                              "id": 15,
                               "created_by": "agent",
                               "created_by_agent_prescripteur": false,
-                              "created_by_id": 151,
+                              "created_by_id": 144,
                               "created_by_type": "Agent",
                               "send_lifecycle_notifications": true,
                               "send_reminder_notification": true,
                               "status": "unknown",
                               "user": {
-                                "id": 25,
+                                "id": 19,
                                 "address": "20 avenue de Ségur, Paris, 75012",
                                 "address_details": null,
                                 "affiliation_number": "39012093812038",
                                 "birth_date": "1985-07-20",
                                 "birth_name": null,
-                                "caisse_affiliation": "caf",
-                                "case_number": null,
-                                "created_at": "2025-02-12 14:58:17 +0100",
+                                "created_at": "2025-02-17 12:12:26 +0100",
                                 "email": "usager_1@lapin.fr",
-                                "family_situation": "divorced",
-                                "first_name": "Pascale",
+                                "first_name": "Charlaine",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "MÉUNIER",
-                                "logement": "locataire",
-                                "notes": "Super note",
+                                "last_name": "PERRIER",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
-                                "number_of_children": 12,
-                                "phone_number": "0769046672",
-                                "phone_number_formatted": "+33769046672",
+                                "phone_number": "797892255",
+                                "phone_number_formatted": "+33797892255",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
@@ -3110,35 +3075,29 @@
                           "status": "unknown",
                           "users": [
                             {
-                              "id": 25,
+                              "id": 19,
                               "address": "20 avenue de Ségur, Paris, 75012",
                               "address_details": null,
                               "affiliation_number": "39012093812038",
                               "birth_date": "1985-07-20",
                               "birth_name": null,
-                              "caisse_affiliation": "caf",
-                              "case_number": null,
-                              "created_at": "2025-02-12 14:58:17 +0100",
+                              "created_at": "2025-02-17 12:12:26 +0100",
                               "email": "usager_1@lapin.fr",
-                              "family_situation": "divorced",
-                              "first_name": "Pascale",
+                              "first_name": "Charlaine",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "MÉUNIER",
-                              "logement": "locataire",
-                              "notes": "Super note",
+                              "last_name": "PERRIER",
                               "notify_by_email": true,
                               "notify_by_sms": true,
-                              "number_of_children": 12,
-                              "phone_number": "0769046672",
-                              "phone_number_formatted": "+33769046672",
+                              "phone_number": "797892255",
+                              "phone_number_formatted": "+33797892255",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "8d671758-47fc-4c00-b09a-58c152922d45"
+                          "uuid": "0817d940-1b21-4d97-a428-1dda09597348"
                         }
                       ],
                       "meta": {
@@ -3251,35 +3210,29 @@
                     "value": {
                       "referent_assignation": {
                         "agent": {
-                          "id": 252,
+                          "id": 245,
                           "email": "agent_2@lapin.fr",
-                          "first_name": "Judicaël",
+                          "first_name": "Alexanne",
                           "inclusion_connect_open_id_sub": null,
-                          "last_name": "Arnaud"
+                          "last_name": "Daniel"
                         },
                         "user": {
-                          "id": 101,
+                          "id": 95,
                           "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "caisse_affiliation": "caf",
-                          "case_number": null,
-                          "created_at": "2025-02-12 14:58:22 +0100",
+                          "created_at": "2025-02-17 12:12:31 +0100",
                           "email": "usager_1@lapin.fr",
-                          "family_situation": "divorced",
-                          "first_name": "Catherine",
+                          "first_name": "Judith",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "MARTY",
-                          "logement": "locataire",
-                          "notes": "Super note",
+                          "last_name": "RÉMY",
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "number_of_children": 12,
-                          "phone_number": "0732816032",
-                          "phone_number_formatted": "+33732816032",
+                          "phone_number": "6 99 48 91 27",
+                          "phone_number_formatted": "+33699489127",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -3533,30 +3486,30 @@
                           "id": 5,
                           "agents": [
                             {
-                              "id": 284,
+                              "id": 277,
                               "email": "agent_2@lapin.fr",
-                              "first_name": "Éric",
+                              "first_name": "Angadrême",
                               "inclusion_connect_open_id_sub": null,
-                              "last_name": "Huet"
+                              "last_name": "Monnier"
                             },
                             {
-                              "id": 285,
+                              "id": 278,
                               "email": "agent_3@lapin.fr",
-                              "first_name": "Ludivine",
+                              "first_name": "Séraphin",
                               "inclusion_connect_open_id_sub": null,
-                              "last_name": "Renaud"
+                              "last_name": "Da silva"
                             },
                             {
-                              "id": 286,
+                              "id": 279,
                               "email": "agent_4@lapin.fr",
-                              "first_name": "Gautier",
+                              "first_name": "Mauricette",
                               "inclusion_connect_open_id_sub": null,
-                              "last_name": "Colin"
+                              "last_name": "Lopez"
                             }
                           ],
-                          "name": "Basse-Normandie oracles 18219804",
+                          "name": "Midi-Pyrénées dogs 6c94a3f3",
                           "territory": {
-                            "id": 245,
+                            "id": 232,
                             "departement_number": "01",
                             "motif_categories": [],
                             "name": "Territoire n°1"
@@ -3673,35 +3626,29 @@
                     "value": {
                       "user_profile": {
                         "organisation": {
-                          "id": 264,
+                          "id": 251,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null,
                           "verticale": "rdv_solidarites"
                         },
                         "user": {
-                          "id": 117,
+                          "id": 111,
                           "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "caisse_affiliation": "caf",
-                          "case_number": null,
-                          "created_at": "2025-02-12 14:58:24 +0100",
+                          "created_at": "2025-02-17 12:12:33 +0100",
                           "email": "usager_1@lapin.fr",
-                          "family_situation": "divorced",
-                          "first_name": "Manassé",
+                          "first_name": "Quitterie",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "LEMOINE",
-                          "logement": "locataire",
-                          "notes": "Super note",
+                          "last_name": "NOËL",
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "number_of_children": 12,
-                          "phone_number": "06 10 82 77 82",
-                          "phone_number_formatted": "+33610827782",
+                          "phone_number": "6 42 59 26 54",
+                          "phone_number_formatted": "+33642592654",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -3988,34 +3935,28 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 134,
+                        "id": 128,
                         "address": "20 avenue de Ségur, Paris, 75012",
                         "address_details": null,
                         "affiliation_number": "39012093812038",
                         "birth_date": "1985-07-20",
                         "birth_name": null,
-                        "caisse_affiliation": "caf",
-                        "case_number": null,
-                        "created_at": "2025-02-12 14:58:25 +0100",
+                        "created_at": "2025-02-17 12:12:34 +0100",
                         "email": "jean@jacques.fr",
-                        "family_situation": "divorced",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,
                         "invitation_created_at": null,
                         "last_name": "JACQUES",
-                        "logement": "locataire",
-                        "notes": "Super note",
                         "notify_by_email": true,
                         "notify_by_sms": true,
-                        "number_of_children": 12,
-                        "phone_number": "7 70 83 17 08",
-                        "phone_number_formatted": "+33770831708",
+                        "phone_number": "6 19 39 78 95",
+                        "phone_number_formatted": "+33619397895",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
                           {
                             "organisation": {
-                              "id": 285,
+                              "id": 272,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null,
@@ -4293,56 +4234,44 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 169,
+                        "id": 163,
                         "address": "10 rue du Havre, Paris, 75016",
                         "address_details": null,
                         "affiliation_number": "101010",
                         "birth_date": "1976-10-01",
                         "birth_name": "Fripouille",
-                        "caisse_affiliation": "caf",
-                        "case_number": null,
-                        "created_at": "2025-02-12 14:58:26 +0100",
+                        "created_at": "2025-02-17 12:12:36 +0100",
                         "email": "jean@jacques.fr",
-                        "family_situation": "single",
                         "first_name": "Alain",
                         "invitation_accepted_at": null,
                         "invitation_created_at": null,
                         "last_name": "Verse",
-                        "logement": "locataire",
-                        "notes": "Super note",
                         "notify_by_email": false,
                         "notify_by_sms": false,
-                        "number_of_children": 3,
                         "phone_number": "33600008012",
                         "phone_number_formatted": "+33600008012",
                         "responsible": {
-                          "id": 168,
+                          "id": 162,
                           "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "caisse_affiliation": "caf",
-                          "case_number": null,
-                          "created_at": "2025-02-12 14:58:26 +0100",
+                          "created_at": "2025-02-17 12:12:35 +0100",
                           "email": "usager_1@lapin.fr",
-                          "family_situation": "divorced",
-                          "first_name": "Vincent",
+                          "first_name": "Nathanaël",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "PHILIPPE",
-                          "logement": "locataire",
-                          "notes": "Super note",
+                          "last_name": "RICHARD",
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "number_of_children": 12,
-                          "phone_number": "6 41 41 04 11",
-                          "phone_number_formatted": "+33641410411",
+                          "phone_number": "6 99 13 73 84",
+                          "phone_number_formatted": "+33699137384",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
                         },
-                        "responsible_id": 168,
+                        "responsible_id": 162,
                         "user_profiles": null
                       }
                     }
@@ -4472,7 +4401,7 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "invitation_token": "RDRTUUAD"
+                      "invitation_token": "IGQ3G79Y"
                     }
                   }
                 },
@@ -4605,28 +4534,22 @@
                     "value": {
                       "users": [
                         {
-                          "id": 193,
+                          "id": 187,
                           "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "caisse_affiliation": "caf",
-                          "case_number": null,
-                          "created_at": "2025-02-12 14:58:28 +0100",
+                          "created_at": "2025-02-17 12:12:37 +0100",
                           "email": "usager_1@lapin.fr",
-                          "family_situation": "divorced",
-                          "first_name": "Scholastique",
+                          "first_name": "Charline",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "LEMOINE",
-                          "logement": "locataire",
-                          "notes": "Super note",
+                          "last_name": "SANCHEZ",
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "number_of_children": 12,
-                          "phone_number": "06 27 14 71 75",
-                          "phone_number_formatted": "+33627147175",
+                          "phone_number": "772533338",
+                          "phone_number_formatted": "+33772533338",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4883,56 +4806,44 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 204,
+                        "id": 198,
                         "address": "10 rue du Havre, Paris, 75016",
                         "address_details": null,
                         "affiliation_number": "101010",
                         "birth_date": "1976-10-01",
                         "birth_name": "Fripouille",
-                        "caisse_affiliation": "caf",
-                        "case_number": null,
-                        "created_at": "2025-02-12 14:58:28 +0100",
+                        "created_at": "2025-02-17 12:12:37 +0100",
                         "email": "jean@jacques.fr",
-                        "family_situation": "single",
                         "first_name": "Johnny",
                         "invitation_accepted_at": null,
                         "invitation_created_at": null,
                         "last_name": "Silverhand",
-                        "logement": null,
-                        "notes": null,
                         "notify_by_email": false,
                         "notify_by_sms": false,
-                        "number_of_children": 3,
                         "phone_number": "33600008012",
                         "phone_number_formatted": "+33600008012",
                         "responsible": {
-                          "id": 203,
+                          "id": 197,
                           "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "caisse_affiliation": "caf",
-                          "case_number": null,
-                          "created_at": "2025-02-12 14:58:28 +0100",
+                          "created_at": "2025-02-17 12:12:37 +0100",
                           "email": "usager_1@lapin.fr",
-                          "family_situation": "divorced",
-                          "first_name": "Alaïs",
+                          "first_name": "Guillemette",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "LOPEZ",
-                          "logement": "locataire",
-                          "notes": "Super note",
+                          "last_name": "MARCHAND",
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "number_of_children": 12,
-                          "phone_number": "07 79 19 96 51",
-                          "phone_number_formatted": "+33779199651",
+                          "phone_number": "7 98 69 30 57",
+                          "phone_number_formatted": "+33798693057",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
                         },
-                        "responsible_id": 203,
+                        "responsible_id": 197,
                         "user_profiles": null
                       }
                     }
@@ -5073,28 +4984,22 @@
                     "value": {
                       "users": [
                         {
-                          "id": 213,
+                          "id": 207,
                           "address": "20 avenue de Ségur, Paris, 75012",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "caisse_affiliation": "caf",
-                          "case_number": null,
-                          "created_at": "2025-02-12 14:58:29 +0100",
+                          "created_at": "2025-02-17 12:12:38 +0100",
                           "email": "usager_1@lapin.fr",
-                          "family_situation": "divorced",
-                          "first_name": "Lothaire",
+                          "first_name": "Mélodie",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "SCHNEIDER",
-                          "logement": "locataire",
-                          "notes": "Super note",
+                          "last_name": "BESSON",
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "number_of_children": 12,
-                          "phone_number": "6 13 55 08 84",
-                          "phone_number_formatted": "+33613550884",
+                          "phone_number": "0789995364",
+                          "phone_number_formatted": "+33789995364",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -5211,34 +5116,28 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 218,
+                        "id": 212,
                         "address": "20 avenue de Ségur, Paris, 75012",
                         "address_details": null,
                         "affiliation_number": "39012093812038",
                         "birth_date": "1985-07-20",
                         "birth_name": null,
-                        "caisse_affiliation": "caf",
-                        "case_number": null,
-                        "created_at": "2025-02-12 14:58:29 +0100",
+                        "created_at": "2025-02-17 12:12:38 +0100",
                         "email": "jean@jacques.fr",
-                        "family_situation": "divorced",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,
                         "invitation_created_at": null,
                         "last_name": "JACQUES",
-                        "logement": "locataire",
-                        "notes": "Super note",
                         "notify_by_email": true,
                         "notify_by_sms": true,
-                        "number_of_children": 12,
-                        "phone_number": "665707573",
-                        "phone_number_formatted": "+33665707573",
+                        "phone_number": "06 77 99 38 67",
+                        "phone_number_formatted": "+33677993867",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
                           {
                             "organisation": {
-                              "id": 361,
+                              "id": 348,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null,
@@ -5545,7 +5444,7 @@
                     "value": {
                       "webhook_endpoint": {
                         "id": 26,
-                        "organisation_id": 381,
+                        "organisation_id": 368,
                         "subscriptions": [
                           "rdv",
                           "user",
@@ -5743,7 +5642,7 @@
                     "value": {
                       "webhook_endpoint": {
                         "id": 28,
-                        "organisation_id": 388,
+                        "organisation_id": 375,
                         "subscriptions": [
                           "rdv",
                           "user",
