@@ -163,6 +163,34 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     it_behaves_like "not permit actions", :rdv
     it_behaves_like "included in scope"
   end
+end
 
-  # TODO: write cases for :new? and create? which
+RSpec.describe Agent::RdvPolicy::Scope do
+  describe "#resolve" do
+    subject(:policy_scope) { described_class.new(current_agent, Rdv) }
+
+    context "l’agent courant est admin d’orga" do
+      let!(:organisation) { create(:organisation) }
+      let!(:rdv) { create(:rdv, organisation:) }
+      let!(:rdv_other_orga) { create(:rdv, organisation: create(:organisation)) }
+      let(:current_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+      specify do
+        expect(policy_scope.resolve.map(&:id)).to contain_exactly(rdv.id)
+      end
+    end
+
+    context "l’agent courant est admin d’orga, un RDV a deux agents attachés" do
+      let!(:organisation) { create(:organisation) }
+      let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let!(:rdv1) { create(:rdv, organisation:, agents: [agent1]) }
+      let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let!(:rdv2) { create(:rdv, organisation:, agents: [agent1, agent2]) }
+      let(:current_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+      specify do
+        expect(policy_scope.resolve.map(&:id)).to contain_exactly(rdv1.id, rdv2.id)
+      end
+    end
+  end
 end
