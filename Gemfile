@@ -109,6 +109,8 @@ gem "notion-ruby-client", "~> 1.2"
 gem "rswag-api"
 # A Rails Engine that includes swagger-ui and powers it from configured OpenAPI (formerly named Swagger) endpoints
 gem "rswag-ui"
+# Gem utilisée par rswag-ui
+gem "ostruct"
 
 # Forms
 
@@ -159,14 +161,6 @@ gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
 
 # Utilisée pour les imports
 gem "csv"
-
-# Ces gems ne seront plus intégrées à Ruby en version 3.5.
-# Lors de l'upgrade depuis 3.4.2, on pourra vérifier si les gems qui en dépendent
-# implicitement ont ajouté dans leur gemspec une dépendance explicite.
-#
-# gem "observer"
-# gem "logger"
-gem "ostruct" # utilisé par rswag-ui
 
 group :development do
   #  Hot reload
