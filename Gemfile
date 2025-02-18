@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.7"
+ruby "3.4.2"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -161,12 +161,10 @@ gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
 # Ces gems ne seront plus intégrées à Ruby en version 3.4.0 Lors de l'upgrade
 # depuis 3.3.7, on pourra vérifier si les gems qui en dépendent implicitement
 # ont ajouté dans leur gemspec une dépendance explicite.
-gem "bigdecimal"
-gem "csv"
-gem "drb"
-gem "observer"
-gem "logger"
-gem "ostruct"
+# gem "csv"
+# gem "observer"
+# gem "logger"
+# gem "ostruct"
 
 group :development do
   #  Hot reload
