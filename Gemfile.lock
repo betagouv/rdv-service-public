@@ -208,6 +208,7 @@ GEM
     crass (1.0.6)
     css_parser (1.16.0)
       addressable
+    csv (3.3.2)
     database_cleaner (2.1.0)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.2.0)
@@ -430,6 +431,7 @@ GEM
       validate_url
       webfinger (~> 1.2)
     orm_adapter (0.5.0)
+    ostruct (0.6.1)
     paper_trail (15.2.0)
       activerecord (>= 6.1)
       request_store (~> 1.4)
@@ -755,6 +757,7 @@ DEPENDENCIES
   common_french_passwords
   connection_pool
   coverband
+  csv
   database_cleaner
   devise!
   devise-async
@@ -786,6 +789,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection
   omniauth-rdv-service-public!
   omniauth_openid_connect
+  ostruct
   paper_trail
   parallel_tests
   parser (= 3.3.7.0)
