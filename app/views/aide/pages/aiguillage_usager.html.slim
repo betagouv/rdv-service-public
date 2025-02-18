@@ -75,9 +75,9 @@
               .fr-col-md-6
                 h3 Étapes à suivre
                 ul
-                  li Consultez le SMS reçu de RDV Service public (ou RDV Solidarités ou RDV Aide Numérique).
+                  li Consultez le SMS reçu de #{current_domain.name}.
                   li Cliquez sur le lien qui suit "infos/annulation".
-                  li Vous êtes redirigé sur le site de RDV Service public.
+                  li Vous êtes redirigé sur le site de #{current_domain.name}.
                   li Renseignez les 3 premières lettres de votre nom de famille".
                   li Cliquez sur "Annuler le RDV".
                   li Confirmez l'annulation en cliquant sur "Oui, annuler le rendez-vous".
@@ -99,9 +99,9 @@
               .fr-col-md-6
                 h3 Procédure à suivre
                 ul
-                  li Consultez l’email reçu de RDV Service public (ou RDV Solidarités ou RDV Aide Numérique).
+                  li Consultez l’email reçu de #{current_domain.name}.
                   li Cliquez sur le lien qui suit "infos/annulation".
-                  li Vous êtes redirigé sur le site de RDV Service public.
+                  li Vous êtes redirigé sur le site de #{current_domain.name}.
                   li Renseignez les 3 premières lettres de votre nom de famille".
                   li Cliquez sur "Annuler le RDV".
                   li Confirmez l'annulation en cliquant sur "Oui, annuler le rendez-vous".
@@ -110,9 +110,9 @@
 
     - if @form.raison.present?
       p
-        ' Si vous rencontrez des difficultés, vous pouvez contacter l’équipe de RDV Service Public :
+        ' Si vous rencontrez des difficultés, vous pouvez contacter l’équipe de #{current_domain.name} :
       div
-        = link_to "Contacter l’équipe de RDV Service Public",
+        = link_to "Contacter l’équipe de #{current_domain.name}",
           new_aide_demande_support_path(role: :usager, sujet: @form.raison_label),
           class: "fr-link fr-mb-2w"
       .fr-mt-8w

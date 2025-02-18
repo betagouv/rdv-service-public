@@ -8,7 +8,7 @@
 .fr-grid-row.fr-mb-4w
   .fr-col-md-8
     p
-      ' L’équipe de RDV Service Public essaie de fournir un support adapté à tous les particuliers et agents du service public.
+      ' L’équipe de #{current_domain.name} essaie de fournir un support adapté à tous les particuliers et agents du service public.
       | Pour vous aider le plus efficacement possible, veuillez nous indiquer votre rôle ci-dessous.
 
     = form_with url: aide_aiguillage_role_path, method: :GET, builder: Dsfr::FormBuilder do |f|
@@ -18,7 +18,7 @@
           hint: "Vous avez un RDV ou vous cherchez à prendre un RDV pour accéder à un service public",},
          {value: "agent",
           label:"Vous êtes un·e agent du service public",
-          hint: "L’administration dans laquelle vous travaillez utilise RDV Service Public ou souhaite plus d’informations",},
+          hint: "L’administration dans laquelle vous travaillez utilise #{current_domain.name} ou souhaite plus d’informations",},
         ],
         legend: "Vous êtes…",
         required: true

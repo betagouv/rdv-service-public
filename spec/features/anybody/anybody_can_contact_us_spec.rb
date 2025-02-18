@@ -20,7 +20,7 @@ RSpec.describe "Tout le monde peut nous contacter" do
       click_on "Valider"
 
       expect(page).to have_content("Comment annuler votre RDV ?")
-      click_on "Contacter l’équipe de RDV Service Public"
+      click_on "Contacter l’équipe de RDV Solidarités"
 
       fill_in "Votre prénom", with: "Tamara"
       fill_in "Votre email", with: "tamara.dupont@provider.fr"
