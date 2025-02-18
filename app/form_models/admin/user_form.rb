@@ -29,7 +29,8 @@ class Admin::UserForm
         annotation = user.annotations.find_or_initialize_by(territory: @current_territory)
         annotation&.assign_attributes(content: user.notes)
         user.notes = user.notes_was
-        annotation&.save
+        # TODO: tester comme ça
+        # annotation&.save
       end
       user.save
     end
