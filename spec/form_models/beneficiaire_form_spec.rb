@@ -101,6 +101,7 @@ RSpec.describe BeneficiaireForm do
         last_name: "Rogne",
         phone_number: "0611223344",
         ants_pre_demande_number:,
+        ants_meeting_point_id: "11",
       }
     end
 
@@ -123,7 +124,7 @@ RSpec.describe BeneficiaireForm do
     end
 
     context "numéro de pré-demande ANTS valide" do
-      before { stub_ants_status_ok("VALID12345", status: "validated", appointments: []) }
+      before { stub_ants_status_ok("VALID12345", meeting_point_id: "11", status: "validated", appointments: []) }
 
       let(:ants_pre_demande_number) { "VALID12345" }
 
@@ -133,7 +134,7 @@ RSpec.describe BeneficiaireForm do
     end
 
     context "numéro de pré-demande ANTS non-reconnu (status unknown)" do
-      before { stub_ants_status_ok("VALID12345", status: "unknown", appointments: []) }
+      before { stub_ants_status_ok("VALID12345", meeting_point_id: "11", status: "unknown", appointments: []) }
 
       let(:ants_pre_demande_number) { "VALID12345" }
 
@@ -147,6 +148,7 @@ RSpec.describe BeneficiaireForm do
       before do
         stub_ants_status_ok(
           "VALID12345",
+          meeting_point_id: "11",
           status: "validated",
           appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "http://rdvsympa.fr/123" }]
         )
@@ -170,6 +172,7 @@ RSpec.describe BeneficiaireForm do
       before do
         stub_ants_status_ok(
           "VALID12345",
+          meeting_point_id: "11",
           status: "validated",
           appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "http://rdvsympa.fr/123" }]
         )
@@ -182,6 +185,7 @@ RSpec.describe BeneficiaireForm do
           last_name: "Rogne",
           phone_number: "0611223344",
           ants_pre_demande_number: "VALID12345",
+          ants_meeting_point_id: "11",
           ignore_benign_errors: "true",
         }
       end
