@@ -21,7 +21,10 @@
     - if @form.raison_creneaux?
       h6 Étapes pour prendre un RDV
       ol
-        li Sur la page d’accueil, dans la barre de recherche, saisissez votre adresse et cliquez sur « Rechercher »
+        - if current_domain == Domain::RDV_MAIRIE
+          li Cliquez sur votre lien de prise de RDV : vous l’avez peut-être trouvé sur le site de l’organisation ou bien il vous a été communiqué par email.
+        - else
+          li Sur la page d’accueil, dans la barre de recherche, saisissez votre adresse et cliquez sur « Rechercher »
         li Sélectionnez un service puis un motif
         li Choisissez un lieu : pour les rendez-vous physiques, plusieurs options peuvent être proposées. Si le rendez-vous est téléphonique, en visioconférence ou à domicile, cette étape ne sera pas proposée
         li Prenez en compte les instructions: certaines informations peuvent s'afficher avant de valider le rendez-vous, assurez-vous de les prendre en compte
