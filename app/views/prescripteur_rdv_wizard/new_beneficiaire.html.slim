@@ -20,6 +20,7 @@ main.container
               .row
                 .col-12
                   = f.input :ants_pre_demande_number, required: true, input_html: {style: "text-transform: uppercase;"}
+                  = f.hidden_field :ants_meeting_point_id, value: @rdv_wizard.lieu_id
 
             .form-group
               .row

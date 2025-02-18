@@ -8,6 +8,7 @@ class BeneficiaireForm
     phone_number
     ignore_benign_errors
     ants_pre_demande_number
+    ants_meeting_point_id
   ].freeze
 
   attr_accessor(*ATTRIBUTES, :motif_id)
