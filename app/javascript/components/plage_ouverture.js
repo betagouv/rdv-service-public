@@ -30,11 +30,6 @@ class PlageOuverture {
 
     const primaryTimesEndsAtHours = document.querySelector("#plage_ouverture_end_time_4i")
 
-    console.log(addSecondaryTimesButton)
-    console.log(removeSecondaryTimesButton)
-    console.log(secondaryTimesContainer)
-    console.log(secondaryTimesShownInitially)
-
     const showSecondaryTimes = () => {
       addSecondaryTimesButton.classList.add("hidden")
       removeSecondaryTimesButton.classList.remove("hidden")
