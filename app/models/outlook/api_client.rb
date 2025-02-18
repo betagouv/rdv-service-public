@@ -48,7 +48,6 @@ module Outlook
     #                 for POST or PATCH.
 
     # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
     def call_events_api(method, path, event_payload = {})
       headers = {
         "Authorization" => "Bearer #{@agent.microsoft_graph_token}",
@@ -73,7 +72,8 @@ module Outlook
       body_response = response.body == "" ? {} : JSON.parse(response.body)
       if body_response["error"].present?
         if @agent.connected_to_outlook? && response.response_code == 401 # token expired
-          refresh_outlook_token && call_events_api(method, path, event_payload)
+          refresh_outlook_token!
+          body_response = call_events_api(method, path, event_payload)
         else
           raise_exception(error_code: body_response["error"]["code"], error_message: body_response["error"]["message"])
         end
@@ -81,9 +81,8 @@ module Outlook
       response.response_code == 204 ? "" : body_response
     end
     # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
 
-    def refresh_outlook_token
+    def refresh_outlook_token!
       refresh_token_query =
         Typhoeus.post(
           # voir https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0

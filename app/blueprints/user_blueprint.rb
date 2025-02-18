@@ -2,9 +2,8 @@ class UserBlueprint < Blueprinter::Base
   identifier :id
 
   fields  :first_name, :birth_name, :last_name, :email, :address, :phone_number, :phone_number_formatted, :birth_date,
-          :responsible_id, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :notify_by_sms,
-          :notify_by_email, :invitation_created_at, :invitation_accepted_at, :created_at, :case_number, :address_details,
-          :logement, :notes
+          :responsible_id, :affiliation_number, :notify_by_sms, :notify_by_email, :invitation_created_at,
+          :invitation_accepted_at, :created_at, :address_details
 
   association :responsible, blueprint: UserBlueprint
 
