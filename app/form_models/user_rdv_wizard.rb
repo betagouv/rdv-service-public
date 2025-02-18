@@ -72,10 +72,12 @@ module UserRdvWizard
       true
     end
 
+    def lieu_id = @attributes[:lieu_id]
+
     private
 
     def lieu
-      @lieu ||= @attributes[:lieu_id].present? ? Lieu.find(@attributes[:lieu_id]) : nil
+      @lieu ||= lieu_id.present? ? Lieu.find(lieu_id) : nil
     end
   end
 
@@ -102,6 +104,8 @@ module UserRdvWizard
       # dans ce form model
       if rdv.requires_ants_predemande_number?
         @user.singleton_class.validates(:ants_pre_demande_number, presence: true)
+        @user.singleton_class.attr_accessor :ants_meeting_point_id
+        @user.ants_meeting_point_id = lieu_id # used in AntsPreDemandeNumberStatusValidation
         @user.singleton_class.validates_with(AntsPreDemandeNumberStatusValidation)
       end
 
