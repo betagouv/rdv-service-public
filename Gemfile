@@ -110,7 +110,7 @@ gem "crisp-api", "~> 1.1"
 gem "rswag-api"
 # A Rails Engine that includes swagger-ui and powers it from configured OpenAPI (formerly named Swagger) endpoints
 gem "rswag-ui"
-# Gem utilisée par rswag-ui
+# TODO: Retirer quand ce fix est mergé : https://github.com/rswag/rswag/pull/790
 gem "ostruct"
 
 # Forms
