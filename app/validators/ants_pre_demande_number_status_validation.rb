@@ -17,6 +17,7 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
 
     status, appointments = AntsApi.status(
       ants_pre_demande_number: record.ants_pre_demande_number.upcase,
+      meeting_point_id: get_meeting_point_id(record),
       timeout: 4
     ).values_at("status", "appointments")
 
@@ -32,6 +33,14 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
   end
 
   private
+
+  def get_meeting_point_id(record)
+    meeting_point_id = record.respond_to?(:ants_meeting_point_id) ? record.ants_meeting_point_id : nil
+    if meeting_point_id.nil?
+      Sentry.capture_message("meeting_point_id nil lors de la validation du statut de demande")
+    end
+    meeting_point_id
+  end
 
   def validate_status_validated(status, record)
     return true if status == "validated"
