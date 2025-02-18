@@ -6,7 +6,11 @@ class Users::RelativesController < UserAuthController
   def new
     user = current_user.relatives.new
     authorize(user, policy_class: User::UserPolicy)
-    @form = RelativeUserForm.new(user:, ants_pre_demande_number_required: params[:ants_pre_demande_number_required].to_b)
+    @form = RelativeUserForm.new(
+      user:,
+      ants_meeting_point_id: params[:ants_meeting_point_id],
+      ants_pre_demande_number_required: params[:ants_pre_demande_number_required].to_b
+    )
     respond_modal_with @form
   end
 
@@ -55,7 +59,7 @@ class Users::RelativesController < UserAuthController
 
   def form_params
     p = params.require(:relative_user_form)
-      .permit(:first_name, :last_name, :birth_date, :ants_pre_demande_number, :ants_pre_demande_number_required, :ignore_benign_errors)
+      .permit(:first_name, :last_name, :birth_date, :ants_pre_demande_number, :ants_pre_demande_number_required, :ants_meeting_point_id, :ignore_benign_errors)
       .to_h.symbolize_keys
     p[:ants_pre_demande_number_required] = p[:ants_pre_demande_number_required].to_b
     p
