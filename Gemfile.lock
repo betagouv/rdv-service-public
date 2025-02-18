@@ -208,7 +208,6 @@ GEM
     crass (1.0.6)
     css_parser (1.16.0)
       addressable
-    csv (3.3.0)
     database_cleaner (2.1.0)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.2.0)
@@ -398,7 +397,6 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0)
       version_gem (~> 1.1)
-    observer (0.1.2)
     omniauth (2.1.2)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
@@ -432,7 +430,6 @@ GEM
       validate_url
       webfinger (~> 1.2)
     orm_adapter (0.5.0)
-    ostruct (0.6.0)
     paper_trail (15.2.0)
       activerecord (>= 6.1)
       request_store (~> 1.4)
@@ -743,7 +740,6 @@ DEPENDENCIES
   axe-core-rspec (= 4.3.2)
   axiom-types!
   better_errors
-  bigdecimal
   binding_of_caller
   blueprinter
   bootsnap
@@ -759,7 +755,6 @@ DEPENDENCIES
   common_french_passwords
   connection_pool
   coverband
-  csv
   database_cleaner
   devise!
   devise-async
@@ -768,7 +763,6 @@ DEPENDENCIES
   doorkeeper
   doorkeeper-i18n
   dotenv-rails
-  drb
   dsfr-form_builder (= 0.0.2)
   dsfr-view-components
   factory_bot
@@ -783,18 +777,15 @@ DEPENDENCIES
   kaminari
   letter_opener_web
   listen
-  logger
   lograge
   mail
   montrose
   notion-ruby-client (~> 1.2)
-  observer
   omniauth-github
   omniauth-microsoft_graph
   omniauth-rails_csrf_protection
   omniauth-rdv-service-public!
   omniauth_openid_connect
-  ostruct
   paper_trail
   parallel_tests
   parser (= 3.3.7.0)
@@ -845,7 +836,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 3.3.7p123
+   ruby 3.4.2p28
 
 BUNDLED WITH
    2.5.22
