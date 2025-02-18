@@ -68,11 +68,12 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       # Bypass DeviseTokenAuth for rdv-insertion
       authenticate_agent_with_shared_secret
     elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"]
-      # Use DeviseTokenAuth
       authenticate_api_v1_agent_with_token_auth!
+      @authentication_type = "DeviseTokenAuth"
     else
       doorkeeper_authorize!
       if doorkeeper_token
+        @authentication_type = "OAuth"
         @current_agent = Agent.find(doorkeeper_token.resource_owner_id)
       end
     end
@@ -81,6 +82,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   def authenticate_agent_with_shared_secret
     if shared_secret_is_valid?
       @current_agent = Agent.find_by(email: request.headers["uid"])
+      @authentication_type = "SharedSecret"
     else
       Sentry.capture_message("API authentication agent was called with an invalid signature !", fingerprint: ["api_agent_invalid_sig"])
       render(
@@ -115,15 +117,14 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       method: request.method,
       path: request.fullpath,
       host: request.host,
-      # We only keep headers that are uppercase (convention for HTTP headers)
-      headers: request.headers.select { |key, _| key == key.upcase }.to_h.transform_values { |value| value.is_a?(String) ? value : value.inspect },
     }
 
     ApiCall.create!(
       raw_http: raw_http,
       controller_name: controller_name,
       action_name: action_name,
-      agent_id: current_agent.id
+      agent_id: current_agent.id,
+      authentication_type: @authentication_type
     )
   rescue StandardError => e
     Sentry.capture_exception(e, extra: {

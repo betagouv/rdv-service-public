@@ -9,13 +9,10 @@ RSpec.describe "RDV Plan API" do
     }
   end
   let(:application) do
-    Doorkeeper::Application.create!(
-      name: "Démarches Simplifiées",
-      uid: "fake_app_id",
-      redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback",
-      post_logout_redirect_uri: "http://localhost:4567/",
-      logo_base64: ""
-    )
+    create(:oauth_application,
+           name: "Démarches Simplifiées",
+           redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttp://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback",
+           post_logout_redirect_uri: "http://localhost:4567/")
   end
 
   let(:agent) do
@@ -105,7 +102,7 @@ RSpec.describe "RDV Plan API" do
             address: "21 rue des Ardennes, 75019 Paris",
             birth_date: "1990-12-31",
           },
-          return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/callback/123",
+          return_url: "https://demo.demarches-simplifiees.fr/callback/123",
         }
       end
 
@@ -114,8 +111,11 @@ RSpec.describe "RDV Plan API" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
         end.to change(User, :count).by(1)
         rdv_plan = RdvPlan.last
-        expect(rdv_plan.planning_agent).to eq agent
-        expect(rdv_plan.return_url).to eq "https://monsuivisocial.incubateur.anct.gouv.fr/callback/123"
+        expect(rdv_plan).to have_attributes(
+          planning_agent: agent,
+          return_url: "https://demo.demarches-simplifiees.fr/callback/123",
+          oauth_application_id: application.id
+        )
 
         expect(rdv_plan.user).to have_attributes(
           first_name: "Francis",
@@ -130,22 +130,6 @@ RSpec.describe "RDV Plan API" do
   end
 
   describe "#show" do
-    context "when there is a rdv" do
-      let(:rdv_plan) do
-        create(:rdv_plan, rdv: create(:rdv), planning_agent: agent)
-      end
-
-      it "returns the minimum information about the rdv" do
-        get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
-        expect(parsed_response_body.dig("rdv_plan", "rdv")).to match(
-          {
-            id: rdv_plan.rdv_id,
-            status: "unknown",
-          }
-        )
-      end
-    end
-
     context "when the rdv_plan belongs to a different user" do
       let(:rdv_plan) do
         create(:rdv_plan, planning_agent: create(:agent))

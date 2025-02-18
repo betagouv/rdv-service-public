@@ -11,7 +11,8 @@ class RelativeUserForm
 
   validate :validate_user
   validates :ants_pre_demande_number, presence: true, if: :ants_pre_demande_number_required
-  validates_with AntsPreDemandeNumberValidation, if: -> { ants_pre_demande_number_required && user.ants_pre_demande_number.present? }
+  # la validation du format du numéro de pré-demande ANTS est déjà faite au niveau du modèle user
+  validates_with AntsPreDemandeNumberStatusValidation, if: :ants_pre_demande_number_required
 
   def initialize(user:, ants_pre_demande_number_required: false)
     @user = user

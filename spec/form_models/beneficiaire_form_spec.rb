@@ -109,7 +109,7 @@ RSpec.describe BeneficiaireForm do
 
       specify do
         expect(form).to be_invalid
-        expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+        expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS doit être renseigné")
       end
     end
 

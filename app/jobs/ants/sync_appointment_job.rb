@@ -12,12 +12,17 @@ module Ants
     # useful to debug tests and avoid retries
     # discard_on(StandardError) { |_job, ex| raise ex }
 
-    def perform(ants_pre_demande_number:, meeting_point_id: nil)
+    def perform(ants_pre_demande_number:, obsolete_meeting_point_id: nil)
       @ants_pre_demande_number = ants_pre_demande_number
+      @obsolete_meeting_point_id = obsolete_meeting_point_id
+
+      if meeting_point_id.nil?
+        raise MissingMeetingPointId, "aucun RDV trouvé pour le numéro ANTS '#{ants_pre_demande_number}'"
+      end
 
       ants_status = AntsApi.status(
         ants_pre_demande_number: stripped_ants_pre_demande_number,
-        meeting_point_id: meeting_point_id || find_meeting_point_id,
+        meeting_point_id:,
         timeout: 4
       )
 
@@ -25,19 +30,19 @@ module Ants
 
       # on n’utilise pas de regex ci-dessous pour éviter un faux-positif de Brakeman
       protocol = Rails.env.production? ? "https" : "http"
-      ants_appointments = ants_status["appointments"].select do |appointment|
+      @ants_appointments = ants_status["appointments"].select do |appointment|
         appointment["management_url"].start_with?("#{protocol}://#{Domain::RDV_MAIRIE.host_name}")
       end
 
-      # on ne fait rien si les infos sont déjà identiques (chacune des deux listes peut être vide ici)
-      return true if ants_appointments == [upcoming_rdv_serialized_to_ants_appointment].compact
+      return true unless needs_synchronization?
 
       # on déclenche la suppression des appointments existants dans tous les cas, qu’il s’agisse d’une mise à jour ou d’une suppression
       # en effet l’API de l’ANTS ne permet pas de faire de mises à jour, on fait donc un delete puis un create
-      ants_appointments.each do |appointment|
+      @ants_appointments.each do |appointment|
         AntsApi.delete(
           ants_pre_demande_number: stripped_ants_pre_demande_number,
-          **appointment.symbolize_keys.slice(:meeting_point, :appointment_date, :meeting_point_id)
+          meeting_point_id:, # les appointments retournés par status ne contiennent pas le meeting_point_id
+          **appointment.symbolize_keys.slice(:meeting_point, :appointment_date)
         )
       end
 
@@ -82,22 +87,36 @@ module Ants
       @stripped_ants_pre_demande_number ||= ants_pre_demande_number.strip
     end
 
-    def find_meeting_point_id
-      return upcoming_rdv.lieu_id.to_s if upcoming_rdv&.lieu_id.present?
+    def meeting_point_id
+      @meeting_point_id ||=
+        if @obsolete_meeting_point_id.present?
+          @obsolete_meeting_point_id # utilisé pour les suppressions de participations
+        elsif upcoming_rdv&.lieu_id.present?
+          return upcoming_rdv.lieu_id.to_s
+        else
+          # On se replie sur le lieu de n’importe quel RDV associé à ce numéro, même dans le passé
+          Lieu
+            .joins(rdvs: { users: [], motif: { motif_category: [] } })
+            .merge(MotifCategory.requires_ants_predemande_number)
+            .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number].uniq })
+            .order("rdvs.id DESC") # choix arbitraire pour éviter un comportement aléatoire
+            .first
+            &.id
+            &.to_s
+        end
+    end
 
-      # On se replie sur n’importe quel RDV associé à ce numéro, même dans le passé
-      fallback_id = Lieu
-        .joins(rdvs: { users: [], motif: { motif_category: [] } })
-        .merge(MotifCategory.requires_ants_predemande_number)
-        .where(users: { ants_pre_demande_number: [stripped_ants_pre_demande_number, ants_pre_demande_number].uniq })
-        .order("rdvs.id DESC") # choix arbitraire pour éviter un comportement aléatoire
-        .first
-        &.id
-        &.to_s
+    def needs_synchronization?
+      return false if @ants_appointments.empty? && upcoming_rdv.nil?
 
-      return fallback_id if fallback_id.present?
+      return true if
+        @ants_appointments.size > 1 || # ça ne devrait jamais arriver
+        (@ants_appointments.empty? && upcoming_rdv.present?) || # il faut créer un rdv
+        (@ants_appointments.present? && upcoming_rdv.nil?) # il faut supprimer l’appointment
 
-      raise MissingMeetingPointId, "aucun RDV trouvé pour le numéro ANTS '#{ants_pre_demande_number}'"
+      compared_attributes = %i[management_url appointment_date meeting_point]
+      @ants_appointments.first.symbolize_keys.slice(*compared_attributes) !=
+        upcoming_rdv_serialized_to_ants_appointment.slice(*compared_attributes)
     end
   end
 end
