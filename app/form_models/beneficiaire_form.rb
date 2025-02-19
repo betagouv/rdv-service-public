@@ -8,6 +8,7 @@ class BeneficiaireForm
     phone_number
     ignore_benign_errors
     ants_pre_demande_number
+    ants_meeting_point_id
   ].freeze
 
   attr_accessor(*ATTRIBUTES, :motif_id)
@@ -15,7 +16,8 @@ class BeneficiaireForm
   validates_presence_of :first_name, :last_name
   validate :warn_no_contact_information
   validate :validate_phone_number
-  validates_with AntsPreDemandeNumberValidation, if: :requires_ants_predemande_number?
+  validates :ants_pre_demande_number, presence: true, ants_pre_demande_number_format: true, if: :requires_ants_predemande_number?
+  validates_with AntsPreDemandeNumberStatusValidation, if: :requires_ants_predemande_number?
 
   def warn_no_contact_information
     return if ignore_benign_errors
@@ -29,7 +31,7 @@ class BeneficiaireForm
     return if phone_number.blank?
 
     errors.add(:phone_number, :invalid) if PhoneNumberValidation.parsed_number(phone_number).blank?
-    errors.add(:phone_number, "ne permet pas de recevoir des SMS") unless PhoneNumberValidation.number_is_mobile?(phone_number)
+    errors.add(:phone_number, "doit être un numéro de mobile") unless PhoneNumberValidation.number_is_mobile?(phone_number)
   end
 
   def requires_ants_predemande_number?

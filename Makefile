@@ -33,7 +33,12 @@ generate_db_diagram: ## Generate docs/domain_model.svg from Rails models
 	bundle exec erd
 
 rswag: ## Re-generate swagger/v1/api.json by running API specs
-	SWAGGER_DRY_RUN=0 RAILS_ENV=test rake rswag:specs:swaggerize PATTERN="spec/requests/api/**/*_spec.rb"
+	SWAGGER_DRY_RUN=0 RAILS_ENV=test FAKER_SEED=1 rake rswag:specs:swaggerize PATTERN="spec/requests/api/**/*_spec.rb"
+
+rswag_api_v1: ## Re-generate swagger/v1/api.json by running API specs
+	SWAGGER_DRY_RUN=0 RAILS_ENV=test FAKER_SEED=1 rake rswag:specs:swaggerize PATTERN="spec/requests/api/v1/swagger_doc/**/*_spec.rb"
+	git checkout swagger/conseillers_numeriques/api.json
+	git checkout swagger/visioplainte/api.json
 
 .PHONY: install run lint lint_rubocop lint_brakeman test test_unit test_features autocorrect clean generate_db_diagram help
 .DEFAULT_GOAL := help

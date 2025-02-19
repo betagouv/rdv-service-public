@@ -21,13 +21,13 @@ RSpec.describe RelativeUserForm do
 
   context "numéro de pré-demande ANTS requis et" do
     include_context "rdv_mairie_api_authentication"
-    before { stub_ants_status_ok("VALID12345", status: "validated", appointments: []) }
+    before { stub_ants_status_ok("VALID12345", status: "validated", meeting_point_id: "11", appointments: []) }
 
-    let(:form) { described_class.new(user: User.new, ants_pre_demande_number_required: true) }
+    let(:form) { described_class.new(user: User.new, ants_pre_demande_number_required: true, ants_meeting_point_id: "11") }
 
     context "numéro passé et valide" do
       it "créé un user" do
-        expect { form.submit(first_name: "Jean", last_name: "Jacques", ants_pre_demande_number: "VALID12345") }.to change(User, :count).by(1)
+        expect { form.submit(first_name: "Jean", last_name: "Jacques", ants_pre_demande_number: "VALID12345", ants_meeting_point_id: "11") }.to change(User, :count).by(1)
         form.user.reload
         expect(form.user.first_name).to eq("Jean")
         expect(form.user.last_name).to eq("Jacques")
@@ -49,7 +49,7 @@ RSpec.describe RelativeUserForm do
         expect { form.submit(first_name: "Jean", last_name: "Jacques", ants_pre_demande_number: "notval") }.not_to change(User, :count)
         expect(form.errors.count).to eq 1
         expect(form.errors.first.attribute).to eq :ants_pre_demande_number
-        expect(form.errors.first.type).to eq "doit comporter 10 chiffres et lettres"
+        expect(form.errors.first.type).to eq :invalid_format
       end
     end
   end
