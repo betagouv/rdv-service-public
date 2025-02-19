@@ -177,8 +177,16 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(:agent_id, :user_id, :status, :start, :end,
-                  motif_ids: [], lieu_ids: [], scoped_organisation_ids: []).to_hash.to_h do |param_name, param_value|
+    params.permit(
+      :agent_id,
+      :user_id,
+      :status,
+      :start,
+      :end,
+      motif_ids: [],
+      lieu_ids: [],
+      scoped_organisation_ids: []
+    ).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
         [param_name, parse_date_from_params(param_value)]
