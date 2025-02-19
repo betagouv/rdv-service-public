@@ -59,7 +59,7 @@ class PrescripteurRdvWizardController < ApplicationController
     @beneficiaire = BeneficiaireForm.new(beneficiaire_params.merge(motif_id: session[:rdv_wizard_attributes]["motif_id"]))
 
     if @beneficiaire.valid?
-      session[:rdv_wizard_attributes][:user] = beneficiaire_params
+      session[:rdv_wizard_attributes][:user] = beneficiaire_params.except("ants_meeting_point_id")
 
       rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
       rdv_wizard.create!
