@@ -134,7 +134,7 @@ gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
 gem "dsfr-view-components"
-gem "dsfr-form_builder", "= 0.0.2" # On fixe la version tant qu’on est pas en 1.0
+gem "dsfr-form_builder", "= 0.0.3" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
@@ -197,6 +197,8 @@ group :development do
   gem "better_errors"
   # Retrieve the binding of a method's caller, or further up the stack.
   gem "binding_of_caller" # Enable the REPL in better_errors
+  # A mini view framework for console/irb that's easy to use. Includes a no-wrap table, auto-pager, tree and menu.
+  gem "hirb"
   # Profiles loading speed for rack applications.
   gem "rack-mini-profiler"
   # Used by rack-mini-profiler to display flamegraphs: trigger by adding "?pp=flamegraph" to your URL
