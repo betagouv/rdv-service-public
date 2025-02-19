@@ -6,6 +6,12 @@ fr:
         other: Usagers
     attributes:
       user:
+        # Pour ne pas perturber les agents avec différentes notions d'email, les champs ont tous le même nom.
+        # Notification email et email sont mutuellement exclusifs.
+        # Preferred email est soit l'un soit l'autre.
+        notification_email: Email
+        preferred_email: Email
+        email: Email
         organisation: Organisation
         caisse_affiliation: Caisse d'affiliation
         affiliation_number: Numéro d'allocataire

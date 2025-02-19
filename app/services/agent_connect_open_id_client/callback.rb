@@ -4,7 +4,7 @@ module AgentConnectOpenIdClient
     class OpenIdFlowError < StandardError; end
     class ApiRequestError < StandardError; end
 
-    def initialize(session_state:, params_state:, callback_url:, nonce:, client_id:, client_secret:) # rubocop:disable Metrics/ParameterLists
+    def initialize(session_state:, params_state:, callback_url:, nonce:, client_id:, client_secret:)
       @session_state = session_state
       @params_state = params_state
       @callback_url = callback_url
