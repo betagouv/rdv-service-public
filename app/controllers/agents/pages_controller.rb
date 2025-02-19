@@ -1,4 +1,6 @@
 class Agents::PagesController < AgentAuthController
+  layout "application"
+
   def home
     skip_authorization
 
@@ -6,7 +8,7 @@ class Agents::PagesController < AgentAuthController
 
     if accessible_organisations.count == 1
       redirect_to admin_organisation_agent_agenda_path(accessible_organisations.first, current_agent)
-    else
+    elsif accessible_organisations.count > 1
       redirect_to agents_organisations_path
     end
   end
