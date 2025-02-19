@@ -142,6 +142,7 @@ class Agent::RdvPolicy < ApplicationPolicy
       if current_agent.secretaire?
         scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
           .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
+          .distinct
 
       else
 
@@ -154,6 +155,7 @@ class Agent::RdvPolicy < ApplicationPolicy
               OR (agent_roles.access_level = 'admin')",
             current_agent.id, current_agent.service_ids
           )
+          .distinct
       end
     end
   end
