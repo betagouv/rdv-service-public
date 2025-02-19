@@ -819,6 +819,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_13_094124) do
     t.string "rdv_invitation_token"
     t.virtual "text_search_terms", type: :tsvector, as: "(((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
     t.datetime "rdv_invitation_token_updated_at"
+    t.string "notification_email", comment: "Used for notifications only, multiple users can share the same email notification address"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
@@ -830,6 +831,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_13_094124) do
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_users_on_last_name"
+    t.index ["notification_email"], name: "index_users_on_notification_email", where: "(notification_email IS NOT NULL)"
     t.index ["phone_number_formatted"], name: "index_users_on_phone_number_formatted"
     t.index ["rdv_invitation_token"], name: "index_users_on_rdv_invitation_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

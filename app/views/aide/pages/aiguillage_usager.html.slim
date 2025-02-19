@@ -1,0 +1,119 @@
+- content_for :title, "Aide particuliers"
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "Contact", href: aide_aiguillage_role_path
+    = b.with_breadcrumb label: yield(:title)
+
+.fr-grid-row.fr-mb-4w
+  .fr-col-12.fr-col-md-8
+    - if @form.raison.blank?
+      = form_for @form, url: aide_aiguillage_usager_path, method: :GET, builder: Dsfr::FormBuilder do |f|
+        = f.dsfr_radio_buttons :raison, @form.raisons_options, legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :"
+        = f.submit "Valider", class: "fr-btn"
+    - else
+      .fr-mb-4w
+        |> Votre situation :
+        b=> @form.raison_label
+        = link_to "modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line"
+
+    - if @form.raison_creneaux?
+      h6 Étapes pour prendre un RDV
+      ol
+        - if current_domain == Domain::RDV_MAIRIE
+          li Cliquez sur votre lien de prise de RDV : vous l’avez peut-être trouvé sur le site de l’organisation ou bien il vous a été communiqué par email.
+        - else
+          li Sur la page d’accueil, dans la barre de recherche, saisissez votre adresse et cliquez sur « Rechercher ».
+        li Sélectionnez un service puis un motif.
+        li Choisissez un lieu : pour les rendez-vous physiques, plusieurs options peuvent être proposées. Si le rendez-vous est téléphonique, en visioconférence ou à domicile, cette étape ne sera pas proposée.
+        li Prenez en compte les instructions: certaines informations peuvent s'afficher avant de valider le rendez-vous, assurez-vous de les prendre en compte.
+        li Choisissez un créneau horaire: Si aucun créneau ne convient, explorez les dates futures.
+        li Identifiez-vous : la connexion se fait par la création d'un compte ou via France Connect.
+        li Confirmez le rendez-vous : un SMS et/ou un email seront envoyés quelques minutes après la confirmation du rendez-vous. Pour les emails, pensez à vérifier vos spams si besoin.
+
+      .fr-mb-4w
+        = link_to "Faire une recherche de RDV depuis l’accueil", root_path, class: "fr-btn"
+
+      .fr-callout.fr-mb-2w
+        ' Si vous ne trouvez pas de créneaux, nous vous invitons à contacter l’organisation avec laquelle vous souhaitez prendre RDV
+
+      p
+        ' Vous pouvez chercher les coordonnées de l’organisation avec laquelle vous souhaitez prendre RDV dans l’annuaire des services publics :
+      .fr-mb-8w
+        = link_to "Consulter l’annuaire du Service Public", "https://lannuaire.service-public.fr/", class: "fr-btn fr-btn--secondary", target: "_blank"
+
+    - if @form.raison_annuler?
+      .fr-accordions-group.fr-mb-4w
+        section.fr-accordion
+          h2.fr-accordion__title
+            button.fr-accordion__btn[type="button" aria-expanded="false" aria-controls="faq-annuler"]
+              | Comment annuler votre RDV ?
+          .fr-collapse#faq-annuler
+            p
+              ' Vous pouvez annuler vos rendez-vous dès la confirmation du rendez-vous et jusqu'à 4 heures avant le rendez-vous.
+            p
+              ' Vous pouvez annuler votre rendez-vous depuis les liens présents dans le SMS et/ou l’e-mail que vous avez reçu.
+            .fr-callout.fr-mb-2w
+              ' Si le rendez-vous a lieu dans moins de 4 heures, vous ne pouvez plus annuler le RDV.
+              ' Nous vous invitons à contacter directement le service pour l'informer de votre absence.
+            p
+              ' Vous trouverez ci-dessous plus de détails et des captures d’écran sur le fonctionnement de l’annulation depuis les SMS ou les emails.
+        section.fr-accordion
+          h2.fr-accordion__title
+            button.fr-accordion__btn[type="button" aria-expanded="false" aria-controls="faq-annuler-sms"]
+              | Comment annuler votre RDV depuis le SMS que vous avez reçu ?
+          .fr-collapse#faq-annuler-sms
+            .fr-grid-row.fr-grid-row--gutters
+              .fr-col-md-6
+                h3 Capture d’écran
+                video[
+                  src=asset_path("static_pages/capture-ecran-annuler-rdv-depuis-sms.mp4")
+                  class="rdv-max-height-80vh rdv-max-width-100"
+                  controls=true
+                ]
+              .fr-col-md-6
+                h3 Étapes à suivre
+                ul
+                  li Consultez le SMS reçu de #{current_domain.name}.
+                  li Cliquez sur le lien qui suit "infos/annulation".
+                  li Vous êtes redirigé sur le site de #{current_domain.name}.
+                  li Renseignez les 3 premières lettres de votre nom de famille".
+                  li Cliquez sur "Annuler le RDV".
+                  li Confirmez l'annulation en cliquant sur "Oui, annuler le rendez-vous".
+                p
+                  |> Une notif email vous est envoyée pour confirmer l'annulation du rendez-vous.
+        section.fr-accordion
+          h2.fr-accordion__title
+            button.fr-accordion__btn[type="button" aria-expanded="false" aria-controls="faq-annuler-email"]
+              | Comment annuler votre RDV depuis l’email que vous avez reçu ?
+          .fr-collapse#faq-annuler-email
+            .fr-grid-row.fr-grid-row--gutters
+              .fr-col-md-6
+                h3 Capture d’écran
+                video[
+                  src=asset_path("static_pages/capture-ecran-annuler-rdv-depuis-email.mp4")
+                  class="rdv-max-height-80vh rdv-max-width-100"
+                  controls=true
+                ]
+              .fr-col-md-6
+                h3 Procédure à suivre
+                ul
+                  li Consultez l’email reçu de #{current_domain.name}.
+                  li Cliquez sur le lien qui suit "infos/annulation".
+                  li Vous êtes redirigé sur le site de #{current_domain.name}.
+                  li Renseignez les 3 premières lettres de votre nom de famille".
+                  li Cliquez sur "Annuler le RDV".
+                  li Confirmez l'annulation en cliquant sur "Oui, annuler le rendez-vous".
+                p
+                  ' Une notification email vous est envoyée pour confirmer l'annulation du rendez-vous.
+
+    - if @form.raison.present?
+      p
+        ' Si vous rencontrez des difficultés, vous pouvez contacter l’équipe de #{current_domain.name} :
+      div
+        = link_to "Contacter l’équipe de #{current_domain.name}",
+          new_aide_demande_support_path(role: :usager, sujet: @form.raison_label),
+          class: "fr-link fr-mb-2w"
+      .fr-mt-8w
+        = link_to "Revenir à l’accueil", root_path, class: "fr-link fr-link--icon-left fr-icon-arrow-left-line fr-link--sm"

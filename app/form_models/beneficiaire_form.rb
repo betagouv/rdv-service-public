@@ -31,7 +31,7 @@ class BeneficiaireForm
     return if phone_number.blank?
 
     errors.add(:phone_number, :invalid) if PhoneNumberValidation.parsed_number(phone_number).blank?
-    errors.add(:phone_number, "ne permet pas de recevoir des SMS") unless PhoneNumberValidation.number_is_mobile?(phone_number)
+    errors.add(:phone_number, "doit être un numéro de mobile") unless PhoneNumberValidation.number_is_mobile?(phone_number)
   end
 
   def requires_ants_predemande_number?

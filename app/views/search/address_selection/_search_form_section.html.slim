@@ -10,7 +10,8 @@ section.rdv-background-color-alt-blue-ecume.fr-pt-4w.fr-pb-8w
         = f.hidden_field :latitude, name: "latitude", value: context.latitude
         = f.hidden_field :longitude, name: "longitude", value: context.longitude
         / TODO: change input name to address and change whereInput in application.js
+        = f.label :where, "Saisissez votre adresse", class: "fr-label"
         .fr-search-bar.fr-search-bar--lg[role="search"]
-          = f.text_field :where, label: false, placeholder: "ex : 21 rue Anatole France, Calais", name: "address", class: "fr-input", required: true, value: context.address, data: { "address-autocomplete": "on" }
+          = f.text_field :where, placeholder: "ex : 21 rue Anatole France, Calais", name: "address", class: "fr-input", required: true, value: context.address, data: { "address-autocomplete": "on" }
           = button_tag :button, id: "search_submit", class: "fr-btn" do
             | Rechercher

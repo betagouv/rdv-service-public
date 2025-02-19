@@ -18,7 +18,10 @@
 
 = f.input :phone_number, as: :tel, **input_opts
 
-= f.input(:email, as: :email, **input_opts)
+- if user.notification_email.present?
+  = f.input(:notification_email, as: :email, **input_opts)
+- else
+  = f.input(:email, as: :email, **input_opts)
 - if user.new_record?
   label
     = check_box_tag :invite_on_create, \
