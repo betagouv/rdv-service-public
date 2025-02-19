@@ -34,6 +34,7 @@ tables:
       - birth_name
       - birth_date
       - email
+      - notification_email
       - unconfirmed_email
       - address
       - address_details
