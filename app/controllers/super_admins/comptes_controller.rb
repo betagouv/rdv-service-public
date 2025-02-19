@@ -33,7 +33,7 @@ module SuperAdmins
         territory: %i[name departement_number],
         organisation: %i[name ants_connectable],
         lieu: %i[address latitude longitude],
-        agent: %i[first_name last_name email service_ids]
+        agent: %i[id first_name last_name email service_ids]
       )
     end
   end

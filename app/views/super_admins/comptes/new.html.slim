@@ -36,7 +36,7 @@ section.main-content__body
       - if @agent
         p = @agent.full_name
         p = @agent.email
-        = ff.hidden_field :agent_id, value: @agent.id
+        = ff.hidden_field :id, value: @agent.id
       - else
         = ff.input :first_name, label: "Prénom"
         = ff.input :last_name, label: "Nom"

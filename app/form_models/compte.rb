@@ -26,10 +26,7 @@ class Compte
       organisation.save!
       lieu.save!
 
-      self.agent = Agent.invite!(@attributes[:agent].merge(
-                                   password: SecureRandom.base64(32),
-                                   roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
-                                 ))
+      self.agent = find_or_invite_agent(organisation)
 
       agent.services.each do |service|
         TerritoryService.create!(service: service, territory: territory)
@@ -64,6 +61,19 @@ class Compte
   end
 
   private
+
+  def find_or_invite_agent(organisation)
+    if @attributes.dig(:agent, :id)
+      Agent.find(@attributes.dig(:agent, :id)).tap do |agent|
+        AgentRole.create(agent: agent, organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+      end
+    else
+      Agent.invite!(@attributes[:agent].merge(
+                      password: SecureRandom.base64(32),
+                      roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
+                    ))
+    end
+  end
 
   def create_mairie_motifs!
     service = Service.find_by(name: Service::MAIRIE)
