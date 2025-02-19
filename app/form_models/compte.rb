@@ -65,12 +65,16 @@ class Compte
   def find_or_invite_agent(organisation)
     if @attributes.dig(:agent, :id)
       Agent.find(@attributes.dig(:agent, :id)).tap do |agent|
-        AgentRole.create(agent: agent, organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+        agent.update(
+          @attributes[:agent].merge(
+            roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
+          )
+        )
       end
     else
       Agent.invite!(@attributes[:agent].merge(
-                      password: SecureRandom.base64(32),
-                      roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
+                      roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
+                      password: SecureRandom.base64(32)
                     ))
     end
   end
