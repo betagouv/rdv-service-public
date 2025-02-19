@@ -1,4 +1,4 @@
-require:
+plugins:
   - rubocop-rspec
   - rubocop-rails
 
@@ -11,6 +11,8 @@ AllCops:
     - "db/migrate/*good_job*.rb"
     - "scripts/screenshots/**/*"
   NewCops: enable
+  TargetRubyVersion: 3.4.2
+  ParserEngine: parser_prism
   SuggestExtensions: false
 
 Bundler/OrderedGems:
@@ -33,6 +35,10 @@ Layout/LineLength:
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
+
+Layout/ExtraSpacing:
+  Exclude:
+    - 'db/migrate/**/*'
 
 Lint/MissingSuper:
   Exclude:
@@ -159,6 +165,7 @@ RSpec/VariableName:
     - "spec/requests/api/v1/**/*"
     - "spec/requests/api/rdvinsertion/**/*"
     - "spec/support/api_spec_shared_examples.rb"
+    - "spec/requests/api/conseiller_numerique/swagger_doc_spec.rb"
 
 RSpec/MultipleExpectations:
   Enabled: false

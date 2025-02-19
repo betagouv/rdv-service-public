@@ -5,8 +5,6 @@ ruby "3.4.2"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
-# Required by rubocop for Ruby > 3.4
-gem "prism"
 
 # Full-stack web application framework.
 gem "rails", "~> 7.1.0"
@@ -178,9 +176,8 @@ group :development do
   gem "active_record_doctor"
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
-  # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
-  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby
-  gem "parser", "3.3.7.0", require: false
+  # Required by rubocop for Ruby > 3.4
+  gem "prism"
   # Automatic Ruby code style checking tool.
   gem "rubocop", require: false
   # Code style checking for RSpec files

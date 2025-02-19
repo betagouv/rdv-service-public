@@ -37,6 +37,13 @@ class SmsSender < BaseService
     end
   end
 
+  # These errors should not trigger a retry, because it would only fail again
+  NETSIZE_PERMANENT_ERRORS = [
+    15, # Message concatenation limit exceeded
+    103, # Invalid account name
+    117, # Invalid campaign name
+  ].freeze
+
   private
 
   def to_s
@@ -59,13 +66,6 @@ class SmsSender < BaseService
       Sentry.capture_message(error_message)
     end
   end
-
-  # These errors should not trigger a retry, because it would only fail again
-  NETSIZE_PERMANENT_ERRORS = [
-    15, # Message concatenation limit exceeded
-    103, # Invalid account name
-    117, # Invalid campaign name
-  ].freeze
 
   # NetSize
   # `Netsize Implementation Guide, REST API - SMS.pdf`
