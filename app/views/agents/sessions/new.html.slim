@@ -3,15 +3,7 @@ h1.rdv-text-align-center.text-dark.mt-0.font-weight-bold.mb-4 Connexion à #{cur
 - if display_agent_connect_button?
   = render "common/proconnect_button"
 
-- if display_inclusion_connect_button?
-  .row.p-2
-    .alert.alert-info.d-flex
-      .mr-3
-        i.fa.fa-info
-      span
-        | Si nécessaire, #{link_to("cliquez ici", inclusion_connect_auth_path)} pour continuer d'utiliser Inclusion Connect.
-
-p.fr-hr-or ou
+  p.fr-hr-or ou
 
 p.text-muted.mb-2 Entrez votre email et votre mot de passe.
 = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
