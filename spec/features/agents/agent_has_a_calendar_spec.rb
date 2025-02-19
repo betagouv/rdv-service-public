@@ -47,7 +47,9 @@ RSpec.describe "Agent calendar displays rdvs and plages", js: true do
     click_button "Mois"
     expect(page).to have_content("Ceci est le libellé de la plage")
 
-    # On vérifie que la spec n'est pas en faux positif en affichant le mois suivant
+    # On vérifie que la plage n'est pas affichée sur le mois suivant :
+    # cela permet de s'assurer que la spec n'est pas en faux-positif
+    # à cause de race conditions liées aux appels Ajax.
     find(".fc-next-button").click
     expect(page).not_to have_content("Ceci est le libellé de la plage")
     find(".fc-prev-button").click
