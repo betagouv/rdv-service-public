@@ -14,7 +14,7 @@ class PlacesInput {
         filter(i => !!i.elt) // filter only present inputs
 
     $(container).autocomplete(
-      { hint: false },
+      { hint: false, openOnFocus: true },
       [{
         source: this.getSuggestions,
         debounce: 800,
@@ -85,10 +85,10 @@ class PlacesInput {
     const details = this.getDetails(suggestion).join(", ")
     const content = `<b>${name}</b> <span class='text-muted'>${details}</span>`
     return `
-      <div class='d-flex'>
+      <li class='d-flex' role="option">
         <div class='fr-ml-1w'><i class="fr-icon-${icon}"></i></div>
         <div class='fr-ml-1w'>${content}</div>
-      </div>
+      </li>
     `
   }
 

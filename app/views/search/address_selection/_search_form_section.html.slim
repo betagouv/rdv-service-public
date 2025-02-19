@@ -9,9 +9,16 @@ section.rdv-background-color-alt-blue-ecume.fr-pt-4w.fr-pb-8w
         = f.hidden_field :longitude, name: "longitude", value: context.longitude
         - if context.prescripteur?
           = f.hidden_field :prescripteur, name: "prescripteur", value: 1
+        = f.label :where, class: "fr-label" do
+          | Saisissez votre adresse
+          span.fr-hint-text
+            | Exemple : 21 rue Anatole France, Calais
+        .fr-search-bar.fr-search-bar--lg.autocomplete-wrapper[role="search"]
         / TODO: change input name to address and change whereInput in application.js
-        = f.label :where, "Saisissez votre adresse", class: "fr-label"
+
         .fr-search-bar.fr-search-bar--lg[role="search"]
-          = f.text_field :where, placeholder: "ex : 21 rue Anatole France, Calais", name: "address", class: "fr-input", required: true, value: context.address, data: { "address-autocomplete": "on" }, autocomplete: "street-address", dir: "ltr"
+          = f.text_field :where, name: "address", class: "fr-input", required: true, value: context.address, data: { "address-autocomplete": "on" }, aria: { describedby: "where-error-message" }
           = button_tag :button, id: "search_submit", class: "fr-btn" do
             | Rechercher
+        .fr-messages-group.fr-mt-2v#where-error-message[aria-live="polite" hidden]
+          p.fr-message.fr-message--error#where-error-message-text

@@ -1,0 +1,17 @@
+.autocomplete__wrapper {
+  width: 100%;
+
+  .autocomplete__menu {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #999;
+    border-top: none;
+  }
+
+  .autocomplete__option {
+    display: block;
+    cursor: pointer;
+    padding: 10px 4px;
+    margin: 1px 0;
+  }
+}
