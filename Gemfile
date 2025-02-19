@@ -203,6 +203,8 @@ group :development do
   gem "better_errors"
   # Retrieve the binding of a method's caller, or further up the stack.
   gem "binding_of_caller" # Enable the REPL in better_errors
+  # A mini view framework for console/irb that's easy to use. Includes a no-wrap table, auto-pager, tree and menu.
+  gem "hirb"
   # Profiles loading speed for rack applications.
   gem "rack-mini-profiler"
   # Used by rack-mini-profiler to display flamegraphs: trigger by adding "?pp=flamegraph" to your URL
