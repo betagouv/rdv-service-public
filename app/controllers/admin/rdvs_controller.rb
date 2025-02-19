@@ -184,8 +184,7 @@ class Admin::RdvsController < AgentAuthController
       :start,
       :end,
       motif_ids: [],
-      lieu_ids: [],
-      scoped_organisation_ids: []
+      lieu_ids: []
     ).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
