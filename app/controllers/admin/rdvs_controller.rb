@@ -145,8 +145,10 @@ class Admin::RdvsController < AgentAuthController
     @agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:agent_id]) if params[:agent_id].present?
   end
 
-  def parse_date_from_params(date_param)
-    Date.parse(date_param)
+  def parse_date_from_params(raw_value)
+    return nil if raw_value.blank?
+
+    Date.parse(raw_value)
   rescue Date::Error
     nil
   end
@@ -177,22 +179,15 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(
-      :agent_id,
-      :user_id,
-      :status,
-      :start,
-      :end,
-      motif_ids: [],
-      lieu_ids: []
-    ).to_hash.to_h do |param_name, param_value|
-      case param_name
-      when "start", "end"
-        [param_name, parse_date_from_params(param_value)]
-      else
-        [param_name, param_value]
-      end
-    end
+    {
+      agent_id: params[:agent_id],
+      user_id: params[:user_id],
+      status: params[:status],
+      start: parse_date_from_params(params[:start]),
+      end: parse_date_from_params(params[:end]),
+      motif_ids: params[:motif_ids],
+      lieu_ids: params[:lieu_ids],
+    }.stringify_keys # TODO: remove this legacy stringify_keys
   end
 
   def rdv_success_flash
