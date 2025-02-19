@@ -102,7 +102,7 @@ class ImportZoneRowsService < BaseService
   def sectors_by_human_id
     @sectors_by_human_id ||= Sector
       .where(territory: @territory, human_id: @rows.pluck("sector_id"))
-      .to_h { [_1.human_id, _1] }
+      .index_by(&:human_id)
   end
 
   def zone_import_row_for(row)

@@ -89,13 +89,6 @@ class Admin::MotifsController < AgentAuthController
     end
   end
 
-  private
-
-  def display_sectorisation_level?
-    @display_sectorisation_level ||= current_organisation.motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
-  end
-  helper_method :display_sectorisation_level?
-
   FORM_ATTRIBUTES = %i[
     name
     service_id
@@ -118,6 +111,13 @@ class Admin::MotifsController < AgentAuthController
     rdvs_editable_by_user
     duplicated_from_motif_id
   ].freeze
+
+  private
+
+  def display_sectorisation_level?
+    @display_sectorisation_level ||= current_organisation.motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
+  end
+  helper_method :display_sectorisation_level?
 
   def pundit_user
     current_agent

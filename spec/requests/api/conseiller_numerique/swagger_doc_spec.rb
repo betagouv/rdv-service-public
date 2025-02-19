@@ -75,7 +75,7 @@ RSpec.describe "Api de création de comptes", swagger_doc: "conseillers_numeriqu
       produces "application/json"
       consumes "application/json"
       stub_env_with(COOP_MEDIATION_NUMERIQUE: "coop-mediation-numerique-api-test-key-123456")
-      let(:"X-COOP-MEDIATION-NUMERIQUE-API-KEY") do # rubocop:disable RSpec/VariableName : le nom de la variable doit correspondre au nom du header
+      let(:"X-COOP-MEDIATION-NUMERIQUE-API-KEY") do
         "coop-mediation-numerique-api-test-key-123456"
       end
 
