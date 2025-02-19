@@ -10,7 +10,7 @@ class Admin::RdvsController < AgentAuthController
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
-    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).search_for(@scoped_organisations, parsed_params)
+    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).search_for(@scoped_organisations, rdv_search_options)
       .order(order).page(page_number).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
@@ -26,7 +26,7 @@ class Admin::RdvsController < AgentAuthController
       ]
     )
 
-    @form = Admin::RdvSearchForm.new(parsed_params.merge(pundit_user:, organisation_id: params[:organisation_id]))
+    @form = Admin::RdvSearchForm.new(rdv_search_options.merge(pundit_user:, organisation_id: params[:organisation_id]))
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
     @motifs = Agent::MotifPolicy::ScopeForRdvsList.new(
       current_agent,
@@ -47,7 +47,7 @@ class Admin::RdvsController < AgentAuthController
     RdvsExportJob.perform_later(
       agent: current_agent,
       organisation_ids: @scoped_organisations.ids,
-      options: parsed_params
+      options: rdv_search_options
     )
     flash[:success] = t("layouts.flash.confirm_export_queued_html", exports_path: agents_exports_path)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
@@ -60,7 +60,7 @@ class Admin::RdvsController < AgentAuthController
     ParticipationsExportJob.perform_later(
       agent: current_agent,
       organisation_ids: @scoped_organisations.ids,
-      options: parsed_params
+      options: rdv_search_options
     )
     flash[:success] = t("layouts.flash.confirm_export_queued_html", exports_path: agents_exports_path)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
@@ -178,7 +178,7 @@ class Admin::RdvsController < AgentAuthController
     allowed_params
   end
 
-  def parsed_params
+  def rdv_search_options
     {
       agent_id: params[:agent_id],
       user_id: params[:user_id],
