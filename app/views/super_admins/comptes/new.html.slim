@@ -12,13 +12,14 @@ section.main-content__body
   p
     | Ce formulaire vous permet de créer un territoire, une organisation, et un lieu pour un agent qui en sera admin (généralement la personne référente du projet).
   p
-    | Un motif d'exemple "Mon premier motif" sera créé, sauf s'il s'agit d'une ouverture de compte pour une mairie.
+    | Des motifs "Suivi de dossier" seront créés par défaut
   = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
     = f.simple_fields_for :territory do |ff|
       = ff.input :name, label: "Nom du territoire"
 
     = f.simple_fields_for :organisation do |ff|
-      = ff.input :name, label: "Nom de la première organisation et du premier lieu"
+      div[style="margin: 8px 0"]
+        = ff.input :name, label: "Nom de la première organisation et du premier lieu"
       div[style="margin: 16px 0 8px 0"]
         = ff.input :ants_connectable, as: :boolean, label: "Autoriser le branchement au moteur de recherche de l'ANTS", hint: "En cochant cette case, vous permettrez à cette organisation (probablement une mairie) d'apparaitre sur https://rendezvouspasseport.ants.gouv.fr/"
 
@@ -32,9 +33,14 @@ section.main-content__body
 
     h2[style="margin: 32px 0 16px 0"] Admin de territoire
     = f.simple_fields_for :agent do |ff|
-      = ff.input :first_name, label: "Prénom"
-      = ff.input :last_name, label: "Nom"
-      = ff.input :email, label: "Adresse mail", hint: "Une invitation sera envoyée automatiquement"
+      - if @agent
+        p = @agent.full_name
+        p = @agent.email
+        = ff.hidden_field :agent_id, value: @agent.id
+      - else
+        = ff.input :first_name, label: "Prénom"
+        = ff.input :last_name, label: "Nom"
+        = ff.input :email, label: "Adresse mail", hint: "Une invitation sera envoyée automatiquement"
       - # rubocop:disable Rails/OutputSafety
       = ff.input :service_ids, label: "Service", collection: Service.all, hint: "Si nécessaire, vous pouvez #{link_to('créer un nouveau service', new_super_admins_service_path, target: :blank)}".html_safe
     - # rubocop:enable Rails/OutputSafety

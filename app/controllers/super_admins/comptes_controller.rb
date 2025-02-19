@@ -1,5 +1,14 @@
 module SuperAdmins
   class ComptesController < SuperAdmins::ApplicationController
+    def new
+      @agent = Agent.find(params[:agent_id])
+      if @agent
+        authorize_resource(@agent)
+      end
+
+      super
+    end
+
     def create
       compte_params[:agent][:invited_by] = current_super_admin
       compte = Compte.new(compte_params, current_domain)
