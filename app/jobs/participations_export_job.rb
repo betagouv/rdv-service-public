@@ -3,7 +3,12 @@ class ParticipationsExportJob < ExportJob
     raise "Agent does not belong to all requested organisation(s)" if (organisation_ids - agent.organisation_ids).any?
 
     organisations = agent.organisations.where(id: organisation_ids)
-    rdvs = Rdv.search_for(organisations, options)
+
+    rdvs = Admin::RdvSearchForm
+      .new(options.merge(pundit_user: agent))
+      .get_rdvs(organisations)
+      .order(starts_at: :desc)
+
     participations = Participation.where(rdv_id: rdvs.select(:id)).order(id: :desc)
 
     export = Export.create!(

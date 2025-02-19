@@ -256,25 +256,6 @@ class Rdv < ApplicationRecord
     ""
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
-  def self.search_for(organisations, options)
-    rdvs = joins(:organisation).where(organisation: organisations)
-    options = options.with_indifferent_access.select { |_, value| Array(value).compact_blank.present? }
-
-    rdvs = rdvs.joins(:lieu).where(lieux: { id: options[:lieu_ids] }) if options[:lieu_ids]
-    rdvs = rdvs.joins(:motif).where(motifs: { id: options[:motif_ids] }) if options[:motif_ids]
-    rdvs = rdvs.joins(:agents).where(agents: { id: options[:agent_id] }) if options[:agent_id]
-    rdvs = rdvs.with_user_id(options[:user_id]) if options[:user_id]
-    rdvs = rdvs.status(options[:status]) if options[:status]
-    rdvs = rdvs.where("DATE(starts_at) >= ?", options[:start]) if options[:start]
-    rdvs = rdvs.where("DATE(ends_at) <= ?", options[:end]) if options[:end]
-
-    rdvs
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
-
   def reschedule_max_date
     Time.zone.now + motif.max_public_booking_delay
   end

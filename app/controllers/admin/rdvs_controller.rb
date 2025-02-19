@@ -10,8 +10,8 @@ class Admin::RdvsController < AgentAuthController
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
-    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).search_for(@scoped_organisations, rdv_search_options)
-      .order(order).page(page_number).per(10)
+    @form = Admin::RdvSearchForm.new(rdv_search_options.merge(pundit_user:))
+    @rdvs = @form.get_rdvs(@scoped_organisations).order(order).page(page_number).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
     # parce que ça fait un sort et beaucoup de left outer joins
@@ -26,7 +26,6 @@ class Admin::RdvsController < AgentAuthController
       ]
     )
 
-    @form = Admin::RdvSearchForm.new(rdv_search_options.merge(pundit_user:, organisation_id: params[:organisation_id]))
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
     @motifs = Agent::MotifPolicy::ScopeForRdvsList.new(
       current_agent,
@@ -180,14 +179,16 @@ class Admin::RdvsController < AgentAuthController
 
   def rdv_search_options
     {
+      organisation_id: params[:organisation_id],
       agent_id: params[:agent_id],
       user_id: params[:user_id],
       status: params[:status],
       start: parse_date_from_params(params[:start]),
       end: parse_date_from_params(params[:end]),
-      motif_ids: params[:motif_ids],
-      lieu_ids: params[:lieu_ids],
-    }.stringify_keys # TODO: remove this legacy stringify_keys
+      motif_ids: params[:motif_ids]&.compact_blank,
+      lieu_ids: params[:lieu_ids]&.compact_blank,
+      scoped_organisation_ids: params[:scoped_organisation_ids]&.compact_blank,
+    }.compact_blank
   end
 
   def rdv_success_flash
