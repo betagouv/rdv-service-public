@@ -56,7 +56,8 @@ RSpec.describe "Agent can update user" do
 
       it "update user annotations" do
         within("#spec-primary-user-card") { click_link "Modifier" }
-        expect(page).to have_content("Remarques du territoire courant")
+        expect(page).to have_field("Remarques", with: "Remarques du territoire courant")
+
         fill_in "Remarques", with: "souhaite participer au prochain atelier collectif"
         select "MSA", from: "Caisse d'affiliation"
         click_button "Enregistrer"

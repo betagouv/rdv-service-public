@@ -21,17 +21,19 @@ class Admin::UserForm
     super && user.valid? # order is important here
   end
 
-  def save
+  def save(annotation_content)
     return unless valid?
 
     user.transaction do
-      if user.notes_changed?
+      if annotation_content.present?
         annotation = user.annotations.find_or_initialize_by(territory: @current_territory)
-        annotation&.assign_attributes(content: user.notes)
-        user.notes = user.notes_was
-        # TODO: tester comme ça
-        # annotation&.save
+        annotation.assign_attributes(content: annotation_content)
+        annotation.save
+      else
+        existing_annotation = user.annotations.find_by(territory: @current_territory)
+        existing_annotation&.destroy
       end
+
       user.save
     end
   end
