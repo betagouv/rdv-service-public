@@ -54,7 +54,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Téléphone", with: "0123456789"
 
     click_on "Confirmer le rendez-vous"
-    expect(page).to have_content("Téléphone ne permet pas de recevoir des SMS")
+    expect(page).to have_content("Téléphone doit être un numéro de mobile")
     fill_in "Téléphone", with: "0611223344"
 
     expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(User, :count).by(1))
