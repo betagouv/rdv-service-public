@@ -308,7 +308,7 @@ Rails.application.routes.draw do
     get page_name => "static_pages##{page_name}"
   end
 
-  get "contact", to: redirect("/aide/aiguillage_role")
+  get "contact", to: redirect("/aide/aiguillage_role", status: 302) # temporary redirect in case we rollback
   namespace :aide do
     get "aiguillage_role" => "pages#aiguillage_role"
     get "aiguillage_usager" => "pages#aiguillage_usager"
