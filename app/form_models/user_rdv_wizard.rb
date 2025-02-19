@@ -99,14 +99,11 @@ module UserRdvWizard
       # we make sure the email can be updated only if it is blank
       @user.skip_reconfirmation! if @user.email_was.blank?
 
-      # dans la vue on appelle form_for(user) plutôt que form_for(user_rdv_wizard) les erreurs doivent donc être
-      # définies sur le user et on ne peut pas simplement appeler `validates_with AntsPreDemandeNumberStatusValidation`
-      # dans ce form model
+      # dans la vue on appelle form_for(user) plutôt que form_for(user_rdv_wizard),
+      # il faut donc ajouter des validations (et des erreurs) sur l'objet user
       if rdv.requires_ants_predemande_number?
-        @user.singleton_class.validates(:ants_pre_demande_number, presence: true)
-        @user.singleton_class.attr_accessor :ants_meeting_point_id
+        @user.singleton_class.include(User::AntsPreDemandeNumberStatusValidationConcern)
         @user.ants_meeting_point_id = lieu_id # used in AntsPreDemandeNumberStatusValidation
-        @user.singleton_class.validates_with(AntsPreDemandeNumberStatusValidation)
       end
 
       valid? && @user.save
