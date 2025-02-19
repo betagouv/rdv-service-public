@@ -1,12 +1,9 @@
 class ParticipationsExportJob < ExportJob
-  def perform(agent:, organisation_ids:, options:)
-    raise "Agent does not belong to all requested organisation(s)" if (organisation_ids - agent.organisation_ids).any?
-
-    organisations = agent.organisations.where(id: organisation_ids)
-
+  def perform(agent:, options:)
+    # Admin::RdvSearchForm est responsable d’appliquer les policies
     rdvs = Admin::RdvSearchForm
       .new(options.merge(pundit_user: agent))
-      .get_rdvs(organisations)
+      .get_rdvs
       .order(starts_at: :desc)
 
     participations = Participation.where(rdv_id: rdvs.select(:id)).order(id: :desc)

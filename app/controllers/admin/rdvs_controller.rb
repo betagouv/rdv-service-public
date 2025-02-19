@@ -6,12 +6,12 @@ class Admin::RdvsController < AgentAuthController
   before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner export participations_export]
 
   def index
-    set_scoped_organisations
+    skip_policy_scope # les policies sont appliquées dans Admin::RdvSearchForm
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
     @form = Admin::RdvSearchForm.new(rdv_search_options.merge(pundit_user:))
-    @rdvs = @form.get_rdvs(@scoped_organisations).order(order).page(page_number).per(10)
+    @rdvs = @form.get_rdvs.order(order).page(page_number).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
     # parce que ça fait un sort et beaucoup de left outer joins
@@ -26,10 +26,10 @@ class Admin::RdvsController < AgentAuthController
       ]
     )
 
-    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
+    @lieux = Lieu.joins(:organisation).where(organisations: { id: @form.scoped_organisations.select(:id) }).enabled.ordered_by_name
     @motifs = Agent::MotifPolicy::ScopeForRdvsList.new(
       current_agent,
-      Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).ordered_by_name
+      Motif.joins(:organisation).where(organisations: { id: @form.scoped_organisations.select(:id) }).ordered_by_name
     ).resolve
   end
 
@@ -40,27 +40,15 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def export
-    skip_authorization # RDV will be scoped in SendExportJob
-    set_scoped_organisations
-
-    RdvsExportJob.perform_later(
-      agent: current_agent,
-      organisation_ids: @scoped_organisations.ids,
-      options: rdv_search_options
-    )
+    skip_authorization # les policies seront appliquées dans le job d’export
+    RdvsExportJob.perform_later(agent: current_agent, options: rdv_search_options)
     flash[:success] = t("layouts.flash.confirm_export_queued_html", exports_path: agents_exports_path)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 
   def participations_export
-    skip_authorization # RDV will be scoped in SendExportJob
-    set_scoped_organisations
-
-    ParticipationsExportJob.perform_later(
-      agent: current_agent,
-      organisation_ids: @scoped_organisations.ids,
-      options: rdv_search_options
-    )
+    skip_authorization # les policies seront appliquées dans le job d’export
+    ParticipationsExportJob.perform_later(agent: current_agent, options: rdv_search_options)
     flash[:success] = t("layouts.flash.confirm_export_queued_html", exports_path: agents_exports_path)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
@@ -118,27 +106,6 @@ class Admin::RdvsController < AgentAuthController
   end
 
   private
-
-  def set_scoped_organisations
-    @selected_organisations_ids = params[:scoped_organisation_ids]&.compact_blank
-    accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
-    @scoped_organisations = if @selected_organisations_ids.blank?
-                              # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
-                              # Nous sélectionnons par défaut l'organisation courante
-                              @selected_organisations_ids = [current_organisation.id]
-                              accessible_organisations.where(id: current_organisation.id)
-                            elsif @selected_organisations_ids.include?("0")
-                              # l'agent a sélectionné 'Toutes' parmi les options
-                              @selected_organisations_ids = ["0"]
-                              accessible_organisations
-                            else
-                              # l'agent a sélectionné une ou plusieurs organisations spécifiques
-                              accessible_organisations.where(id: @selected_organisations_ids)
-                            end
-
-    # An empty scope means the agent tried to access a foreign organisation
-    raise Pundit::NotAuthorizedError unless @scoped_organisations.any?
-  end
 
   def set_optional_agent
     @agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:agent_id]) if params[:agent_id].present?

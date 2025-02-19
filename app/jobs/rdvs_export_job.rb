@@ -1,19 +1,14 @@
 class RdvsExportJob < ExportJob
-  def perform(agent:, organisation_ids:, options:)
-    raise "Agent does not belong to all requested organisation(s)" if (organisation_ids - agent.organisation_ids).any?
-
-    organisations = agent.organisations.where(id: organisation_ids)
-
-    rdvs = Admin::RdvSearchForm
-      .new(options.merge(pundit_user: agent))
-      .get_rdvs(organisations)
-      .order(starts_at: :desc)
+  def perform(agent:, options:, organisation_ids:)
+    # Admin::RdvSearchForm est responsable d’appliquer les policies
+    form = Admin::RdvSearchForm.new(options.merge(pundit_user: agent))
+    rdvs = form.get_rdvs(organisations).order(starts_at: :desc)
 
     export = Export.create!(
       export_type: Export::RDV_EXPORT,
       agent: agent,
       file_name: file_name(organisations),
-      organisation_ids: organisation_ids,
+      organisation_ids: form.scoped_organisation_ids,
       options: options
     )
 

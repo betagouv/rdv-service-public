@@ -4,6 +4,19 @@ class Admin::RdvSearchForm
 
   attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_ids, :status, :motif_ids, :scoped_organisation_ids, :pundit_user
 
+  def initialize(attributes = {})
+    attributes.symbolize_keys!
+    if attributes[:scoped_organisation_ids].blank?
+      # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
+      # Nous sélectionnons par défaut l'organisation courante
+      attributes[:scoped_organisation_ids] = [attributes[:organisation_id]]
+    elsif attributes[:scoped_organisation_ids].include?("0")
+      # l'agent a sélectionné 'Toutes' parmi les options
+      attributes[:scoped_organisation_ids] = ["0"]
+    end
+    super
+  end
+
   alias start_date start # start and end are ruby keywords, it’s more convenient to use aliases
   alias end_date end
 
@@ -20,10 +33,13 @@ class Admin::RdvSearchForm
       .to_h { [_1, send(_1)] }
   end
 
-  def get_rdvs(organisations)
+  def get_rdvs
+    # An empty scope means the agent tried to access a foreign organisation
+    raise Pundit::NotAuthorizedError unless scoped_organisations.any?
+
     rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope)
       .joins(:organisation)
-      .where(organisation: organisations)
+      .where(organisation: scoped_organisations)
 
     rdvs = rdvs.joins(:lieu).where(lieux: { id: lieu_ids }) if lieu_ids
     rdvs = rdvs.joins(:motif).where(motifs: { id: motif_ids }) if motif_ids
@@ -36,7 +52,19 @@ class Admin::RdvSearchForm
     rdvs
   end
 
+  def scoped_organisations
+    @scoped_organisations ||= begin
+      o = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
+      o = o.where(id: scoped_organisation_ids) if scoped_organisation_ids.present? && scoped_organisation_ids != ["0"]
+      o
+    end
+  end
+
   private
+
+  def current_organisation
+    Organisation.find(organisation_id)
+  end
 
   def user_scope
     policy_scope(User, policy_scope_class: Agent::UserPolicy::TerritoryScope)
