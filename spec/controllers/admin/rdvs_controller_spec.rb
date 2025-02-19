@@ -225,7 +225,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
 
       expect do
         post :export, params: { organisation_id: organisation.id }.merge(params)
-      end.to have_enqueued_job(RdvsExportJob).with(agent: agent, organisation_ids: [organisation.id], options: params.stringify_keys)
+      end.to have_enqueued_job(RdvsExportJob).with(agent: agent, organisation_ids: [organisation.id], options: params.except(:organisation_id).stringify_keys)
     end
 
     context "when passing scoped_organisation_id param to which agent not belong" do
@@ -266,7 +266,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
 
       expect do
         post :participations_export, params: { organisation_id: organisation.id }.merge(params)
-      end.to have_enqueued_job(ParticipationsExportJob).with(agent: agent, organisation_ids: [organisation.id], options: params.stringify_keys)
+      end.to have_enqueued_job(ParticipationsExportJob).with(agent: agent, organisation_ids: [organisation.id], options: params.except(:organisation_id).stringify_keys)
     end
 
     context "when passing scoped_organisation_id param to which agent not belong" do

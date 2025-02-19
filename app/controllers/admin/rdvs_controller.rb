@@ -26,7 +26,7 @@ class Admin::RdvsController < AgentAuthController
       ]
     )
 
-    @form = Admin::RdvSearchForm.new(parsed_params.merge(pundit_user:))
+    @form = Admin::RdvSearchForm.new(parsed_params.merge(pundit_user:, organisation_id: params[:organisation_id]))
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
     @motifs = Agent::MotifPolicy::ScopeForRdvsList.new(
       current_agent,
@@ -177,8 +177,8 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(:organisation_id, :agent_id, :user_id, :status, :start, :end,
-                  lieu_attributes: %i[name address latitude longitude], motif_ids: [], lieu_ids: [], scoped_organisation_ids: []).to_hash.to_h do |param_name, param_value|
+    params.permit(:agent_id, :user_id, :status, :start, :end,
+                  motif_ids: [], lieu_ids: [], scoped_organisation_ids: []).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
         [param_name, parse_date_from_params(param_value)]
