@@ -290,7 +290,7 @@ Rails.application.routes.draw do
     end
   end
   authenticated :agent do
-    root to: "agents/pages#home", as: :authenticated_agents_root
+    root to: "agents/pages#home", as: :authenticated_agent_root
   end
 
   scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do
