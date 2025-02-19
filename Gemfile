@@ -5,6 +5,8 @@ ruby "3.4.2"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
+# Required by rubocop for Ruby > 3.4
+gem "prism"
 
 # Full-stack web application framework.
 gem "rails", "~> 7.1.0"
