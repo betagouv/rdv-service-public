@@ -1,0 +1,60 @@
+- content_for :title, "Formulaire de contact"
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "Contact", href: aide_aiguillage_role_path
+    - if @form.role_usager?
+      = b.with_breadcrumb label: "Aide particuliers", href: aide_aiguillage_usager_path
+    = b.with_breadcrumb label: yield(:title)
+
+.fr-grid-row.fr-mb-4w
+  .fr-col-12.fr-col-md-8
+    = form_for @form, url: aide_demande_support_path, method: :POST, builder: Dsfr::FormBuilder do |f|
+      - if @form.role.present?
+        = f.hidden_field :role, value: @form.role
+        .fr-input-group
+          .fr-input-group__text
+            - if @form.role_agent?
+              | Vous êtes un·e agent du service public
+            - elsif @form.role_usager?
+              | Vous êtes un·e particulier
+            - else
+              - raise "Role not supported"
+            = link_to "modifier…", aide_aiguillage_role_path, class: "fr-link fr-link--secondary fr-ml-1w fr-text--sm"
+      - else
+        = f.dsfr_select :role,
+          [["Vous êtes un·e particulier", :usager], ["Vous êtes un·e agent du service public", :agent]],
+          value: @form.role,
+          label: "Vous êtes…",
+          required: true
+      - if @form.role_agent?
+        .fr-callout.fr-my-2w
+          | Avez-vous consulté les pages de documentation ? Elles contiennent de nombreuses informations pour aider les agents.
+          div= link_to "Documentation #{current_domain.name}", "https://aide.rdv-service-public.fr", class: "fr-btn fr-btn--secondary", target: "_blank"
+      = f.dsfr_text_field :sujet, value: @form.sujet, label: "La raison de votre message", required: true
+      - if @form.role_usager?
+        .fr-callout.fr-my-2w
+          |> Pour toute demande de prise de RDV ou d’annulation, de disponibilités, ou de transmission de documents, veuillez contactez directement l’organisation concernée via
+          = link_to "l’annuaire du Service Public", "https://lannuaire.service-public.fr/", target: "_blank"
+          |. Par contre, si vous rencontrez un problème technique lors de la prise de RDV, vous êtes au bon endroit, n’hésitez à nous en parler ici !
+
+      = f.dsfr_text_area :message, rows: 5, label: "Votre message", required: true
+      .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
+        .fr-col-12.fr-col-md-6
+          = f.dsfr_text_field :first_name, label: "Votre prénom", required: true
+        .fr-col-12.fr-col-md-6
+          = f.dsfr_text_field :last_name, label: "Votre nom de famille", required: true
+      .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
+        .fr-col-12.fr-col-md-6
+          = f.dsfr_email_field :email, label: "Votre email", required: true
+        .fr-col-12.fr-col-md-6
+          = f.dsfr_phone_field :phone_number, label: "Votre numéro de téléphone (facultatif)"
+
+      ul.fr-btns-group.fr-btns-group--inline
+        li
+          = link_to "Annuler",
+            @form.role_usager? ? aide_aiguillage_usager_path : root_path,
+            class: "fr-btn fr-btn--secondary"
+        li
+          = f.submit "Envoyer votre demande", class: "fr-btn"

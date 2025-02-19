@@ -18,7 +18,7 @@
 
     .row.my-4
       .col.flex
-        = mail_to(current_domain.support_email, "Contactez-nous", class: "btn btn-primary")
+        = link_to "Contactez-nous", new_aide_demande_support_path(sujet: "Erreur 500"), class: "btn btn-primary"
         = link_to("Retour à l'accueil", root_path, class: "btn btn-outline-primary ml-2")
 
   .col-0.col-md-4
