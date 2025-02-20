@@ -10,7 +10,7 @@ RSpec.describe Participation::Creatable, type: :concern do
     let(:user3) { create :user }
     let!(:organisation) { create(:organisation) }
     let(:relative) do
-      create(:user, :relative, :with_no_email, responsible: user, first_name: "Petit", last_name: "Bébé")
+      create(:user, :relative, :without_devise_email, responsible: user, first_name: "Petit", last_name: "Bébé")
     end
     let(:rdv) { create :rdv, :collectif, :without_users, starts_at: Time.zone.tomorrow, agents: [agent], organisation: }
 

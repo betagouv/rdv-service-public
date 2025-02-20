@@ -10,7 +10,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
 
     context "email is nil" do
       let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: nil) }
-      let!(:user_without_email) { create(:user, :with_no_email) }
+      let!(:user_without_email) { create(:user, :without_devise_email) }
 
       it { is_expected.to be_empty }
     end
