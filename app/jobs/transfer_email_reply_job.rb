@@ -8,9 +8,12 @@ class TransferEmailReplyJob < ApplicationJob
 
   def self.reply_address_for_rdv(rdv)
     if rdv.domain.reply_host_name.nil?
-      # ça se produire notamment sur les review app, il faudrait peut-être raise pour être avertis
-      # des autres cas où ça ne devrait pas se produire
-      return rdv.domain.support_email
+      if ENV["IS_REVIEW_APP"] == "true"
+        return rdv.domain.support_email
+      else
+        Sentry.capture_message("Missing reply_host_name for domain", extra: { domain: rdv.domain })
+        return nil
+      end
     end
 
     "rdv+#{rdv.uuid}@#{rdv.domain.reply_host_name}"
