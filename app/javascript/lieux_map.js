@@ -66,8 +66,9 @@ const initMap = (mapElt, lieux) => {
     map.on('mouseleave', 'lieux-markers', () => {
       map.getCanvas().style.cursor = '';
     });
-
   })
+
+  return map
 }
 
 const setCounters = (lieux) => {
@@ -89,6 +90,25 @@ const displayLegendCircles = () => {
   })
 }
 
+const moveHandler = (e, map) => {
+  console.log("in moveHandler")
+  const region = e.currentTarget.dataset.region
+  const bounds = {
+    "guadeloupe": [[-61.8, 15.8], [-60.9, 16.5]],
+    "martinique": [[-61.3, 14.3], [-60.8, 14.9]],
+    "guyane": [[-54.7, 2.1], [-51.6, 5.1]],
+    "la-reunion": [[55.1, -21.6], [55.8, -20.7]],
+    "mayotte": [[44.9, -13.1], [45.4, -12.6]],
+  }[region]
+  if (bounds) map.fitBounds(bounds, { padding: 20 })
+}
+
+const initMoveHandlers = (map) => {
+  document
+    .querySelectorAll('[data-action="click->stats-map#move"]')
+    .forEach(elt => elt.addEventListener('click', e => moveHandler(e, map)))
+}
+
 window.addEventListener("load", () => {
   const mapElt = document.querySelector('[data-controller="stats-map"]')
   if (!mapElt) return
@@ -99,9 +119,10 @@ window.addEventListener("load", () => {
       throw new Error(`HTTP status ${response.status}`);
     })
     .then(lieux => {
-      initMap(mapElt, lieux)
+      const map = initMap(mapElt, lieux)
       displayLegendCircles()
       setCounters(lieux)
+      initMoveHandlers(map)
     })
     .catch(error => {
       console.error(error)
