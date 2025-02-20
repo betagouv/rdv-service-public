@@ -11,7 +11,3 @@
   - if resource.connected_with_agent_connect?
     .form-text.text-muted.mb-2
       | Les informations de votre compte proviennent de ProConnect.
-  - elsif resource.inclusion_connect_open_id_sub.present?
-    .form-text.text-muted.mb-2
-      | Les informations de votre compte proviennent d'Inclusion Connect.
-    .text-left= link_to "Modifier vos informations sur Inclusion Connect", "https://connect.inclusion.beta.gouv.fr/accounts/my-account/", target: "_blank"

@@ -439,7 +439,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport), organisation:) }
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
-    let!(:status_stub) { stub_ants_status_ok("A123456789", status: "validated", appointments: []) }
+    let!(:status_stub) { stub_ants_status_ok("A123456789", status: "validated", meeting_point_id: lieu.id, appointments: []) }
 
     before { travel_to(Time.zone.parse("2020-02-10")) } # le RDV est dans le futur
     before { user.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
