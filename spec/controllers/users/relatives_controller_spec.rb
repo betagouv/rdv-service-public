@@ -71,11 +71,11 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "quand le numéro de pré-demande ANTS est requis et passé et valide" do
       let(:attributes) do
-        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345", ants_pre_demande_number_required: "true" } }
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345", ants_pre_demande_number_required: "true", ants_meeting_point_id: "11" } }
       end
 
       include_context "rdv_mairie_api_authentication"
-      before { stub_ants_status_ok("VALID12345", status: "validated", appointments: []) }
+      before { stub_ants_status_ok("VALID12345", meeting_point_id: "11", status: "validated", appointments: []) }
 
       it "créé le proche avec le numéro de pré-demande" do
         expect { subject }.to change(User, :count)
@@ -88,12 +88,12 @@ RSpec.describe Users::RelativesController, type: :controller do
 
     context "quand le numéro de pré-demande ANTS est requis et passé et valide mais qu'il existe déjà des RDVs pris ailleurs pour ce numéro" do
       let(:attributes) do
-        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345", ants_pre_demande_number_required: "true" } }
+        { relative_user_form: { first_name: "Eliott", last_name: "Le Dragon", ants_pre_demande_number: "VALID12345", ants_pre_demande_number_required: "true", ants_meeting_point_id: "11" } }
       end
 
       include_context "rdv_mairie_api_authentication"
       before do
-        stub_ants_status_ok("VALID12345", status: "validated", appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "https://rdvsympa.fr/123" }])
+        stub_ants_status_ok("VALID12345", meeting_point_id: "11", status: "validated", appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "https://rdvsympa.fr/123" }])
       end
 
       it "créé le proche avec le numéro de pré-demande" do

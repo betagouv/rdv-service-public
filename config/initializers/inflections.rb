@@ -13,6 +13,7 @@
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular "lieu", "lieux"
   inflect.uncountable "created_by"
+  inflect.irregular "demande_support", "demandes_support"
 end
 
 # These inflection rules are supported but not enabled by default:

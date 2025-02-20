@@ -4,7 +4,7 @@ ruby:
   event_sources = [
     admin_api_agenda_rdvs_path(agent_id: current_agent, organisation_id: organisation.id, format: :json),
     admin_api_agenda_absences_path(agent_id: current_agent, organisation_id: organisation.id, format: :json),
-    admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: organisation.id, in_background: true, format: :json),
+    admin_api_agenda_plage_ouvertures_path(agent_id: current_agent, organisation_id: organisation.id, mixed_with_rdvs: true, format: :json),
     OffDays.to_full_calendar_array,
   ]
 

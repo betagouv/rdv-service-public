@@ -9,9 +9,6 @@ Rails.application.routes.draw do
   get "agent_connect/auth" => "agent_connect#auth"
   get "agent_connect/callback" => "agent_connect#callback"
 
-  get "inclusion_connect/auth" => "inclusion_connect#auth"
-  get "inclusion_connect/callback" => "inclusion_connect#callback"
-
   devise_for :super_admins # necessary for helpers like super_admin_signed_in?
   devise_scope :super_admin do
     get "omniauth/github/callback" => "omniauth_callbacks#github"
@@ -304,9 +301,17 @@ Rails.application.routes.draw do
     get "confirmation"
   end
 
-  %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
+  %w[mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
+
+  get "contact", to: redirect("/aide/aiguillage_role", status: 302) # temporary redirect in case we rollback
+  namespace :aide do
+    get "aiguillage_role" => "pages#aiguillage_role"
+    get "aiguillage_usager" => "pages#aiguillage_usager"
+    resource :demande_support, only: %i[new create]
+  end
+
   get "/.well-known/microsoft-identity-association" => "static_pages#microsoft_domain_verification", format: :json
 
   get "health_check" => "health#db_connection"
