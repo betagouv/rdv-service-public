@@ -28,6 +28,18 @@ RSpec.describe TextSearch, type: :concern do
       expect(described_class.search_by_text("patoche@duroy.fr")).to eq([patricia])
     end
 
+    it "returns users that match with partial notification_email" do
+      create(:user, :without_devise_email, notification_email: "jean@moustache.fr")
+      patricia = create(:user, :without_devise_email, notification_email: "patoche@duroy.fr")
+      expect(described_class.search_by_text("patoche@dur")).to eq([patricia])
+    end
+
+    it "returns users that match with notification_email" do
+      create(:user, :without_devise_email, notification_email: "jean@moustache.fr")
+      patricia = create(:user, :without_devise_email, notification_email: "patoche@duroy.fr")
+      expect(described_class.search_by_text("patoche@duroy.fr")).to eq([patricia])
+    end
+
     it "returns users that match with phone_number_formatted" do
       jean = create(:user, phone_number: "01 30 30 04 04")
       create(:user, phone_number: "01 31 34 34 34")
