@@ -1,12 +1,12 @@
-def stub_request_ants_status(application_id, meeting_point_id: nil)
-  expected_query = { application_ids: application_id }
-  expected_query[:meeting_point_id] = meeting_point_id.to_s if meeting_point_id.present?
+def stub_request_ants_status(application_id, meeting_point_id:)
+  raise "missing meeting_point_id" if meeting_point_id.blank?
+
   stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status")
-    .with(query: hash_including(expected_query))
+    .with(query: { application_ids: application_id, meeting_point_id: })
 end
 
-def stub_ants_status_ok(application_id, status: "validated", appointments: [])
-  stub_request_ants_status(application_id).to_return(
+def stub_ants_status_ok(application_id, meeting_point_id:, status: "validated", appointments: [])
+  stub_request_ants_status(application_id, meeting_point_id:).to_return(
     status: 200,
     body: { application_id => { status: status, appointments: appointments } }.to_json
   )

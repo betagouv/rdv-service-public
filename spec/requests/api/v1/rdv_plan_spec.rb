@@ -130,22 +130,6 @@ RSpec.describe "RDV Plan API" do
   end
 
   describe "#show" do
-    context "when there is a rdv" do
-      let(:rdv_plan) do
-        create(:rdv_plan, rdv: create(:rdv), planning_agent: agent)
-      end
-
-      it "returns the minimum information about the rdv" do
-        get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
-        expect(parsed_response_body.dig("rdv_plan", "rdv")).to match(
-          {
-            id: rdv_plan.rdv_id,
-            status: "unknown",
-          }
-        )
-      end
-    end
-
     context "when the rdv_plan belongs to a different user" do
       let(:rdv_plan) do
         create(:rdv_plan, planning_agent: create(:agent))

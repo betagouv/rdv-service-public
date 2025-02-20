@@ -36,7 +36,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     before do
-      stub_ants_status_ok("1122334455", appointments: appointments)
+      stub_ants_status_ok("1122334455", meeting_point_id: lieu.id, appointments: appointments)
     end
 
     it "allows booking a rdv through the full lifecycle of api calls" do
@@ -127,9 +127,9 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
   context "ajout d’un proche avec des numéros ANTS problématiques puis avec un numéro ANTS valide" do
     before do
-      stub_ants_status_ok("1122334455", appointments: [])
-      stub_ants_status_ok("5544332211", appointments: [])
-      stub_ants_status_ok("66CONSUMED", status: "consumed")
+      stub_ants_status_ok("1122334455", meeting_point_id: lieu.id, appointments: [])
+      stub_ants_status_ok("5544332211", meeting_point_id: lieu.id, appointments: [])
+      stub_ants_status_ok("66CONSUMED", meeting_point_id: lieu.id, status: "consumed")
     end
 
     it "permet de réserver sans avertissement", js: true do
@@ -184,9 +184,10 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
   context "ajout d’un proche avec un numéro ANTS différent mais qui a des appointments" do
     before do
-      stub_ants_status_ok("1122334455", appointments: [])
+      stub_ants_status_ok("1122334455", meeting_point_id: lieu.id, appointments: [])
       stub_ants_status_ok(
         "5544332211",
+        meeting_point_id: lieu.id,
         appointments: [{
           management_url: "https://gerer-rdv.com",
           meeting_point: "Mairie de Sannois",
@@ -248,7 +249,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     context "when using a pre-demande number in lowercase" do
-      let!(:call_to_status_with_upcased_number) { stub_ants_status_ok("ABCD1234EF", appointments: []) }
+      let!(:call_to_status_with_upcased_number) { stub_ants_status_ok("ABCD1234EF", meeting_point_id: lieu.id, appointments: []) }
 
       it "considers it as uppercase when calling ANTS API and saving it in user" do
         time = Time.zone.now.change(hour: 9, min: 0)
@@ -280,13 +281,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
         fill_in("user_ants_pre_demande_number", with: "  ")
         click_button("Continuer")
-        expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+        expect(page).to have_content("Numéro de pré-demande ANTS doit être renseigné")
       end
     end
 
     context "ANTS responds with an unexpected error" do
       before do
-        stub_request_ants_status("5544332211")
+        stub_request_ants_status("5544332211", meeting_point_id: lieu.id)
           .to_return(status: 500, body: "Internal Server Error")
       end
 

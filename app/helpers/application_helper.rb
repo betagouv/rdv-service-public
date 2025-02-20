@@ -136,10 +136,6 @@ module ApplicationHelper
     ENV["AGENT_CONNECT_BASE_URL"].present?
   end
 
-  def display_inclusion_connect_button?
-    !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
-  end
-
   def dsfr_path
     "/dsfr-v1.13.0"
   end
