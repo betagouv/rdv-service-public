@@ -16,7 +16,7 @@
 
 ## Suivi du document
 
-> Le suivi de ce document est assuré par le versionnage Git.
+> Le suivi de ce document est assuré par le versionnage Git au sein même du dépôt unique du code : [github.com/betagouv/rdv-service-public](https://github.com/betagouv/rdv-service-public/blob/production/docs/architecture-technique.md).
 
 ## Fiche de contrôle
 
@@ -42,11 +42,10 @@ Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-service-publi
 
 ### Stack technique
 
-Le projet est un monolithe Ruby on Rails avec une base Postgres pour les données métier et un Redis pour le cache et les
-sessions. L'infrastructure est entièrement gérée par Scalingo en PaaS.
+Le projet est un monolithe Ruby on Rails avec une base Postgres pour les données métier et un Redis pour le cache. L'infrastructure est entièrement gérée par Scalingo en PaaS.
 
 Le projet ne contient que très peu de Javascript (petites touches de vanilla JS, pas de framework front) et le HTML est
-généré côté serveur. Coté CSS / composants, c'est principalement Bootstrap qui est utilisé, avec un usage grandissant du Design System de l'état (DSFR) pour les interfaces usager.
+généré côté serveur. Coté CSS / composants, c'est principalement Bootstrap qui est utilisé pour les interfaces métier proposées aux agents. Pour les interfaces usager (plus simples et beaucoup moins nombreuses), le projet tend à n'utiliser que le Design System de l'état (DSFR).
 
 Ces choix reflètent un désir de simplicité avant tout, afin de rester agiles et se concentrer sur la valeur métier.
 Ces choix techniques sont aussi influencés par la culture de la communauté Ruby.
@@ -76,25 +75,38 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 
 #### Services externes
 
-| Source                            | Destination                | Protocole     | Port | Localisation        | Interne/URL Externe                 |
-|-----------------------------------|----------------------------|---------------|------|---------------------|-------------------------------------|
-| App Rails                         | Brevo                      | SMTP          | 587  | Paris, France       | smtp-relay.sendinblue.com           |
-| App Rails                         | API et Oauth Microsoft     | HTTPS         | 443  | Paris, France       | graph.microsoft.com                 |
-| App Rails                         | Netsize                    | HTTPS         | 443  | France              | europe.ipx.com                      |
-| App Rails                         | SFR mail2SMS               | SMTP          | 587  | France              | @mailtosms.dmc.sfr-sh.fr            |
-| App Rails                         | Clever Technologies        | HTTPS         | 443  | France              | webservicesmultimedias.clever-is.fr |
-| Navigateur redirigé par App Rails | API Microsoft              | HTTPS (OAuth) | 443  | Amsterdam, Pays-Bas | login.microsoftonline.com      |
+| Source                            | Destination            | Protocole     | Port | Localisation        | Interne/URL Externe                                   |
+|-----------------------------------|------------------------|---------------|------|---------------------|-------------------------------------------------------|
+| App Rails                         | Brevo                  | SMTP          | 587  | Paris, France       | smtp-relay.sendinblue.com                             |
+| App Rails                         | API et Oauth Microsoft | HTTPS         | 443  | Paris, France       | graph.microsoft.com                                   |
+| App Rails                         | Netsize                | HTTPS         | 443  | France              | europe.ipx.com                                        |
+| App Rails                         | SFR mail2SMS           | SMTP          | 587  | France              | @mailtosms.dmc.sfr-sh.fr                              |
+| App Rails                         | Clever Technologies    | HTTPS         | 443  | France              | webservicesmultimedias.clever-is.fr                   |
+| Navigateur redirigé par App Rails | API Microsoft          | HTTPS (OAuth) | 443  | Amsterdam, Pays-Bas | login.microsoftonline.com                             |
+| App Rails                         | API dédoublonnage ANTS | HTTPS         | 443  | Paris, France       | api-coordination.rendezvouspasseport.ants.gouv.fr/api |
+| Moteur de recherche ANTS          | App Rails              | HTTPS         | 443  | Paris, France       | rdv.anct.gouv.fr/api/ants/availableTimeSlots          |
 
-Note : l'application permet aussi de définir des webhooks sortants, et donc d'appeler en HTTPS un service externe
-lors de la création, modification ou suppression de certaines données applicatives. On sait que la Drôme et les départements qui
-utilisent RDV Insertion utilisent ces webhooks.
+##### Webhooks
+
+L'application permet aussi de définir des webhooks sortants, et donc d'appeler en HTTPS un service externe
+lors de la création, modification ou suppression de certaines données applicatives. 
+
+Nous savons que les webhooks sont
+utilisés pour gérer une synchronisation de calendrier dans :
+- les Hauts-de-Seine
+- la Drôme
+- le Pas-de-Calais
+- les Pyrénées-Atlantiques
+
+Ils sont aussi extensivement utilisés dans le cadre de l'inter-connexion avec RDV Insertion afin de synchroniser
+plusieurs tables dans la base de données de RDV Insertion.
 
 #### Fournisseurs d'identité
 
 | Source     | Destination      | Protocole     | Port | Localisation        | Interne/URL Externe            |
 |------------|------------------|---------------|------|---------------------|--------------------------------|
 | Navigateur | FranceConnect    | HTTPS (OAuth) | 443  | Paris, France       | smtp-relay.sendinblue.com      |
-| Navigateur | InclusionConnect | HTTPS (OAuth) | 443  | France              | connect.inclusion.beta.gouv.fr |
+| Navigateur | ProConnect       | HTTPS (OAuth) | 443  | France              | auth.agentconnect.gouv.fr      |
 | Navigateur | GitHub           | HTTPS (OAuth) | 443  | USA                 | github.com                     |
 
 ### Inventaire des dépendances
@@ -103,7 +115,7 @@ utilisent RDV Insertion utilisent ces webhooks.
 |---------------------|------------------|-----------|-----------------------------------------------------------------|
 | Serveur web         | Rails @ Scalingo | Rails 7   | Voir ci-dessous pour le détail des librairies                   |
 | BDD métier          | PostgreSQL       | `14.10.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
-| BDD technique       | Redis            | `7.2.3`   | Stockage des sessions et du cache                               |
+| BDD technique       | Redis            | `7.2.3`   | Stockage du cache                                               |
 
 La liste des librairies Ruby est disponible dans :
 - [Gemfile](/Gemfile) pour la liste des dépendances directes et la description de la fonctionnalité de chacune des gems
@@ -160,7 +172,7 @@ créé cette instance afin de séparer les données de plateforme `rdv.anct.gouv
 
 L'instance `demo-rdv-solidarites` sert de plateforme de démo pour nos 3 domaines.
 
-Chaque schémas ci-dessous représente une seule instance (une seule app Scalingo), qu'elle soit de prod ou de démo.
+Chaque schéma ci-dessous représente une seule instance (une seule app Scalingo), qu'elle soit de prod ou de démo.
 À noter que les instances `demo-rdv-solidarites` et `production-rdv-mairie` n'utilisent que `netsize` comme
 fournisseur de SMS, les autres fournisseurs étant spécifiques à des départements du médico-social.
 
@@ -218,14 +230,12 @@ C4Container
     Person(user, "Utilisateur⋅ice", "Agent / usager")
 
     System_Ext(france_connect, "FranceConnect", "")
-    System_Ext(inclusion_connect, "InclusionConnect", "")
     System_Ext(oauth_microsoft, "Oauth Microsoft", "")
     System_Ext(oauth_github, "Oauth GitHub", "")
 
     Rel(user, web_app, "HTTPS redirect")
 
     Rel(user, france_connect, "HTTPS redirect")
-    Rel(user, inclusion_connect, "HTTPS redirect")
     Rel(user, oauth_microsoft, "HTTPS redirect")
     Rel(user, oauth_github, "HTTPS redirect")
 ```
@@ -316,7 +326,6 @@ Le fait d'avoir accès à une app Scalingo donne les droits suivants :
   - credentials de Postgres
   - credentials de Netsize (envoi de SMS)
   - credentials FranceConnect
-  - credentials InclusionConnect
   - credentials GitHub
   - master key Rails (permettant de déchiffrer les colonnes chiffrées en base)
   - credentials Brevo (ex Sendinblue)
@@ -375,9 +384,9 @@ Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas 
 
 #### Les agents
 
-Les agents ont accès à diverses fonctionnalités touchants à :
+Les agents ont accès à diverses fonctionnalités touchant à :
 - la déclaration de leurs plages d'ouvertures et absences
-- le configuration des motifs de RDVs et des lieux de RDVs
+- la configuration des motifs de RDVs et des lieux de RDVs
 - la gestion des autres agents de leur organisation
 - la liste de leurs RDVs et de ceux de leurs collègues
 - la sectorisation géographique des lieux
@@ -388,23 +397,31 @@ Ces niveaux d'accès sont gérés par les administrateurs locaux de la solution 
 utilisatrices (départements, mairies).
 
 La connexion à un profil agent est faite par email + mot de passe. Les mots de passes sont stockés salés et chiffrés
-(en utilisant une Devise qui utilise Bcrypt). Une connexion via InclusionConnect est aussi proposée : un compte est alors
-créé ou relié si l'e-mail existe déjà dans notre base agents.
+(en utilisant une Devise qui utilise Bcrypt).
 
 Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
 
 #### Les super admins
 
-Une interface CRUD permettant de gérer l'ensemble des organisations, services, motifs, lieux, territoires, agents et
-usagers est proposée à :
-- toute l'équipe RDV Service Public
-- toute l'équipe RDV Insertion
+Une interface a été développer afin de permettre aux membres de l'équipe de facilement :
+- trouver un agent, lister ses organisations et se connecter "en tant que"
+- trouver un usager, visualiser et modifier sa fiche
+- trouver une organisation, éditer son nom, sa verticale, la connecter à l'ANTS
+- lister et modifier la liste référentielle des "services" proposés dans l'instance
+- trouver et modifier des motifs
+- trouver et modifier des lieux
+- trouver et modifier les territoires
 
-Afin de s'y connecter, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alors fournie par GitHub doit être
-présente dans une table `super_admins`, où les entrées sont crées et supprimées à la main lors de l'arrivée et
-du départ de membres de l'équipe.
+Il existe deux niveaux d'accès pour les super-admins : "complet" et "support". Les devs (RDV-SP et RDV-I) ont un
+niveau "complet", ainsi que l'équipe produit de RDV Service Public. L'équipe produit de RDV Insertion est quant à elle
+limitée à un niveau "support".
 
-Tous les membres de l'équipe faisant partie de [l'organisation `betagouv` sur Github](https://github.com/betagouv), ils utilisent forcément une authentification à 2 facteurs (car cette politique est imposée au niveau de l'organisation GitHub).
+Pour se connecter aux interfaces de super-admin, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alors fournie
+par GitHub doit être présente dans une table `super_admins`, où les entrées sont créées et supprimées à la main lors
+de l'arrivée et du départ de membres de l'équipe.
+
+Tous les membres de l'équipe faisant partie de [l'organisation `betagouv` sur Github](https://github.com/betagouv),
+ils utilisent forcément une authentification à 2 facteurs (car cette politique est imposée au niveau de l'organisation GitHub).
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
@@ -414,7 +431,7 @@ Les logs textuels sont écrits dans le système de log de Scalingo. Cela compren
 - Les logs des commandes de la production (e.g. lancer la console)
 - les changements de variables d'environnements
 
-Les logs applicatifs (générés par Rails) contiennent, pour chaque requêtes HTTP :
+Les logs applicatifs (générés par Rails) contiennent, pour chaque requête HTTP :
 
 - timestamp
 - path HTTP
@@ -423,7 +440,7 @@ Les logs applicatifs (générés par Rails) contiennent, pour chaque requêtes H
 - controller + action
 - durée
 
-Les logs produits par le routeur de Scalingo contiennent, pour chaque requêtes HTTP :
+Les logs produits par le routeur de Scalingo contiennent, pour chaque requête HTTP :
 
 - timestamp
 - path HTTP
@@ -502,7 +519,7 @@ créés quotidiennement et gardés 1 an.
 
 Nous les testons régulièrement en les téléchargeant et en les chargeant dans notre environnement local.
 
-Scalingo nous offre également la fonctionnalité de Point-in-time Recovery. Nous profitons également d'un système
+Scalingo nous offre également une fonctionnalité de Point-in-time Recovery. Nous profitons aussi d'un système
 de cluster avec 2 nodes, qui permet un failover automatique en cas de plantage d'une instance Postgres.
 
 ### Confidentialité

@@ -34,7 +34,7 @@ class User < ApplicationRecord
 
   # Attributes
   ONGOING_MARGIN = 1.hour.freeze
-  auto_strip_attributes :email, :first_name, :last_name, :birth_name
+  auto_strip_attributes :email, :notification_email, :first_name, :last_name, :birth_name
 
   enum :caisse_affiliation, { aucune: 0, caf: 1, msa: 2 }
   enum :family_situation, { single: 0, in_a_relationship: 1, divorced: 2 }
@@ -76,8 +76,7 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
-  # after_create :create_annotations # backfill temporaire, première étape de migration
-  # after_update :sync_annotations    # backfill temporaire, première étape de migration
+  before_save :clear_notification_email_if_email_present
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -91,9 +90,17 @@ class User < ApplicationRecord
     full_name
   end
 
-  def email=(value)
+  def sanitize_email(email)
     # On corriger automatiquement ces fautes de frappe courantes
-    super(value&.gsub(".@", "@")&.gsub("..", "."))
+    email&.gsub(".@", "@")&.gsub("..", ".")
+  end
+
+  def email=(email)
+    super(sanitize_email(email))
+  end
+
+  def notification_email=(email)
+    super(sanitize_email(email))
   end
 
   def add_organisation(organisation)
@@ -293,28 +300,8 @@ class User < ApplicationRecord
     self.email = nil if email.blank?
   end
 
-  def create_annotations
-    return if notes.blank?
-
-    territories.distinct.map.each do |territory|
-      annotation = annotations.find_or_initialize_by(territory:)
-      annotation.content = notes
-      annotation.save!
-    end
-  end
-
-  def sync_annotations
-    return unless notes_previously_changed?
-
-    if notes.present?
-      territories.distinct.map.each do |territory|
-        annotation = annotations.find_or_initialize_by(territory:)
-        annotation.content = notes
-        annotation.save!
-      end
-    else
-      annotations.destroy_all
-    end
+  def clear_notification_email_if_email_present
+    self.notification_email = nil if email.present?
   end
 
   def birth_date_validity
@@ -340,7 +327,8 @@ class User < ApplicationRecord
       first_name: "Usager supprimé",
       last_name: "Usager supprimé",
       deleted_at: Time.zone.now,
-      email: deleted_email
+      email: deleted_email,
+      notification_email: nil
     )
     reload # anonymizer operates outside the realm of rails knowledge
   end

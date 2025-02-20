@@ -65,6 +65,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   def authenticate_agent
     if request.headers.include?("X-Agent-Auth-Signature")
+      # Bypass DeviseTokenAuth for rdv-insertion
       authenticate_agent_with_shared_secret
     elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"]
       authenticate_api_v1_agent_with_token_auth!

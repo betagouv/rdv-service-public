@@ -60,7 +60,7 @@ class Motif < ApplicationRecord
   validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }
   validates :name, presence: true
   validates :color, :default_duration_in_min, :min_public_booking_delay, :max_public_booking_delay, presence: true
-  validates :min_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
+  validates :min_public_booking_delay, numericality: { greater_than_or_equal_to: 5.minutes, less_than_or_equal_to: 1.year.minutes } # On a besoin de 5mn pour la staging de Visioplainte, mais on propose 30mn minimum dans l'interface # rubocop:disable Layout/LineLength
   validates :max_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validate :booking_delay_validation
   validate :not_associated_with_secretariat

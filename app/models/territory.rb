@@ -116,7 +116,11 @@ class Territory < ApplicationRecord
   end
 
   def any_social_field_enabled?
-    attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?
+    attributes.symbolize_keys.slice(*SOCIAL_FIELD_TOGGLES.keys).values.any?
+  end
+
+  def any_optional_user_field_enabled?
+    attributes.symbolize_keys.slice(*OPTIONAL_FIELD_TOGGLES.keys).values.any?
   end
 
   def to_s
