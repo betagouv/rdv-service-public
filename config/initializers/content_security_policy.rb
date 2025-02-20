@@ -13,7 +13,7 @@ api_adresse_data_gouv = "api-adresse.data.gouv.fr"
 # Nous utilisons mapbox et les tiles etalab pour les interfaces de config de sectorisation
 api_mapbox = "api.mapbox.com"
 tiles_etalab = "etalab-tiles.fr"
-# Nous utilisons unpkg et les tiles OSM pour utiliser Leaflet et afficher une carte des lieux
+# Nous utilisons unpkg, les tiles OSM et etalab pour afficher une carte des lieux dans les stats avec maplibre
 unpkg_cdn = "unpkg.com"
 tiles_osm = "tile.openstreetmap.org"
 tiles_data_gouv = "openmaptiles.data.gouv.fr"

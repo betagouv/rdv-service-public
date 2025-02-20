@@ -70,9 +70,8 @@ const setCounters = (lieux) => {
   }, {});
 
   for (const [counterName, count] of Object.entries(counts)) {
-    document
-      .querySelector(`[data-target="map-counter"][data-counter-name="${counterName}"]`)
-      &.counterElt.textContent = `(${count})`
+    const counterElt = document.querySelector(`[data-target="map-counter"][data-counter-name="${counterName}"]`)
+    if (counterElt) counterElt.textContent = `(${count})`
   }
 }
 

@@ -5,6 +5,13 @@
     = b.with_breadcrumb label: "Accueil", href: "/"
     = b.with_breadcrumb label: yield(:title)
 
+- content_for :additional_stylesheets do
+  link href="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css" rel="stylesheet"
+
+- content_for :additional_scripts do
+  script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js"
+  = javascript_include_tag "lieux_map"
+
 p
   | Les statistiques présentées ici sont le cumul de RDV Service Public, RDV Solidarités, RDV Aide Numérique.
 
@@ -46,7 +53,3 @@ iframe.rdv-width-100.fr-mb-8w.rdv-iframe-metabase.js-iframe-metabase[src="https:
   frameborder="0"
   allowtransparency
 ]
-
-link href="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css" rel="stylesheet"
-script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js"
-= javascript_include_tag "lieux_map"
