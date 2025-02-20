@@ -37,4 +37,15 @@ RSpec.describe "Agent can create user" do
       expect(User.last.ants_pre_demande_number).to eq("ABCD1234EF")
     end
   end
+
+  context "without any pre-demande number" do
+    it "creates user with no warning" do
+      fill_in :user_first_name, with: "Marco"
+      fill_in :user_last_name, with: "Lebreton"
+      click_button "Créer"
+      expect(page).not_to have_content("déjà utilisé")
+      expect_page_title("Marco LEBRETON")
+      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to be(true)
+    end
+  end
 end
