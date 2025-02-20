@@ -180,7 +180,7 @@ module UsersHelper
   def user_merge_attribute_value(user, attribute, current_territory)
     return birth_date_and_age(user) if attribute == :birth_date
     return user.responsible&.full_name if attribute == :responsible_id
-    return formatted_user_notes(user, current_territory) if attribute == :notes
+    return formatted_user_notes(user, current_territory) if attribute == :annotation_content
     return user&.human_attribute_value(:logement) if attribute == :logement
 
     user.send(attribute)

@@ -67,4 +67,15 @@ RSpec.describe "Agent can delete user" do
     expect(page).to have_content("Les usagers ont été fusionnés")
     expect(page).to have_content("aalyah@damn.com")
   end
+
+  it "displays all fields" do
+    login_as(agent, scope: :agent)
+    visit new_admin_organisation_merge_users_path(organisation_id: organisation.id, user1_id: user1.id, user2_id: user2.id)
+    expect(page).to have_content("Notes 1")
+    expect(page).to have_content("Notes 2")
+    choose "Notes 2"
+    click_on "Fusionner"
+    expect(user1.reload.annotations.sole.content).to eq("Notes 2")
+    expect(user2.reload.annotations).to be_empty
+  end
 end

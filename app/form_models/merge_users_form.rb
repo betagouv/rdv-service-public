@@ -92,7 +92,11 @@ class MergeUsersForm
   end
 
   def values_for(attribute)
-    [user1&.send(attribute), user2&.send(attribute)]
+    if attribute == :annotation_content
+      [user1.annotation_for(@organisation.territory), user2.annotation_for(@organisation.territory)]
+    else
+      [user1&.send(attribute), user2&.send(attribute)]
+    end
   end
 
   def different_users?
