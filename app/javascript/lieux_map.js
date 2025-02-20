@@ -78,12 +78,13 @@ const setCounters = (lieux) => {
   }, {});
 
   for (const [counterName, count] of Object.entries(counts)) {
-    const counterElt = document.querySelector(`[data-target="map-counter"][data-counter-name="${counterName}"]`)
+    const counterElt = document.querySelector(`[data-target="map-counter"][data-group="${counterName}"]`)
     if (counterElt) counterElt.textContent = `(${count})`
   }
 }
 
 const displayLegendCircles = () => {
+  // on préfère définir les couleurs depuis le JS plutôt que dans le CSS pour qu’elles soient définies à un seul endroit
   Object.entries(MAP_COLORS).forEach(([group, color]) => {
     const circleElt = document.querySelector(`[data-target="map-legend-circle"][data-group="${group}"]`)
     if (circleElt) circleElt.style.backgroundColor = color
@@ -91,7 +92,6 @@ const displayLegendCircles = () => {
 }
 
 const moveHandler = (e, map) => {
-  console.log("in moveHandler")
   const region = e.currentTarget.dataset.region
   const bounds = {
     "guadeloupe": [[-61.8, 15.8], [-60.9, 16.5]],
