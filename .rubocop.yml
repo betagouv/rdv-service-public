@@ -11,8 +11,7 @@ AllCops:
     - "db/migrate/*good_job*.rb"
     - "scripts/screenshots/**/*"
   NewCops: enable
-  TargetRubyVersion: 3.4.2
-  ParserEngine: parser_prism
+  TargetRubyVersion: 3.3.7
   SuggestExtensions: false
 
 Bundler/OrderedGems:
