@@ -11,7 +11,7 @@ ul.rdv-stats-legend {
   margin: 0;
   padding-left: 0;
 
-  li.rdv-stats-legend-circle {
+  li {
     margin-left: 0;
     padding-left: 0;
     margin: 0;
@@ -19,22 +19,14 @@ ul.rdv-stats-legend {
     gap: 10px;
   }
 
-  li.rdv-stats-legend-circle:before {
+  li span.rdv-stats-legend-circle {
     flex-shrink: 0;
     content: "";
-    display: block;
+    background-color: transparent; // will be set through JS
     width: 20px;
     height: 20px;
     border-radius: 50%;
-  }
-  li.rdv-stats-legend-circle--mairies:before {
-    background-color: #2e4177;
-  }
-  li.rdv-stats-legend-circle--rdvsp:before {
-    background-color: #5fe0eb;
-  }
-  li.rdv-stats-legend-circle--rdvs:before {
-    background-color: #f983f1;
+    margin-top: 2px; // better alignment with legend text
   }
 }
 

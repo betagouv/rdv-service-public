@@ -1,3 +1,10 @@
+const MAP_COLORS = {
+  'RDV Solidarités': '#f983f1',
+  'RDV Service Public': '#5fe0eb',
+  'Mairie': '#2e4177',
+  'Autre': '#e55e5e',
+}
+
 const initMap = (mapElt, lieux) => {
   const map = new maplibregl.Map({
     container: mapElt,
@@ -32,10 +39,10 @@ const initMap = (mapElt, lieux) => {
         'circle-color': [
           'match',
           ['get', 'type_organisation'],
-          'RDV Solidarités', '#f983f1',
-          'RDV Service Public', '#5fe0eb',
-          'Mairie', '#2e4177',
-          '#e55e5e',
+          'RDV Solidarités', MAP_COLORS['RDV Solidarités'],
+          'RDV Service Public', MAP_COLORS['RDV Service Public'],
+          'Mairie', MAP_COLORS['Mairie'],
+          MAP_COLORS['Autre']
         ],
         'circle-radius': 4,
         'circle-stroke-width': 1,
@@ -75,6 +82,13 @@ const setCounters = (lieux) => {
   }
 }
 
+const displayLegendCircles = () => {
+  Object.entries(MAP_COLORS).forEach(([group, color]) => {
+    const circleElt = document.querySelector(`[data-target="map-legend-circle"][data-group="${group}"]`)
+    if (circleElt) circleElt.style.backgroundColor = color
+  })
+}
+
 window.addEventListener("load", () => {
   const mapElt = document.querySelector('[data-controller="stats-map"]')
   if (!mapElt) return
@@ -86,6 +100,7 @@ window.addEventListener("load", () => {
     })
     .then(lieux => {
       initMap(mapElt, lieux)
+      displayLegendCircles()
       setCounters(lieux)
     })
     .catch(error => {

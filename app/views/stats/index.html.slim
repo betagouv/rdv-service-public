@@ -26,24 +26,30 @@ p
           h2 Qui l’utilise ?
           .fr-mb-2w Légende
           ul.rdv-stats-legend
-            li.rdv-stats-legend-circle.rdv-stats-legend-circle--mairies
+            li.fr-mb-2w
+              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="Mairie"]
               div
                 div
                   |> Mairies avec dispositif de recueil
-                  span[data-target="map-counter" data-counter-name="Mairie"] &nbsp;
-                .fr-text--sm.rdv-color-text-mention-grey RDV Service Public
-            li.rdv-stats-legend-circle.rdv-stats-legend-circle--rdvsp
+                  span[data-target="map-counter" data-group="Mairie"] &nbsp;
+                .fr-text--sm.rdv-color-text-mention-grey.fr-mb-0
+                  | RDV Service Public
+            li.fr-mb-2w
+              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="RDV Service Public"]
               div
                 div
                   |> Services de l’État, Opérateurs publics, Collectivités
-                  span[data-target="map-counter" data-counter-name="RDV Service Public"] &nbsp;
-                .fr-text--sm.rdv-color-text-mention-grey RDV Service Public
-            li.rdv-stats-legend-circle.rdv-stats-legend-circle--rdvs
+                  span[data-target="map-counter" data-group="RDV Service Public"] &nbsp;
+                .fr-text--sm.rdv-color-text-mention-grey.fr-mb-0
+                  | RDV Service Public
+            li.fr-mb-2w
+              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="RDV Solidarités"]
               div
                 div
                   |> Maison des solidarités, Points justice, Médiation numérique
-                  span[data-target="map-counter" data-counter-name="RDV Solidarités"] &nbsp;
-                .fr-text--sm.rdv-color-text-mention-grey RDV Solidarités, RDV Aide Numérique
+                  span[data-target="map-counter" data-group="RDV Solidarités"] &nbsp;
+                .fr-text--sm.rdv-color-text-mention-grey.fr-mb-0
+                  | RDV Solidarités, RDV Aide Numérique
 
   .fr-col-12.fr-col-md-8
     .stats-map[data-controller="stats-map" data-url=stats_lieux_map_data_path]
