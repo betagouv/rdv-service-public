@@ -7,7 +7,11 @@ class TransferEmailReplyJob < ApplicationJob
   self.log_arguments = false
 
   def self.reply_address_for_rdv(rdv)
-    return nil if rdv.domain.reply_host_name.nil?
+    if rdv.domain.reply_host_name.nil?
+      # ça se produire notamment sur les review app, il faudrait peut-être raise pour être avertis
+      # des autres cas où ça ne devrait pas se produire
+      return rdv.domain.support_email
+    end
 
     "rdv+#{rdv.uuid}@#{rdv.domain.reply_host_name}"
   end
