@@ -1,7 +1,7 @@
 - if context.unique_motifs_by_name_and_location_type.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h2 Sélectionnez le service avec qui vous voulez prendre un RDV&nbsp;:
+  = dsfr_stepper(title: "Sélectionnez le service avec qui vous voulez prendre un RDV", value: 1, max: 7, next_title: "Sélectionnez le motif de votre RDV")
   - context.services.each do |service|
     .fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
       .fr-card__body

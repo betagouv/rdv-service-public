@@ -1,10 +1,8 @@
 = render "prescription_banner"
 
-= render "banner", context: @context
-
 / Adress selection partials have multiple sections
 - if @context.current_step == :address_selection
-  // On fait du spécifique pour la bannière de la page de sélection d'adresse en attendant qu’on fasse la refonte au DSFR
+  = render "banner", context: @context
   = render(current_domain.address_selection_template_name, context: @context)
 - else
   .fr-container
