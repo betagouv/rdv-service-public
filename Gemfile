@@ -177,8 +177,6 @@ group :development do
   gem "active_record_doctor"
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
-  # Required by rubocop for Ruby > 3.4
-  gem "prism"
   # Automatic Ruby code style checking tool.
   gem "rubocop", require: false
   # Code style checking for RSpec files
