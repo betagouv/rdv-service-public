@@ -22,17 +22,14 @@ Typhoeus.before do |request|
 end
 
 Typhoeus.before do |request|
-  filter_secrets_from_body = lambda do |body|
-    body.to_s.gsub(InclusionConnect::IC_CLIENT_SECRET || "", "filtered")
-  end
-
   crumb = Sentry::Breadcrumb.new(
     message: "HTTP request",
     data: {
       method: request.options[:method],
       url: request.url,
       headers: request.options[:headers],
-      body: filter_secrets_from_body.call(request.encoded_body),
+      # TODO: filtrer toutes les variables d'env ici ?
+      body: request.encoded_body.to_s,
     }
   )
   Sentry.add_breadcrumb(crumb)
