@@ -16,9 +16,6 @@ RSpec.describe "Agent can delete user" do
   let!(:user_profile1) do
     create(:user_profile, user: user1, organisation: organisation)
   end
-  let!(:user_annotations1) do
-    create(:annotation, user: user1, territory: territory, content: "Notes 1")
-  end
   let!(:user2) do
     create(
       :user,
@@ -30,9 +27,6 @@ RSpec.describe "Agent can delete user" do
       organisations: [organisation],
       logement: "proprietaire"
     )
-  end
-  let!(:user_annotations2) do
-    create(:annotation, user: user2, territory: territory, content: "Notes 2")
   end
 
   it "normal", js: true do
@@ -69,6 +63,9 @@ RSpec.describe "Agent can delete user" do
   end
 
   it "displays all fields" do
+    create(:annotation, user: user1, territory: territory, content: "Notes 1")
+    create(:annotation, user: user2, territory: territory, content: "Notes 2")
+
     login_as(agent, scope: :agent)
     visit new_admin_organisation_merge_users_path(organisation_id: organisation.id, user1_id: user1.id, user2_id: user2.id)
     expect(page).to have_content("Notes 1")

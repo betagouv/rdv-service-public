@@ -21,7 +21,7 @@ ul.list-unstyled.mb-5
       | En attente de confirmation pour #{user.unconfirmed_email}
 
   - if current_territory.enable_notes_field?
-    li.mb-2= object_attribute_tag(user, :notes, formatted_user_notes(user, current_territory))
+    li.mb-2= object_attribute_tag(user, :annotation_content, formatted_user_notes(user, current_territory).to_s)
 
 - if current_territory.any_social_field_enabled?
   h4.card-title.mb-3 Informations sociales
