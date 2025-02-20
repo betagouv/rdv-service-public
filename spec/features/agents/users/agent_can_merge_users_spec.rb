@@ -76,6 +76,7 @@ RSpec.describe "Agent can delete user" do
     choose "Notes 2"
     click_on "Fusionner"
     expect(user1.reload.annotations.sole.content).to eq("Notes 2")
+    expect(user2.reload.deleted_at).to be_present
     expect(user2.reload.annotations).to be_empty
   end
 end
