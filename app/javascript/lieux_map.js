@@ -2,10 +2,7 @@ const initMap = (mapElt, lieux) => {
   const map = new maplibregl.Map({
     container: mapElt,
     style: 'https://openmaptiles.data.gouv.fr/styles/positron/style.json',
-    bounds: [
-      [-5.3, 41.3],
-      [9.8, 51.1]
-    ],
+    bounds: [[-5.3, 41.3], [9.8, 51.1]], // France métropolitaine
     fitBoundsOptions: { padding: 20 },
   })
 
@@ -35,9 +32,9 @@ const initMap = (mapElt, lieux) => {
         'circle-color': [
           'match',
           ['get', 'type_organisation'],
-          'RDV Solidarités', '#f28cb1',
-          'RDV Service Public', '#3bb2d0',
-          'Mairie', '#223b53',
+          'RDV Solidarités', '#f983f1',
+          'RDV Service Public', '#5fe0eb',
+          'Mairie', '#2e4177',
           '#e55e5e',
         ],
         'circle-radius': 4,
@@ -72,16 +69,10 @@ const setCounters = (lieux) => {
     return acc;
   }, {});
 
-  for (const [orgaType, count] of Object.entries(counts)) {
-    const orgaKey = {
-      "RDV Solidarités": "rdvs",
-      "RDV Service Public": "rdvsp",
-      "Mairie": "mairies"
-    }[orgaType]
-    if (!orgaKey) continue
-
-    const counterElt = document.querySelector(`[data-target="map-counter-${orgaKey}"]`)
-    if (counterElt) counterElt.textContent = `(${count})`
+  for (const [counterName, count] of Object.entries(counts)) {
+    document
+      .querySelector(`[data-target="map-counter"][data-counter-name="${counterName}"]`)
+      &.counterElt.textContent = `(${count})`
   }
 }
 
