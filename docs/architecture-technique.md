@@ -89,7 +89,7 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 ##### Webhooks
 
 L'application permet aussi de définir des webhooks sortants, et donc d'appeler en HTTPS un service externe
-lors de la création, modification ou suppression de certaines données applicatives. 
+lors de la création, modification ou suppression de certaines données applicatives.
 
 Nous savons que les webhooks sont
 utilisés pour gérer une synchronisation de calendrier dans :
@@ -301,14 +301,14 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 Les serveurs (applicatif et base de données) sont gérés par Scalingo. Scalingo ne fournit pas de système de rôle : soit
 on a accès à une app, soit on ne l'a pas.
 
-Nous avons actuellement 6 apps Scalingo, les trois premières pour le métier, les trois autres pour le tooling :
-
-- `osc-secnum-fr1/production-rdv-solidarites`
-- `osc-secnum-fr1/production-rdv-mairie`
-- `osc-secnum-fr1/demo-rdv-solidarites`
-- `osc-secnum-fr1/rdv-service-public-etl`
-- `osc-secnum-fr1/rdv-service-public-etl-staging`
-- `osc-secnum-fr1/rdv-service-public-metabase`
+Nous avons les applications suivantes :
+- `osc-secnum-fr1/production-rdv-solidarites` : appli métier de production
+- `osc-secnum-fr1/production-rdv-mairie` : appli métier de production
+- `osc-secnum-fr1/demo-rdv-solidarites` : appli métier de préproduction
+- `osc-secnum-fr1/staging-rdv-service-public` : appli métier de préproduction
+- `osc-secnum-fr1/rdv-service-public-etl` : appli de tooling de production
+- `osc-secnum-fr1/rdv-service-public-etl-staging` : appli de tooling de préproduction
+- `osc-secnum-fr1/rdv-service-public-metabase` : appli de tooling de production
 
 Le fait d'avoir accès à une app Scalingo donne les droits suivants :
 
