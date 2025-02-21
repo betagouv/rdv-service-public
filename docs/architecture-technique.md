@@ -514,8 +514,7 @@ Nous avons également activé CodeQL sur notre dépot GitHub. Cet outil permet d
 
 ### Intégrité
 
-Des backups de nos bases de données Postgres et Redis sont faîtes automatiquement par Scalingo. Ces backups sont
-créés quotidiennement et gardés 1 an.
+Des backups de nos bases de données Postgres et Redis sont faîtes automatiquement par Scalingo. Ces backups sont créés quotidiennement et [conservés 1 an](https://doc.scalingo.com/databases/backup-policies#retention-policy-for-scheduled-backups).
 
 Nous les testons régulièrement en les téléchargeant et en les chargeant dans notre environnement local.
 
@@ -524,7 +523,13 @@ de cluster avec 2 nodes, qui permet un failover automatique en cas de plantage d
 
 ### Confidentialité
 
-**L'application est initialement conçue pour la prise de RDV dans le milieu médico-social. Nous manipulons donc des données médicales.**
+**L'application est initialement conçue pour la prise de RDV dans le milieu médico-social. Cependant, les données liées au rendez-vous ne sont pas des données de santé.**
+Numéricité a étudié cette question, et rédigé une note sur le sujet qui arrive à la conclusion suivante :
+
+> Est-ce que RDV Service Public traite des données de santé ?
+
+> Non, eu égard aux éléments susvisés, le service numérique traite les données relatives aux comptes des agents publics et les données relatives aux prises de rendez-vous, donc uniquement des données à caractère personnel. Les données relatives aux rendez-vous ne permettent pas d’identifier la pathologie ou l’état de santé des personnes concernées (qui peuvent d’ailleurs prendre un rendez-vous pour une autre personne).
+
 
 Parmi les données que nous manipulons, les plus critiques sont :
 - les coordonnées des usager⋅es
