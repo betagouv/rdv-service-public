@@ -13,14 +13,14 @@ RSpec.describe ParticipationsExportJob do
 
     it "prevents agent from exporting an org in which she does not belong" do
       agents_org = create(:organisation)
+      agent = create(:agent, admin_role_in_organisations: [agents_org])
+      agents_rdv = create(:rdv, organisation: agents_org)
       not_agents_org = create(:organisation)
-      agent = create(:agent, organisations: [agents_org])
+      _not_agents_rdv = create(:rdv, organisation: not_agents_org)
 
-      described_class.perform_later(agent: agent, organisation_ids: [agents_org.id, not_agents_org.id], options: {})
-      expect do
-        perform_enqueued_jobs
-      end.to change(sentry_events, :size).by(1)
-      expect(sentry_events.last.exception.values.first.value).to eq("Agent does not belong to all requested organisation(s) (RuntimeError)")
+      job = described_class.new
+      job.perform(agent: agent, options: { scoped_organisation_ids: [agents_org.id, not_agents_org.id] })
+      expect(job.rdvs.map(&:id)).to contain_exactly(agents_rdv.id)
     end
   end
 end

@@ -6,7 +6,7 @@ RSpec.describe RdvsExportJob do
       agent = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
 
-      described_class.perform_now(agent: agent, organisation_ids: [organisation.id, other_organisation.id], options: {})
+      described_class.perform_now(agent: agent, options: { scoped_organisation_ids: [organisation.id, other_organisation.id] })
 
       expect { perform_enqueued_jobs }.to have_enqueued_mail(Agents::ExportMailer, :rdv_export)
       expect(Export.last.file_name).to eq("export-rdv-2022-09-14.xls")
@@ -21,7 +21,7 @@ RSpec.describe RdvsExportJob do
       agent = create(:agent, admin_role_in_organisations: [organisation])
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
 
-      described_class.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
+      described_class.perform_now(agent: agent, options: { scoped_organisation_ids: [organisation.id] })
 
       # Perform batch of jobs and callback job
       expect { perform_enqueued_jobs }.to have_enqueued_mail
@@ -33,23 +33,17 @@ RSpec.describe RdvsExportJob do
       expect(email.html_part.body.to_s).to include("Votre export est prêt")
     end
 
-    it "prevents agent from exporting an org in which she does not belong" do
+    it "does not export rdvs from an org in which agent does not belong" do
       agents_org = create(:organisation)
+      agent = create(:agent, admin_role_in_organisations: [agents_org])
+      agents_rdv = create(:rdv, organisation: agents_org)
       not_agents_org = create(:organisation)
-      agent = create(:agent, organisations: [agents_org])
+      _not_agents_rdv = create(:rdv, organisation: not_agents_org)
 
-      expect do
-        described_class.perform_now(agent: agent, organisation_ids: [agents_org.id, not_agents_org.id], options: {})
-      end.to change(sentry_events, :size).by(1)
-      expect(sentry_events.last.exception.values.first.value).to eq("Agent does not belong to all requested organisation(s) (RuntimeError)")
-    end
-  end
+      job = described_class.new
+      job.perform(agent: agent, options: { scoped_organisation_ids: [agents_org.id, not_agents_org.id] })
 
-  def expect_zipped_attached_xls(expected_file_name:)
-    attachment = ActionMailer::Base.deliveries.last.attachments.first
-    expect(attachment.filename).to eq("#{expected_file_name}.zip")
-    Zip::File.open_buffer(attachment.body.raw_source) do |zip_file|
-      expect(zip_file.map(&:name)).to eq([expected_file_name])
+      expect(job.rdvs.map(&:id)).to contain_exactly(agents_rdv.id)
     end
   end
 end

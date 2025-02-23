@@ -6,12 +6,17 @@ class Admin::RdvsController < AgentAuthController
   before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner export participations_export]
 
   def index
-    skip_policy_scope # les policies sont appliquées dans Admin::RdvSearchForm
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
-    @form = Admin::RdvSearchForm.new(rdv_search_options.merge(pundit_user:))
-    @rdvs = @form.get_rdvs.order(order).page(page_number).per(10)
+    @form = Admin::RdvSearchForm.new(
+      **rdv_search_options,
+      rdv_scope: policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope),
+      user_scope: policy_scope(User, policy_scope_class: Agent::UserPolicy::TerritoryScope),
+      agent_scope: policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope),
+      organisation_scope: policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
+    )
+    @rdvs = @form.rdvs.order(order).page(page_number).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
     # parce que ça fait un sort et beaucoup de left outer joins

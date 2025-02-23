@@ -1,18 +1,27 @@
 class ParticipationsExportJob < ExportJob
-  def perform(agent:, options:)
-    # Admin::RdvSearchForm est responsable d’appliquer les policies
-    rdvs = Admin::RdvSearchForm
-      .new(options.merge(pundit_user: agent))
-      .get_rdvs
-      .order(starts_at: :desc)
+  include Pundit::Authorization
 
-    participations = Participation.where(rdv_id: rdvs.select(:id)).order(id: :desc)
+  attr_reader :rdvs # for tests
+
+  def perform(agent:, options:)
+    @agent = agent
+    @form = Admin::RdvSearchForm
+      .new(
+        **options,
+        rdv_scope: policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope),
+        user_scope: policy_scope(User, policy_scope_class: Agent::UserPolicy::TerritoryScope),
+        agent_scope: policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope),
+        organisation_scope: policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
+      )
+
+    @rdvs = @form.rdvs.order(starts_at: :desc)
+    participations = Participation.where(rdv_id: @rdvs.select(:id)).order(id: :desc)
 
     export = Export.create!(
       export_type: Export::PARTICIPATIONS_EXPORT,
       agent: agent,
       file_name: file_name,
-      organisation_ids: organisation_ids,
+      organisation_ids: @form.scoped_organisation_ids,
       options: options
     )
 
@@ -28,6 +37,10 @@ class ParticipationsExportJob < ExportJob
   end
 
   private
+
+  def pundit_user
+    AgentOrganisationContext.new(@agent, @agent.organisations.first)
+  end
 
   def file_name
     @file_name ||= "export-rdvs-user-#{Time.zone.now.strftime('%Y-%m-%d')}.xls"

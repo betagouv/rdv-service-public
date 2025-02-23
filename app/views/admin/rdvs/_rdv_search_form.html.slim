@@ -3,11 +3,9 @@
     .row
       .col-md-6
         = f.input :scoped_organisation_ids, collection: current_agent.organisations.map {[_1.name, _1.id]}.unshift(["Toutes", 0]), \
-                selected: @selected_organisations_ids, \
                 label: "Organisation", \
                 input_html: { \
                   class: "select2-input", \
-                  onchange: "this.form.submit()", \
                   multiple: true, \
                 }, \
                 wrapper: "horizontal_form"
