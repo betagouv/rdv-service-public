@@ -72,11 +72,6 @@
       "value": "change_me_if_needed"
     },
 
-    "INCLUSION_CONNECT_CLIENT_SECRET": {
-      "description": "Notre secret partagé avec InclusionConnect. Inutile sur une review app puisque IC n'aura pas la bonne URL de callback.",
-      "value": "change_me_if_needed"
-    },
-
     "BREVO_INBOUND_PASSWORD": {
       "description": "Cette valeur est passée en paramètre dans le webhook que nous avons défini chez SendInBlue. C'est un secret, donc non hérité en review app.",
       "value": "change_me_if_needed"

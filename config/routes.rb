@@ -9,9 +9,6 @@ Rails.application.routes.draw do
   get "agent_connect/auth" => "agent_connect#auth"
   get "agent_connect/callback" => "agent_connect#callback"
 
-  get "inclusion_connect/auth" => "inclusion_connect#auth"
-  get "inclusion_connect/callback" => "inclusion_connect#callback"
-
   devise_for :super_admins # necessary for helpers like super_admin_signed_in?
   devise_scope :super_admin do
     get "omniauth/github/callback" => "omniauth_callbacks#github"

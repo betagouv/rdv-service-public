@@ -1,6 +1,13 @@
 RSpec.describe "rdv-insertion API: users" do
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation_rdv_insertion]) }
-  let(:user) { create(:user, :with_no_email, notification_email: "notif@example.com", organisations: [organisation_rdv_insertion, other_organisation_rdv_insertion, organisation_rdv_solidarites]) }
+  let(:user) do
+    create(
+      :user,
+      :without_devise_email,
+      notification_email: "notif@example.com",
+      organisations: [organisation_rdv_insertion, other_organisation_rdv_insertion, organisation_rdv_solidarites]
+    )
+  end
 
   let(:shared_secret) { "S3cr3T" }
   let(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }

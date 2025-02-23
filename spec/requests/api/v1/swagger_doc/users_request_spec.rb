@@ -248,7 +248,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       parameter name: "last_name", in: :query, type: :string, description: "Nom", example: "Silverhand", required: false
       parameter name: "notification_email", in: :query, type: :string, description: "Email de notification", required: false, document: false
 
-      let(:user) { create(:user, :with_no_email, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+      let(:user) { create(:user, :without_devise_email, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
       let(:user_id) { user.id }
 
       before do

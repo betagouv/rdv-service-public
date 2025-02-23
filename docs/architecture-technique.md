@@ -107,7 +107,6 @@ plusieurs tables dans la base de données de RDV Insertion.
 |------------|------------------|---------------|------|---------------------|--------------------------------|
 | Navigateur | FranceConnect    | HTTPS (OAuth) | 443  | Paris, France       | smtp-relay.sendinblue.com      |
 | Navigateur | ProConnect       | HTTPS (OAuth) | 443  | France              | auth.agentconnect.gouv.fr      |
-| Navigateur | InclusionConnect | HTTPS (OAuth) | 443  | France              | connect.inclusion.beta.gouv.fr |
 | Navigateur | GitHub           | HTTPS (OAuth) | 443  | USA                 | github.com                     |
 
 ### Inventaire des dépendances
@@ -231,14 +230,12 @@ C4Container
     Person(user, "Utilisateur⋅ice", "Agent / usager")
 
     System_Ext(france_connect, "FranceConnect", "")
-    System_Ext(inclusion_connect, "InclusionConnect", "")
     System_Ext(oauth_microsoft, "Oauth Microsoft", "")
     System_Ext(oauth_github, "Oauth GitHub", "")
 
     Rel(user, web_app, "HTTPS redirect")
 
     Rel(user, france_connect, "HTTPS redirect")
-    Rel(user, inclusion_connect, "HTTPS redirect")
     Rel(user, oauth_microsoft, "HTTPS redirect")
     Rel(user, oauth_github, "HTTPS redirect")
 ```
@@ -329,7 +326,6 @@ Le fait d'avoir accès à une app Scalingo donne les droits suivants :
   - credentials de Postgres
   - credentials de Netsize (envoi de SMS)
   - credentials FranceConnect
-  - credentials InclusionConnect
   - credentials GitHub
   - master key Rails (permettant de déchiffrer les colonnes chiffrées en base)
   - credentials Brevo (ex Sendinblue)
@@ -401,8 +397,7 @@ Ces niveaux d'accès sont gérés par les administrateurs locaux de la solution 
 utilisatrices (départements, mairies).
 
 La connexion à un profil agent est faite par email + mot de passe. Les mots de passes sont stockés salés et chiffrés
-(en utilisant la librairie Devise qui utilise Bcrypt). Une connexion via InclusionConnect est aussi proposée : un compte est alors
-créé ou relié si l'e-mail existe déjà dans notre base agents.
+(en utilisant une Devise qui utilise Bcrypt).
 
 Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
 
