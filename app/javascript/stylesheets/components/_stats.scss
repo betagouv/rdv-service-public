@@ -5,3 +5,36 @@
     height: 2300px;
   }
 }
+
+ul.rdv-stats-legend {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+
+  li {
+    margin-left: 0;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    gap: 10px;
+  }
+
+  li span.rdv-stats-legend-circle {
+    flex-shrink: 0;
+    content: "";
+    background-color: transparent; // will be set through JS
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-top: 2px; // better alignment with legend text
+  }
+}
+
+.stats-map {
+  border: 1px solid var(--border-default-grey);
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

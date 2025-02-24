@@ -27,7 +27,7 @@ FactoryBot.define do
     trait :unconfirmed do
       confirmed_at { nil }
     end
-    trait :with_no_email do
+    trait :without_devise_email do
       email { nil }
     end
     trait :with_no_phone_number do
