@@ -10,14 +10,14 @@ class Admin::RdvsController < AgentAuthController
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
-    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope)
-      .select("DISTINCT ON (rdvs.id) rdvs.*") # dédoublonnage des RDV renvoyés par Agent::RdvPolicy::Scope
+    @rdvs_ids_paginated = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope)
+      .select("DISTINCT ON (rdvs.id) rdvs.id") # dédoublonnage des RDV renvoyés par Agent::RdvPolicy::Scope
       .search_for(@scoped_organisations, parsed_params)
       .order(order).page(page_number).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
     # parce que ça fait un sort et beaucoup de left outer joins
-    @rdvs_in_page = Rdv.where(id: @rdvs.pluck(:id)).order(order).includes(
+    @rdvs_in_page = Rdv.where(id: @rdvs_ids_paginated.pluck(:id)).order(order).includes(
       [
         :agents_rdvs, :organisation, :lieu, :motif,
         {
