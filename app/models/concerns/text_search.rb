@@ -38,8 +38,11 @@ module TextSearch
 
       term = clean_search_term(term)
 
-      if columns.map(&:name).any? { |column| column =~ /email/i } && looks_like_email(term)
-        where("\"#{table_name}\".\"email\" LIKE ? OR \"#{table_name}\".\"notification_email\" LIKE ?", "#{term}%", "#{term}%")
+      email_columns = columns.map(&:name).intersection(%w[email notification_email])
+      if email_columns.any? && looks_like_email(term)
+        email_columns.map do |email_column|
+          where("\"#{table_name}\".\"#{email_column}\" LIKE ?", "#{term}%")
+        end.reduce(:or)
       else
         full_text_search(term)
       end
