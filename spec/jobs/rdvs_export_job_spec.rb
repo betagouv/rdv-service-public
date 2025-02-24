@@ -44,12 +44,4 @@ RSpec.describe RdvsExportJob do
       expect(sentry_events.last.exception.values.first.value).to eq("Agent does not belong to all requested organisation(s) (RuntimeError)")
     end
   end
-
-  def expect_zipped_attached_xls(expected_file_name:)
-    attachment = ActionMailer::Base.deliveries.last.attachments.first
-    expect(attachment.filename).to eq("#{expected_file_name}.zip")
-    Zip::File.open_buffer(attachment.body.raw_source) do |zip_file|
-      expect(zip_file.map(&:name)).to eq([expected_file_name])
-    end
-  end
 end
