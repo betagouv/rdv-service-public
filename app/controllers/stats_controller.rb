@@ -3,6 +3,15 @@ class StatsController < ApplicationController
 
   def index; end
 
+  def lieux_map_data
+    query = Rails.root.join("app/lib/lieux_map_query.sql").read
+    res_body = Rails.cache.fetch("lieux_map_data", expires_in: 24.hours) { MetabaseApi.sql_query(query) }
+    json = JSON.parse(res_body)
+    render(json:)
+  rescue MetabaseApi::Error => e
+    render(json: { error: e.message }, status: :internal_server_error)
+  end
+
   def territories
     @territories = Territory.all
   end

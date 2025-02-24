@@ -84,6 +84,7 @@ Rails.application.routes.draw do
     get :territory_rdvs
     get :territory_active_agents
     get :territory_receipts
+    get :lieux_map_data, format: :json
   end
 
   authenticate :user do
