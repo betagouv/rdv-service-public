@@ -217,6 +217,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
           let!(:"organisation_ids[]") { [organisation1.id] }
 
           it { expect(parsed_response_body["creneau_availability"]).to be_truthy }
+          it { expect(parsed_response_body["creneau_availability_count"]).to eq(5) }
         end
 
         context "Quand le user est spécifié" do
