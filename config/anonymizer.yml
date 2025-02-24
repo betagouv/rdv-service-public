@@ -49,6 +49,7 @@ tables:
       - city_name
       - case_number
       - logement
+      - notes
       - ants_pre_demande_number
       - franceconnect_openid_sub
       - encrypted_password
