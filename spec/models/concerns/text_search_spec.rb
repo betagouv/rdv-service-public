@@ -22,7 +22,7 @@ RSpec.describe TextSearch, type: :concern do
       expect(described_class.search_by_text("patoche@dur")).to eq([patricia])
     end
 
-    it "returns users that match with email" do
+    it "returns users that match with exact email" do
       create(:user, email: "jean@moustache.fr")
       patricia = create(:user, email: "patoche@duroy.fr")
       expect(described_class.search_by_text("patoche@duroy.fr")).to eq([patricia])
@@ -51,6 +51,26 @@ RSpec.describe TextSearch, type: :concern do
       match_in_first_name = create(:user, first_name: "Nicolas", last_name: "Marie")
       match_in_email = create(:user, first_name: "Frédéric", last_name: "Petit", email: "nicolas@example.com")
       expect(described_class.search_by_text("nicolas")).to eq([match_in_last_name, match_in_first_name, match_in_email])
+    end
+  end
+
+  describe(Agent) do
+    it "returns agents that match with first name" do
+      create(:agent, first_name: "jean")
+      martine = create(:agent, first_name: "martine")
+      expect(described_class.search_by_text("martine")).to eq([martine])
+    end
+
+    it "returns agent that match with partial email" do
+      create(:agent, email: "jean@moustache.fr")
+      martine = create(:agent, email: "martine@validay.fr")
+      expect(described_class.search_by_text("martine@val")).to eq([martine])
+    end
+
+    it "returns agent that match with exact email" do
+      create(:agent, email: "jean@moustache.fr")
+      martine = create(:agent, email: "martine@validay.fr")
+      expect(described_class.search_by_text("martine@validay.fr")).to eq([martine])
     end
   end
 end
