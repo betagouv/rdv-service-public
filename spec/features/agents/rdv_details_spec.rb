@@ -45,7 +45,7 @@ RSpec.describe "Agent can see RDV details correctly" do
     end
 
     context "The rdv has multiple users" do
-      let(:user2) { create(:user, :with_no_email, :with_no_phone_number, organisations: [organisation]) }
+      let(:user2) { create(:user, :without_devise_email, :with_no_phone_number, organisations: [organisation]) }
 
       before do
         create(:participation, user: user2, rdv: rdv)
