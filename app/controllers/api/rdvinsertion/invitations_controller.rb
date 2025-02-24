@@ -18,7 +18,7 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def number_of_creneaux_available
-    invitation_search_context.matching_motifs.sum do |motif|
+    @number_of_creneaux_available ||= invitation_search_context.matching_motifs.sum do |motif|
       if motif.phone?
         creneaux_available_for_motif(motif).size
       else
