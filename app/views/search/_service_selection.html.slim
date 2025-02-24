@@ -1,11 +1,33 @@
 - if context.unique_motifs_by_name_and_location_type.empty?
   = render "search/nothing_to_show", context: context
 - else
-  = dsfr_stepper(title: "Sélectionnez le service avec qui vous voulez prendre un RDV", value: 1, max: 7, next_title: "Sélectionnez le motif de votre RDV")
-  - context.services.each do |service|
-    .fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
-      .fr-card__body
-        .fr-card__content
-          .fr-card__title
-            = link_to service.name, prendre_rdv_path(context.query_params.merge(service_id: service.id))
+  = dsfr_stepper(title: "Sélectionnez le service avec lequel vous voulez prendre RDV puis le motif", value: 1, max: 6, next_title: "Sélectionnez le motif de votre RDV")
+  = dsfr_accordion(classes: "fr-mb-7v") do |accordion|
+    - context.services.each do |service|
+      = accordion.with_section(title: service.name) do
+        ul.fr-raw-list
+          - context.unique_motifs_by_name_and_location_type.each do |motif|
+            // TODO: Changer cette manière d’afficher les motifs par service. C’est pas très propre et pas très efficient mais c’est juste pour prototyper.
+            - if motif.service_id == service.id
+              li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
+                .fr-card__body
+                  .fr-card__content
+                    .fr-card__title
+                      = link_to motif.name, prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))
+                    .fr-card__start
+                      ul.fr-badges-group
+                        - case motif.location_type
+                        - when "phone"
+                          li.fr-badge.fr-badge--blue-cumulus.fr-icon-phone-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
+                        - when "home"
+                          li.fr-badge.fr-badge--blue-cumulus.fr-icon-home-4-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
+                        - when "public_office"
+                          li.fr-badge.fr-badge--blue-cumulus.fr-icon-building-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
+                        - when "visio"
+                          li.fr-badge.fr-badge--blue-cumulus.fr-icon-mac-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
+                        - else
+                          li.fr-badge.fr-badge--blue-cumulus = motif.human_attribute_value(:location_type)
+                          - if motif.collectif?
+                            li.fr-badge.fr-badge--purple-glycine.fr-icon-team-fill.fr-badge--icon-left = "RDV collectif"
+
 = render "search/referent_booking_card", context: context
