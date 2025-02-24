@@ -1,9 +1,7 @@
 .fr-container
   .fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
-    = dsfr_stepper(title: "Vos informations", value: 5, max: 7, next_title: "Choix de l’usager")
+    = dsfr_stepper(title: "Vos informations", value: 5, max: 6, next_title: "Confirmation")
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
         = render "users/users/form", user: current_user, rdv_wizard: @rdv_wizard, service: @rdv_wizard.service
-        .col
-          = link_to "Revenir en arrière", prendre_rdv_path(@rdv_wizard.to_query), class: "btn btn-link"

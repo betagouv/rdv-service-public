@@ -1,6 +1,6 @@
 .fr-container
   .fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
-    = dsfr_stepper(title: "Choix de l’usager", value: 6, max: 7, next_title: "Confirmation")
+    = dsfr_stepper(title: "Vos informations", value: 5, max: 6, next_title: "Confirmation")
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
@@ -31,8 +31,5 @@
                 input_html: { name: "rdv[user_ids][]" }
           .form-group
             = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?, ants_meeting_point_id: @rdv_wizard.lieu_id), data: { modal: true }
-          .row
-            .col
-              = link_to "Revenir en arrière", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), class: "btn btn-link"
-            .col
-              = f.button :submit, "Continuer"
+          .rdv-text-align-right
+            = f.button :submit, "Continuer"

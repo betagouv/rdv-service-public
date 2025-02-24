@@ -1,8 +1,18 @@
-= render "search/selected_motif_recap", context: context
 - if context.next_availability_by_motifs_organisations.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h3 Sélectionnez la structure avec laquelle prendre RDV&nbsp;:
+  = dsfr_stepper(title: "Sélectionnez la structure avec laquelle prendre RDV", value: 2, max: 6, next_title: "Sélectionnez un créneau de RDV")
+
+  .card
+    ul.list-group.list-group-flush
+      li.list-group-item
+        .row
+          .col
+            span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+            | Motif :&nbsp;
+            = context.first_matching_motif.name
+          .col-auto
+            = link_to "modifier", path_to_service_selection(params)
   ul.fr-raw-list
     - context.next_availability_by_motifs_organisations.each do |organisation, next_availability|
       li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w

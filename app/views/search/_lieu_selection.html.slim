@@ -1,8 +1,17 @@
-= render "search/selected_motif_recap", context: context
 - if context.shown_lieux.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h3 = t(".select_lieu")
+  = dsfr_stepper(title: "Sélectionnez un lieu de RDV", value: 3, max: 6, next_title: "Sélectionnez un créneau de RDV")
+  .card
+    ul.list-group.list-group-flush
+      li.list-group-item
+        .row
+          .col
+            span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+            | Motif :&nbsp;
+            = context.first_matching_motif.name
+          .col-auto
+            = link_to "modifier", path_to_service_selection(params)
   p = t(".lieu_available", count: context.shown_lieux.count)
   ul.fr-raw-list
     - context.next_availability_by_lieux.each do |lieu, next_availability|
