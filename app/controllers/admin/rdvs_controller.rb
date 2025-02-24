@@ -9,9 +9,10 @@ class Admin::RdvsController < AgentAuthController
     set_scoped_organisations
     @breadcrumb_page = params[:breadcrumb_page]
 
-    order = { starts_at: :asc }
+    order = [{ starts_at: :asc }, { id: :asc }]
+    distinct_on = "rdvs.starts_at, rdvs.id" # les clauses ORDER BY et DISTINCT ON doivent utiliser les mêmes colonnes
     @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope)
-      .select("DISTINCT ON (rdvs.id) rdvs.*") # dédoublonnage des RDV renvoyés par Agent::RdvPolicy::Scope
+      .select("DISTINCT ON (#{distinct_on}) rdvs.*") # dédoublonnage des RDV renvoyés par Agent::RdvPolicy::Scope
       .search_for(@scoped_organisations, parsed_params)
       .order(order).page(page_number).per(10)
 

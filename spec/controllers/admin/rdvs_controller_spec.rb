@@ -28,9 +28,10 @@ RSpec.describe Admin::RdvsController, type: :controller do
     end
 
     it "assign RDVS" do
-      _rdv = create(:rdv, agents: [agent], organisation: organisation, motif: motif)
+      rdv = create(:rdv, agents: [agent], organisation: organisation, motif: motif)
       get(:index, params: { organisation_id: organisation.id })
-      expect(assigns(:rdvs).total_count).to eq(2) # rdv & rdv_binome
+
+      expect(assigns(:rdvs)).to contain_exactly(rdv, rdv_binome)
     end
 
     it "assign form" do
