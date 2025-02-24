@@ -197,7 +197,7 @@ RSpec.describe MergeUsersService, type: :service do
 
     it "preserves target by default" do
       perform
-      expect(user_target.annotations.find_by(territory: organisation.territory).content).to eq("Sympa")
+      expect(user_target.annotation_for(organisation.territory)).to eq("Sympa")
       # TODO: voir ce qu'on fait pour les notes d'un autre territoire
     end
 
