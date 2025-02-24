@@ -1,16 +1,4 @@
-//TODO: Si on retient la fusion service/motif, supprimer cette étape
-
-= dsfr_stepper(title: "Sélectionnez le motif de votre RDV", value: 2, max: 7, next_title: "Sélectionnez la structure avec laquelle prendre RDV")
-.card
-  ul.list-group.list-group-flush
-    li.list-group-item
-      .row
-        .col
-          span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
-          | Service :&nbsp;
-          = context.service.name
-        .col-auto
-          = link_to "modifier", path_to_service_selection(params)
+= dsfr_stepper(title: "Sélectionnez le motif de votre RDV", value: 1, max: 6, next_title: "Sélectionnez le lieu de RDV")
 - if context.unique_motifs_by_name_and_location_type.empty?
   = render "search/nothing_to_show", context: context
 - else

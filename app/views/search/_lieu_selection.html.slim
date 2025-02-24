@@ -1,7 +1,7 @@
 - if context.shown_lieux.empty?
   = render "search/nothing_to_show", context: context
 - else
-  = dsfr_stepper(title: "Sélectionnez un lieu de RDV", value: 3, max: 6, next_title: "Sélectionnez un créneau de RDV")
+  = dsfr_stepper(title: "Sélectionnez un lieu de RDV", value: 2, max: 6, next_title: "Sélectionnez un créneau de RDV")
   .card
     ul.list-group.list-group-flush
       li.list-group-item
