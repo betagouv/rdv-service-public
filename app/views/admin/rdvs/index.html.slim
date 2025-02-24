@@ -30,7 +30,7 @@
     .card-body
       = render "rdv_search_form", form: @form
 
-    - if @rdvs_ids_paginated.total_count > 0
+    - if @rdvs.total_count > 0
       .card-footer
         div.d-flex.justify-content-end.align-items-center
           = button_to participations_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "Veuillez patienter…" do
@@ -38,10 +38,10 @@
             i.fa.fa-download>
           = button_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "Veuillez patienter…" do
             span
-              - if @rdvs_ids_paginated.total_count == 1
+              - if @rdvs.total_count == 1
                 |> Exporter le RDV en XLS
               - else
-                |> Exporter les #{@rdvs_ids_paginated.total_count} RDV en XLS
+                |> Exporter les #{@rdvs.total_count} RDV en XLS
 
             i.fa.fa-download>
 
@@ -51,18 +51,18 @@
 
   = render "admin/rdvs/rdv_visibility"
 
-  - if @rdvs_ids_paginated.total_count > 0
+  - if @rdvs.total_count > 0
     .mb-2
-      h4>= "#{@rdvs_ids_paginated.total_count} rendez-vous"
+      h4>= "#{@rdvs.total_count} rendez-vous"
       .custom-control.custom-switch
         input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
         label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
 
     .row.justify-content-center.pb-3
       .col-md-12.col-lg-8
-        .d-flex.justify-content-center= paginate @rdvs_ids_paginated, theme: "twitter-bootstrap-4"
+        .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
         = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
-        .d-flex.justify-content-center= paginate @rdvs_ids_paginated, theme: "twitter-bootstrap-4"
+        .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
   - else
     .row.justify-content-center.pb-3
       .col-md-12.col-lg-8
