@@ -25,8 +25,6 @@ RSpec.describe "Agent calendar displays rdvs and plages", js: true do
   end
 
   it "shows plages in weekly and monthly views" do
-    travel_to(Time.zone.parse("2025-02-17 16:00")) # on est lundi 17 février
-
     organisation = create(:organisation)
     agent = create(:agent, basic_role_in_organisations: [organisation])
     login_as(agent, scope: :agent)
@@ -36,7 +34,7 @@ RSpec.describe "Agent calendar displays rdvs and plages", js: true do
       :no_recurrence,
       agent: agent,
       organisation: organisation,
-      first_day: Date.new(2025, 2, 18), # la plage est ouverte pour demain mardi 18 février
+      first_day: Time.zone.now.beginning_of_week.monday + 1.day, # la plage est ouverte pour mardi de la semaine courante
       start_time: "09:00",
       end_time: "12:00",
       title: "Ceci est le libellé de la plage"
