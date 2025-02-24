@@ -10,7 +10,9 @@ class Admin::RdvsController < AgentAuthController
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
-    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).search_for(@scoped_organisations, parsed_params)
+    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope)
+      .select("DISTINCT ON (rdvs.id) rdvs.*") # dédoublonnage des RDV renvoyés par Agent::RdvPolicy::Scope
+      .search_for(@scoped_organisations, parsed_params)
       .order(order).page(page_number).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
