@@ -14,25 +14,16 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def creneau_available?
-    creneaux_available.any? { |creneau| creneau[:creneau_available] }
+    number_of_creneaux_available > 0
   end
 
   def number_of_creneaux_available
-    creneaux_available.sum { |creneau| creneau[:number_of_creneaux] }
-  end
-
-  def creneaux_available
-    @creneaux_available ||= invitation_search_context.matching_motifs.map do |motif|
-      number_of_creneaux = if motif.phone?
-                             creneaux_available_for_motif(motif).size
-                           else
-                             motif.lieux.sum { |lieu| creneaux_available_for_motif(motif, lieu).size }
-                           end
-
-      {
-        number_of_creneaux:,
-        creneau_available: number_of_creneaux > 0,
-      }
+    invitation_search_context.matching_motifs.sum do |motif|
+      if motif.phone?
+        creneaux_available_for_motif(motif).size
+      else
+        motif.lieux.sum { |lieu| creneaux_available_for_motif(motif, lieu).size }
+      end
     end
   end
 
