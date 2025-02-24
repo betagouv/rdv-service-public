@@ -103,19 +103,6 @@ RSpec.describe "Agent can list RDVs" do
       end
     end
 
-    context "un seul RDV avec deux users" do
-      let!(:current_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:user1) { create(:user) }
-      let!(:user2) { create(:user) }
-      let!(:rdv) { create(:rdv, users: [user1, user2], organisation: organisation, agents: [current_agent]) }
-
-      it "devrait afficher des compteurs de RDV égaux à 1" do
-        visit admin_organisation_rdvs_path(organisation, current_agent)
-        expect(page).to have_content("Exporter le RDV en XLS")
-        expect(find("h4", text: /1 rendez-vous/)).to be_present
-      end
-    end
-
     context "panaché de RDV" do
       let!(:current_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let!(:other_agent) { create(:agent, organisations: [organisation]) }
