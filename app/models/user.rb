@@ -267,6 +267,10 @@ class User < ApplicationRecord
     annotations.find_by(territory: territory)&.content
   end
 
+  def annotate!(content, territory:)
+    Annotation.upsert!(content, user: self, territory:)
+  end
+
   protected
 
   def generate_rdv_invitation_token

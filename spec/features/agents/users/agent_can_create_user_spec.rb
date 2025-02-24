@@ -24,7 +24,6 @@ RSpec.describe "Agent can create user" do
     expect_page_title("Marco LEBRETON")
 
     user = User.last
-    expect(user.notes).to be_blank
     expect(user.annotation_for(organisation.territory)).to eq "souhaite participer au prochain atelier collectif"
 
     expect(page).to have_no_content("Inviter")

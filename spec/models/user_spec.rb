@@ -365,46 +365,34 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "annotations" do
-    describe "user creation" do
-      it "creates an annotation if needed" do
-        organisation = create(:organisation)
-        user_with_notes = create(:user, notes: "Lorem ipsum", organisations: [organisation])
-        expect(user_with_notes.notes).to eq("Lorem ipsum")
-        expect(Annotation.where(user: user_with_notes).sole).to have_attributes(territory: organisation.territory, content: "Lorem ipsum")
-
-        expect { create(:user, notes: "", organisations: [organisation]) }.not_to change(Annotation, :count)
-      end
+  describe "annotate!" do
+    it "creates if no annotation exists" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      expect { user.annotate!("Lorem ipsum", territory: organisation.territory) }.to change(Annotation, :count).by(1)
     end
 
-    describe "user update" do
-      it "creates an annotation if notes appear" do
-        organisation = create(:organisation)
-        user = create(:user, notes: nil, organisations: [organisation])
-        expect(Annotation.count).to eq(0)
+    it "updates existing annotation" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      user.annotate!("Lorem ipsum", territory: organisation.territory)
 
-        expect { user.update!(notes: "Lorem ipsum") }.to change(Annotation, :count).by(1)
-        expect(Annotation.where(user: user).sole).to have_attributes(territory: organisation.territory, content: "Lorem ipsum")
-      end
+      expect { user.annotate!("dolor sit amet", territory: organisation.territory) }.to change { user.annotations.sole.content }.from("Lorem ipsum").to("dolor sit amet")
+    end
 
-      it "updates the annotation if the notes change" do
-        organisation = create(:organisation)
-        user = create(:user, notes: "Lorem ipsum", organisations: [organisation])
-        expect { user.update!(notes: "dolor sit amet") }.to change { Annotation.where(user: user).sole.reload.updated_at }
-        expect(Annotation.where(user: user).sole.content).to eq("dolor sit amet")
-      end
+    it "deletes an annotation when passed empty content" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      user.annotate!("Lorem ipsum", territory: organisation.territory)
 
-      it "deletes the annotation if the notes become blank" do
-        organisation = create(:organisation)
-        user = create(:user, notes: "Lorem ipsum", organisations: [organisation])
-        expect { user.update!(notes: "") }.to change { Annotation.where(user: user).first }.to(nil)
-      end
+      expect { user.annotate!(" ", territory: organisation.territory) }.to change { user.annotations.count }.by(-1)
     end
 
     describe "user anonymization" do
       it "deletes the annotations" do
         organisation = create(:organisation)
-        user = create(:user, notes: "Lorem ipsum", organisations: [organisation])
+        user = create(:user, organisations: [organisation])
+        user.annotate!("Lorem ipsum", territory: organisation.territory)
         expect(Annotation.where(user: user).sole.content).to eq("Lorem ipsum")
 
         user.soft_delete
@@ -421,7 +409,9 @@ RSpec.describe User, type: :model do
         organisation_b_1 = create(:organisation, territory: territory_b)
         organisation_b_2 = create(:organisation, territory: territory_b)
 
-        user = create(:user, notes: "Lorem ipsum", organisations: [organisation_a_1, organisation_a_2, organisation_b_1, organisation_b_2])
+        user = create(:user, organisations: [organisation_a_1, organisation_a_2, organisation_b_1, organisation_b_2])
+        user.annotate!("Infos du territoire A", territory: territory_a)
+        user.annotate!("Infos du territoire B", territory: territory_b)
         expect(Annotation.where(user: user).count).to eq(2)
 
         expect { UserProfile.find_by!(user: user, organisation: organisation_a_1).destroy! }.not_to change(Annotation, :count)
