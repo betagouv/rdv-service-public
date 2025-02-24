@@ -26,6 +26,7 @@ class Admin::UserForm
     user.transaction do
       if user.save
         user.annotate!(annotation_content, territory: current_territory)
+        true
       end
     end
   end
