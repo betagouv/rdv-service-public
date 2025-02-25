@@ -1,15 +1,15 @@
 / Component: display the user notification settings
   depending on :email :phone_number :notify_by_email and :notify_by_sms
 
-- if user.email.present?
+- if user.valid_email?
   - if user.notify_by_email?
     = boolean_tag(true) do
       div= t(".email_present_and_enabled")
-      code= user.email
+      code= user.preferred_email
   - else
     = boolean_tag(false) do
       div= t(".email_disabled")
-      code= user.email
+      code= user.preferred_email
 - else
   = boolean_tag(false) do
     = t(".email_absent")
