@@ -22,9 +22,23 @@ class MergeUsersService < BaseService
   private
 
   def merge_annotations
-    annotation_to_merge = @user_to_merge.annotations.find_by(territory: @organisation.territory)
-    @user_target.annotations.find_by(territory: @organisation.territory).update!(content: annotation_to_merge.content)
+    current_territory = @organisation.territory
+
+    annotation_to_merge = @user_to_merge.annotations.find_by(territory: current_territory)
+    @user_target.annotate!(annotation_to_merge.content, territory: current_territory)
     annotation_to_merge.destroy!
+
+    if @user_to_merge.territories - [current_territory] == @user_target.territories - [current_territory]
+      other_territories = @user_to_merge.territories - [current_territory]
+      other_territories.each do |other_territory|
+        annotation_to_merge = @user_to_merge.annotations.find_by(territory: other_territory)
+        next unless annotation_to_merge
+
+        new_content = "#{annotation_to_merge.content}\n#{@user_target.annotation_for(other_territory)}".strip
+        @user_target.annotate!(new_content, territory: other_territory)
+        annotation_to_merge.destroy!
+      end
+    end
   end
 
   def merge_user_attributes

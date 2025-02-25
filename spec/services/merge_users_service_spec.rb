@@ -190,12 +190,9 @@ RSpec.describe MergeUsersService, type: :service do
   end
 
   context "both users have annotations" do
-    before do
+    it "preserves target by default" do
       user_target.annotations.create!(territory: organisation.territory, content: "Sympa")
       user_to_merge.annotations.create!(territory: organisation.territory, content: "thiquement")
-    end
-
-    it "preserves target by default" do
       perform
       expect(user_target.annotation_for(organisation.territory)).to eq("Sympa")
       # TODO: voir ce qu'on fait pour les notes d'un autre territoire
@@ -205,8 +202,35 @@ RSpec.describe MergeUsersService, type: :service do
       let(:attributes_to_merge) { [:annotation_content] }
 
       it "overrides notes from merged user" do
+        user_target.annotations.create!(territory: organisation.territory, content: "Sympa")
+        user_to_merge.annotations.create!(territory: organisation.territory, content: "thiquement")
         perform
         expect(user_target.annotation_for(organisation.territory)).to eq("thiquement")
+      end
+    end
+
+    context "when both users have annotations in two territories" do
+      let(:attributes_to_merge) { [:annotation_content] }
+
+      let(:other_territory) { create(:territory) }
+      let(:organisation_in_other_territory) { create(:organisation, territory: other_territory) }
+
+      before do
+        user_to_merge.organisations << organisation_in_other_territory
+        user_target.organisations << organisation_in_other_territory
+
+        user_to_merge.annotations.create!(territory: organisation.territory,  content: "User to merge, current territory")
+        user_to_merge.annotations.create!(territory: other_territory,         content: "User to merge, other territory")
+
+        user_target.annotations.create!(territory: organisation.territory,    content: "User target, current territory")
+        user_target.annotations.create!(territory: other_territory,           content: "User target, other territory")
+      end
+
+      it "concatenates the distant territory's annotations" do
+        perform
+        expect(user_target.annotations.count).to eq(2)
+        expect(user_target.annotation_for(organisation.territory)).to eq("User to merge, current territory")
+        expect(user_target.annotation_for(other_territory)).to eq("User to merge, other territory\nUser target, other territory")
       end
     end
   end
