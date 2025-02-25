@@ -39,6 +39,10 @@ default: &default
   # For GoodJob container, pool size is GOOD_JOB_MAX_THREADS (5) + 3 (1 for LISTEN/NOTIFY, 2 for CRON)
   pool: <%= $PROGRAM_NAME.include?("good_job") ? ENV.fetch("GOOD_JOB_MAX_THREADS", 5).to_i + 3 : (ENV.fetch("RAILS_MAX_THREADS", 5).to_i) %>
 
+  # idle_timeout permet de définir au bout de combien de secondes une connexion inactive est fermée
+  # On espère qu'en diminuant cette valeur par rapport au default de Rails (300 secondes), on aura moins de connexions inutilisées, donc moins d'usage mémoire sur la DB
+  idle_timeout: <%=ENV.fetch("RAILS_IDLE_TIMEOUT", 300).to_i %>
+
 development:
   <<: *default
   database: lapin_development
