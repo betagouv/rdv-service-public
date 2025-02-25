@@ -1,7 +1,7 @@
 RSpec.describe "Agent can list RDVs" do
   let!(:organisation) { create(:organisation) }
   let!(:current_agent) { create(:agent, organisations: [organisation]) }
-  let!(:user) { create(:user).tap { _1.annotate!("Ma remarque", territory: organisation.territory) } }
+  let!(:user) { create(:user) }
 
   def user_profile_path(user)
     admin_organisation_user_path(organisation_id: organisation.id, id: user.id)
@@ -15,6 +15,7 @@ RSpec.describe "Agent can list RDVs" do
     organisation.territory.update!(enable_notes_field: true)
     motif = create(:motif, service: current_agent.services.first, organisation:)
     create(:rdv, organisation: organisation, agents: [current_agent], users: [user], motif: motif)
+    user.annotate!("Ma remarque", territory: organisation.territory)
 
     visit admin_organisation_rdvs_url(organisation, current_agent)
     expect(page).to have_content(user.full_name)
