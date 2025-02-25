@@ -6,7 +6,7 @@ class Redis
   POOL_TIMEOUT = 5 # amount of time to wait for a connection if none currently available in the pool
   REDIS_TIMEOUT = 5 # timeout for each individual connection, see https://github.com/redis/redis-rb?tab=readme-ov-file#timeouts
 
-  CONNECTION_POOL = ConnectionPool.new(size: ENV.fetch("RAILS_MAX_THREADS", 5), timeout: POOL_TIMEOUT) do
+  CONNECTION_POOL = ConnectionPool.new(size: ENV.fetch("RAILS_MAX_THREADS", 4), timeout: POOL_TIMEOUT) do
     redis_connection = new(url: Rails.configuration.x.redis_url, timeout: REDIS_TIMEOUT)
     Redis::Namespace.new(Rails.configuration.x.redis_namespace, redis: redis_connection)
   end
