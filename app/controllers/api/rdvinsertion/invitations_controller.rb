@@ -2,7 +2,13 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[address latitude longitude invitation_token]).freeze
 
   def creneau_availability
-    render json: { creneau_availability: creneau_available?, creneau_availability_count: number_of_creneaux_available }
+    payload = if params[:total_count] == "true"
+                { creneau_availability_count: }
+              else
+                { creneau_availability: creneau_available? }
+              end
+
+    render json: payload
   rescue StandardError => e
     render json: { error: e.message }, status: :internal_server_error
   end
@@ -13,16 +19,22 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
     @user ||= Invitation.new(invitation_link_hash).user
   end
 
-  def creneau_available?
-    number_of_creneaux_available > 0
+  def creneau_availability_count
+    invitation_search_context.matching_motifs.sum do |motif|
+      if motif.phone?
+        creneaux_available_for_motif(motif)
+      else
+        motif.lieux.sum { |lieu| creneaux_available_for_motif(motif, lieu) }
+      end
+    end
   end
 
-  def number_of_creneaux_available
-    @number_of_creneaux_available ||= invitation_search_context.matching_motifs.sum do |motif|
+  def creneau_available?
+    invitation_search_context.matching_motifs.any? do |motif|
       if motif.phone?
-        creneaux_available_for_motif(motif).size
+        creneaux_available_for_motif(motif).any?
       else
-        motif.lieux.sum { |lieu| creneaux_available_for_motif(motif, lieu).size }
+        motif.lieux.any? { |lieu| creneaux_available_for_motif(motif, lieu).any? }
       end
     end
   end
