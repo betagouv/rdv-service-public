@@ -228,9 +228,13 @@ RSpec.describe MergeUsersService, type: :service do
 
       it "concatenates the distant territory's annotations" do
         perform
-        expect(user_target.annotations.count).to eq(2)
+        expect(user_target.annotations.map(&:territory)).to contain_exactly(organisation.territory, other_territory)
         expect(user_target.annotation_for(organisation.territory)).to eq("User to merge, current territory")
-        expect(user_target.annotation_for(other_territory)).to eq("User to merge, other territory\nUser target, other territory")
+        expect(user_target.annotation_for(other_territory)).to eq("User target, other territory")
+        expect(user_to_merge.annotation_for(other_territory)).to eq("User to merge, other territory")
+
+        expect(user_to_merge.territories).to contain_exactly(other_territory)
+        expect(user_target.territories).to contain_exactly(organisation.territory, other_territory)
       end
     end
   end
