@@ -213,6 +213,8 @@ Je suppose que l’éxecution du serveur Rails de spec est complètement interro
 
 ## Nombre maximum de threads et de connexions en production
 
+### Nombre max de connexions ouvertes à la base de données PostgreSQL
+
 Le tableau ci-dessous présente le nombre de connexions maximum à la base de données PostgreSQL pouvant être ouverts.
 Il s’agit des chiffres pour l’instance historique RDV Solidarités.
 
@@ -224,7 +226,9 @@ Il s’agit des chiffres pour l’instance historique RDV Solidarités.
 | extra_connections_per_process | 0   | 3    | -               | doc de GoodJob         |
 | total_max_connections         | 120 | 22   | -               | -                      |
 
-Soit un total de 142 connexions simultanées possibles.
+Soit un total de 142 connexions à la base PostgreSQL ouvertes simultanées possibles.
+
+### Nombre max de threads ruby
 
 Le tableau ci-dessous présente le nombre de threads maximum pouvant être ouverts simultanémment.
 Il s’agit des chiffres pour l’instance historique RDV Solidarités.
@@ -236,6 +240,9 @@ Il s’agit des chiffres pour l’instance historique RDV Solidarités.
 | max_threads_count_per_process | 5   | 5    |
 | total_max_threads             | 120 | 10   |
 
+Aujourd’hui, le nombre de threads ruby web et de connexions à la DB ouvertes possibles est le même. Ce n’est pas strictement nécessaire, on pourrait baisser le nombre max de connexions ouvertes.
+
+### Comment obtenir ces chiffres ?
 
 Ces chiffres datent de Février 2025. On peut re-générer les chiffres ci-dessus en utilisant le script suivant :
 
