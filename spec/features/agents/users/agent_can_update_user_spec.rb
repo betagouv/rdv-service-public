@@ -42,10 +42,10 @@ RSpec.describe "Agent can update user" do
     context "when they are enabled" do
       let(:territory) { create(:territory, enable_notes_field: true, enable_caisse_affiliation_field: true) }
       let!(:annotation_in_current_territory) do
-        create(:annotation, user: user, territory: territory, content: "Remarques du territoire courant")
+        Annotation.create!(user: user, territory: territory, content: "Remarques du territoire courant")
       end
       let!(:annotation_in_other_territory) do
-        create(:annotation, user: user, territory: other_territory, content: "Remarques de l'autre territoire")
+        Annotation.create!(user: user, territory: other_territory, content: "Remarques de l'autre territoire")
       end
       let(:other_territory) { create(:territory) }
 

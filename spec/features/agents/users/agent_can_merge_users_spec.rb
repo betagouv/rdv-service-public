@@ -63,8 +63,8 @@ RSpec.describe "Agent can delete user" do
   end
 
   it "displays all fields" do
-    create(:annotation, user: user1, territory: territory, content: "Notes 1")
-    create(:annotation, user: user2, territory: territory, content: "Notes 2")
+    Annotation.create!(user: user1, territory: territory, content: "Notes 1")
+    Annotation.create!(user: user2, territory: territory, content: "Notes 2")
 
     login_as(agent, scope: :agent)
     visit new_admin_organisation_merge_users_path(organisation_id: organisation.id, user1_id: user1.id, user2_id: user2.id)
