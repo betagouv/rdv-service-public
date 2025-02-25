@@ -37,6 +37,9 @@ default: &default
   #
   #
   # For GoodJob container, pool size is GOOD_JOB_MAX_THREADS (5) + 3 (1 for LISTEN/NOTIFY, 2 for CRON)
+  #
+  # cf docs/4-notes-techniques.md pour une vue d’ensemble du nombre de threads et de connexions à
+  # la base de données
   pool: <%= $PROGRAM_NAME.include?("good_job") ? ENV.fetch("GOOD_JOB_MAX_THREADS", 5).to_i + 3 : (ENV.fetch("RAILS_MAX_THREADS", 5).to_i) %>
 
   # idle_timeout permet de définir au bout de combien de secondes une connexion inactive est fermée
