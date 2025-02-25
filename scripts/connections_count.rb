@@ -1,4 +1,5 @@
 # bundle exec rails runner scripts/connections_count.rb
+# WARNING: ce fichier contient des eval de code lu depuis des fichiers de config
 
 def display_ascii_table(headers, data)
   column_widths = headers.map.with_index do |header, index|
@@ -19,8 +20,7 @@ end
 
 prod_env_values = `scalingo --region osc-secnum-fr1 --app production-rdv-solidarites env`
   .split("\n")
-  .map { |line| line.split("=", 2).map(&:strip) }
-  .to_h
+  .to_h { |line| line.split("=", 2).map(&:strip) }
   .slice("RAILS_MAX_THREADS", "GOOD_JOB_MAX_THREADS", "WEB_CONCURRENCY")
 env_values = prod_env_values
 
@@ -38,7 +38,7 @@ puma_max_threads_count = File.read("config/puma.rb")
   .find { |line| line.include?("max_threads_count") }
   .sub("max_threads_count = ", "")
   .sub("ENV", "env_values")
-  .then { eval(_1) }
+  .then { eval(_1) } # rubocop:disable Security/Eval
 
 good_job_max_threads_count = File.read("config/initializers/good_job.rb")
   .lines
@@ -53,7 +53,7 @@ scalingo_workers_count = `scalingo --region osc-secnum-fr1 --app production-rdv-
   .lines
   .drop(3)
   .first(2)
-  .map { _1.split("|").map(&:strip) }
+  .map { _1.split("|").map(&:strip) } # rubocop:disable Style/MapToHash
   .to_h { [_1[1], _1[2].to_i] }
   .symbolize_keys
 
