@@ -22,9 +22,9 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   def creneau_availability_count
     invitation_search_context.matching_motifs.sum do |motif|
       if motif.phone?
-        creneaux_available_for_motif(motif)
+        creneaux_available_for_motif(motif).size
       else
-        motif.lieux.sum { |lieu| creneaux_available_for_motif(motif, lieu) }
+        motif.lieux.sum { |lieu| creneaux_available_for_motif(motif, lieu).size }
       end
     end
   end

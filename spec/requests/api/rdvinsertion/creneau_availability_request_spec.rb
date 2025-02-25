@@ -215,11 +215,15 @@ RSpec.describe "Available Creneaux Count for Invitation" do
 
         context "Avec un motif_category_shortname" do
           let!(:motif_category_short_name) { "rsa_orientation" }
-          let!(:total_count) { "true" }
           let!(:"organisation_ids[]") { [organisation1.id] }
 
           it { expect(parsed_response_body["creneau_availability"]).to be_truthy }
-          it { expect(parsed_response_body["creneau_availability_count"]).to eq(5) }
+
+          context "Avec le paramètre total_count" do
+            let!(:total_count) { "true" }
+
+            it { expect(parsed_response_body["creneau_availability_count"]).to eq(5) }
+          end
         end
 
         context "Quand le user est spécifié" do
