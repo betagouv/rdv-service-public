@@ -25,9 +25,23 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   # And also GoodJob doc: https://github.com/bensheldon/good_job#database-connections
-  # For web containers, pool size is puma's default number of threads, plus the number of threads defined by global_executor_concurrency
+  #
+  # Pour les containers web, on ouvre une connexion par thread puma.
+  # On utilise `load_async` à certains endroits, ce qui veut dire qu'un thread peut utiliser plusieurs connexions à la fois (voir global_executor_concurrency).
+  # Dans le scénario du pire, il est possible que tous les thread soient en train d'accéder à la base de données, et que certains d'entre eux soient en plus en train d'exécuter du code qui utilise `load_async`. Cependant, ce cas ne se produit jamais ou quasiment jamais. S'il a lieu, les thread attendront d'avoir une connexion disponible, ce qui peut causer un ralentissement de l'application, mais probablement pas assez pour générer un timeout.
+  # Les connexions ont un cout au niveau du server de base de données : chaque connexion utilise de la RAM, donc on essaye de ne pas trop en ouvrir.
+  # Pour savoir combien de connexions on utilise, on peut vérifier sur Scalingo via la page "Running queries" du dashboard postgres
+  # par exemple https://dashboard.scalingo.com/apps/osc-secnum-fr1/production-rdv-solidarites/db/postgresql/running-queries
+  #
+  # On pourrait même mieux utiliser le mécanisme de connection pool, et avoir moins de connexions que de threads.
+  #
+  #
   # For GoodJob container, pool size is GOOD_JOB_MAX_THREADS (5) + 3 (1 for LISTEN/NOTIFY, 2 for CRON)
-  pool: <%= $PROGRAM_NAME.include?("good_job") ? ENV.fetch("GOOD_JOB_MAX_THREADS", 5).to_i + 3 : (ENV.fetch("RAILS_MAX_THREADS", 5).to_i + 4) %>
+  pool: <%= $PROGRAM_NAME.include?("good_job") ? ENV.fetch("GOOD_JOB_MAX_THREADS", 5).to_i + 3 : (ENV.fetch("RAILS_MAX_THREADS", 5).to_i) %>
+
+  # idle_timeout permet de définir au bout de combien de secondes une connexion inactive est fermée
+  # On espère qu'en diminuant cette valeur par rapport au default de Rails (300 secondes), on aura moins de connexions inutilisées, donc moins d'usage mémoire sur la DB
+  idle_timeout: <%=ENV.fetch("RAILS_IDLE_TIMEOUT", 300).to_i %>
 
 development:
   <<: *default
