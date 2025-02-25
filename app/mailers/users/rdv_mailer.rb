@@ -47,7 +47,7 @@ class Users::RdvMailer < ApplicationMailer
   private
 
   def save_receipt(subject)
-    Receipt.create!(rdv: @rdv, user: @user, event: action_name, channel: :mail, result: :processed, email_address: @user.email, content: subject)
+    Receipt.create!(rdv: @rdv, user: @user, event: action_name, channel: :mail, result: :processed, email_address: @user.preferred_email, content: subject)
   end
 
   def domain
