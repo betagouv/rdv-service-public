@@ -16,7 +16,7 @@ class Admin::RdvWizardForm::Step2
     return unless rdv.motif.visio?
 
     can_receive_notifications = users.map(&:user_to_notify).any? do |user|
-      user.email.present? ||
+      user.valid_email? ||
         (user.phone_number.present? && PhoneNumberValidation.number_is_mobile?(user.phone_number))
     end
     return if can_receive_notifications

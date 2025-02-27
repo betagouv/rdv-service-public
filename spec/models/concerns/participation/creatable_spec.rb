@@ -7,10 +7,14 @@ RSpec.describe Participation::Creatable, type: :concern do
   describe "Participation create" do
     let(:agent) { create :agent }
     let(:user) { create :user }
+    let(:user2) { create :user, :without_devise_email, notification_email: "notif@email.fr" }
     let(:user3) { create :user }
     let!(:organisation) { create(:organisation) }
     let(:relative) do
       create(:user, :relative, :without_devise_email, responsible: user, first_name: "Petit", last_name: "Bébé")
+    end
+    let(:relative2) do
+      create(:user, :relative, :without_devise_email, responsible: user2, first_name: "Grand", last_name: "Bébé")
     end
     let(:rdv) { create :rdv, :collectif, :without_users, starts_at: Time.zone.tomorrow, agents: [agent], organisation: }
 
@@ -25,7 +29,7 @@ RSpec.describe Participation::Creatable, type: :concern do
       end
     end
 
-    describe "with notifications" do
+    describe "with notifications for devise email" do
       let(:participation1) { build(:participation, rdv: rdv, user: user) }
       let(:participation_relative) { build(:participation, rdv: rdv, user: relative) }
 
@@ -41,6 +45,28 @@ RSpec.describe Participation::Creatable, type: :concern do
         participation1.save!
         participation_relative.create_and_notify!(user)
         expect_notifications_sent_for(rdv, user, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect(rdv.reload.participations).to eq([participation_relative])
+        expect(participation1.participation_token).to be_nil
+      end
+    end
+
+    describe "with notifications for a notification email" do
+      let(:participation1) { build(:participation, rdv: rdv, user: user2) }
+      let(:participation_relative) { build(:participation, rdv: rdv, user: relative2) }
+
+      it "for self (user2)" do
+        participation1.create_and_notify!(user2)
+        expect_notifications_sent_for(rdv, user2, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect(rdv.reload.participations).to eq([participation1])
+        expect(participation1.participation_token).to eq("12345")
+      end
+
+      it "for a relative with existing participations" do
+        participation1.save!
+        participation_relative.create_and_notify!(user2)
+        expect_notifications_sent_for(rdv, user2, :rdv_created)
         expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.participations).to eq([participation_relative])
         expect(participation1.participation_token).to be_nil

@@ -59,7 +59,7 @@ ul.list-group.list-group-flush
       .row
         .col.ml-3
           span> ✉️ Email&nbsp;:
-          b>= current_user.email
+          b>= current_user.preferred_email
           span>= "(notifications par email #{current_user.notify_by_email? ? 'activées' :  'désactivées'})"
       .row
         .col.ml-3

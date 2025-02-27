@@ -3,11 +3,11 @@
 # Any libraries that use thread pools should be configured to match
 # the maximum value specified for Puma. Default is set to 5 threads for minimum
 # and maximum; this matches the default thread size of Active Record.
-#
 # cf docs/4-notes-techniques.md pour une vue d’ensemble du nombre de threads et de connexions à
 # la base de données
 #
-max_threads_count = ENV.fetch("RAILS_MAX_THREADS", 5)
+#
+max_threads_count = ENV.fetch("RAILS_MAX_THREADS", 4)
 min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }
 threads min_threads_count, max_threads_count
 
@@ -33,7 +33,7 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
-# workers ENV.fetch("WEB_CONCURRENCY") { 2 }
+workers ENV.fetch("WEB_CONCURRENCY", 3)
 
 # NOTE: Cette variable d’env est quand même respectée même quand la ligne au dessus est commentée !
 # Elle n’est actuellement pas définie sur les instances de production (2024-02-27)
