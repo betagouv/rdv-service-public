@@ -24,7 +24,7 @@
           ruby:
             user = participation.user
             phone_number = user.user_to_notify&.phone_number
-            email = user.user_to_notify&.email
+            email = user.user_to_notify&.preferred_email
           div
             span.font-weight-bold.lead
               = user

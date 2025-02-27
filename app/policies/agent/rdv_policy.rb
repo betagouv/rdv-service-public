@@ -139,12 +139,11 @@ class Agent::RdvPolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
+      # NOTE: IMPORTANTE: Ce scope peut renvoyer des RDV doublons à cause des INNER JOIN vers les participations et les agents.
       if current_agent.secretaire?
         scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
           .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
-
       else
-
         scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
           .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
           .joins(:motif, :agents_rdvs)
