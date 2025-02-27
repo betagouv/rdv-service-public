@@ -54,8 +54,24 @@
 
 // FLEX
 
+.rdv-flex-wrap-wrap {
+  flex-wrap: wrap;
+}
+
 .rdv-flex-wrap-wrap-reverse {
   flex-wrap: wrap-reverse;
+}
+
+.rdv-justify-content-center {
+  justify-content: center;
+}
+
+.rdv-align-items-baseline {
+  align-items: baseline;
+}
+
+.rdv-gap-1rem {
+  gap: 1rem;
 }
 
 // DIMENSIONS

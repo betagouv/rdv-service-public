@@ -130,10 +130,10 @@ La liste des librairies JS utilisée est disponible dans :
 
 ### Schéma de l’architecture
 
-Notre application est accessible sous 3 "marques" différentes :
+Notre application est accessible sous 3 "marques" différentes via trois noms de domaine différents :
 - https://www.rdv-solidarites.fr/
 - https://www.rdv-aide-numerique.fr/
-- https://rdv.anct.gouv.fr/
+- https://rdv.anct.gouv.fr/ (prochainement rdv.numerique.gouv.fr)
 
 Nous avons actuellement 3 instances :
 - `production-rdv-solidarites` : serveur de production pour `www.rdv-solidarites.fr` et `www.rdv-aide-numerique.fr`
