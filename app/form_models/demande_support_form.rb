@@ -23,13 +23,25 @@ class DemandeSupportForm
   def submit
     return unless valid?
 
-    CreateZammadTicketJob.perform_later(
-      sender_role: role,
-      email:,
-      subject: ticket_subject,
-      body: ticket_body,
-      tags: [current_domain.to_s]
-    )
+    if ENV.fetch("CRISP_ENABLED", false)
+      CreateCrispTicketJob.perform_later(
+        nickname: "#{first_name} #{last_name}",
+        email: email,
+        phone: phone_number,
+        subject: ticket_subject,
+        message: message,
+        role: role,
+        domain: current_domain.to_s
+      )
+    else
+      CreateZammadTicketJob.perform_later(
+        sender_role: role,
+        email:,
+        subject: ticket_subject,
+        body: ticket_body,
+        tags: [current_domain.to_s]
+      )
+    end
   end
 
   private
