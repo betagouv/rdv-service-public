@@ -3,8 +3,8 @@ class RemoveInvitationsCountColumns < ActiveRecord::Migration[7.1]
 
   def change
     safety_assured do
-      remove_index :agents, :invitations_count
-      remove_index :users, :invitations_count
+      remove_index :agents, :invitations_count, algorithm: :concurrently
+      remove_index :users, :invitations_count, algorithm: :concurrently
 
       remove_column :agents,          :invitations_count, :integer, default: 0
       remove_column :users,           :invitations_count, :integer, default: 0
