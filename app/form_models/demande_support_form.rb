@@ -28,7 +28,7 @@ class DemandeSupportForm
         nickname: "#{first_name} #{last_name}",
         email: email,
         phone: phone_number,
-        subject: ticket_subject,
+        subject: subject,
         message: message,
         role: role,
         domain: current_domain.to_s
@@ -46,10 +46,14 @@ class DemandeSupportForm
 
   private
 
+  # Nous utilisons cette méthode uniquement pour Zammad car Crisp permet de stocker les inforations de contact
+  # dans les métadonnées de la conversation
   def ticket_subject
     "Demande Support #{role.to_s.capitalize} - #{first_name} #{last_name} - #{sujet}"
   end
 
+  # Nous utilisons cette méthode uniquement pour Zammad car Crisp permet de stocker les informations de contact
+  # dans les métadonnées de la conversation
   def ticket_body
     <<~BODY
       #{message}

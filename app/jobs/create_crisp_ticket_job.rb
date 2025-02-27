@@ -2,10 +2,17 @@ class CreateCrispTicketJob < ApplicationJob
   def perform(nickname:, email:, phone:, subject:, message:, role:, domain:)
     response = client.website.create_new_conversation(website_id)
 
+    message = <<~MESSAGE
+      #{message}
+
+      ---
+      Message envoyé depuis le formulaire de contact
+    MESSAGE
+
     query = {
       "type" => "text",
       "from" => "user",
-      "origin" => "email",
+      "origin" => ENV.fetch("CRISP_URN"), # Permet de savoir que le message provient de notre application
       "content" => message,
     }
 
