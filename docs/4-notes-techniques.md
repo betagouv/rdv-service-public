@@ -222,11 +222,11 @@ Il s’agit des chiffres pour l’instance historique RDV Solidarités.
 |-------------------------------|-----|------| --------------- | ---------------------- |
 | scalingo_workers_count        | 8   | 2    | -               | `scalingo scale`       |
 | processes_per_worker          | 3   | 1    | WEB_CONCURRENCY | config/puma.rb         |
-| connection_pools_max_sizes    | 5   | 8    | GOOD_JOB_MAX_THREADS et RAILS_MAX_THREADS | config/database.yml |
+| connection_pools_max_sizes    | 4   | 8    | GOOD_JOB_MAX_THREADS et RAILS_MAX_THREADS | config/database.yml |
 | extra_connections_per_process | 0   | 3    | -               | doc de GoodJob         |
-| total_max_connections         | 120 | 22   | -               | -                      |
+| total_max_connections         | 96  | 22   | -               | -                      |
 
-Soit un total de 142 connexions à la base PostgreSQL ouvertes simultanées possibles.
+Soit un total de 118 connexions à la base PostgreSQL ouvertes simultanées possibles.
 
 ### Nombre max de threads ruby
 
@@ -237,8 +237,8 @@ Il s’agit des chiffres pour l’instance historique RDV Solidarités.
 |-------------------------------|-----|------|
 | scalingo_workers_count        | 8   | 2    |
 | processes_per_worker          | 3   | 1    |
-| max_threads_count_per_process | 5   | 5    |
-| total_max_threads             | 120 | 10   |
+| max_threads_count_per_process | 4   | 5    |
+| total_max_threads             | 96  | 10   |
 
 Aujourd’hui, le nombre de threads ruby web et de connexions à la DB ouvertes possibles est le même. Ce n’est pas strictement nécessaire, on pourrait baisser le nombre max de connexions ouvertes.
 

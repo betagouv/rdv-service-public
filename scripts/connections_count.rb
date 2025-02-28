@@ -61,10 +61,14 @@ extra_connections_per_process = {
   web: 0,
   jobs: 3, # 2 pour les LISTEN/NOTIFY et 1 pour le cron
 }
-processes_per_worker = {
-  web: env_values["WEB_CONCURRENCY"].to_i,
-  jobs: 1,
-}
+processes_per_worker = { jobs: 1 }
+processes_per_worker[:web] = File.read("config/puma.rb")
+  .lines
+  .find { |line| line.include?("workers ENV") }
+  .sub("workers ", "")
+  .sub("ENV", "env_values")
+  .then { eval(_1) } # rubocop:disable Security/Eval
+
 total_max_connections = %i[web jobs].index_with do |worker_type|
   scalingo_workers_count[worker_type] *
     processes_per_worker[worker_type] *
