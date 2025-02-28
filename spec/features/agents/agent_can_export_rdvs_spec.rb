@@ -10,7 +10,7 @@ RSpec.describe "agent can export RDVs" do
 
   it "displays export list" do
     visit admin_organisation_rdvs_url(organisation, agent)
-    click_on "Exporter les 1 RDVs en XLS"
+    click_on "Exporter le RDV en XLS"
     perform_enqueued_jobs
 
     login_as(agent, scope: :agent)
@@ -26,7 +26,7 @@ RSpec.describe "agent can export RDVs" do
   it "exports by RDV" do
     visit admin_organisation_rdvs_url(organisation, agent)
     perform_enqueued_jobs do
-      click_on "Exporter les 1 RDVs en XLS"
+      click_on "Exporter le RDV en XLS"
     end
 
     open_email(agent.email)

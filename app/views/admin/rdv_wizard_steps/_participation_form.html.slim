@@ -21,7 +21,7 @@ div id=element_id
         i.fa.fa-edit
   .ml-3
     = render "admin/users/notifications_preferences", user: user.user_to_notify
-    - if participation.user.user_to_notify.email.present? || participation.user.user_to_notify.phone_number.present?
+    - if participation.user.user_to_notify.valid_email? || participation.user.user_to_notify.phone_number.present?
       h6= t("admin.participations.notifications_overrides")
       = form.input :send_lifecycle_notifications, wrapper: false
       - if current_organisation.rdv_insertion?

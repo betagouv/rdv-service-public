@@ -4,21 +4,16 @@ class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner export participations_export]
-  # Ce mécanisme temporaire est mis en place afin d'assurer une rétro-compatibilité du fait
-  # du changement de noms (ou ajout des s) aux paramètres motif_id, lieu_id et scoped_organisation_id
-  # Pour plus de contexte, voir https://github.com/betagouv/rdv-service-public/pull/4054#discussion_r1489720373
-  before_action do
-    params[:motif_ids] ||= Array(params[:motif_id])
-    params[:lieu_ids] ||= Array(params[:lieu_id])
-    params[:scoped_organisation_ids] ||= Array(params[:scoped_organisation_id])
-  end
 
   def index
     set_scoped_organisations
     @breadcrumb_page = params[:breadcrumb_page]
 
-    order = { starts_at: :asc }
-    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).search_for(@scoped_organisations, parsed_params)
+    order = [{ starts_at: :asc }, { id: :asc }]
+    distinct_on = "rdvs.starts_at, rdvs.id" # les clauses ORDER BY et DISTINCT ON doivent utiliser les mêmes colonnes
+    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope)
+      .select("DISTINCT ON (#{distinct_on}) rdvs.*") # dédoublonnage des RDV renvoyés par Agent::RdvPolicy::Scope
+      .search_for(@scoped_organisations, parsed_params)
       .order(order).page(page_number).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,

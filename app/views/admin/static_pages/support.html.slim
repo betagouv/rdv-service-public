@@ -19,12 +19,9 @@
           span> Contacter l'équipe technique
           i.fa.fa-question-circle
       .card-body
-        = mail_to current_domain.support_email,
-          subject: "[Problème Agent]",
-          body: t(".contact-email-body"), class: "btn btn-primary" do
-          span>
-            i.fa.fa-envelope
-          | Envoyer une demande à l'équipe technique
+        = link_to "Envoyer une demande à l’équipe technique",
+          new_aide_demande_support_path(role: "agent", sujet: "Question"),
+          class: "fr-btn fr-btn--icon-left fr-icon-chat-3-line"
 
     .card
       .card-header

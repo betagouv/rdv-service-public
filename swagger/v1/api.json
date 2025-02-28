@@ -203,10 +203,6 @@
           "last_name": {
             "type": "string",
             "nullable": true
-          },
-          "inclusion_connect_open_id_sub": {
-            "type": "string",
-            "nullable": true
           }
         },
         "required": [
@@ -1302,13 +1298,12 @@
                           "id": 12,
                           "email": "agent@example.com",
                           "first_name": "Angilbe",
-                          "inclusion_connect_open_id_sub": null,
                           "last_name": "Reynaud"
                         },
                         "end_day": "2023-11-20",
                         "end_time": "15:00:00",
                         "first_day": "2023-11-20",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250217T111218Z\r\nUID:absence_12@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250219T105303Z\r\nUID:absence_12@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_12@RDV Solidarités",
                         "organisation": {
                           "id": 12,
@@ -1488,13 +1483,12 @@
                           "id": 23,
                           "email": "agent_1@lapin.fr",
                           "first_name": "Paulette",
-                          "inclusion_connect_open_id_sub": null,
                           "last_name": "Hubert"
                         },
-                        "end_day": "2025-02-18",
+                        "end_day": "2025-02-20",
                         "end_time": "15:30:00",
-                        "first_day": "2025-02-18",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250217T111219Z\r\nUID:absence_21@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250218T100000\r\nDTEND;TZID=Europe/Paris:20250218T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "first_day": "2025-02-20",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250219T105304Z\r\nUID:absence_21@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250220T100000\r\nDTEND;TZID=Europe/Paris:20250220T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_21@RDV Solidarités",
                         "organisation": {
                           "id": 26,
@@ -1695,13 +1689,12 @@
                           "id": 35,
                           "email": "agent_1@lapin.fr",
                           "first_name": "Serge",
-                          "inclusion_connect_open_id_sub": null,
                           "last_name": "Jacquet"
                         },
-                        "end_day": "2025-02-18",
+                        "end_day": "2025-02-20",
                         "end_time": "15:30:00",
-                        "first_day": "2025-02-18",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250217T111220Z\r\nUID:absence_33@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250218T100000\r\nDTEND;TZID=Europe/Paris:20250218T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "first_day": "2025-02-20",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20241027T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20250219T105304Z\r\nUID:absence_33@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20250220T100000\r\nDTEND;TZID=Europe/Paris:20250220T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_33@RDV Solidarités",
                         "organisation": {
                           "id": 38,
@@ -1991,7 +1984,6 @@
                           "id": 59,
                           "email": "agent_1@lapin.fr",
                           "first_name": "Faustine",
-                          "inclusion_connect_open_id_sub": null,
                           "last_name": "Da silva"
                         }
                       ],
@@ -2765,9 +2757,9 @@
                     "value": {
                       "rdv_plan": {
                         "id": 2,
-                        "created_at": "2025-02-17 12:12:25 +0100",
+                        "created_at": "2025-02-19 11:53:10 +0100",
                         "rdv": null,
-                        "updated_at": "2025-02-17 12:12:25 +0100",
+                        "updated_at": "2025-02-19 11:53:10 +0100",
                         "url": "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/2",
                         "user_id": 11
                       }
@@ -2879,14 +2871,14 @@
                     "value": {
                       "rdv_plan": {
                         "id": 4,
-                        "created_at": "2025-02-17 12:12:25 +0100",
+                        "created_at": "2025-02-19 11:53:10 +0100",
                         "rdv": {
                           "id": 8,
                           "status": "unknown",
-                          "starts_at": "2025-02-20 12:12:25 +0100",
+                          "starts_at": "2025-02-22 11:53:10 +0100",
                           "location_type": "public_office"
                         },
-                        "updated_at": "2025-02-17 12:12:25 +0100",
+                        "updated_at": "2025-02-19 11:53:10 +0100",
                         "url": "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/4",
                         "user_id": 15
                       }
@@ -2990,14 +2982,13 @@
                               "id": 144,
                               "email": "agent_1@lapin.fr",
                               "first_name": "Amaranthe",
-                              "inclusion_connect_open_id_sub": null,
                               "last_name": "Guyot"
                             }
                           ],
                           "cancelled_at": null,
                           "collectif": false,
                           "context": null,
-                          "created_at": "2025-02-17 12:12:26 +0100",
+                          "created_at": "2025-02-19 11:53:10 +0100",
                           "created_by": "agent",
                           "created_by_id": 144,
                           "created_by_type": "Agent",
@@ -3055,7 +3046,7 @@
                                 "affiliation_number": "39012093812038",
                                 "birth_date": "1985-07-20",
                                 "birth_name": null,
-                                "created_at": "2025-02-17 12:12:26 +0100",
+                                "created_at": "2025-02-19 11:53:10 +0100",
                                 "email": "usager_1@lapin.fr",
                                 "first_name": "Charlaine",
                                 "invitation_accepted_at": null,
@@ -3081,7 +3072,7 @@
                               "affiliation_number": "39012093812038",
                               "birth_date": "1985-07-20",
                               "birth_name": null,
-                              "created_at": "2025-02-17 12:12:26 +0100",
+                              "created_at": "2025-02-19 11:53:10 +0100",
                               "email": "usager_1@lapin.fr",
                               "first_name": "Charlaine",
                               "invitation_accepted_at": null,
@@ -3097,7 +3088,7 @@
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "0817d940-1b21-4d97-a428-1dda09597348"
+                          "uuid": "1eee9078-a9ca-424c-b227-fef530ad87d3"
                         }
                       ],
                       "meta": {
@@ -3213,7 +3204,6 @@
                           "id": 245,
                           "email": "agent_2@lapin.fr",
                           "first_name": "Alexanne",
-                          "inclusion_connect_open_id_sub": null,
                           "last_name": "Daniel"
                         },
                         "user": {
@@ -3223,7 +3213,7 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-02-17 12:12:31 +0100",
+                          "created_at": "2025-02-19 11:53:16 +0100",
                           "email": "usager_1@lapin.fr",
                           "first_name": "Judith",
                           "invitation_accepted_at": null,
@@ -3489,25 +3479,22 @@
                               "id": 277,
                               "email": "agent_2@lapin.fr",
                               "first_name": "Angadrême",
-                              "inclusion_connect_open_id_sub": null,
                               "last_name": "Monnier"
                             },
                             {
                               "id": 278,
                               "email": "agent_3@lapin.fr",
                               "first_name": "Séraphin",
-                              "inclusion_connect_open_id_sub": null,
                               "last_name": "Da silva"
                             },
                             {
                               "id": 279,
                               "email": "agent_4@lapin.fr",
                               "first_name": "Mauricette",
-                              "inclusion_connect_open_id_sub": null,
                               "last_name": "Lopez"
                             }
                           ],
-                          "name": "Midi-Pyrénées dogs 6c94a3f3",
+                          "name": "Midi-Pyrénées dogs e90b9dcd",
                           "territory": {
                             "id": 232,
                             "departement_number": "01",
@@ -3639,7 +3626,7 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-02-17 12:12:33 +0100",
+                          "created_at": "2025-02-19 11:53:17 +0100",
                           "email": "usager_1@lapin.fr",
                           "first_name": "Quitterie",
                           "invitation_accepted_at": null,
@@ -3941,7 +3928,7 @@
                         "affiliation_number": "39012093812038",
                         "birth_date": "1985-07-20",
                         "birth_name": null,
-                        "created_at": "2025-02-17 12:12:34 +0100",
+                        "created_at": "2025-02-19 11:53:18 +0100",
                         "email": "jean@jacques.fr",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,
@@ -4240,7 +4227,7 @@
                         "affiliation_number": "101010",
                         "birth_date": "1976-10-01",
                         "birth_name": "Fripouille",
-                        "created_at": "2025-02-17 12:12:36 +0100",
+                        "created_at": "2025-02-19 11:53:20 +0100",
                         "email": "jean@jacques.fr",
                         "first_name": "Alain",
                         "invitation_accepted_at": null,
@@ -4257,7 +4244,7 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-02-17 12:12:35 +0100",
+                          "created_at": "2025-02-19 11:53:20 +0100",
                           "email": "usager_1@lapin.fr",
                           "first_name": "Nathanaël",
                           "invitation_accepted_at": null,
@@ -4401,7 +4388,7 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "invitation_token": "IGQ3G79Y"
+                      "invitation_token": "RQAFQAK5"
                     }
                   }
                 },
@@ -4540,7 +4527,7 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-02-17 12:12:37 +0100",
+                          "created_at": "2025-02-19 11:53:22 +0100",
                           "email": "usager_1@lapin.fr",
                           "first_name": "Charline",
                           "invitation_accepted_at": null,
@@ -4812,7 +4799,7 @@
                         "affiliation_number": "101010",
                         "birth_date": "1976-10-01",
                         "birth_name": "Fripouille",
-                        "created_at": "2025-02-17 12:12:37 +0100",
+                        "created_at": "2025-02-19 11:53:22 +0100",
                         "email": "jean@jacques.fr",
                         "first_name": "Johnny",
                         "invitation_accepted_at": null,
@@ -4829,7 +4816,7 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-02-17 12:12:37 +0100",
+                          "created_at": "2025-02-19 11:53:22 +0100",
                           "email": "usager_1@lapin.fr",
                           "first_name": "Guillemette",
                           "invitation_accepted_at": null,
@@ -4990,7 +4977,7 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-02-17 12:12:38 +0100",
+                          "created_at": "2025-02-19 11:53:23 +0100",
                           "email": "usager_1@lapin.fr",
                           "first_name": "Mélodie",
                           "invitation_accepted_at": null,
@@ -5122,7 +5109,7 @@
                         "affiliation_number": "39012093812038",
                         "birth_date": "1985-07-20",
                         "birth_name": null,
-                        "created_at": "2025-02-17 12:12:38 +0100",
+                        "created_at": "2025-02-19 11:53:23 +0100",
                         "email": "jean@jacques.fr",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,

@@ -1,6 +1,7 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
+  self.ignored_columns += %i[inclusion_connect_open_id_sub invitations_count]
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
@@ -162,8 +163,7 @@ class Agent < ApplicationRecord
         deleted_at: Time.zone.now,
         email_original: email,
         email: deleted_email,
-        uid: deleted_email,
-        inclusion_connect_open_id_sub: ("deleted_#{inclusion_connect_open_id_sub}" if inclusion_connect_open_id_sub.present?)
+        uid: deleted_email
       )
     end
   end
@@ -282,10 +282,6 @@ class Agent < ApplicationRecord
                 else
                   Domain::RDV_SOLIDARITES
                 end
-  end
-
-  def read_only_profile_infos?
-    inclusion_connect_open_id_sub.present? || connected_with_agent_connect?
   end
 
   def prevent_destroy_if_rdvs

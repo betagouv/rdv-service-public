@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  self.ignored_columns += %i[invitations_count]
+
   # Mixins
   has_paper_trail(
     only: %w[
@@ -26,13 +28,13 @@ class User < ApplicationRecord
 
   def self.search_options
     {
-      using: { tsearch: { prefix: true, tsvector_column: "text_search_terms" } },
+      using: { tsearch: { prefix: true, tsvector_column: "text_search_terms_with_notification_email" } },
     }
   end
 
   # Attributes
   ONGOING_MARGIN = 1.hour.freeze
-  auto_strip_attributes :email, :first_name, :last_name, :birth_name
+  auto_strip_attributes :email, :notification_email, :first_name, :last_name, :birth_name
 
   enum :caisse_affiliation, { aucune: 0, caf: 1, msa: 2 }
   enum :family_situation, { single: 0, in_a_relationship: 1, divorced: 2 }
@@ -74,6 +76,7 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
+  before_save :clear_notification_email_if_email_present
   after_create :create_annotations  # backfill temporaire, première étape de migration
   after_update :sync_annotations    # backfill temporaire, première étape de migration
 
@@ -89,9 +92,17 @@ class User < ApplicationRecord
     full_name
   end
 
-  def email=(value)
+  def sanitize_email(email)
     # On corriger automatiquement ces fautes de frappe courantes
-    super(value&.gsub(".@", "@")&.gsub("..", "."))
+    email&.gsub(".@", "@")&.gsub("..", ".")
+  end
+
+  def email=(email)
+    super(sanitize_email(email))
+  end
+
+  def notification_email=(email)
+    super(sanitize_email(email))
   end
 
   def add_organisation(organisation)
@@ -311,6 +322,10 @@ class User < ApplicationRecord
     end
   end
 
+  def clear_notification_email_if_email_present
+    self.notification_email = nil if email.present?
+  end
+
   def birth_date_validity
     return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
@@ -334,7 +349,8 @@ class User < ApplicationRecord
       first_name: "Usager supprimé",
       last_name: "Usager supprimé",
       deleted_at: Time.zone.now,
-      email: deleted_email
+      email: deleted_email,
+      notification_email: nil
     )
     reload # anonymizer operates outside the realm of rails knowledge
   end

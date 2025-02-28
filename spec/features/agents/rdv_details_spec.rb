@@ -44,8 +44,15 @@ RSpec.describe "Agent can see RDV details correctly" do
       expect(page).to have_text(user.phone_number)
     end
 
+    it "show good notification preferences when user has a notification_email" do
+      user.update(email: nil, notification_email: "test@test.fr")
+      visit admin_organisation_rdv_path(organisation, rdv)
+      expect(page).to have_text(user.notification_email)
+      expect(page).not_to have_text(I18n.t("admin.users.notifications_preferences.email_absent"))
+    end
+
     context "The rdv has multiple users" do
-      let(:user2) { create(:user, :with_no_email, :with_no_phone_number, organisations: [organisation]) }
+      let(:user2) { create(:user, :without_devise_email, :with_no_phone_number, organisations: [organisation]) }
 
       before do
         create(:participation, user: user2, rdv: rdv)

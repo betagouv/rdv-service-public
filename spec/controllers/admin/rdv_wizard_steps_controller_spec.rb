@@ -51,7 +51,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
       end
 
       context "when the user has no email nor phone_number" do
-        let!(:user) { create(:user, :with_no_email, :with_no_phone_number, organisations: [organisation]) }
+        let!(:user) { create(:user, :without_devise_email, :with_no_phone_number, organisations: [organisation]) }
 
         it "doesn't show the notification preferences" do
           get :new, params: params
