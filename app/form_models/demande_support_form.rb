@@ -28,7 +28,7 @@ class DemandeSupportForm
         nickname: "#{first_name} #{last_name}",
         email: email,
         phone: phone_number,
-        subject: subject,
+        subject: sujet,
         message: message,
         role: role,
         domain: current_domain.to_s

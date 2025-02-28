@@ -1,6 +1,6 @@
 class CreateCrispTicketJob < ApplicationJob
   def perform(nickname:, email:, phone:, subject:, message:, role:, domain:)
-    response = client.website.create_new_conversation(website_id)
+    conversation = client.website.create_new_conversation(website_id)
 
     message = <<~MESSAGE
       #{message}
@@ -9,27 +9,31 @@ class CreateCrispTicketJob < ApplicationJob
       Message envoyé depuis le formulaire de contact
     MESSAGE
 
-    query = {
-      "type" => "text",
-      "from" => "user",
-      "origin" => ENV.fetch("CRISP_URN"), # Permet de savoir que le message provient de notre application
-      "content" => message,
-    }
+    client.website.send_message_in_conversation(
+      website_id,
+      conversation["session_id"],
+      {
+        "type" => "text",
+        "from" => "user",
+        "origin" => ENV.fetch("CRISP_URN"), # Permet de savoir que le message provient de notre application
+        "content" => message,
+      }
+    )
 
-    client.website.send_message_in_conversation(website_id, response["session_id"], query)
-
-    data = {
-      nickname:,
-      email:,
-      phone:,
-      segments: [
-        role,
-        domain,
-      ],
-      subject:,
-    }
-
-    client.website.update_conversation_metas(website_id, response["session_id"], data)
+    client.website.update_conversation_metas(
+      website_id,
+      conversation["session_id"],
+      {
+        nickname:,
+        email:,
+        phone:,
+        segments: [
+          role,
+          domain,
+        ],
+        subject:,
+      }
+    )
   end
 
   private

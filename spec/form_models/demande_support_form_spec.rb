@@ -1,7 +1,7 @@
 RSpec.describe DemandeSupportForm do
   subject(:form) { described_class.new(**attributes) }
 
-  before { allow(ENV).to receive(:fetch).with("CRISP_ENABLED", false).and_return(false) }
+  stub_env_with(CRISP_ENABLED: nil)
 
   context "tous les attributs présents" do
     let(:attributes) do
@@ -26,7 +26,7 @@ RSpec.describe DemandeSupportForm do
     end
 
     context "CRISP_ENABLED est activé" do
-      before { allow(ENV).to receive(:fetch).with("CRISP_ENABLED", false).and_return(true) }
+      stub_env_with(CRISP_ENABLED: "true")
 
       it "appele CreateCrispTicket" do
         expect(CreateCrispTicketJob).to receive(:perform_later)
