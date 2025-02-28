@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  self.ignored_columns += %i[invitations_count]
+
   # Mixins
   has_paper_trail(
     only: %w[
