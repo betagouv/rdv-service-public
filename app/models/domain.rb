@@ -37,9 +37,7 @@ class Domain
       france_connect_enabled: true,
       support_email: "support@rdv-solidarites.fr",
       verticale: :rdv_solidarites,
-      # TODO: décommenter cette ligne après les tests
-      # allow_agent_creation_with_agent_connect: false,
-      allow_agent_creation_with_agent_connect: true,
+      allow_agent_creation_with_agent_connect: false,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
       # secretariat_email est utilisé comme adresse de "Reply-To" pour les e-mails
       # qui contiennent des ICS. Lorsque l'événement ICS est acceptée par le
