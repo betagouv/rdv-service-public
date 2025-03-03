@@ -11,7 +11,7 @@ class Agents::PagesController < AgentAuthController
     if accessible_organisations.count == 1
       redirect_to admin_organisation_agent_agenda_path(accessible_organisations.first, current_agent)
     elsif accessible_organisations.count > 1
-      redirect_to agents_organisations_path
+      redirect_to admin_organisations_path
     end
   end
 
