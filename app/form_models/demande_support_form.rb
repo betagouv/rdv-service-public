@@ -23,21 +23,37 @@ class DemandeSupportForm
   def submit
     return unless valid?
 
-    CreateZammadTicketJob.perform_later(
-      sender_role: role,
-      email:,
-      subject: ticket_subject,
-      body: ticket_body,
-      tags: [current_domain.to_s]
-    )
+    if ENV.fetch("CRISP_ENABLED", false)
+      CreateCrispTicketJob.perform_later(
+        nickname: "#{first_name} #{last_name}",
+        email: email,
+        phone: phone_number,
+        subject: sujet,
+        message: message,
+        role: role,
+        domain: current_domain.to_s
+      )
+    else
+      CreateZammadTicketJob.perform_later(
+        sender_role: role,
+        email:,
+        subject: ticket_subject,
+        body: ticket_body,
+        tags: [current_domain.to_s]
+      )
+    end
   end
 
   private
 
+  # Nous utilisons cette méthode uniquement pour Zammad car Crisp permet de stocker les inforations de contact
+  # dans les métadonnées de la conversation
   def ticket_subject
     "Demande Support #{role.to_s.capitalize} - #{first_name} #{last_name} - #{sujet}"
   end
 
+  # Nous utilisons cette méthode uniquement pour Zammad car Crisp permet de stocker les informations de contact
+  # dans les métadonnées de la conversation
   def ticket_body
     <<~BODY
       #{message}
