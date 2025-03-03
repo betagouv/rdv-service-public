@@ -68,8 +68,6 @@ class WebSearchContext < SearchContext
 
   private
 
-  attr_reader :referent_ids, :lieu_id
-
   def matching_motifs
     @matching_motifs ||= filter_motifs(geo_search.available_motifs)
   end

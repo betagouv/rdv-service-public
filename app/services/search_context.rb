@@ -54,9 +54,7 @@ class SearchContext
 
   private
 
-  def referent_ids
-    raise NoMethodError
-  end
+  attr_reader :referent_ids, :lieu_id
 
   def matching_motifs
     raise NoMethodError
@@ -71,10 +69,6 @@ class SearchContext
   end
 
   def street_ban_id
-    raise NoMethodError
-  end
-
-  def lieu_id
     raise NoMethodError
   end
 
