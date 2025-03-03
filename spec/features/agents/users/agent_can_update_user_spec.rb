@@ -11,10 +11,10 @@ RSpec.describe "Agent can update user" do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
     visit admin_organisation_user_path(organisation, user)
-    within("#spec-primary-user-card") { click_link "Modifier" }
   end
 
   it "update existing user's email" do
+    within("#spec-primary-user-card") { click_link "Modifier" }
     fill_in :user_first_name, with: "jeanne"
     fill_in :user_last_name, with: "reynolds"
     fill_in "Email", with: "jeanne@reynolds.com"
@@ -33,6 +33,7 @@ RSpec.describe "Agent can update user" do
       let(:territory) { create(:territory, enable_notes_field: false, enable_caisse_affiliation_field: false) }
 
       it "doesn't show them them" do
+        within("#spec-primary-user-card") { click_link "Modifier" }
         expect(page).not_to have_content("Remarques")
         expect(page).not_to have_content("Caisse d'affiliation")
       end
@@ -40,13 +41,30 @@ RSpec.describe "Agent can update user" do
 
     context "when they are enabled" do
       let(:territory) { create(:territory, enable_notes_field: true, enable_caisse_affiliation_field: true) }
+      let!(:annotation_in_current_territory) do
+        Annotation.create!(user: user, territory: territory, content: "Remarques du territoire courant")
+      end
+      let!(:annotation_in_other_territory) do
+        Annotation.create!(user: user, territory: other_territory, content: "Remarques de l'autre territoire")
+      end
+      let(:other_territory) { create(:territory) }
 
-      it "update user notes" do
+      before do
+        # On ajoute l'usager dans un autre territoire pour vérifier que ses annotations sont mises à jour dans un seul territoire
+        create(:user_profile, user: user, organisation: create(:organisation, territory: other_territory))
+      end
+
+      it "update user annotations" do
+        within("#spec-primary-user-card") { click_link "Modifier" }
+        expect(page).to have_field("Remarques", with: "Remarques du territoire courant")
+
         fill_in "Remarques", with: "souhaite participer au prochain atelier collectif"
         select "MSA", from: "Caisse d'affiliation"
         click_button "Enregistrer"
-        expect(user.reload.notes).to eq "souhaite participer au prochain atelier collectif"
+        expect(user.reload.annotation_for(territory)).to eq "souhaite participer au prochain atelier collectif"
         expect(user.reload.caisse_affiliation).to eq "msa"
+        expect(user.reload.annotation_for(other_territory)).to eq "Remarques de l'autre territoire"
+        expect(page).to have_content("souhaite participer au prochain atelier collectif")
       end
     end
   end
@@ -57,6 +75,7 @@ RSpec.describe "Agent can update user" do
     end
 
     it "add email to existing user" do
+      within("#spec-primary-user-card") { click_link "Modifier" }
       fill_in "Email", with: "jean@legende.com"
       click_button "Enregistrer"
       click_link "Inviter"
@@ -70,6 +89,7 @@ RSpec.describe "Agent can update user" do
     let!(:user) { create(:user, :unconfirmed, organisations: [organisation]) }
 
     it "permet de désactiver et réactiver les préférences de notifications SMS et email" do
+      within("#spec-primary-user-card") { click_link "Modifier" }
       expect(page).to have_content("Modifier l'usager")
       expect(page).to have_checked_field("Accepte les notifications par email")
       expect(page).to have_checked_field("Accepte les notifications par SMS")
