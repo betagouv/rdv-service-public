@@ -1,8 +1,7 @@
 module Users::CreneauxWizardConcern
   extend ActiveSupport::Concern
 
-  # *** Method that outputs the next step for the user to complete its rdv journey ***
-  # *** It is used in #to_partial_path to render the matching partial view ***
+  # *** Method that outputs the current step for the user to complete its rdv journey ***
   def current_step
     if departement.blank?
       :address_selection
@@ -21,10 +20,6 @@ module Users::CreneauxWizardConcern
 
   def start_date
     query_params[:date]&.to_date || super
-  end
-
-  def to_partial_path
-    "search/#{current_step}"
   end
 
   def wizard_after_creneau_selection_path(params)
