@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_25_184048) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -151,7 +151,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.index ["access_level"], name: "index_agent_roles_on_access_level"
     t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
     t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
-    t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
   end
 
   create_table "agent_services", force: :cascade do |t|
@@ -159,7 +158,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.bigint "service_id", null: false
     t.datetime "created_at", null: false
     t.index ["agent_id", "service_id"], name: "index_agent_services_on_agent_id_and_service_id", unique: true
-    t.index ["agent_id"], name: "index_agent_services_on_agent_id"
     t.index ["service_id"], name: "index_agent_services_on_service_id"
   end
 
@@ -170,7 +168,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_agent_teams_on_agent_id"
     t.index ["team_id", "agent_id"], name: "index_agent_teams_primary_keys", unique: true
-    t.index ["team_id"], name: "index_agent_teams_on_team_id"
   end
 
   create_table "agent_territorial_access_rights", force: :cascade do |t|
@@ -182,7 +179,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.boolean "allow_to_manage_access_rights", default: false, null: false
     t.boolean "allow_to_invite_agents", default: false, null: false
     t.index ["agent_id", "territory_id"], name: "index_agent_territorial_access_rights_unique_agent_territory", unique: true
-    t.index ["agent_id"], name: "index_agent_territorial_access_rights_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
   end
 
@@ -190,7 +186,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.bigint "agent_id", null: false
     t.bigint "territory_id", null: false
     t.index ["agent_id", "territory_id"], name: "index_agent_territorial_roles_unique_agent_territory", unique: true
-    t.index ["agent_id"], name: "index_agent_territorial_roles_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_roles_on_territory_id"
   end
 
@@ -257,7 +252,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.text "outlook_id"
     t.boolean "outlook_create_in_progress", default: false, null: false
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
-    t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
@@ -302,7 +296,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.integer "notifications_sent", default: 0
     t.datetime "last_creneau_sent_at"
     t.index ["rdv_id", "user_id"], name: "index_file_attentes_on_rdv_id_and_user_id", unique: true
-    t.index ["rdv_id"], name: "index_file_attentes_on_rdv_id"
     t.index ["user_id"], name: "index_file_attentes_on_user_id"
   end
 
@@ -465,7 +458,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.bigint "motif_id", null: false
     t.bigint "plage_ouverture_id", null: false
     t.index ["motif_id", "plage_ouverture_id"], name: "index_motifs_plage_ouvertures_primary_keys", unique: true
-    t.index ["motif_id"], name: "index_motifs_plage_ouvertures_on_motif_id"
     t.index ["plage_ouverture_id"], name: "index_motifs_plage_ouvertures_on_plage_ouverture_id"
   end
 
@@ -527,7 +519,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.boolean "ants_connectable", default: false, null: false, comment: "Autorise l'organisation à être branchée sur le moteur de recherche de l'ANTS sur https://rendezvouspasseport.ants.gouv.fr/. Pour éviter de brancher n'importe qui sur ce moteur de recherche, cette option n'est pas activable par les agents.\n"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
-    t.index ["name"], name: "index_organisations_on_name"
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
 
@@ -555,7 +546,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.index ["invited_by_id"], name: "index_participations_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_participations_on_invited_by"
     t.index ["rdv_id", "user_id"], name: "index_participations_on_rdv_id_and_user_id", unique: true
-    t.index ["rdv_id"], name: "index_participations_on_rdv_id"
     t.index ["status"], name: "index_participations_on_status"
     t.index ["user_id"], name: "index_participations_on_user_id"
   end
@@ -676,7 +666,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.bigint "agent_id", null: false
     t.index ["agent_id"], name: "index_referent_assignations_on_agent_id"
     t.index ["user_id", "agent_id"], name: "index_referent_assignations_on_user_id_and_agent_id", unique: true
-    t.index ["user_id"], name: "index_referent_assignations_on_user_id"
   end
 
   create_table "sector_attributions", force: :cascade do |t|
@@ -696,7 +685,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.datetime "updated_at", null: false
     t.bigint "territory_id", null: false
     t.index ["human_id", "territory_id"], name: "index_sectors_on_human_id_and_territory_id", unique: true
-    t.index ["human_id"], name: "index_sectors_on_human_id"
     t.index ["territory_id"], name: "index_sectors_on_territory_id"
   end
 
@@ -759,7 +747,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.datetime "created_at", null: false
     t.index ["service_id"], name: "index_territory_services_on_service_id"
     t.index ["territory_id", "service_id"], name: "index_territory_services_on_territory_id_and_service_id", unique: true
-    t.index ["territory_id"], name: "index_territory_services_on_territory_id"
   end
 
   create_table "user_profiles", force: :cascade do |t|
@@ -861,7 +848,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_145921) do
     t.datetime "updated_at", null: false
     t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
     t.index ["organisation_id", "target_url"], name: "index_webhook_endpoints_on_organisation_id_and_target_url", unique: true
-    t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
   end
 
   create_table "zones", force: :cascade do |t|

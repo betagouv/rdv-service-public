@@ -1,6 +1,6 @@
 ---
 title: Notre politique de mise à jour des gems (et libs JS)
-date: 2023-02-24
+date: 2023-04-24
 status: proposition
 ---
 

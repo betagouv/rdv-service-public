@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  self.ignored_columns += [:notes]
+  self.ignored_columns += %i[invitations_count notes]
 
   # Mixins
   has_paper_trail(
