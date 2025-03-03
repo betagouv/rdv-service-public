@@ -17,7 +17,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "saves the user" do
       expect(user).to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save
     end
   end
 
@@ -52,7 +52,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save
     end
   end
 
@@ -70,7 +70,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save
     end
   end
 
@@ -87,7 +87,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "saves the user" do
       expect(user).to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save
     end
   end
 
@@ -110,7 +110,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save
     end
   end
 
@@ -130,7 +130,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "saves the user" do
       expect(user).to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save
     end
   end
 
