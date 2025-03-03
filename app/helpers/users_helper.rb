@@ -116,10 +116,9 @@ module UsersHelper
     user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}") : nil
   end
 
-  # @return [String]
   def formatted_user_annotation(user, current_territory)
     annotation = user.annotation_for(current_territory)
-    annotation.present? ? simple_format(annotation) : ""
+    annotation.present? ? simple_format(annotation) : nil
   end
 
   def user_soft_delete_confirm_message(user)
