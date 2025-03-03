@@ -1,6 +1,8 @@
 RSpec.describe DemandeSupportForm do
   subject(:form) { described_class.new(**attributes) }
 
+  stub_env_with(CRISP_ENABLED: nil)
+
   context "tous les attributs présents" do
     let(:attributes) do
       {
@@ -19,7 +21,18 @@ RSpec.describe DemandeSupportForm do
 
     it "appele CreateZammadTicket" do
       expect(CreateZammadTicketJob).to receive(:perform_later)
+      expect(CreateCrispTicketJob).not_to receive(:perform_later)
       form.submit
+    end
+
+    context "CRISP_ENABLED est activé" do
+      stub_env_with(CRISP_ENABLED: "true")
+
+      it "appele CreateCrispTicket" do
+        expect(CreateCrispTicketJob).to receive(:perform_later)
+        expect(CreateZammadTicketJob).not_to receive(:perform_later)
+        form.submit
+      end
     end
   end
 
@@ -41,6 +54,7 @@ RSpec.describe DemandeSupportForm do
 
     it "n’appele pas CreateZammadTicket" do
       expect(CreateZammadTicketJob).not_to receive(:perform_later)
+      expect(CreateCrispTicketJob).not_to receive(:perform_later)
       form.submit
     end
   end
@@ -63,6 +77,7 @@ RSpec.describe DemandeSupportForm do
 
     it "n’appele pas CreateZammadTicket" do
       expect(CreateZammadTicketJob).not_to receive(:perform_later)
+      expect(CreateCrispTicketJob).not_to receive(:perform_later)
       form.submit
     end
   end
