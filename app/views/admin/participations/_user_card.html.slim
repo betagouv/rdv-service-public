@@ -3,11 +3,11 @@
     .card-body.p-2
       .mb-1
         = render "admin/users/identity", user: participation.user
-      - notes = participation.user.notes
-      - if current_territory.enable_notes_field? && notes.present?
+      - annotation = participation.user.annotation_for(current_territory)
+      - if current_territory.enable_notes_field? && annotation.present?
         .participation_notes
           i.fa.fa-info-circle.text-primary-blue.mr-2
-          = simple_format(notes, {}, wrapper_tag: :span)
+          = simple_format(annotation, {}, wrapper_tag: :span)
       div
         = render "admin/participations/notifications_email", participation: participation
       div
