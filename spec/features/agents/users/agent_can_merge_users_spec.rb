@@ -62,7 +62,7 @@ RSpec.describe "Agent can delete user" do
     expect(page).to have_content("aalyah@damn.com")
   end
 
-  it "displays all fields" do
+  it "allows to merge annotations" do
     Annotation.create!(user: user1, territory: territory, content: "Notes 1")
     Annotation.create!(user: user2, territory: territory, content: "Notes 2")
 
