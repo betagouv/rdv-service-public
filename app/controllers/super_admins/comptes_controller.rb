@@ -1,7 +1,7 @@
 module SuperAdmins
   class ComptesController < SuperAdmins::ApplicationController
     def new
-      @agent = Agent.find(params[:agent_id])
+      @agent = Agent.find_by(params[:agent_id])
       if @agent
         authorize_resource(@agent)
       end
