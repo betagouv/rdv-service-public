@@ -91,7 +91,7 @@ class Territory < ApplicationRecord
   }.freeze
 
   OPTIONAL_FIELD_TOGGLES = {
-    enable_notes_field: :annotation_content,
+    enable_notes_field: :notes,
     enable_logement_field: :logement,
   }.merge(SOCIAL_FIELD_TOGGLES).freeze
 

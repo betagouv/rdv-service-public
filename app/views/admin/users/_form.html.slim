@@ -41,7 +41,7 @@
       - unless current_domain == Domain::RDV_MAIRIE
         = date_input(f, :birth_date, **input_opts[:relative])
       - if current_territory.enable_notes_field?
-        = f.input :annotation_content, **input_opts[:relative].deep_merge(input_html: { rows: 6, value: user.annotation_for(current_territory) })
+        = f.input :notes, **input_opts[:relative].deep_merge(input_html: { rows: 6 })
 
     - if user.new_record?
       .form-row.mb-2 *div_opts[:relative]
