@@ -1,10 +1,11 @@
 - content_for(:title) do
   h1.rdv-color-white Ajouter un proche
 
-= simple_form_for @form, url: relatives_path, remote: true, data: { modal: true } do |f|
+= form_for @form, url: relatives_path, remote: true, data: { modal: true }, builder: Dsfr::FormBuilder do |f|
   = render "model_errors", model: @form, f: f
   = render "form_fields", f: f
+  // Note : on laisse le row et le col pour le moment car on va passer la modale au DSFR dans une PR suivante
   .row
     .col.rdv-text-align-right
-      button.btn.btn-link data-dismiss="modal" type="button" Annuler
-      = f.button :submit
+      button.fr-btn.fr-btn--secondary.fr-mr-2v data-dismiss="modal" type="button" Annuler
+      = f.button :submit, class: "fr-btn fr-btn--primary"

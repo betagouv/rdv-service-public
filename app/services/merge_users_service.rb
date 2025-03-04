@@ -8,6 +8,7 @@ class MergeUsersService < BaseService
 
   def perform
     User.transaction do
+      merge_annotations if @attributes_to_merge.delete(:annotation_content)
       merge_user_attributes
       merge_organisations
       merge_rdvs
@@ -19,6 +20,14 @@ class MergeUsersService < BaseService
   end
 
   private
+
+  def merge_annotations
+    current_territory = @organisation.territory
+
+    annotation_to_merge = @user_to_merge.annotations.find_by(territory: current_territory)
+    @user_target.annotate!(annotation_to_merge.content, territory: current_territory)
+    annotation_to_merge.destroy!
+  end
 
   def merge_user_attributes
     @attributes_to_merge.each do |attribute|

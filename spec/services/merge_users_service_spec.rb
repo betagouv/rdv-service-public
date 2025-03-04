@@ -189,23 +189,62 @@ RSpec.describe MergeUsersService, type: :service do
     end
   end
 
-  context "both users have notes" do
-    before do
-      user_target.update(notes: "Sympa")
-      user_to_merge.update(notes: "thiquement")
-    end
-
+  context "both users have annotations" do
     it "preserves target by default" do
+      user_target.annotations.create!(territory: organisation.territory, content: "Sympa")
+      user_to_merge.annotations.create!(territory: organisation.territory, content: "thiquement")
       perform
-      expect(user_target.notes).to eq("Sympa")
+      expect(user_target.annotation_for(organisation.territory)).to eq("Sympa")
     end
 
-    context "when merging notes" do
-      let(:attributes_to_merge) { [:notes] }
+    context "when merging annotations" do
+      let(:attributes_to_merge) { [:annotation_content] }
 
-      it "overrides notes from merged user" do
+      it "overrides annotation from merged user" do
+        user_target.annotations.create!(territory: organisation.territory, content: "Sympa")
+        user_to_merge.annotations.create!(territory: organisation.territory, content: "thiquement")
         perform
-        expect(user_target.notes).to eq("thiquement")
+        expect(user_target.annotation_for(organisation.territory)).to eq("thiquement")
+      end
+    end
+
+    context "when both users have annotations in two territories" do
+      let(:attributes_to_merge) { [:annotation_content] }
+
+      let(:other_territory) { create(:territory) }
+      let(:organisation_in_other_territory) { create(:organisation, territory: other_territory) }
+
+      let(:current_territory) { organisation.territory }
+
+      before do
+        user_to_merge.organisations << organisation_in_other_territory
+        user_target.organisations << organisation_in_other_territory
+
+        user_to_merge.annotations.create!(territory: current_territory, content: "User to merge, current territory")
+        user_to_merge.annotations.create!(territory: other_territory,   content: "User to merge, other territory")
+
+        user_target.annotations.create!(territory: current_territory,   content: "User target, current territory")
+        user_target.annotations.create!(territory: other_territory,     content: "User target, other territory")
+      end
+
+      it "preserves the 2 users with their 2 annotations in other territory, merges in current territory" do
+        perform
+        user_target.reload
+        user_to_merge.reload
+
+        # Dans l'autre territoire, les annotations restent intactes
+        expected_annotations_in_other_territory = [
+          [user_to_merge, "User to merge, other territory"],
+          [user_target, "User target, other territory"],
+        ]
+        expect(Annotation.where(territory: other_territory).map { [_1.user, _1.content] }).to match_array(expected_annotations_in_other_territory)
+
+        # Dans le territoire courant, on ne garde que l'annotation à fusionner, c'est-à-dire
+        # l'annotation sélectionnée, et on l'associe à l'usager qui est gardé (target).
+        expected_annotations_in_current_territory = [
+          [user_target, "User to merge, current territory"],
+        ]
+        expect(Annotation.where(territory: current_territory).map { [_1.user, _1.content] }).to match_array(expected_annotations_in_current_territory)
       end
     end
   end

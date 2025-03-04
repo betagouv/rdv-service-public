@@ -113,9 +113,12 @@ module ApplicationHelper
     boolean_tag(value) { object.class.human_attribute_value(attribute_name, value) }
   end
 
-  def object_attribute_tag(object, attribute_name, value = nil)
+  def object_attribute_tag(object, attribute_name, value = :delegate_to_object)
     name = object.class.human_attribute_name(attribute_name)
-    value ||= object.human_attribute_value(attribute_name)
+
+    if value == :delegate_to_object
+      value = object.human_attribute_value(attribute_name)
+    end
 
     tag.strong(tag.span(name) + tag.span(" : ")) +
       tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))

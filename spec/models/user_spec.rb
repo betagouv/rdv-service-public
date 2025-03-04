@@ -366,68 +366,38 @@ RSpec.describe User, type: :model do
   end
 
   describe "annotations" do
-    describe "user creation" do
-      it "creates an annotation if needed" do
-        organisation = create(:organisation)
-        user_with_notes = create(:user, notes: "Lorem ipsum", organisations: [organisation])
-        expect(user_with_notes.notes).to eq("Lorem ipsum")
-        expect(Annotation.where(user: user_with_notes).sole).to have_attributes(territory: organisation.territory, content: "Lorem ipsum")
-
-        expect { create(:user, notes: "", organisations: [organisation]) }.not_to change(Annotation, :count)
-      end
+    it "provides the #annotate! helper method" do
+      user = create(:user)
+      territory = create(:territory)
+      expect(Annotation).to receive(:upsert!).with("Ma remarque", user:, territory:)
+      user.annotate!("Ma remarque", territory:)
     end
 
-    describe "user update" do
-      it "creates an annotation if notes appear" do
-        organisation = create(:organisation)
-        user = create(:user, notes: nil, organisations: [organisation])
-        expect(Annotation.count).to eq(0)
+    it "deletes annotations when leaving the last org of a territory" do
+      territory_a = create(:territory)
+      territory_b = create(:territory)
+      organisation_a_1 = create(:organisation, territory: territory_a)
+      organisation_a_2 = create(:organisation, territory: territory_a)
+      organisation_b_1 = create(:organisation, territory: territory_b)
+      organisation_b_2 = create(:organisation, territory: territory_b)
 
-        expect { user.update!(notes: "Lorem ipsum") }.to change(Annotation, :count).by(1)
-        expect(Annotation.where(user: user).sole).to have_attributes(territory: organisation.territory, content: "Lorem ipsum")
-      end
+      user = create(:user, organisations: [organisation_a_1, organisation_a_2, organisation_b_1, organisation_b_2])
+      user.annotate!("Infos du territoire A", territory: territory_a)
+      user.annotate!("Infos du territoire B", territory: territory_b)
+      expect(Annotation.where(user: user).count).to eq(2)
 
-      it "updates the annotation if the notes change" do
-        organisation = create(:organisation)
-        user = create(:user, notes: "Lorem ipsum", organisations: [organisation])
-        expect { user.update!(notes: "dolor sit amet") }.to change { Annotation.where(user: user).sole.reload.updated_at }
-        expect(Annotation.where(user: user).sole.content).to eq("dolor sit amet")
-      end
+      expect { user.organisations.delete(organisation_a_1) }.not_to change(Annotation, :count)
+      expect { user.organisations.delete(organisation_a_2) }.to change(Annotation, :count).by(-1)
 
-      it "deletes the annotation if the notes become blank" do
-        organisation = create(:organisation)
-        user = create(:user, notes: "Lorem ipsum", organisations: [organisation])
-        expect { user.update!(notes: "") }.to change { Annotation.where(user: user).first }.to(nil)
-      end
+      expect { user.organisations.delete(organisation_b_1) }.not_to change(Annotation, :count)
+      expect { user.organisations.delete(organisation_b_2) }.to change(Annotation, :count).by(-1)
     end
 
-    describe "user anonymization" do
-      it "deletes the annotations" do
-        organisation = create(:organisation)
-        user = create(:user, notes: "Lorem ipsum", organisations: [organisation])
-        expect(Annotation.where(user: user).sole.content).to eq("Lorem ipsum")
-
-        user.soft_delete
-        expect(Annotation.where(user: user)).to be_empty
-      end
-    end
-
-    describe "removing user from organisation" do
-      it "removes annotations for the org's territory" do
-        territory_a = create(:territory)
-        territory_b = create(:territory)
-        organisation_a_1 = create(:organisation, territory: territory_a)
-        organisation_a_2 = create(:organisation, territory: territory_a)
-        organisation_b_1 = create(:organisation, territory: territory_b)
-        organisation_b_2 = create(:organisation, territory: territory_b)
-
-        user = create(:user, notes: "Lorem ipsum", organisations: [organisation_a_1, organisation_a_2, organisation_b_1, organisation_b_2])
-        expect(Annotation.where(user: user).count).to eq(2)
-
-        expect { UserProfile.find_by!(user: user, organisation: organisation_a_1).destroy! }.not_to change(Annotation, :count)
-        expect { UserProfile.find_by!(user: user, organisation: organisation_a_2).destroy! }.to change(Annotation, :count).by(-1)
-        expect(Annotation.where(user: user).sole.territory).to eq(territory_b)
-      end
+    it "deletes annotations when soft deleting" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      user.annotate!("Ma remarque", territory: organisation.territory)
+      expect { user.soft_delete }.to change { user.annotations.count }.to(0)
     end
   end
 end

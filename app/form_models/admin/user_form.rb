@@ -20,8 +20,15 @@ class Admin::UserForm
     super && user.valid? # order is important here
   end
 
-  def save
-    valid? && user.save
+  def save(annotation_content:, current_territory:)
+    return false unless valid?
+
+    user.transaction do
+      if user.save
+        user.annotate!(annotation_content, territory: current_territory)
+        true
+      end
+    end
   end
 
   private
