@@ -26,10 +26,10 @@ module RecurrenceConcern
         end_time: record.end_time.to_s,
         recurrence: Montrose::Recurrence.dump(record.recurrence),
       }
-      if record.is_a?(PlageOuverture)
-        manually_serialized_attrs[:secondary_start_time] = record.secondary_start_time.to_s if record.secondary_start_time
-        manually_serialized_attrs[:secondary_end_time] = record.secondary_end_time.to_s if record.secondary_end_time
-      end
+
+      manually_serialized_attrs[:secondary_start_time] = record.secondary_start_time.to_s if record.try(:secondary_start_time)
+      manually_serialized_attrs[:secondary_end_time] = record.secondary_end_time.to_s if record.try(:secondary_end_time)
+
       record.attributes.merge(manually_serialized_attrs.stringify_keys)
     end
 
@@ -40,10 +40,10 @@ module RecurrenceConcern
         end_time: Tod::TimeOfDay.parse(hash[:end_time]),
         recurrence: Montrose::Recurrence.load(hash[:recurrence]),
       }
-      if self == PlageOuverture
-        manually_deserialized_attrs[:secondary_start_time] = Tod::TimeOfDay.parse(hash[:secondary_start_time]) if hash[:secondary_start_time]
-        manually_deserialized_attrs[:secondary_end_time] = Tod::TimeOfDay.parse(hash[:secondary_end_time]) if hash[:secondary_end_time]
-      end
+
+      manually_deserialized_attrs[:secondary_start_time] = Tod::TimeOfDay.parse(hash[:secondary_start_time]) if hash[:secondary_start_time].present?
+      manually_deserialized_attrs[:secondary_end_time] = Tod::TimeOfDay.parse(hash[:secondary_end_time]) if hash[:secondary_end_time].present?
+
       new(hash.merge(manually_deserialized_attrs))
     end
   end
