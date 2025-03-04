@@ -43,9 +43,4 @@ class FakeOauthClient < Sinatra::Base
 
     redirect to(Capybara.app_host + OmniAuth::Strategies::RdvServicePublic.sign_out_path("fake_app_id"))
   end
-
-  get "/favicon.ico" do
-    status 204
-    body ""
-  end
 end
