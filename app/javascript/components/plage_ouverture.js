@@ -1,6 +1,5 @@
 class PlageOuverture {
   constructor() {
-    // Essai pour changer la clé de cache de build JS en CI
     this.toggleLieuSelectionField(true);
     $(".plage-ouverture-form .form-check-input[name='plage_ouverture[motif_ids][]']").on("input", () => { this.toggleLieuSelectionField(); })
   }
