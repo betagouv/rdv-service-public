@@ -23,7 +23,7 @@ fr:
         notify_by_sms: "Accepte les notifications par SMS"
         notify_by_email: "Accepte les notifications par email"
         created_through: "Origine du compte"
-        notes: Remarques
+        annotation_content: Remarques
         ants_pre_demande_number: &ants_pre_demande_number_label Numéro de pré-demande ANTS
       user/logements:
         sdf: Sans domicile fixe

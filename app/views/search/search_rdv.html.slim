@@ -9,4 +9,4 @@
 - else
   .fr-container
     section.py-4.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
-      = render @context, context: @context
+      = render partial: "search/#{@context.current_step}", locals: { context: @context }

@@ -84,6 +84,7 @@ Rails.application.routes.draw do
     get :territory_rdvs
     get :territory_active_agents
     get :territory_receipts
+    get :lieux_map_data, format: :json
   end
 
   authenticate :user do
@@ -289,7 +290,7 @@ Rails.application.routes.draw do
     end
   end
   authenticated :agent do
-    root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
+    root to: "agents/pages#home", as: :authenticated_agent_root
   end
 
   scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do

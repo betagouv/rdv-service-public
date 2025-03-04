@@ -206,6 +206,8 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    crisp-api (1.1.12)
+      rest-client (~> 2.0)
     css_parser (1.16.0)
       addressable
     csv (3.3.2)
@@ -230,6 +232,7 @@ GEM
       devise (> 3.5.2, < 5)
       rails (>= 4.2.0, < 7.3)
     diff-lcs (1.5.0)
+    domain_name (0.6.20240107)
     doorkeeper (5.7.1)
       railties (>= 5)
     doorkeeper-i18n (5.2.7)
@@ -291,6 +294,9 @@ GEM
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
     htmlentities (4.3.4)
+    http-accept (1.7.0)
+    http-cookie (1.0.8)
+      domain_name (~> 0.5)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     icalendar (2.8.0)
@@ -362,6 +368,10 @@ GEM
     marcel (1.0.4)
     matrix (0.4.2)
     method_source (1.1.0)
+    mime-types (3.6.0)
+      logger
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2025.0220)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
     minitest (5.25.4)
@@ -384,6 +394,7 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
+    netrc (0.11.0)
     nio4r (2.7.3)
     nokogiri (1.18.3)
       mini_portile2 (~> 2.8.2)
@@ -554,6 +565,11 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     rexml (3.4.0)
     rouge (4.5.1)
     rspec (3.13.0)
@@ -698,7 +714,7 @@ GEM
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
     uniform_notifier (1.16.0)
-    uri (0.13.0)
+    uri (1.0.3)
     validate_email (0.1.6)
       activemodel (>= 3.0)
       mail (>= 2.2.5)
@@ -762,6 +778,7 @@ DEPENDENCIES
   common_french_passwords
   connection_pool
   coverband
+  crisp-api (~> 1.1)
   csv
   database_cleaner
   devise!

@@ -39,7 +39,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     # create user with mail
     fill_in :user_first_name, with: "Jean-Paul"
     fill_in :user_last_name, with: "Orvoir"
-    expect(page).to have_selector(".user_email")
+    fill_in :user_email, with: "jporvoir@bidule.com"
     click_button("Créer usager")
 
     # create user without email
@@ -171,6 +171,21 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
           JSON.parse(req.body)["data"]["users"].pluck("id") == [user.id]
         end)
+      end
+    end
+
+    describe "with a user with a notification email" do
+      let(:user_with_notification_email) { create(:user, :without_devise_email, notification_email: "user_with_notif_email@test.com", organisations: [organisation]) }
+
+      it "works", js: true do
+        step1
+        select_user(user_with_notification_email)
+        click_button("Continuer")
+        step3(:enabled)
+        expect(page).to have_content("Reçoit les notifications par email")
+        expect(page).to have_content("user_with_notif_email@test.com")
+        click_button("Confirmer le RDV")
+        expect(user_with_notification_email.rdvs.count).to eq(1)
       end
     end
   end

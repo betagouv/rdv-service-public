@@ -1,7 +1,7 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns += [:inclusion_connect_open_id_sub]
+  self.ignored_columns += %i[inclusion_connect_open_id_sub invitations_count]
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
@@ -100,7 +100,7 @@ class Agent < ApplicationRecord
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
   validates :last_name, presence: true, unless: -> { allow_blank_name }
-  validates :agent_services, presence: true
+  validates :agent_services, presence: true, unless: -> { roles.none? }
 
   # Hooks
   before_destroy :prevent_destroy_if_rdvs

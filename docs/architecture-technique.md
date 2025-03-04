@@ -85,11 +85,12 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 | Navigateur redirigé par App Rails | API Microsoft          | HTTPS (OAuth) | 443  | Amsterdam, Pays-Bas | login.microsoftonline.com                             |
 | App Rails                         | API dédoublonnage ANTS | HTTPS         | 443  | Paris, France       | api-coordination.rendezvouspasseport.ants.gouv.fr/api |
 | Moteur de recherche ANTS          | App Rails              | HTTPS         | 443  | Paris, France       | rdv.anct.gouv.fr/api/ants/availableTimeSlots          |
+| App Rails                         | Crisp                  | HTTPS         | 443  | Amsterdam, Pays-Bas | api.crisp.chat                                        |
 
 ##### Webhooks
 
 L'application permet aussi de définir des webhooks sortants, et donc d'appeler en HTTPS un service externe
-lors de la création, modification ou suppression de certaines données applicatives. 
+lors de la création, modification ou suppression de certaines données applicatives.
 
 Nous savons que les webhooks sont
 utilisés pour gérer une synchronisation de calendrier dans :
@@ -111,11 +112,11 @@ plusieurs tables dans la base de données de RDV Insertion.
 
 ### Inventaire des dépendances
 
-| Nom de l’applicatif | Service          | Version   | Commentaires                                                    |
-|---------------------|------------------|-----------|-----------------------------------------------------------------|
-| Serveur web         | Rails @ Scalingo | Rails 7   | Voir ci-dessous pour le détail des librairies                   |
-| BDD métier          | PostgreSQL       | `14.10.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
-| BDD technique       | Redis            | `7.2.3`   | Stockage du cache                                               |
+| Nom de l’applicatif | Service          | Version  | Commentaires                                                    |
+|---------------------|------------------|----------|-----------------------------------------------------------------|
+| Serveur web         | Rails @ Scalingo | Rails 7  | Voir ci-dessous pour le détail des librairies                   |
+| BDD métier          | PostgreSQL       | `16.6.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
+| BDD technique       | Redis            | `7.2.5`  | Stockage du cache                                               |
 
 La liste des librairies Ruby est disponible dans :
 - [Gemfile](/Gemfile) pour la liste des dépendances directes et la description de la fonctionnalité de chacune des gems
@@ -130,10 +131,10 @@ La liste des librairies JS utilisée est disponible dans :
 
 ### Schéma de l’architecture
 
-Notre application est accessible sous 3 "marques" différentes :
+Notre application est accessible sous 3 "marques" différentes via trois noms de domaine différents :
 - https://www.rdv-solidarites.fr/
 - https://www.rdv-aide-numerique.fr/
-- https://rdv.anct.gouv.fr/
+- https://rdv.anct.gouv.fr/ (prochainement rdv.numerique.gouv.fr)
 
 Nous avons actuellement 3 instances :
 - `production-rdv-solidarites` : serveur de production pour `www.rdv-solidarites.fr` et `www.rdv-aide-numerique.fr`
@@ -301,14 +302,14 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 Les serveurs (applicatif et base de données) sont gérés par Scalingo. Scalingo ne fournit pas de système de rôle : soit
 on a accès à une app, soit on ne l'a pas.
 
-Nous avons actuellement 6 apps Scalingo, les trois premières pour le métier, les trois autres pour le tooling :
-
-- `osc-secnum-fr1/production-rdv-solidarites`
-- `osc-secnum-fr1/production-rdv-mairie`
-- `osc-secnum-fr1/demo-rdv-solidarites`
-- `osc-secnum-fr1/rdv-service-public-etl`
-- `osc-secnum-fr1/rdv-service-public-etl-staging`
-- `osc-secnum-fr1/rdv-service-public-metabase`
+Nous avons les applications suivantes :
+- `osc-secnum-fr1/production-rdv-solidarites` : appli métier de production
+- `osc-secnum-fr1/production-rdv-mairie` : appli métier de production
+- `osc-secnum-fr1/demo-rdv-solidarites` : appli métier de préproduction
+- `osc-secnum-fr1/staging-rdv-service-public` : appli métier de préproduction
+- `osc-secnum-fr1/rdv-service-public-etl` : appli de tooling de production
+- `osc-secnum-fr1/rdv-service-public-etl-staging` : appli de tooling de préproduction
+- `osc-secnum-fr1/rdv-service-public-metabase` : appli de tooling de production
 
 Le fait d'avoir accès à une app Scalingo donne les droits suivants :
 
@@ -514,8 +515,7 @@ Nous avons également activé CodeQL sur notre dépot GitHub. Cet outil permet d
 
 ### Intégrité
 
-Des backups de nos bases de données Postgres et Redis sont faîtes automatiquement par Scalingo. Ces backups sont
-créés quotidiennement et gardés 1 an.
+Des backups de nos bases de données Postgres et Redis sont faîtes automatiquement par Scalingo. Ces backups sont créés quotidiennement et [conservés 1 an](https://doc.scalingo.com/databases/backup-policies#retention-policy-for-scheduled-backups).
 
 Nous les testons régulièrement en les téléchargeant et en les chargeant dans notre environnement local.
 
@@ -524,7 +524,13 @@ de cluster avec 2 nodes, qui permet un failover automatique en cas de plantage d
 
 ### Confidentialité
 
-**L'application est initialement conçue pour la prise de RDV dans le milieu médico-social. Nous manipulons donc des données médicales.**
+**L'application est initialement conçue pour la prise de RDV dans le milieu médico-social. Cependant, les données liées au rendez-vous ne sont pas des données de santé.**
+Numéricité a étudié cette question, et rédigé une note sur le sujet qui arrive à la conclusion suivante :
+
+> Est-ce que RDV Service Public traite des données de santé ?
+
+> Non, eu égard aux éléments susvisés, le service numérique traite les données relatives aux comptes des agents publics et les données relatives aux prises de rendez-vous, donc uniquement des données à caractère personnel. Les données relatives aux rendez-vous ne permettent pas d’identifier la pathologie ou l’état de santé des personnes concernées (qui peuvent d’ailleurs prendre un rendez-vous pour une autre personne).
+
 
 Parmi les données que nous manipulons, les plus critiques sont :
 - les coordonnées des usager⋅es

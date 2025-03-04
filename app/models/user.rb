@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  self.ignored_columns += %i[invitations_count notes]
+
   # Mixins
   has_paper_trail(
     only: %w[
@@ -26,7 +28,7 @@ class User < ApplicationRecord
 
   def self.search_options
     {
-      using: { tsearch: { prefix: true, tsvector_column: "text_search_terms" } },
+      using: { tsearch: { prefix: true, tsvector_column: "text_search_terms_with_notification_email" } },
     }
   end
 
@@ -75,8 +77,6 @@ class User < ApplicationRecord
   # Hooks
   before_save :set_email_to_null_if_blank
   before_save :clear_notification_email_if_email_present
-  after_create :create_annotations  # backfill temporaire, première étape de migration
-  after_update :sync_annotations    # backfill temporaire, première étape de migration
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -263,6 +263,14 @@ class User < ApplicationRecord
     annotations.where.not(territory: territories.reload).each(&:destroy!)
   end
 
+  def annotation_for(territory)
+    annotations.find_by(territory: territory)&.content
+  end
+
+  def annotate!(content, territory:)
+    Annotation.upsert!(content, user: self, territory:)
+  end
+
   protected
 
   def generate_rdv_invitation_token
@@ -294,30 +302,6 @@ class User < ApplicationRecord
 
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
-  end
-
-  def create_annotations
-    return if notes.blank?
-
-    territories.distinct.map.each do |territory|
-      annotation = annotations.find_or_initialize_by(territory:)
-      annotation.content = notes
-      annotation.save!
-    end
-  end
-
-  def sync_annotations
-    return unless notes_previously_changed?
-
-    if notes.present?
-      territories.distinct.map.each do |territory|
-        annotation = annotations.find_or_initialize_by(territory:)
-        annotation.content = notes
-        annotation.save!
-      end
-    else
-      annotations.destroy_all
-    end
   end
 
   def clear_notification_email_if_email_present
