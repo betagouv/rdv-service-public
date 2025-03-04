@@ -18,56 +18,56 @@ class PlageOuverture {
   }
 
   armSecondaryTimesToggle() {
-    const addSecondaryTimesButton = document.querySelector(".js-plages-form-add-secondary-times-button")
-    const removeSecondaryTimesButton = document.querySelector(".js-plages-form-remove-secondary-times-button")
-    const secondaryTimesContainer = document.querySelector(".js-plages-form-secondary-times-container")
-    const secondaryTimesShownInitially = document.querySelector(".js-plages-form-secondary-times-initial-state").dataset.state === "true"
+    const addSecondaryTimesButton = document.querySelector(".js-plages-form-add-secondary-times-button");
+    const removeSecondaryTimesButton = document.querySelector(".js-plages-form-remove-secondary-times-button");
+    const secondaryTimesContainer = document.querySelector(".js-plages-form-secondary-times-container");
+    const secondaryTimesShownInitially = document.querySelector(".js-plages-form-secondary-times-initial-state").dataset.state === "true";
 
-    const secondaryTimesStartsAtHours = document.querySelector("#plage_ouverture_secondary_start_time_4i")
-    const secondaryTimesStartsAtMinutes = document.querySelector("#plage_ouverture_secondary_start_time_5i")
-    const secondaryTimesEndsAtHours = document.querySelector("#plage_ouverture_secondary_end_time_4i")
-    const secondaryTimesEndsAtMinutes = document.querySelector("#plage_ouverture_secondary_end_time_5i")
+    const secondaryTimesStartsAtHours = document.querySelector("#plage_ouverture_secondary_start_time_4i");
+    const secondaryTimesStartsAtMinutes = document.querySelector("#plage_ouverture_secondary_start_time_5i");
+    const secondaryTimesEndsAtHours = document.querySelector("#plage_ouverture_secondary_end_time_4i");
+    const secondaryTimesEndsAtMinutes = document.querySelector("#plage_ouverture_secondary_end_time_5i");
 
-    const primaryTimesEndsAtHours = document.querySelector("#plage_ouverture_end_time_4i")
+    const primaryTimesEndsAtHours = document.querySelector("#plage_ouverture_end_time_4i");
 
     const showSecondaryTimes = () => {
-      addSecondaryTimesButton.classList.add("hidden")
-      removeSecondaryTimesButton.classList.remove("hidden")
-      secondaryTimesContainer.classList.remove("hidden")
+      addSecondaryTimesButton.classList.add("hidden");
+      removeSecondaryTimesButton.classList.remove("hidden");
+      secondaryTimesContainer.classList.remove("hidden");
 
-      secondaryTimesStartsAtHours.required = true
-      secondaryTimesStartsAtMinutes.required = true
-      secondaryTimesEndsAtHours.required = true
-      secondaryTimesEndsAtMinutes.required = true
+      secondaryTimesStartsAtHours.required = true;
+      secondaryTimesStartsAtMinutes.required = true;
+      secondaryTimesEndsAtHours.required = true;
+      secondaryTimesEndsAtMinutes.required = true;
 
       if(!secondaryTimesStartsAtHours.value) {
-        secondaryTimesStartsAtHours.value ||= parseInt(primaryTimesEndsAtHours.value) + 1
-        secondaryTimesStartsAtMinutes.value ||= "00"
-        secondaryTimesEndsAtHours.value ||= parseInt(primaryTimesEndsAtHours.value) + 5
-        secondaryTimesEndsAtMinutes.value ||= "00"
+        secondaryTimesStartsAtHours.value ||= parseInt(primaryTimesEndsAtHours.value) + 1;
+        secondaryTimesStartsAtMinutes.value ||= "00";
+        secondaryTimesEndsAtHours.value ||= parseInt(primaryTimesEndsAtHours.value) + 5;
+        secondaryTimesEndsAtMinutes.value ||= "00";
       }
     }
     const hideSecondaryTimes = () => {
-      addSecondaryTimesButton.classList.remove("hidden")
-      removeSecondaryTimesButton.classList.add("hidden")
-      secondaryTimesContainer.classList.add("hidden")
+      addSecondaryTimesButton.classList.remove("hidden");
+      removeSecondaryTimesButton.classList.add("hidden");
+      secondaryTimesContainer.classList.add("hidden");
 
-      secondaryTimesStartsAtHours.required = false
-      secondaryTimesStartsAtMinutes.required = false
-      secondaryTimesEndsAtHours.required = false
-      secondaryTimesEndsAtMinutes.required = false
+      secondaryTimesStartsAtHours.required = false;
+      secondaryTimesStartsAtMinutes.required = false;
+      secondaryTimesEndsAtHours.required = false;
+      secondaryTimesEndsAtMinutes.required = false;
 
-      secondaryTimesStartsAtHours.value = ""
-      secondaryTimesStartsAtMinutes.value = ""
-      secondaryTimesEndsAtHours.value = ""
-      secondaryTimesEndsAtMinutes.value = ""
+      secondaryTimesStartsAtHours.value = "";
+      secondaryTimesStartsAtMinutes.value = "";
+      secondaryTimesEndsAtHours.value = "";
+      secondaryTimesEndsAtMinutes.value = "";
     }
-    addSecondaryTimesButton.addEventListener("click", showSecondaryTimes)
+    addSecondaryTimesButton.addEventListener("click", showSecondaryTimes);
 
-    removeSecondaryTimesButton.addEventListener("click", hideSecondaryTimes)
+    removeSecondaryTimesButton.addEventListener("click", hideSecondaryTimes);
 
     if(secondaryTimesShownInitially) {
-      showSecondaryTimes()
+      showSecondaryTimes();
     }
   }
 }
