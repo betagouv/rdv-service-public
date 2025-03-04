@@ -4,12 +4,16 @@ class WebInvitationSearchContext < InvitationSearchContext
 
   def initialize(user:, query_params: {})
     super
-    @service_id = query_params[:service_id]
+
+    # Ces paramètres sont déterminés par l'invitation
     @address = query_params[:address]
     @latitude = query_params[:latitude]
     @longitude = query_params[:longitude]
 
     # User choices
+    # La plupart du temps il n'y a qu'un seul service qui propose des invitations, donc il n'est
+    # pas choisi explicitement, mais c'est techniquement possible
+    @service_id = query_params[:service_id]
     # motif_selection:
     @motif_name_with_location_type = query_params[:motif_name_with_location_type]
 

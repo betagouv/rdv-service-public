@@ -2,32 +2,31 @@ class WebSearchContext < SearchContext
   include Users::CreneauxWizardConcern
   attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude
 
+  ADDRESS_SELECTION_PARAMS = %i[latitude longitude address departement city_code street_ban_id].freeze
+
+  USER_CHOICE_PARAMS = %i[service_id motif_name_with_location_type lieu_id user_selected_organisation_id motif_id].freeze
+
   def initialize(user:, query_params: {})
     super
-    @latitude = query_params[:latitude]
-    @longitude = query_params[:longitude]
-    @address = query_params[:address]
-    @city_code = query_params[:city_code]
-    @street_ban_id = query_params[:street_ban_id]
+
+    # Optional starting conditions
     @public_link_organisation_id = query_params[:public_link_organisation_id]
     @external_organisation_ids = query_params[:external_organisation_ids]
     @referent_ids = query_params[:referent_ids]
     @prescripteur = query_params[:prescripteur]
 
+    # Address selection:
+    @latitude = query_params[:latitude]
+    @longitude = query_params[:longitude]
+    @address = query_params[:address]
+    @city_code = query_params[:city_code]
+    @street_ban_id = query_params[:street_ban_id]
+
     # User choices
-    # service_selection:
     @service_id = query_params[:service_id]
-
-    # motif_selection:
     @motif_name_with_location_type = query_params[:motif_name_with_location_type]
-
-    # lieu_selection:
     @lieu_id = query_params[:lieu_id]
-
-    # organisation_selection:
     @user_selected_organisation_id = query_params[:user_selected_organisation_id]
-
-    # creneau_selection
     @motif_id = query_params[:motif_id]
   end
 
