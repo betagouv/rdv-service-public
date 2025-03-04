@@ -1,40 +1,35 @@
 module SearchContextHelper
-  def path_to_motif_selection(params)
+  def path_to_service_selection(params)
     prendre_rdv_path(
-      service_selection(params).merge(
-        service_id: params[:service_id]
-      )
+      permit_hash_or_params(params, service_selection_permitted_params_list)
     )
   end
 
-  def path_to_service_selection(params)
-    prendre_rdv_path(service_selection(params))
+  def path_to_motif_selection(params)
+    prendre_rdv_path(
+      permit_hash_or_params(params, [:service_id] + service_selection_permitted_params_list)
+    )
   end
 
   def path_to_lieu_selection(params)
     prendre_rdv_path(
-      service_selection(params).merge(
-        motif_name_with_location_type: params[:motif_name_with_location_type],
-        service_id: params[:service_id]
-      )
+      permit_hash_or_params(params, %i[service_id motif_name_with_location_type] + service_selection_permitted_params_list)
     )
   end
 
   def path_to_organisation_selection(params)
     prendre_rdv_path(
-      service_selection(params).merge(
-        motif_name_with_location_type: params[:motif_name_with_location_type],
-        user_selected_organisation_id: nil
-      )
+      permit_hash_or_params(params, %i[service_id motif_name_with_location_type] + service_selection_permitted_params_list)
     )
   end
 
   def path_to_creneau_selection(params)
+    additional_params = %i[
+      service_id motif_name_with_location_type lieu_id user_selected_organisation_id
+    ]
+
     prendre_rdv_path(
-      service_selection(params).merge(
-        motif_name_with_location_type: params[:motif_name_with_location_type],
-        lieu_id: params[:lieu_id], user_selected_organisation_id: params[:user_selected_organisation_id]
-      )
+      permit_hash_or_params(params, additional_params + service_selection_permitted_params_list)
     )
   end
 
