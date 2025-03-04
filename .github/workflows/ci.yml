@@ -134,7 +134,14 @@ jobs:
           path: node_modules
       - name: Install JS dependencies
         run: yarn install
+      - name: Cache precompiled assets
+        id: cache-precompiled-assets
+        uses: actions/cache@v4
+        with:
+          key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
+          path: app/assets/builds
       - name: Precompile assets
+        if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: yarn run build
       - name: Prepare runtime log cache key
         run: ls spec/**/*.rb > tmp/spec_files.txt
@@ -202,7 +209,14 @@ jobs:
           path: node_modules
       - name: Install JS dependencies
         run: yarn install
+      - name: Cache precompiled assets
+        id: cache-precompiled-assets
+        uses: actions/cache@v4
+        with:
+          key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
+          path: app/assets/builds
       - name: Precompile assets
+        if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: yarn run build
       - name: Prepare runtime log cache key
         run: "ls spec/features/${{ matrix.dirname }}/**/*.rb > tmp/feature_spec_${{ matrix.dirname }}_files.txt"
