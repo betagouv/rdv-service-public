@@ -2,7 +2,9 @@ class WebSearchContext < SearchContext
   include Users::CreneauxWizardConcern
   attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude
 
-  ADDRESS_SELECTION_PARAMS = %i[latitude longitude address departement city_code street_ban_id].freeze
+  # departement est un cas particulier parce qu'il est aussi utilisé en dehors de addresse selection pour
+  # passer cette première étape
+  ADDRESS_SELECTION_PARAMS = %i[latitude longitude address city_code street_ban_id departement].freeze
 
   USER_CHOICE_PARAMS = %i[service_id motif_name_with_location_type lieu_id user_selected_organisation_id motif_id].freeze
 
