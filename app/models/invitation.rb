@@ -1,3 +1,6 @@
+# Les invitations peuvent servir dans plusieurs cas :
+# - inviter un usager à prendre un nouveau rendez-vous, suite à une notification envoyée par RDV Insertion
+# - permettre à un usager de modifier un rendez-vous existant, dont parfois de changer le créneau (parfois pour les Files d'attente)
 class Invitation
   attr_reader :attributes
 
@@ -31,10 +34,6 @@ class Invitation
 
   def to_take_rdv?
     user_by_rdv_invitation_token.present?
-  end
-
-  def to_edit_rdv?
-    participation_by_invitation_token.present?
   end
 
   def expired?
