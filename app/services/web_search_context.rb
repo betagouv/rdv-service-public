@@ -10,14 +10,25 @@ class WebSearchContext < SearchContext
     @city_code = query_params[:city_code]
     @street_ban_id = query_params[:street_ban_id]
     @public_link_organisation_id = query_params[:public_link_organisation_id]
-    @user_selected_organisation_id = query_params[:user_selected_organisation_id]
     @external_organisation_ids = query_params[:external_organisation_ids]
-    @motif_id = query_params[:motif_id]
-    @motif_name_with_location_type = query_params[:motif_name_with_location_type]
-    @service_id = query_params[:service_id]
-    @lieu_id = query_params[:lieu_id]
     @referent_ids = query_params[:referent_ids]
     @prescripteur = query_params[:prescripteur]
+
+    # User choices
+    # service_selection:
+    @service_id = query_params[:service_id]
+
+    # motif_selection:
+    @motif_name_with_location_type = query_params[:motif_name_with_location_type]
+
+    # lieu_selection:
+    @lieu_id = query_params[:lieu_id]
+
+    # organisation_selection:
+    @user_selected_organisation_id = query_params[:user_selected_organisation_id]
+
+    # creneau_selection
+    @motif_id = query_params[:motif_id]
   end
 
   def invitation?

@@ -4,13 +4,24 @@ class WebInvitationSearchContext < InvitationSearchContext
 
   def initialize(user:, query_params: {})
     super
-    @user_selected_organisation_id = query_params[:user_selected_organisation_id]
-    @motif_id = query_params[:motif_id]
-    @motif_name_with_location_type = query_params[:motif_name_with_location_type]
     @service_id = query_params[:service_id]
     @address = query_params[:address]
     @latitude = query_params[:latitude]
     @longitude = query_params[:longitude]
+
+    # User choices
+    # motif_selection:
+    @motif_name_with_location_type = query_params[:motif_name_with_location_type]
+
+    # lieu_selection: le lieu peut parfois être déterminé par l'invitation
+    # mais il peut aussi être choisi par l'usager.
+    # Dans les deux cas, la variable d'instance lieu_id est initialisée par la classe parente
+
+    # organisation_selection:
+    @user_selected_organisation_id = query_params[:user_selected_organisation_id]
+
+    # creneau_selection
+    @motif_id = query_params[:motif_id]
   end
 
   # dupliqué de WebSearchContext

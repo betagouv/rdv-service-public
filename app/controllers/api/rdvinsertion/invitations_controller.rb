@@ -1,4 +1,6 @@
 class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseController
+  # TODO: address latitude longitude ne sont pas utilisés, mais quand même passés
+  # invitation_token sert uniquement à retrouver l'usager
   INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[address latitude longitude invitation_token]).freeze
 
   def creneau_availability
