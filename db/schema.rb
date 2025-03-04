@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_25_184048) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_27_165927) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -209,7 +209,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_25_184048) do
     t.integer "invitation_limit"
     t.string "invited_by_type"
     t.bigint "invited_by_id"
-    t.integer "invitations_count", default: 0
     t.datetime "deleted_at"
     t.string "email_original"
     t.string "provider", default: "email", null: false
@@ -229,16 +228,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_25_184048) do
     t.text "refresh_microsoft_graph_token"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
-    t.string "inclusion_connect_open_id_sub"
     t.boolean "connected_with_agent_connect", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["external_id"], name: "index_agents_on_external_id", unique: true
-    t.index ["inclusion_connect_open_id_sub"], name: "index_agents_on_inclusion_connect_open_id_sub", unique: true, where: "(inclusion_connect_open_id_sub IS NOT NULL)"
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true
-    t.index ["invitations_count"], name: "index_agents_on_invitations_count"
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_agents_on_last_name"
@@ -534,7 +530,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_25_184048) do
     t.integer "invitation_limit"
     t.string "invited_by_type"
     t.bigint "invited_by_id"
-    t.integer "invitations_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -782,7 +777,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_25_184048) do
     t.integer "invitation_limit"
     t.string "invited_by_type"
     t.bigint "invited_by_id"
-    t.integer "invitations_count", default: 0
     t.integer "caisse_affiliation"
     t.string "affiliation_number"
     t.integer "family_situation"
@@ -817,7 +811,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_25_184048) do
     t.index ["first_name"], name: "index_users_on_first_name"
     t.index ["franceconnect_openid_sub"], name: "index_users_on_franceconnect_openid_sub", where: "(franceconnect_openid_sub IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
-    t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_users_on_last_name"

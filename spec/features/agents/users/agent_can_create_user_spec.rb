@@ -1,5 +1,6 @@
 RSpec.describe "Agent can create user" do
-  let!(:organisation) { create(:organisation, name: "MDS des Champs") }
+  let!(:organisation) { create(:organisation, name: "MDS des Champs", territory: territory) }
+  let!(:territory) { create(:territory, enable_notes_field: true) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:user) do
     create(:user, first_name: "Jean", last_name: "LEGENDE", email: "jean@legende.com", organisations: [organisation])
@@ -18,8 +19,13 @@ RSpec.describe "Agent can create user" do
   it "works" do
     fill_in :user_first_name, with: "Marco"
     fill_in :user_last_name, with: "Lebreton"
+    fill_in "Remarques", with: "souhaite participer au prochain atelier collectif"
     click_button "Créer"
     expect_page_title("Marco LEBRETON")
+
+    user = User.last
+    expect(user.annotation_for(organisation.territory)).to eq "souhaite participer au prochain atelier collectif"
+
     expect(page).to have_no_content("Inviter")
     within("#spec-primary-user-card") { click_link "Modifier" }
     fill_in "Email", with: "marco@lebreton.bzh"

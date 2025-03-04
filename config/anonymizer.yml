@@ -72,7 +72,6 @@ tables:
       - invitation_limit
       - reset_password_sent_at
       - invitation_sent_at
-      - invitations_count
       - invited_by_id
       - invited_by_type
       - invited_through
@@ -99,7 +98,6 @@ tables:
       - microsoft_graph_token
       - refresh_microsoft_graph_token
       - remember_created_at
-      - inclusion_connect_open_id_sub
     non_anonymized_column_names:
       - reset_password_sent_at
       - last_sign_in_at
@@ -111,7 +109,6 @@ tables:
       - invitation_limit
       - invited_by_type
       - invited_by_id
-      - invitations_count
       - provider
       - rdv_notifications_level
       - allow_password_change
@@ -246,7 +243,6 @@ tables:
       - invitation_limit
       - invited_by_type
       - invited_by_id
-      - invitations_count
       - status
       - created_by_id
       - created_by_type
