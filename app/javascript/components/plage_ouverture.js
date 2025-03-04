@@ -1,6 +1,5 @@
 class PlageOuverture {
   constructor() {
-    tiens_tiens_mais_cette_fonction_nexiste_pas();
     this.toggleLieuSelectionField(true);
     $(".plage-ouverture-form .form-check-input[name='plage_ouverture[motif_ids][]']").on("input", () => { this.toggleLieuSelectionField(); })
   }
