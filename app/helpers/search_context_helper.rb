@@ -63,7 +63,7 @@ module SearchContextHelper
       {
         referent_ids: [],
         external_organisation_ids: [],
-        user_ids: [],
+        user_ids: [], # utilisés par les agents prescripteurs en prescription interne
       },
     ]
   end
