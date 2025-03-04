@@ -85,6 +85,7 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 | Navigateur redirigé par App Rails | API Microsoft          | HTTPS (OAuth) | 443  | Amsterdam, Pays-Bas | login.microsoftonline.com                             |
 | App Rails                         | API dédoublonnage ANTS | HTTPS         | 443  | Paris, France       | api-coordination.rendezvouspasseport.ants.gouv.fr/api |
 | Moteur de recherche ANTS          | App Rails              | HTTPS         | 443  | Paris, France       | rdv.anct.gouv.fr/api/ants/availableTimeSlots          |
+| App Rails                         | Crisp                  | HTTPS         | 443  | Amsterdam, Pays-Bas | api.crisp.chat                                        |
 
 ##### Webhooks
 
@@ -111,11 +112,11 @@ plusieurs tables dans la base de données de RDV Insertion.
 
 ### Inventaire des dépendances
 
-| Nom de l’applicatif | Service          | Version   | Commentaires                                                    |
-|---------------------|------------------|-----------|-----------------------------------------------------------------|
-| Serveur web         | Rails @ Scalingo | Rails 7   | Voir ci-dessous pour le détail des librairies                   |
-| BDD métier          | PostgreSQL       | `14.10.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
-| BDD technique       | Redis            | `7.2.3`   | Stockage du cache                                               |
+| Nom de l’applicatif | Service          | Version  | Commentaires                                                    |
+|---------------------|------------------|----------|-----------------------------------------------------------------|
+| Serveur web         | Rails @ Scalingo | Rails 7  | Voir ci-dessous pour le détail des librairies                   |
+| BDD métier          | PostgreSQL       | `16.6.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
+| BDD technique       | Redis            | `7.2.5`  | Stockage du cache                                               |
 
 La liste des librairies Ruby est disponible dans :
 - [Gemfile](/Gemfile) pour la liste des dépendances directes et la description de la fonctionnalité de chacune des gems

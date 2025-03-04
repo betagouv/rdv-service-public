@@ -4,8 +4,8 @@ RSpec.describe MergeUsersService, type: :service do
   # defaults
   let!(:organisation) { create(:organisation) }
   let(:attributes_to_merge) { [] }
-  let(:user_target) { create(:user, organisations: [organisation]) }
-  let(:user_to_merge) { create(:user, organisations: [organisation]) }
+  let!(:user_target) { create(:user, organisations: [organisation]) }
+  let!(:user_to_merge) { create(:user, organisations: [organisation]) }
 
   context "simply merge first_name" do
     let(:user_target) { create(:user, first_name: "Jean", last_name: "PAUL", email: "jean@paul.fr", organisations: [organisation]) }
@@ -179,8 +179,8 @@ RSpec.describe MergeUsersService, type: :service do
     let!(:organisation2) { create(:organisation) }
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
-    let(:user_target) { create(:user, referent_agents: [agent1], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, referent_agents: [agent2], organisations: [organisation, organisation2]) }
+    let!(:user_target) { create(:user, referent_agents: [agent1], organisations: [organisation]) }
+    let!(:user_to_merge) { create(:user, referent_agents: [agent2], organisations: [organisation, organisation2]) }
 
     it "does not move the agent from the other orga anything" do
       perform
@@ -245,6 +245,46 @@ RSpec.describe MergeUsersService, type: :service do
           [user_target, "User to merge, current territory"],
         ]
         expect(Annotation.where(territory: current_territory).map { [_1.user, _1.content] }).to match_array(expected_annotations_in_current_territory)
+      end
+    end
+  end
+
+  context "only user to merge has an annotation" do
+    before do
+      user_to_merge.annotations.create!(territory: organisation.territory, content: "user to merge")
+    end
+
+    it "deletes the annotation along with the merged user by default" do
+      expect { perform }.to change(Annotation, :count).by(-1).and(change(User, :count).by(-1))
+      expect(user_target.annotations.find_by(territory: organisation.territory)).to be_nil
+    end
+
+    context "when merging annotations" do
+      let(:attributes_to_merge) { [:annotation_content] }
+
+      it "moves the annotation to the target user" do
+        perform
+        expect(user_target.annotation_for(organisation.territory)).to eq("user to merge")
+      end
+    end
+  end
+
+  context "only target user has an annotation" do
+    before do
+      user_target.annotations.create!(territory: organisation.territory, content: "target user")
+    end
+
+    it "keeps the annotation by default" do
+      expect { perform }.not_to change(Annotation, :count)
+      expect(user_target.annotation_for(organisation.territory)).to eq("target user")
+    end
+
+    context "when merging annotations" do
+      let(:attributes_to_merge) { [:annotation_content] }
+
+      it "deletes the annotation of the target user, to replace it with with the absence of annotation of the user to merge" do
+        expect { perform }.to change(Annotation, :count).by(-1)
+        expect(user_target.annotations.find_by(territory: organisation.territory)).to be_nil
       end
     end
   end
