@@ -31,9 +31,9 @@ class SearchController < ApplicationController
       redirect_to search_creneau_admin_organisation_prescription_path(session[:agent_prescripteur_organisation_id], agent_search_params)
     else
       @context = if invitation?
-                   WebInvitationSearchContext.new(user: current_user, query_params: query_params)
+                   WebInvitationSearchContext.new(user: current_user, query_params: search_params.merge(invitation.query_params))
                  else
-                   WebSearchContext.new(user: current_user, query_params: query_params)
+                   WebSearchContext.new(user: current_user, query_params: search_params)
                  end
 
       if !current_domain.provides_address_selection? && @context.current_step == :address_selection
@@ -99,10 +99,6 @@ class SearchController < ApplicationController
     end
   end
 
-  def query_params
-    search_params.to_h.deep_symbolize_keys.merge(invitation? ? invitation.query_params : {})
-  end
-
   def invitation?
     invitation.present? && invitation.to_take_rdv?
   end
@@ -113,7 +109,7 @@ class SearchController < ApplicationController
       :service_id, :lieu_id, :date, :motif_name_with_location_type, :motif_category_short_name,
       :motif_id, :public_link_organisation_id, :user_selected_organisation_id, :prescripteur,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []
-    )
+    ).to_h.deep_symbolize_keys
   end
 
   def agent_search_params
