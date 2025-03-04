@@ -1,6 +1,6 @@
 class WebInvitationSearchContext < InvitationSearchContext
   include Users::CreneauxWizardConcern
-  attr_reader :errors, :query_params, :address, :latitude, :longitude
+  attr_reader :errors, :query_params, :address, :latitude, :longitude, :organisation_ids, :motif_category_short_name
 
   def initialize(user:, query_params: {})
     super

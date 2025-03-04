@@ -13,7 +13,6 @@ class WebSearchContext < SearchContext
     @user_selected_organisation_id = query_params[:user_selected_organisation_id]
     @external_organisation_ids = query_params[:external_organisation_ids]
     @motif_id = query_params[:motif_id]
-    @motif_category_short_name = query_params[:motif_category_short_name]
     @motif_name_with_location_type = query_params[:motif_name_with_location_type]
     @service_id = query_params[:service_id]
     @lieu_id = query_params[:lieu_id]
@@ -67,8 +66,6 @@ class WebSearchContext < SearchContext
   end
 
   private
-
-  attr_reader :referent_ids, :lieu_id
 
   def matching_motifs
     @matching_motifs ||= filter_motifs(geo_search.available_motifs)

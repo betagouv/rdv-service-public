@@ -25,8 +25,8 @@ class MergeUsersService < BaseService
     current_territory = @organisation.territory
 
     annotation_to_merge = @user_to_merge.annotations.find_by(territory: current_territory)
-    @user_target.annotate!(annotation_to_merge.content, territory: current_territory)
-    annotation_to_merge.destroy!
+    @user_target.annotate!(annotation_to_merge&.content, territory: current_territory)
+    annotation_to_merge&.destroy!
   end
 
   def merge_user_attributes

@@ -32,6 +32,9 @@ class CreateCrispTicketJob < ApplicationJob
           domain,
         ],
         subject:,
+        device: {
+          locales: ["fr"],
+        },
       }
     )
   end

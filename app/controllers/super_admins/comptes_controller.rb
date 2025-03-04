@@ -1,5 +1,14 @@
 module SuperAdmins
   class ComptesController < SuperAdmins::ApplicationController
+    def new
+      @agent = Agent.find_by(id: params[:agent_id])
+      if @agent
+        authorize_resource(@agent)
+      end
+
+      super
+    end
+
     def create
       compte_params[:agent][:invited_by] = current_super_admin
       compte = Compte.new(compte_params, current_domain)
@@ -24,7 +33,7 @@ module SuperAdmins
         territory: %i[name departement_number],
         organisation: %i[name ants_connectable],
         lieu: %i[address latitude longitude],
-        agent: %i[first_name last_name email service_ids]
+        agent: %i[id first_name last_name email service_ids]
       )
     end
   end
