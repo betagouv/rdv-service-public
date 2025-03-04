@@ -51,12 +51,7 @@ module SearchContextHelper
 
   def service_selection_permitted_params_list
     [
-      :departement,
-      :city_code,
-      :longitude,
-      :latitude,
-      :street_ban_id,
-      :address,
+      *WebSearchContext::ADDRESS_SELECTION_PARAMS,
       :public_link_organisation_id,
       :prescripteur,
       :duration,
