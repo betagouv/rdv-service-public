@@ -41,19 +41,35 @@ module SearchContextHelper
   private
 
   def service_selection(params)
-    {
-      departement: params[:departement],
-      city_code: params[:city_code],
-      longitude: params[:longitude],
-      latitude: params[:latitude],
-      street_ban_id: params[:street_ban_id],
-      address: params[:address],
-      public_link_organisation_id: params[:public_link_organisation_id],
-      referent_ids: params[:referent_ids],
-      external_organisation_ids: params[:external_organisation_ids],
-      prescripteur: params[:prescripteur],
-      duration: params[:duration],
-      user_ids: params[:user_ids],
-    }
+    permit_hash_or_params(params, service_selection_permitted_params_list)
+  end
+
+  def permit_hash_or_params(hash_or_params, permitted_params_list)
+    params = if hash_or_params.is_a?(Hash)
+               ActionController::Parameters.new(hash_or_params)
+             else
+               hash_or_params
+             end
+
+    params.permit(*permitted_params_list)
+  end
+
+  def service_selection_permitted_params_list
+    [
+      :departement,
+      :city_code,
+      :longitude,
+      :latitude,
+      :street_ban_id,
+      :address,
+      :public_link_organisation_id,
+      :prescripteur,
+      :duration,
+      {
+        referent_ids: [],
+        external_organisation_ids: [],
+        user_ids: [],
+      },
+    ]
   end
 end
