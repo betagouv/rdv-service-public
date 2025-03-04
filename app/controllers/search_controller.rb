@@ -30,7 +30,7 @@ class SearchController < ApplicationController
     if current_agent && params[:prescripteur] == Prescripteur::INTERNE && session[:agent_prescripteur_organisation_id]
       redirect_to search_creneau_admin_organisation_prescription_path(session[:agent_prescripteur_organisation_id], agent_search_params)
     else
-      @context = if invitation?
+      @context = if invitation&.to_take_rdv?
                    WebInvitationSearchContext.new(user: current_user, query_params: search_params.merge(invitation.query_params))
                  else
                    WebSearchContext.new(user: current_user, query_params: search_params)
@@ -97,10 +97,6 @@ class SearchController < ApplicationController
       flash[:alert] = "Organisation non trouvée"
       redirect_to root_path
     end
-  end
-
-  def invitation?
-    invitation.present? && invitation.to_take_rdv?
   end
 
   def search_params
