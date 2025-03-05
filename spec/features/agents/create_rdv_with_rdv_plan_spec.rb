@@ -66,4 +66,17 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
     expect(page).to have_content("Retour sur Démarches Simplifiées")
   end
+
+  context "quand l'agent n'appartient à aucune organisation" do
+    # Ça arrive s'il n'a pas encore fait d'ouverture de compte avec notre équipe déploiement, ou qu'il n'a pas été invité à rejoindre son organisation par ses collègues
+    let!(:agent) do
+      create(:agent, basic_role_in_organisations: [])
+    end
+
+    it "redirige vers la page qui permet de corriger cette situation" do
+      visit agents_rdv_plan_path(rdv_plan.id)
+      expect(page).to have_content("Vos collègues peuvent vous inviter")
+      expect(page).to have_content("Nous vous invitons à contacter notre équipe")
+    end
+  end
 end
