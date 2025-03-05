@@ -240,6 +240,7 @@ jobs:
         with:
           name: artifacts-capybara
           path: tmp/capybara
+          if-no-files-found: ignore
   test_boot_without_db:
     name: Boot web server without database
     runs-on: ubuntu-latest
