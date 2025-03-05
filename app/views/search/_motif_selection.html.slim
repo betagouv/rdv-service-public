@@ -4,7 +4,7 @@
 - if context.unique_motifs_by_name_and_location_type.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h2 Sélectionnez le motif de votre RDV&nbsp;:
+  h1.fr-h2 Sélectionnez le motif de votre RDV&nbsp;:
   ul.fr-raw-list
     - context.unique_motifs_by_name_and_location_type.each do |motif|
       li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w

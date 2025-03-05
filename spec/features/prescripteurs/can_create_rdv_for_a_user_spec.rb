@@ -215,7 +215,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
       expect(page).to have_content("Sélectionnez un créneau")
 
-      click_on(lieu.name)
+      find_all("a", text: "modifier").last.click # Retour en arrière au choix de lieu
 
       expect(page).to have_content("Sélectionnez un lieu de RDV")
       click_on lieu.name

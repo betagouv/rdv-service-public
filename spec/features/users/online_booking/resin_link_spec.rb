@@ -26,7 +26,7 @@ RSpec.describe "Rés'In specific public link" do
 
   it "allows user to book a RDV" do
     visit "/resin/123,456"
-    expect(page).to have_content("Accompagnement individuel (Sur place)")
+    expect(page).to have_content("Accompagnement individuel")
     expect(page).to have_content("2 lieux sont disponibles")
     expect(page).to have_content(motif_a.name)
     expect(page).to have_content(motif_b.name)

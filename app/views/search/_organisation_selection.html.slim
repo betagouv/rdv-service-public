@@ -2,7 +2,7 @@
 - if context.next_availability_by_motifs_organisations.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h3 Sélectionnez la structure avec laquelle prendre RDV&nbsp;:
+  h1.fr-h3 Sélectionnez la structure avec laquelle prendre RDV&nbsp;:
   ul.fr-raw-list
     - context.next_availability_by_motifs_organisations.each do |organisation, next_availability|
       li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
