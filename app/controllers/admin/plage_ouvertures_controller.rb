@@ -58,7 +58,7 @@ class Admin::PlageOuverturesController < AgentAuthController
 
       Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_created.deliver_later if @agent.plage_ouverture_notification_level == "all"
       flash[:success] = "Plage d'ouverture créée"
-      redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
+      redirect_to admin_organisation_agent_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
       render :new
     end
@@ -69,7 +69,7 @@ class Admin::PlageOuverturesController < AgentAuthController
     if @plage_ouverture.update(plage_ouverture_params)
       Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_updated.deliver_later if @agent.plage_ouverture_notification_level == "all"
       flash[:success] = "La plage d'ouverture a été modifiée."
-      redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
+      redirect_to admin_organisation_agent_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
       render :edit
     end
