@@ -18,7 +18,7 @@ class Invitation
 
   def query_params
     # Dans le cas d'une invitation à prendre rdv, les clés du hash renvoyé par cette méthode
-    # devraient correspondre à Api::Rdvinsertion::InvitationsController::INVITATION_LINK_PARAMS
+    # devraient correspondre à InvitationSearchContext::INVITATION_PARAMS
     @attributes.except(:invitation_token, :expires_at)
   end
 
