@@ -56,8 +56,7 @@ module UserRdvWizard
       }.merge(
         @attributes.slice(
           *WebSearchContext::ADDRESS_SELECTION_PARAMS,
-          :where, :lieu_id,
-          :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
+          :where, :lieu_id, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
           :referent_ids, :external_organisation_ids, :duration
         )
       )
