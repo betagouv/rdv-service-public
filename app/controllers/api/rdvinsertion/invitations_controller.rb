@@ -1,6 +1,6 @@
 class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseController
   # invitation_token sert uniquement à retrouver l'usager
-  INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[address latitude longitude invitation_token]).freeze
+  INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[invitation_token]).freeze
 
   def creneau_availability
     payload = if params[:total_count] == "true"

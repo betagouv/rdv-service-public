@@ -1,14 +1,9 @@
 class WebInvitationSearchContext < InvitationSearchContext
   include Users::CreneauxWizardConcern
-  attr_reader :errors, :query_params, :address, :latitude, :longitude, :organisation_ids, :motif_category_short_name
+  attr_reader :errors, :query_params, :organisation_ids, :motif_category_short_name
 
   def initialize(user:, query_params: {})
     super
-
-    # Ces paramètres sont déterminés par l'invitation
-    @address = query_params[:address]
-    @latitude = query_params[:latitude]
-    @longitude = query_params[:longitude]
 
     # User choices
     # La plupart du temps il n'y a qu'un seul service qui propose des invitations, donc il n'est
