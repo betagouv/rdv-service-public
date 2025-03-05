@@ -2,12 +2,12 @@
 
 .card
   .card-body
-    = simple_form_for @user, url: relative_path(@user) do |f|
-      = render "model_errors", model: @user
+    = form_for @form, url: relative_path(@form.user), builder: Dsfr::FormBuilder do |f|
+      = render "model_errors", model: @form, f: f
       = render "form_fields", f: f
       .d-flex.justify-content-between
-        = link_to "Supprimer", relative_path(@user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce proche ?"}
+        = link_to "Supprimer", relative_path(@form.user), method: :delete, class: "fr-btn fr-btn--icon-left fr-btn--secondary fr-icon-delete-line", data: { confirm: "Confirmez-vous la suppression de ce proche ?"}
 
         .d-flex.justify-content-end
-          = link_to "Annuler", users_informations_path, class: "btn btn-link"
-          = f.button :submit, class: "btn"
+          = link_to "Annuler", users_informations_path, class: "fr-btn fr-btn--tertiary fr-mr-2v"
+          = f.button :submit, class: "fr-btn"

@@ -9,9 +9,6 @@ Rails.application.routes.draw do
   get "agent_connect/auth" => "agent_connect#auth"
   get "agent_connect/callback" => "agent_connect#callback"
 
-  get "inclusion_connect/auth" => "inclusion_connect#auth"
-  get "inclusion_connect/callback" => "inclusion_connect#callback"
-
   devise_for :super_admins # necessary for helpers like super_admin_signed_in?
   devise_scope :super_admin do
     get "omniauth/github/callback" => "omniauth_callbacks#github"
@@ -79,11 +76,16 @@ Rails.application.routes.draw do
     resource :user_name_initials_verification, only: %i[new create], controller: "user_name_initials_verification"
     post "file_attente", to: "file_attentes#create_or_delete"
   end
-  resources :stats, only: :index
-  get "stats/rdvs", to: "stats#rdvs", as: "rdvs_stats"
-  get "stats/active_agents", to: "stats#active_agents", as: "active_agents_stats"
-  get "stats/receipts", to: "stats#receipts", as: "receipts_stats"
-  get "stats/notifications", to: "stats#notifications_index", as: "notifications_index_stats"
+  namespace :stats, controller: "stats", module: nil do
+    get "/", action: "index"
+    get :territories
+    get :territory
+    get :territory_notifications
+    get :territory_rdvs
+    get :territory_active_agents
+    get :territory_receipts
+    get :lieux_map_data, format: :json
+  end
 
   authenticate :user do
     get "/users/informations", to: "users/users#edit"
@@ -115,6 +117,23 @@ Rails.application.routes.draw do
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
+      end
+      resources :rdv_plans, only: %i[show] do
+        member do
+          get :edit_starts_at
+          patch :update_starts_at
+
+          get :edit_modalites
+          patch :update_modalites
+
+          get :edit_motif
+          patch :update_motif
+
+          get :edit_user
+          post :create_rdv
+
+          get :rdv
+        end
       end
       resources :users, only: [] do
         collection do
@@ -271,7 +290,7 @@ Rails.application.routes.draw do
     end
   end
   authenticated :agent do
-    root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
+    root to: "agents/pages#home", as: :authenticated_agent_root
   end
 
   scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do
@@ -283,9 +302,17 @@ Rails.application.routes.draw do
     get "confirmation"
   end
 
-  %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
+  %w[mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
+
+  get "contact", to: redirect("/aide/aiguillage_role", status: 302) # temporary redirect in case we rollback
+  namespace :aide do
+    get "aiguillage_role" => "pages#aiguillage_role"
+    get "aiguillage_usager" => "pages#aiguillage_usager"
+    resource :demande_support, only: %i[new create]
+  end
+
   get "/.well-known/microsoft-identity-association" => "static_pages#microsoft_domain_verification", format: :json
 
   get "health_check" => "health#db_connection"

@@ -1,7 +1,8 @@
 RSpec.describe "User can see RDV instructions" do
   it "can see RDV inscrution on RDV page" do
-    motif = create(:motif, restriction_for_rdv: "Pensez à prendre votre carnet de santé")
-    rdv = create(:rdv, motif: motif)
+    organisation = create(:organisation)
+    motif = create(:motif, restriction_for_rdv: "Pensez à prendre votre carnet de santé", organisation:)
+    rdv = create(:rdv, motif:, organisation:)
     user = rdv.users.first
     login_as(user, scope: :user)
     visit users_rdv_path(rdv)

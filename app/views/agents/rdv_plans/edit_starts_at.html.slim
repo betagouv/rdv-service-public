@@ -1,0 +1,9 @@
+.fr-row.fr-mb-16w
+  .fr-col-12
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
+
+    h2.fr-h3 Calendrier de #{current_agent.full_name}
+    p Convenez d'un horaire avec #{@rdv_plan.user.full_name}, et cliquez dessus dans le calendrier
+    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: false
+    - if @rdv_plan.return_url
+      = link_to "retour", @rdv_plan.return_url

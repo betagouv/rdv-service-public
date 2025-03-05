@@ -1,4 +1,4 @@
-- contact_team_url = "https://cal.com/forms/937585aa-48a4-4efd-a642-961fad79c9c5"
+- contact_team_url = Agents::PagesController::CONTACT_TEAM_URL
 
 .fr-py-8w.rdv-background-color-alt-blue-ecume
   .fr-container
@@ -14,7 +14,7 @@
           | Éviter les rendez-vous non honorés, gagner du temps au quotidien et améliorer la relation entre les agents et les usagers
         ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md.fr-mb-0
           li
-            = link_to "Contacter notre équipe", contact_team_url, class: "fr-btn fr-mb-0"
+            = link_to "Demander une démo", contact_team_url, class: "fr-btn fr-mb-0"
 
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -284,15 +284,21 @@ hr
               = image_tag "rdv_mairie/billet-0-euros.png", alt: "Illustration d’un billet de 0 euros tenu par des mains", class: "fr-responsive-img"
 
 .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
-  .fr-container.fr-py-8w
+  .fr-container.fr-py-6w
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
-        | 2 715 045
+        | 2 892 616
       .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
         .rdv-font-weight-bold
           | RENDEZ-VOUS PLANIFIÉS
         div
-          | DANS 995 STRUCTURES
+          | DANS 995 STRUCTURES*
+
+.fr-container.fr-py-3w.rdv-text-align-center
+  |> *Données concernant les 24 derniers mois.
+  |> Pour plus d’informations,
+  = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
+  | .
 
 .rdv-background-color-alt-grey
   .fr-container.fr-py-8w
@@ -411,5 +417,5 @@ hr
     h2 Plus de RDV, moins de lapins
     p
       | Votre agenda vous remerciera.
-    .fr-my-4w= link_to "Contacter notre équipe", contact_team_url, class: "fr-btn"
+    .fr-my-4w= link_to "Demander une démo", contact_team_url, class: "fr-btn"
     = link_to "Revenir en haut de la page", "#header", class: "fr-link fr-icon-arrow-up-line fr-link--icon-left"

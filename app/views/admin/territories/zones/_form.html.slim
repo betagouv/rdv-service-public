@@ -29,15 +29,13 @@
     = f.input :city_label, \
       label: "Rechercher une commune", \
       input_html: { \
-        class: "places-js-container", \
-        data: { "address-type": "municipality" }, \
+        data: { "address-type": "municipality", "address-autocomplete": "on" }, \
       }
   - elsif zone.level_street?
     = f.input :street_label, \
       label: "Rechercher une rue", \
       input_html: { \
-        class: "places-js-container", \
-        data: { "address-type": "street" }, \
+        data: { "address-type": "street", "address-autocomplete": "on" }, \
       }
   .row
     .col-6

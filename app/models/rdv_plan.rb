@@ -6,19 +6,72 @@ class RdvPlan < ApplicationRecord
   belongs_to :motif, optional: true
   belongs_to :lieu, optional: true
   belongs_to :rdv, optional: true
+  # Le `optional: true` sur les oauth_application est un peu anticipé : on pourra avoir ce cas quand des
+  # rdv_plans seront créés en natif depuis l'application, probablement pour enregistrer un brouillon de rdv
+  # TODO: il faudrait mettre à jour la spec swagger pour utiliser de l'oauth pour pouvoir enlever le `optional: true`
+  belongs_to :oauth_application, class_name: "Doorkeeper::Application", optional: true
 
   delegate :organisation, to: :motif
 
   validate :return_url_is_authorized
+
+  # TODO: mettre en commun avec les motifs et ajouter une validation de synchro
+  enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
+
+  def modalite
+    if location_type == "public_office"
+      "#{location_type}-#{lieu&.id}"
+    else
+      location_type
+    end
+  end
+
+  def modalite=(modalite)
+    self.location_type, self.lieu_id = modalite.split("-")
+  end
+
+  def create_rdv(user_attributes:, participation_attributes:)
+    if user.encrypted_password.blank? # Pour mettre à jour l'email sans renvoyer de mail de confirmation
+      user.skip_confirmation_notification!
+      user.skip_reconfirmation!
+    end
+    user.update!(user_attributes)
+
+    rdv = Rdv.create(
+      agents: [rdv_agent],
+      participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
+      motif: motif,
+      organisation: organisation,
+      lieu: lieu,
+      starts_at: starts_at,
+      created_by: planning_agent,
+      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
+    )
+
+    if rdv.persisted?
+      update(rdv: rdv)
+      Notifiers::RdvCreated.perform_with(rdv, planning_agent)
+    end
+
+    rdv
+  end
 
   private
 
   def return_url_is_authorized
     return if return_url.blank?
 
-    uri = URI.parse(return_url)
-    return if uri.host&.end_with?(".gouv.fr")
+    return_uri = URI.parse(return_url)
 
-    errors.add(:return_url, "N'est pas un nom de domaine autorisé")
+    unless return_uri.scheme&.in?(%w[http https])
+      errors.add(:return_url, "Doit utiliser http ou https")
+    end
+
+    authorized_domain_names = oauth_application.redirect_uri.split("\n").map do |uri|
+      URI.parse(uri).host
+    end
+    unless return_uri.host&.in?(authorized_domain_names)
+      errors.add(:return_url, "n'est pas un nom de domaine autorisé")
+    end
   end
 end

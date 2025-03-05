@@ -5,7 +5,7 @@ class Users::FileAttenteMailer < ApplicationMailer
     @token = params[:token]
   end
 
-  default to: -> { @user.email }
+  default to: -> { @user.preferred_email }
 
   def new_creneau_available
     subject = t("users.file_attente_mailer.new_creneau_available.title")
@@ -16,7 +16,7 @@ class Users::FileAttenteMailer < ApplicationMailer
   private
 
   def save_receipt(subject)
-    Receipt.create!(rdv: @rdv, user: @user, event: action_name, channel: :mail, result: :processed, email_address: @user.email, content: subject)
+    Receipt.create!(rdv: @rdv, user: @user, event: action_name, channel: :mail, result: :processed, email_address: @user.preferred_email, content: subject)
   end
 
   def domain

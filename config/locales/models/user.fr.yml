@@ -6,6 +6,12 @@ fr:
         other: Usagers
     attributes:
       user:
+        # Pour ne pas perturber les agents avec différentes notions d'email, les champs ont tous le même nom.
+        # Notification email et email sont mutuellement exclusifs.
+        # Preferred email est soit l'un soit l'autre.
+        notification_email: Email
+        preferred_email: Email
+        email: Email
         organisation: Organisation
         caisse_affiliation: Caisse d'affiliation
         affiliation_number: Numéro d'allocataire
@@ -17,7 +23,7 @@ fr:
         notify_by_sms: "Accepte les notifications par SMS"
         notify_by_email: "Accepte les notifications par email"
         created_through: "Origine du compte"
-        notes: Remarques
+        annotation_content: Remarques
         ants_pre_demande_number: &ants_pre_demande_number_label Numéro de pré-demande ANTS
       user/logements:
         sdf: Sans domicile fixe
@@ -54,6 +60,7 @@ fr:
               too_short:
                 other: "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins %{count} caractères"
             ants_pre_demande_number: &ants_pre_demande_number_errors
+              blank: doit être renseigné
               invalid_format: doit comporter 10 chiffres et lettres
               unexpected_api_error: n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.
             phone_number:
@@ -67,13 +74,15 @@ fr:
   simple_form:
     hints:
       user:
-        ants_pre_demande_number_html: Pour accélérer votre démarche, nous vous recommandons très fortement de pré-remplir votre dossier sur le <a href="https://passeport.ants.gouv.fr/demarches-en-ligne" target="_blank">site de l'ANTS</a>, et d'indiquer votre numéro de pré-demande.
+        ants_pre_demande_number_html: Veuillez soumettre au préalable votre demande sur le <a href="https://passeport.ants.gouv.fr/demarches-en-ligne" target="_blank">site de l'ANTS</a> et indiquer le numéro reçu à la fin de la procédure
       agent:
-        ants_pre_demande_number_html: Pour accélérer la démarche de l'usager, nous vous recommandons très fortement de pré-remplir son dossier sur le <a href="https://passeport.ants.gouv.fr/demarches-en-ligne" target="_blank">site de l'ANTS</a>, et d'indiquer son numéro de pré-demande.
+        ants_pre_demande_number_html: Il est fortement recommandé à la personne concernée de soumettre au préalable une demande sur le <a href="https://passeport.ants.gouv.fr/demarches-en-ligne" target="_blank">site de l'ANTS</a>
 
   # BeneficiaireForm
   activemodel:
     attributes:
+      relative_user_form:
+        ants_pre_demande_number: *ants_pre_demande_number_label
       beneficiaire_form:
         ants_pre_demande_number: *ants_pre_demande_number_label
     errors:

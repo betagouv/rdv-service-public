@@ -4,8 +4,8 @@ RSpec.describe "Migrating an agent from one organisation to another" do
   let!(:new_organisation) { create :organisation, territory: old_organisation.territory }
   let(:agent) { create :agent, admin_role_in_organisations: [old_organisation] }
 
-  let!(:motif1) { create :motif }
-  let!(:motif2) { create :motif }
+  let!(:motif1) { create :motif, organisation: old_organisation }
+  let!(:motif2) { create :motif, organisation: old_organisation }
   let!(:rdv1) { create :rdv, organisation: old_organisation, agents: [agent], motif: motif1 }
   let!(:rdv2) { create :rdv, organisation: old_organisation, agents: [agent], motif: motif1 }
   let!(:rdv3) { create :rdv, organisation: old_organisation, agents: [agent], motif: motif2 }

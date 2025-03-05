@@ -1,5 +1,5 @@
 RSpec.describe CronMonitor do
-  subject { described_class.expected_enqueued_count(cron_str, time_range) }
+  subject { described_class.expected_enqueued_ats(cron_str, time_range).count }
 
   context "cron tous les jours à 22h, time range entre 20h et 23h" do
     let(:cron_str) { "every day at 22:00 Europe/Paris" }

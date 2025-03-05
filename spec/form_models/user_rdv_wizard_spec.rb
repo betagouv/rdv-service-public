@@ -69,7 +69,7 @@ RSpec.describe UserRdvWizard do
       let!(:motif) { create(:motif, organisation:, motif_category:) }
 
       context "l’usager fournit un numéro de pré-demande valide" do
-        before { stub_ants_status_ok("VALID12345", status: "validated", appointments: []) }
+        before { stub_ants_status_ok("VALID12345", status: "validated", meeting_point_id: lieu.id, appointments: []) }
 
         let(:attributes) do
           {
@@ -115,20 +115,19 @@ RSpec.describe UserRdvWizard do
           expect(res).to be false
           expect(form.errors.count).to eq(1)
           expect(form.errors.first.attribute).to eq(:ants_pre_demande_number)
-          expect(form.errors.first.message).to eq("doit comporter 10 chiffres et lettres")
           # le message affiché est en fait celui sur le user
-          expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+          expect(form.errors.first.full_message).to eq("Numéro de pré-demande ANTS doit être renseigné")
         end
       end
 
       context "l’usager fournit un numéro de pré-demande ANTS non reconnu" do
-        before { stub_ants_status_ok("VALID12345", status: "unknown", appointments: []) }
+        before { stub_ants_status_ok("VALID12345", status: "unknown", meeting_point_id: lieu.id, appointments: []) }
 
         let(:attributes) do
           {
             starts_at: creneau.starts_at,
             motif_id: motif.id,
-            lieu_id: nil,
+            lieu_id: lieu.id,
             user_ids: [user_for_rdv.id],
             user: {
               first_name: "Léa",
@@ -156,6 +155,7 @@ RSpec.describe UserRdvWizard do
           stub_ants_status_ok(
             "VALID12345",
             status: "validated",
+            meeting_point_id: lieu.id,
             appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "http://rdvsympa.fr/123" }]
           )
         end
@@ -164,7 +164,7 @@ RSpec.describe UserRdvWizard do
           {
             starts_at: creneau.starts_at,
             motif_id: motif.id,
-            lieu_id: nil,
+            lieu_id: lieu.id,
             user_ids: [user_for_rdv.id],
             user: {
               first_name: "Léa",
@@ -197,6 +197,7 @@ RSpec.describe UserRdvWizard do
           stub_ants_status_ok(
             "VALID12345",
             status: "validated",
+            meeting_point_id: lieu.id,
             appointments: [{ "meeting_point" => "Mairie de Montrouge", "management_url" => "http://rdvsympa.fr/123" }]
           )
         end
@@ -205,7 +206,7 @@ RSpec.describe UserRdvWizard do
           {
             starts_at: creneau.starts_at,
             motif_id: motif.id,
-            lieu_id: nil,
+            lieu_id: lieu.id,
             user_ids: [user_for_rdv.id],
             user: {
               first_name: "Léa",

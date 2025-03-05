@@ -1,6 +1,6 @@
 div= object_attribute_tag(user, :address)
 - if current_territory.enable_notes_field?
-  div= object_attribute_tag(user, :notes)
+  div= object_attribute_tag(user, :annotation_content, user.annotation_for(current_territory).to_s)
 - if current_territory.enable_logement_field
   div= object_attribute_tag(user, :logement)
 - Territory::SOCIAL_FIELD_TOGGLES.each do |toggle, field_name|

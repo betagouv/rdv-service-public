@@ -50,5 +50,15 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
         expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => 1 })
       end
     end
+
+    context "quand la variable COMPTE PROD de la page Notion est une organisation inconnue" do
+      let(:compte_prod_url) { "https://demo.rdv-solidarites.fr/organisations/26739" }
+
+      it "retourne un compte nul" do
+        described_class.new.perform
+
+        expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => nil })
+      end
+    end
   end
 end

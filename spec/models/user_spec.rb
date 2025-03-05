@@ -364,4 +364,40 @@ RSpec.describe User, type: :model do
       expect(user.reload.ants_pre_demande_number).to eq "ABCDE12345"
     end
   end
+
+  describe "annotations" do
+    it "provides the #annotate! helper method" do
+      user = create(:user)
+      territory = create(:territory)
+      expect(Annotation).to receive(:upsert!).with("Ma remarque", user:, territory:)
+      user.annotate!("Ma remarque", territory:)
+    end
+
+    it "deletes annotations when leaving the last org of a territory" do
+      territory_a = create(:territory)
+      territory_b = create(:territory)
+      organisation_a_1 = create(:organisation, territory: territory_a)
+      organisation_a_2 = create(:organisation, territory: territory_a)
+      organisation_b_1 = create(:organisation, territory: territory_b)
+      organisation_b_2 = create(:organisation, territory: territory_b)
+
+      user = create(:user, organisations: [organisation_a_1, organisation_a_2, organisation_b_1, organisation_b_2])
+      user.annotate!("Infos du territoire A", territory: territory_a)
+      user.annotate!("Infos du territoire B", territory: territory_b)
+      expect(Annotation.where(user: user).count).to eq(2)
+
+      expect { user.organisations.delete(organisation_a_1) }.not_to change(Annotation, :count)
+      expect { user.organisations.delete(organisation_a_2) }.to change(Annotation, :count).by(-1)
+
+      expect { user.organisations.delete(organisation_b_1) }.not_to change(Annotation, :count)
+      expect { user.organisations.delete(organisation_b_2) }.to change(Annotation, :count).by(-1)
+    end
+
+    it "deletes annotations when soft deleting" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      user.annotate!("Ma remarque", territory: organisation.territory)
+      expect { user.soft_delete }.to change { user.annotations.count }.to(0)
+    end
+  end
 end

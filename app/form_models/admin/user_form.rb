@@ -7,7 +7,6 @@ class Admin::UserForm
 
   delegate :ants_pre_demande_number, :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :user
   validate :warn_duplicates
-  validates_with AntsPreDemandeNumberValidation, if: -> { @user.ants_pre_demande_number.present? }
 
   delegate :errors, to: :user
 
@@ -21,8 +20,15 @@ class Admin::UserForm
     super && user.valid? # order is important here
   end
 
-  def save
-    valid? && user.save
+  def save(annotation_content:, current_territory:)
+    return false unless valid?
+
+    user.transaction do
+      if user.save
+        user.annotate!(annotation_content, territory: current_territory)
+        true
+      end
+    end
   end
 
   private

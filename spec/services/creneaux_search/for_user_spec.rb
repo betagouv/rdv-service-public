@@ -1,5 +1,6 @@
 RSpec.describe CreneauxSearch::ForUser, type: :service do
   let(:organisation) { create(:organisation) }
+  let(:creneau_double) { instance_double(Creneau, starts_at: 1.hour.from_now) }
   let(:lieu) { create(:lieu, organisation: organisation) }
   let(:date_range) { (Date.parse("2020-10-20")..Date.parse("2020-10-23")) }
   let(:now) { Time.zone.parse("2020-10-19 15:34") }
@@ -11,23 +12,26 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
   it "call builder without special options" do
     user = create(:user)
     motif = create(:motif, name: "Coucou", organisation: organisation, location_type: :public_office)
-    expect(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, [])
-    described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
+    allow(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, []).and_return([creneau_double])
+    creneaux = described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
+    expect(creneaux).to eq [creneau_double]
   end
 
   it "call with referent as filter when follow_up motif" do
     motif = create(:motif, follow_up: true, organisation: organisation)
     agent = create(:agent, basic_role_in_organisations: [organisation])
     user = create(:user, organisations: [organisation], referent_agents: [agent])
-    expect(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, [agent])
-    described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
+    allow(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, [agent]).and_return([creneau_double])
+    creneaux = described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
+    expect(creneaux).to eq [creneau_double]
   end
 
   it "call without referents when user without referents" do
     motif = create(:motif, follow_up: true, organisation: organisation)
     user = create(:user, referent_agents: [])
-    expect(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, [])
-    described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
+    allow(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, []).and_return([creneau_double])
+    creneaux = described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
+    expect(creneaux).to eq [creneau_double]
   end
 
   context "with geo search" do
@@ -37,15 +41,17 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
       it "calls without agents filter" do
         mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: {})
         motif = create(:motif, :sectorisation_level_agent, organisation: organisation)
-        expect(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, [])
-        described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
+        allow(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, []).and_return([creneau_double])
+        creneaux = described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
+        expect(creneaux).to eq [creneau_double]
       end
 
       it "calls without agents filter when no attributed agents" do
         mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => Agent.none })
         motif = create(:motif, organisation: organisation)
-        expect(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, [])
-        described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
+        allow(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, []).and_return([creneau_double])
+        creneaux = described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
+        expect(creneaux).to eq [creneau_double]
       end
 
       context "when the lieu is nil" do
@@ -55,7 +61,8 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
         it "doesn't crash" do
           expect do
             mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => Agent.none })
-            described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
+            creneaux = described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
+            expect(creneaux).to eq []
           end.not_to raise_error
         end
       end
@@ -66,8 +73,9 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
       agent2 = create(:agent, basic_role_in_organisations: [organisation])
       motif = create(:motif, :sectorisation_level_agent, organisation: organisation)
       mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => Agent.where(id: [agent1.id, agent2.id]) })
-      expect(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, contain_exactly(agent1, agent2))
-      described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
+      allow(CreneauxSearch::Calculator).to receive(:available_slots).with(motif, lieu, date_range, contain_exactly(agent1, agent2)).and_return([creneau_double])
+      creneaux = described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
+      expect(creneaux).to eq [creneau_double]
     end
   end
 
@@ -75,13 +83,13 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
     subject { described_class.new(user: user, motif: motif, lieu: lieu) }
 
     let!(:motif) { create(:motif, collectif: true) }
-    let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: 3.days.from_now) }
-    let!(:passed_rdv) { create(:rdv, motif: motif, lieu: lieu, starts_at: 2.days.ago) }
-    let!(:rdv_with_user) { create(:rdv, :future, motif: motif, lieu: lieu, users: [user], starts_at: 4.days.from_now) }
-    let!(:rdv_in_different_lieu) { create(:rdv, :future, motif: motif, lieu: create(:lieu)) }
-    let!(:rdv_with_no_remaining_seat) { create(:rdv, :future, motif: motif, lieu: lieu, max_participants_count: 1) }
-    let!(:rdv_after_max_public_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.end_booking_delay + 1.hour) }
-    let!(:rdv_before_min_public_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.start_booking_delay - 1.hour) }
+    let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: 3.days.from_now, organisation: motif.organisation) }
+    let!(:passed_rdv) { create(:rdv, motif: motif, lieu: lieu, starts_at: 2.days.ago, organisation: motif.organisation) }
+    let!(:rdv_with_user) { create(:rdv, :future, motif: motif, lieu: lieu, users: [user], starts_at: 4.days.from_now, organisation: motif.organisation) }
+    let!(:rdv_in_different_lieu) { create(:rdv, :future, motif: motif, lieu: create(:lieu), organisation: motif.organisation) }
+    let!(:rdv_with_no_remaining_seat) { create(:rdv, :future, motif: motif, lieu: lieu, max_participants_count: 1, organisation: motif.organisation) }
+    let!(:rdv_after_max_public_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.end_booking_delay + 1.hour, organisation: motif.organisation) }
+    let!(:rdv_before_min_public_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.start_booking_delay - 1.hour, organisation: motif.organisation) }
     let!(:user) { create(:user) }
 
     it "returns the subscribable collective rdvs (rdv and rdv_with_user)" do
@@ -94,8 +102,8 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
 
       let!(:agent) { create(:agent) }
       let!(:motif) { create(:motif, collectif: true, organisation: organisation, sectorisation_level: "agent") }
-      let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [agent]) }
-      let!(:rdv2) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [build(:agent)]) }
+      let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [agent], organisation: motif.organisation) }
+      let!(:rdv2) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [build(:agent)], organisation: motif.organisation) }
       let!(:geo_search) { instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => [agent] }) }
 
       it "returns the rdv linked to the geo attributed agents" do
@@ -110,8 +118,8 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
       let!(:agent) { create(:agent) }
       let!(:user) { create(:user, referent_agents: [agent]) }
       let!(:motif) { create(:motif, collectif: true, organisation: organisation, follow_up: true) }
-      let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [agent]) }
-      let!(:rdv2) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [build(:agent)]) }
+      let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [agent], organisation: motif.organisation) }
+      let!(:rdv2) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [build(:agent)], organisation: motif.organisation) }
 
       it "returns the rdv linked to referents" do
         expect(subject.next_availability).to eq(rdv)
@@ -160,6 +168,42 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
       end
 
       it { is_expected.to eq(mock_creneaux[0]) }
+    end
+
+    context "when there are multiple creneaux with the same starts_at" do
+      let(:agent1) { create(:agent) }
+      let(:agent2) { create(:agent) }
+
+      let(:mock_creneaux) do
+        [
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 09:30"), agent: agent1),
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 09:30"), agent: agent2),
+        ]
+      end
+
+      before { allow(mock_creneaux).to receive(:select).and_return(mock_creneaux) }
+
+      it "randomly picks one" do
+        allow(mock_creneaux).to receive(:sample).and_return(mock_creneaux.first)
+
+        creneau = described_class.creneau_for(
+          user: user,
+          motif: motif,
+          lieu: lieu,
+          starts_at: starts_at
+        )
+        expect(creneau.agent).to eq agent1
+
+        allow(mock_creneaux).to receive(:sample).and_return(mock_creneaux.last)
+
+        creneau = described_class.creneau_for(
+          user: user,
+          motif: motif,
+          lieu: lieu,
+          starts_at: starts_at
+        )
+        expect(creneau.agent).to eq agent2
+      end
     end
 
     context "no matching creneaux" do

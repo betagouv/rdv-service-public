@@ -1,6 +1,7 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
+  self.ignored_columns += %i[inclusion_connect_open_id_sub invitations_count]
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
@@ -99,7 +100,7 @@ class Agent < ApplicationRecord
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
   validates :last_name, presence: true, unless: -> { allow_blank_name }
-  validates :agent_services, presence: true
+  validates :agent_services, presence: true, unless: -> { roles.none? }
 
   # Hooks
   before_destroy :prevent_destroy_if_rdvs
@@ -145,10 +146,6 @@ class Agent < ApplicationRecord
     invitation_sent_at.nil? || invitation_accepted_at.present?
   end
 
-  def inactive?
-    last_sign_in_at.nil? || last_sign_in_at <= 1.month.ago
-  end
-
   def soft_delete
     raise SoftDeleteError, "agent still has attached orgs: #{organisations.ids.inspect}" if organisations.any?
 
@@ -166,8 +163,7 @@ class Agent < ApplicationRecord
         deleted_at: Time.zone.now,
         email_original: email,
         email: deleted_email,
-        uid: deleted_email,
-        inclusion_connect_open_id_sub: ("deleted_#{inclusion_connect_open_id_sub}" if inclusion_connect_open_id_sub.present?)
+        uid: deleted_email
       )
     end
   end
@@ -182,6 +178,10 @@ class Agent < ApplicationRecord
 
   def inactive_message
     deleted_at ? :deleted_account : super
+  end
+
+  def soft_deleted?
+    deleted_at.present?
   end
 
   def name_for_paper_trail
@@ -282,10 +282,6 @@ class Agent < ApplicationRecord
                 else
                   Domain::RDV_SOLIDARITES
                 end
-  end
-
-  def read_only_profile_infos?
-    inclusion_connect_open_id_sub.present? || connected_with_agent_connect?
   end
 
   def prevent_destroy_if_rdvs

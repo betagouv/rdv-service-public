@@ -1,4 +1,6 @@
 class Participation < ApplicationRecord
+  self.ignored_columns += %i[invitations_count]
+
   # Mixins
   devise :invitable, invite_for: 12.weeks
 

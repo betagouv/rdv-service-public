@@ -29,15 +29,17 @@ module ApplicationHelper
     end
   end
 
-  def datetime_input(form, field, input_html: {})
+  def datetime_input(form, field, input_html: {}, options: {})
     form.input(
       field,
-      as: :string,
-      input_html: {
-        value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"),
-        data: { behaviour: "datetimepicker" },
-        autocomplete: "off",
-      }.deep_merge(input_html)
+      {
+        as: :string,
+        input_html: {
+          value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"),
+          data: { behaviour: "datetimepicker" },
+          autocomplete: "off",
+        }.deep_merge(input_html),
+      }.deep_merge(options)
     )
   end
 
@@ -111,9 +113,12 @@ module ApplicationHelper
     boolean_tag(value) { object.class.human_attribute_value(attribute_name, value) }
   end
 
-  def object_attribute_tag(object, attribute_name, value = nil)
+  def object_attribute_tag(object, attribute_name, value = :delegate_to_object)
     name = object.class.human_attribute_name(attribute_name)
-    value ||= object.human_attribute_value(attribute_name)
+
+    if value == :delegate_to_object
+      value = object.human_attribute_value(attribute_name)
+    end
 
     tag.strong(tag.span(name) + tag.span(" : ")) +
       tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
@@ -132,10 +137,6 @@ module ApplicationHelper
     return false if Rails.configuration.x.agent_connect_unreachable_at_boot_time
 
     ENV["AGENT_CONNECT_BASE_URL"].present?
-  end
-
-  def display_inclusion_connect_button?
-    !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
   end
 
   def dsfr_path

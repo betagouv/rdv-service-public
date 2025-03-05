@@ -1,6 +1,8 @@
 class AgentPrescripteurRdvWizard
   attr_reader :query_params
 
+  delegate :context, to: :rdv
+
   def initialize(query_params:, agent_prescripteur:, domain:, current_organisation:)
     @query_params = query_params
     @agent_prescripteur = agent_prescripteur
@@ -32,7 +34,7 @@ class AgentPrescripteurRdvWizard
     @rdv ||= if query_params[:rdv_collectif_id].present?
                Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(query_params[:rdv_collectif_id])
              else
-               Rdv.new(query_params.slice(:starts_at, :motif_id, :lieu_id))
+               Rdv.new(query_params.slice(:starts_at, :motif_id, :lieu_id, :context))
              end
   end
 

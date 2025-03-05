@@ -10,8 +10,8 @@ RSpec.describe "Agent can see RDV details correctly" do
   let(:agent) { create(:agent, first_name: "Bruce", last_name: "Wayne", service: service, basic_role_in_organisations: [organisation]) }
 
   context "Motif is not collective" do
-    let(:user) { create(:user) }
-    let(:motif) { create(:motif, service: service, name: "Renseignements") }
+    let(:user) { create(:user, organisations: [organisation]) }
+    let(:motif) { create(:motif, service: service, name: "Renseignements", organisation:) }
     let(:rdv) { create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation, starts_at: starts_at) }
     let!(:receipt) { create(:receipt, rdv: rdv, result: :sent, content: "Vous avez rendez-vous!") }
     let(:prescripteur) { create(:prescripteur, first_name: "Jean", last_name: "Valjean") }
@@ -44,8 +44,15 @@ RSpec.describe "Agent can see RDV details correctly" do
       expect(page).to have_text(user.phone_number)
     end
 
+    it "show good notification preferences when user has a notification_email" do
+      user.update(email: nil, notification_email: "test@test.fr")
+      visit admin_organisation_rdv_path(organisation, rdv)
+      expect(page).to have_text(user.notification_email)
+      expect(page).not_to have_text(I18n.t("admin.users.notifications_preferences.email_absent"))
+    end
+
     context "The rdv has multiple users" do
-      let(:user2) { create(:user, :with_no_email, :with_no_phone_number) }
+      let(:user2) { create(:user, :without_devise_email, :with_no_phone_number, organisations: [organisation]) }
 
       before do
         create(:participation, user: user2, rdv: rdv)
@@ -109,10 +116,10 @@ RSpec.describe "Agent can see RDV details correctly" do
   end
 
   context "Motif is collective" do
-    let(:user) { create(:user) }
-    let(:user2) { create(:user) }
-    let(:user3) { create(:user) }
-    let(:motif) { create(:motif, :collectif, service: service, name: "Atelier Colectif") }
+    let(:user) { create(:user, organisations: [organisation]) }
+    let(:user2) { create(:user, organisations: [organisation]) }
+    let(:user3) { create(:user, organisations: [organisation]) }
+    let(:motif) { create(:motif, :collectif, service: service, name: "Atelier Colectif", organisation:) }
     let(:rdv) { create(:rdv, agents: [agent], users: [user, user2, user3], motif: motif, organisation: organisation, starts_at: starts_at, max_participants_count: 3) }
     let!(:receipt) { create(:receipt, rdv: rdv, result: :sent, content: "Vous avez rendez-vous!") }
 
@@ -140,8 +147,8 @@ RSpec.describe "Agent can see RDV details correctly" do
   end
 
   context "when the rdv is by visio" do
-    let(:motif) { create(:motif, service: service, location_type: :visio) }
-    let(:user) { create(:user) }
+    let(:motif) { create(:motif, service: service, location_type: :visio, organisation:) }
+    let(:user) { create(:user, organisations: [organisation]) }
 
     context "when the agent participates in the rdv" do
       let(:rdv) { create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation, starts_at: starts_at) }

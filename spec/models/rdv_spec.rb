@@ -260,19 +260,19 @@ RSpec.describe Rdv, type: :model do
   describe "#visible" do
     it "don't return rdv with invisible motif" do
       motif = create(:motif, :invisible)
-      create(:rdv, motif: motif)
+      create(:rdv, motif: motif, organisation: motif.organisation)
       expect(described_class.visible).to be_empty
     end
 
     it "return rdv with visible and notified motif" do
       motif = create(:motif, :visible_and_notified)
-      rdv = create(:rdv, motif: motif)
+      rdv = create(:rdv, motif: motif, organisation: motif.organisation)
       expect(described_class.visible).to contain_exactly(rdv)
     end
 
     it "return rdv with visible and not notified motif" do
       motif = create(:motif, :visible_and_not_notified)
-      rdv = create(:rdv, motif: motif)
+      rdv = create(:rdv, motif: motif, organisation: motif.organisation)
       expect(described_class.visible).to contain_exactly(rdv)
     end
   end

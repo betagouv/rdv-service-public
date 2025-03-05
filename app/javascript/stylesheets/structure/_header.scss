@@ -51,7 +51,10 @@ header {
   max-width: 6rem;
 }
 
-.link-dsfr {
+// L'usage spécifique su sélecteur "a[href].link-dsfr" sert à prendre la priorité
+// sur les déclarations faites dans le DSFR sur le styling de "a[href]".
+.link-dsfr,
+a[href].link-dsfr {
   padding: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -67,6 +70,34 @@ header {
   &:focus {
     border: 2px solid $focus-dsfr;
     box-shadow: none;
+  }
+}
+
+#rdv-account-dropdown {
+  .dropdown-toggle:focus {
+    border: none; // l'indicateur de focus est déjà géré par bootstrap
+  }
+
+  .dropdown-menu {
+    min-width: auto;
+    max-width: 30rem;
+
+    li {
+      padding: 0; // par défaut un li a un petit padding-bottom qui rend le spacing difficile dans ce contexte
+    }
+
+    .dropdown-item.dropdown-item-dsfr {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: black;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem;
+
+      &:hover {
+        background-color: rgb(246, 246, 246);
+      }
+    }
   }
 }
 

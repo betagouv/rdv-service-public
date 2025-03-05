@@ -54,14 +54,38 @@
 
 // FLEX
 
+.rdv-flex-wrap-wrap {
+  flex-wrap: wrap;
+}
+
 .rdv-flex-wrap-wrap-reverse {
   flex-wrap: wrap-reverse;
+}
+
+.rdv-justify-content-center {
+  justify-content: center;
+}
+
+.rdv-align-items-baseline {
+  align-items: baseline;
+}
+
+.rdv-gap-1rem {
+  gap: 1rem;
 }
 
 // DIMENSIONS
 
 .rdv-max-width-60 {
   max-width: 60%;
+}
+
+.rdv-width-100 {
+  width: 100%;
+}
+
+.rdv-max-width-100 {
+  max-width: 100%;
 }
 
 .rdv-max-width-md-100 {
@@ -72,6 +96,10 @@
 
 .rdv-max-height-12rem {
   max-height: 12rem;
+}
+
+.rdv-max-height-80vh {
+  max-height: 80vh;
 }
 
 .rdv-height-md-0 {

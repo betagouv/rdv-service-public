@@ -26,10 +26,7 @@ class Compte
       organisation.save!
       lieu.save!
 
-      self.agent = Agent.invite!(@attributes[:agent].merge(
-                                   password: SecureRandom.base64(32),
-                                   roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
-                                 ))
+      self.agent = find_or_invite_agent(organisation)
 
       agent.services.each do |service|
         TerritoryService.create!(service: service, territory: territory)
@@ -39,7 +36,7 @@ class Compte
         create_mairie_motifs!
         add_mairie_motifs_categories!
       else
-        create_example_motif!
+        create_example_motifs!
       end
 
       AgentTerritorialRole.create!(agent: agent, territory: territory)
@@ -64,6 +61,23 @@ class Compte
   end
 
   private
+
+  def find_or_invite_agent(organisation)
+    if @attributes.dig(:agent, :id)
+      Agent.find(@attributes.dig(:agent, :id)).tap do |agent|
+        agent.update(
+          @attributes[:agent].merge(
+            roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
+          )
+        )
+      end
+    else
+      Agent.invite!(@attributes[:agent].merge(
+                      roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
+                      password: SecureRandom.base64(32)
+                    ))
+    end
+  end
 
   def create_mairie_motifs!
     service = Service.find_by(name: Service::MAIRIE)
@@ -92,15 +106,17 @@ class Compte
     end
   end
 
-  def create_example_motif!
-    Motif.create!(
+  def create_example_motifs!
+    default_motif_attributes = {
       organisation: organisation,
-      name: "Mon premier motif",
+      name: "Suivi de dossier",
       color: "#99CC99",
-      location_type: :public_office,
       default_duration_in_min: 30,
       bookable_by: :agents,
-      service: agent.services.first
-    )
+      service: agent.services.first,
+    }
+    Motif.create!(default_motif_attributes.merge(location_type: :phone))
+    Motif.create!(default_motif_attributes.merge(location_type: :visio))
+    Motif.create!(default_motif_attributes.merge(location_type: :public_office))
   end
 end

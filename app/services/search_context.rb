@@ -18,7 +18,6 @@ class SearchContext
 
   def creneaux
     @creneaux ||= creneaux_search.creneaux
-      .uniq(&:starts_at) # On n'affiche qu'un créneau par horaire, même si plusieurs agents sont dispos
   end
 
   def available_collective_rdvs
@@ -26,7 +25,7 @@ class SearchContext
   end
 
   def creneaux_search
-    creneaux_search_for(lieu, date_range, first_matching_motif)
+    creneaux_search_for(lieu, first_matching_motif)
   end
 
   def first_matching_motif
@@ -55,9 +54,7 @@ class SearchContext
 
   private
 
-  def referent_ids
-    raise NoMethodError
-  end
+  attr_reader :referent_ids, :lieu_id
 
   def matching_motifs
     raise NoMethodError
@@ -75,11 +72,7 @@ class SearchContext
     raise NoMethodError
   end
 
-  def lieu_id
-    raise NoMethodError
-  end
-
-  def creneaux_search_for(lieu, date_range, motif)
+  def creneaux_search_for(lieu, motif)
     CreneauxSearch::ForUser.new(
       user: @user,
       motif: motif,
