@@ -12,17 +12,6 @@ RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
     login_as(agent, scope: :agent)
   end
 
-  it "allows changing the motif location_type" do
-    motif = create(:motif, organisation: organisation, location_type: :public_office, service:)
-
-    visit admin_organisation_motifs_path(organisation)
-    click_on motif.name
-    click_on "Modifier"
-    expect(page).to have_content "L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV."
-    choose "Par visioconférence"
-    expect { click_on "Enregistrer" }.to change { motif.reload.location_type }.from("public_office").to("visio")
-  end
-
   it "adds validation when trying to create a rdv without email or phone number", js: true do
     motif = create(:motif, organisation: organisation, location_type: :visio, service: service, name: "Accompagnement RSA")
 

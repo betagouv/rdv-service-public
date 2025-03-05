@@ -113,6 +113,17 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(editable_by_user_checkbox).not_to be_checked
       expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
+
+    it "allows changing the motif's location_type to :visio" do
+      motif = create(:motif, organisation: organisation, location_type: :public_office, service:)
+
+      visit admin_organisation_motifs_path(organisation)
+      click_on motif.name
+      click_on "Modifier"
+      expect(page).to have_content "L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV."
+      choose "Par visioconférence"
+      expect { click_on "Enregistrer" }.to change { motif.reload.location_type }.from("public_office").to("visio")
+    end
   end
 
   describe "archiving" do
