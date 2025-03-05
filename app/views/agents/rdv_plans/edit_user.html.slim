@@ -13,7 +13,8 @@
       = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
 
       hr.fr-mt-2w
-      h3= @rdv_plan.user.full_name
+      h3 Coordonnées de #{@rdv_plan.user.full_name}
+      p Des notifications seront envoyées par email et/ou par sms
       = simple_form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post do |f|
         = f.fields_for :user, @rdv_plan.user do |ff|
           .row
