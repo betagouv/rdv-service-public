@@ -1,5 +1,4 @@
 RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
-  let!(:motif) { create(:motif, organisation: organisation, location_type: :public_office, service: service, name: "Accompagnement RSA") }
   let(:organisation) { create(:organisation) }
   let(:service) { create(:service) }
 
@@ -12,17 +11,19 @@ RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
     login_as(agent, scope: :agent)
   end
 
-  it "allows changing the location type and adds validation when trying to create a rdv without email or phone number", js: true do
+  it "allows changing the motif location_type" do
+    motif = create(:motif, organisation: organisation, location_type: :public_office, service:)
+
     visit admin_organisation_motifs_path(organisation)
     click_on motif.name
     click_on "Modifier"
     expect(page).to have_content "L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV."
     choose "Par visioconférence"
-    click_on "Enregistrer"
-    wait_for { Motif.exists?(id: motif.id, location_type: :visio) }.to be(true)
+    expect { click_on "Enregistrer" }.to change { motif.reload.location_type }.from("public_office").to("visio")
+  end
 
-    expect(page).to have_content "RDV individuel par visioconférence"
-    expect(page).to have_content "L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV."
+  it "adds validation when trying to create a rdv without email or phone number", js: true do
+    motif = create(:motif, organisation: organisation, location_type: :visio, service: service, name: "Accompagnement RSA")
 
     visit new_admin_organisation_rdv_wizard_step_path(organisation_id: organisation.id)
     select(motif.name, from: "Motif du rendez-vous")
