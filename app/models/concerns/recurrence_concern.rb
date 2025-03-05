@@ -58,6 +58,12 @@ module RecurrenceConcern
     end
   end
 
+  def last_occurrence_ends_at
+    raise "this method only works for a recurring record" unless recurring?
+
+    recurrence_ends_at.present? ? end_time.on(recurrence_ends_at.to_date) : nil
+  end
+
   def first_occurrence_ends_at
     if end_time.blank?
       nil

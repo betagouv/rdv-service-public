@@ -19,6 +19,6 @@ fr:
               format: "La date de fin %{message}"
             end_time:
               format: "%{message}"
-              must_be_after_start_time: "L’heure de fin doit être ultérieure à l’heure de début."
+              must_be_after_start_time: "L’heure de fin doit être après l'heure de début."
             recurrence_ends_at:
               format: "La date de fin de répétition %{message}"
