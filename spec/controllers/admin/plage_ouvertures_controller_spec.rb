@@ -119,9 +119,9 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         end
 
         it "creates it and redirects to the index" do
-          post(:create, params: valid_params)
-          expect(response).to redirect_to(admin_organisation_plage_ouverture_path(organisation, PlageOuverture.last))
-          expect(agent.plage_ouvertures.count).to eq 2
+          expect { post(:create, params: valid_params) }.to change { agent.plage_ouvertures.count }.by(1)
+          created_plage = PlageOuverture.last
+          expect(response).to redirect_to(admin_organisation_agent_plage_ouvertures_path(organisation_id: created_plage.organisation, agent_id: created_plage.agent_id))
         end
 
         it "send notification after create" do
@@ -176,7 +176,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       context "with valid params" do
         it "updates the requested plage_ouverture" do
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
-          expect(response).to redirect_to(admin_organisation_plage_ouverture_path(organisation, plage_ouverture))
+          expect(response).to redirect_to(admin_organisation_agent_plage_ouvertures_path(organisation_id: plage_ouverture.organisation, agent_id: plage_ouverture.agent_id))
         end
 
         it "send notification after update" do
