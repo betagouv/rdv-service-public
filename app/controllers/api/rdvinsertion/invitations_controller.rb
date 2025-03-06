@@ -1,6 +1,4 @@
 class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseController
-  INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[address latitude longitude invitation_token]).freeze
-
   def creneau_availability
     payload = if params[:total_count] == "true"
                 { creneau_availability_count: }
@@ -60,6 +58,7 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def invitation_link_params
-    params.permit(INVITATION_LINK_PARAMS)
+    # invitation_token sert uniquement à retrouver l'usager
+    params.permit(InvitationSearchContext::INVITATION_PARAMS + %i[invitation_token])
   end
 end

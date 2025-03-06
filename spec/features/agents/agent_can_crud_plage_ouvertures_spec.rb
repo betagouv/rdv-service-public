@@ -24,7 +24,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
-      expect_page_title("La belle plage")
+      expect_page_title("Vos plages d'ouverture")
+      click_on("La belle plage")
       click_link("Supprimer")
 
       expect_page_title("Vos plages d'ouverture")
@@ -42,9 +43,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       select(lieu.full_name, from: "plage_ouverture_lieu_id") if lieu
       check "Suivi bonjour"
       click_button "Créer la plage d'ouverture"
-
-      expect_page_title("Accueil")
-      click_link "Modifier"
+      expect(PlageOuverture.last.title).to eq("Accueil")
+      expect_page_title("Vos plages d'ouverture")
     end
   end
 
@@ -111,7 +111,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
-      expect_page_title("La belle plage")
+      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+      click_on("La belle plage")
       accept_confirm do
         click_link("Supprimer")
       end
@@ -126,9 +127,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       check "Suivi bonjour"
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
       click_button "Créer la plage d'ouverture"
-
-      expect_page_title("Accueil")
-      click_link "Modifier"
+      expect(PlageOuverture.last.title).to eq("Accueil")
+      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
     end
 
     context "when the motif doesn't require a lieu" do
@@ -148,7 +148,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         fill_in "Libellé (facultatif)", with: "La belle plage"
         click_button("Enregistrer")
 
-        expect_page_title("La belle plage")
+        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+        click_on("La belle plage")
         click_link("Supprimer")
 
         expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
@@ -160,9 +161,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         fill_in "Libellé (facultatif)", with: "Accueil"
         check "Suivi bonjour"
         click_button "Créer la plage d'ouverture"
-
-        expect_page_title("Accueil")
-        click_link "Modifier"
+        expect(PlageOuverture.last.title).to eq("Accueil")
+        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
       end
     end
   end

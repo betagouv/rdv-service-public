@@ -2,7 +2,7 @@
 - if context.shown_lieux.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h3 = t(".select_lieu")
+  h1.fr-h3 = t(".select_lieu")
   p = t(".lieu_available", count: context.shown_lieux.count)
   ul.fr-raw-list
     - context.next_availability_by_lieux.each do |lieu, next_availability|
