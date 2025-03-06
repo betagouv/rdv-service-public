@@ -1,10 +1,19 @@
 RSpec.describe TokenInvitable, type: :controller do
   controller(ApplicationController) do
     include TokenInvitable
+    prepend_before_action :store_invitation_in_session_and_redirect
 
     def fake_action
       render plain: "ok"
     end
+
+    def fake_action_not_using_invitation
+      render plain: "ok"
+    end
+
+    private
+
+    def store_invitation_in_session_and_redirect_for_allowlisted_actions; end
   end
 
   let!(:token) { "some-token" }
