@@ -4,6 +4,7 @@ class Users::ParticipationsController < UserAuthController
   layout "application_narrow"
 
   include TokenInvitable
+  prepend_before_action :store_invitation_in_session_and_redirect
 
   def index
     @rdv = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).find(params[:rdv_id])

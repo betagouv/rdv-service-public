@@ -7,7 +7,6 @@ module TokenInvitable
   included do
     # :store_invitation_in_session_and_redirect is called first, :sign_in_with_session_token after it
     prepend_before_action :sign_in_with_session_token, if: -> { session[:invitation].present? }
-    prepend_before_action :store_invitation_in_session_and_redirect
   end
 
   private
