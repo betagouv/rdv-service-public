@@ -243,7 +243,7 @@ GEM
       railties (>= 3.2)
     drb (2.2.1)
     dsfr-assets (1.13.0.1)
-    dsfr-form_builder (0.0.5)
+    dsfr-form_builder (0.0.6)
       actionview (>= 6.1, < 9.0)
       activemodel (>= 6.1, < 9.0)
       activesupport (>= 6.1, < 9.0)
@@ -787,7 +787,7 @@ DEPENDENCIES
   doorkeeper-i18n
   dotenv-rails
   drb
-  dsfr-form_builder (= 0.0.5)
+  dsfr-form_builder (= 0.0.6)
   dsfr-view-components
   factory_bot
   faker
