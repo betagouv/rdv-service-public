@@ -55,17 +55,11 @@ module UserRdvWizard
         motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id), rdv_collectif_id: rdv.id,
       }.merge(
         @attributes.slice(
-          :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id,
-          :address, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
+          *WebSearchContext::ADDRESS_SELECTION_PARAMS,
+          :where, :lieu_id, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
           :referent_ids, :external_organisation_ids, :duration
         )
       )
-    end
-
-    def to_search_query
-      @attributes
-        .slice(:departement, :latitude, :longitude, :motif_name_with_location_type, :where, :city_code, :street_ban_id)
-        .merge(service: @rdv.motif.service_id, motif_name_with_location_type: @rdv.motif.name_with_location_type)
     end
 
     def save

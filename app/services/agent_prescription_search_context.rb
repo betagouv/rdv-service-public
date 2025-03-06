@@ -1,8 +1,8 @@
 class AgentPrescriptionSearchContext < WebSearchContext
   STRONG_PARAMS_LIST = [
-    :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
-    :service_id, :lieu_id, :date, :motif_name_with_location_type, :motif_category_short_name,
-    :motif_id, :user_selected_organisation_id, :prescripteur,
+    *WebSearchContext::ADDRESS_SELECTION_PARAMS,
+    *WebSearchContext::USER_CHOICE_PARAMS,
+    :date, :motif_category_short_name, :prescripteur,
     :context,
     { # Paramètre supplémentaire qui n'apparait pas dans le WebSearchContext
       user_ids: [],
