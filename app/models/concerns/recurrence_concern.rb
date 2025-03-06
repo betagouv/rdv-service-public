@@ -3,8 +3,8 @@ module RecurrenceConcern
 
   included do
     serialize :recurrence, coder: Montrose::Recurrence
-    serialize :start_time, coder: Tod::TimeOfDay
-    serialize :end_time, coder: Tod::TimeOfDay
+    attribute :start_time, :time_only # uses Tod::TimeOfDayType
+    attribute :end_time, :time_only   # uses Tod::TimeOfDayType
 
     before_save :clear_empty_recurrence, :set_recurrence_ends_at
 
@@ -22,8 +22,8 @@ module RecurrenceConcern
   class_methods do
     def serialize_for_active_job(record)
       manually_serialized_attrs = {
-        start_time: Tod::TimeOfDay.dump(record.start_time),
-        end_time: Tod::TimeOfDay.dump(record.end_time),
+        start_time: record.start_time.to_s,
+        end_time: record.end_time.to_s,
         recurrence: Montrose::Recurrence.dump(record.recurrence),
       }
       record.attributes.merge(manually_serialized_attrs.stringify_keys)
@@ -32,8 +32,8 @@ module RecurrenceConcern
     def deserialize_for_active_job(hash)
       hash = hash.symbolize_keys
       manually_deserialized_attrs = {
-        start_time: Tod::TimeOfDay.load(hash[:start_time]),
-        end_time: Tod::TimeOfDay.load(hash[:end_time]),
+        start_time: Tod::TimeOfDay.parse(hash[:start_time]),
+        end_time: Tod::TimeOfDay.parse(hash[:end_time]),
         recurrence: Montrose::Recurrence.load(hash[:recurrence]),
       }
       new(hash.merge(manually_deserialized_attrs))
@@ -92,6 +92,15 @@ module RecurrenceConcern
     return nil if recurrence.nil?
 
     recurrence.to_hash[:interval] || 1 # when interval is nil, it means 1
+  end
+
+  def human_time_range
+    [human_time(starts_at), human_time(ends_at)].join("-")
+  end
+
+  def human_time(datetime)
+    minutes = datetime.min.zero? ? nil : datetime.min
+    "#{datetime.hour}h#{minutes}"
   end
 
   class_methods do

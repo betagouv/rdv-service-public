@@ -1,5 +1,9 @@
 .card[id= "rdv-#{rdv.id}"]
-  .mx-3[id= "rdv-updated-flash-message-#{rdv.id}"]
+  div[id= "js-rdv-error-message-#{rdv.id}"]
+  - if local_assigns[:success_message]
+    .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mx-3w.fr-my-2w
+      p.fr-mb-0= local_assigns[:success_message]
+
   .card-header.border-white
     .d-flex.flex-wrap.align-items-center.flex-gap-1em
       .flex-grow-1
@@ -8,9 +12,9 @@
             = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
       = render "admin/rdvs/waiting_room", rdv: rdv
       - if rdv.collectif?
-        = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
+        = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv
       - else
-        = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
+        = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv
   hr.my-0.mx-3
   .card-body.py-3.row
     .col-md-8.col-sm-12
@@ -56,12 +60,4 @@
         p Il n'y a pas encore de participant pour ce RDV
 
       - if rdv.collectif?
-        .d-flex.justify-content-start.mb-2
-          - if rdv.remaining_seats? && rdv.not_cancelled?
-            = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "btn btn-outline-primary btn-sm" do
-              span.ml-1
-                i.fa.fa-fw.fa-user-plus>
-              span
-                = "Ajouter un participant"
-          .text-muted.align-self-center.ml-2
-            = render "admin/rdvs/participants_count", rdv: rdv
+        = render "admin/rdvs/rdv_collectif_add_participant", rdv: rdv

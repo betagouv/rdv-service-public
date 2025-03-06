@@ -77,17 +77,17 @@ class PlacesInput {
   suggestionTemplate = suggestion => {
     const { type, name } = suggestion
     const icon = {
-      housenumber: "map-marker",
-      locality: "map-pin",
-      municipality: "city",
-      street: 'road'
+      housenumber: "home-4-fill",
+      locality: "road-map-fill",
+      municipality: "community-fill",
+      street: 'map-pin-2-fill'
     }[type] || "question"
     const details = this.getDetails(suggestion).join(", ")
     const content = `<b>${name}</b> <span class='text-muted'>${details}</span>`
     return `
       <div class='d-flex'>
-        <div class='ml-1'><i class="fa fa-${icon}"></i></div>
-        <div class='ml-1'>${content}</div>
+        <div class='fr-ml-1w'><i class="fr-icon-${icon}"></i></div>
+        <div class='fr-ml-1w'>${content}</div>
       </div>
     `
   }
@@ -104,7 +104,7 @@ class PlacesInput {
 
 class PlacesInputs {
   constructor() {
-    document.querySelectorAll('.places-js-container').forEach(elt => new PlacesInput(elt))
+    document.querySelectorAll('input[data-address-autocomplete="on"]').forEach(elt => new PlacesInput(elt))
   }
 }
 

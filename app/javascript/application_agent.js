@@ -27,16 +27,18 @@ import { DestroyButton } from './components/destroy-button'
 import { Tooltips } from './components/tooltips'
 import { PlageOuverture } from './components/plage_ouverture.js'
 import {CheckAll, UnCheckAll} from './components/check-all'
+import './components/motifs_table'
 import './components/calendar'
 import './components/browser-detection'
 import './components/clear-field-on-focus.js'
 
 import { Application } from "@hotwired/stimulus"
-import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers"
+import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
+import MotifFormController from './controllers/motif_form_controller'
 
 window.Stimulus = Application.start()
-const context = require.context("./controllers", true, /\.js$/)
-Stimulus.load(definitionsFromContext(context))
+Stimulus.register('checkbox-select-all', CheckboxSelectAll)
+Stimulus.register('motif-form', MotifFormController)
 
 import './stylesheets/print'
 import './stylesheets/application_agent'

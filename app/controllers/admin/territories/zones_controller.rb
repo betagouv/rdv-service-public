@@ -18,7 +18,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
 
   def new
     zone_defaults = { level: params[:default_zone_level] || Zone::LEVEL_CITY }
-    @zone = Zone.new(**zone_defaults.merge(zone_params_get), sector: @sector)
+    @zone = Zone.new(**zone_defaults, **zone_params_get, sector: @sector)
     @sectors = sector_policy.resolve
     authorize(@zone, policy_class: Agent::ZonePolicy)
   end

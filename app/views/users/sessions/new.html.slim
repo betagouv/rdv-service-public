@@ -12,22 +12,10 @@
 
     h2 Se connecter avec son compte
 
-    = form_for resource, as: resource_name, url: session_path(resource_name) do |f|
+    = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
       = render "devise/shared/error_messages", resource: resource
-      .fr-input-group
-        = f.label :email, class: "fr-label" do
-          = "Adresse email"
-          span.fr-hint-text Format attendu : nom@domaine.fr
-        = f.email_field :email, autofocus: true, class: "fr-input"
-      .fr-password
-        = f.label :password, class: "fr-label", for: "password"
-        .fr-input-wrap
-          = f.password_field :password, autocomplete: "current-password", required: true, class: "fr-password__input fr-input", id: "password"
-        .fr-password__checkbox.fr-checkbox-group.fr-checkbox-group--sm
-          input type="checkbox" aria-label="Afficher le mot de passe" id="password-show"
-          label for="password-show" class="fr-password__checkbox fr-label" Afficher
-
-        = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "fr-link"
+      = f.dsfr_email_field :email, autofocus: true, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse email"
+      = render "common/form/current_password_input", f:, forgotten_password_link: true
 
       .rdv-text-align-center
         = f.submit "Se connecter", class: "fr-mt-2v fr-btn"

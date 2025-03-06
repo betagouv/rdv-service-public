@@ -60,8 +60,16 @@ a[disabled] {
   white-space: nowrap;
 }
 
+.rdv-white-space-pre {
+  white-space: pre;
+}
+
 .rdv-color-white {
   color: white;
+}
+
+.rdv-color-active-blue {
+  color: var(--background-active-blue-france);
 }
 
 // GRID
@@ -141,4 +149,8 @@ ul.horizontal-border-between-items {
 .btn-link.disabled,
 button:disabled {
   pointer-events: auto; // needed for a disabled button to show a tooltip
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

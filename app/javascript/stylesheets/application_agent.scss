@@ -1,10 +1,62 @@
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 @import "./_variables";
 @import "./fontawesome_imports";
-@import "./fonts";
 
-@import "~bootstrap/scss/bootstrap";
+// import bootstrap file by file so we can remove unwanted rules component by component
+// cf https://github.com/twbs/bootstrap/blob/v4.3.1/scss/bootstrap.scss
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/code";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/input-group";
+@import "~bootstrap/scss/custom-forms";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/breadcrumb";
+@import "~bootstrap/scss/pagination";
+@import "~bootstrap/scss/badge";
+@import "~bootstrap/scss/jumbotron";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/progress";
+@import "~bootstrap/scss/media";
+@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/close";
+@import "~bootstrap/scss/toasts";
+@import "~bootstrap/scss/modal";
+@import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/popover";
+@import "~bootstrap/scss/carousel";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/utilities/align";
+@import "~bootstrap/scss/utilities/background";
+@import "~bootstrap/scss/utilities/borders";
+@import "~bootstrap/scss/utilities/clearfix";
+@import "~bootstrap/scss/utilities/display";
+@import "~bootstrap/scss/utilities/embed";
+@import "~bootstrap/scss/utilities/flex";
+@import "~bootstrap/scss/utilities/float";
+@import "~bootstrap/scss/utilities/interactions";
+@import "~bootstrap/scss/utilities/overflow";
+@import "~bootstrap/scss/utilities/position";
+@import "~bootstrap/scss/utilities/screenreaders";
+@import "~bootstrap/scss/utilities/shadows";
+@import "~bootstrap/scss/utilities/sizing";
+@import "~bootstrap/scss/utilities/spacing";
+@import "~bootstrap/scss/utilities/stretched-link";
+@import "~bootstrap/scss/utilities/text";
+@import "~bootstrap/scss/utilities/visibility";
+
 @import "~select2/dist/css/select2";
 @import "~select2-bootstrap4-theme/dist/select2-bootstrap4.min";
 
@@ -39,6 +91,7 @@
 @import "./components/recurrence";
 @import "./components/settings";
 @import "./components/utilities";
+@import "./components/utilities_dsfr";
 @import "./components/autocomplete";
 @import "./components/pagination";
 @import "./components/select2";
@@ -53,6 +106,20 @@
   }
 }
 
+@import "./structure/bootstrap_overrides";
+
+a[href]:not(.fc-event-waiting) {
+  background-image: none; // pour éviter le soulignement des liens
+}
+
+ol > li::marker {
+  content: ""; //pour éviter les chiffres dans les breadcrumbs
+}
+
 header.header {
   border-bottom: 1px solid $card-border-color;
+}
+
+li.nav-item {
+  padding-bottom: 0; // Pour les onglets bootstrap
 }

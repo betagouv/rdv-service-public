@@ -6,7 +6,7 @@ main.container
         .card-body
           h3
             i.fa.fa-check-circle
-            = " Rendez-vous confirmé"
+            |< Rendez-vous confirmé
           - rdv = @rdv
           ul.list-group.list-group-flush
             li.list-group-item
@@ -32,9 +32,16 @@ main.container
               .fa.fa-user>
               = @rdv.users.first.full_name
               = " (#{@rdv.users.first.phone_number})" if @rdv.users.first.phone_number.present?
+
             li.list-group-item
-              i.fa.fa-info-circle>
-              = rdv.motif.name
+              .row
+                .col-auto.pr-0
+                  i.fa.fa-info-circle>
+                .col-auto.pl-1
+                  = rdv.motif.name
+                  - if current_territory.enable_context_field && @rdv.context.present?
+                    div.rdv-white-space-pre.pt-3= @rdv.context
+
             - if rdv.motif.instruction_for_rdv.present?
               li.list-group-item
                 i.fa.fa-exclamation-triangle>
@@ -42,6 +49,6 @@ main.container
                 .pl-3.pt-1
                   = instruction_for_rdv_to_html(rdv.motif)
             li.list-group-item
-              = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
-              =< mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
+              |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
+              = link_to "Contactez-nous", new_aide_demande_support_path(role: :agent, sujet: "Déplacer ou corriger un RDV pris via prescription")
           .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", admin_organisation_agent_agenda_path(current_organisation, current_agent)

@@ -39,16 +39,16 @@ RSpec.describe "Adding a user to a collective RDV" do
 
   def select_lieu
     expect(page).to have_content("Sélectionnez un lieu de RDV")
-    click_link("Prochaine disponibilité")
+    click_link("Lieu n°1")
   end
 
   def expect_cancel_participation
     expect do
-      expect(page).to have_content("À venir")
-      click_link("Annuler votre participation")
+      expect(page).to have_content(/À venir/i)
+      click_on("Annuler votre participation")
       click_link("Oui, annuler votre participation", match: :first)
       expect(page).to have_content("Participation annulée")
-      expect(page).to have_content("Annulé")
+      expect(page).to have_content(/Annulé/i)
     end
   end
 
@@ -114,7 +114,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer.")
       fill_in("user_email", with: logged_user.email)
-      fill_in("password", with: logged_user.password)
+      fill_in("user_password", with: logged_user.password)
 
       click_button("Se connecter")
       click_button("Continuer")
@@ -200,13 +200,13 @@ RSpec.describe "Adding a user to a collective RDV" do
         fill_in(:letter1, with: "N")
         fill_in(:letter2, with: "V")
 
-        expect(page).to have_content("Annulé")
+        expect(page).to have_content(/Annulé/i)
         create(:participation, rdv: rdv2, user: user, status: "revoked")
         rdv2.status = "revoked"
         rdv2.save
 
         visit users_rdv_path(rdv2, invitation_token: rdv2.participation_token(user.id))
-        expect(page).to have_content("Annulé")
+        expect(page).to have_content(/Annulé/i)
       end
 
       it "doesnt send notifications email to user if notif is unchecked" do
@@ -356,13 +356,13 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         visit users_rdv_path(rdv)
 
-        expect(page).to have_content("Annulé")
+        expect(page).to have_content(/Annulé/i)
         create(:participation, rdv: rdv2, user: user, status: "revoked")
         rdv2.status = "revoked"
         rdv2.save
 
         visit users_rdv_path(rdv2)
-        expect(page).to have_content("Annulé")
+        expect(page).to have_content(/Annulé/i)
       end
 
       it "doesnt send notifications email to user if notif is unchecked" do

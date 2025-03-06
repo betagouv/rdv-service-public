@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.5"
+ruby "3.3.7"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -32,6 +32,8 @@ gem "sentry-rails"
 gem "skylight"
 # Block & throttle abusive requests
 gem "rack-attack"
+# Ruby production code coverage collection and reporting (line of code usage)
+gem "coverband"
 # Dépendance interne pour anonymiser les records AR
 gem "anonymizer", path: "lib/anonymizer"
 
@@ -98,6 +100,10 @@ gem "blueprinter"
 # Parallel HTTP library on top of libcurl multi.
 gem "typhoeus"
 
+# External services
+gem "notion-ruby-client", "~> 1.2"
+gem "crisp-api", "~> 1.1"
+
 # API documentation
 
 # A Rails Engine that exposes OpenAPI (formerly called Swagger) files as JSON endpoints
@@ -127,6 +133,7 @@ gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
 gem "dsfr-view-components"
+gem "dsfr-form_builder", "= 0.0.3" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
@@ -141,7 +148,7 @@ gem "rubyzip" # zip export files
 # Recurring events in Ruby
 gem "montrose"
 # Supplies TimeOfDay and Shift class
-gem "tod", "~> 2.2"
+gem "tod"
 # A ruby implementation of the iCalendar specification (RFC-5545).
 gem "icalendar", "~> 2.5"
 
@@ -152,7 +159,7 @@ gem "lograge"
 gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
 
 # Ces gems ne seront plus intégrées à Ruby en version 3.4.0 Lors de l'upgrade
-# depuis 3.3.5, on pourra vérifier si les gems qui en dépendent implicitement
+# depuis 3.3.7, on pourra vérifier si les gems qui en dépendent implicitement
 # ont ajouté dans leur gemspec une dépendance explicite.
 gem "bigdecimal"
 gem "csv"
@@ -175,15 +182,15 @@ group :development do
   gem "active_record_doctor"
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
-  # Automatic Ruby code style checking tool.
-  gem "rubocop", "~> 1.65", require: false
   # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
-  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.5)
-  gem "parser", "3.3.5.0", require: false
+  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby
+  gem "parser", "3.3.7.0", require: false
+  # Automatic Ruby code style checking tool.
+  gem "rubocop", require: false
   # Code style checking for RSpec files
-  gem "rubocop-rspec", "~> 3.0", require: false
+  gem "rubocop-rspec", require: false
   # Automatic Rails code style checking tool.
-  gem "rubocop-rails", "~> 2.25", require: false
+  gem "rubocop-rails", require: false
   # Slim template linting tool
   gem "slim_lint", require: false
 
@@ -197,6 +204,8 @@ group :development do
   gem "better_errors"
   # Retrieve the binding of a method's caller, or further up the stack.
   gem "binding_of_caller" # Enable the REPL in better_errors
+  # A mini view framework for console/irb that's easy to use. Includes a no-wrap table, auto-pager, tree and menu.
+  gem "hirb"
   # Profiles loading speed for rack applications.
   gem "rack-mini-profiler"
   # Used by rack-mini-profiler to display flamegraphs: trigger by adding "?pp=flamegraph" to your URL
@@ -271,4 +280,6 @@ group :test do
 
   gem "sinatra"
   gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
+
+  gem "pry"
 end

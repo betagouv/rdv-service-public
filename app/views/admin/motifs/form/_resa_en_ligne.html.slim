@@ -77,9 +77,7 @@
       h5.card-title.mb-2= Motif.human_attribute_name("sectorisation_level_title")
       .mb-3
         span>= Motif.human_attribute_name("sectorisation_level_hint")
-        = link_to "https://doc.rdv-solidarites.fr/guide-utilisation/pour-un-territoire/sectorisation-geographique/" do
-          span> Voir la documentation concernant la sectorisation
-          i.fa.fa-external-link-alt>
+        = link_to  "Voir la documentation concernant la sectorisation", "https://doc.rdv-solidarites.fr/guide-utilisation/pour-un-territoire/sectorisation-geographique/", target: "_blank"
       .mb-2
         = label_tag do
           = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT)

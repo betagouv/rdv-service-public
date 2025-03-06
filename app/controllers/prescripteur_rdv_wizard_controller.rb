@@ -40,7 +40,7 @@ class PrescripteurRdvWizardController < ApplicationController
 
       redirect_to prescripteur_new_beneficiaire_path
     else
-      flash[:error] = "Veuillez compléter tous les champs obligatoires" # rubocop:disable Rails/ActionControllerFlashBeforeRender
+      flash[:error] = "Veuillez compléter tous les champs obligatoires"
       @step_title = @step_titles[1]
 
       render :new_prescripteur
@@ -59,7 +59,7 @@ class PrescripteurRdvWizardController < ApplicationController
     @beneficiaire = BeneficiaireForm.new(beneficiaire_params.merge(motif_id: session[:rdv_wizard_attributes]["motif_id"]))
 
     if @beneficiaire.valid?
-      session[:rdv_wizard_attributes][:user] = beneficiaire_params
+      session[:rdv_wizard_attributes][:user] = beneficiaire_params.except("ants_meeting_point_id")
 
       rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
       rdv_wizard.create!

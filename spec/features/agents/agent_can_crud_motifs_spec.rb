@@ -117,6 +117,17 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(editable_by_user_checkbox).not_to be_checked
       expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
+
+    it "allows changing the motif's location_type to :visio" do
+      motif = create(:motif, organisation: organisation, location_type: :public_office, service:)
+
+      visit admin_organisation_motifs_path(organisation)
+      click_on motif.name
+      click_on "Modifier"
+      expect(page).to have_content "L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV."
+      choose "Par visioconférence"
+      expect { click_on "Enregistrer" }.to change { motif.reload.location_type }.from("public_office").to("visio")
+    end
   end
 
   describe "archiving" do
@@ -160,7 +171,7 @@ RSpec.describe "Agent can CRUD motifs" do
       it "explains why the motif can't be un-archived" do
         visit admin_organisation_motif_path(motif.organisation, motif)
         expect { click_on "Réactiver" }.not_to change { motif.reload.archived? }.from(true)
-        expect(page).to have_content("Nom est déjà utilisé : un motif du même type et du même service porte déjà ce nom dans cette organisation.")
+        expect(page).to have_content("Il existe déjà dans #{motif.organisation.name} un motif")
       end
     end
   end

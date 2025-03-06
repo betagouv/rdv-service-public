@@ -24,7 +24,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
-      expect_page_title("La belle plage")
+      expect_page_title("Vos plages d'ouverture")
+      click_on("La belle plage")
       click_link("Supprimer")
 
       expect_page_title("Vos plages d'ouverture")
@@ -42,9 +43,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       select(lieu.full_name, from: "plage_ouverture_lieu_id") if lieu
       check "Suivi bonjour"
       click_button "Créer la plage d'ouverture"
-
-      expect_page_title("Accueil")
-      click_link "Modifier"
+      expect(PlageOuverture.last.title).to eq("Accueil")
+      expect_page_title("Vos plages d'ouverture")
     end
   end
 
@@ -111,7 +111,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
-      expect_page_title("La belle plage")
+      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+      click_on("La belle plage")
       accept_confirm do
         click_link("Supprimer")
       end
@@ -126,9 +127,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       check "Suivi bonjour"
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
       click_button "Créer la plage d'ouverture"
-
-      expect_page_title("Accueil")
-      click_link "Modifier"
+      expect(PlageOuverture.last.title).to eq("Accueil")
+      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
     end
 
     context "when the motif doesn't require a lieu" do
@@ -148,7 +148,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         fill_in "Libellé (facultatif)", with: "La belle plage"
         click_button("Enregistrer")
 
-        expect_page_title("La belle plage")
+        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+        click_on("La belle plage")
         click_link("Supprimer")
 
         expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
@@ -160,9 +161,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         fill_in "Libellé (facultatif)", with: "Accueil"
         check "Suivi bonjour"
         click_button "Créer la plage d'ouverture"
-
-        expect_page_title("Accueil")
-        click_link "Modifier"
+        expect(PlageOuverture.last.title).to eq("Accueil")
+        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
       end
     end
   end
@@ -195,6 +195,45 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       visit admin_organisation_plage_ouverture_path(organisation, plage_ouverture)
       expect(page).to have_content(plage_ouverture.title_with_default)
       expect(page).to have_content("Conflit de dates et d'horaires avec d'autres plages d'ouvertures\nPlage d'ouverture #{overlapping_plage.id}")
+    end
+  end
+
+  describe "selecting motifs for a plage" do
+    let!(:avocat) { create(:service, name: "Avocat") }
+    let!(:notaire) { create(:service, name: "Notaire") }
+
+    let!(:motif_1_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
+    let!(:motif_2_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
+
+    it "works", js: true do
+      visit new_admin_organisation_agent_plage_ouverture_path(organisation, agent)
+      expect(page).not_to have_content("Lieu")
+      check avocat.name
+      expect(page).to have_checked_field(motif_1_service_avocat.name)
+      expect(page).to have_checked_field(motif_2_service_avocat.name)
+      expect(page).not_to have_checked_field(motif.name)
+      expect(page).to have_content("Lieu")
+      select(lieu.full_name, from: "plage_ouverture_lieu_id")
+      click_on "Créer la plage d'ouverture"
+      expect(PlageOuverture.last.motifs).to contain_exactly(motif_1_service_avocat, motif_2_service_avocat)
+    end
+  end
+
+  describe "selecting a time range" do
+    it "works" do
+      visit new_admin_organisation_agent_plage_ouverture_path(organisation, agent)
+      check motif.name
+      select(lieu.full_name, from: "plage_ouverture_lieu_id")
+
+      # Set start time at 10:30
+      select "10", from: "plage_ouverture_start_time_4i"
+      select "30", from: "plage_ouverture_start_time_5i"
+      # Set start time at 13:45
+      select "13", from: "plage_ouverture_end_time_4i"
+      select "45", from: "plage_ouverture_end_time_5i"
+
+      expect { click_on "Créer la plage d'ouverture" }.to change(PlageOuverture, :count).by(1)
+      expect(PlageOuverture.last).to have_attributes(start_time: Tod::TimeOfDay.new(10, 30), end_time: Tod::TimeOfDay.new(13, 45))
     end
   end
 end

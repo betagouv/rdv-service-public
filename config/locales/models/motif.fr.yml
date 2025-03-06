@@ -83,8 +83,8 @@ fr:
         public_office: Sur place
         visio: Par visioconférence
       motif/location_types/hint:
-        public_office: L'agent reçoit l'usager sur place, au lieu sélectionné (MDS...).
-        visio: L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV. L'agent se connecte au <a href="https://www.numerique.gouv.fr/outils-agents/webconference-etat/" target="_blank">service de webconférence de l'État <i class="fa fa-external-link" /></a> avec ProConnect pour démarrer la visioconférence.
+        public_office: L'agent reçoit l'usager sur place, au lieu sélectionné (MDS…).
+        visio: L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV. L'agent se connecte au <a href="https://www.numerique.gouv.fr/outils-agents/webconference-etat/" target="_blank">service de webconférence de l'État</a> avec ProConnect pour démarrer la visioconférence.
         phone: L’agent appelle le numéro indiqué sur la fiche de l'usager.
         home: L’agent se rend à l'adresse indiquée sur la fiche de l'usager.
       motif/bookable_by/radio_label_html:
@@ -101,7 +101,7 @@ fr:
           Seuls vous et les agents de votre organisation peuvent ajouter des rendez-vous à votre agenda.
         agents_and_prescripteurs: >
           Les agents et prescripteurs d’autres organisations peuvent ajouter des rendez-vous à votre agenda. Voir la
-          <a href="https://rdv-service-public-1.gitbook.io/rdv-service-public/toutes-les-notions/utiliser-la-prescription-externe" target="_blank">documentation  <i class="fa fa-external-link" /></a>
+          <a href="https://aide.rdv-service-public.fr/toutes-les-notions/utiliser-la-prescription-externe" target="_blank">documentation</a>
           pour plus d’informations.
         agents_and_prescripteurs_and_invited_users: >
           Les agents, prescripteurs, et usagers peuvent ajouter des rendez-vous dans votre agenda.

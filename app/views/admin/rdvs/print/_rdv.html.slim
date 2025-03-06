@@ -16,7 +16,7 @@
       - if rdv.motif.visio?
         .pl-3.pt-2
           .fa.fa-video-camera>
-          = "RDV par visioconférence "
+          |> RDV par visioconférence
           = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
 
       .card-body
@@ -24,7 +24,7 @@
           ruby:
             user = participation.user
             phone_number = user.user_to_notify&.phone_number
-            email = user.user_to_notify&.email
+            email = user.user_to_notify&.preferred_email
           div
             span.font-weight-bold.lead
               = user
@@ -45,6 +45,10 @@
               - else
                 span.font-weight-light.font-italic.text-muted
                   | Téléphone non renseigné
+          .mt-2
+            span.mx-1
+              - if current_organisation.ants_connectable? && user.ants_pre_demande_number.present?
+                = "N° de pré-demande ANTS : #{user.ants_pre_demande_number}"
           .users-details.collapse
             - if user.responsible.present?
               div.mb-2

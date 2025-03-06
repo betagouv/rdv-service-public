@@ -1,8 +1,7 @@
 module Users::CreneauxWizardConcern
   extend ActiveSupport::Concern
 
-  # *** Method that outputs the next step for the user to complete its rdv journey ***
-  # *** It is used in #to_partial_path to render the matching partial view ***
+  # *** Method that outputs the current step for the user to complete its rdv journey ***
   def current_step
     if departement.blank?
       :address_selection
@@ -21,10 +20,6 @@ module Users::CreneauxWizardConcern
 
   def start_date
     query_params[:date]&.to_date || super
-  end
-
-  def to_partial_path
-    "search/#{current_step}"
   end
 
   def wizard_after_creneau_selection_path(params)
@@ -48,7 +43,7 @@ module Users::CreneauxWizardConcern
   # Retourne une liste d'organisations et leur prochaine dispo, ordonnées par date de prochaine dispo
   def next_availability_by_motifs_organisations
     @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
-      [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
+      [motif.organisation, creneaux_search_for(nil, motif).next_availability]
     end.compact.sort_by(&:last).to_h
   end
 
@@ -64,11 +59,15 @@ module Users::CreneauxWizardConcern
     @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
+  def follow_up_motifs?
+    @follow_up_motifs ||= Motif.where(service: services).where.not(bookable_by: :agents).exists?(follow_up: true, deleted_at: nil)
+  end
+
   def next_availability_by_lieux
     return @next_availability_by_lieux if @next_availability_by_lieux
 
     next_availability_by_lieux = Lieu.with_open_slots_for_motifs(matching_motifs).includes(:organisation).to_h do |lieu|
-      next_availability = creneaux_search_for(lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first).next_availability
+      next_availability = creneaux_search_for(lieu, matching_motifs.where(organisation: lieu.organisation).first).next_availability
       [lieu, next_availability]
     end.compact
 
@@ -93,8 +92,19 @@ module Users::CreneauxWizardConcern
     creneaux.empty? && next_availability.nil?
   end
 
-  def max_public_booking_delay
-    matching_motifs.maximum("max_public_booking_delay")
+  def after_max_public_booking_delay?(date)
+    # On a déjà le first_matching_motif en mémoire au moment où on appelle cette méthode
+    # Dans la plupart des cas, tous les motifs ont le même max_booking_delay
+    # On s'en sert donc pour éviter de chercher le maximum sur tous les matching_motifs si possible
+    if date < (Time.zone.now + first_matching_motif.max_public_booking_delay.seconds).to_date
+      return false
+    end
+
+    # TODO: on pourrait peut-être rendre cette requête plus rapide avec un index sur motifs.max_public_booking_delay
+    # Elle peut etre assez longue, donc on fait un memoize pour éviter de la faire plusieurs fois
+    @max_public_booking_delay ||= matching_motifs.maximum("max_public_booking_delay")
+
+    date >= (Time.zone.now + @max_public_booking_delay.seconds).to_date
   end
 
   private

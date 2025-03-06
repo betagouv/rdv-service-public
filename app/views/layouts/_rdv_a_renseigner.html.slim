@@ -1,10 +1,10 @@
-- if organisation.present? && agent && agent.unknown_past_rdv_count > 0 \
-    && !agent.conseiller_numerique? # See https://github.com/betagouv/rdv-solidarites.fr/issues/2245
-  = link_to admin_organisation_rdvs_path(organisation, status: "unknown_past", agent_id: agent.id)
-    .navbar.alert-warning.p-2
-      div.mr-4
-        .fa.fa-exclamation-triangle.alert-link>
-        span.ml-1.alert-link = t(".unknown_past_rdv_count", count: agent.unknown_past_rdv_count )
-        - if agent.organisations.size > 1
-          span.ml-1.alert-link = t(".agent_organisations")
-      button.btn.rdv-status-unknown_past.float-right = t(".link_to_unknown_past_rdv")
+/ locals(organisation: nil)
+- if current_agent.unknown_past_rdv_count > 0 && !current_agent.conseiller_numerique? # See https://github.com/betagouv/rdv-solidarites.fr/issues/2245
+  / la condition ci-dessous permet de gérer les cas où le compteur en cache unknown_past_rdv_count
+  / est supérieur 0 mais qu’on ne retrouve aucun RDV effectivement à renseigner
+  - organisation_id = organisation&.id || current_agent.rdvs.a_renseigner.first&.organisation_id
+  - if organisation_id
+    li.list-inline-item.fr-mr-2w
+      = link_to a_renseigner_admin_organisation_rdvs_path(organisation_id), class: "btn text-primary-blue link-dsfr" do
+        span.fr-icon--sm.fr-mr-1v.fr-icon-warning-fill[aria-hidden="true"]
+        = "#{current_agent.unknown_past_rdv_count} RDV à renseigner"

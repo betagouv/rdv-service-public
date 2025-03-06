@@ -38,7 +38,7 @@ RSpec.describe "Agents can export their calendar to other tools, such as Outlook
     travel_to(Time.zone.parse("2022-07-08 16:00"))
     org = create(:organisation, id: 123_000)
     agent = create(:agent, calendar_uid: SecureRandom.uuid, first_name: "Marceau", last_name: "COLIN")
-    motif = create(:motif, name: "Accompagnement individuel")
+    motif = create(:motif, name: "Accompagnement individuel", organisation: org)
     lieu = create(:lieu, name: "CMS Le Vernay", address: "22 avenue Germain Perréard, 74960 Cran Gevrier")
 
     create(:rdv, motif: motif, agents: [agent], status: "unknown", starts_at: Time.zone.parse("2022-07-09 16:00"), ends_at: Time.zone.parse("2022-07-09 16:45"),

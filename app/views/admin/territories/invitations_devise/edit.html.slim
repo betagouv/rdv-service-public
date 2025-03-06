@@ -12,14 +12,14 @@
         p.fr-mt-3w.fr-hr-or = "ou"
 
       h2 Se créer un compte avec un mot de passe
-      = form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, builder: DsfrFormBuilder, display_required_tags: false do |f|
+      = form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, builder: Dsfr::FormBuilder, display_required_tags: false do |f|
         p.fr-hint-text Tous les champs sont obligatoires.
         = render "devise/shared/dsfr_error_messages", resource: resource
         = f.hidden_field :invitation_token
-        .fr-grid-row.fr-grid-row--gutters
+        .fr-grid-row.fr-grid-row--gutters.fr-mb-5v
           .fr-col-md-6= f.dsfr_text_field :first_name, required: true
           .fr-col-md-6= f.dsfr_text_field :last_name, required: true
-        = render "common/form/password_input", f: f, live_validation: true
+        = render "common/form/new_password_input", f: , hint: "Choisissez votre mot de passe"
 
         .fr-btns-group.fr-btns-group--inline.fr-btns-group--right
           .fr-mt-2w= f.submit t("devise.invitations.edit.submit_button"), class: "fr-btn"

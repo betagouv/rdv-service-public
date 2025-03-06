@@ -2,7 +2,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
   let(:motif) { create(:motif) }
   let(:organisation) { motif.organisation }
   let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
-  let(:user) { create(:user) }
+  let(:user) { create(:user, organisations: [organisation]) }
 
   before { sign_in agent }
 
@@ -51,7 +51,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
       end
 
       context "when the user has no email nor phone_number" do
-        let!(:user) { create(:user, :with_no_email, :with_no_phone_number) }
+        let!(:user) { create(:user, :without_devise_email, :with_no_phone_number, organisations: [organisation]) }
 
         it "doesn't show the notification preferences" do
           get :new, params: params
@@ -89,7 +89,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
 
     it "creates the rdv and flashes success" do
       expect { create_request }.to change(Rdv, :count).by(1)
-      expect(flash[:notice]).to match(/Le rendez-vous a été créé/)
+      expect(flash[:success]).to match(/Le rendez-vous a été créé/)
     end
 
     context "when the rdv is in the past" do

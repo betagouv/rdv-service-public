@@ -19,6 +19,8 @@ namespace :api do
     resources :participations, only: %i[update]
     # Doesn't need authentication
     resources :public_links, only: [:index]
+    resources :rdv_plans, only: %i[create show]
+    resources :teams, only: %i[index]
   end
 
   namespace :ants do

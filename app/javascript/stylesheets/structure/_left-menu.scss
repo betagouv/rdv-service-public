@@ -28,7 +28,7 @@
   background: $bg-leftbar;
   scrollbar-width: thin;
 
-  a:not(.btn-primary) {
+  a:not(.fr-btn) {
     color: $menu-item;
     transition: all 0.2s;
 
@@ -76,6 +76,8 @@
   }
 
   .current-organisation {
+    background-color: lighten($bg-leftbar, 10%);
+    font-size: 1.125rem;
     border-top: 1px solid $card-border-color;
     border-bottom: 1px solid $card-border-color;
   }

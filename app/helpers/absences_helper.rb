@@ -1,4 +1,6 @@
 module AbsencesHelper
+  CALENDAR_BACKGROUND_COLOR = "rgba(52, 57, 58, 0.7)".freeze
+
   def absence_tag(absence)
     if absence.expired?
       tag.span("Passée", class: "badge badge-light")

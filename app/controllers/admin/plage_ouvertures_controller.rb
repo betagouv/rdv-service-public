@@ -57,8 +57,8 @@ class Admin::PlageOuverturesController < AgentAuthController
     if @plage_ouverture.save
 
       Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_created.deliver_later if @agent.plage_ouverture_notification_level == "all"
-      flash[:notice] = "Plage d'ouverture créée"
-      redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
+      flash[:success] = "Plage d'ouverture créée"
+      redirect_to admin_organisation_agent_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
       render :new
     end
@@ -68,7 +68,8 @@ class Admin::PlageOuverturesController < AgentAuthController
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.update(plage_ouverture_params)
       Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_updated.deliver_later if @agent.plage_ouverture_notification_level == "all"
-      redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), notice: "La plage d'ouverture a été modifiée."
+      flash[:success] = "La plage d'ouverture a été modifiée."
+      redirect_to admin_organisation_agent_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
       render :edit
     end
@@ -83,7 +84,8 @@ class Admin::PlageOuverturesController < AgentAuthController
         plage_attributes = PlageOuverture.serialize_for_active_job(@plage_ouverture).merge(motif_ids: motif_ids)
         Agents::PlageOuvertureMailer.with(plage_ouverture: plage_attributes).plage_ouverture_destroyed.deliver_later
       end
-      redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent), notice: "La plage d'ouverture a été supprimée."
+      flash[:notice] = "La plage d'ouverture a été supprimée."
+      redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
     else
       render :edit
     end

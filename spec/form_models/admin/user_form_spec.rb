@@ -17,7 +17,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "saves the user" do
       expect(user).to receive(:save)
-      subject.save
+      subject.save(annotation_content: "", current_territory: organisation.territory)
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save
+      subject.save(annotation_content: "", current_territory: organisation.territory)
     end
   end
 
@@ -52,7 +52,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save
+      subject.save(annotation_content: "", current_territory: organisation.territory)
     end
   end
 
@@ -70,7 +70,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save
+      subject.save(annotation_content: "", current_territory: organisation.territory)
     end
   end
 
@@ -87,7 +87,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "saves the user" do
       expect(user).to receive(:save)
-      subject.save
+      subject.save(annotation_content: "", current_territory: organisation.territory)
     end
   end
 
@@ -110,7 +110,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save
+      subject.save(annotation_content: "", current_territory: organisation.territory)
     end
   end
 
@@ -130,7 +130,30 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "saves the user" do
       expect(user).to receive(:save)
-      subject.save
+      subject.save(annotation_content: "", current_territory: organisation.territory)
+    end
+  end
+
+  describe "validations numéro ANTS" do
+    let(:duplicate_users_mock) { [] }
+
+    include_context "rdv_mairie_api_authentication"
+
+    context "numéro de pré-demande ANTS mal formatté" do
+      let(:user) { build(:user, ants_pre_demande_number: "undeux") }
+
+      specify do
+        expect(subject.valid?).to be false
+        expect(subject.errors.first.full_message).to eq("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+      end
+    end
+
+    context "numéro de pré-demande ANTS valide" do
+      let(:user) { build(:user, ants_pre_demande_number: "VALID12345") }
+
+      specify do
+        expect(subject).to be_valid
+      end
     end
   end
 end

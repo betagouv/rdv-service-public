@@ -15,14 +15,24 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   def create
     params.require(:organisation_ids)
 
-    user = User.new(user_params.merge(created_through: "agent_creation_api"))
-    authorize(user, policy_class: Agent::UserPolicy)
-    user.skip_confirmation_notification!
-    user.save!
-    render_record user
+    @user = User.new
+    @user.assign_attributes(user_params.merge(created_through: "agent_creation_api"))
+    authorize(@user, policy_class: Agent::UserPolicy)
+    @user.skip_confirmation_notification!
+    @user.save!
+    render_record @user
   end
 
   def update
+    if email_change_not_allowed?
+      render_error :unprocessable_entity, {
+        success: false,
+        errors: {},
+        error_messages: [I18n.t("users.can_not_update_email_of_confirmed_user")],
+      }
+      return
+    end
+
     @user.skip_reconfirmation!
     @user.update!(user_params)
     render_record @user
@@ -34,6 +44,10 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   private
+
+  def email_change_not_allowed?
+    @user.confirmed? && user_params.key?(:email) && @user.email != user_params[:email]
+  end
 
   def set_organisation
     @organisation = params[:organisation_id].present? ? Organisation.find(params[:organisation_id]) : nil
@@ -50,11 +64,22 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     attrs = %i[
       first_name birth_name last_name email address phone_number
       birth_date responsible_id caisse_affiliation affiliation_number
-      family_situation number_of_children notify_by_sms notify_by_email
+      family_situation number_of_children notify_by_sms notify_by_email notification_email
     ]
 
     attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
 
-    params.permit(attrs, organisation_ids: [], referent_agent_ids: [])
+    referents_i_can_modify = Agent::AgentPolicy::Scope.new(pundit_user, @user.referent_agents).resolve
+    referents_i_cant_modify = @user.referent_agents - referents_i_can_modify
+
+    permitted_params = params.permit(*attrs, organisation_ids: [])
+    permitted_params.merge(referent_agent_ids: authorized_referent_ids + referents_i_cant_modify.map(&:id))
+  end
+
+  def authorized_referent_ids
+    policy_scope(
+      Agent.where(id: params[:referent_agent_ids]),
+      policy_scope_class: Agent::AgentPolicy::Scope
+    ).ids
   end
 end

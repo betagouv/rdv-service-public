@@ -5,7 +5,7 @@ ruby:
   previous_steps = [{ step: 1, value: motif_name_and_location_type(@rdv.motif) } ]
   next_steps = [{step: 3}, {step: 4}]
 
-= render "card", rdv_wizard_form: @rdv_wizard, previous_steps: previous_steps, next_steps: next_steps, step_title: t(".step_title") do
+= render "card", rdv_wizard_form: @rdv_wizard, previous_steps: previous_steps, step_title: t(".step_title"), current_step: 2, next_step_title: t("admin.rdv_wizard_steps.step3.step_title") do
   = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
     = render "model_errors", model: @rdv_wizard
     = render "hidden_fields", f: f, step: 2, \
@@ -16,7 +16,7 @@ ruby:
     - @rdv.users.each do |user|
       / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
       = f.hidden_field "user_ids][", value: user.id
-      .pl-2.my-1
+      .my-1
         .d-flex
           div
             i.fa.fa-user
@@ -40,15 +40,15 @@ ruby:
                 i.fa.fa-edit
 
     - show_add_user = @rdv.users.empty?
-    .pl-2.mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "" : "show")
+    .collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "" : "show")
       = link_to ".collapse-add-user-selection", data: { toggle: "collapse" }
         i.fa.fa-plus-circle
         span.ml-1= t("helpers.add")
-    .pl-2.mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "show" : "")
+    .collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "show" : "")
       - if current_organisation.users.any?
         = label_tag :user_search, "Rechercher un usager", {class: "form-control-label string optional"}
         div.form-row.grid-align-center
-          .flex-grow-1.pr-4
+          .flex-grow-1.pr-4.ml-1
             = select_tag :status,
             options_for_select([]),
             required: false,
@@ -83,7 +83,7 @@ ruby:
       .col.text-left
         = link_to(@rdv_wizard.previous_step_path) do
           i.fa.fa-arrow-left
-          = " Revenir en arrière"
+          |< Revenir en arrière
 
       - if (@rdv_wizard.validate || @rdv_wizard.errors[:users].empty?)
         .col.text-right

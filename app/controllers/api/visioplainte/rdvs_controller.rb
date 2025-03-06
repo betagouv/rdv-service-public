@@ -89,7 +89,7 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   end
 
   def authorized_rdv_scope
-    Rdv.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
+    Rdv.joins(organisation: :territory).merge(Territory.visioplainte)
   end
 
   def motif

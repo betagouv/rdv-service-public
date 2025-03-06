@@ -42,7 +42,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)
-      click_on("Prochaine disponibilité lemardi 20 septembre 2022 à 08h00")
+      click_on(lieu_a.name)
 
       expect(page).to have_content("Sélectionnez un créneau")
       click_on("08:00")
@@ -96,7 +96,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)
-      click_on("Prochaine disponibilité lemardi 20 septembre 2022 à 08h00")
+      click_on(lieu_a.name)
 
       expect(page).to have_content("Sélectionnez un créneau")
       click_on("08:00")

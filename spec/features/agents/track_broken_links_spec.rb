@@ -22,8 +22,8 @@ RSpec.describe "Broken links in the application are visible in Sentry" do
       it "doesn't send anything to Sentry" do
         expect_any_instance_of(Sentry::Client).to receive(:log_debug).with("Discarded event because before_send returned nil") # rubocop:disable RSpec/AnyInstance
         visit broken_agenda_path
-        fill_in "Email", with: agent.email
-        fill_in :password, with: agent.password
+        fill_in "Adresse email", with: agent.email
+        fill_in "Mot de passe", with: agent.password
         expect { click_on "Se connecter" }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end

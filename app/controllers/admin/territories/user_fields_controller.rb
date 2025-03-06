@@ -7,7 +7,7 @@ class Admin::Territories::UserFieldsController < Admin::Territories::BaseControl
     authorize(current_territory, policy_class: Agent::TerritoryPolicy)
     current_territory.update!(user_fields_params)
 
-    flash[:alert] = "Configuration enregistrée"
+    flash[:success] = "Configuration enregistrée"
     redirect_to action: :edit
   end
 

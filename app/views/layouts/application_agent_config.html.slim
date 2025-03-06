@@ -4,8 +4,13 @@ doctype html
 html lang="fr"
   head
     = render "common/meta"
+    = stylesheet_link_tag "#{dsfr_path}/dsfr.min.css", "data-turbo-track": "reload"
+    = stylesheet_link_tag "#{dsfr_path}/utility/icons/icons.min.css", "data-turbo-track": "reload"
     = stylesheet_link_tag    "application_agent_config", media: "all", "data-turbolinks-track": "reload"
+
     = javascript_include_tag "application_agent_config", "data-turbolinks-track": "reload"
+    = javascript_include_tag "#{dsfr_path}/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
+    = javascript_include_tag "#{dsfr_path}/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
   main
     body.pb-0
       = render "layouts/rdv_solidarites_instance_name"
@@ -16,23 +21,34 @@ html lang="fr"
           - if current_agent.present?
             = link_to(root_path, class: "pt-1 pb-4") do
               i.fa.fa-arrow-left
-              = " Retour à l'accueil"
+              |< Retour à l'accueil
           .align-items-center.d-flex.mt-2.mt-lg-4
             .p-1.p-lg-3.flex-grow-1.mt-lg-4
-              - if agent_path? && current_agent.nil?
-                p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
-              - elsif agent_path? && current_agent.present?
-                = render "agents/preferences_menu"
+              - if current_agent
+                / Lors de la connexion par Oauth, on affiche juste les informations qui indiquent à l'agent qu'iel est connecté.e, et avec quel compte
+                / On ne propose pas tout le menu, parce que ce n'est pas pertinent de faire sortir l'agent du flow d'Oauth
+                - if controller.instance_of?(Doorkeeper::AuthorizationsController)
+                  .d-flex.flex-row.justify-content-center
+                    div.text-left
+                      h3 = current_agent.full_name
+                      p = current_agent.email
+                - else
+                  = render "agents/preferences_menu"
               - else
-                h4.mb-3 Prenez RDV en ligne avec votre département !
+                p.lead.mb-3
+                  ' Faciliter
+                  span.rdv-color-blue-ecume-sun-247-moon-675-hover
+                    ' la gestion et la prise de rendez‑vous
+                    / on utilise un non-breaking hyphen dans rendez-vous pour éviter le retour à la ligne
+                  | dans votre administration
 
         .auth-fluid-form-box.col-xs-12.col-md-8
           / Permet de centrer les formulaire de login, et d'aligner en haut de l'écran les formulaires de préférences
           div class="#{"align-items-center d-flex h-100" if current_agent.blank?}"
             .p-3.flex-grow-1
-              = render "layouts/flash"
               .row
                 .col-md-10.offset-md-1
+                  = render "layouts/flash_dsfr"
                   - if content_for :title
                     .text-center.m-auto
                       h1.card-title.text-dark-50.text-center.mt-0.font-weight-bold.mb-4

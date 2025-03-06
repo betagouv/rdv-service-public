@@ -87,13 +87,13 @@ section.rdv-background-color-alt-green-menthe.py-5
     .fr-grid-row.mt-4
       .fr-col-12.fr-col-md-8.mx-auto.rdv-text-align-center.m-auto
         p
-          ' Si vous n'avez jamais utilisé votre compte, vous pouvez réinitialiser votre mot de passe en indiquant votre adresse
+          |> Si vous n'avez jamais utilisé votre compte, vous pouvez réinitialiser votre mot de passe en indiquant votre adresse
           em
             | @conseiller-numerique.fr
           | .
         p.m-auto
           | Des questions ?
-          =< link_to("Contactez-nous", "mailto:#{current_domain.support_email}", target: "_blank")
+          =< link_to "Contactez-nous", new_aide_demande_support_path(role: :agent, sujet: "Intégration de RDV Aide Numérique")
           | .
 
 section.py-5
@@ -131,15 +131,15 @@ section.rdv-background-color-alt-green-menthe.py-5
         figure.fr-quote
           blockquote
             p
-              ' « J'ai cherché pendant longtemps un outil qui permettait de prendre des rendez-vous selon
-              ' des plages horaires définies avec un temps donné. RDV Solidarités, une solution qui m'a
+              |> « J'ai cherché pendant longtemps un outil qui permettait de prendre des rendez-vous selon
+              |> des plages horaires définies avec un temps donné. RDV Solidarités, une solution qui m'a
               | permis une meilleure gestion des rendez-vous et de travailler en équipe. »
           figcaption
             p.fr-quote__author Un conseiller numérique, Ville du Mans
         figure.fr-quote
           blockquote
             p
-              ' « Les médiateur⋅rices numériques que je connais qui utilisent RDV Aide
+              |> « Les médiateur⋅rices numériques que je connais qui utilisent RDV Aide
               | Numérique et moi-même sommes ravis de cette plateforme. »
           figcaption
             p.fr-quote__author Témoignage recueilli via sondage

@@ -1,9 +1,0 @@
-.card-body
-  .row
-    .col-md
-      h3.card-title.mb-3.mt-0.rdv-color-text-default-success.rdv-font-weight-700
-        - if motif.collectif?
-          i.fa.fa-users>
-        = motif.name
-      .card-subtitle= motif.human_attribute_value(:location_type)
-      .card-subtitle= motif.service.name

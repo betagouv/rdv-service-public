@@ -13,7 +13,14 @@ module Outlook
     # @return [String] the outlook_id of the created event
     def create_event!(payload)
       outlook_event = call_events_api("POST", "me/Events", payload)
-      outlook_event["id"]
+      id = outlook_event["id"]
+
+      # Ce logging permet d'enquêter sur https://github.com/betagouv/rdv-service-public/issues/3539
+      if id.to_s.size < 10
+        Sentry.capture_message("ID outlook suspicieux: #{id}", extra: { outlook_response: outlook_event })
+      end
+
+      id
     rescue AlreadyExistsError => e
       Rails.logger.error("Outlook error while creating event: #{e.message}")
     end
@@ -41,7 +48,6 @@ module Outlook
     #                 for POST or PATCH.
 
     # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
     def call_events_api(method, path, event_payload = {})
       headers = {
         "Authorization" => "Bearer #{@agent.microsoft_graph_token}",
@@ -66,7 +72,8 @@ module Outlook
       body_response = response.body == "" ? {} : JSON.parse(response.body)
       if body_response["error"].present?
         if @agent.connected_to_outlook? && response.response_code == 401 # token expired
-          refresh_outlook_token && call_events_api(method, path, event_payload)
+          refresh_outlook_token!
+          body_response = call_events_api(method, path, event_payload)
         else
           raise_exception(error_code: body_response["error"]["code"], error_message: body_response["error"]["message"])
         end
@@ -74,9 +81,8 @@ module Outlook
       response.response_code == 204 ? "" : body_response
     end
     # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
 
-    def refresh_outlook_token
+    def refresh_outlook_token!
       refresh_token_query =
         Typhoeus.post(
           # voir https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
@@ -92,8 +98,10 @@ module Outlook
 
       if refresh_token_response["error"].present?
         raise RefreshTokenError, refresh_token_response["error"]
-      elsif refresh_token_response["access_token"].present?
-        @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
+      elsif refresh_token_response["access_token"].present? && refresh_token_response["refresh_token"].present?
+        @agent.update!(microsoft_graph_token: refresh_token_response["access_token"], refresh_microsoft_graph_token: refresh_token_response["refresh_token"])
+      else
+        raise RefreshTokenError, "Could not refresh token, invalid response (does not contain access_token and refresh_token)"
       end
     end
 

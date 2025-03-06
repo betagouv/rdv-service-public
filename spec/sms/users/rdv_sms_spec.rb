@@ -5,17 +5,17 @@ RSpec.describe Users::RdvSms, type: :service do
 
       let(:organisation) { build(:organisation) }
       let(:pmi) { build(:service, short_name: "PMI") }
-      let(:motif) { build(:motif, service: pmi) }
+      let(:motif) { build(:motif, service: pmi, organisation:) }
       let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici, Paris, 75016") }
       let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 123, name: "Ne Doit pas s'afficher") }
       let(:user) { build(:user) }
       let(:token) { "12345" }
 
       it do
-        expect(subject).to include("RDV PMI vendredi 10/12 à 13h10")
-        expect(subject).to include("MDS Centre (10 rue d'ici, Paris, 75016)")
-        expect(subject).to include("Infos et annulation")
-        expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/123/12345")
+        expect(subject).to include("RDV PMI vendredi 10/12 13h10")
+        expect(subject).to include("10 rue d'ici, Paris, 75016")
+        expect(subject).to include("Infos/annulation")
+        expect(subject).to include("www.rdv-solidarites-test.localhost/r/123/12345")
         expect(subject).not_to include("Ne Doit pas s'afficher")
       end
     end
@@ -29,14 +29,14 @@ RSpec.describe Users::RdvSms, type: :service do
       let(:token) { "12345" }
 
       it "contains rdv title" do
-        expect(subject).to include("RDV #{rdv.service.name} : Super Atelier, vendredi 10/12 à 13h10.")
+        expect(subject).to include("RDV #{rdv.service.name} : Super Atelier, vendredi 10/12 13h10.")
       end
 
       context "with a blank name" do
         let(:rdv_name) { "    " }
 
         it "contains rdv title but not the blank name" do
-          expect(subject).to include("RDV #{rdv.service.name} vendredi 10/12 à 13h10.")
+          expect(subject).to include("RDV #{rdv.service.name} vendredi 10/12 13h10.")
         end
       end
 
@@ -44,17 +44,18 @@ RSpec.describe Users::RdvSms, type: :service do
         let(:rdv_name) { "Organiser ses fichiers et ses dossiers sur son ordinateur" }
 
         it "truncates it too avoid sending too many sms and costing too much money" do
-          expect(subject).to include("RDV #{rdv.service.name} : Organiser ses fichiers et ses dossiers sur son ord..., vendredi 10/12 à 13h10.")
+          expect(subject).to include("RDV #{rdv.service.name} : Organiser ses fichiers et ses dossiers sur son ord..., vendredi 10/12 13h10.")
         end
       end
     end
 
     context "with a follow_up rdv" do
       it "contains referent name" do
+        organisation = create(:organisation)
         agent = create(:agent, first_name: "James", last_name: "Bond")
         user = create(:user, referent_agents: [agent])
-        motif = create(:motif, follow_up: true)
-        rdv = create(:rdv, motif: motif, users: [user], agents: [agent])
+        motif = create(:motif, follow_up: true, organisation:)
+        rdv = create(:rdv, motif: motif, users: [user], agents: [agent], organisation:)
         token = "12345"
 
         content = described_class.rdv_created(rdv, user, token).content
@@ -76,10 +77,10 @@ RSpec.describe Users::RdvSms, type: :service do
     let(:user) { build(:user) }
 
     it do
-      expect(subject).to include("RDV modifié: PMI vendredi 10/12 à 13h10")
-      expect(subject).to include("MDS Centre (10 rue d'ici, Paris, 75016)")
-      expect(subject).to include("Infos et annulation")
-      expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/124/2345")
+      expect(subject).to include("RDV modifié: PMI vendredi 10/12 13h10")
+      expect(subject).to include("10 rue d'ici, Paris, 75016")
+      expect(subject).to include("Infos/annulation")
+      expect(subject).to include("www.rdv-solidarites-test.localhost/r/124/2345")
     end
   end
 
@@ -152,10 +153,10 @@ RSpec.describe Users::RdvSms, type: :service do
     let(:token) { "7777" }
 
     it do
-      expect(subject).to include("Rappel RDV PMI le vendredi 10/12 à 13h10")
-      expect(subject).to include("MDS Centre (10 rue d'ici, Paris, 75016)")
-      expect(subject).to include("Infos et annulation")
-      expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/140/7777")
+      expect(subject).to include("RDV PMI vendredi 10/12 13h10")
+      expect(subject).to include("10 rue d'ici, Paris, 75016")
+      expect(subject).to include("Infos/annulation")
+      expect(subject).to include("www.rdv-solidarites-test.localhost/r/140/7777")
     end
   end
 
@@ -178,7 +179,7 @@ RSpec.describe Users::RdvSms, type: :service do
         let(:motif) { build(:motif, :at_home) }
 
         it do
-          expect(subject).to include("RDV à votre domicile")
+          expect(subject).to include("A domicile")
         end
       end
 
@@ -186,7 +187,7 @@ RSpec.describe Users::RdvSms, type: :service do
         let(:motif) { build(:motif, :by_phone) }
 
         it do
-          expect(subject).to include("RDV téléphonique")
+          expect(subject).to include("Par tél")
           expect(subject).to include(rdv.address)
         end
       end
@@ -195,7 +196,7 @@ RSpec.describe Users::RdvSms, type: :service do
         let(:motif) { build(:motif, location_type: :visio) }
 
         it do
-          expect(subject).to include("RDV par visioconférence")
+          expect(subject).to include("Par visio")
           expect(subject).to include(rdv.address)
         end
       end
@@ -221,21 +222,14 @@ RSpec.describe Users::RdvSms, type: :service do
         let(:lieu_phone_number) { "0123456789" }
         let(:organisation_phone_number) { "0987654321" }
 
-        it { expect(subject).to include(" / 0123456789") }
+        it { expect(subject).to include("\n0123456789") }
       end
 
       context "when only organisation has a phone number" do
         let(:lieu_phone_number) { nil }
         let(:organisation_phone_number) { "0987654321" }
 
-        it { expect(subject).to include(" / 0987654321") }
-      end
-
-      context "when none have a phone number" do
-        let(:lieu_phone_number) { nil }
-        let(:organisation_phone_number) { nil }
-
-        it { expect(subject).not_to include(" / ") }
+        it { expect(subject).to include("\n0987654321") }
       end
     end
   end

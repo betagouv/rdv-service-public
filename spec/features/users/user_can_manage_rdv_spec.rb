@@ -13,10 +13,10 @@ RSpec.describe "User can manage their rdvs" do
 
       it "default", js: true do
         expect(page).to have_content(rdv.motif_name)
-        click_link("Annuler le RDV")
+        click_on("Annuler le RDV")
         expect(page).to have_content("Confirmation")
         click_link("Oui, annuler le rendez-vous")
-        expect(page).to have_selector(".badge", text: "Annulé")
+        expect(page).to have_selector(".fr-badge", text: "ANNULÉ")
       end
     end
 
@@ -34,10 +34,10 @@ RSpec.describe "User can manage their rdvs" do
       let(:starts_at) { 15.days.from_now }
 
       it "default", js: true do
-        expect(page).to have_content("Je souhaite être prévenu si un créneau se libère.")
-        check "Je souhaite être prévenu si un créneau se libère."
+        expect(page).to have_content("Je souhaite être prévenu(e) si un créneau se libère.")
+        check "Je souhaite être prévenu(e) si un créneau se libère."
         expect(page).to have_content("Vous êtes à présent sur la liste d'attente")
-        uncheck "Je souhaite être prévenu si un créneau se libère."
+        uncheck "Je souhaite être prévenu(e) si un créneau se libère."
         expect(page).to have_content("Vous n'êtes plus sur la liste d'attente")
       end
     end
@@ -58,7 +58,7 @@ RSpec.describe "User can manage their rdvs" do
     let!(:agent2) { create(:agent, organisations: [organisation]) }
     let!(:user) { create(:user, organisations: [organisation]) }
     let!(:motif) { create(:motif, organisation: organisation) }
-    let!(:rdv) { create(:rdv, users: [user], agents: [agent1], starts_at: 10.days.from_now, created_by: user, motif: motif, lieu: lieu) }
+    let!(:rdv) { create(:rdv, users: [user], agents: [agent1], starts_at: 10.days.from_now, created_by: user, motif: motif, lieu: lieu, organisation:) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu, organisation: organisation, agent: agent2) }
 
     before do

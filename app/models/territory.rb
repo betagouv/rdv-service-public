@@ -68,6 +68,7 @@ class Territory < ApplicationRecord
     where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(territories.name))")) }
+  scope :visioplainte, -> { where(name: VISIOPLAINTE_NAME) }
 
   ## -
 
@@ -90,13 +91,9 @@ class Territory < ApplicationRecord
   }.freeze
 
   OPTIONAL_FIELD_TOGGLES = {
-    enable_notes_field: :notes,
+    enable_notes_field: :annotation_content,
     enable_logement_field: :logement,
   }.merge(SOCIAL_FIELD_TOGGLES).freeze
-
-  def self.mairies
-    find_by(name: MAIRIES_NAME)
-  end
 
   def mairies?
     name == MAIRIES_NAME
@@ -104,6 +101,10 @@ class Territory < ApplicationRecord
 
   def cn?
     name == CNFS_NAME
+  end
+
+  def visioplainte?
+    name == VISIOPLAINTE_NAME
   end
 
   def sectorized?
@@ -115,7 +116,11 @@ class Territory < ApplicationRecord
   end
 
   def any_social_field_enabled?
-    attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?
+    attributes.symbolize_keys.slice(*SOCIAL_FIELD_TOGGLES.keys).values.any?
+  end
+
+  def any_optional_user_field_enabled?
+    attributes.symbolize_keys.slice(*OPTIONAL_FIELD_TOGGLES.keys).values.any?
   end
 
   def to_s

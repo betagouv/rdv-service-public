@@ -15,7 +15,7 @@ RSpec.describe "Step 4 of the rdv wizard" do
   end
 
   context "when booking a rdv for a relative" do
-    let(:user) { create(:user, :relative, responsible: responsible) }
+    let(:user) { create(:user, :relative, responsible: responsible, organisations: [organisation]) }
     let(:responsible) { create(:user, email: nil) }
 
     before do
@@ -26,9 +26,9 @@ RSpec.describe "Step 4 of the rdv wizard" do
     it "sends a sms with a valid link" do
       login_as(agent, scope: :agent)
       visit new_admin_organisation_rdv_wizard_step_path(params)
-      click_button "Créer RDV"
+      click_button "Confirmer le RDV"
       expect(page).to have_content("Le rendez-vous a été créé.")
-      rdv_url = rdv_short_url(Rdv.last, host: Domain::RDV_SOLIDARITES.host_name, tkn: "12345")
+      rdv_url = rdv_short_url(Rdv.last, host: Domain::RDV_SOLIDARITES.host_name, tkn: "12345").sub(%r{https?://}, "")
       expect_sms_enqueued(content: /#{rdv_url}/)
     end
   end

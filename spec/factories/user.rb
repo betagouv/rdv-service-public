@@ -17,14 +17,13 @@ FactoryBot.define do
     affiliation_number { "39012093812038" }
     family_situation { "divorced" }
     number_of_children { random_value_in([nil, 0, 1, 2, 3, 8, 800]) }
-    notes { Faker::Movies::PrincessBride.quote }
     logement { :locataire }
     responsible { nil }
     created_through { "user_sign_up" }
     trait :unconfirmed do
       confirmed_at { nil }
     end
-    trait :with_no_email do
+    trait :without_devise_email do
       email { nil }
     end
     trait :with_no_phone_number do
@@ -34,6 +33,9 @@ FactoryBot.define do
       confirmed_at { nil }
       password { nil }
       password_confirmation { nil }
+      before(:create) do |user, _|
+        user.skip_confirmation_notification!
+      end
     end
     trait :relative do
       responsible { association(:user) }

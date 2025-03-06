@@ -29,21 +29,19 @@
     = f.input :city_label, \
       label: "Rechercher une commune", \
       input_html: { \
-        class: "places-js-container", \
-        data: { "address-type": "municipality" }, \
+        data: { "address-type": "municipality", "address-autocomplete": "on" }, \
       }
   - elsif zone.level_street?
     = f.input :street_label, \
       label: "Rechercher une rue", \
       input_html: { \
-        class: "places-js-container", \
-        data: { "address-type": "street" }, \
+        data: { "address-type": "street", "address-autocomplete": "on" }, \
       }
   .row
     .col-6
       = f.input :city_name, input_html: { readonly: true }, required: true
     .col-6
-      = f.input :city_code, input_html: { readonly: true }, required: true, hint: "code postal ≠ <a href='https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune' target='_blank'>code commune INSEE <i class='fa fa-external-link-alt'></i></a>".html_safe
+      = f.input :city_code, input_html: { readonly: true }, required: true, hint: "code postal ≠ <a href='https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune' target='_blank'>code commune INSEE</a>".html_safe
 
   - if zone.level_street?
     .row

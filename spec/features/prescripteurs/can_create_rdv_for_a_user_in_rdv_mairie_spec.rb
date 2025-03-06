@@ -2,8 +2,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
-  let!(:territory) { create(:territory, :mairies) }
-  let!(:organisation) { create(:organisation, :with_contact, territory: territory) }
+  let!(:organisation) { create(:organisation, :with_contact, ants_connectable: true) }
   let(:service) { create(:service) }
   let!(:cni_motif) do
     create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: cni_motif_category)
@@ -43,7 +42,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "success scenario (ants_pre_demander number is validated and has no appointment declared yet)" do
     before do
-      stub_ants_status("1122334455")
+      stub_ants_status_ok("1122334455", meeting_point_id: lieu.id)
     end
 
     it "allows booking a rdv for the given ants_pre_demander" do
@@ -61,7 +60,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "when using a pre-demande number in lowercase" do
     let(:ants_pre_demande_number) { "abcd1234ef" }
-    let!(:call_to_status_with_upcased_number) { stub_ants_status("ABCD1234EF", appointments: []) }
+    let!(:call_to_status_with_upcased_number) { stub_ants_status_ok("ABCD1234EF", meeting_point_id: lieu.id, appointments: []) }
 
     it "considers it as uppercase when calling ANTS API and saving it in user" do
       visit creneaux_url
@@ -76,8 +75,9 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "ants_pre_demander number is validated but already has appointments" do
     before do
-      stub_ants_status(
+      stub_ants_status_ok(
         "1122334455",
+        meeting_point_id: lieu.id,
         appointments: [
           {
             management_url: "https://gerer-rdv.com",
@@ -108,7 +108,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "ants_pre_demander number is consumed (dossier déjà envoyé et instruit en préfecture)" do
     before do
-      stub_ants_status("1122334455", status: "consumed")
+      stub_ants_status_ok("1122334455", meeting_point_id: lieu.id, status: "consumed")
     end
 
     it "prevents from creating the user / RDV" do
@@ -125,10 +125,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "ANTS responds with an unexpected error" do
     before do
-      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
-        status: 500,
-        body: "Internal Server Error"
-      )
+      stub_request_ants_status("1122334455", meeting_point_id: lieu.id)
+        .to_return(status: 500, body: "Internal Server Error")
     end
 
     it "prevents from creating the user / RDV" do

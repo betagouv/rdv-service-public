@@ -2,8 +2,8 @@ FactoryBot.define do
   factory :rdv do
     organisation { association(:organisation) }
     lieu { build(:lieu, organisation: organisation) }
-    motif { build(:motif, organisation: organisation) }
     agents { [build(:agent, organisations: [organisation])] }
+    motif { build(:motif, organisation: organisation, service: agents.first.services.first) }
 
     duration_in_min { motif&.default_duration_in_min || random_value_in([15, 30, 45, 60, 90]) }
     starts_at { Faker::Time.forward(days: 7) }

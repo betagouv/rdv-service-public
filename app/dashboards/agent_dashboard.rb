@@ -16,8 +16,10 @@ class AgentDashboard < Administrate::BaseDashboard
     roles: Field::HasMany,
     territories: Field::HasMany,
     territorial_roles: Field::HasMany,
+    agent_territorial_access_rights: Field::HasMany,
     services: Field::HasMany,
     agent_services: Field::HasMany,
+    rdvs: Field::HasMany.with_options(sort_by: :starts_at, direction: :desc),
     invitation_sent_at: Field::DateTime,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
@@ -46,6 +48,8 @@ class AgentDashboard < Administrate::BaseDashboard
     roles
     agent_services
     territorial_roles
+    agent_territorial_access_rights
+    rdvs
     invitation_sent_at
     created_at
     deleted_at

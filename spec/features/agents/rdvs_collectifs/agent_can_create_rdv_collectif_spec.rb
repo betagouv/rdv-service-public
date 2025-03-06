@@ -18,6 +18,10 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
     stub_netsize_ok
     travel_to(now)
     login_as(agent, scope: :agent)
+    # Depuis que les jours fériés sont affichés sur la journée complète dans le calendrier,
+    # cela peut nous empêcher de cliquer sur une plage horaire et générer une flaky.
+    # On les retire pour ce test
+    allow(OffDays).to receive(:to_full_calendar_array).and_return([])
     visit admin_organisation_agent_agenda_path(organisation, agent)
   end
 
@@ -29,21 +33,21 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
 
     # Step 2
     # First we don't add any users
-    expect(page).to have_selector(".card-title", text: "2. Usager(s)")
+    expect(page).to have_selector("h2", text: "Usager")
     click_button("Continuer")
 
     # Step 3
-    expect(page).to have_selector(".card-title", text: "3. Agent(s), horaires & lieu")
+    expect(page).to have_selector("h2", text: "Agent, horaires & lieu")
     select(lieu.full_name, from: "rdv_lieu_id")
     click_button("Continuer")
 
     # Step 4
-    expect(page).to have_selector(".card-title", text: "4. Notifications")
+    expect(page).to have_selector("h2", text: "Notifications")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
-    expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
-    expect(page).to have_selector(".list-group-item", text: /Agent\(s\), horaires & lieu/)
+    expect(page).to have_selector(".list-group-item", text: /Usager/)
+    expect(page).to have_selector(".list-group-item", text: /Agent, horaires & lieu/)
 
-    click_button("Créer RDV")
+    click_button("Confirmer le RDV")
     sleep 1
 
     rdv = Rdv.last

@@ -3,9 +3,9 @@
     h1.mb-3 Vos rendez-vous
     .rdv-button-group-before-card.mb-3
       - if params[:past].present?
-        = link_to "Voir vos prochains RDV", users_rdvs_path, class: "btn btn-outline-primary"
+        = link_to "Voir vos prochains RDV", users_rdvs_path, class: "fr-btn fr-btn--secondary"
       - else
-        = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "btn btn-outline-primary"
+        = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "fr-btn fr-btn--secondary"
       - if current_domain.provides_address_selection?
         = render "prendre_rdv_button"
 
@@ -15,20 +15,16 @@
               .card-body
                 = render "rdv", rdv: rdv
           .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-          .rdv-text-align-center
-            = render "prendre_rdv_button", text: "Prendre un autre RDV"
 
     - else
       .card
         .card-body
-          .rdv-text-align-center.my-5
-            p.mb-2.lead= no_rdv_for_users
-            span.fa-stack.fa-4x
-              i.fa.fa-circle.fa-stack-2x.rdv-color-text-action-high-blue-ecume
-              i.fa.fa-calendar.fa-stack-1x.rdv-color-white
-            .rdv-text-align-center.mt-2
+          .rdv-text-align-center.fr-my-4v
+            p.fr-mb-2v.fr-text--lead= no_rdv_for_users
+            .fr-col-4.fr-col-offset-4
+              = dsfr_svg (image_path "custom-artworks/calendar_cross.svg"), custom: true, class: "fr-responsive-img"
   .col-md-6
-    h2.mb-3 Vos référents
+    h1.mb-3 Vos référents
     - if current_user.referent_agents.any?
       - current_user.referent_agents.each do |agent|
         .card

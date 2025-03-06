@@ -49,9 +49,9 @@ module RdvsHelper
 
   def rdv_tag(rdv)
     if rdv.cancelled_at || current_user&.participation_for(rdv)&.cancelled?
-      tag.span("Annulé", class: "badge badge-warning")
+      tag.span("Annulé", class: "fr-badge fr-badge--sm fr-badge--warning fr-badge--no-icon fr-ml-1w")
     elsif rdv.starts_at.future?
-      tag.span("À venir", class: "badge bg-info")
+      tag.span("À venir", class: "fr-badge fr-badge--sm fr-badge--info fr-badge--no-icon fr-ml-1w")
     end
   end
 
@@ -84,20 +84,6 @@ module RdvsHelper
     end
   end
 
-  def individual_rdv_status_dropdown_toggle(rdv)
-    tag.div(data: { toggle: "dropdown" },
-            class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
-      Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
-    end
-  end
-
-  def collective_rdv_status_dropdown_toggle(rdv)
-    tag.div(data: { toggle: "dropdown" },
-            class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
-      Rdv.human_attribute_value(:collective_status, rdv.temporal_status, disable_cast: true)
-    end
-  end
-
   def change_status_confirmation_message(rdv, status)
     return "" if rdv.past?
     return I18n.t("admin.rdvs.message.confirm.simple_cancel") if cancel_rdv_to_not_notify?(rdv, status)
@@ -119,8 +105,8 @@ module RdvsHelper
     status == "unknown" && !rdv.past?
   end
 
-  def rdv_status_delete_dropdown_item(rdv, agent)
-    link_to admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: agent&.id),
+  def rdv_status_delete_dropdown_item(rdv)
+    link_to admin_organisation_rdv_path(rdv.organisation, rdv),
             method: :delete,
             class: "dropdown-item",
             data: { confirm: t("admin.rdvs.delete.confirm") } do

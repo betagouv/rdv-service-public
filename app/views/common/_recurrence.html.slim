@@ -7,13 +7,13 @@
         = date_input(f, :end_day)
 
   .row
-    .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false
-    .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false
+    .col = f.input :start_time, as: :time, ignore_date: true, minute_step: 5
+    .col = f.input :end_time,   as: :time, ignore_date: true, minute_step: 5
 
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
 
   = simple_fields_for :recurrence do |n|
-    = n.input :has_recurrence, as: :boolean, label: "Répéter...", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" }, class: "js-recurrence-toggle js-recurrence-input" }
+    = n.input :has_recurrence, as: :boolean, label: "Répéter…", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" }, class: "js-recurrence-toggle js-recurrence-input" }
 
     .all-select
       .form-group
@@ -24,7 +24,7 @@
 
       .weekly-select
         - weekdays = { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }
-        - weekdays[:Dimanche] = "sunday" if current_territory.name == Territory::VISIOPLAINTE_NAME
+        - weekdays[:Dimanche] = "sunday" if current_territory.visioplainte?
         = n.input :on, as: :check_boxes, label: "Répéter les", collection: weekdays, include_blank: false, input_html: { data: { target: "recurrence.on", action: "recurrence#updateRecurrence" }, class: "js-recurrence-on js-recurrence-input" }
 
       .monthly-select.form-group

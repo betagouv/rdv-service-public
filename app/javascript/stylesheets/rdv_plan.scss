@@ -1,0 +1,19 @@
+@import "@fullcalendar/core/main";
+@import "@fullcalendar/daygrid/main";
+@import "@fullcalendar/timegrid/main";
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "./variables";
+@import "./components/calendar";
+
+.fc-widget-content {
+  // On suit l'exemple de Google Calendar : dans le calendrier principal même si on peut cliquer n'importe où dans le calendrier
+  // pour créer un evènement, on ne passe habituellement le cursor en point que sur les évènements,
+  // parce qu'on considère que par défaut on est en train de consulter le calendrier plutôt que de vouloir
+  // ajouter un évènement
+  // Cependant, dans le cadre du rdv_plan, on sait qu'on et en train de chercher à créer un nouvel évènement
+  // donc on explicite que le calendrier est cliquable avec un cursor pointer.
+  cursor: pointer;
+}

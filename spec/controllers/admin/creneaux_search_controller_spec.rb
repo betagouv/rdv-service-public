@@ -2,7 +2,7 @@ RSpec.describe Admin::CreneauxSearchController do
   let(:organisation) { create(:organisation) }
 
   context "with a secretaire signed_in" do
-    let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+    let(:agent) { create(:agent, :secretaire, :with_territory_access_rights, basic_role_in_organisations: [organisation]) }
 
     before { sign_in agent }
 
@@ -12,7 +12,7 @@ RSpec.describe Admin::CreneauxSearchController do
       expect(response).to render_template("index")
     end
 
-    it "assignses form with user_ids" do
+    it "assigns form with user_ids" do
       user = create(:user)
       get :index, params: { organisation_id: organisation.id, user_ids: [user.id] }
       expect(assigns(:form).user_ids).to eq([user.id.to_s])

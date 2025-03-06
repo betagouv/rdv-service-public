@@ -21,24 +21,18 @@
               placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
               input_html: { rows: 5 },
               wrapper_html: { class: "mb-1" }
-      = link_to image_path("motif_form/restriction_for_rdv.png"), target: "_blank" do
-        span> Voir un exemple
-        i.fa.fa-external-link-alt>
+      = link_to  "Voir un exemple", image_path("motif_form/restriction_for_rdv.png"), target: "_blank"
     .mt-3
       = f.input :instruction_for_rdv,
               label: sanitize("Instructions affichées <strong>après</strong> la prise du RDV"),
               placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
               input_html: { rows: 5 },
               wrapper_html: { class: "mb-1" }
-      = link_to image_path("motif_form/instruction_for_rdv.png"), target: "_blank" do
-        span> Voir un exemple
-        i.fa.fa-external-link-alt>
+      = link_to "Voir un exemple", image_path("motif_form/instruction_for_rdv.png"), target: "_blank"
     .mt-3
       = f.input :custom_cancel_warning_message,
               label: sanitize("Message d’avertissement </strong>en cas d’annulation</strong>"),
               placeholder: "Laissez vide si vous ne souhaitez pas afficher de messager d’avertissement.",
               input_html: { rows: 5 },
               wrapper_html: { class: "mb-1" }
-      = link_to image_path("motif_form/custom_cancel_warning_message.png"), target: "_blank" do
-        span> Voir un exemple
-        i.fa.fa-external-link-alt>
+      = link_to  "Voir un exemple", image_path("motif_form/custom_cancel_warning_message.png"), target: "_blank"

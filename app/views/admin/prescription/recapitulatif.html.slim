@@ -17,7 +17,16 @@ main.container
                   = UsersHelper.reverse_full_name_and_notification_coordinates(@rdv_wizard.participation.user)
                 .col-auto
                   = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
+            - if current_territory.enable_context_field
+              li.list-group-item
+                .row
+                  .col
+                    i.fa.fa-check.fa-fw.mr-1.text-success
+                    |> Contexte :
+                    = @rdv_wizard.context&.strip&.truncate_words(6)&.presence || "N/A"
+                  .col-auto
+                    = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
 
           .row.mt-2
             .col.text-right
-              = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "btn btn-primary")
+              = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "btn btn-primary", data: { disable_with: "Veuillez patienter…"})

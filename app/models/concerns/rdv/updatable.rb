@@ -1,10 +1,10 @@
 module Rdv::Updatable
   extend ActiveSupport::Concern
 
-  def update_and_notify(author, attributes)
+  def update_and_notify(author, attributes, &block)
     @old_agent_ids = agent_ids.to_a
     assign_attributes(attributes)
-    save_and_notify(author)
+    save_and_notify(author, &block)
   end
 
   def save_and_notify(author)
@@ -22,6 +22,8 @@ module Rdv::Updatable
         participations.reload
       end
 
+      yield self if block_given? # yield RDV before saving, can be used to run policy check
+
       if save
         notify!(author, previous_participations)
         true
@@ -38,7 +40,7 @@ module Rdv::Updatable
 
   def new_cancelled_notifier(author, previous_participations)
     # Don't notify RDV cancellation to users that had previously cancelled their individual participation
-    available_users_for_notif = previous_participations.select(&:not_cancelled?).map(&:user)
+    available_users_for_notif = previous_participations.select(&:send_lifecycle_notifications?).select(&:not_cancelled?).map(&:user)
     Notifiers::RdvCancelled.new(self, author, available_users_for_notif)
   end
 

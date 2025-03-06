@@ -16,6 +16,7 @@ Domain = Struct.new(
   :support_email,
   :secretariat_email,
   :verticale,
+  :allow_agent_creation_with_agent_connect,
   keyword_init: true
 )
 
@@ -36,6 +37,7 @@ class Domain
       france_connect_enabled: true,
       support_email: "support@rdv-solidarites.fr",
       verticale: :rdv_solidarites,
+      allow_agent_creation_with_agent_connect: false,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
       # secretariat_email est utilisé comme adresse de "Reply-To" pour les e-mails
       # qui contiennent des ICS. Lorsque l'événement ICS est acceptée par le
@@ -58,6 +60,7 @@ class Domain
       france_connect_enabled: false,
       support_email: "support@rdv-aide-numerique.fr",
       verticale: :rdv_aide_numerique,
+      allow_agent_creation_with_agent_connect: false,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
     ),
 
@@ -67,7 +70,7 @@ class Domain
       public_logo_path: "/logo_rdv_service_public.png",
       dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
       name: "RDV Service Public",
-      presentation_for_agents_template_name: "presentation_for_mairie",
+      presentation_for_agents_template_name: nil, # C'est la homepage qui joue ce rôle pour ce domaine
       address_selection_template_name: nil,
       search_banner_template_name: "search/banners/rdv_mairie",
       online_reservation_with_public_link: true,
@@ -76,6 +79,7 @@ class Domain
       france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
       verticale: :rdv_mairie,
+      allow_agent_creation_with_agent_connect: true,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),
   ].freeze
@@ -85,7 +89,7 @@ class Domain
   end
 
   def documentation_url
-    "https://rdv-service-public-1.gitbook.io/rdv-service-public"
+    "https://aide.rdv-service-public.fr"
   end
 
   def agent_connect_client_id

@@ -4,7 +4,7 @@ RSpec.describe AntsApi, type: :service do
   describe ".status" do
     context "when credentials are incorrect" do
       before do
-        stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
+        stub_request_ants_status("1122334455", meeting_point_id: "11").to_return(
           status: 401,
           body: <<~JSON
             {
@@ -16,7 +16,7 @@ RSpec.describe AntsApi, type: :service do
 
       it "raises an error" do
         expect do
-          described_class.status(ants_pre_demande_number: "1122334455")
+          described_class.status(ants_pre_demande_number: "1122334455", meeting_point_id: "11")
         end.to raise_error(AntsApi::ApiRequestError, "code:401, body:{\n  \"detail\": \"X-RDV-OPT-AUTH-TOKEN header invalid\"\n}\n")
       end
     end

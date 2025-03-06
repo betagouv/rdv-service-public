@@ -11,11 +11,12 @@ org_mairie_de_sannois = Organisation.create!(
   name: "Mairie de Sannois",
   phone_number: "0475796991",
   territory: territory_val_doise,
+  ants_connectable: true,
   verticale: :rdv_mairie
 )
 
 # Service
-service_titres = Service.create!(name: "Service Titres Sécurisés", short_name: "STS")
+service_titres = Service.create!(name: "Mairie", short_name: "Mairie")
 
 territory_val_doise.services << service_titres
 
@@ -80,4 +81,27 @@ _plage_ouverture_org_drome_lieu_mairie_de_sannois = PlageOuverture.create!(
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
   recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
+)
+
+# Users
+
+user_mairie_sannois = User.create!(
+  organisations: [org_mairie_de_sannois],
+  first_name: "Louis-Ken",
+  last_name: "de PENTECOTE",
+  email: "loulou@exemple.fr",
+  ants_pre_demande_number: "ABCDE12345"
+)
+
+# RDVs
+
+Rdv.create!(
+  organisation: org_mairie_de_sannois,
+  motif: motif_passeport,
+  lieu: lieu_mairie_de_sannois,
+  agents: [agent_mairie_de_sannois],
+  users: [user_mairie_sannois],
+  starts_at: Time.zone.now.beginning_of_week + 14.hours,
+  ends_at: Time.zone.now.beginning_of_week + 14.5.hours,
+  created_by: agent_mairie_de_sannois
 )

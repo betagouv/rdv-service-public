@@ -1,15 +1,8 @@
 .row.justify-content-md-center
   .col-md-12.col-lg-8
+    = render "common/stepper", step_count: 4, current_step: current_step, step_title: step_title, next_step_title: local_assigns[:next_step_title]
     .card
       - if local_assigns[:previous_steps]
         = render "admin/rdv_wizard_steps/stepper", rdv_wizard_form: rdv_wizard_form, steps: previous_steps
-        hr.my-0
       .card-body.px-3
-        .d-flex.justify-content-between.mb-3
-          h5.card-title
-            i.far.fa-circle.mr-1
-            = step_title
         = yield
-      - if local_assigns[:next_steps]
-        hr.mb-0
-        = render "admin/rdv_wizard_steps/stepper", steps: next_steps

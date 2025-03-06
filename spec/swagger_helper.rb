@@ -147,7 +147,6 @@ RSpec.configure do |config|
               email: { type: "string" },
               first_name: { type: "string", nullable: true },
               last_name: { type: "string", nullable: true },
-              inclusion_connect_open_id_sub: { type: "string", nullable: true },
             },
             required: %w[id email first_name last_name],
           },
@@ -180,21 +179,16 @@ RSpec.configure do |config|
               bith_date: { type: "string", format: "date", nullable: true },
               bith_name: { type: "string", nullable: true },
               caisse_affiliation: { type: "string", enum: %w[aucun caf msa], nullable: true },
-              case_number: { type: "string", nullable: true },
               created_at: { type: "string" },
               email: { type: "string", nullable: true },
-              family_situation: { type: "string", enum: %w[single in_a_relationship divorced], nullable: true },
               first_name: { type: "string" },
               invitation_accepted_at: { type: "string", nullable: true },
               invitation_created_at: { type: "string", nullable: true },
               last_name: { type: "string" },
               notify_by_email: { type: "boolean" },
               notify_by_sms: { type: "boolean" },
-              number_of_children: { type: "integer", nullable: true },
               phone_number: { type: "string", nullable: true },
               phone_number_formatted: { type: "string", nullable: true },
-              logement: { type: "string", enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire], nullable: true },
-              notes: { type: "string", nullable: true },
               responsible: { type: "object", nullable: true },
               responsible_id: { type: "integer", nullable: true },
               user_profiles: {
@@ -203,7 +197,7 @@ RSpec.configure do |config|
                 items: { "$ref" => "#/components/schemas/user_profile" },
               },
             },
-            required: %w[id address address_details affiliation_number birth_date birth_name case_number created_at first_name invitation_accepted_at
+            required: %w[id address address_details affiliation_number birth_date birth_name created_at first_name invitation_accepted_at
                          invitation_created_at last_name notify_by_email notify_by_sms phone_number phone_number_formatted responsible responsible_id user_profiles],
           },
           user_profile_with_root: {
@@ -402,6 +396,27 @@ RSpec.configure do |config|
               motif_category: { "$ref" => "#/components/schemas/motif_category" },
             },
             required: %w[motif_category],
+          },
+          teams: {
+            properties: {
+              teams: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/team" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+          },
+          team: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              name: { type: "string" },
+              territory_id: { type: "integer" },
+              agents: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/agent" },
+              },
+            },
           },
           territory: {
             type: "object",

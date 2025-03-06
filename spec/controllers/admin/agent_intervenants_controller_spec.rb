@@ -23,7 +23,7 @@ RSpec.describe Admin::AgentIntervenantsController, type: :controller do
 
       expect(agent_intervenant.last_name).to eq("UpdatedName")
       expect(response).to redirect_to(admin_organisation_agents_path(organisation))
-      expect(flash[:notice]).to eq("Intervenant modifié avec succès.")
+      expect(flash[:success]).to eq("Intervenant modifié avec succès.")
     end
 
     it "renders edit on failure" do

@@ -109,7 +109,19 @@ Pas de politique très clairement décidée mais la pratique est d’essayer de 
 Pas de politique très clairement décidée mais la pratique est d’essayer de coller à la version la plus récente.
 
 ### Versions des gems et des node modules
-Une politique de mise à jour prudente a été décidée cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)
+
+Une politique de mise à jour prudente a été décidée
+cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)
+
+### Version du DSFR
+
+1. `yarn upgrade @gouvfr/dsfr`. Notez le nouveau numéro de version, par exemple 1.13.0
+2. Mettez à jour le lien symbolique vers les fichiers
+   précompilés : `rm public/dsfr-v* && ln -s ../node_modules/@gouvfr/dsfr/dist/ public/dsfr-v1.13.0`
+3. Mettez à jour la version dans `ApplicationHelper#dsfr_path`
+
+Cette manière de faire permet d’éviter de passer par des compilations d’assets inutiles via webpacker ou sprockets.
+Le numéro de version dans les chemins sert de fingerprint pour le cache bump des navigateurs.
 
 ## Review apps
 
@@ -184,3 +196,17 @@ Pour mettre à jour Metabase il faut déclencher un deploy en utilisant la comma
 ```bash
 scalingo --app rdv-service-public-metabase deploy https://github.com/Scalingo/metabase-scalingo/archive/refs/heads/master.tar.gz
 ```
+
+## Debug des feature specs
+
+Une manière pratique et intéractive d’écrire ou de debugger des feature specs (end-to-end) est :
+
+- insérer un `binding.pry` dans la spec avant la ligne qui échoue
+- préfixer `HEADLESS=false` avant l’appel à `bundle exec rspec ...`
+- le test utilisera alors le driver capybara JS même si le flag `js: true` n’est pas présent
+- le navigateur Chrome orchestré par Capybara sera maintenant visible
+
+Une console s’ouvre alors et on peut appeler des commandes comme `click_button "Enregistrer"` ou bien rédiger des `expect` itérativement. On peut sortir de la console et laisser le test terminer son éxecution avec CTRL+D.
+
+Ça ne fonctionne pas avec `byebug` ou un breakpoint de debug sur RubyMine, lorsqu’on éxecute une commande dans la console ouverte, le navigateur semble bloqué.
+Je suppose que l’éxecution du serveur Rails de spec est complètement interrompue, ce qui n’est pas pratique pour itérer

@@ -7,15 +7,15 @@ class AgentCreneauxSearchForm
   validates :organisation_id, :motif, presence: true
 
   def organisation
-    Organisation.find_by(id: organisation_id)
+    Organisation.find_by(id: organisation_id) if organisation_id.present?
   end
 
   def service
-    Service.find_by(id: service_id)
+    Service.find_by(id: service_id) if service_id.present?
   end
 
   def motif
-    organisation.motifs.find_by(id: motif_id)
+    organisation.motifs.find_by(id: motif_id) if motif_id.present?
   end
 
   def users

@@ -9,7 +9,7 @@ RSpec.describe "Visioplainte Creneaux" do
     load Rails.root.join("db/seeds/visioplainte.rb")
     create(:plage_ouverture,
            organisation: orga_gendarmerie,
-           agent: orga_gendarmerie.agents.first,
+           agent: Agent.find_by(last_name: "Guichet 1"),
            motifs: orga_gendarmerie.motifs,
            first_day: Date.tomorrow,
            start_time: Tod::TimeOfDay.new(14),
@@ -32,7 +32,18 @@ RSpec.describe "Visioplainte Creneaux" do
       }
     end
 
-    it "returns a list of creneaux" do
+    before do
+      create(:plage_ouverture,
+             organisation: orga_gendarmerie,
+             agent: Agent.find_by(last_name: "Guichet 2"),
+             motifs: orga_gendarmerie.motifs,
+             first_day: Date.tomorrow,
+             start_time: Tod::TimeOfDay.new(14),
+             end_time: Tod::TimeOfDay.new(18),
+             recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday]))
+    end
+
+    it "returns a list of creneaux without duplicates" do
       creneaux = get_request[:creneaux]
       expect(creneaux.first).to eq(
         {
@@ -40,6 +51,12 @@ RSpec.describe "Visioplainte Creneaux" do
           duration_in_min: 30,
         }
       )
+
+      creneaux_starting_at_2pm = creneaux.select do |c|
+        c[:starts_at] == "2024-08-19T14:00:00+02:00"
+      end
+
+      expect(creneaux_starting_at_2pm.count).to eq 1
     end
   end
 

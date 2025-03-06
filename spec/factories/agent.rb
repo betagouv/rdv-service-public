@@ -10,8 +10,17 @@ FactoryBot.define do
 
     transient do
       service { build(:service) }
+      no_services { false }
+
+      trait :no_services do
+        no_services { true }
+      end
     end
     after(:build) do |agent, evaluator|
+      next if evaluator.no_services
+      next if agent.agent_services.any?
+      next if agent.services.any?
+
       if agent.agent_services.empty? && agent.services.empty?
         agent.services = if evaluator.service
                            [evaluator.service]

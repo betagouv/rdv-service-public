@@ -1,5 +1,9 @@
 spec
 docs
 /tmp/cache
-/node_modules
 /.cache/yarn
+
+# hack permettant d’exclure tous les node modules sauf @gouvfr/dsfr
+/node_modules/@[a-f]*
+/node_modules/@[h-z]*
+/node_modules/[a-z]*

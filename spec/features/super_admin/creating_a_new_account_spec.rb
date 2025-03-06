@@ -1,4 +1,4 @@
-RSpec.describe "Creating a new account for a new project, other than a mairie", js: true do
+RSpec.describe "Creating a new account for a new project, which can be a mairie", js: true do
   let(:super_admin) { create(:super_admin, :support) }
 
   let(:autocomplete_response) do
@@ -18,8 +18,7 @@ RSpec.describe "Creating a new account for a new project, other than a mairie", 
     login_as(super_admin, scope: :super_admin)
     visit super_admins_root_url(host: "http://www.rdv-mairie-test.localhost")
 
-    click_link "Comptes"
-    click_link "Création compte"
+    click_link "Ouverture de compte"
 
     fill_in("Nom du territoire", with: "France Rénov")
     fill_in("Nom de la première organisation", with: "Agence de Romainville")
@@ -67,7 +66,7 @@ RSpec.describe "Creating a new account for a new project, other than a mairie", 
 
     new_motif = new_organisation.motifs.first
     expect(new_motif).to have_attributes(
-      name: "Mon premier motif"
+      name: "Suivi de dossier"
     )
 
     perform_enqueued_jobs
@@ -77,5 +76,52 @@ RSpec.describe "Creating a new account for a new project, other than a mairie", 
       subject: "Vous avez été invité sur RDV Service Public",
       from: ["support@rdv-service-public.fr"]
     )
+  end
+
+  describe "ouverture de compte pour une mairie" do
+    let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
+    let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
+    let!(:cni_passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME) }
+    let!(:service) { create(:service, name: "Mairie") }
+
+    it "crée un territoire avec une organisation qui a les catégories de motif pour se brancher à l'ANTS" do
+      login_as(super_admin, scope: :super_admin)
+      visit super_admins_root_url(host: "http://www.rdv-mairie-test.localhost")
+
+      click_link "Ouverture de compte"
+
+      fill_in("Nom du territoire", with: "Romainville")
+      fill_in("Nom de la première organisation", with: "Mairie de Romainville")
+      fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
+
+      # Fake autocomplete
+      page.execute_script("document.querySelector('#compte_lieu_latitude').value = '48.880505'")
+      page.execute_script("document.querySelector('#compte_lieu_longitude').value = '2.429639'")
+
+      fill_in("Numéro du département", with: "93")
+
+      expect(page).to have_content("Admin de territoire")
+
+      fill_in("Prénom", with: "Francis")
+      fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input
+      fill_in("Adresse mail", with: "francis@factice.org")
+      select("Mairie", from: "Service")
+
+      find(:label, text: "Autoriser le branchement au moteur de recherche de l'ANTS").click
+
+      click_button("Enregistrer")
+
+      expect(page).to have_content("Le nouveau compte a été créé, et une invitation a été envoyée à francis@factice.org")
+
+      mairie_organisation = Organisation.last
+      expect(mairie_organisation).to have_attributes(
+        ants_connectable: true
+      )
+
+      expect(mairie_organisation.motifs.requires_ants_predemande_number.count).to eq(3)
+      expect(mairie_organisation.motifs.count).to eq 3
+
+      expect(mairie_organisation.territory.motif_categories.pluck(:name)).to match_array(Api::Ants::EditorController::ANTS_MOTIF_CATEGORY_NAMES)
+    end
   end
 end

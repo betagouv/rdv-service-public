@@ -59,7 +59,7 @@
           td Rue des casernes
           td 62080_0180
         tr
-          td.rdv-text-align-center[colspan=3] ...
+          td.rdv-text-align-center[colspan=3] …
     .rdv-text-align-center
       .mb-1.w-75.m-auto.text-muted 3 premières lignes: communes entières, 2 dernières lignes: 2 rues spécifiques
       ul.list-inline
@@ -73,10 +73,8 @@
     ul
       li
         span> ⚠️ Utilisez les
-        = link_to "https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune", target: "_blank" do
-          span> codes communes INSEE
-          i.fa.fa-external-link-alt>
-        | et non les codes postaux
+        = link_to "codes communes INSEE", "https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune", target: "_blank"
+        |  et non les codes postaux
       li Utilisez un format XLS ou CSV (délimité par des virgules)
       li Utilisez un encodage UTF-8
       li
@@ -92,6 +90,4 @@
         span> Les codes rue à utiliser sont ceux de la
         span>= link_to "Base Adresse Nationale", "https://adresse.data.gouv.fr/", target: "_blank"
         span>et sont obligatoires. Ils sont au format `69323_4344` où la première partie est le code commune et la deuxième désigne la rue spécifique. Pour rajouter ces codes dans votre fichier, vous pouvez utiliser
-        span>= link_to "https://adresse.data.gouv.fr/csv", target: "_blank" do
-          span> cet outil web
-          i.fa.fa-external-link-alt>
+        span>= link_to "cet outil web", "https://adresse.data.gouv.fr/csv", target: "_blank"

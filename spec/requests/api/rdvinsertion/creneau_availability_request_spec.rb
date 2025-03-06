@@ -28,6 +28,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
       parameter name: "lieu_id", in: :query, type: :string, description: "L'ID du lieu de recherche", example: "1", required: false
       parameter name: "organisation_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "Les IDs des organisations de recherche", example: %w[1 2 3], required: false
       parameter name: "referent_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "Les IDs des référents de recherche", example: %w[1 2 3], required: false
+      parameter name: "total_count", in: :query, type: :string, description: "Est-ce que l'endpoint doit renvoyer le total ou un booléen", example: "true", required: false
 
       let!(:user) { create(:user, organisations: [organisation1], rdv_invitation_token: "user_token") }
       let!(:user_with_referent) { create(:user, referent_agents: [agent], organisations: [organisation1], rdv_invitation_token: "user_with_referent_token") }
@@ -121,16 +122,16 @@ RSpec.describe "Available Creneaux Count for Invitation" do
         end
 
         it "logs the API call" do
-          expect(ApiCall.first.attributes.symbolize_keys).to include(
+          api_call = ApiCall.first
+          expect(api_call).to have_attributes(
             controller_name: "invitations",
             action_name: "creneau_availability",
             agent_id: agent.id,
-            received_at: now
+            received_at: now,
+            authentication_type: "DeviseTokenAuth"
           )
-          expect(ApiCall.first.raw_http["method"]).to eq("GET")
-          expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
-          expect(ApiCall.first.raw_http["headers"]).not_to include("rack.session.options")
-          expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
+          expect(api_call.raw_http["method"]).to eq("GET")
+          expect(api_call.raw_http["headers"]).to be_blank
         end
 
         context "Si le lieu n'existe pas" do
@@ -197,8 +198,6 @@ RSpec.describe "Available Creneaux Count for Invitation" do
               received_at: now
             )
             expect(ApiCall.first.raw_http["method"]).to eq("GET")
-            expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
-            expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
           end
         end
 
@@ -219,6 +218,12 @@ RSpec.describe "Available Creneaux Count for Invitation" do
           let!(:"organisation_ids[]") { [organisation1.id] }
 
           it { expect(parsed_response_body["creneau_availability"]).to be_truthy }
+
+          context "Avec le paramètre total_count" do
+            let!(:total_count) { "true" }
+
+            it { expect(parsed_response_body["creneau_availability_count"]).to eq(5) }
+          end
         end
 
         context "Quand le user est spécifié" do

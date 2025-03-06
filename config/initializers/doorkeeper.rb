@@ -159,7 +159,7 @@ Doorkeeper.configure do
   # `grant_type` - the grant type of the request (see Doorkeeper::OAuth)
   # `scopes` - the requested scopes (see Doorkeeper::OAuth::Scopes)
   #
-  # use_refresh_token
+  use_refresh_token
 
   # Provide support for an owner to be assigned to each registered application (disabled by default)
   # Optional parameter confirmation: true (default: false) if you want to enforce ownership of
@@ -215,7 +215,11 @@ Doorkeeper.configure do
   # #call can be used in order to allow conditional checks (to allow non-SSL
   # redirects to localhost for example).
   #
-  force_ssl_in_redirect_uri(!Rails.env.local? && ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO")
+  force_ssl_in_redirect_uri(
+    !Rails.env.local? &&
+      ENV["RDV_SOLIDARITES_INSTANCE_NAME"] != "DEMO" &&
+      ENV["IS_REVIEW_APP"] != "true"
+  )
   #
   # force_ssl_in_redirect_uri { |uri| uri.host != 'localhost' }
 

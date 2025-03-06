@@ -1,5 +1,10 @@
 = render "common/meta"
+= stylesheet_link_tag "#{dsfr_path}/dsfr.min.css", "data-turbo-track": "reload"
+= stylesheet_link_tag "#{dsfr_path}/utility/icons/icons.min.css", "data-turbo-track": "reload"
 = stylesheet_link_tag "application_agent", media: "all", "data-turbolinks-track": "reload"
-= javascript_include_tag "application_agent", "data-turbolinks-track": "reload"
 
-= content_for(:charts_script)
+= javascript_include_tag "application_agent", "data-turbolinks-track": "reload"
+= javascript_include_tag "#{dsfr_path}/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
+= javascript_include_tag "#{dsfr_path}/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
+
+= content_for(:additional_scripts)

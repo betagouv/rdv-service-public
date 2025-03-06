@@ -5,7 +5,7 @@ RSpec.describe "Participations", type: :request do
   let(:motif) { create(:motif, :collectif, organisation: organisation, service: service) }
   let(:rdv) { create(:rdv, organisation: organisation, motif: motif, agents: [agent]) }
   let(:user1) { create(:user) }
-  let(:user2) { create(:user, :with_no_email, :with_no_phone_number) }
+  let(:user2) { create(:user, :without_devise_email, :with_no_phone_number) }
 
   before do
     login_as(agent, scope: :agent)

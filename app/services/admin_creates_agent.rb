@@ -12,6 +12,9 @@ class AdminCreatesAgent
       @agent = find_agent
 
       if @agent
+        if @agent.services.none?
+          @agent.update(service_ids: @agent_params[:service_ids])
+        end
         add_agent_to_organisations
         @warning_message = self.class.check_agent_service(@agent, @agent_params[:service_ids])
       elsif @access_level == "intervenant"

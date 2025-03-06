@@ -13,6 +13,10 @@ api_adresse_data_gouv = "api-adresse.data.gouv.fr"
 # Nous utilisons mapbox et les tiles etalab pour les interfaces de config de sectorisation
 api_mapbox = "api.mapbox.com"
 tiles_etalab = "etalab-tiles.fr"
+# Nous utilisons unpkg, les tiles OSM et etalab pour afficher une carte des lieux dans les stats avec maplibre
+unpkg_cdn = "unpkg.com"
+tiles_osm = "tile.openstreetmap.org"
+tiles_data_gouv = "openmaptiles.data.gouv.fr"
 # Bouton "Je donne mon avis sur cette démarche"
 voxusagers = "voxusagers.numerique.gouv.fr"
 # Utilisé sur nos pages statiques (404.html, 500.html)
@@ -20,6 +24,8 @@ bootstrap_cdn = "*.bootstrapcdn.com"
 # Headway nous permet de publier un changelog au sein de l'app
 headway_cnd = "cdn.headwayapp.co"
 headway_widget = "headway-widget.net"
+# Metabase permet d’embedder des rapports dans l’application
+metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
 
 Rails.application.config.content_security_policy do |policy|
   policy.default_src :self
@@ -27,12 +33,12 @@ Rails.application.config.content_security_policy do |policy|
   policy.object_src :none
   policy.worker_src :blob
   policy.child_src :blob, :self
-  policy.frame_src :self, in_status, headway_widget
+  policy.frame_src :self, in_status, headway_widget, metabase
   policy.media_src :self, s3_de_rdv_insertion
-  policy.img_src :self, :data, voxusagers
-  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd
-  policy.connect_src :self, api_adresse_data_gouv, tiles_etalab
-  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd
+  policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
+  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
+  policy.connect_src :self, api_adresse_data_gouv, tiles_etalab, tiles_data_gouv
+  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI

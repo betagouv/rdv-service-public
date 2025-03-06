@@ -17,7 +17,7 @@ class FakeOauthClient < Sinatra::Base
     status 200
     if session[:email]
       <<-HTML
-        Votre email est #{session[:email]}, et votre token est #{session[:access_token]}
+        Votre email est #{session[:email]}, votre token est #{session[:access_token]}, et votre refresh_token est #{session[:refresh_token]}
         <a href="/logout">Déconnexion</a>
       HTML
     else
@@ -32,6 +32,7 @@ class FakeOauthClient < Sinatra::Base
   get "/omniauth/rdvservicepublic/callback" do
     session[:email] = request.env["omniauth.auth"]["info"]["agent"]["email"]
     session[:access_token] = request.env["omniauth.auth"]["credentials"]["token"]
+    session[:refresh_token] = request.env["omniauth.auth"]["credentials"]["refresh_token"]
 
     redirect to("/")
   end
@@ -41,5 +42,10 @@ class FakeOauthClient < Sinatra::Base
     session.delete(:access_token)
 
     redirect to(Capybara.app_host + OmniAuth::Strategies::RdvServicePublic.sign_out_path("fake_app_id"))
+  end
+
+  get "/favicon.ico" do
+    status 204
+    body ""
   end
 end

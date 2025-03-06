@@ -25,11 +25,9 @@
   p.card-text.mb-0
     - should_display_link = current_agent.in?(rdv.agents) || current_agent.secretaire?
     i.fa.fa-video-camera.text-primary-blue>
-    = "Par visioconférence "
+    |> Par visioconférence
     - if should_display_link
-      = link_to(rdv.visio_url, target: :_blank) do
-        = "démarrer la visioconférence "
-        i.fa.fa-external-link[aria-hidden="true"]
+      = link_to("démarrer la visioconférence ", rdv.visio_url, target: :_blank)
     - else
       br
       small.text-muted = "Le lien de visioconférence s'affiche uniquement pour l'agent qui assure le RDV et les secrétaires."
@@ -58,22 +56,22 @@
     div.mr-1
       i.fa-solid.fa-user-plus.text-primary-blue
     div
-      ' Rendez-vous pris par
+      |> Rendez-vous pris par
       a href="#prescripteur-explanation#{participation.id}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"
         = author.full_name
   .collapse.alert-info.p-2.m-2 id="prescripteur-explanation#{participation.id}"
     p
-      ' La réservation a été faite par un prescripteur qui ne participera pas au rendez-vous (agent d'accueil, conseiller).
+      |> La réservation a été faite par un prescripteur qui ne participera pas au rendez-vous (agent d'accueil, conseiller).
     p
-      ' Ce rendez-vous a été pris sur un créneau ouvert au public.
+      |> Ce rendez-vous a été pris sur un créneau ouvert au public.
     p.mb-0
-      ' Si vous pensez qu'il y a eu une erreur lors de la prise de rendez-vous, vous pouvez contacter
+      |> Si vous pensez qu'il y a eu une erreur lors de la prise de rendez-vous, vous pouvez contacter
       strong => author.full_name
       - if author.is_a?(Prescripteur) && author.phone_number.present?
-        ' au
+        |> au
         strong => phone_to(author.phone_number)
-        ' ou
-      ' à l'adresse
+        |> ou
+      |> à l'adresse
       strong = mail_to(author.email)
       | .
 

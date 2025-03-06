@@ -1,20 +1,20 @@
-- contact_team_url = "https://cal.com/forms/937585aa-48a4-4efd-a642-961fad79c9c5"
+- contact_team_url = Agents::PagesController::CONTACT_TEAM_URL
 
 .fr-py-8w.rdv-background-color-alt-blue-ecume
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-12.fr-col-md-8.rdv-text-align-center
         h1
-          ' Faciliter
+          |> Faciliter
           span.rdv-color-blue-ecume-sun-247-moon-675-hover
-            ' la gestion et la prise de rendez‑vous
+            |> la gestion et la prise de rendez‑vous
             / on utilise un non-breaking hyphen dans rendez-vous pour éviter le retour à la ligne
           | dans votre administration
         .fr-text--lg
           | Éviter les rendez-vous non honorés, gagner du temps au quotidien et améliorer la relation entre les agents et les usagers
         ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md.fr-mb-0
           li
-            = link_to "Contacter notre équipe", contact_team_url, class: "fr-btn fr-mb-0"
+            = link_to "Demander une démo", contact_team_url, class: "fr-btn fr-mb-0"
 
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -234,10 +234,10 @@ hr
         h2
           | Besoin d’une intégration sur mesure ?
         p
-          ' Notre API puissante et flexible permet d’intégrer facilement notre brique de rendez-vous dans vos applications.
+          |> Notre API puissante et flexible permet d’intégrer facilement notre brique de rendez-vous dans vos applications.
           | Accédez à un flux de données en temps réel pour une expérience enrichie et personnalisée.
         ul.fr-btns-group.fr-btns-group--center.rdv-btns-group--left-md.fr-btns-group--inline-md.fr-mb-0
-          li= link_to "Consulter la documentation technique", "https://rdv-service-public-1.gitbook.io/rdv-service-public/documentation-technique/api", class: "fr-btn fr-btn--secondary"
+          li= link_to "Consulter la documentation technique", "https://aide.rdv-service-public.fr/documentation-technique/api", class: "fr-btn fr-btn--secondary"
       .fr-col-12.fr-col-md-5.rdv-text-align-center
         = image_tag "rdv_mairie/api.svg", alt: "Des fenêtres et des icônes d’applications avec des flèches", class: "rdv-height-md-0 rdv-min-height-md-100"
 
@@ -284,15 +284,21 @@ hr
               = image_tag "rdv_mairie/billet-0-euros.png", alt: "Illustration d’un billet de 0 euros tenu par des mains", class: "fr-responsive-img"
 
 .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
-  .fr-container.fr-py-8w
+  .fr-container.fr-py-6w
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
-        | 2 715 045
+        | 2 892 616
       .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
         .rdv-font-weight-bold
           | RENDEZ-VOUS PLANIFIÉS
         div
-          | DANS 995 STRUCTURES
+          | DANS 995 STRUCTURES*
+
+.fr-container.fr-py-3w.rdv-text-align-center
+  |> *Données concernant les 24 derniers mois.
+  |> Pour plus d’informations,
+  = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
+  | .
 
 .rdv-background-color-alt-grey
   .fr-container.fr-py-8w
@@ -339,35 +345,35 @@ hr
               | RDV Solidarités, RDV Aide Numérique et RDV Service Public, quelles différences ?
           .fr-collapse id="faq-difference-rdv"
             p
-              ' Notre solution est déployée sur trois noms de domaine distincts :  
+              |> Notre solution est déployée sur trois noms de domaine distincts :  
               = link_to "rdv-solidarites.fr", "https://www.rdv-solidarites.fr", target: "_blank", rel: "noopener"
               ',
               = link_to "rdv-aide-numerique.fr", "https://www.rdv-aide-numerique.fr", target: "_blank", rel: "noopener"
               ',
               = link_to "rdv.anct.gouv.fr", "https://www.rdv.anct.gouv.fr", target: "_blank", rel: "noopener"
               '.
-              ' Il est important de noter que ces noms de domaine n’affectent en rien les fonctionnalités de la solution.
+              |> Il est important de noter que ces noms de domaine n’affectent en rien les fonctionnalités de la solution.
             p
-              ' En effet, toutes les fonctionnalités reposent sur une base de code unique, répartie sur deux instances pour renforcer la sécurité informatique.
-              ' L’utilisation de ces différents noms de domaine permet une distribution efficace des comptes en fonction du type d’administration utilisatrice.
+              |> En effet, toutes les fonctionnalités reposent sur une base de code unique, répartie sur deux instances pour renforcer la sécurité informatique.
+              |> L’utilisation de ces différents noms de domaine permet une distribution efficace des comptes en fonction du type d’administration utilisatrice.
         section.fr-accordion
           h3.fr-accordion__title
             button.fr-accordion__btn aria-expanded="false" aria-controls="faq-donnees-protegees"
               | Comment la solution s’adapte-t-elle à mon organisation ?
           .fr-collapse id="faq-donnees-protegees"
             p
-              ' RDV Service Public s’adapte aux réalités variées des administrations publiques.
-              ' La solution offre diverses options pour configurer les spécificités de votre administration, qu’elle soit multi-site ou multi-service, permettant ainsi un déploiement flexible.
-              ' Que vous gériez une petite commune rurale avec quelques agents ou un conseil départemental comptant plusieurs centaines d’agents, RDV Service Public s’ajuste à vos besoins.
+              |> RDV Service Public s’adapte aux réalités variées des administrations publiques.
+              |> La solution offre diverses options pour configurer les spécificités de votre administration, qu’elle soit multi-site ou multi-service, permettant ainsi un déploiement flexible.
+              |> Que vous gériez une petite commune rurale avec quelques agents ou un conseil départemental comptant plusieurs centaines d’agents, RDV Service Public s’ajuste à vos besoins.
         section.fr-accordion
           h3.fr-accordion__title
             button.fr-accordion__btn aria-expanded="false" aria-controls="faq-acces-agenda"
               | Comment fonctionne la prise de rendez-vous en ligne ?
           .fr-collapse id="faq-acces-agenda"
             p
-              ' Votre administration disposera d’une URL de prise de rendez-vous en ligne.
-              ' Cette URL ouvre un parcours usager de prise de rendez-vous en ligne qui pourra être intégrée dans tous vos supports de relation agent-usagers (site internet, email).
-              ' Vous pouvez configurer individuellement les lieux, les services et les motifs que vous souhaitez ouvrir à la prise de rendez-vous en ligne.
+              |> Votre administration disposera d’une URL de prise de rendez-vous en ligne.
+              |> Cette URL ouvre un parcours usager de prise de rendez-vous en ligne qui pourra être intégrée dans tous vos supports de relation agent-usagers (site internet, email).
+              |> Vous pouvez configurer individuellement les lieux, les services et les motifs que vous souhaitez ouvrir à la prise de rendez-vous en ligne.
         section.fr-accordion
           h3.fr-accordion__title
             button.fr-accordion__btn aria-expanded="false" aria-controls="faq-notifs-sms"
@@ -394,14 +400,14 @@ hr
               | Comment puis-je mettre en place la solution ?
           .fr-collapse id="faq-mise-en-place"
             p
-              ' Pour déployer la solution dans votre administration, nous vous invitons à planifier un rendez-vous avec notre équipe.
+              |> Pour déployer la solution dans votre administration, nous vous invitons à planifier un rendez-vous avec notre équipe.
               | Nous consacrerons le temps nécessaire à l’étude de vos besoins et à la configuration de la solution selon votre organisation.
             p
-              ' À l’issue de ce rendez-vous, vous obtiendrez des accès en production ou en démonstration, selon vos préférences. De plus, vous bénéficierez d’un accompagnement jusqu’à ce que vos équipes atteignent leur pleine autonomie.
+              |> À l’issue de ce rendez-vous, vous obtiendrez des accès en production ou en démonstration, selon vos préférences. De plus, vous bénéficierez d’un accompagnement jusqu’à ce que vos équipes atteignent leur pleine autonomie.
               ' Pour découvrir ou déployer la solution, planifiez un rendez-vous :
             = link_to "Contacter notre équipe", contact_team_url, class: "fr-link fr-icon-arrow-right-line fr-link--icon-right"
       .rdv-text-align-center.fr-mt-6w
-        = link_to "Consulter le centre d’aide", "https://rdv-service-public-1.gitbook.io/rdv-service-public/", class: "fr-btn fr-btn--secondary"
+        = link_to "Consulter le centre d’aide", "https://aide.rdv-service-public.fr/", class: "fr-btn fr-btn--secondary"
 
 .fr-py-8w.rdv-background-color-alt-blue-ecume.rdv-text-align-center
   .fr-container
@@ -411,5 +417,5 @@ hr
     h2 Plus de RDV, moins de lapins
     p
       | Votre agenda vous remerciera.
-    .fr-my-4w= link_to "Contacter notre équipe", contact_team_url, class: "fr-btn"
+    .fr-my-4w= link_to "Demander une démo", contact_team_url, class: "fr-btn"
     = link_to "Revenir en haut de la page", "#header", class: "fr-link fr-icon-arrow-up-line fr-link--icon-left"

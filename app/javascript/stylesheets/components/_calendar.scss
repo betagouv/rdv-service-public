@@ -71,6 +71,10 @@
   height: auto;
 }
 
+.fc-button:hover {
+  color: $black;
+}
+
 .fc-text-arrow {
   font-family: inherit;
   font-size: 1rem;
@@ -136,6 +140,7 @@
     transparent 75%,
     transparent
   );
+  background-repeat: repeat;
   background-size: 1rem 1rem;
 }
 
