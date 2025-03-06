@@ -82,14 +82,15 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
   context "for a collectif motif" do
     subject { described_class.new(user: user, motif: motif, lieu: lieu) }
 
-    let!(:motif) { create(:motif, collectif: true) }
-    let!(:rdv) { create(:rdv, motif: motif, lieu: lieu, starts_at: 3.days.from_now) }
-    let!(:passed_rdv) { create(:rdv, motif: motif, lieu: lieu, starts_at: 2.days.ago) }
-    let!(:rdv_with_user) { create(:rdv, motif: motif, lieu: lieu, users: [user], starts_at: 4.days.from_now) }
-    let!(:rdv_in_different_lieu) { create(:rdv, motif: motif, lieu: create(:lieu), starts_at: 2.days.from_now.at_noon) }
-    let!(:rdv_with_no_remaining_seat) { create(:rdv, motif: motif, lieu: lieu, max_participants_count: 1, starts_at: 2.days.from_now.at_noon) }
-    let!(:rdv_after_max_public_booking_delay) { create(:rdv, motif: motif, lieu: lieu, starts_at: motif.end_booking_delay + 1.hour) }
-    let!(:rdv_before_min_public_booking_delay) { create(:rdv, motif: motif, lieu: lieu, starts_at: motif.start_booking_delay - 1.hour) }
+    let!(:organisation) { create(:organisation) }
+    let!(:motif) { create(:motif, collectif: true, organisation:) }
+    let!(:rdv) { create(:rdv, motif: motif, lieu: lieu, starts_at: 3.days.from_now, organisation:) }
+    let!(:passed_rdv) { create(:rdv, motif: motif, lieu: lieu, starts_at: 2.days.ago, organisation:) }
+    let!(:rdv_with_user) { create(:rdv, motif: motif, lieu: lieu, users: [user], starts_at: 4.days.from_now, organisation:) }
+    let!(:rdv_in_different_lieu) { create(:rdv, motif: motif, lieu: create(:lieu), starts_at: 2.days.from_now.at_noon, organisation:) }
+    let!(:rdv_with_no_remaining_seat) { create(:rdv, motif: motif, lieu: lieu, max_participants_count: 1, starts_at: 2.days.from_now.at_noon, organisation:) }
+    let!(:rdv_after_max_public_booking_delay) { create(:rdv, motif: motif, lieu: lieu, starts_at: motif.end_booking_delay + 1.hour, organisation:) }
+    let!(:rdv_before_min_public_booking_delay) { create(:rdv, motif: motif, lieu: lieu, starts_at: motif.start_booking_delay - 1.hour, organisation:) }
     let!(:user) { create(:user) }
 
     it "returns the subscribable collective rdvs (rdv and rdv_with_user)" do
@@ -101,9 +102,9 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
       subject { described_class.new(user: user, motif: motif, lieu: lieu, geo_search: geo_search) }
 
       let!(:agent) { create(:agent) }
-      let!(:motif) { create(:motif, collectif: true, organisation: organisation, sectorisation_level: "agent") }
-      let!(:rdv) { create(:rdv, motif: motif, lieu: lieu, agents: [agent], starts_at: 2.days.from_now.at_noon) }
-      let!(:rdv2) { create(:rdv, motif: motif, lieu: lieu, agents: [build(:agent)], starts_at: 2.days.from_now.at_noon) }
+      let!(:motif) { create(:motif, collectif: true, organisation:, sectorisation_level: "agent") }
+      let!(:rdv) { create(:rdv, motif: motif, lieu: lieu, agents: [agent], starts_at: 2.days.from_now.at_noon, organisation:) }
+      let!(:rdv2) { create(:rdv, motif: motif, lieu: lieu, agents: [build(:agent)], starts_at: 2.days.from_now.at_noon, organisation:) }
       let!(:geo_search) { instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => [agent] }) }
 
       it "returns the rdv linked to the geo attributed agents" do
@@ -117,9 +118,9 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
 
       let!(:agent) { create(:agent) }
       let!(:user) { create(:user, referent_agents: [agent]) }
-      let!(:motif) { create(:motif, collectif: true, organisation: organisation, follow_up: true) }
-      let!(:rdv) { create(:rdv, motif: motif, lieu: lieu, agents: [agent], starts_at: 2.days.from_now.at_noon) }
-      let!(:rdv2) { create(:rdv, motif: motif, lieu: lieu, agents: [build(:agent)], starts_at: 2.days.from_now.at_noon) }
+      let!(:motif) { create(:motif, collectif: true, organisation:, follow_up: true) }
+      let!(:rdv) { create(:rdv, motif: motif, lieu: lieu, agents: [agent], starts_at: 2.days.from_now.at_noon, organisation:) }
+      let!(:rdv2) { create(:rdv, motif: motif, lieu: lieu, agents: [build(:agent)], starts_at: 2.days.from_now.at_noon, organisation:) }
 
       it "returns the rdv linked to referents" do
         expect(subject.next_availability).to eq(rdv)
@@ -130,7 +131,7 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
 
   it "applies the motif's minimum and maximum booking delay restrictions" do
     date_range = Time.zone.today..(Time.zone.today + 7.days)
-    motif = create(:motif, organisation: organisation, min_public_booking_delay: 24.hours)
+    motif = create(:motif, organisation: organisation, min_public_booking_delay: 24.hours, default_duration_in_min: 45)
 
     create(:plage_ouverture, :weekdays, motifs: [motif], first_day: 7.days.ago.to_date, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(18), lieu: lieu)
 
