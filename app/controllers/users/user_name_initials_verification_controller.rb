@@ -4,7 +4,6 @@ class Users::UserNameInitialsVerificationController < UserAuthController
   skip_after_action :verify_authorized
 
   include TokenInvitable
-  prepend_before_action :store_invitation_in_session_and_redirect
 
   def new; end
 
