@@ -1,6 +1,5 @@
 require("@rails/ujs").start()
 require("turbolinks").start()
-import { PlacesInputs } from './components/places-inputs.js'
 import { AddressAutocomplete } from "./components/address-autocomplete";
 import { Modal } from './components/modal';
 import { NameInitialsForm } from './components/name-initials-form';
@@ -15,7 +14,7 @@ import './stylesheets/print';
 new Modal();
 
 $(document).on('turbolinks:load', function() {
-  new PlacesInputs();
+  //new PlacesInputs();
   new NameInitialsForm();
   new AddressAutocomplete();
   DsfrNewPassword();

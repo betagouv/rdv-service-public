@@ -116,6 +116,7 @@ class AddressAutocomplete {
       source: source,
       inputClasses: "fr-input",
       required: true,
+      displayMenu: 'overlay',
       templates: {
         inputValue: valueTemplate,
         suggestion: suggestionTemplate
