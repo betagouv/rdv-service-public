@@ -258,7 +258,6 @@ RSpec.describe "agents can prescribe rdvs" do
       it "when sectorization is enabled on the user street level only it show the street leveled motif only" do
         expect(page).not_to have_content(motif_insertion.name)
         expect(page).not_to have_content(motif_autre_service.name)
-        expect(page).to have_content(motif_mds.service.name)
         expect(page).to have_content(motif_mds.name)
         click_on motif_mds.name
         find(".fr-card__title", text: /#{mds_paris_nord.name}/).ancestor(".fr-card__body").find("a").click

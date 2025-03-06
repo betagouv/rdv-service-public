@@ -47,7 +47,7 @@ RSpec.describe "Motif selection" do
       click_link("premier contact")
       expect(page).to have_content("Sélectionnez un lieu de RDV")
       expect(page).to have_content("MDS Centre")
-      click_link("premier contact") # c’est le lien retour
+      click_link("modifier")
       expect(page).to have_content("Sélectionnez le motif")
     end
   end
