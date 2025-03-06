@@ -1,12 +1,10 @@
-class PlageOuverture {
+// Cette classe gère l'apparition ou non du champ "Lieu" en fonction
+// des motifs sélectionnés sur le formulaire de plages d'ouverture.
+class PlageOuvertureLieuSelection {
   constructor() {
-    if(!document.querySelector(".plage-ouverture-form")) {
-      return;
-    }
 
     this.toggleLieuSelectionField(true);
     $(".plage-ouverture-form .form-check-input[name='plage_ouverture[motif_ids][]']").on("input", () => { this.toggleLieuSelectionField(); });
-    this.armSecondaryTimesToggle();
   }
 
   toggleLieuSelectionField(noTransition = false) {
@@ -18,6 +16,16 @@ class PlageOuverture {
     } else {
       $(lieuSelectionField).find(".select2-input").val(null).trigger('change');
       lieuSelectionField.collapse("hide");
+    }
+  }
+}
+
+// Cette classe gère le toggle de l'affichage du second
+// créneau sur le formulaire des plages d'ouverture.
+class PlageOuvertureSecondaryTimes {
+  constructor() {
+    if(document.querySelector(".plage-ouverture-form")) {
+      this.armSecondaryTimesToggle();
     }
   }
 
@@ -44,6 +52,8 @@ class PlageOuverture {
       secondaryTimesEndsAtHours.required = true;
       secondaryTimesEndsAtMinutes.required = true;
 
+      // Lorsque le second créneau est activé, on propose par défaut
+      // de faire une pause d'une heure avant une après-midi de 4h.
       if(!secondaryTimesStartsAtHours.value) {
         secondaryTimesStartsAtHours.value ||= parseInt(primaryTimesEndsAtHours.value) + 1;
         secondaryTimesStartsAtMinutes.value ||= "00";
@@ -51,6 +61,7 @@ class PlageOuverture {
         secondaryTimesEndsAtMinutes.value ||= "00";
       }
     }
+
     const hideSecondaryTimes = () => {
       addSecondaryTimesButton.classList.remove("hidden");
       removeSecondaryTimesButton.classList.add("hidden");
@@ -76,4 +87,4 @@ class PlageOuverture {
   }
 }
 
-export { PlageOuverture };
+export { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes };
