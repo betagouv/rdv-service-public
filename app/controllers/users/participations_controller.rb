@@ -4,6 +4,7 @@ class Users::ParticipationsController < UserAuthController
   layout "application_narrow"
 
   include TokenInvitable
+  # je crois que le before action est inutile ici
   prepend_before_action :store_invitation_in_session_and_redirect
 
   def index

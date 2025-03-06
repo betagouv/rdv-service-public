@@ -9,6 +9,7 @@ class Users::RdvsController < UserAuthController
   layout "application_narrow", only: %i[show]
 
   include TokenInvitable
+  # ce before action semble nécessaire uniquement pour show et creneaux
   prepend_before_action :store_invitation_in_session_and_redirect
 
   def index

@@ -10,6 +10,7 @@ class Users::RdvWizardStepsController < UserAuthController
   before_action :set_step_titles
 
   include TokenInvitable
+  # je crois que ce before action est inutile ici
   prepend_before_action :store_invitation_in_session_and_redirect
 
   def new
