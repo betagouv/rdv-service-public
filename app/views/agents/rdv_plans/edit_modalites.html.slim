@@ -5,6 +5,7 @@
   .col-12.col-md-4
     = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: true
     = link_to edit_starts_at_agents_rdv_plan_path(@rdv_plan) do
+      = back_icon(class: "fr-mr-1w")
       = "retour"
 
   .col-12.col-md-4
