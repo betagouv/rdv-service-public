@@ -120,7 +120,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
       expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
 
-      click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first
+      click_link "Renseigner les disponibilités de Jane FAROU", match: :first
 
       expect_page_title("Nouvelle plage d'ouverture")
       fill_in "Libellé (facultatif)", with: "Accueil"
@@ -155,7 +155,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
         expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
 
-        click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first
+        click_link "Renseigner les disponibilités de Jane FAROU", match: :first
 
         expect_page_title("Nouvelle plage d'ouverture")
         fill_in "Libellé (facultatif)", with: "Accueil"

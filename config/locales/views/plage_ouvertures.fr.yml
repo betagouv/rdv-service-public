@@ -11,9 +11,16 @@ fr:
         in_progress: En cours
         past: "Passées"
         no_results_for_your_search: Il n'y a pas de résultat correspondant à votre recherche.
-        not_yet_created_plage_ouverture: Vous n'avez pas encore créé de plage d'ouverture.
-        this_agent_not_yet_created_plage_ouverture: "%{full_name} n'a pas encore créé de plage d'ouverture."
-        explanation_plage_ouverture: Les plages d'ouvertures affichent votre disponibilité à la prise de RDV, qu'elle soit faite par l'usager lui même (en ligne) ou par un autre agent de votre organisation. Chaque agent a ses propres plages d'ouvertures et peut y associer des motifs et un lieu. Les plages peuvent être récurrentes.
+
+        self:
+          not_yet_created_plage_ouverture: Vous n'avez pas encore créé de plage d'ouverture.
+          explanation_plage_ouverture: Vos plages d'ouverture sont votre vitrine de disponibilité. Elles permettent aux usagers de réserver un créneau avec vous (si l’option est activée) et facilitent la coordination avec vos collègues.
+          create_first_plage_cta: Renseigner mes disponibilités
+        other_agent:
+          not_yet_created_plage_ouverture: "%{full_name} n'a pas encore créé de plage d'ouverture."
+          explanation_plage_ouverture: Ses plages d'ouverture sont sa vitrine de disponibilité. Elles permettent aux usagers de réserver un créneau (si l’option est activée) et facilitent la coordination avec ses collègues.
+          create_first_plage_cta: Renseigner les disponibilités de %{full_name}
+
         title: Libellé
         motifs: Motifs
         place: Lieu
