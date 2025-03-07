@@ -123,6 +123,10 @@ module RecurrenceConcern
     "#{datetime.hour}h#{minutes}"
   end
 
+  def secondary_times_present?
+    try(:secondary_start_time) && try(:secondary_end_time)
+  end
+
   class_methods do
     def all_occurrences_for(period)
       # defined as a class method, but typically used on ActiveRecord::Relation
@@ -149,16 +153,12 @@ module RecurrenceConcern
   def occurrences_for_exceptionnelle(inclusive_datetime_range)
     occurrences = []
     occurrences << single_occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
-    occurrences << single_occurrence_in_range(secondary_starts_at, secondary_ends_at, inclusive_datetime_range) if secondary_times?
+    occurrences << single_occurrence_in_range(secondary_starts_at, secondary_ends_at, inclusive_datetime_range) if secondary_times_present?
     occurrences.compact
   end
 
   def single_occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
     Recurrence::Occurrence.new(starts_at:, ends_at:) if event_in_range?(starts_at, ends_at, inclusive_datetime_range)
-  end
-
-  def secondary_times?
-    try(:secondary_start_time) && try(:secondary_end_time)
   end
 
   def event_in_range?(event_starts_at, event_ends_at, range)

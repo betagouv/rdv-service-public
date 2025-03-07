@@ -10,8 +10,7 @@
     .col = f.input :start_time, as: :time, ignore_date: true, minute_step: 5
     .col = f.input :end_time,   as: :time, ignore_date: true, minute_step: 5
   - if model.respond_to?(:secondary_start_time)
-    - secondary_times_shown = model.secondary_start_time.present?
-    .js-plages-form-secondary-times-initial-state[data-state=secondary_times_shown.inspect]
+    .js-plages-form-secondary-times-initial-state[data-state=model.secondary_times_present?.inspect]
     .row.mb-2
       .col
         button.fr-btn.fr-btn--tertiary.fr-btn--sm.fr-btn--icon-left.fr-icon-add-line.js-plages-form-add-secondary-times-button[type="button" style="width: 100%"]
