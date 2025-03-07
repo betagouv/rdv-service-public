@@ -144,7 +144,7 @@ module RecurrenceConcern
     min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
     occurrences = []
     occurrences += compute_occurrences_for(recurrence.starting(starts_at).until(min_until), (end_time - start_time).to_i.seconds, inclusive_datetime_range)
-    if respond_to?(:secondary_starts_at) && secondary_starts_at
+    if secondary_times_present?
       occurrences += compute_occurrences_for(recurrence.starting(secondary_starts_at).until(min_until), (secondary_end_time - secondary_start_time).to_i.seconds, inclusive_datetime_range)
     end
     occurrences.sort
