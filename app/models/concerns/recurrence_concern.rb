@@ -114,33 +114,6 @@ module RecurrenceConcern
     end
   end
 
-  def occurrences_for_recurring(inclusive_date_range, inclusive_datetime_range)
-    min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
-    occurrences = []
-    occurrences += compute_occurrences_for(recurrence.starting(starts_at).until(min_until), (end_time - start_time).to_i.seconds, inclusive_datetime_range)
-    if respond_to?(:secondary_starts_at) && secondary_starts_at
-      occurrences += compute_occurrences_for(recurrence.starting(secondary_starts_at).until(min_until), (secondary_end_time - secondary_start_time).to_i.seconds, inclusive_datetime_range)
-    end
-    occurrences.sort
-  end
-
-  def occurrences_for_single_day(inclusive_datetime_range)
-    occurrences = []
-    if event_in_range?(starts_at, ends_at, inclusive_datetime_range)
-      occurrences << Recurrence::Occurrence.new(starts_at:, ends_at:)
-    end
-    if secondary_times? && event_in_range?(secondary_starts_at, secondary_ends_at, inclusive_datetime_range)
-      occurrences << Recurrence::Occurrence.new(starts_at: secondary_starts_at, ends_at: secondary_ends_at)
-    end
-    occurrences
-  end
-
-  def recurrence_interval
-    return nil if recurrence.nil?
-
-    recurrence.to_hash[:interval] || 1 # when interval is nil, it means 1
-  end
-
   def human_time_range
     [human_time(starts_at), human_time(ends_at)].join("-")
   end
@@ -162,6 +135,27 @@ module RecurrenceConcern
   end
 
   private
+
+  def occurrences_for_recurring(inclusive_date_range, inclusive_datetime_range)
+    min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
+    occurrences = []
+    occurrences += compute_occurrences_for(recurrence.starting(starts_at).until(min_until), (end_time - start_time).to_i.seconds, inclusive_datetime_range)
+    if respond_to?(:secondary_starts_at) && secondary_starts_at
+      occurrences += compute_occurrences_for(recurrence.starting(secondary_starts_at).until(min_until), (secondary_end_time - secondary_start_time).to_i.seconds, inclusive_datetime_range)
+    end
+    occurrences.sort
+  end
+
+  def occurrences_for_single_day(inclusive_datetime_range)
+    occurrences = []
+    occurrences << single_occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
+    occurrences << single_occurrence_in_range(secondary_starts_at, secondary_ends_at, inclusive_datetime_range) if secondary_times?
+    occurrences.compact
+  end
+
+  def single_occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
+    Recurrence::Occurrence.new(starts_at:, ends_at:) if event_in_range?(starts_at, ends_at, inclusive_datetime_range)
+  end
 
   def secondary_times?
     try(:secondary_start_time) && try(:secondary_end_time)
