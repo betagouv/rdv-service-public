@@ -17,7 +17,7 @@
               - current_user.available_users_for_rdv.each do |user|
                 = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, hint: birth_date_and_age(user), checked: (user.id.in?(@rdv.user_ids)), name: "rdv[user_ids][]" }, user.id, nil
           - else
-            - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, hint: birth_date_and_age(user), value: user.id, checked: (user.id.in?(@rdv.user_ids))} }
+            - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, hint: birth_date_and_age(user), value: user.id, checked: (user.id.in?(@rdv.user_ids) || current_user.id == user.id)} }
             = f.dsfr_radio_buttons :users, users, legend: "", required: true, rich: true, name: "rdv[user_ids][]"
 
           .form-group
