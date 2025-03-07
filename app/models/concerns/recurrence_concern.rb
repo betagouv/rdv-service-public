@@ -96,9 +96,9 @@ module RecurrenceConcern
     inclusive_datetime_range = datetime_range_start..(inclusive_date_range.end.end_of_day)
 
     if recurring?
-      occurrences_for_recurring_plage(inclusive_datetime_range, inclusive_datetime_range)
+      occurrences_for_recurring(inclusive_datetime_range, inclusive_datetime_range)
     else
-      occurrences_for_individuelle_plage(inclusive_datetime_range)
+      occurrences_for_single_day(inclusive_datetime_range)
     end
   end
 
@@ -114,7 +114,7 @@ module RecurrenceConcern
     end
   end
 
-  def occurrences_for_recurring_plage(inclusive_date_range, inclusive_datetime_range)
+  def occurrences_for_recurring(inclusive_date_range, inclusive_datetime_range)
     min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
     occurrences = []
     occurrences += compute_occurrences_for(recurrence.starting(starts_at).until(min_until), (end_time - start_time).to_i.seconds, inclusive_datetime_range)
@@ -124,12 +124,12 @@ module RecurrenceConcern
     occurrences.sort
   end
 
-  def occurrences_for_individuelle_plage(inclusive_datetime_range)
+  def occurrences_for_single_day(inclusive_datetime_range)
     occurrences = []
     if event_in_range?(starts_at, ends_at, inclusive_datetime_range)
       occurrences << Recurrence::Occurrence.new(starts_at:, ends_at:)
     end
-    if respond_to?(:secondary_starts_at) && secondary_starts_at && event_in_range?(secondary_starts_at, secondary_ends_at, inclusive_datetime_range)
+    if secondary_times? && event_in_range?(secondary_starts_at, secondary_ends_at, inclusive_datetime_range)
       occurrences << Recurrence::Occurrence.new(starts_at: secondary_starts_at, ends_at: secondary_ends_at)
     end
     occurrences
@@ -162,6 +162,10 @@ module RecurrenceConcern
   end
 
   private
+
+  def secondary_times?
+    try(:secondary_start_time) && try(:secondary_end_time)
+  end
 
   def event_in_range?(event_starts_at, event_ends_at, range)
     (event_starts_at..event_ends_at).overlap?(range)
