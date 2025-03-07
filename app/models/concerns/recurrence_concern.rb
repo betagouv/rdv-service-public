@@ -98,7 +98,7 @@ module RecurrenceConcern
     if recurring?
       occurrences_for_recurring(inclusive_datetime_range, inclusive_datetime_range)
     else
-      occurrences_for_single_day(inclusive_datetime_range)
+      occurrences_for_exceptionnelle(inclusive_datetime_range)
     end
   end
 
@@ -146,7 +146,7 @@ module RecurrenceConcern
     occurrences.sort
   end
 
-  def occurrences_for_single_day(inclusive_datetime_range)
+  def occurrences_for_exceptionnelle(inclusive_datetime_range)
     occurrences = []
     occurrences << single_occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
     occurrences << single_occurrence_in_range(secondary_starts_at, secondary_ends_at, inclusive_datetime_range) if secondary_times?
