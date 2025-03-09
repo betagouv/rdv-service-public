@@ -102,18 +102,6 @@ module RecurrenceConcern
     end
   end
 
-  def compute_occurrences_for(montrose_recurrence, duration, inclusive_datetime_range)
-    if starts_at <= inclusive_datetime_range.begin
-      montrose_recurrence = montrose_recurrence.fast_forward(inclusive_datetime_range.begin)
-    end
-
-    montrose_recurrence.lazy.each_with_object([]) do |occurrence_starts_at, memo|
-      if event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
-        memo << Recurrence::Occurrence.new(starts_at: occurrence_starts_at, ends_at: occurrence_starts_at + duration)
-      end
-    end
-  end
-
   def human_time_range
     [human_time(starts_at), human_time(ends_at)].join("-")
   end
@@ -159,6 +147,18 @@ module RecurrenceConcern
 
   def single_occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
     Recurrence::Occurrence.new(starts_at:, ends_at:) if event_in_range?(starts_at, ends_at, inclusive_datetime_range)
+  end
+
+  def compute_occurrences_for(montrose_recurrence, duration, inclusive_datetime_range)
+    if starts_at <= inclusive_datetime_range.begin
+      montrose_recurrence = montrose_recurrence.fast_forward(inclusive_datetime_range.begin)
+    end
+
+    montrose_recurrence.lazy.each_with_object([]) do |occurrence_starts_at, memo|
+      if event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
+        memo << Recurrence::Occurrence.new(starts_at: occurrence_starts_at, ends_at: occurrence_starts_at + duration)
+      end
+    end
   end
 
   def event_in_range?(event_starts_at, event_ends_at, range)
