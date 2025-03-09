@@ -88,6 +88,19 @@ module RecurrenceConcern
     recurrence.present?
   end
 
+  def human_time_range
+    [human_time(starts_at), human_time(ends_at)].join("-")
+  end
+
+  def human_time(datetime)
+    minutes = datetime.min.zero? ? nil : datetime.min
+    "#{datetime.hour}h#{minutes}"
+  end
+
+  def secondary_times_present?
+    try(:secondary_start_time) && try(:secondary_end_time)
+  end
+
   def occurrences_for(inclusive_date_range)
     return [] if inclusive_date_range.nil?
 
@@ -100,19 +113,6 @@ module RecurrenceConcern
     else
       occurrences_for_exceptionnelle(inclusive_datetime_range)
     end
-  end
-
-  def human_time_range
-    [human_time(starts_at), human_time(ends_at)].join("-")
-  end
-
-  def human_time(datetime)
-    minutes = datetime.min.zero? ? nil : datetime.min
-    "#{datetime.hour}h#{minutes}"
-  end
-
-  def secondary_times_present?
-    try(:secondary_start_time) && try(:secondary_end_time)
   end
 
   class_methods do
@@ -140,13 +140,9 @@ module RecurrenceConcern
 
   def occurrences_for_exceptionnelle(inclusive_datetime_range)
     occurrences = []
-    occurrences << single_occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
-    occurrences << single_occurrence_in_range(secondary_starts_at, secondary_ends_at, inclusive_datetime_range) if secondary_times_present?
+    occurrences << occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
+    occurrences << occurrence_in_range(secondary_starts_at, secondary_ends_at, inclusive_datetime_range) if secondary_times_present?
     occurrences.compact
-  end
-
-  def single_occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
-    Recurrence::Occurrence.new(starts_at:, ends_at:) if event_in_range?(starts_at, ends_at, inclusive_datetime_range)
   end
 
   def compute_occurrences_for(montrose_recurrence, duration, inclusive_datetime_range)
@@ -155,14 +151,16 @@ module RecurrenceConcern
     end
 
     montrose_recurrence.lazy.each_with_object([]) do |occurrence_starts_at, memo|
-      if event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
-        memo << Recurrence::Occurrence.new(starts_at: occurrence_starts_at, ends_at: occurrence_starts_at + duration)
-      end
+      occurrence = occurrence_in_range(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
+      memo << occurrence if occurrence
     end
   end
 
-  def event_in_range?(event_starts_at, event_ends_at, range)
-    (event_starts_at..event_ends_at).overlap?(range)
+  # @return [nil, Recurrence::Occurrence]
+  def occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
+    if (starts_at..ends_at).overlap?(inclusive_datetime_range)
+      Recurrence::Occurrence.new(starts_at:, ends_at:)
+    end
   end
 
   def set_recurrence_ends_at
