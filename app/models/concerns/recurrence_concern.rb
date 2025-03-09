@@ -81,7 +81,7 @@ module RecurrenceConcern
   end
 
   def exceptionnelle?
-    recurrence.nil?
+    !recurring?
   end
 
   def recurring?
