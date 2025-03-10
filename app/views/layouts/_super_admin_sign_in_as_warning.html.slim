@@ -1,0 +1,8 @@
+- if session[:sign_in_as]
+  .fr-notice.fr-notice--warning
+    .fr-container
+      .fr-notice__body
+        p.fr-mb-0
+          span.fr-notice__title Attention
+          span.fr-notice__desc Vous êtes actuellement connecté en tant que #{current_agent.full_name}.
+          = link_to "Revenir au super admin", super_admins_agents_path, class: "fr-notice__link"

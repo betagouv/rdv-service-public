@@ -6,6 +6,8 @@ module SuperAdmins
       if sign_in_as_allowed?
         sign_out(:user)
         bypass_sign_in(agent, scope: :agent)
+        # On ajoute une clé de session pour savoir qu’un super-admin s’est connecté en tant qu’agent
+        session[:sign_in_as] = true
         redirect_to root_url
       else
         flash[:error] = "Fonctionnalité désactivée sur cet environnement."

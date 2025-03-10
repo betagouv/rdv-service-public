@@ -42,6 +42,9 @@ class Agents::SessionsController < Devise::SessionsController
 
     sign_out(:agent)
 
+    # On efface cette clé de session qui nous permet de savoir qu’un super-admin s’est connecté en tant qu’agent
+    session.delete(:sign_in_as)
+
     # Si on redirige vers l'app cliente, on n'aura pas de render pendant lequel le flash s'affichera, donc on ne l'ajoute pas.
     if @oauth_client_app_post_logout_redirect_url
       # On est obligés de modifier la session ici puisque l'appel à `sign_out(:agent)` a effacé la session

@@ -28,3 +28,5 @@ header.header.bg-white
             li = link_to destroy_agent_session_path, method: :delete, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-logout-box-r-line[aria-hidden="true"]
               | Se déconnecter
+
+  = render "layouts/super_admin_sign_in_as_warning"
