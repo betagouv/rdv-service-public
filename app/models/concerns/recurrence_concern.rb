@@ -149,7 +149,7 @@ module RecurrenceConcern
   def occurrences_for_exceptionnelle(inclusive_datetime_range)
     occurrences = []
     occurrences << occurrence_in_range(starts_at, ends_at, inclusive_datetime_range)
-    occurrences << occurrence_in_range(secondary_starts_at, secondary_ends_at, inclusive_datetime_range) if secondary_times_present?
+    occurrences << occurrence_in_range(secondary_starts_at, secondary_end_time.on(first_day), inclusive_datetime_range) if secondary_times_present?
     occurrences.compact
   end
 
