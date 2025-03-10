@@ -154,7 +154,19 @@ module CreneauxSearch::Calculator
       #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
 
       @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
-      @rdvs_starts_and_ends_at = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).async_pluck(:starts_at, :ends_at)
+
+      rdv_scope = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+
+      # Pour éviter l'erreur :
+      # ActiveRecord::AsynchronousQueryInsideTransactionError:
+      #   Asynchronous queries are not allowed inside transactions
+      # on exécute la requête de manière synchrone si on est dans une transaction,
+      # ce qui arrive pour certaines créations de rendez-vous
+      @rdvs_starts_and_ends_at = if ActiveRecord::Base.connection.open_transactions > 0
+                                   OpenStruct.new(value: rdv_scope.pluck(:starts_at, :ends_at))
+                                 else
+                                   rdv_scope.async_pluck(:starts_at, :ends_at)
+                                 end
     end
 
     def busy_times_from_absences
