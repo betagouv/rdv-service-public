@@ -14,10 +14,12 @@ RSpec.describe TokenInvitable, type: :controller do
     private
 
     def store_invitation_in_session_and_redirect_for_allowlisted_actions
-      store_invitation_in_session_and_redirect
+      return unless params[:invitation_token]
+
       unless params[:action].in?(["fake_action"])
         Sentry.capture_message("Invitation used on unexpected action")
       end
+      store_invitation_in_session_and_redirect
     end
   end
 
@@ -212,6 +214,12 @@ RSpec.describe TokenInvitable, type: :controller do
       expect(request.session[:invitation]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
 
       expect(sentry_events.last.message).to eq "Invitation used on unexpected action"
+    end
+
+    it "doesn't notify Sentry if there is no invitation token" do
+      get :fake_action_not_using_invitation
+
+      expect(sentry_events).to be_empty
     end
   end
 end

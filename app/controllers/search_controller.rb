@@ -2,8 +2,7 @@ class SearchController < ApplicationController
   layout "application_base"
 
   include TokenInvitable
-  # ce before_action est utile uniquement pour search_rdv
-  prepend_before_action :store_invitation_in_session_and_redirect
+  prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
 
   # utilisé par le Pas-de-Calais pour prendre rdv depuis leur site : https://www.pasdecalais.fr/Solidarite-Sante/Enfance-et-famille/La-Protection-Maternelle-et-Infantile/Prendre-rendez-vous-en-ligne-en-MDS-PMI-ou-service-social
   after_action :allow_iframe
@@ -89,6 +88,15 @@ class SearchController < ApplicationController
   end
 
   private
+
+  def store_invitation_in_session_and_redirect_for_allowlisted_actions
+    return unless params[:invitation_token]
+
+    if params[:action] != "search_rdv"
+      Sentry.capture_message("Invitation used on unexpected action")
+    end
+    store_invitation_in_session_and_redirect
+  end
 
   def redirect_to_organisation_search(organisation)
     if organisation
