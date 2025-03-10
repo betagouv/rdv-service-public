@@ -104,7 +104,9 @@ module RecurrenceConcern
   end
 
   def secondary_times_present?
-    try(:secondary_start_time) && try(:secondary_end_time)
+    return false unless respond_to?(:secondary_start_time)
+
+    secondary_start_time.present? && secondary_end_time.present?
   end
 
   def occurrences_for(inclusive_date_range)
