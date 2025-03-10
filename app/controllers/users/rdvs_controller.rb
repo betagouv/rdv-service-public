@@ -9,6 +9,7 @@ class Users::RdvsController < UserAuthController
   layout "application_narrow", only: %i[show]
 
   include TokenInvitable
+  prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
 
   def index
     authorize(Rdv, policy_class: User::RdvPolicy)
@@ -23,14 +24,14 @@ class Users::RdvsController < UserAuthController
     # Nous modifions en mémoire la durée par défaut du motif
     # Cela permet d'effectuer une recherche de créneaux, avec une durée différente
     motif.default_duration_in_min = params[:duration] if params[:duration]
+    @creneau = CreneauxSearch::ForUser.creneau_for(
+      user: current_user,
+      starts_at: Time.zone.parse(rdv_params[:starts_at]),
+      motif: motif,
+      lieu: lieu,
+      geo_search: @geo_search
+    )
     ActiveRecord::Base.transaction do
-      @creneau = CreneauxSearch::ForUser.creneau_for(
-        user: current_user,
-        starts_at: Time.zone.parse(rdv_params[:starts_at]),
-        motif: motif,
-        lieu: lieu,
-        geo_search: @geo_search
-      )
       if @creneau.present?
         @rdv = build_rdv_from_creneau(@creneau)
         authorize(@rdv, policy_class: User::RdvPolicy)
@@ -94,6 +95,15 @@ class Users::RdvsController < UserAuthController
   end
 
   private
+
+  def store_invitation_in_session_and_redirect_for_allowlisted_actions
+    return true if params[:invitation_token].blank?
+
+    unless params[:action].in?(%w[show creneaux])
+      Sentry.capture_message("Invitation used unexpectedly on #{params[:controller]}##{params[:action]}")
+    end
+    store_invitation_in_session_and_redirect
+  end
 
   def build_creneau
     @starts_at = Time.zone.parse(params[:starts_at])
