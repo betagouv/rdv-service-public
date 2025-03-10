@@ -69,11 +69,7 @@ module RecurrenceConcern
   end
 
   def recurrence=(hash)
-    if hash.present?
-      super
-    else
-      self.recurrence = nil # on évite d'avoir un objet Montrose::Recurrence avec une config vide
-    end
+    super(hash.presence) # on évite d'avoir un objet Montrose::Recurrence avec une config vide
   end
 
   def duration
