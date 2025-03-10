@@ -88,6 +88,12 @@ module RecurrenceConcern
     recurrence.present?
   end
 
+  def recurrence_interval
+    return nil if recurrence.nil?
+
+    recurrence.to_hash[:interval] || 1 # when interval is nil, it means 1
+  end
+
   def human_time_range
     [human_time(starts_at), human_time(ends_at)].join("-")
   end
