@@ -4,6 +4,7 @@ class Users::ParticipationsController < UserAuthController
   layout "application_narrow"
 
   include TokenInvitable
+  prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
 
   def index
     @rdv = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).find(params[:rdv_id])
@@ -19,6 +20,13 @@ class Users::ParticipationsController < UserAuthController
   end
 
   private
+
+  def store_invitation_in_session_and_redirect_for_allowlisted_actions
+    return true if params[:invitation_token].blank?
+
+    Sentry.capture_message("Invitation used unexpectedly on #{params[:controller]}##{params[:action]}")
+    store_invitation_in_session_and_redirect
+  end
 
   def set_rdv
     @rdv = Rdv.find(params[:rdv_id])

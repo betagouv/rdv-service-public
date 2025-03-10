@@ -28,10 +28,7 @@ class UserAuthController < ApplicationController
   end
 
   def should_verify_user_name_initials?
-    return false unless current_user.signed_in_with_invitation_token?
-    return false if cookies.encrypted[user_name_initials_cookie_name] == true
-
-    true
+    current_user.signed_in_with_invitation_token? && !cookies.encrypted[user_name_initials_cookie_name]
   end
 
   def verify_user_name_initials
@@ -41,6 +38,8 @@ class UserAuthController < ApplicationController
     redirect_to new_users_user_name_initials_verification_path
   end
 
+  # Cette méthode est appelée quand l'usager vérifie ses initiales au moment d'une première "connexion"
+  # ou s'il fait une action d'écriture sur une participation (dont une création de rdv)
   def set_user_name_initials_verified
     cookies.encrypted[user_name_initials_cookie_name] = {
       value: true, expires: 10.minutes.from_now,
