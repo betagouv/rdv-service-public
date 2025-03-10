@@ -3,6 +3,6 @@
     .fr-container
       .fr-notice__body
         p.fr-mb-0
-          span.fr-notice__title Attention
-          span.fr-notice__desc Vous êtes actuellement connecté en tant que #{current_agent.full_name}.
+          span.fr-notice__title Information importante
+          span.fr-notice__desc Vous êtes connecté en tant que #{current_agent.full_name}. Soyez attentif à vos manipulations.
           = link_to "Revenir au super admin", super_admins_agents_path, class: "fr-notice__link"
