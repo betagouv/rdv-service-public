@@ -22,9 +22,9 @@ class Users::ParticipationsController < UserAuthController
   private
 
   def store_invitation_in_session_and_redirect_for_allowlisted_actions
-    return unless params[:invitation_token]
+    return true if params[:invitation_token].blank?
 
-    Sentry.capture_message("Invitation used on unexpected action")
+    Sentry.capture_message("Invitation used unexpectedly on #{params[:controller]}##{params[:action]}")
     store_invitation_in_session_and_redirect
   end
 

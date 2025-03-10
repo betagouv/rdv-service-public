@@ -14,7 +14,7 @@ RSpec.describe TokenInvitable, type: :controller do
     private
 
     def store_invitation_in_session_and_redirect_for_allowlisted_actions
-      return unless params[:invitation_token]
+      return true if params[:invitation_token].blank?
 
       unless params[:action].in?(["fake_action"])
         Sentry.capture_message("Invitation used unexpectedly on #{params[:controller]}##{params[:action]}")
