@@ -9,7 +9,9 @@ RSpec.describe "User can search for rdvs" do
   end
 
   describe "default" do
-    let!(:territory92) { create(:territory, departement_number: "92") }
+    let!(:territory92) do
+      create(:territory, departement_number: "92", enable_birth_date_field: true)
+    end
     let!(:organisation) { create(:organisation, :with_contact, territory: territory92) }
     let(:service) { create(:service) }
     let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, restriction_for_rdv: nil, service: service) }
