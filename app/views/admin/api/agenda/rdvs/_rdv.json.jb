@@ -3,15 +3,15 @@ json = {
   end: rdv.ends_at.as_json,
 
   id: rdv.id,
-  title: rdv_title_in_agenda(rdv),
+  title: sanitize(rdv_title_in_agenda(rdv)),
   url: admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: params[:agent_id]),
 
   extendedProps: {
-    organisationName: rdv.organisation.name,
+    organisationName: sanitize(rdv.organisation.name),
     status: rdv.status,
     readableStatus: rdv.human_attribute_value(:status),
-    motif: rdv.motif_name,
-    lieu: rdv.public_office? && rdv.lieu&.name,
+    motif: sanitize(rdv.motif_name),
+    lieu: sanitize(rdv.public_office? && rdv.lieu&.name),
     past: rdv.past?,
     duration: rdv.duration_in_min,
   },
