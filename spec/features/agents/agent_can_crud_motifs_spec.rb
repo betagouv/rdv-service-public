@@ -65,7 +65,9 @@ RSpec.describe "Agent can CRUD motifs" do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       find("#tab_resa_en_ligne").click
       check "Autoriser les agents du service Secrétariat à assurer ces RDV"
-      click_on "Enregistrer" and motif.reload
+      click_on "Enregistrer"
+      expect(page).to have_content "Le motif #{motif.name} a été modifié."
+      motif.reload
       expect(motif.for_secretariat).to be_truthy
       expect(motif.follow_up).to be_falsey
 
@@ -73,7 +75,9 @@ RSpec.describe "Agent can CRUD motifs" do
       find("#tab_resa_en_ligne").click
       check "Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent"
       expect(find("#motif_for_secretariat", visible: false)).not_to be_checked
-      click_on "Enregistrer" and motif.reload
+      click_on "Enregistrer"
+      expect(page).to have_content "Le motif #{motif.name} a été modifié."
+      motif.reload
       expect(motif.for_secretariat).to be_falsey
       expect(motif.follow_up).to be_truthy
     end
