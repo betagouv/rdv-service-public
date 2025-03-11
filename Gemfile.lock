@@ -146,8 +146,9 @@ GEM
     attr_required (1.0.1)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
-    axe-core-api (4.3.2)
+    axe-core-api (4.10.2)
       dumb_delegator
+      ostruct
       virtus
     axe-core-rspec (4.3.2)
       axe-core-api
@@ -251,7 +252,7 @@ GEM
       dsfr-assets (~> 1.13)
       html-attributes-utils (~> 1)
       view_component (~> 3)
-    dumb_delegator (1.0.0)
+    dumb_delegator (1.1.0)
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
@@ -756,7 +757,7 @@ DEPENDENCIES
   administrate
   anonymizer!
   auto_strip_attributes
-  axe-core-api (= 4.3.2)
+  axe-core-api
   axe-core-rspec (= 4.3.2)
   axiom-types!
   better_errors

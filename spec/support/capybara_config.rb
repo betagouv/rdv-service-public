@@ -51,8 +51,13 @@ RSpec.configure do |config|
   end
 end
 
-def expect_page_to_be_axe_clean(path)
+def expect_page_to_be_axe_clean(path, excluding_selector: nil)
   visit path
   expect(page).to have_current_path(path)
-  expect(page).to be_axe_clean
+
+  if excluding_selector
+    expect(page).to be_axe_clean.excluding(excluding_selector)
+  else
+    expect(page).to be_axe_clean
+  end
 end
