@@ -1,9 +1,8 @@
 RSpec.describe "agents page", js: true do
-  # Désactivé jusqu'à ce qu'on puisse enelever la bannière qui explique le changement de AgentConnect à ProConnect
-  # it "login is accessible" do
-  #   path = new_agent_session_path
-  #   expect_page_to_be_axe_clean(path)
-  # end
+  it "login is accessible" do
+    path = new_agent_session_path
+    expect_page_to_be_axe_clean(path)
+  end
 
   it "invitation page is accessible" do
     agent = create(:agent)
