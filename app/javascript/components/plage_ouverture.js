@@ -55,9 +55,9 @@ class PlageOuvertureSecondaryTimes {
       // Lorsque le second créneau est activé, on propose par défaut
       // de faire une pause d'une heure avant une après-midi de 4h.
       if(!secondaryTimesStartsAtHours.value && parseInt(primaryTimesEndsAtHours.value) < 15) {
-        secondaryTimesStartsAtHours.value ||= parseInt(primaryTimesEndsAtHours.value) + 1;
+        secondaryTimesStartsAtHours.value ||= String(parseInt(primaryTimesEndsAtHours.value) + 1).padStart(2, "0");
         secondaryTimesStartsAtMinutes.value ||= "00";
-        secondaryTimesEndsAtHours.value ||= parseInt(primaryTimesEndsAtHours.value) + 5;
+        secondaryTimesEndsAtHours.value ||= String(parseInt(primaryTimesEndsAtHours.value) + 5).padStart(2, "0");
         secondaryTimesEndsAtMinutes.value ||= "00";
       }
     }
