@@ -100,13 +100,19 @@ RSpec.describe "Agent can CRUD motifs" do
       choose "Agents de l’organisation, prescripteurs et usagers"
       expect(editable_by_user_checkbox).to be_checked
 
-      expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.to("everyone")
+      expect do
+        click_on "Enregistrer"
+        expect(page).to have_content "Le motif #{motif.name} a été modifié."
+      end.to change { motif.reload.bookable_by }.to("everyone")
 
       # On décoche la case "RDVs modifiables" et on enregistre
       click_on "Modifier"
       find("#tab_resa_en_ligne").click
       uncheck "motif_rdvs_editable_by_user"
-      expect { click_on "Enregistrer" }.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
+      expect do
+        click_on "Enregistrer"
+        expect(page).to have_content "Le motif #{motif.name} a été modifié."
+      end.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
 
       # On revient sur le formulaire, la case est bien décochée
       # et reste décochée lorsque l'on désactive la résa en ligne
@@ -115,7 +121,10 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(editable_by_user_checkbox).not_to be_checked
       choose "Agents de l’organisation", id: "motif_bookable_by_agents"
       expect(editable_by_user_checkbox).not_to be_checked
-      expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.from("everyone").to("agents")
+      expect do
+        click_on "Enregistrer"
+        expect(page).to have_content "Le motif #{motif.name} a été modifié." # On attend le chargement de cette page pour éviter une flaky spec
+      end.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
 
     it "allows changing the motif's location_type to :visio" do
