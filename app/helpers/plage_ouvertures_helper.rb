@@ -29,7 +29,11 @@ module PlageOuverturesHelper
   end
 
   def display_time_range(plage_ouverture)
-    "de #{I18n.l(plage_ouverture.start_time, format: '%H:%M')} à #{I18n.l(plage_ouverture.end_time, format: '%H:%M')}"
+    str = "de #{I18n.l(plage_ouverture.start_time, format: '%H:%M')} à #{I18n.l(plage_ouverture.end_time, format: '%H:%M')}"
+    if plage_ouverture.try(:secondary_start_time) && plage_ouverture.try(:secondary_end_time)
+      str += " et de #{I18n.l(plage_ouverture.secondary_start_time, format: '%H:%M')} à #{I18n.l(plage_ouverture.secondary_end_time, format: '%H:%M')}"
+    end
+    str
   end
 
   def plage_ouverture_occurrence_text(plage_ouverture)

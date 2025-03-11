@@ -813,8 +813,8 @@ RSpec.describe Rdv, type: :model do
 
     context "rdv interval is consecutive to absence interval: Absence for 08h-09h and Rdv for 09h-10h" do
       before do
-        absence.start_time = Tod::TimeOfDay.new(9)
-        absence.start_time = Tod::TimeOfDay.new(10)
+        absence.start_time = Tod::TimeOfDay.new(8)
+        absence.end_time = Tod::TimeOfDay.new(9)
         absence.save!
       end
 
