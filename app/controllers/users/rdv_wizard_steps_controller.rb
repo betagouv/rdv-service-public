@@ -7,7 +7,6 @@ class Users::RdvWizardStepsController < UserAuthController
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
   after_action :allow_iframe
-  before_action :set_step_titles
 
   include TokenInvitable
   prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
@@ -57,12 +56,6 @@ class Users::RdvWizardStepsController < UserAuthController
     idx = current_step_index + 2 # steps start at 1 + increment
     idx += 1 if current_step_index.zero? && current_user.signed_in_with_invitation_token? # we skip the step 2 in the context of an invitation
     idx
-  end
-
-  def set_step_titles
-    @step_titles = (0..3).map do |idx|
-      I18n.t("users.rdv_wizard_steps.step#{idx}.title") unless idx == 2 && current_user.signed_in_with_invitation_token?
-    end.compact
   end
 
   def current_step_index
