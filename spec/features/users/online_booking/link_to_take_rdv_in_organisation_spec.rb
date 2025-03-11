@@ -3,7 +3,9 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
   around { |example| perform_enqueued_jobs { example.run } }
 
-  let!(:territory) { create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER) }
+  let!(:territory) do
+    create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER, enable_birth_date_field: true)
+  end
   let!(:organisation_a) { create(:organisation, territory: territory, external_id: "123") }
   let!(:organisation_b) { create(:organisation, territory: territory, external_id: "456") }
 
