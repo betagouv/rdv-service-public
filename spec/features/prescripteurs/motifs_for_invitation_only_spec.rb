@@ -21,7 +21,10 @@ RSpec.describe "motifs for invitation only" do
       choose("Agents de l’organisation et prescripteurs")
       expect(page).to have_field("Délai minimum avant le RDV", visible: :visible)
 
-      expect { click_button("Enregistrer") }.to change { motif.reload.bookable_by }.to("agents_and_prescripteurs")
+      expect do
+        click_button("Enregistrer")
+        expect(page).to have_content("Le motif Accompagnement individuel a été modifié.")
+      end.to change { motif.reload.bookable_by }.to("agents_and_prescripteurs")
     end
   end
 
