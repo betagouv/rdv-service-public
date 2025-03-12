@@ -7,6 +7,8 @@ class Users::RdvWizardStepsController < UserAuthController
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
   after_action :allow_iframe
+  before_action :set_current_step_index
+  before_action :set_max_step_index
 
   include TokenInvitable
   prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
@@ -28,7 +30,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv = @rdv_wizard.rdv
     skip_authorization
     if @rdv_wizard.valid? && @rdv_wizard.user.benign_errors.blank? && @rdv_wizard.save
-      redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_index))
+      redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_number))
     else
       render current_step
     end
@@ -43,23 +45,33 @@ class Users::RdvWizardStepsController < UserAuthController
     store_invitation_in_session_and_redirect
   end
 
+  def steps
+    if current_user.signed_in_with_invitation_token?
+      UserRdvWizard::INVITATION_STEPS
+    else
+      UserRdvWizard::STEPS
+    end
+  end
+
   def current_step
-    return UserRdvWizard::STEPS.first if params[:step].blank?
+    return steps.first if params[:step].blank?
 
     step = "step#{params[:step]}"
-    raise "Invalid step: #{step.inspect}" unless step.in?(UserRdvWizard::STEPS)
+    raise "Invalid step: #{step.inspect}" unless step.in?(steps)
 
     step
   end
 
-  def next_step_index
-    idx = current_step_index + 2 # steps start at 1 + increment
-    idx += 1 if current_step_index.zero? && current_user.signed_in_with_invitation_token? # we skip the step 2 in the context of an invitation
-    idx
+  def next_step_number
+    steps[steps.index(current_step) + 1].last
   end
 
-  def current_step_index
-    UserRdvWizard::STEPS.index(current_step)
+  def set_current_step_index
+    @current_step_index = steps.index(current_step) + 2
+  end
+
+  def set_max_step_index
+    @max_step_index = steps.size + 1
   end
 
   def rdv_wizard_for(current_user, request_params)
