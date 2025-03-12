@@ -1,0 +1,60 @@
+- content_for :title do
+  = settings_icon(class: "fr-mr-1w")
+  | Paramètres
+
+.fr-grid-row.fr-mt-4w
+  .fr-col-12.d-flex.justify-content-between.align-items-center
+    h2
+      = icon("fr-icon-user-fill",class: "fr-mr-1w")
+      | Agents
+
+    = link_to "Gérer les agents", admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--secondary"
+
+.card
+  .card-header
+    h4 Administrateurs
+  .card-body
+    ul
+      - current_organisation.agent_roles.where(access_level: "admin").each do |admin|
+        li= admin.agent.full_name
+
+.card
+  .card-header
+    h4 Agents basiques
+  .card-body
+    - basic_agents = current_organisation.agent_roles.where(access_level: "basic")
+    - if basic_agents.count > 10
+      | Vous avez #{basic_agents.count} agents
+    - else
+      ul
+        - basic_agents.each do |role|
+          li= role.agent.full_name
+
+.fr-grid-row.fr-mt-4w
+  .fr-col-12.d-flex.justify-content-between.align-items-center
+    h2
+      = motif_icon(class: "fr-mr-1w")
+      | Motifs
+
+    = link_to "Gérer les motifs", admin_organisation_motifs_path(current_organisation), class: "fr-btn fr-btn--secondary"
+
+.card
+  .card-body
+    p Vous avez 11 motifs
+
+.fr-grid-row.fr-mt-4w
+  .fr-col-12.d-flex.justify-content-between.align-items-center
+    h2
+      = lieu_icon(class: "fr-mr-1w")
+      | Lieux
+
+    = link_to "Gérer les lieux", admin_organisation_lieux_path(current_organisation), class: "fr-btn fr-btn--secondary"
+
+- lieux = current_organisation.lieux.enabled
+p Vous avez #{lieux.count} lieux pour accueillir du public
+- lieux.each do |lieu|
+  = render "common/tuile", title: lieu.name, path: edit_admin_organisation_lieu_path(current_organisation, lieu),  description: lieu.address
+  br
+
+br.my-4w.py-4w
+br.my-4w.py-4w
