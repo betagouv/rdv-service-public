@@ -13,15 +13,14 @@ module UserRdvWizard
     def initialize(user, attributes)
       @user = user
       @attributes = attributes.to_h.symbolize_keys
-      rdv_defaults = { user_ids: [user&.id] }
       if attributes[:rdv_collectif_id].present?
         @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(attributes[:rdv_collectif_id])
       else
-        @rdv = Rdv.new(
-          rdv_defaults
-            .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
-        )
+        @rdv = Rdv.new({
+          user_ids: [user&.id],
+        }.merge(@attributes.slice(:starts_at, :user_ids, :motif_id)))
         @rdv.duration_in_min = @attributes[:duration]&.to_i || @rdv.motif&.default_duration_in_min
+        @rdv.organisation_id = @rdv.motif.organisation_id
       end
     end
 
