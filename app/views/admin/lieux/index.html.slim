@@ -1,7 +1,8 @@
-- content_for(:menu_item) { "menu-lieux" }
-
 - content_for :title do
-  | Vos lieux de consultation
+  | Lieux
+
+= render "admin/organisations/configurations/fil_ariane", current_page_title: content_for(:title)
+- content_for(:menu_item) { "menu-settings" }
 
 - if @lieux_policy.create?
   - content_for :breadcrumb do

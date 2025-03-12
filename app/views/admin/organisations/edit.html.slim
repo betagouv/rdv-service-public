@@ -1,7 +1,9 @@
-- content_for(:menu_item) { "menu-organisation" }
+= render "admin/organisations/configurations/fil_ariane", current_page_title: "Informations de contact"
+
+- content_for(:menu_item) { "menu-settings" }
 
 - content_for :title do
-  | Modifier l'organisation
+  | Modifier les informations de contact
 
 .row.justify-content-center
   .col-md-6

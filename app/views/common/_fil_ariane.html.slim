@@ -1,0 +1,13 @@
+/# locals: (titles_and_paths:, current_page_title:)
+
+/ On a ajouté des .fr-mb-0.fr-ml-2w ici
+nav.fr-breadcrumb.fr-mb-0.fr-ml-2w[role="navigation" aria-label="vous êtes ici :"]
+  button.fr-breadcrumb__button[aria-expanded="false" aria-controls="breadcrumb-1"] Voir le fil d’Ariane
+  .fr-collapse#breadcrumb-1
+    ol.fr-breadcrumb__list
+      - titles_and_paths.each do |title, path|
+        li
+          = link_to(title, path, class: "fr-breadcrumb__link")
+      li
+        a.fr-breadcrumb__link[aria-current="page"]
+          = current_page_title

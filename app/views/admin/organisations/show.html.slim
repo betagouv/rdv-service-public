@@ -1,8 +1,10 @@
-- content_for(:menu_item) { "menu-organisation" }
+= render "admin/organisations/configurations/fil_ariane", current_page_title: "Informations de contact"
 
 - content_for :title do
-  | Votre organisation
+  | Informations de contact
 
+p
+  | Ces informations seront affichées aux usagers qui prennent rendez-vous avec votre organisation.
 .row.justify-content-center
   .col-md-12.col-lg-8
     .card

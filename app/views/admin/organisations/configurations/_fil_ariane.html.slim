@@ -1,0 +1,6 @@
+/# locals: (current_page_title:)
+- titles_and_paths = [["Accueil", root_path], ["Configuration", admin_organisation_configuration_path(current_organisation)]]
+
+/ TODO: ne pas utiliser ce partial pour les pages qui peuvent être utilisées hors configuration (motifs et lieux)
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths: titles_and_paths, current_page_title: current_page_title

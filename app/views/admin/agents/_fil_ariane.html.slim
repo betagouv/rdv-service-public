@@ -1,0 +1,11 @@
+/# locals: (current_page_title:)
+
+ruby:
+  titles_and_paths = [
+    ["Accueil", root_path],
+    ["Configuration", admin_organisation_configuration_path(current_organisation)],
+    ["Agents", admin_organisation_agents_path(current_organisation)],
+  ]
+
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths: titles_and_paths, current_page_title: current_page_title
