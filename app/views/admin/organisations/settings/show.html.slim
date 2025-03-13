@@ -9,7 +9,7 @@
   | Configuration
 
 .fr-grid-row.fr-mt-4w
-  .fr-col-12.fr-col-md-6.fr-mb-2w
+  .fr-col-12.fr-col-md-4.fr-mb-2w
 
     .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
       .fr-tile__body
@@ -24,7 +24,7 @@
             - if current_organisation.agents.count > 3
               = " et #{current_organisation.agents.count - 3} autres"
 
-  .fr-col-6.fr-mb-2w
+  .fr-col-4.fr-mb-2w
 
     .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
       .fr-tile__body
@@ -40,7 +40,7 @@
             - if motif_names.count > 3
               = " et #{motif_names.count - 3} autres"
 
-  .fr-col-6.fr-mb-2w
+  .fr-col-4.fr-mb-2w
 
     .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
       .fr-tile__body
@@ -53,9 +53,9 @@
             / TODO: prévoir les différents états ici
             = current_organisation.lieux.limit(3).map(&:name).uniq.join(", ")
 
-  .fr-col-6.fr-mb-2w
+  .fr-col-4.fr-mb-2w
     = render "common/tuile", title: "Information de contact", path: admin_organisation_path(current_organisation),  description: "contact@mairie-montreuil.fr  061122334455"
-  .fr-col-6.fr-mb-2w
+  .fr-col-4.fr-mb-2w
     = render "common/tuile", title: "Réservation en ligne", path: admin_organisation_online_booking_path(current_organisation),  description: "La réservation en ligne n'est pas encore activée"
 
 br.fr-my-2w
