@@ -24,7 +24,7 @@ class Admin::OrganisationsController < AgentAuthController
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
 
     if @organisation.update(organisation_params)
-      flash[:success] = "L’organisation a été modifiée."
+      flash[:success] = "Les informations de contact ont été modifiées"
       redirect_to admin_organisation_path(@organisation)
     else
       render :edit
