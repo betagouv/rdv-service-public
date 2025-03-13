@@ -242,7 +242,7 @@ group :test do
   # Accessibility
 
   # Axe API utility methods
-  gem "axe-core-api", "4.3.2" # Fixed to 4.3.2 because recent versions of axe are more strict
+  gem "axe-core-api"
   # RSpec custom matchers for Axe
   gem "axe-core-rspec", "4.3.2"
 
