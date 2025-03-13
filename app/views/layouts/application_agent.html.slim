@@ -13,6 +13,8 @@ html lang="fr"
       main.content-page[style="flex-grow: 1;"]
         .content
           .fr-mx-2w= render "layouts/flash_dsfr"
+          .fr-m-2w= content_for :fil_ariane
+
           .container-fluid
             - if content_for :title
               .page-title-box

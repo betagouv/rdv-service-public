@@ -1,7 +1,12 @@
-- content_for(:menu_item) { "menu-motifs" }
+- content_for :fil_ariane do
+  = link_to("Accueil", "/")
+  = " > "
+  = link_to("Configuration", admin_organisation_configuration_path(current_organisation))
+  = " > "
+  = "Motifs de rendez-vous"
 
 - content_for :title do
-  | Motifs de l'organisation
+  | Motifs de rendez-vous
 
 - if agent_can_create_motif?
   - content_for :breadcrumb do

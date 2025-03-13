@@ -1,8 +1,15 @@
-- content_for(:menu_item) { "menu-organisation" }
+- content_for :fil_ariane do
+  = link_to("Accueil", "/")
+  = " > "
+  = link_to("Configuration", admin_organisation_configuration_path(current_organisation))
+  = " > "
+  = "Informations de contact"
 
 - content_for :title do
-  | Votre organisation
+  | Informations de contact
 
+p
+  | Ces informations seront affichées aux usagers qui prennent rendez-vous avec votre organisation.
 .row.justify-content-center
   .col-md-12.col-lg-8
     .card

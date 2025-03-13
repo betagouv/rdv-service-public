@@ -83,16 +83,9 @@ nav.left-side-menu-wrapper
 
         - if current_agent_role.admin?
           li
-            a[
-              data-toggle="collapse"
-              href=".left-submenu-settings"
-              aria-expanded=(menu_top_level_item == "settings" ? "true" : "false")
-              class="side-menu__item"
-            ]
-              .d-flex.justify-content-between
-                div
-                  span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-                  | Configuration
+            = active_link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item"
+              span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
+              | Configuration
         li
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
             span.fr-icon-question-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]

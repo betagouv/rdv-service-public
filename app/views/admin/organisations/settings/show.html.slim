@@ -1,20 +1,62 @@
-- content_for(:menu_item) { "menu-online-booking" }
+- content_for :fil_ariane do
+  = link_to("Accueil", "/")
+  = " > Configuration"
+  - content_for(:menu_item) { "menu-online-booking" }
 
 - content_for :title do
   = settings_icon(class: "fr-mr-1w")
   | Configuration
 
 .fr-grid-row.fr-mt-4w
+  .fr-col-12.fr-col-md-6.fr-mb-2w
+
+    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
+            = link_to(admin_organisation_agents_path(current_organisation)) do
+              = icon("fr-icon-user-fill",class: "fr-mr-1w")
+              | Agents
+          p.fr-tile__desc
+            / TODO: prévoir les différents états ici
+            = current_organisation.agents.limit(3).map(&:full_name).join(", ")
+            - if current_organisation.agents.count > 3
+              = " et #{current_organisation.agents.count - 3} autres"
+
   .fr-col-6.fr-mb-2w
-    = render "common/tuile", title: "Agents", path: "#",  description: "1 admin et 5 agents basiques"
+
+    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
+            = link_to(admin_organisation_motifs_path(current_organisation)) do
+              = motif_icon(class: "fr-mr-1w")
+              | Motifs de rendez-vous
+          p.fr-tile__desc
+            / TODO: prévoir les différents états ici
+            - motif_names = current_organisation.motifs.map(&:name).uniq
+            = motif_names[0..2].join(", ")
+            - if motif_names.count > 3
+              = " et #{motif_names.count - 3} autres"
+
   .fr-col-6.fr-mb-2w
-    = render "common/tuile", title: "Motifs", path: "#",  description: "3 motifs"
+
+    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
+            = link_to(admin_organisation_lieux_path(current_organisation)) do
+              = lieu_icon(class: "fr-mr-1w")
+              | Lieux
+          p.fr-tile__desc
+            / TODO: prévoir les différents états ici
+            = current_organisation.lieux.limit(3).map(&:name).uniq.join(", ")
+
+
   .fr-col-6.fr-mb-2w
-    = render "common/tuile", title: "Lieux", path: "#",  description: "Mairie de Montreuil", details: "3 rue de la république, 93000 Montreuil"
+    = render "common/tuile", title: "Information de contact", path: admin_organisation_path(current_organisation),  description: "contact@mairie-montreuil.fr  061122334455"
   .fr-col-6.fr-mb-2w
-    = render "common/tuile", title: "Information de contact", path: "#",  description: "contact@mairie-montreuil.fr  061122334455"
-  .fr-col-6.fr-mb-2w
-    = render "common/tuile", title: "Réservation en ligne", path: "#",  description: "contact@mairie-montreuil.fr  061122334455"
+    = render "common/tuile", title: "Réservation en ligne", path: admin_organisation_online_booking_path(current_organisation),  description: "La réservation en ligne n'est pas encore activée"
 
 br.fr-my-2w
 br.fr-my-2w
