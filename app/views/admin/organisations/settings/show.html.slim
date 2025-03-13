@@ -1,7 +1,8 @@
 - content_for :fil_ariane do
-  = link_to("Accueil", "/")
-  = " > Configuration"
-  - content_for(:menu_item) { "menu-online-booking" }
+  = render "common/fil_ariane", titles_and_paths: [["Accueil", "/"]], current_page_title: "Configuration"
+  /= link_to("Accueil", "/")
+  /= " > Configuration"
+  /- content_for(:menu_item) { "menu-online-booking" }
 
 - content_for :title do
   = settings_icon(class: "fr-mr-1w")
@@ -51,7 +52,6 @@
           p.fr-tile__desc
             / TODO: prévoir les différents états ici
             = current_organisation.lieux.limit(3).map(&:name).uniq.join(", ")
-
 
   .fr-col-6.fr-mb-2w
     = render "common/tuile", title: "Information de contact", path: admin_organisation_path(current_organisation),  description: "contact@mairie-montreuil.fr  061122334455"
