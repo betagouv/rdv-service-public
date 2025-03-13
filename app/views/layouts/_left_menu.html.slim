@@ -92,22 +92,7 @@ nav.left-side-menu-wrapper
               .d-flex.justify-content-between
                 div
                   span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-                  | Paramètres
-                div
-                  i.fa.fa-angle-down.menu-arrow.mt-1
-            ul.list-unstyled.ml-4.left-submenu-settings.collapse[
-              class=("show" if menu_top_level_item == "settings")
-            ]
-              li
-                = active_link_to "Agents", admin_organisation_agents_path(current_organisation), active: [["admin/agents", "admin/invitations"], []], class: "side-menu__item side-menu__item--small"
-              li
-                = active_link_to "Motifs", admin_organisation_motifs_path(current_organisation), class: "side-menu__item side-menu__item--small"
-              li
-                = active_link_to "Lieux", admin_organisation_lieux_path(current_organisation), class: "side-menu__item side-menu__item--small"
-              li
-                = active_link_to "Informations de contact", admin_organisation_path(current_organisation), active: :exact, class: "side-menu__item side-menu__item--small"
-              li
-                = active_link_to "Réservation en ligne", admin_organisation_online_booking_path(current_organisation), class: "side-menu__item side-menu__item--small"
+                  | Configuration
         li
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
             span.fr-icon-question-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]

@@ -2,100 +2,19 @@
 
 - content_for :title do
   = settings_icon(class: "fr-mr-1w")
-  | Paramètres
+  | Configuration
 
 .fr-grid-row.fr-mt-4w
-  .fr-col-12.d-flex.justify-content-between.align-items-center
-    h2
-      = icon("fr-icon-user-fill",class: "fr-mr-1w")
-      | Agents
+  .fr-col-6.fr-mb-2w
+    = render "common/tuile", title: "Agents", path: "#",  description: "1 admin et 5 agents basiques"
+  .fr-col-6.fr-mb-2w
+    = render "common/tuile", title: "Motifs", path: "#",  description: "3 motifs"
+  .fr-col-6.fr-mb-2w
+    = render "common/tuile", title: "Lieux", path: "#",  description: "Mairie de Montreuil", details: "3 rue de la république, 93000 Montreuil"
+  .fr-col-6.fr-mb-2w
+    = render "common/tuile", title: "Information de contact", path: "#",  description: "contact@mairie-montreuil.fr  061122334455"
+  .fr-col-6.fr-mb-2w
+    = render "common/tuile", title: "Réservation en ligne", path: "#",  description: "contact@mairie-montreuil.fr  061122334455"
 
-    = link_to "Gérer les agents", admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--secondary"
-
-.card
-  .card-header
-    h4 Administrateurs
-  .card-body
-    ul
-      - current_organisation.agent_roles.where(access_level: "admin").each do |admin|
-        li= admin.agent.full_name
-
-.card
-  .card-header
-    h4 Agents basiques
-  .card-body
-    - basic_agents = current_organisation.agent_roles.where(access_level: "basic")
-    - if basic_agents.count > 10
-      | Vous avez #{basic_agents.count} agents
-    - else
-      ul
-        - basic_agents.each do |role|
-          li= role.agent.full_name
-
-.fr-grid-row.fr-mt-4w
-  .fr-col-12.d-flex.justify-content-between.align-items-center
-    h2
-      = motif_icon(class: "fr-mr-1w")
-      | Motifs
-
-    = link_to "Gérer les motifs", admin_organisation_motifs_path(current_organisation), class: "fr-btn fr-btn--secondary"
-
-.card
-  .card-body
-    p.fr-mb-0 Vous avez 11 motifs
-
-.fr-grid-row.fr-mt-4w
-  .fr-col-12.d-flex.justify-content-between.align-items-center
-    h2
-      = lieu_icon(class: "fr-mr-1w")
-      | Lieux
-
-    = link_to "Gérer les lieux", admin_organisation_lieux_path(current_organisation), class: "fr-btn fr-btn--secondary"
-
-- lieux = current_organisation.lieux.enabled
-p Vous avez #{lieux.count} lieux pour accueillir du public
-- lieux.each do |lieu|
-  = render "common/tuile", title: lieu.name, path: edit_admin_organisation_lieu_path(current_organisation, lieu),  description: lieu.address
-  br
-
-.fr-grid-row.fr-mt-4w
-  .fr-col-12.d-flex.justify-content-between.align-items-center
-    h2
-      | Informations de contact
-
-.card
-  .card-body
-    .fr-grid-row
-      .fr-col-6
-        ul.list-unstyled
-          li.mb-2
-            strong> Nom&nbsp;:
-            | #{@organisation.name}
-          li.mb-2
-            strong> Téléphone&nbsp;:
-            | #{display_value_or_na_placeholder(@organisation.phone_number)}
-          li.mb-2
-            strong> Email&nbsp;:
-            | #{display_value_or_na_placeholder(@organisation.email)}
-      .fr-col-6
-        ul.list-unstyled
-          li.mb-2
-            strong> Site web&nbsp;:
-            | #{display_value_or_na_placeholder(@organisation.website)}
-          li
-            strong> Horaires&nbsp;:
-            | #{display_value_or_na_placeholder(@organisation.horaires)}
-    = link_to "Modifier", edit_admin_organisation_path(@organisation), class: "fr-btn fr-btn--secondary"
-
-.fr-grid-row.fr-mt-4w
-  .fr-col-12.d-flex.justify-content-between.align-items-center
-    h2
-      | Réservation en ligne
-
-    = link_to "Configurer", admin_organisation_online_booking_path(current_organisation), class: "fr-btn fr-btn--secondary"
-.card
-  .card-body.d-flex.justify-content-between.align-items-start
-    p.fr-mb-0 Vous n'avez pas encore de motifs ouverts à la réservation en ligne
-
-br.my-4w.py-4w
-br.my-4w.py-4w
+br.fr-my-2w
+br.fr-my-2w
