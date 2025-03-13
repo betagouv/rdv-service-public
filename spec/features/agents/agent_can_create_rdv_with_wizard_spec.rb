@@ -100,6 +100,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       step2
       step3(:enabled)
       step4
+      expect(page).to have_content("Le rendez-vous a été créé.")
 
       expect(user.rdvs.count).to eq(1)
       rdv = user.rdvs.first
@@ -131,6 +132,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
 
         step3(:enabled)
         step4
+        expect(page).to have_content("Le rendez-vous a été créé.")
 
         expect(user_from_other_organisation.rdvs.count).to eq(1)
         expect(user_from_other_organisation.reload.organisations).to contain_exactly(organisation, other_organisation)
@@ -185,6 +187,8 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         expect(page).to have_content("Reçoit les notifications par email")
         expect(page).to have_content("user_with_notif_email@test.com")
         click_button("Confirmer le RDV")
+        expect(page).to have_content("Le rendez-vous a été créé.")
+
         expect(user_with_notification_email.rdvs.count).to eq(1)
       end
     end
@@ -196,6 +200,8 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       step2
       step3(:single_use)
       step4
+
+      expect(page).to have_content("Le rendez-vous a été créé.")
 
       expect(user.rdvs.count).to eq(1)
       rdv = user.rdvs.first

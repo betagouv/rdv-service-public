@@ -159,9 +159,11 @@ RSpec.describe "prescripteur can create RDV for a user" do
       # Le format du numéro de téléphone n'est pas exactement le même que celui en base
       fill_in "Téléphone", with: "06 11 22 33 44"
 
-      expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1)
-        .and(change(User, :count).by(0))
-        .and(change(UserProfile, :count).by(1))
+      expect do
+        click_on "Confirmer le rendez-vous"
+
+        expect(page).to have_content("Rendez-vous confirmé")
+      end.to change(Rdv, :count).by(1).and(change(User, :count).by(0)).and(change(UserProfile, :count).by(1))
 
       expect(UserProfile.last).to have_attributes(
         user: user,
@@ -190,7 +192,11 @@ RSpec.describe "prescripteur can create RDV for a user" do
         # Le format du numéro de téléphone n'est pas exactement le même que celui en base
         fill_in "Téléphone", with: "06 11 22 33 44"
 
-        expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(UserProfile, :count).by(0))
+        expect do
+          click_on "Confirmer le rendez-vous"
+
+          expect(page).to have_content("Rendez-vous confirmé")
+        end.to change(Rdv, :count).by(1).and(change(UserProfile, :count).by(0))
       end
     end
   end

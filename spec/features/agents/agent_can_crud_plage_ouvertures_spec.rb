@@ -113,6 +113,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
       click_on("La belle plage")
+      expect(page).to have_content("La belle plage")
       accept_confirm do
         click_link("Supprimer")
       end
@@ -127,6 +128,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       check "Suivi bonjour"
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
       click_button "Créer la plage d'ouverture"
+      expect(page).to have_content("Plage d'ouverture créée")
+
       expect(PlageOuverture.last.title).to eq("Accueil")
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
     end
@@ -215,6 +218,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(page).to have_content("Lieu")
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
       click_on "Créer la plage d'ouverture"
+      expect(page).to have_content("Plage d'ouverture créée")
       expect(PlageOuverture.last.motifs).to contain_exactly(motif_1_service_avocat, motif_2_service_avocat)
     end
   end
@@ -240,7 +244,10 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       select "17", from: "plage_ouverture_secondary_end_time_4i"
       select "45", from: "plage_ouverture_secondary_end_time_5i"
 
-      expect { click_on "Créer la plage d'ouverture" }.to change(PlageOuverture, :count).by(1)
+      expect do
+        click_on "Créer la plage d'ouverture"
+        expect(page).to have_content("Plage d'ouverture créée")
+      end.to change(PlageOuverture, :count).by(1)
       expected_attrs = {
         start_time: Tod::TimeOfDay.parse("09:30"),
         end_time: Tod::TimeOfDay.parse("12:00"),
