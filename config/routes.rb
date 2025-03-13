@@ -241,7 +241,7 @@ Rails.application.routes.draw do
         end
         scope module: "organisations" do
           resource :online_booking, only: [:show]
-          resource :configuration, only: [:show], controller: "settings"
+          resource :configuration, only: [:show]
           resources :stats, only: :index do
             collection do
               get :rdvs

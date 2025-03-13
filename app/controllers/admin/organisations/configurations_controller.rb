@@ -1,4 +1,4 @@
-class Admin::Organisations::SettingsController < AgentAuthController
+class Admin::Organisations::ConfigurationsController < AgentAuthController
   before_action :set_organisation
 
   def show

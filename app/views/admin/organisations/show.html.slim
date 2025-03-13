@@ -1,9 +1,4 @@
-- content_for :fil_ariane do
-  = link_to("Accueil", "/")
-  = " > "
-  = link_to("Configuration", admin_organisation_configuration_path(current_organisation))
-  = " > "
-  = "Informations de contact"
+= render "admin/organisations/configurations/fil_ariane", current_page_title: "Informations de contact"
 
 - content_for :title do
   | Informations de contact

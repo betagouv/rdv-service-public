@@ -1,13 +1,4 @@
-- content_for :fil_ariane do
-  .fr-mb-2w
-    - content_for(:menu_item) { "menu-motifs" }
-    = link_to("Accueil", "/")
-    = " > "
-    = link_to("Configuration", admin_organisation_configuration_path(current_organisation))
-    = " > "
-    = "Agents"
-
-- content_for(:menu_item) { "menu-agents" }
+= render "admin/organisations/configurations/fil_ariane", current_page_title: "Agents"
 
 - content_for(:title, "Agents de #{current_organisation.name}")
 
