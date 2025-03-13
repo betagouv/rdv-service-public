@@ -1,7 +1,8 @@
-- content_for(:menu_item) { "menu-agents" }
-
 - content_for :title do
   = t("agents.create_cta")
+
+= render "admin/agents/fil_ariane", current_page_title: content_for(:title)
+- content_for(:menu_item) { "menu-settings" }
 
 .row.justify-content-center
   .col-md-12.col-lg-8
