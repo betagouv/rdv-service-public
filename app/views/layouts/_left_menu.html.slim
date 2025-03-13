@@ -83,7 +83,7 @@ nav.left-side-menu-wrapper
 
         - if current_agent_role.admin?
           li
-            = active_link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item"
+            = link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item #{'active' if menu_top_level_item == 'settings'}"
               span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
               | Configuration
         li

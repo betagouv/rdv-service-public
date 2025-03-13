@@ -1,6 +1,8 @@
 - content_for :fil_ariane do
   = render "common/fil_ariane", titles_and_paths: [["Accueil", "/"]], current_page_title: "Configuration"
 
+- content_for(:menu_item) { "menu-settings" }
+
 - content_for :title do
   = settings_icon(class: "fr-mr-1w")
   | Configuration
