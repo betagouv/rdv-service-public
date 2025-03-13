@@ -42,7 +42,6 @@ RSpec.describe "Agents can be managed by organisation admins" do
         let!(:organisation1) { create(:organisation, territory: territory, verticale: :rdv_aide_numerique) }
 
         it "allows inviting agents on the correct domain" do
-          click_link "Agents"
           click_link "Ajouter un agent", match: :first
           fill_in "Email", with: "jean@paul.com"
           check(pmi.name)
@@ -58,7 +57,6 @@ RSpec.describe "Agents can be managed by organisation admins" do
         let!(:organisation1) { create(:organisation, territory: territory, verticale: :rdv_insertion) }
 
         it "allows inviting agents on the correct domain" do
-          click_link "Agents"
           click_link "Ajouter un agent", match: :first
           fill_in "Email", with: "jean@paul.com"
           check(pmi.name)
@@ -73,7 +71,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
     specify "CRUD on agents" do
       create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation1], invitation_accepted_at: nil)
 
-      click_link "Agents"
+      visit admin_organisation_agents_path(organisation1)
       expect_page_title("Agents de Organisation n°1")
 
       click_link "PATRICK Tony"

@@ -1,7 +1,7 @@
 - content_for :title do
   | Lieux
 
-= render "admin/organisations/configurations/fil_ariane", current_page_title: content_for(:title)
+= render "admin/lieux/fil_ariane"
 - content_for(:menu_item) { "menu-settings" }
 
 - if @lieux_policy.create?

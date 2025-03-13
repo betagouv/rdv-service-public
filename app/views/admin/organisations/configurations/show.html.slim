@@ -1,5 +1,5 @@
 - content_for :fil_ariane do
-  = render "common/fil_ariane", titles_and_paths: [["Accueil", "/"]], current_page_title: "Configuration"
+  = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: "Configuration"
 
 - content_for(:menu_item) { "menu-settings" }
 
@@ -18,7 +18,6 @@
               = icon("fr-icon-user-fill",class: "fr-mr-1w")
               | Agents
           p.fr-tile__desc
-            / TODO: prévoir les différents états ici
             = current_organisation.agents.limit(3).map(&:full_name).join(", ")
             - if current_organisation.agents.count > 3
               = " et #{current_organisation.agents.count - 3} autres"
@@ -33,11 +32,13 @@
               = motif_icon(class: "fr-mr-1w")
               | Motifs de rendez-vous
           p.fr-tile__desc
-            / TODO: prévoir les différents états ici
             - motif_names = current_organisation.motifs.map(&:name).uniq
-            = motif_names[0..2].join(", ")
-            - if motif_names.count > 3
-              = " et #{motif_names.count - 3} autres"
+            - if motif_names.blank?
+              | Aucun motif
+            - else
+              = motif_names[0..2].join(", ")
+              - if motif_names.count > 3
+                = " et #{motif_names.count - 3} autres"
 
   .fr-col-4.fr-mb-2w
 
@@ -49,13 +50,29 @@
               = lieu_icon(class: "fr-mr-1w")
               | Lieux
           p.fr-tile__desc
-            / TODO: prévoir les différents états ici
-            = current_organisation.lieux.limit(3).map(&:name).uniq.join(", ")
+            - if current_organisation.lieux.none?
+              | Aucun lieu
+            - else
+              = current_organisation.lieux.limit(3).map(&:name).join(", ")
+              - if current_organisation.lieux.count > 3
+                = " et #{current_organisation.lieux.count - 3} autres"
 
   .fr-col-4.fr-mb-2w
-    = render "common/tuile", title: "Information de contact", path: admin_organisation_path(current_organisation),  description: "contact@mairie-montreuil.fr  061122334455"
-  .fr-col-4.fr-mb-2w
-    = render "common/tuile", title: "Réservation en ligne", path: admin_organisation_online_booking_path(current_organisation),  description: "La réservation en ligne n'est pas encore activée"
+    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
+            = link_to("Informations de contact", admin_organisation_path(current_organisation))
+          p.fr-tile__desc
+            = [@organisation.phone_number, @organisation.email, @organisation.website].compact.join(" ").presence || "Pas d'informations de contact de définies"
 
+  .fr-col-4.fr-mb-2w
+    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
+            = link_to("Réservation en ligne", admin_organisation_online_booking_path(current_organisation))
+
+/ Un bricolage pour éviter que le footer déborde sur les tuiles
 br.fr-my-2w
 br.fr-my-2w
