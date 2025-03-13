@@ -1,9 +1,6 @@
 module UserRdvWizard
   # cf https://medium.com/@nicolasblanco/developing-a-wizard-or-multi-steps-forms-in-rails-d2f3b7c692ce
 
-  STEPS = %w[step1 step2 step3].freeze
-  INVITATION_STEPS = %w[step1 step3].freeze
-
   class Base
     include ActiveModel::Model
 

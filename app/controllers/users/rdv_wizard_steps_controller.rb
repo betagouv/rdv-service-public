@@ -7,8 +7,6 @@ class Users::RdvWizardStepsController < UserAuthController
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
   after_action :allow_iframe
-  before_action :set_current_step_index
-  before_action :set_max_step_index
 
   include TokenInvitable
   prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
@@ -18,7 +16,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv = @rdv_wizard.rdv
     authorize(@rdv, policy_class: User::RdvPolicy)
     if @rdv_wizard.creneau.present?
-      render current_step
+      render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
     else
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
       redirect_to(prendre_rdv_path(@rdv_wizard.to_query))
@@ -30,9 +28,9 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv = @rdv_wizard.rdv
     skip_authorization
     if @rdv_wizard.valid? && @rdv_wizard.user.benign_errors.blank? && @rdv_wizard.save
-      redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_number))
+      redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step[:number]))
     else
-      render current_step
+      render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
     end
   end
 
@@ -46,36 +44,51 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def steps
-    if current_user.signed_in_with_invitation_token?
-      UserRdvWizard::INVITATION_STEPS
-    else
-      UserRdvWizard::STEPS
-    end
+    steps = {
+      authentification: {}, # cette étape n’est pas gérée par le controller. Sa présence ici sert à la matérialiser dans le stepper
+      step1: {
+        name: "step1",
+        number: 1,
+        title: "Vos informations",
+        next_step: current_user.signed_in_with_invitation_token? ? :step3 : :step2,
+        stepper_index: 2,
+      },
+      step2: {
+        name: "step2",
+        number: 2,
+        title: "Choix de l’usager",
+        next_step: :step3,
+        stepper_index: 3,
+      },
+      step3: {
+        name: "step3",
+        number: 3,
+        title: "Confirmation",
+        stepper_index: current_user.signed_in_with_invitation_token? ? 3 : 4,
+      },
+    }
+
+    # Dans le cas d'une invitation, on passe l’étape 2
+    steps.delete(:step2) if current_user.signed_in_with_invitation_token?
+
+    steps
   end
 
   def current_step
-    return steps.first if params[:step].blank?
+    return steps[:step1] if params[:step].blank?
 
     step = "step#{params[:step]}"
-    raise "Invalid step: #{step.inspect}" unless step.in?(steps)
+    raise "Invalid step: #{step.inspect}" unless steps.key?(step.to_sym)
 
-    step
+    steps[step.to_sym]
   end
 
-  def next_step_number
-    steps[steps.index(current_step) + 1].last
-  end
-
-  def set_current_step_index
-    @current_step_index = steps.index(current_step) + 2
-  end
-
-  def set_max_step_index
-    @max_step_index = steps.size + 1
+  def next_step
+    steps[current_step[:next_step]]
   end
 
   def rdv_wizard_for(current_user, request_params)
-    klass = "UserRdvWizard::#{current_step.camelize}".constantize
+    klass = "UserRdvWizard::#{current_step[:name].camelize}".constantize
     klass.new(current_user, request_params)
   end
 
