@@ -7,5 +7,6 @@ class Admin::Organisations::ConfigurationsController < AgentAuthController
     @agents_scope = current_organisation.agents.active
 
     @motif_names = current_organisation.motifs.active.pluck(:name).uniq
+    @lieu_names = current_organisation.lieux.enabled.pluck(:name)
   end
 end
