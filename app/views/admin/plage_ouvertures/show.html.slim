@@ -36,7 +36,7 @@
             span= @plage_ouverture.title
         div.mt-2.d-flex
           .flex-shrink-0.mr-1.font-weight-bold Répétition&nbsp;:
-          span= @plage_ouverture.recurring? ? "Récurrente" : po_exceptionnelle_tag(@plage_ouverture)
+          span= @plage_ouverture.recurring? ? "Récurrente" : exceptionnelle_tag(@plage_ouverture)
         div.mt-2.d-flex
           .flex-shrink-0.mr-1.font-weight-bold Dates&nbsp;:
           - if @plage_ouverture.recurring?

@@ -72,8 +72,8 @@ module PlageOuverturesHelper
     weekdays[weekday]
   end
 
-  def po_exceptionnelle_tag(plage_ouverture)
-    tag.span("Exceptionnelle", class: "badge badge-info") if plage_ouverture.exceptionnelle?
+  def exceptionnelle_tag(recurrent_record)
+    tag.span("Exceptionnelle", class: "badge badge-info") if recurrent_record.exceptionnelle?
   end
 
   def filter_plage_ouvertures_in_departement_scope(plage_ouvertures)
