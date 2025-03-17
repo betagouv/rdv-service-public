@@ -98,9 +98,9 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_button("Continuer")
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
+        expect(page).to have_content("Participation confirmée")
+        expect(page).to have_content("modifier") # can_change_participants?
       end.to change { rdv.reload.users.count }.from(0).to(1)
-      expect(page).to have_content("Participation confirmée")
-      expect(page).to have_content("modifier") # can_change_participants?
 
       expect_notifications_sent_for(rdv, logged_user, :rdv_created)
       expect_webhooks_for(logged_user)

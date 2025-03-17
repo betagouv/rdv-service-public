@@ -14,6 +14,7 @@ div
   - if @rdv.bookable_by_everyone?
     p= t(".reschedule_online")
     .btn-wrapper
+      / Il y a peut-être un bug ici : il manquerait le lieu_id, qui fait partie des choix de l'usager
       = link_to t(".reschedule_button"), prendre_rdv_url(\
         departement: @rdv.organisation.departement_number, \
         motif_name_with_location_type: @rdv.motif.name_with_location_type, \

@@ -10,6 +10,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def create!
+    creneau # On précharge le créneau en dehors de la transaction pour éviter les erreurs  ActiveRecord::AsynchronousQueryInsideTransactionError lors des requêtes asynchrones
     ActiveRecord::Base.transaction do
       find_or_create_user
 

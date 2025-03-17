@@ -10,8 +10,9 @@ RSpec.describe "Agent can CRUD motifs" do
 
   it "works" do
     visit authenticated_agent_root_path
+    click_link "Configuration"
     click_link "Motifs"
-    expect_page_title("Motifs de l'organisation")
+    expect_page_title("Motifs de rendez-vous")
     click_link motif.name
 
     expect(page).to have_content(motif.name)
@@ -23,10 +24,10 @@ RSpec.describe "Agent can CRUD motifs" do
 
     expect(page).to have_content("Suivi bonsoir (PMI)")
     click_link("Archiver")
-    expect(page).to have_content("Suivi bonsoir (PMI)\n(archivé)")
+    expect(page).to have_content("Suivi bonsoir (PMI) (archivé)")
     click_link("Supprimer")
 
-    expect_page_title("Motifs de l'organisation")
+    expect_page_title("Motifs de rendez-vous")
     expect(page).to have_content("Vous n'avez pas encore créé de motif.")
     click_link "Créer un motif", match: :first
 
@@ -38,7 +39,7 @@ RSpec.describe "Agent can CRUD motifs" do
     fill_in "Couleur associée", with: "#000"
     click_button "Créer le motif"
 
-    expect_page_title("Motifs de l'organisation")
+    expect_page_title("Motifs de rendez-vous")
     expect(page).to have_content("Suivi bonne nuit")
   end
 
@@ -65,7 +66,9 @@ RSpec.describe "Agent can CRUD motifs" do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       find("#tab_resa_en_ligne").click
       check "Autoriser les agents du service Secrétariat à assurer ces RDV"
-      click_on "Enregistrer" and motif.reload
+      click_on "Enregistrer"
+      expect(page).to have_content "Le motif #{motif.name} a été modifié."
+      motif.reload
       expect(motif.for_secretariat).to be_truthy
       expect(motif.follow_up).to be_falsey
 
@@ -73,7 +76,9 @@ RSpec.describe "Agent can CRUD motifs" do
       find("#tab_resa_en_ligne").click
       check "Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent"
       expect(find("#motif_for_secretariat", visible: false)).not_to be_checked
-      click_on "Enregistrer" and motif.reload
+      click_on "Enregistrer"
+      expect(page).to have_content "Le motif #{motif.name} a été modifié."
+      motif.reload
       expect(motif.for_secretariat).to be_falsey
       expect(motif.follow_up).to be_truthy
     end
@@ -96,13 +101,19 @@ RSpec.describe "Agent can CRUD motifs" do
       choose "Agents de l’organisation, prescripteurs et usagers"
       expect(editable_by_user_checkbox).to be_checked
 
-      expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.to("everyone")
+      expect do
+        click_on "Enregistrer"
+        expect(page).to have_content "Le motif #{motif.name} a été modifié."
+      end.to change { motif.reload.bookable_by }.to("everyone")
 
       # On décoche la case "RDVs modifiables" et on enregistre
       click_on "Modifier"
       find("#tab_resa_en_ligne").click
       uncheck "motif_rdvs_editable_by_user"
-      expect { click_on "Enregistrer" }.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
+      expect do
+        click_on "Enregistrer"
+        expect(page).to have_content "Le motif #{motif.name} a été modifié."
+      end.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
 
       # On revient sur le formulaire, la case est bien décochée
       # et reste décochée lorsque l'on désactive la résa en ligne
@@ -111,7 +122,10 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(editable_by_user_checkbox).not_to be_checked
       choose "Agents de l’organisation", id: "motif_bookable_by_agents"
       expect(editable_by_user_checkbox).not_to be_checked
-      expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.from("everyone").to("agents")
+      expect do
+        click_on "Enregistrer"
+        expect(page).to have_content "Le motif #{motif.name} a été modifié." # On attend le chargement de cette page pour éviter une flaky spec
+      end.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
 
     it "allows changing the motif's location_type to :visio" do

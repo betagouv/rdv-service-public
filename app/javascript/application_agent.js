@@ -25,7 +25,7 @@ import { PlanningAgentSelect } from './components/planning-agent-select'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { DestroyButton } from './components/destroy-button'
 import { Tooltips } from './components/tooltips'
-import { PlageOuverture } from './components/plage_ouverture.js'
+import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
 import {CheckAll, UnCheckAll} from './components/check-all'
 import './components/motifs_table'
 import './components/calendar'
@@ -109,7 +109,8 @@ $(document).on('turbolinks:load', function() {
 
   new DestroyButton()
 
-  new PlageOuverture()
+  new PlageOuvertureLieuSelection()
+  new PlageOuvertureSecondaryTimes()
 
   new CheckAll()
   new UnCheckAll()

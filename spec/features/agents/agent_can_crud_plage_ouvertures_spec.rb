@@ -113,6 +113,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
       click_on("La belle plage")
+      expect(page).to have_content("La belle plage")
       accept_confirm do
         click_link("Supprimer")
       end
@@ -127,6 +128,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       check "Suivi bonjour"
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
       click_button "Créer la plage d'ouverture"
+      expect(page).to have_content("Plage d'ouverture créée")
+
       expect(PlageOuverture.last.title).to eq("Accueil")
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
     end
@@ -198,6 +201,18 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     end
   end
 
+  describe "detecting motif duration overflow" do
+    before do
+      plage_ouverture.update!(start_time: "09:00", end_time: "10:30") # plage de 1h30
+      motif.update!(default_duration_in_min: 120)                     # motif de 2h
+    end
+
+    it "works" do
+      visit admin_organisation_plage_ouverture_path(organisation, plage_ouverture)
+      expect(page).to have_content("Suivi bonjour déborde de 30 minutes. Il ne sera pas possible de prendre rendez-vous pour ce motif en l'état.")
+    end
+  end
+
   describe "selecting motifs for a plage" do
     let!(:avocat) { create(:service, name: "Avocat") }
     let!(:notaire) { create(:service, name: "Notaire") }
@@ -215,25 +230,43 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(page).to have_content("Lieu")
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
       click_on "Créer la plage d'ouverture"
+      expect(page).to have_content("Plage d'ouverture créée")
       expect(PlageOuverture.last.motifs).to contain_exactly(motif_1_service_avocat, motif_2_service_avocat)
     end
   end
 
   describe "selecting a time range" do
-    it "works" do
+    it "works", js: true do
       visit new_admin_organisation_agent_plage_ouverture_path(organisation, agent)
       check motif.name
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
 
-      # Set start time at 10:30
-      select "10", from: "plage_ouverture_start_time_4i"
+      # Set start time at 09:30
+      select "09", from: "plage_ouverture_start_time_4i"
       select "30", from: "plage_ouverture_start_time_5i"
-      # Set start time at 13:45
-      select "13", from: "plage_ouverture_end_time_4i"
-      select "45", from: "plage_ouverture_end_time_5i"
+      # Set start time at 12:00
+      select "12", from: "plage_ouverture_end_time_4i"
+      select "00", from: "plage_ouverture_end_time_5i"
 
-      expect { click_on "Créer la plage d'ouverture" }.to change(PlageOuverture, :count).by(1)
-      expect(PlageOuverture.last).to have_attributes(start_time: Tod::TimeOfDay.new(10, 30), end_time: Tod::TimeOfDay.new(13, 45))
+      click_on "Ajouter un second créneau à la plage"
+      # Set secondary start time at 09:30
+      select "14", from: "plage_ouverture_secondary_start_time_4i"
+      select "30", from: "plage_ouverture_secondary_start_time_5i"
+      # Set start time at 12:00
+      select "17", from: "plage_ouverture_secondary_end_time_4i"
+      select "45", from: "plage_ouverture_secondary_end_time_5i"
+
+      expect do
+        click_on "Créer la plage d'ouverture"
+        expect(page).to have_content("Plage d'ouverture créée")
+      end.to change(PlageOuverture, :count).by(1)
+      expected_attrs = {
+        start_time: Tod::TimeOfDay.parse("09:30"),
+        end_time: Tod::TimeOfDay.parse("12:00"),
+        secondary_start_time: Tod::TimeOfDay.parse("14:30"),
+        secondary_end_time: Tod::TimeOfDay.parse("17:45"),
+      }
+      expect(PlageOuverture.last).to have_attributes(expected_attrs)
     end
   end
 end

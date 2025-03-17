@@ -68,6 +68,7 @@ RSpec.describe "OAuth provider", js: true do
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
+    expect(page).to have_content("Connexion réussie")
 
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"

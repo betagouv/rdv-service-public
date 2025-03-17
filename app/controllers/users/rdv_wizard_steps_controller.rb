@@ -10,6 +10,7 @@ class Users::RdvWizardStepsController < UserAuthController
   before_action :set_step_titles
 
   include TokenInvitable
+  prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
 
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
@@ -35,6 +36,13 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   protected
+
+  def store_invitation_in_session_and_redirect_for_allowlisted_actions
+    return true if params[:invitation_token].blank?
+
+    Sentry.capture_message("Invitation used unexpectedly on #{params[:controller]}##{params[:action]}")
+    store_invitation_in_session_and_redirect
+  end
 
   def current_step
     return UserRdvWizard::STEPS.first if params[:step].blank?

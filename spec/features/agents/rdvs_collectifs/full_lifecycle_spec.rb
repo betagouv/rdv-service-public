@@ -56,6 +56,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     add_user(user1)
     add_new_user
     click_button "Enregistrer"
+    expect(page).to have_content("Participants mis à jour")
 
     expect(Receipt.where(user_id: user1.id, channel: "sms", result: "delivered").count).to eq 1
     expect(Receipt.where(user_id: user1.id, channel: "mail", result: "processed").count).to eq 1
@@ -66,6 +67,8 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     add_user(user2)
     add_new_user({ with_phone: true })
     click_button "Enregistrer"
+    expect(page).to have_content("Participants mis à jour")
+
     user3 = User.last
 
     expect(user3).not_to eq user2

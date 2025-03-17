@@ -8,6 +8,8 @@ fr:
         first_day: Premier jour
         start_time: Commence à
         end_time: Termine à
+        secondary_start_time: Reprend à
+        secondary_end_time: Termine à
         recurrence: Répéter
         lieu: Lieu
         recurrence_ends_at: Dernier jour
@@ -20,5 +22,11 @@ fr:
             end_time:
               format: "%{message}"
               must_be_after_start_time: "L’heure de fin doit être après l'heure de début."
+            secondary_start_time:
+              format: "%{message}"
+              overlaps_primary_interval: "Le second créneau ne doit pas chevaucher le premier."
+            secondary_end_time:
+              format: "%{message}"
+              must_be_after_secondary_start_time: "L'heure de fin doit être après l'heure de début."
             lieu:
               must_be_enabled: "doit être ouvert."

@@ -1,13 +1,11 @@
-- content_for(:menu_item) { "menu-motifs" }
+- content_for :title, "#{@motif.name} (#{@motif.service.short_name}) #{'(archivé)' if @motif.archived?}"
+
+= render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
+- content_for(:menu_item) { "menu-settings" }
 
 .row.justify-content-center
   .col-md-12.col-lg-8
     .card.mt-2
-      .card-header
-        h3.rdv-text-align-center
-          | Motif #{@motif.name} (#{@motif.service.short_name})
-          - if @motif.archived?
-            h3.text-bold.rdv-text-align-center = "(archivé)"
       .card-body
         = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
         = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service.name)

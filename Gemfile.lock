@@ -146,8 +146,9 @@ GEM
     attr_required (1.0.1)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
-    axe-core-api (4.3.2)
+    axe-core-api (4.10.2)
       dumb_delegator
+      ostruct
       virtus
     axe-core-rspec (4.3.2)
       axe-core-api
@@ -243,7 +244,7 @@ GEM
       railties (>= 3.2)
     drb (2.2.1)
     dsfr-assets (1.13.0.1)
-    dsfr-form_builder (0.0.3)
+    dsfr-form_builder (0.0.7)
       actionview (>= 6.1, < 9.0)
       activemodel (>= 6.1, < 9.0)
       activesupport (>= 6.1, < 9.0)
@@ -251,7 +252,7 @@ GEM
       dsfr-assets (~> 1.13)
       html-attributes-utils (~> 1)
       view_component (~> 3)
-    dumb_delegator (1.0.0)
+    dumb_delegator (1.1.0)
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
@@ -350,7 +351,7 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    logger (1.6.5)
+    logger (1.6.6)
     lograge (0.11.2)
       actionpack (>= 4)
       activesupport (>= 4)
@@ -479,7 +480,7 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (2.2.12)
+    rack (2.2.13)
     rack-attack (6.6.1)
       rack (>= 1.0, < 3)
     rack-cors (2.0.2)
@@ -756,7 +757,7 @@ DEPENDENCIES
   administrate
   anonymizer!
   auto_strip_attributes
-  axe-core-api (= 4.3.2)
+  axe-core-api
   axe-core-rspec (= 4.3.2)
   axiom-types!
   better_errors
@@ -787,7 +788,7 @@ DEPENDENCIES
   doorkeeper-i18n
   dotenv-rails
   drb
-  dsfr-form_builder (= 0.0.3)
+  dsfr-form_builder (= 0.0.7)
   dsfr-view-components
   factory_bot
   faker

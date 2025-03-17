@@ -1,4 +1,5 @@
-- model.overflow_motifs_duration.each do |motif|
+- plage_ouverture.overflow_motifs_duration.each do |motif|
+  - motif_duration_overflow = (motif.default_duration_in_min - plage_ouverture.daily_max_duration.in_minutes).to_i
   li.mb-1
-    span>= link_to("#{motif.name}", edit_admin_organisation_motif_path(model.organisation, motif))
-    span> déborde de #{overflow_motif_duration(model, motif)} minutes. Il ne sera pas possible de prendre rendez-vous pour ce motif en l'état.
+    span>= link_to("#{motif.name}", edit_admin_organisation_motif_path(plage_ouverture.organisation, motif))
+    span> déborde de #{motif_duration_overflow} minutes. Il ne sera pas possible de prendre rendez-vous pour ce motif en l'état.

@@ -44,6 +44,7 @@ RSpec.describe "Agent can CRUD intervenants" do
       fill_in "Nom", with: "Fictif", match: :smart
     end
     click_button("Enregistrer")
+    expect(page).to have_content("L’agent ancien_intervenant1@invitation.com a été invité à rejoindre votre organisation.")
 
     expect(Agent.last.roles.pluck(:access_level)).to eq ["admin"]
 
@@ -143,6 +144,7 @@ RSpec.describe "Agent can CRUD intervenants" do
         fill_in "Nom", with: "Fictif", match: :smart
       end
       click_button("Enregistrer")
+      expect(page).to have_content "L’agent nouvel_agent@exemple.fr a été invité à rejoindre votre organisation."
 
       expect(agent_intervenant1.reload.roles.pluck(:access_level)).to eq ["basic"]
     end
