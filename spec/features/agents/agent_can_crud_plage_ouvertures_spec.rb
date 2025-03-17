@@ -201,6 +201,18 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     end
   end
 
+  describe "detecting motif duration overflow" do
+    before do
+      plage_ouverture.update!(start_time: "09:00", end_time: "10:30") # plage de 1h30
+      motif.update!(default_duration_in_min: 120)                     # motif de 2h
+    end
+
+    it "works" do
+      visit admin_organisation_plage_ouverture_path(organisation, plage_ouverture)
+      expect(page).to have_content("Suivi bonjour déborde de 30 minutes. Il ne sera pas possible de prendre rendez-vous pour ce motif en l'état.")
+    end
+  end
+
   describe "selecting motifs for a plage" do
     let!(:avocat) { create(:service, name: "Avocat") }
     let!(:notaire) { create(:service, name: "Notaire") }

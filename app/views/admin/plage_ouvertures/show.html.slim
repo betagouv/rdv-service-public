@@ -58,7 +58,7 @@
               = @plage_ouverture.send(:warn_overflow_motifs_duration).type
             .border-left.border-right.border-bottom.rounded.border-warning
               ul.pl-3.py-2.mb-0
-                = render "motifs_duration_exceed", model: @plage_ouverture
+                = render "motifs_duration_exceed", plage_ouverture: @plage_ouverture
 
       .card-footer.d-flex.justify-content-between
         div
