@@ -68,7 +68,7 @@ RSpec.describe "Admin can configure the organisation" do
       let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation], basic_role_in_organisations: [create(:organisation)]) }
 
       it "redirects to the organisation" do
-        visit("/admin/configuration")
+        visit("/admin/organisations/configuration")
         expect(page).to have_content "Configuration"
         expect(page).to have_current_path(admin_organisation_configuration_path(organisation))
       end
@@ -81,7 +81,7 @@ RSpec.describe "Admin can configure the organisation" do
       let(:other_organisation) { create(:organisation, name: "MDS Montreuil Sud") }
 
       it "lets the agent choose the organisation, and redirects there" do
-        visit("/admin/configuration")
+        visit("/admin/organisations/configuration")
         expect(page).to have_content(organisation.name)
         expect(page).to have_content(other_organisation.name)
         click_on(other_organisation.name)
