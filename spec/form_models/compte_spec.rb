@@ -15,9 +15,9 @@ RSpec.describe Compte do
           agent: { first_name: "Francis", last_name: "Factice", email: agent.email, service_ids: [service.id] },
         },
         Domain::RDV_MAIRIE
-      )
+      ).save!
 
-      expect(agent.reload.roles.last).to have_attributes(access_level: :admin)
+      expect(agent.reload.roles.last).to have_attributes(access_level: "admin")
       expect(agent.organisations.last.name).to eq "Mairie de Montreuil"
     end
   end
