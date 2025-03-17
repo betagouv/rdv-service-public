@@ -1,5 +1,5 @@
 class PlageOuverturePresenter
-  include PlageOuverturesHelper
+  include RecurrenceHelper
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
 
