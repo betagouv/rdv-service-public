@@ -63,20 +63,24 @@ class Compte
   private
 
   def find_or_invite_agent(organisation)
-    if @attributes.dig(:agent, :id)
-      Agent.find(@attributes.dig(:agent, :id)).tap do |agent|
-        agent.update(
-          @attributes[:agent].merge(
-            roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
-          )
+    agent = find_agent
+    if agent
+      agent.update!(
+        @attributes[:agent].merge(
+          roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
         )
-      end
+      )
+      agent
     else
       Agent.invite!(@attributes[:agent].merge(
                       roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
                       password: SecureRandom.base64(32)
                     ))
     end
+  end
+
+  def find_agent
+    Agent.find_by(id: @attributes.dig(:agent, :id)) || Agent.find_by(email: @attributes.dig(:agent, :email))
   end
 
   def create_mairie_motifs!
