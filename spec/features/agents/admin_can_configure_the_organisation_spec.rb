@@ -64,6 +64,17 @@ RSpec.describe "Admin can configure the organisation" do
   end
 
   describe "link to configuration from other applications" do
+    context "when the agent is not an admin of any organisation" do
+      let!(:agent_admin) { create(:agent, admin_role_in_organisations: []) }
+
+      it "redirects to the home page" do
+        visit("/admin/organisations/configuration")
+        expect(page).to have_content "Bienvenue"
+
+        expect(page).to have_current_path("/")
+      end
+    end
+
     context "when the agent is the admin of only one organisation" do
       let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation], basic_role_in_organisations: [create(:organisation)]) }
 

@@ -6,7 +6,9 @@ class Admin::Organisations::ConfigurationsController < AgentAuthController
   def index
     @organisations = policy_scope(current_agent.admin_orgs, policy_scope_class: Agent::OrganisationPolicy::Scope)
 
-    if @organisations.count == 1
+    if @organisations.none?
+      redirect_to authenticated_agent_root_path
+    elsif @organisations.count == 1
       redirect_to admin_organisation_configuration_path(@organisations.first)
     else
       render :index, layout: "application"
