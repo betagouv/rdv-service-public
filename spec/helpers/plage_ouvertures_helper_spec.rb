@@ -35,7 +35,7 @@ RSpec.describe PlageOuverturesHelper do
 
     it "returns" do
       plage_ouverture = build(:plage_ouverture)
-      expect(occurrence_text(plage_ouverture)).to eq("mardi 28 décembre 2021de 08:00 à 12:00")
+      expect(occurrence_text(plage_ouverture)).to eq("mardi 28 décembre 2021 de 08:00 à 12:00")
     end
   end
 

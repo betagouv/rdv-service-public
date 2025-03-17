@@ -40,7 +40,7 @@ module PlageOuverturesHelper
     if recurrent_record.recurring?
       display_recurrence(recurrent_record).join(" ")
     else
-      I18n.l(recurrent_record.first_day, format: :human) + display_time_range(recurrent_record)
+      [I18n.l(recurrent_record.first_day, format: :human), display_time_range(recurrent_record)].join(" ")
     end
   end
 
