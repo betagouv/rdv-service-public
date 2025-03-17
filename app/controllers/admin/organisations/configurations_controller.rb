@@ -1,6 +1,8 @@
 class Admin::Organisations::ConfigurationsController < AgentAuthController
   before_action :set_organisation, only: [:show]
 
+  # Cette action permet à des apps externes qui sont intégrées via OAuth de fournir un lien vers la configuration sans avoir
+  # à connaitre l'id de l'organisation de l'agent
   def index
     @organisations = policy_scope(current_agent.admin_orgs, policy_scope_class: Agent::OrganisationPolicy::Scope)
 
