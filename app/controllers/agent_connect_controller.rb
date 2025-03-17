@@ -14,7 +14,7 @@ class AgentConnectController < ApplicationController
     redirect_to auth_client.redirect_url(agent_connect_callback_url), allow_other_host: true
   end
 
-  def callback # rubocop:disable Metrics/PerceivedComplexity
+  def callback # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     callback_client = AgentConnectOpenIdClient::Callback.new(
       session_state: session.delete(:agent_connect_state),
       params_state: params[:state],
@@ -28,7 +28,6 @@ class AgentConnectController < ApplicationController
       flash[:error] = generic_error_message
       redirect_to(new_agent_session_path) and return
     end
-    flash[:notice] = callback_client.user_info.to_json
 
     # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
     # voir https://github.com/numerique-gouv/agentconnect-documentation/blob/main/doc_fs/donnees_fournies.md#le-champ-sub
@@ -48,6 +47,9 @@ class AgentConnectController < ApplicationController
         confirmed_at: agent.confirmed_at || Time.zone.now,
         last_sign_in_at: Time.zone.now
       )
+      if ENV["ENABLE_PROCONNECT_SIRET"] == "true"
+        agent.update!(proconnect_siret: callback_client.user_siret)
+      end
 
       bypass_sign_in agent, scope: :agent
       session[:agent_connect_id_token] = callback_client.id_token_for_logout
