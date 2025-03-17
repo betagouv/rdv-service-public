@@ -6,6 +6,7 @@ RSpec.describe AgentConnectController do
   )
 
   describe "#auth" do
+    stub_env_with(ENABLE_PROCONNECT_SIRET: "false")
     it "redirects to AgentConnect" do
       get :auth
       expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
@@ -22,6 +23,18 @@ RSpec.describe AgentConnectController do
         state: be_a(String),
         nonce: be_a(String)
       )
+    end
+
+    context "when getting the siret as well" do
+      stub_env_with(ENABLE_PROCONNECT_SIRET: "true")
+
+      it "adds it to the scopes" do
+        get :auth
+
+        redirect_url = response.headers["Location"]
+        redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
+        expect(redirect_url_query_params["scope"]).to eq("openid email given_name usual_name siret")
+      end
     end
   end
 
