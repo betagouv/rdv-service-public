@@ -17,8 +17,9 @@ RSpec.describe "Admin can configure the organisation" do
   end
 
   it "CRUD on lieux" do
+    click_link "Configuration"
     click_link "Lieux"
-    expect_page_title("Vos lieux de consultation")
+    expect_page_title("Lieux")
 
     within("#lieu_#{lieu.id}") do
       click_link "Modifier"
@@ -29,7 +30,7 @@ RSpec.describe "Admin can configure the organisation" do
     fill_in "Téléphone", with: "01 02 03 04 05"
     click_button("Enregistrer")
 
-    expect_page_title("Vos lieux de consultation")
+    expect_page_title("Lieux")
 
     nouveau_lieu = Lieu.find_by(name: "Le nouveau lieu")
     within("#lieu_#{nouveau_lieu.id}") do
@@ -38,7 +39,7 @@ RSpec.describe "Admin can configure the organisation" do
 
     click_link("Supprimer")
 
-    expect_page_title("Vos lieux de consultation")
+    expect_page_title("Lieux")
     expect_page_with_no_record_text("Vous n'avez pas encore ajouté de lieu de consultation.")
 
     click_link "Ajouter un lieu", match: :first
@@ -49,7 +50,7 @@ RSpec.describe "Admin can configure the organisation" do
     first("input#lieu_latitude", visible: false).set(48.583844)
     first("input#lieu_longitude", visible: false).set(7.735253)
     click_button "Enregistrer"
-    expect_page_title("Vos lieux de consultation")
+    expect_page_title("Lieux")
 
     le_nouveau_lieu = Lieu.find_by(name: "Un autre nouveau lieu")
     within("#lieu_#{le_nouveau_lieu.id}") do
@@ -57,14 +58,15 @@ RSpec.describe "Admin can configure the organisation" do
     end
   end
 
-  it "Update organisation" do
-    click_link "Organisation"
+  it "Update organisation contact information" do
+    click_link "Configuration"
+    click_link "Informations de contact"
     click_link "Modifier"
     fill_in "Nom", with: la_nouvelle_org.name
     fill_in "Téléphone", with: la_nouvelle_org.phone_number
     fill_in "Horaires", with: la_nouvelle_org.horaires
     click_button "Enregistrer"
 
-    expect(page).to have_content("L’organisation a été modifiée.")
+    expect(page).to have_content("Les informations de contact ont été modifiées")
   end
 end

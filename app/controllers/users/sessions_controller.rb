@@ -10,7 +10,8 @@ class Users::SessionsController < Devise::SessionsController
     # Le flash d'erreur est trop aggressif pour le cas d'un usager non connecté.
     # Un flash de style info est plus adapté.
     if flash[:alert] == I18n.t("devise.failure.unauthenticated")
-      flash[:notice] = flash[:alert]
+      # Il faut utiliser un flash.now pour éviter de réafficher le flash après la connexion si on utilise ProConnect
+      flash.now[:notice] = flash[:alert]
       flash[:alert] = nil
     end
 

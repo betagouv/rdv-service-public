@@ -7,7 +7,8 @@ class Agents::SessionsController < Devise::SessionsController
     if flash[:alert] == I18n.t("devise.failure.unauthenticated")
       # Contrairement aux usagers, les agents ne peuvent pas créer de compte
       # On n'utilise donc pas `I18n.t("devise.failure.unauthenticated")`, mais une variante
-      flash[:notice] = "Vous devez vous connecter pour continuer"
+      # Il faut utiliser un flash.now pour éviter de réafficher le flash après la connexion si on utilise ProConnect
+      flash.now[:notice] = "Vous devez vous connecter pour continuer"
       flash[:alert] = nil
     end
 

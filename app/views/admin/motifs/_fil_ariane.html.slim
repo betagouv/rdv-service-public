@@ -1,0 +1,11 @@
+/# locals: (current_page_title: nil)
+
+ruby:
+  titles_and_paths = [
+    ["Accueil", root_path],
+    (["Configuration", admin_organisation_configuration_path(current_organisation)] if current_agent_role.admin?),
+    (["Motifs de rendez-vous", admin_organisation_motifs_path(current_organisation)] if current_page_title),
+  ].compact
+
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths: titles_and_paths, current_page_title: current_page_title || "Motifs de rendez-vous"
