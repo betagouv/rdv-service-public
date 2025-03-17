@@ -57,6 +57,17 @@ RSpec.describe Absence, type: :model do
       expected_message = "L’heure de fin doit être après l'heure de début."
       expect(build(:plage_ouverture, start_time: "09:00", end_time: "08:00").tap(&:validate).errors.full_messages).to include(expected_message)
     end
+
+    it "validates that recurrence ends after it starts" do
+      last_monday = Time.zone.now.beginning_of_week.to_date
+      next_monday = last_monday + 7.days
+
+      absence = build(:absence, :weekly_on_monday, first_day: next_monday)
+      absence.recurrence = absence.recurrence.until(last_monday)
+
+      expect(absence).to be_invalid
+      expect(absence.errors.full_messages).to include("La fin de la récurrence doit être après le premier jour.")
+    end
   end
 
   describe "#occurrences_for" do
