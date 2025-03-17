@@ -1,14 +1,7 @@
 RSpec.describe "Admin can configure the organisation" do
-  let!(:organisation) { create(:organisation) }
-  let!(:pmi) { create(:service, name: "PMI", territories: [organisation.territory]) }
-  let!(:service_social) { create(:service, name: "Service social", territories: [organisation.territory]) }
-  let!(:agent_admin) { create(:agent, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", service: pmi, admin_role_in_organisations: [organisation]) }
-  let!(:other_agent_user) { create(:agent, first_name: "JP", last_name: "Dupond", email: "jp@dupond.fr", service: service_social, basic_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, name: "Motif 1", service: pmi, organisation: organisation) }
-  let!(:user) { create(:user, organisations: [organisation]) }
+  let!(:organisation) { create(:organisation, name: "MDS Montreuil Nord") }
+  let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:secretariat) { create(:service, :secretariat) }
-  let(:le_nouveau_motif) { build(:motif, name: "Motif 2", service: pmi, organisation: organisation) }
   let(:la_nouvelle_org) { build(:organisation) }
 
   before do
@@ -68,5 +61,44 @@ RSpec.describe "Admin can configure the organisation" do
     click_button "Enregistrer"
 
     expect(page).to have_content("Les informations de contact ont été modifiées")
+  end
+
+  describe "link to configuration from other applications" do
+    context "when the agent is not an admin of any organisation" do
+      let!(:agent_admin) { create(:agent, admin_role_in_organisations: []) }
+
+      it "redirects to the home page" do
+        visit("/admin/organisations/configuration")
+        expect(page).to have_content "Bienvenue"
+
+        expect(page).to have_current_path("/")
+      end
+    end
+
+    context "when the agent is the admin of only one organisation" do
+      let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation], basic_role_in_organisations: [create(:organisation)]) }
+
+      it "redirects to the organisation" do
+        visit("/admin/organisations/configuration")
+        expect(page).to have_content "Configuration"
+        expect(page).to have_current_path(admin_organisation_configuration_path(organisation))
+      end
+    end
+
+    context "when the agent is the admin of multiple organisations" do
+      let!(:agent_admin) do
+        create(:agent, admin_role_in_organisations: [organisation, other_organisation])
+      end
+      let(:other_organisation) { create(:organisation, name: "MDS Montreuil Sud") }
+
+      it "lets the agent choose the organisation, and redirects there" do
+        visit("/admin/organisations/configuration")
+        expect(page).to have_content(organisation.name)
+        expect(page).to have_content(other_organisation.name)
+        click_on(other_organisation.name)
+        expect(page).to have_content "Configuration"
+        expect(page).to have_current_path(admin_organisation_configuration_path(other_organisation))
+      end
+    end
   end
 end

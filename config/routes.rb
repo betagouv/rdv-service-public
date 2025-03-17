@@ -205,6 +205,9 @@ Rails.application.routes.draw do
       end
 
       resources :organisations do
+        collection do
+          get "configuration", to: "organisations/configurations#index"
+        end
         get "creneaux_search" => "creneaux_search#index"
         get "creneaux_search/selection_creneaux" => "creneaux_search#selection_creneaux"
         # Lien très utilisé pour la duplication de RDV
