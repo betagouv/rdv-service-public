@@ -36,11 +36,11 @@ module PlageOuverturesHelper
     str
   end
 
-  def plage_ouverture_occurrence_text(plage_ouverture)
-    if plage_ouverture.recurring?
-      display_recurrence(plage_ouverture).join(" ")
+  def occurrence_text(recurrent_record)
+    if recurrent_record.recurring?
+      display_recurrence(recurrent_record).join(" ")
     else
-      I18n.l(plage_ouverture.first_day, format: :human) + display_time_range(plage_ouverture)
+      I18n.l(recurrent_record.first_day, format: :human) + display_time_range(recurrent_record)
     end
   end
 

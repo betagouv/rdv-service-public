@@ -27,15 +27,15 @@ RSpec.describe PlageOuverturesHelper do
     end
   end
 
-  describe "#plage_ouverture_occurrence_text" do
+  describe "#occurrence_text" do
     it "returns occurrence text" do
       plage_ouverture = build(:plage_ouverture, recurrence: Montrose.every(:week))
-      expect(plage_ouverture_occurrence_text(plage_ouverture)).to eq("Toutes les  semaines, le mardi de 08:00 à 12:00 à partir du mardi 28 décembre 2021")
+      expect(occurrence_text(plage_ouverture)).to eq("Toutes les  semaines, le mardi de 08:00 à 12:00 à partir du mardi 28 décembre 2021")
     end
 
     it "returns" do
       plage_ouverture = build(:plage_ouverture)
-      expect(plage_ouverture_occurrence_text(plage_ouverture)).to eq("mardi 28 décembre 2021de 08:00 à 12:00")
+      expect(occurrence_text(plage_ouverture)).to eq("mardi 28 décembre 2021de 08:00 à 12:00")
     end
   end
 
