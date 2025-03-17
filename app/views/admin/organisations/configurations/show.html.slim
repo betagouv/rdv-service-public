@@ -18,9 +18,10 @@
               = icon("fr-icon-user-fill",class: "fr-mr-1w")
               | Agents
           p.fr-tile__desc
-            = current_organisation.agents.limit(3).map(&:full_name).join(", ")
-            - if current_organisation.agents.count > 3
-              = " et #{current_organisation.agents.count - 3} autres"
+            = @agents_scope.limit(3).map(&:full_name).join(", ")
+            - if @agents_scope.count > 3
+              - autres_count = @agents_scope.count - 3
+              = " et #{autres_count} #{'autre'.pluralize(autres_count)}"
 
   .fr-col-4.fr-mb-2w
 

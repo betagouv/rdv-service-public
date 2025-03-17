@@ -3,5 +3,7 @@ class Admin::Organisations::ConfigurationsController < AgentAuthController
 
   def show
     authorize(@organisation, :edit?, policy_class: Agent::OrganisationPolicy)
+
+    @agents_scope = current_organisation.agents.active
   end
 end
