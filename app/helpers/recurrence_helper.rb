@@ -75,4 +75,11 @@ module RecurrenceHelper
   def exceptionnelle_tag(recurrent_record)
     tag.span("Exceptionnelle", class: "badge badge-info") if recurrent_record.exceptionnelle?
   end
+
+  def filter_plage_ouvertures_in_departement_scope(plage_ouvertures)
+    Agent::PlageOuverturePolicy::Scope
+      .new(pundit_user, PlageOuverture)
+      .resolve
+      .merge(plage_ouvertures)
+  end
 end
