@@ -22,7 +22,7 @@ RSpec.describe Absence, type: :model do
   end
 
   describe "time validation" do
-    it "allows absence to span on multiple days if no recurrence" do
+    it "is only valid when times are in order (no recurrence, single day)" do
       # Sur un seul jour, on valide que l'heure de fin est > à l'heure de début
       single_day = build(:absence, :no_recurrence, first_day: Time.zone.today, end_day: Time.zone.today)
       expect(single_day.tap { _1.assign_attributes(start_time: "09:00", end_time: "12:00") }).to be_valid    # start_time < end_time
@@ -30,7 +30,7 @@ RSpec.describe Absence, type: :model do
       expect(single_day.tap { _1.assign_attributes(start_time: "09:00", end_time: "08:00") }).to be_invalid  # start_time > end_time
     end
 
-    it "validates start and and datetimes when spanning several days" do
+    it "is only valid when datetimes are in order (no recurrence, several days)" do
       # Sur plusieurs jours (sans recurrence), l'heure de fin peut être inférieure à l'heure de début
       spanning_two_days = build(:absence, :no_recurrence, first_day: Time.zone.today, end_day: Time.zone.tomorrow)
       expect(spanning_two_days.tap { _1.assign_attributes(start_time: "09:00", end_time: "12:00") }).to be_valid  # start_time < end_time
@@ -38,10 +38,11 @@ RSpec.describe Absence, type: :model do
       expect(spanning_two_days.tap { _1.assign_attributes(start_time: "09:00", end_time: "08:00") }).to be_valid  # start_time > end_time
     end
 
-    it "validates that the start and en date are in the right order" do
-      # Bien sûr, on valide que le jour de fin est supérieur ou égal au jour de début
+    it "is never valid if start day is after end day" do
       first_day_after_end_day = build(:absence, :no_recurrence, first_day: Time.zone.tomorrow, end_day: Time.zone.today)
-      expect(first_day_after_end_day).to be_invalid
+      expect(first_day_after_end_day.tap { _1.assign_attributes(start_time: "09:00", end_time: "12:00") }).to be_invalid  # start_time < end_time
+      expect(first_day_after_end_day.tap { _1.assign_attributes(start_time: "09:00", end_time: "09:00") }).to be_invalid  # start_time = end_time
+      expect(first_day_after_end_day.tap { _1.assign_attributes(start_time: "09:00", end_time: "08:00") }).to be_invalid  # start_time > end_time
     end
 
     it "validates that times are in order if using recurrence" do
