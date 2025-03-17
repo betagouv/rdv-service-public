@@ -92,14 +92,6 @@ module RecurrenceConcern
     recurrence.present?
   end
 
-  def occurrences_for(inclusive_date_range)
-    return [] if inclusive_date_range.nil?
-
-    occurrence_start_at_list_for(inclusive_date_range).map do |o|
-      Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration)
-    end
-  end
-
   def human_time_range
     [human_time(starts_at), human_time(ends_at)].join("-")
   end
