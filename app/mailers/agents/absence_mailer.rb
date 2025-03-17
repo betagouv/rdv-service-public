@@ -1,5 +1,5 @@
 class Agents::AbsenceMailer < ApplicationMailer
-  helper PlageOuverturesHelper
+  helper RecurrenceHelper
 
   before_action do
     @absence = params[:absence]
