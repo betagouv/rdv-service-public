@@ -36,7 +36,7 @@ class Motif < ApplicationRecord
 
   # Relations
   belongs_to :organisation
-  belongs_to :service
+  belongs_to :service, optional: true
   belongs_to :motif_category, optional: true
   has_many :rdvs, dependent: :restrict_with_exception
   has_many :motifs_plage_ouvertures, dependent: :delete_all
