@@ -5,5 +5,7 @@ class Admin::Organisations::ConfigurationsController < AgentAuthController
     authorize(@organisation, :edit?, policy_class: Agent::OrganisationPolicy)
 
     @agents_scope = current_organisation.agents.active
+
+    @motif_names = current_organisation.motifs.active.pluck(:name).uniq
   end
 end
