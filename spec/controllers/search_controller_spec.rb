@@ -48,6 +48,20 @@ RSpec.describe SearchController, type: :controller do
       .and_return(geo_search)
   end
 
+  describe "#home" do
+    it "rend la page d’accueil" do
+      get :home
+      expect(response).to be_successful
+    end
+
+    context "quand un id de session Crisp est présent" do
+      it "l’utilisateur est redirigé vers le chat Crisp" do
+        get :home, params: { crisp_sid: "123456" }
+        expect(response).to redirect_to("https://go.crisp.chat/chat/embed/?website_id=#{ENV['CRISP_WEBSITE_ID']}&crisp_sid=123456")
+      end
+    end
+  end
+
   describe "#search_rdv" do
     context "invitation validation" do
       context "when the token is invalid" do
