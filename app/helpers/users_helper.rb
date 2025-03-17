@@ -113,7 +113,7 @@ module UsersHelper
   end
 
   def clickable_user_phone_number(user)
-    user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}") : nil
+    user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}", class: "fr-link") : nil
   end
 
   def formatted_user_annotation(user, current_territory)

@@ -133,7 +133,7 @@ gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
 gem "dsfr-view-components"
-gem "dsfr-form_builder", "= 0.0.3" # On fixe la version tant qu’on est pas en 1.0
+gem "dsfr-form_builder", "= 0.0.7" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
@@ -242,7 +242,7 @@ group :test do
   # Accessibility
 
   # Axe API utility methods
-  gem "axe-core-api", "4.3.2" # Fixed to 4.3.2 because recent versions of axe are more strict
+  gem "axe-core-api"
   # RSpec custom matchers for Axe
   gem "axe-core-rspec", "4.3.2"
 

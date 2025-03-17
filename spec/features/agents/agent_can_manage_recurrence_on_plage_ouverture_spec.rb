@@ -29,6 +29,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     fill_in("recurrence-until", with: "30/12/2019")
 
     click_button("Enregistrer")
+    expect(page).to have_content("La plage d'ouverture a été modifiée")
 
     # check if everything is ok in db
     expect(plage_ouverture.reload.recurrence.to_hash).to eq(
@@ -68,6 +69,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     uncheck("recurrence_on_saturday")
 
     click_button("Enregistrer")
+    expect(page).to have_content("La plage d'ouverture a été modifiée")
 
     # check if everything is ok in db
     expect(plage_ouverture.reload.recurrence.to_hash).to eq(
@@ -91,6 +93,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     select("1", from: "recurrence_interval")
     expect(page).to have_text("Tous les 2ème mercredi du mois")
     click_button("Enregistrer")
+    expect(page).to have_content("La plage d'ouverture a été modifiée")
 
     # check if everything is ok in db
     expect(plage_ouverture.reload.recurrence.to_hash).to eq(

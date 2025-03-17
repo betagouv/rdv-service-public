@@ -50,7 +50,10 @@ class Agents::SessionsController < Devise::SessionsController
       set_flash_message!(:notice, :signed_out)
     end
 
-    if agent_connect_id_token
+    if session[:super_admin_signed_in_as_agent]
+      session.delete(:super_admin_signed_in_as_agent)
+      redirect_to super_admins_agents_path
+    elsif agent_connect_id_token
       agent_connect_client = AgentConnectOpenIdClient::Logout.new(agent_connect_id_token)
 
       redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true

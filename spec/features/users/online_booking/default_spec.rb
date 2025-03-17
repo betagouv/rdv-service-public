@@ -9,7 +9,9 @@ RSpec.describe "User can search for rdvs" do
   end
 
   describe "default" do
-    let!(:territory92) { create(:territory, departement_number: "92") }
+    let!(:territory92) do
+      create(:territory, departement_number: "92", enable_birth_date_field: true)
+    end
     let!(:organisation) { create(:organisation, :with_contact, territory: territory92) }
     let(:service) { create(:service) }
     let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, restriction_for_rdv: nil, service: service) }
@@ -53,7 +55,10 @@ RSpec.describe "User can search for rdvs" do
 
   describe "Prise de RDV en ligne" do
     let!(:service) { create(:service) }
-    let!(:territory) { create(:territory, departement_number: "92") }
+    let!(:territory) do
+      create(:territory, departement_number: "92", enable_birth_date_field: true)
+    end
+
     let!(:first_organisation_with_po) { create(:organisation, :with_contact, territory: territory) }
     let!(:first_motif) do
       create(:motif, :by_phone, name: "RSA orientation par téléphone", organisation: first_organisation_with_po, restriction_for_rdv: nil, service: service)
@@ -179,7 +184,11 @@ RSpec.describe "User can search for rdvs" do
       end
     end
     let!(:agent2) { create(:agent) }
-    let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "92")) }
+    let!(:organisation) { create(:organisation, territory: territory) }
+    let!(:territory) do
+      create(:territory, departement_number: "92", enable_birth_date_field: true)
+    end
+
     let!(:service_social) { create(:service, name: "Service Social") }
     let!(:service_insertion) { create(:service, name: "Service Insertion") }
     let!(:lieu) { create(:lieu, organisation: organisation) }
@@ -468,6 +477,7 @@ RSpec.describe "User can search for rdvs" do
     fill_in("Adresse email", with: "michel@lapin.fr")
     fill_in("Numéro de téléphone", with: "0612345678")
     click_button("Je m’inscris")
+    expect(page).to have_content("Un message contenant un lien de confirmation a été envoyé à votre adresse email. Ouvrez ce lien pour activer votre compte.")
 
     # Confirmation email
     open_email("michel@lapin.fr")

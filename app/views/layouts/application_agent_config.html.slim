@@ -13,6 +13,7 @@ html lang="fr"
     = javascript_include_tag "#{dsfr_path}/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
   main
     body.pb-0
+      = render "layouts/super_admin_sign_in_as_warning"
       = render "layouts/rdv_solidarites_instance_name"
       .auth-fluid.row
         .auth-fluid-left.text-center.col-xs-12.col-md-4 class="#{"auth-fluid-left--agent-preferences" if current_agent}"

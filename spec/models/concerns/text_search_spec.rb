@@ -56,7 +56,7 @@ RSpec.describe TextSearch, type: :concern do
 
   describe(Agent) do
     it "returns agents that match with first name" do
-      create(:agent, first_name: "jean")
+      create(:agent, first_name: "jean", last_name: "valjean")
       martine = create(:agent, first_name: "martine")
       expect(described_class.search_by_text("martine")).to eq([martine])
     end

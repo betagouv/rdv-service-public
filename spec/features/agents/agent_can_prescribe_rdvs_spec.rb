@@ -86,7 +86,10 @@ RSpec.describe "agents can prescribe rdvs" do
       # deuxième passage page récap
       click_on "Continuer"
       expect(page).to have_content("L’usager est pressé il a besoin...")
-      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      expect do
+        click_button "Confirmer le rdv"
+        expect(page).to have_content("Rendez-vous confirmé")
+      end.to change(Rdv, :count).by(1)
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
       created_rdv = Rdv.last
@@ -134,7 +137,10 @@ RSpec.describe "agents can prescribe rdvs" do
         expect(page).to have_content("Lieu : #{mds_paris_nord.name}")
         expect(page).to have_content("Date du rendez-vous :")
         expect(page).to have_content("Usager : FACTICE Francis")
-        expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
+        expect do
+          click_button "Confirmer le rdv"
+          expect(page).to have_content("Rendez-vous confirmé")
+        end.to change(Rdv.last.reload.participations, :count).by(1)
         expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to be(true)
       end
     end
@@ -196,7 +202,10 @@ RSpec.describe "agents can prescribe rdvs" do
       click_on "Créer usager"
       expect(page).to have_content("BONJOUR Jean-Pierre")
       click_on "Continuer"
-      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      expect do
+        click_button "Confirmer le rdv"
+        expect(page).to have_content("Rendez-vous confirmé")
+      end.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.full_name).to eq("Jean-Pierre BONJOUR")
       expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
     end
@@ -258,12 +267,14 @@ RSpec.describe "agents can prescribe rdvs" do
       it "when sectorization is enabled on the user street level only it show the street leveled motif only" do
         expect(page).not_to have_content(motif_insertion.name)
         expect(page).not_to have_content(motif_autre_service.name)
-        expect(page).to have_content(motif_mds.service.name)
         expect(page).to have_content(motif_mds.name)
         click_on motif_mds.name
         find(".fr-card__title", text: /#{mds_paris_nord.name}/).ancestor(".fr-card__body").find("a").click
         first(:link, "11:00").click
-        expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+        expect do
+          click_button "Confirmer le rdv"
+          expect(page).to have_content("Rendez-vous confirmé")
+        end.to change(Rdv, :count).by(1)
       end
 
       context "when sectorization is enabled on the street level and on city level on 2 differents sectors" do
@@ -336,7 +347,10 @@ RSpec.describe "agents can prescribe rdvs" do
       # Display Récapitulatif
       # les infos de l'usager sont affichées dans le recap
       expect(page).to have_content("Usager : TERRE Miss - 20/07/1985 - 06 11 22 33 44 - miss_terre@example.com")
-      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      expect do
+        click_button "Confirmer le rdv"
+        expect(page).to have_content("Rendez-vous confirmé")
+      end.to change(Rdv, :count).by(1)
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
       created_rdv = Rdv.last

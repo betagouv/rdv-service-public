@@ -257,6 +257,8 @@ tables:
       - first_day
       - start_time
       - end_time
+      - secondary_start_time
+      - secondary_end_time
       - recurrence
       - expired_cached
       - recurrence_ends_at
@@ -292,6 +294,7 @@ tables:
       - enable_case_number
       - enable_address_details
       - enable_context_field
+      - enable_birth_date_field
       - enable_waiting_room_mail_field
       - enable_waiting_room_color_field
       - visible_users_throughout_the_territory

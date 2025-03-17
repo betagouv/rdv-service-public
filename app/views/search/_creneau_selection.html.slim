@@ -1,32 +1,12 @@
 .fr-container
   = render "search/selected_motif_recap", context: context
-  - if context.lieu.present?
-    .card
-      .card-body
-        = link_to path_to_lieu_selection(params), class: "d-block stretched-link", title: "Retour à la sélection du lieu" do
-          .row
-            .col-auto.align-self-center
-              span.fr-icon-arrow-left-line
-            .col
-              h2.pb-1.mb-1.card-title= context.lieu.name
-              .card-subtitle= context.lieu.address
-  - elsif context.user_selected_organisation.present?
-    .card
-      .card-body
-        = link_to path_to_organisation_selection(params), class: "d-block stretched-link", title: "Retour à la sélection de l’organisation" do
-          .row
-            .col-auto.align-self-center
-              span.fr-icon-arrow-left-line
-            .col
-              h2.pb-1.mb-1.card-title= context.user_selected_organisation.name
-              = render "search/organisation_card_subtitles", organisation: context.user_selected_organisation
   - if context.no_availability?
     = render "search/nothing_to_show", context: context
   - else
     - if context.first_matching_motif.collectif?
-      h3 = "Inscrivez-vous à l'atelier de votre choix :"
+      h1.fr-h3 = "Inscrivez-vous à l'atelier de votre choix :"
     - else
-      h3 Sélectionnez un créneau&nbsp;:
+      h1.fr-h3 Sélectionnez un créneau&nbsp;:
     - if context.first_matching_motif.collectif?
       ul.fr-raw-list
         - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
