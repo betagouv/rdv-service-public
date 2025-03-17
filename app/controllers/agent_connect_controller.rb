@@ -28,6 +28,7 @@ class AgentConnectController < ApplicationController
       flash[:error] = generic_error_message
       redirect_to(new_agent_session_path) and return
     end
+    flash[:notice] = callback_client.user_info.to_json
 
     # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
     # voir https://github.com/numerique-gouv/agentconnect-documentation/blob/main/doc_fs/donnees_fournies.md#le-champ-sub

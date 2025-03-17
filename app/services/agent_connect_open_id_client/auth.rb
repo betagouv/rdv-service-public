@@ -17,7 +17,7 @@ module AgentConnectOpenIdClient
         response_type: "code",
         client_id: @client_id,
         redirect_uri: callback_url,
-        scope: "openid email given_name usual_name",
+        scope: "openid email given_name usual_name siret",
         state: state,
         nonce: nonce,
         acr_values: "eidas1",

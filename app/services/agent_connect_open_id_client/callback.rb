@@ -13,7 +13,7 @@ module AgentConnectOpenIdClient
       @client_secret = client_secret
     end
 
-    attr_reader :id_token_for_logout
+    attr_reader :id_token_for_logout, :user_info
 
     def fetch_user_info_from_code!(code)
       validate_state!
