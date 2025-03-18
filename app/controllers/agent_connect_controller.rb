@@ -47,7 +47,7 @@ class AgentConnectController < ApplicationController
         confirmed_at: agent.confirmed_at || Time.zone.now,
         last_sign_in_at: Time.zone.now
       )
-      if ENV["ENABLE_PROCONNECT_SIRET"] == "true"
+      if ENV["ENABLE_PROCONNECT_SIRET"] == "true" # Cette variable d'env sert à essayer la fonctionnalité en production, et pourra être supprimée s'il n'y a pas de problèmes
         agent.update!(proconnect_siret: callback_client.user_siret)
       end
 
