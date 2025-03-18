@@ -2,7 +2,8 @@ RSpec.describe AgentConnectController do
   stub_env_with(
     AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
     AGENT_CONNECT_RDVS_CLIENT_SECRET: "un faux secret de test",
-    AGENT_CONNECT_RDVS_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
+    AGENT_CONNECT_RDVS_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa",
+    ENABLE_PROCONNECT_SIRET: "false"
   )
 
   describe "#auth" do
@@ -22,6 +23,18 @@ RSpec.describe AgentConnectController do
         state: be_a(String),
         nonce: be_a(String)
       )
+    end
+
+    context "when getting the siret as well" do
+      stub_env_with(ENABLE_PROCONNECT_SIRET: "true")
+
+      it "adds it to the scopes" do
+        get :auth
+
+        redirect_url = response.headers["Location"]
+        redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
+        expect(redirect_url_query_params["scope"]).to eq("openid email given_name usual_name siret")
+      end
     end
   end
 
@@ -88,6 +101,27 @@ RSpec.describe AgentConnectController do
           first_name: "Jean Michel",
           last_name: "Factice"
         )
+      end
+    end
+
+    context "when asking for the siret" do
+      stub_env_with(ENABLE_PROCONNECT_SIRET: "true")
+      let(:user_info) do
+        {
+          "sub" => "ab70770d-1285-46e6-b4d0-3601b49698d4",
+          "email" => "francis.factice@exemple.gouv.fr",
+          "given_name" => "Francis Factice",
+          "usual_name" => "Factice",
+          "siret" => "11006801200050",
+          "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
+          "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
+        }
+      end
+
+      it "saves it on the agent" do
+        agent = create(:agent, email: "francis.factice@exemple.gouv.fr")
+        get :callback, params: { state: state, code: code }
+        expect(agent.reload.proconnect_siret).to eq "11006801200050"
       end
     end
   end

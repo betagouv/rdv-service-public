@@ -39,6 +39,10 @@ module AgentConnectOpenIdClient
       @user_info["usual_name"]
     end
 
+    def user_siret
+      @user_info["siret"]
+    end
+
     private
 
     def validate_state!
