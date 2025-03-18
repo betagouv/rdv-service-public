@@ -65,7 +65,6 @@ tables:
       - created_through
       - invitation_accepted_at
       - invitation_created_at
-      - text_search_terms
       - text_search_terms_with_notification_email
       - deleted_at
       - invitation_limit
