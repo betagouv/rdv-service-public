@@ -6,7 +6,7 @@ module RecurrenceConcern
     attribute :start_time, :time_only # uses Tod::TimeOfDayType
     attribute :end_time, :time_only   # uses Tod::TimeOfDayType
 
-    before_save :clear_empty_recurrence, :set_recurrence_ends_at
+    before_save { self.recurrence_ends_at = recurrence&.ends_at&.end_of_day }
 
     validates :first_day, :start_time, :end_time, presence: true
     validate :recurrence_starts_matches_first_day, if: :recurring?
@@ -15,7 +15,7 @@ module RecurrenceConcern
     scope :exceptionnelles, -> { where(recurrence: nil) }
     scope :regulieres, -> { where.not(recurrence: nil) }
     scope :overlapping_range, lambda { |range|
-      in_range(range).select { _1.occurrences_for(range).any? { |occurence| occurence.overlaps?(range) } }
+      in_range(range).select { _1.occurrences_for(range).any? { |occurrence| occurrence.overlaps?(range) } }
     }
   end
 
@@ -82,22 +82,20 @@ module RecurrenceConcern
     end
   end
 
+  def recurrence=(hash)
+    super(hash.presence) # on évite d'avoir un objet Montrose::Recurrence avec une config vide
+  end
+
   def duration
     (first_occurrence_ends_at - starts_at).to_i
   end
 
   def exceptionnelle?
-    recurrence.nil?
+    !recurring?
   end
 
   def recurring?
     recurrence.present?
-  end
-
-  def recurrence_interval
-    return nil if recurrence.nil?
-
-    recurrence.to_hash[:interval] || 1 # when interval is nil, it means 1
   end
 
   def human_time_range
@@ -175,14 +173,6 @@ module RecurrenceConcern
     if (starts_at..ends_at).overlap?(inclusive_datetime_range)
       Recurrence::Occurrence.new(starts_at:, ends_at:)
     end
-  end
-
-  def set_recurrence_ends_at
-    self.recurrence_ends_at = recurrence&.ends_at&.end_of_day
-  end
-
-  def clear_empty_recurrence
-    self.recurrence = nil if recurrence.present? && recurrence.to_hash == {}
   end
 
   def end_time_must_be_after_start_time

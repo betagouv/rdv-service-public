@@ -18,6 +18,14 @@ class SearchController < ApplicationController
       return
     end
 
+    # Crisp propose aux utilisateurs de répondre aux mails soit par réponse de mail soit par le chat
+    # Comme nous ne pouvons pas retirer la mention du chat et que nous ne souhaitons pas le proposer comme moyen de
+    # contact, nous redirigeons les utilisateurs vers le chat Crisp si ils cliquent sur le lien dans le footer du mail
+    if params[:crisp_sid]
+      redirect_to_crisp_chat(params[:crisp_sid])
+      return
+    end
+
     if current_domain == Domain::RDV_MAIRIE
       render "dsfr/rdv_mairie/homepage"
     else
@@ -120,5 +128,9 @@ class SearchController < ApplicationController
 
   def agent_search_params
     params.permit(AgentPrescriptionSearchContext::STRONG_PARAMS_LIST)
+  end
+
+  def redirect_to_crisp_chat(crisp_sid)
+    redirect_to "https://go.crisp.chat/chat/embed/?website_id=#{ENV['CRISP_WEBSITE_ID']}&crisp_sid=#{crisp_sid}", allow_other_host: true
   end
 end

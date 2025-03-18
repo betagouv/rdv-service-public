@@ -1,0 +1,10 @@
+h1.fr-h2 Choisissez une organisation
+
+.fr-grid-row.fr-mt-4w.fr-pb-4w
+  - @organisations.each do |organisation|
+    .fr-col-4.fr-mb-2w
+      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
+        .fr-tile__body
+          .fr-tile__content
+            h2.fr-tile__title
+              = link_to(organisation.name, admin_organisation_configuration_path(organisation))

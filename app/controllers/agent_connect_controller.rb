@@ -14,7 +14,7 @@ class AgentConnectController < ApplicationController
     redirect_to auth_client.redirect_url(agent_connect_callback_url), allow_other_host: true
   end
 
-  def callback # rubocop:disable Metrics/PerceivedComplexity
+  def callback # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     callback_client = AgentConnectOpenIdClient::Callback.new(
       session_state: session.delete(:agent_connect_state),
       params_state: params[:state],
@@ -47,6 +47,9 @@ class AgentConnectController < ApplicationController
         confirmed_at: agent.confirmed_at || Time.zone.now,
         last_sign_in_at: Time.zone.now
       )
+      if ENV["ENABLE_PROCONNECT_SIRET"] == "true" # Cette variable d'env sert à essayer la fonctionnalité en production, et pourra être supprimée s'il n'y a pas de problèmes
+        agent.update!(proconnect_siret: callback_client.user_siret)
+      end
 
       bypass_sign_in agent, scope: :agent
       session[:agent_connect_id_token] = callback_client.id_token_for_logout

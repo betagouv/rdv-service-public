@@ -24,7 +24,7 @@ class Admin::OrganisationsController < AgentAuthController
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
 
     if @organisation.update(organisation_params)
-      flash[:success] = "L’organisation a été modifiée."
+      flash[:success] = "Les informations de contact ont été modifiées"
       redirect_to admin_organisation_path(@organisation)
     else
       render :edit
@@ -46,7 +46,7 @@ class Admin::OrganisationsController < AgentAuthController
     )
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
     if @organisation.save
-      redirect_to admin_organisation_path(@organisation),
+      redirect_to admin_organisation_configuration_path(@organisation),
                   flash: { success: "Organisation enregistrée ! Vous pouvez maintenant lui ajouter des motifs et des lieux de rendez-vous, puis inviter des agents à la rejoindre" }
     else
       @active_agent_preferences_menu_item = :organisations

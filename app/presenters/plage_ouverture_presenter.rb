@@ -1,5 +1,5 @@
 class PlageOuverturePresenter
-  include PlageOuverturesHelper
+  include RecurrenceHelper
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
 
@@ -21,7 +21,7 @@ class PlageOuverturePresenter
       attrs.merge!(
         path: admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture),
         lieu_name: plage_ouverture.lieu_name,
-        occurrence_text: plage_ouverture_occurrence_text(plage_ouverture),
+        occurrence_text: occurrence_text(plage_ouverture),
         organisation_name: plage_ouverture.organisation.name
       )
     end

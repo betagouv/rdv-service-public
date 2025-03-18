@@ -122,6 +122,7 @@ tables:
       - created_at
       - updated_at
       - connected_with_agent_connect
+      - proconnect_siret
 
   - table_name: rdvs
     anonymized_column_names:
