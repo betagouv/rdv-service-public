@@ -400,4 +400,18 @@ RSpec.describe User, type: :model do
       expect { user.soft_delete }.to change { user.annotations.count }.to(0)
     end
   end
+
+  describe "when notification_email is not valid" do
+    it "does not allow invalid email with single letter domain name" do
+      user = build(:user, :without_devise_email, notification_email: "test@domain.a")
+      expect(user).not_to be_valid
+      expect(user.errors[:notification_email]).to include("n'est pas valide")
+    end
+
+    it "does not allow invalid email that starts with a dot" do
+      user = build(:user, :without_devise_email, notification_email: ".test@domain.com")
+      expect(user).not_to be_valid
+      expect(user.errors[:notification_email]).to include("n'est pas valide")
+    end
+  end
 end

@@ -70,6 +70,9 @@ class User < ApplicationRecord
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :ants_pre_demande_number, ants_pre_demande_number_format: true
 
+  EMAIL_REGEXP = Devise.email_regexp
+  validates :notification_email, format: { with: EMAIL_REGEXP }, allow_blank: true
+
   validate :birth_date_validity
 
   # Hooks
