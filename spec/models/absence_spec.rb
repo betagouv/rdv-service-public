@@ -68,6 +68,15 @@ RSpec.describe Absence, type: :model do
       expect(absence).to be_invalid
       expect(absence.errors.full_messages).to include("La fin de la récurrence doit être après le premier jour.")
     end
+
+    it "validates that a absence must be single day if recurring" do
+      last_monday = Time.zone.now.beginning_of_week.to_date
+      absence = build(:absence, :weekly_on_monday, first_day: last_monday, end_day: last_monday)
+      expect(absence).to be_valid
+
+      absence.end_day = absence.end_day + 2.days
+      expect(absence).to be_invalid
+    end
   end
 
   describe "#occurrences_for" do
