@@ -19,14 +19,14 @@ class RdvPlanCalendar {
     const options = {
       plugins: [timeGridPlugin, interactionPlugin],
       eventSources: JSON.parse(dataset.eventSourcesJson),
-      defaultDate: JSON.parse(dataset.defaultDateJson),
+      initialDate: JSON.parse(dataset.defaultDateJson),
       defaultView: dataset.singleDay === "true" ? 'timeGridDay' : 'timeGridWeek',
       hiddenDays: [0],
       header: { left:  '', center: '', right:  '' },
       select: this.selectEvent,
-      minTime: dataset.minTime || '07:00:00',
-      maxTime: dataset.maxTime || '20:00:00',
-      eventRender: eventRenderer(),
+      slotMinTime: dataset.slotMinTime || '07:00:00',
+      slotMaxTime: dataset.slotMaxTime || '20:00:00',
+      eventDidMount: eventRenderer(),
     }
 
     if (dataset.displaySaturdays !== "true") {

@@ -12,8 +12,8 @@ const defaultFullCalendarConfig = () => ({
       startTime: '07:00',
       endTime: '19:00',
   },
-  minTime: '07:00:00',
-  maxTime: '20:00:00',
+  slotMinTime: '07:00:00',
+  slotMaxTime: '20:00:00',
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
     timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
   // If this is removed, there is a bug that causes the events in the calendar to be show at the wrong
@@ -71,7 +71,7 @@ function eventRenderer(selectedEventId) {
       title += `Toute la journée`;
     }
 
-    if (info.event.rendering == 'background') {
+    if (info.event.display == 'background') {
       $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
 
       if (extendedProps.organisationName) {

@@ -66,14 +66,14 @@ class CalendarRdvSolidarites {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: this.handleAjaxError,
-      defaultDate: this.getDefaultDate(),
-      defaultView: this.getDefaultView(),
-      viewSkeletonRender: function (info) {
+      initialDate: this.getDefaultDate(),
+      initialView: this.getDefaultView(),
+      viewDidMount: function (info) {
         localStorage.setItem("calendarDefaultView", info.view.type);
       },
       hiddenDays: hiddenDays,
       select: this.selectEvent,
-      header: {
+      headerToolbar: {
         center: 'dayGridMonth,timeGridWeek,timeGridOneDay,listWeek'
       },
       views: {
@@ -83,8 +83,8 @@ class CalendarRdvSolidarites {
           buttonText: 'Journée'
         }
       },
-      datesRender: this.datesRender,
-      eventRender: eventRenderer(this.data.selectedEventId),
+      datesSet: this.datesSet,
+      eventDidMount: eventRenderer(this.data.selectedEventId),
     }
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
   }
@@ -111,7 +111,7 @@ class CalendarRdvSolidarites {
     window.location = `/admin/organisations/${this.data.organisationId}/rdv_wizard_step/new?${urlSearchParams.toString()}`;;
   }
 
-  datesRender = (info) => {
+  datesSet = (info) => {
     if (
       this.currentTodayVisible && !this.isTodayVisible(info.view) &&
       this.currentViewType &&

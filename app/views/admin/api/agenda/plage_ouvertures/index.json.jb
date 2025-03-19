@@ -5,7 +5,7 @@
     end: occurrence.ends_at.as_json,
     backgroundColor: plage_ouverture.organisation == @organisation ? "#6fceff80" : "grey",
     textColor: "#313131",
-    rendering: @display_in_background ? "background" : nil,
+    display: @display_in_background ? "background" : nil,
     url: admin_organisation_plage_ouverture_path(@organisation, plage_ouverture),
 
     extendedProps: {
