@@ -5,13 +5,13 @@
 - else
   h2 Sélectionnez le service puis le motif pour lequel voulez prendre un RDV&nbsp;:
   = dsfr_accordion(classes: "fr-mb-7v") do |accordion|
-    - context.unique_motifs_by_name_and_location_type.group_by(&:service).sort.each do |service, motifs|
+    - context.motifs_grouped_by_service.each do |service, motifs|
       .fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
         .fr-card__body
         = accordion.with_section(title: service.name) do
           ul.fr-raw-list
             .fr-card__title
-            - motifs.each do |motif|
+            - motifs.sort.each do |motif|
               li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
                 .fr-card__body
                   .fr-card__content
@@ -32,3 +32,4 @@
                           li.fr-badge.fr-badge--blue-cumulus = motif.human_attribute_value(:location_type)
                         - if motif.collectif?
                           li.fr-badge.fr-badge--purple-glycine.fr-icon-team-fill.fr-badge--icon-left = "RDV collectif"
+= render "search/referent_booking_card", context: context

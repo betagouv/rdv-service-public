@@ -90,7 +90,7 @@ RSpec.describe "public pages", js: true do
           address: "Paris 75001"
         )
         visit path
-        expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+        expect(page).to have_content("Sélectionnez le service puis le motif pour lequel voulez prendre un RDV")
 
         expect_page_to_be_axe_clean(path)
       end

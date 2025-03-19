@@ -42,7 +42,7 @@ RSpec.describe "Search", type: :request do
 
       it "show text to invite to select motif" do
         get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
-        expect(response.body).to include("Sélectionnez le service avec qui vous voulez prendre un RDV")
+        expect(response.body).to include("Sélectionnez le service puis le motif pour lequel voulez prendre un RDV")
       end
 
       context "lorsqu’il n’y a pas de motif de suivi associé aux services" do
