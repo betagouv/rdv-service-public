@@ -52,7 +52,7 @@ RSpec.describe "agents can prescribe rdvs" do
       go_to_prescription_page
       expect(page).to have_content("Nouveau RDV par prescription")
 
-      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel voulez prendre un RDV")
+      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
       expect(page).to have_content(motif_mds.service.name)
       expect(page).to have_content(motif_autre_service.service.name)
 
@@ -115,7 +115,7 @@ RSpec.describe "agents can prescribe rdvs" do
         go_to_prescription_page
         expect(page).to have_content("Nouveau RDV par prescription")
         # Selection du service et du motif
-        expect(page).to have_content("Sélectionnez le service puis le motif pour lequel voulez prendre un RDV")
+        expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
 
         find("button", text: motif_collectif.service.name).click # Ouverture de l’accordéon du service
 
@@ -223,7 +223,7 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Nouveau RDV par prescription")
       expect(page).to have_content("pour #{user.full_name}")
       # Select Service
-      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel voulez prendre un RDV")
+      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
 
       find("button", text: motif_mds.service.name).click # Ouverture de l’accordéon du service
 

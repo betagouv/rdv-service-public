@@ -343,7 +343,7 @@ RSpec.describe "User can search for rdvs" do
     it "shows the service selection" do
       visit root_path(departement: "92")
 
-      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel voulez prendre un RDV")
+      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
       expect(page).to have_content(service.name)
       expect(page).to have_content(other_service.name)
     end
@@ -434,13 +434,13 @@ RSpec.describe "User can search for rdvs" do
 
   def choose_service(service)
     expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
-    expect(page).to have_content("Sélectionnez le service puis le motif pour lequel voulez prendre un RDV")
+    expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
 
     find("a", text: service.name).click
   end
 
   def choose_motif(motif)
-    expect(page).to have_content("Sélectionnez le service puis le motif pour lequel voulez prendre un RDV")
+    expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
     find("button", text: motif.service.name).click
     find("a", text: motif.name).click
   end
