@@ -45,26 +45,25 @@ class Users::RdvWizardStepsController < UserAuthController
 
   def steps
     steps = {
-      authentification: {}, # cette étape n’est pas gérée par le controller. Sa présence ici sert à la matérialiser dans le stepper
       step1: {
         name: "step1",
         number: 1,
         title: "Vos informations",
         next_step: current_user.signed_in_with_invitation_token? ? :step3 : :step2,
-        stepper_index: 2,
+        stepper_index: 1,
       },
       step2: {
         name: "step2",
         number: 2,
         title: "Choix de l’usager",
         next_step: :step3,
-        stepper_index: 3,
+        stepper_index: 2,
       },
       step3: {
         name: "step3",
         number: 3,
         title: "Confirmation",
-        stepper_index: current_user.signed_in_with_invitation_token? ? 3 : 4,
+        stepper_index: current_user.signed_in_with_invitation_token? ? 2 : 3,
       },
     }
 
