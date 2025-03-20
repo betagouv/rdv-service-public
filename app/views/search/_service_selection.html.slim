@@ -5,11 +5,10 @@
 - else
   h2 Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV&nbsp;:
   = dsfr_accordion(classes: "fr-mb-7v") do |accordion|
-    - only_one_service = context.motifs_grouped_by_service.size == 1
     - context.motifs_grouped_by_service.each do |service, motifs|
       .fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
         .fr-card__body
-        = accordion.with_section(title: service.name, expanded: only_one_service) do
+        = accordion.with_section(title: service.name) do
           ul.fr-raw-list
             .fr-card__title
             - motifs.sort.each do |motif|
