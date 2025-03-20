@@ -204,7 +204,7 @@ class User < ApplicationRecord
   end
 
   def name_for_paper_trail
-    "[User] #{full_name}"
+    "[User] #{full_name} (user_id=#{id})"
   end
 
   def minor?

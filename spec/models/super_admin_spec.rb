@@ -20,7 +20,7 @@ RSpec.describe SuperAdmin, type: :model do
   describe "#name_for_paper_trail" do
     context "when impersonated is blank" do
       it "returns the correct string" do
-        expect(super_admin.name_for_paper_trail).to eq("[Admin] #{super_admin.full_name}")
+        expect(super_admin.name_for_paper_trail).to eq("[Admin] #{super_admin.full_name} (super_admin_id=#{super_admin.id})")
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe SuperAdmin, type: :model do
       let(:agent) { create(:agent) }
 
       it "returns the correct string" do
-        expect(super_admin.name_for_paper_trail(impersonated: agent)).to eq("[Admin] #{super_admin.full_name} pour #{agent.full_name}")
+        expect(super_admin.name_for_paper_trail(impersonated_agent: agent)).to eq("[Admin] #{super_admin.full_name} (super_admin_id=#{super_admin.id}) pour #{agent.full_name} (agent_id=#{agent.id})")
       end
     end
   end

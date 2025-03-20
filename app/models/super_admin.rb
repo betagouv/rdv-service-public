@@ -17,9 +17,9 @@ class SuperAdmin < ApplicationRecord
 
   devise :authenticatable
 
-  def name_for_paper_trail(impersonated: nil)
-    return "[Admin] #{full_name}" if impersonated.blank?
+  def name_for_paper_trail(impersonated_agent: nil)
+    return "[Admin] #{full_name} (super_admin_id=#{id})" if impersonated_agent.blank?
 
-    "[Admin] #{full_name} pour #{impersonated.full_name}"
+    "[Admin] #{full_name} (super_admin_id=#{id}) pour #{impersonated_agent.full_name} (agent_id=#{impersonated_agent.id})"
   end
 end
