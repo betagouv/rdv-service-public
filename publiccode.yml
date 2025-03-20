@@ -1,0 +1,53 @@
+# This repository adheres to the publiccode.yml standard by including this
+# metadata file that makes public software easily discoverable.
+# More info at https://github.com/italia/publiccode.yml
+
+# Ajouté notamment pour être indexé sur https://code.gouv.fr
+
+publiccodeYmlVersion: '0.2'
+name: RDV Service Public
+url: 'https://github.com/betagouv/rdv-service-public'
+landingURL: 'https://rdv.anct.gouv.fr/'
+developmentStatus: stable
+softwareType: standalone/backend
+categories:
+  - digital-citizenship
+platforms:
+  - web
+logo: |-
+  https://github.com/betagouv/rdv-service-public/blob/production/app/assets/images/logos/logo_sombre_rdv_service_public.svg
+legal:
+  license: AGPL-3.0
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - fr
+fr:
+  sample: '0.2'
+description:
+  fr:
+    documentation: 'https://aide.rdv-service-public.fr/'
+    apiDocumentation: |-
+      https://rdv.anct.gouv.fr/api-docs/
+    shortDescription: |-
+      outil permettant aux usagers de prendre RDV avec les administrations
+    longDescription: |
+      RDV Service Public est un outil permettant aux usagers de prendre RDV avec les administrations.
+
+      Il a pour objectif de :
+      - simplifier la prise de RDV pour les usagers (notamment avec la prise de RDV en ligne)
+      - notifier les usagers des rendez-vous pris (par mail et SMS)
+      - permettre aux agents de gérer les RDV pris
+      - s’interconnecter avec d’autres outils de l’État et des collectivités
+
+      Il doit être générateur d’efficience, tout en garantissant l’autonomie personnelle des utilisateurs. Le choix des priorités de développement est donc guidé par les retours des ses utilisateurs (usagers et agents administratifs).
+    genericName: Gestionnaire de RDV
+    features:
+      - réaliser une prise de RDV en ligne
+      - gérer les RDV pris
+      - notifier les usagers des RDV pris
+fundedBy:
+  - name: Direction interministérielle du numérique
+    url: https://lannuaire.service-public.fr/gouvernement/d1a97841-b4bf-46df-a089-1003e4e266b4
+  - name: Agence Nationale de Cohésion des Territoires
+    url: https://lannuaire.service-public.fr/gouvernement/da837b24-afa7-46ab-b56a-427dd4bcc159
