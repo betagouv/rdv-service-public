@@ -1,4 +1,13 @@
 module AgentsHelper
+  def may_need_onboarding_help?
+    # TODO: ajouter un commentaire pour expliquer le contournement de problèmes de perf
+    current_organisation.rdvs.limit(5).pluck(:id).count < 5
+  end
+
+  def meet_the_team_url
+    "https://cal.com/team/rdv-service-public/temps-d-echanges"
+  end
+
   def current_agent?(agent)
     agent.id == current_agent.id
   end
