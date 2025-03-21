@@ -1,7 +1,8 @@
 module AgentsHelper
   def may_need_onboarding_help?
-    # TODO: ajouter un commentaire pour expliquer le contournement de problèmes de perf
-    current_organisation.rdvs.limit(5).pluck(:id).count < 5
+    # Pour éviter d'avoir des problèmes de perfs en faisant un COUNT(*) sur tous les rdvs de l'organisation,
+    # on limite à 5 puisque c'est le nombre qu'on considère comme un bon indicateur que l'organisation a réussi à configurer son compte
+    current_organisation.rdvs.limit(5).count < 5
   end
 
   def meet_the_team_url
