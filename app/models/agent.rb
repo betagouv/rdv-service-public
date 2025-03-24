@@ -3,7 +3,12 @@ class SoftDeleteError < StandardError; end
 class Agent < ApplicationRecord
   # Mixins
   has_paper_trail(
-    only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
+    only: %w[
+      email unconfirmed_email
+      first_name last_name
+      proconnect_siret
+      invitation_sent_at invitation_accepted_at
+    ]
   )
 
   include Outlook::Connectable
