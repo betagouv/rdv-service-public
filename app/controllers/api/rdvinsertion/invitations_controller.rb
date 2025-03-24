@@ -1,7 +1,10 @@
 class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseController
+  INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[address latitude longitude invitation_token]).freeze
+  MAX_RELEVANT_CRENEAUX_COUNT_LIMIT = 200
+
   def creneau_availability
     payload = if params[:total_count] == "true"
-                { creneau_availability_count: }
+                { creneau_availability_count:, limit_reached: creneau_availability_count >= MAX_RELEVANT_CRENEAUX_COUNT_LIMIT }
               else
                 { creneau_availability: creneau_available? }
               end
@@ -18,13 +21,19 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def creneau_availability_count
-    invitation_search_context.matching_motifs.sum do |motif|
+    available_creneaux_count = 0
+    invitation_search_context.matching_motifs.each do |motif|
       if motif.phone?
         creneaux_available_for_motif(motif).size
       else
-        motif.lieux.sum { |lieu| creneaux_available_for_motif(motif, lieu).size }
+        motif.lieux.each do |lieu|
+          available_creneaux_count += creneaux_available_for_motif(motif, lieu).size
+          break if available_creneaux_count >= MAX_RELEVANT_CRENEAUX_COUNT_LIMIT
+        end
       end
+      break if available_creneaux_count >= MAX_RELEVANT_CRENEAUX_COUNT_LIMIT
     end
+    available_creneaux_count
   end
 
   def creneau_available?
@@ -58,7 +67,6 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def invitation_link_params
-    # invitation_token sert uniquement à retrouver l'usager
-    params.permit(InvitationSearchContext::INVITATION_PARAMS + %i[invitation_token])
+    params.permit(INVITATION_LINK_PARAMS)
   end
 end
