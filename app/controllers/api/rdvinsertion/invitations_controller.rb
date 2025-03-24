@@ -1,5 +1,4 @@
 class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseController
-  INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[address latitude longitude invitation_token]).freeze
   MAX_RELEVANT_CRENEAUX_COUNT_LIMIT = 200
 
   def creneau_availability
@@ -67,6 +66,7 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def invitation_link_params
-    params.permit(INVITATION_LINK_PARAMS)
+    # invitation_token sert uniquement à retrouver l'usager
+    params.permit(InvitationSearchContext::INVITATION_PARAMS + %i[invitation_token])
   end
 end
