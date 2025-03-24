@@ -22,8 +22,6 @@ localisation:
   localisationReady: false
   availableLanguages:
     - fr
-fr:
-  sample: '0.2'
 description:
   fr:
     documentation: 'https://aide.rdv-service-public.fr/'
