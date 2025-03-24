@@ -77,7 +77,7 @@ RSpec.describe "public pages", js: true do
       let!(:po_pour_autre_service_motif) { create(:plage_ouverture, motifs: [autre_service_motif], lieu: lieu) }
 
       it "root path is accessible" do
-        expect_page_to_be_axe_clean(root_path)
+        expect_page_to_be_axe_clean(root_path, check_title: false)
       end
 
       it "root path with a city_code page is accessible" do

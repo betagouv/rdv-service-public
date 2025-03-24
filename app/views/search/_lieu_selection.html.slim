@@ -1,3 +1,5 @@
+- content_for :title, "Sélectionnez le lieu"
+
 = render "search/selected_motif_recap", context: context
 - if context.shown_lieux.empty?
   = render "search/nothing_to_show", context: context
