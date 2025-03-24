@@ -1,6 +1,4 @@
 class SmsJob < ApplicationJob
-  queue_as :sms
-
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
 

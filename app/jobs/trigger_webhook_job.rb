@@ -1,6 +1,4 @@
 class TriggerWebhookJob < ApplicationJob
-  queue_as :trigger_webhook
-
   self.log_arguments = false
 
   def perform(webhook_endpoint_id)

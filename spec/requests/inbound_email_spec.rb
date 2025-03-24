@@ -13,7 +13,7 @@ RSpec.describe "Handling an email reply from a user" do
     it "enqueues the job that handles transferring the email" do
       expect do
         receive_brevo_callback
-      end.to have_enqueued_job(TransferEmailReplyJob).with({ "Subject" => "Dummy email" }).on_queue(:mailers)
+      end.to have_enqueued_job(TransferEmailReplyJob).with({ "Subject" => "Dummy email" }).on_queue(:default)
     end
   end
 
