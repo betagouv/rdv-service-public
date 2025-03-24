@@ -11,8 +11,8 @@ h1.m-2.rdv-text-align-center.border-bottom.pb-2 = t("admin.territories.show.titl
       = link_to edit_admin_territory_path(current_territory) do
         h2.fw-bold.mb-0
           i.fa.fa-location-dot>
-          | Espace
-        p Configurer l'espace, département, structure
+          | Général
+        p Nom de l'espace, département, téléphone
 
   - if Configuration::AgentPolicy.allowed_to_manage_agents_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
