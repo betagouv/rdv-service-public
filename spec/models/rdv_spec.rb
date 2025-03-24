@@ -789,37 +789,23 @@ RSpec.describe Rdv, type: :model do
   end
 
   describe "#overlapping_absences" do
-    subject { rdv.overlapping_absences }
+    let!(:agent) { create(:agent) }
 
-    let(:agent) { create(:agent) }
-    let(:now) { Time.zone.parse("2021-05-03 09h00") }
-    let(:rdv) { create(:rdv, starts_at: now, ends_at: now + 1.hour, agents: [agent]) }
-    let!(:absence) do
-      create(
-        :absence,
-        agent: agent,
-        first_day: now.to_date,
-        start_time: Tod::TimeOfDay.new(9),
-        end_time: Tod::TimeOfDay.new(10),
-        recurrence: Montrose.every(:week, on: ["monday"], starts: Time.zone.parse("20210503 00:00"), until: nil, interval: 1)
-      )
-    end
+    context "both absence and RDV run from 9 to 10 am" do
+      let!(:absence_from_9_to_10) { create(:absence, agent: agent, first_day: Time.zone.tomorrow, start_time: "09:00", end_time: "10:00") }
+      let!(:rdv_from_9_to_10) { create(:rdv, starts_at: tomorrow_at(9), ends_at: tomorrow_at(10), agents: [agent]) }
 
-    before { travel_to now }
-
-    it "returns absence overlapping rdv" do
-      expect(subject).to contain_exactly(absence)
+      it "detects that the absence overlaps" do
+        expect(rdv_from_9_to_10.overlapping_absences).to include(absence_from_9_to_10)
+      end
     end
 
     context "rdv interval is consecutive to absence interval: Absence for 08h-09h and Rdv for 09h-10h" do
-      before do
-        absence.start_time = Tod::TimeOfDay.new(8)
-        absence.end_time = Tod::TimeOfDay.new(9)
-        absence.save!
-      end
+      let!(:absence_from_8_to_9) { create(:absence, agent: agent, first_day: Time.zone.tomorrow, start_time: "08:00", end_time: "09:00") }
+      let!(:rdv_from_9_to_10) { create(:rdv, starts_at: tomorrow_at(9), ends_at: tomorrow_at(10), agents: [agent]) }
 
       it "does not find any overlapping absence" do
-        expect(subject).to be_empty
+        expect(rdv_from_9_to_10.overlapping_absences).to be_empty
       end
     end
   end

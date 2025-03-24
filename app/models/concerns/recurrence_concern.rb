@@ -169,6 +169,14 @@ module RecurrenceConcern
     end
   end
 
+  def end_time_must_be_after_start_time
+    return unless start_time && end_time
+
+    if start_time >= end_time
+      errors.add(:end_time, :must_be_after_start_time)
+    end
+  end
+
   def recurrence_starts_matches_first_day
     return true if recurrence.to_h[:starts]&.to_date == first_day
 
