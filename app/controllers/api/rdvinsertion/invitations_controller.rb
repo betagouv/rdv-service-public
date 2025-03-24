@@ -3,7 +3,7 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
 
   def creneau_availability
     payload = if params[:total_count] == "true"
-                { creneau_availability_count:, limit_reached: creneau_availability_count >= MAX_RELEVANT_CRENEAUX_COUNT_LIMIT }
+                { creneau_availability_count:, limit_reached: relevant_limit_reached?(creneau_availability_count) }
               else
                 { creneau_availability: creneau_available? }
               end
@@ -20,19 +20,21 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def creneau_availability_count
-    available_creneaux_count = 0
-    invitation_search_context.matching_motifs.each do |motif|
-      if motif.phone?
-        creneaux_available_for_motif(motif).size
-      else
-        motif.lieux.each do |lieu|
-          available_creneaux_count += creneaux_available_for_motif(motif, lieu).size
-          break if available_creneaux_count >= MAX_RELEVANT_CRENEAUX_COUNT_LIMIT
+    @creneau_availability_count ||= begin
+      available_creneaux_count = 0
+      invitation_search_context.matching_motifs.each do |motif|
+        if motif.phone?
+          creneaux_available_for_motif(motif).size
+        else
+          motif.lieux.each do |lieu|
+            available_creneaux_count += creneaux_available_for_motif(motif, lieu).size
+            break if relevant_limit_reached?(available_creneaux_count)
+          end
         end
+        break if relevant_limit_reached?(available_creneaux_count)
       end
-      break if available_creneaux_count >= MAX_RELEVANT_CRENEAUX_COUNT_LIMIT
+      available_creneaux_count
     end
-    available_creneaux_count
   end
 
   def creneau_available?
@@ -43,6 +45,10 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
         motif.lieux.any? { |lieu| creneaux_available_for_motif(motif, lieu).any? }
       end
     end
+  end
+
+  def relevant_limit_reached?(count)
+    count >= MAX_RELEVANT_CRENEAUX_COUNT_LIMIT
   end
 
   def creneaux_available_for_motif(motif, lieu = nil)
