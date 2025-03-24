@@ -30,7 +30,7 @@ class Agent::TerritoryPolicy
     if verified_by_mss?(agent)
       Service.find_by(name: "Action Sociale").id
     else
-      raise NotImplementedError, "Il faut définir les services par défaut pour les applications autre que mss, ou permettre le fonctionnement d'agent sans motifs (voir https://github.com/betagouv/rdv-service-public/pull/5182)"
+      raise NotImplementedError, "Il faut définir les services par défaut pour les applications autre que mss, ou permettre le fonctionnement sans service (ni pour les agents ni pour les motifs) (voir https://github.com/betagouv/rdv-service-public/pull/5182)"
     end
   end
 
