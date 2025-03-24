@@ -3,6 +3,40 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
+      "fingerprint": "d93227729f1a070feb92d7048272b7c5b0535fc7505c7ba5ab3c6c9c6e510fca",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "app/views/agents/rdv_plans/rdv.html.slim",
+      "line": 33,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to(\"Retour sur #{RdvPlan.find(params[:id]).oauth_application.name}\", RdvPlan.find(params[:id]).return_url, :class => \"float-right fr-btn\")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Agents::RdvPlansController",
+          "method": "rdv",
+          "line": 86,
+          "file": "app/controllers/agents/rdv_plans_controller.rb",
+          "rendered": {
+            "name": "agents/rdv_plans/rdv",
+            "file": "app/views/agents/rdv_plans/rdv.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "agents/rdv_plans/rdv"
+      },
+      "user_input": "RdvPlan.find(params[:id]).return_url",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
       "fingerprint": "dbe0369e2d4d1c53275ed53753eb214ac4f86b713b15cbe7035590a5fd0139ab",
       "check_name": "LinkToHref",
       "message": "Potentially unsafe model attribute in `link_to` href",
@@ -26,40 +60,6 @@
       "location": {
         "type": "template",
         "template": "agents/rdv_plans/edit_starts_at"
-      },
-      "user_input": "RdvPlan.find(params[:id]).return_url",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 4,
-      "fingerprint": "eb06341fb0ece8eb672553f39d23c6f20622a266bd155402f243287541ba2f19",
-      "check_name": "LinkToHref",
-      "message": "Potentially unsafe model attribute in `link_to` href",
-      "file": "app/views/agents/rdv_plans/rdv.html.slim",
-      "line": 33,
-      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
-      "code": "link_to(\"Retour sur #{RdvPlan.find(params[:id]).oauth_application.name}\", RdvPlan.find(params[:id]).return_url, :class => \"float-right\")",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Agents::RdvPlansController",
-          "method": "rdv",
-          "line": 86,
-          "file": "app/controllers/agents/rdv_plans_controller.rb",
-          "rendered": {
-            "name": "agents/rdv_plans/rdv",
-            "file": "app/views/agents/rdv_plans/rdv.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "agents/rdv_plans/rdv"
       },
       "user_input": "RdvPlan.find(params[:id]).return_url",
       "confidence": "Weak",

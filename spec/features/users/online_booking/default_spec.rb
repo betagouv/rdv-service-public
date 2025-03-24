@@ -288,7 +288,7 @@ RSpec.describe "User can search for rdvs" do
       ## Take rdv
       expect(page).to have_content("Vos informations")
       click_button("Continuer")
-      expect(page).to have_content("Choix de l'usager")
+      expect(page).to have_content("Choix de l’usager")
       click_button("Continuer")
       expect(page).to have_content("Confirmation")
       click_link("Confirmer mon RDV")
