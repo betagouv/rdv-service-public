@@ -25,10 +25,10 @@ class Agent::TerritoryPolicy
     agent.access_tokens.find_by(application_id: mss_oauth_application&.id)
   end
 
-  def self.default_services(agent)
+  def self.default_service(agent)
     # Pour le moment on propose cette fonctionnalité uniquement pour MSS, donc on met uniquement le service social
     if verified_by_mss?(agent)
-      Service.find_by(name: "Action Sociale").id
+      Service.find_by!(name: "Action Sociale")
     else
       raise NotImplementedError, <<~MSG
         Il faut définir les services par défaut pour les applications autre que mss, ou permettre le fonctionnement sans service (ni pour les agents ni pour les motifs)
