@@ -7,8 +7,11 @@ OmniAuth.config.request_validation_phase = nil
 
 # Cette classe est une application Sinatra minimaliste qui utilise l'oauth de RDV Service Public pour les tests
 class MonSuiviSocial < Sinatra::Base
+  base_url = "http://www.rdv-mairie.localhost:3000"
+  app_id = "Gcz6Hrp8fmqI-4ubjjsJeTcyZg_JF0v_XYsibL7a_Fg"
+
   use OmniAuth::Builder do
-    provider :rdv_service_public, "Gcz6Hrp8fmqI-4ubjjsJeTcyZg_JF0v_XYsibL7a_Fg", "development-kLbob_cr6Z58h9DTHjUvOhi44cImr2QA4XOQZJHKTCg", scope: "write", base_url: "http://www.rdv-mairie.localhost:3000"
+    provider :rdv_service_public, app_id, "development-kLbob_cr6Z58h9DTHjUvOhi44cImr2QA4XOQZJHKTCg", scope: "write", base_url: base_url
   end
 
   set :sessions, expire_after: 600 # temps en secondes
@@ -51,7 +54,7 @@ class MonSuiviSocial < Sinatra::Base
     session.delete(:email)
     session.delete(:access_token)
 
-    redirect to(Capybara.app_host + OmniAuth::Strategies::RdvServicePublic.sign_out_path("fake_app_id"))
+    redirect to(base_url + OmniAuth::Strategies::RdvServicePublic.sign_out_path(app_id))
   end
 
   get "/favicon.ico" do
