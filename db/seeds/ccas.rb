@@ -1,4 +1,4 @@
-service = Service.create!(name: "Action Sociale", short_name: "AS CCAS")
+service = Service.create!(name: "Action Sociale", short_name: "Action Sociale")
 
 Compte.new(
   {
