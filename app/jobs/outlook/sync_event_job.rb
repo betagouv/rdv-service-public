@@ -8,7 +8,9 @@ module Outlook
       key: -> { "Outlook::SyncEventJob-#{arguments.first}" }
     )
 
-    def self.perform_later_for(agents_rdv, queue: :default)
+    queue_as :latency_30s
+
+    def self.perform_later_for(agents_rdv, queue: :latency_30s)
       if agents_rdv.outlook_id.nil? && !agents_rdv.destroyed?
         agents_rdv.update_columns(outlook_create_in_progress: true) # rubocop:disable Rails/SkipsModelValidations
       end

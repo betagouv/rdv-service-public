@@ -1,5 +1,9 @@
 class CronJob < ApplicationJob
+  queue_as :latency_whenever
+
   class FileAttenteJob < CronJob
+    queue_as :latency_30s
+
     def perform
       FileAttente.send_notifications
     end
@@ -9,7 +13,7 @@ class CronJob < ApplicationJob
     def perform
       Rdv.not_cancelled.day_after_tomorrow.find_each do |rdv|
         run_at = rdv.starts_at - 48.hours
-        RdvUpcomingReminderJob.set(wait_until: run_at, queue: :low_priority).perform_later(rdv)
+        RdvUpcomingReminderJob.set(wait_until: run_at, queue: :latency_5m).perform_later(rdv)
       end
     end
   end

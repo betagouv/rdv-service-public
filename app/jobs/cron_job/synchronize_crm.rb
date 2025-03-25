@@ -1,4 +1,4 @@
-class CronJob::SynchronizeCrm < ApplicationJob
+class CronJob::SynchronizeCrm < CronJob
   # Base de données "Activation"
   # ID récupéré dans l’URL de la page
   # Cf: https://developers.notion.com/reference/retrieve-a-database

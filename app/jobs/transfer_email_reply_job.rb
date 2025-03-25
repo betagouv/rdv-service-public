@@ -1,6 +1,8 @@
 # cf /docs/interconnexions/brevo.md
 
 class TransferEmailReplyJob < ApplicationJob
+  queue_as :latency_30s
+
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
 

@@ -1,9 +1,11 @@
 class FailOnPurposeError < StandardError; end
 
 class FailOnPurposeJob < ApplicationJob
+  queue_as :latency_30s
+
   # self.log_arguments = false
 
-  # retry_on(StandardError, wait: 20.seconds, attempts: 3, queue: :low_priority)
+  # retry_on(StandardError, wait: 20.seconds, attempts: 3, priority: DefaultJobBehaviour::PRIORITY_OF_RETRIES)
 
   # discard_on(FailOnPurposeError) { |_job, error| Sentry.capture_exception(error) }
 

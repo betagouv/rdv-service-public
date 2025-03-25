@@ -1,5 +1,5 @@
 class ExportJob < ApplicationJob
-  queue_as :low_priority
+  queue_as :latency_whenever
 
   private
 
