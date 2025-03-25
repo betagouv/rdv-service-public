@@ -21,34 +21,34 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
 
   def creneau_availability_count
     @creneau_availability_count ||= begin
-      available_creneaux_count = 0
+      counter = 0
       invitation_search_context.matching_motifs.each do |motif|
         if motif.phone?
-          creneaux_available_for_motif(motif).size
+          counter += creneaux_available_for_motif(motif).all_creneaux.size
         else
           motif.lieux.each do |lieu|
-            available_creneaux_count += creneaux_available_for_motif(motif, lieu).size
-            break if relevant_limit_reached?(available_creneaux_count)
+            counter += creneaux_available_for_motif(motif, lieu).all_creneaux.size
+            break if relevant_limit_reached?(counter)
           end
         end
-        break if relevant_limit_reached?(available_creneaux_count)
+        break if relevant_limit_reached?(counter)
       end
-      available_creneaux_count
+      counter
     end
   end
 
   def creneau_available?
     invitation_search_context.matching_motifs.any? do |motif|
       if motif.phone?
-        creneaux_available_for_motif(motif).any?
+        creneaux_available_for_motif(motif).creneaux.any?
       else
-        motif.lieux.any? { |lieu| creneaux_available_for_motif(motif, lieu).any? }
+        motif.lieux.any? { |lieu| creneaux_available_for_motif(motif, lieu).creneaux.any? }
       end
     end
   end
 
   def relevant_limit_reached?(count)
-    count >= MAX_RELEVANT_CRENEAUX_COUNT_LIMIT
+    count >= params.fetch(:max_relevant_creneaux_count_limit, MAX_RELEVANT_CRENEAUX_COUNT_LIMIT)
   end
 
   def creneaux_available_for_motif(motif, lieu = nil)
@@ -57,7 +57,7 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
       motif: motif,
       lieu: lieu,
       geo_search: invitation_search_context.geo_search
-    ).creneaux
+    )
   end
 
   def invitation_search_context
