@@ -1,4 +1,6 @@
 class Users::RdvWizardStepsController < UserAuthController
+  layout "application_base"
+
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
   EXTRA_PERMITTED_PARAMS = [
     *WebSearchContext::ADDRESS_SELECTION_PARAMS,

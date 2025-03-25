@@ -1,24 +1,27 @@
-.row.justify-content-md-center
-  .col-md-6
-    .card
-      .card-body
-        h1.card-title = t(".my_informations")
-        = render "form", user: @user
-  .col-md-6
-    .card
-      .card-body
-        h2.card-title = t(".my_relatives")
-        ul.list-group.mb-2
-          - if @user.relatives.empty?
-            li.list-group-item
-              em = t(".no_relatives")
-          - @user.relatives.order(:birth_date).each do |relative|
-            li.list-group-item
-              .row
-                .col
-                  => relative.full_name
-                  = "(#{age(relative)})" if relative.birth_date
-                .col-auto.rdv-text-align-right
-                  = link_to t("admin.rdvs.show.update"), edit_relative_path(relative)
-        .rdv-text-align-right
-          = link_to t(".add_relative"), new_relative_path, class: "fr-btn fr-btn--secondary", data: { modal: true }
+- content_for :title, t(".my_informations")
+
+.fr-container.fr-pt-3w
+  .row.justify-content-md-center
+    .col-md-6
+      .card
+        .card-body
+          h1.card-title = t(".my_informations")
+          = render "form", user: @user
+    .col-md-6
+      .card
+        .card-body
+          h2.card-title = t(".my_relatives")
+          ul.list-group.mb-2
+            - if @user.relatives.empty?
+              li.list-group-item
+                em = t(".no_relatives")
+            - @user.relatives.order(:birth_date).each do |relative|
+              li.list-group-item
+                .row
+                  .col
+                    => relative.full_name
+                    = "(#{age(relative)})" if relative.birth_date
+                  .col-auto.rdv-text-align-right
+                    = link_to t("admin.rdvs.show.update"), edit_relative_path(relative)
+          .rdv-text-align-right
+            = link_to t(".add_relative"), new_relative_path, class: "fr-btn fr-btn--secondary", data: { modal: true }

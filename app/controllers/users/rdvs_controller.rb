@@ -7,6 +7,7 @@ class Users::RdvsController < UserAuthController
   after_action :allow_iframe
 
   layout "application_narrow", only: %i[show]
+  layout "application_base", only: %i[index]
 
   include TokenInvitable
   prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
