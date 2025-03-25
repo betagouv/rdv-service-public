@@ -13,13 +13,14 @@
 
   .container-fluid.card
 
-    .m-3.d-flex.justify-content-end
-      - if [params[:search], params[:online_filter], params[:service_filter], params[:location_type_filter]].compact_blank.any?
-        div = link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation, current_tab: @current_tab), class: "btn btn-link"
-      = f.input :search, placeholder: "ex. Être appelé par la MDS", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
-      = f.button :submit, "Rechercher"
+    - if needs_motif_search?
+      .fr-mt-2w.d-flex.justify-content-end[style="margin-bottom: -32px"]
+        - if [params[:search], params[:online_filter], params[:service_filter], params[:location_type_filter]].compact_blank.any?
+          div = link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation, current_tab: @current_tab), class: "btn btn-link"
+        = f.input :search, placeholder: "ex. Être appelé par la MDS", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+        = f.button :submit, "Rechercher"
 
-    ul.nav.nav-tabs
+    ul.nav.nav-tabs.fr-mt-2w
       - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
         li.nav-item
           ruby:
