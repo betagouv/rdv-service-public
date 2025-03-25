@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_18_141146) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_25_140105) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -215,7 +215,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_18_141146) do
     t.string "uid", default: ""
     t.text "tokens"
     t.boolean "allow_password_change", default: false
-    t.enum "rdv_notifications_level", default: "others", enum_type: "agents_rdv_notifications_level"
+    t.enum "rdv_notifications_level", default: "all", enum_type: "agents_rdv_notifications_level"
     t.integer "unknown_past_rdv_count", default: 0
     t.boolean "display_saturdays", default: false, comment: "Indique si l'agent veut que les samedis s'affichent quand il consulte un calendrier (pas forcément le sien). Cela n'affecte pas ce que voient les autres agents. Modifiable par le bouton en bas de la vue calendrier.\n"
     t.boolean "display_cancelled_rdv", default: true, comment: "Indique si l'agent veut que les rdv annulés s'affichent quand il consulte un calendrier (pas forcément le sien). Cela n'affecte pas ce que voient les autres agents. Modifiable par le bouton en bas de la vue calendrier\n"
