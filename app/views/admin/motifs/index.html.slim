@@ -15,6 +15,7 @@
 
     - need_search = needs_motif_search?
     - if need_search
+      / Le margin-bottom négatif compense la hauteur des onglets
       .fr-mt-2w.d-flex.justify-content-end[style="margin-bottom: -32px"]
         - if [params[:search], params[:online_filter], params[:service_filter], params[:location_type_filter]].compact_blank.any?
           div = link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation, current_tab: @current_tab), class: "btn btn-link"
