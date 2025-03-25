@@ -28,7 +28,7 @@ class Agents::TerritoriesController < AgentAuthController
     params.require(:compte).permit(
       territory: %i[name departement_number],
       organisation: %i[name],
-      agent: %i[id service_ids]
+      agent: [:id, { service_ids: [] }]
     )
   end
 
