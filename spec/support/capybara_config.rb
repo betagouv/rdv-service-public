@@ -51,10 +51,10 @@ RSpec.configure do |config|
   end
 end
 
-def expect_page_to_be_axe_clean(path, excluding_selector: nil, check_title: true)
+def expect_page_to_be_axe_clean(path, excluding_selector: nil)
   visit path
   expect(page).to have_current_path(path)
-  expect_page_to_have_title if check_title
+  expect_page_to_have_title
 
   if excluding_selector
     expect(page).to be_axe_clean.excluding(excluding_selector)
@@ -66,5 +66,9 @@ end
 # Pour des questions d’accessibilité, chaque page doit avoir un titre explicite
 # suivi du nom de l’application (sauf pour la page d’accueil)
 def expect_page_to_have_title
-  expect(page).to have_title(/.* - RDV Solidarités/)
+  if page.current_path == "/"
+    expect(page).to have_title("RDV Solidarités")
+  else
+    expect(page).to have_title(/.* - RDV Solidarités/)
+  end
 end
