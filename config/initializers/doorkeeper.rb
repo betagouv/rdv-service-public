@@ -18,7 +18,7 @@ Doorkeeper.configure do
   #
   # access_token_class "Dookeeper::AccessToken"
   # access_grant_class "Doorkeeper::AccessGrant"
-  # application_class "Doorkeeper::Application"
+  application_class "OauthApplication"
   #
   # Don't forget to include Doorkeeper ORM mixins into your custom models:
   #
