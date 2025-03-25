@@ -7,76 +7,83 @@
   = settings_icon(class: "fr-mr-1w")
   | Configuration
 
-.fr-grid-row.fr-mt-4w
+.fr-container-fluid
+  - if may_need_onboarding_help?
+    .fr-callout.fr-p-2w
+      p.fr-callout__text
+        = icon("fr-icon-lightbulb-line", class: "fr-mr-3v")
+        | Besoin d'aide pour configurer votre organisation ? Nous pouvons vous aider
+        = external_link_to("Contacter l'équipe", meet_the_team_url, class: "fr-btn fr-btn--secondary fr-ml-1w")
+  .fr-grid-row.fr-grid-row--gutters.fr-mt-4w
 
-  .fr-col-12.fr-col-md-4.fr-mb-2w
-    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
-      .fr-tile__body
-        .fr-tile__content
-          h3.fr-tile__title
-            = link_to(admin_organisation_agents_path(current_organisation)) do
-              = icon("fr-icon-user-fill",class: "fr-mr-1w")
-              | Agents
-          p.fr-tile__desc
-            = @agents_scope.limit(3).map(&:full_name).join(", ")
-            - if @agents_scope.count > 3
-              - autres_count = @agents_scope.count - 3
-              = " et #{autres_count} #{'autre'.pluralize(autres_count)}"
-
-  .fr-col-4.fr-mb-2w
-    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
-      .fr-tile__body
-        .fr-tile__content
-          h3.fr-tile__title
-            = link_to(admin_organisation_motifs_path(current_organisation)) do
-              = motif_icon(class: "fr-mr-1w")
-              | Motifs de rendez-vous
-          p.fr-tile__desc
-            - if @motif_names.blank?
-              i Aucun motif
-            - else
-              = @motif_names[0..2].join(", ")
-              - if @motif_names.count > 3
-                - autres_count = @motif_names.count - 3
+    .fr-col-12.fr-col-md-4.fr-mb-2w
+      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+        .fr-tile__body
+          .fr-tile__content
+            h3.fr-tile__title
+              = link_to(admin_organisation_agents_path(current_organisation)) do
+                = icon("fr-icon-user-fill",class: "fr-mr-1w")
+                | Agents
+            p.fr-tile__desc
+              = @agents_scope.limit(3).map(&:full_name).join(", ")
+              - if @agents_scope.count > 3
+                - autres_count = @agents_scope.count - 3
                 = " et #{autres_count} #{'autre'.pluralize(autres_count)}"
 
-  .fr-col-4.fr-mb-2w
-    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
-      .fr-tile__body
-        .fr-tile__content
-          h3.fr-tile__title
-            = link_to(admin_organisation_lieux_path(current_organisation)) do
-              = lieu_icon(class: "fr-mr-1w")
-              | Lieux
-          p.fr-tile__desc
-            - if current_organisation.lieux.none?
-              i Aucun lieu
-            - else
-              = @lieu_names[0..2].join(", ")
-              - if @lieu_names.count > 3
-                - autres_count = @lieu_names.count - 3
-                = " et #{autres_count} #{'autre'.pluralize(autres_count)}"
+    .fr-col-12.fr-col-md-4.fr-mb-2w
+      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+        .fr-tile__body
+          .fr-tile__content
+            h3.fr-tile__title
+              = link_to(admin_organisation_motifs_path(current_organisation)) do
+                = motif_icon(class: "fr-mr-1w")
+                | Motifs de rendez-vous
+            p.fr-tile__desc
+              - if @motif_names.blank?
+                i Aucun motif
+              - else
+                = @motif_names[0..2].join(", ")
+                - if @motif_names.count > 3
+                  - autres_count = @motif_names.count - 3
+                  = " et #{autres_count} #{'autre'.pluralize(autres_count)}"
 
-  .fr-col-4.fr-mb-2w
-    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
-      .fr-tile__body
-        .fr-tile__content
-          h3.fr-tile__title
-            = link_to("Informations de contact", admin_organisation_path(current_organisation))
-          p.fr-tile__desc
-            - infos =[@organisation.phone_number, @organisation.email, @organisation.website].compact
-            - if infos.present?
-              = infos.join(" ")
-            - else
-              i Pas d'informations de contact
+    .fr-col-12.fr-col-md-4.fr-mb-2w
+      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+        .fr-tile__body
+          .fr-tile__content
+            h3.fr-tile__title
+              = link_to(admin_organisation_lieux_path(current_organisation)) do
+                = lieu_icon(class: "fr-mr-1w")
+                | Lieux
+            p.fr-tile__desc
+              - if current_organisation.lieux.none?
+                i Aucun lieu
+              - else
+                = @lieu_names[0..2].join(", ")
+                - if @lieu_names.count > 3
+                  - autres_count = @lieu_names.count - 3
+                  = " et #{autres_count} #{'autre'.pluralize(autres_count)}"
 
-  .fr-col-4.fr-mb-2w
-    .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md.fr-m-2w
-      .fr-tile__body
-        .fr-tile__content
-          h3.fr-tile__title
-            = link_to("Réservation en ligne", admin_organisation_online_booking_path(current_organisation))
+    .fr-col-12.fr-col-md-4.fr-mb-2w
+      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+        .fr-tile__body
+          .fr-tile__content
+            h3.fr-tile__title
+              = link_to("Informations de contact", admin_organisation_path(current_organisation))
+            p.fr-tile__desc
+              - infos =[@organisation.phone_number, @organisation.email, @organisation.website].compact
+              - if infos.present?
+                = infos.join(" ")
+              - else
+                i Pas d'informations de contact
 
-/ Un bricolage pour éviter que le footer déborde sur les tuiles
-br.fr-my-2w
-br.fr-my-2w
+    .fr-col-12.fr-col-md-4.fr-mb-2w
+      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+        .fr-tile__body
+          .fr-tile__content
+            h3.fr-tile__title
+              = link_to("Réservation en ligne", admin_organisation_online_booking_path(current_organisation))
+
+  / Un bricolage pour éviter que le footer déborde sur les tuiles
+  br.fr-my-2w
+  br.fr-my-2w
