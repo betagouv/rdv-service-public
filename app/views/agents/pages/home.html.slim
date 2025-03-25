@@ -6,20 +6,19 @@
   .fr-col-12.fr-col-md-6.fr-p-1w
     .card
       .card-body
-        h2.fr-h6 Votre structure utilise déjà #{current_domain.name} et vous souhaitez disposer d’un accès ?
+        h2.fr-h6 Votre organisation utilise déjà #{current_domain.name} ?
         p Vos collègues peuvent vous inviter depuis le menu <b>Configuration > Agents > Ajouter un agent</b>.
 
   .fr-col-12.fr-col-md-6.fr-p-1w.fr-pb-8w
     .card
       .card-body
-        h2.fr-h6 Votre structure n’utilise pas #{current_domain.name} et vous souhaitez créer un compte ?
+        h2.fr-h6 Votre organisation n’utilise pas encore #{current_domain.name} ?
         - policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)
         - if policy.new?
-          p Vous pouvez ouvrir un espace pour votre structure
-          / ou alors "ouvrir un espace pour ma structure ?"
+          p Vous pouvez ouvrir un espace pour votre organisation.
           = link_to "Ouvrir un espace", new_agents_territory_path, class: "fr-btn"
         - else
-          p Nous vous invitons à contacter notre équipe. Nous organiserons un temps d’échanges pour vous présenter la solution et créer le compte de votre structure.
+          p Nous vous invitons à contacter notre équipe. Nous organiserons un temps d’échanges pour vous présenter la solution et ouvrir un espace pour votre organisation.
 
           ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md
             li
