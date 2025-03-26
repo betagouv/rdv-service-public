@@ -3,7 +3,7 @@
 - if context.unique_motifs_by_name_and_location_type.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h1.fr-h3 Sélectionnez le motif de votre RDV&nbsp;:
+  p.fr-text--lg Sélectionnez le motif de votre RDV&nbsp;:
   ul.fr-raw-list
     - context.unique_motifs_by_name_and_location_type.each do |motif|
       = render "search/motif_card", context: context, motif: motif
