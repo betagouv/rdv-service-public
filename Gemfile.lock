@@ -400,6 +400,22 @@ GEM
     nokogiri (1.18.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    nokogiri (1.18.4-aarch64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.4-aarch64-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.18.4-arm-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.4-arm-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.18.4-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.18.4-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.18.4-x86_64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.4-x86_64-linux-musl)
+      racc (~> 1.4)
     notion-ruby-client (1.2.2)
       faraday (>= 2.0)
       faraday-mashify (>= 0.1.1)
@@ -753,7 +769,15 @@ GEM
     zeitwerk (2.7.0)
 
 PLATFORMS
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-gnu
+  arm-linux-musl
+  arm64-darwin
   ruby
+  x86_64-darwin
+  x86_64-linux-gnu
+  x86_64-linux-musl
 
 DEPENDENCIES
   active_link_to
