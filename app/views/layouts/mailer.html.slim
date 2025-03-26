@@ -26,7 +26,7 @@ html
                   td.aligncenter.content-block
                     = link_to mentions_legales_url do
                       span> Mentions Légales
-                  - if @agent
+                  - if @display_link_to_agent_preferences
                     = "Vous pouvez changer la fréquence de ces mails depuis "
                     = link_to agents_preferences_url do
                       span> vos préférences

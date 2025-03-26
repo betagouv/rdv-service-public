@@ -3,6 +3,7 @@ class Agents::AbsenceMailer < ApplicationMailer
 
   before_action do
     @absence = params[:absence]
+    @display_link_to_agent_preferences = true
   end
 
   default to: -> { @absence.agent.email }
