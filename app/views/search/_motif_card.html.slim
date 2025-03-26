@@ -1,0 +1,22 @@
+/ locals(context: ,#motif:)
+
+li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
+  .fr-card__body
+    .fr-card__content
+      .fr-card__title
+        = link_to motif.name, prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))
+      .fr-card__start
+        ul.fr-badges-group
+          - case motif.location_type
+          - when "phone"
+            li.fr-badge.fr-badge--blue-cumulus.fr-icon-phone-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
+          - when "home"
+            li.fr-badge.fr-badge--blue-cumulus.fr-icon-home-4-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
+          - when "public_office"
+            li.fr-badge.fr-badge--blue-cumulus.fr-icon-building-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
+          - when "visio"
+            li.fr-badge.fr-badge--blue-cumulus.fr-icon-mac-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
+          - else
+            li.fr-badge.fr-badge--blue-cumulus = motif.human_attribute_value(:location_type)
+          - if motif.collectif?
+            li.fr-badge.fr-badge--purple-glycine.fr-icon-team-fill.fr-badge--icon-left = "RDV collectif"
