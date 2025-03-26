@@ -72,8 +72,6 @@ function eventRenderer(selectedEventId) {
     }
 
     if (info.event.display == 'background') {
-      $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
-
       if (extendedProps.organisationName) {
         title += `<br>${extendedProps.organisationName}`;
       }
