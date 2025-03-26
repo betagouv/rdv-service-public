@@ -13,9 +13,9 @@ RSpec.describe Outlook::MassCreateEventJob do
 
   it "syncs future rdvs to outlook" do
     described_class.perform_now(agent)
-    expect(Outlook::SyncEventJob).to have_received(:perform_later_for).with(future_rdv1.agents_rdvs.first)
-    expect(Outlook::SyncEventJob).to have_received(:perform_later_for).with(future_rdv2.agents_rdvs.first)
-    expect(Outlook::SyncEventJob).to have_received(:perform_later_for).with(recent_past_rdv.agents_rdvs.first)
-    expect(Outlook::SyncEventJob).not_to have_received(:perform_later_for).with(distant_past_rdv.agents_rdvs.first)
+    expect(Outlook::SyncEventJob).to have_received(:perform_later_for).with(future_rdv1.agents_rdvs.first, queue: :latency_5m)
+    expect(Outlook::SyncEventJob).to have_received(:perform_later_for).with(future_rdv2.agents_rdvs.first, queue: :latency_5m)
+    expect(Outlook::SyncEventJob).to have_received(:perform_later_for).with(recent_past_rdv.agents_rdvs.first, queue: :latency_5m)
+    expect(Outlook::SyncEventJob).not_to have_received(:perform_later_for).with(distant_past_rdv.agents_rdvs.first, queue: :latency_5m)
   end
 end

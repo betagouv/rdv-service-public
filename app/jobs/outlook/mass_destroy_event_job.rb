@@ -1,6 +1,6 @@
 module Outlook
   class MassDestroyEventJob < ApplicationJob
-    queue_as :outlook_sync
+    queue_as :latency_5m
 
     def perform(agent)
       Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })

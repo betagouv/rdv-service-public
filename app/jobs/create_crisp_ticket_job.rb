@@ -1,4 +1,6 @@
 class CreateCrispTicketJob < ApplicationJob
+  queue_as :latency_30s
+
   def perform(nickname:, email:, phone:, subject:, message:, role:, domain:)
     conversation = client.website.create_new_conversation(website_id)
 

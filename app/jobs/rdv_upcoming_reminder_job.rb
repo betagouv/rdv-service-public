@@ -1,5 +1,5 @@
 class RdvUpcomingReminderJob < ApplicationJob
-  queue_as :reminders
+  queue_as :latency_5m
 
   # Ces jobs sont enqueued 48 heures avant le début du RDV
   # La stratégie de retries par défaut jusqu’à 8 jours ne convient donc pas
