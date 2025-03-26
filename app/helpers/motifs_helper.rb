@@ -132,8 +132,4 @@ module MotifsHelper
   def instruction_for_rdv_to_html(motif)
     auto_link(simple_format(motif.instruction_for_rdv, {}, wrapper_tag: "span"), html: { target: "_blank" })
   end
-
-  def needs_motif_search?
-    current_organisation.motifs.limit(10).count == 10
-  end
 end

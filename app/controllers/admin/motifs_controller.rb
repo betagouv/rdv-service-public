@@ -9,6 +9,7 @@ class Admin::MotifsController < AgentAuthController
 
     unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
     @filtered_motifs = filtered(unfiltered_motifs, params)
+    @need_search = enough_motifs_to_need_search?(unfiltered_motifs)
 
     @motifs_page = @filtered_motifs
       .active(@current_tab == :active)
@@ -151,4 +152,8 @@ class Admin::MotifsController < AgentAuthController
     @agent_can_create_motif ||= Agent::MotifPolicy.new(current_agent, Motif.new(organisation: current_organisation)).create?
   end
   helper_method :agent_can_create_motif?
+
+  def enough_motifs_to_need_search?(motif_scope)
+    motif_scope.limit(10).count == 10
+  end
 end

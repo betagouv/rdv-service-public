@@ -13,8 +13,7 @@
 
   .container-fluid.card
 
-    - need_search = needs_motif_search?
-    - if need_search
+    - if @need_search
       / Le margin-bottom négatif compense la hauteur des onglets
       .fr-mt-2w.d-flex.justify-content-end[style="margin-bottom: -32px"]
         - if [params[:search], params[:online_filter], params[:service_filter], params[:location_type_filter]].compact_blank.any?
@@ -50,7 +49,7 @@
           th
             div
               = Motif.human_attribute_name("bookable_by")
-            - if need_search
+            - if @need_search
               div
                 - options = options_for_select(["En ligne", "Hors ligne"], params[:online_filter])
                 = select_tag("online_filter", options, include_blank: "Tous", class: "js-submit-on-change select2-input")
@@ -59,14 +58,14 @@
           th
             div
               = Motif.human_attribute_name("service")
-            - if need_search
+            - if @need_search
               div
                 - options = options_from_collection_for_select(current_territory.services, :id, :short_name, params[:service_filter])
                 = select_tag("service_filter", options, include_blank: "Tous", class: "js-submit-on-change select2-input")
           th
             div
               = Motif.human_attribute_name("location_type")
-              - if need_search
+              - if @need_search
                 div
                   - options = options_for_select(Motif.location_types.map{|l| [Motif.human_attribute_value(:location_type, l[0]), l[1]] }, params[:location_type_filter])
                   = select_tag("location_type_filter", options, include_blank: "Tous", class: "js-submit-on-change select2-input")
