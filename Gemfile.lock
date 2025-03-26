@@ -142,7 +142,7 @@ GEM
       sassc-rails (~> 2.1)
       selectize-rails (~> 0.6)
     aes_key_wrap (1.1.0)
-    ast (2.4.2)
+    ast (2.4.3)
     attr_required (1.0.1)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
@@ -315,7 +315,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jsbundling-rails (1.2.1)
       railties (>= 6.0.0)
-    json (2.10.1)
+    json (2.10.2)
     json-jwt (1.16.6)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -375,7 +375,7 @@ GEM
     mime-types-data (3.2025.0220)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
-    minitest (5.25.4)
+    minitest (5.25.5)
     montrose (0.16.0)
       activesupport (>= 5.2, < 8)
     msgpack (1.7.2)
@@ -452,7 +452,7 @@ GEM
     parallel (1.26.3)
     parallel_tests (4.8.0)
       parallel
-    parser (3.3.7.0)
+    parser (3.3.7.3)
       ast (~> 2.4.1)
       racc
     pg (1.4.6)
@@ -468,6 +468,7 @@ GEM
       actionmailer (>= 3)
       net-smtp
       premailer (~> 1.7, >= 1.7.9)
+    prism (1.4.0)
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -609,7 +610,7 @@ GEM
     rswag-ui (2.16.0)
       actionpack (>= 5.2, < 8.1)
       railties (>= 5.2, < 8.1)
-    rubocop (1.72.2)
+    rubocop (1.75.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -617,12 +618,13 @@ GEM
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.38.0, < 2.0)
+      rubocop-ast (>= 1.43.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.38.0)
-      parser (>= 3.3.1.0)
-    rubocop-rails (2.30.1)
+    rubocop-ast (1.43.0)
+      parser (>= 3.3.7.2)
+      prism (~> 1.4)
+    rubocop-rails (2.30.3)
       activesupport (>= 4.2.0)
       lint_roller (~> 1.1)
       rack (>= 1.1)
@@ -780,6 +782,7 @@ DEPENDENCIES
   connection_pool
   coverband
   crisp-api (~> 1.1)
+  csv
   database_cleaner
   devise!
   devise-async
