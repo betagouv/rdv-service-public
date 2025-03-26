@@ -46,7 +46,7 @@ class PlageOuvertureOverlap
 
     # but are on different days
     # for monthly recurrences, day is [3] for the third day of the week
-    options1.day.intersection(options2.day).empty?
+    !options1.day.intersect?(options2.day)
   end
 
   def both_monthly_but_different_days? # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -60,12 +60,12 @@ class PlageOuvertureOverlap
 
     # … but but are on different weeks
     # for monthly recurrences, day is {2=>[3]} for the second day of the third week of the month
-    return true if options1.day.keys.intersection(options2.day.keys).empty?
+    return true unless options1.day.keys.intersect?(options2.day.keys)
 
     # … but are on the same week of the month but on different days
     # day is a hash, the key is the week number in the month, the value is the days in this week.
     # In RDVS, monthly PO are only on a single day per month
-    return true if options1.day.keys == options2.day.keys && options1.day.keys.size == 1 && options1.day.values.first.intersection(options2.day.values.first).empty?
+    return true if options1.day.keys == options2.day.keys && options1.day.keys.size == 1 && !options1.day.values.first.intersect?(options2.day.values.first)
 
     false
   end
