@@ -3,26 +3,27 @@ $rdvs-fc-header-bg-color: $gray-200;
 :root {
   --fc-button-text-color: #000000;
   --fc-button-bg-color: #e3eaef;
-  --fc-button-border-color: #1a252f;
+  --fc-button-border-color: #1a252f; // non utilisée car en border: none
 
   --fc-button-hover-text-color: #000000;
   --fc-button-hover-bg-color: #f6f6f6;
-  --fc-button-hover-border-color: #1a252f;
+  --fc-button-hover-border-color: #1a252f; // non utilisée car en border: none
 
   --fc-button-active-color: #fff;
   --fc-button-active-bg-color: #1a252f;
-  --fc-button-active-border-color: #151e27;
+  --fc-button-active-border-color: #151e27; // non utilisée car en border: none
 
   --fc-bg-event-opacity: 1.0;
 }
 
 .fc {
+  // réduit la taille de la date
   .fc-toolbar-title {
     font-size: 1.25rem;
     line-height: 1.875rem;
-    text-transform: uppercase;
   }
 
+  // change l'apparence de l'en-tête du calendrier
   .fc-col-header-cell {
     background: $rdvs-fc-header-bg-color;
     border: none;
@@ -51,8 +52,10 @@ $rdvs-fc-header-bg-color: $gray-200;
   padding: 6px 12px;
   height: auto;
 
-  &.fc-button-active {
-    color:  var(--fc-button-active-color) !important;
+  // prend le dessus sur une règle très spécifique dans FullCalendar
+  // .fc .fc-button-primary:not(:disabled).fc-button-active
+  &.fc-button-active.fc-button-primary:not(:disabled) {
+    color: var(--fc-button-active-color);
   }
 }
 
@@ -108,13 +111,14 @@ $rdvs-fc-header-bg-color: $gray-200;
   }
 }
 
+// Toute cette section implémente la petite secousse
+// qui indique qu'un RDV vient d'être créé.
 .fc-event.selected {
   animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
 }
-
 @keyframes shake {
   10%,
   90% {
