@@ -1,30 +1,48 @@
+$rdvs-fc-header-bg-color: $gray-200;
+
 :root {
   --fc-button-text-color: #000000;
-  --fc-button-bg-color: #dfdfdf;
+  --fc-button-bg-color: #e3eaef;
+  --fc-button-border-color: #1a252f;
+
   --fc-button-hover-text-color: #000000;
-  --fc-button-hover-bg-color: #eaeaea;
-  --fc-button-active-bg-color: rgb(189, 189, 189);
-  --fc-button-border-color: rgb(0, 0, 0, 0);
-  --fc-button-hover-border-color: rgb(0, 0, 0, 0);
-  --fc-button-active-border-color: rgb(0, 0, 0, 0);
+  --fc-button-hover-bg-color: #f6f6f6;
+  --fc-button-hover-border-color: #1a252f;
+
+  --fc-button-active-color: #fff;
+  --fc-button-active-bg-color: #1a252f;
+  --fc-button-active-border-color: #151e27;
 
   --fc-bg-event-opacity: 1.0;
 }
 
 .fc {
+  .fc-toolbar-title {
+    font-size: 1.25rem;
+    line-height: 1.875rem;
+    text-transform: uppercase;
+  }
+
   .fc-col-header-cell {
-    background: $gray-200;
+    background: $rdvs-fc-header-bg-color;
+    border: none;
     font-size: 13px;
     line-height: 20px;
     padding: 10px 0;
     text-transform: uppercase;
     .fc-col-header-cell-cushion {
       color: black; // override DSFR
+      cursor: default;
     }
+  }
+
+  // définit la couleur de fond de la petite case en haut à gauche
+  .fc-timegrid-axis:not(.fc-timegrid-col) {
+    background-color: $rdvs-fc-header-bg-color;
   }
 }
 
-.fc-button {
+.fc .fc-button {
   border: none;
   text-transform: capitalize;
   box-shadow: none;
@@ -32,26 +50,25 @@
   margin: 0 3px;
   padding: 6px 12px;
   height: auto;
+
+  &.fc-button-active {
+    color:  var(--fc-button-active-color) !important;
+  }
 }
 
 .fc-event {
   border-radius: 0px;
   border: none;
   font-size: 0.8125rem;
-  &:not(.fc-bg-event) {
-    margin: 2px;
-    padding: 2px;
-  }
-}
-
-.fc-bg-event {
-  cursor: default;
 }
 
 .fc-event-excused,
 .fc-event-seen,
 .fc-event-revoked {
   opacity: 0.7;
+  .fc-event-title {
+    text-decoration: line-through;
+  }
 }
 
 .fc-event-waiting {
@@ -69,14 +86,6 @@
   background-size: 1rem 1rem;
 }
 
-.fc-event-excused,
-.fc-event-noshow,
-.fc-event-revoked {
-  .fc-event-title {
-    text-decoration: line-through;
-  }
-}
-
 .fc-unauthorized-rdv {
   cursor: not-allowed;
 }
@@ -90,20 +99,12 @@
 
 .fc-timeGridWeek-view {
   .fc-event:not(.fc-bg-event) {
-    margin-left: 10%;
+    margin-left: 5%;
   }
+}
+.fc-timegrid {
   .fc-bg-event {
-    margin-right: 70%;
-
-    border: 1px solid var(--border-action-high-info);
-    .fc-event-title {
-      //position: absolute;
-      //top: 0;
-      //left: 0;
-      //overflow: hidden;
-      //white-space: nowrap;
-      //writing-mode: vertical-rl;
-    }
+    cursor: default;
   }
 }
 
