@@ -140,6 +140,7 @@ Rails.application.routes.draw do
           get "search"
         end
       end
+      resources :territories, only: %i[new create]
       resources :exports, only: %i[index] do
         get :download
       end

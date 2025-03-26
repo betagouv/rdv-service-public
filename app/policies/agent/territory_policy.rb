@@ -12,6 +12,31 @@ class Agent::TerritoryPolicy
   alias update? territorial_admin?
   alias edit? territorial_admin?
 
+  def new?
+    return false if @current_agent.agent_territorial_access_rights.any?
+
+    self.class.verified_by_mss?(@current_agent)
+  end
+  alias create? new?
+
+  # On espère que cette méthode est temporaire, et qu'on pourra ouvrir ça aux autres applications oauth
+  def self.verified_by_mss?(agent)
+    mss_oauth_application = Doorkeeper::Application.find_by(name: "Mon Suivi Social")
+    agent.access_tokens.find_by(application_id: mss_oauth_application&.id)
+  end
+
+  def self.default_service(agent)
+    # Pour le moment on propose cette fonctionnalité uniquement pour MSS, donc on met uniquement le service social
+    if verified_by_mss?(agent)
+      Service.find_by!(name: "Action Sociale")
+    else
+      raise NotImplementedError, <<~MSG
+        Il faut définir les services par défaut pour les applications autre que mss, ou permettre le fonctionnement sans service (ni pour les agents ni pour les motifs)
+        (voir https://github.com/betagouv/rdv-service-public/pull/5182)"
+      MSG
+    end
+  end
+
   def show?
     territorial_admin? ||
       allow_to_manage_teams? ||

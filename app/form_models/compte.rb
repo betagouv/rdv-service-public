@@ -1,4 +1,4 @@
-# Utilisé uniquement au niveau du SuperAdmin, pour ouvrir un compte
+# Permet d'ouvrir un "compte", c'est à dire un nouveau territoire avec une organisation, et quelques infos supplémentaires
 class Compte
   include ActiveModel::Model
 
@@ -7,24 +7,26 @@ class Compte
   def initialize(attributes, current_domain = nil)
     @attributes = attributes
     @current_domain = current_domain
-  end
+    self.territory = Territory.new(@attributes[:territory] || {})
 
-  def save!
-    self.territory = Territory.new(@attributes[:territory])
-    self.organisation = Organisation.new(@attributes[:organisation].merge(
+    self.organisation = Organisation.new((@attributes[:organisation] || {}).merge(
                                            territory: territory,
                                            verticale: @current_domain&.verticale
                                          ))
-    self.lieu = Lieu.new(@attributes[:lieu].merge(
+    self.lieu = Lieu.new((@attributes[:lieu] || {}).merge(
                            organisation: organisation,
                            name: organisation.name,
                            availability: :enabled
                          ))
+  end
 
+  def save!
     ActiveRecord::Base.transaction do
       territory.save!
       organisation.save!
-      lieu.save!
+      if lieu.address
+        lieu.save!
+      end
 
       self.agent = find_or_invite_agent(organisation)
 
