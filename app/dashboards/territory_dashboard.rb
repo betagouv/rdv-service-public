@@ -34,9 +34,9 @@ class TerritoryDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
-    organisations
-    roles
     departement_number
+    roles
+    organisations
     created_at
     updated_at
   ].freeze
