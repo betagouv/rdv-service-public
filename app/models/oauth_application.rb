@@ -7,6 +7,6 @@ class OauthApplication < Doorkeeper::Application
   end
 
   def self.default_service_ids_for(agent)
-    OauthApplication.joins(:access_tokens).where(oauth_access_tokens: { resource_owner_id: agent.id }).pluck(:default_service_id).compact
+    OauthApplication.joins(:access_tokens).where(oauth_access_tokens: { resource_owner_id: agent.id }).pluck(:default_service_id).uniq.compact
   end
 end

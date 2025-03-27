@@ -77,14 +77,14 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
       let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
 
       it "authorizes the creation" do
-        expect(subject.create?).to be_truthy # rubocop:disable RSpec/PredicateMatcher
+        expect(subject.create?).to be_truthy
       end
 
       context "when the agent already has a territory" do
         let(:agent) { create(:agent, :with_territory_access_rights, basic_role_in_organisations: [create(:organisation)]) }
 
         it "doesn't authorize the creation" do
-          expect(subject.create?).to be_falsey # rubocop:disable RSpec/PredicateMatcher
+          expect(subject.create?).to be_falsey
         end
       end
     end
@@ -93,7 +93,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
       let(:agent) { create(:agent) }
 
       it "doesn't authorize the creation" do
-        expect(subject.create?).to be_falsey # rubocop:disable RSpec/PredicateMatcher
+        expect(subject.create?).to be_falsey
       end
     end
   end
