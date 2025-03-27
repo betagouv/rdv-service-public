@@ -23,8 +23,7 @@
         .pl-3.pt-2
           .fa.fa-phone>
           |> RDV par téléphone
-          - participants_phones = rdv.participations.map(&:user).filter_map(&:phone_number_formatted)
-          - participants_phones.each do |phone_number|
+          - rdv.participations.map(&:user).map(&:user_to_notify).compact.filter_map(&:phone_number_formatted).each do |phone_number|
             |> -
             = phone_to(phone_number)
 
