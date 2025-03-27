@@ -545,7 +545,8 @@ RSpec.describe "User can search for rdvs" do
       lieu_id: lieu&.id,
       longitude: "",
       motif_name_with_location_type: "vaccination-public_office",
-      street_ban_id: ""
+      street_ban_id: "",
+      service_id: service&.id
     )
   end
 end
