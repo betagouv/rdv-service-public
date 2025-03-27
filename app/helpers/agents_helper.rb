@@ -5,6 +5,10 @@ module AgentsHelper
     current_organisation.rdvs.limit(5).count < 5
   end
 
+  def needs_agent_search?
+    current_organisation.agents.active.limit(10).count == 10
+  end
+
   def meet_the_team_url
     "https://cal.com/team/rdv-service-public/temps-d-echanges"
   end

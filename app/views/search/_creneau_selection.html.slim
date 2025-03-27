@@ -5,10 +5,10 @@
   - else
     - if context.first_matching_motif.collectif?
       - content_for :title, "Sélectionnez l’atelier"
-      h1.fr-h3 = "Inscrivez-vous à l'atelier de votre choix :"
+      p.fr-text--lg = "Inscrivez-vous à l'atelier de votre choix :"
     - else
       - content_for :title, "Sélectionnez le créneau"
-      h1.fr-h3 Sélectionnez un créneau&nbsp;:
+      p.fr-text--lg Sélectionnez un créneau&nbsp;:
     - if context.first_matching_motif.collectif?
       ul.fr-raw-list
         - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
