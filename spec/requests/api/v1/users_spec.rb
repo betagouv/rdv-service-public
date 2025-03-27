@@ -24,6 +24,11 @@ RSpec.describe "/api/v1/users" do
           organisations: [my_organisation]
         )
       end
+
+      it "saves whodunnit" do
+        post "/api/v1/users", headers:, params:, as: :json
+        expect(User.last.versions.last.whodunnit).to eq("[Agent] #{myself.full_name} (via API)")
+      end
     end
 
     context "when passing arbitrary referent_agent_ids" do
