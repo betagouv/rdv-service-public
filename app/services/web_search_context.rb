@@ -1,6 +1,6 @@
 class WebSearchContext < SearchContext
   include Users::CreneauxWizardConcern
-  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude
+  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement
 
   # departement est un cas particulier parce qu'il est aussi utilisé en dehors de addresse selection pour
   # passer cette première étape
@@ -23,6 +23,7 @@ class WebSearchContext < SearchContext
     @address = query_params[:address]
     @city_code = query_params[:city_code]
     @street_ban_id = query_params[:street_ban_id]
+    @departement = query_params[:departement]
 
     # User choices
     @service_id = query_params[:service_id]
@@ -38,10 +39,6 @@ class WebSearchContext < SearchContext
 
   def prescripteur?
     @prescripteur
-  end
-
-  def departement
-    @departement ||= @query_params[:departement] || public_link_organisation&.departement_number
   end
 
   def organisation_id

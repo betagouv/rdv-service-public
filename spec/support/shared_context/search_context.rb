@@ -22,7 +22,7 @@ RSpec.shared_examples "SearchContext" do
 
   before do
     allow(Users::GeoSearch).to receive(:new)
-      .with(departement: departement_number.presence, city_code: city_code, street_ban_id: nil)
+      .with(departement: departement_number, city_code: city_code, street_ban_id: nil)
       .and_return(geo_search)
   end
 
@@ -37,7 +37,7 @@ RSpec.shared_examples "SearchContext" do
 
     context "when using a direct link to an organisation with a territory without departement number" do
       let!(:query_params) { { public_link_organisation_id: organisation.id } }
-      let(:departement_number) { "" }
+      let(:departement_number) { nil }
       let(:city_code) { nil }
       let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "")) }
 
