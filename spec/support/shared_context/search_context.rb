@@ -22,7 +22,7 @@ RSpec.shared_examples "SearchContext" do
 
   before do
     allow(Users::GeoSearch).to receive(:new)
-      .with(departement: departement_number, city_code: city_code, street_ban_id: nil)
+      .with(departement: departement_number.presence, city_code: city_code, street_ban_id: nil)
       .and_return(geo_search)
   end
 
