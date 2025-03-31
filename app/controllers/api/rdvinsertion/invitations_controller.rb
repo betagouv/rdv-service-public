@@ -46,9 +46,7 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def relevant_limit_reached?(count)
-    return false if params[:max_relevant_creneaux_count_limit].blank?
-
-    count >= params[:max_relevant_creneaux_count_limit].to_i
+    params[:max_relevant_creneaux_count_limit].present? && count >= params[:max_relevant_creneaux_count_limit].to_i
   end
 
   def creneaux_available_for_motif(motif, lieu = nil)
