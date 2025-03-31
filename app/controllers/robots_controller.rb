@@ -1,4 +1,4 @@
-class RobotsController < ActionController::Base
+class RobotsController < ActionController::Base # rubocop:disable Rails/ApplicationController
   layout false
 
   respond_to :text
