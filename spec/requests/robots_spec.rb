@@ -24,14 +24,16 @@ RSpec.describe "/robots.txt" do
   end
 
   it "sert un robots.txt privé pour le domaine rdv.numerique.gouv.fr" do
-    get "http://www.rdv-solidarites-test.localhost/robots.txt"
+    # Ces domaines sont officiels et donc crawlables
+    get "https://www.rdv-solidarites.fr/robots.txt"
     expect(response.body).to eq(public_robots)
-    get "http://www.rdv-aide-numerique-test.localhost/robots.txt"
+    get "https://www.rdv-aide-numerique.fr/robots.txt"
     expect(response.body).to eq(public_robots)
-    get "http://www.rdv-mairie-test.localhost/robots.txt"
+    get "https://rdv.anct.gouv.fr/robots.txt"
     expect(response.body).to eq(public_robots)
 
-    get "http://www.rdv-numerique-gouv-fr-test.localhost/robots.txt"
+    # Ce domaine n'est pas encore public et donc non crawlables
+    get "https://www.rdv.numerique.gouv.fr/robots.txt"
     expect(response.body).to eq(private_robots)
   end
 end
