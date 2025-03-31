@@ -296,3 +296,7 @@ RSpec/NoExpectationExample:
 Rails/RedundantActiveRecordAllMethod:
   Exclude:
     - "db/migrate/**"
+
+RSpec/PredicateMatcher:
+  Exclude:
+    - "spec/policies/**/*"

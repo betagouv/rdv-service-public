@@ -22,7 +22,7 @@ class Agents::TerritoriesController < AgentAuthController
   def compte_params
     params[:compte][:agent] = {
       id: current_agent.id,
-      service_ids: [Agent::TerritoryPolicy.default_service(current_agent).id],
+      service_ids: OauthApplication.default_service_ids_for(current_agent),
     }
 
     params.require(:compte).permit(

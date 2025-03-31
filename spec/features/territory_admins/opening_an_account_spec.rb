@@ -1,10 +1,6 @@
 RSpec.describe "Un agent vérifié via une application externe peut créer un territoire" do
   let(:application) do
-    create(:oauth_application, name: "Mon Suivi Social")
-  end
-
-  before do
-    create(:service, name: "Action Sociale")
+    create(:oauth_application, name: "Mon Suivi Social", default_service: create(:service, name: "Action Sociale"))
   end
 
   context "quand l'agent a déjà été créé via une connexion ProConnect" do
