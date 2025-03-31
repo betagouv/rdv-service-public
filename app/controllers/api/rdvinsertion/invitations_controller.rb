@@ -1,6 +1,4 @@
 class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseController
-  MAX_RELEVANT_CRENEAUX_COUNT_LIMIT = 200
-
   def creneau_availability
     payload = if params[:total_count] == "true"
                 { creneau_availability_count:, limit_reached: relevant_limit_reached?(creneau_availability_count) }
@@ -48,7 +46,9 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def relevant_limit_reached?(count)
-    count >= params.fetch(:max_relevant_creneaux_count_limit, MAX_RELEVANT_CRENEAUX_COUNT_LIMIT)
+    return false if params[:max_relevant_creneaux_count_limit].blank?
+
+    count >= params[:max_relevant_creneaux_count_limit].to_i
   end
 
   def creneaux_available_for_motif(motif, lieu = nil)
