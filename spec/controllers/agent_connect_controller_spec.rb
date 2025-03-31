@@ -1,8 +1,8 @@
 RSpec.describe AgentConnectController do
   stub_env_with(
     AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
-    AGENT_CONNECT_RDVS_CLIENT_SECRET: "un faux secret de test",
-    AGENT_CONNECT_RDVS_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
+    AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
+    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
   )
 
   describe "#auth" do
