@@ -90,9 +90,7 @@ class SearchController < ApplicationController
   end
 
   def prescripteur
-    redirect_to prendre_rdv_path(
-      prescripteur: 1
-    )
+    redirect_to prendre_rdv_path(prescripteur: 1)
   end
 
   private

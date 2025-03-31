@@ -35,6 +35,17 @@ RSpec.shared_examples "SearchContext" do
       end
     end
 
+    context "when using a direct link to an organisation with a territory without departement number" do
+      let!(:query_params) { { public_link_organisation_id: organisation.id } }
+      let(:departement_number) { nil }
+      let(:city_code) { nil }
+      let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "")) }
+
+      it "returns service selection" do
+        expect(subject.current_step).to eq(:service_selection)
+      end
+    end
+
     context "with an address but several matching motifs" do
       let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
       let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
