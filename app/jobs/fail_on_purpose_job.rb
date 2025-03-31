@@ -1,6 +1,8 @@
 class FailOnPurposeError < StandardError; end
 
 class FailOnPurposeJob < ApplicationJob
+  queue_as :latency_30s
+
   # self.log_arguments = false
 
   # retry_on(StandardError, wait: 20.seconds, attempts: 3, priority: DefaultJobBehaviour::PRIORITY_OF_RETRIES)

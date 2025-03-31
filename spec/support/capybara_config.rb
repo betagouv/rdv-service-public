@@ -54,10 +54,21 @@ end
 def expect_page_to_be_axe_clean(path, excluding_selector: nil)
   visit path
   expect(page).to have_current_path(path)
+  expect_page_to_have_title
 
   if excluding_selector
     expect(page).to be_axe_clean.excluding(excluding_selector)
   else
     expect(page).to be_axe_clean
+  end
+end
+
+# Pour des questions d’accessibilité, chaque page doit avoir un titre explicite
+# suivi du nom de l’application (sauf pour la page d’accueil)
+def expect_page_to_have_title
+  if page.current_path == "/"
+    expect(page).to have_title("RDV Solidarités")
+  else
+    expect(page).to have_title(/.* - RDV Solidarités/)
   end
 end

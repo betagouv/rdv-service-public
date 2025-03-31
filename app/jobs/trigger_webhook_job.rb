@@ -1,5 +1,5 @@
 class TriggerWebhookJob < ApplicationJob
-  queue_as :trigger_webhook
+  queue_as :latency_whenever
 
   self.log_arguments = false
 

@@ -27,7 +27,6 @@ RSpec.describe "User can search for rdvs" do
     it "default", js: true do
       visit root_path
       execute_search
-      choose_service(motif.service)
       choose_motif(motif)
       choose_lieu(lieu)
 
@@ -344,7 +343,7 @@ RSpec.describe "User can search for rdvs" do
     it "shows the service selection" do
       visit root_path(departement: "92")
 
-      expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
       expect(page).to have_content(service.name)
       expect(page).to have_content(other_service.name)
     end
@@ -435,13 +434,14 @@ RSpec.describe "User can search for rdvs" do
 
   def choose_service(service)
     expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
-    expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+    expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
 
     find("a", text: service.name).click
   end
 
   def choose_motif(motif)
-    expect(page).to have_content("Sélectionnez le motif de votre RDV")
+    expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
+    find("button", text: motif.service.name).click
     find("a", text: motif.name).click
   end
 
@@ -545,8 +545,8 @@ RSpec.describe "User can search for rdvs" do
       lieu_id: lieu&.id,
       longitude: "",
       motif_name_with_location_type: "vaccination-public_office",
-      service_id: service.id,
-      street_ban_id: ""
+      street_ban_id: "",
+      service_id: service&.id
     )
   end
 end

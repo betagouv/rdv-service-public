@@ -1,30 +1,11 @@
-// Nous mettons un lien simple qui est beaucoup plus accessible en attendant la PR qui fusionne la sélection du service et du motif
-.fr-mb-4w
-  = link_to "Retour à la sélection du service", path_to_service_selection(params), class: "fr-link fr-icon-arrow-go-back-line fr-link--icon-left"
+- content_for :title, "Sélectionnez le motif"
+
 - if context.unique_motifs_by_name_and_location_type.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h1.fr-h2 Sélectionnez le motif de votre RDV&nbsp;:
+  p.fr-text--lg Sélectionnez le motif de votre RDV&nbsp;:
   ul.fr-raw-list
     - context.unique_motifs_by_name_and_location_type.each do |motif|
-      li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
-        .fr-card__body
-          .fr-card__content
-            .fr-card__title
-              = link_to motif.name, prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))
-            .fr-card__start
-              ul.fr-badges-group
-                - case motif.location_type
-                - when "phone"
-                  li.fr-badge.fr-badge--blue-cumulus.fr-icon-phone-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
-                - when "home"
-                  li.fr-badge.fr-badge--blue-cumulus.fr-icon-home-4-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
-                - when "public_office"
-                  li.fr-badge.fr-badge--blue-cumulus.fr-icon-building-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
-                - when "visio"
-                  li.fr-badge.fr-badge--blue-cumulus.fr-icon-mac-fill.fr-badge--icon-left = motif.human_attribute_value(:location_type)
-                - else
-                  li.fr-badge.fr-badge--blue-cumulus = motif.human_attribute_value(:location_type)
-                - if motif.collectif?
-                  li.fr-badge.fr-badge--purple-glycine.fr-icon-team-fill.fr-badge--icon-left = "RDV collectif"
+      = render "search/motif_card", context: context, motif: motif, service_id: context.service.id
+
 = render "search/referent_booking_card", context: context

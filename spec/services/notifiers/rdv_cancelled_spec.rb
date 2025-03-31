@@ -15,6 +15,7 @@ RSpec.describe Notifiers::RdvCancelled, type: :service do
   end
 
   context "cancellation by agent (default notification level : others)" do
+    let!(:agent1) { create(:agent, rdv_notifications_level: :others) }
     let!(:author) { agent1 }
     let!(:new_status) { :revoked }
 
@@ -101,6 +102,7 @@ RSpec.describe Notifiers::RdvCancelled, type: :service do
 
     before do
       agent1.update!(rdv_notifications_level: "none")
+      agent2.update!(rdv_notifications_level: "others")
     end
 
     context "starts in more than 2 days" do

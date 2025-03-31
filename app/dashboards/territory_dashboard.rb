@@ -11,6 +11,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     id: Field::Number,
     departement_number: Field::String,
     name: Field::String,
+    organisations: Field::HasMany.with_options(sort_by: :name, direction: :asc),
     admin_agents: Field::HasMany,
     roles: Field::HasMany,
     created_at: Field::DateTime,
@@ -33,8 +34,9 @@ class TerritoryDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
-    roles
     departement_number
+    roles
+    organisations
     created_at
     updated_at
   ].freeze

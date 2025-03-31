@@ -3,7 +3,9 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   include DeviseTokenAuth::Concerns::SetUserByToken
 
   skip_before_action :verify_authenticity_token
-  before_action :authenticate_agent, :log_api_call_in_database
+  before_action :authenticate_agent
+  before_action :log_api_call_in_database
+  before_action :set_paper_trail_whodunnit
 
   def pundit_user
     AgentOrganisationContext.new(current_agent, current_organisation)
@@ -110,6 +112,10 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_json),
       request.headers["X-Agent-Auth-Signature"]
     )
+  end
+
+  def user_for_paper_trail
+    "#{current_agent.name_for_paper_trail} (via API)"
   end
 
   def log_api_call_in_database

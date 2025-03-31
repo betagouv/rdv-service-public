@@ -12,6 +12,10 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       expect(mail.to).to eq([agent.email])
     end
 
+    it "shows a link to the agent's email preference" do
+      expect(mail.html_part.body.to_s).to include("/agents/preferences")
+    end
+
     context "in 2 hours" do
       let(:rdv) { create(:rdv, starts_at: t + 10.minutes, agents: [agent]) }
 

@@ -2,7 +2,7 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
   before { stub_netsize_ok }
 
   describe "Participation change status" do
-    let(:agent) { create :agent }
+    let(:agent) { create(:agent, rdv_notifications_level: :others) }
     let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent] }
     let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: rdv.organisation, subscriptions: ["rdv"]) }
     let(:participation1) { create(:participation, rdv: rdv) }

@@ -34,6 +34,19 @@ module SuperAdmins
     end
     # End Pundit configuration for Administrate
 
+    # Copié et adapté depuis Administrate::ApplicationController#destroy
+    # Le code d'Administrate est buggé et ne trouve pas les raisons de
+    # l'échec d'une suppression. Cette version basée sur
+    # ActiveRecord::RecordNotDestroyed corrige ce bug.
+    def destroy
+      requested_resource.destroy!
+      flash[:notice] = translate_with_resource("destroy.success")
+    rescue ActiveRecord::RecordNotDestroyed => e
+      flash[:error] = e.record.errors.full_messages.join("<br/>")
+    ensure
+      redirect_to after_resource_destroyed_path(requested_resource)
+    end
+
     private
 
     def super_admin_not_authorized(exception)
