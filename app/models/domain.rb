@@ -82,6 +82,25 @@ class Domain
       allow_agent_creation_with_agent_connect: true,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),
+
+    RDV_NUMERIQUE_GOUV_FR = new(
+      id: "RDV_NUMERIQUE_GOUV_FR",
+      logo_path: "logos/logo_rdv_service_public.svg",
+      public_logo_path: "/logo_rdv_service_public.png",
+      dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
+      name: "RDV Service Public",
+      presentation_for_agents_template_name: nil, # C'est la homepage qui joue ce rôle pour ce domaine
+      address_selection_template_name: nil,
+      search_banner_template_name: "search/banners/rdv_mairie",
+      online_reservation_with_public_link: true,
+      can_sync_to_outlook: false,
+      sms_sender_name: "RDV S.P.",
+      france_connect_enabled: true,
+      support_email: "support@rdv-service-public.fr", # TODO: Configurer SPF, DKIM, DMARC
+      verticale: :rdv_mairie,
+      allow_agent_creation_with_agent_connect: true,
+      secretariat_email: "secretariat-auto@rdv-service-public.fr" # TODO: réfléchir à cette boite auto
+    ),
   ].freeze
 
   def provides_address_selection?
@@ -97,6 +116,7 @@ class Domain
       RDV_SOLIDARITES => ENV["AGENT_CONNECT_RDVS_CLIENT_ID"],
       RDV_AIDE_NUMERIQUE => ENV["AGENT_CONNECT_RDVAN_CLIENT_ID"],
       RDV_MAIRIE => ENV["AGENT_CONNECT_RDVSP_CLIENT_ID"],
+      RDV_NUMERIQUE_GOUV_FR => ENV["AGENT_CONNECT_RDV_NUMERIQUE_GOUV_FR_CLIENT_ID"],
     }.fetch(self)
   end
 
@@ -105,6 +125,7 @@ class Domain
       RDV_SOLIDARITES => ENV["AGENT_CONNECT_RDVS_CLIENT_SECRET"],
       RDV_AIDE_NUMERIQUE => ENV["AGENT_CONNECT_RDVAN_CLIENT_SECRET"],
       RDV_MAIRIE => ENV["AGENT_CONNECT_RDVSP_CLIENT_SECRET"],
+      RDV_NUMERIQUE_GOUV_FR => ENV["AGENT_CONNECT_RDV_NUMERIQUE_GOUV_FR_CLIENT_SECRET"],
     }.fetch(self)
   end
 
@@ -120,18 +141,21 @@ class Domain
           RDV_SOLIDARITES => "staging.rdv-solidarites.fr", # sous-domaine pas configuré
           RDV_AIDE_NUMERIQUE => "staging.rdv-aide-numerique.fr", # sous-domaine pas configuré
           RDV_MAIRIE => "staging.rdv-service-public.fr",
+          RDV_NUMERIQUE_GOUV_FR => "staging.rdv.numerique.gouv.fr", # sous-domaine pas configuré
         }.fetch(self)
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
         {
           RDV_SOLIDARITES => "demo.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "demo.rdv-aide-numerique.fr",
           RDV_MAIRIE => "demo.rdv.anct.gouv.fr",
+          RDV_NUMERIQUE_GOUV_FR => "demo.rdv.numerique.gouv.fr",
         }.fetch(self)
       else
         {
           RDV_SOLIDARITES => "www.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.fr",
           RDV_MAIRIE => "rdv.anct.gouv.fr",
+          RDV_NUMERIQUE_GOUV_FR => "www.rdv.numerique.gouv.fr",
         }.fetch(self)
       end
     when :development
@@ -139,12 +163,14 @@ class Domain
         RDV_SOLIDARITES => "www.rdv-solidarites.localhost",
         RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.localhost",
         RDV_MAIRIE => "www.rdv-mairie.localhost",
+        RDV_NUMERIQUE_GOUV_FR => "www.rdv-numerique-gouv-fr.localhost",
       }.fetch(self)
     when :test
       {
         RDV_SOLIDARITES => "www.rdv-solidarites-test.localhost",
         RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique-test.localhost",
         RDV_MAIRIE => "www.rdv-mairie-test.localhost",
+        RDV_NUMERIQUE_GOUV_FR => "www.rdv-numerique-gouv-fr-test.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"
