@@ -1,4 +1,4 @@
-class RobotsController < ApplicationController
+class RobotsController < ActionController::Base
   layout false
 
   respond_to :text

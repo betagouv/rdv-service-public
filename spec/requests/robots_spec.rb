@@ -35,5 +35,17 @@ RSpec.describe "/robots.txt" do
     # Ce domaine n'est pas encore public et donc non crawlables
     get "https://www.rdv.numerique.gouv.fr/robots.txt"
     expect(response.body).to eq(private_robots)
+
+    # La démo n'est pas crawlable
+    with_modified_env({ "RDV_SOLIDARITES_INSTANCE_NAME" => "DEMO" }) do
+      get "https://demo.rdv-solidarites.fr/robots.txt"
+      expect(response.body).to eq(private_robots)
+      get "https://demo.rdv-aide-numerique.fr/robots.txt"
+      expect(response.body).to eq(private_robots)
+      get "https://demo.rdv.anct.gouv.fr/robots.txt"
+      expect(response.body).to eq(private_robots)
+      get "https://demo.rdv.numerique.gouv.fr/robots.txt"
+      expect(response.body).to eq(private_robots)
+    end
   end
 end
