@@ -63,6 +63,40 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
       it_behaves_like "not permit actions", :territory, :update?, :edit?, :allow_to_manage_teams?, :allow_to_manage_access_rights?
     end
   end
+
+  describe "#create?" do
+    subject { described_class.new(agent, territory) }
+
+    let(:territory) { Territory.new }
+    let(:agent) { create(:agent) }
+
+    context "when the agent was connected from an authorized OAuth application" do
+      let(:application) { create(:oauth_application, default_service: service) }
+      let(:service) { create(:service) }
+
+      let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
+
+      it "authorizes the creation" do
+        expect(subject.create?).to be_truthy
+      end
+
+      context "when the agent already has a territory" do
+        let(:agent) { create(:agent, :with_territory_access_rights, basic_role_in_organisations: [create(:organisation)]) }
+
+        it "doesn't authorize the creation" do
+          expect(subject.create?).to be_falsey
+        end
+      end
+    end
+
+    context "when the agent only logged in from the homepage with ProConnect" do
+      let(:agent) { create(:agent) }
+
+      it "doesn't authorize the creation" do
+        expect(subject.create?).to be_falsey
+      end
+    end
+  end
 end
 
 RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
