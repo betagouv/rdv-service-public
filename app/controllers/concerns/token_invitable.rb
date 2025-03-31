@@ -12,7 +12,7 @@ module TokenInvitable
   private
 
   def store_invitation_in_session_and_redirect
-    return true if params[:invitation_token].blank?
+    return if params[:invitation_token].blank?
 
     invitation = Invitation.new(current_url_params)
     return redirect_with_error(t("devise.invitations.invitation_token_invalid")) unless invitation.token_valid?
