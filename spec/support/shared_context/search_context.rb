@@ -37,12 +37,12 @@ RSpec.shared_examples "SearchContext" do
 
     context "when using a direct link to an organisation with a territory without departement number" do
       let!(:query_params) { { public_link_organisation_id: organisation.id } }
-      let(:departement_number) { nil }
+      let(:departement_number) { "" }
       let(:city_code) { nil }
       let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "")) }
 
-      it "returns service selection" do
-        expect(subject.current_step).to eq(:service_selection)
+      it "returns motif selection" do
+        expect(subject.current_step).to eq(:motif_selection)
       end
     end
 
