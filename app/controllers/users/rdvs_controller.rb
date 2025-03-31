@@ -10,7 +10,7 @@ class Users::RdvsController < UserAuthController
   layout "application_base", only: %i[index]
 
   include TokenInvitable
-  prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
+  prepend_before_action :store_invitation_in_session_and_redirect, only: %i[show creneaux]
 
   def index
     authorize(Rdv, policy_class: User::RdvPolicy)
@@ -96,15 +96,6 @@ class Users::RdvsController < UserAuthController
   end
 
   private
-
-  def store_invitation_in_session_and_redirect_for_allowlisted_actions
-    return true if params[:invitation_token].blank?
-
-    unless params[:action].in?(%w[show creneaux])
-      Sentry.capture_message("Invitation used unexpectedly on #{params[:controller]}##{params[:action]}")
-    end
-    store_invitation_in_session_and_redirect
-  end
 
   def build_creneau
     @starts_at = Time.zone.parse(params[:starts_at])

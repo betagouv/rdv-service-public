@@ -1,7 +1,7 @@
 RSpec.describe TokenInvitable, type: :controller do
   controller(ApplicationController) do
     include TokenInvitable
-    prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
+    prepend_before_action :store_invitation_in_session_and_redirect
 
     def fake_action
       render plain: "ok"
@@ -9,17 +9,6 @@ RSpec.describe TokenInvitable, type: :controller do
 
     def fake_action_not_using_invitation
       render plain: "ok"
-    end
-
-    private
-
-    def store_invitation_in_session_and_redirect_for_allowlisted_actions
-      return true if params[:invitation_token].blank?
-
-      unless params[:action].in?(["fake_action"])
-        Sentry.capture_message("Invitation used unexpectedly on #{params[:controller]}##{params[:action]}")
-      end
-      store_invitation_in_session_and_redirect
     end
   end
 
@@ -201,26 +190,6 @@ RSpec.describe TokenInvitable, type: :controller do
           expect(flash[:error]).to eq("L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez.")
         end
       end
-    end
-  end
-
-  context "when using an invitation on an unexpected action" do
-    let(:token) { user.set_rdv_invitation_token! }
-    let(:params) { { invitation_token: token } }
-
-    it "stores the token in the session and notifies Sentry" do
-      get :fake_action_not_using_invitation, params: params
-
-      expect(request.session[:invitation]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
-
-      expect(sentry_events.last.message).to eq "Invitation used unexpectedly on anonymous#fake_action_not_using_invitation"
-    end
-
-    it "doesn't notify Sentry if there is no invitation token" do
-      get :fake_action_not_using_invitation
-      expect(response.body).to eq "ok"
-
-      expect(sentry_events).to be_empty
     end
   end
 end
