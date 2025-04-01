@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_27_092827) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_01_130505) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -425,7 +425,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_27_092827) do
     t.integer "min_public_booking_delay", default: 1800, null: false, comment: "Permet de savoir combien de secondes il y aura au minimum entre la prise de rdv par un usager ou un prescripteur et le début du rdv. Par exemple si la valeur est 1800, et qu'il est 10h, le premier rdv qui pourra être pris (s'il y a une plage d'ouverture libre) sera à 10h30, puisque 1800 = 30 x 60. Cela permet à l'agent d'être prévenu suffisamment à l'avance.\n"
     t.integer "max_public_booking_delay", default: 7889238, null: false, comment: "Permet de savoir combien de temps à l'avance il est possible de prendre rdv pour un usager ou un prescripteur. Le délai est mesuré en secondes. Cela évite que des gens prennent des rdv dans trop longtemps, et évite aux agents de s'engager à assurer des rdv alors qu'ils ne connaissent pas leur emploi du temps suffisamment à l'avance.\n"
     t.datetime "deleted_at", comment: "Permet de savoir à quelle date le motif a été soft-deleted\n"
-    t.bigint "service_id", null: false
+    t.bigint "service_id"
     t.text "restriction_for_rdv", comment: "Instructions à accepter avant la prise du rendez-vous par l'usager\n"
     t.text "instruction_for_rdv", comment: "Indications affichées à l'usager après la confirmation du rendez-vous. Apparait dans le mail de confirmation pour l'usager.\n"
     t.boolean "for_secretariat", default: false, comment: "Permet aux agents du secrétariat d'assurer des rdv pour ce motif\n"
@@ -739,6 +739,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_27_092827) do
     t.boolean "enable_waiting_room_color_field", default: false
     t.boolean "visible_users_throughout_the_territory", default: false
     t.boolean "enable_birth_date_field", default: false
+    t.string "category", comment: "La catégorie permet classifier les différents territoires principalement pour faire des statistiques dans metabase,\net pour avoir un suivi approprié de chaque territoire pour notre équipe déploiement et support. Par exemple, les besoins d'une commune\nne seront pas les mêmes que ceux d'un service de l'état.\n"
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
   end
 
