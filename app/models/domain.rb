@@ -201,7 +201,7 @@ class Domain
   def self.find_matching(domain_name)
     return review_app_domain if ENV["IS_REVIEW_APP"] == "true"
 
-    ALL_BY_HOST_NAME.fetch(domain_name) { RDV_SOLIDARITES }
+    ALL_BY_HOST_NAME.fetch(domain_name) { RDV_MAIRIE }
   end
 
   # Les review apps utilisent un host de Scalingo, elles ne permettent
