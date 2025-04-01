@@ -298,6 +298,7 @@ tables:
       - enable_waiting_room_mail_field
       - enable_waiting_room_color_field
       - visible_users_throughout_the_territory
+      - category
 
   # Tables sans données personnelles
   - table_name: agent_roles
