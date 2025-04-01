@@ -3,7 +3,7 @@ module Users::CreneauxWizardConcern
 
   # *** Method that outputs the current step for the user to complete its rdv journey ***
   def current_step
-    if departement.blank?
+    if departement.blank? && query_params[:public_link_organisation_id].blank?
       :address_selection
     elsif !service_selected?
       :service_selection
