@@ -1,6 +1,5 @@
-- content_for :title, "Connexion agent à #{current_domain.name}"
-
-h1.rdv-text-align-center.text-dark.mt-0.font-weight-bold.mb-4 Connexion agent à #{current_domain.name}
+- content_for :title do
+  h1.fr-mt-0.fr-mb-4w Connexion agent à #{current_domain.name}
 
 - if display_agent_connect_button?
   = render "common/proconnect_button"
