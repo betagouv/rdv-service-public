@@ -19,7 +19,9 @@ Bundler/OrderedGems:
     - 'Gemfile'
 
 Gemspec/RequiredRubyVersion:
-  Enabled: false
+  Exclude:
+    - 'lib/anonymizer/anonymizer.gemspec'
+    - 'lib/omniauth-rdv-service-public/omniauth-rdv-service-public.gemspec'
 
 Layout/LineLength:
   Max: 200
