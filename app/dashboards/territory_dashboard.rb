@@ -11,7 +11,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     id: Field::Number,
     departement_number: Field::String,
     name: Field::String,
-    category: Field::String,
+    category: Field::Select.with_options(collection: %w[État Département Intercommunalité Commune Région Opérateur Association Inconnu]),
     organisations: Field::HasMany.with_options(sort_by: :name, direction: :asc),
     admin_agents: Field::HasMany,
     roles: Field::HasMany,
