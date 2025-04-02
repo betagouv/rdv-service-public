@@ -30,7 +30,7 @@ module SuperAdmins
 
     def compte_params
       params.require(:compte).permit(
-        territory: %i[name departement_number],
+        territory: %i[name departement_number category],
         organisation: %i[name ants_connectable],
         lieu: %i[address latitude longitude],
         agent: %i[id first_name last_name email service_ids]
