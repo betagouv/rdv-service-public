@@ -16,6 +16,7 @@ section.main-content__body
   = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
     = f.simple_fields_for :territory do |ff|
       = ff.input :name, label: "Nom du territoire"
+      = ff.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie du territoire"
 
     = f.simple_fields_for :organisation do |ff|
       div[style="margin: 8px 0"]
