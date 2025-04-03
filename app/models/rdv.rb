@@ -395,7 +395,7 @@ class Rdv < ApplicationRecord
 
     errors.add(:lieu, :blank) if lieu.nil?
 
-    if in_the_future?
+    if starts_at&.future?
       errors.add(:lieu, :must_not_be_disabled) if lieu&.disabled?
     end
   end
