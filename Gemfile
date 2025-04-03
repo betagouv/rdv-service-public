@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.7"
+ruby "3.4.2"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -110,6 +110,8 @@ gem "crisp-api", "~> 1.1"
 gem "rswag-api"
 # A Rails Engine that includes swagger-ui and powers it from configured OpenAPI (formerly named Swagger) endpoints
 gem "rswag-ui"
+# TODO: Retirer quand ce fix est mergé : https://github.com/rswag/rswag/pull/790
+gem "ostruct"
 
 # Forms
 
@@ -158,15 +160,8 @@ gem "lograge"
 # TODO: retirer cette ligne quand une nouvelle version de httpclient est released
 gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
 
-# Ces gems ne seront plus intégrées à Ruby en version 3.4.0 Lors de l'upgrade
-# depuis 3.3.7, on pourra vérifier si les gems qui en dépendent implicitement
-# ont ajouté dans leur gemspec une dépendance explicite.
-gem "bigdecimal"
+# Utilisée pour les imports
 gem "csv"
-gem "drb"
-gem "observer"
-gem "logger"
-gem "ostruct"
 
 group :development do
   #  Hot reload
@@ -182,9 +177,6 @@ group :development do
   gem "active_record_doctor"
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
-  # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
-  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby
-  gem "parser", "3.3.7.0", require: false
   # Automatic Ruby code style checking tool.
   gem "rubocop", require: false
   # Code style checking for RSpec files

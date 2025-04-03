@@ -1,4 +1,4 @@
-require:
+plugins:
   - rubocop-rspec
   - rubocop-rails
 
@@ -11,12 +11,17 @@ AllCops:
     - "db/migrate/*good_job*.rb"
     - "scripts/screenshots/**/*"
   NewCops: enable
-  TargetRubyVersion: 3.3.7
+  TargetRubyVersion: 3.4.2
   SuggestExtensions: false
 
 Bundler/OrderedGems:
   Exclude:
     - 'Gemfile'
+
+Gemspec/RequiredRubyVersion:
+  Exclude:
+    - 'lib/anonymizer/anonymizer.gemspec'
+    - 'lib/omniauth-rdv-service-public/omniauth-rdv-service-public.gemspec'
 
 Layout/LineLength:
   Max: 200
@@ -287,6 +292,9 @@ Style/SafeNavigationChainLength:
   Enabled: false
 
 Style/MapToSet:
+  Enabled: false
+
+Style/ItBlockParameter:
   Enabled: false
 
 # cette vérification serait bien à mettre en place mais il y plus de 20 specs qui ne la respectent pas aujourd’hui

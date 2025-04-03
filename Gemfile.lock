@@ -142,7 +142,7 @@ GEM
       sassc-rails (~> 2.1)
       selectize-rails (~> 0.6)
     aes_key_wrap (1.1.0)
-    ast (2.4.2)
+    ast (2.4.3)
     attr_required (1.0.1)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
@@ -211,7 +211,7 @@ GEM
       rest-client (~> 2.0)
     css_parser (1.16.0)
       addressable
-    csv (3.3.0)
+    csv (3.3.2)
     database_cleaner (2.1.0)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.2.0)
@@ -315,7 +315,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jsbundling-rails (1.2.1)
       railties (>= 6.0.0)
-    json (2.9.1)
+    json (2.10.2)
     json-jwt (1.16.6)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -338,7 +338,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
-    language_server-protocol (3.17.0.3)
+    language_server-protocol (3.17.0.4)
     launchy (2.5.2)
       addressable (~> 2.8)
     letter_opener (1.10.0)
@@ -348,6 +348,7 @@ GEM
       letter_opener (~> 1.9)
       railties (>= 6.1)
       rexml
+    lint_roller (1.1.0)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -374,7 +375,7 @@ GEM
     mime-types-data (3.2025.0220)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
-    minitest (5.25.4)
+    minitest (5.25.5)
     montrose (0.16.0)
       activesupport (>= 5.2, < 8)
     msgpack (1.7.2)
@@ -411,7 +412,6 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0)
       version_gem (~> 1.1)
-    observer (0.1.2)
     omniauth (2.1.2)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
@@ -445,14 +445,14 @@ GEM
       validate_url
       webfinger (~> 1.2)
     orm_adapter (0.5.0)
-    ostruct (0.6.0)
+    ostruct (0.6.1)
     paper_trail (15.2.0)
       activerecord (>= 6.1)
       request_store (~> 1.4)
     parallel (1.26.3)
     parallel_tests (4.8.0)
       parallel
-    parser (3.3.7.0)
+    parser (3.3.7.3)
       ast (~> 2.4.1)
       racc
     pg (1.4.6)
@@ -468,6 +468,7 @@ GEM
       actionmailer (>= 3)
       net-smtp
       premailer (~> 1.7, >= 1.7.9)
+    prism (1.4.0)
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -609,25 +610,29 @@ GEM
     rswag-ui (2.16.0)
       actionpack (>= 5.2, < 8.1)
       railties (>= 5.2, < 8.1)
-    rubocop (1.69.2)
+    rubocop (1.75.0)
       json (~> 2.3)
-      language_server-protocol (>= 3.17.0)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.36.2, < 2.0)
+      rubocop-ast (>= 1.43.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.37.0)
-      parser (>= 3.3.1.0)
-    rubocop-rails (2.28.0)
+    rubocop-ast (1.43.0)
+      parser (>= 3.3.7.2)
+      prism (~> 1.4)
+    rubocop-rails (2.30.3)
       activesupport (>= 4.2.0)
+      lint_roller (~> 1.1)
       rack (>= 1.1)
-      rubocop (>= 1.52.0, < 2.0)
-      rubocop-ast (>= 1.31.1, < 2.0)
-    rubocop-rspec (3.3.0)
-      rubocop (~> 1.61)
+      rubocop (>= 1.72.1, < 2.0)
+      rubocop-ast (>= 1.38.0, < 2.0)
+    rubocop-rspec (3.5.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
     ruby-graphviz (1.2.5)
       rexml
     ruby-ole (1.2.12.2)
@@ -708,7 +713,7 @@ GEM
       ethon (>= 0.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (3.1.3)
+    unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
     uniform_notifier (1.16.0)
@@ -761,7 +766,6 @@ DEPENDENCIES
   axe-core-rspec (= 4.3.2)
   axiom-types!
   better_errors
-  bigdecimal
   binding_of_caller
   blueprinter
   bootsnap
@@ -787,7 +791,6 @@ DEPENDENCIES
   doorkeeper
   doorkeeper-i18n
   dotenv-rails
-  drb
   dsfr-form_builder (= 0.0.7)
   dsfr-view-components
   factory_bot
@@ -803,12 +806,10 @@ DEPENDENCIES
   kaminari
   letter_opener_web
   listen
-  logger
   lograge
   mail
   montrose
   notion-ruby-client (~> 1.2)
-  observer
   omniauth-github
   omniauth-microsoft_graph
   omniauth-rails_csrf_protection
@@ -817,7 +818,6 @@ DEPENDENCIES
   ostruct
   paper_trail
   parallel_tests
-  parser (= 3.3.7.0)
   pg
   pg_search
   phonelib
@@ -865,7 +865,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 3.3.7p123
+   ruby 3.4.2p28
 
 BUNDLED WITH
-   2.5.22
+   2.6.4
