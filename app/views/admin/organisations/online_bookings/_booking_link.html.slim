@@ -1,8 +1,19 @@
 form data={ "controller": "clipboard" }
   .d-flex
-    .flex-grow-1
-      = text_field_tag :booking_link, booking_link, readonly: true, class: "form-control", data: { "clipboard-target": "input-to-copy" }
-    .flex-grow-0
-      = button_tag class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
-        i.fa.fa-copy.mr-1
-        | copier
+    = text_field_tag :booking_link, booking_link, readonly: true, class: "fr-input", data: { "clipboard-target": "input-to-copy" }
+    = button_tag class: "fr-btn fr-btn--icon-left fr-icon-clipboard-line", data: { "clipboard-target": "copy-button" }
+      | copier
+
+p.fr-mt-3v ou intégrer le bouton de prise de RDV à votre site avec le code HTML suivant&nbsp;:
+= dsfr_tabs do |tabs|
+  - tabs.with_tab title: "Bouton large" do
+    b Prévisualisation du bouton de prise de RDV&nbsp;:
+    = render "admin/organisations/online_bookings/button", booking_link: booking_link
+    br
+    b Code à intégrer dans votre site&nbsp;:
+    = tag.pre class: "rdv-code fr-mt-3v" do
+      = CGI.unescapeHTML(CGI.unescapeHTML(render("admin/organisations/online_bookings/button", booking_link: booking_link )))
+  - tabs.with_tab title: "Bouton medium" do
+    = tag.pre class: "fr-pre" do
+      = tag.code class: "fr-code" do
+        = tag.escape_once booking_link

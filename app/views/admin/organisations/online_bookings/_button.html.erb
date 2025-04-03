@@ -1,0 +1,27 @@
+<%# locals: (booking_link: nil) %>
+
+<style>
+    a.rdvsp-button-lg {
+        align-items:center;
+        background-color:#000091;
+        color:#f5f5fe;
+        display:inline-flex;
+        font-size:1.125rem;
+        font-weight:500;
+        line-height:1.75rem;
+        min-height:3rem;
+        padding:.5rem 1.5rem;
+        width:-moz-fit-content;
+        width:fit-content;
+        font-family: Marianne,arial,sans-serif;
+        text-decoration: none;
+    }
+
+    a.rdvsp-button-lg:hover {
+        background-color:#0000b3;
+    }
+</style>
+<a href="<%= booking_link %>" class="rdvsp-button-lg">
+  <span style="mask-image: url('data:image/svg+xml;utf8,<svg viewBox=&quot;0 0 120 120&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><path d=&quot;M91.92 7.26H90.55V0H82.32V7.26H63.11V0H54.88V7.26H35.67V0H27.44V7.26H26.07C11.8 7.26 0 18.98 0 33.49V94.05C0 108.28 11.8 120 26.07 120H91.92C106.19 120 117.99 108.28 117.99 93.77V33.49C117.99 18.98 106.19 7.26 91.92 7.26ZM26.07 15.63H27.44V22.05H35.67V15.63H54.88V22.05H63.11V15.63H82.32V22.05H90.55V15.63H91.92C101.8 15.63 109.76 23.72 109.76 33.49V42.42H8.23V33.49C8.23 23.72 16.19 15.63 26.07 15.63ZM91.92 111.63H26.07C16.19 111.63 8.23 103.82 8.23 93.77V50.79H109.75V94.05C109.75 103.82 101.79 111.63 91.91 111.63H91.92Z&quot; fill=&quot;%23f5f5fe&quot;/><path d=&quot;M58.9601 87.8301C52.8401 87.8301 47.3401 84.1001 44.8901 78.8101L36.3201 82.8501C40.3001 91.5601 49.1701 97.1601 58.9601 97.1601C68.7501 97.1601 77.3101 91.5601 81.6001 82.8501L73.3401 78.8101C70.5901 84.4101 65.0801 87.8301 58.9601 87.8301Z&quot; fill=&quot;%23f5f5fe&quot;/></svg>'); height: 1.5rem; width: 1.5rem; background-color: #f5f5fe; margin-right: 0.5rem;"></span>
+  Prendre un RDV
+</a>

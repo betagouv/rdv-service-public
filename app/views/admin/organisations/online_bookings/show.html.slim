@@ -6,9 +6,21 @@
 
 .card
   .card-body
-    p Permettez à vos usagers de prendre rendez-vous en ligne, sur les créneaux qui vous conviennent.
+    p Vous pouvez permettre à vos usagers de prendre directement RDV en ligne pour un motif donné, sur un créneau qui vous convient.
+      Ils peuvent choisir le motif de leur choix et réserver un créneau parmi ceux que vous avez ouverts.
 
-    p La réservation en ligne peut être configurée pour chaque motif de rendez-vous.
+    p Pour cela vous devez&nbsp;:
+    ol
+      li Configurer des motifs « ouverts aux agents, aux prescripteurs et aux usagers »
+      li Associer ces motifs à des plages d'ouverture dans les agendas des agents
+      li Partager votre URL de prise de rendez-vous en ligne ou ajouter votre site internet le bouton de prise de RDV
+
+.card
+  .card-body
+    p
+      b Permettez à vos usagers de prendre rendez-vous en ligne, sur les créneaux qui vous conviennent.
+
+    p Pour chaque motif, vous pouvez choisir si vous souhaitez que les usagers puissent faire une réservation en ligne ou non.
 
     - if current_organisation.sectorized?
       p Cette organisation est sectorisée, les usagers peuvent prendre rendez-vous en saisissant leur adresse sur la page d'accueil&nbsp;:
