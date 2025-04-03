@@ -395,9 +395,7 @@ class Rdv < ApplicationRecord
 
     errors.add(:lieu, :blank) if lieu.nil?
 
-    # On ne souhaite pas bloquer l'update d'un RDV si son lieu a été fermé,
-    # donc on ne valide le lieu qu'à la création ou si le RDV change de lieu.
-    if new_record? || lieu_id_changed?
+    if in_the_future?
       errors.add(:lieu, :must_not_be_disabled) if lieu&.disabled?
     end
   end
