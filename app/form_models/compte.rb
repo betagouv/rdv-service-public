@@ -2,6 +2,8 @@
 class Compte
   include ActiveModel::Model
 
+  CATEGORIES = %w[État Département Intercommunalité Commune Région Opérateur Association Inconnu].freeze
+
   attr_accessor :territory, :organisation, :lieu, :agent
 
   def initialize(attributes, current_domain = nil)
