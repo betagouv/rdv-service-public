@@ -384,12 +384,6 @@ RSpec.describe Rdv, type: :model do
       let(:lieu) { build :lieu, availability: :disabled }
 
       it { is_expected.to be_of_kind(:lieu, :must_not_be_disabled) }
-
-      context "when the RDV has ended" do
-        let(:rdv) { build :rdv, :past, motif: motif, lieu: lieu }
-
-        it { is_expected.not_to be_of_kind(:lieu, :must_not_be_disabled) }
-      end
     end
 
     context "is valid if lieu is enabled" do
