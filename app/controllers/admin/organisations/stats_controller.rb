@@ -23,11 +23,6 @@ class Admin::Organisations::StatsController < AgentAuthController
     render json: stats.chart_json
   end
 
-  def users
-    skip_authorization
-    render json: Stat.new(users: policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope)).users_group_by_week
-  end
-
   private
 
   def rdv_scope

@@ -249,7 +249,6 @@ Rails.application.routes.draw do
           resources :stats, only: :index do
             collection do
               get :rdvs
-              get :users
             end
           end
         end
