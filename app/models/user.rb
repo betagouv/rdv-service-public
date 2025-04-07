@@ -1,12 +1,16 @@
 class User < ApplicationRecord
-  self.ignored_columns += %i[invitations_count]
-
   # Mixins
   has_paper_trail(
     only: %w[
-      email first_name last_name birth_name created_at confirmed_at invitation_accepted_at invited_through
-      created_through address phone_number birth_date caisse_affiliation affiliation_number family_situation
-      number_of_children notify_by_sms notify_by_email city_code post_code city_name
+      email notification_email first_name last_name birth_name
+      created_at confirmed_at invitation_accepted_at deleted_at
+      invited_through created_through
+      address phone_number birth_date
+      responsible_id
+      caisse_affiliation affiliation_number family_situation number_of_children
+      notify_by_sms notify_by_email
+      city_code post_code city_name
+      ants_pre_demande_number
     ]
   )
 
@@ -72,13 +76,14 @@ class User < ApplicationRecord
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :ants_pre_demande_number, ants_pre_demande_number_format: true
 
+  EMAIL_REGEXP = Devise.email_regexp
+  validates :notification_email, format: { with: EMAIL_REGEXP }, allow_blank: true
+
   validate :birth_date_validity
 
   # Hooks
   before_save :set_email_to_null_if_blank
   before_save :clear_notification_email_if_email_present
-  after_create :create_annotations  # backfill temporaire, première étape de migration
-  after_update :sync_annotations    # backfill temporaire, première étape de migration
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -265,6 +270,14 @@ class User < ApplicationRecord
     annotations.where.not(territory: territories.reload).each(&:destroy!)
   end
 
+  def annotation_for(territory)
+    annotations.find_by(territory: territory)&.content
+  end
+
+  def annotate!(content, territory:)
+    Annotation.upsert!(content, user: self, territory:)
+  end
+
   protected
 
   def generate_rdv_invitation_token
@@ -296,30 +309,6 @@ class User < ApplicationRecord
 
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
-  end
-
-  def create_annotations
-    return if notes.blank?
-
-    territories.distinct.map.each do |territory|
-      annotation = annotations.find_or_initialize_by(territory:)
-      annotation.content = notes
-      annotation.save!
-    end
-  end
-
-  def sync_annotations
-    return unless notes_previously_changed?
-
-    if notes.present?
-      territories.distinct.map.each do |territory|
-        annotation = annotations.find_or_initialize_by(territory:)
-        annotation.content = notes
-        annotation.save!
-      end
-    else
-      annotations.destroy_all
-    end
   end
 
   def clear_notification_email_if_email_present

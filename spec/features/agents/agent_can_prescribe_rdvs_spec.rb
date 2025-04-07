@@ -51,16 +51,17 @@ RSpec.describe "agents can prescribe rdvs" do
     it "works (happy path)", js: true do
       go_to_prescription_page
       expect(page).to have_content("Nouveau RDV par prescription")
-      # Select Service
-      expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+
+      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
       expect(page).to have_content(motif_mds.service.name)
       expect(page).to have_content(motif_autre_service.service.name)
-      find("a", text: motif_mds.service.name).ancestor(".fr-card__title").click
-      # Select Motif
-      expect(page).to have_content("Sélectionnez le motif de votre RDV")
+
+      find("button", text: motif_mds.service.name).click # Ouverture de l’accordéon du service
       expect(page).to have_content(motif_mds.name)
       expect(page).to have_content(motif_insertion.name)
+
       find("a", text: motif_insertion.name).ancestor(".fr-card__title").click
+
       # Select Lieu
       expect(page).to have_content(mission_locale_paris_sud.name)
       expect(page).to have_content(mission_locale_paris_nord.name)
@@ -86,7 +87,10 @@ RSpec.describe "agents can prescribe rdvs" do
       # deuxième passage page récap
       click_on "Continuer"
       expect(page).to have_content("L’usager est pressé il a besoin...")
-      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      expect do
+        click_button "Confirmer le rdv"
+        expect(page).to have_content("Rendez-vous confirmé")
+      end.to change(Rdv, :count).by(1)
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
       created_rdv = Rdv.last
@@ -110,18 +114,18 @@ RSpec.describe "agents can prescribe rdvs" do
       it "works", js: true do
         go_to_prescription_page
         expect(page).to have_content("Nouveau RDV par prescription")
-        # Select Service
-        expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
-        expect(page).to have_content(motif_collectif.service.name)
-        find("a", text: motif_collectif.service.name).ancestor(".fr-card__title").click
-        # Select Motif
-        expect(page).to have_content("Sélectionnez le motif de votre RDV")
+        # Selection du service et du motif
+        expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
+
+        find("button", text: motif_collectif.service.name).click # Ouverture de l’accordéon du service
+
         expect(page).to have_content(motif_mds.name)
         expect(page).to have_content(motif_collectif.name)
         find("a", text: motif_collectif.name).ancestor(".fr-card__title").click
-        # Select Lieu
+
+        # Selection du lieu
         find(".fr-card__title", text: /#{mds_paris_nord.name}/).ancestor(".fr-card__body").find("a").click
-        # Select créneau
+        # Selection du créneau
         first(:link, "S'inscrire").click
         # Display User selection
         find(".select2-selection[aria-labelledby=select2-user_ids_-container]").click
@@ -134,7 +138,10 @@ RSpec.describe "agents can prescribe rdvs" do
         expect(page).to have_content("Lieu : #{mds_paris_nord.name}")
         expect(page).to have_content("Date du rendez-vous :")
         expect(page).to have_content("Usager : FACTICE Francis")
-        expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
+        expect do
+          click_button "Confirmer le rdv"
+          expect(page).to have_content("Rendez-vous confirmé")
+        end.to change(Rdv.last.reload.participations, :count).by(1)
         expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to be(true)
       end
     end
@@ -173,22 +180,22 @@ RSpec.describe "agents can prescribe rdvs" do
     # il n'était pas validé car le `user_ids` de l'ancien restant dans l'URL.
     it "allows going back to change the user", js: true do
       go_to_prescription_page
-      # Select Service
-      find("a", text: motif_mds.service.name).ancestor(".fr-card__title").click
-      # Select Motif
+      # Selection du service
+      find("button", text: motif_mds.service.name).click
+      # Selection du motif
       find("a", text: motif_insertion.name).ancestor(".fr-card__title").click
-      # Select Lieu
+      # Selection du Lieu
       find(".fr-card__title", text: /#{mission_locale_paris_nord.name}/).ancestor(".fr-card__body").find("a").click
-      # Select créneau
+      # Selection du créneau
       first(:link, "11:00").click
-      # Display User selection
+      # Afficher la sélection de l’usager
       click_on "Créer un usager"
       fill_in :user_first_name, with: "Jean-Paul"
       fill_in :user_last_name, with: "Orvoir"
       click_on "Créer usager"
       expect(page).to have_content("Jean-Paul")
       click_on "Continuer"
-      # go back to user selection
+      # retour à la sélection de l’usager
       page.all("a").find { _1.text == "modifier" && _1[:href].include?("user_selection") }.click
       click_on "Créer un usager"
       fill_in :user_first_name, with: "Jean-Pierre"
@@ -196,7 +203,10 @@ RSpec.describe "agents can prescribe rdvs" do
       click_on "Créer usager"
       expect(page).to have_content("BONJOUR Jean-Pierre")
       click_on "Continuer"
-      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      expect do
+        click_button "Confirmer le rdv"
+        expect(page).to have_content("Rendez-vous confirmé")
+      end.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.full_name).to eq("Jean-Pierre BONJOUR")
       expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
     end
@@ -213,9 +223,10 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Nouveau RDV par prescription")
       expect(page).to have_content("pour #{user.full_name}")
       # Select Service
-      find(".fr-card__title", text: /#{motif_mds.service.name}/).ancestor(".fr-card__body").find("a").click
-      # Select Motif
-      expect(page).to have_content("Sélectionnez le motif de votre RDV")
+      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
+
+      find("button", text: motif_mds.service.name).click # Ouverture de l’accordéon du service
+
       find(".fr-card__title", text: /#{motif_mds.name}/).ancestor(".fr-card__body").find("a").click
       # Select Lieu
       find(".fr-card__title", text: /#{mds_paris_nord.name}/).ancestor(".fr-card__body").find("a").click
@@ -258,12 +269,14 @@ RSpec.describe "agents can prescribe rdvs" do
       it "when sectorization is enabled on the user street level only it show the street leveled motif only" do
         expect(page).not_to have_content(motif_insertion.name)
         expect(page).not_to have_content(motif_autre_service.name)
-        expect(page).to have_content(motif_mds.service.name)
         expect(page).to have_content(motif_mds.name)
         click_on motif_mds.name
         find(".fr-card__title", text: /#{mds_paris_nord.name}/).ancestor(".fr-card__body").find("a").click
         first(:link, "11:00").click
-        expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+        expect do
+          click_button "Confirmer le rdv"
+          expect(page).to have_content("Rendez-vous confirmé")
+        end.to change(Rdv, :count).by(1)
       end
 
       context "when sectorization is enabled on the street level and on city level on 2 differents sectors" do
@@ -319,25 +332,28 @@ RSpec.describe "agents can prescribe rdvs" do
       visit root_path
       within(".left-side-menu") { click_on "Trouver un RDV" }
       click_link "Élargir la recherche"
-      # Select Service
-      find("a", text: motif_mds.service.name).ancestor(".fr-card__title").click
-      # Select Motif
+      # Selection du service
+      find("button", text: motif_mds.service.name).click
+      # Selection du motif
       find("a", text: motif_insertion.name).ancestor(".fr-card__title").click
-      # Select Lieu
+      # Selection du lieu
       find(".fr-card__title", text: /#{mission_locale_paris_nord.name}/).ancestor(".fr-card__body").find("a").click
-      # Select créneau
+      # Selection du créneau
       first(:link, "11:00").click
-      # Display User selection
+      # Afficher la sélection de l’usager
       find(".select2-selection[aria-labelledby=select2-user_ids_-container]").click
       find(".select2-search__field").send_keys("terre")
       expect(page).to have_content("TERRE Miss - 20/07/**** - 06******44 - m******e@example.com")
       first(".select2-results ul.select2-results__options li").click
       click_on "Continuer"
-      # Display Récapitulatif
+      # Affichage du récapitulatif
       # les infos de l'usager sont affichées dans le recap
       expect(page).to have_content("Usager : TERRE Miss - 20/07/1985 - 06 11 22 33 44 - miss_terre@example.com")
-      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
-      # Display Confirmation
+      expect do
+        click_button "Confirmer le rdv"
+        expect(page).to have_content("Rendez-vous confirmé")
+      end.to change(Rdv, :count).by(1)
+      # Affichage de la confirmation
       expect(page).to have_content("Rendez-vous confirmé")
       created_rdv = Rdv.last
       expect(created_rdv.users.first).to eq(user_in_organisation_mystere)

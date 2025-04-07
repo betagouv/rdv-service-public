@@ -4,7 +4,8 @@ ul.list-unstyled.mb-5
   - if current_organisation.motifs.requires_ants_predemande_number.any?
     li.mb-2= object_attribute_tag(user, :ants_pre_demande_number)
   li.mb-2= object_attribute_tag(user, :birth_name)
-  li.mb-2= object_attribute_tag(user, :birth_date, birth_date_and_age(user))
+  - if current_territory.enable_birth_date_field?
+    li.mb-2= object_attribute_tag(user, :birth_date, birth_date_and_age(user))
   li.mb-2= object_attribute_tag(user, :address)
   li.mb-2= object_attribute_tag(user, :preferred_email, clickable_user_email(user))
   li.mb-2= object_attribute_tag(user, :notify_by_email, notify_by_email_description(user))
@@ -21,7 +22,7 @@ ul.list-unstyled.mb-5
       | En attente de confirmation pour #{user.unconfirmed_email}
 
   - if current_territory.enable_notes_field?
-    li.mb-2= object_attribute_tag(user, :notes, formatted_user_notes(user))
+    li.mb-2= object_attribute_tag(user, :annotation_content, formatted_user_annotation(user, current_territory))
 
 - if current_territory.any_social_field_enabled?
   h4.card-title.mb-3 Informations sociales

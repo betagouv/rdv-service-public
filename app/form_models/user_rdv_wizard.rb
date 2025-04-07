@@ -1,8 +1,6 @@
 module UserRdvWizard
   # cf https://medium.com/@nicolasblanco/developing-a-wizard-or-multi-steps-forms-in-rails-d2f3b7c692ce
 
-  STEPS = %w[step1 step2 step3].freeze
-
   class Base
     include ActiveModel::Model
 
@@ -13,15 +11,14 @@ module UserRdvWizard
     def initialize(user, attributes)
       @user = user
       @attributes = attributes.to_h.symbolize_keys
-      rdv_defaults = { user_ids: [user&.id] }
       if attributes[:rdv_collectif_id].present?
         @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(attributes[:rdv_collectif_id])
       else
-        @rdv = Rdv.new(
-          rdv_defaults
-            .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
-        )
+        @rdv = Rdv.new({
+          user_ids: [user&.id],
+        }.merge(@attributes.slice(:starts_at, :user_ids, :motif_id)))
         @rdv.duration_in_min = @attributes[:duration]&.to_i || @rdv.motif&.default_duration_in_min
+        @rdv.organisation_id = @rdv.motif.organisation_id
       end
     end
 
@@ -55,17 +52,11 @@ module UserRdvWizard
         motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id), rdv_collectif_id: rdv.id,
       }.merge(
         @attributes.slice(
-          :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id,
-          :address, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
+          *WebSearchContext::ADDRESS_SELECTION_PARAMS,
+          :where, :lieu_id, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
           :referent_ids, :external_organisation_ids, :duration
         )
       )
-    end
-
-    def to_search_query
-      @attributes
-        .slice(:departement, :latitude, :longitude, :motif_name_with_location_type, :where, :city_code, :street_ban_id)
-        .merge(service: @rdv.motif.service_id, motif_name_with_location_type: @rdv.motif.name_with_location_type)
     end
 
     def save

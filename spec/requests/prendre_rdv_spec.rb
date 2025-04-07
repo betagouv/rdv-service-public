@@ -4,12 +4,12 @@ RSpec.describe "Search", type: :request do
   describe "GET /" do
     context "without params" do
       it "is successful" do
-        get root_path
+        get "http://www.rdv-solidarites-test.localhost/"
         expect(response).to be_successful
       end
 
       it "render adress_selection template" do
-        get root_path
+        get "http://www.rdv-solidarites-test.localhost/"
         expect(response).to render_template("search/address_selection/_rdv_solidarites")
       end
     end
@@ -27,7 +27,7 @@ RSpec.describe "Search", type: :request do
         it "render motif_selection template" do
           motif = create(:motif, service: agent.services.first, follow_up: true, organisation: organisation)
           create(:plage_ouverture, agent: agent, motifs: [motif], organisation: organisation)
-          get prendre_rdv_path(referent_ids: [agent.id], service: agent.services.first.id, departement: organisation.territory.departement_number)
+          get prendre_rdv_url(referent_ids: [agent.id], service: agent.services.first.id, departement: organisation.territory.departement_number, host: "www.rdv-solidarites-test.localhost")
           expect(response).to render_template("search/_motif_selection")
         end
       end
@@ -41,13 +41,13 @@ RSpec.describe "Search", type: :request do
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif, other_motif], organisation: organisation) }
 
       it "show text to invite to select motif" do
-        get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
-        expect(response.body).to include("Sélectionnez le service avec qui vous voulez prendre un RDV")
+        get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
+        expect(response.body).to include("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
       end
 
       context "lorsqu’il n’y a pas de motif de suivi associé aux services" do
         it "n’affiche pas l’invitation à se connecter pour prendre un RDV de suivi" do
-          get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+          get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
           expect(response.body).not_to include("Pour prendre un RDV de suivi avec un de vos agents référents")
         end
       end
@@ -57,7 +57,7 @@ RSpec.describe "Search", type: :request do
         let!(:follow_up_motif) { create(:motif, organisation: organisation, service: motif.service, follow_up: true, bookable_by:) }
 
         it "affiche l’invitation à se connecter pour prendre un RDV de suivi" do
-          get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+          get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
           expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référents")
         end
 
@@ -65,7 +65,7 @@ RSpec.describe "Search", type: :request do
           let(:bookable_by) { :agents }
 
           it "n’affiche pas l’invitation à se connecter" do
-            get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+            get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
             expect(response.body).not_to include("Pour prendre un RDV de suivi avec un de vos agents référents")
           end
         end
@@ -80,13 +80,13 @@ RSpec.describe "Search", type: :request do
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif, other_motif], organisation: organisation) }
 
       it "show text to invite to select motif" do
-        get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+        get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
         expect(response.body).to include("Sélectionnez le motif de votre RDV")
       end
 
       context "lorsqu’il n’y a pas de motif de suivi associé aux services" do
         it "n’affiche pas l’invitation à se connecter" do
-          get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+          get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
           expect(response.body).not_to include("Pour prendre un RDV de suivi avec un de vos agents référents")
         end
       end
@@ -96,7 +96,7 @@ RSpec.describe "Search", type: :request do
         let!(:follow_up_motif) { create(:motif, organisation: organisation, service: motif.service, follow_up: true, bookable_by:) }
 
         it "affiche l’invitation à se connecter pour prendre un RDV de suivi" do
-          get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+          get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
           expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référents")
         end
 
@@ -104,7 +104,7 @@ RSpec.describe "Search", type: :request do
           let(:bookable_by) { :agents }
 
           it "n’affiche pas l’invitation à se connecter" do
-            get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
+            get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
             expect(response.body).not_to include("Pour prendre un RDV de suivi avec un de vos agents référents")
           end
         end
@@ -114,7 +114,7 @@ RSpec.describe "Search", type: :request do
 
   describe "GET /prendre_rdv" do
     it "is successful" do
-      get prendre_rdv_path
+      get "http://www.rdv-solidarites-test.localhost/prendre_rdv"
       expect(response).to be_successful
     end
   end

@@ -1,8 +1,8 @@
 RSpec.describe AgentConnectController do
   stub_env_with(
     AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
-    AGENT_CONNECT_RDVS_CLIENT_SECRET: "un faux secret de test",
-    AGENT_CONNECT_RDVS_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
+    AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
+    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
   )
 
   describe "#auth" do
@@ -18,7 +18,7 @@ RSpec.describe AgentConnectController do
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         redirect_uri: "http://test.host/agent_connect/callback",
         response_type: "code",
-        scope: "openid email given_name usual_name",
+        scope: "openid email given_name usual_name siret",
         state: be_a(String),
         nonce: be_a(String)
       )
@@ -75,18 +75,20 @@ RSpec.describe AgentConnectController do
           "email" => "jean.michel.factice@exemple.gouv.fr",
           "given_name" => "Jean Michel Factice",
           "usual_name" => "Factice",
+          "siret" => "11006801200050",
           "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
           "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
         }
       end
 
-      it "sets the proper first and last name for the agent" do
+      it "sets the proper first and last name and siret for the agent" do
         agent = create(:agent, email: "jean.michel.factice@exemple.gouv.fr")
         get :callback, params: { state: state, code: code }
 
         expect(agent.reload).to have_attributes(
           first_name: "Jean Michel",
-          last_name: "Factice"
+          last_name: "Factice",
+          proconnect_siret: "11006801200050"
         )
       end
     end

@@ -1,8 +1,9 @@
 class Agents::AbsenceMailer < ApplicationMailer
-  helper PlageOuverturesHelper
+  helper RecurrenceHelper
 
   before_action do
     @absence = params[:absence]
+    @display_link_to_agent_preferences = true
   end
 
   default to: -> { @absence.agent.email }

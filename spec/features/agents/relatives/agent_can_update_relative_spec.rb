@@ -1,5 +1,8 @@
 RSpec.describe "Agent can update a relative" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { create(:organisation, territory: territory) }
+  let(:territory) do
+    create(:territory, enable_birth_date_field: true)
+  end
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:user) do
     create(:user, first_name: "Fiona", last_name: "LEGENDE", email: "jean@legende.com", organisations: [organisation])

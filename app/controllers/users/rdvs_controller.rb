@@ -7,8 +7,10 @@ class Users::RdvsController < UserAuthController
   after_action :allow_iframe
 
   layout "application_narrow", only: %i[show]
+  layout "application_base", only: %i[index]
 
   include TokenInvitable
+  prepend_before_action :store_invitation_in_session_and_redirect, only: %i[show creneaux]
 
   def index
     authorize(Rdv, policy_class: User::RdvPolicy)
@@ -23,14 +25,14 @@ class Users::RdvsController < UserAuthController
     # Nous modifions en mémoire la durée par défaut du motif
     # Cela permet d'effectuer une recherche de créneaux, avec une durée différente
     motif.default_duration_in_min = params[:duration] if params[:duration]
+    @creneau = CreneauxSearch::ForUser.creneau_for(
+      user: current_user,
+      starts_at: Time.zone.parse(rdv_params[:starts_at]),
+      motif: motif,
+      lieu: lieu,
+      geo_search: @geo_search
+    )
     ActiveRecord::Base.transaction do
-      @creneau = CreneauxSearch::ForUser.creneau_for(
-        user: current_user,
-        starts_at: Time.zone.parse(rdv_params[:starts_at]),
-        motif: motif,
-        lieu: lieu,
-        geo_search: @geo_search
-      )
       if @creneau.present?
         @rdv = build_rdv_from_creneau(@creneau)
         authorize(@rdv, policy_class: User::RdvPolicy)

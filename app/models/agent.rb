@@ -1,10 +1,14 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns += %i[inclusion_connect_open_id_sub invitations_count]
   # Mixins
   has_paper_trail(
-    only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
+    only: %w[
+      email unconfirmed_email
+      first_name last_name
+      proconnect_siret
+      invitation_sent_at invitation_accepted_at
+    ]
   )
 
   include Outlook::Connectable
@@ -100,7 +104,7 @@ class Agent < ApplicationRecord
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
   validates :last_name, presence: true, unless: -> { allow_blank_name }
-  validates :agent_services, presence: true
+  validates :agent_services, presence: true, unless: -> { roles.none? }
 
   # Hooks
   before_destroy :prevent_destroy_if_rdvs
@@ -121,7 +125,7 @@ class Agent < ApplicationRecord
   delegate :name, to: :domain, prefix: true
 
   def confrere_of?(other_agent)
-    services.to_set.intersection(other_agent.services.to_set).present?
+    services.to_set.intersect?(other_agent.services.to_set)
   end
 
   def confreres

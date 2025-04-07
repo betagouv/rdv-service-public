@@ -1,8 +1,13 @@
 RSpec.describe TokenInvitable, type: :controller do
   controller(ApplicationController) do
     include TokenInvitable
+    prepend_before_action :store_invitation_in_session_and_redirect
 
     def fake_action
+      render plain: "ok"
+    end
+
+    def fake_action_not_using_invitation
       render plain: "ok"
     end
   end
@@ -14,7 +19,10 @@ RSpec.describe TokenInvitable, type: :controller do
 
   before do
     travel_to(now)
-    routes.draw { get "fake_action" => "anonymous#fake_action" }
+    routes.draw do
+      get "fake_action" => "anonymous#fake_action"
+      get "fake_action_not_using_invitation" => "anonymous#fake_action_not_using_invitation"
+    end
   end
 
   describe "#store_invitation_in_session_and_redirect" do

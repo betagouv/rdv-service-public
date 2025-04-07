@@ -1,8 +1,10 @@
-= render "stepper", step_title: t(".title")
+/# locals: (current_step:, max_step:, next_step: nil)
 
-.row.justify-content-center
-  .col-lg-7.col-md-10.col-sm-11
-    h3.rdv-text-align-center.mb-3 Confirmation
+- content_for :title, current_step[:title]
+
+.fr-container.fr-pt-3w
+  .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
+    = dsfr_stepper(title: current_step[:title], value: current_step[:stepper_index], max: max_step)
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body.rdv-text-align-right

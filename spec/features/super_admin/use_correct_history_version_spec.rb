@@ -26,6 +26,7 @@ RSpec.describe "Use correct history version when a super admin is logged in and 
     click_link "Vos informations"
     fill_in("Téléphone", with: "0612345678")
     click_on("Modifier")
+    expect(page).to have_content("Vos informations ont été mises à jour")
 
     expect(user.reload.versions.last.whodunnit).to eq "[Admin] #{super_admin.full_name} pour #{user.full_name}"
   end

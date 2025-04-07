@@ -140,6 +140,7 @@ Rails.application.routes.draw do
           get "search"
         end
       end
+      resources :territories, only: %i[new create]
       resources :exports, only: %i[index] do
         get :download
       end
@@ -205,6 +206,9 @@ Rails.application.routes.draw do
       end
 
       resources :organisations do
+        collection do
+          get "configuration", to: "organisations/configurations#index"
+        end
         get "creneaux_search" => "creneaux_search#index"
         get "creneaux_search/selection_creneaux" => "creneaux_search#selection_creneaux"
         # Lien très utilisé pour la duplication de RDV
@@ -241,10 +245,10 @@ Rails.application.routes.draw do
         end
         scope module: "organisations" do
           resource :online_booking, only: [:show]
+          resource :configuration, only: [:show]
           resources :stats, only: :index do
             collection do
               get :rdvs
-              get :users
             end
           end
         end
@@ -290,7 +294,7 @@ Rails.application.routes.draw do
     end
   end
   authenticated :agent do
-    root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
+    root to: "agents/pages#home", as: :authenticated_agent_root
   end
 
   scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do
@@ -401,4 +405,6 @@ Rails.application.routes.draw do
 
   match "/404", to: "errors#not_found", via: :all
   match "/500", to: "errors#internal_server_error", via: :all
+
+  get "robots.txt" => "robots#robots"
 end

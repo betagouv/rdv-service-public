@@ -1,4 +1,3 @@
-# rubocop:disable RSpec/PredicateMatcher
 RSpec.describe Agent::MotifPolicy do
   subject { described_class }
 
@@ -89,4 +88,3 @@ RSpec.describe Agent::MotifPolicy do
     end
   end
 end
-# rubocop:enable RSpec/PredicateMatcher

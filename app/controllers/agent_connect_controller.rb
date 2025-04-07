@@ -14,7 +14,7 @@ class AgentConnectController < ApplicationController
     redirect_to auth_client.redirect_url(agent_connect_callback_url), allow_other_host: true
   end
 
-  def callback
+  def callback # rubocop:disable Metrics/PerceivedComplexity
     callback_client = AgentConnectOpenIdClient::Callback.new(
       session_state: session.delete(:agent_connect_state),
       params_state: params[:state],
@@ -33,11 +33,16 @@ class AgentConnectController < ApplicationController
     # voir https://github.com/numerique-gouv/agentconnect-documentation/blob/main/doc_fs/donnees_fournies.md#le-champ-sub
     agent = Agent.active.find_by(email: callback_client.user_email)
 
+    if current_domain.allow_agent_creation_with_agent_connect
+      agent ||= Agent.new(email: callback_client.user_email, password: SecureRandom.base64(32))
+    end
+
     if agent
       agent.update!(
         connected_with_agent_connect: true,
         first_name: callback_client.user_first_name,
         last_name: callback_client.user_last_name,
+        proconnect_siret: callback_client.user_siret,
         invitation_token: nil, # Pour désactiver les anciens liens d'invitation
         invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now,
         confirmed_at: agent.confirmed_at || Time.zone.now,

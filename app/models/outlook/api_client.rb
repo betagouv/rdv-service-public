@@ -6,6 +6,9 @@ module Outlook
     class RefreshTokenError < ApiError; end
     class RateLimitingError < ApiError; end
 
+    USER_AGENT = "RDVSolidarites".freeze
+    BASE_URL = "https://graph.microsoft.com/v1.0".freeze
+
     def initialize(agent)
       @agent = agent
     end
@@ -36,9 +39,6 @@ module Outlook
     end
 
     private
-
-    USER_AGENT = "RDVSolidarites".freeze
-    BASE_URL = "https://graph.microsoft.com/v1.0".freeze
 
     # https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
     # method (string): The HTTP method to use for the API call.

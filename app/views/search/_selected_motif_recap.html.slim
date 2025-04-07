@@ -1,10 +1,35 @@
 .card
-  .card-body
-    = link_to path_to_motif_selection(params), class: "d-block stretched-link", title: "Retour à la sélection du motif" do
+  ul.list-group.list-group-flush
+    li.list-group-item
       .row
-        .col-auto.align-self-center
-          span.fr-icon-arrow-left-line
         .col
-          h2.pb-1.mb-1
-            = motif_name_and_location_type(context.first_matching_motif)
-          = context.service.name
+          span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+          | Motif :&nbsp;
+          = context.first_matching_motif.name
+        .col-auto
+          = link_to "modifier", path_to_service_selection(params)
+    - case context.first_matching_motif.location_type
+    - when Motif.location_types[:phone]
+      li.list-group-item
+        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+        | RDV téléphonique
+    - when Motif.location_types[:home]
+      li.list-group-item
+        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+        | RDV à domicile
+    - when Motif.location_types[:visio]
+      li.list-group-item
+        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+        | RDV par visioconférence
+    - when Motif.location_types[:public_office]
+      - if context.lieu
+        li.list-group-item
+          .row
+            .col
+              span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+              | Lieu :&nbsp;
+              = context.lieu.full_name
+            .col-auto
+              = link_to "modifier", path_to_organisation_selection(params)
+    - else
+      = raise "unrecognized location_type: #{rdv_wizard.motif.location_type.inspect}"

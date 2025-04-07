@@ -91,8 +91,9 @@ class Territory < ApplicationRecord
   }.freeze
 
   OPTIONAL_FIELD_TOGGLES = {
-    enable_notes_field: :notes,
+    enable_notes_field: :annotation_content,
     enable_logement_field: :logement,
+    enable_birth_date_field: :birth_date,
   }.merge(SOCIAL_FIELD_TOGGLES).freeze
 
   def mairies?

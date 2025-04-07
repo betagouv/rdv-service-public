@@ -1,35 +1,36 @@
-# Utilisé uniquement au niveau du SuperAdmin, pour ouvrir un compte
+# Permet d'ouvrir un "compte", c'est à dire un nouveau territoire avec une organisation, et quelques infos supplémentaires
 class Compte
   include ActiveModel::Model
+
+  CATEGORIES = %w[État Département Intercommunalité Commune Région Opérateur Association Inconnu].freeze
 
   attr_accessor :territory, :organisation, :lieu, :agent
 
   def initialize(attributes, current_domain = nil)
     @attributes = attributes
     @current_domain = current_domain
-  end
+    self.territory = Territory.new(@attributes[:territory] || {})
 
-  def save!
-    self.territory = Territory.new(@attributes[:territory])
-    self.organisation = Organisation.new(@attributes[:organisation].merge(
+    self.organisation = Organisation.new((@attributes[:organisation] || {}).merge(
                                            territory: territory,
                                            verticale: @current_domain&.verticale
                                          ))
-    self.lieu = Lieu.new(@attributes[:lieu].merge(
+    self.lieu = Lieu.new((@attributes[:lieu] || {}).merge(
                            organisation: organisation,
                            name: organisation.name,
                            availability: :enabled
                          ))
+  end
 
+  def save!
     ActiveRecord::Base.transaction do
       territory.save!
       organisation.save!
-      lieu.save!
+      if lieu.address
+        lieu.save!
+      end
 
-      self.agent = Agent.invite!(@attributes[:agent].merge(
-                                   password: SecureRandom.base64(32),
-                                   roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
-                                 ))
+      self.agent = find_or_invite_agent(organisation)
 
       agent.services.each do |service|
         TerritoryService.create!(service: service, territory: territory)
@@ -64,6 +65,27 @@ class Compte
   end
 
   private
+
+  def find_or_invite_agent(organisation)
+    agent = find_agent
+    if agent
+      agent.update!(
+        @attributes[:agent].merge(
+          roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
+        )
+      )
+      agent
+    else
+      Agent.invite!(@attributes[:agent].merge(
+                      roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
+                      password: SecureRandom.base64(32)
+                    ))
+    end
+  end
+
+  def find_agent
+    Agent.find_by(id: @attributes.dig(:agent, :id)) || Agent.find_by(email: @attributes.dig(:agent, :email))
+  end
 
   def create_mairie_motifs!
     service = Service.find_by(name: Service::MAIRIE)

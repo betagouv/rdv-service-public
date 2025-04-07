@@ -1,4 +1,4 @@
-RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
+RSpec.describe "OAuth provider", js: true do
   # On fait quelque chose d'un peu inhabituel dans cette spec pour avoir un test d'intégration sur l'oauth
   # dans un contexte où notre application est le fournisseur d'oauth : on démarre une petite application
   # Sinatra qui joue le rôle d'une application externe (comme Démarches Simplifiées) qui propose un
@@ -68,6 +68,7 @@ RSpec.describe "OAuth provider", ignore_js_errors: true, js: true do
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
+    expect(page).to have_content("Connexion réussie")
 
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"

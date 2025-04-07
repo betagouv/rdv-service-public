@@ -12,6 +12,13 @@ class Agent::TerritoryPolicy
   alias update? territorial_admin?
   alias edit? territorial_admin?
 
+  def new?
+    return false if @current_agent.agent_territorial_access_rights.any?
+
+    OauthApplication.agent_is_verified_by_an_application?(@current_agent)
+  end
+  alias create? new?
+
   def show?
     territorial_admin? ||
       allow_to_manage_teams? ||

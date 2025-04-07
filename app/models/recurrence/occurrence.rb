@@ -1,8 +1,12 @@
 class Recurrence::Occurrence
-  include ActiveModel::Model
   include Comparable
 
-  attr_accessor :starts_at, :ends_at
+  attr_reader :starts_at, :ends_at
+
+  def initialize(starts_at:, ends_at:)
+    @starts_at = starts_at
+    @ends_at = ends_at
+  end
 
   def <=>(other)
     starts_at <=> other.starts_at

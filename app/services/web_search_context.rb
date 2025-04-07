@@ -1,24 +1,36 @@
 class WebSearchContext < SearchContext
   include Users::CreneauxWizardConcern
-  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude
+  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement
+
+  # departement est un cas particulier parce qu'il est aussi utilisé en dehors de addresse selection pour
+  # passer cette première étape
+  ADDRESS_SELECTION_PARAMS = %i[latitude longitude address city_code street_ban_id departement].freeze
+
+  USER_CHOICE_PARAMS = %i[service_id motif_name_with_location_type lieu_id user_selected_organisation_id motif_id].freeze
 
   def initialize(user:, query_params: {})
     super
+
+    # Optional starting conditions
+    @public_link_organisation_id = query_params[:public_link_organisation_id]
+    @external_organisation_ids = query_params[:external_organisation_ids]
+    @referent_ids = query_params[:referent_ids]
+    @prescripteur = query_params[:prescripteur]
+
+    # Address selection:
     @latitude = query_params[:latitude]
     @longitude = query_params[:longitude]
     @address = query_params[:address]
     @city_code = query_params[:city_code]
     @street_ban_id = query_params[:street_ban_id]
-    @public_link_organisation_id = query_params[:public_link_organisation_id]
-    @user_selected_organisation_id = query_params[:user_selected_organisation_id]
-    @external_organisation_ids = query_params[:external_organisation_ids]
-    @motif_id = query_params[:motif_id]
-    @motif_category_short_name = query_params[:motif_category_short_name]
-    @motif_name_with_location_type = query_params[:motif_name_with_location_type]
+    @departement = query_params[:departement]
+
+    # User choices
     @service_id = query_params[:service_id]
+    @motif_name_with_location_type = query_params[:motif_name_with_location_type]
     @lieu_id = query_params[:lieu_id]
-    @referent_ids = query_params[:referent_ids]
-    @prescripteur = query_params[:prescripteur]
+    @user_selected_organisation_id = query_params[:user_selected_organisation_id]
+    @motif_id = query_params[:motif_id]
   end
 
   def invitation?
@@ -27,10 +39,6 @@ class WebSearchContext < SearchContext
 
   def prescripteur?
     @prescripteur
-  end
-
-  def departement
-    @departement ||= @query_params[:departement] || public_link_organisation&.departement_number
   end
 
   def organisation_id
@@ -67,8 +75,6 @@ class WebSearchContext < SearchContext
   end
 
   private
-
-  attr_reader :referent_ids, :lieu_id
 
   def matching_motifs
     @matching_motifs ||= filter_motifs(geo_search.available_motifs)

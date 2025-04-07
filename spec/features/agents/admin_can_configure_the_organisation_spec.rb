@@ -1,14 +1,7 @@
 RSpec.describe "Admin can configure the organisation" do
-  let!(:organisation) { create(:organisation) }
-  let!(:pmi) { create(:service, name: "PMI", territories: [organisation.territory]) }
-  let!(:service_social) { create(:service, name: "Service social", territories: [organisation.territory]) }
-  let!(:agent_admin) { create(:agent, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", service: pmi, admin_role_in_organisations: [organisation]) }
-  let!(:other_agent_user) { create(:agent, first_name: "JP", last_name: "Dupond", email: "jp@dupond.fr", service: service_social, basic_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, name: "Motif 1", service: pmi, organisation: organisation) }
-  let!(:user) { create(:user, organisations: [organisation]) }
+  let!(:organisation) { create(:organisation, name: "MDS Montreuil Nord") }
+  let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:secretariat) { create(:service, :secretariat) }
-  let(:le_nouveau_motif) { build(:motif, name: "Motif 2", service: pmi, organisation: organisation) }
   let(:la_nouvelle_org) { build(:organisation) }
 
   before do
@@ -17,8 +10,9 @@ RSpec.describe "Admin can configure the organisation" do
   end
 
   it "CRUD on lieux" do
+    click_link "Configuration"
     click_link "Lieux"
-    expect_page_title("Vos lieux de consultation")
+    expect_page_title("Lieux")
 
     within("#lieu_#{lieu.id}") do
       click_link "Modifier"
@@ -29,7 +23,7 @@ RSpec.describe "Admin can configure the organisation" do
     fill_in "Téléphone", with: "01 02 03 04 05"
     click_button("Enregistrer")
 
-    expect_page_title("Vos lieux de consultation")
+    expect_page_title("Lieux")
 
     nouveau_lieu = Lieu.find_by(name: "Le nouveau lieu")
     within("#lieu_#{nouveau_lieu.id}") do
@@ -38,7 +32,7 @@ RSpec.describe "Admin can configure the organisation" do
 
     click_link("Supprimer")
 
-    expect_page_title("Vos lieux de consultation")
+    expect_page_title("Lieux")
     expect_page_with_no_record_text("Vous n'avez pas encore ajouté de lieu de consultation.")
 
     click_link "Ajouter un lieu", match: :first
@@ -49,7 +43,7 @@ RSpec.describe "Admin can configure the organisation" do
     first("input#lieu_latitude", visible: false).set(48.583844)
     first("input#lieu_longitude", visible: false).set(7.735253)
     click_button "Enregistrer"
-    expect_page_title("Vos lieux de consultation")
+    expect_page_title("Lieux")
 
     le_nouveau_lieu = Lieu.find_by(name: "Un autre nouveau lieu")
     within("#lieu_#{le_nouveau_lieu.id}") do
@@ -57,14 +51,54 @@ RSpec.describe "Admin can configure the organisation" do
     end
   end
 
-  it "Update organisation" do
-    click_link "Organisation"
+  it "Update organisation contact information" do
+    click_link "Configuration"
+    click_link "Informations de contact"
     click_link "Modifier"
     fill_in "Nom", with: la_nouvelle_org.name
     fill_in "Téléphone", with: la_nouvelle_org.phone_number
     fill_in "Horaires", with: la_nouvelle_org.horaires
     click_button "Enregistrer"
 
-    expect(page).to have_content("L’organisation a été modifiée.")
+    expect(page).to have_content("Les informations de contact ont été modifiées")
+  end
+
+  describe "link to configuration from other applications" do
+    context "when the agent is not an admin of any organisation" do
+      let!(:agent_admin) { create(:agent, admin_role_in_organisations: []) }
+
+      it "redirects to the home page" do
+        visit("/admin/organisations/configuration")
+        expect(page).to have_content "Bienvenue"
+
+        expect(page).to have_current_path("/")
+      end
+    end
+
+    context "when the agent is the admin of only one organisation" do
+      let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation], basic_role_in_organisations: [create(:organisation)]) }
+
+      it "redirects to the organisation" do
+        visit("/admin/organisations/configuration")
+        expect(page).to have_content "Configuration"
+        expect(page).to have_current_path(admin_organisation_configuration_path(organisation))
+      end
+    end
+
+    context "when the agent is the admin of multiple organisations" do
+      let!(:agent_admin) do
+        create(:agent, admin_role_in_organisations: [organisation, other_organisation])
+      end
+      let(:other_organisation) { create(:organisation, name: "MDS Montreuil Sud") }
+
+      it "lets the agent choose the organisation, and redirects there" do
+        visit("/admin/organisations/configuration")
+        expect(page).to have_content(organisation.name)
+        expect(page).to have_content(other_organisation.name)
+        click_on(other_organisation.name)
+        expect(page).to have_content "Configuration"
+        expect(page).to have_current_path(admin_organisation_configuration_path(other_organisation))
+      end
+    end
   end
 end

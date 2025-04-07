@@ -22,6 +22,9 @@ class PlageOuverture < ApplicationRecord
   # Attributes
   auto_strip_attributes :title
 
+  attribute :secondary_start_time, :time_only # uses Tod::TimeOfDayType
+  attribute :secondary_end_time,   :time_only # uses Tod::TimeOfDayType
+
   # Relations
   belongs_to :organisation
   belongs_to :agent
@@ -33,7 +36,8 @@ class PlageOuverture < ApplicationRecord
   has_many :motifs, -> { distinct }, through: :motifs_plage_ouvertures
 
   # Validations
-  validate :end_after_start
+  validate :end_time_must_be_after_start_time
+  validate :secondary_times_valid
   validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
   validates :motifs, presence: true
@@ -60,6 +64,12 @@ class PlageOuverture < ApplicationRecord
   delegate :domain, to: :organisation
 
   ## -
+
+  def secondary_starts_at
+    return nil if secondary_start_time.blank? || first_day.blank?
+
+    secondary_start_time&.on(first_day)
+  end
 
   def title_with_default
     if title.present?
@@ -136,10 +146,20 @@ class PlageOuverture < ApplicationRecord
     [first_day, start_time, end_time].all?(&:present?)
   end
 
-  def end_after_start
-    return if end_time.blank? || start_time.blank?
+  def secondary_times_valid
+    return unless secondary_start_time && secondary_end_time
 
-    errors.add(:end_time, :must_be_after_start_time) if end_time <= start_time
+    if secondary_start_time >= secondary_end_time
+      errors.add(:secondary_end_time, :must_be_after_secondary_start_time)
+    end
+
+    return unless start_time && end_time
+
+    first_interval = start_time..end_time
+    second_interval = secondary_start_time..secondary_end_time
+    if first_interval.overlaps?(second_interval)
+      errors.add(:secondary_start_time, :overlaps_primary_interval)
+    end
   end
 
   def lieu_is_enabled

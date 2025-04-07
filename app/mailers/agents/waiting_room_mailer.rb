@@ -10,7 +10,5 @@ class Agents::WaitingRoomMailer < ApplicationMailer
     mail(subject: t("agents.waiting_room_mailer.title", domain_name: domain.name))
   end
 
-  def domain
-    @agent.domain
-  end
+  delegate :domain, to: :@agent
 end

@@ -1,9 +1,10 @@
 class Agents::PlageOuvertureMailer < ApplicationMailer
   helper MotifsHelper
-  helper PlageOuverturesHelper
+  helper RecurrenceHelper
 
   before_action do
     @plage_ouverture = params[:plage_ouverture]
+    @display_link_to_agent_preferences = true
   end
 
   default to: -> { @plage_ouverture.agent.email }

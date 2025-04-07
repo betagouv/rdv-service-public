@@ -1,7 +1,5 @@
 module Outlook
   class SyncEventJob < ApplicationJob
-    queue_as :outlook_sync
-
     include GoodJob::ActiveJobExtensions::Concurrency
     good_job_control_concurrency_with(
       perform_limit: 1,
@@ -10,13 +8,15 @@ module Outlook
       key: -> { "Outlook::SyncEventJob-#{arguments.first}" }
     )
 
-    def self.perform_later_for(agents_rdv)
+    queue_as :latency_30s
+
+    def self.perform_later_for(agents_rdv, queue: :latency_30s)
       if agents_rdv.outlook_id.nil? && !agents_rdv.destroyed?
         agents_rdv.update_columns(outlook_create_in_progress: true) # rubocop:disable Rails/SkipsModelValidations
       end
       # En cas de suppression du agents_rdv, on ne pourra pas le désérialiser au moment de l'exécution du job.
       # On aura donc besoin du outlook_id et de l'agent pour supprimer l'event dans Outlook
-      perform_later(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
+      set(queue:).perform_later(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
     end
 
     def perform(agents_rdv_id, outlook_id, agent)
@@ -37,7 +37,7 @@ module Outlook
 
     def capture_sentry_warning_for_retry?(exception)
       # Ces erreurs se produisent parfois à la première exécution, puis le job passe au retry.
-      if exception.class.in?([Outlook::ApiClient::RefreshTokenError, Outlook::ApiClient::RateLimitingError])
+      if exception.class.in?([Outlook::ApiClient::RefreshTokenError, Outlook::ApiClient::RateLimitingError, Typhoeus::Errors::TimeoutError])
         executions > 3
       else
         super

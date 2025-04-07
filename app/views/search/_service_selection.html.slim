@@ -1,11 +1,17 @@
+- content_for :title, "Sélectionnez le service"
+
 - if context.unique_motifs_by_name_and_location_type.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h2 Sélectionnez le service avec qui vous voulez prendre un RDV&nbsp;:
-  - context.services.each do |service|
-    .fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
-      .fr-card__body
-        .fr-card__content
-          .fr-card__title
-            = link_to service.name, prendre_rdv_path(context.query_params.merge(service_id: service.id))
+  p.fr-text--lg Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV&nbsp;:
+  // Nous n’utilisons pas le composant du DSFR view component car nous avons changé la typo des titres d’accordéon
+  .fr-accordions-group.fr-mb-5w[data-fr-group="true"]
+    - context.services.each do |service|
+      section.fr-accordion
+        h2.fr-accordion__title
+          button.fr-accordion__btn.fr-text--lead type="button" aria-expanded="false" aria-controls="fr-accordion-#{service.id}" = service.name
+        .fr-collapse id="fr-accordion-#{service.id}"
+          - context.motifs_grouped_by_service_id[service.id].uniq(&:name_with_location_type).sort_by { |motif| I18n.transliterate(motif.name.downcase)}.each do |motif|
+            = render "search/motif_card", context: context, motif: motif, service_id: service.id
+
 = render "search/referent_booking_card", context: context

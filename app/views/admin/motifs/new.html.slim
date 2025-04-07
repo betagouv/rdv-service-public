@@ -1,13 +1,8 @@
-- content_for(:menu_item) { "menu-motifs" }
-
 - page_title = @motif.duplicated_from_motif ? %(Duplication du motif "#{@motif.duplicated_from_motif}") : t("motifs.form.title.new")
 - content_for :title, page_title
 
-- content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to t("motifs.index.title"), admin_organisation_motifs_path(current_organisation)
-    li.breadcrumb-item.active = page_title
+= render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
+- content_for(:menu_item) { "menu-settings" }
 
 .row
   .col-md-12

@@ -1,9 +1,11 @@
+- content_for :title, "Sélectionnez le lieu"
+
 = render "search/selected_motif_recap", context: context
 - if context.shown_lieux.empty?
   = render "search/nothing_to_show", context: context
 - else
-  h3 = t(".select_lieu")
-  p = t(".lieu_available", count: context.shown_lieux.count)
+  p.fr-text--lg = t(".select_lieu")
+  p.fr-text--sm = t(".lieu_available", count: context.shown_lieux.count)
   ul.fr-raw-list
     - context.next_availability_by_lieux.each do |lieu, next_availability|
       - motif = next_availability.motif

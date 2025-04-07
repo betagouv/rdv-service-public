@@ -113,11 +113,12 @@ module UsersHelper
   end
 
   def clickable_user_phone_number(user)
-    user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}") : nil
+    user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}", class: "fr-link") : nil
   end
 
-  def formatted_user_notes(user)
-    user.notes.present? ? simple_format(user.notes) : nil
+  def formatted_user_annotation(user, current_territory)
+    annotation = user.annotation_for(current_territory)
+    annotation.present? ? simple_format(annotation) : nil
   end
 
   def user_soft_delete_confirm_message(user)
@@ -180,10 +181,10 @@ module UsersHelper
     :responsible
   end
 
-  def user_merge_attribute_value(user, attribute)
+  def user_merge_attribute_value(user, attribute, current_territory)
     return birth_date_and_age(user) if attribute == :birth_date
     return user.responsible&.full_name if attribute == :responsible_id
-    return formatted_user_notes(user) if attribute == :notes
+    return formatted_user_annotation(user, current_territory) if attribute == :annotation_content
     return user&.human_attribute_value(:logement) if attribute == :logement
 
     user.send(attribute)

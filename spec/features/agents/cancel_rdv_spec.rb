@@ -1,6 +1,7 @@
 RSpec.describe "Agent can cancel a RDV", js: true do
-  let(:rdv) { create(:rdv) }
-  let(:agent) { rdv.agents.first }
+  let(:rdv) { create(:rdv, agents: [agent], organisation: organisation) }
+  let(:agent) { create(:agent, rdv_notifications_level: :others, basic_role_in_organisations: [organisation]) }
+  let(:organisation) { create(:organisation) }
 
   before do
     rdv.participations.first.update!(send_lifecycle_notifications: false)

@@ -5,6 +5,8 @@ module DefaultJobBehaviour
   PRIORITY_OF_RETRIES = 20
 
   included do
+    queue_as :latency_5m
+
     # This retry_on means:
     # "retry 20 times with an exponential backoff, then mark job as discarded"
     #

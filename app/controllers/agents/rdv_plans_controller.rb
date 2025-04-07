@@ -4,7 +4,11 @@ class Agents::RdvPlansController < AgentAuthController
   before_action :redirect_to_rdv, if: -> { @rdv_plan.rdv.present? }, except: [:rdv]
 
   def show
-    redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+    if current_agent.organisations.any?
+      redirect_to edit_starts_at_agents_rdv_plan_path(@rdv_plan)
+    else
+      redirect_to authenticated_agent_root_path
+    end
   end
 
   def edit_starts_at

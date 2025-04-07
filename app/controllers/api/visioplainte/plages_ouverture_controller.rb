@@ -16,7 +16,7 @@ class Api::Visioplainte::PlagesOuvertureController < Api::Visioplainte::BaseCont
       plages_ouvertures = plages_ouvertures.where(agent_id: params[:guichet_ids])
     end
 
-    plages_ouverture_occurences = plages_ouvertures.all_occurrences_for(date_debut..date_fin).map do |plage_ouverture, occurrence|
+    plages_ouverture_occurrences = plages_ouvertures.all_occurrences_for(date_debut..date_fin).map do |plage_ouverture, occurrence|
       {
         id: plage_ouverture.id,
         starts_at: occurrence.starts_at.iso8601,
@@ -25,7 +25,7 @@ class Api::Visioplainte::PlagesOuvertureController < Api::Visioplainte::BaseCont
       }
     end
 
-    render json: { plages_ouverture: plages_ouverture_occurences }
+    render json: { plages_ouverture: plages_ouverture_occurrences }
   end
 
   private

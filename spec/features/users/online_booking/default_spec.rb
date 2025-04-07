@@ -9,7 +9,9 @@ RSpec.describe "User can search for rdvs" do
   end
 
   describe "default" do
-    let!(:territory92) { create(:territory, departement_number: "92") }
+    let!(:territory92) do
+      create(:territory, departement_number: "92", enable_birth_date_field: true)
+    end
     let!(:organisation) { create(:organisation, :with_contact, territory: territory92) }
     let(:service) { create(:service) }
     let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, restriction_for_rdv: nil, service: service) }
@@ -25,7 +27,6 @@ RSpec.describe "User can search for rdvs" do
     it "default", js: true do
       visit root_path
       execute_search
-      choose_service(motif.service)
       choose_motif(motif)
       choose_lieu(lieu)
 
@@ -53,7 +54,10 @@ RSpec.describe "User can search for rdvs" do
 
   describe "Prise de RDV en ligne" do
     let!(:service) { create(:service) }
-    let!(:territory) { create(:territory, departement_number: "92") }
+    let!(:territory) do
+      create(:territory, departement_number: "92", enable_birth_date_field: true)
+    end
+
     let!(:first_organisation_with_po) { create(:organisation, :with_contact, territory: territory) }
     let!(:first_motif) do
       create(:motif, :by_phone, name: "RSA orientation par téléphone", organisation: first_organisation_with_po, restriction_for_rdv: nil, service: service)
@@ -179,7 +183,11 @@ RSpec.describe "User can search for rdvs" do
       end
     end
     let!(:agent2) { create(:agent) }
-    let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "92")) }
+    let!(:organisation) { create(:organisation, territory: territory) }
+    let!(:territory) do
+      create(:territory, departement_number: "92", enable_birth_date_field: true)
+    end
+
     let!(:service_social) { create(:service, name: "Service Social") }
     let!(:service_insertion) { create(:service, name: "Service Insertion") }
     let!(:lieu) { create(:lieu, organisation: organisation) }
@@ -279,7 +287,7 @@ RSpec.describe "User can search for rdvs" do
       ## Take rdv
       expect(page).to have_content("Vos informations")
       click_button("Continuer")
-      expect(page).to have_content("Choix de l'usager")
+      expect(page).to have_content("Choix de l’usager")
       click_button("Continuer")
       expect(page).to have_content("Confirmation")
       click_link("Confirmer mon RDV")
@@ -335,7 +343,7 @@ RSpec.describe "User can search for rdvs" do
     it "shows the service selection" do
       visit root_path(departement: "92")
 
-      expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+      expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
       expect(page).to have_content(service.name)
       expect(page).to have_content(other_service.name)
     end
@@ -426,13 +434,14 @@ RSpec.describe "User can search for rdvs" do
 
   def choose_service(service)
     expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
-    expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+    expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
 
     find("a", text: service.name).click
   end
 
   def choose_motif(motif)
-    expect(page).to have_content("Sélectionnez le motif de votre RDV")
+    expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
+    find("button", text: motif.service.name).click
     find("a", text: motif.name).click
   end
 
@@ -468,6 +477,7 @@ RSpec.describe "User can search for rdvs" do
     fill_in("Adresse email", with: "michel@lapin.fr")
     fill_in("Numéro de téléphone", with: "0612345678")
     click_button("Je m’inscris")
+    expect(page).to have_content("Un message contenant un lien de confirmation a été envoyé à votre adresse email. Ouvrez ce lien pour activer votre compte.")
 
     # Confirmation email
     open_email("michel@lapin.fr")
@@ -535,8 +545,8 @@ RSpec.describe "User can search for rdvs" do
       lieu_id: lieu&.id,
       longitude: "",
       motif_name_with_location_type: "vaccination-public_office",
-      service_id: service.id,
-      street_ban_id: ""
+      street_ban_id: "",
+      service_id: service&.id
     )
   end
 end

@@ -1,16 +1,16 @@
-module PlageOuverturesHelper
-  def display_recurrence(plage_ouverture)
-    every_part = display_every(plage_ouverture)
+module RecurrenceHelper
+  def display_recurrence(recurrent_record)
+    every_part = display_every(recurrent_record)
 
-    time_part = display_time_range(plage_ouverture)
+    time_part = display_time_range(recurrent_record)
 
-    range_part = display_recurrence_range(plage_ouverture)
+    range_part = display_recurrence_range(recurrent_record)
 
     [every_part, time_part, range_part]
   end
 
-  def display_every(plage_ouverture)
-    recurrence_hash = plage_ouverture.recurrence.to_hash
+  def display_every(recurrent_record)
+    recurrence_hash = recurrent_record.recurrence.to_hash
 
     interval = "#{recurrence_hash[:interval]} " if recurrence_hash[:interval]&.>(1)
 
@@ -21,29 +21,33 @@ module PlageOuverturesHelper
       if recurrence_hash[:on].present?
         "#{every_part}, les #{recurrence_hash[:on].map { |d| "#{weekday_in_fr(d)}s" }.to_sentence}"
       else
-        "#{every_part}, le #{I18n.l(plage_ouverture.first_day, format: '%A')}"
+        "#{every_part}, le #{I18n.l(recurrent_record.first_day, format: '%A')}"
       end
     when :month
       "Tous les #{interval} mois, #{weekday_position_in_month(recurrence_hash[:day])}"
     end
   end
 
-  def display_time_range(plage_ouverture)
-    "de #{I18n.l(plage_ouverture.start_time, format: '%H:%M')} à #{I18n.l(plage_ouverture.end_time, format: '%H:%M')}"
+  def display_time_range(recurrent_record)
+    str = "de #{I18n.l(recurrent_record.start_time, format: '%H:%M')} à #{I18n.l(recurrent_record.end_time, format: '%H:%M')}"
+    if recurrent_record.try(:secondary_start_time) && recurrent_record.try(:secondary_end_time)
+      str += " et de #{I18n.l(recurrent_record.secondary_start_time, format: '%H:%M')} à #{I18n.l(recurrent_record.secondary_end_time, format: '%H:%M')}"
+    end
+    str
   end
 
-  def plage_ouverture_occurrence_text(plage_ouverture)
-    if plage_ouverture.recurring?
-      display_recurrence(plage_ouverture).join(" ")
+  def occurrence_text(recurrent_record)
+    if recurrent_record.recurring?
+      display_recurrence(recurrent_record).join(" ")
     else
-      I18n.l(plage_ouverture.first_day, format: :human) + display_time_range(plage_ouverture)
+      [I18n.l(recurrent_record.first_day, format: :human), display_time_range(recurrent_record)].join(" ")
     end
   end
 
-  def display_recurrence_range(plage_ouverture)
-    recurrence_hash = plage_ouverture.recurrence.to_hash
+  def display_recurrence_range(recurrent_record)
+    recurrence_hash = recurrent_record.recurrence.to_hash
 
-    range_part = "à partir du #{I18n.l(plage_ouverture.first_day, format: :human)}"
+    range_part = "à partir du #{I18n.l(recurrent_record.first_day, format: :human)}"
 
     range_part = "#{range_part}, jusqu'au #{I18n.l(recurrence_hash[:until].to_date, format: :human)}" if recurrence_hash[:until].present?
     range_part
@@ -68,12 +72,8 @@ module PlageOuverturesHelper
     weekdays[weekday]
   end
 
-  def overflow_motif_duration(plage_ouverture, motif)
-    (motif.default_duration_in_min - plage_ouverture.daily_max_duration.in_minutes).to_i
-  end
-
-  def po_exceptionnelle_tag(plage_ouverture)
-    tag.span("Exceptionnelle", class: "badge badge-info") if plage_ouverture.exceptionnelle?
+  def exceptionnelle_tag(recurrent_record)
+    tag.span("Exceptionnelle", class: "badge badge-info") if recurrent_record.exceptionnelle?
   end
 
   def filter_plage_ouvertures_in_departement_scope(plage_ouvertures)
