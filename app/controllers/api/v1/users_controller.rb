@@ -69,10 +69,13 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
 
     attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
 
+    permitted_params = params.permit(*attrs, organisation_ids: [])
+
+    return permitted_params if params[:referent_agent_ids].nil?
+
     referents_i_can_modify = Agent::AgentPolicy::Scope.new(pundit_user, @user.referent_agents).resolve
     referents_i_cant_modify = @user.referent_agents - referents_i_can_modify
 
-    permitted_params = params.permit(*attrs, organisation_ids: [])
     permitted_params.merge(referent_agent_ids: authorized_referent_ids + referents_i_cant_modify.map(&:id))
   end
 
