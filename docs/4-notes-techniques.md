@@ -218,13 +218,13 @@ Je suppose que l’éxecution du serveur Rails de spec est complètement interro
 Le tableau ci-dessous présente le nombre de connexions maximum à la base de données PostgreSQL pouvant être ouverts.
 Il s’agit des chiffres pour l’instance historique RDV Solidarités.
 
-|                               | web | jobs | variables d’env | où trouver la config ? |
-|-------------------------------|-----|------| --------------- | ---------------------- |
-| scalingo_workers_count        | 8   | 2    | -               | `scalingo scale`       |
-| processes_per_worker          | 3   | 1    | WEB_CONCURRENCY | config/puma.rb         |
-| connection_pools_max_sizes    | 4   | 8    | GOOD_JOB_MAX_THREADS et RAILS_MAX_THREADS | config/database.yml |
-| extra_connections_per_process | 0   | 3    | -               | doc de GoodJob         |
-| total_max_connections         | 96  | 22   | -               | -                      |
+|                                      | web | jobs | variables d’env | où trouver la config ? |
+|------------------------------------- | --- | ---- | --------------- | ---------------------- |
+| scalingo_workers_count               | 8   | 2    | -               | `scalingo scale`       |
+| processes_per_worker                 | 3   | 1    | WEB_CONCURRENCY | config/puma.rb         |
+| connection_pools_sizes_per_worker    | 4   | 8    | GOOD_JOB_MAX_THREADS et RAILS_MAX_THREADS | config/database.yml |
+| extra_connections_per_process        | 0   | 3    | -               | doc de GoodJob         |
+| total_max_connections                | 96  | 22   | -               | -                      |
 
 Soit un total de 118 connexions à la base PostgreSQL ouvertes simultanées possibles.
 

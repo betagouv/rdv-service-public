@@ -23,13 +23,13 @@ prod_env_values = `scalingo --region osc-secnum-fr1 --app production-rdv-solidar
   .to_h { |line| line.split("=", 2).map(&:strip) }
   .slice("RAILS_MAX_THREADS", "GOOD_JOB_MAX_THREADS", "WEB_CONCURRENCY")
 env_values = prod_env_values
+env_values.each { |k, v| ENV[k] = v }
 
-connection_pools_max_sizes = File.read("config/database.yml")
+connection_pools_sizes_per_worker = File.read("config/database.yml")
   .lines
   .find { |line| line.include?("pool:") }
   .match(/<%= \$PROGRAM_NAME\.include\?\("good_job"\) \? (?<jobs>.*) : (?<web>.*) %>/)
   .named_captures
-  .transform_values { _1.gsub("ENV", "env_values") }
   .transform_values { eval(_1) } # rubocop:disable Security/Eval
   .symbolize_keys
 
@@ -37,16 +37,12 @@ puma_max_threads_count = File.read("config/puma.rb")
   .lines
   .find { |line| line.include?("max_threads_count") }
   .sub("max_threads_count = ", "")
-  .sub("ENV", "env_values")
   .then { eval(_1) } # rubocop:disable Security/Eval
 
-good_job_max_threads_count = File.read("config/initializers/good_job.rb")
-  .lines
-  .find { |line| line.include?("max_threads = ") }
-  .sub("config.good_job.max_threads = ", "")
-  .to_i
+good_job_max_threads_count = GoodJob::Configuration.new(Rails.configuration.good_job).max_threads
 
 max_threads_count_per_process = { jobs: good_job_max_threads_count, web: puma_max_threads_count }
+puts "max_threads_count_per_process is #{max_threads_count_per_process}"
 
 scalingo_workers_count = `scalingo --region osc-secnum-fr1 --app production-rdv-solidarites scale`
   .gsub(" (*)", "")
@@ -59,7 +55,7 @@ scalingo_workers_count = `scalingo --region osc-secnum-fr1 --app production-rdv-
 
 extra_connections_per_process = {
   web: 0,
-  jobs: 3, # 2 pour les LISTEN/NOTIFY et 1 pour le cron
+  jobs: 3, # 2 pour les LISTEN/NOTIFY, cron + 1 pour les requêtes multithreadées
 }
 processes_per_worker = { jobs: 1 }
 processes_per_worker[:web] = File.read("config/puma.rb")
@@ -72,7 +68,7 @@ processes_per_worker[:web] = File.read("config/puma.rb")
 total_max_connections = %i[web jobs].index_with do |worker_type|
   scalingo_workers_count[worker_type] *
     processes_per_worker[worker_type] *
-    (connection_pools_max_sizes[worker_type] + extra_connections_per_process[worker_type])
+    (connection_pools_sizes_per_worker[worker_type] + extra_connections_per_process[worker_type])
 end
 
 total_max_threads = %i[web jobs].index_with do |worker_type|
@@ -105,7 +101,7 @@ display_ascii_table(
   [
     table_attr("scalingo_workers_count", scalingo_workers_count),
     table_attr("processes_per_worker", processes_per_worker),
-    table_attr("connection_pools_max_sizes", connection_pools_max_sizes),
+    table_attr("connection_pools_sizes_per_worker", connection_pools_sizes_per_worker),
     table_attr("extra_connections_per_process", extra_connections_per_process),
     ["-", "-", "-"],
     table_attr("total_max_connections", total_max_connections),
