@@ -67,6 +67,12 @@ RSpec.describe "/api/v1/users" do
         end.to change { existing_user.reload.last_name }
         expect(existing_user.reload.last_name).to eq("Fastoche")
       end
+
+      it "does not modify user agent referents" do
+        existing_user.referent_agents << myself
+        put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json
+        expect(existing_user.reload.referent_agents).to eq([myself])
+      end
     end
 
     context "when passing arbitrary referent_agent_ids" do
