@@ -25,6 +25,7 @@ class WebhookJob < ApplicationJob
       body: payload,
       timeout: TIMEOUT
     )
+    request.scrub_from_sentry_breadcrumbs = [:body]
 
     request.on_failure do |response|
       # Cela permet d'identifier singulièrement l'erreur selon l'URL et le code HTTP de la réponse
