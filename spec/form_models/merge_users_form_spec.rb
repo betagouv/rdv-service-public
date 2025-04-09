@@ -41,7 +41,7 @@ RSpec.describe MergeUsersForm, type: :form do
       let(:organisation) { create(:organisation, territory:) }
       let(:user1) { create(:user, organisations: [organisation]) }
       let(:user2) { create(:user, organisations: [organisation]) }
-      let(:form) { described_class.new(organisation, user1: user1, user2: user2) }
+      let(:form) { described_class.new(organisation, user1:, user2:) }
 
       it { is_expected.to include(:birth_date) }
     end
@@ -51,7 +51,7 @@ RSpec.describe MergeUsersForm, type: :form do
       let(:organisation) { create(:organisation, territory:) }
       let(:user1) { create(:user, organisations: [organisation]) }
       let(:user2) { create(:user, organisations: [organisation]) }
-      let(:form) { described_class.new(organisation, user1: user1, user2: user2) }
+      let(:form) { described_class.new(organisation, user1:, user2:) }
 
       it { is_expected.not_to include(:birth_date) }
     end
