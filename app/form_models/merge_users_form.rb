@@ -33,9 +33,12 @@ class MergeUsersForm
   end
 
   def available_attributes
-    return %i[first_name last_name birth_date responsible_id] if user1&.relative? || user2&.relative?
-
-    ATTRIBUTES + optional_attributes
+    attrs = ATTRIBUTES + optional_attributes
+    if user1&.relative? || user2&.relative?
+      # cette intersection permet d’éviter d’exposer des champs optionnels à tort
+      attrs &= %i[first_name last_name birth_date responsible_id]
+    end
+    attrs
   end
 
   def attribute_comparison(attribute)
