@@ -35,7 +35,7 @@ class MergeUsersForm
   def available_attributes
     return %i[first_name last_name birth_date responsible_id] if user1&.relative? || user2&.relative?
 
-    ATTRIBUTES + optional_attributes
+    (ATTRIBUTES + optional_attributes).uniq
   end
 
   def attribute_comparison(attribute)
@@ -87,6 +87,7 @@ class MergeUsersForm
 
   def attributes_to_merge
     (ATTRIBUTES + Territory::OPTIONAL_FIELD_TOGGLES.values)
+      .uniq
       .select { send(_1) == user_to_merge_number }
       .without(:email) # email cannot be in this list, only to be explicit
   end
