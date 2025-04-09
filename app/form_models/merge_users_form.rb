@@ -3,7 +3,7 @@ class MergeUsersForm
 
   ATTRIBUTES = %i[
     email
-    first_name last_name birth_name birth_date phone_number responsible_id
+    first_name last_name birth_name phone_number responsible_id
     address
   ].freeze
 
