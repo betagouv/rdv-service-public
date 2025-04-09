@@ -55,5 +55,27 @@ RSpec.describe MergeUsersForm, type: :form do
 
       it { is_expected.not_to include(:birth_date) }
     end
+
+    context "un des deux usagers à fusionner est un proche" do
+      context "les dates de naissance sont disponibles sur le territoire" do
+        let(:territory) { create(:territory, enable_birth_date_field: true) }
+        let(:organisation) { create(:organisation, territory:) }
+        let(:user1) { create(:user, :relative, organisations: [organisation]) }
+        let(:user2) { create(:user, organisations: [organisation]) }
+        let(:form) { described_class.new(organisation, user1:, user2:) }
+
+        it { is_expected.to match_array(%i[first_name last_name birth_date responsible_id]) }
+      end
+
+      context "les dates de naissance ne sont pas disponibles sur le territoire" do
+        let(:territory) { create(:territory, enable_birth_date_field: false) }
+        let(:organisation) { create(:organisation, territory:) }
+        let(:user1) { create(:user, :relative, organisations: [organisation]) }
+        let(:user2) { create(:user, organisations: [organisation]) }
+        let(:form) { described_class.new(organisation, user1:, user2:) }
+
+        it { is_expected.to match_array(%i[first_name last_name responsible_id]) } # no birth_date
+      end
+    end
   end
 end
