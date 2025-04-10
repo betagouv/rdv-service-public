@@ -54,8 +54,10 @@ fr:
         accept: "Accepter l'invitation"
         accept_until: "Cette invitation est valable jusqu'au %{due_date}."
         ignore: "Si vous n'acceptez pas cette invitation, ignorez cet email. Aucun compte ne sera créé sans votre autorisation."
-      confirmation_instructions:
-        subject: "Instructions de confirmation de votre adresse email"
+      confirmation_instructions_email_update:
+        subject: "Instructions de confirmation de votre nouvelle adresse email"
+      confirmation_instructions_signup:
+        subject: "Instructions de confirmation"
       reset_password_instructions:
         subject: "Instructions pour changer le mot de passe"
       unlock_instructions:
