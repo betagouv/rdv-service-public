@@ -21,10 +21,10 @@ class CustomDeviseMailer < Devise::Mailer
 
   def confirmation_instructions(record, token, opts = {})
     @token = token
-    if record.confirmed_at.nil?
-      devise_mail(record, :confirmation_instructions_signup, opts)
-    else
+    if record.unconfirmed_email.present? && record.confirmed_at.present?
       devise_mail(record, :confirmation_instructions_email_update, opts)
+    else
+      devise_mail(record, :confirmation_instructions_signup, opts)
     end
   end
 
