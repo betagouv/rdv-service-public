@@ -179,7 +179,12 @@ class Admin::UsersController < AgentAuthController
   end
 
   def set_user
-    @user = User.find(params[:id])
+    @user = User.unscoped.find(params[:id])
+    if @user.deleted_at.present?
+      redirect_to root_path, flash: { error: "L’usager a été supprimé" }
+      return
+    end
+
     authorize(@user, policy_class: Agent::UserPolicy)
   end
 end
