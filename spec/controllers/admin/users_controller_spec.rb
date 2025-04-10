@@ -166,7 +166,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
       it "redirige avec un message d’erreur" do
         get :show, params: { organisation_id: organisation.id, id: user.id }
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(admin_organisation_users_path(organisation.id))
         expect(flash[:error]).to match(/a été supprimé/)
       end
     end
