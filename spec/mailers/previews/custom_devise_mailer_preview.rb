@@ -1,6 +1,9 @@
 class CustomDeviseMailerPreview < ActionMailer::Preview
   def confirmation_instructions
-    CustomDeviseMailer.confirmation_instructions(Agent.first, {})
+    agent = Agent.first
+    agent.readonly!
+    agent.unconfirmed_email = "alain-nouveau@rdv-insertion.fr"
+    CustomDeviseMailer.confirmation_instructions(agent, {})
   end
 
   def reset_password_instructions
