@@ -1,7 +1,7 @@
 - content_for :title, t(".title")
 
-= simple_form_for(@agent, url: agents_preferences_path) do |f|
-  = render "devise/shared/error_messages", resource: @agent
+= simple_form_for(@form, url: agents_preferences_path, method: :put, as: "agent") do |f|
+  = render "model_errors", model: @form, f:
 
   p.lead.font-weight-bold= t(".rdv_notifications_header")
   = f.collection_radio_buttons :rdv_notifications_level, Agent.human_attribute_values(:rdv_notifications_level), :last, :first do |b|

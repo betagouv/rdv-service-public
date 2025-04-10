@@ -4,26 +4,33 @@ class Agents::PreferencesController < AgentAuthController
   before_action { @active_agent_preferences_menu_item = :notifications }
 
   def show
-    @agent = current_agent
-    authorize(@agent, policy_class: Agent::AgentPolicy)
+    @form = Admin::PreferencesForm.new(agent: current_agent)
+    authorize(@form.agent, policy_class: Agent::AgentPolicy)
   end
 
   def update
-    @agent = current_agent
-    authorize(@agent, policy_class: Agent::AgentPolicy)
+    @form = Admin::PreferencesForm.new(agent: current_agent)
+    authorize(@form.agent, policy_class: Agent::AgentPolicy)
 
-    if @agent.update(update_params)
+    if @form.submit(update_params)
       redirect_to agents_preferences_path, flash: { success: t(".update.done") }
     else
       render :show
     end
   end
 
+  private
+
   def pundit_user
     AgentContext.new(current_agent)
   end
 
   def update_params
-    params.require(:agent).permit(:rdv_notifications_level, :plage_ouverture_notification_level, :absence_notification_level)
+    params.require(:agent).permit(
+      :rdv_notifications_level,
+      :plage_ouverture_notification_level,
+      :absence_notification_level,
+      :ignore_benign_errors
+    )
   end
 end
