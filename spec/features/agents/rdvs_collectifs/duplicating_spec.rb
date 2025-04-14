@@ -34,7 +34,7 @@ RSpec.describe "Agent can duplicate a Rdv collectif" do
 
   describe "when trying to duplicate a RDV the agent doesn't have access to" do
     let(:other_organisation) { create(:organisation) }
-    let!(:motif_other_organisation) { create(:motif, :collectif, service: service, organisation: other_organisation, name: "Atelier Collectif") }
+    let!(:motif_other_organisation) { create(:motif, :collectif, organisation: other_organisation, name: "Atelier Collectif") }
     let(:rdv_for_other_organisation) do
       create(:rdv, motif: motif_other_organisation, organisation: other_organisation, name: "Traitement de texte")
     end

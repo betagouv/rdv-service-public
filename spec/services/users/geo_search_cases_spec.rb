@@ -1,3 +1,4 @@
+# TODO: faire une variante de ces specs avec des motifs sans services
 # this file contains ~integration specs, there is another with ~unit tests
 
 RSpec.describe Users::GeoSearch, type: :service_model do

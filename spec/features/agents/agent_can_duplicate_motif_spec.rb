@@ -1,3 +1,4 @@
+# TODO: voir s'il faut faire une variante sans service
 RSpec.describe "agent can duplicate motif" do
   let(:territory) { create(:territory).tap { _1.motif_categories << create(:motif_category, name: "Cat de motif") } }
   let(:organisation) { create(:organisation, territory: territory) }

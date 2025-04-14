@@ -1,3 +1,4 @@
+# TODO: voir s'il faut faire une spec sans service
 RSpec.describe "Agent can organize a rdv collectif", js: true do
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Alain", last_name: "DIALO") }
   let!(:motif) do

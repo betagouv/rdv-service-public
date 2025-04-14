@@ -1,3 +1,4 @@
+# TODO: voir s'il faut faire une spec sans service
 RSpec.describe "Agent can create a Rdv collectif from the agenda" do
   include UsersHelper
 

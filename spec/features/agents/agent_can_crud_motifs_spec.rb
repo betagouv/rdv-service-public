@@ -1,3 +1,4 @@
+# TODO: faire une version sans service
 RSpec.describe "Agent can CRUD motifs" do
   let(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI", territories: [organisation.territory]) }

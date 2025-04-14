@@ -1,3 +1,4 @@
+# TODO: voir s'il faut une spec avec des motifs sans services
 RSpec.describe "Prise de rdv avec sectorisations pour deux espaces dans le même département" do
   let!(:territory_medico_social) { create(:territory, name: "Drome social", departement_number: "26") }
   let!(:territory_insertion) { create(:territory, name: "Drome insertion", departement_number: "26") }

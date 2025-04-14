@@ -58,6 +58,7 @@ RSpec.describe Admin::Api::Agenda::RdvsController, type: :controller do
     end
 
     describe "showing RDVs without details" do
+      # TODO: ajouter une spec pour un rdv sans service
       describe "showing an agent's RDVs for a service in which I am not" do
         let(:current_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 

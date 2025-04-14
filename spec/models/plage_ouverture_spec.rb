@@ -104,6 +104,7 @@ RSpec.describe PlageOuverture, type: :model do
   end
 
   describe "#available_motifs" do
+    # TODO: faire une variante pour les motifs sans service
     subject { plage_ouverture.available_motifs }
 
     let!(:orga2) { create(:organisation) }

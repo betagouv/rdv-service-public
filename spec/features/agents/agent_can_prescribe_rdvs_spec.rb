@@ -1,3 +1,4 @@
+# TODO: faire une variante sans service
 RSpec.describe "agents can prescribe rdvs" do
   before do
     travel_to(now)

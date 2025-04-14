@@ -1,3 +1,4 @@
+# TODO: ajouter specs pour motifs sans service
 RSpec.describe Agent::RdvPolicy, type: :policy do
   subject { described_class }
 
