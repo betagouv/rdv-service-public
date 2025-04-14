@@ -23,17 +23,22 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     http_host = env["HTTP_HOST"]
     provider = env["omniauth.error.strategy"].class.name.demodulize
 
-    Sentry.set_context(
-      "omniauth_env",
-      {
-        http_host: http_host,
-        provider: provider,
-        full_env: env.transform_values { |value| value.is_a?(String) ? value : value.inspect },
-      }
-    )
+    # NOTE: ne pas utiliser 'auth' dans le nom du contexte sinon Sentry le scrubbe
+    Sentry.set_context(:omni_failure, { http_host:, provider: })
 
     Sentry.capture_exception(env["omniauth.error"])
 
     OmniauthCallbacksController.action(:failure).call(env)
+  end
+
+  before_callback_phase do |env|
+    # cf https://github.com/betagouv/rdv-service-public/issues/4637
+    Sentry.set_context(
+      :omni_callback, # NOTE: ne pas utiliser 'auth' dans le nom du contexte sinon Sentry le scrubbe
+      {
+        state_from_session: env["rack.session"]["omniauth.state"],
+        state_from_params: Rack::Request.new(env).params["state"],
+      }
+    )
   end
 end
