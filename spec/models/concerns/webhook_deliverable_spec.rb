@@ -67,6 +67,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
 
     context "when the webhook endpoint is triggered by the model changes but webhook callbacks are disabled in the config" do
       before { Rails.configuration.x.webhooks_enabled = false }
+      after { Rails.configuration.x.webhooks_enabled = true }
 
       context "on creation" do
         let!(:rdv) { build(:rdv, organisation: organisation) }
