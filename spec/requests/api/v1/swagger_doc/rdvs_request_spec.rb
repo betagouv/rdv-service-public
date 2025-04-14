@@ -29,6 +29,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       let!(:organisationA) { create(:organisation) }
       let!(:organisationB) { create(:organisation) }
 
+      # TODO: ajouter des rdvs pour des motifs sans services
       let!(:service) { create(:service) }
       let!(:service2) { create(:service) }
 

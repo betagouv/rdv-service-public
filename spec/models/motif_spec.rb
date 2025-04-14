@@ -1,3 +1,4 @@
+# TODO: parcourir les specs et voir lesquels doivent se faire sans service
 RSpec.describe Motif, type: :model do
   let(:secretariat) { create(:service, :secretariat) }
   let(:motif) { create(:motif, organisation: organisation) }

@@ -2,7 +2,7 @@ RSpec.describe "Participations", type: :request do
   let(:service) { create(:service) }
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
-  let(:motif) { create(:motif, :collectif, organisation: organisation, service: service) }
+  let(:motif) { create(:motif, :collectif, organisation: organisation) }
   let(:rdv) { create(:rdv, organisation: organisation, motif: motif, agents: [agent]) }
   let(:user1) { create(:user) }
   let(:user2) { create(:user, :without_devise_email, :with_no_phone_number) }

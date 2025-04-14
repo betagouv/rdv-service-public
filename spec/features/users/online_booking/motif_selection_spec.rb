@@ -1,3 +1,4 @@
+# TODO: faire des variantes avec des motifs sans services
 RSpec.describe "Motif selection" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 

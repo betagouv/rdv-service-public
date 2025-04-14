@@ -1,3 +1,4 @@
+# TODO: ajouter une variante pour des motifs sans services ?
 RSpec.shared_examples "SearchContext" do
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:organisation) { create(:organisation) }

@@ -1,3 +1,4 @@
+# TODO: tester une version sans services
 RSpec.describe Admin::CreateMotifs do
   let(:service) { create(:service) }
   let!(:organisations) { create_list(:organisation, 2) }

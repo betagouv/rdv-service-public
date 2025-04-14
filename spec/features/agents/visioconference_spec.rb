@@ -12,7 +12,7 @@ RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
   end
 
   it "adds validation when trying to create a rdv without email or phone number", js: true do
-    motif = create(:motif, organisation: organisation, location_type: :visio, service: service, name: "Accompagnement RSA")
+    motif = create(:motif, organisation: organisation, location_type: :visio, name: "Accompagnement RSA")
 
     visit new_admin_organisation_rdv_wizard_step_path(organisation_id: organisation.id)
     select(motif.name, from: "Motif du rendez-vous")

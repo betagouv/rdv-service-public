@@ -3,10 +3,9 @@ RSpec.describe "Agent can update a RDV", js: true do
   let(:rdv) do
     create(:rdv, organisation: organisation, motif: motif, agents: [agent], lieu: lieu)
   end
-  let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, basic_role_in_organisations: [organisation]) }
+  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", basic_role_in_organisations: [organisation]) }
 
-  let!(:motif) { create(:motif, service: service, organisation: organisation) }
+  let!(:motif) { create(:motif, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
   before do

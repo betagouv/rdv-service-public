@@ -1,3 +1,4 @@
+# TODO: si ça ne fait pas trop doublon avec d'autres specs, ajouter une variante avec motif sans service
 RSpec.describe "Agent can CRUD plage d'ouverture" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI") }

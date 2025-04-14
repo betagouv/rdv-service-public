@@ -1,3 +1,4 @@
+# TODO: faire une spec pour les motifs sans service
 RSpec.describe Admin::PlageOuverturesController, type: :controller do
   render_views
 

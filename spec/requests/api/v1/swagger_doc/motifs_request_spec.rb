@@ -130,6 +130,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
           it { expect(parsed_response_body["motifs"].pluck("bookable_publicly")).to contain_exactly(false) }
         end
 
+        # TODO: ajouter une spec pour les motifs sans services
         response 200, "Renvoie les motifs filtrés sur service_id", document: false do
           let!(:another_service) { create(:service) }
           let!(:motif1) { create(:motif, organisation: organisation, service: service) }

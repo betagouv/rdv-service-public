@@ -66,6 +66,7 @@ RSpec.describe Stat, type: :model do
   end
 
   describe "#rdvs_group_by_service" do
+    # TODO: ajouter un cas pour les rdvs sans services
     let(:organisation) { create(:organisation) }
 
     it "returns rdv group by service" do

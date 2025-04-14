@@ -1,3 +1,4 @@
+# TODO: faire version pour un motif sans service
 RSpec.describe "can see users' RDV" do
   context "with no RDV" do
     let!(:organisation) { create(:organisation) }

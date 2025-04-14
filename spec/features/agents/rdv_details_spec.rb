@@ -11,7 +11,7 @@ RSpec.describe "Agent can see RDV details correctly" do
 
   context "Motif is not collective" do
     let(:user) { create(:user, organisations: [organisation]) }
-    let(:motif) { create(:motif, service: service, name: "Renseignements", organisation:) }
+    let(:motif) { create(:motif, name: "Renseignements", organisation:) }
     let(:rdv) { create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation, starts_at: starts_at) }
     let!(:receipt) { create(:receipt, rdv: rdv, result: :sent, content: "Vous avez rendez-vous!") }
     let(:prescripteur) { create(:prescripteur, first_name: "Jean", last_name: "Valjean") }
@@ -119,7 +119,7 @@ RSpec.describe "Agent can see RDV details correctly" do
     let(:user) { create(:user, organisations: [organisation]) }
     let(:user2) { create(:user, organisations: [organisation]) }
     let(:user3) { create(:user, organisations: [organisation]) }
-    let(:motif) { create(:motif, :collectif, service: service, name: "Atelier Colectif", organisation:) }
+    let(:motif) { create(:motif, :collectif, name: "Atelier Colectif", organisation:) }
     let(:rdv) { create(:rdv, agents: [agent], users: [user, user2, user3], motif: motif, organisation: organisation, starts_at: starts_at, max_participants_count: 3) }
     let!(:receipt) { create(:receipt, rdv: rdv, result: :sent, content: "Vous avez rendez-vous!") }
 
@@ -147,7 +147,7 @@ RSpec.describe "Agent can see RDV details correctly" do
   end
 
   context "when the rdv is by visio" do
-    let(:motif) { create(:motif, service: service, location_type: :visio, organisation:) }
+    let(:motif) { create(:motif, location_type: :visio, organisation:) }
     let(:user) { create(:user, organisations: [organisation]) }
 
     context "when the agent participates in the rdv" do

@@ -3,7 +3,7 @@ RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nou
   let(:organisation) { create(:organisation) }
   let(:service) { create(:service) }
   let!(:rdv) do
-    create(:rdv, :past, status: :unknown, agents: [agent], motif: create(:motif, service: service, organisation:), organisation: organisation)
+    create(:rdv, :past, status: :unknown, agents: [agent], motif: create(:motif, organisation:), organisation: organisation)
   end
 
   before { login_as(agent, scope: :agent) }

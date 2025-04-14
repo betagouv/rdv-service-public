@@ -1,3 +1,4 @@
+# TODO: faire une variante sans service
 RSpec.describe "Agent can create a Rdv with creneau search" do
   include UsersHelper
 
