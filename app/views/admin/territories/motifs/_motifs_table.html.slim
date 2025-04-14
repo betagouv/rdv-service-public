@@ -37,7 +37,7 @@ table.table.table-centered.table-bordered.table-sm.mb-0[class=(display_checkboxe
             = motif_badges(motif)
         td
           label.mb-0[for="edit_checkbox#{motif.id}"]
-            = motif.service.short_name
+            = motif.service&.short_name
         td
           - if motif_policy.show? && display_actions
             = link_to(motif.organisation.name, admin_organisation_motifs_path(organisation_id: motif.organisation.id))

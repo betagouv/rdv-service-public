@@ -296,11 +296,13 @@ class Motif < ApplicationRecord
 
   def unique_in_org
     if Motif.active.where.not(id: id).exists?(organisation_id:, name:, service_id:, location_type:)
-      errors.add(
-        :base,
-        :duplicate_detected,
-        message: %(Il existe déjà dans #{organisation.name} un motif #{human_attribute_value(:location_type)} nommé "#{name}" pour le service #{service.name})
-      )
+      error_message = if service.present?
+                        %(Il existe déjà dans #{organisation.name} un motif #{human_attribute_value(:location_type)} nommé "#{name}" pour le service #{service.name})
+                      else
+                        %(Il existe déjà dans #{organisation.name} un motif #{human_attribute_value(:location_type)} nommé "#{name}" ouvert à tous les agents)
+                      end
+
+      errors.add(:base, :duplicate_detected, message: error_message)
     end
   end
 end

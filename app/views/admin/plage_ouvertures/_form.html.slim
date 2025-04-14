@@ -19,7 +19,11 @@
                 .form-group data-controller="checkbox-select-all"
                   label.h4.d-flex
                     input.mr-1 type="checkbox" data-checkbox-select-all-target="checkboxAll"
-                    span.cursor-pointer Motifs de #{service.name}
+                    span.cursor-pointer
+                      - if service
+                        | Motifs de #{service.name}
+                      - else
+                        | Motifs ouverts à tous les agents
                   - motifs.each do |motif|
                     .pl-4
                       = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}", data: { checkbox_select_all_target: "checkbox" } }, motif.id, false

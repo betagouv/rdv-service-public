@@ -3,7 +3,7 @@
     .card-header
      .d-flex.justify-content-between.flex-wrap
        span
-         h3= t(".available_slots_title_html", motif: "#{@form.motif.name.downcase} (#{@form.motif.service.short_name})")
+         h3= t(".available_slots_title_html", motif: motif_name_and_service(@form.motif))
          - if @form.motif.requires_lieu?
            = t(".place_informations_html", place_name: @search_result.lieu.name, place_address: @search_result.lieu.address)
          - else

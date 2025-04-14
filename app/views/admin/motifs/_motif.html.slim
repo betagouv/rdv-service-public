@@ -20,7 +20,7 @@ tr
         - counts = SectorAttribution.level_agent_grouped_by_service(current_organisation).fetch(motif.service_id, {agents_count: 0})
         = t("motifs.index.sectorisation_level_agent", count: counts[:agents_count], sectors_count_human: \
             t("motifs.index.sectorisation_level_organisation", count: counts[:sectors_count]))
-  td= motif.service.short_name
+  td= motif.service&.short_name
   td= motif.human_attribute_value(:location_type)
   td= "#{motif.default_duration_in_min} min."
   td.p-0
