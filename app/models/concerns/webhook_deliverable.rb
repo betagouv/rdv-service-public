@@ -21,12 +21,16 @@ module WebhookDeliverable
   end
 
   def generate_payload_and_send_webhook(action)
+    return unless Rails.configuration.x.webhooks_enabled
+
     subscribed_webhook_endpoints.each do |endpoint|
       WebhookJob.perform_later(generate_webhook_payload(action), endpoint.id)
     end
   end
 
   def generate_payload_and_send_webhook_for_destroy
+    return unless Rails.configuration.x.webhooks_enabled
+
     # Prépare les données à envoyer, avant de supprimer l'objet
     payloads = subscribed_webhook_endpoints.index_with do |_endpoint|
       generate_webhook_payload(:destroyed)

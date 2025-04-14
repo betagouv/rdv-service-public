@@ -39,7 +39,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
       end
     end
 
-    context "when the webhook endpoint is triggered by the model changes but webhook callbacks are disabled explicitly" do
+    context "when the webhook endpoint is triggered by the model changes but webhook callbacks are disabled explicitly on this record" do
       context "on creation" do
         let!(:rdv) { build(:rdv, organisation: organisation) }
 
@@ -62,6 +62,26 @@ RSpec.describe WebhookDeliverable, type: :concern do
         expect do
           rdv.destroy
         end.not_to have_enqueued_job
+      end
+    end
+
+    context "when the webhook endpoint is triggered by the model changes but webhook callbacks are disabled in the config" do
+      before { Rails.configuration.x.webhooks_enabled = false }
+
+      context "on creation" do
+        let!(:rdv) { build(:rdv, organisation: organisation) }
+
+        it "does not send webhook" do
+          expect { rdv.save }.not_to have_enqueued_job
+        end
+      end
+
+      it "does not send webhook on update" do
+        expect { rdv.update(status: :excused) }.not_to have_enqueued_job
+      end
+
+      it "does not send webhook on deletion" do
+        expect { rdv.destroy }.not_to have_enqueued_job
       end
     end
 
