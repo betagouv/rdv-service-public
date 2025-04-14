@@ -32,4 +32,36 @@ RSpec.describe MergeUsersForm, type: :form do
     merge_users_form = described_class.new(organisation, user1: user1, user2: user2, **merge_users_params)
     expect(merge_users_form).to be_invalid
   end
+
+  describe "#available_attributes" do
+    subject { form.available_attributes }
+
+    context "les dates de naissance sont disponibles sur le territoire" do
+      let(:territory) { create(:territory, enable_birth_date_field: true) }
+      let(:organisation) { create(:organisation, territory:) }
+      let(:user1) { create(:user, organisations: [organisation]) }
+      let(:user2) { create(:user, organisations: [organisation]) }
+      let(:form) { described_class.new(organisation, user1: user1, user2: user2) }
+
+      it { is_expected.to include(:birth_date) }
+
+      it "ne contient pas de doublons" do
+        expect(subject.count).to eq(subject.uniq.count)
+      end
+    end
+
+    context "les dates de naissance ne sont pas disponibles sur le territoire" do
+      let(:territory) { create(:territory, enable_birth_date_field: false) }
+      let(:organisation) { create(:organisation, territory:) }
+      let(:user1) { create(:user, organisations: [organisation]) }
+      let(:user2) { create(:user, organisations: [organisation]) }
+      let(:form) { described_class.new(organisation, user1: user1, user2: user2) }
+
+      it { is_expected.to include(:birth_date) } # c’est surprenant mais volontaire cf #5230
+
+      it "ne contient pas de doublons" do
+        expect(subject.count).to eq(subject.uniq.count)
+      end
+    end
+  end
 end
