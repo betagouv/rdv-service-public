@@ -9,9 +9,9 @@
     - context.services.each do |service|
       section.fr-accordion
         h2.fr-accordion__title
-          button.fr-accordion__btn.fr-text--lead type="button" aria-expanded="false" aria-controls="fr-accordion-#{service.id}" = service.name
-        .fr-collapse id="fr-accordion-#{service.id}"
-          - context.motifs_grouped_by_service_id[service.id].uniq(&:name_with_location_type).sort_by { |motif| I18n.transliterate(motif.name.downcase)}.each do |motif|
-            = render "search/motif_card", context: context, motif: motif, service_id: service.id
+          button.fr-accordion__btn.fr-text--lead type="button" aria-expanded="false" aria-controls="fr-accordion-#{service&.id || "all"}" = service&.name || "Autres"
+        .fr-collapse id="fr-accordion-#{service&.id || "all"}"
+          - context.motifs_grouped_by_service_id[service&.id].sort_by { |motif| I18n.transliterate(motif.name.downcase)}.each do |motif|
+            = render "search/motif_card", context: context, motif: motif
 
 = render "search/referent_booking_card", context: context

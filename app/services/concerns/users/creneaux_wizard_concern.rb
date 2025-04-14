@@ -60,7 +60,7 @@ module Users::CreneauxWizardConcern
   end
 
   def services
-    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by { |service| I18n.transliterate(service.name.downcase) }
+    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by { |service| I18n.transliterate((service&.name || "Autres").downcase) }
   end
 
   def follow_up_motifs?
@@ -123,7 +123,7 @@ module Users::CreneauxWizardConcern
   end
 
   def service_selected?
-    service.present?
+    service.present? || motif_param_present?
   end
 
   def requires_lieu_selection?

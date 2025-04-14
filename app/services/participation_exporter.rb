@@ -76,7 +76,7 @@ module ParticipationExporter
       Rdv.human_attribute_value(:created_by_type, rdv.created_by_type),
       I18n.l(rdv.starts_at.to_date),
       I18n.l(rdv.starts_at, format: :time_only),
-      rdv.motif.service.name,
+      rdv.service&.name,
       rdv.motif_name,
       rdv.context,
       Rdv.human_attribute_value(:status, participation.temporal_status, disable_cast: true),

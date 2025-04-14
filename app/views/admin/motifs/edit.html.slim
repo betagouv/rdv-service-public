@@ -1,7 +1,9 @@
 - content_for :title do
   / Cette partial est rendue lorsque l'update est invalide, il faut alors afficher
   / le nom et service du motif tels qu'ils étaient avant la tentative de modif.
-  | Modifier le motif "#{@motif.name_was}" (#{Service.find(@motif.service_id_was).short_name})
+  | Modifier le motif "#{@motif.name_was}"
+  - if @motif.service_id_was.present?
+    |  (#{Service.find(@motif.service_id_was)&.short_name})
 
 = render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
 - content_for(:menu_item) { "menu-settings" }

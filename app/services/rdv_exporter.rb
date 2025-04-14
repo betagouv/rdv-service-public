@@ -70,7 +70,7 @@ module RdvExporter
       Rdv.human_attribute_value(:created_by_type, rdv.created_by_type, disable_cast: true),
       I18n.l(rdv.starts_at.to_date),
       I18n.l(rdv.starts_at, format: :time_only),
-      rdv.motif.service.name,
+      rdv.motif.service&.name,
       rdv.motif_name,
       rdv.context,
       Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true),

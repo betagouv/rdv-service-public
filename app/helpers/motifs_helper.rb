@@ -21,7 +21,11 @@ module MotifsHelper
   end
 
   def motif_name_and_service(motif)
-    "#{motif.name} - #{motif.service.name}"
+    if motif.service_id
+      "#{motif.name} - #{motif.service.name}"
+    else
+      motif.name
+    end
   end
 
   def motif_name_with_special_location_type(motif)

@@ -45,7 +45,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   end
 
   def same_service?
-    @record.motif.service.in?(current_agent.services)
+    @record.motif.service_id.in?(current_agent.service_ids)
   end
 
   def agents_authorized?

@@ -26,7 +26,7 @@
           = f.input :motif_id, \
             required: true, \
             include_blank: true, \
-            collection: @motifs.includes(:service).to_a.group_by { _1.service.name }, \
+            collection: @motifs.includes(:service).to_a.group_by { _1.service&.name }, \
             as: :grouped_select, \
             group_method: :last,
             label_method: -> { motif_name_and_location_type(_1) }, \
