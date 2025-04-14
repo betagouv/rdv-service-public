@@ -1,5 +1,5 @@
 - title = @motif.name
-- title += "(#{@motif.service&.short_name})" if @motif.service
+- title += "(#{@motif.service_short_name})" if @motif.service_short_name
 - title += "(archivé)" if @motif.archived?
 
 - content_for :title, title
@@ -12,7 +12,7 @@
     .card.mt-2
       .card-body
         = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
-        = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service&.name)
+        = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service_name)
         - if @motif.motif_category.present?
           = motif_attribute_row(MotifCategory.model_name.human, @motif.motif_category.name)
         = motif_attribute_row \

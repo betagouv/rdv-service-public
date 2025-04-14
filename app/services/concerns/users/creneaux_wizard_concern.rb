@@ -123,7 +123,8 @@ module Users::CreneauxWizardConcern
   end
 
   def service_selected?
-    service.present? || motif_param_present?
+    # TODO: ajouter une spec pour le cas de la prise de rdv d'un motif avec ou sans service
+    service.present? || motif_param_present? # Si le motif n'a pas de service, service sera blank, mais on ne voudra pas afficher l'étape de choix de service
   end
 
   def requires_lieu_selection?

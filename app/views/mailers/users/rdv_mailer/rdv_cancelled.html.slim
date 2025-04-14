@@ -1,11 +1,8 @@
 div
   p= t("mailers.common.hello")
-  - service_name = @rdv.service&.name
-  - date = l(@rdv.starts_at, format: :human)
-  - if @rdv.status == "revoked"
-    p= t(".revoked_at_date", service: service_name, date: date)
-  - else
-    p= t(".cancelled_at_date", service: service_name, date: date)
+
+  - translation_key = (@rdv.status == "revoked" ? ".revoked_at_date" : ".cancelled_at_date")
+  p= t(translation_key, service: @rdv.service_name, date: l(@rdv.starts_at, format: :human))
 
   - if @rdv.phone_number.present?
     - telephone_link = link_to(@rdv.phone_number, "tel:#{@rdv.phone_number_formatted}")
