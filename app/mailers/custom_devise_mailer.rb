@@ -19,6 +19,15 @@ class CustomDeviseMailer < Devise::Mailer
     end
   end
 
+  def confirmation_instructions(record, token, opts = {})
+    @token = token
+    if record.unconfirmed_email.present? && record.confirmed_at.present?
+      devise_mail(record, :confirmation_instructions_email_update, opts)
+    else
+      devise_mail(record, :confirmation_instructions_signup, opts)
+    end
+  end
+
   private
 
   def domain
