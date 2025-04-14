@@ -5,10 +5,11 @@ class Agent::MotifPolicy < ApplicationPolicy
 
   def self.agent_can_use_motif?(motif, agent)
     return false unless motif.organisation.in?(agent.organisations)
+    return true if motif.service.blank?
 
     agent.secretaire? ||
       agent_can_manage_motif?(motif, agent) ||
-      motif.service.in?(agent.services)
+      motif.service_id.in?(agent.service_ids)
   end
 
   def self.organisations_i_can_manage(agent)
