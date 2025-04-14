@@ -4,7 +4,7 @@ class Users::RdvSms < Users::BaseSms
 
   def rdv_title(rdv)
     [
-      rdv.service&.short_name,
+      rdv.service_short_name,
       (truncated_rdv_name if rdv.collectif? && rdv.name.present?).presence,
     ].compact.join(" : ")
   end

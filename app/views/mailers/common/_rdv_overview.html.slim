@@ -23,10 +23,10 @@
         = rdv.motif_name
     .clear
 
-  - if rdv.service.present?
+  - if rdv.service_name
     div.row-result
       span.title Service :
-      span.float-right= rdv.service.name
+      span.float-right= rdv.service_name
       .clear
   - if rdv.follow_up?
     div.row-result
