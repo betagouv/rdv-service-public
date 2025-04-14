@@ -145,4 +145,30 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect(assigns(:users)).to eq([user_with_referent])
     end
   end
+
+  describe "GET #show" do
+    subject { get :show }
+
+    context "l’usager existe" do
+      let!(:user) { create(:user, first_name: "Lola", organisations: [organisation]) }
+
+      it "montre l’usager" do
+        get :show, params: { organisation_id: organisation.id, id: user.id }
+        expect(response).to be_successful
+        expect(response.body).to include("Lola")
+      end
+    end
+
+    context "l’usager a été soft-deleted" do
+      let!(:user) { create(:user, organisations: [organisation]) }
+
+      before { user.soft_delete }
+
+      it "redirige avec un message d’erreur" do
+        get :show, params: { organisation_id: organisation.id, id: user.id }
+        expect(response).to redirect_to(admin_organisation_users_path(organisation.id))
+        expect(flash[:error]).to match(/a été supprimé/)
+      end
+    end
+  end
 end
