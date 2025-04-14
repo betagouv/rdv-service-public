@@ -4,6 +4,6 @@ p
   span{style="white-space: nowrap;"}
     => @resource.unconfirmed_email
 p
-  | Pour confirmer confirmer et utiliser cette adresse email sur #{domain.name}, veuillez cliquer sur ce bouton :
+  | Pour confirmer et utiliser cette adresse email sur #{domain.name}, veuillez cliquer sur ce bouton :
 .btn-wrapper
   = link_to "Confirmer mon adresse email", confirmation_url(@resource, confirmation_token: @token), class:"btn btn-primary"
