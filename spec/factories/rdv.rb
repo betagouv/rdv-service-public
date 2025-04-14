@@ -5,7 +5,7 @@ FactoryBot.define do
     agents { [build(:agent, organisations: [organisation])] }
     motif { build(:motif, organisation: organisation, service: agents.first.services.first) }
 
-    duration_in_min { 45 }
+    duration_in_min { motif.default_duration_in_min }
     starts_at { 3.days.from_now }
 
     status { "unknown" }
