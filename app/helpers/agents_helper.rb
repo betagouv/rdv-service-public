@@ -25,8 +25,10 @@ module AgentsHelper
     # les intervenants ne peuvent pas se connecter, il est inutile de les afficher comme "Inactif".
     return if agent.is_an_intervenant?
 
-    if agent.last_sign_in_at.nil? || agent.last_sign_in_at <= 1.month.ago
-      tag.span("Inactif", class: "badge badge-warning")
+    if agent.last_sign_in_at.nil?
+      tag.div("⚠︎ Jamais connecté·e", class: "text-muted")
+    elsif agent.last_sign_in_at <= 1.month.ago
+      tag.div("⚠︎ Dernière connexion le #{l(agent.last_sign_at&.to_date)}", class: "text-muted")
     end
   end
 
