@@ -242,26 +242,6 @@ _plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
   recurrence: Montrose.every(:week, day: [5], interval: 1, starts: Date.tomorrow, on: %i[friday])
 )
 
-# WEBHOOKS
-WebhookEndpoint.create!(
-  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
-  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
-  organisation_id: org_drome1.id,
-  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
-)
-WebhookEndpoint.create!(
-  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
-  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
-  organisation_id: org_drome2.id,
-  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
-)
-WebhookEndpoint.create!(
-  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
-  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
-  organisation_id: org_yonne.id,
-  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
-)
-
 # Users
 user1 = User.create!(
   email: "jean.rsavalence@testinvitation.fr",
@@ -357,3 +337,23 @@ application = Doorkeeper::Application.new(
 test_secret = "development-EdtuETfEK5Lr_--kx6S_QlItIJov-iThILw6M8IyTus" # Pour le développement en local uniquement
 application.secret_strategy.store_secret(application, :secret, test_secret)
 application.save!
+
+# WEBHOOKS
+WebhookEndpoint.create!(
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
+  organisation_id: org_drome1.id,
+  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
+)
+WebhookEndpoint.create!(
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
+  organisation_id: org_drome2.id,
+  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
+)
+WebhookEndpoint.create!(
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
+  organisation_id: org_yonne.id,
+  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
+)
