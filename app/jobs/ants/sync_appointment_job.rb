@@ -57,6 +57,10 @@ module Ants
     def capture_sentry_warning_for_retry?(exception)
       if exception.is_a?(Typhoeus::Errors::TimeoutError)
         false
+      elsif exception.is_a?(AntsApi::ApiRequestError)
+        # l’API ANTS est un peu imprévisible et renvoie souvent des 500 qui se résolvent au premier
+        # retry, on ne veut donc pas être informé des premiers échecs
+        super && executions >= 3
       else
         super
       end
