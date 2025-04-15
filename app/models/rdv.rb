@@ -396,7 +396,10 @@ class Rdv < ApplicationRecord
     return unless motif.public_office?
 
     errors.add(:lieu, :blank) if lieu.nil?
-    errors.add(:lieu, :must_not_be_disabled) if lieu&.disabled?
+
+    if starts_at&.future?
+      errors.add(:lieu, :must_not_be_disabled) if lieu&.disabled?
+    end
   end
 
   def virtual_attributes_for_paper_trail
