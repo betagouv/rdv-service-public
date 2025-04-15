@@ -815,4 +815,56 @@ RSpec.describe Rdv, type: :model do
       end
     end
   end
+
+  describe "#creneaux_available" do
+    subject { rdv.creneaux_available(Time.zone.now..2.weeks.from_now) }
+
+    context "RDV avec une durée égale à la durée par défaut du motif" do
+      let!(:organisation) { create(:organisation) }
+      let!(:lieu) { create(:lieu, organisation:) }
+      let!(:motif) { create(:motif, organisation:, default_duration_in_min: 30) }
+      let!(:rdv) { create(:rdv, organisation:, motif:, lieu:, duration_in_min: 30) }
+      let!(:plage_ouverture) do
+        create(
+          :plage_ouverture,
+          :weekly_on_monday,
+          organisation:,
+          motifs: [motif],
+          lieu:,
+          first_day: Time.zone.today.next_week(:monday),
+          start_time: Tod::TimeOfDay.new(8),
+          end_time: Tod::TimeOfDay.new(12)
+        )
+      end
+
+      it "retourne des créneaux de 30 min" do
+        expect(subject.first.starts_at.strftime("%H:%M")).to eq("08:00")
+        expect(subject.second.starts_at.strftime("%H:%M")).to eq("08:30")
+      end
+    end
+
+    context "RDV avec une durée différente de la durée par défaut du motif" do
+      let!(:organisation) { create(:organisation) }
+      let!(:lieu) { create(:lieu, organisation:) }
+      let!(:motif) { create(:motif, organisation:, default_duration_in_min: 30) }
+      let!(:rdv) { create(:rdv, organisation:, motif:, lieu:, duration_in_min: 90) }
+      let!(:plage_ouverture) do
+        create(
+          :plage_ouverture,
+          :weekly_on_monday,
+          organisation:,
+          motifs: [motif],
+          lieu:,
+          first_day: Time.zone.today.next_week(:monday),
+          start_time: Tod::TimeOfDay.new(8),
+          end_time: Tod::TimeOfDay.new(12)
+        )
+      end
+
+      it "retourne des créneaux de 90 min" do
+        expect(subject.first.starts_at.strftime("%H:%M")).to eq("08:00")
+        expect(subject.second.starts_at.strftime("%H:%M")).to eq("09:30")
+      end
+    end
+  end
 end
