@@ -50,6 +50,5 @@
         = t(".create_absence_for", full_name: @agent.full_name_or_email)
 
 - unless current_territory.visioplainte?
-  .alert.alert-dismissible.alert-info
-    i.fa.fa-info-circle
+  = dsfr_alert type: :info, size: :sm, classes: "fr-mb-2v" do
     |< Les jours fériés sont automatiquement considérés comme indisponibles.
