@@ -21,17 +21,6 @@ module AgentsHelper
     tag.span("Vous", class: "badge badge-info") if current_agent?(agent)
   end
 
-  def inactive_tag(agent)
-    # les intervenants ne peuvent pas se connecter, il est inutile de les afficher comme "Inactif".
-    return if agent.is_an_intervenant?
-
-    if agent.last_sign_in_at.nil?
-      tag.div("⚠︎ Jamais connecté·e", class: "text-muted")
-    elsif agent.last_sign_in_at <= 1.month.ago
-      tag.div("⚠︎ Dernière connexion le #{l(agent.last_sign_at&.to_date)}", class: "text-muted")
-    end
-  end
-
   def build_link_to_rdv_wizard_params(creneau, form)
     params = {}
     params[:step] = 2

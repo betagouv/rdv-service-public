@@ -4,8 +4,21 @@
 tr id="agent_#{agent.id}"
   td
     - if agent_policy.edit?
-      = link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "mr-2"
-      = inactive_tag(agent)
+      - if agent.full_name.present?
+        = link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "mr-2"
+      - unless agent.is_an_intervenant?
+        / les intervenants ne peuvent pas se connecter, il est inutile de les afficher comme "Inactif".
+        - if agent.last_sign_in_at.nil? && agent.invitation_sent_at.present? && agent.invitation_accepted_at.nil?
+          .text-muted
+            |> ⚠︎ L’invitation envoyée le #{l(agent.invitation_sent_at.to_date)} n’a pas été acceptée
+            - if agent.invitation_due_at.past?
+              | et n’est plus valide, veuillez en renvoyer une nouvelle
+        - elsif agent.last_sign_in_at.nil?
+          / ce cas est très rare et n’arrive plus depuis 2022 car les agents sont connectés tout de suite après avoir accepté l’invitation
+          .text-muted ⚠︎ Jamais connecté·e
+        - elsif agent.last_sign_in_at <= 1.month.ago
+          .text-muted ⚠︎ Dernière connexion le #{l(agent.last_sign_in_at&.to_date)}
+      end
     - else
       span.mr-2= agent.reverse_full_name
     = me_tag(agent)
