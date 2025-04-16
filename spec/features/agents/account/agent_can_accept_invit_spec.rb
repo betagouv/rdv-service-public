@@ -1,6 +1,24 @@
 RSpec.describe "Agent can accept invitation" do
   let(:agent) { create(:agent) }
 
+  context "when using ProConnect" do
+    it "sets the login_hint to make sure the agent uses ProConnect with the right email and avoids getting stuck" do
+      agent.deliver_invitation
+      visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
+      find(".fr-connect__brand").click
+      begin
+        click_button("ProConnect")
+      rescue ActionController::RoutingError
+        # Capybara essaye de suivre une redirection vers "https://fca.integ01.dev-agentconnect.fr/api/v2/authorize
+        # ce qui n'est pas possible dans l'env de test (il ignore le host et il cherche /api/v2/authorize dans nos routes).
+      end
+
+      redirect_url_query_params = Rack::Utils.parse_query(URI.parse(page.current_url).query)
+
+      expect(redirect_url_query_params["login_hint"]).to eq agent.email
+    end
+  end
+
   context "when password is secure" do
     it "accepts the invitation" do
       agent.deliver_invitation
