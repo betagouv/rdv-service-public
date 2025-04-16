@@ -6,12 +6,13 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
   end
 
   def create
-    authorize(Territory.new, policy_class: Agent::TerritoryPolicy)
-    @compte_form = Compte.new(compte_params, current_domain)
-    @compte_form.agent = current_agent
+    @territory_creation_request = TerritoryCreationRequest.new(permitted_params.merge(agent_id: current_agent.id))
+    authorize(@territory_creation_request, policy_class: Agent::TerritoryCreationRequestPolicy)
 
-    if @compte_form.save!
-      redirect_to admin_organisation_configuration_path(@compte_form.organisation)
+    if @territory_creation_request.save
+
+      flash[:success] = "Votre demande a bien été enregistrée. Notre équipe va l'étudier et revenir vers vous dans les meilleurs délais"
+      redirect_to root_path
     else
       render :new
     end
@@ -19,17 +20,8 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
 
   private
 
-  def compte_params
-    params[:compte][:agent] = {
-      id: current_agent.id,
-      service_ids: OauthApplication.default_service_ids_for(current_agent),
-    }
-
-    params.require(:compte).permit(
-      territory: %i[name departement_number],
-      organisation: %i[name],
-      agent: [:id, { service_ids: [] }]
-    )
+  def permitted_params
+    params.require(:territory_creation_request).permit(:territory_name, :organisation_name)
   end
 
   def pundit_user
