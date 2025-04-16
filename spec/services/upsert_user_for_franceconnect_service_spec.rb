@@ -84,7 +84,7 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
                        sub: "hvdiuds4357")
       end
 
-      it "updates the existing identity fields" do
+      it "downcases the email" do
         service = described_class.new(omniauth_info)
         expect { service.perform }.not_to change(User, :count)
         expect(service.new_user?).to be(false)
