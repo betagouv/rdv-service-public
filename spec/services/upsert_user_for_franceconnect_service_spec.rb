@@ -73,6 +73,30 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
       expect(user.birth_date).to eq(Date.parse("1971-06-20"))
       expect(user.franceconnect_openid_sub).to eq("hvdiuds4357")
     end
+
+    context "when the france connect email has capital letters" do
+      let(:omniauth_info) do
+        OpenStruct.new(email: "JEANNE@longo.fr",
+                       given_name: "jeanne",
+                       family_name: "longo",
+                       preferred_username: "DUPONT",
+                       birthdate: Date.parse("1971-06-20"),
+                       sub: "hvdiuds4357")
+      end
+
+      it "updates the existing identity fields" do
+        service = described_class.new(omniauth_info)
+        expect { service.perform }.not_to change(User, :count)
+        expect(service.new_user?).to be(false)
+        user = service.user.reload
+        expect(user.email).to eq("jeanne@longo.fr")
+        expect(user.first_name).to eq("jeanne")
+        expect(user.last_name).to eq("DUPONT")
+        expect(user.birth_name).to eq("longo")
+        expect(user.birth_date).to eq(Date.parse("1971-06-20"))
+        expect(user.franceconnect_openid_sub).to eq("hvdiuds4357")
+      end
+    end
   end
 
   context "pre-existing user with same email but missing infos" do
