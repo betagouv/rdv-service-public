@@ -1,4 +1,4 @@
-RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son compte soit par notre équipe soit via une appli OAuth" do
+RSpec.describe "Un agent non vérifié via une application externe peut créer un territoire" do
   let(:application) do
     create(:oauth_application, name: "Mon Suivi Social", default_service: create(:service, name: "Action Sociale"))
   end
@@ -26,22 +26,10 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
     end
 
     context "mais que son compte n'est pas vérifié par une organisation externe" do
-      let(:super_admin) { create :super_admin }
-
       it "ne permet pas de créer un territoire" do
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
-        click_on "Demander à ouvrir un espace"
-
-        fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
-        fill_in("Nom du territoire", with: "Commune de Montreuil")
-        click_on "Envoyer la demande"
-
-        expect(page).to have_content("Votre demande a bien été enregistrée. Notre équipe va l'étudier et revenir vers vous dans les meilleurs délais")
-
-        login_as(super_admin, scope: :super_admin)
-
-        visit super_admins_territory_creation_requests_path
-        click_on agent.email
+        expect(page).to have_content "Rencontrer notre équipe"
+        expect(page).not_to have_content "Ouvrir un espace"
       end
     end
   end

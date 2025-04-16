@@ -1,0 +1,10 @@
+.fr-grid-row.fr-mb-8w
+  .fr-col-12.fr-col-md-8.fr-col-offset-md-2
+    .card
+      .card-body
+        h1.fr-h2 Demande d'ouverture d'un nouvel espace
+        = form_for @territory_creation_request, url: agents_territories_path, builder: Dsfr::FormBuilder, as: :compte do |f|
+          = f.dsfr_text_field :organisation_name, label: "Nom de votre organisation", hint: "par exemple : CCAS de Montreuil", autocomplete: "organization", required: true
+          = f.dsfr_text_field :territory_name, label: "Nom du territoire ou du service public", hint: "par exemple : Commune de Montreuil ou Ministère de la Culture", required: true
+
+          = f.submit "Envoyer la demande", class: "fr-btn float-right"

@@ -13,13 +13,11 @@
     .card
       .card-body
         h2.fr-h6 Votre organisation n’utilise pas encore #{current_domain.name} ?
-        - policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)
-        - if policy.new?
+        - if Agent::TerritoryPolicy.new(current_agent, Territory.new).new?
           p Vous pouvez ouvrir un espace pour votre organisation.
           = link_to "Ouvrir un espace", new_agents_territory_path, class: "fr-btn"
         - else
-          p Nous vous invitons à contacter notre équipe. Nous organiserons un temps d’échanges pour vous présenter la solution et ouvrir un espace pour votre organisation.
-
+          p Vous pouvez demander à ouvrir un espace pour votre organisation. Notre équipe fera les vérifications nécessaire et vous ouvrira un espace.
           ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md
             li
-              = link_to "Rencontrer notre équipe", meet_the_team_url, class: "fr-btn"
+              = link_to "Demander à ouvrir un espace", new_agents_territory_creation_request_path, class: "fr-btn"

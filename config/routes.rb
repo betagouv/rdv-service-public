@@ -141,6 +141,7 @@ Rails.application.routes.draw do
         end
       end
       resources :territories, only: %i[new create]
+      resources :territory_creation_requests, only: %i[new create]
       resources :exports, only: %i[index] do
         get :download
       end
