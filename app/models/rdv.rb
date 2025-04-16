@@ -53,6 +53,7 @@ class Rdv < ApplicationRecord
   has_many :users, through: :participations, validate: false
   has_many :webhook_endpoints, through: :organisation
   has_one :territory, through: :organisation
+  has_one :rdv_plan, dependent: :destroy
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :visio?, :bookable_by_everyone?,
