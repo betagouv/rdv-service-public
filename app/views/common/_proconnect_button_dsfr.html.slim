@@ -1,7 +1,8 @@
+/# locals: (login_hint: nil)
 form.fr-connect-group[action="#{agent_connect_auth_path}" method="get"]
 
-  - if locals[:login_hint]
-    input[type="hidden" value="#{locals[:login_hint]}" name="login_hint"]
+  - if login_hint
+    input[type="hidden" value="#{login_hint}" name="login_hint"]
   button.fr-connect.fr-proconnect
     span.fr-connect__login
       | S’identifier avec
