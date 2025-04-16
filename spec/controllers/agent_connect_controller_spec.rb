@@ -107,7 +107,7 @@ RSpec.describe AgentConnectController do
       end
 
       it "finds the right agent and updates them" do
-        agent = create(:agent, email: "JEAN.MICHEL.FACTICE@exemple.gouv.fr")
+        agent = create(:agent, email: "JEAN.MICHEL.FACTICE@exemple.gouv.fr") # même si on crée l'agent avec des majuscule dans l'email, il sera persisté en base avec des minuscules
         get :callback, params: { state: state, code: code }
 
         expect(agent.reload).to have_attributes(
