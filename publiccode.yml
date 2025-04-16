@@ -22,6 +22,12 @@ localisation:
   localisationReady: false
   availableLanguages:
     - fr
+usedBy:
+  - Collectivités
+  - Conseils départementaux
+  - Ministère de la Justice
+  - Ministère de l’Europe et des Affaires Étrangères
+  - Autres services de l’État (via La Suite Numérique)
 description:
   fr:
     documentation: 'https://aide.rdv-service-public.fr/'
