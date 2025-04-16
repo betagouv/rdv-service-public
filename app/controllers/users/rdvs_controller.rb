@@ -4,7 +4,6 @@ class Users::RdvsController < UserAuthController
   before_action :set_geo_search, only: [:create]
   before_action :set_lieu, only: %i[edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
-  after_action :allow_iframe
 
   layout "application_narrow", only: %i[show]
   layout "application_base", only: %i[index]

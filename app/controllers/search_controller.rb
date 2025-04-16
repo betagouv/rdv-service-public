@@ -4,8 +4,6 @@ class SearchController < ApplicationController
   include TokenInvitable
   prepend_before_action :store_invitation_in_session_and_redirect, only: %i[search_rdv]
 
-  after_action :allow_iframe
-
   def home
     # Si l'agent est redirigé vers le root_path depuis ProConnect, et qu'on veut le rediriger vers
     # une application OAuth cliente (par exemple RDV Insertion)

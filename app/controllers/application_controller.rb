@@ -101,10 +101,6 @@ class ApplicationController < ActionController::Base
   end
   helper_method :add_query_string_params_to_url
 
-  def allow_iframe
-    response.headers.except! "X-Frame-Options"
-  end
-
   def page_number
     params[:page].presence&.to_i || 1
   end
