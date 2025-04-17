@@ -8,7 +8,6 @@ class Users::RdvWizardStepsController < UserAuthController
     :public_link_organisation_id, :duration,
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
-  after_action :allow_iframe
 
   include TokenInvitable
 
