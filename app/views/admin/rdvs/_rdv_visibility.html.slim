@@ -1,4 +1,2 @@
-.alert.alert-info.d-flex.align-items-center
-  .mr-3
-    i.fa.fa-eye>
-    = Agent::RdvPolicy.explain(current_organisation, current_agent)
+= dsfr_alert size: :sm, icon_name: "eye-line" do
+  = Agent::RdvPolicy.explain(current_organisation, current_agent)

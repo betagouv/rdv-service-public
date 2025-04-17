@@ -47,7 +47,8 @@ p
     p Choisissez le nombre de participants :
 
     - if disabled
-      p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le nombre de participants
+      = dsfr_alert type: :warning, size: :sm, classes: "fr-mb-2v" do
+        | Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le nombre de participants
 
     = label_tag do
       = f.radio_button(:collectif, false, disabled: disabled)
