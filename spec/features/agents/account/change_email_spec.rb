@@ -18,7 +18,7 @@ RSpec.describe "Agents can change their email" do
     expect(page).to have_content("Votre compte a bien été mis à jour mais nous devons vérifier votre nouvelle adresse email")
     perform_enqueued_jobs
     open_email(new_email)
-    current_email.click_link("Confirmer mon compte")
+    current_email.click_link("Confirmer mon adresse email")
 
     expect(page).to have_content("Votre compte a été validé")
     expect(agent.reload.email).to eq(new_email)
