@@ -394,8 +394,18 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       free_times = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
       plage_ouverture_free_times = { plage_ouverture => free_times }
 
-      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture).and_return([])
+      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture, duration_in_min: nil).and_return([])
       described_class.slots_for(plage_ouverture_free_times, motif)
+    end
+
+    it "should pass down overridden duration_in_min" do
+      motif = build(:motif, default_duration_in_min: 25)
+      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      free_times = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
+      plage_ouverture_free_times = { plage_ouverture => free_times }
+
+      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture, duration_in_min: 30).and_return([])
+      described_class.slots_for(plage_ouverture_free_times, motif, duration_in_min: 30)
     end
   end
 

@@ -76,11 +76,11 @@ module CreneauxSearch::Calculator
       range if (busy_time.ends_at < range.begin) || (busy_time.starts_at > range.end) # Dans ce dernier cas il n'y a pas d'overlap du tout entre le range et le busy_time
     end
 
-    def slots_for(plage_ouverture_free_times, motif)
+    def slots_for(plage_ouverture_free_times, motif, duration_in_min: nil)
       slots = []
       plage_ouverture_free_times.each do |plage_ouverture, free_times|
         free_times.each do |free_time|
-          slots += calculate_slots(free_time, motif, plage_ouverture)
+          slots += calculate_slots(free_time, motif, plage_ouverture, duration_in_min:)
         end
       end
       slots
