@@ -14,13 +14,13 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
 
     it "returns 2 slots with a basic context" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
-      slots = described_class.available_slots(motif, lieu, date_range)
+      slots = described_class.available_slots(motif:, lieu:, date_range:)
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
     end
 
     it "return Creneaux object" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
-      slots = described_class.available_slots(motif, lieu, date_range)
+      slots = described_class.available_slots(motif:, lieu:, date_range:)
       expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
     end
 
@@ -29,7 +29,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
 
       it "returns the creneaux for the reste of the plage d'ouverture" do
         create(:plage_ouverture, :weekdays, motifs: [motif], first_day: friday.to_date, start_time: Tod::TimeOfDay.new(7), end_time: Tod::TimeOfDay.new(11), lieu: lieu)
-        slots = described_class.available_slots(motif, lieu, date_range)
+        slots = described_class.available_slots(motif:, lieu:, date_range:)
         expect(slots.first.starts_at.iso8601).to eq("2021-04-30T08:00:00+02:00")
       end
     end
@@ -50,7 +50,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       end
 
       it "only returns slots in the future" do
-        slots = described_class.available_slots(motif, lieu, two_days_ago..seven_days_from_now)
+        slots = described_class.available_slots(motif:, lieu:, date_range: two_days_ago..seven_days_from_now)
 
         # Only today's slots are returned, not the ones from the past, even though they are included in the range
         expect(slots.map(&:starts_at)).to eq([Time.zone.parse("2022-07-13 09:00:00"), Time.zone.parse("2022-07-13 10:00:00")])
@@ -59,7 +59,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       context "when date range also ends before today" do
         it "returns no result" do
           date_range_in_the_past = (today - 10.days)..(today - 3.days)
-          slots = described_class.available_slots(motif, lieu, date_range_in_the_past)
+          slots = described_class.available_slots(motif:, lieu:, date_range: date_range_in_the_past)
 
           # No slot is returned since all slots are in the past
           expect(slots).to be_empty
@@ -81,7 +81,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
 
         travel_to(Time.zone.local(2021, 5, 3, 15, 3, 0))
 
-        slots = described_class.available_slots(motif, lieu, date_range)
+        slots = described_class.available_slots(motif:, lieu:, date_range:)
 
         # The current time is 15:03
         # The available plages ouvertures are 9:00-12:00, 14:00-17:00, and 18:00-20:00
@@ -106,7 +106,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       end
 
       it "returns the slots in the free part of the plage ouverture" do
-        slots = described_class.available_slots(motif, lieu, date_range)
+        slots = described_class.available_slots(motif:, lieu:, date_range:)
         expect(slots.map(&:starts_at).map(&:hour)).to eq([10])
       end
     end

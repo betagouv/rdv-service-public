@@ -213,7 +213,7 @@ class Rdv < ApplicationRecord
 
     motif.default_duration_in_min = duration_in_min # pour les cas rdv.duration ≠ motif.default_duration_in_min
     motif.readonly! # pour éviter que cette durée ne soit sauvegardée
-    CreneauxSearch::Calculator.available_slots(motif, lieu, date_range)
+    CreneauxSearch::Calculator.available_slots(motif:, lieu:, date_range:)
   end
 
   # Ces plages d'ouvertures sont utilisé pour afficher des infos
