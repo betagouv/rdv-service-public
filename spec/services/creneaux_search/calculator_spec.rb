@@ -15,7 +15,13 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "returns 2 slots with a basic context" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
       slots = described_class.available_slots(motif:, lieu:, date_range:)
-      expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
+      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:00"])
+    end
+
+    it "accepts and uses overriden duration_in_min" do
+      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
+      slots = described_class.available_slots(motif:, lieu:, date_range:, duration_in_min: 25)
+      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "09:25", "09:50", "10:15", "10:40"])
     end
 
     it "return Creneaux object" do
