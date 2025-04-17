@@ -86,9 +86,10 @@ module CreneauxSearch::Calculator
       slots
     end
 
-    def calculate_slots(free_time, motif, plage_ouverture)
+    def calculate_slots(free_time, motif, plage_ouverture, duration_in_min: nil)
       possible_slot_start = earliest_possible_slot_start(free_time)
-      last_possible_slot_start = free_time.end - motif.default_duration_in_min.minutes
+      duration_in_min ||= motif.default_duration_in_min
+      last_possible_slot_start = free_time.end - duration_in_min.minutes
 
       slots = []
 
@@ -96,10 +97,11 @@ module CreneauxSearch::Calculator
         slots << Creneau.new(
           starts_at: possible_slot_start,
           motif: motif,
+          duration_in_min:,
           lieu_id: plage_ouverture.lieu_id,
           agent: plage_ouverture.agent
         )
-        possible_slot_start += motif.default_duration_in_min.minutes
+        possible_slot_start += duration_in_min.minutes
       end
       slots
     end
