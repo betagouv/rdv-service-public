@@ -24,8 +24,6 @@ class EmailToNotificationEmailMigrator
     FileUtils.mkdir_p(File.dirname(@log_file))
     @logger = File.open(@log_file, "w")
     log("Démarrage de la migration - #{Time.current}")
-    # Comment récupérer le fichier de log depuis le container une fois le script executé ?
-    # Pas de possibilité de download depuis le container (vu avec Scalingo)
   end
 
   def perform
