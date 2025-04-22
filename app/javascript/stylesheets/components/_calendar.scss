@@ -93,6 +93,22 @@ $rdvs-fc-header-bg-color: $gray-200;
   cursor: not-allowed;
 }
 
+.fc-event-main {
+  white-space: nowrap;
+}
+
+.fc-timegrid-event {
+  .fc-event-main-frame {
+    padding-left: 0.3rem;
+  }
+  &.fc-timegrid-event-short {
+    .fc-event-main-frame {
+      // alignement vertical centré pour les événements courts
+      align-items: center;
+    }
+  }
+}
+
 .fc-toolbar {
   flex-direction: column;
   @include media-breakpoint-up(sm) {
