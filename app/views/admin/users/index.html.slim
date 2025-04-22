@@ -34,9 +34,10 @@
             th Téléphone
             th Email
         tbody id="users-list"
+          / On dédoublonne ici les résultats de la page courante.
           / En effet, on rencontre ce problème : Casecommons/pg_search#238
           / Le uniq est un solution qui casse parfois le décompte, mais ça paraît acceptable !
-          - @users.includes(:responsible).uniq.each do |user|
+          - @users.uniq.each do |user|
             - cache([current_organisation.id, user], expires_in: 7.days)
               = render partial: "admin/users/user", locals: { user: user }
 
