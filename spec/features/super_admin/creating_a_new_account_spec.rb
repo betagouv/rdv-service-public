@@ -8,7 +8,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
   end
 
   before do
-    stub_request(:get, "https://api-adresse.data.gouv.fr/search/?q=Place%20de%20la%20mairie,%20Romainville,%2093230")
+    stub_request(:get, "https://data.geopf.fr/geocodage/search/?q=Place%20de%20la%20mairie,%20Romainville,%2093230")
       .to_return(status: 200, body: autocomplete_response, headers: {})
 
     create(:service, name: "Urbanisme")

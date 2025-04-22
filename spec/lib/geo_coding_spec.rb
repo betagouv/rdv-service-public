@@ -3,7 +3,7 @@ RSpec.describe GeoCoding do
     before do
       stub_request(
         :get,
-        "https://api-adresse.data.gouv.fr/search/?q=03%20Rue%20Lambert,%20Paris,%2075018"
+        "https://data.geopf.fr/geocodage/search/?q=03%20Rue%20Lambert,%20Paris,%2075018"
       ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
     end
 
@@ -21,7 +21,7 @@ RSpec.describe GeoCoding do
       before do
         stub_request(
           :get,
-          "https://api-adresse.data.gouv.fr/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
+          "https://data.geopf.fr/geocodage/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
         ).to_return(
           status: 200,
           body: {
@@ -56,7 +56,7 @@ RSpec.describe GeoCoding do
       before do
         stub_request(
           :get,
-          "https://api-adresse.data.gouv.fr/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
+          "https://data.geopf.fr/geocodage/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
         ).to_return(
           status: 200,
           body: {
@@ -91,7 +91,7 @@ RSpec.describe GeoCoding do
       before do
         stub_request(
           :get,
-          "https://api-adresse.data.gouv.fr/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
+          "https://data.geopf.fr/geocodage/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
         ).to_return(
           status: 200,
           body: {
