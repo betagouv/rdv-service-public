@@ -31,13 +31,15 @@ module UserRdvWizard
     end
 
     def creneau
+      motif = @rdv.motif
+      motif.default_duration_in_min = @attributes[:duration].to_i if @attributes[:duration]
+
       @creneau ||= CreneauxSearch::ForUser.creneau_for(
         user: @user,
-        motif: @rdv.motif,
+        motif: motif,
         lieu: lieu,
         starts_at: @rdv.starts_at,
-        geo_search: geo_search,
-        duration_in_min: @attributes[:duration]&.presence&.to_i
+        geo_search: geo_search
       )
     end
 
