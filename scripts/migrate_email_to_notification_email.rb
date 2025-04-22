@@ -62,6 +62,11 @@ class EmailToNotificationEmailMigrator
 
       users_batch.each do |user|
         email = user.email
+        if user.organisations.any? { |org| org.verticale != "rdv_insertion" }
+          log("ERREUR L'utilisateur ##{user.id} n'appartient pas à une organisation avec verticale 'rdv_insertion'")
+          next
+        end
+
         user.update_columns( # rubocop:disable Rails/SkipsModelValidations
           notification_email: email,
           email: nil,
