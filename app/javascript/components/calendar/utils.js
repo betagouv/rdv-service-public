@@ -45,7 +45,7 @@ function eventRenderer(selectedEventId) {
     };
 
     if (selectedEventId && info.event.id == selectedEventId)
-      $el.addClass("selected");
+      $el.addClass("rdv-shake");
 
     $el.addClass("fc-event-" + extendedProps.status);
 

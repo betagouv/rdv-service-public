@@ -111,9 +111,9 @@ $rdvs-fc-header-bg-color: $gray-200;
   }
 }
 
-// Toute cette section implémente la petite secousse
-// qui indique qu'un RDV vient d'être créé.
-.fc-event.selected {
+// La section suivante implémente la petite secousse utilisée
+// pour mettre en valeur sur le calendrier le RDV tout juste créé.
+.rdv-shake {
   animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
