@@ -35,4 +35,42 @@ RSpec.describe Creneau, type: :model do
       expect(build(:creneau, lieu_id: nil).lieu).to be_nil
     end
   end
+
+  describe "#duration_in_min" do
+    subject { creneau.duration_in_min }
+
+    context "no overridden duration_in_min" do
+      let(:motif) { build(:motif, default_duration_in_min: 25) }
+      let(:creneau) { build(:creneau, motif:) }
+
+      it { is_expected.to eq 25 }
+    end
+
+    context "with overridden duration_in_min" do
+      let(:motif) { build(:motif, default_duration_in_min: 25) }
+      let(:creneau) { build(:creneau, motif:, duration_in_min: 30) }
+
+      it { is_expected.to eq 30 }
+    end
+  end
+
+  describe "#build_rdv" do
+    subject(:rdv) { creneau.build_rdv }
+
+    context "no overridden duration_in_min" do
+      let(:motif) { build(:motif, default_duration_in_min: 25) }
+      let(:agent) { build(:agent) }
+      let(:creneau) { build(:creneau, motif:, agent:) }
+
+      specify { expect(rdv.duration_in_min).to eq(25) }
+    end
+
+    context "with overridden duration_in_min" do
+      let(:motif) { build(:motif, default_duration_in_min: 25) }
+      let(:agent) { build(:agent) }
+      let(:creneau) { build(:creneau, motif:, agent:, duration_in_min: 30) }
+
+      specify { expect(rdv.duration_in_min).to eq(30) }
+    end
+  end
 end
