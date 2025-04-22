@@ -20,9 +20,9 @@ class RdvPlanCalendar {
       plugins: [timeGridPlugin, interactionPlugin],
       eventSources: JSON.parse(dataset.eventSourcesJson),
       initialDate: JSON.parse(dataset.defaultDateJson),
-      defaultView: dataset.singleDay === "true" ? 'timeGridDay' : 'timeGridWeek',
+      initialView: dataset.singleDay === "true" ? 'timeGridDay' : 'timeGridWeek',
       hiddenDays: [0],
-      header: { left:  '', center: '', right:  '' },
+      headerToolbar: { left:  '', center: '', right:  '' },
       select: this.selectEvent,
       slotMinTime: dataset.slotMinTime || '07:00:00',
       slotMaxTime: dataset.slotMaxTime || '20:00:00',
@@ -33,7 +33,7 @@ class RdvPlanCalendar {
       options.hiddenDays.push(6);
     }
     if (dataset.singleDay !== "true") {
-      options.header.right = 'prev,next';
+      options.headerToolbar.right = 'prev,next';
     }
 
     return { ...defaultFullCalendarConfig(), ...options };
