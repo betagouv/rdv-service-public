@@ -1,0 +1,36 @@
+//## Local variables:
+/
+/- `page`:
+/  An instance of [Administrate::Page::Form][1].
+/  Contains helper methods to help display a form,
+/  and knows which attributes should be displayed in the resource's form.
+/
+/[1]: http://www.rubydoc.info/gems/administrate/Administrate/Page/Form
+
+- content_for(:title) { "Demande d'ouverture d'espace" }
+
+header.main-content__header
+  h1.main-content__page-title
+    = content_for(:title)
+
+section.main-content__body
+  p
+    b = "Demandé par : "
+    = page.resource.agent.full_name
+    br
+    b = "Organisation: "
+    = page.resource.organisation_name
+
+    br
+    b = "Territoire: "
+    = page.resource.territory_name
+
+    / TODO: mettre un avertissement avec la liste des autres agents qui ont le même nom de domaine pour éviter les doublons
+
+  - form_object = ProcessTerritoryCreationRequestForm.new(page.resource)
+  = simple_form_for(form_object, url: super_admins_territory_creation_request_path(page.resource.id), method: :patch, html: { class: "form" }) do |f|
+    p Quels services voulez-vous activer pour ce nouveau territoire ?
+
+    = f.input :service_ids, collection: Service.all, label: "Services", input_html: { multiple: true, class: "select2-input" }
+
+    = f.submit "Ouvrir le compte", class: "fr-btn"
