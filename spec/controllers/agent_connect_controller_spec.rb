@@ -92,5 +92,30 @@ RSpec.describe AgentConnectController do
         )
       end
     end
+
+    context "when the agent has a capital letter in their ProConnect email address" do
+      let(:user_info) do
+        {
+          "sub" => "ab70770d-1285-46e6-b4d0-3601b49698d4",
+          "email" => "JEAN.MICHEL.FACTICE@exemple.gouv.fr",
+          "given_name" => "Jean Michel Factice",
+          "usual_name" => "Factice",
+          "siret" => "11006801200050",
+          "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
+          "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
+        }
+      end
+
+      it "finds the right agent and updates them" do
+        agent = create(:agent, email: "JEAN.MICHEL.FACTICE@exemple.gouv.fr") # même si on crée l'agent avec des majuscule dans l'email, il sera persisté en base avec des minuscules
+        get :callback, params: { state: state, code: code }
+
+        expect(agent.reload).to have_attributes(
+          first_name: "Jean Michel",
+          last_name: "Factice",
+          proconnect_siret: "11006801200050"
+        )
+      end
+    end
   end
 end

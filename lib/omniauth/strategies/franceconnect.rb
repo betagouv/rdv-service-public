@@ -22,6 +22,43 @@ module OmniAuth
           email: user_info.email,
         }
       end
+
+      def request_phase
+        res = super # call super before so that session state is set
+        Redis.with_connection do |redis|
+          key = self.class.redis_key_for_state(session["omniauth.state"])
+          redis.hsetnx key, "created_at", Time.zone.now.to_s
+          redis.hsetnx key, "user_agent", request.user_agent
+          redis.expireat key, 2.days.from_now
+        end
+        res
+      end
+
+      def callback_phase
+        # cf https://github.com/betagouv/rdv-service-public/issues/4637
+        request = Rack::Request.new(env)
+        state_from_params = request.params["state"]
+        state_from_session = env["rack.session"]["omniauth.state"]
+        if state_from_session != state_from_params
+          redis_key = self.class.redis_key_for_state(state_from_params)
+          redis_data = Redis.with_connection { |r| r.hgetall redis_key }
+          Sentry.set_context(
+            :omni_callback, # NOTE: ne pas utiliser 'auth' dans le nom du contexte sinon Sentry le scrubbe
+            {
+              state_from_session:,
+              state_from_params:,
+              current_user_agent: request.user_agent,
+              stored_state_created_at: redis_data&.fetch("created_at", nil),
+              stored_state_user_agent: redis_data&.fetch("user_agent", nil),
+            }
+          )
+        end
+        super
+      end
+
+      def self.redis_key_for_state(state)
+        state.present? && "omniauth:franceconnect:state:#{state}"
+      end
     end
   end
 end
