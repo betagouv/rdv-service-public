@@ -62,7 +62,7 @@ class EmailToNotificationEmailMigrator
 
       users_batch.each do |user|
         email = user.email
-        user.update_columns(
+        user.update_columns( # rubocop:disable Rails/SkipsModelValidations
           notification_email: email,
           email: nil,
           updated_at: Time.current
