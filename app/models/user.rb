@@ -331,7 +331,9 @@ class User < ApplicationRecord
 
     Anonymizer.anonymize_record!(self)
     receipts.each { |r| Anonymizer.anonymize_record!(r) }
-    rdvs.each { |r| Anonymizer.anonymize_record!(r) }
+    rdvs
+      .select { |r| r.users.where(deleted_at: nil).where.not(id:).empty? }
+      .each { |r| Anonymizer.anonymize_record!(r) }
     annotations.destroy_all
     versions.destroy_all
     update_columns(
