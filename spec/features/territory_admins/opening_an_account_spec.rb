@@ -41,7 +41,11 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         login_as(super_admin, scope: :super_admin)
 
         visit super_admins_territory_creation_requests_path
-        click_on agent.email
+        expect(page).to have_content("Demandes d'ouverture de comptes en attente")
+        click_on agent.full_name
+
+        expect(page).to have_content("CCAS de Montreuil")
+        expect(page).to have_content("Commune de Montreuil")
       end
     end
   end
