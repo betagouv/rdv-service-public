@@ -1,24 +1,23 @@
 #!/usr/bin/env ruby
 # Ce script migre les emails des utilisateurs de RDV-Insertion vers le champ notification_email
-# Il ignore les utilisateurs qui ont activé leur compte Devise (confirmed_at n'est pas nil)
-# ou utilisent le système d'authentification (encrypted_password n'est pas vide ou franceconnect est activé)
-# Usage: bundle exec rails runner scripts/migrate_email_to_notification_email.rb PATH_TO_USER_IDS_FILE
+# Il sélectionne les utilisateurs qui:
+# - Appartiennent uniquement à des organisations avec verticale 'rdv_insertion'
+# - N'utilisent pas le système d'authentification
+# - Ont un email mais pas de notification_email
+# Usage: bundle exec rails runner scripts/migrate_email_to_notification_email.rb
 
 require "benchmark"
 require "fileutils"
 
 class EmailToNotificationEmailMigrator
-  def initialize(user_ids_file)
-    @user_ids_file = user_ids_file
+  def initialize
     @log_file = "log/email_migration_#{Time.current.strftime('%Y%m%d_%H%M%S')}.log"
+    @migrated_users_file = "log/email_migration_#{Time.current.strftime('%Y%m%d_%H%M%S')}_migrated_users_ids.log"
     @stats = {
-      total_users: 0,
+      total_rdv_insertion_users: 0,
+      eligible_for_migration: 0,
       migrated_users: 0,
       errored_users: 0,
-      skipped_users_email_and_notification_email_blank: 0,
-      skipped_users_email_blank: 0,
-      skipped_users_devise: 0,
-      skipped_users_notification_email_present: 0,
     }
 
     FileUtils.mkdir_p(File.dirname(@log_file))
@@ -27,105 +26,94 @@ class EmailToNotificationEmailMigrator
   end
 
   def perform
-    unless File.exist?(@user_ids_file)
-      log("Fichier d'IDs non trouvé: #{@user_ids_file}", :error)
-      return
-    end
-
-    user_ids = File.readlines(@user_ids_file).map(&:strip).map(&:to_i)
-
-    if user_ids.empty?
-      log("Aucun ID d'utilisateur valide trouvé dans le fichier. Opération annulée.", :error)
-      return
-    end
-
     time = Benchmark.measure do
-      log("Début de la migration des emails vers notification_email")
-      log("Traitement de #{user_ids.size} usagers depuis le fichier: #{@user_ids_file}")
-
-      users_scope = User.where(id: user_ids)
-
-      users_scope.find_in_batches(batch_size: 1000) do |users_batch|
-        @stats[:total_users] += users_batch.size
-
-        log("Progression: #{@stats[:total_users]} utilisateurs traités") if @stats[:total_users] % 10000 == 0
-
-        users_batch.each do |user|
-          migrate_user(user)
-        end
-      end
+      analyze_users
+      migrate_users
     end
 
     log_stats(time)
-
     @logger.close
-
     puts "Migration terminée. Logs disponibles dans: #{@log_file}"
+    puts "Liste des IDs utilisateurs migrés disponible dans: #{@migrated_users_file}"
   end
 
   private
 
-  def migrate_user(user)
-    if user.email.blank? && user.notification_email.blank?
-      log("Utilisateur ##{user.id} ignoré: email et notification_email manquants", :debug)
-      @stats[:skipped_users_email_and_notification_email_blank] += 1
-      return
-    end
+  def analyze_users
+    log("Sélection des usagers appartenant uniquement aux organisations avec verticale 'rdv_insertion'")
 
-    if user.email.blank?
-      log("Utilisateur ##{user.id} ignoré: email manquant", :debug)
-      @stats[:skipped_users_email_blank] += 1
-      return
-    end
+    @rdv_insertion_users = find_users_with_only_rdv_insertion_organisations
+    @stats[:total_rdv_insertion_users] = @rdv_insertion_users.count
+    log("Total d'utilisateurs avec uniquement des organisations rdv_insertion: #{@stats[:total_rdv_insertion_users]}")
 
-    if uses_devise?(user)
-      log("Utilisateur ##{user.id} ignoré: utilise Devise", :debug)
-      @stats[:skipped_users_devise] += 1
-      return
-    end
+    @users_to_migrate = select_eligible_users(@rdv_insertion_users)
+    @stats[:eligible_for_migration] = @users_to_migrate.count
+    log("Utilisateurs éligibles pour la migration: #{@stats[:eligible_for_migration]}")
+  end
 
-    if user.notification_email.present?
-      log("Utilisateur ##{user.id} ignoré: notification_email déjà présent (#{user.notification_email})", :debug)
-      @stats[:skipped_users_notification_email_present] += 1
-      return
-    end
+  def migrate_users
+    return if @users_to_migrate.empty?
 
-    begin
-      email = user.email
+    log("Début de la migration des emails vers notification_email")
+    processed = 0
+    @users_to_migrate.find_in_batches(batch_size: 1000) do |users_batch|
+      processed += users_batch.size
+      log("Traitement: #{processed}/#{@stats[:eligible_for_migration]} utilisateurs (#{(processed.to_f / @stats[:eligible_for_migration] * 100).round(1)}%)...")
 
-      user.update_columns( # rubocop:disable Rails/SkipsModelValidations
-        notification_email: email,
-        email: nil,
-        updated_at: Time.current
-      )
-
-      log("Utilisateur ##{user.id} migré: #{email} -> notification_email", :info)
-      @stats[:migrated_users] += 1
-    rescue StandardError => e
-      log("ERREUR pour l'utilisateur ##{user.id}: #{e.message}", :error)
-      @stats[:errored_users] += 1
+      users_batch.each do |user|
+        email = user.email
+        user.update_columns(
+          notification_email: email,
+          email: nil,
+          updated_at: Time.current
+        )
+        @stats[:migrated_users] += 1
+        File.open(@migrated_users_file, "a") do |f|
+          f.puts(user.id)
+        end
+      rescue StandardError => e
+        log("ERREUR pour l'utilisateur ##{user.id}: #{e.message}", :error)
+        @stats[:errored_users] += 1
+      end
     end
   end
 
-  def uses_devise?(user)
-    user.confirmed_at.present? ||
-      user.encrypted_password.present? ||
-      user.logged_once_with_franceconnect == true
+  def find_users_with_only_rdv_insertion_organisations
+    users_with_rdv_insertion = User.joins(user_profiles: :organisation)
+      .where(organisations: { verticale: "rdv_insertion" })
+      .distinct
+
+    users_with_mixed_verticales = User.joins(user_profiles: :organisation)
+      .where(id: users_with_rdv_insertion.select(:id))
+      .where.not(organisations: { verticale: "rdv_insertion" })
+      .distinct
+
+    User.where(id: users_with_rdv_insertion.select(:id))
+      .where.not(id: users_with_mixed_verticales.select(:id))
+  end
+
+  def select_eligible_users(base_users)
+    # - avec un email non vide
+    # - sans notification_email
+    # - non-connectés (pas de confirmed_at, pas de mot de passe, pas de franceconnect)
+    base_users.where.not(email: [nil, ""])
+      .where(notification_email: [nil, ""])
+      .where(confirmed_at: nil)
+      .where(encrypted_password: ["", nil])
+      .where(logged_once_with_franceconnect: [nil, false])
   end
 
   def log(message, level = :info)
-    timestamp = Time.current.strftime("%Y-%m-%d %H:%M:%S.%L")
-
+    timestamp = Time.current.strftime("%Y-%m-%d %H:%M:%S")
     prefix = case level
-             when :error then "[ERROR] "
+             when :error then "[ERREUR] "
              when :info then "[INFO] "
-             when :debug then "[DEBUG] "
              else ""
              end
 
     log_message = "#{timestamp} #{prefix}#{message}"
     @logger.puts(log_message)
-    @logger.flush # S'assurer que les logs sont écrits immédiatement
+    @logger.flush
 
     puts log_message if level == :error
   end
@@ -133,26 +121,14 @@ class EmailToNotificationEmailMigrator
   def log_stats(time)
     log("Migration terminée en #{time.real.round(2)} secondes")
     log("Statistiques:")
-    log("  - Total d'utilisateurs traités: #{@stats[:total_users]}")
-    log("  - Utilisateurs ignorés: #{@stats[:skipped_users]}")
-    log("  - Utilisateurs migrés: #{@stats[:migrated_users]}")
-    log("  - Erreurs: #{@stats[:errored_users]}")
-    log("  - Utilisateurs ignorés: email et notification_email manquants: #{@stats[:skipped_users_email_and_notification_email_blank]}")
-    log("  - Utilisateurs ignorés: email manquant: #{@stats[:skipped_users_email_blank]}")
-    log("  - Utilisateurs ignorés: utilise Devise: #{@stats[:skipped_users_devise]}")
-    log("  - Utilisateurs ignorés: notification_email déjà présent: #{@stats[:skipped_users_notification_email_present]}")
+    log("  - Total d'utilisateurs RDV-Insertion: #{@stats[:total_rdv_insertion_users]}")
+    log("  - Utilisateurs éligibles pour migration: #{@stats[:eligible_for_migration]}")
+    log("  - Utilisateurs migrés avec succès: #{@stats[:migrated_users]}")
+    log("  - Erreurs lors de la migration: #{@stats[:errored_users]}")
   end
 end
 
 if $PROGRAM_NAME == __FILE__
-  user_ids_file = ARGV[0]
-
-  if user_ids_file.nil?
-    puts "🔴 ERREUR: Veuillez spécifier le chemin du fichier contenant les IDs d'utilisateurs."
-    puts "Usage: bundle exec rails runner scripts/migrate_email_to_notification_email.rb PATH_TO_USER_IDS_FILE"
-    exit 1
-  end
-
-  migrator = EmailToNotificationEmailMigrator.new(user_ids_file)
+  migrator = EmailToNotificationEmailMigrator.new
   migrator.perform
 end
