@@ -16,7 +16,7 @@ section.main-content__body
   = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
     = f.simple_fields_for :territory do |ff|
       = ff.input :name, label: "Nom du territoire"
-      = ff.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie du territoire"
+      = ff.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie du territoire", input_html: { class: "fr-select" }
 
     = f.simple_fields_for :organisation do |ff|
       div[style="margin: 8px 0"]
@@ -42,6 +42,6 @@ section.main-content__body
         = ff.input :first_name, label: "Prénom"
         = ff.input :last_name, label: "Nom"
         = ff.input :email, label: "Adresse mail", hint: "Une invitation sera envoyée automatiquement"
-      = ff.input :service_ids, label: "Service", collection: Service.all, hint: sanitize("Si nécessaire, vous pouvez #{link_to('créer un nouveau service', new_super_admins_service_path, target: :blank)}")
+      = ff.input :service_ids, label: "Service", collection: Service.all, hint: sanitize("Si nécessaire, vous pouvez #{link_to('créer un nouveau service', new_super_admins_service_path, target: :blank)}"), input_html: { class: "fr-select" }
 
     = f.submit

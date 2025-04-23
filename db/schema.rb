@@ -48,6 +48,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_16_123443) do
     "agents_and_prescripteurs_and_invited_users",
   ], force: :cascade
 
+  create_enum :creation_status, [
+    "accepted",
+    "refused",
+  ], force: :cascade
+
   create_enum :export_type, [
     "rdv_export",
     "participations_export",
@@ -747,6 +752,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_16_123443) do
     t.bigint "agent_id", null: false
     t.string "organisation_name"
     t.string "territory_name"
+    t.enum "response", enum_type: "creation_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_territory_creation_requests_on_agent_id"

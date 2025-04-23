@@ -8,7 +8,5 @@ class ProcessTerritoryCreationRequestForm
   delegate :organisation_name, :territory_name, to: :territory_creation_request
   attr_accessor :service_ids
 
-  def services
-    Service.where(id: service_ids)
-  end
+  def submit; end
 end

@@ -28,6 +28,8 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
     context "mais que son compte n'est pas vérifié par une organisation externe" do
       let(:super_admin) { create :super_admin }
 
+      let!(:service) { create(:service, name: "Service social") }
+
       it "ne permet pas de créer un territoire" do
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
         click_on "Demander à ouvrir un espace"
@@ -41,11 +43,15 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         login_as(super_admin, scope: :super_admin)
 
         visit super_admins_territory_creation_requests_path
-        expect(page).to have_content("Demandes d'ouverture de comptes en attente")
-        click_on agent.full_name
+        click_on "Commune de Montreuil"
 
+        expect(page).to have_content("Demande d'ouverture d'espace")
         expect(page).to have_content("CCAS de Montreuil")
         expect(page).to have_content("Commune de Montreuil")
+
+        select "Service social", from: "Services"
+
+        click_on "Ouvrir le compte"
       end
     end
   end
