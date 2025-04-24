@@ -6,7 +6,7 @@ class ProcessTerritoryCreationRequestForm
   end
 
   delegate :organisation_name, :territory_name, to: :territory_creation_request
-  attr_accessor :service_ids
+  attr_accessor :service_ids, :territory_creation_request
 
   def submit; end
 end
