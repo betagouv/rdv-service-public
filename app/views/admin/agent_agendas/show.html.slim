@@ -4,6 +4,7 @@
 - content_for :title do
   - if current_agent == @agent
     | Votre agenda
+    = dsfr_button(label: "Mettre à jour automatiquement", level: :secondary, size: :sm, icon: "play-circle-line", classes: "fr-ml-2w", html_attributes: { id: "js-calendar-polling" })
   - else
     | Agenda de #{@agent.full_name_and_service}
 

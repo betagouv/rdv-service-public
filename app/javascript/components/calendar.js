@@ -18,17 +18,21 @@ class CalendarRdvSolidarites {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
+    this.pollingButtonEl = document.getElementById("js-calendar-polling");
+    this.pollingButtonEl?.addEventListener("click", () => {
+      this.pollingButtonEl.dataset["enabled"] ? this.disablePolling() : this.enablePolling()
+    })
 
-    document.addEventListener('turbolinks:before-cache', this.clearRefetchInterval);
-    document.addEventListener('turbolinks:before-render', this.clearRefetchInterval);
+    document.addEventListener('turbolinks:before-cache', this.disablePolling);
+    document.addEventListener('turbolinks:before-render', this.enablePolling);
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         // when agent comes back to tab, refresh immediately
         this.fullCalendarInstance.refetchEvents();
 
-        this.setRefetchInterval();
+        this.enablePolling();
       } else if (this.refreshCalendarInterval) {
-        this.clearRefetchInterval();
+        this.disablePolling();
       }
     })
     document.addEventListener("turbolinks:before-cache", () => {
@@ -40,18 +44,28 @@ class CalendarRdvSolidarites {
       // fixes hanging tooltip on back
       $(".tooltip").removeClass("show")
     })
-    this.setRefetchInterval()
+    this.enablePolling()
   }
 
-  setRefetchInterval = () => {
-    if (this.refreshCalendarInterval) return
-    this.refreshCalendarInterval = setInterval(() => this.fullCalendarInstance.refetchEvents(), 60000)
+  disablePolling = () => {
+    if (this.refreshCalendarInterval) {
+      clearTimeout(this.refreshCalendarInterval)
+      this.refreshCalendarInterval = null
+    }
+    this.pollingButtonEl.innerHTML = "Mettre à jour automatiquement"
+    this.pollingButtonEl.classList.remove("fr-icon-pause-circle-line")
+    this.pollingButtonEl.classList.add("fr-icon-play-circle-line")
+    this.pollingButtonEl.removeAttribute("data-enabled")
   }
 
-  clearRefetchInterval = () => {
-    if (!this.refreshCalendarInterval) return
-    clearTimeout(this.refreshCalendarInterval)
-    this.refreshCalendarInterval = null
+  enablePolling = () => {
+    if (!this.refreshCalendarInterval) {
+      this.refreshCalendarInterval = setInterval(() => this.fullCalendarInstance.refetchEvents(), 1000)
+    }
+    this.pollingButtonEl.innerHTML = "Arrêter la mise à jour automatique"
+    this.pollingButtonEl.classList.remove("fr-icon-play-circle-line")
+    this.pollingButtonEl.classList.add("fr-icon-pause-circle-line")
+    this.pollingButtonEl.setAttribute("data-enabled", "true")
   }
 
   initFullCalendar = () => {
