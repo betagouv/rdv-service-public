@@ -26,6 +26,9 @@
   .fr-container.fr-py-8w.fr-mb-8w
     h1.fr-h3.fr-pb-2w Ouverture de compte en attente
     p.fr-py-1w Nous avons bien reçu votre demande d'ouverture de compte pour #{current_agent.territory_creation_request.territory_name}.
-    p Vous serez averti par email dès que nous l'aurons traitée.
-    /TODO: mettre un lien vers le formulaire de contact
+    p Nous mettons généralement un ou deux jours ouvrés à traiter les nouvelles demandes.  Vous recevrez un mail dès que votre espace sera ouvert.
+    p En attendant, si vous avez des questions vous pouvez consulter notre documentation ou nous contacter directement
+    = link_to "Consulter la documentation", new_agents_territory_creation_request_path, class: "fr-btn fr-btn--secondary fr-pr-2w"
+    = link_to "Contacter l'équipe", new_agents_territory_creation_request_path, class: "fr-btn fr-btn--secondary"
+    /TODO: mettre les bons liens
 
