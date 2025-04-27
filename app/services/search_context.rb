@@ -73,12 +73,14 @@ class SearchContext
   end
 
   def creneaux_search_for(lieu, motif)
+    duration_in_min = motif.default_duration_in_min
     CreneauxSearch::ForUser.new(
       user: @user,
       motif: motif,
       lieu: lieu,
       date_range: date_range,
-      geo_search: geo_search
+      geo_search: geo_search,
+      duration_in_min:
     )
   end
 
