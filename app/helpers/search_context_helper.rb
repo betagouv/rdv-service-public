@@ -13,10 +13,17 @@ module SearchContextHelper
     )
   end
 
-  def path_to_lieu_selection(params)
+  def path_to_ants_pre_demandes_count_selection(params)
     prendre_rdv_path_with_filtered_params(
       params,
       %i[service_id motif_name_with_location_type] + starting_permitted_params_list
+    )
+  end
+
+  def path_to_lieu_selection(params)
+    prendre_rdv_path_with_filtered_params(
+      params,
+      %i[service_id motif_name_with_location_type ants_pre_demandes_count] + starting_permitted_params_list
     )
   end
 
@@ -25,7 +32,7 @@ module SearchContextHelper
   def path_to_organisation_selection(params)
     prendre_rdv_path_with_filtered_params(
       params,
-      %i[service_id motif_name_with_location_type] + starting_permitted_params_list
+      %i[service_id motif_name_with_location_type ants_pre_demandes_count] + starting_permitted_params_list
     )
   end
 

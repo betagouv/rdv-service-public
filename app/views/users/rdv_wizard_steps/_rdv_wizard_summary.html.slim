@@ -22,6 +22,14 @@ ul.list-group.list-group-flush
       span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
       | RDV par visioconférence
   - when Motif.location_types[:public_office]
+    - if rdv_wizard.ants_pre_demandes_count.present?
+      li.list-group-item
+        .row
+          .col
+            span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+            | Nombre de pré-demandes ANTS à déposer : #{rdv_wizard.ants_pre_demandes_count}
+          .col-auto
+            = link_to "modifier", path_to_ants_pre_demandes_count_selection(rdv_wizard.params_to_selections)
     li.list-group-item
       .row
         .col

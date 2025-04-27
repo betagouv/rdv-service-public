@@ -52,7 +52,7 @@ module UserRdvWizard
         @attributes.slice(
           *WebSearchContext::ADDRESS_SELECTION_PARAMS,
           :where, :lieu_id, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
-          :referent_ids, :external_organisation_ids, :duration
+          :referent_ids, :external_organisation_ids, :duration, :ants_pre_demandes_count
         )
       )
     end
@@ -62,10 +62,13 @@ module UserRdvWizard
     end
 
     def lieu_id = @attributes[:lieu_id]
+    def ants_pre_demandes_count = @attributes[:ants_pre_demandes_count].presence&.to_i
 
     def duration_in_min
       if @attributes[:duration]
         @attributes[:duration].to_i
+      elsif @attributes[:ants_pre_demandes_count].present?
+        motif.default_duration_in_min * @attributes[:ants_pre_demandes_count].to_i
       else
         motif.default_duration_in_min
       end

@@ -72,8 +72,13 @@ class SearchContext
     raise NoMethodError
   end
 
+  def ants_pre_demandes_count
+    raise NoMethodError
+  end
+
   def creneaux_search_for(lieu, motif)
     duration_in_min = motif.default_duration_in_min
+    duration_in_min *= ants_pre_demandes_count.to_i if ants_pre_demandes_count.present?
     CreneauxSearch::ForUser.new(
       user: @user,
       motif: motif,

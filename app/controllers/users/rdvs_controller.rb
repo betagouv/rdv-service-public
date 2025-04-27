@@ -163,6 +163,8 @@ class Users::RdvsController < UserAuthController
   def duration_in_min_for(motif:)
     if params[:duration]
       params[:duration].to_i
+    elsif params[:ants_pre_demandes_count].present?
+      motif.default_duration_in_min * params[:ants_pre_demandes_count].to_i
     else
       motif.default_duration_in_min
     end
