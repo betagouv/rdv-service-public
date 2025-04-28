@@ -1,5 +1,6 @@
+/# locals: (user:, rdv_wizard: nil, service: nil, last_wizard_step: false)
+
 ruby:
-  rdv_wizard = local_assigns[:rdv_wizard]
   form_url = rdv_wizard.present? ? users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv)) : users_informations_path
   form_method = rdv_wizard.present? ? "post" : "patch"
   territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
@@ -44,7 +45,7 @@ ruby:
   = f.hidden_field :post_code
   = f.hidden_field :city_name
 
-  - if local_assigns[:service].nil? || service.user_field_groups.include?(:social)
+  - if service.nil? || service.user_field_groups.include?(:social)
     - if territories.map(&:enable_caisse_affiliation_field).any? || territories.map(&:enable_affiliation_number_field).any?
       .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
         - if territories.map(&:enable_caisse_affiliation_field).any?
@@ -65,4 +66,10 @@ ruby:
       = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
 
   .rdv-text-align-right
-    = f.submit (rdv_wizard.present? ? "Continuer" : "Modifier"), class: "fr-btn"
+    - if last_wizard_step
+      - if rdv_wizard.rdv.collectif?
+        = link_to "Confirmer ma participation", users_rdv_participations_path(rdv_wizard.rdv), method: :post, class: "btn btn-primary", data: { disable_with: "Veuillez patienter…" }
+      - else
+        = link_to "Confirmer mon RDV", users_rdvs_path(rdv_wizard.to_query), method: :post, class: "btn btn-primary", data: { disable_with: "Veuillez patienter…" }
+    - else
+      = f.submit (rdv_wizard.present? ? "Continuer" : "Modifier"), class: "fr-btn"

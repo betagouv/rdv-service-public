@@ -49,14 +49,7 @@ class Users::RdvWizardStepsController < UserAuthController
         name: "step2",
         number: 2,
         title: "Choix de l’usager",
-        next_step: :step3,
         stepper_index: 2,
-      },
-      step3: {
-        name: "step3",
-        number: 3,
-        title: "Confirmation",
-        stepper_index: current_user.signed_in_with_invitation_token? ? 2 : 3,
       },
     }
 
