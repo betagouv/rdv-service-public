@@ -65,9 +65,7 @@ $rdvs-fc-header-bg-color: $gray-200;
   font-size: 0.8125rem;
 }
 
-.fc-event-excused,
-.fc-event-seen,
-.fc-event-revoked {
+.rdv-fc-event-barre {
   opacity: 0.7;
   .fc-event-title {
     text-decoration: line-through;
