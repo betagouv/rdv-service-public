@@ -21,7 +21,7 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
   private
 
   def permitted_params
-    params.require(:territory_creation_request).permit(:territory_name, :organisation_name)
+    params.require(:territory_creation_request).permit(:territory_name, :organisation_name, :service_name)
   end
 
   def pundit_user
