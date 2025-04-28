@@ -26,7 +26,7 @@ class Compte
     ActiveRecord::Base.transaction do
       territory.save!
       organisation.save!
-      if lieu.address
+      if lieu.address.present?
         lieu.save!
       end
 

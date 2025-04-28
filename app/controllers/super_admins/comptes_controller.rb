@@ -1,10 +1,8 @@
 module SuperAdmins
   class ComptesController < SuperAdmins::ApplicationController
     def new
-      @agent = Agent.find_by(id: params[:agent_id])
-      if @agent
-        authorize_resource(@agent)
-      end
+      @territory_creation_request = policy_scope(TerritoryCreationRequest, policy_scope_class: SuperAdmin::TerritoryCreationRequestPolicy::Scope).find_by(id: params[:request_id])
+      @agent = policy_scope(Agent, policy_scope_class: SuperAdmin::AgentPolicy::Scope).find_by(id: params[:agent_id]) || @territory_creation_request&.agent
 
       super
     end
@@ -15,6 +13,7 @@ module SuperAdmins
       authorize_resource(compte)
 
       if compte.save!
+        # TODO: enregistrer la réponse sur le creation request aussi
         redirect_to(
           super_admins_agent_path(compte.agent),
           notice: "Le nouveau compte a été créé, et une invitation a été envoyée à #{compte_params.dig(:agent, :email)}"

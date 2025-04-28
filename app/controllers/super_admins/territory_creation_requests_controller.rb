@@ -5,25 +5,16 @@ module SuperAdmins
       authorize(@territory_creation_requests, policy_class: SuperAdmin::TerritoryCreationRequestPolicy)
     end
 
-    def edit
-      super
-    end
-
     def update
-      ProcessTerritoryCreationRequestForm.new
-      compte_params[:agent][:invited_by] = current_super_admin
-      compte = Compte.new(compte_params, current_domain)
-      authorize_resource(compte)
+      @territory_creation_request = TerritoryCreationRequest.find(params[:id])
+      authorize_resource(@territory_creation_request)
 
-      if compte.save!
-        redirect_to(
-          super_admins_agent_path(compte.agent),
-          notice: "Le nouveau compte a été créé, et une invitation a été envoyée à #{compte_params.dig(:agent, :email)}"
-        )
+      if @territory_creation_request.update(params.require(:territory_creation_request).permit(:response))
+        redirect_to super_admins_territory_creation_requests_path, flash: "Demande traitée"
       else
-        render :new, locals: {
-          page: Administrate::Page::Form.new(dashboard, resource),
-        }, status: :unprocessable_entity
+        # TODO: gérer le cas d'une demande déjà traitée
+        # TODO: ajouter le cas d'une demande en attente ?
+        render :edit, status: :unprocessable_entity
       end
     end
   end
