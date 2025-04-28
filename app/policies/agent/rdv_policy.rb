@@ -51,7 +51,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   def agents_authorized?
     return @agents_authorized if defined?(@agents_authorized)
 
-    rdv_agent_ids = record.agents_rdvs.map(&:agent).reject(&:soft_deleted?).map(&:id)
+    rdv_agent_ids = Agent.where(id: record.agent_ids, deleted_at: nil).pluck(:id)
     @agents_authorized = (authorized_agent_ids_via_scope(rdv_agent_ids) + authorized_agent_ids_via_motif(rdv_agent_ids)).to_set == rdv_agent_ids.to_set
 
     notify_agents_unauthorized unless @agents_authorized

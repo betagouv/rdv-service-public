@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/betagouv/activerecord_defer_persist
+  revision: 59569fa607edf89ad17fbfca08935fae24b21e9c
+  branch: main
+  specs:
+    activerecord_defer_persist (0.4.0)
+      activerecord (>= 7)
+      activesupport (>= 7)
+
+GIT
   remote: https://github.com/nahi/httpclient.git
   revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
   ref: d57cc6d
@@ -201,7 +210,7 @@ GEM
       descendants_tracker (~> 0.0.1)
     common_french_passwords (0.0.1)
     concurrent-ruby (1.3.5)
-    connection_pool (2.5.0)
+    connection_pool (2.5.3)
     coverband (6.1.4)
       redis (>= 3.0)
     crack (0.4.5)
@@ -763,6 +772,7 @@ DEPENDENCIES
   active_link_to
   active_record_doctor
   activerecord-postgres_enum
+  activerecord_defer_persist!
   administrate
   anonymizer!
   auto_strip_attributes

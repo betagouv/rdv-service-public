@@ -14,6 +14,7 @@ class Rdv < ApplicationRecord
   include IcsPayloads::Rdv
   include Ants::AppointmentSerializerAndListener
   include CreatedByConcern
+  include ActiverecordDeferPersist::Concern # aucun effet tant que defer_persist n’est pas appelé
 
   # Attributes
   auto_strip_attributes :name

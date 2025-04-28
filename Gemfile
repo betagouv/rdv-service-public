@@ -22,6 +22,8 @@ gem "bootsnap", require: false # Reduces boot times through caching; required in
 gem "rack-cors" # CORS management
 # Mail provides a nice Ruby DSL for making, sending and reading emails.
 gem "mail"
+# Custom gem that defers persisting to the db on has_many assignment calls like `agent_ids=`
+gem "activerecord_defer_persist", git: "https://github.com/betagouv/activerecord_defer_persist", branch: "main"
 
 # Ops
 # A gem that provides a client interface for the Sentry error logger

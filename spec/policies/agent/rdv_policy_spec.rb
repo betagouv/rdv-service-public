@@ -128,6 +128,45 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     it_behaves_like "not permit actions", :rdv, :update?, :status?
   end
 
+  context "RDV existant de l’agent courant" do
+    let(:organisation) { create(:organisation) }
+    let(:service) { create(:service) }
+    let(:agent1) { create(:agent, basic_role_in_organisations: [organisation], service:) }
+    let(:motif) { create(:motif, organisation:, service: service) }
+    let!(:rdv) { create(:rdv, agents: [agent1], motif:, organisation:) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent1, organisation) }
+
+    before { rdv.singleton_class.defer_persist(:agents) }
+
+    context "pour ajouter un agent auquel iel a accès" do
+      let(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service:) }
+      before { rdv.agents = [agent1, agent2] } # not persisted
+
+      it_behaves_like "permit actions", :rdv, :update?, :status?
+    end
+
+    context "pour ajouter un agent auquel iel n’a pas accès" do
+      let(:agent2) { create(:agent, basic_role_in_organisations: [create(:organisation)], service:) }
+      before { rdv.agents = [agent1, agent2] } # not persisted
+
+      it_behaves_like "not permit actions", :rdv, :update?, :status?
+    end
+
+    context "pour se remplacer par un agent auquel iel a accès" do
+      let(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service:) }
+      before { rdv.agents = [agent2] } # not persisted
+
+      it_behaves_like "permit actions", :rdv, :update?, :status?
+    end
+
+    context "pour se remplacer par un agent auquel iel n’a pas accès" do
+      let(:agent2) { create(:agent, basic_role_in_organisations: [create(:organisation)], service:) }
+      before { rdv.agents = [agent2] } # not persisted
+
+      it_behaves_like "not permit actions", :rdv, :update?, :status?
+    end
+  end
+
   # Certains controllers ajoutent des usagers à un RDV à travers
   # `@rdv.participations.build(...)`, puis appellent cette policy.
   # Cette section teste ce cas de figure.
