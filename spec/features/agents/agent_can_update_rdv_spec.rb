@@ -78,6 +78,22 @@ RSpec.describe "Agent can update a RDV", js: true do
   context "ajout d’un agent au RDV" do
     let!(:agent_jungyoon) { create(:agent, first_name: "Jung Yoon", last_name: "Han", email: "jungyoon@angouleme.fr", service:, basic_role_in_organisations: [organisation]) }
 
+    it "envoie un email à l’agent ajouté" do
+      visit edit_admin_organisation_rdv_path(organisation, rdv)
+      select("Jung Yoon HAN (Urbanisme)", from: "rdv_agent_ids")
+      click_button "Enregistrer"
+
+      expect(page).to have_content("Jung Yoon HAN (Urbanisme)")
+      expect(page).to have_content("Shiraz NADIR (Urbanisme)")
+      perform_enqueued_jobs
+      mail_shiraz = ActionMailer::Base.deliveries.find { _1.to.first == "shiraz@angouleme.fr" }
+      expect(mail_shiraz).not_to be_nil
+      expect(mail_shiraz.subject).to match(/RDV .* modifié/)
+      mail_jungyoon = ActionMailer::Base.deliveries.find { _1.to.first == "jungyoon@angouleme.fr" }
+      expect(mail_jungyoon).not_to be_nil
+      expect(mail_jungyoon.subject).to match(/Nouveau RDV/)
+    end
+
     context "un RDV existe à la même heure pour l’agent ajouté" do
       before { create(:rdv, agents: [agent_jungyoon], starts_at: rdv.starts_at) }
 
