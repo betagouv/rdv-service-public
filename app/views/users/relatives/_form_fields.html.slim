@@ -1,9 +1,9 @@
 .fr-grid-row.fr-grid-row--gutters.fr-mb-5v
-  .fr-col-md-6= f.dsfr_text_field :first_name
-  .fr-col-md-6= f.dsfr_text_field :last_name
+  .fr-col-md-6= f.dsfr_text_field :first_name, autocomplete: "given-name"
+  .fr-col-md-6= f.dsfr_text_field :last_name, autocomplete: "family-name"
 - if f.object.ants_pre_demande_number_required
   = f.dsfr_text_field :ants_pre_demande_number, required: true, hint: t("simple_form.hints.user.ants_pre_demande_number_html"), input_html: {style: "text-transform: uppercase;"}
   = f.hidden_field :ants_pre_demande_number_required, value: "true"
   = f.hidden_field :ants_meeting_point_id
 - if current_domain != Domain::RDV_MAIRIE # TODO: trouver un moyen d'avoir le contexte du rdv_wizard, pour ensuite se baser sur current_territory.enable_birth_date_field?
-  = f.dsfr_text_field :birth_date, type: :date, input_html: { type: "date" }
+  = f.dsfr_text_field :birth_date, type: :date, input_html: { type: "date" }, autocomplete: "bday"

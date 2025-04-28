@@ -6,7 +6,7 @@ FactoryBot.define do
     motif { build(:motif, organisation: organisation, service: agents.first.services.first) }
 
     duration_in_min { motif.default_duration_in_min }
-    starts_at { 3.days.from_now }
+    starts_at { 3.days.from_now.round.change(sec: 0) } # les Rdv créés dans l’app ont une précision à la minute
 
     status { "unknown" }
 
