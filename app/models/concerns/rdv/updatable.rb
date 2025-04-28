@@ -7,6 +7,7 @@ module Rdv::Updatable
     save_and_notify(author, &block)
   end
 
+  # rubocop:disable Metrics/PerceivedComplexity
   def save_and_notify(author)
     Rdv.transaction do
       self.updated_at = Time.zone.now
@@ -22,9 +23,10 @@ module Rdv::Updatable
         participations.reload
       end
 
-      yield self if block_given? # yield RDV before saving, can be used to run policy check
+      should_save = block_given? ? yield(self) : true
+      # yield RDV before saving, can be used to run policy check
 
-      if save
+      if should_save && save
         notify!(author, previous_participations)
         true
       else
@@ -32,6 +34,7 @@ module Rdv::Updatable
       end
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def participation_token(user_id)
     # For user invited with tokens, nil default for not invited users

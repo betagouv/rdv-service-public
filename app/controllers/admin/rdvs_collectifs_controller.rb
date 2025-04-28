@@ -57,6 +57,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
     success = @rdv.update_and_notify(current_agent, update_users_params) do |rdv_before_save|
       authorize(rdv_before_save, :update?, policy_class: Agent::RdvPolicy)
+      true
     end
 
     if success
