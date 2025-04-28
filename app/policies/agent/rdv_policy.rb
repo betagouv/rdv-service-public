@@ -7,7 +7,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   alias new? create?
 
   def update?
-    same_agent_or_has_access? && users_authorized?
+    same_agent_or_has_access? && users_and_agents_authorized?
   end
   alias status? update?
 
