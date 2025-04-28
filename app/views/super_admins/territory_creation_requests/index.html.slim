@@ -13,6 +13,8 @@
   = link_to "Voir les demandes refusées", super_admins_territory_creation_requests_path(status: "refused")
   br
 
+  - if @territory_creation_requests.empty?
+    p.fr-my-4w Il n'y a aucune demande pour ce filtre
   - @territory_creation_requests.each do |request|
     .fr-card.fr-enlarge-link.fr-card--horizontal.fr-card--sm
       .fr-card__body

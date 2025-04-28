@@ -16,27 +16,27 @@ header.main-content__header
 section.main-content__body
   p
     b = "Demandé par : "
-    = page.resource.agent.full_name
+    = @territory_creation_request.agent.full_name
     = " "
-    = page.resource.agent.email
+    = @territory_creation_request.agent.email
 
   p
     b = "Nom de l'espace : "
-    = page.resource.territory_name
+    = @territory_creation_request.territory_name
 
   p
     b = "Nom de l'organisation : "
-    = page.resource.organisation_name
+    = @territory_creation_request.organisation_name
 
   p
     b = "Service demandé : "
-    = page.resource.service_name
+    = @territory_creation_request.service_name
 
-    - if page.resource.agent.proconnect_siret
+    - if @territory_creation_request.agent.proconnect_siret
       p
         b = "Siret de l'agent : "
-        = page.resource.agent.proconnect_siret
-      - agents_with_same_siret = Agent.joins(:organisations).where(agents: { proconnect_siret: page.resource.agent.proconnect_siret }).limit(10).distinct
+        = @territory_creation_request.agent.proconnect_siret
+      - agents_with_same_siret = Agent.joins(:organisations).where(agents: { proconnect_siret: @territory_creation_request.agent.proconnect_siret }).limit(10).distinct
       - if agents_with_same_siret.any?
         p D'autres agents ont le même siret :
         ul
@@ -49,8 +49,8 @@ section.main-content__body
     li Il n'y a pas d'autres organisation avec un nom similaire
     li Il n'y a pas d'autres agents avec le même nom de domaine qui ont déjà un espace
 
-  = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
+  = simple_form_for([namespace, @territory_creation_request], html: { class: "form" }) do |f|
     = f.hidden_field :response, value: "refused"
     = f.submit "Refuser"
 
-  = link_to("Accepter", new_super_admins_compte_path(request_id: page.resource.id), class: "btn")
+  = link_to("Accepter", new_super_admins_compte_path(request_id: @territory_creation_request.id), class: "btn")
