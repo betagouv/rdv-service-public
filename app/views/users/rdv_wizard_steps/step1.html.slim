@@ -6,6 +6,8 @@
   .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
     - if max_step > 1
       = dsfr_stepper(title: current_step[:title], value: current_step[:stepper_index], max: max_step, next_title: next_step[:title])
+    - else
+      = dsfr_stepper(title: current_step[:title], value: current_step[:stepper_index], max: max_step)
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body

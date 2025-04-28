@@ -57,7 +57,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       click_link("S'inscrire")
       uncheck "Accepte les notifications par email" unless notif
       uncheck "Accepte les notifications par SMS" unless notif
-      click_button("Continuer")
       if page.has_button?("Continuer")
         page.click_button("Continuer")
       end
@@ -95,7 +94,6 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("Revenir en arrière")
         sleep(1)
         click_button("Continuer")
-        click_button("Continuer")
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
         expect(page).to have_content("Participation confirmée")
@@ -119,7 +117,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       click_button("Se connecter")
       click_button("Continuer")
       expect(page).to have_content("Choix de l’usager")
-      click_button("Continuer")
       stub_request(:post, "https://example.com/")
       click_on("Confirmer ma participation")
       expect(page).to have_content("Participation confirmée")
@@ -302,7 +299,7 @@ RSpec.describe "Adding a user to a collective RDV" do
           create(:participation, rdv: rdv)
           create(:participation, rdv: rdv)
 
-          click_button("Continuer")
+          click_on("Confirmer ma participation")
           expect(page).to have_content("Ce créneau n'est plus disponible")
         end
       end

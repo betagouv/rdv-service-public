@@ -67,11 +67,6 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
       # Pour l'instant cette page s'affiche même si l'on a une seule personne dans la liste des choix. :/
       expect(page).to have_content("Pour qui prenez-vous rendez-vous ?") # David est sélectionné par défaut
-      click_on("Continuer")
-
-      # Page finale de confirmation
-      expect(page).to have_content("Confirmation")
-      expect(page).to have_content("Date du rendez-vous : mardi 20 septembre 2022 à 08h00 (45 minutes)")
       expect { click_on("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
     end
   end

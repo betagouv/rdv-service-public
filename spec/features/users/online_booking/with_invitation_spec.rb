@@ -63,12 +63,6 @@ RSpec.describe "User can be invited" do
       expect(page).not_to have_field("Adresse")
       expect(page).to have_field("Email", with: user.email, disabled: true)
       expect(page).to have_field("Téléphone", with: user.phone_number)
-      click_button("Continuer")
-
-      # Confirmation
-      expect(page).to have_content("Informations de contact")
-      expect(page).to have_content("johndoe@gmail.com")
-      expect(page).to have_content("0682605955")
       click_link("Confirmer mon RDV")
 
       # RDV page
@@ -184,12 +178,6 @@ RSpec.describe "User can be invited" do
       expect(page).not_to have_field("Adresse")
       expect(page).to have_field("Email", with: user.email, disabled: true)
       expect(page).to have_field("Téléphone", with: user.phone_number)
-      click_button("Continuer")
-
-      # Confirmation
-      expect(page).to have_content("Informations de contact")
-      expect(page).to have_content("johndoe@gmail.com")
-      expect(page).to have_content("0682605955")
       click_link("Confirmer mon RDV")
 
       # RDV page
@@ -249,12 +237,6 @@ RSpec.describe "User can be invited" do
         expect(page).not_to have_field("Adresse")
         expect(page).to have_field("Email", with: user.email, disabled: true)
         expect(page).to have_field("Téléphone", with: user.phone_number)
-        click_button("Continuer")
-
-        # Confirmation
-        expect(page).to have_content("Informations de contact")
-        expect(page).to have_content("johndoe@gmail.com")
-        expect(page).to have_content("0682605955")
         click_link("Confirmer mon RDV")
 
         # RDV page

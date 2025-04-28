@@ -39,7 +39,6 @@ RSpec.describe "User can search rdv on rdv service public" do
     expect(page).not_to have_field("Numéro de pré-demande ANTS")
 
     click_button("Continuer")
-    click_button("Continuer")
     click_link("Confirmer mon RDV")
     expect(page).to have_content("Votre rendez vous a été confirmé.")
   end

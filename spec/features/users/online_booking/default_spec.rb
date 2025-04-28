@@ -36,7 +36,7 @@ RSpec.describe "User can search for rdvs" do
       sign_up
       continue_to_rdv(motif)
       add_relative
-      confirm_rdv(motif, lieu)
+      check_post_confirm_info(motif, lieu)
     end
 
     describe "On RDV Service Public" do
@@ -47,7 +47,7 @@ RSpec.describe "User can search for rdvs" do
         click_button("Continuer")
 
         add_relative(birth_date: false)
-        confirm_rdv(motif, lieu)
+        check_post_confirm_info(motif, lieu)
       end
     end
   end
@@ -107,7 +107,7 @@ RSpec.describe "User can search for rdvs" do
         sign_up
         continue_to_rdv(first_motif)
         add_relative
-        confirm_rdv(first_motif)
+        check_post_confirm_info(first_motif)
       end
     end
 
@@ -143,7 +143,7 @@ RSpec.describe "User can search for rdvs" do
         sign_up
         continue_to_rdv(first_motif, address: "03 Rue Lambert, Paris, 75016")
         add_relative
-        confirm_rdv(first_motif)
+        check_post_confirm_info(first_motif)
       end
     end
 
@@ -169,7 +169,7 @@ RSpec.describe "User can search for rdvs" do
         sign_up
         continue_to_rdv(first_motif, address: "03 Rue Lambert, Paris, 75016")
         add_relative
-        confirm_rdv(first_motif)
+        check_post_confirm_info(first_motif)
         expect(page).to have_content("RDV par visioconférence")
       end
     end
@@ -288,8 +288,6 @@ RSpec.describe "User can search for rdvs" do
       expect(page).to have_content("Vos informations")
       click_button("Continuer")
       expect(page).to have_content("Choix de l’usager")
-      click_button("Continuer")
-      expect(page).to have_content("Confirmation")
       click_link("Confirmer mon RDV")
 
       expect(page).to have_content("Votre RDV")
@@ -514,14 +512,10 @@ RSpec.describe "User can search for rdvs" do
     # on vérifie directement que le proche est bien enregistré dans la base.
     wait_for { User.exists?(first_name: "Mathieu", last_name: "Lapin") }.to be(true)
 
-    click_button("Continuer")
+    click_link("Confirmer mon RDV")
   end
 
-  def confirm_rdv(motif, lieu = nil)
-    expect(page).to have_content("Informations de contact")
-    expect(page).to have_content("Mathieu LAPIN")
-    click_link("Confirmer mon RDV")
-
+  def check_post_confirm_info(motif, lieu = nil)
     expect(page).to have_content("Votre RDV")
     expect(page).to have_content(lieu.address) if lieu.present?
     expect(page).to have_content(motif.name)
