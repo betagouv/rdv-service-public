@@ -1,0 +1,26 @@
+.fr-p-2w
+  h1
+    | Demandes d'ouverture d'espace
+    - if params[:status].blank?
+      = " en attente"
+    - elsif params[:status] == "accepted"
+      = " acceptées"
+    - elsif params[:status] == "refused"
+      = " refusées"
+
+  = link_to "Voir les demandes acceptées", super_admins_territory_creation_requests_path(status: "accepted")
+  br
+  = link_to "Voir les demandes refusées", super_admins_territory_creation_requests_path(status: "refused")
+  br
+
+  - @territory_creation_requests.each do |request|
+    .fr-card.fr-enlarge-link.fr-card--horizontal.fr-card--sm
+      .fr-card__body
+        .fr-card__content
+          h3.fr-card__title
+            = link_to(edit_super_admins_territory_creation_request_path(request.id))
+              = request.territory_name
+          p.fr-card__desc
+            = "demandé par #{request.agent.full_name}"
+            br
+            = request.agent.email
