@@ -14,8 +14,9 @@ const defaultFullCalendarConfig = () => ({
   },
   slotMinTime: '07:00:00',
   slotMaxTime: '20:00:00',
+  eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
-    timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
+  timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
   // If this is removed, there is a bug that causes the events in the calendar to be show at the wrong
   // time for agents that are not in the Paris timezone.
   // The proper fix for this would be to make sure we store all rdvs with the right timezone, but that's a much bigger project.
@@ -28,31 +29,33 @@ const defaultFullCalendarConfig = () => ({
   // for the rdv. This seems unlikely for now.
 })
 
+function eventClassNames(info) {
+  let extendedProps = info.event.extendedProps;
+  const customCssClasses = [];
+
+  if(["seen", "excused", "revoked"].includes(extendedProps.status)) {
+    customCssClasses.push("rdv-fc-event-barre");
+  }
+
+  if (extendedProps.unauthorizedRdvExplanation) {
+    customCssClasses.push("rdv-fc-unauthorized-rdv");
+  }
+
+  if (extendedProps.userInWaitingRoom == true) {
+    customCssClasses.push("rdv-fc-event-waiting");
+  }
+
+  return customCssClasses;
+}
+
 function eventRenderer(selectedEventId) {
   // On renvoie une fonction qui aura le bon selectedEventId
   return (info) => {
     let $el = $(info.el);
     let extendedProps = info.event.extendedProps;
 
-    if (extendedProps.past == true) {
-      $el.addClass("fc-event-past");
-    };
-    if (extendedProps.duration <= 30) {
-      $el.addClass("fc-event-small");
-    };
-    if (extendedProps.unauthorizedRdvExplanation) {
-      $el.addClass("fc-unauthorized-rdv");
-    };
-
-    if (selectedEventId && info.event.id == selectedEventId)
+    if (selectedEventId && info.event.id == selectedEventId) {
       $el.addClass("rdv-shake");
-
-    if(["seen", "excused", "revoked"].includes(extendedProps.status)) {
-      $el.addClass("rdv-fc-event-barre");
-    }
-
-    if (extendedProps.userInWaitingRoom == true) {
-      $el.addClass("fc-event-waiting");
     }
 
     if (extendedProps.jour_feries == true) {

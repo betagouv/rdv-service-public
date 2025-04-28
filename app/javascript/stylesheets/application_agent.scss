@@ -104,7 +104,7 @@
 
 @import "./structure/bootstrap_overrides";
 
-a[href]:not(.fc-event-waiting):not(.fr-link) {
+a[href]:not(.rdv-fc-event-waiting):not(.fr-link) {
   background-image: none; // pour éviter le soulignement des liens
 }
 

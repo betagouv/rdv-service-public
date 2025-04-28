@@ -72,7 +72,7 @@ $rdvs-fc-header-bg-color: $gray-200;
   }
 }
 
-.fc-event-waiting {
+.rdv-fc-event-waiting {
   background-image: linear-gradient(
     45deg,
     rgba(255, 255, 255, 0.3) 25%,
@@ -87,7 +87,7 @@ $rdvs-fc-header-bg-color: $gray-200;
   background-size: 1rem 1rem;
 }
 
-.fc-unauthorized-rdv {
+.rdv-fc-unauthorized-rdv {
   cursor: not-allowed;
 }
 
