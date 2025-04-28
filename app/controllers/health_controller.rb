@@ -7,15 +7,21 @@ class HealthController < ApplicationController
   end
 
   def jobs_queues
-    counts1 = compute_enqueued_jobs_count_by_queue
-    queues_with_many_jobs = counts1.select { |_queue, count| count > 10 }
-    return render(status: :ok, json: {}) if queues_with_many_jobs.none?
+    queues = [
+      { name: "latency_30s", pending_jobs_threshold: 10, delay: 30.seconds },
+      { name: "latency_5m", pending_jobs_threshold: 10, delay: 5.minutes },
+      { name: "latency_whenever", pending_jobs_threshold: 30, delay: nil },
+    ]
+    queues.each do |queue|
+      query = GoodJob::Job.where(executions_count: 0).where(queue_name: queue[:name])
+      if queue[:delay]
+        query = query.where("scheduled_at < ?", Time.zone.now - (queue[:delay] / 10)) # le petit délai évite de compter les jobs qui viennent d’être enqueued
+      end
+      queue[:pending_jobs_count] = query.count
+    end
+    congested_queues = queues.select { _1[:pending_jobs_count] >= _1[:pending_jobs_threshold] }
 
-    sleep(5) # leave some time for some jobs to be performed
-    counts2 = compute_enqueued_jobs_count_by_queue
-    congested_queues = queues_with_many_jobs.select { |queue, count1| counts2.fetch(queue, 0) >= count1 }.keys
-
-    return render(status: :service_unavailable, json: { congested_queues: }) if congested_queues
+    return render(status: :service_unavailable, json: { congested_queues: }) if congested_queues.any?
 
     render(status: :ok, json: {})
   end
@@ -39,15 +45,5 @@ class HealthController < ApplicationController
     else
       render status: :ok, json: context
     end
-  end
-
-  private
-
-  def compute_enqueued_jobs_count_by_queue
-    GoodJob::Job
-      .group(:queue_name)
-      .where("scheduled_at < ?", Time.zone.now)
-      .where(finished_at: nil)
-      .count
   end
 end
