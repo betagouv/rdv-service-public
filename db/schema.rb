@@ -750,8 +750,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_16_123443) do
 
   create_table "territory_creation_requests", force: :cascade do |t|
     t.bigint "agent_id", null: false
-    t.string "organisation_name"
     t.string "territory_name"
+    t.string "organisation_name"
+    t.string "service_name"
     t.enum "response", enum_type: "creation_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
