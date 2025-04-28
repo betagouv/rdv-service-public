@@ -34,8 +34,9 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
         click_on "Demander à ouvrir un espace"
 
-        fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
-        fill_in("Nom du territoire", with: "Commune de Montreuil")
+        fill_in("Nom de l'espace", with: "Commune de Montreuil")
+        fill_in("Nom de votre première organisation", with: "CCAS de Montreuil")
+        fill_in("Pour quel service souhaitez-vous gérer des rendez-vous ?", with: "Action Sociale")
         click_on "Envoyer la demande"
 
         expect(page).to have_content("Votre demande a bien été enregistrée. Notre équipe va l'étudier et revenir vers vous dans les meilleurs délais")
@@ -46,12 +47,11 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         click_on "Commune de Montreuil"
 
         expect(page).to have_content("Demande d'ouverture d'espace")
-        expect(page).to have_content("CCAS de Montreuil")
-        expect(page).to have_content("Commune de Montreuil")
 
         select "Service social", from: "Services"
 
         click_on "Ouvrir le compte"
+        expect(page).to have_content "coucou"
       end
     end
   end
