@@ -79,7 +79,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
             agent_ids: [agent_mayra.id, agent_stefan.id]
           )
           expect(form.rdv.starts_at).to eq Time.zone.parse("2025-04-28 10:30")
-          expect(Agent.where(id: form.selected_agent_ids)).to contain_exactly(agent_mayra, agent_stefan)
+          expect(form.rdv.agents).to contain_exactly(agent_mayra, agent_stefan)
           rdv2.reload
           expect(rdv2.starts_at).to eq Time.zone.parse("2025-04-29 18:00")
           expect(rdv2.agents).to contain_exactly(agent_mayra)
@@ -107,7 +107,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
           ignore_benign_errors: "1"
         )
         expect(form.rdv.starts_at).to eq Time.zone.parse("2025-04-28 10:30")
-        expect(Agent.where(id: form.selected_agent_ids)).to contain_exactly(agent_mayra)
+        expect(form.rdv.agents).to contain_exactly(agent_mayra)
         rdv2.reload
         expect(rdv2.starts_at).to eq Time.zone.parse("2025-04-28 10:30")
         expect(rdv2.agents).to contain_exactly(agent_mayra)
@@ -123,7 +123,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
           agent_ids: [agent_mayra.id]
         )
         expect(form.rdv.starts_at).to eq Time.zone.parse("2025-04-28 10:30")
-        expect(Agent.where(id: form.selected_agent_ids)).to contain_exactly(agent_mayra)
+        expect(form.rdv.agents).to contain_exactly(agent_mayra)
         rdv2.reload
         expect(rdv2.starts_at).to eq Time.zone.parse("2025-04-29 18:00")
         expect(rdv2.agents).to contain_exactly(agent_mayra, agent_stefan)

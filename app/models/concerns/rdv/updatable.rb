@@ -2,35 +2,10 @@ module Rdv::Updatable
   extend ActiveSupport::Concern
 
   def update_and_notify(author, attributes, &block)
-    @old_agent_ids = agent_ids.to_a
-    assign_attributes(attributes)
-    save_and_notify(author, &block)
-  end
+    raise ArgumentError, "agent_ids est accepté mais pas agents" if attributes.key?(:agents)
 
-  def save_and_notify(author)
-    Rdv.transaction do
-      self.updated_at = Time.zone.now
-      previous_participations = participations.select(&:persisted?)
-      remove_duplicate_participations
-
-      set_created_by_for_new_participations(author)
-
-      if status_changed? && valid?
-        self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
-        change_participation_statuses
-        # Reload is needed after .persisted? method call.
-        participations.reload
-      end
-
-      yield self if block_given? # yield RDV before saving, can be used to run policy check
-
-      if save
-        notify!(author, previous_participations)
-        true
-      else
-        false
-      end
-    end
+    res = Rdv.transaction { do_update_and_notify(author, attributes, &block) }
+    res.to_boolean # Rdv.transaction returns nil when rollbacked
   end
 
   def participation_token(user_id)
@@ -65,13 +40,36 @@ module Rdv::Updatable
     previous_changes["starts_at"].present?
   end
 
+  def agents_changed?
+    # we cannot use ActiveModel::Dirty methods here for this has_many association
+    @old_agent_ids.to_set != agent_ids.to_set
+  end
+
   def rdv_updated?
-    # TODO : How to pass the list of old agents from Admin::EditRdvForm to Updatable ?
-    # TODO : add agents_changed?
-    starts_at_changed? || lieu_changed?
+    starts_at_changed? || lieu_changed? || agents_changed?
   end
 
   private
+
+  def do_update_and_notify(author, attributes)
+    @old_agent_ids = agent_ids.to_a
+    assign_attributes(attributes) # this can assign agent_ids and thus persist
+    self.updated_at = Time.zone.now
+    previous_participations = participations.select(&:persisted?)
+    remove_duplicate_participations
+    set_created_by_for_new_participations(author)
+    if status_changed? && valid?
+      self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
+      change_participation_statuses
+      participations.reload # reload is needed after .persisted? method call
+    end
+    yield(self) if block_given? # yield RDV before saving, can be used to run policy check
+    save!
+    notify!(author, previous_participations)
+    true
+  rescue ActiveRecord::RecordInvalid, ActiveModel::ValidationError
+    raise ActiveRecord::Rollback
+  end
 
   def remove_duplicate_participations
     existing_participations = Participation.where(rdv_id: id).to_a # pour éviter une requête N+1
