@@ -1,19 +1,21 @@
 class CreneauxSearch::ForUser
-  def initialize(motif:, date_range: nil, user: nil, lieu: nil, geo_search: nil)
+  def initialize(motif:, date_range: nil, user: nil, lieu: nil, geo_search: nil, duration_in_min: nil)
     @user = user
     @motif = motif
     @lieu = lieu
     @date_range = date_range
     @geo_search = geo_search
+    @duration_in_min = duration_in_min
   end
 
-  def self.creneau_for(motif:, starts_at:, user: nil, lieu: nil, geo_search: nil)
+  def self.creneau_for(motif:, starts_at:, user: nil, lieu: nil, geo_search: nil, duration_in_min: nil)
     search = new(
       user: user,
       motif: motif,
       lieu: lieu,
       date_range: (starts_at.to_date..(starts_at + 1.day).to_date),
-      geo_search: geo_search
+      geo_search: geo_search,
+      duration_in_min:
     )
 
     search.all_creneaux.select { _1.starts_at == starts_at }.sample
@@ -24,7 +26,7 @@ class CreneauxSearch::ForUser
 
     from = [date_range.begin, @motif.start_booking_delay].max
 
-    CreneauxSearch::NextAvailability.find(motif, @lieu, attributed_agents, from: from, to: @motif.end_booking_delay)
+    CreneauxSearch::NextAvailability.find(motif, @lieu, attributed_agents, from: from, to: @motif.end_booking_delay, duration_in_min:)
   end
 
   def creneaux
@@ -47,12 +49,15 @@ class CreneauxSearch::ForUser
 
     return [] if reduced_date_range.blank?
 
-    CreneauxSearch::Calculator.available_slots(motif:, lieu: @lieu, date_range: reduced_date_range, agents: attributed_agents)
+    CreneauxSearch::Calculator.available_slots(
+      motif:, lieu: @lieu, date_range: reduced_date_range, agents: attributed_agents,
+      **duration_in_min.present? ? { duration_in_min: } : {}
+    )
   end
 
   private
 
-  attr_reader :motif, :date_range
+  attr_reader :motif, :date_range, :duration_in_min
 
   def reduced_date_range
     @reduced_date_range ||= CreneauxSearch::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délai min du motif

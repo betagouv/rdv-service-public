@@ -100,10 +100,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     end
 
     def time_slots_for_lieu_and_motif(lieu:, motif:)
-      # on change en mémoire, la durée par défaut du motif pour rechercher des créneaux
-      # d'une durée adaptée au nombre de participants au Rdv
-      motif.default_duration_in_min *= users_count
-      CreneauxSearch::ForUser.new(lieu:, motif:, date_range:)
+      duration_in_min = motif.default_duration_in_min * users_count
+      CreneauxSearch::ForUser.new(lieu:, motif:, date_range:, duration_in_min:)
         .creneaux
         .map { creneau_to_time_slot(_1) }
         .uniq
@@ -124,7 +122,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
           lieu_id: creneau.lieu_id,
           motif_id: creneau.motif.id,
           public_link_organisation_id: creneau.motif.organisation_id,
-          duration: creneau.motif.default_duration_in_min
+          duration: creneau.duration_in_min
         ),
       }
     end

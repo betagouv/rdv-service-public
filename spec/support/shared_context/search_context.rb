@@ -3,7 +3,7 @@ RSpec.shared_examples "SearchContext" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
   let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
-  let!(:motif) { create(:motif, name: "RSA orientation sur site", motif_category: rsa_orientation, organisation: organisation) }
+  let!(:motif) { create(:motif, name: "RSA orientation sur site", motif_category: rsa_orientation, organisation: organisation, default_duration_in_min: 30) }
   let!(:rsa_orientation_on_phone_platform) { create(:motif_category, name: "RSA orientation sur plateforme téléphonique", short_name: "rsa_orientation_on_phone_platform") }
   let!(:motif2) { create(:motif, name: "RSA orientation sur plateforme téléphonique", motif_category: rsa_orientation_on_phone_platform, organisation: organisation, service: motif.service) }
   let!(:departement_number) { "75" }
@@ -152,14 +152,15 @@ RSpec.shared_examples "SearchContext" do
           motif: motif,
           lieu: lieu,
           date_range: search_context.date_range,
-          geo_search: geo_search
+          geo_search: geo_search,
+          duration_in_min: 30
         )
         search_context.creneaux_search
       end
     end
 
     context "when lieu is nil" do
-      let!(:motif) { create(:motif, :by_phone, organisation: organisation) }
+      let!(:motif) { create(:motif, :by_phone, organisation: organisation, default_duration_in_min: 30) }
 
       it "returns a CreneauxSearch::ForUser using no lieu and the selected motif" do
         create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
@@ -173,7 +174,8 @@ RSpec.shared_examples "SearchContext" do
           motif: motif,
           lieu: nil,
           date_range: search_context.date_range,
-          geo_search: geo_search
+          geo_search: geo_search,
+          duration_in_min: 30
         )
         search_context.creneaux_search
       end

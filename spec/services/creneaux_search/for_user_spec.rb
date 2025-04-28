@@ -224,4 +224,23 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
       it { is_expected.to be_nil }
     end
   end
+
+  context "with duration_in_min argument" do
+    let(:creneaux_search) { described_class.new(user: user, motif:, lieu:, date_range:, duration_in_min: 60) }
+    let(:user) { create(:user) }
+    let(:motif) { create(:motif, organisation:, default_duration_in_min: 30) }
+
+    it "passes down to calculator" do
+      allow(CreneauxSearch::Calculator).to receive(:available_slots)
+        .with(motif:, lieu:, date_range:, agents: [], duration_in_min: 60)
+        .and_return([creneau_double])
+      expect(creneaux_search.creneaux).to eq [creneau_double]
+    end
+
+    it "passes down to NextAvailability" do
+      allow(CreneauxSearch::NextAvailability).to receive(:find)
+        .with(motif, lieu, [], hash_including(duration_in_min: 60))
+      creneaux_search.next_availability
+    end
+  end
 end
