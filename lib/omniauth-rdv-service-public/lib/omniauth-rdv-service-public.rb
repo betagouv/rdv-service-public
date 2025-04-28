@@ -1,1 +1,1 @@
-require "omniauth/strategies/rdv_service_public" # rubocop:disable Naming/FileName
+require_relative "omniauth/strategies/rdv_service_public" # rubocop:disable Naming/FileName
