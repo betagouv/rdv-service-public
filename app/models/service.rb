@@ -19,7 +19,8 @@ class Service < ApplicationRecord
   has_many :territories, through: :territory_services
 
   # Validations
-  validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, :short_name, presence: true
+  validates :name, uniqueness: { case_sensitive: false }
 
   # Scopes
   default_scope { order(Arel.sql("unaccent(LOWER(services.name))")) }

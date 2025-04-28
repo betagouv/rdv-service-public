@@ -702,7 +702,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_02_123003) do
     t.datetime "updated_at", null: false
     t.string "short_name", null: false
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
-    t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
     t.index ["name"], name: "index_services_on_name"
   end
 
