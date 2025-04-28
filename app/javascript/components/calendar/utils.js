@@ -47,6 +47,7 @@ function eventRenderer(selectedEventId) {
     if (selectedEventId && info.event.id == selectedEventId)
       $el.addClass("rdv-shake");
 
+    // Ajoute les classes .fc-event-excused, .fc-event-seen et .fc-event-revoked
     $el.addClass("fc-event-" + extendedProps.status);
 
     if (extendedProps.userInWaitingRoom == true) {
