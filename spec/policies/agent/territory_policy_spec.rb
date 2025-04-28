@@ -63,6 +63,40 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
       it_behaves_like "not permit actions", :territory, :update?, :edit?, :allow_to_manage_teams?, :allow_to_manage_access_rights?
     end
   end
+
+  describe "#create?" do
+    subject { described_class.new(agent, territory) }
+
+    let(:territory) { Territory.new }
+    let(:agent) { create(:agent) }
+
+    context "when the agent was connected from an authorized OAuth application" do
+      let(:application) { create(:oauth_application, default_service: service) }
+      let(:service) { create(:service) }
+
+      let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
+
+      it "authorizes the creation" do
+        expect(subject.create?).to be_truthy
+      end
+
+      context "when the agent already has a territory" do
+        let(:agent) { create(:agent, :with_territory_access_rights, basic_role_in_organisations: [create(:organisation)]) }
+
+        it "doesn't authorize the creation" do
+          expect(subject.create?).to be_falsey
+        end
+      end
+    end
+
+    context "when the agent only logged in from the homepage with ProConnect" do
+      let(:agent) { create(:agent) }
+
+      it "doesn't authorize the creation" do
+        expect(subject.create?).to be_falsey
+      end
+    end
+  end
 end
 
 RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
@@ -71,15 +105,69 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
       described_class.new(agent, Territory).resolve
     end
 
-    context "misc state" do
-      let!(:territory1) { create(:territory) }
-      let!(:territory2) { create(:territory) }
-      let!(:territory3) { create(:territory) }
-      let!(:agent) { create(:agent, role_in_territories: [territory1, territory2]) }
+    context "many possible cases" do
+      let!(:agent) { create(:agent) }
 
-      it { is_expected.to include(territory1) }
-      it { is_expected.to include(territory2) }
-      it { is_expected.not_to include(territory3) }
+      let!(:territory_no_rights_in_db) do
+        create(:territory, name: "Territoire où je n'ai aucun droit")
+      end
+
+      let!(:territory_allow_nothing) do
+        create(:territory, name: "Territoire ou j'ai un AgentTerritorialAccessRight avec tout à false").tap do |territory|
+          agent.agent_territorial_access_rights.create!(territory:)
+        end
+      end
+
+      let!(:territory_with_role) do
+        create(:territory, name: "Territoire ou j'ai un AgentTerritorialRole").tap do |territory|
+          agent.territorial_roles.create!(territory:)
+        end
+      end
+
+      let!(:territory_manage_teams) do
+        create(:territory, name: "Territoire ou j'ai un AgentTerritorialAccessRight avec allow_to_manage_teams: true").tap do |territory|
+          agent.agent_territorial_access_rights.create!(territory:, allow_to_manage_teams: true)
+        end
+      end
+      let!(:territory_invite_agents) do
+        create(:territory, name: "Territoire ou j'ai un AgentTerritorialAccessRight avec allow_to_invite_agents: true").tap do |territory|
+          agent.agent_territorial_access_rights.create!(territory:, allow_to_invite_agents: true)
+        end
+      end
+      let!(:territory_manage_access_rights) do
+        create(:territory, name: "Territoire ou j'ai un AgentTerritorialAccessRight avec allow_to_manage_access_rights: true").tap do |territory|
+          agent.agent_territorial_access_rights.create!(territory:, allow_to_invite_agents: true)
+        end
+      end
+
+      let!(:territory_with_role_and_rights) do
+        create(:territory, name: "Territoire ou j'ai un à la fois un role et des rights").tap do |territory|
+          agent.territorial_roles.create!(territory:)
+          agent.agent_territorial_access_rights.create!(territory:, allow_to_manage_access_rights: true)
+        end
+      end
+
+      let!(:territory_with_role_for_another_agent) do
+        create(:territory, name: "Territoire où quelqu'un d'autre a un AgentTerritorialRole").tap do |territory|
+          create(:agent).territorial_roles.create!(territory:)
+        end
+      end
+
+      let!(:territory_with_rights_for_another_agent) do
+        create(:territory, name: "Territoire où quelqu'un d'autre a un AgentTerritorialAccessRight avec allow_to_manage_teams: true").tap do |territory|
+          create(:agent).agent_territorial_access_rights.create!(territory:, allow_to_manage_teams: true)
+        end
+      end
+
+      it "includes any territory where I either have a role or any right" do
+        expect(subject).to contain_exactly(
+          territory_with_role,
+          territory_manage_teams,
+          territory_invite_agents,
+          territory_manage_access_rights,
+          territory_with_role_and_rights
+        )
+      end
     end
   end
 end

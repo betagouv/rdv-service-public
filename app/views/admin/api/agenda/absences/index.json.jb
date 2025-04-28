@@ -1,6 +1,6 @@
 @absence_occurrences.map do |absence, occurrence|
   {
-    title: absence.title,
+    title: sanitize(absence.title),
     start: occurrence.starts_at.as_json,
     end: occurrence.ends_at.as_json,
     backgroundColor: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,

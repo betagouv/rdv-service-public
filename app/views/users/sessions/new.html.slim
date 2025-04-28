@@ -12,9 +12,9 @@
 
     h2 Se connecter avec son compte
 
-    = form_for resource, as: resource_name, url: session_path(resource_name), builder: DsfrFormBuilder do |f|
+    = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
       = render "devise/shared/error_messages", resource: resource
-      = f.dsfr_email_field :email, autofocus: true, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse email"
+      = f.dsfr_email_field :email, autofocus: true, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse email", autocomplete: "email"
       = render "common/form/current_password_input", f:, forgotten_password_link: true
 
       .rdv-text-align-center

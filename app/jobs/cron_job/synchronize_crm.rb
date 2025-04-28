@@ -1,8 +1,8 @@
-class CronJob::SynchronizeCrm < ApplicationJob
+class CronJob::SynchronizeCrm < CronJob
   # Base de données "Activation"
   # ID récupéré dans l’URL de la page
   # Cf: https://developers.notion.com/reference/retrieve-a-database
-  NOTION_DATABASE_ID = "81a35c7b2490464590a408bbbb78ca2e".freeze
+  NOTION_DATABASE_ID = ENV["NOTION_DATABASE_ID"].freeze
 
   def perform
     return unless ENV["NOTION_API_SECRET"]

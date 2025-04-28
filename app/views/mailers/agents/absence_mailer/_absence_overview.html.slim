@@ -10,7 +10,7 @@
     .clear
   div.row-result
     span.title Répétition :
-    span.float-right= @absence.recurring? ? "Récurrente" : po_exceptionnelle_tag(@absence)
+    span.float-right= @absence.recurring? ? "Récurrente" : exceptionnelle_tag(@absence)
     .clear
   div.row-result.no-border
     span.title Dates :

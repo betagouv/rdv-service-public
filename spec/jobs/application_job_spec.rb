@@ -26,6 +26,9 @@ RSpec.describe ApplicationJob, type: :job do
 
       expect(sentry_events.last.exception.values.first.value).to match("Something unexpected happened (RuntimeError)")
       expect(sentry_events.last.exception.values.first.type).to eq("RuntimeError")
+
+      # Expect ajouté lors du passage à Ruby 3.4 : la stacktrace n'était plus remontée
+      expect(sentry_events.last.exception.values.first.stacktrace.frames.map(&:filename)).to include("spec/jobs/application_job_spec.rb")
     end
   end
 

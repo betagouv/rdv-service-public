@@ -1,13 +1,13 @@
 class Users::RdvWizardStepsController < UserAuthController
+  layout "application_base"
+
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
   EXTRA_PERMITTED_PARAMS = [
-    :lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code, :rdv_collectif_id,
-    :street_ban_id, :address, :user_selected_organisation_id,
+    *WebSearchContext::ADDRESS_SELECTION_PARAMS,
+    :lieu_id, :where, :created_user_id, :rdv_collectif_id, :user_selected_organisation_id,
     :public_link_organisation_id, :duration,
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
-  after_action :allow_iframe
-  before_action :set_step_titles
 
   include TokenInvitable
 
@@ -16,7 +16,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv = @rdv_wizard.rdv
     authorize(@rdv, policy_class: User::RdvPolicy)
     if @rdv_wizard.creneau.present?
-      render current_step
+      render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
     else
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
       redirect_to(prendre_rdv_path(@rdv_wizard.to_query))
@@ -28,41 +28,59 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv = @rdv_wizard.rdv
     skip_authorization
     if @rdv_wizard.valid? && @rdv_wizard.user.benign_errors.blank? && @rdv_wizard.save
-      redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_index))
+      redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step[:number]))
     else
-      render current_step
+      render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
     end
   end
 
   protected
 
+  def steps
+    steps = {
+      step1: {
+        name: "step1",
+        number: 1,
+        title: "Vos informations",
+        next_step: current_user.signed_in_with_invitation_token? ? :step3 : :step2,
+        stepper_index: 1,
+      },
+      step2: {
+        name: "step2",
+        number: 2,
+        title: "Choix de l’usager",
+        next_step: :step3,
+        stepper_index: 2,
+      },
+      step3: {
+        name: "step3",
+        number: 3,
+        title: "Confirmation",
+        stepper_index: current_user.signed_in_with_invitation_token? ? 2 : 3,
+      },
+    }
+
+    # Dans le cas d'une invitation, on passe l’étape 2
+    steps.delete(:step2) if current_user.signed_in_with_invitation_token?
+
+    steps
+  end
+
   def current_step
-    return UserRdvWizard::STEPS.first if params[:step].blank?
+    return steps[:step1] if params[:step].blank?
 
     step = "step#{params[:step]}"
-    raise "Invalid step: #{step.inspect}" unless step.in?(UserRdvWizard::STEPS)
+    raise "Invalid step: #{step.inspect}" unless steps.key?(step.to_sym)
 
-    step
+    steps[step.to_sym]
   end
 
-  def next_step_index
-    idx = current_step_index + 2 # steps start at 1 + increment
-    idx += 1 if current_step_index.zero? && current_user.signed_in_with_invitation_token? # we skip the step 2 in the context of an invitation
-    idx
-  end
-
-  def set_step_titles
-    @step_titles = (0..3).map do |idx|
-      I18n.t("users.rdv_wizard_steps.step#{idx}.title") unless idx == 2 && current_user.signed_in_with_invitation_token?
-    end.compact
-  end
-
-  def current_step_index
-    UserRdvWizard::STEPS.index(current_step)
+  def next_step
+    steps[current_step[:next_step]]
   end
 
   def rdv_wizard_for(current_user, request_params)
-    klass = "UserRdvWizard::#{current_step.camelize}".constantize
+    klass = "UserRdvWizard::#{current_step[:name].camelize}".constantize
     klass.new(current_user, request_params)
   end
 
@@ -82,6 +100,7 @@ class Users::RdvWizardStepsController < UserAuthController
                     :phone_number,
                     :birth_date,
                     :email,
+                    :notification_email,
                     :address,
                     :caisse_affiliation,
                     :affiliation_number,

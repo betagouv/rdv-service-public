@@ -39,7 +39,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     # create user with mail
     fill_in :user_first_name, with: "Jean-Paul"
     fill_in :user_last_name, with: "Orvoir"
-    expect(page).to have_selector(".user_email")
+    fill_in :user_email, with: "jporvoir@bidule.com"
     click_button("Créer usager")
 
     # create user without email
@@ -100,6 +100,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       step2
       step3(:enabled)
       step4
+      expect(page).to have_content("Le rendez-vous a été créé.")
 
       expect(user.rdvs.count).to eq(1)
       rdv = user.rdvs.first
@@ -131,6 +132,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
 
         step3(:enabled)
         step4
+        expect(page).to have_content("Le rendez-vous a été créé.")
 
         expect(user_from_other_organisation.rdvs.count).to eq(1)
         expect(user_from_other_organisation.reload.organisations).to contain_exactly(organisation, other_organisation)
@@ -173,6 +175,23 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         end)
       end
     end
+
+    describe "with a user with a notification email" do
+      let(:user_with_notification_email) { create(:user, :without_devise_email, notification_email: "user_with_notif_email@test.com", organisations: [organisation]) }
+
+      it "works", js: true do
+        step1
+        select_user(user_with_notification_email)
+        click_button("Continuer")
+        step3(:enabled)
+        expect(page).to have_content("Reçoit les notifications par email")
+        expect(page).to have_content("user_with_notif_email@test.com")
+        click_button("Confirmer le RDV")
+        expect(page).to have_content("Le rendez-vous a été créé.")
+
+        expect(user_with_notification_email.rdvs.count).to eq(1)
+      end
+    end
   end
 
   describe "create a RDV with a single_use lieu" do
@@ -181,6 +200,8 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       step2
       step3(:single_use)
       step4
+
+      expect(page).to have_content("Le rendez-vous a été créé.")
 
       expect(user.rdvs.count).to eq(1)
       rdv = user.rdvs.first

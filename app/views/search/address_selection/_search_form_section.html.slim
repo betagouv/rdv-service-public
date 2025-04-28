@@ -2,15 +2,16 @@ section.rdv-background-color-alt-blue-ecume.fr-pt-4w.fr-pb-8w
   .fr-container
     #search_form.fr-col-lg-10.fr-col-offset-lg-1
       = form_with url: prendre_rdv_path, method: :get, scope: :search do |f|
-        = f.hidden_field :departement, value: context.departement, name: "departement"
-        - if context.prescripteur?
-          = f.hidden_field :prescripteur, name: "prescripteur", value: 1
+        = f.hidden_field :departement, name: "departement", value: context.departement
         = f.hidden_field :city_code, name: "city_code", value: context.city_code
         = f.hidden_field :street_ban_id, name: "street_ban_id", value: context.street_ban_id
         = f.hidden_field :latitude, name: "latitude", value: context.latitude
         = f.hidden_field :longitude, name: "longitude", value: context.longitude
+        - if context.prescripteur?
+          = f.hidden_field :prescripteur, name: "prescripteur", value: 1
         / TODO: change input name to address and change whereInput in application.js
+        = f.label :where, "Saisissez votre adresse", class: "fr-label"
         .fr-search-bar.fr-search-bar--lg[role="search"]
-          = f.text_field :where, label: false, placeholder: "ex : 21 rue Anatole France, Calais", name: "address", class: "fr-input places-js-container", required: true, value: context.address
+          = f.text_field :where, placeholder: "ex : 21 rue Anatole France, Calais", name: "address", class: "fr-input", required: true, value: context.address, data: { "address-autocomplete": "on" }, autocomplete: "street-address"
           = button_tag :button, id: "search_submit", class: "fr-btn" do
             | Rechercher

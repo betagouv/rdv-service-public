@@ -1,4 +1,6 @@
 class Users::UsersController < UserAuthController
+  layout "application_base"
+
   def edit
     @user = current_user
     authorize(@user, policy_class: User::UserPolicy)

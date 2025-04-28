@@ -3,6 +3,7 @@ class Creneau
   include Comparable
 
   attr_accessor :starts_at, :lieu_id, :motif, :agent
+  attr_writer :duration_in_min
 
   delegate :full_name, to: :lieu, prefix: true, allow_nil: true
 
@@ -30,7 +31,7 @@ class Creneau
   end
 
   def duration_in_min
-    motif.default_duration_in_min
+    @duration_in_min || motif.default_duration_in_min
   end
 
   # Required by the Comparable module

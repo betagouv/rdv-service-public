@@ -33,7 +33,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Téléphone", with: "0611223344"
 
     # On simule que le créneau choisi est simultanément pris par quelqu'un d'autre
-    create(:rdv, starts_at: Time.zone.local(2022, 11, 15, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu)
+    create(:rdv, starts_at: Time.zone.local(2022, 11, 15, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu, organisation:)
     click_on "Confirmer le rendez-vous"
     expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
     # Dans ce cas, retour à l'étape de choix du lieu
@@ -54,7 +54,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Téléphone", with: "0123456789"
 
     click_on "Confirmer le rendez-vous"
-    expect(page).to have_content("Téléphone ne permet pas de recevoir des SMS")
+    expect(page).to have_content("Téléphone doit être un numéro de mobile")
     fill_in "Téléphone", with: "0611223344"
 
     expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(User, :count).by(1))
@@ -88,7 +88,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(created_rdv.created_by_prescripteur?).to be(true)
     expect(created_rdv.participations.first.created_by_prescripteur?).to be(true)
 
-    perform_enqueued_jobs(queue: "mailers")
+    perform_enqueued_jobs(only: ApplicationMailerDeliveryJob)
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
     expect(email_sent_to("alex@prescripteur.fr").subject).to include("RDV confirmé")
     expect(email_sent_to("alex@prescripteur.fr").body).to include("RDV Aide Numérique")
@@ -159,9 +159,11 @@ RSpec.describe "prescripteur can create RDV for a user" do
       # Le format du numéro de téléphone n'est pas exactement le même que celui en base
       fill_in "Téléphone", with: "06 11 22 33 44"
 
-      expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1)
-        .and(change(User, :count).by(0))
-        .and(change(UserProfile, :count).by(1))
+      expect do
+        click_on "Confirmer le rendez-vous"
+
+        expect(page).to have_content("Rendez-vous confirmé")
+      end.to change(Rdv, :count).by(1).and(change(User, :count).by(0)).and(change(UserProfile, :count).by(1))
 
       expect(UserProfile.last).to have_attributes(
         user: user,
@@ -190,7 +192,11 @@ RSpec.describe "prescripteur can create RDV for a user" do
         # Le format du numéro de téléphone n'est pas exactement le même que celui en base
         fill_in "Téléphone", with: "06 11 22 33 44"
 
-        expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(UserProfile, :count).by(0))
+        expect do
+          click_on "Confirmer le rendez-vous"
+
+          expect(page).to have_content("Rendez-vous confirmé")
+        end.to change(Rdv, :count).by(1).and(change(UserProfile, :count).by(0))
       end
     end
   end
@@ -215,7 +221,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
       expect(page).to have_content("Sélectionnez un créneau")
 
-      click_on(lieu.name)
+      find_all("a", text: "modifier").last.click # Retour en arrière au choix de lieu
 
       expect(page).to have_content("Sélectionnez un lieu de RDV")
       click_on lieu.name

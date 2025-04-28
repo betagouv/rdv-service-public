@@ -2,16 +2,12 @@ class Agent::RdvPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def create?
-    # Nous monitorons les cas
-    notify_agents_unauthorized unless agents_authorized?
-    notify_users_unauthorized unless users_authorized?
-
-    users_authorized?
+    users_and_agents_authorized? && motif_authorized?
   end
   alias new? create?
 
   def update?
-    same_agent_or_has_access?
+    same_agent_or_has_access? && users_authorized?
   end
   alias status? update?
 
@@ -19,9 +15,11 @@ class Agent::RdvPolicy < ApplicationPolicy
     same_agent_or_has_access? && users_authorized?
   end
 
-  # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV,
-  # qui permet à la fois de l'afficher et de le modifier
-  alias show? update?
+  def show?
+    # Nous n'examinons pas les usagers du RDV pour un show, car parfois des
+    # usagers sont retirés de l'orga, mais on veut quand-même pouvoir afficher le RDV.
+    same_agent_or_has_access?
+  end
   alias versions? show?
 
   def destroy?
@@ -42,6 +40,10 @@ class Agent::RdvPolicy < ApplicationPolicy
 
   private
 
+  def users_and_agents_authorized?
+    users_authorized? && agents_authorized?
+  end
+
   def same_service?
     @record.motif.service.in?(current_agent.services)
   end
@@ -49,16 +51,61 @@ class Agent::RdvPolicy < ApplicationPolicy
   def agents_authorized?
     return @agents_authorized if defined?(@agents_authorized)
 
-    @agents_authorized = Agent::AgentPolicy::Scope.new(pundit_user, Agent).resolve
-      .where(id: record.agent_ids).pluck(:id).to_set == record.agent_ids.to_set
+    rdv_agent_ids = record.agents_rdvs.map(&:agent).reject(&:soft_deleted?).map(&:id)
+    @agents_authorized = (authorized_agent_ids_via_scope(rdv_agent_ids) + authorized_agent_ids_via_motif(rdv_agent_ids)).to_set == rdv_agent_ids.to_set
+
+    notify_agents_unauthorized unless @agents_authorized
+
+    @agents_authorized
+  end
+
+  def authorized_agent_ids_via_scope(rdv_agent_ids)
+    Agent::AgentPolicy::Scope.new(pundit_user, Agent).resolve
+      .where(id: rdv_agent_ids).pluck(:id)
+  end
+
+  def authorized_agent_ids_via_motif(rdv_agent_ids)
+    return [] if record.motif.blank?
+
+    record.motif.authorized_agents.where(id: rdv_agent_ids).pluck(:id)
   end
 
   def users_authorized?
     return @users_authorized if defined?(@users_authorized)
 
-    participation_user_ids = record.participations.map(&:user_id)
-    @users_authorized = Agent::UserPolicy::TerritoryScope.new(pundit_user, User).resolve
-      .where(id: participation_user_ids).pluck(:id).to_set == participation_user_ids.to_set
+    participants = record.participations.map(&:user).reject(&:soft_deleted?).map(&:id).to_set
+
+    territory_scope_users = Agent::UserPolicy::TerritoryScope.new(agent_organisation_context, User).resolve
+      .where(id: participants).pluck(:id).to_set
+
+    participants_not_in_territory_scope = participants.difference(territory_scope_users)
+    @users_authorized = if participants_not_in_territory_scope.empty?
+                          # Tous les participants sont dans mon périmètre
+                          true
+                        else
+                          # Temporaire : si un usager n'est pas dans mon périmètre (orga / territoire)
+                          # mais qu'il participe à des RDV que je peux voir, c'est OK.
+                          # Voir : https://github.com/betagouv/rdv-service-public/pull/5023
+                          users_of_rdvs_i_can_see = Scope.new(current_agent, Rdv.joins(:participations).where(participations: { user_id: participants_not_in_territory_scope })).resolve
+                          users_of_rdvs_i_can_see.pluck("participations.user_id").to_set == participants_not_in_territory_scope
+                        end
+
+    notify_users_unauthorized unless @users_authorized
+
+    @users_authorized
+  end
+
+  def motif_authorized?
+    record.motif.blank? ||
+      Agent::MotifPolicy.agent_can_use_motif?(record.motif, current_agent)
+  end
+
+  def agent_organisation_context
+    if pundit_user.respond_to?(:agent) && pundit_user.respond_to?(:organisation)
+      pundit_user
+    else
+      AgentOrganisationContext.new(pundit_user, record.organisation)
+    end
   end
 
   def notify_agents_unauthorized
@@ -92,12 +139,11 @@ class Agent::RdvPolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
+      # NOTE: IMPORTANTE: Ce scope peut renvoyer des RDV doublons à cause des INNER JOIN vers les participations et les agents.
       if current_agent.secretaire?
         scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
           .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
-
       else
-
         scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
           .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
           .joins(:motif, :agents_rdvs)

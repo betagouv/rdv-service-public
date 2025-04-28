@@ -11,13 +11,25 @@ RSpec.describe "Agent can list RDVs" do
     login_as(current_agent, scope: :agent)
   end
 
+  it "displays user info for each RDV" do
+    organisation.territory.update!(enable_notes_field: true)
+    motif = create(:motif, service: current_agent.services.first, organisation:)
+    create(:rdv, organisation: organisation, agents: [current_agent], users: [user], motif: motif)
+    user.annotate!("Ma remarque", territory: organisation.territory)
+
+    visit admin_organisation_rdvs_url(organisation, current_agent)
+    expect(page).to have_content(user.full_name)
+    expect(page).to have_content(motif.name)
+    expect(page.html).to include("Ma remarque")
+  end
+
   describe "RDV visibility within organisation" do
     let!(:agent_from_same_service) { create(:agent, organisations: [organisation], service: current_agent.services.first) }
     let!(:agent_from_other_service) { create(:agent, organisations: [organisation]) }
 
     before do
       [current_agent, agent_from_same_service, agent_from_other_service].each do |agent|
-        create(:rdv, organisation: organisation, agents: [agent], motif: create(:motif, service: agent.services.first))
+        create(:rdv, organisation: organisation, agents: [agent], motif: create(:motif, service: agent.services.first, organisation:))
       end
     end
 
@@ -87,6 +99,39 @@ RSpec.describe "Agent can list RDVs" do
       expect(page).to have_content(user.reverse_full_name)
       click_on("Rafraîchir la liste")
       expect(page).to have_content(motif.name) # Permet de vérifier que le rdv est bien affiché
+    end
+  end
+
+  describe "cohérence du compteur pour les RDV avec plusieurs agents" do
+    context "un seul RDV avec deux agents" do
+      let!(:current_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+      let!(:other_agent) { create(:agent, organisations: [organisation]) }
+      let!(:rdv) { create(:rdv, organisation: organisation, agents: [current_agent, other_agent]) }
+
+      it "devrait afficher des compteurs de RDV égaux à 1" do
+        visit admin_organisation_rdvs_path(organisation, current_agent)
+        expect(page).to have_content("Exporter le RDV en XLS")
+        expect(find("h4", text: /1 rendez-vous/)).to be_present
+      end
+    end
+
+    context "panaché de RDV" do
+      let!(:current_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+      let!(:other_agent) { create(:agent, organisations: [organisation]) }
+      let!(:other_agent2) { create(:agent, organisations: [organisation]) }
+
+      before do
+        create(:rdv, organisation: organisation, agents: [current_agent, other_agent])
+        create(:rdv, organisation: organisation, agents: [current_agent])
+        create(:rdv, organisation: organisation, agents: [other_agent])
+        create(:rdv, organisation: organisation, agents: [current_agent, other_agent, other_agent2])
+      end
+
+      it "devrait afficher le bon nombre de RDV" do
+        visit admin_organisation_rdvs_path(organisation, current_agent)
+        expect(page).to have_content("Exporter les 4 RDV en XLS")
+        expect(find("h4", text: /4 rendez-vous/)).to be_present
+      end
     end
   end
 end

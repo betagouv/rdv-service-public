@@ -1,4 +1,18 @@
 module AgentsHelper
+  def may_need_onboarding_help?
+    # Pour éviter d'avoir des problèmes de perfs en faisant un COUNT(*) sur tous les rdvs de l'organisation,
+    # on limite à 5 puisque c'est le nombre qu'on considère comme un bon indicateur que l'organisation a réussi à configurer son compte
+    current_organisation.rdvs.limit(5).count < 5
+  end
+
+  def needs_agent_search?
+    current_organisation.agents.active.limit(10).count == 10
+  end
+
+  def meet_the_team_url
+    "https://cal.com/team/rdv-service-public/temps-d-echanges"
+  end
+
   def current_agent?(agent)
     agent.id == current_agent.id
   end
@@ -41,12 +55,7 @@ module AgentsHelper
       "menu-plages-ouvertures" => "planning",
       "menu-absences" => "planning",
       "menu-rdvs-collectifs-list" => "planning",
-      "menu-agents" => "settings",
-      "menu-invitations" => "settings",
-      "menu-lieux" => "settings",
-      "menu-motifs" => "settings",
-      "menu-organisation" => "settings",
-      "menu-online-booking" => "settings",
+      "menu-settings" => "settings",
       "menu-organisation-stats" => "stats",
       "menu-stats" => "stats",
     }[content_for(:menu_item)]

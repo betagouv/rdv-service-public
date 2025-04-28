@@ -2,7 +2,6 @@ class Admin::OrganisationsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, except: :index
-  before_action :follow_unique, only: :index
 
   def index
     @organisations_by_territory = policy_scope(current_agent.organisations, policy_scope_class: Agent::OrganisationPolicy::Scope)
@@ -25,7 +24,7 @@ class Admin::OrganisationsController < AgentAuthController
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
 
     if @organisation.update(organisation_params)
-      flash[:success] = "L’organisation a été modifiée."
+      flash[:success] = "Les informations de contact ont été modifiées"
       redirect_to admin_organisation_path(@organisation)
     else
       render :edit
@@ -47,7 +46,7 @@ class Admin::OrganisationsController < AgentAuthController
     )
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
     if @organisation.save
-      redirect_to admin_organisation_path(@organisation),
+      redirect_to admin_organisation_configuration_path(@organisation),
                   flash: { success: "Organisation enregistrée ! Vous pouvez maintenant lui ajouter des motifs et des lieux de rendez-vous, puis inviter des agents à la rejoindre" }
     else
       @active_agent_preferences_menu_item = :organisations
@@ -72,12 +71,5 @@ class Admin::OrganisationsController < AgentAuthController
 
   def new_organisation_params
     params.require(:organisation).permit(:name, :territory_id)
-  end
-
-  def follow_unique
-    accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
-    return if params[:follow_unique].blank? || accessible_organisations.count != 1
-
-    redirect_to admin_organisation_agent_agenda_path(accessible_organisations.first, current_agent)
   end
 end

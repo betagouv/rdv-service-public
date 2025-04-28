@@ -3,7 +3,9 @@
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
 
     h2.fr-h3 Calendrier de #{current_agent.full_name}
-    p Cliquez sur l'horaire auquel vous voulez faire le rendez-vous :
+    p Convenez d'un horaire avec #{@rdv_plan.user.full_name}, et cliquez dessus dans le calendrier
     = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: false
     - if @rdv_plan.return_url
-      = link_to "retour", @rdv_plan.return_url
+      = link_to @rdv_plan.return_url do
+        = back_icon(class: "fr-mr-1w")
+        = "Retour sur #{@rdv_plan.oauth_application.name}"

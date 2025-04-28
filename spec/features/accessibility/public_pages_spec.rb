@@ -3,8 +3,17 @@ RSpec.describe "public pages", js: true do
     expect_page_to_be_axe_clean(accessibility_path)
   end
 
-  it "contact_path page is accessible" do
-    expect_page_to_be_axe_clean(contact_path)
+  it "aide/aiguillage_role page is accessible" do
+    expect_page_to_be_axe_clean(aide_aiguillage_role_path)
+  end
+
+  it "aide/aiguillage_usager page is accessible" do
+    expect_page_to_be_axe_clean(aide_aiguillage_usager_path)
+    expect_page_to_be_axe_clean(aide_aiguillage_usager_path(raison: "annuler"))
+  end
+
+  it "aide/demande_supports#new page is accessible", js: true do
+    expect_page_to_be_axe_clean(new_aide_demande_support_path)
   end
 
   it "accueil_mds_path page is accessible" do
@@ -81,7 +90,7 @@ RSpec.describe "public pages", js: true do
           address: "Paris 75001"
         )
         visit path
-        expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+        expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
 
         expect_page_to_be_axe_clean(path)
       end

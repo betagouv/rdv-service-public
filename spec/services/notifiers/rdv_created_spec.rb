@@ -3,9 +3,9 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
 
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
-  let(:agent1) { create(:agent) }
-  let(:agent2) { create(:agent) }
-  let(:rdv) { create(:rdv, starts_at: starts_at, motif: motif, agents: [agent1, agent2], users: [user1, user2]) }
+  let(:agent1) { create(:agent, rdv_notifications_level: :others) }
+  let(:agent2) { create(:agent, rdv_notifications_level: :others) }
+  let(:rdv) { create(:rdv, starts_at: starts_at, motif: motif, agents: [agent1, agent2], users: [user1, user2], organisation: motif.organisation) }
   let(:token1) { "123456" }
   let(:token2) { "56789" }
 

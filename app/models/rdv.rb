@@ -1,7 +1,7 @@
 class Rdv < ApplicationRecord
   # Mixins
   has_paper_trail(
-    only: %w[user_ids agent_ids status starts_at ends_at lieu_id notes context participations],
+    only: %w[user_ids agent_ids status starts_at ends_at lieu_id context participations],
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
   )
 
@@ -53,6 +53,7 @@ class Rdv < ApplicationRecord
   has_many :users, through: :participations, validate: false
   has_many :webhook_endpoints, through: :organisation
   has_one :territory, through: :organisation
+  has_one :rdv_plan, dependent: :destroy
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :visio?, :bookable_by_everyone?,
@@ -67,6 +68,7 @@ class Rdv < ApplicationRecord
 
   validates :participations, presence: true, unless: :collectif?
   validates :status, inclusion: { in: COLLECTIVE_RDV_STATUSES }, if: :collectif?
+  validate :validate_motif_organisation
 
   # Hooks
   after_save :associate_users_with_organisation
@@ -209,7 +211,7 @@ class Rdv < ApplicationRecord
     date_range = CreneauxSearch::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
     return [] if date_range.blank?
 
-    CreneauxSearch::Calculator.available_slots(motif, lieu, date_range)
+    CreneauxSearch::Calculator.available_slots(motif:, lieu:, date_range:, duration_in_min:)
   end
 
   # Ces plages d'ouvertures sont utilisé pour afficher des infos
@@ -393,7 +395,10 @@ class Rdv < ApplicationRecord
     return unless motif.public_office?
 
     errors.add(:lieu, :blank) if lieu.nil?
-    errors.add(:lieu, :must_not_be_disabled) if lieu&.disabled?
+
+    if starts_at&.future?
+      errors.add(:lieu, :must_not_be_disabled) if lieu&.disabled?
+    end
   end
 
   def virtual_attributes_for_paper_trail
@@ -425,5 +430,11 @@ class Rdv < ApplicationRecord
 
   def set_created_by_for_participations
     participations.each { |participation| participation.created_by = created_by }
+  end
+
+  def validate_motif_organisation
+    if organisation_id != motif.organisation_id
+      errors.add(:motif_id, "n’appartient pas à l’organisation du RDV")
+    end
   end
 end

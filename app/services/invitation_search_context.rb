@@ -1,7 +1,7 @@
 class InvitationSearchContext < SearchContext
-  attr_reader :departement, :city_code, :street_ban_id
+  attr_reader :departement, :city_code, :street_ban_id, :address, :latitude, :longitude
 
-  INVITATION_PARAMS = %i[city_code departement street_ban_id motif_category_short_name lieu_id].freeze + [
+  INVITATION_PARAMS = %i[city_code departement street_ban_id address latitude longitude motif_category_short_name lieu_id].freeze + [
     organisation_ids: [], referent_ids: [],
   ].freeze
 
@@ -35,20 +35,4 @@ class InvitationSearchContext < SearchContext
         Motif.available_for_booking.where(organisation_id: @organisation_ids).joins(:organisation)
       )
   end
-
-  def contactable_organisations
-    @contactable_organisations ||= Organisation.where(id: @organisation_ids).contactable
-  end
-
-  def organisations_emails
-    contactable_organisations.where.not(email: [nil, ""]).pluck(:email).join(",")
-  end
-
-  def motif_category_name
-    @motif_category_short_name.present? ? MotifCategory.find_by(short_name: @motif_category_short_name)&.name : nil
-  end
-
-  private
-
-  attr_reader :referent_ids, :lieu_id
 end

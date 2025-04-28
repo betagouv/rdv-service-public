@@ -1,3 +1,5 @@
+- content_for :title, "Création de compte sur #{current_domain.name}"
+
 .fr-container
   .fr-grid-row.fr-grid-row--center
     .fr-col-xs-12.fr-col-md-8.fr-py-5w
@@ -12,7 +14,7 @@
         p.fr-mt-3w.fr-hr-or = "ou"
 
       h2 Se créer un compte avec un mot de passe
-      = form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, builder: DsfrFormBuilder, display_required_tags: false do |f|
+      = form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, builder: Dsfr::FormBuilder, display_required_tags: false do |f|
         p.fr-hint-text Tous les champs sont obligatoires.
         = render "devise/shared/dsfr_error_messages", resource: resource
         = f.hidden_field :invitation_token

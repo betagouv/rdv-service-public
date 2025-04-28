@@ -1,10 +1,6 @@
 class PrescripteurRdvWizardController < ApplicationController
   include SearchContextHelper
 
-  before_action do
-    @step_titles = ["Choix du rendez-vous", "Prescripteur", "Bénéficiaire", "Confirmation"]
-  end
-
   before_action :check_rdv_wizard_attributes, except: %i[start confirmation]
   before_action :set_rdv_wizard, only: %i[new_prescripteur new_beneficiaire create_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
@@ -19,8 +15,6 @@ class PrescripteurRdvWizardController < ApplicationController
   end
 
   def new_prescripteur
-    @step_title = @step_titles[1]
-
     @prescripteur = Prescripteur.new(session[:autocomplete_prescripteur_attributes])
   end
 
@@ -41,15 +35,12 @@ class PrescripteurRdvWizardController < ApplicationController
       redirect_to prescripteur_new_beneficiaire_path
     else
       flash[:error] = "Veuillez compléter tous les champs obligatoires"
-      @step_title = @step_titles[1]
 
       render :new_prescripteur
     end
   end
 
   def new_beneficiaire
-    @step_title = @step_titles[2]
-
     @beneficiaire = BeneficiaireForm.new
   end
 
@@ -59,7 +50,7 @@ class PrescripteurRdvWizardController < ApplicationController
     @beneficiaire = BeneficiaireForm.new(beneficiaire_params.merge(motif_id: session[:rdv_wizard_attributes]["motif_id"]))
 
     if @beneficiaire.valid?
-      session[:rdv_wizard_attributes][:user] = beneficiaire_params
+      session[:rdv_wizard_attributes][:user] = beneficiaire_params.except("ants_meeting_point_id")
 
       rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
       rdv_wizard.create!
@@ -69,13 +60,11 @@ class PrescripteurRdvWizardController < ApplicationController
       session.delete(:rdv_wizard_attributes)
       redirect_to prescripteur_confirmation_path
     else
-      @step_title = @step_titles[2]
       render :new_beneficiaire
     end
   end
 
   def confirmation
-    @step_title = @step_titles[3]
     @prescripteur = Prescripteur.find(session[:prescripteur_id])
   end
 

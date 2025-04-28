@@ -1,10 +1,9 @@
 module Users::CreneauxWizardConcern
   extend ActiveSupport::Concern
 
-  # *** Method that outputs the next step for the user to complete its rdv journey ***
-  # *** It is used in #to_partial_path to render the matching partial view ***
+  # *** Method that outputs the current step for the user to complete its rdv journey ***
   def current_step
-    if departement.blank?
+    if departement.blank? && query_params[:public_link_organisation_id].blank?
       :address_selection
     elsif !service_selected?
       :service_selection
@@ -21,10 +20,6 @@ module Users::CreneauxWizardConcern
 
   def start_date
     query_params[:date]&.to_date || super
-  end
-
-  def to_partial_path
-    "search/#{current_step}"
   end
 
   def wizard_after_creneau_selection_path(params)
@@ -45,10 +40,14 @@ module Users::CreneauxWizardConcern
     @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq(&:name_with_location_type)
   end
 
+  def motifs_grouped_by_service_id
+    @motifs_grouped_by_service_id ||= matching_motifs.group_by(&:service_id)
+  end
+
   # Retourne une liste d'organisations et leur prochaine dispo, ordonnées par date de prochaine dispo
   def next_availability_by_motifs_organisations
     @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
-      [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
+      [motif.organisation, creneaux_search_for(nil, motif).next_availability]
     end.compact.sort_by(&:last).to_h
   end
 
@@ -61,7 +60,7 @@ module Users::CreneauxWizardConcern
   end
 
   def services
-    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
+    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by { |service| I18n.transliterate(service.name.downcase) }
   end
 
   def follow_up_motifs?
@@ -72,7 +71,7 @@ module Users::CreneauxWizardConcern
     return @next_availability_by_lieux if @next_availability_by_lieux
 
     next_availability_by_lieux = Lieu.with_open_slots_for_motifs(matching_motifs).includes(:organisation).to_h do |lieu|
-      next_availability = creneaux_search_for(lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first).next_availability
+      next_availability = creneaux_search_for(lieu, matching_motifs.where(organisation: lieu.organisation).first).next_availability
       [lieu, next_availability]
     end.compact
 

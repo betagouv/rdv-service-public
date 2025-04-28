@@ -201,10 +201,10 @@ RSpec.describe RecurrenceConcern do
 
   shared_examples "#human_time_range" do
     it "does not show minutes if the are zero" do
-      object = build(factory, start_time: Tod::TimeOfDay("09:00"), end_time: Tod::TimeOfDay("12:00"))
+      object = build(factory, start_time: "09:00", end_time: "12:00")
       expect(object.human_time_range).to eq("9h-12h")
 
-      object = build(factory, start_time: Tod::TimeOfDay("09:15"), end_time: Tod::TimeOfDay("12:45"))
+      object = build(factory, start_time: "09:15", end_time: "12:45")
       expect(object.human_time_range).to eq("9h15-12h45")
     end
   end
@@ -218,6 +218,44 @@ RSpec.describe RecurrenceConcern do
       include_examples "#recurrence_ends_after_first_day"
       include_examples "#set_recurrence_ends_at"
       include_examples "#human_time_range"
+    end
+  end
+
+  describe "plage avec horaires d'après-midi" do
+    context "quand elle est exceptionnelle" do
+      it "works" do
+        plage = build(:plage_ouverture, :no_recurrence,
+                      first_day: Date.new(2025, 2, 10),
+                      start_time: "09:00",
+                      end_time: "12:00",
+                      secondary_start_time: "14:00",
+                      secondary_end_time: "18:00")
+
+        expected_occurrences = [
+          [Time.zone.parse("2025-02-10 09:00"), Time.zone.parse("2025-02-10 12:00")],
+          [Time.zone.parse("2025-02-10 14:00"), Time.zone.parse("2025-02-10 18:00")],
+        ]
+        expect(plage.occurrences_for(Date.new(2025, 2, 10)..Date.new(2025, 2, 18)).map { [_1.starts_at, _1.ends_at] }).to eq(expected_occurrences)
+      end
+    end
+
+    context "quand elle est récurrente" do
+      it "works" do
+        plage = build(:plage_ouverture, :weekly_on_monday,
+                      first_day: Date.new(2025, 2, 10),
+                      start_time: "09:00",
+                      end_time: "12:00",
+                      secondary_start_time: "14:00",
+                      secondary_end_time: "18:00")
+
+        expected_occurrences = [
+          [Time.zone.parse("2025-02-10 09:00"), Time.zone.parse("2025-02-10 12:00")],
+          [Time.zone.parse("2025-02-10 14:00"), Time.zone.parse("2025-02-10 18:00")],
+          [Time.zone.parse("2025-02-17 09:00"), Time.zone.parse("2025-02-17 12:00")],
+          [Time.zone.parse("2025-02-17 14:00"), Time.zone.parse("2025-02-17 18:00")],
+        ]
+        expect(plage.occurrences_for(Date.new(2025, 2, 10)..Date.new(2025, 2, 18)).map { [_1.starts_at, _1.ends_at] }).to eq(expected_occurrences)
+      end
     end
   end
 end

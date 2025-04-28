@@ -134,7 +134,14 @@ jobs:
           path: node_modules
       - name: Install JS dependencies
         run: yarn install
+      - name: Cache precompiled assets
+        id: cache-precompiled-assets
+        uses: actions/cache@v4
+        with:
+          key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
+          path: app/assets/builds
       - name: Precompile assets
+        if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: yarn run build
       - name: Prepare runtime log cache key
         run: ls spec/**/*.rb > tmp/spec_files.txt
@@ -193,6 +200,17 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+      # TODO: Remove this workaround that specify the Chrome version used by the CI
+      # inspired by https://github.com/teamcapybara/capybara/issues/2800#issuecomment-2731100953
+      # once the linked issue on selenium would have been fixed
+      - name: Remove image-bundled Chrome
+        run: sudo apt-get purge google-chrome-stable
+      - name: Setup stable Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 128
+          install-chromedriver: true
+          install-dependencies: true
       - name: Set up Redis
         uses: zhulik/redis-action@1.1.0
       - name: Cache js dependencies
@@ -202,7 +220,14 @@ jobs:
           path: node_modules
       - name: Install JS dependencies
         run: yarn install
+      - name: Cache precompiled assets
+        id: cache-precompiled-assets
+        uses: actions/cache@v4
+        with:
+          key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
+          path: app/assets/builds
       - name: Precompile assets
+        if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: yarn run build
       - name: Prepare runtime log cache key
         run: "ls spec/features/${{ matrix.dirname }}/**/*.rb > tmp/feature_spec_${{ matrix.dirname }}_files.txt"
@@ -226,6 +251,7 @@ jobs:
         with:
           name: artifacts-capybara
           path: tmp/capybara
+          if-no-files-found: ignore
   test_boot_without_db:
     name: Boot web server without database
     runs-on: ubuntu-latest

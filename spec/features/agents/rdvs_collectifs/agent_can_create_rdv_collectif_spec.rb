@@ -63,6 +63,7 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
     add_user(user2)
     add_user(user3)
     click_button("Enregistrer")
+    expect(page).to have_content("Le rendez-vous a été modifié.")
     expect(rdv.reload.users.count).to eq 3
   end
 end

@@ -1,41 +1,44 @@
-.row.mt-3.justify-content-center
-  .col-md-6
-    h1.mb-3 Vos rendez-vous
-    .rdv-button-group-before-card.mb-3
-      - if params[:past].present?
-        = link_to "Voir vos prochains RDV", users_rdvs_path, class: "fr-btn fr-btn--secondary"
+- content_for :title, "Vos rendez-vous"
+
+.fr-container.fr-pt-3w
+  .row.mt-3.justify-content-center
+    .col-md-6
+      h1.mb-3 Vos rendez-vous
+      .rdv-button-group-before-card.mb-3
+        - if params[:past].present?
+          = link_to "Voir vos prochains RDV", users_rdvs_path, class: "fr-btn fr-btn--secondary"
+        - else
+          = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "fr-btn fr-btn--secondary"
+        - if current_domain.provides_address_selection?
+          = render "prendre_rdv_button"
+
+      - if @rdvs.any?
+            - @rdvs.each do |rdv|
+              .card
+                .card-body
+                  = render "rdv", rdv: rdv
+            .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+
       - else
-        = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "fr-btn fr-btn--secondary"
-      - if current_domain.provides_address_selection?
-        = render "prendre_rdv_button"
-
-    - if @rdvs.any?
-          - @rdvs.each do |rdv|
-            .card
-              .card-body
-                = render "rdv", rdv: rdv
-          .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-
-    - else
-      .card
-        .card-body
-          .rdv-text-align-center.fr-my-4v
-            p.fr-mb-2v.fr-text--lead= no_rdv_for_users
-            .fr-col-4.fr-col-offset-4
-              = dsfr_svg (image_path "custom-artworks/calendar_cross.svg"), custom: true, class: "fr-responsive-img"
-  .col-md-6
-    h1.mb-3 Vos référents
-    - if current_user.referent_agents.any?
-      - current_user.referent_agents.each do |agent|
         .card
           .card-body
-            = agent.full_name_and_service
-          .card-footer.rdv-text-align-right
-            = render "prendre_rdv_button", text: "Prendre un RDV de suivi", link: prendre_rdv_path(referent_ids: [agent.id], departement: agent.agent_territorial_access_rights.first.territory.departement_number)
-    - else
-      | Vous n'avez pas de référents
+            .rdv-text-align-center.fr-my-4v
+              p.fr-mb-2v.fr-text--lead= no_rdv_for_users
+              .fr-col-4.fr-col-offset-4
+                = dsfr_svg (image_path "custom-artworks/calendar_cross.svg"), custom: true, class: "fr-responsive-img"
+    .col-md-6
+      h1.mb-3 Vos référents
+      - if current_user.referent_agents.any?
+        - current_user.referent_agents.each do |agent|
+          .card
+            .card-body
+              = agent.full_name_and_service
+            .card-footer.rdv-text-align-right
+              = render "prendre_rdv_button", text: "Prendre un RDV de suivi", link: prendre_rdv_path(referent_ids: [agent.id], departement: agent.agent_territorial_access_rights.first.territory.departement_number)
+      - else
+        | Vous n'avez pas de référents
 
-.row.mt-3.justify-content-center
-  .rdv-text-align-center.my-5
-    = link_to "https://voxusagers.numerique.gouv.fr/Demarches/2484?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=b4053638f7a51e868dea83f4361ebc23" do
-      img src="https://voxusagers.numerique.gouv.fr/static/bouton-blanc.svg" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche"
+  .row.mt-3.justify-content-center
+    .rdv-text-align-center.my-5
+      = link_to "https://voxusagers.numerique.gouv.fr/Demarches/2484?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=b4053638f7a51e868dea83f4361ebc23" do
+        img src="https://voxusagers.numerique.gouv.fr/static/bouton-blanc.svg" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche"

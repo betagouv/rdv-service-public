@@ -9,8 +9,8 @@ class GeoCoding
 
     {
       city_code: feature.dig("properties", "citycode"),
-      # 5 chars for city insee code, 1 for _, 4 for street fantoir
-      street_ban_id: feature.dig("properties", "id").first(10),
+      # 5 chars for city insee code, 1 for _, 4 (or more) for street fantoir
+      street_ban_id: feature.dig("properties", "id").split("_").first(2).join("_"),
     }
   end
 
@@ -30,7 +30,7 @@ class GeoCoding
 
   def address_api_response(address)
     address_api_response = Rails.cache.fetch("api-adresse:#{address}") do
-      Faraday.get("https://api-adresse.data.gouv.fr/search/", q: address)
+      Faraday.get("https://data.geopf.fr/geocodage/search/", q: address)
     end
 
     JSON.parse(address_api_response.body)

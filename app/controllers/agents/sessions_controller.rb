@@ -1,6 +1,20 @@
 class Agents::SessionsController < Devise::SessionsController
   before_action :exclude_signed_in_users, only: [:new]
 
+  def new
+    # Le flash d'erreur est trop agressif pour le cas d'un agent non connecté.
+    # Un flash de style info est plus adapté.
+    if flash[:alert] == I18n.t("devise.failure.unauthenticated")
+      # Contrairement aux usagers, les agents ne peuvent pas créer de compte
+      # On n'utilise donc pas `I18n.t("devise.failure.unauthenticated")`, mais une variante
+      # Il faut utiliser un flash.now pour éviter de réafficher le flash après la connexion si on utilise ProConnect
+      flash.now[:notice] = "Vous devez vous connecter pour continuer"
+      flash[:alert] = nil
+    end
+
+    super
+  end
+
   def create
     super
 
@@ -37,7 +51,10 @@ class Agents::SessionsController < Devise::SessionsController
       set_flash_message!(:notice, :signed_out)
     end
 
-    if agent_connect_id_token
+    if session[:super_admin_signed_in_as_agent]
+      session.delete(:super_admin_signed_in_as_agent)
+      redirect_to super_admins_agents_path
+    elsif agent_connect_id_token
       agent_connect_client = AgentConnectOpenIdClient::Logout.new(agent_connect_id_token)
 
       redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true

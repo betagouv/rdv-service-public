@@ -5,12 +5,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
     describe "when a rdv is created, updated and deleted" do
       it "doesn't enqueue a sync job" do
-        expect(Outlook::SyncEventJob).not_to receive(:perform_later)
-        rdv = create(:rdv, agents: [agent])
-
-        rdv.update!(starts_at: rdv.starts_at + 1.hour)
-
-        rdv.destroy
+        expect do
+          rdv = create(:rdv, agents: [agent])
+          rdv.update!(starts_at: rdv.starts_at + 1.hour)
+          rdv.destroy
+        end.not_to have_enqueued_job(Outlook::SyncEventJob)
       end
     end
   end
@@ -20,17 +19,18 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
     describe "when a rdv is created, updated and deleted" do
       it "queues a sync job for each change" do
-        allow(Outlook::SyncEventJob).to receive(:perform_later)
+        rdv = nil
+        expect do
+          rdv = create(:rdv, agents: [agent])
+        end.to have_enqueued_job(Outlook::SyncEventJob)
 
-        rdv = create(:rdv, agents: [agent])
+        expect do
+          rdv.update!(starts_at: rdv.starts_at + 1.hour)
+        end.to have_enqueued_job(Outlook::SyncEventJob)
 
-        expect(Outlook::SyncEventJob).to have_received(:perform_later)
-
-        rdv.update!(starts_at: rdv.starts_at + 1.hour)
-        expect(Outlook::SyncEventJob).to have_received(:perform_later).twice
-
-        rdv.destroy
-        expect(Outlook::SyncEventJob).to have_received(:perform_later).thrice
+        expect do
+          rdv.destroy
+        end.to have_enqueued_job(Outlook::SyncEventJob)
       end
     end
 
@@ -38,16 +38,18 @@ RSpec.describe Outlook::EventSerializerAndListener do
       let!(:rdv) { create(:rdv, agents: [agent]) }
 
       it "queues a sync job for each change" do
-        allow(Outlook::SyncEventJob).to receive(:perform_later)
-        participation = create(:participation, rdv: rdv)
+        participation = nil
+        expect do
+          participation = create(:participation, rdv: rdv)
+        end.to have_enqueued_job(Outlook::SyncEventJob)
 
-        expect(Outlook::SyncEventJob).to have_received(:perform_later)
+        expect do
+          participation.update!(status: Participation::CANCELLED_STATUSES.first)
+        end.to have_enqueued_job(Outlook::SyncEventJob)
 
-        participation.update!(status: Participation::CANCELLED_STATUSES.first)
-        expect(Outlook::SyncEventJob).to have_received(:perform_later).twice
-
-        participation.destroy
-        expect(Outlook::SyncEventJob).to have_received(:perform_later).thrice
+        expect do
+          participation.destroy
+        end.to have_enqueued_job(Outlook::SyncEventJob)
       end
     end
 
@@ -55,13 +57,14 @@ RSpec.describe Outlook::EventSerializerAndListener do
       let!(:rdv) { create(:rdv) }
 
       it "queues a sync job for each change" do
-        allow(Outlook::SyncEventJob).to receive(:perform_later)
+        agent_participation = nil
+        expect do
+          agent_participation = create(:agents_rdv, agent: agent, rdv: rdv)
+        end.to have_enqueued_job(Outlook::SyncEventJob)
 
-        agent_participation = create(:agents_rdv, agent: agent, rdv: rdv)
-        expect(Outlook::SyncEventJob).to have_received(:perform_later)
-
-        agent_participation.destroy
-        expect(Outlook::SyncEventJob).to have_received(:perform_later).twice
+        expect do
+          agent_participation.destroy
+        end.to have_enqueued_job(Outlook::SyncEventJob)
       end
     end
 
@@ -70,15 +73,14 @@ RSpec.describe Outlook::EventSerializerAndListener do
         let!(:rdv) { create(:rdv, agents: [agent]) }
 
         it "enqueues a single job after the transaction is committed" do
-          allow(Outlook::SyncEventJob).to receive(:perform_later)
-
-          ActiveRecord::Base.transaction do
-            rdv.update!(starts_at: rdv.starts_at + 1.hour)
-            create(:participation, rdv: rdv)
-            expect(Outlook::SyncEventJob).not_to have_received(:perform_later)
-          end
-
-          expect(Outlook::SyncEventJob).to have_received(:perform_later).once
+          expect do
+            ActiveRecord::Base.transaction do
+              expect do
+                rdv.update!(starts_at: rdv.starts_at + 1.hour)
+                create(:participation, rdv: rdv)
+              end.not_to have_enqueued_job(Outlook::SyncEventJob) # Rien n'est enqueued à l'intérieur de la transaction
+            end
+          end.to have_enqueued_job(Outlook::SyncEventJob) # un job est enqueued quand la transaction est committed
         end
       end
     end

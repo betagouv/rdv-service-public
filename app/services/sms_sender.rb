@@ -3,7 +3,7 @@ class SmsSender < BaseService
 
   attr_reader :phone_number, :content, :provider, :api_key
 
-  def initialize(sender_name, phone_number, content, provider, api_key, receipt_params) # rubocop:disable Metrics/ParameterLists
+  def initialize(sender_name, phone_number, content, provider, api_key, receipt_params)
     @sender_name = sender_name
     @phone_number = phone_number
     @content = formatted_content(content)
@@ -37,6 +37,13 @@ class SmsSender < BaseService
     end
   end
 
+  # These errors should not trigger a retry, because it would only fail again
+  NETSIZE_PERMANENT_ERRORS = [
+    15, # Message concatenation limit exceeded
+    103, # Invalid account name
+    117, # Invalid campaign name
+  ].freeze
+
   private
 
   def to_s
@@ -59,13 +66,6 @@ class SmsSender < BaseService
       Sentry.capture_message(error_message)
     end
   end
-
-  # These errors should not trigger a retry, because it would only fail again
-  NETSIZE_PERMANENT_ERRORS = [
-    15, # Message concatenation limit exceeded
-    103, # Invalid account name
-    117, # Invalid campaign name
-  ].freeze
 
   # NetSize
   # `Netsize Implementation Guide, REST API - SMS.pdf`

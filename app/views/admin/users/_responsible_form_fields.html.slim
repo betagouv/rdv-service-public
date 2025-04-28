@@ -11,14 +11,18 @@
   .col-md-6= f.input :first_name, **input_opts.deep_merge(frozen_fields_opts)
   .col-md-6= f.input :last_name, **input_opts
 
-- unless current_domain == Domain::RDV_MAIRIE
-  .form-row
+.form-row
+  - if current_domain != Domain::RDV_MAIRIE
     .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
+  - if current_territory.enable_birth_date_field?
     .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
 
 = f.input :phone_number, as: :tel, **input_opts
 
-= f.input(:email, as: :email, **input_opts)
+- if user.notification_email.present?
+  = f.input(:notification_email, as: :email, **input_opts)
+- else
+  = f.input(:email, as: :email, **input_opts)
 - if user.new_record?
   label
     = check_box_tag :invite_on_create, \
@@ -44,20 +48,20 @@
     | L'usager ayant validé son compte, vous ne pouvez plus modifier ses préférences
 
 - unless current_domain == Domain::RDV_MAIRIE
-  = f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
+  = f.input :address, **(input_opts.deep_merge(input_html: { data: { "address-autocomplete": "on" } }))
 
   = f.input :city_code, as: :hidden, **input_opts
   = f.input :post_code, as: :hidden, **input_opts
   = f.input :city_name, as: :hidden, **input_opts
 
 - if current_territory.enable_address_details
-  = f.input :address_details, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
+  = f.input :address_details, **(input_opts.deep_merge(input_html: { data: { "address-autocomplete": "on" } }))
 
 - if current_territory.enable_case_number
   = f.input :case_number, **input_opts
 
 - if current_territory.enable_notes_field
-  = f.input :notes, **input_opts.deep_merge(input_html: { rows: 6 })
+  = f.input :annotation_content, **input_opts.deep_merge(input_html: { rows: 6, value: user.annotation_for(current_territory)} )
 
 - if current_territory.enable_caisse_affiliation_field || current_territory.enable_affiliation_number_field
   .form-row

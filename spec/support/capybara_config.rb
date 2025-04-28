@@ -8,18 +8,11 @@ WebMock.disable_net_connect!(allow: [
 Capybara.register_driver :selenium do |app|
   chrome_bin = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
   binary = chrome_bin if chrome_bin
-  browser_options = Selenium::WebDriver::Chrome::Options.new(
-    # these args seem to reduce test flakyness
-    args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen],
-    "goog:loggingPrefs": { browser: "ALL" },
-    binary: binary
-  )
-
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    options: browser_options
-  )
+  # these args seem to reduce test flakyness
+  args = %w[no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen disable-features=MacAppCodeSignClone]
+  args.prepend("headless") if ENV["HEADLESS"] != "false"
+  options = Selenium::WebDriver::Chrome::Options.new(args:, "goog:loggingPrefs": { browser: "ALL" }, binary:)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 
 Capybara.javascript_driver = :selenium
@@ -40,8 +33,14 @@ Capybara.configure do |config|
   config.always_include_port = true
 end
 
+# On force le driver JS lorsqu’on debug des tests E2E, mais ça ne
+# fonctionne pas dans tous les cas, il vaut mieux rajouter manuellement js:true
+if ENV["HEADLESS"] == "false"
+  Capybara.default_driver = Capybara.javascript_driver
+end
+
 RSpec.configure do |config|
-  config.after(:each, ignore_js_errors: nil, js: true) do
+  config.after(:each, js: true) do
     logs = page.driver.browser.logs.get(:browser)
     aggregate_failures "javascript errors" do
       logs.each do |log|
@@ -52,8 +51,24 @@ RSpec.configure do |config|
   end
 end
 
-def expect_page_to_be_axe_clean(path)
+def expect_page_to_be_axe_clean(path, excluding_selector: nil)
   visit path
   expect(page).to have_current_path(path)
-  expect(page).to be_axe_clean
+  expect_page_to_have_title
+
+  if excluding_selector
+    expect(page).to be_axe_clean.excluding(excluding_selector)
+  else
+    expect(page).to be_axe_clean
+  end
+end
+
+# Pour des questions d’accessibilité, chaque page doit avoir un titre explicite
+# suivi du nom de l’application (sauf pour la page d’accueil)
+def expect_page_to_have_title
+  if page.current_path == "/"
+    expect(page).to have_title("RDV Solidarités")
+  else
+    expect(page).to have_title(/.* - RDV Solidarités/)
+  end
 end

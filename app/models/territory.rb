@@ -91,8 +91,9 @@ class Territory < ApplicationRecord
   }.freeze
 
   OPTIONAL_FIELD_TOGGLES = {
-    enable_notes_field: :notes,
+    enable_notes_field: :annotation_content,
     enable_logement_field: :logement,
+    enable_birth_date_field: :birth_date,
   }.merge(SOCIAL_FIELD_TOGGLES).freeze
 
   def mairies?
@@ -116,7 +117,11 @@ class Territory < ApplicationRecord
   end
 
   def any_social_field_enabled?
-    attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?
+    attributes.symbolize_keys.slice(*SOCIAL_FIELD_TOGGLES.keys).values.any?
+  end
+
+  def any_optional_user_field_enabled?
+    attributes.symbolize_keys.slice(*OPTIONAL_FIELD_TOGGLES.keys).values.any?
   end
 
   def to_s

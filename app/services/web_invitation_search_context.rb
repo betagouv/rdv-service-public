@@ -1,16 +1,26 @@
 class WebInvitationSearchContext < InvitationSearchContext
   include Users::CreneauxWizardConcern
-  attr_reader :errors, :query_params, :address, :latitude, :longitude
+  attr_reader :errors, :query_params, :organisation_ids, :motif_category_short_name
 
   def initialize(user:, query_params: {})
     super
-    @user_selected_organisation_id = query_params[:user_selected_organisation_id]
-    @motif_id = query_params[:motif_id]
-    @motif_name_with_location_type = query_params[:motif_name_with_location_type]
+
+    # User choices
+    # La plupart du temps il n'y a qu'un seul service qui propose des invitations, donc il n'est
+    # pas choisi explicitement, mais c'est techniquement possible
     @service_id = query_params[:service_id]
-    @address = query_params[:address]
-    @latitude = query_params[:latitude]
-    @longitude = query_params[:longitude]
+    # motif_selection:
+    @motif_name_with_location_type = query_params[:motif_name_with_location_type]
+
+    # lieu_selection: le lieu peut parfois être déterminé par l'invitation
+    # mais il peut aussi être choisi par l'usager.
+    # Dans les deux cas, la variable d'instance lieu_id est initialisée par la classe parente
+
+    # organisation_selection:
+    @user_selected_organisation_id = query_params[:user_selected_organisation_id]
+
+    # creneau_selection
+    @motif_id = query_params[:motif_id]
   end
 
   # dupliqué de WebSearchContext

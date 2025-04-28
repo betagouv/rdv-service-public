@@ -8,6 +8,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
       RdvPlan.create!(
         planning_agent: current_agent,
         user: user,
+        oauth_application: doorkeeper_token&.application,
         return_url: params[:return_url]
       )
     end
@@ -40,7 +41,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
       user = User.find(user_params[:id])
 
-      if user.organisation_ids.intersection(current_agent.organisation_ids).blank?
+      unless user.organisation_ids.intersect?(current_agent.organisation_ids)
         # L'agent et l'usager n'ont pas d'organisations en commun
         raise Pundit::NotAuthorizedError
       end

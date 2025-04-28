@@ -1,13 +1,20 @@
 # cf /docs/interconnexions/brevo.md
 
 class TransferEmailReplyJob < ApplicationJob
-  queue_as :mailers
+  queue_as :latency_30s
 
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
 
   def self.reply_address_for_rdv(rdv)
-    return nil if rdv.domain.reply_host_name.nil?
+    if rdv.domain.reply_host_name.nil?
+      if ENV["IS_REVIEW_APP"] == "true"
+        return rdv.domain.support_email
+      else
+        Sentry.capture_message("Missing reply_host_name for domain", extra: { domain: rdv.domain })
+        return nil
+      end
+    end
 
     "rdv+#{rdv.uuid}@#{rdv.domain.reply_host_name}"
   end

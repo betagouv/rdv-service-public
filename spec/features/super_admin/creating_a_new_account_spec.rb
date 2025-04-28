@@ -8,7 +8,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
   end
 
   before do
-    stub_request(:get, "https://api-adresse.data.gouv.fr/search/?q=Place%20de%20la%20mairie,%20Romainville,%2093230")
+    stub_request(:get, "https://data.geopf.fr/geocodage/search/?q=Place%20de%20la%20mairie,%20Romainville,%2093230")
       .to_return(status: 200, body: autocomplete_response, headers: {})
 
     create(:service, name: "Urbanisme")
@@ -21,6 +21,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     click_link "Ouverture de compte"
 
     fill_in("Nom du territoire", with: "France Rénov")
+    select("Commune", from: "Catégorie du territoire")
     fill_in("Nom de la première organisation", with: "Agence de Romainville")
     fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
 
@@ -45,7 +46,8 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
     new_territory = Territory.last
     expect(new_territory).to have_attributes(
-      name: "France Rénov"
+      name: "France Rénov",
+      category: "Commune"
     )
 
     new_agent = new_territory.admin_agents.first
@@ -91,6 +93,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
       click_link "Ouverture de compte"
 
       fill_in("Nom du territoire", with: "Romainville")
+      select("Commune", from: "Catégorie du territoire")
       fill_in("Nom de la première organisation", with: "Mairie de Romainville")
       fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
 

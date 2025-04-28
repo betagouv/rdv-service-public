@@ -1,6 +1,10 @@
 DEFAULT_TYPHOEUS_TIMEOUT = 15
 class Typhoeus::Errors::TimeoutError < Typhoeus::Errors::TyphoeusError; end
 
+class Typhoeus::Request
+  attr_accessor :scrub_from_sentry_breadcrumbs
+end
+
 #
 # Typhoeus ne lève pas d'exception en cas de timeout, donc on fait
 # en sorte de mettre un timeout par défaut et de lever l'exception.
@@ -22,20 +26,18 @@ Typhoeus.before do |request|
 end
 
 Typhoeus.before do |request|
-  filter_secrets_from_body = lambda do |body|
-    body.to_s.gsub(InclusionConnect::IC_CLIENT_SECRET || "", "filtered")
-  end
-
-  crumb = Sentry::Breadcrumb.new(
-    message: "HTTP request",
-    data: {
-      method: request.options[:method],
-      url: request.url,
-      headers: request.options[:headers],
-      body: filter_secrets_from_body.call(request.encoded_body),
-    }
-  )
-  Sentry.add_breadcrumb(crumb)
+  data = {
+    method: request.options[:method],
+    url: request.url,
+    headers: request.options[:headers],
+  }
+  data[:body] =
+    if request.scrub_from_sentry_breadcrumbs&.include?(:body)
+      "*** scrubbed ***"
+    else
+      request.encoded_body.to_s # TODO: filtrer toutes les variables d'env ici ?
+    end
+  Sentry.add_breadcrumb Sentry::Breadcrumb.new(message: "HTTP request", data:)
 end
 
 Typhoeus.on_complete do |response|

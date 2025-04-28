@@ -1,3 +1,5 @@
+- content_for :title, "Espace Admin - #{current_territory.name}"
+
 = link_to(root_path, class: "pt-1 pb-4") do
   i.fa.fa-arrow-left
   |< Retour à l'accueil
@@ -44,7 +46,7 @@ h1.m-2.rdv-text-align-center.border-bottom.pb-2 Espace Admin - #{current_territo
           | Sectorisation
         p Créer, importer, affecter vos secteurs géographiques.
 
-  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit? && current_territory.any_optional_user_field_enabled?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_user_fields_path(current_territory) do
         h2.fw-bold.mb-0

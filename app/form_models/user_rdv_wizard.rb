@@ -1,8 +1,6 @@
 module UserRdvWizard
   # cf https://medium.com/@nicolasblanco/developing-a-wizard-or-multi-steps-forms-in-rails-d2f3b7c692ce
 
-  STEPS = %w[step1 step2 step3].freeze
-
   class Base
     include ActiveModel::Model
 
@@ -13,15 +11,14 @@ module UserRdvWizard
     def initialize(user, attributes)
       @user = user
       @attributes = attributes.to_h.symbolize_keys
-      rdv_defaults = { user_ids: [user&.id] }
       if attributes[:rdv_collectif_id].present?
         @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(attributes[:rdv_collectif_id])
       else
-        @rdv = Rdv.new(
-          rdv_defaults
-            .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
-        )
+        @rdv = Rdv.new({
+          user_ids: [user&.id],
+        }.merge(@attributes.slice(:starts_at, :user_ids, :motif_id)))
         @rdv.duration_in_min = @attributes[:duration]&.to_i || @rdv.motif&.default_duration_in_min
+        @rdv.organisation_id = @rdv.motif.organisation_id
       end
     end
 
@@ -55,27 +52,23 @@ module UserRdvWizard
         motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id), rdv_collectif_id: rdv.id,
       }.merge(
         @attributes.slice(
-          :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id,
-          :address, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
+          *WebSearchContext::ADDRESS_SELECTION_PARAMS,
+          :where, :lieu_id, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
           :referent_ids, :external_organisation_ids, :duration
         )
       )
-    end
-
-    def to_search_query
-      @attributes
-        .slice(:departement, :latitude, :longitude, :motif_name_with_location_type, :where, :city_code, :street_ban_id)
-        .merge(service: @rdv.motif.service_id, motif_name_with_location_type: @rdv.motif.name_with_location_type)
     end
 
     def save
       true
     end
 
+    def lieu_id = @attributes[:lieu_id]
+
     private
 
     def lieu
-      @lieu ||= @attributes[:lieu_id].present? ? Lieu.find(@attributes[:lieu_id]) : nil
+      @lieu ||= lieu_id.present? ? Lieu.find(lieu_id) : nil
     end
   end
 
@@ -97,11 +90,11 @@ module UserRdvWizard
       # we make sure the email can be updated only if it is blank
       @user.skip_reconfirmation! if @user.email_was.blank?
 
-      # dans la vue on appelle form_for(user) plutôt que form_for(user_rdv_wizard) les erreurs doivent donc être
-      # définies sur le user et on ne peut pas simplement appeler `validates_with AntsPreDemandeNumberValidation`
-      # dans ce form model
+      # dans la vue on appelle form_for(user) plutôt que form_for(user_rdv_wizard),
+      # il faut donc ajouter des validations (et des erreurs) sur l'objet user
       if rdv.requires_ants_predemande_number?
-        @user.singleton_class.validates_with(AntsPreDemandeNumberValidation)
+        @user.singleton_class.include(User::AntsPreDemandeNumberStatusValidationConcern)
+        @user.ants_meeting_point_id = lieu_id # used in AntsPreDemandeNumberStatusValidation
       end
 
       valid? && @user.save

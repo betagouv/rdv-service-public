@@ -29,7 +29,7 @@ class PlacesInput {
   }
 
   getSuggestions = (query, callback) => {
-    const url = "https://api-adresse.data.gouv.fr/search/"
+    const url = "https://data.geopf.fr/geocodage/search/"
     const searchParams = new URLSearchParams()
     searchParams.append("q", query)
     if (this.addressType) searchParams.append("type", this.addressType)
@@ -57,8 +57,8 @@ class PlacesInput {
       return { street_ban_id: feature.properties.id, street_name: feature.properties.name }
     }
     if (feature.properties.type === "housenumber") {
-      // 5 chars for city insee code, 1 for _, 4 for street fantoir
-      return { street_ban_id: feature.properties.id.substring(0,10) }
+      // 5 chars for city insee code, 1 for _, 4 (or more) for street fantoir
+      return { street_ban_id: feature.properties.id.split("_").slice(0, 2).join("_") }
     }
 
     return {}
@@ -92,7 +92,7 @@ class PlacesInput {
     `
   }
 
-  // exemple de name : 52 Avenue Jean Jaurès, city : Paris, postcode : 75019. 
+  // exemple de name : 52 Avenue Jean Jaurès, city : Paris, postcode : 75019.
   // District et context ont été supprimé afin de récupérer des adresses plus courtes. Exemple district: Paris 19e Arrondissement, context: 75, Paris, Île-de-France
   getDetails = ({ name, city, postcode }) => {
     let attributes = [postcode]
@@ -104,7 +104,7 @@ class PlacesInput {
 
 class PlacesInputs {
   constructor() {
-    document.querySelectorAll('.places-js-container').forEach(elt => new PlacesInput(elt))
+    document.querySelectorAll('input[data-address-autocomplete="on"]').forEach(elt => new PlacesInput(elt))
   }
 }
 

@@ -46,7 +46,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     fill_in "Téléphone", with: "0123456789"
     click_on "Confirmer le rendez-vous"
 
-    expect(page).to have_content("Téléphone ne permet pas de recevoir des SMS")
+    expect(page).to have_content("Téléphone doit être un numéro de mobile")
     fill_in "Téléphone", with: "0611223344"
 
     expect { click_on "Confirmer le rendez-vous" }.to change { rdv_collectif.users.count }.by(1).and(change(User, :count).by(1))
@@ -73,7 +73,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       phone_number: "0611223344"
     )
 
-    perform_enqueued_jobs(queue: "mailers")
+    perform_enqueued_jobs(only: ApplicationMailerDeliveryJob)
     expect(email_sent_to(agent.email).subject).to include("Nouvelle participation au RDV collectif sur votre agenda RDV Solidarités")
     expect(email_sent_to("alex@prescripteur.fr").subject).to include("RDV confirmé")
     expect(email_sent_to("alex@prescripteur.fr").body).to include("RDV Aide Numérique")
@@ -84,7 +84,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
 
   context "when creneau is taken by someone else during booking process" do
     let!(:fallback_rdv_collectif_2_hours_later) do
-      create(:rdv, :without_users, motif: motif_collectif, agents: [agent], lieu: lieu, starts_at: rdv_collectif.starts_at + 2.hours)
+      create(:rdv, :without_users, motif: motif_collectif, agents: [agent], lieu: lieu, starts_at: rdv_collectif.starts_at + 2.hours, organisation:)
     end
 
     it "redirects to creneau search with error message" do

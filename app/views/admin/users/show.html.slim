@@ -25,7 +25,7 @@
               - if @user.invitation_sent_at
                 p.small.m-0 Invitation envoyée il y a #{distance_of_time_in_words_to_now(@user.invitation_sent_at)}
             .col-md-4.text-right
-              = link_to "Inviter", invite_admin_organisation_user_path(current_organisation, @user), method: :post, class: "btn btn-outline-white"
+              = link_to "Inviter", invite_admin_organisation_user_path(current_organisation, @user), method: :post, class: "btn btn-outline-white", data: { disable_with: "Veuillez patienter…"}
 
         - if @user.invited_through == "external" && @user.invitation_accepted_at.nil?
           .row.bg-info.text-white.p-2.mb-3
@@ -48,7 +48,7 @@
               li= object_attribute_tag(@user, :ants_pre_demande_number)
             li= object_attribute_tag(@user, :birth_date, birth_date_and_age(@user))
             - if current_territory.enable_notes_field?
-              li= object_attribute_tag(@user, :notes, formatted_user_notes(@user))
+              li= object_attribute_tag(@user, :annotation_content, formatted_user_annotation(@user, current_territory))
 
         .row.mt-3
           .col.text-left
@@ -129,7 +129,8 @@
             = link_to "Voir tous les rendez-vous de #{@user.full_name}", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "btn btn-outline-primary small"
       .card-body
         .row
-          = render "admin/rdvs/rdv_visibility"
+          .fr-mb-2v
+            = render "admin/rdvs/rdv_visibility"
           .col-lg-6
             - %i[seen excused revoked noshow].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
@@ -143,9 +144,7 @@
                 count: @participations.joins(:rdv).status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
       .card-footer
-        .alert.alert-info.d-flex.align-items-center
-          .mr-3
-            i.fa.fa-info
+        = dsfr_alert type: :info, size: :sm
           | Les RDV sont supprimés au bout de 2 ans.
 
 .row.justify-content-center

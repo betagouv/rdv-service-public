@@ -54,6 +54,11 @@ RSpec.configure do |config|
   config.include DeviseRequestSpecHelpers, type: :request
   config.include NotificationsHelper
 
+  # Permet d'avoir des données générées de manière déterministe pour les specs swagger
+  if ENV["FAKER_SEED"]
+    Faker::Config.random = Random.new(ENV["FAKER_SEED"].to_i)
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -81,7 +86,11 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
+
     Rack::Attack.enabled = false
+
+    Faker::Config.locale = :fr
+    Faker::Config.random = Random.new(config.seed)
   end
 
   config.around do |example|

@@ -1,17 +1,17 @@
 @plage_ouverture_occurrences.map do |plage_ouverture, occurrence|
   {
-    title: plage_ouverture.title_with_default,
+    title: sanitize(plage_ouverture.title_with_default),
     start: occurrence.starts_at.as_json,
     end: occurrence.ends_at.as_json,
     backgroundColor: plage_ouverture.organisation == @organisation ? "#6fceff80" : "grey",
     textColor: "#313131",
-    rendering: params[:in_background] ? "background" : nil,
+    rendering: @display_in_background ? "background" : nil,
     url: admin_organisation_plage_ouverture_path(@organisation, plage_ouverture),
 
     extendedProps: {
-      organisationName: plage_ouverture.organisation.name,
-      location: plage_ouverture.lieu_address,
-      lieu: plage_ouverture.lieu_name,
+      organisationName: sanitize(plage_ouverture.organisation.name),
+      location: sanitize(plage_ouverture.lieu_address),
+      lieu: sanitize(plage_ouverture.lieu_name),
     },
   }
 end

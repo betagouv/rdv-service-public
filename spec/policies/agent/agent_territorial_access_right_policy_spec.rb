@@ -1,4 +1,3 @@
-# rubocop:disable RSpec/PredicateMatcher
 RSpec.describe Agent::AgentTerritorialAccessRightPolicy do
   let(:territory) { create(:territory) }
   let(:agent_territorial_access_right) { create(:agent_territorial_access_right, territory: territory) }
@@ -34,4 +33,3 @@ RSpec.describe Agent::AgentTerritorialAccessRightPolicy do
     end
   end
 end
-# rubocop:enable RSpec/PredicateMatcher

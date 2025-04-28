@@ -1,0 +1,32 @@
+.row.justify-content-md-center
+  .col-12
+    = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 3, step_title: "Usager", next_step_title: ""
+.row.fr-mb-16w
+  .col-12.col-md-4
+    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: true
+    = link_to edit_motif_agents_rdv_plan_path(@rdv_plan) do
+      = back_icon(class: "fr-mr-1w")
+      = "retour"
+  .col-12.col-md-8
+      = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
+      = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
+      = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
+
+      hr.fr-mt-2w
+      h3 Coordonnées de #{@rdv_plan.user.full_name}
+      p Des notifications seront envoyées par email et/ou par sms
+      = simple_form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post do |f|
+        = f.fields_for :user, @rdv_plan.user do |ff|
+          .row
+            .col-6
+              / TODO: gérer le cas des users confirmed (et gérer ce cas dans l'interface principale aussi) : leur nouvelle adresse mail ne sera pas prise en compte tant qu'ils ne la confirment pas
+              = ff.input :email
+            .col-6
+              = ff.input :phone_number
+        - if @rdv_plan.motif.visible_and_notified?
+          = f.fields_for :participation, (Participation.new(send_lifecycle_notifications: true, send_reminder_notification: true)) do |ff|
+            = ff.input :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
+            = ff.input :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
+        - else
+          | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
+        = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right fr-btn--lg"

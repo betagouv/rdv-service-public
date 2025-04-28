@@ -105,6 +105,16 @@ RSpec.describe User, type: :model do
       expect(user.versions).to be_empty
     end
 
+    it "n’anonymise pas les RDV collectifs avec d’autres participants" do
+      user1 = create(:user)
+      user2 = create(:user)
+      rdv = create(:rdv, users: [user1, user2], context: "des détails sur le RDV")
+      user1.soft_delete
+      expect(rdv.reload.context).to eq("des détails sur le RDV")
+      user2.soft_delete
+      expect(rdv.reload.context).to match %([valeur unique anonymisée \\d+])
+    end
+
     it "is hidden user by default" do
       user = create(:user)
       user.soft_delete
@@ -362,6 +372,56 @@ RSpec.describe User, type: :model do
       expect(user).to be_valid
       user.save
       expect(user.reload.ants_pre_demande_number).to eq "ABCDE12345"
+    end
+  end
+
+  describe "annotations" do
+    it "provides the #annotate! helper method" do
+      user = create(:user)
+      territory = create(:territory)
+      expect(Annotation).to receive(:upsert!).with("Ma remarque", user:, territory:)
+      user.annotate!("Ma remarque", territory:)
+    end
+
+    it "deletes annotations when leaving the last org of a territory" do
+      territory_a = create(:territory)
+      territory_b = create(:territory)
+      organisation_a_1 = create(:organisation, territory: territory_a)
+      organisation_a_2 = create(:organisation, territory: territory_a)
+      organisation_b_1 = create(:organisation, territory: territory_b)
+      organisation_b_2 = create(:organisation, territory: territory_b)
+
+      user = create(:user, organisations: [organisation_a_1, organisation_a_2, organisation_b_1, organisation_b_2])
+      user.annotate!("Infos du territoire A", territory: territory_a)
+      user.annotate!("Infos du territoire B", territory: territory_b)
+      expect(Annotation.where(user: user).count).to eq(2)
+
+      expect { user.organisations.delete(organisation_a_1) }.not_to change(Annotation, :count)
+      expect { user.organisations.delete(organisation_a_2) }.to change(Annotation, :count).by(-1)
+
+      expect { user.organisations.delete(organisation_b_1) }.not_to change(Annotation, :count)
+      expect { user.organisations.delete(organisation_b_2) }.to change(Annotation, :count).by(-1)
+    end
+
+    it "deletes annotations when soft deleting" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      user.annotate!("Ma remarque", territory: organisation.territory)
+      expect { user.soft_delete }.to change { user.annotations.count }.to(0)
+    end
+  end
+
+  describe "when notification_email is not valid" do
+    it "does not allow invalid email with single letter domain name" do
+      user = build(:user, :without_devise_email, notification_email: "test@domain.a")
+      expect(user).not_to be_valid
+      expect(user.errors[:notification_email]).to include("n'est pas valide")
+    end
+
+    it "does not allow invalid email that starts with a dot" do
+      user = build(:user, :without_devise_email, notification_email: ".test@domain.com")
+      expect(user).not_to be_valid
+      expect(user.errors[:notification_email]).to include("n'est pas valide")
     end
   end
 end

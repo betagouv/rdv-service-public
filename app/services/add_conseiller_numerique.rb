@@ -152,7 +152,7 @@ class AddConseillerNumerique
     zipcode = address[zipcode_regex]
 
     response = Faraday.get(
-      "https://api-adresse.data.gouv.fr/search/",
+      "https://data.geopf.fr/geocodage/search/",
       q: address,
       postcode: zipcode
     )

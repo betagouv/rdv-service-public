@@ -6,6 +6,7 @@ class Agents::RdvMailer < ApplicationMailer
     @rdv = params[:rdv]
     @agent = params[:agent]
     @author = params[:author]
+    @display_link_to_agent_preferences = true
   end
 
   default to: -> { @agent.email }

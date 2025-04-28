@@ -1,4 +1,4 @@
-- contact_team_url = "https://cal.com/forms/937585aa-48a4-4efd-a642-961fad79c9c5"
+- contact_team_url = Agents::PagesController::CONTACT_TEAM_URL
 
 .fr-py-8w.rdv-background-color-alt-blue-ecume
   .fr-container
@@ -12,9 +12,7 @@
           | dans votre administration
         .fr-text--lg
           | Éviter les rendez-vous non honorés, gagner du temps au quotidien et améliorer la relation entre les agents et les usagers
-        ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md.fr-mb-0
-          li
-            = link_to "Contacter notre équipe", contact_team_url, class: "fr-btn fr-mb-0"
+        = link_to "Demander une démo", contact_team_url, class: "fr-btn fr-mb-0"
 
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -29,7 +27,7 @@
               h3.fr-card__title.rdv-color-text-action-high-blue-france
                 | Administrations de l’État
               p.fr-card__desc
-                | Administrations décentralisées, agences nationales ou ministères, RDV Service Public est ouvert à l’ensemble des services de l’État.
+                | Administrations déconcentrées, agences nationales ou ministères, RDV Service Public est ouvert à l’ensemble des services de l’État.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img.fr-px-md-8w.fr-py-md-4w
               = dsfr_svg "artwork/pictograms/buildings/city-hall", class: "fr-responsive-img"
@@ -56,7 +54,7 @@
             .fr-card__img.fr-px-md-8w.fr-py-md-4w
               = dsfr_svg "artwork/pictograms/map/location-france", class: "fr-responsive-img"
 
-hr
+hr[aria-hidden="true"]
 
 .fr-container.fr-pt-4w.fr-pb-12w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -73,7 +71,7 @@ hr
                 | Les informations des usagers, des disponiblités et des rendez-vous sont centralisées pour simplifier le quotidien des agents et permettre une réponse rapide aux usagers.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
-              = image_tag "rdv_mairie/ecosystem.svg", alt: "Des silhouettes rouges encerclées liées entre elles par des traits bleus", class: "fr-responsive-img rdv-max-height-12rem rdv-object-fit-contain"
+              = image_tag "rdv_mairie/ecosystem.svg", alt: "", class: "fr-responsive-img rdv-max-height-12rem rdv-object-fit-contain"
         .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
           .fr-card__body
             .fr-card__content
@@ -104,7 +102,7 @@ hr
                 | L’interface ergonomique, aux couleurs de la charte de l’État, offre un parcours simple et rapide permettant aux usagers d’être autonomes quant à la planification et la modification de leur rendez-vous.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
-              = image_tag "rdv_mairie/self-training.svg", alt: "Une silhouette rouge regardant un écran d’ordinateur bleu", class: "fr-responsive-img rdv-max-height-12rem rdv-object-fit-contain"
+              = image_tag "rdv_mairie/self-training.svg", alt: "", class: "fr-responsive-img rdv-max-height-12rem rdv-object-fit-contain"
         .fr-card.fr-card--horizontal.fr-card--horizontal-tier.fr-mt-2w
           .fr-card__body
             .fr-card__content
@@ -116,7 +114,7 @@ hr
             .fr-card__img
               = dsfr_svg "artwork/pictograms/digital/data-visualization", class: "fr-responsive-img rdv-max-height-12rem"
 
-hr
+hr[aria-hidden="true"]
 
 .fr-container.fr-py-8w
   h2.rdv-text-align-center
@@ -239,7 +237,7 @@ hr
         ul.fr-btns-group.fr-btns-group--center.rdv-btns-group--left-md.fr-btns-group--inline-md.fr-mb-0
           li= link_to "Consulter la documentation technique", "https://aide.rdv-service-public.fr/documentation-technique/api", class: "fr-btn fr-btn--secondary"
       .fr-col-12.fr-col-md-5.rdv-text-align-center
-        = image_tag "rdv_mairie/api.svg", alt: "Des fenêtres et des icônes d’applications avec des flèches", class: "rdv-height-md-0 rdv-min-height-md-100"
+        = image_tag "rdv_mairie/api.svg", alt: "", class: "rdv-height-md-0 rdv-min-height-md-100"
 
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -257,7 +255,7 @@ hr
                 | Une solution développée par les services de l’État pour l’ensemble de la fonction publique. Nous adaptons la solution aux contraintes réglementaires publiques et intégrons l’écosystème numérique public à la solution.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
-              = image_tag "rdv_mairie/republique-francaise-splash.png", alt: "Le logo de la république française", class: "fr-responsive-img"
+              = image_tag "rdv_mairie/republique-francaise-splash.png", alt: "", class: "fr-responsive-img"
 
       .fr-col-12.fr-col-md-4
         .fr-card.fr-p-0
@@ -269,7 +267,7 @@ hr
                 | Une solution utilisée dans des contextes et pour des enjeux variés. Nous mutualisons les besoins et co-construisons une vision commune pour enrichir une solution unique au bénéfice de toutes les administrations.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
-              = image_tag "rdv_mairie/collaboration-bras-ampoules.png", alt: "Illustration de mains se tenant en cercle autour d’une ampoule", class: "fr-responsive-img"
+              = image_tag "rdv_mairie/collaboration-bras-ampoules.png", alt: "", class: "fr-responsive-img"
 
       .fr-col-12.fr-col-md-4
         .fr-card.fr-p-0
@@ -281,18 +279,24 @@ hr
                 | Une solution gratuite pour les administrations utilisatrices. Des financements interministériels garantissent la pérennité de la solution pour les administrations utilisatrices.
           .fr-card__header.rdv-background-color-alt-blue-ecume
             .fr-card__img
-              = image_tag "rdv_mairie/billet-0-euros.png", alt: "Illustration d’un billet de 0 euros tenu par des mains", class: "fr-responsive-img"
+              = image_tag "rdv_mairie/billet-0-euros.png", alt: "", class: "fr-responsive-img"
 
 .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
-  .fr-container.fr-py-8w
+  .fr-container.fr-py-6w
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
-        | 2 715 045
+        | 2 892 616
       .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
         .rdv-font-weight-bold
           | RENDEZ-VOUS PLANIFIÉS
         div
-          | DANS 995 STRUCTURES
+          | DANS 995 STRUCTURES*
+
+.fr-container.fr-py-3w.rdv-text-align-center
+  |> *Données concernant les 24 derniers mois.
+  |> Pour plus d’informations,
+  = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
+  | .
 
 .rdv-background-color-alt-grey
   .fr-container.fr-py-8w
@@ -325,7 +329,7 @@ hr
           .fr-quote__image
             = dsfr_svg "artwork/pictograms/leisure/community", class: "fr-responsive-img"
 
-hr
+hr[aria-hidden="true"]
 
 .fr-container.fr-py-8w
   h2.rdv-text-align-center
@@ -407,9 +411,9 @@ hr
   .fr-container
     .fr-mb-4w
       - 3.times do
-        = image_tag "rdv_mairie/carotte.png", alt: "Illustration d’une carotte"
+        = image_tag "rdv_mairie/carotte.png", alt: ""
     h2 Plus de RDV, moins de lapins
     p
       | Votre agenda vous remerciera.
-    .fr-my-4w= link_to "Contacter notre équipe", contact_team_url, class: "fr-btn"
+    .fr-my-4w= link_to "Demander une démo", contact_team_url, class: "fr-btn"
     = link_to "Revenir en haut de la page", "#header", class: "fr-link fr-icon-arrow-up-line fr-link--icon-left"

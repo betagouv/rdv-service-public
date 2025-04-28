@@ -35,6 +35,17 @@ RSpec.shared_examples "SearchContext" do
       end
     end
 
+    context "when using a direct link to an organisation with a territory without departement number" do
+      let!(:query_params) { { public_link_organisation_id: organisation.id } }
+      let(:departement_number) { nil }
+      let(:city_code) { nil }
+      let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "")) }
+
+      it "returns motif selection" do
+        expect(subject.current_step).to eq(:motif_selection)
+      end
+    end
+
     context "with an address but several matching motifs" do
       let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
       let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
@@ -188,10 +199,11 @@ RSpec.shared_examples "SearchContext" do
     end
 
     it "returns collective motif with lieu_id" do
-      lieu = create(:lieu)
+      organisation = create(:organisation)
+      lieu = create(:lieu, organisation:)
       search_context = described_class.new(user: nil, query_params: { lieu_id: lieu.id })
-      motif = create(:motif, collectif: true)
-      create(:rdv, motif: motif, lieu: lieu)
+      motif = create(:motif, collectif: true, organisation:)
+      create(:rdv, motif: motif, lieu: lieu, organisation:)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
     end
 
