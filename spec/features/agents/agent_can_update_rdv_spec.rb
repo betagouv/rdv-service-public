@@ -1,17 +1,16 @@
 RSpec.describe "Agent can update a RDV", js: true do
   let!(:organisation) { create(:organisation) }
   let(:rdv) do
-    create(:rdv, organisation: organisation, motif: motif, agents: [agent], lieu: lieu)
+    create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu)
   end
-  let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, basic_role_in_organisations: [organisation]) }
-
+  let!(:service) { create(:service, name: "Urbanisme") }
+  let!(:agent_shiraz) { create(:agent, first_name: "Shiraz", last_name: "Nadir", email: "shiraz@angouleme.fr", service:, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, service: service, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
   before do
     stub_netsize_ok
-    login_as(agent, scope: :agent)
+    login_as(agent_shiraz, scope: :agent)
   end
 
   it "update existing RDV with single_use lieu" do
@@ -30,7 +29,7 @@ RSpec.describe "Agent can update a RDV", js: true do
 
   it "update existing RDV with existing lieu" do
     lieu_ponctuel = create(:lieu, organisation: organisation, availability: :single_use)
-    rdv = create(:rdv, organisation: organisation, motif: motif, agents: [agent], lieu: lieu_ponctuel)
+    rdv = create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu_ponctuel)
 
     visit edit_admin_organisation_rdv_path(organisation, rdv)
 
@@ -72,23 +71,21 @@ RSpec.describe "Agent can update a RDV", js: true do
     end
   end
 
-  context "adding agents" do
-    let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], services: agent.services) }
-    let!(:other_rdv) { create(:rdv, agents: [other_agent], starts_at: rdv.starts_at) }
+  context "ajout d’un agent au RDV" do
+    let!(:agent_jungyoon) { create(:agent, first_name: "Jung Yoon", last_name: "Han", email: "jungyoon@angouleme.fr", service:, basic_role_in_organisations: [organisation]) }
 
-    context "when there is a warning" do
-      it "works" do
+    context "un RDV existe à la même heure pour l’agent ajouté" do
+      before { create(:rdv, agents: [agent_jungyoon], starts_at: rdv.starts_at) }
+
+      it "affiche un avertissement, une fois contourné l’agent est bien ajouté" do
         visit edit_admin_organisation_rdv_path(organisation, rdv)
-
-        select(other_agent.full_name, from: "rdv_agent_ids")
+        select("Jung Yoon HAN (Urbanisme)", from: "rdv_agent_ids")
         click_button "Enregistrer"
         expect(page).to have_content "Ce rendez-vous en chevauche un autre"
-        expect(rdv.reload.agents).to eq [agent]
-
+        expect(rdv.reload.agents.map(&:full_name)).to contain_exactly("Shiraz NADIR")
         click_button "Confirmer en ignorant les avertissements"
-
         expect(page).to have_content "Le rendez-vous a été modifié."
-        expect(rdv.reload.agents).to eq [agent, other_agent]
+        expect(rdv.reload.agents.map(&:full_name)).to contain_exactly("Shiraz NADIR", "Jung Yoon HAN")
       end
     end
   end
