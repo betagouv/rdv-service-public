@@ -1,0 +1,24 @@
+.fr-card.fr-enlarge-link.fr-card--horizontal
+  .fr-card__body
+    .fr-card__content
+      h3.fr-card__title
+        a[href="#"]
+          = post.title
+        .fr-card__detail.fr-icon-calendar-2-fill.rdv-align-items-center.mt-1
+          = l(post.published_at.to_date, format: :long)
+      p.fr-card__desc
+        = post.description
+      .fr-card__start
+        / ul.fr-tags-group
+        /   li
+        /     p.fr-tag
+        /       | label tag
+        /   li
+        /     p.fr-tag
+        /       | label tag
+      / .fr-card__end
+      /   p.fr-card__detail.fr-icon-warning-fill
+      /     | détail (optionnel)
+  / .fr-card__header
+  /   .fr-card__img
+  /     img.fr-responsive-img[src="/img/placeholder.16x9.png" alt="[À MODIFIER - vide ou texte alternatif de l’image]"]

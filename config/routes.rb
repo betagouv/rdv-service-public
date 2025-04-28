@@ -151,8 +151,11 @@ Rails.application.routes.draw do
         get :download
       end
     end
+
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
     get "omniauth/rdvservicepublic/callback" => "admin/instance_exports#oauth_callback"
+
+    get "blog" => "agents/blog_posts#index"
   end
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar

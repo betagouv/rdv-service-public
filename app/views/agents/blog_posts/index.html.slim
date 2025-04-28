@@ -1,0 +1,5 @@
+= content_for(:title) { @feed.title }
+p = @feed.description
+- @feed.posts.each do |post|
+  .m-2
+    = render partial: "agents/blog_posts/post", locals: { post: post }
