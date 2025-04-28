@@ -2,6 +2,9 @@ module Rdv::Updatable
   extend ActiveSupport::Concern
 
   def update_and_notify(author, attributes, &block)
+    raise ArgumentError, "agent_ids est accepté mais pas agents" if attributes.key?(:agents)
+
+    singleton_class.defer_persist(:agents)
     @old_agent_ids = agent_ids.to_a
     assign_attributes(attributes)
     save_and_notify(author, &block)
@@ -68,10 +71,13 @@ module Rdv::Updatable
     previous_changes["starts_at"].present?
   end
 
+  def agents_changed?
+    # we cannot use ActiveModel::Dirty methods here for this has_many association
+    @old_agent_ids.to_set != agent_ids.to_set
+  end
+
   def rdv_updated?
-    # TODO : How to pass the list of old agents from Admin::EditRdvForm to Updatable ?
-    # TODO : add agents_changed?
-    starts_at_changed? || lieu_changed?
+    starts_at_changed? || lieu_changed? || agents_changed?
   end
 
   private
