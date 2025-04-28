@@ -11,11 +11,15 @@ class Admin::EditRdvForm
   end
 
   def submit(rdv_attributes)
+    raise ArgumentError, "agent_ids est accepté mais pas agents" if rdv_attributes.key?(:agents)
+
+    agent_ids = rdv_attributes.delete(:agent_ids) # évite de sauvegarder les changements d’agents avant la validation
     @rdv.assign_attributes(rdv_attributes)
 
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
     if valid?
+      @rdv.agent_ids = agent_ids if agent_ids.present?
       @rdv.save_and_notify(agent_context.agent)
     else
       false
