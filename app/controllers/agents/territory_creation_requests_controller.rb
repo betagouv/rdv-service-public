@@ -10,10 +10,10 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
     authorize(@territory_creation_request, policy_class: Agent::TerritoryCreationRequestPolicy)
 
     if @territory_creation_request.save
-
       flash[:success] = "Votre demande a bien été enregistrée. Notre équipe va l'étudier et revenir vers vous dans les meilleurs délais"
       redirect_to root_path
     else
+      # TODO: vérifier la gestion d'erreur sur ce formulaire
       render :new
     end
   end

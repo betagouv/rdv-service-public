@@ -13,8 +13,8 @@
   .select2-results__option[aria-selected="true"]:not(
     .select2-results__option--highlighted
   ) {
-  background-color: #66d9ce;
-  color: #313131;
+  background-color: $tertiary;
+  color: $dark;
 }
 
 .select2-container--bootstrap4 .select2-results__group {
@@ -49,7 +49,7 @@
 
 .select2-dropdown {
   border-radius: 0;
-  background-color: #f9f9f9;
+  background-color: $input-bg;
 }
 
 // Border radius overrides
@@ -117,7 +117,6 @@
 // Background color overrides
 // même fonctionnement que pour les border radius
 // on remplace les background-color: #fff; par background-color: $input-bg;
-$input-bg: #f9f9f9;
 
 .select2-container--bootstrap4 .select2-selection {
   background-color: $input-bg;
