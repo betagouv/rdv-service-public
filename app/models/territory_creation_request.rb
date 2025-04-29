@@ -3,6 +3,6 @@ class TerritoryCreationRequest < ApplicationRecord
 
   belongs_to :agent
 
-  validates :organisation_name, :territory_name, presence: true
+  validates :organisation_name, :territory_name, :service_name, presence: true
   validates :agent_id, uniqueness: true
 end

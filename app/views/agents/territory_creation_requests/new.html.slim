@@ -7,6 +7,5 @@
           = f.dsfr_text_field :territory_name, label: "Nom de l'espace", hint: "par exemple : Commune de Montreuil, Préfecture de Seine-Saint-Denis", required: true
           = f.dsfr_text_field :organisation_name, label: "Nom de votre première organisation", hint: "par exemple : CCAS de Montreuil, Bureau de Bobigny", autocomplete: "organization", required: true
           = f.dsfr_text_field :service_name, label: "Pour quel service souhaitez-vous gérer des rendez-vous ?", hint: "par exemple : Action Sociale, Ressources Humaines", required: true
-          / TODO: enlever les astérisques et fixer le label
 
           = f.submit "Envoyer la demande", class: "fr-btn float-right"

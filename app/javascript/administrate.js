@@ -16,4 +16,3 @@ $(document).on('turbolinks:load', function() {
   new PlacesInputs();
   $(".field-unit--has-many select").select2({theme: "bootstrap4"})
 });
-
