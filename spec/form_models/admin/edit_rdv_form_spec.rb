@@ -45,5 +45,39 @@ RSpec.describe Admin::EditRdvForm, type: :form do
       expect(rdv.cancelled_at).to be_nil
       expect(rdv.status).to eq("unknown")
     end
+
+    context "ajout d’un agent à un RDV avec une erreur contournable" do
+      subject do
+        described_class.new(rdv2, agent_context).submit(attributes)
+        rdv2.reload.agents.map(&:full_name).sort.to_sentence
+      end
+
+      let!(:organisation) { create(:organisation) }
+      let!(:agent_mayra) { create(:agent, first_name: "Mayra", last_name: "Castello", basic_role_in_organisations: [organisation]) }
+      let!(:agent_stefan) { create(:agent, first_name: "Stefan", last_name: "Hoyt", basic_role_in_organisations: [organisation]) }
+      let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent_mayra, organisation:) }
+      let!(:rdv1) { create(:rdv, agents: [agent_mayra], organisation:, starts_at: Time.zone.parse("2025-04-28 10:30")) }
+      let!(:rdv2) { create(:rdv, agents: [agent_mayra], organisation:, starts_at: Time.zone.parse("2025-04-29 18:00")) }
+      let(:base_attributes) do
+        {
+          starts_at: Time.zone.parse("2025-04-28 10:30"), # le même horaire que rdv1, déclenche une erreur contournable
+          agent_ids: [agent_mayra.id, agent_stefan.id],
+        }
+      end
+
+      before { travel_to Time.zone.parse("2025-04-24 10:00") }
+
+      context "l’avertissement est contourné" do
+        let(:attributes) { base_attributes.merge(ignore_benign_errors: "1") }
+
+        it { is_expected.to eq("Mayra CASTELLO et Stefan HOYT") }
+      end
+
+      context "l’avertissement n’est pas contourné" do
+        let(:attributes) { base_attributes }
+
+        it { is_expected.to eq("Mayra CASTELLO") }
+      end
+    end
   end
 end
