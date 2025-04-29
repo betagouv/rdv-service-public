@@ -20,7 +20,7 @@ section.main-content__body
 
     = f.simple_fields_for :organisation do |ff|
       div[style="margin: 8px 0"]
-        = ff.input :name, label: "Nom de la première organisation", input_html: { value: @territory_creation_request&.territory_name }
+        = ff.input :name, label: "Nom de la première organisation", input_html: { value: @territory_creation_request&.organisation_name }
       div[style="margin: 16px 0 8px 0"]
         = ff.input :ants_connectable, as: :boolean, label: "Autoriser le branchement au moteur de recherche de l'ANTS", hint: "En cochant cette case, vous permettrez à cette organisation (probablement une mairie) d'apparaitre sur https://rendezvouspasseport.ants.gouv.fr/"
 
@@ -43,5 +43,9 @@ section.main-content__body
         = ff.input :last_name, label: "Nom"
         = ff.input :email, label: "Adresse mail", hint: "Une invitation sera envoyée automatiquement"
       = ff.input :service_ids, label: "Service", collection: Service.all, hint: sanitize("Si nécessaire, vous pouvez #{link_to('créer un nouveau service', new_super_admins_service_path, target: :blank)}")
+      - if @territory_creation_request
+        .form-text.text-muted[style="margin-bottom: 12px"]
+          = "L'agent a indiqué travailler pour le service "
+          b #{@territory_creation_request.service_name}
 
     = f.submit

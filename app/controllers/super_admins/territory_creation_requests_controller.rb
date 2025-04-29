@@ -1,7 +1,7 @@
 module SuperAdmins
   class TerritoryCreationRequestsController < SuperAdmins::ApplicationController
     def index
-      @territory_creation_requests = policy_scope(TerritoryCreationRequest.where(response: params[:status]), policy_scope_class: SuperAdmin::TerritoryCreationRequestPolicy::Scope)
+      @territory_creation_requests = policy_scope(TerritoryCreationRequest.where(response: params[:response]), policy_scope_class: SuperAdmin::TerritoryCreationRequestPolicy::Scope)
 
       # le module Administrate::Punditize oblige à faire un appel à #authorize même si on est sur l'index
       authorize(@territory_creation_requests, policy_class: SuperAdmin::TerritoryCreationRequestPolicy)

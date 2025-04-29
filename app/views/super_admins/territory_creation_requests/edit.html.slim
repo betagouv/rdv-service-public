@@ -11,6 +11,14 @@ section.main-content__body
     = " "
     = @territory_creation_request.agent.email
 
+    - email_domain = @territory_creation_request.agent.email.split("@").last
+    - agents_with_similar_email = Agent.where("email ilike ?", "%@#{email_domain}").limit(10) # TODO: mettre une vrai pagination ici ?
+    - if agents_with_similar_email.any?
+      p D'autres agents ont une adresse email avec le même nom de domaine :
+      ul
+        - agents_with_similar_email.each do |agent|
+          li = link_to(agent.full_name, super_admins_agent_path(agent), target: :_blank)
+
   p
     b = "Nom de l'espace : "
     = @territory_creation_request.territory_name
@@ -38,10 +46,10 @@ section.main-content__body
   ul
     li Il n'y a pas d'autre territoire/espace avec un nom similaire
     li Il n'y a pas d'autres organisation avec un nom similaire
-    li Il n'y a pas d'autres agents avec le même nom de domaine qui ont déjà un espace
 
-  = simple_form_for([namespace, @territory_creation_request], html: { class: "form" }) do |f|
-    = f.hidden_field :response, value: "refused"
-    = f.submit "Refuser"
+  div[style="display: flex; padding-top: 12px"]
+    = simple_form_for([namespace, @territory_creation_request], html: { class: "form", style: "padding-right: 20px" }) do |f|
+      = f.hidden_field :response, value: "refused"
+      = f.submit "Refuser"
 
-  = link_to("Accepter", new_super_admins_compte_path(request_id: @territory_creation_request.id), class: "btn")
+    = link_to("Accepter", new_super_admins_compte_path(request_id: @territory_creation_request.id), class: "button")

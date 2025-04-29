@@ -1,5 +1,5 @@
-.fr-p-2w
-  h1
+header.main-content__header
+  h1.main-content__page-title
     | Demandes d'ouverture d'espace
     - if params[:status].blank?
       = " en attente"
@@ -8,21 +8,20 @@
     - elsif params[:status] == "refused"
       = " refusées"
 
-  = link_to "Voir les demandes acceptées", super_admins_territory_creation_requests_path(status: "accepted")
-  br
-  = link_to "Voir les demandes refusées", super_admins_territory_creation_requests_path(status: "refused")
-  br
+section.main-content__body.main-content__body--flush
+  div[style="margin-bottom: 12px"]
+    = link_to "Demandes en attente", super_admins_territory_creation_requests_path(response: nil), class: "button button--alt", style: "margin: 0 8px"
+    = link_to "Demandes acceptées", super_admins_territory_creation_requests_path(response: "accepted"), class: "button button--alt", style: "margin: 0 8px"
+    = link_to "Demandes refusées", super_admins_territory_creation_requests_path(response: "refused"), class: "button button--alt", style: "margin: 0 8px"
 
-  - if @territory_creation_requests.empty?
-    p.fr-my-4w Il n'y a aucune demande pour ce filtre
-  - @territory_creation_requests.each do |request|
-    .fr-card.fr-enlarge-link.fr-card--horizontal.fr-card--sm
-      .fr-card__body
-        .fr-card__content
-          h3.fr-card__title
-            = link_to(edit_super_admins_territory_creation_request_path(request.id))
-              = request.territory_name
-          p.fr-card__desc
-            = "demandé par #{request.agent.full_name}"
-            br
-            = request.agent.email
+  div[style="margin: 12px"]
+    - if @territory_creation_requests.empty?
+      p.fr-my-4w Il n'y a aucune demande pour ce filtre
+    - @territory_creation_requests.each do |request|
+        h3
+          = link_to(edit_super_admins_territory_creation_request_path(request.id))
+            = request.territory_name
+        p
+          = "demandé par #{request.agent.full_name}"
+          br
+          = request.agent.email
