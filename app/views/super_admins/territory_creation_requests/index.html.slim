@@ -16,7 +16,7 @@ section.main-content__body.main-content__body--flush
 
   div[style="margin: 12px"]
     - if @territory_creation_requests.empty?
-      p.fr-my-4w Il n'y a aucune demande pour ce filtre
+      p Il n'y a aucune demande avec ce statut
     - @territory_creation_requests.each do |request|
         h3
           = link_to(edit_super_admins_territory_creation_request_path(request.id))

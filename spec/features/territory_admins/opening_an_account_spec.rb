@@ -4,7 +4,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
   end
 
   context "quand l'agent a déjà été créé via une connexion ProConnect" do
-    let(:agent) { create(:agent, :no_services) }
+    let(:agent) { create(:agent, :no_services, email: "francis@factice.org", proconnect_siret: "13002526500013") }
 
     before { login_as(agent, scope: :agent) }
 
@@ -29,6 +29,8 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
       let(:super_admin) { create :super_admin }
 
       let!(:service) { create(:service, name: "Service social") }
+      let!(:agent_with_same_email_domain) { create(:agent, :no_services, email: "regis@factice.org") }
+      let!(:agent_with_same_siret) { create(:agent, :no_services, proconnect_siret: agent.proconnect_siret) }
 
       it "ne permet pas de créer un territoire" do
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
@@ -48,10 +50,31 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         expect(page).to have_content("Demande d'ouverture d'espace")
 
-        select "Service social", from: "Services"
+        click_on "Accepter"
 
-        click_on "Ouvrir le compte"
-        expect(page).to have_content "coucou"
+        select "Commune", from: "Catégorie du territoire"
+
+        select "Service social", from: "Service"
+        click_on "Enregistrer"
+        expect(page).to have_content "Le nouveau compte a été créé"
+
+        expect(Territory.last).to have_attributes(
+          name: "Commune de Montreuil",
+          admin_agents: [agent]
+        )
+
+        expect(Organisation.last).to have_attributes(
+          name: "CCAS de Montreuil",
+          agents: [agent]
+        )
+
+        visit super_admins_territory_creation_requests_path
+
+        expect(page).to have_content "Il n'y a aucune demande avec ce statut"
+
+        click_on("Demandes acceptées")
+
+        expect(page).to have_content "Commune de Montreuil"
       end
     end
   end

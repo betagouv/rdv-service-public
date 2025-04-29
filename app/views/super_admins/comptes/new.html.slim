@@ -14,6 +14,8 @@ section.main-content__body
   p
     | Des motifs "Suivi de dossier" seront créés par défaut
   = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
+    - if @territory_creation_request
+      = f.hidden_field :territory_creation_request_id, value: @territory_creation_request.id
     = f.simple_fields_for :territory do |ff|
       = ff.input :name, label: "Nom du territoire", input_html: { value: @territory_creation_request&.territory_name }
       = ff.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie du territoire", input_html: { class: "fr-select" }
