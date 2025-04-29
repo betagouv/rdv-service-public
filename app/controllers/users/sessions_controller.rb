@@ -22,11 +22,7 @@ class Users::SessionsController < Devise::SessionsController
       set_flash_message!(:notice, :signed_in)
       sign_in(:agent, resource)
 
-      checker = PasswordChecker.new(params[:user][:password]) # voir aussi app/controllers/agents/sessions_controller.rb
-      if checker.too_weak?
-        flash[:notice] = nil
-        flash[:alert] = checker.error_message(current_domain.name)
-      end
+      # TODO
 
       yield resource if block_given?
       respond_with resource, location: after_sign_in_path_for(resource)

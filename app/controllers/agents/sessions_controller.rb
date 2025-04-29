@@ -1,4 +1,5 @@
 class Agents::SessionsController < Devise::SessionsController
+  include Admin::WeakPasswordControllerConcern
   before_action :exclude_signed_in_users, only: [:new]
 
   def new
@@ -17,21 +18,9 @@ class Agents::SessionsController < Devise::SessionsController
 
   def create
     self.resource = warden.authenticate!(auth_options)
-    checker = PasswordChecker.new(params[:agent][:password]) # voir aussi app/controllers/users/sessions_controller.rb
-    if checker.too_weak? || true
-      reset_password_token = current_agent.send(:set_reset_password_token)
-      sign_out current_agent
-      error = <<~MSG
-        Pour des raisons de sécurité, nous vous demandons de changer votre mot de passe actuel qui présente des vulnérabilités.
-        Merci de le modifier avant d'accéder à votre espace personnel.
-      MSG
-      redirect_to(edit_agent_password_path(reset_password_token:), flash: { error: })
-    else
-      set_flash_message!(:notice, :signed_in)
-      sign_in(resource_name, resource)
-      yield resource if block_given?
-      respond_with resource, location: after_sign_in_path_for(resource)
-    end
+    return if reset_password_if_weak!
+
+    super # this will repeat warden.authenticate! but it’s okay
   end
 
   def destroy
