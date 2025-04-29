@@ -99,10 +99,21 @@ $rdvs-fc-header-bg-color: $gray-200;
   .fc-event-main-frame {
     padding-left: 0.3rem;
   }
+
+  // alignement vertical centré pour les événements courts
   &.fc-timegrid-event-short {
     .fc-event-main-frame {
-      // alignement vertical centré pour les événements courts
       align-items: center;
+    }
+  }
+
+  // alignement vertical centré pour les événements longs
+  &:not(.fc-timegrid-event-short) {
+    .fc-event-main-frame {
+      justify-content: center;
+      .fc-event-title-container {
+        flex-grow: 0;
+      }
     }
   }
 }
