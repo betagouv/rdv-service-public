@@ -10,14 +10,14 @@ class HealthController < ApplicationController
     queues = [
       { name: "latency_30s", pending_jobs_threshold: 10, delay: 30.seconds },
       { name: "latency_5m", pending_jobs_threshold: 10, delay: 5.minutes },
-      { name: "latency_whenever", pending_jobs_threshold: 30, delay: nil },
+      { name: "latency_whenever", pending_jobs_threshold: 10, delay: 6.hours },
     ]
     queues.each do |queue|
-      query = GoodJob::Job.where(executions_count: 0).where(queue_name: queue[:name])
-      if queue[:delay]
-        query = query.where("scheduled_at < ?", Time.zone.now - (queue[:delay] / 10)) # le petit délai évite de compter les jobs qui viennent d’être enqueued
-      end
-      queue[:pending_jobs_count] = query.count
+      queue[:pending_jobs_count] = GoodJob::Job
+        .where(finished_at: nil) # finished_at is set upon success or final failure
+        .where(queue_name: queue[:name])
+        .where("scheduled_at < ?", Time.zone.now - queue[:delay]) # scheduled_at is updated at each retry
+        .count
     end
     congested_queues = queues.select { _1[:pending_jobs_count] >= _1[:pending_jobs_threshold] }
 
