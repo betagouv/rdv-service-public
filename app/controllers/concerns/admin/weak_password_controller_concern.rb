@@ -1,18 +1,14 @@
 module Admin::WeakPasswordControllerConcern
-  def reset_password_if_weak!(password)
+  def reset_current_agent_password_if_weak!(password)
     return false unless password_too_weak?(password)
 
-    current_agent.password = Admin::WeakPasswordControllerConcern.generate_password
+    current_agent.password = StrongPasswordConcern.generate
     current_agent.save!
     reset_password_token = current_agent.send(:set_reset_password_token)
     sign_out current_agent # required because this method is called after warden.authenticate!
 
     redirect_to edit_agent_password_path(reset_password_token:), flash: { error: weak_password_error_message }
     true
-  end
-
-  def self.generate_password
-    "#{Devise.friendly_token}!3Aa".chars.shuffle.join
   end
 
   protected
@@ -25,11 +21,6 @@ module Admin::WeakPasswordControllerConcern
   end
 
   def password_too_weak?(password)
-    Agent
-      .new(password:)
-      .tap(&:readonly!)
-      .tap(&:validate)
-      .errors[:password]
-      .any?
+    Agent.new(password:).tap(&:readonly!).tap(&:validate).errors[:password].any?
   end
 end

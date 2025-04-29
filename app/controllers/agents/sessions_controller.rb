@@ -18,7 +18,7 @@ class Agents::SessionsController < Devise::SessionsController
 
   def create
     self.resource = warden.authenticate!(auth_options)
-    return if reset_password_if_weak!(params[:agent][:password])
+    return if reset_current_agent_password_if_weak!(params[:agent][:password])
 
     super # this will repeat warden.authenticate! but it’s okay
   end

@@ -6,6 +6,11 @@ module StrongPasswordConcern
     validate :password_complexity
   end
 
+  def self.generate
+    [("a".."z"), ("A".."Z"), ("0".."9"), %w([];|'.,)]
+      .flat_map { _1.to_a.sample(4) }.join.chars.shuffle.join
+  end
+
   protected
 
   def check_password_is_uncommon

@@ -23,7 +23,7 @@ class Users::SessionsController < Devise::SessionsController
       set_flash_message!(:notice, :signed_in)
       sign_in(:agent, resource)
 
-      return if reset_password_if_weak!(params[:user][:password])
+      return if reset_current_agent_password_if_weak!(params[:user][:password])
 
       yield resource if block_given?
       respond_with resource, location: after_sign_in_path_for(resource)
