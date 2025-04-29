@@ -18,7 +18,7 @@ section.main-content__body
       = f.hidden_field :territory_creation_request_id, value: @territory_creation_request.id
     = f.simple_fields_for :territory do |ff|
       = ff.input :name, label: "Nom du territoire", input_html: { value: @territory_creation_request&.territory_name }
-      = ff.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie du territoire", input_html: { class: "fr-select" }
+      = ff.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie du territoire"
 
     = f.simple_fields_for :organisation do |ff|
       div[style="margin: 8px 0"]

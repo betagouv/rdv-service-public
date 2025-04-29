@@ -12,7 +12,7 @@ module SuperAdmins
       compte = Compte.new(compte_params, current_domain)
       authorize_resource(compte)
 
-      # TODO: éviter les validations en parallèle
+      # TODO: éviter les créations de doublons
       if compte.save!
         territory_creation_request_scope = policy_scope(TerritoryCreationRequest, policy_scope_class: SuperAdmin::TerritoryCreationRequestPolicy::Scope)
         territory_creation_request = territory_creation_request_scope.find_by(id: params.dig(:compte, :territory_creation_request_id))
