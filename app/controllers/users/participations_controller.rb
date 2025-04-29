@@ -25,8 +25,8 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def set_user
-    @user = if params[:user_id].present?
-              User.find(params[:user_id])
+    @user = if params[:user_ids].present?
+              User.find(params[:user_ids].first)
             else
               current_user
             end

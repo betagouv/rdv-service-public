@@ -8,25 +8,26 @@
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
-        = form_for @rdv, url: users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query.except(:rdv)), method: :post, builder: Dsfr::FormBuilder do |f|
-
-          = f.hidden_field :motif_id
-          = f.hidden_field :starts_at
-
+        ruby:
+          if @rdv_wizard.rdv.collectif?
+            form_url = users_rdv_participations_path(@rdv_wizard.rdv)
+            submit_label = "Confirmer ma participation"
+          else
+            form_url = users_rdvs_path(@rdv_wizard.to_query.except(:user_ids))
+            submit_label = "Confirmer mon RDV"
+          end
+        = form_with url: form_url, method: :post, builder: Dsfr::FormBuilder do |f|
           div Pour qui prenez-vous rendez-vous ?
           - if current_domain == Domain::RDV_MAIRIE
             .fr-mt-2w
               - current_user.available_users_for_rdv.each do |user|
-                = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, hint: birth_date_and_age(user), checked: (user.id.in?(@rdv.user_ids)), name: "rdv[user_ids][]" }, user.id, nil
+                = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, hint: birth_date_and_age(user), checked: (user.id.in?(@rdv.user_ids)), name: "user_ids[]" }, user.id, nil
           - else
             - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, hint: birth_date_and_age(user), value: user.id, checked: (user.id.in?(@rdv.user_ids) || current_user.id == user.id)} }
-            = f.dsfr_radio_buttons :users, users, legend: "", required: true, rich: true, name: "rdv[user_ids][]"
+            = f.dsfr_radio_buttons :users, users, legend: "", required: true, rich: true, name: "user_ids[]"
 
           .form-group
             = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?, ants_meeting_point_id: @rdv_wizard.lieu_id), data: { modal: true }
           .rdv-text-align-right
             = link_to "Revenir en arrière", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), class: "fr-btn fr-btn--secondary fr-mr-2w"
-            - if @rdv_wizard.rdv.collectif?
-              = link_to "Confirmer ma participation", users_rdv_participations_path(@rdv_wizard.rdv), method: :post, class: "btn btn-primary", data: { disable_with: "Veuillez patienter…" }
-            - else
-              = link_to "Confirmer mon RDV", users_rdvs_path(@rdv_wizard.to_query), method: :post, class: "btn btn-primary", data: { disable_with: "Veuillez patienter…" }
+            = f.submit submit_label, class: "fr-btn"
