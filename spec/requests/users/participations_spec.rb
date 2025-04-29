@@ -50,7 +50,7 @@ RSpec.describe "Users::Participants", type: :request do
         let(:rdv) { create(:rdv, :collectif, users: [other_user, user_child]) }
 
         it "change to other relative user" do
-          post users_rdv_participations_path(rdv, user_id: user_other_child.id)
+          post users_rdv_participations_path(rdv, user_ids: [user_other_child.id])
           expect(flash[:success]).to eq("Participation confirmée")
           expect(rdv.reload.users).to contain_exactly(user_other_child, other_user)
           expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: Participation.last.restricted_auth_token))

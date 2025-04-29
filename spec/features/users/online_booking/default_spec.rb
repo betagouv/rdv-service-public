@@ -288,7 +288,7 @@ RSpec.describe "User can search for rdvs" do
       expect(page).to have_content("Vos informations")
       click_button("Continuer")
       expect(page).to have_content("Choix de l’usager")
-      click_link("Confirmer mon RDV")
+      click_button("Confirmer mon RDV")
 
       expect(page).to have_content("Votre RDV")
       expect(page).to have_content(lieu.address)
@@ -512,7 +512,7 @@ RSpec.describe "User can search for rdvs" do
     # on vérifie directement que le proche est bien enregistré dans la base.
     wait_for { User.exists?(first_name: "Mathieu", last_name: "Lapin") }.to be(true)
 
-    click_link("Confirmer mon RDV")
+    click_button("Confirmer mon RDV")
   end
 
   def check_post_confirm_info(motif, lieu = nil)

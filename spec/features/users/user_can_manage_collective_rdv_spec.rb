@@ -293,13 +293,12 @@ RSpec.describe "Adding a user to a collective RDV" do
           select_motif
           select_lieu
           click_link("S'inscrire")
-          click_button("Continuer")
 
           rdv.update!(max_participants_count: 2)
           create(:participation, rdv: rdv)
           create(:participation, rdv: rdv)
 
-          click_on("Confirmer ma participation")
+          click_button("Continuer")
           expect(page).to have_content("Ce créneau n'est plus disponible")
         end
       end

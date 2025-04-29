@@ -125,7 +125,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       )
       click_button("Confirmer en ignorant les avertissements")
 
-      click_link("Confirmer mon RDV")
+      click_button("Confirmer mon RDV")
       expect(page).to have_content("Votre rendez vous a été confirmé.")
       expect(user.reload.ants_pre_demande_number).to eq("1122334455")
     end
@@ -194,7 +194,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       check("Marco POLO", allow_label_click: true)
       check("Alain MAIRIE", allow_label_click: true)
-      click_link "Confirmer mon RDV"
+      click_button "Confirmer mon RDV"
       expect(page).to have_content("Votre rendez vous a été confirmé.")
       expect(page).to have_content("Alain MAIRIE")
       expect(page).to have_content("Marco POLO")
@@ -247,7 +247,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       check("Marco POLO", allow_label_click: true)
       check("Alain MAIRIE", allow_label_click: true)
-      click_link "Confirmer mon RDV"
+      click_button "Confirmer mon RDV"
 
       expect(page).to have_content("Votre rendez vous a été confirmé.")
       expect(page).to have_content("Alain MAIRIE")
@@ -295,7 +295,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
         fill_in("user_ants_pre_demande_number", with: "abcd1234ef")
         click_button("Continuer")
-        expect { click_link("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
+        expect { click_button("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
         expect(user.reload.ants_pre_demande_number).to eq("ABCD1234EF")
         expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
       end
