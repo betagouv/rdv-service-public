@@ -10,7 +10,7 @@ class HealthController < ApplicationController
     queues = [
       { name: "latency_30s", pending_jobs_threshold: 10, delay: 30.seconds },
       { name: "latency_5m", pending_jobs_threshold: 10, delay: 5.minutes },
-      { name: "latency_whenever", pending_jobs_threshold: 10, delay: 6.hours },
+      { name: "latency_whenever", pending_jobs_threshold: 10, delay: 1.hour },
     ]
     queues.each do |queue|
       queue[:pending_jobs_count] = GoodJob::Job
