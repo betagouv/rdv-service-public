@@ -68,7 +68,7 @@ RSpec.describe "User signs up and signs in" do
     end
   end
 
-  context "if agent goes wrong" do
+  context "if agent tries to sign in through the user signin form" do
     let!(:agent) { create(:agent, password: "c0rRecthorse!", basic_role_in_organisations: [create(:organisation)]) }
 
     it ".sign_in as user and be signed in as agent" do
@@ -89,12 +89,22 @@ RSpec.describe "User signs up and signs in" do
         end
       end
 
-      it "shows a warning and advises to change the password" do
+      it "expire le mot de passe et redirige vers la page pour en définir un nouveau" do
+        previous_encrypted_password = agent.reload.encrypted_password
         visit new_user_session_path
-        fill_in :user_email, with: agent.email
-        fill_in :user_password, with: "tropfaible"
+        fill_in "Adresse email", with: agent.email
+        fill_in "Mot de passe", with: "tropfaible"
         within("main") { click_on "Se connecter" }
-        expect(page).to have_content("Votre mot de passe est trop faible")
+        expect(page).to have_content("nous vous demandons de changer votre mot de passe")
+        expect(agent.reload.encrypted_password).not_to eq(previous_encrypted_password) # vérifie que le mot de passe a été modifié
+        fill_in "Mot de passe", with: "tropfaible2"
+        click_on "Enregistrer"
+        # expect(page.status_code).to eq 422 # je ne sais pas trop pourquoi devise renvoie une 422 ici
+        expect(page).to have_content("Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères")
+        fill_in "Mot de passe", with: "Rdvservicepublictest1!"
+        click_on "Enregistrer"
+        expect(page).to have_content("Votre mot de passe a été édité avec succès, votre connexion est désormais active")
+        expect(page).to have_content("Bienvenue !")
       end
     end
   end

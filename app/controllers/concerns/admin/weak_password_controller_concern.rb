@@ -1,6 +1,6 @@
 module Admin::WeakPasswordControllerConcern
-  def reset_password_if_weak!
-    return false unless password_too_weak?
+  def reset_password_if_weak!(password)
+    return false unless password_too_weak?(password)
 
     current_agent.password = Admin::WeakPasswordControllerConcern.generate_password
     current_agent.save!
@@ -24,9 +24,9 @@ module Admin::WeakPasswordControllerConcern
     MESSAGE
   end
 
-  def password_too_weak?
+  def password_too_weak?(password)
     Agent
-      .new(password: params[:agent][:password])
+      .new(password:)
       .tap(&:readonly!)
       .tap(&:validate)
       .errors[:password]
