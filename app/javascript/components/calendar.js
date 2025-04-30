@@ -83,7 +83,6 @@ class CalendarRdvSolidarites {
           buttonText: 'Journée'
         }
       },
-      displayEventEnd: false,
       datesSet: this.datesSet,
       eventDidMount: eventRenderer(this.data.selectedEventId),
     }

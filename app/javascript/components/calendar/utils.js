@@ -14,6 +14,7 @@ const defaultFullCalendarConfig = () => ({
   },
   slotMinTime: '07:00:00',
   slotMaxTime: '20:00:00',
+  displayEventEnd: false,
   eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
   timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
