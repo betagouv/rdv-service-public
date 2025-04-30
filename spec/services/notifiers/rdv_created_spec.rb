@@ -13,6 +13,8 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     stub_netsize_ok
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(Agents::RdvMailer).to receive(:with).and_call_original
+    allow(Users::RdvSms).to receive(:rdv_created).and_call_original
+    allow(Devise.token_generator).to receive(:generate).and_return(token1, token2)
   end
 
   context "modifié par un agent" do
@@ -42,6 +44,12 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
       subject
     end
 
+    it "l'utilisateur reçoit un SMS de confirmation" do
+      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)
+      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user2, token2)
+      subject
+    end
+
     it "l'attribut participations_tokens_by_user_id retourne les tokens pour les utilisateurs correspondants" do
       notifier = described_class.new(rdv, user1)
       notifier.perform
@@ -58,6 +66,12 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent1, author: user1 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: user1 })
+      subject
+    end
+
+    it "l'utilisateur reçoit un SMS de confirmation" do
+      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)
+      expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user2, token2)
       subject
     end
   end
@@ -88,7 +102,7 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
       let(:starts_at) { 1.day.from_now }
 
       it "l'utilisateur reçoit un SMS de confirmation" do
-        expect(Users::RdvSms).to receive(:rdv_created).and_call_original
+        expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)
         subject
       end
     end
