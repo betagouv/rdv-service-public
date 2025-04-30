@@ -15,13 +15,13 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     allow(Agents::RdvMailer).to receive(:with).and_call_original
   end
 
-  context "edited by agent" do
+  context "modifié par un agent" do
     subject { described_class.perform_with(rdv, agent1) }
 
     let(:starts_at) { 3.days.from_now }
     let(:motif) { build(:motif) }
 
-    it "triggers sending mail to users and other agents" do
+    it "déclenche l'envoi d'emails aux utilisateurs et aux autres agents" do
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: agent1 })
@@ -30,11 +30,11 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     end
   end
 
-  context "starts in more than 2 days" do
+  context "commence dans plus de 2 jours" do
     let(:starts_at) { 3.days.from_now }
     let(:motif) { build(:motif) }
 
-    it "triggers sending mail to users and agents" do
+    it "déclenche l'envoi d'emails aux utilisateurs et aux agents" do
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent1, author: user1 })
@@ -42,19 +42,18 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
       subject
     end
 
-    it "participations_tokens_by_user_id attribute outputs the tokens for matching users" do
-      # keep this stubbing test as its important to check matching token and users
+    it "l'attribut participations_tokens_by_user_id retourne les tokens pour les utilisateurs correspondants" do
       notifier = described_class.new(rdv, user1)
       notifier.perform
       expect(notifier.participations_tokens_by_user_id).to eq({ user1.id => token1, user2.id => token2 })
     end
   end
 
-  context "starts today or tomorrow" do
+  context "commence aujourd'hui ou demain" do
     let(:starts_at) { 2.hours.from_now }
     let(:motif) { build(:motif) }
 
-    it "triggers sending mails to both user and agents" do
+    it "déclenche l'envoi d'emails aux utilisateurs et aux agents" do
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent1, author: user1 })
@@ -63,13 +62,35 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     end
   end
 
-  context "with visible and not notified motif" do
+  context "avec un motif visible et non notifié" do
     let(:starts_at) { 3.days.from_now }
     let(:motif) { build(:motif, :visible_and_not_notified) }
 
-    it "does not send emails to users" do
+    it "n'envoie pas d'emails aux utilisateurs" do
       expect(Users::RdvMailer).not_to receive(:with)
       subject
+    end
+  end
+
+  context "le rendez-vous est pris par un utilisateur" do
+    subject { described_class.perform_with(rdv, user1) }
+
+    let(:rdv) { create(:rdv, starts_at: starts_at, motif: motif, agents: [agent1], users: [user1], organisation: motif.organisation, created_by: user1) }
+    let(:starts_at) { 3.days.from_now }
+    let(:motif) { build(:motif) }
+
+    it "l'utilisateur ne reçoit pas de SMS de confirmation" do
+      expect(Users::RdvSms).not_to receive(:rdv_created)
+      subject
+    end
+
+    context "le rendez-vous est pris moins de 48h avant" do
+      let(:starts_at) { 1.day.from_now }
+
+      it "l'utilisateur reçoit un SMS de confirmation" do
+        expect(Users::RdvSms).to receive(:rdv_created).and_call_original
+        subject
+      end
     end
   end
 end
