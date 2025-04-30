@@ -17,7 +17,7 @@ tr id="agent_#{agent.id}"
           / ce cas est très rare et n’arrive plus depuis 2022 car les agents sont connectés tout de suite après avoir accepté l’invitation
           .badge.badge-warning Jamais connecté·e
         - elsif agent.last_sign_in_at <= 1.month.ago
-          .badge.badge-warning Dernière connexion > 1 mois
+          .badge.badge-warning Pas connecté·e depuis plus d'un mois
       end
     - else
       span.mr-2= agent.reverse_full_name
