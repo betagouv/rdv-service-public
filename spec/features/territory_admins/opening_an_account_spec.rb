@@ -25,14 +25,12 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
       end
     end
 
-    context "mais que son compte n'est pas vérifié par une organisation externe" do
+    context "mais que son compte n'est pas vérifié par une application partenaire" do
       let(:super_admin) { create :super_admin }
 
       let!(:service) { create(:service, name: "Service social") }
-      let!(:agent_with_same_email_domain) { create(:agent, :no_services, email: "regis@factice.org") }
-      let!(:agent_with_same_siret) { create(:agent, :no_services, proconnect_siret: agent.proconnect_siret) }
 
-      it "ne permet pas de créer un territoire" do
+      it "permet de demander une ouverture d'espace" do
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
         click_on "Demander à ouvrir un espace"
 
@@ -75,6 +73,24 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         click_on("Demandes acceptées")
 
         expect(page).to have_content "Commune de Montreuil"
+      end
+
+      context "quand il y a un doublon probable qu'on retrouve via l'adresse mail d'autres agents" do
+        let!(:agent_with_same_email_domain) { create(:agent, email: "regis@factice.org", basic_role_in_organisations: [duplicate_organisation]) }
+        let(:duplicate_organisation) { create(:organisation, name: "Mairie de Montreuil", territory: duplicate_territory) }
+        let(:duplicate_territory) { create(:territory, name: "Ville de Montreuil") }
+
+        let(:territory_creation_request) do
+          create(:territory_creation_request, agent: agent, territory_name: "Commune de Montreuil", organisation_name: "CCAS de Montreuil")
+        end
+
+        it "affiche la liste de espaces potentiellement en doublon" do
+          login_as(super_admin, scope: :super_admin)
+
+          visit edit_super_admins_territory_creation_request_path(territory_creation_request.id)
+          expect(page).to have_content("Attention, ces organisations ont des agents avec des adresses email similaires")
+          expect(page).to have_content("Mairie de Montreuil")
+        end
       end
     end
   end

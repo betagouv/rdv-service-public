@@ -5,51 +5,52 @@ header.main-content__header
     = content_for(:title)
 
 section.main-content__body
-  p
-    b = "Demandé par : "
-    = @territory_creation_request.agent.full_name
-    = " "
-    = @territory_creation_request.agent.email
+  dl
+    dt.attribute-label.attribute-label--normal-case Espace
+    dd.attribute-data = @territory_creation_request.territory_name
 
-    - email_domain = @territory_creation_request.agent.email.split("@").last
-    - agents_with_similar_email = Agent.where("email ilike ?", "%@#{email_domain}").limit(10) # TODO: mettre une vrai pagination ici ?
-    - if agents_with_similar_email.any?
-      p D'autres agents ont une adresse email avec le même nom de domaine :
+
+    dt.attribute-label.attribute-label--normal-case Organisation
+    dd.attribute-data = @territory_creation_request.organisation_name
+
+    dt.attribute-label.attribute-label--normal-case Demandé par
+    dd.attribute-data
+      = @territory_creation_request.agent.full_name
+      = " "
+      = mail_to(@territory_creation_request.agent.email)
+
+    dt.attribute-label.attribute-label--normal-case Service
+    dd.attribute-data = @territory_creation_request.service_name
+
+  section.main-content__body[style=""]
+    - if @territory_creation_request.possible_duplicate_organisations_by_email_domain.none?
+      p ✅ Aucun espace existant n'a d'agents avec des adresses email similaires.
+    - else
+      p ⚠️ Attention, ces organisations ont des agents avec des adresses email similaires :
       ul
-        - agents_with_similar_email.each do |agent|
-          li = link_to(agent.full_name, super_admins_agent_path(agent), target: :_blank)
+        - @territory_creation_request.possible_duplicate_organisations_by_email_domain.each do |organisation|
+          li
+            = link_to organisation.name, super_admins_organisation_path(organisation)
 
-  p
-    b = "Nom de l'espace : "
-    = @territory_creation_request.territory_name
+      - if @territory_creation_request.agent.proconnect_siret
+        p
+          b = "Siret de l'agent : "
+          = @territory_creation_request.agent.proconnect_siret
+        - agents_with_same_siret = Agent.joins(:organisations).where(agents: { proconnect_siret: @territory_creation_request.agent.proconnect_siret }).limit(10).distinct
+        - if agents_with_same_siret.any?
+          p D'autres agents ont le même siret :
+          ul
+            - agents_with_same_siret.each do |agent|
+              li = link_to(agent.full_name, super_admins_agent_path(agent), target: :_blank)
 
-  p
-    b = "Nom de l'organisation : "
-    = @territory_creation_request.organisation_name
+    = "Avant d'accepter cette requête, pour éviter de créer des doublons, merci de faire les vérifications suivantes :"
+    ul
+      li Il n'y a pas d'autre territoire/espace avec un nom similaire
+      li Il n'y a pas d'autres organisation avec un nom similaire
 
-  p
-    b = "Service demandé : "
-    = @territory_creation_request.service_name
+    div[style="display: flex; padding-top: 12px"]
+      = simple_form_for([namespace, @territory_creation_request], html: { class: "form", style: "padding-right: 20px" }) do |f|
+        = f.hidden_field :response, value: "refused"
+        = f.submit "Refuser"
 
-    - if @territory_creation_request.agent.proconnect_siret
-      p
-        b = "Siret de l'agent : "
-        = @territory_creation_request.agent.proconnect_siret
-      - agents_with_same_siret = Agent.joins(:organisations).where(agents: { proconnect_siret: @territory_creation_request.agent.proconnect_siret }).limit(10).distinct
-      - if agents_with_same_siret.any?
-        p D'autres agents ont le même siret :
-        ul
-          - agents_with_same_siret.each do |agent|
-            li = link_to(agent.full_name, super_admins_agent_path(agent), target: :_blank)
-
-  = "Avant d'accepter cette requête, pour éviter de créer des doublons, merci de faire les vérifications suivantes :"
-  ul
-    li Il n'y a pas d'autre territoire/espace avec un nom similaire
-    li Il n'y a pas d'autres organisation avec un nom similaire
-
-  div[style="display: flex; padding-top: 12px"]
-    = simple_form_for([namespace, @territory_creation_request], html: { class: "form", style: "padding-right: 20px" }) do |f|
-      = f.hidden_field :response, value: "refused"
-      = f.submit "Refuser"
-
-    = link_to("Accepter", new_super_admins_compte_path(request_id: @territory_creation_request.id), class: "button")
+      = link_to("Accepter", new_super_admins_compte_path(request_id: @territory_creation_request.id), class: "button")
