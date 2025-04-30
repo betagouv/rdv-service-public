@@ -1,4 +1,3 @@
-# TODO: ajouter une spec pour cette classe
 class Agent::TerritoryCreationRequestPolicy
   def initialize(current_agent, territory_creation_request)
     @current_agent = current_agent
