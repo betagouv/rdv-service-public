@@ -13,7 +13,6 @@ class Agents::TerritoryCreationRequestsController < AgentAuthController
       flash[:success] = "Votre demande a bien été enregistrée. Notre équipe va l'étudier et revenir vers vous dans les meilleurs délais"
       redirect_to root_path
     else
-      # TODO: vérifier la gestion d'erreur sur ce formulaire
       render :new
     end
   end

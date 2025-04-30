@@ -1,0 +1,8 @@
+fr:
+  activerecord:
+    attributes:
+      territory_creation_request:
+        territory_name: Nom de l’espace
+        organisation_name: Nom de votre première organisation
+        service_name: Nom du service
+
