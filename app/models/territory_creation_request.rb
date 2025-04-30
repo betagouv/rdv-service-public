@@ -16,4 +16,14 @@ class TerritoryCreationRequest < ApplicationRecord
 
     Organisation.joins(:agents).where(agents: { proconnect_siret: agent.proconnect_siret }).distinct
   end
+
+  validate :can_only_have_one_response
+
+  private
+
+  def can_only_have_one_response
+    if response_changed? && !response_was.nil?
+      errors.add(:response, "Un autre admin a déjà traité cette demande")
+    end
+  end
 end
