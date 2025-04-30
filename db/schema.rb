@@ -757,7 +757,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_150741) do
     t.enum "response", enum_type: "creation_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["agent_id"], name: "index_territory_creation_requests_on_agent_id"
+    t.index ["agent_id"], name: "index_territory_creation_requests_on_agent_id", unique: true
   end
 
   create_table "territory_services", force: :cascade do |t|

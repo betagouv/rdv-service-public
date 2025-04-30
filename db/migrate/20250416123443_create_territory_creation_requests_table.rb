@@ -13,6 +13,6 @@ class CreateTerritoryCreationRequestsTable < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    add_index :territory_creation_requests, :agent_id, algorithm: :concurrently
+    add_index :territory_creation_requests, :agent_id, algorithm: :concurrently, unique: true
   end
 end
