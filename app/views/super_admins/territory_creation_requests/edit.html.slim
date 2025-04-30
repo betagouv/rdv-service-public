@@ -49,7 +49,12 @@ section.main-content__body
 
       p Si vous pensez que ce nouvel espace serait un doublon, vous pouvez contacter un admin d'organisation pour lui proposer d'inviter #{@territory_creation_request.agent.full_name}.
 
-    = "Pour éviter de créer des doublons, vérifiez qu'il n'y a pas d'espace déjà existant avec un nom similaire"
+    hr
+    h2 Réponse
+    p Pour éviter de créer des doublons, vérifiez qu'il n'y a pas d'espace déjà existant avec un nom similaire
+
+    p Si vous refusez la demande, merci de contacter l'agent pour lui expliquer votre décision.
+
     div[style="display: flex; padding-top: 12px"]
       = simple_form_for([namespace, @territory_creation_request], html: { class: "form", style: "padding-right: 20px" }) do |f|
         = f.hidden_field :response, value: "refused"
