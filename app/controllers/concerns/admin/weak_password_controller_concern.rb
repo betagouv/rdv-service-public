@@ -2,8 +2,8 @@ module Admin::WeakPasswordControllerConcern
   def reset_current_agent_password_if_weak!(password)
     return false unless password_too_weak?(password)
 
-    current_agent.update_attribute(:encrypted_password, "") # rubocop:disable Rails/SkipsModelValidations
-    reset_password_token = current_agent.send(:set_reset_password_token)
+    resource.update_attribute(:encrypted_password, "") # rubocop:disable Rails/SkipsModelValidations
+    reset_password_token = resource.send(:set_reset_password_token)
 
     redirect_to edit_agent_password_path(reset_password_token:), flash: { error: weak_password_error_message }
     true
