@@ -72,6 +72,16 @@ RSpec.describe Users::RdvsController, type: :controller do
           expect(flash[:error]).to eq "Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action"
         end
       end
+
+      context "when a duration is passed" do
+        let(:motif) { create(:motif, organisation:, default_duration_in_min: 30) }
+
+        it "uses the duration passed" do
+          post :create, params: params.merge(duration: "60")
+          expect(Rdv.count).to eq(1)
+          expect(Rdv.last.duration_in_min).to eq(60)
+        end
+      end
     end
 
     describe "when there is no available creneau" do

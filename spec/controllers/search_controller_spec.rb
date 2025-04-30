@@ -19,10 +19,10 @@ RSpec.describe SearchController, type: :controller do
   let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
   let!(:rsa_orientation_on_phone_platform) { create(:motif_category, name: "RSA orientation sur plateforme téléphonique", short_name: "rsa_orientation_on_phone_platform") }
 
-  let!(:motif) { create(:motif, name: "RSA orientation 1", service: service, motif_category: rsa_orientation, organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "RSA orientation 2", service: service, motif_category: rsa_orientation_on_phone_platform, organisation: organisation) }
-  let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, organisation: other_org) }
-  let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, organisation: other_org) }
+  let!(:motif) { create(:motif, name: "RSA orientation 1", service: service, motif_category: rsa_orientation, organisation: organisation, default_duration_in_min: 30) }
+  let!(:motif2) { create(:motif, name: "RSA orientation 2", service: service, motif_category: rsa_orientation_on_phone_platform, organisation: organisation, default_duration_in_min: 30) }
+  let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, organisation: other_org, default_duration_in_min: 30) }
+  let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, organisation: other_org, default_duration_in_min: 30) }
 
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
   let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], lieu: lieu2, organisation: organisation) }
@@ -162,7 +162,8 @@ RSpec.describe SearchController, type: :controller do
           motif: motif,
           lieu: lieu,
           date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 29)),
-          geo_search: geo_search
+          geo_search: geo_search,
+          duration_in_min: 30
         ).and_return(creneaux_search)
       end
 
@@ -198,7 +199,8 @@ RSpec.describe SearchController, type: :controller do
           motif: motif,
           lieu: lieu,
           date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28)),
-          geo_search: geo_search
+          geo_search: geo_search,
+          duration_in_min: 30
         ).and_return(creneaux_search)
       end
 
