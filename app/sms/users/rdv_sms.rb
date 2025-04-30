@@ -11,15 +11,19 @@ class Users::RdvSms < Users::BaseSms
   end
 
   def rdv_created(rdv, user, token)
-    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
+    complete_address = @rdv.starts_at < 2.days.from_now
+
+    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token, complete_address:)}"
   end
 
   def rdv_updated(rdv, user, token)
-    @content = "RDV modifié: #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token)}"
+    complete_address = @rdv.starts_at < 2.days.from_now
+
+    @content = "RDV modifié: #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token, complete_address:)}"
   end
 
   def rdv_upcoming_reminder(rdv, user, token)
-    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token)}"
+    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token, complete_address: true)}"
   end
 
   def rdv_cancelled(rdv, _user, token)
@@ -51,8 +55,8 @@ class Users::RdvSms < Users::BaseSms
     I18n.l(rdv.starts_at, format: rdv.home? ? :short_sms_approx : :short_sms)
   end
 
-  def rdv_footer(rdv, user, token)
-    details = rdv_location(rdv)
+  def rdv_footer(rdv, user, token, complete_address: false)
+    details = rdv_location(rdv, complete_address:)
 
     if user.relatives.present? && !rdv.collectif?
       users_full_names = rdv.users.map(&:full_name).sort.to_sentence
@@ -72,10 +76,14 @@ class Users::RdvSms < Users::BaseSms
     details + links
   end
 
-  def rdv_location(rdv)
+  def rdv_location(rdv, complete_address: false)
     case rdv.motif.location_type
     when "public_office"
-      rdv.address
+      if complete_address
+        rdv.address_complete
+      else
+        rdv.address
+      end
     when "phone"
       "Par tél"
     when "home"
