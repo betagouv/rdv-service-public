@@ -49,15 +49,17 @@ section.main-content__body
 
       p Si vous pensez que ce nouvel espace serait un doublon, vous pouvez contacter un admin d'organisation pour lui proposer d'inviter #{@territory_creation_request.agent.full_name}.
 
-    hr
-    h2 Réponse
-    p Pour éviter de créer des doublons, vérifiez qu'il n'y a pas d'espace déjà existant avec un nom similaire
+    - if @territory_creation_request.response.blank?
+      hr
+      h2 Réponse
 
-    p Si vous refusez la demande, merci de contacter l'agent pour lui expliquer votre décision.
+      p Pour éviter de créer des doublons, vérifiez qu'il n'y a pas d'espace déjà existant avec un nom similaire
 
-    div[style="display: flex; padding-top: 12px"]
-      = simple_form_for([namespace, @territory_creation_request], html: { class: "form", style: "padding-right: 20px" }) do |f|
-        = f.hidden_field :response, value: "refused"
-        = f.submit "Refuser"
+      p Si vous refusez la demande, merci de contacter l'agent pour lui expliquer votre décision.
 
-      = link_to("Accepter", new_super_admins_compte_path(request_id: @territory_creation_request.id), class: "button")
+      div[style="display: flex; padding-top: 12px"]
+        = simple_form_for([namespace, @territory_creation_request], html: { class: "form", style: "padding-right: 20px" }) do |f|
+          = f.hidden_field :response, value: "refused"
+          = f.submit "Refuser"
+
+        = link_to("Accepter", new_super_admins_compte_path(request_id: @territory_creation_request.id), class: "button")
