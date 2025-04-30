@@ -17,10 +17,14 @@ class Agents::SessionsController < Devise::SessionsController
   end
 
   def create
+    # this is the first line of Devise::SessionsController#create
     self.resource = warden.authenticate!(auth_options)
+
     return if reset_current_agent_password_if_weak!(params[:agent][:password])
 
-    super # this will repeat warden.authenticate! but it’s okay
+    super
+    # super will repeat warden.authenticate! which will not repeat everything but fetch from the session
+    # cf https://github.com/wardencommunity/warden/blob/master/lib/warden/proxy.rb#L332-L334
   end
 
   def destroy
