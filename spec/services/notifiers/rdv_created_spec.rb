@@ -14,7 +14,6 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(Agents::RdvMailer).to receive(:with).and_call_original
     allow(Users::RdvSms).to receive(:rdv_created).and_call_original
-    allow(Devise.token_generator).to receive(:generate).and_return(token1, token2)
   end
 
   context "modifié par un agent" do
@@ -100,6 +99,15 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
 
     context "le rendez-vous est pris moins de 48h avant" do
       let(:starts_at) { 1.day.from_now }
+
+      it "l'utilisateur reçoit un SMS de confirmation" do
+        expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)
+        subject
+      end
+    end
+
+    context "l’utilisateur n'a pas confirmé son compte" do
+      let(:user1) { create(:user, confirmed_at: nil) }
 
       it "l'utilisateur reçoit un SMS de confirmation" do
         expect(Users::RdvSms).to receive(:rdv_created).with(rdv, user1, token1)
