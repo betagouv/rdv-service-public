@@ -16,7 +16,7 @@ Domain = Struct.new(
   :support_email,
   :secretariat_email,
   :verticale,
-  :allow_agent_creation_with_agent_connect,
+  :allow_agent_creation_with_agent_connect, # TODO: renommer ça pour expliciter l'état du self-onboarding
   keyword_init: true
 )
 
