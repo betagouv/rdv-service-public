@@ -13,7 +13,7 @@ tr id="agent_#{agent.id}"
             .badge.badge-warning Invitation expirée
           - else
             .badge.badge-warning Invitation en attente
-        - elsif agent.last_sign_in_at.nil? ||agent.last_sign_in_at <= 1.month.ago
+        - elsif agent.last_sign_in_at.nil? || agent.last_sign_in_at <= 1.month.ago
           / le cas agent.last_sign_in_at.nil? est très rare et correspond probablement à des agents connectés avant qu’on ne commence à stocker le last_sign_in_at
           .badge.badge-warning Pas connecté·e depuis plus d'un mois
       end
