@@ -9,7 +9,6 @@ section.main-content__body
     dt.attribute-label.attribute-label--normal-case Espace
     dd.attribute-data = @territory_creation_request.territory_name
 
-
     dt.attribute-label.attribute-label--normal-case Organisation
     dd.attribute-data = @territory_creation_request.organisation_name
 
@@ -18,6 +17,11 @@ section.main-content__body
       = @territory_creation_request.agent.full_name
       = " "
       = mail_to(@territory_creation_request.agent.email)
+
+    - siret = @territory_creation_request.agent.proconnect_siret
+    - if siret
+      dt.attribute-label SIRET
+      dd.attribute-data =link_to(siret, "https://annuaire-entreprises.data.gouv.fr/etablissement/#{siret}", target: "_blank")
 
     dt.attribute-label.attribute-label--normal-case Service
     dd.attribute-data = @territory_creation_request.service_name
@@ -32,22 +36,20 @@ section.main-content__body
           li
             = link_to organisation.name, super_admins_organisation_path(organisation)
 
-      - if @territory_creation_request.agent.proconnect_siret
-        p
-          b = "Siret de l'agent : "
-          = @territory_creation_request.agent.proconnect_siret
-        - agents_with_same_siret = Agent.joins(:organisations).where(agents: { proconnect_siret: @territory_creation_request.agent.proconnect_siret }).limit(10).distinct
-        - if agents_with_same_siret.any?
-          p D'autres agents ont le même siret :
-          ul
-            - agents_with_same_siret.each do |agent|
-              li = link_to(agent.full_name, super_admins_agent_path(agent), target: :_blank)
+      p Si vous pensez que ce nouvel espace serait un doublon, vous pouvez contacter un admin d'organisation pour lui proposer d'inviter #{@territory_creation_request.agent.full_name}.
 
-    = "Avant d'accepter cette requête, pour éviter de créer des doublons, merci de faire les vérifications suivantes :"
-    ul
-      li Il n'y a pas d'autre territoire/espace avec un nom similaire
-      li Il n'y a pas d'autres organisation avec un nom similaire
+    - if @territory_creation_request.possible_duplicate_organisations_by_siret.none?
+      p ✅ Aucun espace existant n'a d'agents avec des SIRET similaires.
+    - else
+      p ⚠️ Attention, ces organisations ont des agents avec le même SIRET :
+      ul
+        - @territory_creation_request.possible_duplicate_organisations_by_siret.each do |organisation|
+          li
+            = link_to organisation.name, super_admins_organisation_path(organisation)
 
+      p Si vous pensez que ce nouvel espace serait un doublon, vous pouvez contacter un admin d'organisation pour lui proposer d'inviter #{@territory_creation_request.agent.full_name}.
+
+    = "Pour éviter de créer des doublons, vérifiez qu'il n'y a pas d'espace déjà existant avec un nom similaire"
     div[style="display: flex; padding-top: 12px"]
       = simple_form_for([namespace, @territory_creation_request], html: { class: "form", style: "padding-right: 20px" }) do |f|
         = f.hidden_field :response, value: "refused"

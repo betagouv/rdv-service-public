@@ -75,21 +75,32 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         expect(page).to have_content "Commune de Montreuil"
       end
 
-      context "quand il y a un doublon probable qu'on retrouve via l'adresse mail d'autres agents" do
-        let!(:agent_with_same_email_domain) { create(:agent, email: "regis@factice.org", basic_role_in_organisations: [duplicate_organisation]) }
-        let(:duplicate_organisation) { create(:organisation, name: "Mairie de Montreuil", territory: duplicate_territory) }
-        let(:duplicate_territory) { create(:territory, name: "Ville de Montreuil") }
-
+      context "quand il y a un doublon probable" do
+        let(:duplicate_organisation) { create(:organisation, name: "Mairie de Montreuil") }
         let(:territory_creation_request) do
           create(:territory_creation_request, agent: agent, territory_name: "Commune de Montreuil", organisation_name: "CCAS de Montreuil")
         end
 
-        it "affiche la liste de espaces potentiellement en doublon" do
-          login_as(super_admin, scope: :super_admin)
+        before { login_as(super_admin, scope: :super_admin) }
 
-          visit edit_super_admins_territory_creation_request_path(territory_creation_request.id)
-          expect(page).to have_content("Attention, ces organisations ont des agents avec des adresses email similaires")
-          expect(page).to have_content("Mairie de Montreuil")
+        context "via l'adresse mail d'autres agents" do
+          let!(:agent_with_same_email_domain) { create(:agent, email: "regis@factice.org", basic_role_in_organisations: [duplicate_organisation]) }
+
+          it "affiche la liste des organisations potentiellement en doublon" do
+            visit edit_super_admins_territory_creation_request_path(territory_creation_request.id)
+            expect(page).to have_content("Attention, ces organisations ont des agents avec des adresses email similaires")
+            expect(page).to have_content("Mairie de Montreuil")
+          end
+        end
+
+        context "via le siret d'autres agents" do
+          let!(:agent_with_same_siret) { create(:agent, proconnect_siret: "13002526500013", basic_role_in_organisations: [duplicate_organisation]) }
+
+          it "affiche la liste de organisations potentiellement en doublon" do
+            visit edit_super_admins_territory_creation_request_path(territory_creation_request.id)
+            expect(page).to have_content("Attention, ces organisations ont des agents avec le même SIRET")
+            expect(page).to have_content("Mairie de Montreuil")
+          end
         end
       end
     end

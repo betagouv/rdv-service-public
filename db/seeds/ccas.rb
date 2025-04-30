@@ -60,6 +60,7 @@ agent = Agent.new(
   services: [],
   invitation_accepted_at: 1.day.ago,
   roles_attributes: [],
+  proconnect_siret: "13002603200016",
   agent_territorial_access_rights_attributes: []
 )
 agent.skip_confirmation!
