@@ -62,6 +62,13 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 | App Rails        | Postgres Scalingo | TCP       | 5432 | Paris/SecNumCloud | Interne             |
 | App Rails        | Redis Scalingo    | TCP       | 6379 | Paris/SecNumCloud | Interne             |
 
+Nos services sont hébergés sur le PaaS (*Platform as a Service*) Scalingo.
+Scalingo est certifié [ISO 27001](https://scalingo.com/fr/certification-iso-27001) et [HDS (Hébergement de Données de Santé)](https://scalingo.com/fr/certification-hds) (nous n’hébergeons cependant aucune donnée de santé).
+
+Scalingo n’est pas encore habilité SecNumCloud mais œuvre à le devenir [cf cet article de blog Scalingo](https://scalingo.com/fr/blog/secnumcloud-qualification-anssi-guide).
+Nos apps sont cependant toutes situées sur la zone `SecNumCloud` de Scalingo, qui utilise les serveurs OutScale qui sont eux certifiés SecNumCloud.
+
+
 #### Tooling (error monitoring, APM)
 
 | Source     | Destination | Protocole | Port | Localisation              | Interne/URL Externe                             |
@@ -350,16 +357,6 @@ TOTP, Scalingo propose une procédure qui inclut la vérification de l'identité
 transmission d'un document d'identité.
 
 Note : les review apps sont créées manuellement et héritent de l'app de démo. Le fichier `scalingo.json` contient la liste des variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de la création d'une review app. Les review apps sont automatiquement détruites lors de la fermeture d'une PR.
-
-### Habilitations de sécurité
-
-Nous sommes en train de finaliser une habilitation de sécurité avec l’ANCT.
-
-Nos services sont hébergés sur le PaaS (*Platform as a Service*) Scalingo.
-Scalingo est certifié [ISO 27001](https://scalingo.com/fr/certification-iso-27001) et [HDS (Hébergement de Données de Santé)](https://scalingo.com/fr/certification-hds).
-
-Scalingo n’est pas encore habilité SecNumCloud mais œuvre à le devenir [cf cet article de blog Scalingo](https://scalingo.com/fr/blog/secnumcloud-qualification-anssi-guide).
-Nos apps sont cependant toutes situées sur la zone `SecNumCloud` de Scalingo, qui utilise les serveurs OutScale qui sont eux certifiés SecNumCloud.
 
 ### Détection de fuite de secrets
 
