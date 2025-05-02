@@ -55,7 +55,7 @@ class Notifiers::RdvBase < BaseService
     @rdv.participations.each do |participation|
       participant = participation.user
       user_to_notify = participant.user_to_notify
-      @participations_tokens_by_user_id[user_to_notify.id] = participation.new_raw_invitation_token
+      @participations_tokens_by_user_id[user_to_notify.id] = participation.restricted_auth_token
     end
 
     @rdv.skip_webhooks = false
