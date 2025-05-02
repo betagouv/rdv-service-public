@@ -147,5 +147,42 @@ RSpec.describe CreneauxSearch::NextAvailability, type: :service do
         expect(next_creneau.starts_at).to eq(other_agent_start_day + 9.hours)
       end
     end
+
+    context "argument duration_in_min : motif de 30 min + 1 PO de 30 min + 1 PO de 1h30" do
+      let!(:motif) { create(:motif, default_duration_in_min: 30, organisation:) }
+      let!(:plage_ouverture1) do
+        create(
+          :plage_ouverture,
+          motifs: [motif],
+          lieu:,
+          agent:,
+          organisation:,
+          first_day: today + 8.days,
+          start_time: Tod::TimeOfDay.parse("09:30"),
+          end_time: Tod::TimeOfDay.parse("10:00")
+        )
+      end
+      let!(:plage_ouverture2) do
+        create(
+          :plage_ouverture,
+          motifs: [motif],
+          lieu:,
+          agent:,
+          organisation:,
+          first_day: today + 16.days,
+          start_time: Tod::TimeOfDay.parse("08:30"),
+          end_time: Tod::TimeOfDay.parse("10:00")
+        )
+      end
+
+      specify do
+        next_available_default = described_class.find(motif, lieu, [], from: today)
+        expect(next_available_default.starts_at).to eq((today + 8.days).at(Tod::TimeOfDay.parse("09:30")))
+        next_available_30min = described_class.find(motif, lieu, [], from: today, duration_in_min: 30)
+        expect(next_available_30min.starts_at).to eq((today + 8.days).at(Tod::TimeOfDay.parse("09:30")))
+        next_available_1h00 = described_class.find(motif, lieu, [], from: today, duration_in_min: 60)
+        expect(next_available_1h00.starts_at).to eq((today + 16.days).at(Tod::TimeOfDay.parse("08:30")))
+      end
+    end
   end
 end

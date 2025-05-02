@@ -30,15 +30,4 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
     OmniauthCallbacksController.action(:failure).call(env)
   end
-
-  before_callback_phase do |env|
-    # cf https://github.com/betagouv/rdv-service-public/issues/4637
-    Sentry.set_context(
-      :omni_callback, # NOTE: ne pas utiliser 'auth' dans le nom du contexte sinon Sentry le scrubbe
-      {
-        state_from_session: env["rack.session"]["omniauth.state"],
-        state_from_params: Rack::Request.new(env).params["state"],
-      }
-    )
-  end
 end

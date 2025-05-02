@@ -9,7 +9,7 @@ class ZonesMap {
   }
 
   getCenterCoordinates = () => {
-    const url = "https://api-adresse.data.gouv.fr/search/"
+    const url = "https://data.geopf.fr/geocodage/search/"
     const searchParams = new URLSearchParams()
     searchParams.append("q", this.mapElement.dataset.centerQuery)
     searchParams.append("type", "municipality")

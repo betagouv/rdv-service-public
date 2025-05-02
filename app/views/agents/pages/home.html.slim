@@ -1,16 +1,15 @@
 - if current_agent.territory_creation_request.blank?
-  .fr-container
-    h1.fr-h3.fr-pb-2w Bienvenue !
-    p.fr-py-1w Pour commencer, aidez-nous à en savoir plus :
+  h1.fr-h3.fr-pb-2w Bienvenue !
+  p.fr-py-1w Pour commencer, aidez-nous à en savoir plus :
 
   .fr-grid-row
-    .fr-col-12.fr-col-md-6.fr-p-1w
+    .fr-col-12.fr-col-md-6.fr-grid-row--gutters
       .card
         .card-body
           h2.fr-h6 Votre organisation utilise déjà #{current_domain.name} ?
           p Vos collègues peuvent vous inviter depuis le menu <b>Configuration > Agents > Ajouter un agent</b>.
 
-    .fr-col-12.fr-col-md-6.fr-p-1w.fr-pb-8w
+    .fr-col-12.fr-col-md-6.fr-pb-8w
       .card
         .card-body
           h2.fr-h6 Votre organisation n’utilise pas encore #{current_domain.name} ?

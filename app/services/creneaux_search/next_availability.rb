@@ -1,5 +1,5 @@
 class CreneauxSearch::NextAvailability
-  def self.find(motif, lieu, agents, from:, to: nil)
+  def self.find(motif, lieu, agents, from:, to: nil, duration_in_min: nil)
     from = from.to_datetime # rubocop:disable Style/DateTime
     to = to&.to_datetime || (from + 6.months) # rubocop:disable Style/DateTime
 
@@ -9,7 +9,7 @@ class CreneauxSearch::NextAvailability
 
       max_creneau_date = [to, date + 7.days].min
 
-      creneaux = CreneauxSearch::Calculator.available_slots(motif, lieu, date..max_creneau_date, agents)
+      creneaux = CreneauxSearch::Calculator.available_slots(motif:, lieu:, date_range: date..max_creneau_date, agents:, duration_in_min:)
       # NOTE: We build the whole list of creneaux of the week just to return the first one.
       return creneaux.min if creneaux.any?
     end

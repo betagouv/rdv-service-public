@@ -53,6 +53,7 @@ class Rdv < ApplicationRecord
   has_many :users, through: :participations, validate: false
   has_many :webhook_endpoints, through: :organisation
   has_one :territory, through: :organisation
+  has_one :rdv_plan, dependent: :destroy
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :visio?, :bookable_by_everyone?,
@@ -210,9 +211,7 @@ class Rdv < ApplicationRecord
     date_range = CreneauxSearch::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
     return [] if date_range.blank?
 
-    motif.default_duration_in_min = duration_in_min # pour les cas rdv.duration ≠ motif.default_duration_in_min
-    motif.readonly! # pour éviter que cette durée ne soit sauvegardée
-    CreneauxSearch::Calculator.available_slots(motif, lieu, date_range)
+    CreneauxSearch::Calculator.available_slots(motif:, lieu:, date_range:, duration_in_min:)
   end
 
   # Ces plages d'ouvertures sont utilisé pour afficher des infos

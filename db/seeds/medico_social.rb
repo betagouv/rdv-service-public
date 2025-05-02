@@ -539,10 +539,10 @@ agents_attributes = 1_000.times.map do |i|
   {
     created_at: now,
     updated_at: now,
-    first_name: "first_name_#{i}",
-    last_name: "last_name_#{i}",
     email: "email_#{i}@test.com",
     uid: "email_#{i}@test.com",
+    invitation_created_at: now,
+    invitation_sent_at: now,
   }
 end
 results = Agent.insert_all!(agents_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]

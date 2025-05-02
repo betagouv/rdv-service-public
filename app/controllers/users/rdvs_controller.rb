@@ -4,7 +4,6 @@ class Users::RdvsController < UserAuthController
   before_action :set_geo_search, only: [:create]
   before_action :set_lieu, only: %i[edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
-  after_action :allow_iframe
 
   layout "application_narrow", only: %i[show]
   layout "application_base", only: %i[index]
@@ -22,15 +21,13 @@ class Users::RdvsController < UserAuthController
   def create
     lieu = new_rdv_extra_params[:lieu_id].present? ? Lieu.find(new_rdv_extra_params[:lieu_id]) : nil
     motif = Motif.find(rdv_params[:motif_id])
-    # Nous modifions en mémoire la durée par défaut du motif
-    # Cela permet d'effectuer une recherche de créneaux, avec une durée différente
-    motif.default_duration_in_min = params[:duration] if params[:duration]
     @creneau = CreneauxSearch::ForUser.creneau_for(
       user: current_user,
       starts_at: Time.zone.parse(rdv_params[:starts_at]),
       motif: motif,
       lieu: lieu,
-      geo_search: @geo_search
+      geo_search: @geo_search,
+      duration_in_min: duration_in_min_for(motif:)
     )
     ActiveRecord::Base.transaction do
       if @creneau.present?
@@ -161,5 +158,13 @@ class Users::RdvsController < UserAuthController
 
   def rdv_params
     params.permit(:starts_at, :motif_id, :context, user_ids: [])
+  end
+
+  def duration_in_min_for(motif:)
+    if params[:duration]
+      params[:duration].to_i
+    else
+      motif.default_duration_in_min
+    end
   end
 end

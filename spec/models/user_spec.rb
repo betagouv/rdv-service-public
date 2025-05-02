@@ -105,6 +105,16 @@ RSpec.describe User, type: :model do
       expect(user.versions).to be_empty
     end
 
+    it "n’anonymise pas les RDV collectifs avec d’autres participants" do
+      user1 = create(:user)
+      user2 = create(:user)
+      rdv = create(:rdv, users: [user1, user2], context: "des détails sur le RDV")
+      user1.soft_delete
+      expect(rdv.reload.context).to eq("des détails sur le RDV")
+      user2.soft_delete
+      expect(rdv.reload.context).to match %([valeur unique anonymisée \\d+])
+    end
+
     it "is hidden user by default" do
       user = create(:user)
       user.soft_delete
