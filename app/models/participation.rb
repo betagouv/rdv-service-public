@@ -95,11 +95,6 @@ class Participation < ApplicationRecord
     self.send_reminder_notification = rdv.motif.visible_and_notified? if send_reminder_notification.nil?
   end
 
-  def new_raw_invitation_token
-    invite! { |rdv_u| rdv_u.skip_invitation = true }
-    raw_invitation_token
-  end
-
   def set_restricted_authentication_token
     self.restricted_auth_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
     self.restricted_auth_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) while Participation.where(restricted_auth_token:).any?

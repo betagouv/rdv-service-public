@@ -10,11 +10,6 @@ module Participation::Creatable
     end
   end
 
-  def participation_token
-    # For user invited with tokens, nil default for not invited users
-    @notifier&.participations_tokens_by_user_id&.fetch(user.id, nil)
-  end
-
   private
 
   def empty_rdv_from_relatives

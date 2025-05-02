@@ -64,7 +64,7 @@ class Users::ParticipationsController < UserAuthController
     set_user_name_initials_verified
     flash[:success] = "Participation confirmée" if existing_participation.status == "unknown"
     flash[:notice] = "Participation annulée" if existing_participation.status == "excused"
-    redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.participation_token)
+    redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.restricted_auth_token)
   end
 
   def create_participation
@@ -75,7 +75,7 @@ class Users::ParticipationsController < UserAuthController
     new_participation.create_and_notify!(current_user)
     set_user_name_initials_verified
     flash[:success] = "Participation confirmée"
-    redirect_to users_rdv_path(@rdv, invitation_token: new_participation.participation_token)
+    redirect_to users_rdv_path(@rdv, invitation_token: new_participation.restricted_auth_token)
   end
 
   def responsible_or_relatives_participating?
