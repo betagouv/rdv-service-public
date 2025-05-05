@@ -452,24 +452,6 @@ RSpec.configure do |config|
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user created_by_type],
           },
-          public_links: {
-            type: "object",
-            properties: {
-              public_links: {
-                type: "array",
-                items: { "$ref" => "#/components/schemas/public_link" },
-              },
-            },
-            required: %w[public_links],
-          },
-          public_link: {
-            type: "object",
-            properties: {
-              external_id: { type: "string" },
-              public_link: { type: "string" },
-            },
-            required: %w[external_id public_link],
-          },
           meta: {
             type: "object",
             properties: {
