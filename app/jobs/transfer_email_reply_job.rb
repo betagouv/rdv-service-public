@@ -50,7 +50,8 @@ class TransferEmailReplyJob < ApplicationJob
   def forward_to_default_mailbox
     Agents::ReplyTransferMailer.forward_to_default_mailbox(
       reply_body: extracted_response,
-      source_mail: source_mail
+      source_mail: source_mail,
+      rdv:
     ).deliver_now
   end
 

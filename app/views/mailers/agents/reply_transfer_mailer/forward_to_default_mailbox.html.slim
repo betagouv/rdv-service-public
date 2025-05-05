@@ -8,3 +8,7 @@ div
   p = t("agents.reply_transfer_mailer.shared.attachments", attachment_names: @attachment_names) if @attachment_names.present?
 
   p = t(".instructions")
+
+  - if @rdv
+    p
+      = link_to "Voir le RDV dans la super admin", super_admins_rdv_url(@rdv, host: @rdv.domain.host_name)

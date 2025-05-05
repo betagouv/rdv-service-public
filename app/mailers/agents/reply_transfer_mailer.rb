@@ -19,11 +19,13 @@ class Agents::ReplyTransferMailer < ApplicationMailer
 
   # @param [String] reply_body
   # @param [Mail::Message] source_mail
-  def forward_to_default_mailbox(reply_body:, source_mail:)
+  # @param [Rdv] rdv
+  def forward_to_default_mailbox(reply_body:, source_mail:, rdv: nil)
     @author = source_mail.header[:from]
     @reply_subject = source_mail.subject
     @reply_body = reply_body
     @attachment_names = source_mail.attachments.map(&:filename).join(", ")
+    @rdv = rdv
 
     mail(to: domain.support_email, subject: t(".title"))
   end
