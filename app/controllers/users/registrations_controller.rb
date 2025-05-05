@@ -2,7 +2,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   include CanHaveRdvWizardContext
 
   before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
-  after_action :allow_iframe
 
   layout "application"
   layout "application_narrow", only: %i[new create update edit pending]

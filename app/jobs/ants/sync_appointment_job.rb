@@ -12,6 +12,8 @@ module Ants
     # useful to debug tests and avoid retries
     # discard_on(StandardError) { |_job, ex| raise ex }
 
+    queue_as :latency_5m
+
     def perform(ants_pre_demande_number:, obsolete_meeting_point_id: nil)
       @ants_pre_demande_number = ants_pre_demande_number
       @obsolete_meeting_point_id = obsolete_meeting_point_id
@@ -55,6 +57,10 @@ module Ants
     def capture_sentry_warning_for_retry?(exception)
       if exception.is_a?(Typhoeus::Errors::TimeoutError)
         false
+      elsif exception.is_a?(AntsApi::ApiRequestError)
+        # l’API ANTS est un peu imprévisible et renvoie souvent des 500 qui se résolvent au premier
+        # retry, on ne veut donc pas être informé des premiers échecs
+        super && executions >= 3
       else
         super
       end

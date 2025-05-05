@@ -25,7 +25,7 @@ OptionParser.new do |parser|
 
   parser.on("--containers-amount AMOUNT", "Number of containers, between 1 and 10") do |val|
     val_int = val.to_i
-    raise StandardError, "invalid containers amount, must be between 1 and 10" unless val_int >= 1 && val_int <= 10
+    raise StandardError, "invalid containers amount, must be between 1 and 10" unless val_int.between?(1, 10)
 
     options[:containers_amount] = val_int
   end

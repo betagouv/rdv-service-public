@@ -91,7 +91,7 @@ RSpec.describe Territory, type: :model do
     end
   end
 
-  # rubocop:disable RSpec/ PredicateMatcher
+  # rubocop:disable RSpec/PredicateMatcher
   describe "#any_social_field_enabled?" do
     it "returns true if any social field is enabled" do
       expect(described_class.new.any_social_field_enabled?).to be_falsey
@@ -106,5 +106,5 @@ RSpec.describe Territory, type: :model do
       expect(described_class.new(enable_notes_field: true).any_optional_user_field_enabled?).to be_truthy
     end
   end
-  # rubocop:enable RSpec/ PredicateMatcher
+  # rubocop:enable RSpec/PredicateMatcher
 end

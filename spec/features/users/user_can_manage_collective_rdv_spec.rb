@@ -118,6 +118,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       click_button("Se connecter")
       click_button("Continuer")
+      expect(page).to have_content("Choix de l’usager")
       click_button("Continuer")
       stub_request(:post, "https://example.com/")
       click_on("Confirmer ma participation")
@@ -127,7 +128,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect_webhooks_for(logged_user)
     end
 
-    it "with an invited user (Token), redirect to rdv with invitaiton_token refreshed" do
+    it "with an invited user (Token), redirect to rdv with invitation_token refreshed" do
       motif.update!(bookable_by: "agents_and_prescripteurs_and_invited_users")
       params.merge!(invitation_token: invitation_token)
       visit prendre_rdv_path(params)
@@ -150,7 +151,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       it "do not display revoked or full rdvs for reservation (invitation error)" do
         params.merge!(invitation_token: invitation_token)
-        visit root_path(params)
+        visit prendre_rdv_path(params)
 
         rdv.status = "revoked"
         rdv.save
@@ -162,7 +163,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         create(:participation, rdv: rdv2)
         create(:participation, rdv: rdv2)
         rdv2.save
-        visit root_path(params)
+        visit prendre_rdv_path(params)
         expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.")
         expect(page).to have_content("Toutes nos excuses pour cela.")
       end
@@ -170,7 +171,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       it "correctly display message of participation already existing" do
         params.merge!(invitation_token: invitation_token)
         create(:participation, rdv: rdv, user: user)
-        visit root_path(params)
+        visit prendre_rdv_path(params)
         select_motif
         select_lieu
         expect(page).to have_content("Vous êtes déjà inscrit pour cet atelier")
@@ -180,7 +181,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         params.merge!(invitation_token: invitation_token)
         create(:participation, rdv: rdv, user: user, status: "excused")
 
-        visit root_path(params)
+        visit prendre_rdv_path(params)
         select_motif
         select_lieu
         expect_confirm_participation.not_to change { rdv.reload.users.count }
@@ -191,7 +192,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       it "display rdv with cancelled tag when participation is excused or rdv is revoked", js: true do
         params.merge!(invitation_token: invitation_token)
-        visit root_path(params)
+        visit prendre_rdv_path(params)
 
         create(:participation, rdv: rdv, user: user, status: "excused")
 
@@ -211,7 +212,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       it "doesnt send notifications email to user if notif is unchecked" do
         params.merge!(invitation_token: invitation_token)
-        visit root_path(params)
+        visit prendre_rdv_path(params)
         select_motif
         select_lieu
         expect_confirm_participation(notif: false).to change { rdv.reload.users.count }.from(0).to(1)
@@ -222,7 +223,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       it "can cancel collective rdv participation, with mail notifications only", js: true do
         params.merge!(invitation_token: invitation_token)
-        visit root_path(params)
+        visit prendre_rdv_path(params)
 
         participation = create(:participation, rdv: rdv, user: user, status: "unknown")
 
@@ -244,7 +245,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       it "can cancel collective rdv participation, without notifications", js: true do
         params.merge!(invitation_token: invitation_token)
-        visit root_path(params)
+        visit prendre_rdv_path(params)
 
         participation = create(:participation, rdv: rdv, user: user, status: "unknown")
         participation.send_lifecycle_notifications = false
@@ -271,7 +272,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         params.merge!(invitation_token: invitation_token)
 
-        visit root_path(params)
+        visit prendre_rdv_path(params)
         select_motif
         select_lieu
         expect_confirm_participation.to change { rdv.reload.users.count }.from(2).to(3)

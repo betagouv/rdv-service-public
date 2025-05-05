@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :oauth_application, class: Doorkeeper::Application do
+  factory :oauth_application, class: OauthApplication do
     name { "Démarches Simplifiées" }
     uid { "fake_app_id" }
     logo_base64 { "" }

@@ -8,6 +8,7 @@ Gem::Specification.new do |gem|
 
   gem.name          = "omniauth-rdv-service-public"
   gem.require_paths = ["lib"]
+  gem.files         = Dir["lib/**/*"]
 
   gem.add_dependency "omniauth", "~> 2.0"
   gem.add_dependency "omniauth-oauth2", "~> 1.8"

@@ -1,19 +1,24 @@
 module AgentsHelper
+  def may_need_onboarding_help?
+    # Pour éviter d'avoir des problèmes de perfs en faisant un COUNT(*) sur tous les rdvs de l'organisation,
+    # on limite à 5 puisque c'est le nombre qu'on considère comme un bon indicateur que l'organisation a réussi à configurer son compte
+    current_organisation.rdvs.limit(5).count < 5
+  end
+
+  def needs_agent_search?
+    current_organisation.agents.active.limit(10).count == 10
+  end
+
+  def meet_the_team_url
+    "https://cal.com/team/rdv-service-public/temps-d-echanges"
+  end
+
   def current_agent?(agent)
     agent.id == current_agent.id
   end
 
   def me_tag(agent)
     tag.span("Vous", class: "badge badge-info") if current_agent?(agent)
-  end
-
-  def inactive_tag(agent)
-    # les intervenants ne peuvent pas se connecter, il est inutile de les afficher comme "Inactif".
-    return if agent.is_an_intervenant?
-
-    if agent.last_sign_in_at.nil? || agent.last_sign_in_at <= 1.month.ago
-      tag.span("Inactif", class: "badge badge-warning")
-    end
   end
 
   def build_link_to_rdv_wizard_params(creneau, form)

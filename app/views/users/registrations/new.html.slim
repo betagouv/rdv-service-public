@@ -15,11 +15,11 @@
       = render "devise/shared/dsfr_error_messages", resource: resource
       .fr-grid-row.fr-grid-row--gutters.fr-mb-5v
         .fr-col-6
-          = f.dsfr_text_field :first_name, label: "Prénom", required: true
+          = f.dsfr_text_field :first_name, label: "Prénom", required: true, autocomplete: "given-name"
         .fr-col-6
-          = f.dsfr_text_field :last_name, label: "Nom", required: true
+          = f.dsfr_text_field :last_name, label: "Nom", required: true, autocomplete: "family-name"
       = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true
-      = f.dsfr_phone_field :phone_number, label: "Numéro de téléphone", hint: "Vous recevrez les rappels et les informations du RDV sur ce numéro."
+      = f.dsfr_phone_field :phone_number, label: "Numéro de téléphone", hint: "Vous recevrez les rappels et les informations du RDV sur ce numéro.", autocomplete: "tel"
 
       .form-group
         small

@@ -3,7 +3,7 @@ module Users::CreneauxWizardConcern
 
   # *** Method that outputs the current step for the user to complete its rdv journey ***
   def current_step
-    if departement.blank?
+    if departement.blank? && query_params[:public_link_organisation_id].blank?
       :address_selection
     elsif !service_selected?
       :service_selection
@@ -40,6 +40,10 @@ module Users::CreneauxWizardConcern
     @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq(&:name_with_location_type)
   end
 
+  def motifs_grouped_by_service_id
+    @motifs_grouped_by_service_id ||= matching_motifs.group_by(&:service_id)
+  end
+
   # Retourne une liste d'organisations et leur prochaine dispo, ordonnées par date de prochaine dispo
   def next_availability_by_motifs_organisations
     @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
@@ -56,7 +60,7 @@ module Users::CreneauxWizardConcern
   end
 
   def services
-    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
+    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by { |service| I18n.transliterate(service.name.downcase) }
   end
 
   def follow_up_motifs?

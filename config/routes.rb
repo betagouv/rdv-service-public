@@ -140,6 +140,7 @@ Rails.application.routes.draw do
           get "search"
         end
       end
+      resources :territories, only: %i[new create]
       resources :exports, only: %i[index] do
         get :download
       end
@@ -248,7 +249,6 @@ Rails.application.routes.draw do
           resources :stats, only: :index do
             collection do
               get :rdvs
-              get :users
             end
           end
         end
@@ -405,4 +405,6 @@ Rails.application.routes.draw do
 
   match "/404", to: "errors#not_found", via: :all
   match "/500", to: "errors#internal_server_error", via: :all
+
+  get "robots.txt" => "robots#robots"
 end

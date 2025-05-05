@@ -28,6 +28,8 @@ class Admin::UsersController < AgentAuthController
     @users = @users.merge(Agent.find(agent_id).users) if agent_id.present?
     @users = @users.search_by_text(search_params) if search_params.present?
     @users = @users.ordered_by_last_name.page(page_number)
+    @users = @users.includes(:responsible)
+    @users.load # Ce préchargement permet d'éviter de déclencher des requêtes inutiles depuis la vue
   end
 
   def search
@@ -179,7 +181,12 @@ class Admin::UsersController < AgentAuthController
   end
 
   def set_user
-    @user = User.find(params[:id])
+    @user = User.unscoped.find(params[:id])
+    if @user.deleted_at.present?
+      redirect_to admin_organisation_users_path(current_organisation.id), flash: { error: "L’usager a été supprimé" }
+      return
+    end
+
     authorize(@user, policy_class: Agent::UserPolicy)
   end
 end

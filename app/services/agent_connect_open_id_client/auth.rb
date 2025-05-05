@@ -13,10 +13,7 @@ module AgentConnectOpenIdClient
     attr_reader :state, :nonce
 
     def redirect_url(callback_url)
-      scopes = "openid email given_name usual_name"
-      if ENV["ENABLE_PROCONNECT_SIRET"] == "true" # Cette variable d'env sert à essayer la fonctionnalité en production, et pourra être supprimée s'il n'y a pas de problèmes
-        scopes += " siret"
-      end
+      scopes = "openid email given_name usual_name siret"
 
       query_params = {
         response_type: "code",

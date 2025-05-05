@@ -12,8 +12,8 @@ class Users::BaseSms < ApplicationSms
 
   attr_reader :content
 
-  def deliver_later(queue: :sms, priority: 0)
-    SmsJob.set(queue: queue, priority: priority).perform_later(
+  def deliver_later(queue: :latency_30s)
+    SmsJob.set(queue: queue).perform_later(
       sender_name: @rdv.domain.sms_sender_name,
       phone_number: @user.phone_number_formatted,
       content: content,

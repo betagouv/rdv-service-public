@@ -1,6 +1,6 @@
 require "csv"
 
-API_ENDPOINT = "https://api-adresse.data.gouv.fr/search/csv/".freeze
+API_ENDPOINT = "https://data.geopf.fr/geocodage/search/csv/".freeze
 
 def update_user_city_name_from(geocoded_addresses)
   puts geocoded_addresses.inspect

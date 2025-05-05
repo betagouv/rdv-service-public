@@ -1,40 +1,28 @@
 RSpec.describe AgentConnectController do
   stub_env_with(
     AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
-    AGENT_CONNECT_RDVS_CLIENT_SECRET: "un faux secret de test",
-    AGENT_CONNECT_RDVS_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa",
-    ENABLE_PROCONNECT_SIRET: "false"
+    AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
+    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
   )
 
   describe "#auth" do
     it "redirects to AgentConnect" do
-      get :auth
+      get :auth, params: { login_hint: "francis.factice@exemple.gouv.fr" }
       expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
 
       redirect_url = response.headers["Location"]
       redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
 
       expect(redirect_url_query_params.symbolize_keys).to match(
+        login_hint: "francis.factice@exemple.gouv.fr",
         acr_values: "eidas1",
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         redirect_uri: "http://test.host/agent_connect/callback",
         response_type: "code",
-        scope: "openid email given_name usual_name",
+        scope: "openid email given_name usual_name siret",
         state: be_a(String),
         nonce: be_a(String)
       )
-    end
-
-    context "when getting the siret as well" do
-      stub_env_with(ENABLE_PROCONNECT_SIRET: "true")
-
-      it "adds it to the scopes" do
-        get :auth
-
-        redirect_url = response.headers["Location"]
-        redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
-        expect(redirect_url_query_params["scope"]).to eq("openid email given_name usual_name siret")
-      end
     end
   end
 
@@ -88,29 +76,30 @@ RSpec.describe AgentConnectController do
           "email" => "jean.michel.factice@exemple.gouv.fr",
           "given_name" => "Jean Michel Factice",
           "usual_name" => "Factice",
+          "siret" => "11006801200050",
           "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
           "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
         }
       end
 
-      it "sets the proper first and last name for the agent" do
+      it "sets the proper first and last name and siret for the agent" do
         agent = create(:agent, email: "jean.michel.factice@exemple.gouv.fr")
         get :callback, params: { state: state, code: code }
 
         expect(agent.reload).to have_attributes(
           first_name: "Jean Michel",
-          last_name: "Factice"
+          last_name: "Factice",
+          proconnect_siret: "11006801200050"
         )
       end
     end
 
-    context "when asking for the siret" do
-      stub_env_with(ENABLE_PROCONNECT_SIRET: "true")
+    context "when the agent has a capital letter in their ProConnect email address" do
       let(:user_info) do
         {
           "sub" => "ab70770d-1285-46e6-b4d0-3601b49698d4",
-          "email" => "francis.factice@exemple.gouv.fr",
-          "given_name" => "Francis Factice",
+          "email" => "JEAN.MICHEL.FACTICE@exemple.gouv.fr",
+          "given_name" => "Jean Michel Factice",
           "usual_name" => "Factice",
           "siret" => "11006801200050",
           "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
@@ -118,10 +107,15 @@ RSpec.describe AgentConnectController do
         }
       end
 
-      it "saves it on the agent" do
-        agent = create(:agent, email: "francis.factice@exemple.gouv.fr")
+      it "finds the right agent and updates them" do
+        agent = create(:agent, email: "JEAN.MICHEL.FACTICE@exemple.gouv.fr") # même si on crée l'agent avec des majuscule dans l'email, il sera persisté en base avec des minuscules
         get :callback, params: { state: state, code: code }
-        expect(agent.reload.proconnect_siret).to eq "11006801200050"
+
+        expect(agent.reload).to have_attributes(
+          first_name: "Jean Michel",
+          last_name: "Factice",
+          proconnect_siret: "11006801200050"
+        )
       end
     end
   end

@@ -24,6 +24,11 @@ RSpec.describe "/api/v1/users" do
           organisations: [my_organisation]
         )
       end
+
+      it "saves whodunnit" do
+        post "/api/v1/users", headers:, params:, as: :json
+        expect(User.last.versions.last.whodunnit).to eq("[Agent] #{myself.full_name} (via API)")
+      end
     end
 
     context "when passing arbitrary referent_agent_ids" do
@@ -61,6 +66,12 @@ RSpec.describe "/api/v1/users" do
           put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json
         end.to change { existing_user.reload.last_name }
         expect(existing_user.reload.last_name).to eq("Fastoche")
+      end
+
+      it "does not modify user agent referents" do
+        existing_user.referent_agents << myself
+        put "/api/v1/users/#{existing_user.id}", headers:, params:, as: :json
+        expect(existing_user.reload.referent_agents).to eq([myself])
       end
     end
 

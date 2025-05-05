@@ -11,6 +11,8 @@ class TerritoryDashboard < Administrate::BaseDashboard
     id: Field::Number,
     departement_number: Field::String,
     name: Field::String,
+    category: Field::Select.with_options(collection: Compte::CATEGORIES),
+    organisations: Field::HasMany.with_options(sort_by: :name, direction: :asc),
     admin_agents: Field::HasMany,
     roles: Field::HasMany,
     created_at: Field::DateTime,
@@ -25,6 +27,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     departement_number
+    category
     name
   ].freeze
 
@@ -33,8 +36,10 @@ class TerritoryDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
-    roles
     departement_number
+    category
+    roles
+    organisations
     created_at
     updated_at
   ].freeze
@@ -46,6 +51,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     name
     admin_agents
     departement_number
+    category
   ].freeze
 
   def display_resource(territory)

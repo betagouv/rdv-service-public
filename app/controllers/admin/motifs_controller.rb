@@ -1,6 +1,29 @@
 class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
+  FORM_ATTRIBUTES = %i[
+    name
+    service_id
+    organisation_id
+    color
+    motif_category_id
+    default_duration_in_min
+    bookable_by
+    location_type
+    max_public_booking_delay
+    min_public_booking_delay
+    visibility_type
+    restriction_for_rdv
+    instruction_for_rdv
+    custom_cancel_warning_message
+    for_secretariat
+    follow_up
+    collectif
+    sectorisation_level
+    rdvs_editable_by_user
+    duplicated_from_motif_id
+  ].freeze
+
   before_action :set_organisation, only: %i[new create]
   before_action :set_motif, only: %i[show edit update archive unarchive destroy]
 
@@ -9,6 +32,7 @@ class Admin::MotifsController < AgentAuthController
 
     unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
     @filtered_motifs = filtered(unfiltered_motifs, params)
+    @need_search = enough_motifs_to_need_search?(unfiltered_motifs)
 
     @motifs_page = @filtered_motifs
       .active(@current_tab == :active)
@@ -95,29 +119,6 @@ class Admin::MotifsController < AgentAuthController
   end
   helper_method :display_sectorisation_level?
 
-  FORM_ATTRIBUTES = %i[
-    name
-    service_id
-    organisation_id
-    color
-    motif_category_id
-    default_duration_in_min
-    bookable_by
-    location_type
-    max_public_booking_delay
-    min_public_booking_delay
-    visibility_type
-    restriction_for_rdv
-    instruction_for_rdv
-    custom_cancel_warning_message
-    for_secretariat
-    follow_up
-    collectif
-    sectorisation_level
-    rdvs_editable_by_user
-    duplicated_from_motif_id
-  ].freeze
-
   def pundit_user
     current_agent
   end
@@ -151,4 +152,8 @@ class Admin::MotifsController < AgentAuthController
     @agent_can_create_motif ||= Agent::MotifPolicy.new(current_agent, Motif.new(organisation: current_organisation)).create?
   end
   helper_method :agent_can_create_motif?
+
+  def enough_motifs_to_need_search?(motif_scope)
+    motif_scope.limit(10).count == 10
+  end
 end

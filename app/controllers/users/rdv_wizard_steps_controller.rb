@@ -1,4 +1,6 @@
 class Users::RdvWizardStepsController < UserAuthController
+  layout "application_base"
+
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
   EXTRA_PERMITTED_PARAMS = [
     *WebSearchContext::ADDRESS_SELECTION_PARAMS,
@@ -6,10 +8,8 @@ class Users::RdvWizardStepsController < UserAuthController
     :public_link_organisation_id, :duration,
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
-  after_action :allow_iframe
 
   include TokenInvitable
-  prepend_before_action :store_invitation_in_session_and_redirect_for_allowlisted_actions
 
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
@@ -35,13 +35,6 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   protected
-
-  def store_invitation_in_session_and_redirect_for_allowlisted_actions
-    return true if params[:invitation_token].blank?
-
-    Sentry.capture_message("Invitation used unexpectedly on #{params[:controller]}##{params[:action]}")
-    store_invitation_in_session_and_redirect
-  end
 
   def steps
     steps = {

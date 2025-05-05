@@ -14,13 +14,19 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
 
     it "returns 2 slots with a basic context" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
-      slots = described_class.available_slots(motif, lieu, date_range)
-      expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
+      slots = described_class.available_slots(motif:, lieu:, date_range:)
+      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:00"])
+    end
+
+    it "accepts and uses overriden duration_in_min" do
+      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
+      slots = described_class.available_slots(motif:, lieu:, date_range:, duration_in_min: 25)
+      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "09:25", "09:50", "10:15", "10:40"])
     end
 
     it "return Creneaux object" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
-      slots = described_class.available_slots(motif, lieu, date_range)
+      slots = described_class.available_slots(motif:, lieu:, date_range:)
       expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
     end
 
@@ -29,7 +35,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
 
       it "returns the creneaux for the reste of the plage d'ouverture" do
         create(:plage_ouverture, :weekdays, motifs: [motif], first_day: friday.to_date, start_time: Tod::TimeOfDay.new(7), end_time: Tod::TimeOfDay.new(11), lieu: lieu)
-        slots = described_class.available_slots(motif, lieu, date_range)
+        slots = described_class.available_slots(motif:, lieu:, date_range:)
         expect(slots.first.starts_at.iso8601).to eq("2021-04-30T08:00:00+02:00")
       end
     end
@@ -50,7 +56,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       end
 
       it "only returns slots in the future" do
-        slots = described_class.available_slots(motif, lieu, two_days_ago..seven_days_from_now)
+        slots = described_class.available_slots(motif:, lieu:, date_range: two_days_ago..seven_days_from_now)
 
         # Only today's slots are returned, not the ones from the past, even though they are included in the range
         expect(slots.map(&:starts_at)).to eq([Time.zone.parse("2022-07-13 09:00:00"), Time.zone.parse("2022-07-13 10:00:00")])
@@ -59,7 +65,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       context "when date range also ends before today" do
         it "returns no result" do
           date_range_in_the_past = (today - 10.days)..(today - 3.days)
-          slots = described_class.available_slots(motif, lieu, date_range_in_the_past)
+          slots = described_class.available_slots(motif:, lieu:, date_range: date_range_in_the_past)
 
           # No slot is returned since all slots are in the past
           expect(slots).to be_empty
@@ -81,7 +87,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
 
         travel_to(Time.zone.local(2021, 5, 3, 15, 3, 0))
 
-        slots = described_class.available_slots(motif, lieu, date_range)
+        slots = described_class.available_slots(motif:, lieu:, date_range:)
 
         # The current time is 15:03
         # The available plages ouvertures are 9:00-12:00, 14:00-17:00, and 18:00-20:00
@@ -106,7 +112,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       end
 
       it "returns the slots in the free part of the plage ouverture" do
-        slots = described_class.available_slots(motif, lieu, date_range)
+        slots = described_class.available_slots(motif:, lieu:, date_range:)
         expect(slots.map(&:starts_at).map(&:hour)).to eq([10])
       end
     end
@@ -368,7 +374,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       expect(computed_dates.call).to eq(xmas_week.to_a - [Date.new(2024, 12, 25)])
 
       # Les agents de visioplainte travaillent les jours fériés
-      plage_ouverture.organisation.territory.update_columns(name: Territory::VISIOPLAINTE_NAME) # rubocop:disable Rails/ SkipsModelValidations
+      plage_ouverture.organisation.territory.update_columns(name: Territory::VISIOPLAINTE_NAME) # rubocop:disable Rails/SkipsModelValidations
       expect(computed_dates.call).to eq(xmas_week.to_a)
     end
   end
@@ -394,8 +400,18 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       free_times = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
       plage_ouverture_free_times = { plage_ouverture => free_times }
 
-      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture).and_return([])
+      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture, duration_in_min: nil).and_return([])
       described_class.slots_for(plage_ouverture_free_times, motif)
+    end
+
+    it "should pass down overridden duration_in_min" do
+      motif = build(:motif, default_duration_in_min: 25)
+      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      free_times = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
+      plage_ouverture_free_times = { plage_ouverture => free_times }
+
+      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture, duration_in_min: 30).and_return([])
+      described_class.slots_for(plage_ouverture_free_times, motif, duration_in_min: 30)
     end
   end
 
@@ -407,13 +423,24 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       expect(described_class.calculate_slots(free_time, motif, plage_ouverture)).to eq([])
     end
 
-    it "returns slot that match with free time" do
+    it "returns slots that fit" do
       motif = build(:motif, default_duration_in_min: 30)
       plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-      free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 9:45")
+      free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 10:15")
 
-      slots = described_class.calculate_slots(free_time, motif, plage_ouverture) { |s| Creneau.new(starts_at: s) }
-      expect(slots.map(&:starts_at).map(&:hour)).to eq([9])
+      slots = described_class.calculate_slots(free_time, motif, plage_ouverture)
+      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "09:30"])
+      expect(slots.map(&:duration_in_min)).to eq([30, 30])
+    end
+
+    it "returns slots that fit when passed an overriden duration_in_min" do
+      motif = build(:motif, default_duration_in_min: 30)
+      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 10:15")
+
+      slots = described_class.calculate_slots(free_time, motif, plage_ouverture, duration_in_min: 20)
+      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "09:20", "09:40"])
+      expect(slots.map(&:duration_in_min)).to eq([20, 20, 20])
     end
   end
 

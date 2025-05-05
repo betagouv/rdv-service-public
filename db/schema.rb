@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_18_141146) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_01_130505) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -215,7 +215,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_18_141146) do
     t.string "uid", default: ""
     t.text "tokens"
     t.boolean "allow_password_change", default: false
-    t.enum "rdv_notifications_level", default: "others", enum_type: "agents_rdv_notifications_level"
+    t.enum "rdv_notifications_level", default: "all", enum_type: "agents_rdv_notifications_level"
     t.integer "unknown_past_rdv_count", default: 0
     t.boolean "display_saturdays", default: false, comment: "Indique si l'agent veut que les samedis s'affichent quand il consulte un calendrier (pas forcément le sien). Cela n'affecte pas ce que voient les autres agents. Modifiable par le bouton en bas de la vue calendrier.\n"
     t.boolean "display_cancelled_rdv", default: true, comment: "Indique si l'agent veut que les rdv annulés s'affichent quand il consulte un calendrier (pas forcément le sien). Cela n'affecte pas ce que voient les autres agents. Modifiable par le bouton en bas de la vue calendrier\n"
@@ -499,6 +499,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_18_141146) do
     t.datetime "updated_at", null: false
     t.text "logo_base64"
     t.text "post_logout_redirect_uri"
+    t.bigint "default_service_id", comment: "Indique le service qui sera ajouté au territoire par défaut si un agent qui utilise cette application ouvre un nouvel espace.\nCette colonne indique aussi que les agents qui utilisent cette application sont autorisés à ouvrir un nouvel espace.\n"
+    t.index ["default_service_id"], name: "index_oauth_applications_on_default_service_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
@@ -737,6 +739,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_18_141146) do
     t.boolean "enable_waiting_room_color_field", default: false
     t.boolean "visible_users_throughout_the_territory", default: false
     t.boolean "enable_birth_date_field", default: false
+    t.string "category", comment: "La catégorie permet classifier les différents territoires principalement pour faire des statistiques dans metabase,\net pour avoir un suivi approprié de chaque territoire pour notre équipe déploiement et support. Par exemple, les besoins d'une commune\nne seront pas les mêmes que ceux d'un service de l'état.\n"
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
   end
 
@@ -887,6 +890,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_18_141146) do
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_applications", "services", column: "default_service_id"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"

@@ -31,8 +31,8 @@ RSpec.describe Notifiers::RdvUpdated, type: :service do
   context "update without agent change" do
     subject { described_class.perform_with(rdv, agent1, old_agent_ids: [agent1.id, agent2.id]) }
 
-    let(:agent1) { build(:agent, first_name: "Sean", last_name: "PAUL") }
-    let(:agent2) { build(:agent) }
+    let(:agent1) { build(:agent, first_name: "Sean", last_name: "PAUL", rdv_notifications_level: :others) }
+    let(:agent2) { build(:agent, rdv_notifications_level: :others) }
     let(:rdv) { create(:rdv, starts_at: starts_at_initial, agents: [agent1, agent2], users: [user1, user2]) }
 
     before do
