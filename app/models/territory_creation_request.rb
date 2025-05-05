@@ -5,6 +5,7 @@ class TerritoryCreationRequest < ApplicationRecord
 
   validates :organisation_name, :territory_name, :service_name, presence: true
   validates :agent_id, uniqueness: true
+  validate :can_only_have_one_response
 
   def possible_duplicate_organisations_by_email_domain
     email_domain = agent.email.split("@").last
@@ -16,8 +17,6 @@ class TerritoryCreationRequest < ApplicationRecord
 
     Organisation.joins(:agents).where(agents: { proconnect_siret: agent.proconnect_siret }).distinct
   end
-
-  validate :can_only_have_one_response
 
   private
 
