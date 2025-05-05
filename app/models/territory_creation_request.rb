@@ -22,7 +22,7 @@ class TerritoryCreationRequest < ApplicationRecord
 
   def can_only_have_one_response
     if response_changed? && !response_was.nil?
-      errors.add(:response, "Un autre admin a déjà traité cette demande")
+      errors.add(:response, "Un autre super admin a déjà traité cette demande")
     end
   end
 end

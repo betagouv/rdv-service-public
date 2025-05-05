@@ -54,7 +54,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         select "Service social", from: "Service"
         click_on "Enregistrer"
-        expect(page).to have_content "Le nouveau compte a été créé"
+        expect(page).to have_content "Le nouvel espace a été créé"
 
         expect(Territory.last).to have_attributes(
           name: "Commune de Montreuil",

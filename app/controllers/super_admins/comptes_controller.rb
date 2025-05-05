@@ -19,7 +19,7 @@ module SuperAdmins
       if compte.save!
         redirect_to(
           super_admins_agent_path(compte.agent),
-          notice: "Le nouveau compte a été créé, et une invitation a été envoyée à #{compte_params.dig(:agent, :email)}"
+          notice: "Le nouvel espace a été créé, et une invitation a été envoyée à #{compte.agent.email}"
         )
       else
         render :new, locals: {
