@@ -23,7 +23,7 @@ module SuperAdmins
         )
       else
         render :new, locals: {
-          page: Administrate::Page::Form.new(dashboard, resource),
+          page: Administrate::Page::Form.new(dashboard, compte),
         }, status: :unprocessable_entity
       end
     end

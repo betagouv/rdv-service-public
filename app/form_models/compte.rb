@@ -59,6 +59,7 @@ class Compte
           domain_id: @current_domain.id
         ).deliver_later
       end
+      true
     end
   end
 
