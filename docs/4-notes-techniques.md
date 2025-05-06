@@ -242,8 +242,3 @@ Il s’agit des chiffres pour l’instance historique RDV Solidarités.
 
 Aujourd’hui, le nombre de threads ruby web et de connexions à la DB ouvertes possibles est le même. Ce n’est pas strictement nécessaire, on pourrait baisser le nombre max de connexions ouvertes.
 
-### Comment obtenir ces chiffres ?
-
-Ces chiffres datent de Février 2025. On peut re-générer les chiffres ci-dessus en utilisant le script suivant :
-
-`bundle exec rails runner scripts/connections_count.rb`
