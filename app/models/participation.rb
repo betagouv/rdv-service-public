@@ -96,8 +96,7 @@ class Participation < ApplicationRecord
   end
 
   def set_restricted_authentication_token
-    self.restricted_auth_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
-    self.restricted_auth_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) while Participation.where(restricted_auth_token:).any?
+    self.restricted_auth_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until restricted_auth_token && Participation.where(restricted_auth_token:).none?
   end
 
   def prescription?
