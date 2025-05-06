@@ -51,6 +51,14 @@ class Compte
         allow_to_manage_access_rights: true,
         allow_to_invite_agents: true
       )
+
+      if @territory_creation_request
+        Agents::TerritoryCreationRequestMailer.accepted(
+          agent: agent,
+          organisation: organisation,
+          domain_id: @current_domain.id
+        ).deliver_later
+      end
     end
   end
 
