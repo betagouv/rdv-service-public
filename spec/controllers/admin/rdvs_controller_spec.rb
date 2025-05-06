@@ -180,11 +180,12 @@ RSpec.describe Admin::RdvsController, type: :controller do
     end
 
     context "admin agent" do
+      let(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
       let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
 
-      it "destroy rdv" do
-        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
+      before { create(:rdv_plan, rdv:) }
 
+      it "destroy rdv" do
         expect do
           delete :destroy, params: { organisation_id: organisation.id, id: rdv.id }
         end.to change(Rdv, :count).by(-1)

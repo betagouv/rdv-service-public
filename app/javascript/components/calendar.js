@@ -150,12 +150,25 @@ class CalendarRdvSolidarites {
   }
 
   handleAjaxError = (response) => {
-    if (response.xhr.status === 401) {
-      window.location = this.calendarEl.attributes["data-sign-in-path"].value;
-      return;
+    if (this.ajaxErrorHandledAt) {
+      const secondsSinceLast = (Date.now() - this.ajaxErrorHandledAt) / 1000;
+      if (secondsSinceLast < 60) return
     }
+    this.ajaxErrorHandledAt = Date.now()
 
-    alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr.`);
+    switch (response.xhr.status) {
+      case 401:
+        window.location = this.calendarEl.attributes["data-sign-in-path"].value;
+        break;
+      case 500:
+        alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
+        break;
+      case 0:
+        alert(`Le chargement du calendrier a échoué, probablement car votre connexion internet a été coupée.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
+        break;
+      default:
+        alert(`Le chargement du calendrier a échoué avec une erreur ${response.xhr.status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
+    }
   }
 }
 

@@ -9,7 +9,7 @@ in_status = "*.instatus.com"
 # Nous hébergeons la vidéo de la page d'accueil de RDV_MAIRIE sur le s3 de RDV-Insertion
 s3_de_rdv_insertion = "rdv-insertion-medias-production.s3.fr-par.scw.cloud"
 # Nous faisons des appels vers cette API dans notre recherche par adresse
-api_adresse_data_gouv = "api-adresse.data.gouv.fr"
+api_adresse_ign = "data.geopf.fr"
 # Nous utilisons mapbox et les tiles etalab pour les interfaces de config de sectorisation
 api_mapbox = "api.mapbox.com"
 tiles_etalab = "etalab-tiles.fr"
@@ -37,7 +37,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.media_src :self, s3_de_rdv_insertion
   policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
-  policy.connect_src :self, api_adresse_data_gouv, tiles_etalab, tiles_data_gouv
+  policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
   policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
 
   if ENV["CI"].present?

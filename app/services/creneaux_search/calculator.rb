@@ -1,11 +1,11 @@
 module CreneauxSearch::Calculator
   class << self
     # méthode publique
-    def available_slots(motif, lieu, date_range, agents = [])
+    def available_slots(motif:, lieu:, date_range:, agents: [], duration_in_min: nil)
       datetime_range = CreneauxSearch::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
       free_times_po = free_times_from(plage_ouvertures, datetime_range) # dépendances implicite à Rdv, Absence et OffDays
-      slots_for(free_times_po, motif).select do |slot|
+      slots_for(free_times_po, motif, duration_in_min:).select do |slot|
         slot.starts_at >= datetime_range.begin
       end
     end
@@ -76,19 +76,20 @@ module CreneauxSearch::Calculator
       range if (busy_time.ends_at < range.begin) || (busy_time.starts_at > range.end) # Dans ce dernier cas il n'y a pas d'overlap du tout entre le range et le busy_time
     end
 
-    def slots_for(plage_ouverture_free_times, motif)
+    def slots_for(plage_ouverture_free_times, motif, duration_in_min: nil)
       slots = []
       plage_ouverture_free_times.each do |plage_ouverture, free_times|
         free_times.each do |free_time|
-          slots += calculate_slots(free_time, motif, plage_ouverture)
+          slots += calculate_slots(free_time, motif, plage_ouverture, duration_in_min:)
         end
       end
       slots
     end
 
-    def calculate_slots(free_time, motif, plage_ouverture)
+    def calculate_slots(free_time, motif, plage_ouverture, duration_in_min: nil)
       possible_slot_start = earliest_possible_slot_start(free_time)
-      last_possible_slot_start = free_time.end - motif.default_duration_in_min.minutes
+      duration_in_min ||= motif.default_duration_in_min
+      last_possible_slot_start = free_time.end - duration_in_min.minutes
 
       slots = []
 
@@ -96,10 +97,11 @@ module CreneauxSearch::Calculator
         slots << Creneau.new(
           starts_at: possible_slot_start,
           motif: motif,
+          duration_in_min:,
           lieu_id: plage_ouverture.lieu_id,
           agent: plage_ouverture.agent
         )
-        possible_slot_start += motif.default_duration_in_min.minutes
+        possible_slot_start += duration_in_min.minutes
       end
       slots
     end

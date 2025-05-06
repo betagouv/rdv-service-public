@@ -9,11 +9,11 @@ RSpec.describe "Api de création de comptes", swagger_doc: "conseillers_numeriqu
 
     stub_request(
       :get,
-      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=21%20rue%20des%20Ardennes,%20Paris,%2075019"
+      "https://data.geopf.fr/geocodage/search/?postcode=75019&q=21%20rue%20des%20Ardennes,%20Paris,%2075019"
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
     stub_request(
       :get,
-      "https://api-adresse.data.gouv.fr/search/?postcode=75007&q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
+      "https://data.geopf.fr/geocodage/search/?postcode=75007&q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075007"
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
