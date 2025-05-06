@@ -37,5 +37,7 @@ RSpec.describe "Les usagers peuvent voir les détails de leurs rendez-vous depui
     visit path_in_first_sms
 
     expect(page).not_to have_content "Votre invitation n'est pas valide."
+
+    expect(page).to have_content "Votre RDV"
   end
 end
