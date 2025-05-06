@@ -1,5 +1,6 @@
 RSpec.describe "Les usagers peuvent voir les détails de leurs rendez-vous depuis les sms de rappel" do
-  let!(:rdv) { create(:rdv, starts_at: 2.days.from_now, users: [user]) }
+  let!(:rdv) { create(:rdv, starts_at: 2.days.from_now, users: [user], lieu: lieu) }
+  let(:lieu) { create(:lieu, name: "CCAS de Montreuil") }
   let(:user) { create(:user, last_name: "Factice") }
 
   before { stub_netsize_ok }
@@ -18,6 +19,7 @@ RSpec.describe "Les usagers peuvent voir les détails de leurs rendez-vous depui
     click_on("OK")
 
     expect(page).to have_content "Votre RDV"
+    expect(page).to have_content "CCAS de Montreuil"
 
     travel_back # Pour expirer les cookies
     # On envoie une deuxième notification
@@ -33,11 +35,13 @@ RSpec.describe "Les usagers peuvent voir les détails de leurs rendez-vous depui
     click_on("OK")
 
     expect(page).to have_content "Votre RDV"
+    expect(page).to have_content "CCAS de Montreuil"
 
     visit path_in_first_sms
 
     expect(page).not_to have_content "Votre invitation n'est pas valide."
 
     expect(page).to have_content "Votre RDV"
+    expect(page).to have_content "CCAS de Montreuil"
   end
 end
