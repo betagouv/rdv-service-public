@@ -421,4 +421,71 @@ RSpec.describe "User can search rdv on rdv mairie" do
       end
     end
   end
+  context "prise de RDV en direct sur RDVSP (sans passer par le moteur de l’ANTS)" do
+    before { stub_ants_status_ok("TESTRDV001", meeting_point_id: lieu.id) }
+
+    context "il n’y a pas de créneaux dispos" do
+      it "incite à passer par le moteur de l’ANTS quand", js: true do
+        visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
+        click_on "Passeport"
+        expect(page).to have_content("Nombre de pré-demandes ANTS")
+        expect(find_field(find("label", text: /pré-demandes ANTS/)[:for])[:value]).to eq("1")
+        # On choisit volontairement un nombre de dossiers qui va faire que le créneau sera trop long pour la PO
+        4.times { click_on "+" } # js: true est important dans cette spec pour tester les boutons + et -
+        click_on "-"
+        expect(find_field(find("label", text: /pré-demandes ANTS/)[:for])[:value]).to eq("4")
+        click_on "Valider"
+        expect(page).to have_content("aucun créneau correspondant à votre recherche n'a été trouvé")
+        expect(page).to have_content("Élargissez votre recherche")
+      end
+    end
+
+    it "permet de choisir le nombre de dossiers à déposer" do
+      visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
+      click_on "Passeport"
+      expect(page).to have_content("Nombre de pré-demandes ANTS")
+      fill_in(find("label", text: /pré-demandes ANTS/)[:for], with: "2", fill_options: { clear: :backspace }) # ici on fait sans JS en remplissant le champ directement
+      click_on "Valider"
+      expect(page).to have_content("Sélectionnez un lieu de RDV :")
+      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
+      click_on "Mairie de Sannois"
+      expect(page).to have_content("Sélectionnez un créneau")
+      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
+      click_on "09:00"
+      expect(page).to have_content("Connexion")
+      expect(page).to have_content("(50 minutes)")
+      # Inscription
+      click_on "Créer un compte"
+      fill_in "Prénom", with: "Eloïse"
+      fill_in "Nom", with: "Vanna"
+      fill_in "Adresse email", with: "elo@ise.fr"
+      click_on "Je m’inscris"
+      expect(page).to have_content("Un message contenant un lien de confirmation a été envoyé à votre adresse email")
+      perform_enqueued_jobs
+      open_email("elo@ise.fr")
+      current_email.click_link "Confirmer mon compte"
+      expect(page).to have_content("Définir mon mot de passe")
+      fill_in "Mot de passe", with: "Rdvservicepublictest1!"
+      click_on "Enregistrer"
+      # Parcours post-connexion
+      expect(page).to have_content("Étape 1 sur 3")
+      expect(page).to have_content("Vos informations")
+      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
+      expect(page).to have_content("(50 minutes)")
+      fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001"
+      click_on "Continuer"
+      expect(page).to have_content("Étape 2 sur 3")
+      expect(page).to have_content("Choix de l’usager")
+      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
+      expect(page).to have_content("(50 minutes)")
+      click_on "Continuer"
+      expect(page).to have_content("Étape 3 sur 3")
+      expect(page).to have_content("Confirmation")
+      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
+      expect(page).to have_content("(50 minutes)")
+      click_on "Confirmer mon RDV"
+      expect(page).to have_content("Votre rendez vous a été confirmé")
+      expect(page).to have_content("durée : 50 minutes")
+    end
+  end
 end
