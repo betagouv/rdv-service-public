@@ -48,6 +48,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_02_123003) do
     "agents_and_prescripteurs_and_invited_users",
   ], force: :cascade
 
+  create_enum :creation_status, [
+    "accepted",
+    "refused",
+  ], force: :cascade
+
   create_enum :export_type, [
     "rdv_export",
     "participations_export",
@@ -239,6 +244,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_02_123003) do
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_agents_on_last_name"
+    t.index ["proconnect_siret"], name: "index_agents_on_proconnect_siret"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
   end
@@ -745,6 +751,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_02_123003) do
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
   end
 
+  create_table "territory_creation_requests", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.string "territory_name"
+    t.string "organisation_name"
+    t.string "service_name"
+    t.enum "response", enum_type: "creation_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_territory_creation_requests_on_agent_id", unique: true
+  end
+
   create_table "territory_services", force: :cascade do |t|
     t.bigint "territory_id", null: false
     t.bigint "service_id", null: false
@@ -919,6 +936,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_02_123003) do
   add_foreign_key "sector_attributions", "sectors"
   add_foreign_key "sectors", "territories"
   add_foreign_key "teams", "territories"
+  add_foreign_key "territory_creation_requests", "agents"
   add_foreign_key "territory_services", "services"
   add_foreign_key "territory_services", "territories"
   add_foreign_key "user_profiles", "organisations"

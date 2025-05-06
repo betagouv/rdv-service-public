@@ -11,7 +11,7 @@ as defined by the routes in the `admin/` namespace
   <%= link_to "Se déconnecter", super_admins_sign_out_path, method: :delete, class: "navigation__link" %>
 
   <hr />
-  <% Administrate::Namespace.new(namespace).resources_with_index_route.each do |resource| %>
+  <% Administrate::Namespace.new(namespace).resources_with_index_route.excluding("territory_creation_requests").each do |resource| %>
     <%= link_to(
       display_resource_name(resource),
       resource_index_route(resource),
@@ -20,5 +20,7 @@ as defined by the routes in the `admin/` namespace
   <% end %>
   <hr />
   <%= link_to "Ouverture de compte", new_super_admins_compte_path, class: "navigation__link"%>
+  <%= link_to "Demandes d'ouverture d'espace", super_admins_territory_creation_requests_path, class: "navigation__link"%>
+
   <%= link_to "Good Job", super_admins_good_job_path, class: "navigation__link" if current_super_admin.legacy_admin_member?%>
 </nav>

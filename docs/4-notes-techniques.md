@@ -210,3 +210,35 @@ Une console s’ouvre alors et on peut appeler des commandes comme `click_button
 
 Ça ne fonctionne pas avec `byebug` ou un breakpoint de debug sur RubyMine, lorsqu’on éxecute une commande dans la console ouverte, le navigateur semble bloqué.
 Je suppose que l’éxecution du serveur Rails de spec est complètement interrompue, ce qui n’est pas pratique pour itérer
+
+## Nombre maximum de threads et de connexions en production
+
+### Nombre max de connexions ouvertes à la base de données PostgreSQL
+
+Le tableau ci-dessous présente le nombre de connexions maximum à la base de données PostgreSQL pouvant être ouverts.
+Il s’agit des chiffres pour l’instance historique RDV Solidarités.
+
+|                                      | web | jobs | variables d’env | où trouver la config ? |
+|------------------------------------- | --- | ---- | --------------- | ---------------------- |
+| scalingo_workers_count               | 8   | 2    | -               | `scalingo scale`       |
+| processes_per_worker                 | 3   | 1    | WEB_CONCURRENCY | config/puma.rb         |
+| connection_pools_sizes_per_worker    | 4   | 8    | GOOD_JOB_MAX_THREADS et RAILS_MAX_THREADS | config/database.yml |
+| extra_connections_per_process        | 0   | 3    | -               | doc de GoodJob         |
+| total_max_connections                | 96  | 22   | -               | -                      |
+
+Soit un total de 118 connexions à la base PostgreSQL ouvertes simultanées possibles.
+
+### Nombre max de threads ruby
+
+Le tableau ci-dessous présente le nombre de threads maximum pouvant être ouverts simultanémment.
+Il s’agit des chiffres pour l’instance historique RDV Solidarités.
+
+|                               | web | jobs |
+|-------------------------------|-----|------|
+| scalingo_workers_count        | 8   | 2    |
+| processes_per_worker          | 3   | 1    |
+| max_threads_count_per_process | 4   | 5    |
+| total_max_threads             | 96  | 10   |
+
+Aujourd’hui, le nombre de threads ruby web et de connexions à la DB ouvertes possibles est le même. Ce n’est pas strictement nécessaire, on pourrait baisser le nombre max de connexions ouvertes.
+

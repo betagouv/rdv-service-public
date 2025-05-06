@@ -1,27 +1,29 @@
 module SuperAdmins
   class ComptesController < SuperAdmins::ApplicationController
     def new
-      @agent = Agent.find_by(id: params[:agent_id])
-      if @agent
-        authorize_resource(@agent)
-      end
+      @territory_creation_request = policy_scope(TerritoryCreationRequest, policy_scope_class: SuperAdmin::TerritoryCreationRequestPolicy::Scope).find_by(id: params[:request_id])
+      @agent = policy_scope(Agent, policy_scope_class: SuperAdmin::AgentPolicy::Scope).find_by(id: params[:agent_id]) || @territory_creation_request&.agent
 
       super
     end
 
     def create
       compte_params[:agent][:invited_by] = current_super_admin
-      compte = Compte.new(compte_params, current_domain)
+
+      territory_creation_request_scope = policy_scope(TerritoryCreationRequest, policy_scope_class: SuperAdmin::TerritoryCreationRequestPolicy::Scope)
+      territory_creation_request = territory_creation_request_scope.find_by(id: params.dig(:compte, :territory_creation_request_id))
+
+      compte = Compte.new(compte_params, current_domain:, territory_creation_request:)
       authorize_resource(compte)
 
       if compte.save!
         redirect_to(
           super_admins_agent_path(compte.agent),
-          notice: "Le nouveau compte a été créé, et une invitation a été envoyée à #{compte_params.dig(:agent, :email)}"
+          notice: "Le nouvel espace a été créé, et une invitation a été envoyée à #{compte.agent.email}"
         )
       else
         render :new, locals: {
-          page: Administrate::Page::Form.new(dashboard, resource),
+          page: Administrate::Page::Form.new(dashboard, compte),
         }, status: :unprocessable_entity
       end
     end

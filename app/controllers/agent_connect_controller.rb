@@ -33,7 +33,7 @@ class AgentConnectController < ApplicationController
     # voir https://github.com/numerique-gouv/agentconnect-documentation/blob/main/doc_fs/donnees_fournies.md#le-champ-sub
     agent = Agent.active.find_by(email: callback_client.user_email.downcase) # Certains agents ont des majuscultes dans leur email ProConnect, mais on les enlève automatiquement sur la table agents
 
-    if current_domain.allow_agent_creation_with_agent_connect
+    if current_domain.allow_self_onboarding
       agent ||= Agent.new(email: callback_client.user_email, password: SecureRandom.base64(32))
     end
 
