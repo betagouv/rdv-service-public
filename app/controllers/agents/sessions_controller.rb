@@ -1,6 +1,15 @@
 class Agents::SessionsController < Devise::SessionsController
   before_action :exclude_signed_in_users, only: [:new]
 
+  # Lorsqu'un agent est connecté à une application Oauth via notre application,
+  # Il est possible qu'il cherche à se déconnecter alors que sa session a déjà expiré.
+  #
+  # Dans ce cas, pour éviter que Devise retourne l'erreur "sessions.already_signed_out",
+  # on évite de run le callback de Devise qui vérifie si l'agent est déjà déconnecté.
+  #
+  # De cette façon c'est nous qui gérons la redirection le cas échéant.
+  skip_before_action :verify_signed_out_user, only: :destroy
+
   def new
     # Le flash d'erreur est trop agressif pour le cas d'un agent non connecté.
     # Un flash de style info est plus adapté.
