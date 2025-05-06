@@ -36,7 +36,7 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 workers ENV.fetch("WEB_CONCURRENCY", 3)
 
 # NOTE: Cette variable d’env est quand même respectée même quand la ligne au dessus est commentée !
-# Elle n’est actuellement pas définie sur les instances de production (2024-02-27)
+# Elle n’est actuellement pas définie sur les instances de production (2025-05-06)
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
