@@ -1,24 +1,33 @@
-h1.fr-h3.fr-pb-2w Bienvenue !
-p.fr-py-1w Pour commencer, aidez-nous à en savoir plus :
+- if current_agent.territory_creation_request.blank?
+  h1.fr-h3.fr-pb-2w Bienvenue !
+  p.fr-py-1w Pour commencer, aidez-nous à en savoir plus :
 
-.fr-grid-row.fr-grid-row--gutters
-  .fr-col-12.fr-col-md-6
-    .card
-      .card-body
-        h2.fr-h6 Votre organisation utilise déjà #{current_domain.name} ?
-        p Vos collègues peuvent vous inviter depuis le menu <b>Configuration > Agents > Ajouter un agent</b>.
+  .fr-grid-row.fr-grid-row--gutters
+    .fr-col-12.fr-col-md-6
+      .card
+        .card-body
+          h2.fr-h6 Votre organisation utilise déjà #{current_domain.name} ?
+          p Vos collègues peuvent vous inviter depuis le menu <b>Configuration > Agents > Ajouter un agent</b>.
 
-  .fr-col-12.fr-col-md-6.fr-pb-8w
-    .card
-      .card-body
-        h2.fr-h6 Votre organisation n’utilise pas encore #{current_domain.name} ?
-        - policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)
-        - if policy.new?
-          p Vous pouvez ouvrir un espace pour votre organisation.
-          = link_to "Ouvrir un espace", new_agents_territory_path, class: "fr-btn"
-        - else
-          p Nous vous invitons à contacter notre équipe. Nous organiserons un temps d’échanges pour vous présenter la solution et ouvrir un espace pour votre organisation.
-
-          ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md
-            li
-              = link_to "Rencontrer notre équipe", meet_the_team_url, class: "fr-btn"
+    .fr-col-12.fr-col-md-6.fr-pb-8w
+      .card
+        .card-body
+          h2.fr-h6 Votre organisation n’utilise pas encore #{current_domain.name} ?
+          - if Agent::TerritoryPolicy.new(current_agent, Territory.new).new?
+            p Vous pouvez ouvrir un espace pour votre organisation.
+            = link_to "Ouvrir un espace", new_agents_territory_path, class: "fr-btn"
+            = link_to "Demander une démo", meet_the_team_url, class: "fr-btn--secondary"
+          - else
+            p Vous pouvez demander à ouvrir un espace pour votre organisation. Notre équipe fera les vérifications nécessaires et vous ouvrira un espace.
+            ul.fr-btns-group.fr-btns-group--center.fr-btns-group--inline-md
+              li
+                = link_to "Demander à ouvrir un espace", new_agents_territory_creation_request_path, class: "fr-btn"
+- else
+  .fr-grid-row.fr-grid-row--gutters.fr-pb-8w
+    .fr-col-12.fr-pb-8w
+      h1.fr-h3.fr-pb-2w Ouverture d'espace en attente
+      p.fr-py-1w Nous avons bien reçu votre demande d'ouverture d'espace pour #{current_agent.territory_creation_request.territory_name}.
+      p Vous recevrez un email dès que votre espace sera ouvert.
+      p En attendant, si vous avez des questions vous pouvez consulter notre documentation ou nous contacter directement.
+      = link_to "Consulter la documentation", current_domain.documentation_url, class: "fr-btn fr-btn--secondary fr-mr-2w", target: :_blank
+      = link_to "Contacter l'équipe", new_aide_demande_support_path(role: "agent"), class: "fr-btn fr-btn--secondary"

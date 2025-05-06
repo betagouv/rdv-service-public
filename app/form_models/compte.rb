@@ -6,9 +6,10 @@ class Compte
 
   attr_accessor :territory, :organisation, :lieu, :agent
 
-  def initialize(attributes, current_domain = nil)
+  def initialize(attributes, current_domain: nil, territory_creation_request: nil)
     @attributes = attributes
     @current_domain = current_domain
+    @territory_creation_request = territory_creation_request
     self.territory = Territory.new(@attributes[:territory] || {})
 
     self.organisation = Organisation.new((@attributes[:organisation] || {}).merge(
@@ -24,9 +25,10 @@ class Compte
 
   def save!
     ActiveRecord::Base.transaction do
+      @territory_creation_request&.update!(response: :accepted)
       territory.save!
       organisation.save!
-      if lieu.address
+      if lieu.address.present?
         lieu.save!
       end
 
@@ -49,6 +51,15 @@ class Compte
         allow_to_manage_access_rights: true,
         allow_to_invite_agents: true
       )
+
+      if @territory_creation_request
+        Agents::TerritoryCreationRequestMailer.accepted(
+          agent: agent,
+          organisation: organisation,
+          domain_id: @current_domain.id
+        ).deliver_later
+      end
+      true
     end
   end
 

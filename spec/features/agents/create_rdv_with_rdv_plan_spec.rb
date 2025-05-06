@@ -76,7 +76,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     it "redirige vers la page qui permet de corriger cette situation" do
       visit agents_rdv_plan_path(rdv_plan.id)
       expect(page).to have_content("Vos collègues peuvent vous inviter")
-      expect(page).to have_content("Nous vous invitons à contacter notre équipe")
+      expect(page).to have_content("Vous pouvez demander à ouvrir un espace pour votre organisation.")
     end
   end
 end
