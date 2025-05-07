@@ -122,7 +122,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
           lieu_id: creneau.lieu_id,
           motif_id: creneau.motif.id,
           public_link_organisation_id: creneau.motif.organisation_id,
-          duration: creneau.duration_in_min
+          ants_pre_demandes_count: users_count
         ),
       }
     end

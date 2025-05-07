@@ -38,7 +38,7 @@ module SearchContextHelper
 
   def path_to_creneau_selection(params)
     additional_params = %i[
-      service_id motif_name_with_location_type lieu_id user_selected_organisation_id
+      service_id motif_name_with_location_type ants_pre_demandes_count lieu_id user_selected_organisation_id
     ]
 
     prendre_rdv_path_with_filtered_params(

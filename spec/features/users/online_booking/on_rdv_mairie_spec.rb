@@ -64,7 +64,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
                 lieu_id: lieu.id,
                 motif_id: passport_motif.id,
                 public_link_organisation_id: organisation.id,
-                duration: 50
+                ants_pre_demandes_count: "2"
               ),
             },
           ],
@@ -77,14 +77,21 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_current_path("/users/sign_in")
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
       expect(page).to have_content("Motif : Passeport")
+      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
       expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
       expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (50 minutes)")
 
       # lien pour modifier le motif
       expect(page).to have_link("modifier", href: prendre_rdv_path(
         departement: organisation.territory.departement_number,
-        public_link_organisation_id: organisation.id,
-        duration: 50
+        public_link_organisation_id: organisation.id
+      ))
+
+      # lien pour modifier le nombre de pré-demandes
+      expect(page).to have_link("modifier", href: prendre_rdv_path(
+        departement: organisation.territory.departement_number,
+        motif_name_with_location_type: passport_motif.name_with_location_type,
+        public_link_organisation_id: organisation.id
       ))
 
       # lien pour modifier le lieu
@@ -92,7 +99,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         departement: organisation.territory.departement_number,
         motif_name_with_location_type: passport_motif.name_with_location_type,
         public_link_organisation_id: organisation.id,
-        duration: 50
+        ants_pre_demandes_count: "2"
       ))
 
       # lien pour modifier le créneau
@@ -101,7 +108,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         lieu_id: lieu.id,
         motif_name_with_location_type: passport_motif.name_with_location_type,
         public_link_organisation_id: organisation.id,
-        duration: 50
+        ants_pre_demandes_count: "2"
       ))
 
       fill_in("user_email", with: user.email)
@@ -148,7 +155,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         lieu_id: lieu.id,
         motif_id: passport_motif.id,
         public_link_organisation_id: organisation.id,
-        duration: 50
+        ants_pre_demandes_count: "2"
       )
 
       fill_in "user_email", with: user.email
@@ -217,7 +224,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         lieu_id: lieu.id,
         motif_id: passport_motif.id,
         public_link_organisation_id: organisation.id,
-        duration: 50
+        ants_pre_demandes_count: "2"
       )
 
       fill_in "user_email", with: user.email
@@ -259,7 +266,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         lieu_id: lieu.id,
         motif_id: passport_motif.id,
         public_link_organisation_id: organisation.id,
-        duration: 50
+        ants_pre_demandes_count: "2"
       )
 
       fill_in("user_email", with: user.email)
@@ -282,7 +289,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           public_link_organisation_id: organisation.id,
-          duration: 50
+          ants_pre_demandes_count: "2"
         )
 
         fill_in("user_email", with: user.email)
@@ -306,7 +313,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           public_link_organisation_id: organisation.id,
-          duration: 50
+          ants_pre_demandes_count: "2"
         )
 
         fill_in("user_email", with: user.email)
@@ -332,7 +339,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           public_link_organisation_id: organisation.id,
-          duration: 50
+          ants_pre_demandes_count: "2"
         )
 
         fill_in("user_email", with: user.email)
@@ -356,7 +363,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           public_link_organisation_id: organisation.id,
-          duration: 50
+          ants_pre_demandes_count: "2"
         )
         expect(page).to have_content("Motif : Passeport")
 
@@ -384,7 +391,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           lieu_id: lieu.id,
           motif_id: retrait_motif.id,
           public_link_organisation_id: organisation.id,
-          duration: 50
+          ants_pre_demandes_count: "2"
         )
         expect(page).to have_content("Motif : Retrait")
 
@@ -408,7 +415,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
             lieu_id: lieu.id,
             motif_id: retrait_motif.id,
             public_link_organisation_id: organisation.id,
-            duration: 50
+            ants_pre_demandes_count: "2"
           )
           expect(page).to have_content("Motif : Retrait")
 
@@ -421,6 +428,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       end
     end
   end
+
   context "prise de RDV en direct sur RDVSP (sans passer par le moteur de l’ANTS)" do
     before { stub_ants_status_ok("TESTRDV001", meeting_point_id: lieu.id) }
 
