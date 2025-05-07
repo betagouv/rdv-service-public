@@ -47,7 +47,11 @@ class Invitation
   end
 
   def participation_by_invitation_token
+    return nil if token.blank?
+
     # find_by_invitation_token is a method added by the devise_invitable gem
-    @participation_by_invitation_token ||= token.present? ? Participation.find_by_invitation_token(token, true) : nil
+    @participation_by_invitation_token ||= Participation.find_by_invitation_token(token, true)
+
+    @participation_by_invitation_token ||= Participation.find_by(restricted_auth_token: token)
   end
 end

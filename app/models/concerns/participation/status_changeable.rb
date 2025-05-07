@@ -17,11 +17,6 @@ module Participation::StatusChangeable
     rdv.generate_payload_and_send_webhook(:updated)
   end
 
-  def participation_token
-    # For user invited with tokens, nil default for not invited users
-    @notifier&.participations_tokens_by_user_id&.fetch(user.id, nil)
-  end
-
   private
 
   def notify_update!(author)
