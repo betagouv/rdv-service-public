@@ -145,7 +145,7 @@ class AntsApp < Sinatra::Base
           </div>
         <% end %>
       HTML
-      matching_lieux:, creneaux_by_lieux:,  params:
+      matching_lieux:, creneaux_by_lieux:, params:
     )
   end
 
