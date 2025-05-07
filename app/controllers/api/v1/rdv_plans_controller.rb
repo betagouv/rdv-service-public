@@ -5,12 +5,13 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
       user = find_or_build_user(user_params)
 
-      RdvPlan.create!(
+      plan = RdvPlan.create!(
         planning_agent: current_agent,
         user: user,
         oauth_application: doorkeeper_token&.application,
         return_url: params[:return_url]
       )
+      plan
     end
     render json: RdvPlanBlueprint.render(rdv_plan, root: "rdv_plan"), status: :created
   end

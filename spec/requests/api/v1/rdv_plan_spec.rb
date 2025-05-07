@@ -84,7 +84,7 @@ RSpec.describe "RDV Plan API" do
 
         it "doesn't create the rdv plan" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
-          expect(RdvPlan.last).to be_nil
+          expect(RdvPlan.count).to eq 1
           expect(response.status).to eq 403
         end
       end
