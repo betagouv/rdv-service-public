@@ -59,7 +59,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
           lieu.id.to_s => [
             {
               "datetime" => time.strftime("%Y-%m-%dT%H:%MZ"),
-              "callback_url" => creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50),
+              "callback_url" => creneaux_url(
+                starts_at: time.strftime("%Y-%m-%d %H:%M"),
+                lieu_id: lieu.id,
+                motif_id: passport_motif.id,
+                public_link_organisation_id: organisation.id,
+                duration: 50
+              ),
             },
           ],
         }
@@ -74,12 +80,14 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
       expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (50 minutes)")
 
+      # lien pour modifier le motif
       expect(page).to have_link("modifier", href: prendre_rdv_path(
         departement: organisation.territory.departement_number,
         public_link_organisation_id: organisation.id,
         duration: 50
       ))
 
+      # lien pour modifier le lieu
       expect(page).to have_link("modifier", href: prendre_rdv_path(
         departement: organisation.territory.departement_number,
         motif_name_with_location_type: passport_motif.name_with_location_type,
@@ -87,6 +95,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         duration: 50
       ))
 
+      # lien pour modifier le créneau
       expect(page).to have_link("modifier", href: prendre_rdv_path(
         departement: organisation.territory.departement_number,
         lieu_id: lieu.id,
@@ -134,8 +143,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     it "permet de réserver sans avertissement", js: true do
       time = Time.zone.now.change(hour: 9, min: 0)
-      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-      visit creneaux_url
+      visit creneaux_url(
+        starts_at: time.strftime("%Y-%m-%d %H:%M"),
+        lieu_id: lieu.id,
+        motif_id: passport_motif.id,
+        public_link_organisation_id: organisation.id,
+        duration: 50
+      )
 
       fill_in "user_email", with: user.email
       fill_in "user_password", with: user.password
@@ -198,8 +212,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     it "permet de réserver avec un avertissement contournable", js: true do
       time = Time.zone.now.change(hour: 9, min: 0)
-      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-      visit creneaux_url
+      visit creneaux_url(
+        starts_at: time.strftime("%Y-%m-%d %H:%M"),
+        lieu_id: lieu.id,
+        motif_id: passport_motif.id,
+        public_link_organisation_id: organisation.id,
+        duration: 50
+      )
 
       fill_in "user_email", with: user.email
       fill_in "user_password", with: user.password
@@ -235,8 +254,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
   context "when using a pre-demande number with invalid format (too short)" do
     it "detects wrong format without calling ANTS API an warns user" do
       time = Time.zone.now.change(hour: 9, min: 0)
-      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-      visit creneaux_url
+      visit creneaux_url(
+        starts_at: time.strftime("%Y-%m-%d %H:%M"),
+        lieu_id: lieu.id,
+        motif_id: passport_motif.id,
+        public_link_organisation_id: organisation.id,
+        duration: 50
+      )
 
       fill_in("user_email", with: user.email)
       fill_in("user_password", with: user.password)
@@ -253,8 +277,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       it "considers it as uppercase when calling ANTS API and saving it in user" do
         time = Time.zone.now.change(hour: 9, min: 0)
-        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-        visit creneaux_url
+        visit creneaux_url(
+          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          lieu_id: lieu.id,
+          motif_id: passport_motif.id,
+          public_link_organisation_id: organisation.id,
+          duration: 50
+        )
 
         fill_in("user_email", with: user.email)
         fill_in("user_password", with: user.password)
@@ -272,8 +301,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
     context "when trying to bypass the front-end validation" do
       it "performs back-end validation and displays error" do
         time = Time.zone.now.change(hour: 9, min: 0)
-        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-        visit creneaux_url
+        visit creneaux_url(
+          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          lieu_id: lieu.id,
+          motif_id: passport_motif.id,
+          public_link_organisation_id: organisation.id,
+          duration: 50
+        )
 
         fill_in("user_email", with: user.email)
         fill_in("user_password", with: user.password)
@@ -293,8 +327,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       it "detects wrong format without calling ANTS API an warns user" do
         time = Time.zone.now.change(hour: 9, min: 0)
-        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-        visit creneaux_url
+        visit creneaux_url(
+          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          lieu_id: lieu.id,
+          motif_id: passport_motif.id,
+          public_link_organisation_id: organisation.id,
+          duration: 50
+        )
 
         fill_in("user_email", with: user.email)
         fill_in("user_password", with: user.password)
@@ -312,8 +351,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
     context "when the motif requires ants_predemande_number" do
       it "shows input for ants_predemande_number" do
         time = Time.zone.now.change(hour: 9, min: 0)
-        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-        visit creneaux_url
+        visit creneaux_url(
+          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          lieu_id: lieu.id,
+          motif_id: passport_motif.id,
+          public_link_organisation_id: organisation.id,
+          duration: 50
+        )
         expect(page).to have_content("Motif : Passeport")
 
         fill_in("user_email", with: user.email)
@@ -335,8 +379,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       it "does not show input for ants_predemande_number" do
         time = Time.zone.now.change(hour: 15, min: 0)
-        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: retrait_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-        visit creneaux_url
+        visit creneaux_url(
+          starts_at: time.strftime("%Y-%m-%d %H:%M"),
+          lieu_id: lieu.id,
+          motif_id: retrait_motif.id,
+          public_link_organisation_id: organisation.id,
+          duration: 50
+        )
         expect(page).to have_content("Motif : Retrait")
 
         fill_in("user_email", with: user.email)
@@ -354,8 +403,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
         it "does not show input for ants_predemande_number" do
           time = Time.zone.now.change(hour: 15, min: 0)
-          creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: retrait_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-          visit creneaux_url
+          visit creneaux_url(
+            starts_at: time.strftime("%Y-%m-%d %H:%M"),
+            lieu_id: lieu.id,
+            motif_id: retrait_motif.id,
+            public_link_organisation_id: organisation.id,
+            duration: 50
+          )
           expect(page).to have_content("Motif : Retrait")
 
           fill_in("user_email", with: user.email)
