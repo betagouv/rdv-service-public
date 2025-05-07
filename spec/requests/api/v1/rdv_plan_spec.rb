@@ -61,6 +61,34 @@ RSpec.describe "RDV Plan API" do
         end
       end
 
+      context "when the user is not in any organisation but already has a rdv_plan" do
+        let(:user) { User.create!(first_name: "Francis", last_name: "Factice") }
+        let(:params) do
+          {
+            user: {
+              id: user.id,
+              first_name: "Francis",
+              last_name: "Factice",
+              email: nil,
+              address: nil,
+              phone_number: nil,
+            },
+            return_url: "http://localhost:3000/coop/mes-beneficiaires/ee5623ba-89cf-4fa4-9edc-865e17372f69/accompagnements",
+            dossier_url: "http://localhost:3000/coop/mes-beneficiaires/ee5623ba-89cf-4fa4-9edc-865e17372f69/accompagnements",
+          }
+        end
+
+        before do
+          create(:rdv_plan, user: user, planning_agent: agent)
+        end
+
+        it "doesn't create the rdv plan" do
+          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          expect(RdvPlan.last).to be_nil
+          expect(response.status).to eq 403
+        end
+      end
+
       context "when the user is in one of the agent's organisations" do
         let(:user) do
           create(:user, organisations: [agent.organisations.last])
