@@ -10,6 +10,9 @@ require "uri"
 require "erb"
 
 class AntsApp < Sinatra::Base
+  RDV_HOST = "http://www.rdv-mairie.localhost:3000".freeze
+  AUTH_TOKEN = "fake_ants_api_auth_token".freeze
+
   get "/" do
     status 200
     render_erb(
@@ -150,13 +153,13 @@ class AntsApp < Sinatra::Base
   end
 
   def fetch_lieux
-    fetch_and_parse_uri(URI("http://www.rdv-mairie.localhost:3000/api/ants/getManagedMeetingPoints"))
+    fetch_and_parse_uri(URI("#{RDV_HOST}/api/ants/getManagedMeetingPoints"))
   end
 
   def fetch_creneaux_by_lieu(meeting_point_ids:)
     return {} unless meeting_point_ids.any?
 
-    uri = URI("http://www.rdv-mairie.localhost:3000/api/ants/availableTimeSlots")
+    uri = URI("#{RDV_HOST}/api/ants/availableTimeSlots")
     uri.query = URI.encode_www_form(
       meeting_point_ids:,
       start_date: (Date.today + 1).strftime("%Y-%m-%d"), # rubocop:disable Rails/Date
@@ -169,7 +172,7 @@ class AntsApp < Sinatra::Base
 
   def fetch_and_parse_uri(uri)
     request = Net::HTTP::Get.new(uri)
-    request["X-HUB-RDV-AUTH-TOKEN"] = "fake_ants_api_auth_token"
+    request["X-HUB-RDV-AUTH-TOKEN"] = AUTH_TOKEN
     response = Net::HTTP.start(uri.hostname, uri.port) { _1.request(request) }
     JSON.parse(response.body)
   end
@@ -178,10 +181,9 @@ class AntsApp < Sinatra::Base
     <<-HTML
       <html>
         <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
-
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+          <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
           <link href=" https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.13.1/dist/dsfr.min.css " rel="stylesheet">
           <title>ANTS test app</title>
         </head>
