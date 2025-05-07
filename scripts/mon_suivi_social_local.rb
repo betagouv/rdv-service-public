@@ -30,7 +30,7 @@ class MonSuiviSocial < Sinatra::Base
         <br />
         <a href="http://www.rdv-mairie.localhost:3000/admin/organisations/configuration">Vérifier ma Configuration sur RDV Service Public</a>
         <br />
-        <form><button>Prendre RDV avec Françis Factice</button></form>
+        <form method="post" action="/prendre_rdv"><button>Prendre RDV avec Françis Factice</button></form>
 
         <a href="/logout">Déconnexion</a>
       HTML
@@ -67,7 +67,7 @@ class MonSuiviSocial < Sinatra::Base
           first_name: "Francis",
           last_name: "Factice",
         },
-      },
+      }.to_json,
       {
         "Content-Type": "application/json",
         Authorization: "Bearer #{session[:access_token]}",
