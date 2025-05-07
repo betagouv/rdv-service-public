@@ -5,6 +5,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
       user = find_or_build_user(user_params)
 
+      user.save!
       plan = RdvPlan.create!(
         planning_agent: current_agent,
         user: user,
@@ -49,7 +50,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
       user
     elsif user_params[:email].present?
-      User.find_by(user_params.permit(:email))
+      User.find_by(user_params.permit(:email).downcase)
     end
   end
 end

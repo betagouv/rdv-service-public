@@ -117,6 +117,19 @@ RSpec.describe "RDV Plan API" do
         expect(User.all.to_a).to eq [user]
         expect(RdvPlan.last.user).to eq user
       end
+
+      context "when the email is un uppercase" do
+        let(:params) do
+          { user: { email: "FRANCIS@FACTICE.COM", first_name: "Francois" } }
+        end
+
+        it "creates the rdv plan with the user, because we don't allow multiple users with the same email" do
+          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          expect(response.status).to eq 201
+          expect(User.all.to_a).to eq [user]
+          expect(RdvPlan.last.user).to eq user
+        end
+      end
     end
 
     context "when passing all possible params" do
