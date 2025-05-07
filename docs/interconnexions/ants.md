@@ -90,6 +90,9 @@ Vous pouvez donc chercher et réserver un RDV en suivant ce lien <http://www.rdv
 
 Utilisez ces application ID de tests, partagés par l’équipe support [sur cette issue GitLab](https://gitlab.com/france-titres/rendez-vous-mairie/interaction-avec-les-editeurs/-/issues/85) :
 
+Une application Sinatra indépendante peut être lancée avec `./bin/bundle exec ruby scripts/ants_app.rb`.
+Elle imite le moteur de recherche de l’ANTS pour itérer en local.
+
 status | application_id
 -|-
 validated | RDVSPUB001
