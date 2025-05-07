@@ -15,7 +15,7 @@ RSpec.describe "Admin can configure the territory" do
 
   context "with basic agent" do
     it "forbids from accessing the form" do
-      territory = create(:territory, phone_number: nil)
+      territory = create(:territory, name: "Ville de Montreuil")
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [])
       login_as(agent, scope: :agent)
