@@ -103,6 +103,20 @@ RSpec.describe "RDV Plan API" do
       end
     end
 
+    context "when some of the params are missing" do
+      let(:params) do
+        { user: { first_name: "Francis" } }
+      end
+
+      it "returns an error message and doesn't create the rdv plan" do
+        post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+        expect(RdvPlan.last).to be_nil
+        expect(User.last).to be_nil
+        expect(response.status).to eq 422
+        expect(parsed_response_body["errors"]["last_name"]).to be_present
+      end
+    end
+
     context "when passing a user email" do
       let(:params) do
         { user: { email: "francis@factice.com", first_name: "Francois" } }
