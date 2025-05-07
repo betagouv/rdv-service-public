@@ -43,7 +43,7 @@ class Agents::SessionsController < Devise::SessionsController
     #
     # Dans le cas où on le déconnecte d'abord de ProConnect, on est obligés de faire la redirection
     # vers l'appli cliente après avoir été redirigés vers notre root_url par ProConnect.
-    if params[:oauth_client_app_id].present? && params[:oauth_client_app_id].in?(session[:connected_oauth_app_ids])
+    if params[:oauth_client_app_id].present?
       oauth_app = Doorkeeper::Application.find_by(uid: params[:oauth_client_app_id])
       @oauth_client_app_post_logout_redirect_url = oauth_app.post_logout_redirect_uri
     end
