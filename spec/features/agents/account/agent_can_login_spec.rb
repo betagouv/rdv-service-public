@@ -18,12 +18,22 @@ RSpec.describe "Agent can login" do
       end
     end
 
-    it "shows a warning and advises to change the password" do
+    it "expire le mot de passe et redirige vers la page pour en définir un nouveau" do
+      previous_encrypted_password = agent.reload.encrypted_password
       visit new_agent_session_path
       fill_in "Adresse email", with: agent.email
-      fill_in "Mot de passe", with:  "tropfaible"
+      fill_in "Mot de passe", with: "tropfaible"
       click_on "Se connecter"
-      expect(page).to have_content("Votre mot de passe est trop faible")
+      expect(page).to have_content("nous vous demandons de changer votre mot de passe")
+      expect(agent.reload.encrypted_password).not_to eq(previous_encrypted_password) # vérifie que le mot de passe a été modifié
+      fill_in "Mot de passe", with: "tropfaible2"
+      click_on "Enregistrer"
+      # expect(page.status_code).to eq 422 # je ne sais pas trop pourquoi devise renvoie une 422 ici
+      expect(page).to have_content("Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères")
+      fill_in "Mot de passe", with: "Rdvservicepublictest1!"
+      click_on "Enregistrer"
+      expect(page).to have_content("Votre mot de passe a été édité avec succès, votre connexion est désormais active")
+      expect(page).to have_content("Bienvenue !")
     end
   end
 end
