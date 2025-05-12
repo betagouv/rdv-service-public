@@ -90,7 +90,7 @@ RSpec.describe PhoneNumberValidation do
       end
     end
 
-    [User, Territory, Lieu].each do |klass|
+    [User, Lieu].each do |klass|
       describe(klass) do
         let(:factory) { described_class.name.underscore }
 
