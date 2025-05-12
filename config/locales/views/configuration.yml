@@ -71,14 +71,12 @@ fr:
           title: Carte des secteurs
       teams:
         edit:
-          territory_teams_title: Équipes de l'espace
           title: Modifier l'équipe %{name}
         index:
           teams_title: Équipes de l'espace
           create_team: Ajouter une équipe
           back: Retour
         new:
-          territory_teams_title: Créer une équipe
           title: Ajouter une équipe
       agents:
         edit:
