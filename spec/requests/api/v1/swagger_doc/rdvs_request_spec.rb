@@ -12,7 +12,14 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       operationId "getRdvs"
       description "Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres optionels passés en paramètre"
 
-      parameter name: :organisation_id, in: :path, type: :string, description: "Identifiant de l'organisation", example: "20", required: false
+      parameter name: :organisation_id, in: :query, type: :string, description: "Identifiant de l'organisation", example: "20", required: false
+
+      parameter name: :user_id, in: :query, type: :integer,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id",
+                example: 123, required: false
+      parameter name: :agent_id, in: :query, type: :integer,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'agent qui a cet id",
+                example: 456, required: false
 
       parameter name: :starts_after, in: :query, type: :string,
                 description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time (iso8601).",
@@ -52,6 +59,13 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       description "Renvoie les RDVs du service dont l'agent fait partie dans cette organisation. Si l'agent est administrateurice ou secrétaire, renvoie tous les RDVs de l'organisation en question."
 
       parameter name: :organisation_id, in: :path, type: :string, description: "Identifiant de l'organisation", example: "20"
+
+      parameter name: :user_id, in: :query, type: :integer,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id",
+                example: 123, required: false
+      parameter name: :agent_id, in: :query, type: :integer,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'agent qui a cet id",
+                example: 456, required: false
 
       parameter name: :starts_after, in: :query, type: :string,
                 description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time (iso8601).",
