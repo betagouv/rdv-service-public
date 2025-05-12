@@ -21,7 +21,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     click_link "Ouverture de compte"
 
     fill_in("Nom de l'espace", with: "France Rénov")
-    select("Commune", from: "Catégorie du territoire")
+    select("Commune", from: "Catégorie de l'espace")
     fill_in("Nom de la première organisation", with: "Agence de Romainville")
     fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
 
@@ -93,7 +93,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
       click_link "Ouverture de compte"
 
       fill_in("Nom de l'espace", with: "Romainville")
-      select("Commune", from: "Catégorie du territoire")
+      select("Commune", from: "Catégorie de l'espace")
       fill_in("Nom de la première organisation", with: "Mairie de Romainville")
       fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
 
