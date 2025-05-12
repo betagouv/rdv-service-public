@@ -44,6 +44,7 @@ class Agent < ApplicationRecord
 
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
+  normalizes :email, with: ->(email) { email.downcase }
 
   enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
