@@ -16,6 +16,10 @@ class RdvBlueprint < Blueprinter::Base
     created_by_type_map[rdv.created_by_type]
   end
 
+  field :url_for_agent do |rdv, _options|
+    Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv, host: rdv.domain.host_name)
+  end
+
   association :organisation, blueprint: OrganisationBlueprint
   association :motif, blueprint: MotifBlueprint
   # DEPRECATED : Nous laissons l'association `:users` le temps que le 92, 26, 62, 64, et data-insertion mettent à jours leur système.
