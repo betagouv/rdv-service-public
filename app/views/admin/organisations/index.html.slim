@@ -4,7 +4,7 @@
   .card
     .card-header
       .d-flex.justify-content-between.align-items-center
-        h5.m-2= territory
+        h5.m-2 Espace : #{territory}
         - if Agent::TerritoryPolicy.new(current_agent, territory).show?
           = link_to admin_territory_path(territory), class: "float-right fr-btn fr-btn--sm fr-btn--tertiary fr-icon-settings-5-fill fr-btn--icon-left" do
             = t(".territory_configuration")
