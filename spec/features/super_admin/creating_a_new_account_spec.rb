@@ -39,7 +39,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     select("Urbanisme", from: "Service")
 
     click_button("Enregistrer")
-    expect(page).to have_content("Le nouveau compte a été créé, et une invitation a été envoyée à francis@factice.org")
+    expect(page).to have_content("Le nouvel espace a été créé, et une invitation a été envoyée à francis@factice.org")
 
     expect(page).to have_content("Francis FACTICE")
     expect(Organisation.count).to eq(1)
@@ -114,7 +114,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
       click_button("Enregistrer")
 
-      expect(page).to have_content("Le nouveau compte a été créé, et une invitation a été envoyée à francis@factice.org")
+      expect(page).to have_content("Le nouvel espace a été créé, et une invitation a été envoyée à francis@factice.org")
 
       mairie_organisation = Organisation.last
       expect(mairie_organisation).to have_attributes(

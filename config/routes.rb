@@ -42,8 +42,9 @@ Rails.application.routes.draw do
     resources :motifs
     resources :lieux
     resources :territories, except: %i[new create]
+    resources :territory_creation_requests, only: %i[index edit update]
     resources :users
-    resources :comptes, only: %i[index new create]
+    resources :comptes, only: %i[new create]
     resources :rdvs, only: %i[show]
     root to: "agents#index"
 
@@ -141,6 +142,7 @@ Rails.application.routes.draw do
         end
       end
       resources :territories, only: %i[new create]
+      resources :territory_creation_requests, only: %i[new create]
       resources :exports, only: %i[index] do
         get :download
       end

@@ -231,6 +231,7 @@ tables:
   - table_name: participations
     anonymized_column_names:
       - invitation_token
+      - restricted_auth_token
     non_anonymized_column_names:
       - created_at
       - updated_at
@@ -453,6 +454,14 @@ tables:
       - created_at
       - revoked_at
       - expires_in
+  - table_name: territory_creation_requests
+    non_anonymized_column_names:
+      - territory_name
+      - organisation_name
+      - service_name
+      - response
+      - created_at
+      - updated_at
   - table_name: rdv_plans
     anonymized_column_names:
       - return_url

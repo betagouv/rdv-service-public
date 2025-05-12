@@ -1,0 +1,9 @@
+p = t("mailers.common.hello")
+
+p= t("agents.territory_creation_request_mailer.accepted.body1", domain_name: domain.name)
+p= t("agents.territory_creation_request_mailer.accepted.body2", organisation_name: @organisation.name)
+
+.btn-wrapper
+  = link_to "Commencer", admin_organisation_agent_agenda_url(@organisation, @agent),  class: "btn btn-primary"
+
+= t("mailers.common.farewell_html", domain_name: domain.name)

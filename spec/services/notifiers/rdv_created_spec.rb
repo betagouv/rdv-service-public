@@ -6,14 +6,13 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
   let(:agent1) { create(:agent, rdv_notifications_level: :others) }
   let(:agent2) { create(:agent, rdv_notifications_level: :others) }
   let(:rdv) { create(:rdv, starts_at: starts_at, motif: motif, agents: [agent1, agent2], users: [user1, user2], organisation: motif.organisation) }
-  let(:token1) { "123456" }
-  let(:token2) { "56789" }
+  let(:token1) { user1.participations.last.restricted_auth_token }
+  let(:token2) { user2.participations.last.restricted_auth_token }
 
   before do
     stub_netsize_ok
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(Agents::RdvMailer).to receive(:with).and_call_original
-    allow(Devise.token_generator).to receive(:generate).and_return(token1, token2)
   end
 
   context "edited by agent" do

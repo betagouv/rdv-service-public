@@ -213,11 +213,10 @@ RSpec.describe "User can be invited" do
 
     context "when this is not an invitation to take rdv" do
       let!(:participation) { create(:participation, user: user) }
-      let!(:invitation_token) { participation.new_raw_invitation_token }
 
       it "does not show the motifs that can be booked through invitation only" do
         visit prendre_rdv_path(
-          departement: departement_number, city_code: city_code, invitation_token: invitation_token,
+          departement: departement_number, city_code: city_code, invitation_token: participation.restricted_auth_token,
           address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
         )
 

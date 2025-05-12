@@ -3,9 +3,12 @@
 # Any libraries that use thread pools should be configured to match
 # the maximum value specified for Puma. Default is set to 5 threads for minimum
 # and maximum; this matches the default thread size of Active Record.
+# cf docs/4-notes-techniques.md pour une vue d’ensemble du nombre de threads et de connexions à
+# la base de données
 #
-max_threads_count = ENV.fetch("RAILS_MAX_THREADS", 4)
-min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }
+#
+max_threads_count = ENV.fetch("RAILS_MAX_THREADS", 4).to_i
+min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }.to_i
 threads min_threads_count, max_threads_count
 
 # Specifies the `worker_timeout` threshold that Puma will use to wait before
@@ -31,6 +34,9 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 # processes).
 #
 workers ENV.fetch("WEB_CONCURRENCY", 3)
+
+# NOTE: Cette variable d’env est quand même respectée même quand la ligne au dessus est commentée !
+# Elle n’est actuellement pas définie sur les instances de production (2025-05-06)
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
