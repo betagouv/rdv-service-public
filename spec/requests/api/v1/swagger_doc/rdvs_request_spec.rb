@@ -44,10 +44,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       let!(:basic_agent) { create(:agent, basic_role_in_organisations: [organisationA], service: service) }
       let(:organisation_id) { organisationA.id }
 
-      after do
-        Rack::Attack.enabled = false
-      end
-
       response 200, "Appel API réussi" do
         schema "$ref" => "#/components/schemas/rdvs"
 
