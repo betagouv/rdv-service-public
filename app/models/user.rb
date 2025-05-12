@@ -84,6 +84,7 @@ class User < ApplicationRecord
   # Hooks
   before_save :set_email_to_null_if_blank
   before_save :clear_notification_email_if_email_present
+  normalizes :email, with: ->(email) { email.downcase }
 
   # Scopes
   default_scope { where(deleted_at: nil) }
