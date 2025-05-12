@@ -21,7 +21,7 @@ RSpec.describe RdvPlan do
     let(:agent) { create(:agent) }
 
     it "can only be in a a whitelisted domain name from the corresponding oauth application" do
-      rdv_plan = build(:rdv_plan, oauth_application: application, user: user, planning_agent: agent)
+      rdv_plan = build(:rdv_plan, oauth_application: application)
       rdv_plan.return_url = "nimportequoi.fr/asdf"
       expect(rdv_plan).not_to be_valid
 
@@ -36,8 +36,7 @@ RSpec.describe RdvPlan do
     end
 
     it "needs to be a http url" do
-      rdv_plan = build(:rdv_plan, oauth_application: application, return_url: "javascript:alert(1)",
-                                  user: user, planning_agent: agent)
+      rdv_plan = build(:rdv_plan, oauth_application: application, return_url: "javascript:alert(1)")
       expect(rdv_plan).not_to be_valid
 
       rdv_plan.return_url = "ssh://test.gouv.fr"
