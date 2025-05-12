@@ -30,31 +30,6 @@ fr:
         select_placeholder_existing_lieu: Choisir un lieu existant
         select_placeholder_single_use_lieu: Lieu ponctuel
     territories:
-      agents:
-        index:
-          edit_agents: Modification des équipes de l'agent
-          territory_agents_title: Agents de l'espace
-          reset: Reinitialiser
-          search_placeholder: "ex: martine@example.com"
-          search: Rechercher
-          last_name: Nom
-          first_name: Prénom
-          email: Email
-          teams: Équipes
-          actions: Actions
-        edit:
-          agent_title: Modifier un agent
-          teams: Équipes
-      teams:
-        index:
-          edit_agent_teams_title: Modifier les équipes de %{agent_name}
-          back: Retour
-          create_team: Créer une équipe
-          teams_title: Liste des équipes
-        new:
-          territory_teams_title: Créer une équipe
-        edit:
-          territory_teams_title: Modifier une équipe
       agent_roles:
         destroy:
           cannot_delete_because_of_rdvs: Impossible de retirer l'agent %{agent_name} de %{org_name} car il a des RDVs à venir dans cette organisation. Veuillez les supprimer ou les réaffecter avant de retirer cet agent.
