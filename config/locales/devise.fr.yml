@@ -18,6 +18,8 @@ fr:
       timeout: "Votre session est expirée. Veuillez vous reconnecter pour continuer."
       unauthenticated: "Vous devez vous connecter ou vous inscrire pour continuer."
       unconfirmed: "Vous devez valider votre compte pour continuer."
+      agent:
+        invalid: "Email ou mot de passe incorrect. Vous pouvez <a href='/agents/password/new'>réinitialiser votre mot de passe ici</a>."
     invitations:
       send_instructions: "L'utilisateur %{email} a été invité"
       invitation_token_invalid: "Votre invitation n'est pas valide."

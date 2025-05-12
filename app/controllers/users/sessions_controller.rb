@@ -2,6 +2,7 @@ class Users::SessionsController < Devise::SessionsController
   layout "application_narrow"
 
   include CanHaveRdvWizardContext
+  include Admin::WeakPasswordControllerConcern
 
   before_action :exclude_signed_in_agents, only: [:new]
 
@@ -19,14 +20,10 @@ class Users::SessionsController < Devise::SessionsController
 
   def create
     if auth_options[:scope] == :user && (self.resource = Agent.find_by(email: params[:user]["email"])) && resource.valid_password?(params[:user]["password"])
+      return if reset_current_agent_password_if_weak!(params[:user][:password])
+
       set_flash_message!(:notice, :signed_in)
       sign_in(:agent, resource)
-
-      checker = PasswordChecker.new(params[:user][:password]) # voir aussi app/controllers/agents/sessions_controller.rb
-      if checker.too_weak?
-        flash[:notice] = nil
-        flash[:alert] = checker.error_message(current_domain.name)
-      end
 
       yield resource if block_given?
       respond_with resource, location: after_sign_in_path_for(resource)
