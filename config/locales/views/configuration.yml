@@ -8,11 +8,9 @@ fr:
         new:
           title: Nouvelle attribution pour le secteur %{name}
       nav:
-        configuration_title: Paramètres de "%{territory}"
+        configuration_title: Paramètres de %{territory}
       show:
-        title: Paramètres de l'espace "%{territory}"
-      index:
-        configuration_title: Espace Admin
+        title: Paramètres de %{territory}
       edit:
         title: Configuration %{name}
 
@@ -96,7 +94,7 @@ fr:
           no_other_organisation: Aucune autre organisation.
           create_organisation: Créer une organisation
           empty_agent_organisations: Aucune organisation affectée
-          agent_territorial_role_caption: Administrateur d'espace
+          agent_territorial_role_caption: Droit administrateur
         index:
           territory_agents_title: Agents de l'espace
           reset: Retour

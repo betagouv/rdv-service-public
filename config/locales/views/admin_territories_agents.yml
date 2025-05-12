@@ -14,6 +14,6 @@ fr:
           organisations:
             submit: Enregistrer
           delete_agent_role: Retirer
-          hint_allow_to_manage_teams: "Créer, supprimer, modifier toutes les équipes de l'espace"
-          hint_allow_to_manage_access_rights: "Modifier les droits d'accès et les services de tous les agents de l'espace"
-          hint_allow_to_invite_agents: "Inviter d'autre personne sur l'espace, les affecter ou retirer de chacune des organisations de l'espace"
+          hint_allow_to_manage_teams: "Créer, supprimer, modifier toutes les équipes de l'espace %{territory_name}"
+          hint_allow_to_manage_access_rights: "Modifier les droits d'accès et les services de tous les agents de l'espace %{territory_name}"
+          hint_allow_to_invite_agents: "Inviter d'autre personne sur l'espace, les affecter ou retirer de chacune des organisations de l'espace %{territory_name}"
