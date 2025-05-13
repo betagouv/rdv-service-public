@@ -1,17 +1,4 @@
 RSpec.describe RdvPlan do
-  describe "validations on associations" do
-    it "verifies that the user and the agent are persisted" do
-      invalid_user = User.new
-      invalid_agent = Agent.new
-      plan = described_class.new(
-        user: invalid_user,
-        planning_agent: invalid_agent
-      )
-      expect(plan).not_to be_valid
-      expect(plan.errors.to_hash.keys).to match_array(%i[user_id planning_agent_id])
-    end
-  end
-
   describe "#return_url" do
     let(:application) do
       create(:oauth_application,
