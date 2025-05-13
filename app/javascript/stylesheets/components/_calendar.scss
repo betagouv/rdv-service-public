@@ -129,15 +129,21 @@ $rdvs-fc-header-bg-color: $gray-200;
 }
 
 .fc-timeGridWeek-view {
-  // Ce petit décalage des RDVs vers la droite permet de visualiser
-  // la plage affichée en background en dessous.
   .fc-event:not(.fc-bg-event) {
+    // Ce petit décalage des RDVs vers la droite permet de visualiser
+    // la plage affichée en background en dessous.
     margin-left: 5%;
   }
 }
 .fc-timegrid {
   .fc-bg-event {
     cursor: default;
+    .fc-event-title {
+      font-size: 12px;
+      font-weight: bold;
+      font-style: normal;
+      color: black;
+    }
   }
 }
 
