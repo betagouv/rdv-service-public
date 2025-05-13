@@ -35,6 +35,7 @@ class Admin::EditRdvForm
     end
   end
 
+  # TODO: utiliser cette méthode pour les autres endroits où ce formulaire existe
   def current_agent_ids
     rdv.agents_rdvs.to_a.reject(&:marked_for_destruction?).map(&:agent_id)
   end
