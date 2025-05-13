@@ -14,17 +14,9 @@ class Admin::EditRdvForm
     raise ArgumentError, "agent_ids est accepté mais pas agents" if rdv_attributes.key?(:agents)
 
     agent_ids = rdv_attributes.delete(:agent_ids) || [] # évite de sauvegarder les changements d’agents avant la validation
+    update_agent_rdvs_in_memory_but_not_in_the_database(agent_ids)
+
     @rdv.assign_attributes(rdv_attributes)
-
-    # Add new_agent_rdvs_in_memory_but_not_in_the_database
-    (agent_ids - rdv.agent_ids).each { @rdv.agents_rdvs.build(agent_id: _1) }
-
-    # Remove agent_rdvs_in_memory_but_not_in_the_database
-    (rdv.agent_ids - agent_ids).each do |agent_id_to_remove|
-      @rdv.agents_rdvs.find do |agent_rdv|
-        agent_rdv.agent_id == agent_id_to_remove.to_i
-      end.mark_for_destruction
-    end
 
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
@@ -41,6 +33,16 @@ class Admin::EditRdvForm
   end
 
   private
+
+  def update_agent_rdvs_in_memory_but_not_in_the_database(agent_ids)
+    (agent_ids - rdv.agent_ids).each { @rdv.agents_rdvs.build(agent_id: _1) }
+
+    (rdv.agent_ids - agent_ids).each do |agent_id_to_remove|
+      @rdv.agents_rdvs.find do |agent_rdv|
+        agent_rdv.agent_id == agent_id_to_remove.to_i
+      end.mark_for_destruction
+    end
+  end
 
   def pundit_user
     agent_context
