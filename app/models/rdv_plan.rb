@@ -14,7 +14,6 @@ class RdvPlan < ApplicationRecord
   delegate :organisation, to: :motif
 
   validate :return_url_is_authorized
-  validates :user_id, :planning_agent_id, presence: true
 
   # TODO: mettre en commun avec les motifs et ajouter une validation de synchro
   enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
