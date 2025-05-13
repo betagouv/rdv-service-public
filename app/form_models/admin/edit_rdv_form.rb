@@ -17,11 +17,11 @@ class Admin::EditRdvForm
     @rdv.assign_attributes(rdv_attributes)
 
     (agent_ids - rdv.agent_ids).each { @rdv.agents_rdvs.build(agent_id: _1) }
-    # TODO: do the same thing in memoy for deleted agents
+    # TODO: do the same thing in memory for deleted agents
+    # (rdv.agent_ids - agent_ids).each { @rdv.agents_rdvs.build(agent_id: _1) }
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
     if valid?
-      @rdv.agent_ids = agent_ids if agent_ids.present?
       @rdv.save_and_notify(agent_context.agent)
     else
       false
