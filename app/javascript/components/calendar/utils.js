@@ -14,7 +14,6 @@ const defaultFullCalendarConfig = () => ({
   },
   slotMinTime: '07:00:00',
   slotMaxTime: '20:00:00',
-  displayEventEnd: false,
   eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
   timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
@@ -63,9 +62,15 @@ function eventRenderer(selectedEventId) {
       return
     }
 
-    let title = ``;
     const start = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.start);
     const end = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.end);
+
+    // Sur les événements courts (une seule ligne), on n'affiche que l'heure de début.
+    if (extendedProps.duration <= 30) {
+      info.el.querySelector(".fc-event-time").innerText = start;
+    }
+
+    let title = ``;
 
     if (info.isStart && info.isEnd) {
       title += `${start} - ${end}`;
