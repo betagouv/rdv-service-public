@@ -47,9 +47,8 @@ RSpec.describe Admin::EditRdvForm, type: :form do
     end
 
     context "ajout d’un agent à un RDV avec une erreur contournable" do
-      subject do
+      subject(:submit_form) do
         described_class.new(rdv2, agent_context).submit(attributes)
-        rdv2.reload.agents.map(&:full_name).sort.to_sentence
       end
 
       let!(:organisation) { create(:organisation) }
@@ -70,13 +69,24 @@ RSpec.describe Admin::EditRdvForm, type: :form do
       context "l’avertissement est contourné" do
         let(:attributes) { base_attributes.merge(ignore_benign_errors: "1") }
 
-        it { is_expected.to eq("Mayra CASTELLO et Stefan HOYT") }
+        it "met à jour les agents et le rendez-vous" do
+          submit_form
+          expect(rdv2.starts_at).to eq Time.zone.parse("2025-04-28 10:30")
+          expect(rdv2.reload.agents.map(&:full_name).sort.to_sentence).to eq("Mayra CASTELLO et Stefan HOYT")
+        end
       end
 
       context "l’avertissement n’est pas contourné" do
         let(:attributes) { base_attributes }
 
-        it { is_expected.to eq("Mayra CASTELLO") }
+        it "met à jour les agents et le rendez-vous en mémoire pour réafficher le formulaire, mais pas en base" do
+          submit_form
+          expect(rdv2.starts_at).to eq Time.zone.parse("2025-04-28 10:30")
+          expect(rdv2.agents.map(&:full_name).sort.to_sentence).to eq("Mayra CASTELLO et Stefan HOYT")
+
+          expect(rdv2.reload.starts_at).to eq Time.zone.parse("2025-04-28 18:00")
+          expect(rdv2.reload.agents.map(&:full_name).sort.to_sentence).to eq("Mayra CASTELLO")
+        end
       end
     end
   end
