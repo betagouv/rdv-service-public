@@ -82,7 +82,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
         it "met à jour les agents et le rendez-vous en mémoire pour réafficher le formulaire, mais pas en base" do
           submit_form
           expect(rdv2.starts_at).to eq Time.zone.parse("2025-04-28 10:30")
-          expect(rdv2.agents.map(&:full_name).sort.to_sentence).to eq("Mayra CASTELLO et Stefan HOYT")
+          expect(rdv2.agents_rdvs.map(&:agent).map(&:full_name).sort.to_sentence).to eq("Mayra CASTELLO et Stefan HOYT")
 
           expect(rdv2.reload.starts_at).to eq Time.zone.parse("2025-04-29 18:00")
           expect(rdv2.reload.agents.map(&:full_name).sort.to_sentence).to eq("Mayra CASTELLO")
