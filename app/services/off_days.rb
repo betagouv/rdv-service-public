@@ -30,7 +30,7 @@ class OffDays
     Date.new(2025, 5, 1),
     Date.new(2025, 5, 8),
     Date.new(2025, 5, 29),
-    Date.new(2025, 6, 9),
+    # Date.new(2025, 6, 9), # le lundi de pentecôte est une journée de solidarité optionnellement fériée
     Date.new(2025, 7, 14),
     Date.new(2025, 8, 15),
     Date.new(2025, 11, 1),
@@ -42,7 +42,7 @@ class OffDays
     Date.new(2026, 5, 1),
     Date.new(2026, 5, 8),
     Date.new(2026, 5, 14),
-    Date.new(2026, 5, 25),
+    # Date.new(2026, 5, 25), # le lundi de pentecôte est une journée de solidarité optionnellement fériée
     Date.new(2026, 7, 14),
     Date.new(2026, 8, 15),
     Date.new(2026, 11, 1),
