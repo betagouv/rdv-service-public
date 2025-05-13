@@ -134,4 +134,17 @@ RSpec.describe "Agent can list RDVs" do
       end
     end
   end
+
+  describe "via la route qui n'utilise pas d'id d'organisation" do
+    context "quand l'agent a accès au rdv" do
+      it "redirige vers la page actuelle" do
+        visit agents_rdv_path(rdv.id)
+        raise "todo : finir cette spec"
+      end
+    end
+
+    context "quand l'agent n'a pas accès au rendez-vous" do
+      visit agents_rdv_path(rdv.id)
+    end
+  end
 end
