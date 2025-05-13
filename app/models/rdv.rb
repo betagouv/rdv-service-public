@@ -35,7 +35,7 @@ class Rdv < ApplicationRecord
   belongs_to :motif
   belongs_to :lieu, optional: true
   has_many :file_attentes, dependent: :destroy
-  has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
+  has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy, autosave: true
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :participations, validate: false, inverse_of: :rdv, dependent: :destroy, class_name: "Participation"
