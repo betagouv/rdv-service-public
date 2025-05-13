@@ -31,10 +31,13 @@ $rdvs-fc-header-bg-color: $gray-200;
     line-height: 20px;
     padding: 10px 0;
     text-transform: uppercase;
-    .fc-col-header-cell-cushion {
-      color: black; // override DSFR
-      cursor: default;
-    }
+  }
+
+  // Les headers FullCalendar sont des <a> sans href et le DSFR les grise.
+  // Ici on override ce ce comportement pour garder le texte en noir (meilleur contraste).
+  a.fc-col-header-cell-cushion, a.fc-list-day-text, a.fc-list-day-side-text {
+    color: black;
+    cursor: default;
   }
 
   // définit la couleur de fond de la petite case en haut à gauche
