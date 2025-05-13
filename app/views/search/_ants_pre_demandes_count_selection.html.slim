@@ -15,7 +15,7 @@
           | Indiquez ci-dessous le nombre total de pré-demandes ANTS à traiter :
         .fr-grid-row
           .fr-col-12.fr-col-sm-6.fr-col-md-5.fr-col-lg-3
-            .d-flex.rdv-gap-1rem.fr-mb-2w
+            .d-flex.rdv-gap-1rem.fr-mb-2w[data-controller="counter-field"]
               button.fr-btn.fr-btn--secondary[type="button" data-action="click->counter-field#decrement"]
                 | -
               = f.text_field :ants_pre_demandes_count,
