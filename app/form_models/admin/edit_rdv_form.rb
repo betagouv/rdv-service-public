@@ -16,6 +16,8 @@ class Admin::EditRdvForm
     agent_ids = rdv_attributes.delete(:agent_ids) # évite de sauvegarder les changements d’agents avant la validation
     @rdv.assign_attributes(rdv_attributes)
 
+    (agent_ids - rdv.agent_ids).each { @rdv.agents_rdvs.build(agent_id: _1) }
+    # TODO: do the same thing in memoy for deleted agents
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
     if valid?
