@@ -1,11 +1,14 @@
+# Cette classe est une application Sinatra minimaliste qui utilise l'oauth de RDV Service Public pour les tests ou le dev en local
+# en local : bundle exec ruby spec/support/fake_oauth_client.rb
+# cf docs/interconnexions/oauth.md
+
 require "sinatra"
 require "omniauth-rdv-service-public"
 
-# Cette classe est une application Sinatra minimaliste qui utilise l'oauth de RDV Service Public pour les tests
 class FakeOauthClient < Sinatra::Base
   use OmniAuth::Builder do
     provider :rdv_service_public, "fake_app_id", "fake_app_secret",
-             scope: "write", base_url: Capybara.app_host
+             scope: "write", base_url: defined?(Capybara) ? Capybara.app_host : "http://www.rdv-solidarites-test.localhost:4567"
   end
 
   set :sessions, expire_after: 600 # temps en secondes
@@ -49,3 +52,5 @@ class FakeOauthClient < Sinatra::Base
     body ""
   end
 end
+
+FakeOauthClient.run! if __FILE__ == $PROGRAM_NAME
