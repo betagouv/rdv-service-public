@@ -91,7 +91,7 @@ class CalendarRdvSolidarites {
     if (!browser.is("mobile")) {
       let viewFromLocalStorage = localStorage.getItem("calendarDefaultView");
 
-      defaultView = ['dayGridMonth', 'timeGridWeek', 'timeGridOneDay'].includes(viewFromLocalStorage) ? viewFromLocalStorage : "timeGridWeek";
+      defaultView = ['dayGridMonth', 'timeGridWeek', 'timeGridOneDay', 'listWeek'].includes(viewFromLocalStorage) ? viewFromLocalStorage : "timeGridWeek";
     }
     return defaultView;
   }
