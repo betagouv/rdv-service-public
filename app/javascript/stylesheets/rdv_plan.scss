@@ -1,6 +1,7 @@
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/tooltip"; // Nécessaire pour styliser les tooltips des événements FullCalendar
 @import "./variables";
 @import "./components/calendar";
 
@@ -13,4 +14,10 @@
   // Cependant, dans le cadre du rdv_plan, on sait qu'on et en train de chercher à créer un nouvel évènement
   // donc on explicite que le calendrier est cliquable avec un cursor pointer.
   cursor: pointer;
+}
+
+// Besoin de forcer cette déclaration pour utiliser Marianne dans
+// le tooltip, sinon c'est Liberation Sans qui est utilisée.
+.tooltip {
+  font-family: $font-family-sans-serif;
 }
