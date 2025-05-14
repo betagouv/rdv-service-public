@@ -5,7 +5,7 @@
     .fr-card__content
       h3 Nombre de pré-demandes ANTS
       p
-        |> Chaque personne souhaitant une nouvelle carte d'identité ou passeport doit avoir rempli une pré-demande en ligne sur le site de l’ANTS.
+        |> Chaque personne souhaitant une nouvelle carte d'identité ou passeport doit avoir rempli une pré-demande en ligne sur le site de France Titres - Agence Nationale des Titres Sécurisés (ANTS).
         = link_to "Faites votre pré-demande ici", "https://passeport.ants.gouv.fr/demarches-en-ligne", target: "_blank"
       = form_with url: prendre_rdv_path, method: :get, builder: Dsfr::FormBuilder do |f|
         - context.query_params.each do |key, value|
