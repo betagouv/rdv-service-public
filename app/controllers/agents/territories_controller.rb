@@ -11,7 +11,12 @@ class Agents::TerritoriesController < AgentAuthController
     @compte_form.agent = current_agent
 
     if @compte_form.save!
-      redirect_to admin_organisation_configuration_path(@compte_form.organisation)
+      if RdvPlan.where(planning_agent: current_agent).any?
+        latest_rdv_plan = RdvPlan.where(planning_agent: current_agent).order("created_at desc").first
+        redirect_to agents_rdv_plan_path(latest_rdv_plan)
+      else
+        redirect_to admin_organisation_configuration_path(@compte_form.organisation)
+      end
     else
       render :new
     end
