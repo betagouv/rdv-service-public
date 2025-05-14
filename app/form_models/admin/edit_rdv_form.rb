@@ -13,36 +13,25 @@ class Admin::EditRdvForm
   def submit(rdv_attributes)
     raise ArgumentError, "agent_ids est accepté mais pas agents" if rdv_attributes.key?(:agents)
 
-    agent_ids = rdv_attributes.delete(:agent_ids) || [] # évite de sauvegarder les changements d’agents avant la validation
-    update_agent_rdvs_in_memory_but_not_in_the_database(agent_ids)
+    previous_agent_ids = @rdv.agent_ids
 
     @rdv.assign_attributes(rdv_attributes)
+
+    @selected_agent_ids = @rdv.agent_ids
 
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
     if valid?
       @rdv.save_and_notify(agent_context.agent)
     else
+      @rdv.agent_ids = previous_agent_ids
       false
     end
   end
 
-  # TODO: utiliser cette méthode pour les autres endroits où ce formulaire existe
-  def current_agent_ids
-    rdv.agents_rdvs.to_a.reject(&:marked_for_destruction?).map(&:agent_id)
-  end
+  attr_reader :selected_agent_ids
 
   private
-
-  def update_agent_rdvs_in_memory_but_not_in_the_database(agent_ids)
-    (agent_ids - rdv.agent_ids).each { @rdv.agents_rdvs.build(agent_id: _1) }
-
-    (rdv.agent_ids - agent_ids).each do |agent_id_to_remove|
-      @rdv.agents_rdvs.find do |agent_rdv|
-        agent_rdv.agent_id == agent_id_to_remove.to_i
-      end.mark_for_destruction
-    end
-  end
 
   def pundit_user
     agent_context
