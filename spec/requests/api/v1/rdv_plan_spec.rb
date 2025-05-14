@@ -55,7 +55,7 @@ RSpec.describe "RDV Plan API" do
             post "/api/v1/rdv_plans", headers: headers, params: params_for_second_call, as: :json
           end.to change(RdvPlan, :count).by(1)
 
-          expect(parsed_response_body["user_id"]).to eq first_rdv_plan.user_id
+          expect(parsed_response_body.dig("rdv_plan", "user_id")).to eq first_rdv_plan.user_id
         end
       end
     end
