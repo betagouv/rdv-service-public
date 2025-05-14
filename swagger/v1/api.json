@@ -2950,6 +2950,7 @@
                           ],
                           "starts_at": "2022-01-01 08:00:00 +0100",
                           "status": "unknown",
+                          "url_for_agents": "http://www.rdv-solidarites-test.localhost/agents/rdvs/10",
                           "users": [
                             {
                               "id": 22,
@@ -3191,6 +3192,7 @@
                           ],
                           "starts_at": "2022-01-01 08:00:00 +0100",
                           "status": "unknown",
+                          "url_for_agents": "http://www.rdv-solidarites-test.localhost/agents/rdvs/14",
                           "users": [
                             {
                               "id": 26,
