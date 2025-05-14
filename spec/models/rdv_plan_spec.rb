@@ -4,6 +4,8 @@ RSpec.describe RdvPlan do
       create(:oauth_application,
              redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback\nhttps://demo.demarches-simplifiees.fr/omniauth/rdvservicepublic/callback")
     end
+    let(:user) { create(:user) }
+    let(:agent) { create(:agent) }
 
     it "can only be in a a whitelisted domain name from the corresponding oauth application" do
       rdv_plan = build(:rdv_plan, oauth_application: application)

@@ -2,12 +2,12 @@ class Agents::TerritoriesController < AgentAuthController
   layout "application"
   def new
     authorize(Territory.new, policy_class: Agent::TerritoryPolicy)
-    @compte_form = Compte.new({}, current_domain)
+    @compte_form = Compte.new({}, current_domain:)
   end
 
   def create
     authorize(Territory.new, policy_class: Agent::TerritoryPolicy)
-    @compte_form = Compte.new(compte_params, current_domain)
+    @compte_form = Compte.new(compte_params, current_domain:)
     @compte_form.agent = current_agent
 
     if @compte_form.save!

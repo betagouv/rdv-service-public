@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_01_130505) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_02_123003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -46,6 +46,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_01_130505) do
     "agents_and_prescripteurs",
     "everyone",
     "agents_and_prescripteurs_and_invited_users",
+  ], force: :cascade
+
+  create_enum :creation_status, [
+    "accepted",
+    "refused",
   ], force: :cascade
 
   create_enum :export_type, [
@@ -239,6 +244,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_01_130505) do
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_agents_on_last_name"
+    t.index ["proconnect_siret"], name: "index_agents_on_proconnect_siret"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
   end
@@ -539,11 +545,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_01_130505) do
     t.integer "created_by_id"
     t.string "created_by_type", null: false
     t.boolean "created_by_agent_prescripteur", default: false, null: false
+    t.text "restricted_auth_token"
     t.index ["created_by_type", "created_by_id"], name: "index_participations_on_created_by_type_and_created_by_id"
     t.index ["invitation_token"], name: "index_participations_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_participations_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_participations_on_invited_by"
     t.index ["rdv_id", "user_id"], name: "index_participations_on_rdv_id_and_user_id", unique: true
+    t.index ["restricted_auth_token"], name: "index_participations_on_restricted_auth_token", where: "(restricted_auth_token IS NOT NULL)"
     t.index ["status"], name: "index_participations_on_status"
     t.index ["user_id"], name: "index_participations_on_user_id"
   end
@@ -743,6 +751,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_01_130505) do
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
   end
 
+  create_table "territory_creation_requests", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.string "territory_name"
+    t.string "organisation_name"
+    t.string "service_name"
+    t.enum "response", enum_type: "creation_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_territory_creation_requests_on_agent_id", unique: true
+  end
+
   create_table "territory_services", force: :cascade do |t|
     t.bigint "territory_id", null: false
     t.bigint "service_id", null: false
@@ -917,6 +936,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_01_130505) do
   add_foreign_key "sector_attributions", "sectors"
   add_foreign_key "sectors", "territories"
   add_foreign_key "teams", "territories"
+  add_foreign_key "territory_creation_requests", "agents"
   add_foreign_key "territory_services", "services"
   add_foreign_key "territory_services", "territories"
   add_foreign_key "user_profiles", "organisations"

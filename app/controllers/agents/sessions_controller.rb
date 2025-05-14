@@ -1,5 +1,15 @@
 class Agents::SessionsController < Devise::SessionsController
+  include Admin::WeakPasswordControllerConcern
   before_action :exclude_signed_in_users, only: [:new]
+
+  # Lorsqu'un agent est connecté à une application Oauth via notre application,
+  # Il est possible qu'il cherche à se déconnecter alors que sa session a déjà expiré.
+  #
+  # Dans ce cas, pour éviter que Devise retourne l'erreur "sessions.already_signed_out",
+  # on évite de run le callback de Devise qui vérifie si l'agent est déjà déconnecté.
+  #
+  # De cette façon c'est nous qui gérons la redirection le cas échéant.
+  skip_before_action :verify_signed_out_user, only: :destroy
 
   def new
     # Le flash d'erreur est trop agressif pour le cas d'un agent non connecté.
@@ -16,13 +26,14 @@ class Agents::SessionsController < Devise::SessionsController
   end
 
   def create
-    super
+    # this is the first line of Devise::SessionsController#create
+    self.resource = warden.authenticate!(auth_options)
 
-    checker = PasswordChecker.new(params[:agent][:password]) # voir aussi app/controllers/users/sessions_controller.rb
-    if checker.too_weak?
-      flash[:notice] = nil
-      flash[:alert] = checker.error_message(current_domain.name)
-    end
+    return if reset_current_agent_password_if_weak!(params[:agent][:password])
+
+    super
+    # super will repeat warden.authenticate! which will not repeat everything but fetch from the session
+    # cf https://github.com/wardencommunity/warden/blob/master/lib/warden/proxy.rb#L332-L334
   end
 
   def destroy

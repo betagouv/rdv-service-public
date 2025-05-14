@@ -308,3 +308,6 @@ Rails/RedundantActiveRecordAllMethod:
 RSpec/PredicateMatcher:
   Exclude:
     - "spec/policies/**/*"
+
+Rails/RedundantPresenceValidationOnBelongsTo:
+  Enabled: false

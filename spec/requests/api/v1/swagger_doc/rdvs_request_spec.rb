@@ -3,6 +3,52 @@ require "swagger_helper"
 RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
+  path "/api/v1/rdvs" do
+    get "Lister les rendez-vous d'une organisation" do
+      with_authentication
+
+      tags "RDV"
+      produces "application/json"
+      operationId "getRdvs"
+      description "Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres optionels passés en paramètre"
+
+      parameter name: :organisation_id, in: :query, type: :string, description: "Identifiant de l'organisation", example: "20", required: false
+
+      parameter name: :user_id, in: :query, type: :integer,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id",
+                example: 123, required: false
+      parameter name: :agent_id, in: :query, type: :integer,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'agent qui a cet id",
+                example: 456, required: false
+
+      parameter name: :starts_after, in: :query, type: :string,
+                description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time (iso8601).",
+                example: "2020-01-01", required: false
+      parameter name: :starts_before, in: :query, type: :string,
+                description: "Filtre les rendez-vous avec un starts_at avant cette date. Accepte des formats date ou time (iso8601).",
+                example: "2020-01-01", required: false
+
+      let(:access_basic_agent) { api_auth_headers_for_agent(basic_agent) }
+      let(:"access-token") { access_basic_agent["access-token"].to_s }
+      let(:uid) { access_basic_agent["uid"].to_s }
+      let(:client) { access_basic_agent["client"].to_s }
+
+      let!(:rdv) { create(:rdv, organisation: organisation, motif: motif, starts_at: "2022-01-01 09:00:00 +0200") }
+
+      let(:organisation) { create(:organisation) }
+      let(:service) { create(:service) }
+      let(:motif) { create(:motif, organisation: organisation, service: service) }
+      let!(:basic_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+      let(:organisation_id) { organisation.id }
+
+      response 200, "Appel API réussi" do
+        schema "$ref" => "#/components/schemas/rdvs"
+
+        run_test!
+      end
+    end
+  end
+
   path "/api/v1/organisations/{organisation_id}/rdvs" do
     get "Lister les rendez-vous d'une organisation" do
       with_authentication
@@ -13,6 +59,13 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       description "Renvoie les RDVs du service dont l'agent fait partie dans cette organisation. Si l'agent est administrateurice ou secrétaire, renvoie tous les RDVs de l'organisation en question."
 
       parameter name: :organisation_id, in: :path, type: :string, description: "Identifiant de l'organisation", example: "20"
+
+      parameter name: :user_id, in: :query, type: :integer,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id",
+                example: 123, required: false
+      parameter name: :agent_id, in: :query, type: :integer,
+                description: "Filtre pour obtenir uniquement les rendez-vous de l'agent qui a cet id",
+                example: 456, required: false
 
       parameter name: :starts_after, in: :query, type: :string,
                 description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time (iso8601).",
@@ -43,10 +96,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       let!(:basic_agent) { create(:agent, basic_role_in_organisations: [organisationA], service: service) }
       let(:organisation_id) { organisationA.id }
-
-      after do
-        Rack::Attack.enabled = false
-      end
 
       response 200, "Appel API réussi" do
         schema "$ref" => "#/components/schemas/rdvs"

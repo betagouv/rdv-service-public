@@ -7,13 +7,14 @@ RSpec.describe AgentConnectController do
 
   describe "#auth" do
     it "redirects to AgentConnect" do
-      get :auth
+      get :auth, params: { login_hint: "francis.factice@exemple.gouv.fr" }
       expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
 
       redirect_url = response.headers["Location"]
       redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
 
       expect(redirect_url_query_params.symbolize_keys).to match(
+        login_hint: "francis.factice@exemple.gouv.fr",
         acr_values: "eidas1",
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         redirect_uri: "http://test.host/agent_connect/callback",

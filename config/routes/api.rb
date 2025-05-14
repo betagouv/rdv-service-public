@@ -16,9 +16,8 @@ namespace :api do
       resources :motifs, only: %i[index]
       resources :rdvs, only: %i[index]
     end
+    resources :rdvs, only: %i[index]
     resources :participations, only: %i[update]
-    # Doesn't need authentication
-    resources :public_links, only: [:index]
     resources :rdv_plans, only: %i[create show]
     resources :teams, only: %i[index]
   end
@@ -68,6 +67,3 @@ namespace :api do
 
   post "/coop-mediation-numerique/accounts", to: "coop_mediation_numerique/accounts#create"
 end
-
-# This one has been published before versioning the public API and unification with auth API:
-get "public_api/public_links", to: "api/v1/public_links#index"

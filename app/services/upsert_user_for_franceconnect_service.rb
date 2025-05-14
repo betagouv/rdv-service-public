@@ -8,7 +8,7 @@ class UpsertUserForFranceconnectService < BaseService
 
   def perform
     @user = User.find_by(franceconnect_openid_sub: omniauth_info.sub) \
-      || User.find_by(email: omniauth_info.email.downcase)
+      || User.find_by(email: omniauth_info.email)
     @new_user = @user.nil?
     if @user.nil?
       create_new_user

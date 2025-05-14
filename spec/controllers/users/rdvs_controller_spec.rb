@@ -32,7 +32,6 @@ RSpec.describe Users::RdvsController, type: :controller do
         .with(departement: "12", city_code: "12100", street_ban_id: nil)
         .and_return(mock_geo_search)
       allow(Notifiers::RdvCreated).to receive(:perform_with)
-      allow(Devise.token_generator).to receive(:generate).and_return("12345")
     end
 
     describe "when there is an available creneau" do
@@ -45,7 +44,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "creates rdv" do
         post_create
         expect(Rdv.count).to eq(1)
-        expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
+        expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: user.participations.last.restricted_auth_token)
         expect(user.rdvs.last.created_by).to eq(user)
         expect(user.participations.last.created_by).to eq(user)
       end
@@ -57,7 +56,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         it "creates the rdv" do
           post_create
           expect(Rdv.count).to eq(1)
-          expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
+          expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: user.participations.last.restricted_auth_token)
           expect(user.rdvs.last.created_by).to eq(user)
           expect(user.participations.last.created_by).to eq(user)
         end
@@ -99,11 +98,9 @@ RSpec.describe Users::RdvsController, type: :controller do
 
   describe "PUT #cancel" do
     context "when user belongs to rdv" do
-      let(:token) { "12345" }
+      let(:token) { rdv.participations.first.restricted_auth_token }
       let(:organisation) { create(:organisation) }
       let(:rdv) { create(:rdv, starts_at: 5.hours.from_now, organisation:) }
-
-      before { allow_any_instance_of(Participation).to receive(:new_raw_invitation_token).and_return(token) }
 
       it "calls update_and_notify function" do
         sign_in rdv.users.first
@@ -532,7 +529,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
-    let(:token) { "12345" }
+    let(:token) { rdv.participations.last.restricted_auth_token }
 
     before do
       travel_to(now)
@@ -540,7 +537,6 @@ RSpec.describe Users::RdvsController, type: :controller do
       allow(CreneauxSearch::ForUser).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
-      allow(Devise.token_generator).to receive(:generate).and_return("12345")
     end
 
     context "with an available creneau" do

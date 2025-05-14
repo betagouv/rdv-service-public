@@ -55,7 +55,12 @@ class Notifiers::RdvBase < BaseService
     @rdv.participations.each do |participation|
       participant = participation.user
       user_to_notify = participant.user_to_notify
-      @participations_tokens_by_user_id[user_to_notify.id] = participation.new_raw_invitation_token
+      # TODO: Supprimer ce if une fois que toutes les participations ont des restricted_auth_token
+      if participation.restricted_auth_token.nil?
+        participation.set_restricted_authentication_token
+        participation.save
+      end
+      @participations_tokens_by_user_id[user_to_notify.id] = participation.restricted_auth_token
     end
 
     @rdv.skip_webhooks = false

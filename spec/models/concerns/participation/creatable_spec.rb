@@ -1,7 +1,6 @@
 RSpec.describe Participation::Creatable, type: :concern do
   before do
     stub_netsize_ok
-    allow(Devise.token_generator).to receive(:generate).and_return("12345")
   end
 
   describe "Participation create" do
@@ -38,7 +37,6 @@ RSpec.describe Participation::Creatable, type: :concern do
         expect_notifications_sent_for(rdv, user, :rdv_created)
         expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.participations).to eq([participation1])
-        expect(participation1.participation_token).to eq("12345")
       end
 
       it "for a relative with existing participations" do
@@ -47,7 +45,6 @@ RSpec.describe Participation::Creatable, type: :concern do
         expect_notifications_sent_for(rdv, user, :rdv_created)
         expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.participations).to eq([participation_relative])
-        expect(participation1.participation_token).to be_nil
       end
     end
 
@@ -60,7 +57,6 @@ RSpec.describe Participation::Creatable, type: :concern do
         expect_notifications_sent_for(rdv, user2, :rdv_created)
         expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.participations).to eq([participation1])
-        expect(participation1.participation_token).to eq("12345")
       end
 
       it "for a relative with existing participations" do
@@ -69,7 +65,6 @@ RSpec.describe Participation::Creatable, type: :concern do
         expect_notifications_sent_for(rdv, user2, :rdv_created)
         expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.participations).to eq([participation_relative])
-        expect(participation1.participation_token).to be_nil
       end
     end
 

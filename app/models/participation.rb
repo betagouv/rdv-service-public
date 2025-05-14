@@ -1,6 +1,6 @@
 class Participation < ApplicationRecord
   # Mixins
-  devise :invitable, invite_for: 12.weeks
+  devise :invitable, invite_for: 12.weeks # Hopefully deprecated soon
 
   include Participation::StatusChangeable
   include Participation::Creatable
@@ -10,6 +10,8 @@ class Participation < ApplicationRecord
   enum :status, { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
   NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
+
+  encrypts :restricted_auth_token, deterministic: true
 
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :participations, optional: true
@@ -28,6 +30,7 @@ class Participation < ApplicationRecord
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
   before_create :set_status_from_rdv
+  before_create :set_restricted_authentication_token
   after_save :update_counter_cache
   after_destroy :update_counter_cache
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
@@ -92,9 +95,9 @@ class Participation < ApplicationRecord
     self.send_reminder_notification = rdv.motif.visible_and_notified? if send_reminder_notification.nil?
   end
 
-  def new_raw_invitation_token
-    invite! { |rdv_u| rdv_u.skip_invitation = true }
-    raw_invitation_token
+  def set_restricted_authentication_token
+    # On reprend la même logique que CustomDeviseTokenGenerator
+    self.restricted_auth_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until restricted_auth_token && Participation.where(restricted_auth_token:).none?
   end
 
   def prescription?

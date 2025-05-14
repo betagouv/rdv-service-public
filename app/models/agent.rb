@@ -44,6 +44,7 @@ class Agent < ApplicationRecord
 
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
+  normalizes :email, with: ->(email) { email.downcase }
 
   enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
@@ -73,6 +74,7 @@ class Agent < ApplicationRecord
   has_many :sector_attributions, dependent: :destroy
   has_many :agent_teams, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
+  has_one :territory_creation_request, dependent: :destroy
 
   accepts_nested_attributes_for :roles, :agent_territorial_access_rights
 

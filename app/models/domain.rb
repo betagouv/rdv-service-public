@@ -16,7 +16,7 @@ Domain = Struct.new(
   :support_email,
   :secretariat_email,
   :verticale,
-  :allow_agent_creation_with_agent_connect,
+  :allow_self_onboarding,
   keyword_init: true
 )
 
@@ -37,7 +37,7 @@ class Domain
       france_connect_enabled: true,
       support_email: "support@rdv-solidarites.fr",
       verticale: :rdv_solidarites,
-      allow_agent_creation_with_agent_connect: false,
+      allow_self_onboarding: false,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
       # secretariat_email est utilisé comme adresse de "Reply-To" pour les e-mails
       # qui contiennent des ICS. Lorsque l'événement ICS est acceptée par le
@@ -60,7 +60,7 @@ class Domain
       france_connect_enabled: false,
       support_email: "support@rdv-aide-numerique.fr",
       verticale: :rdv_aide_numerique,
-      allow_agent_creation_with_agent_connect: false,
+      allow_self_onboarding: false,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
     ),
 
@@ -79,7 +79,7 @@ class Domain
       france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
       verticale: :rdv_mairie,
-      allow_agent_creation_with_agent_connect: true,
+      allow_self_onboarding: true,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),
   ].freeze
