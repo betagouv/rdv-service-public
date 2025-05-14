@@ -2,7 +2,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
-  let!(:organisation) { create(:organisation, :with_contact, ants_connectable: true, name: "Mairie de Wavignies") }
+  let(:territory) { create(:territory, departement_number: "78") }
+  let!(:organisation) { create(:organisation, :with_contact, ants_connectable: true, name: "Mairie de Wavignies", territory:) }
   let(:service) { create(:service) }
   let!(:cni_motif) do
     create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: cni_motif_category, default_duration_in_min: 25)
@@ -433,7 +434,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     before { stub_ants_status_ok("TESTRDV001", meeting_point_id: lieu.id) }
 
     context "il n’y a pas de créneaux dispos" do
-      it "incite à passer par le moteur de l’ANTS quand", js: true do
+      it "incite à passer par le moteur de l’ANTS", js: true do
         visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
         click_on "Passeport"
         expect(page).to have_content("Nombre de pré-demandes ANTS")
@@ -494,6 +495,71 @@ RSpec.describe "User can search rdv on rdv mairie" do
       click_on "Confirmer mon RDV"
       expect(page).to have_content("Votre rendez vous a été confirmé")
       expect(page).to have_content("durée : 50 minutes")
+    end
+
+    context "l’usager tente de passer un nombre invalide à l’étape de séléction du nombre de pré-demandes" do
+      specify do
+        visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
+        click_on "Passeport"
+        expect(page).to have_content("Nombre de pré-demandes ANTS")
+        fill_in(find("label", text: /pré-demandes ANTS/)[:for], with: "notanumber", fill_options: { clear: :backspace }) # ici on fait sans JS en remplissant le champ directement
+        click_on "Valider"
+        expect(page).to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
+        fill_in(find("label", text: /pré-demandes ANTS/)[:for], with: "10", fill_options: { clear: :backspace })
+        click_on "Valider"
+        expect(page).to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
+        fill_in(find("label", text: /pré-demandes ANTS/)[:for], with: "2", fill_options: { clear: :backspace })
+        click_on "Valider"
+        expect(page).not_to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
+      end
+    end
+
+    context "l’usager tente de hacker le nombre de demandes dans l’URL dans les étapes post-sign-in" do
+      specify do
+        login_as(user, scope: :user)
+        valid_query = {
+          ants_pre_demandes_count: "2",
+          departement: "78",
+          lieu_id: lieu.id,
+          motif_id: passport_motif.id,
+          starts_at: Time.zone.parse("2021-12-13 9:00"),
+        }
+        visit(new_users_rdv_wizard_step_path(valid_query))
+        expect(page).to have_content("Étape 1 sur 3")
+        expect(page).to have_content("Vos informations")
+        expect(page).not_to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
+        invalid_query = valid_query.merge(ants_pre_demandes_count: "100")
+        visit(new_users_rdv_wizard_step_path(invalid_query))
+        expect(page).not_to have_content("Étape 1 sur 3")
+        expect(page).to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
+      end
+    end
+
+    context "l’usager tente de hacker le nombre de demandes dans l’URL à l’étape finale de confirmation du RDV", js: true do
+      specify do
+        login_as(user, scope: :user)
+        valid_query = {
+          step: "3",
+          ants_pre_demandes_count: "2",
+          departement: "78",
+          lieu_id: lieu.id,
+          motif_id: passport_motif.id,
+          starts_at: Time.zone.parse("2021-12-13 9:00"),
+          user_ids: [user.id],
+        }
+        visit(new_users_rdv_wizard_step_path(valid_query))
+        expect(page).to have_content("Étape 3 sur 3")
+        expect(page).to have_content("Confirmer mon RDV")
+        page.execute_script(%{
+          elt = document.querySelector("a.btn-primary");
+          elt.setAttribute(
+            "href",
+            elt.getAttribute("href").replace("ants_pre_demandes_count=2", "ants_pre_demandes_count=100")
+          )
+        })
+        expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+        expect(page).to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
+      end
     end
   end
 end

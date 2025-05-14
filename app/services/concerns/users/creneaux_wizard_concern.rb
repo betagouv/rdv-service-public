@@ -135,6 +135,9 @@ module Users::CreneauxWizardConcern
   end
 
   def requires_ants_pre_demandes_count_selection?
-    first_matching_motif.requires_ants_predemande_number? && ants_pre_demandes_count.nil?
+    first_matching_motif.requires_ants_predemande_number? && (
+      ants_pre_demandes_count.blank? ||
+      !AntsPreDemandesCountValidator.count_valid?(ants_pre_demandes_count)
+    )
   end
 end
