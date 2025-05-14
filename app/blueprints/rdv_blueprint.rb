@@ -17,7 +17,7 @@ class RdvBlueprint < Blueprinter::Base
   end
 
   field :url_for_agents do |rdv, _options|
-    Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv, host: rdv.domain.host_name)
+    Rails.application.routes.url_helpers.agents_rdv_url(rdv, host: rdv.domain.host_name)
   end
 
   association :organisation, blueprint: OrganisationBlueprint

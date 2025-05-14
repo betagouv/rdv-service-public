@@ -149,9 +149,7 @@ RSpec.describe "Agent can list RDVs" do
       let(:rdv) { create(:rdv, agents: [current_agent]) }
 
       it "affiche une erreur" do
-        expect do
-          visit agents_rdv_path(rdv.id)
-        end.to raise_error(ActiveRecord::RecordNotFound)
+        expect { visit agents_rdv_path(rdv.id) }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end
