@@ -61,7 +61,7 @@ class MonSuiviSocial < Sinatra::Base
 
   post "/prendre_rdv" do
     response = Faraday.post(
-      base_url + "/api/v1/rdv_plans",
+      "#{base_url}/api/v1/rdv_plans",
       {
         user: {
           first_name: "Francis",
