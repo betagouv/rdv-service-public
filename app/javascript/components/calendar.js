@@ -68,9 +68,6 @@ class CalendarRdvSolidarites {
       eventSourceFailure: this.handleAjaxError,
       initialDate: this.getDefaultDate(),
       initialView: this.getDefaultView(),
-      viewDidMount: function (info) {
-        localStorage.setItem("calendarDefaultView", info.view.type);
-      },
       hiddenDays: hiddenDays,
       select: this.selectEvent,
       headerToolbar: {
@@ -112,6 +109,9 @@ class CalendarRdvSolidarites {
   }
 
   datesSet = (info) => {
+    // On stocke la dernière vue utilisée, pour pouvoir la charger la prochaine fois.
+    localStorage.setItem("calendarDefaultView", info.view.type);
+
     if (
       this.currentTodayVisible && !this.isTodayVisible(info.view) &&
       this.currentViewType &&
