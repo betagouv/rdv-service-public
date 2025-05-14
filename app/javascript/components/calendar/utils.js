@@ -65,11 +65,6 @@ function eventRenderer(selectedEventId) {
     const start = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.start);
     const end = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.end);
 
-    // Sur les événements courts (une seule ligne), on n'affiche que l'heure de début.
-    if (extendedProps.duration <= 30) {
-      info.el.querySelector(".fc-event-time").innerText = start;
-    }
-
     let title = ``;
 
     if (info.isStart && info.isEnd) {
