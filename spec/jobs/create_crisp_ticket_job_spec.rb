@@ -4,6 +4,8 @@ RSpec.describe CreateCrispTicketJob do
     let(:client) { instance_double(Crisp::Client) }
     let(:website) { instance_double(Crisp::WebsiteResource) }
 
+    stub_env_with(CRISP_WEBSITE_ID: "abcde", CRISP_URN: "urn:crisp:1234567890")
+
     it "crée un ticket" do
       allow_any_instance_of(described_class).to receive(:client).and_return(client)
       allow(client).to receive(:website).and_return(website)
