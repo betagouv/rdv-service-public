@@ -33,7 +33,7 @@ function eventClassNames(info) {
   let extendedProps = info.event.extendedProps;
   const customCssClasses = [];
 
-  if(["seen", "excused", "revoked"].includes(extendedProps.status)) {
+  if(["noshow", "excused", "revoked"].includes(extendedProps.status)) {
     customCssClasses.push("rdv-fc-event-barre");
   }
 
