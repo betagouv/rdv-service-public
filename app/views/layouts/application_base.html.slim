@@ -39,7 +39,7 @@ html lang="fr"
           header.with_tool_link title: "Se connecter", path: new_user_session_path, classes: "fr-fi-account-fill"
         end
 
-    main#content
+    main#content[role="main"]
       - if content_for :main_content
         = yield :main_content
       - else
