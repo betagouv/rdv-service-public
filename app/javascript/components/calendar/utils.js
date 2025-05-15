@@ -12,10 +12,11 @@ const defaultFullCalendarConfig = () => ({
       startTime: '07:00',
       endTime: '19:00',
   },
-  minTime: '07:00:00',
-  maxTime: '20:00:00',
+  slotMinTime: '07:00:00',
+  slotMaxTime: '20:00:00',
+  eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
-    timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
+  timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
   // If this is removed, there is a bug that causes the events in the calendar to be show at the wrong
   // time for agents that are not in the Paris timezone.
   // The proper fix for this would be to make sure we store all rdvs with the right timezone, but that's a much bigger project.
@@ -28,38 +29,43 @@ const defaultFullCalendarConfig = () => ({
   // for the rdv. This seems unlikely for now.
 })
 
+function eventClassNames(info) {
+  let extendedProps = info.event.extendedProps;
+  const customCssClasses = [];
+
+  if(["seen", "excused", "revoked"].includes(extendedProps.status)) {
+    customCssClasses.push("rdv-fc-event-barre");
+  }
+
+  if (extendedProps.unauthorizedRdvExplanation) {
+    customCssClasses.push("rdv-fc-unauthorized-rdv");
+  }
+
+  if (extendedProps.userInWaitingRoom == true) {
+    customCssClasses.push("rdv-fc-event-waiting");
+  }
+
+  return customCssClasses;
+}
+
 function eventRenderer(selectedEventId) {
   // On renvoie une fonction qui aura le bon selectedEventId
   return (info) => {
     let $el = $(info.el);
     let extendedProps = info.event.extendedProps;
 
-    if (extendedProps.past == true) {
-      $el.addClass("fc-event-past");
-    };
-    if (extendedProps.duration <= 30) {
-      $el.addClass("fc-event-small");
-    };
-    if (extendedProps.unauthorizedRdvExplanation) {
-      $el.addClass("fc-unauthorized-rdv");
-    };
-
-    if (selectedEventId && info.event.id == selectedEventId)
-      $el.addClass("selected");
-
-    $el.addClass("fc-event-" + extendedProps.status);
-
-    if (extendedProps.userInWaitingRoom == true) {
-      $el.addClass("fc-event-waiting");
+    if (selectedEventId && info.event.id == selectedEventId) {
+      $el.addClass("rdv-shake");
     }
 
     if (extendedProps.jour_feries == true) {
       return
     }
 
-    let title = ``;
     const start = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.start);
     const end = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.end);
+
+    let title = ``;
 
     if (info.isStart && info.isEnd) {
       title += `${start} - ${end}`;
@@ -71,9 +77,7 @@ function eventRenderer(selectedEventId) {
       title += `Toute la journée`;
     }
 
-    if (info.event.rendering == 'background') {
-      $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
-
+    if (info.event.display == 'background') {
       if (extendedProps.organisationName) {
         title += `<br>${extendedProps.organisationName}`;
       }
