@@ -23,8 +23,8 @@ ruby:
   data-display-saturdays="#{current_agent.display_saturdays}"
   data-display-sundays="false"
   data-event-sources-json="#{event_sources.to_json}"
-  data-min-time="#{I18n.l(rdv_plan.starts_at - 2.hours, format: "%H:%M:%S") if single_day}"
-  data-max-time="#{I18n.l(rdv_plan.starts_at + 3.hours, format: "%H:%M:%S") if single_day}"
+  data-slot-min-time="#{I18n.l(rdv_plan.starts_at - 2.hours, format: "%H:%M:%S") if single_day}"
+  data-slot-max-time="#{I18n.l(rdv_plan.starts_at + 3.hours, format: "%H:%M:%S") if single_day}"
   data-single-day="#{single_day}"
   style="margin-top: -60px; margin-bottom: 24px;"
 ]

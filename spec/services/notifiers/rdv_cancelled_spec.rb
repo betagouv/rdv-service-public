@@ -31,10 +31,14 @@ RSpec.describe Notifiers::RdvCancelled, type: :service do
       end
 
       it "participations_tokens_by_user_id attribute outputs the tokens" do
-        allow(Devise.token_generator).to receive(:generate).and_return("t0k3n")
         notifier = described_class.new(rdv, nil)
         notifier.perform
-        expect(notifier.participations_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
+        expect(notifier.participations_tokens_by_user_id).to eq(
+          {
+            user1.id => participation1.restricted_auth_token,
+            user2.id => participation2.restricted_auth_token,
+          }
+        )
       end
     end
 

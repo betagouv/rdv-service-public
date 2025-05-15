@@ -5,6 +5,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
       user = find_or_build_user(user_params)
 
+      user.save!
       RdvPlan.create!(
         planning_agent: current_agent,
         user: user,

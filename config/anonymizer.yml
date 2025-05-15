@@ -231,6 +231,7 @@ tables:
   - table_name: participations
     anonymized_column_names:
       - invitation_token
+      - restricted_auth_token
     non_anonymized_column_names:
       - created_at
       - updated_at
