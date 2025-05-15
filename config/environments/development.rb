@@ -83,6 +83,11 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
+  # en production ces valeurs sont encryptées dans les credentials qui sont décryptées via la var d’env RAILS_MASTER_KEY
+  config.active_record.encryption.primary_key = "rdvsp_ar_primary_key_12345"
+  config.active_record.encryption.deterministic_key = "rdvsp_ar_deterministic_key_12345"
+  config.active_record.encryption.key_derivation_salt = "rdvsp_ar_key_derivation_salt_12345"
+
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
