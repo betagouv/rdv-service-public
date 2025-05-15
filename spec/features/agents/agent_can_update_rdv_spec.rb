@@ -71,4 +71,25 @@ RSpec.describe "Agent can update a RDV", js: true do
       expect(page).not_to have_content("Dȋner aux chandelles")
     end
   end
+
+  context "adding agents" do
+    let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], services: agent.services) }
+    let!(:other_rdv) { create(:rdv, agents: [other_agent], starts_at: rdv.starts_at) }
+
+    context "when there is a warning" do
+      it "works" do
+        visit edit_admin_organisation_rdv_path(organisation, rdv)
+
+        select(other_agent.full_name, from: "rdv_agent_ids")
+        click_button "Enregistrer"
+        expect(page).to have_content "Ce rendez-vous en chevauche un autre"
+        expect(rdv.reload.agents).to eq [agent]
+
+        click_button "Confirmer en ignorant les avertissements"
+
+        expect(page).to have_content "Le rendez-vous a été modifié."
+        expect(rdv.reload.agents).to eq [agent, other_agent]
+      end
+    end
+  end
 end

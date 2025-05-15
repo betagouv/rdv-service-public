@@ -57,6 +57,7 @@
               = f.input :address, label: "Lieu (RDV à domicile)", disabled: true, input_html: { data: { "address-autocomplete": "on" } }
             = f.association :agents,
               collection: @rdv_form.motif.authorized_agents,
+              selected: @rdv_form.selected_agent_ids || @rdv.agent_ids,
               label_method: :full_name_and_service,
               input_html: { multiple: true, class: "select2-input", data: { "auto-select-sole-option": true } }
 
