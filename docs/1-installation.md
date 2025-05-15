@@ -16,8 +16,6 @@
 
 Commencer par copier `.env.sample` vers `.env` et définissez-y les variables POSTGRES_HOST, POSTGRES_USER et POSTGRES_PASSWORD pour la connexion à la db locale
 
-Créez le fichier `config/credentials/development.key` et copiez-y la valeur récupérée depuis Vaultwarden.
-
 Puis exécuter ce script pour installer les gems et packages et créer la base de données :
 ```bash
 make install  ## appelle bin/setup
