@@ -38,6 +38,8 @@ class Cleaner
     puts "found #{conversations.count}, among which #{conversations_to_delete.count} will be deleted…"
 
     conversations_to_delete.each do |conversation|
+      raise unless conversation["session_id"].match?(/^[\da-z\-_]+$/) # prevent injections, brakeman false positive
+
       puts "deleting conversation #{conversation['session_id']} with #{conversation['meta']['nickname']}"
       res = connection.delete "/v1/website/#{WEBSITE_ID}/conversation/#{conversation['session_id']}"
       puts "delete res : #{JSON.parse(res.body)}"
