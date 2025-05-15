@@ -283,7 +283,7 @@ class Agent < ApplicationRecord
   def domain
     @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?
                   Domain::RDV_AIDE_NUMERIQUE
-                elsif organisations.where(verticale: :rdv_mairie).any?
+                elsif organisations.where(verticale: :rdv_mairie).any? || ENV["AGENT_CONNECT_RDVSP_CLIENT_ID"].present?
                   Domain::RDV_MAIRIE
                 else
                   Domain::RDV_SOLIDARITES
