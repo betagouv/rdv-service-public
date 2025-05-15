@@ -16,7 +16,15 @@ const defaultFullCalendarConfig = () => ({
   slotMaxTime: '20:00:00',
   eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
-  timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
+
+  // Avec la valeur par défaut (15), les RDVs de 15 minutes sont affichés côte-à-côte, car :
+  //   1. FullCalendar estime que c'est plus lisible de "gonfler" un peu l'affichage d'un événement très court (augmenter sa hauteur).
+  //   2. FullCalendar affiche côte-à-côte des événements qui se chevauchent.
+  //   3. Les événements de 15 minutes se chevauchent une fois gonflés.
+  // Nous disons donc ici à FullCalendar de ne pas gonfler les événements courts.
+  eventMinHeight: 9,
+
+  // This is a hack to make sure that the events will be shown at the proper time in the calendar.
   // If this is removed, there is a bug that causes the events in the calendar to be show at the wrong
   // time for agents that are not in the Paris timezone.
   // The proper fix for this would be to make sure we store all rdvs with the right timezone, but that's a much bigger project.
@@ -27,6 +35,7 @@ const defaultFullCalendarConfig = () => ({
   // There is one case for which this fix would fail: if the local time of the user and the agent is not the same (for example the agent is
   // in the métropole and the user is at la réunion), they will not see the same time
   // for the rdv. This seems unlikely for now.
+  timeZone: "Europe/Paris"
 })
 
 function eventClassNames(info) {
