@@ -42,7 +42,20 @@ function eventClassNames(info) {
   let extendedProps = info.event.extendedProps;
   const customCssClasses = [];
 
-  if(["noshow", "excused", "revoked"].includes(extendedProps.status)) {
+  // La nomenclature visuelle pour l'affichage des RDVs selon le statut est la suivante :
+  // - RDV à renseigner / futur (unknown)   -> aucun effet
+  // - RDV honoré (seen)                    -> transparent
+  // - RDV non excusé, aka lapin (noshow)   -> barré
+  // - RDV annulé par l'usager (excused)    -> transparent + barré
+  // - RDV annulé par le service (revoked)  -> transparent + barré
+  if(extendedProps.status === "seen") {
+    customCssClasses.push("rdv-fc-event-transparent");
+  }
+  else if (extendedProps.status === "noshow") {
+    customCssClasses.push("rdv-fc-event-barre");
+  }
+  else if (extendedProps.status === "excused" || extendedProps.status === "revoked") {
+    customCssClasses.push("rdv-fc-event-transparent");
     customCssClasses.push("rdv-fc-event-barre");
   }
 

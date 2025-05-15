@@ -71,10 +71,13 @@ $rdvs-fc-header-bg-color: $gray-200;
 }
 
 .rdv-fc-event-barre {
-  opacity: 0.7;
   .fc-event-title {
     text-decoration: line-through;
   }
+}
+
+.rdv-fc-event-transparent {
+  opacity: 0.7;
 }
 
 .rdv-fc-event-waiting {
