@@ -252,11 +252,24 @@ html,
 
 .btn-primary {
   background-color: $primary;
+  border: solid;
+  border-color: $primary;
   padding: 0.8em 0.9em;
   color: $white;
   text-decoration: none;
-  font-weight: bold;
-  font-size: 18px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.btn-secondary {
+  border: solid;
+  border-color: $primary;
+  background-color: $white;
+  padding: 0.8em 0.9em;
+  color: $primary;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .btn-wrapper {
