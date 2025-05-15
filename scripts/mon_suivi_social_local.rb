@@ -30,6 +30,8 @@ class MonSuiviSocial < Sinatra::Base
         <br />
         <a href="http://www.rdv-mairie.localhost:3000/admin/organisations/configuration">Vérifier ma Configuration sur RDV Service Public</a>
         <br />
+        <form method="post" action="/prendre_rdv"><button>Prendre RDV avec Françis Factice</button></form>
+
         <a href="/logout">Déconnexion</a>
       HTML
     else
@@ -55,6 +57,26 @@ class MonSuiviSocial < Sinatra::Base
     session.delete(:access_token)
 
     redirect to(base_url + OmniAuth::Strategies::RdvServicePublic.sign_out_path(app_id))
+  end
+
+  post "/prendre_rdv" do
+    response = Faraday.post(
+      "#{base_url}/api/v1/rdv_plans",
+      {
+        user: {
+          first_name: "Francis",
+          last_name: "Factice",
+        },
+      }.to_json,
+      {
+        "Content-Type": "application/json",
+        Authorization: "Bearer #{session[:access_token]}",
+      }
+    )
+
+    parsed_response = JSON.parse(response.body)
+    redirect_url = parsed_response.dig("rdv_plan", "url").gsub(".localhost", ".localhost:3000")
+    redirect to(redirect_url)
   end
 
   get "/favicon.ico" do

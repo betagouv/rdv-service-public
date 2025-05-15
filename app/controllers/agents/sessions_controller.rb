@@ -1,4 +1,5 @@
 class Agents::SessionsController < Devise::SessionsController
+  include Admin::WeakPasswordControllerConcern
   before_action :exclude_signed_in_users, only: [:new]
 
   # Lorsqu'un agent est connecté à une application Oauth via notre application,
@@ -25,13 +26,14 @@ class Agents::SessionsController < Devise::SessionsController
   end
 
   def create
-    super
+    # this is the first line of Devise::SessionsController#create
+    self.resource = warden.authenticate!(auth_options)
 
-    checker = PasswordChecker.new(params[:agent][:password]) # voir aussi app/controllers/users/sessions_controller.rb
-    if checker.too_weak?
-      flash[:notice] = nil
-      flash[:alert] = checker.error_message(current_domain.name)
-    end
+    return if reset_current_agent_password_if_weak!(params[:agent][:password])
+
+    super
+    # super will repeat warden.authenticate! which will not repeat everything but fetch from the session
+    # cf https://github.com/wardencommunity/warden/blob/master/lib/warden/proxy.rb#L332-L334
   end
 
   def destroy
@@ -43,7 +45,7 @@ class Agents::SessionsController < Devise::SessionsController
     #
     # Dans le cas où on le déconnecte d'abord de ProConnect, on est obligés de faire la redirection
     # vers l'appli cliente après avoir été redirigés vers notre root_url par ProConnect.
-    if params[:oauth_client_app_id].present? && params[:oauth_client_app_id].in?(session[:connected_oauth_app_ids])
+    if params[:oauth_client_app_id].present?
       oauth_app = Doorkeeper::Application.find_by(uid: params[:oauth_client_app_id])
       @oauth_client_app_post_logout_redirect_url = oauth_app.post_logout_redirect_uri
     end

@@ -26,7 +26,7 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
   end
 
   it "default", js: true do
-    find(".fc-minor", match: :first).click # Click on the agenda
+    find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click # Click on the agenda
 
     select(motif.name, from: "rdv_motif_id")
     click_button("Continuer")

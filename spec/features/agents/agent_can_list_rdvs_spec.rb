@@ -134,4 +134,23 @@ RSpec.describe "Agent can list RDVs" do
       end
     end
   end
+
+  describe "via la route qui n'utilise pas d'id d'organisation" do
+    context "quand l'agent a accès au rdv" do
+      let(:rdv) { create(:rdv, agents: [current_agent], organisation: organisation) }
+
+      it "redirige vers la page de détails du rdv dans le contexte de son organisation" do
+        visit agents_rdv_path(rdv.id)
+        expect(page).to have_current_path(admin_organisation_rdv_path(rdv.organisation_id, rdv))
+      end
+    end
+
+    context "quand l'agent n'a pas accès au rendez-vous" do
+      let(:rdv) { create(:rdv, agents: [current_agent]) }
+
+      it "affiche une erreur" do
+        expect { visit agents_rdv_path(rdv.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
 end
