@@ -55,7 +55,5 @@ coverage/
 # DB Diagram changes too often to be commited
 docs/domain_model.svg
 
-/config/credentials/production.key
-
 # Fichiers créés quand on fait un gem build sur une des gems définies dans lib
 lib/**/*.gem

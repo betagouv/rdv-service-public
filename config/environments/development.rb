@@ -83,7 +83,7 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  # en production ces valeurs sont encryptées dans les credentials qui sont décryptées via la var d’env RAILS_MASTER_KEY
+  # en production ces clés sont dans des variables d’environnement
   config.active_record.encryption.primary_key = "rdvsp_ar_primary_key_12345"
   config.active_record.encryption.deterministic_key = "rdvsp_ar_deterministic_key_12345"
   config.active_record.encryption.key_derivation_salt = "rdvsp_ar_key_derivation_salt_12345"
