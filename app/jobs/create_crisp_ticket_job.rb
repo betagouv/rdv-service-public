@@ -2,7 +2,12 @@ class CreateCrispTicketJob < ApplicationJob
   queue_as :latency_30s
 
   def perform(nickname:, email:, phone:, subject:, message:, role:, domain:)
-    return if email == "testing@example.com"
+    # On ne crée pas de ticket si l’email n’a pas un format correct
+    # Placé ici suite à un problème de spam, il faudra à terme remonter cette validation dans le formulaire
+    return unless email =~ URI::MailTo::EMAIL_REGEXP
+    # Nous avons ajouté la ligne suivante suite à du spam
+    # On laisse cette ligne en attendant d’avoir un système de captcha
+    return if email =~ /.*@example\.com$/
 
     conversation = client.website.create_new_conversation(website_id)
 
