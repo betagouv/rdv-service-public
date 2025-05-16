@@ -35,6 +35,10 @@ Elle passe par les endpoints `https://demo.rdv.anct.gouv.fr/oauth/authorize` et 
 
 Contactez notre équipe technique à l'adresse support@rdv-service-public.fr pour demander la création d'une appli OAuth et préparer votre intégration.
 
+### Lien vers l'agenda
+
+Les agents peuvent accéder à leur agenda RDV Service Public via le lien `https://rdv.anct.gouv.fr/agents/agenda`
+
 ### Configuration
 
 Vous pouvez proposer aux agents de vérifier leur configuration via le lien `https://rdv.anct.gouv.fr/admin/organisations/configuration`.
@@ -82,4 +86,7 @@ Après ce premier appel, vous pouvez faire des requêtes sur le RDV Plan pour sa
 
 ### Obtenir des informations sur les rendez-vous après leur création
 
-A venir
+
+Vous pouvez utiliser l'endpoint `/api/v1/rdvs` pour obtenir une liste de rendez-vous. Il est possible de filtrer cette liste par agent et ou par usager.
+[La documentation Swagger](https://rdv.anct.gouv.fr/api-docs/index.html) donne plus d'informations sur cet endpoint.
+L'api renvoie sur chaque rendez-vous un attribut `url_for_agents`, qui indique l'url de ce rendez-vous pour les agents (les usagers ne peuvent pas y accéder via cette url).
