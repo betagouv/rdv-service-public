@@ -1,9 +1,21 @@
+- tutoriel_url = "https://scribehow.com/embed/Tutoriel__Configurer_son_Espace_RDV_Service_Public__WRoFB835RG-lulLQNrSTHQ?as=scrollable"
 p = t("mailers.common.hello")
 
-p= t("agents.territory_creation_request_mailer.accepted.body1", domain_name: domain.name)
-p= t("agents.territory_creation_request_mailer.accepted.body2", organisation_name: @organisation.name)
+p
+  = "Nous avons le plaisir de vous confirmer l’ouverture de votre espace "
+  b = domain.name
+  = ". Vous êtes l'"
+  b administrateur de votre espace
+  = ", à ce titre, vous pouvez dès maintenant :"
+  ul
+    li Paramétrer vos organisations, vos services, et inviter vos agents ;
+    li Configurer vos motifs de rendez-vous.
+
+p Pour bien démarrer, #{link_to("consultez notre tutoriel", tutoriel_url)} pour configurer votre espace, et retrouvez toutes les ressources utiles dans notre #{link_to("centre d'aide", "https://aide.rdv-service-public.fr/")}.
 
 .btn-wrapper
-  = link_to "Commencer", admin_organisation_agent_agenda_url(@organisation, @agent),  class: "btn btn-primary"
+  = link_to "Accéder à mon espace", admin_organisation_agent_agenda_url(@organisation, @agent),  class: "btn btn-primary"
+.btn-wrapper
+  = link_to "Consulter le tutoriel", tutoriel_url,  class: "btn btn-secondary"
 
 = t("mailers.common.farewell_html", domain_name: domain.name)
