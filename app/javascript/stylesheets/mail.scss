@@ -40,6 +40,8 @@ table td {
 /* -------------------------------------
     BODY & CONTAINER
 ------------------------------------- */
+$dsfr-blue: #000091;
+
 body {
   background-color: #f6f6f6;
 }
@@ -77,9 +79,6 @@ body {
 ------------------------------------- */
 .main {
   background-color: #fff;
-  border: 1px solid #e9e9e9;
-  border-top: 3px solid $blue;
-  border-radius: 3px;
 }
 
 .content-wrap {
@@ -156,7 +155,7 @@ ol li {
     LINKS & BUTTONS
 ------------------------------------- */
 a {
-  color: #348eda;
+  color: $dsfr-blue;
   text-decoration: underline;
 }
 
@@ -251,12 +250,35 @@ html,
 }
 
 .btn-primary {
+<<<<<<< Updated upstream
   background-color: $primary;
   padding: 0.8em 0.9em;
   color: $white;
   text-decoration: none;
   font-weight: bold;
   font-size: 18px;
+=======
+  background-color: $dsfr-blue;
+  border: solid;
+  border-color: $dsfr-blue;
+  padding: 0.8em 0.9em;
+  color: $white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.btn-secondary {
+  border: solid;
+  border-color: $dsfr-blue;
+  border-width: 1px;
+  background-color: $white;
+  padding: 0.8em 0.9em;
+  color: $dsfr-blue;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+>>>>>>> Stashed changes
 }
 
 .btn-wrapper {
