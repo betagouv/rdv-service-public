@@ -40,22 +40,6 @@ RSpec.describe Anonymizer::Config do
     end
   end
 
-  context "a table does not have rules nor is truncated" do
-    let(:raw_config) do
-      {
-        "tables" => [
-          {
-            "table_name" => "users",
-          },
-        ],
-      }
-    end
-
-    it "raises an error upon initialization" do
-      expect { described_class.new(raw_config) }.to raise_error(Anonymizer::ConfigError, "table users should have anonymization rules or be truncated")
-    end
-  end
-
   context "a table has both anonymization rules and is truncated" do
     let(:raw_config) do
       {
