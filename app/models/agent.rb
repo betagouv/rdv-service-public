@@ -286,8 +286,7 @@ class Agent < ApplicationRecord
                 elsif organisations.where(verticale: :rdv_mairie).any?
                   Domain::RDV_MAIRIE
                 else
-                  # Domain.default_domain_for_current_instance
-                  Domain::RDV_SOLIDARITES
+                  Domain.default_domain_for_current_instance
                 end
   end
 
