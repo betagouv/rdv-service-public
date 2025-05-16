@@ -214,6 +214,14 @@ class Domain
     end
   end
 
+  def self.default_domain_for_current_instance
+    if ENV["AGENT_CONNECT_RDVSP_CLIENT_ID"].present?
+      RDV_MAIRIE
+    else
+      RDV_SOLIDARITES
+    end
+  end
+
   def self.find(id)
     ALL.find { _1.id == id } or raise "Can't find domain with id=#{id}"
   end

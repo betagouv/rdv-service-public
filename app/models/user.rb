@@ -244,7 +244,7 @@ class User < ApplicationRecord
     elsif sign_up_domain
       sign_up_domain
     else
-      Domain::RDV_SOLIDARITES
+      Domain.default_domain_for_current_instance
     end
   end
 
