@@ -46,9 +46,7 @@ module Anonymizer
     end
 
     def validate
-      validate_table_name_present &&
-        validate_rules_or_truncated &&
-        validate_not_both_rules_and_truncated
+      validate_table_name_present && validate_not_both_rules_and_truncated
     end
 
     def validate_table_name_present

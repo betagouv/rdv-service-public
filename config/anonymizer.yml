@@ -11,17 +11,11 @@ tables:
     truncated: true
   - table_name: good_job_processes
     truncated: true
-  - table_name: agent_territorial_roles
-    truncated: true
-  - table_name: motifs_plage_ouvertures
-    truncated: true
   - table_name: referent_assignations
     truncated: true
   - table_name: user_profiles
     truncated: true
   - table_name: annotations
-    truncated: true
-  - table_name: motif_categories_territories
     truncated: true
   - table_name: schema_migrations
     truncated: true
@@ -305,6 +299,9 @@ tables:
   - table_name: agent_roles
     non_anonymized_column_names:
       - access_level
+  - table_name: agent_territorial_roles
+  - table_name: motif_categories_territories
+  - table_name: motifs_plage_ouvertures
   - table_name: agents_rdvs
     non_anonymized_column_names:
       - outlook_id
