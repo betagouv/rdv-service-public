@@ -148,7 +148,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     end
 
     it "permet de supprimer le service désactivé de l’agent et le réaffecter à un autre" do
-      unselect "B (désactivé dans le territoire courant)", from: "Services"
+      unselect "B (désactivé dans l'espace courant)", from: "Services"
       select "A", from: "Services"
       expect { click_on "Enregistrer les services" }.to change { edited_agent.reload.services.to_set }
         .from([service_b])

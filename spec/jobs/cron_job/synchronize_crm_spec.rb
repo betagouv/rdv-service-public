@@ -31,10 +31,10 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
       ENV["NOTION_API_SECRET"] = "secret"
     end
 
-    context "quand la variable COMPTE PROD de la page Notion est un territoire" do
+    context "quand la variable COMPTE PROD de la page Notion est un territory" do
       let(:compte_prod_url) { "https://demo.rdv-solidarites.fr/territories/#{territory.id}" }
 
-      it "le nombre de RDV est mis à jour dans la page Notion avec la somme des RDV du territoire" do
+      it "le nombre de RDV est mis à jour dans la page Notion avec la somme des RDV de l'espace" do
         described_class.new.perform
 
         expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => 2 })

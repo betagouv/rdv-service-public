@@ -52,7 +52,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         click_on "Accepter"
 
-        select "Commune", from: "Catégorie du territoire"
+        select "Commune", from: "Catégorie de l'espace"
 
         select "Service social", from: "Service"
         click_on "Enregistrer"

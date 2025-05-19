@@ -8,7 +8,7 @@ fr:
         rdvs: Rendez-vous
         service: Service
         services: Services
-        territories: Admin de Territoires
+        territories: Espaces administrés
         rdv_notifications_level: Notifications de RDV
         display_saturdays: Affichage des samedis sur le calendrier
         display_cancelled_rdv: Affichage des rendez-vous annulés

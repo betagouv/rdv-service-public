@@ -109,52 +109,52 @@ RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
       let!(:agent) { create(:agent) }
 
       let!(:territory_no_rights_in_db) do
-        create(:territory, name: "Territoire où je n'ai aucun droit")
+        create(:territory, name: "Espace où je n'ai aucun droit")
       end
 
       let!(:territory_allow_nothing) do
-        create(:territory, name: "Territoire ou j'ai un AgentTerritorialAccessRight avec tout à false").tap do |territory|
+        create(:territory, name: "Espace ou j'ai un AgentTerritorialAccessRight avec tout à false").tap do |territory|
           agent.agent_territorial_access_rights.create!(territory:)
         end
       end
 
       let!(:territory_with_role) do
-        create(:territory, name: "Territoire ou j'ai un AgentTerritorialRole").tap do |territory|
+        create(:territory, name: "Espace ou j'ai un AgentTerritorialRole").tap do |territory|
           agent.territorial_roles.create!(territory:)
         end
       end
 
       let!(:territory_manage_teams) do
-        create(:territory, name: "Territoire ou j'ai un AgentTerritorialAccessRight avec allow_to_manage_teams: true").tap do |territory|
+        create(:territory, name: "Espace ou j'ai un AgentTerritorialAccessRight avec allow_to_manage_teams: true").tap do |territory|
           agent.agent_territorial_access_rights.create!(territory:, allow_to_manage_teams: true)
         end
       end
       let!(:territory_invite_agents) do
-        create(:territory, name: "Territoire ou j'ai un AgentTerritorialAccessRight avec allow_to_invite_agents: true").tap do |territory|
+        create(:territory, name: "Espace ou j'ai un AgentTerritorialAccessRight avec allow_to_invite_agents: true").tap do |territory|
           agent.agent_territorial_access_rights.create!(territory:, allow_to_invite_agents: true)
         end
       end
       let!(:territory_manage_access_rights) do
-        create(:territory, name: "Territoire ou j'ai un AgentTerritorialAccessRight avec allow_to_manage_access_rights: true").tap do |territory|
+        create(:territory, name: "Espace ou j'ai un AgentTerritorialAccessRight avec allow_to_manage_access_rights: true").tap do |territory|
           agent.agent_territorial_access_rights.create!(territory:, allow_to_invite_agents: true)
         end
       end
 
       let!(:territory_with_role_and_rights) do
-        create(:territory, name: "Territoire ou j'ai un à la fois un role et des rights").tap do |territory|
+        create(:territory, name: "Espace ou j'ai un à la fois un role et des rights").tap do |territory|
           agent.territorial_roles.create!(territory:)
           agent.agent_territorial_access_rights.create!(territory:, allow_to_manage_access_rights: true)
         end
       end
 
       let!(:territory_with_role_for_another_agent) do
-        create(:territory, name: "Territoire où quelqu'un d'autre a un AgentTerritorialRole").tap do |territory|
+        create(:territory, name: "Espace où quelqu'un d'autre a un AgentTerritorialRole").tap do |territory|
           create(:agent).territorial_roles.create!(territory:)
         end
       end
 
       let!(:territory_with_rights_for_another_agent) do
-        create(:territory, name: "Territoire où quelqu'un d'autre a un AgentTerritorialAccessRight avec allow_to_manage_teams: true").tap do |territory|
+        create(:territory, name: "Espace où quelqu'un d'autre a un AgentTerritorialAccessRight avec allow_to_manage_teams: true").tap do |territory|
           create(:agent).agent_territorial_access_rights.create!(territory:, allow_to_manage_teams: true)
         end
       end

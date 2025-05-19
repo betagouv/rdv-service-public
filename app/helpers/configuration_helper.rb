@@ -5,7 +5,7 @@ module ConfigurationHelper
         tag.ol class: "breadcrumb m-0 p-0" do
           concat(tag.li(class: "breadcrumb-item") do
             link_to admin_territory_path(current_territory) do
-              concat(t("admin.territories.nav.configuration_title"))
+              concat(t("admin.territories.nav.configuration_title", territory: current_territory))
             end
           end)
           previous_links.each do |prev_link|

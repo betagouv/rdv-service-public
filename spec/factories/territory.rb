@@ -1,5 +1,5 @@
 FactoryBot.define do
-  sequence(:territory_name) { |n| "Territoire n°#{n}" }
+  sequence(:territory_name) { |n| "Espace n°#{n}" }
   sequence(:departement_number)
 
   factory :territory do

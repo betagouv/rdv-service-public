@@ -8,11 +8,9 @@ fr:
         new:
           title: Nouvelle attribution pour le secteur %{name}
       nav:
-        configuration_title: Espace Admin
+        configuration_title: Paramètres de %{territory}
       show:
-        title: Espace Admin
-      index:
-        configuration_title: Espace Admin
+        title: Paramètres de %{territory}
       edit:
         title: Configuration %{name}
 
@@ -25,7 +23,7 @@ fr:
           title: Ajouter une commune pour le secteur %{name}
       zone_imports:
         create:
-          title: Sectorisation %{territoire}
+          title: Sectorisation %{territory}
         new:
           sectorization_title: Sectorisation
           title: Importer un fichier
@@ -73,19 +71,17 @@ fr:
           title: Carte des secteurs
       teams:
         edit:
-          territory_teams_title: Équipes du territoire
           title: Modifier l'équipe %{name}
         index:
-          teams_title: Équipes du territoire
+          teams_title: Équipes de l'espace
           create_team: Ajouter une équipe
           back: Retour
         new:
-          territory_teams_title: Créer une équipe
           title: Ajouter une équipe
       agents:
         edit:
           agent_title: Modification agent %{name}
-          territory_agents_title: Agents du territoire
+          territory_agents_title: Agents de l'espace
           services: Services
           agent_services_legend: Attribuer des services
           teams: Équipes
@@ -96,9 +92,9 @@ fr:
           no_other_organisation: Aucune autre organisation.
           create_organisation: Créer une organisation
           empty_agent_organisations: Aucune organisation affectée
-          agent_territorial_role_caption: Administrateur de territoire
+          agent_territorial_role_caption: Droit administrateur
         index:
-          territory_agents_title: Agents du territoire
+          territory_agents_title: Agents de l'espace
           reset: Retour
           search_placeholder: "ex: martine@example.com"
           search: Rechercher

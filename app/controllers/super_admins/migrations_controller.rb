@@ -25,7 +25,7 @@ module SuperAdmins
 
     def migrate_agent!(agent:, old_organisation:, new_organisation:)
       if old_organisation.territory_id != new_organisation.territory_id
-        flash[:error] = "#{new_organisation.name} n'est pas dans le même territoire que #{old_organisation.name}, vous ne pouvez donc pas migrer d'agent entre ces deux organisations"
+        flash[:error] = "#{new_organisation.name} n'est pas dans le même espace que #{old_organisation.name}, vous ne pouvez donc pas migrer d'agent entre ces deux organisations"
         return false
       end
 
