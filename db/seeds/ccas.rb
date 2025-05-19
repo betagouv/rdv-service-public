@@ -66,12 +66,13 @@ agent = Agent.new(
 agent.skip_confirmation!
 agent.save!
 
-application = Doorkeeper::Application.new(
+application = OauthApplication.new(
   name: "Mon Suivi Social",
   uid: "Gcz6Hrp8fmqI-4ubjjsJeTcyZg_JF0v_XYsibL7a_Fg",
   redirect_uri: "http://localhost:4567/auth/rdvservicepublic/callback\nhttp://127.0.0.1:4567/auth/rdvservicepublic/callback",
   post_logout_redirect_uri: "http://localhost:4567/",
-  logo_base64: ""
+  logo_base64: "",
+  default_service: service
 )
 
 test_secret = "development-kLbob_cr6Z58h9DTHjUvOhi44cImr2QA4XOQZJHKTCg" # Pour le développement en local uniquement

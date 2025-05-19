@@ -61,10 +61,6 @@
 @import "~select2-bootstrap4-theme/dist/select2-bootstrap4.min";
 
 // Plugins
-@import "@fullcalendar/core/main";
-@import "@fullcalendar/daygrid/main";
-@import "@fullcalendar/timegrid/main";
-@import "@fullcalendar/list/main";
 @import "jquery-datetimepicker/build/jquery.datetimepicker.min";
 @import "./headway";
 
@@ -108,7 +104,7 @@
 
 @import "./structure/bootstrap_overrides";
 
-a[href]:not(.fc-event-waiting):not(.fr-link) {
+a[href]:not(.rdv-fc-event-waiting):not(.fr-link) {
   background-image: none; // pour éviter le soulignement des liens
 }
 

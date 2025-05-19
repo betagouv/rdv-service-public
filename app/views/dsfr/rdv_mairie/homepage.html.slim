@@ -1,5 +1,8 @@
 - contact_team_url = Agents::PagesController::CONTACT_TEAM_URL
 
+- content_for :title do
+  | Accueil
+
 .fr-py-8w.rdv-background-color-alt-blue-ecume
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -234,8 +237,8 @@ hr[aria-hidden="true"]
         p
           |> Notre API puissante et flexible permet d’intégrer facilement notre brique de rendez-vous dans vos applications.
           | Accédez à un flux de données en temps réel pour une expérience enrichie et personnalisée.
-        ul.fr-btns-group.fr-btns-group--center.rdv-btns-group--left-md.fr-btns-group--inline-md.fr-mb-0
-          li= link_to "Consulter la documentation technique", "https://aide.rdv-service-public.fr/documentation-technique/api", class: "fr-btn fr-btn--secondary"
+        .fr-btns-group.fr-btns-group--center.rdv-btns-group--left-md.fr-btns-group--inline-md.fr-mb-0
+          = link_to "Consulter la documentation technique", "https://aide.rdv-service-public.fr/documentation-technique/api", class: "fr-btn fr-btn--secondary"
       .fr-col-12.fr-col-md-5.rdv-text-align-center
         = image_tag "rdv_mairie/api.svg", alt: "", class: "rdv-height-md-0 rdv-min-height-md-100"
 
@@ -304,17 +307,17 @@ hr[aria-hidden="true"]
       | Ils nous font confiance
     .rdv-logos-partenaires-wrapper
       .rdv-logo-partenaire
-        = image_tag "rdv_mairie/partenaire-ministere-justice.svg", alt: "Logo Ministère de la Justice"
+        = image_tag "rdv_mairie/partenaire-ministere-justice.svg", alt: "Ministère de la Justice"
       .rdv-logo-partenaire
-        = image_tag "rdv_mairie/partenaire-msa.png", alt: "Logo MSA : Santé Famille Retraite Services"
+        = image_tag "rdv_mairie/partenaire-msa.png", alt: "MSA : Santé Famille Retraite Services"
       .rdv-logo-partenaire
-        = image_tag "rdv_mairie/partenaire-asp.png", alt: "Logo ASP : Agence de Services et de Paiement"
+        = image_tag "rdv_mairie/partenaire-asp.png", alt: "ASP : Agence de Services et de Paiement"
       .rdv-logo-partenaire
-        = image_tag "rdv_mairie/partenaire-62.jpg", alt: "Logo du département Pas-de-Calais"
+        = image_tag "rdv_mairie/partenaire-62.jpg", alt: "Département Pas-de-Calais"
       .rdv-logo-partenaire
-        = image_tag "rdv_mairie/partenaire-wavignies.jpg", alt: "Logo de la ville de Wavignies : un W vert dans un cercle"
+        = image_tag "rdv_mairie/partenaire-wavignies.jpg", alt: "Ville de Wavignies"
       .rdv-logo-partenaire
-        = image_tag "rdv_mairie/partenaire-mdph.png", alt: "Logo MDPH : Maison Départementale des Personnes Handicapées"
+        = image_tag "rdv_mairie/partenaire-mdph.png", alt: "MDPH : Maison Départementale des Personnes Handicapées"
 
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--center

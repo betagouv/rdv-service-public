@@ -29,7 +29,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
 
   it "permet de prendre un rendez-vous", js: true do
     visit agents_rdv_plan_path(rdv_plan.id)
-    find(".fc-widget-content", match: :first).click
+    find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click # Click on the agenda
     expect(page).to have_content "Nouveau"
     expect(rdv_plan.reload.starts_at).to be_present
 

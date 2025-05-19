@@ -21,7 +21,7 @@ html lang="fr"
 
     = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: {id: "header"} do |header|
       ruby:
-        header.with_operator_image title: "Accueil - RDV #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: "RDV #{current_domain.name}"
+        header.with_operator_image title: "Accueil - #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: ""
         if current_user.present? && !current_user.signed_in_with_invitation_token?
           header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, classes: "fr-icon-calendar-fill"
           header.with_tool_link title: "Vos informations", path: users_informations_path
@@ -39,7 +39,7 @@ html lang="fr"
           header.with_tool_link title: "Se connecter", path: new_user_session_path, classes: "fr-fi-account-fill"
         end
 
-    main#content
+    main#content[role="main"]
       - if content_for :main_content
         = yield :main_content
       - else
@@ -62,23 +62,30 @@ html lang="fr"
               = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "fr-footer__logo", width: "150"
           .fr-footer__content
             p.fr-footer__content-desc
-              |> RDV Service Public est un service porté par la
+              |> #{current_domain.name} est un service porté par la
               => link_to "Direction Interministérielle du Numérique (DINUM)", "https://www.numerique.gouv.fr/dinum/", target: "_blank", rel: "noopener"
               |> et
               = link_to "l’Agence Nationale de la Cohésion des Territoires (ANCT)", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noopener"
               '
-            p.fr-footer__content-desc
-              = link_to "En savoir plus…", domaines_path
+            - if current_domain == Domain::RDV_AIDE_NUMERIQUE
+              p.fr-footer__content-desc
+                = link_to "En savoir plus concernant #{Domain::RDV_AIDE_NUMERIQUE.name} et #{Domain::RDV_SOLIDARITES.name}…", domaines_path
             ul.fr-footer__content-list
               li.fr-footer__content-item
-                = link_to "anct.gouv.fr", "https://agence-cohesion-territoires.gouv.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener"
+                = link_to "info.gouv.fr", "https://info.gouv.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener external", title: "info.gouv.fr - nouvelle fenêtre"
+              li.fr-footer__content-item
+                = link_to "service-public.fr", "https://service-public.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener external", title: "service-public.fr - nouvelle fenêtre"
+              li.fr-footer__content-item
+                = link_to "legifrance.gouv.fr", "https://legifrance.gouv.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener external", title: "legifrance.gouv.fr - nouvelle fenêtre"
+              li.fr-footer__content-item
+                = link_to "data.gouv.fr", "https://data.gouv.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener external", title: "data.gouv.fr - nouvelle fenêtre"
 
         .fr-footer__partners
           h2.fr-footer__partners-title Nos partenaires
           .fr-footer__partners-logos
             .fr-footer__partners-sub
-              = link_to(image_tag("logos/logo_dinum.svg", alt: "Logo de la Dinum", style: "height: 5.625rem"), "https://www.numerique.gouv.fr/dinum/", class: "fr-footer__partners-link" )
-              = link_to(image_tag("logos/logo_anct.png", alt: "Logo de l'ANCT", style: "height: 5.625rem"), "https://agence-cohesion-territoires.gouv.fr/", class: "fr-footer__partners-link" )
+              = link_to(image_tag("logos/logo_dinum.svg", alt: "DINUM - Direction Interministérielle du Numérique", style: "height: 5.625rem"), "https://www.numerique.gouv.fr/dinum/", class: "fr-footer__partners-link" )
+              = link_to(image_tag("logos/logo_anct.png", alt: "ANCT - Agence Nationale de la Cohésion des Territoires", style: "height: 5.625rem"), "https://agence-cohesion-territoires.gouv.fr/", class: "fr-footer__partners-link" )
 
         .fr-footer__bottom
           ul.fr-footer__bottom-list
@@ -97,6 +104,6 @@ html lang="fr"
             li.fr-footer__bottom-item
               = link_to "Code Source sur GitHub", "https://github.com/betagouv/rdv-service-public", class: "fr-footer__bottom-link", target: "_blank", rel: "noopener"
             li.fr-footer__bottom-item
-              = link_to ENV["RDV_SOLIDARITES_VERSION"], "https://github.com/betagouv/rdv-service-public/commit/#{ENV['CONTAINER_VERSION']}", class: "fr-footer__bottom-link", title: "Aller au code source de #{current_domain.name}", target: "_blank", rel: "noopener"
+              = link_to ENV["RDV_SOLIDARITES_VERSION"], "https://github.com/betagouv/rdv-service-public/commit/#{ENV['CONTAINER_VERSION']}", class: "fr-footer__bottom-link", title: "#{ENV['RDV_SOLIDARITES_VERSION']} - Aller au code source de #{current_domain.name}", target: "_blank", rel: "noopener"
             li.fr-footer__bottom-item
               = link_to "Budget", budget_path, class: "fr-footer__bottom-link", target: "_blank", rel: "noopener"

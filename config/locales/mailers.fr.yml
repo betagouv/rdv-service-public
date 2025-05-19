@@ -65,9 +65,7 @@ fr:
         attachments: Le mail de l'usager⋅e avait en pièce jointe "%{attachment_names}". Il nous est impossible de vous transmettre ce fichier. Vous pouvez contacter l'usager⋅e pour qu'iel l'envoie à votre adresse.
     territory_creation_request_mailer:
       accepted:
-        title: "Votre espace %{domain_name} est ouvert"
-        body1: "Votre demande d'ouverture d'espace sur %{domain_name} a été acceptée."
-        body2: "Vous pouvez dès à présent gérer vos rendez-vous pour %{organisation_name}"
+        title: "Votre espace %{domain_name} est ouvert 🚀"
   users:
     file_attente_mailer:
       new_creneau_available:

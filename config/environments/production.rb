@@ -16,9 +16,8 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
-  # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
-  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
-  # config.require_master_key = true
+  # on n'utilise pas les credentials Rails
+  config.require_master_key = false
 
   # Rails should serve static files itself, we don’t have a NGINX or Apache setup in prod
   config.public_file_server.enabled = true
@@ -122,6 +121,11 @@ Rails.application.configure do
 
   # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
   config.active_record.time_zone_aware_types = [:datetime]
+
+  config.active_record.encryption.primary_key = ENV["ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY"]
+  config.active_record.encryption.deterministic_key = ENV["ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY"]
+  config.active_record.encryption.key_derivation_salt = ENV["ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT"]
+
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector
   # middleware. The `delay` is used to determine how long to wait after a write

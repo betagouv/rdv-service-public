@@ -72,7 +72,8 @@ class SearchController < ApplicationController
       motif_name_with_location_type: motif.name_with_location_type,
       motif_id: motif.id,
       public_link_organisation_id: params[:public_link_organisation_id],
-      duration: params[:duration]
+      duration: params[:duration], # TODO: supprimer ce param
+      ants_pre_demandes_count: params[:ants_pre_demandes_count]
     )
   end
 

@@ -1,135 +1,86 @@
-.fc-view {
-  margin-top: 30px;
-}
+$rdvs-fc-header-bg-color: $gray-200;
 
-.none-border {
-  .modal-footer {
-    border-top: none;
-  }
-}
+:root {
+  --fc-button-text-color: #000000;
+  --fc-button-bg-color: #e3eaef;
+  --fc-button-border-color: #1a252f; // non utilisée car en border: none
 
-.fc-toolbar {
-  margin: 15px 0 5px 0;
-  h2 {
-    font-size: 1.25rem;
-    line-height: 1.875rem;
-    text-transform: uppercase;
-  }
-}
+  --fc-button-hover-text-color: #000000;
+  --fc-button-hover-bg-color: #f6f6f6;
+  --fc-button-hover-border-color: #1a252f; // non utilisée car en border: none
 
-.fc-day-grid-event {
-  .fc-time {
-    font-weight: $font-weight-bold;
-  }
-}
+  --fc-button-active-color: #fff;
+  --fc-button-active-bg-color: #1a252f;
+  --fc-button-active-border-color: #151e27; // non utilisée car en border: none
 
-.fc-day {
-  background: $white;
-}
-
-.fc-toolbar {
-  .fc-state-active,
-  .ui-state-active,
-  button:focus,
-  button:hover,
-  .ui-state-hover {
-    z-index: 0;
-  }
+  --fc-bg-event-opacity: 1;
 }
 
 .fc {
-  th.fc-widget-header {
-    background: $gray-200;
+  // réduit la taille de la date
+  .fc-toolbar-title {
+    font-size: 1.25rem;
+    line-height: 1.875rem;
+  }
+
+  // change l'apparence de l'en-tête du calendrier
+  .fc-col-header-cell {
+    background: $rdvs-fc-header-bg-color;
+    border: none;
     font-size: 13px;
     line-height: 20px;
     padding: 10px 0;
     text-transform: uppercase;
   }
-}
 
-.fc-unthemed {
-  th,
-  td,
-  thead,
-  tbody,
-  .fc-divider,
-  .fc-row,
-  .fc-popover {
-    border-color: $gray-200;
+  // Les headers FullCalendar sont des <a> sans href et le DSFR les grise.
+  // Ici on override ce ce comportement pour garder le texte en noir (meilleur contraste).
+  a.fc-col-header-cell-cushion,
+  a.fc-list-day-text,
+  a.fc-list-day-side-text {
+    color: black;
+    cursor: default;
+  }
+
+  // définit la couleur de fond de la petite case en haut à gauche
+  .fc-timegrid-axis:not(.fc-timegrid-col) {
+    background-color: $rdvs-fc-header-bg-color;
   }
 }
 
-.fc-button {
-  background: $gray-200;
+.fc .fc-button {
   border: none;
-  color: $black;
   text-transform: capitalize;
   box-shadow: none;
   border-radius: 0px;
   margin: 0 3px;
   padding: 6px 12px;
   height: auto;
-}
 
-.fc-button:hover {
-  color: $black;
-}
-
-.fc-text-arrow {
-  font-family: inherit;
-  font-size: 1rem;
-}
-
-.fc-state-hover {
-  background: $gray-200;
-}
-
-.fc-state-highlight {
-  background: $gray-300;
-}
-
-.fc-state-down,
-.fc-state-active,
-.fc-state-disabled {
-  background-color: $primary;
-  color: $white;
-  text-shadow: none;
-}
-
-.fc-cell-overlay {
-  background: $gray-300;
-}
-
-.fc-unthemed {
-  .fc-today {
-    background: $white;
+  // prend le dessus sur une règle très spécifique dans FullCalendar
+  // .fc .fc-button-primary:not(:disabled).fc-button-active
+  &.fc-button-active.fc-button-primary:not(:disabled) {
+    color: var(--fc-button-active-color);
   }
 }
 
-.fc-event {
+.fc-timegrid-event {
   border-radius: 0px;
   border: none;
-  cursor: move;
   font-size: 0.8125rem;
-  margin: 2px;
-  padding: 2px;
-  text-align: center;
 }
 
-.fc-bgevent {
-  opacity: 1;
-  .fc-title {
-    color: black !important;
+.rdv-fc-event-barre {
+  .fc-event-title {
+    text-decoration: line-through;
   }
 }
 
-.fc-event-excused,
-.fc-event-seen,
-.fc-event-revoked {
+.rdv-fc-event-transparent {
   opacity: 0.7;
 }
 
-.fc-event-waiting {
+.rdv-fc-event-waiting {
   background-image: linear-gradient(
     45deg,
     rgba(255, 255, 255, 0.3) 25%,
@@ -144,101 +95,71 @@
   background-size: 1rem 1rem;
 }
 
-.fc-event-excused,
-.fc-event-noshow,
-.fc-event-revoked {
-  .fc-content .fc-title {
-    text-decoration: line-through;
-  }
-}
-
-.fc-unauthorized-rdv {
+.rdv-fc-unauthorized-rdv {
   cursor: not-allowed;
 }
 
-.fc-basic-view {
-  td.fc-week-number {
-    span {
-      padding-right: 8px;
-    }
-  }
-  td.fc-day-number {
-    padding-right: 8px;
-  }
-  .fc-content {
-    color: $white;
-  }
+.fc-event-main {
+  white-space: nowrap;
 }
 
-.fc-time-grid-event {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  padding-left: 0.6rem;
-  &.fc-event-small {
-    line-height: 0.6rem;
-    padding: 0;
+.fc-timegrid-event {
+  .fc-event-main-frame {
+    padding-left: 0.3rem;
   }
-  .fc-time,
-  .fc-title {
-    text-align: left;
+
+  // alignement vertical centré pour les événements courts
+  &.fc-timegrid-event-short {
+    .fc-event-main-frame {
+      align-items: center;
+    }
   }
-}
-.fc-event-container {
-  margin: 0 !important;
-  .fc-event {
-    border: none;
+
+  // alignement vertical centré pour les événements longs
+  &:not(.fc-timegrid-event-short) {
+    .fc-event-main-frame {
+      justify-content: center;
+      .fc-event-title-container {
+        flex-grow: 0;
+      }
+    }
   }
 }
 
 .fc-toolbar {
   flex-direction: column;
-}
-
-@include media-breakpoint-up(sm) {
-  .fc-toolbar {
+  @include media-breakpoint-up(sm) {
     flex-direction: row;
   }
 }
 
-@include media-breakpoint-down(sm) {
-  .fc-toolbar {
-    .fc-left,
-    .fc-right,
-    .fc-center {
-      float: none;
-      display: block;
-      clear: both;
-      margin: 10px 0;
-    }
-  }
-  .fc {
-    .fc-toolbar {
-      > * {
-        > * {
-          float: none;
-        }
-      }
-    }
-  }
-  .fc-today-button {
-    display: none;
-  }
-}
-
 .fc-timeGridWeek-view {
-  .fc-event {
+  .fc-event:not(.fc-bg-event) {
+    // Ce petit décalage des RDVs vers la droite permet de visualiser
+    // la plage affichée en background en dessous.
     margin-left: 5%;
   }
 }
+.fc-timegrid {
+  .fc-bg-event {
+    cursor: default;
+    .fc-event-title {
+      font-size: 12px;
+      font-weight: bold;
+      font-style: normal;
+      color: black;
+    }
+  }
+}
 
-.fc-event.selected {
+// La section suivante implémente la petite secousse utilisée
+// pour mettre en valeur sur le calendrier le RDV tout juste créé.
+.rdv-shake {
   animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
 }
-
 @keyframes shake {
   10%,
   90% {

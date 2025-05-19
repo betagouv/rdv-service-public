@@ -69,7 +69,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         )
 
         open_email(agent.email)
-        expect(current_email.subject).to eq "Votre espace RDV Service Public est ouvert"
+        expect(current_email.subject).to eq "Votre espace RDV Service Public est ouvert 🚀"
 
         visit super_admins_territory_creation_requests_url(host: "http://www.rdv-mairie-test.localhost")
 

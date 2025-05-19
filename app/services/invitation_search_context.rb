@@ -35,4 +35,6 @@ class InvitationSearchContext < SearchContext
         Motif.available_for_booking.where(organisation_id: @organisation_ids).joins(:organisation)
       )
   end
+
+  def ants_pre_demandes_count = nil
 end
