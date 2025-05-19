@@ -3,6 +3,7 @@ on:
   push:
     paths-ignore:
       - 'docs/**'
+  workflow_dispatch:
 jobs:
   rubocop:
     name: Ruby linter

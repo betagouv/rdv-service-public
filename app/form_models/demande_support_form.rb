@@ -5,6 +5,7 @@ class DemandeSupportForm
 
   validates(*ATTRIBUTES.excluding(:phone_number), presence: true)
   validates :message, length: { maximum: 3_000 * 3 } # 3 000 caractères ~= 1 page A4
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   def initialize(current_domain:, role: nil, sujet: nil, first_name: nil, last_name: nil, phone_number: nil, email: nil, message: nil)
     @current_domain = current_domain

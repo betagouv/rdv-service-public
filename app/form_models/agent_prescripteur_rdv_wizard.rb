@@ -65,6 +65,8 @@ class AgentPrescripteurRdvWizard
     users.first
   end
 
+  def ants_pre_demandes_count = nil
+
   private
 
   def create_rdv!

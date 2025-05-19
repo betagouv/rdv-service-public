@@ -1,12 +1,12 @@
 class WebSearchContext < SearchContext
   include Users::CreneauxWizardConcern
-  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement
+  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement, :ants_pre_demandes_count
 
   # departement est un cas particulier parce qu'il est aussi utilisé en dehors de addresse selection pour
   # passer cette première étape
   ADDRESS_SELECTION_PARAMS = %i[latitude longitude address city_code street_ban_id departement].freeze
 
-  USER_CHOICE_PARAMS = %i[service_id motif_name_with_location_type lieu_id user_selected_organisation_id motif_id].freeze
+  USER_CHOICE_PARAMS = %i[service_id motif_name_with_location_type lieu_id user_selected_organisation_id motif_id ants_pre_demandes_count].freeze
 
   def initialize(user:, query_params: {})
     super
@@ -31,6 +31,7 @@ class WebSearchContext < SearchContext
     @lieu_id = query_params[:lieu_id]
     @user_selected_organisation_id = query_params[:user_selected_organisation_id]
     @motif_id = query_params[:motif_id]
+    @ants_pre_demandes_count = query_params[:ants_pre_demandes_count]
   end
 
   def invitation?

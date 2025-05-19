@@ -3,6 +3,7 @@ require("turbolinks").start()
 import { PlacesInputs } from './components/places-inputs.js'
 import { Modal } from './components/modal';
 import { NameInitialsForm } from './components/name-initials-form';
+import CounterField from './components/counter-field';
 import DsfrNewPassword from "./components/dsfr-new-password";
 import './components/browser-detection';
 import 'bootstrap';
@@ -16,6 +17,7 @@ $(document).on('turbolinks:load', function() {
   new PlacesInputs();
   new NameInitialsForm();
   DsfrNewPassword();
+  CounterField();
 
   const whereInput = document.querySelector('#search_where');
   const submitButton = document.querySelector('#search_submit');

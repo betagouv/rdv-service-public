@@ -1,6 +1,29 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "5e49c97564dd5bd05b5bc9a38faaf23c0c404cc707b798d4632845745720d0a4",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "scripts/clean_crisp_tickets.rb",
+      "line": 42,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.delete(\"/v1/website/#{WEBSITE_ID}/conversation/#{conversation[\"session_id\"]}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cleaner",
+        "method": "fetch_conversations_and_delete"
+      },
+      "user_input": "conversation[\"session_id\"]",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
       "fingerprint": "d93227729f1a070feb92d7048272b7c5b0535fc7505c7ba5ab3c6c9c6e510fca",
