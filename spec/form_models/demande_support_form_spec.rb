@@ -79,6 +79,31 @@ RSpec.describe DemandeSupportForm do
       expect(CreateZammadTicketJob).not_to receive(:perform_later)
       expect(CreateCrispTicketJob).not_to receive(:perform_later)
       form.submit
+      expect(form.errors[:message]).to include("est trop long (pas plus de 9000 caractères)")
+    end
+  end
+
+  context "le mail n'est pas valide" do
+    let(:attributes) do
+      {
+        current_domain: Domain::RDV_MAIRIE,
+        role: "usager",
+        sujet: "Je suis perdue",
+        first_name: "Jeanne",
+        last_name: "Jacques",
+        phone_number: "0603040506",
+        email: "cecin’estpasunemail",
+        message: "Je suis perdue, aidez-moi !\nJe ne retrouve pas mon mot de passe. Merci. JJ.",
+      }
+    end
+
+    it { is_expected.not_to be_valid }
+
+    it "n’appele pas CreateZammadTicket" do
+      expect(CreateZammadTicketJob).not_to receive(:perform_later)
+      expect(CreateCrispTicketJob).not_to receive(:perform_later)
+      form.submit
+      expect(form.errors[:email]).to include("n'est pas valide")
     end
   end
 end
