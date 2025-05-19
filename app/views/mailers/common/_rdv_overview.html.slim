@@ -42,7 +42,7 @@
     div.row-result
       span.title Ceci est un rendez-vous à domicile à l'adresse :
       div.alignright
-        = rdv.address_complete
+        = rdv.full_address
   - elsif rdv.motif.visio?
     div.row-result
       span.title = "RDV par visioconférence"
@@ -52,7 +52,7 @@
     div.row-result
       span.title Adresse :
       span.float-right
-        = rdv.address_complete
+        = rdv.full_address
       .clear
   - if rdv.motif.instruction_for_rdv.present? && for_role == :user
     .div.row-result.no-border

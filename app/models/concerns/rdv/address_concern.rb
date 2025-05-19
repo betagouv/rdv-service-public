@@ -12,7 +12,7 @@ module Rdv::AddressConcern
     result || ""
   end
 
-  def address_complete
+  def full_address
     result = case motif.location_type.to_sym
              when :public_office
                lieu&.full_name
