@@ -140,7 +140,7 @@ module ApplicationHelper
   end
 
   def dsfr_path
-    "/dsfr-v1.13.1"
+    "/dsfr-v1.13.2"
   end
 
   def dsfr_svg(path, custom: false, **kwargs)
