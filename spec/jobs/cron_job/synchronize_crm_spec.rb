@@ -38,7 +38,10 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
       it "le nombre de RDV et la date du dernier RDV sont mis à jour dans la page Notion avec la somme des RDV de l'espace" do
         described_class.new.perform
 
-        expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => 2, "DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") } })
+        expect(notion_client).to have_received(:update_page).with(
+          page_id: "page_id",
+          properties: { "NOMBRE DE RDV" => 2, "DATE CREATION DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") } }
+        )
       end
     end
 
@@ -48,7 +51,10 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
       it "le nombre de RDV et la date du dernier RDV sont mis à jour dans la page Notion avec la somme des RDV de l’organisation" do
         described_class.new.perform
 
-        expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => 1, "DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") } })
+        expect(notion_client).to have_received(:update_page).with(
+          page_id: "page_id",
+          properties: { "NOMBRE DE RDV" => 1, "DATE CREATION DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") } }
+        )
       end
 
       context "quand l’organisation n’a pas encore de RDV" do
@@ -57,7 +63,7 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
         it "le nombre de RDV est mis à jour dans la page Notion avec 0 et la date du dernier RDV est nulle" do
           described_class.new.perform
 
-          expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => 0, "DERNIER RDV" => nil })
+          expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => 0, "DATE CREATION DERNIER RDV" => nil })
         end
       end
     end
@@ -68,7 +74,7 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
       it "retourne un compte nul et une date nulle" do
         described_class.new.perform
 
-        expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => nil, "DERNIER RDV" => nil })
+        expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => nil, "DATE CREATION DERNIER RDV" => nil })
       end
     end
   end

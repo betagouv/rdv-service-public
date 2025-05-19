@@ -24,9 +24,9 @@ class CronJob::SynchronizeCrm < CronJob
         rdv_count = ids.blank? ? nil : Rdv.where(organisation: ids).count
         last_rdv = Rdv.where(organisation: ids).order(created_at: :desc).first
         if last_rdv
-          client.update_page(page_id: notion_page.id, properties: { "NOMBRE DE RDV" => rdv_count, "DERNIER RDV" => { start: last_rdv.created_at&.strftime("%Y-%m-%d") } })
+          client.update_page(page_id: notion_page.id, properties: { "NOMBRE DE RDV" => rdv_count, "DATE CREATION DERNIER RDV" => { start: last_rdv.created_at&.strftime("%Y-%m-%d") } })
         else
-          client.update_page(page_id: notion_page.id, properties: { "NOMBRE DE RDV" => rdv_count, "DERNIER RDV" => nil })
+          client.update_page(page_id: notion_page.id, properties: { "NOMBRE DE RDV" => rdv_count, "DATE CREATION DERNIER RDV" => nil })
         end
       end
     end
