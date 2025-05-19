@@ -40,29 +40,29 @@ RSpec.describe "ANTS API: availableTimeSlots" do
         lieu1.id.to_s => [
           {
             datetime: "2022-11-01T09:00Z",
-            callback_url: creneaux_url(starts_at: "2022-11-01 09:00", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id, duration: 30),
+            callback_url: creneaux_url(starts_at: "2022-11-01 09:00", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id, ants_pre_demandes_count: "1"),
           },
           {
             datetime: "2022-11-01T09:30Z",
-            callback_url: creneaux_url(starts_at: "2022-11-01 09:30", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id, duration: 30),
+            callback_url: creneaux_url(starts_at: "2022-11-01 09:30", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id, ants_pre_demandes_count: "1"),
           },
         ],
         lieu2.id.to_s => [
           {
             datetime: "2022-11-02T12:00Z",
-            callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id, duration: 30),
+            callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id, ants_pre_demandes_count: "1"),
           },
           {
             datetime: "2022-11-02T12:15Z",
-            callback_url: creneaux_url(starts_at: "2022-11-02 12:15", lieu_id: lieu2.id, motif_id: motif3.id, public_link_organisation_id: organisation2.id, duration: 30),
+            callback_url: creneaux_url(starts_at: "2022-11-02 12:15", lieu_id: lieu2.id, motif_id: motif3.id, public_link_organisation_id: organisation2.id, ants_pre_demandes_count: "1"),
           },
           {
             datetime: "2022-11-02T12:30Z",
-            callback_url: creneaux_url(starts_at: "2022-11-02 12:30", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id, duration: 30),
+            callback_url: creneaux_url(starts_at: "2022-11-02 12:30", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id, ants_pre_demandes_count: "1"),
           },
           {
             datetime: "2022-11-02T12:45Z",
-            callback_url: creneaux_url(starts_at: "2022-11-02 12:45", lieu_id: lieu2.id, motif_id: motif3.id, public_link_organisation_id: organisation2.id, duration: 30),
+            callback_url: creneaux_url(starts_at: "2022-11-02 12:45", lieu_id: lieu2.id, motif_id: motif3.id, public_link_organisation_id: organisation2.id, ants_pre_demandes_count: "1"),
           },
         ],
       }.with_indifferent_access
@@ -72,7 +72,7 @@ RSpec.describe "ANTS API: availableTimeSlots" do
   context "when there's more than 1 participant" do
     let(:participants_count) { 2 }
 
-    it "returns slots with a duration matching the number of participants" do
+    it "includes the number of participants in the callback url" do
       get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=#{participants_count}&reason=CNI"
 
       expect(response.parsed_body).to eq(
@@ -80,13 +80,13 @@ RSpec.describe "ANTS API: availableTimeSlots" do
           lieu1.id.to_s => [
             {
               datetime: "2022-11-01T09:00Z",
-              callback_url: creneaux_url(starts_at: "2022-11-01 09:00", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id, duration: 60),
+              callback_url: creneaux_url(starts_at: "2022-11-01 09:00", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id, ants_pre_demandes_count: "2"),
             },
           ],
           lieu2.id.to_s => [
             {
               datetime: "2022-11-02T12:00Z",
-              callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id, duration: 60),
+              callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id, ants_pre_demandes_count: "2"),
             },
           ],
         }.with_indifferent_access

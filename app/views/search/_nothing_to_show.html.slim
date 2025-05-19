@@ -12,4 +12,11 @@
       .rdv-font-weight-700.mb-2 Toutes nos excuses pour cela.
       = render "search/nothing_to_show_invitation", context: context
     - else
-      .rdv-font-weight-700 Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.
+      .rdv-font-weight-700
+        | Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.
+      - if context.first_matching_motif&.requires_ants_predemande_number?
+        .fr-callout.fr-mt-4w
+          h3.fr-callout__title Élargissez votre recherche
+          p.fr-callout__text
+           |>  Vous pouvez prendre rendez-vous pour un passeport ou une carte d’identité dans n’importe quelle mairie en France, quel que soit votre lieu de résidence ou de travail, grâce au moteur de recherche de créneaux de l'ANTS :
+          = link_to "Chercher d’autres créneaux", "https://rendezvouspasseport.ants.gouv.fr/", target: "_blank", class: "fr-btn"
