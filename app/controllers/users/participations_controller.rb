@@ -60,11 +60,9 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def change_participation_status(status)
-    if status == "unknown"
-      unless @rdv.remaining_seats?
-        flash[:alert] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-        return redirect_to prendre_rdv_path(motif_name_with_location_type: @rdv.motif.name_with_location_type, lieu_id: @rdv.lieu.id, departement: @rdv.organisation.territory.departement_number)
-      end
+    if status == "unknown" && !@rdv.remaining_seats?
+      flash[:alert] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
+      return redirect_to prendre_rdv_path(motif_name_with_location_type: @rdv.motif.name_with_location_type, lieu_id: @rdv.lieu.id, departement: @rdv.organisation.territory.departement_number)
     end
     existing_participation.change_status_and_notify(current_user, status)
     set_user_name_initials_verified
