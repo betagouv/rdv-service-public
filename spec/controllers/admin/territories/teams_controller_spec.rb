@@ -28,7 +28,7 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
       sign_in agent
 
       agent_from_this_territory = create(:agent, organisations: [create(:organisation, territory: territory)])
-      agent_from_other_territory = create(:agent)
+      agent_from_other_territory = create(:agent, organisations: [create(:organisation, territory: create(:territory))])
 
       expect do
         post :create, params: { territory_id: territory.id, team: { name: "UbberTeam", agent_ids: [agent_from_other_territory.id] } }
@@ -82,13 +82,13 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
     end
 
     it "only allows adding agents from the given territory" do
-      agent = create(:agent)
+      agent = create(:agent, first_name: "Giovanni")
       create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
       team = create(:team, territory: territory)
       sign_in agent
 
-      agent_from_this_territory = create(:agent, organisations: [create(:organisation, territory: territory)])
-      agent_from_other_territory = create(:agent)
+      agent_from_this_territory = create(:agent, first_name: "Djenaba", organisations: [create(:organisation, territory: territory)])
+      agent_from_other_territory = create(:agent, first_name: "Rafael", organisations: [create(:organisation, territory: create(:territory))])
 
       post :update, params: { territory_id: territory.id, id: team.id, team: { agent_ids: [agent_from_this_territory.id] } }
       expect(team.agents).to include(agent_from_this_territory)
