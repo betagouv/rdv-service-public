@@ -22,6 +22,24 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
       end.to change(Team, :count).by(1)
     end
 
+    it "only allows agents from the territory" do
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
+      sign_in agent
+
+      agent_from_this_territory = create(:agent, organisations: [create(:organisation, territory: territory)])
+      agent_from_other_territory = create(:agent)
+
+      expect do
+        post :create, params: { territory_id: territory.id, team: { name: "UbberTeam", agent_ids: [agent_from_other_territory.id] } }
+      end.not_to change(Team, :count)
+
+      expect do
+        post :create, params: { territory_id: territory.id, team: { name: "UbberTeam", agent_ids: [agent_from_this_territory.id] } }
+      end.to change(Team, :count).by(1)
+      expect(Team.last.agents).to contain_exactly(agent_from_this_territory)
+    end
+
     it "redirect to teams index" do
       agent = create(:agent)
       create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
@@ -61,6 +79,22 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
 
       post :update, params: { territory_id: territory.id, id: team.id, team: { name: "otherName" } }
       expect(team.reload.name).to eq("otherName")
+    end
+
+    it "only allows adding agents from the given territory" do
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
+      team = create(:team, territory: territory)
+      sign_in agent
+
+      agent_from_this_territory = create(:agent, organisations: [create(:organisation, territory: territory)])
+      agent_from_other_territory = create(:agent)
+
+      post :update, params: { territory_id: territory.id, id: team.id, team: { agent_ids: [agent_from_this_territory.id] } }
+      expect(team.agents).to include(agent_from_this_territory)
+
+      post :update, params: { territory_id: territory.id, id: team.id, team: { agent_ids: [agent_from_other_territory.id] } }
+      expect(team.agents).not_to include(agent_from_other_territory)
     end
   end
 
