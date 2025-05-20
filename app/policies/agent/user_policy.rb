@@ -36,11 +36,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      organisation_ids = if current_organisation.present? && current_organisation.territory.visible_users_throughout_the_territory
-                           current_organisation.territory.organisation_ids
-                         else
-                           current_organisation&.id || current_agent.organisation_ids
-                         end
+      organisation_ids = current_agent.organisation_ids.to_set
+      current_agent.territories_through_organisations.where(visible_users_throughout_the_territory: true).each do |territory|
+        organisation_ids.merge(territory.organisation_ids)
+      end
 
       scope.where(id: UserProfile.where("user_profiles.organisation_id": organisation_ids).distinct.select(:user_id))
     end
