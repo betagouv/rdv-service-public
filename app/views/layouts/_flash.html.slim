@@ -1,0 +1,4 @@
+- %i[success notice error alert].each do |type|
+  - if flash[type]
+    = dsfr_alert type: alert_dsfr_type_for(type), size: :sm, classes: "fr-pb-1w fr-my-2w", close_button: true, html_attributes: { role: "alert" } do
+      = sanitize(flash[type], tags: %w[a br strong em], scrubber: :prune)

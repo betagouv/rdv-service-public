@@ -1,9 +1,9 @@
-RSpec.describe "layouts/_flash_dsfr", type: :view do
+RSpec.describe "layouts/_flash", type: :view do
   it "sanitizes JS out of links" do
     notice = <<~HTML
       <a href="javascript:alert('hi');">Cliquez ici</a>
     HTML
-    render(partial: "layouts/flash_dsfr", locals: { flash: { notice: notice } })
+    render(partial: "layouts/flash", locals: { flash: { notice: notice } })
     expect(rendered).to include("<a>Cliquez ici</a>")
   end
 
@@ -28,7 +28,7 @@ RSpec.describe "layouts/_flash_dsfr", type: :view do
       <em>Less important</em>
     HTML
 
-    render(partial: "layouts/flash_dsfr", locals: { flash: { notice: notice } })
+    render(partial: "layouts/flash", locals: { flash: { notice: notice } })
     expect(rendered.squish).to include(expected_output.squish)
   end
 end
