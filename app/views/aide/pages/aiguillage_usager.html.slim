@@ -16,7 +16,7 @@
       .fr-mb-4w
         |> Votre situation :
         b=> @form.raison_label
-        = link_to "modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line"
+        = link_to "modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line", title: "Modifier votre choix"
 
     - if @form.raison_creneaux?
       h6 Étapes pour prendre un RDV
