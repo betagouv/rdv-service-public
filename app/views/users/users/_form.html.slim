@@ -35,10 +35,10 @@ ruby:
   div= f.dsfr_check_box :notify_by_sms
   - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_MAIRIE
     - address_value = rdv_wizard.present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
-    = f.dsfr_text_field :address, value: address_value, required: rdv_wizard&.motif&.home?, data: { "address-autocomplete": "on" }, autocomplete: "street-address"
+    = f.dsfr_text_field :address, value: address_value, required: rdv_wizard&.motif&.home?, data: { "address-autocomplete": "on" }, autocomplete: "street-address", dir: "ltr"
 
   - if territories.map(&:enable_address_details).any?
-    = f.dsfr_text_field :address_details, data: { "address-autocomplete": "on" }, autocomplete: "street-address"
+    = f.dsfr_text_field :address_details, data: { "address-autocomplete": "on" }, autocomplete: "street-address", dir: "ltr"
 
   = f.hidden_field :city_code
   = f.hidden_field :post_code
