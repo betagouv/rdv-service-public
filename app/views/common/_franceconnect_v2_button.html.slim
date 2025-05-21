@@ -1,0 +1,8 @@
+.rdv-text-align-center
+  .fr-connect-group
+    = link_to "/omniauth/franceconnect_v2/auth", class: "fr-connect", title: "S’identifier avec FranceConnect V2" do
+      span.fr-connect__login S’identifier avec
+      span.fr-connect__brand FranceConnect
+
+  p
+    = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "fr-link", title: "Qu’est-ce que FranceConnect ? - Nouvelle fenêtre"

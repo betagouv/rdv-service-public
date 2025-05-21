@@ -4,7 +4,10 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
-    - if current_domain.france_connect_enabled || params[:force_franceconnect].present?
+    - if ENV["FRANCECONNECT_V2_BASE_URL"].present? || params[:force_franceconnect_v2].present?
+      h2 Se connecter avec FranceConnect V2
+      = render "common/franceconnect_v2_button"
+    - elsif current_domain.france_connect_enabled || params[:force_franceconnect].present?
       h2 Se connecter avec FranceConnect
       = render "common/franceconnect_button"
 
