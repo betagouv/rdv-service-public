@@ -474,7 +474,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       open_email("elo@ise.fr")
       current_email.click_link "Confirmer mon compte"
       expect(page).to have_content("Définir mon mot de passe")
-      fill_in "Mot de passe", with: "Rdvservicepublictest1!"
+      fill_in "Mot de passe", with: ENV["SEED_PASSWORD"]
       click_on "Enregistrer"
       # Parcours post-connexion
       expect(page).to have_content("Étape 1 sur 3")
