@@ -34,7 +34,7 @@ module ApiSpecSharedExamples
   end
 
   RSpec.shared_context "an endpoint protected against floods that returns 429 - too_many_requests" do |method, path|
-    response 429, "Renvoie 'too_many_requests' quand la limite d'appels est atteinte" do
+    response 429, "Renvoie 'too_many_requests' quand la limite d'appels est atteinte (50 requêtes par périodes de 60 secondes)" do
       schema "$ref" => "#/components/schemas/error_too_many_request"
 
       before do

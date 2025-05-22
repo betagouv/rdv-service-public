@@ -2994,6 +2994,25 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Renvoie 'too_many_requests' quand la limite d'appels est atteinte (50 requêtes par périodes de 60 secondes)",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Limite d'appels API atteinte. Merci de patienter.\n"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_too_many_request"
+                }
+              }
+            }
           }
         }
       }
