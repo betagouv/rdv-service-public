@@ -7,6 +7,11 @@ class ApplicationMailerDeliveryJob < ActionMailer::MailDeliveryJob
   # Only discard DeserializationError if it is caused by a ActiveRecord::RecordNotFound.
   # We don't want to discard a job when deserialization failed because of a DB failure for example.
   rescue_from ActiveJob::DeserializationError do |exception|
+    Rails.logger.error("ActiveJob::DeserializationError rescue block executing...")
+    Rails.logger.error("exception.inspect: #{exception.inspect}")
+    Rails.logger.error("exception.cause.inspect: #{exception.cause.inspect}")
+    Rails.logger.error("executions: #{executions}")
+
     case exception.cause
     when ActiveRecord::RecordNotFound, GoodJob::InterruptError
       Rails.logger.error(exception.message)
@@ -22,9 +27,3 @@ class ApplicationMailerDeliveryJob < ActionMailer::MailDeliveryJob
     super && executions > 2
   end
 end
-
-GoodJob::Job.where(finished_at: nil).where("executions_count > 22").each do |job|
-  job.discard_job
-end
-
-GoodJob::Job.find("37668c6c-71bf-4c68-a18e-65e334cda498").discard_job
