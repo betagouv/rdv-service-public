@@ -9,6 +9,7 @@
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
     - if @form.raison.blank?
+      - content_for :subtitle, "Choix de la raison"
       = form_for @form, url: aide_aiguillage_usager_path, method: :GET, builder: Dsfr::FormBuilder do |f|
         = f.dsfr_radio_buttons :raison, @form.raisons_options, legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :"
         = f.submit "Valider", class: "fr-btn"
@@ -19,6 +20,7 @@
         = link_to "modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line", title: "Modifier votre choix"
 
     - if @form.raison_creneaux?
+      - content_for :subtitle, "Prendre un RDV"
       h6 Étapes pour prendre un RDV
       ol
         - if current_domain == Domain::RDV_MAIRIE
@@ -44,6 +46,7 @@
         = link_to "Consulter l’annuaire du Service Public", "https://lannuaire.service-public.fr/", class: "fr-btn fr-btn--secondary", target: "_blank"
 
     - if @form.raison_annuler?
+      - content_for :subtitle, "Annuler votre RDV"
       .fr-accordions-group.fr-mb-4w
         section.fr-accordion
           h2.fr-accordion__title
