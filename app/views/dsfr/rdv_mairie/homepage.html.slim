@@ -293,10 +293,13 @@ hr[aria-hidden="true"]
         .rdv-font-weight-bold
           | RENDEZ-VOUS PLANIFIÉS
         div
-          | DANS 995 STRUCTURES*
+          | DANS 995 STRUCTURES
+          span[aria-hidden="true"]
+            | *
 
 .fr-container.fr-py-3w.rdv-text-align-center
-  |> *Données concernant les 24 derniers mois.
+  span[aria-hidden="true"] *
+  |> Données concernant les 24 derniers mois.
   |> Pour plus d’informations,
   = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
   | .
