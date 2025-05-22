@@ -3003,7 +3003,7 @@
                   "example": {
                     "value": {
                       "errors": [
-                        "Limite d'appels API atteinte. Merci de patienter.\n"
+                        "Limite d'appels API atteinte. Merci de patienter."
                       ]
                     }
                   }

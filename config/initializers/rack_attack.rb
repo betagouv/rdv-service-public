@@ -15,6 +15,6 @@ class Rack::Attack
       "Retry-After" => (match_data[:period] - (now % match_data[:period])).to_s,
     }
 
-    [429, headers, [{ errors: ["Limite d'appels API atteinte. Merci de patienter.\n"] }.to_json]]
+    [429, headers, [{ errors: ["Limite d'appels API atteinte. Merci de patienter."] }.to_json]]
   end
 end
