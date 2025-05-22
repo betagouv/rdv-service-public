@@ -16,12 +16,12 @@
         .fr-input-group
           .fr-input-group__text
             - if @form.role_agent?
-              | Vous êtes un·e agent du service public
+              |> Vous êtes un·e agent du service public
             - elsif @form.role_usager?
-              | Vous êtes un·e particulier
+              |> Vous êtes un·e particulier
             - else
               - raise "Role not supported"
-            = link_to "modifier…", aide_aiguillage_role_path, class: "fr-link fr-link--secondary fr-ml-1w fr-text--sm"
+            = link_to "modifier", aide_aiguillage_role_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line", title: "Modifier votre choix"
       - else
         = f.dsfr_select :role,
           [["Vous êtes un·e particulier", :usager], ["Vous êtes un·e agent du service public", :agent]],
