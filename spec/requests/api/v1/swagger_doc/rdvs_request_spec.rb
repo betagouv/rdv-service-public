@@ -46,6 +46,8 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
       end
+
+      it_behaves_like "an endpoint protected against floods that returns 429 - too_many_requests", :get, "/api/v1/rdvs"
     end
   end
 

@@ -33,13 +33,13 @@ module ApiSpecSharedExamples
     end
   end
 
-  RSpec.shared_context "an endpoint that returns 429 - too_many_requests" do |method, path|
+  RSpec.shared_context "an endpoint protected against floods that returns 429 - too_many_requests" do |method, path|
     response 429, "Renvoie 'too_many_requests' quand la limite d'appels est atteinte" do
       schema "$ref" => "#/components/schemas/error_too_many_request"
 
       before do
-        Rack::Attack.enabled = true
-        Rack::Attack.reset!
+        Rack::Attack.enabled = true # it is disabled in a before(:suite) in rails_helper.rb
+        Rack::Attack.reset! # this clears the recorded count by IP
         3.times do
           send(method, path)
         end

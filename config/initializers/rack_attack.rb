@@ -1,9 +1,9 @@
 class Rack::Attack
-  throttle("requests by ip", limit: Rails.configuration.x.rack_attack.limit, period: 60) do |request|
-    public_api_controllers = %w[public_link]
-    request.ip if request.path.match("api/v1/(#{public_api_controllers.join('|')})|public_api/public_link")
+  throttle("API throttling by IP", limit: Rails.env.test? ? 2 : 50, period: 60) do |request|
+    request.ip if request.path.match(%r{api/v1/})
   end
 
+  # cf https://github.com/rack/rack-attack/tree/6-stable?tab=readme-ov-file#ratelimit-headers-for-well-behaved-clients
   self.throttled_responder = lambda do |request|
     match_data = request.env["rack.attack.match_data"]
     now = match_data[:epoch_time]
