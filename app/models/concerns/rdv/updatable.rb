@@ -10,35 +10,6 @@ module Rdv::Updatable
     save_and_notify(author, &block)
   end
 
-  # rubocop:disable Metrics/PerceivedComplexity
-  def save_and_notify(author)
-    Rdv.transaction do
-      self.updated_at = Time.zone.now
-      previous_participations = participations.select(&:persisted?)
-      remove_duplicate_participations
-
-      set_created_by_for_new_participations(author)
-
-      if status_changed? && valid?
-        self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
-        change_participation_statuses
-        # Reload is needed after .persisted? method call.
-        participations.reload
-      end
-
-      should_save = block_given? ? yield(self) : true
-      # yield RDV before saving, can be used to run policy check
-
-      if should_save && save
-        notify!(author, previous_participations)
-        true
-      else
-        false
-      end
-    end
-  end
-  # rubocop:enable Metrics/PerceivedComplexity
-
   def participation_token(user_id)
     # For user invited with tokens, nil default for not invited users
     @notifier&.participations_tokens_by_user_id&.fetch(user_id, nil)
@@ -81,6 +52,35 @@ module Rdv::Updatable
   end
 
   private
+
+  # rubocop:disable Metrics/PerceivedComplexity
+  def save_and_notify(author)
+    Rdv.transaction do
+      self.updated_at = Time.zone.now
+      previous_participations = participations.select(&:persisted?)
+      remove_duplicate_participations
+
+      set_created_by_for_new_participations(author)
+
+      if status_changed? && valid?
+        self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
+        change_participation_statuses
+        # Reload is needed after .persisted? method call.
+        participations.reload
+      end
+
+      should_save = block_given? ? yield(self) : true
+      # yield RDV before saving, can be used to run policy check
+
+      if should_save && save
+        notify!(author, previous_participations)
+        true
+      else
+        false
+      end
+    end
+  end
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def remove_duplicate_participations
     existing_participations = Participation.where(rdv_id: id).to_a # pour éviter une requête N+1
