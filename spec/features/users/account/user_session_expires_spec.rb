@@ -1,5 +1,5 @@
 RSpec.describe "User session expiration" do
-  let(:password) { ENV["SEED_PASSWORD"] }
+  let(:password) { "Rdvservicepublictest1!" }
   let!(:user) { create(:user, password: password, password_confirmation: password) }
 
   def expect_to_be_logged_in

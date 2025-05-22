@@ -42,7 +42,7 @@ RSpec.describe "User signs up and signs in" do
       open_email(invited_user.email)
       current_email.click_link "Accepter l'invitation"
       expect(page).to have_content("Inscription")
-      fill_in "Mot de passe", with: ENV["SEED_PASSWORD"]
+      fill_in "Mot de passe", with: "Rdvservicepublictest1!"
       click_on "Enregistrer"
       expect(page).to have_current_path(root_path, ignore_query: true)
       expect_flash_info(I18n.t("devise.invitations.updated"))
@@ -101,7 +101,7 @@ RSpec.describe "User signs up and signs in" do
         click_on "Enregistrer"
         # expect(page.status_code).to eq 422 # je ne sais pas trop pourquoi devise renvoie une 422 ici
         expect(page).to have_content("Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères")
-        fill_in "Mot de passe", with: ENV["SEED_PASSWORD"]
+        fill_in "Mot de passe", with: "Rdvservicepublictest1!"
         click_on "Enregistrer"
         expect(page).to have_content("Votre mot de passe a été édité avec succès, votre connexion est désormais active")
         expect(page).to have_content("Bienvenue !")

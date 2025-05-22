@@ -43,7 +43,7 @@ agent_mairie_de_sannois = Agent.new(
   uid: "alain.mairie@rdv-mairie-demo.fr",
   first_name: "Alain",
   last_name: "Mairie",
-  password: ENV["SEED_PASSWORD"],
+  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   services: [service_titres],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [

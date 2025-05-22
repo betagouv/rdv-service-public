@@ -27,7 +27,7 @@ superviseur_gendarmerie = Agent.new(
   last_name: "Fictif",
   email: "superviseur.fictif@staging.rdv-service-public.fr",
   uid: "superviseur.fictif@staging.rdv-service-public.fr",
-  password: ENV["SEED_PASSWORD"],
+  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   display_saturdays: true,
   services: [service_gendarmerie],
   roles_attributes: [

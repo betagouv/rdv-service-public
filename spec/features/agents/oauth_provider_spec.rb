@@ -19,7 +19,7 @@ RSpec.describe "OAuth provider", js: true do
   end
 
   let!(:agent) do
-    create(:agent, email: "francis@factice.org", password: ENV["SEED_PASSWORD"])
+    create(:agent, email: "francis@factice.org", password: "Rdvservicepublictest1!")
   end
 
   before do
