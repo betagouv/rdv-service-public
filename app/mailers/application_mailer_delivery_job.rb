@@ -12,11 +12,11 @@ class ApplicationMailerDeliveryJob < ActionMailer::MailDeliveryJob
     Rails.logger.error("exception.cause.inspect: #{exception.cause.inspect}")
     Rails.logger.error("executions: #{executions}")
 
-    case exception.cause
-    when ActiveRecord::RecordNotFound, GoodJob::InterruptError
+    if exception.cause.instance_of?(ActiveRecord::RecordNotFound)
       Rails.logger.error(exception.message)
     else
       Sentry.capture_exception(exception)
+      Rails.logger.error("Calling retry_job")
       retry_job
     end
   end
