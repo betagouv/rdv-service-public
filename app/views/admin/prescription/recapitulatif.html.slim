@@ -16,7 +16,7 @@ main.container
                   | Usager :&nbsp;
                   = UsersHelper.reverse_full_name_and_notification_coordinates(@rdv_wizard.participation.user)
                 .col-auto
-                  = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
+                  = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params), title: "Modifier l'usager"
             - if current_territory.enable_context_field
               li.list-group-item
                 .row
@@ -25,7 +25,7 @@ main.container
                     |> Contexte :
                     = @rdv_wizard.context&.strip&.truncate_words(6)&.presence || "N/A"
                   .col-auto
-                    = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
+                    = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params), title: "Modifier le contexte"
 
           .row.mt-2
             .col.text-right

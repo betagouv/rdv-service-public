@@ -7,7 +7,7 @@
           | Motif :&nbsp;
           = context.first_matching_motif.name
         .col-auto
-          = link_to "modifier", path_to_service_selection(params)
+          = link_to "modifier", path_to_service_selection(params), title: "Modifier le motif"
     - case context.first_matching_motif.location_type
     - when Motif.location_types[:phone]
       li.list-group-item
@@ -30,7 +30,7 @@
               | Nombre de pré-demandes ANTS à déposer :&nbsp;
               = context.ants_pre_demandes_count
             .col-auto
-              = link_to "modifier", path_to_ants_pre_demandes_count_selection(params)
+              = link_to "modifier", path_to_ants_pre_demandes_count_selection(params), title: "Modifier le nombre de pré-demandes ANTS"
       - if context.lieu
         li.list-group-item
           .row
@@ -39,6 +39,6 @@
               | Lieu :&nbsp;
               = context.lieu.full_name
             .col-auto
-              = link_to "modifier", path_to_organisation_selection(params)
+              = link_to "modifier", path_to_organisation_selection(params), title: "Modifier le lieu"
     - else
       = raise "unrecognized location_type: #{rdv_wizard.motif.location_type.inspect}"
