@@ -4,7 +4,7 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
-    = form_for resource, as: :user, url: registration_path(resource_name), builder: Dsfr::FormBuilder do |f|
+    = form_for resource, as: :user, url: registration_path(resource_name), builder: Dsfr::FormBuilder, display_required_tags: false do |f|
       - if current_domain.france_connect_enabled || params[:force_franceconnect].present?
         h2 Se créer un compte avec FranceConnect
         = render "common/franceconnect_button"
@@ -12,14 +12,15 @@
         p.fr-hr-or ou
 
       h2 Se créer un compte avec un email
+      p.fr-hint-text Sauf mention contraire, tous les champs sont obligatoires.
       = render "devise/shared/dsfr_error_messages", resource: resource
       .fr-grid-row.fr-grid-row--gutters.fr-mb-5v
         .fr-col-6
           = f.dsfr_text_field :first_name, label: "Prénom", required: true, autocomplete: "given-name"
         .fr-col-6
           = f.dsfr_text_field :last_name, label: "Nom", required: true, autocomplete: "family-name"
-      = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true
-      = f.dsfr_phone_field :phone_number, label: "Numéro de téléphone", hint: "Vous recevrez les rappels et les informations du RDV sur ce numéro.", autocomplete: "tel"
+      = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true, autocomplete: "email"
+      = f.dsfr_phone_field :phone_number, label: "Numéro de téléphone", hint: "Facultatif. Vous recevrez les rappels et les informations du RDV sur ce numéro.", autocomplete: "tel"
 
       .form-group
         small
@@ -30,7 +31,6 @@
         = f.submit "Je m’inscris", class: "fr-btn"
 
     hr.fr-my-2w
+    h2 Vous avez un compte ?
     .rdv-text-align-center
-      p
-        | Vous avez un compte ?
-        =< link_to "Se connecter", new_session_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)), class: "fr-link"
+      =< link_to "Se connecter", new_session_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)), class: "fr-btn fr-btn--secondary"
