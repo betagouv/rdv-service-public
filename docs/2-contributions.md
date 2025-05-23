@@ -51,7 +51,7 @@ make lint_brakeman        Security Checker
 make autocorrect          Fix autocorrectable lint issues
 ```
 
-Vous pouvez utiliser un pre-commit hook pour faire tourner les linters sur les fichiers modifiers.
+Vous pouvez utiliser un pre-commit hook pour faire tourner les linters sur les fichiers modifiés.
 Pour cela ajoutez le fichier `.git/hooks/pre-commit` suivant :
 
 ```bash
