@@ -1,6 +1,8 @@
 class Rack::Attack
-  throttle("API throttling by IP", limit: Rails.env.test? ? 2 : 50, period: 60) do |request|
-    request.ip if request.path.match(%r{api/v1/})
+  throttle("API throttling by IP", limit: Rails.env.test? ? 2 : 20, period: 60) do |request|
+    if request.path.match(%r{api/v1/rdvs}) && request.get?
+      "#{request.ip}-api-rdvs-org-#{params[:organisation_id]}"
+    end
   end
 
   # cf https://github.com/rack/rack-attack/tree/6-stable?tab=readme-ov-file#ratelimit-headers-for-well-behaved-clients
