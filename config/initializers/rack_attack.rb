@@ -1,4 +1,6 @@
 class Rack::Attack
+  class ThrottleError < StandardError; end
+
   throttle("formulaire de demande de support - throttling par IP", limit: Rails.env.test? ? 2 : 10, period: 1.minute) do |request|
     if request.path.match(%r{aide/demande_support}) && request.post?
       request.ip
@@ -6,8 +8,9 @@ class Rack::Attack
   end
 
   Rack::Attack.throttled_responder = lambda do |request|
+    exception = ThrottleError.new(request.env["rack.attack.matched"])
     Sentry.set_context("rack_attack_match_data", request.env["rack.attack.match_data"])
-    Sentry.capture_exception(ThrottleError.new(request.env["rack.attack.matched"]), level: :warning)
+    Sentry.capture_exception(exception, level: :warning)
 
     [302, { "Location" => "/500.html" }, []]
   end

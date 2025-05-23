@@ -38,7 +38,9 @@ RSpec.describe "demandes supports", type: :request do
             expect(response).to redirect_to(root_path)
           end
           post(aide_demande_support_path, params:)
-          expect(response.status).to eq(429)
+          expect(response).to redirect_to("/500.html")
+          expect(sentry_events.last.level).to eq(:warning)
+          expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
         end
       end
     end
