@@ -56,4 +56,15 @@ RSpec.describe ApplicationMailerDeliveryJob do
 
     ActiveRecord::Base.establish_connection # teardown DB failure simulation
   end
+
+  it "discards job when user does not have an email" do
+    user = create(:user, email: nil)
+    MyMailer.a_sample_email(user).deliver_later
+    perform_enqueued_jobs
+    expect(enqueued_jobs.count).to eq 0
+    expect(performed_jobs.count).to eq 1
+    expect(performed_jobs.last["job_class"]).to eq("ApplicationMailerDeliveryJob")
+    expect(sentry_events.last.exception.values.first.type).to eq("ArgumentError")
+    expect(sentry_events.last.exception.values.first.value).to match(/SMTP To address may not be blank/)
+  end
 end
