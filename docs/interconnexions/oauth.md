@@ -14,7 +14,7 @@ sequenceDiagram
 
     Agent->>+DS: Clic sur le bouton <br> "Se connecter avec RDV Service Public"
     DS-->>-Agent: Redirige vers <br> rdv.anct.gouv.fr/oauth/authorize?state=12345<br>&redirect_uri=demarches-simplifiees.fr/callback
-    
+
     Agent->>+RDVSP: Suit la redirection
     RDVSP-->>-Agent: Affiche la page d'autorisation
     Agent->>+RDVSP: Clic sur "J'autorise DS à accéder à mes données RDV-SP"
@@ -31,26 +31,9 @@ sequenceDiagram
     deactivate DS
 ```
 
-## Itérer en environnement de développement
+## Développement
 
-### App Sinatra
+Une application Sinatra de dev simule le comportement d’un client distant comme Mon Suivi Social : `scripts/mon_suivi_social_local.rb`.
+Elle est lancée par défaut dans le `Procfile.dev` et accessible sur : `http://localhost:3010`.
 
-Une app Sinatra simulant un client web externe permet de faire des tests en local :
-
-```sh
-bundle exec ruby spec/support/fake_oauth_client.rb
-```
-
-# Tester le parcours des RDV plans
-
-Pour tester le parcour de RDV plans en local vous pouvez lancer :
-
-```ruby
-RdvPlan.create!(
-    planning_agent: Agent.find_by(email: "martine@demo.rdv-solidarites.fr"),
-    user: User.find_by(email: "patricia_duroy@demo.rdv-solidarites.fr"),
-    oauth_application: OauthApplication.last
-)
-```
-
-Puis vous pouvez vous connecter en tant que martine et accéder à la page suivante : http://www.rdv-mairie.localhost:3000/agents/rdv_plans/RDV_PLAN_ID/edit_starts_at
+Elle permet de faire un parcours de prise de RDV via les RDV plans.
