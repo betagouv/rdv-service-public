@@ -53,7 +53,7 @@ do |f|
               ul
                 - @sectorisation_test_form.available_motifs_from_departement_organisations.to_a.group_by { [_1.organisation, _1.service] }.each do |tuple, motifs|
                   - organisation, service = tuple
-                  li= t("sectorisation_tests.departement_motifs_count", count: motifs.count, organisation: organisation.name, service: service.short_name)
+                  li= t("sectorisation_tests.departement_motifs_count", count: motifs.count, organisation: organisation.name, service: service.name)
                   ul
                     - motifs.each do |motif|
                       li= motif_name_and_location_type(motif)
@@ -65,7 +65,7 @@ do |f|
           ul
             - @sectorisation_test_form.available_motifs_unique_names_and_location_types_by_service.each do |service, motifs|
               li
-                | Service #{service.short_name}: #{motifs.count} motifs disponibles
+                | Service #{service.name}: #{motifs.count} motifs disponibles
                 ul
                   - motifs.each do |motif|
                     li= motif_name_and_location_type(motif)

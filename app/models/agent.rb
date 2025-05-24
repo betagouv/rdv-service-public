@@ -135,15 +135,15 @@ class Agent < ApplicationRecord
   end
 
   def reverse_full_name_and_service
-    services.present? ? "#{reverse_full_name_or_email} (#{services_short_names})" : full_name
+    services.present? ? "#{reverse_full_name_or_email} (#{services_names})" : full_name
   end
 
   def full_name_and_service
-    services.present? ? "#{full_name_or_email} (#{services_short_names})" : full_name
+    services.present? ? "#{full_name_or_email} (#{services_names})" : full_name
   end
 
-  def services_short_names
-    services.map(&:short_name).join(", ")
+  def services_names
+    services.map(&:name).join(", ")
   end
 
   def complete?
