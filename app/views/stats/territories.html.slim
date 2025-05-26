@@ -13,7 +13,7 @@
         li = link_to "Statistiques - #{territory}", stats_territory_path(territory:)
 
     .fr-callout.fr-my-8w
-      - if ENV["APP"] == "production-rdv-solidarites"
+      - if ENV["DEFAULT_APP_IS_RDV_SOLIDARITES"] == "true"
         | Les structures dont les statistiques sont accessibles ici sont celles de RDV Solidarités et RDV Aide Numérique.&#32;
         | Vous pouvez consulter les statistiques des structures de l'instance RDV Service Public sur&#32;
         = link_to "rdv.anct.gouv.fr/stats/territories", "https://rdv.anct.gouv.fr/stats/territories", title: "Page de statistiques RDV Service Public - Nouvelle fenêtre", class: "fr-link", target: "_blank", rel: "noopener external"
