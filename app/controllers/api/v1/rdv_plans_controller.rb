@@ -42,8 +42,8 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
       user = User.find(user_params[:id])
 
-      unless user.organisation_ids.intersect?(current_agent.organisation_ids)
-        # L'agent et l'usager n'ont pas d'organisations en commun
+      # La présence de current_organisation dans Agent::UserPolicy nous empêche de réutiliser la policy directement ici
+      unless user.organisation_ids.intersect?(current_agent.organisation_ids) || RdvPlan.where(planning_agent: current_agent, user: user).any?
         raise Pundit::NotAuthorizedError
       end
 
