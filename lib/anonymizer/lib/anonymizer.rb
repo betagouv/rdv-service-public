@@ -32,16 +32,22 @@ module Anonymizer
 
   def self.exhaustivity_errors(config: nil)
     config ||= default_config
-    errors = (
-      db_connection.tables.to_set -
-      config.table_names.to_set
-    ).map { "missing rules for table #{_1}" }
-    config.table_configs.each do |table_config|
-      errors += Anonymizer::Table
-        .new(table_config:)
-        .unidentified_column_names
-        .map { "missing rule for column #{table_config.table_name}.#{_1}" }
+    errors = []
+
+    db_connection.tables.each do |table_name|
+      table_config = config.table_config_by_name(table_name)
+
+      if table_config
+        errors + Anonymizer::Table
+          .new(table_config:)
+          .unidentified_column_names
+          .map { "missing rule for column #{table_config.table_name}.#{_1}" }
+
+      else
+        errors << "missing rules for table #{table_name}"
+      end
     end
+
     errors
   end
 

@@ -14,16 +14,16 @@ module ApplicationHelper
     end
   end
 
-  def alert_dsfr_class_for(alert)
+  def alert_dsfr_type_for(alert)
     case alert
     when :success
-      "fr-alert--success"
+      :success
     when :alert
-      "fr-alert--warning"
+      :warning
     when :error
-      "fr-alert--error"
+      :error
     when :notice
-      "fr-alert--info"
+      :info
     else
       raise ArgumentError, "alert should be a key among :success, :alert, :error or :notice"
     end

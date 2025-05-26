@@ -1,6 +1,6 @@
 /# locals: (titles_and_paths:, current_page_title:)
 
-= dsfr_breadcrumbs(classes: "fr-mb-0 fr-ml-2w") do |b|
+= dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
   - titles_and_paths.each do |title, path|
     = b.with_breadcrumb label: title, href: path
   = b.with_breadcrumb label: current_page_title

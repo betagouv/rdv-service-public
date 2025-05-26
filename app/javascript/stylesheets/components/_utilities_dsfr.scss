@@ -126,14 +126,6 @@
   background-image: none;
 }
 
-// reset CSS des styles par défaut des navigateurs sur les dialogs
-.rdv-dialog-reset {
-  border: none;
-  position: relative;
-  padding: 0;
-  width: auto;
-}
-
 // pour pouvoir aligner le groupe de boutons à gauche sur desktop mais centré sur mobile
 .rdv-btns-group--left-md,
 .rdv-btns-group--left-md li {
