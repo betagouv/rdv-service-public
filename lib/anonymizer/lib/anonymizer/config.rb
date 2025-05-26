@@ -55,12 +55,6 @@ module Anonymizer
       @errors << "table config should contain a name"
     end
 
-    def validate_rules_or_truncated
-      return true if truncated? || anonymized_column_names.present? || non_anonymized_column_names.present?
-
-      @errors << "table #{table_name} should have anonymization rules or be truncated"
-    end
-
     def validate_not_both_rules_and_truncated
       return true if !truncated? || (anonymized_column_names.blank? && non_anonymized_column_names.blank?)
 
