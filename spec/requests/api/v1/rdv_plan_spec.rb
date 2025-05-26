@@ -159,9 +159,7 @@ RSpec.describe "RDV Plan API" do
       let(:agent) { create(:agent, basic_role_in_organisations: []) }
 
       context "and the instance is RDV Service Public" do
-        stub_env_with(
-          AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
-        )
+        stub_env_with(DEFAULT_APP_IS_RDV_SOLIDARITES: nil)
         it "shows a url with the correct domain name" do
           post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
           expect(parsed_response_body.dig("rdv_plan", "url")).to include("www.rdv-mairie-test.localhost")

@@ -215,10 +215,10 @@ class Domain
   end
 
   def self.default_domain_for_current_instance
-    if ENV["AGENT_CONNECT_RDVSP_CLIENT_ID"].present?
-      RDV_MAIRIE
-    else
+    if ENV["DEFAULT_APP_IS_RDV_SOLIDARITES"] == "true"
       RDV_SOLIDARITES
+    else
+      RDV_MAIRIE
     end
   end
 
