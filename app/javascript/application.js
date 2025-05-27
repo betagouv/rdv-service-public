@@ -14,7 +14,6 @@ import './stylesheets/print';
 new Modal();
 
 $(document).on('turbolinks:load', function() {
-  //new PlacesInputs();
   new NameInitialsForm();
   new AddressAutocomplete();
   DsfrNewPassword();

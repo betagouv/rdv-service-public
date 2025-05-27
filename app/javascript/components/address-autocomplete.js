@@ -30,7 +30,7 @@ class AddressAutocomplete {
 
       status = 'loading'
 
-      const url = "https://api-adresse.data.gouv.fr/search/"
+      const url = "https://data.geopf.fr/geocodage/search/"
       const searchParams = new URLSearchParams()
       searchParams.append("q", query)
       //if (this.addressType) searchParams.append("type", this.addressType)

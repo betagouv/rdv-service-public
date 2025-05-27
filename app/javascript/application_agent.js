@@ -8,7 +8,6 @@ import { Menu } from './components/menu'
 import { Modal } from './components/modal'
 import { ServiceFilterForMotifsSelects } from './components/service-filter-for-motifs-selects'
 import { SubmitOnChange } from './components/submit-on-change'
-import { PlacesInputs } from './components/places-inputs.js'
 import { RdvWizardStep2 } from './components/rdv_wizard_step2.js'
 import { RdvLieu } from './components/rdv_lieu.js'
 import { PastDateAlert } from './components/past-date-alert.js'
@@ -62,10 +61,6 @@ $(document).on('hide.bs.modal', '.modal', function(e) {
   $("[data-behaviour='datepicker'], [data-behaviour='datetimepicker'], [data-behaviour='timepicker']").datetimepicker('destroy')
 })
 
-$(document).on('show.bs.modal', '.modal', function(e) {
-  new PlacesInputs()
-})
-
 $(document).on('turbolinks:load', function() {
   let menu = new Menu()
 
@@ -74,8 +69,6 @@ $(document).on('turbolinks:load', function() {
   $(window).on('resize', function(e) {
     e.preventDefault()
   })
-
-  new PlacesInputs()
 
   new Datetimepicker()
 
