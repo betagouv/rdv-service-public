@@ -125,3 +125,14 @@ li.nav-item {
 .fr-table .fr-btns-group .fr-btn {
   margin-bottom: 0;
 }
+
+// << A SUPPRIMER À LA SUPPRESSION DE BOOTSTRAP REBOOT
+// Suppression d’une marge introduite par Bootstrap Reboot
+.fr-notice p {
+  margin-bottom: 0;
+}
+
+.fr-alert p {
+  margin: var(--text-spacing);
+}
+// >> A SUPPRIMER À LA SUPPRESSION DE BOOTSTRAP REBOOT
