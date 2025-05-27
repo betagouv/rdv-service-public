@@ -10,7 +10,7 @@ RSpec.describe CustomDeviseMailer, "#domain" do
     let(:user) { create(:user) }
 
     context "on the RDV Solidarités instance" do
-      stub_env_with(DEFAULT_APP_IS_RDV_SOLIDARITES: "true")
+      stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: "true")
 
       it "uses RDV_SOLIDARITES" do
         expect_to_use_domain(Domain::RDV_SOLIDARITES)
@@ -18,7 +18,7 @@ RSpec.describe CustomDeviseMailer, "#domain" do
     end
 
     context "on another instance" do
-      stub_env_with(DEFAULT_APP_IS_RDV_SOLIDARITES: nil)
+      stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
 
       it "uses RDV Service Public" do
         expect_to_use_domain(Domain::RDV_MAIRIE)
