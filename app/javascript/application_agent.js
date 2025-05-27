@@ -29,6 +29,7 @@ import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './com
 import {CheckAll, UnCheckAll} from './components/check-all'
 import './components/motifs_table'
 import './components/calendar'
+import './components/calendar/agenda-multi-agent'
 import './components/browser-detection'
 import './components/clear-field-on-focus.js'
 

@@ -1,13 +1,20 @@
 class Admin::Api::Agenda::RdvsController < Admin::Api::BaseController
   def index
-    agent = Agent.find(params[:agent_id])
+    agent_ids = Array(params[:agent_ids].presence) + Array(params[:agent_id].presence)
+
+    agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
+      .active
+      .where(id: agent_ids)
+
     @organisation = Organisation.find(params[:organisation_id])
 
     # Nous voulons afficher tous les RDVs de l'agent en question.
     # Pour chacun des RDV, nous appelons ci-dessous la policy pour déterminer son affichage.
-    skip_authorization
-    rdvs = agent.rdvs.includes(:organisation, :motif, :users, :agents_rdvs, motif: [:service])
-    rdvs = rdvs.where(starts_at: time_range_params)
+    rdvs = Rdv
+      .joins(:agents_rdvs)
+      .where(agents_rdvs: { agent_id: agents })
+      .includes(:organisation, :motif, :users, :agents_rdvs, motif: [:service])
+      .where(starts_at: time_range_params)
 
     # preload current agent relations to avoid N+1 queries
     current_agent.roles.load
