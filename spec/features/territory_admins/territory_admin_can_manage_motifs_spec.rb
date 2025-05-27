@@ -37,7 +37,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       expect(page).to have_content("Consultation prénatale")
       expect(page).to have_content("Suivi après naissance")
 
-      motif_suivi_apres_naissance.archive!
+      motif_suivi_apres_naissance.archive
       visit admin_territory_motifs_path(territory)
       expect(page).to have_content("Consultation prénatale")
       expect(page).not_to have_content("Suivi après naissance")
@@ -301,11 +301,25 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
       expect(page).to have_content("Le motif #{motif.name} a été archivé")
     end
+
+    context "when the motif in invalid" do
+      before do
+        # fait échouer la validation :cant_be_for_secretariat_and_follow_up
+        motif.update_columns(for_secretariat: true, follow_up: true) # rubocop:disable Rails/SkipsModelValidations
+      end
+
+      it "explains why the motif can't be archived" do
+        visit admin_territory_motifs_path(territory)
+        expect(page).to have_content(motif.name)
+        expect { click_on "Archiver" }.not_to change { motif.reload.archived? }
+        expect(page).to have_content(%(Erreur lors de l'archivage car le motif est invalide : Motif accessible au secrétariat ne peut être activé si "RDV de suivi" est activé))
+      end
+    end
   end
 
   describe "un-archiving" do
     let!(:organisation) { create(:organisation, territory: territory) }
-    let!(:motif) { create(:motif, organisation: organisation).tap(&:archive!) }
+    let!(:motif) { create(:motif, organisation: organisation).tap(&:archive) }
 
     before do
       agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
@@ -335,7 +349,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
 
   describe "destroying a motif" do
     let!(:organisation) { create(:organisation, territory: territory) }
-    let!(:motif) { create(:motif, organisation: organisation).tap(&:archive!) }
+    let!(:motif) { create(:motif, organisation: organisation).tap(&:archive) }
 
     before do
       agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
@@ -343,7 +357,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
 
     context "when it was not used for any RDV" do
       it "removes it from the database" do
-        motif.archive!
+        motif.archive
 
         visit admin_territory_motifs_path(territory, current_tab: "archived")
         expect { click_on "Supprimer" }.to change { Motif.exists?(motif.id) }.from(true).to(false)
