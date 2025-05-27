@@ -1,0 +1,10 @@
+- content_for :title, "Agenda de #{@selected_agents.map(&:full_name_or_email).join(', ')}"
+
+.fr-container.mt-4
+  .fr-grid-row
+    .fr-col
+      = form_with(url: admin_organisation_agenda_multi_agents_path ,method: :get) do |form|
+        .rdv-flex
+          - collection = @selectable_agents.map { [_1.full_name_or_email, _1.id] }
+          = form.select :agent_ids, collection, { multiple: true, selected: @selected_agents.map(&:id) }, { class: "select2-input", style: "width: 80%" }
+          = form.submit "Appliquer", { class: "fr-btn" }

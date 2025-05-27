@@ -269,6 +269,7 @@ Rails.application.routes.draw do
         resources :agent_agendas, only: %i[show] do
           put :toggle_displays, on: :member
         end
+        resources :agenda_multi_agents, only: [:index]
         resources :agent_intervenants, only: %i[update]
         resources :agents, except: %i[show] do
           resources :absences, only: %i[index new]

@@ -57,6 +57,11 @@ nav.left-side-menu-wrapper
               = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item side-menu__item--small"
 
         li
+          = active_link_to(admin_organisation_agenda_multi_agents_path(current_organisation), class: "side-menu__item")
+            span.fr-icon-calendar-2-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
+            | Vue multi-agendas
+
+        li
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
             span.fr-icon-group-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Usagers
