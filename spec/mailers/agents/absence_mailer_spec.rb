@@ -22,15 +22,16 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
       end
 
       describe "using the agent domain's branding" do
+        stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: "true")
         context "when agent belongs to an organisation with rdv_solidarites verticale" do
           before { agent.organisations.first.update!(verticale: :rdv_solidarites) }
 
           it "works" do
             mail = described_class.with(absence: absence).send("absence_#{action}")
-            expect(mail.subject).to start_with("RDV Service Public - Indisponibilité")
-            expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_service_public.png))
-            expect(mail.html_part.body.to_s).to include("Voir sur RDV Service Public") unless action == :destroyed
-            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-mairie-test.localhost/))
+            expect(mail.subject).to start_with("RDV Solidarités - Indisponibilité")
+            expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
+            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarites") unless action == :destroyed
+            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/))
           end
         end
 
@@ -39,10 +40,10 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
 
           it "works" do
             mail = described_class.with(absence: absence).send("absence_#{action}")
-            expect(mail.subject).to start_with("RDV Service Public - Indisponibilité")
-            expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_service_public.png))
-            expect(mail.html_part.body.to_s).to include("Voir sur RDV Service Public") unless action == :destroyed
-            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-mairie-test.localhost/))
+            expect(mail.subject).to start_with("RDV Solidarités - Indisponibilité")
+            expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
+            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarites") unless action == :destroyed
+            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/))
           end
         end
 
