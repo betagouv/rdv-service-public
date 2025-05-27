@@ -30,7 +30,7 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
             mail = described_class.with(absence: absence).send("absence_#{action}")
             expect(mail.subject).to start_with("RDV Solidarités - Indisponibilité")
             expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
-            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarites") unless action == :destroyed
+            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités") unless action == :destroyed
             expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/))
           end
         end
@@ -42,7 +42,7 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
             mail = described_class.with(absence: absence).send("absence_#{action}")
             expect(mail.subject).to start_with("RDV Solidarités - Indisponibilité")
             expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
-            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarites") unless action == :destroyed
+            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités") unless action == :destroyed
             expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/))
           end
         end
