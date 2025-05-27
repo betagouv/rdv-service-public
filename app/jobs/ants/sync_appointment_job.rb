@@ -4,6 +4,8 @@ module Ants
   class SyncAppointmentJob < ApplicationJob
     # empêcher deux jobs parallèles avec le même ants_pre_demande_number
     include GoodJob::ActiveJobExtensions::Concurrency
+    include ExtendedRetryStrategyConcern
+
     good_job_control_concurrency_with(
       perform_limit: 1,
       key: -> { "#{self.class.name}-rdv-#{arguments.last[:ants_pre_demande_number]}" }
@@ -11,8 +13,6 @@ module Ants
     discard_on(MissingMeetingPointId) { |_job, error| Sentry.capture_exception(error) }
     # useful to debug tests and avoid retries
     # discard_on(StandardError) { |_job, ex| raise ex }
-
-    include ExtendedRetryStrategyConcern
 
     queue_as :latency_5m
 
