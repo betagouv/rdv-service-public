@@ -1,0 +1,12 @@
+/ Link to the "First" page
+/ - available local variables
+/   url:           url to the first page
+/   current_page:  a page object for the currently displayed page
+/   total_pages:   total number of pages
+/   per_page:      number of items to fetch per page
+/   remote:        data-remote
+
+- if current_page.first?
+  = content_tag("a", "Première page", title: "Première page", role: "link", class: "fr-pagination__link fr-pagination__link--first", aria: { disabled: true })
+- else
+  = link_to "Première page", url, title: "Première page", role: "link", class: "fr-pagination__link fr-pagination__link--first"
