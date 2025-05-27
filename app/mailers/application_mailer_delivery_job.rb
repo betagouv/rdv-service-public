@@ -18,10 +18,10 @@ class ApplicationMailerDeliveryJob < ActionMailer::MailDeliveryJob
     end
   end
 
-  # to catch a specific ArgumentError by its message, we have to override perform and rescue there
+  # to catch a specific ArgumentError by its message, we need to rescue and re-raise.
   # using discard_on or rescue_from is too broad and does not allow re-raising
-  def perform(*, **)
-    super
+  around_perform do |_job, block|
+    block.call
   rescue ArgumentError => e
     if e.message.match(/SMTP To address may not be blank/)
       raise MailArgumentError, e.message
