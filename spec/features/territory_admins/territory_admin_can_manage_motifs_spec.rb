@@ -303,16 +303,15 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
 
     context "when the motif in invalid" do
-      before do
+      it "archives anyway" do
         # fait échouer la validation :cant_be_for_secretariat_and_follow_up
         motif.update_columns(for_secretariat: true, follow_up: true) # rubocop:disable Rails/SkipsModelValidations
-      end
+        expect(motif).to be_invalid
 
-      it "explains why the motif can't be archived" do
         visit admin_territory_motifs_path(territory)
         expect(page).to have_content(motif.name)
-        expect { click_on "Archiver" }.not_to change { motif.reload.archived? }
-        expect(page).to have_content(%(Erreur lors de l'archivage car le motif est invalide : Motif accessible au secrétariat ne peut être activé si "RDV de suivi" est activé))
+        expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
+        expect(page).to have_content("Le motif #{motif.name} a été archivé")
       end
     end
   end

@@ -98,11 +98,8 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
   def archive
     motif = Motif.active.find(params[:id])
     authorize(motif, policy_class: Agent::MotifPolicy)
-    if motif.archive
-      flash[:notice] = "Le motif #{link_to_motif(motif)} a été archivé."
-    else
-      flash[:error] = "Erreur lors de l'archivage car le motif est invalide : #{motif.errors.full_messages.join(', ')}"
-    end
+    motif.archive
+    flash[:notice] = "Le motif #{link_to_motif(motif)} a été archivé."
     redirect_back fallback_location: admin_territory_motifs_path(current_territory)
   end
 

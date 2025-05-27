@@ -51,10 +51,20 @@ RSpec.describe Motif, type: :model do
     end
   end
 
-  describe "#archive!" do
+  describe "#archive" do
     it "marks it deleted" do
       motif = create(:motif)
-      expect { motif.archive! }.to change { motif.reload.deleted_at }.from(nil)
+      expect { motif.archive }.to change { motif.reload.deleted_at }.from(nil)
+    end
+
+    context "when motif is invalid" do
+      it "marks deleted without validating" do
+        motif = create(:motif)
+        # fait échouer la validation :cant_be_for_secretariat_and_follow_up
+        motif.update_columns(for_secretariat: true, follow_up: true) # rubocop:disable Rails/SkipsModelValidations
+        expect(motif).to be_invalid
+        expect { motif.archive }.to change { motif.reload.deleted_at }.from(nil)
+      end
     end
   end
 

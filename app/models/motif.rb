@@ -136,7 +136,7 @@ class Motif < ApplicationRecord
 
   def archive
     self.deleted_at = Time.zone.now
-    save
+    save(validate: false)
   end
 
   def unarchive
