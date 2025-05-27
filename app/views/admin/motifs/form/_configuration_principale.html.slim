@@ -47,7 +47,7 @@ p
     p Choisissez le nombre de participants :
 
     - if disabled
-      = dsfr_alert type: :warning, size: :sm, classes: "fr-mb-2v" do
+      = dsfr_alert type: :warning, size: :sm, html_attributes: { class: "fr-mb-2v" } do
         | Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le nombre de participants
 
     = label_tag do

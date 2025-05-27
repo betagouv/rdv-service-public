@@ -4,13 +4,16 @@ html lang="fr"
     = yield :html_head_prepend
     = render "common/head_agent"
   body
+    - links = [dsfr_link_to("Contenu", "#main"), link_to("Pied de page", "#footer")]
+    = dsfr_skiplink label: "Accès rapide", links: links, html_attributes: { "data-turbolinks": "false" }
+
     = render "layouts/agent_header"
     / doit être dans <body> et pas dans <head>
     = render "layouts/headway_widget"
 
     .content-and-left-menu-wrapper
       = render "layouts/left_menu"
-      main.content-page[style="flex-grow: 1;"]
+      main#main.content-page[style="flex-grow: 1;" role="main"]
         .content
           = content_for :fil_ariane
           .fr-mx-2w= render "layouts/flash"
