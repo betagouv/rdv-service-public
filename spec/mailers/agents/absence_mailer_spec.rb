@@ -6,13 +6,13 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
 
       it "mail to absence's agent" do
         mail = described_class.with(absence: absence).send("absence_#{action}")
-        expect(mail[:from].to_s).to eq(%("RDV Solidarités" <secretariat-auto@rdv-solidarites.fr>))
+        expect(mail[:from].to_s).to eq("RDV Service Public <secretariat-auto@rdv-service-public.fr>")
         expect(mail.to).to eq(["bob@demo.rdv-solidarites.fr"])
       end
 
       it "have a good subject" do
         mail = described_class.with(absence: absence).send("absence_#{action}")
-        expect(mail.subject).to eq("RDV Solidarités - Indisponibilité #{verb} - #{absence.title}")
+        expect(mail.subject).to eq("RDV Service Public - Indisponibilité #{verb} - #{absence.title}")
       end
 
       it "has a ICS file join with UID" do
@@ -27,10 +27,10 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
 
           it "works" do
             mail = described_class.with(absence: absence).send("absence_#{action}")
-            expect(mail.subject).to start_with("RDV Solidarités - Indisponibilité")
-            expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
-            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités") unless action == :destroyed
-            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/))
+            expect(mail.subject).to start_with("RDV Service Public - Indisponibilité")
+            expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_service_public.png))
+            expect(mail.html_part.body.to_s).to include("Voir sur RDV Service Public") unless action == :destroyed
+            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-mairie-test.localhost/))
           end
         end
 
@@ -39,10 +39,10 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
 
           it "works" do
             mail = described_class.with(absence: absence).send("absence_#{action}")
-            expect(mail.subject).to start_with("RDV Solidarités - Indisponibilité")
-            expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
-            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités") unless action == :destroyed
-            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/))
+            expect(mail.subject).to start_with("RDV Service Public - Indisponibilité")
+            expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_service_public.png))
+            expect(mail.html_part.body.to_s).to include("Voir sur RDV Service Public") unless action == :destroyed
+            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-mairie-test.localhost/))
           end
         end
 
