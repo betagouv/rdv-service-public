@@ -22,7 +22,7 @@ const defaultFullCalendarConfig = () => ({
   //   2. FullCalendar affiche côte-à-côte des événements qui se chevauchent.
   //   3. Les événements de 15 minutes se chevauchent une fois gonflés.
   // Nous disons donc ici à FullCalendar de ne pas gonfler les événements courts.
-  eventMinHeight: 9,
+  eventMinHeight: 8,
 
   // This is a hack to make sure that the events will be shown at the proper time in the calendar.
   // If this is removed, there is a bug that causes the events in the calendar to be show at the wrong
