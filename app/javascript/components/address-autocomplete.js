@@ -38,6 +38,7 @@ class AddressAutocomplete {
       const url = "https://data.geopf.fr/geocodage/search/"
       const searchParams = new URLSearchParams()
       searchParams.append("q", query)
+      searchParams.append("limit", 10)
       //if (this.addressType) searchParams.append("type", this.addressType)
       fetch(`${url}?${searchParams}`).
       then(res => res.json()).then(remapBanFeatures).then(data =>
@@ -117,14 +118,15 @@ class AddressAutocomplete {
       document.querySelector('#search_form input[name="street_ban_id"]').value = confirmed.street_ban_id || ''
     }
 
-    const element = document.querySelector('.autocomplete-wrapper');
+    const element = document.querySelector('#search-address');
     const id = "autocomplete";
+
     accessibleAutocomplete({
       element: element,
       id: id,
       minLength: 3,
       source: source,
-      inputClasses: "fr-input",
+      inputClasses: "fr-input fr-input--lg",
       required: true,
       displayMenu: 'overlay',
       templates: {
