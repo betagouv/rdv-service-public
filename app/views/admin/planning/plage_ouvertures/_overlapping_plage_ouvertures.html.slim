@@ -2,7 +2,7 @@
 
 - in_scope.each do |overlapping_plage_ouverture|
   li.mb-1
-    span>= link_to("Plage d'ouverture #{overlapping_plage_ouverture.id}", edit_admin_organisation_plage_ouverture_path(overlapping_plage_ouverture.organisation, overlapping_plage_ouverture))
+    span>= link_to("Plage d'ouverture #{overlapping_plage_ouverture.id}", edit_admin_organisation_planning_plage_ouverture_path(overlapping_plage_ouverture.organisation, overlapping_plage_ouverture))
     - if local_assigns[:display_agents]
       span> de #{overlapping_plage_ouverture.agent.full_name_or_email}
     - if overlapping_plage_ouverture.lieu.present?

@@ -19,7 +19,7 @@ class PlageOuverturePresenter
     attrs = { agent_name: plage_ouverture.agent.full_name }
     if in_scope?
       attrs.merge!(
-        path: admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture),
+        path: admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture),
         lieu_name: plage_ouverture.lieu_name,
         occurrence_text: occurrence_text(plage_ouverture),
         organisation_name: plage_ouverture.organisation.name

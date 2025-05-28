@@ -8,7 +8,7 @@ RSpec.describe "Agent can search plage ouverture" do
 
   before do
     login_as(agent, scope: :agent)
-    visit admin_organisation_agent_plage_ouvertures_path(organisation, agent)
+    visit admin_organisation_planning_plage_ouvertures_path(organisation, agent)
   end
 
   it "displays the correct elements before search" do

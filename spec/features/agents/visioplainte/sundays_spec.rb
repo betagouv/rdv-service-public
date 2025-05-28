@@ -11,7 +11,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
 
     describe "plages d'ouverture" do
       it "can be created on sunday", js: true do
-        visit new_admin_organisation_agent_plage_ouverture_path(organisation_id: organisation.id, agent_id: superviseur.id)
+        visit new_admin_organisation_planning_plage_ouverture_path(organisation_id: organisation.id, agent_id: superviseur.id)
 
         check "Dépôt de plainte par visioconférence"
         check "Répéter"
@@ -65,7 +65,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
     before { login_as(agent, scope: :agent) }
 
     it "doesn't display these fields", js: true do
-      visit new_admin_organisation_agent_plage_ouverture_path(organisation_id: organisation.id, agent_id: agent.id)
+      visit new_admin_organisation_planning_plage_ouverture_path(organisation_id: organisation.id, agent_id: agent.id)
       check "Répéter"
       expect(page).not_to have_content "Dimanche"
 

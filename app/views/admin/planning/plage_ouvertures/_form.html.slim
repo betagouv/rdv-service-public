@@ -1,5 +1,5 @@
 - if plage_ouverture.available_motifs.any?
-  = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
+  = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
     .row.justify-content-center
       .col-md-6
         = render("model_errors", model: plage_ouverture, f: f)
@@ -55,14 +55,14 @@
           - if plage_ouverture.persisted?
             .col.text-left
               = link_to "Annuler", \
-                admin_organisation_plage_ouverture_path(current_organisation, plage_ouverture), \
+                admin_organisation_planning_plage_ouverture_path(current_organisation, plage_ouverture), \
                 class: "btn btn-link"
             .col.text-right
               = f.button :submit, "Enregistrer"
           -else
             .col.text-left
               = link_to "Annuler", \
-                admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
+                admin_organisation_planning_plage_ouvertures_path(current_organisation, current_agent), \
                 class: "btn btn-link"
             .col.text-right
               = f.button :submit, "Créer la plage d'ouverture"

@@ -43,7 +43,7 @@ RSpec.describe "agents page", js: true do
     create_list(:plage_ouverture, 3, :once_a_week, agent: agent, organisation: organisation)
     login_as(agent, scope: :agent)
 
-    path = admin_organisation_agent_plage_ouvertures_path(organisation, agent)
+    path = admin_organisation_planning_plage_ouvertures_path(organisation, agent)
     expect_page_to_be_axe_clean(path)
   end
 

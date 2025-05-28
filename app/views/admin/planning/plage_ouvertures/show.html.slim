@@ -6,7 +6,7 @@
 - content_for :breadcrumb do
   ol.breadcrumb.m-0.p-0
     li.breadcrumb-item
-      = link_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent) do
+      = link_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent) do
         - if @plage_ouverture.agent == current_agent
           | Vos plages d'ouverture
         - else
@@ -64,7 +64,7 @@
         div
           = link_to( \
             "Supprimer", \
-            admin_organisation_plage_ouverture_path(current_organisation, @plage_ouverture), \
+            admin_organisation_planning_plage_ouverture_path(current_organisation, @plage_ouverture), \
             method: :delete, \
             data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}, \
             class: "btn btn-danger" \
@@ -72,7 +72,7 @@
         div
           = link_to( \
             "Dupliquer", \
-            new_admin_organisation_agent_plage_ouverture_path( \
+            new_admin_organisation_planning_plage_ouverture_path( \
               current_organisation, \
               @plage_ouverture.agent.id, \
               duplicate_plage_ouverture_id: @plage_ouverture.id \
@@ -81,7 +81,7 @@
           )
           = link_to( \
             "Modifier", \
-            edit_admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), \
+            edit_admin_organisation_planning_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), \
             class: "btn btn-primary" \
           )
 

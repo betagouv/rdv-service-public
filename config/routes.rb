@@ -220,7 +220,6 @@ Rails.application.routes.draw do
         get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
         get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
 
-        resources :plage_ouvertures, except: %i[index new]
         resources :lieux, except: :show
         resources :motifs do
           member do
@@ -268,15 +267,16 @@ Rails.application.routes.draw do
         resources :agent_agendas, only: %i[show] do
           put :toggle_displays, on: :member
         end
-        resources :agent_intervenants, only: %i[update]
-        resources :agents, except: %i[show] do
-          resources :absences, only: %i[index new]
-          resources :plage_ouvertures, only: %i[index new] do
+        namespace :planning do
+          get :agenda
+          resources :plage_ouvertures do
             collection do
               get :calendar
             end
           end
+          resources :absences
         end
+        resources :agent_intervenants, only: %i[update]
         resources :invitations, only: [:index] do
           post :reinvite, on: :member
         end
