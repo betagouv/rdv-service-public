@@ -14,4 +14,12 @@
     padding: 10px 4px;
     margin: 1px 0;
   }
+
+  .autocomplete__menu--visible {
+    display: block;
+  }
+
+  .autocomplete__menu--hidden {
+    display: none;
+  }
 }

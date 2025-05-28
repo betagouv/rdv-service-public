@@ -22,7 +22,12 @@ class AddressAutocomplete {
 
       //console.log(length, contentSelectedOption)
 
-      // return <span>{length} {words.result} {words.is} {words.available}. {contentSelectedOption}</span>
+      return `${length} ${words.result} ${words.is} ${contentSelectedOption} ${words.available}`
+    }
+
+    function tStatusQueryTooShort(minQueryLength) {
+      return `Veuillez saisir au moins ${minQueryLength} caractères pour lancer la recherche`
+
     }
 
     function source(query, populateResults) {
@@ -104,7 +109,12 @@ class AddressAutocomplete {
     function onConfirm(confirmed) {
       console.log(confirmed)
 
-      //TODO: populate other fields
+      //TODO: improve this
+      document.querySelector('#search_form input[name="latitude"]').value = confirmed.latitude
+      document.querySelector('#search_form input[name="longitude"]').value = confirmed.longitude
+      document.querySelector('#search_form input[name="departement"]').value = confirmed.departement
+      document.querySelector('#search_form input[name="city_code"]').value = confirmed.city_code
+      document.querySelector('#search_form input[name="street_ban_id"]').value = confirmed.street_ban_id || ''
     }
 
     const element = document.querySelector('.autocomplete-wrapper');
@@ -123,7 +133,8 @@ class AddressAutocomplete {
       },
       tNoResults: tNoResults,
       onConfirm: onConfirm,
-      //tStatusResults: tStatusResults,
+      tStatusResults: tStatusResults,
+      tStatusQueryTooShort: tStatusQueryTooShort,
     })
   }
 }
