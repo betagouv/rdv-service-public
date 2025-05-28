@@ -24,7 +24,18 @@ class DemandeSupportForm
   def submit
     return unless valid?
 
-    if ENV.fetch("CRISP_ENABLED", false)
+    if ENV.fetch("CHATWOOT_ENABLED", false)
+      CreateChatwootTicketJob.perform_later(
+        first_name:,
+        last_name:,
+        email:,
+        phone_number:,
+        sujet:,
+        message:,
+        role:,
+        domain: current_domain.to_s
+      )
+    elsif ENV.fetch("CRISP_ENABLED", false)
       CreateCrispTicketJob.perform_later(
         nickname: "#{first_name} #{last_name}",
         email: email,
