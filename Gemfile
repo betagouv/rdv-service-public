@@ -12,6 +12,8 @@ gem "rails", "~> 7.1.0"
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
 gem "puma"
+# compiled binaries for bun, a JS runtime. the matching bun version can be found in Gemfile.lock
+gem "bundlebun", "~> 0.2.1"
 # Bundle and transpile JavaScript in Rails with esbuild, rollup.js, or Webpack.
 gem "jsbundling-rails"
 # Turbolinks makes navigating your web application faster

@@ -133,7 +133,7 @@ La liste des librairies Ruby est disponible dans :
 La liste des librairies JS utilisée est disponible dans :
 
 - [package.json](/package.json) pour la liste des dépendances directes
-- [package.json](/yarn.lock) pour la liste complète des librairies JS utilisées directement et indirectement (
+- [bun.lock](/bun.lock) pour la liste complète des librairies JS utilisées directement et indirectement (
   dépendances indirectes), et leurs versions précises
 
 ### Schéma de l’architecture

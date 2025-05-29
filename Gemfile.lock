@@ -177,6 +177,12 @@ GEM
     bullet (8.0.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
+    bundlebun (0.2.1.1.2.14-arm64-darwin)
+      json
+      zeitwerk
+    bundlebun (0.2.1.1.2.14-x86_64-linux)
+      json
+      zeitwerk
     byebug (11.1.3)
     capybara (3.40.0)
       addressable
@@ -372,7 +378,6 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2025.0220)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.8)
     minitest (5.25.5)
     montrose (0.16.0)
       activesupport (>= 5.2, < 8)
@@ -395,8 +400,9 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.3)
-    nokogiri (1.18.8)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.18.8-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.18.8-x86_64-linux-gnu)
       racc (~> 1.4)
     notion-ruby-client (1.2.2)
       faraday (>= 2.0)
@@ -755,7 +761,8 @@ GEM
     zeitwerk (2.7.0)
 
 PLATFORMS
-  ruby
+  arm64-darwin-24
+  x86_64-linux
 
 DEPENDENCIES
   active_link_to
@@ -774,6 +781,7 @@ DEPENDENCIES
   bootstrap4-kaminari-views
   brakeman
   bullet
+  bundlebun (~> 0.2.1)
   byebug
   capybara
   capybara-email

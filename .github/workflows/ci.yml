@@ -32,18 +32,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
-          cache: yarn
-      - name: Cache js dependencies
-        uses: actions/cache@v4
-        with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
-          path: node_modules
-      - run: yarn install
-      - run: yarn run prettier --check .
+      - name: Set up Bun # set up bun directly rather than through bundlebun because we only need prettier here
+        uses: oven-sh/setup-bun@v2
+      - name: Run Prettier
+        run: bunx prettier@$(jq -r '.devDependencies.prettier // .dependencies.prettier' package.json) --check .
   brakeman:
     name: Security Checker
     runs-on: ubuntu-latest
@@ -117,10 +109,6 @@ jobs:
       - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -131,19 +119,19 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
-      - name: Install JS dependencies
-        run: yarn install
       - name: Cache precompiled assets
         id: cache-precompiled-assets
         uses: actions/cache@v4
         with:
-          key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
+          key: assets-${{ hashFiles('bun.lock', 'app/javascript/**') }}
           path: app/assets/builds
       - name: Precompile assets
         if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
-        run: yarn run build
+        run: bin/rails assets:precompile
+        env:
+          HOST: http://example.com
       - name: Prepare runtime log cache key
         run: ls spec/**/*.rb > tmp/spec_files.txt
       - name: Cache parallel test unit spec runtime log
@@ -169,7 +157,7 @@ jobs:
       matrix:
         # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’exécution
         dirname: [agents, "*"]
-        include: 
+        include:
           - dirname: agents
             command: "parallel:spec[spec/features/agents]"
           - dirname: "*"
@@ -192,10 +180,6 @@ jobs:
       - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -217,19 +201,21 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
       - name: Install JS dependencies
-        run: yarn install
+        run: bin/bun install
       - name: Cache precompiled assets
         id: cache-precompiled-assets
         uses: actions/cache@v4
         with:
-          key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
+          key: assets-${{ hashFiles('bun.lock', 'app/javascript/**') }}
           path: app/assets/builds
       - name: Precompile assets
         if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
-        run: yarn run build
+        run: bin/rails assets:precompile
+        env:
+          HOST: http://example.com
       - name: Prepare runtime log cache key
         run: "ls spec/features/${{ matrix.dirname }}/**/*.rb > tmp/feature_spec_${{ matrix.dirname }}_files.txt"
       - name: Cache parallel test feature spec runtime log
@@ -252,16 +238,11 @@ jobs:
         with:
           name: artifacts-capybara
           path: tmp/capybara
-          if-no-files-found: ignore
   test_boot_without_db:
     name: Boot web server without database
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -270,9 +251,9 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
-      - run: yarn install
+      - run: bin/bun install
       - run: bin/test_boot
         env:
           HOST: http://www.rdv-test.fr

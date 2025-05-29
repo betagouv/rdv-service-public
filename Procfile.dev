@@ -1,5 +1,5 @@
 web: ./bin/start_web_server
 jobs: bundle exec good_job start
-js: yarn build --mode=development --watch --progress
+js: bin/bun run build --mode=development --watch --progress
 mss_web: PORT=3010 bundle exec ruby scripts/mon_suivi_social_local.rb
 ants_web: PORT=3020 bundle exec ruby scripts/ants_app.rb

@@ -6,7 +6,6 @@
   - Ruby 3.3.5 (nous conseillons l’utilisation de [rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
   - PostgreSQL >= 12, l’utilisateur doit avoir les droits `superuser`. C'est nécessaire pour pouvoir activer les extensions utilisés.
 - Développement
-  - [Yarn](https://yarnpkg.com/en/docs/install)
   - [graphviz](https://voormedia.github.io/rails-erd/install.html) (pour [rails-erd](https://github.com/voormedia/rails-erd)).
   - [redis](https://redis.io/docs/getting-started/installation/)
   - [Scalingo CLI](https://doc.scalingo.com/cli) (OPTIONAL)
