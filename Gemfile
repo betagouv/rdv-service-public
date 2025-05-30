@@ -32,8 +32,6 @@ gem "sentry-rails"
 gem "skylight"
 # Block & throttle abusive requests
 gem "rack-attack"
-# Ruby production code coverage collection and reporting (line of code usage)
-gem "coverband"
 # Dépendance interne pour anonymiser les records AR
 gem "anonymizer", path: "lib/anonymizer"
 
