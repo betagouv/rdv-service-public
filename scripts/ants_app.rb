@@ -13,6 +13,8 @@ class AntsApp < Sinatra::Base
   RDV_HOST = "http://www.rdv-mairie.localhost:3000".freeze
   AUTH_TOKEN = "fake_ants_api_auth_token".freeze
 
+  set :port, ENV.fetch("PORT", 3020)
+
   get "/" do
     status 200
     render_erb(
