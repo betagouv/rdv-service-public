@@ -15,15 +15,16 @@
 - content_for :title do
   = "RDV #{rdv_title_for_agent(@rdv)}"
 
-.row.justify-content-md-center
-  .col-md-11
+
+.row
+  .col-12
     / @agent is only used for links in breadcrumb and redirecting if update
     = render partial: "rdv", collection: [@rdv], locals: { agent: @agent }
 
-.row.justify-content-center
-  .col-md-11
+.row
+  .col-12
     = render "admin/receipts/receipts", rdv: @rdv
 
-.row.justify-content-center
-  .col-md-11
+.row
+  .col-md-12
     = render "admin/versions/resource_versions_row", resource_policy: policy(@rdv, policy_class: Agent::RdvPolicy), resource: @rdv
