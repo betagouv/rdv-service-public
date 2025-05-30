@@ -38,6 +38,8 @@ RSpec.describe "Agents can be managed by organisation admins" do
     end
 
     describe "invitation email domains" do
+      stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: "true")
+
       context "when the organisation is using rdv_aide_numerique verticale" do
         let!(:organisation1) { create(:organisation, territory: territory, verticale: :rdv_aide_numerique) }
 
@@ -98,7 +100,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
 
       click_on "Se déconnecter"
       open_email("jean@paul.com")
-      expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
+      expect(current_email.subject).to eq "Vous avez été invité sur RDV Service Public"
 
       current_email.click_link("Accepter l'invitation")
 
