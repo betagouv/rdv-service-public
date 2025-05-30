@@ -24,6 +24,8 @@ class SmsSender < BaseService
 
   def perform
     case @provider.to_sym
+    when :sms_factor
+      send_with_smsfactor
     when :netsize
       send_with_netsize
     when :clever_technologies
@@ -64,6 +66,39 @@ class SmsSender < BaseService
       raise SmsSenderFailure, error_message
     else
       Sentry.capture_message(error_message)
+    end
+  end
+
+  # SMS Factor
+  # https://dev.smsfactor.com/fr/api/sms/envoi/message-unitaire
+  #
+  # Suite à un nouveau bon de commande émis par l’ANCT en mai 2025, SMS Factor devient le fournisseur par défaut
+  def send_with_smsfactor
+    request = Faraday.get(
+      "https://api.smsfactor.com/send",
+      {
+        to: @phone_number,
+        text: @content,
+        pushtype: "alert",
+        sender: @sender_name,
+      },
+      {
+        authorization: "Bearer #{@api_key}",
+        accept: "application/json",
+      }
+    )
+
+    if request.success?
+      parsed_response = JSON.parse(request.body)
+      sms_factor_status = parsed_response["status"]
+      if sms_factor_status == 1
+        save_receipt(result: :delivered, sms_count: parsed_response["cost"])
+      else
+        error_message = parsed_response["message"] || "Unknown SMS Factor error"
+        handle_failure(error_message: "SMS Factor error: #{error_message}")
+      end
+    else
+      handle_failure(error_message: "SMS Factor error: #{request.status} - #{request.body}")
     end
   end
 

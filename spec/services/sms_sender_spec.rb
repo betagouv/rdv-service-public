@@ -44,21 +44,30 @@ RSpec.describe SmsSender, type: :service do
   end
 
   describe "receipt creation" do
-    before do
-      stub_netsize_ok
-      described_class.perform_with("RdvSoli", "0612345678", "content", "netsize", "key", receipt_params)
+    context "with netsize provider" do
+      before do
+        stub_netsize_ok
+        described_class.perform_with("RdvSoli", "0612345678", "content", "netsize", "key", receipt_params)
+      end
+
+      it do
+        receipt = Receipt.last
+        expect(receipt).not_to be_nil
+        expect(receipt).to have_attributes(event: "rdv_created", rdv: rdv, user: user, content: "content", sms_provider: "netsize")
+      end
     end
 
-    it do
-      receipt = Receipt.last
-      expect(receipt).not_to be_nil
-      expect(receipt).to have_attributes(
-        event: "rdv_created",
-        rdv: rdv,
-        user: user,
-        content: "content",
-        sms_provider: "netsize"
-      )
+    context "with smsfactor" do
+      before do
+        stub_smsfactor_ok
+        described_class.perform_with("RdvSoli", "0612345678", "content", "sms_factor", "key", receipt_params)
+      end
+
+      it do
+        receipt = Receipt.last
+        expect(receipt).not_to be_nil
+        expect(receipt).to have_attributes(event: "rdv_created", rdv: rdv, user: user, content: "content", sms_provider: "sms_factor")
+      end
     end
   end
 end
