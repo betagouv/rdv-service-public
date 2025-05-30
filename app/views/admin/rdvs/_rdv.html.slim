@@ -29,6 +29,8 @@
 
     .col-md-4.col-sm-12
       div.d-flex.justify-content-end.mt-1
+        - if rdv.rdv_plan&.dossier_url
+          = link_to("Voir le dossier", rdv.rdv_plan&.dossier_url, class: "fr-btn fr-btn--tertiary mr-2")
         = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
         - if rdv.individuel?
           = link_to t("admin.rdvs.show.duplicate"), admin_organisation_creneaux_search_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"

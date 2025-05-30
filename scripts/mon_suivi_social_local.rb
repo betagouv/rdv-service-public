@@ -45,6 +45,11 @@ class MonSuiviSocial < Sinatra::Base
     end
   end
 
+  get "/francis_factice" do
+    status 200
+    "Francis Factice est un usager"
+  end
+
   get "/auth/rdvservicepublic/callback" do
     session[:email] = request.env["omniauth.auth"]["info"]["agent"]["email"]
     session[:access_token] = request.env["omniauth.auth"]["credentials"]["token"]
@@ -68,6 +73,7 @@ class MonSuiviSocial < Sinatra::Base
           first_name: "Francis",
           last_name: "Factice",
         },
+        dossier_url: "http://localhost:3010/francis_factice",
       }.to_json,
       {
         "Content-Type": "application/json",
