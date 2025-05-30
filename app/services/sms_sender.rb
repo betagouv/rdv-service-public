@@ -93,6 +93,9 @@ class SmsSender < BaseService
       sms_factor_status = parsed_response["status"]
       if sms_factor_status == 1
         save_receipt(result: :delivered, sms_count: parsed_response["cost"])
+        Redis.with_connection do |redis|
+          redis.set("SMS_FACTOR_REMAINING_CREDITS", parsed_response["credits"])
+        end
       else
         error_message = parsed_response["message"] || "Unknown SMS Factor error"
         handle_failure(error_message: "SMS Factor error: #{error_message}")

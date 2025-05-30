@@ -68,6 +68,12 @@ RSpec.describe SmsSender, type: :service do
         expect(receipt).not_to be_nil
         expect(receipt).to have_attributes(event: "rdv_created", rdv: rdv, user: user, content: "content", sms_provider: "sms_factor")
       end
+
+      it "save remaining credits" do
+        Redis.with_connection do |redis|
+          expect(redis.get("SMS_FACTOR_REMAINING_CREDITS")).to eq("42")
+        end
+      end
     end
   end
 end

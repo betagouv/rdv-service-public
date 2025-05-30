@@ -12,6 +12,7 @@ def stub_smsfactor_ok
   stubbed_body = {
     status: 1,
     cost: 1,
+    credits: 42,
   }.to_json
 
   stub_request(:get, "https://api.smsfactor.com/send?pushtype=alert&sender=RdvSoli&text=content&to=0612345678")
