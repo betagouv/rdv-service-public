@@ -36,7 +36,8 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
             phone_number: "0611223344",
             address: "21 rue des Ardennes, 75019 Paris",
           },
-          return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123",
+          return_url: "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123/callback",
+          dossier_url: "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123",
         }
       )
 
@@ -124,6 +125,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
             status: rdv.status,
             location_type: rdv.motif.location_type
           )
+          expect(parsed_response_body.dig("rdv_plan", "dossier_url")).to eq "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123"
           expect(Time.zone.parse(parsed_response_body.dig("rdv_plan", "rdv", "starts_at"))).to be_within(1.second).of(rdv.reload.starts_at)
         end
       end
