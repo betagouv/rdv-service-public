@@ -16,6 +16,7 @@ RSpec.describe ApplicationMailerDeliveryJob do
     MyMailer.a_sample_email(absence).deliver_later
     absence.destroy!
     expect { perform_enqueued_jobs }.not_to raise_error
+    expect(sentry_events).to be_empty
   end
 
   # Sometimes we have DB failures, these should not cause the job to be discarded

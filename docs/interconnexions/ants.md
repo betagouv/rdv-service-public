@@ -72,6 +72,15 @@ Les éditeurs logiciels peuvent voir les appointments posés par d’autres édi
 
 Nous nous authentifions à l’API de l’ANTS via un token passé en header et stocké dans une variable d’environnement : `ANTS_RDV_OPT_AUTH_TOKEN`.
 
+Ces tokens ont une durée de validité de 6 mois.
+Ils nous sont communiqués par l’ANTS à l’adresse mail admin RDVS dans une pièce jointe au format archive Zed.
+On doit alors répondre à l’ANTS en leur donnant un numéro de téléphone pour recevoir le mot de passe de l’archive.
+Le mot de passe de cette adresse mail et les tokens ANTS sont stockés dans Vaultwarden.
+
+Pour mettre à jour ces tokens :
+- `scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites env-set ANTS_RDV_OPT_AUTH_TOKEN=LE_NOUVEAU_TOKEN`
+- `scalingo --region osc-secnum-fr1 --app production-rdv-mairie env-set ANTS_RDV_OPT_AUTH_TOKEN=LE_NOUVEAU_TOKEN`
+
 ### Environnement de développement
 
 L’ANTS fournit un environnement de développement (aussi dit d’intégration) disponible sur [int.api-coordination.rendezvouspasseport.ants.gouv.fr](https://int.api-coordination.rendezvouspasseport.ants.gouv.fr).

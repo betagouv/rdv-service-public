@@ -4,7 +4,7 @@ RSpec.describe AbsencesHelper do
       today = Time.zone.parse("2020-12-24 13:56")
       travel_to(today)
       absence = build(:absence, first_day: today.beginning_of_day, end_day: today.end_of_day)
-      expect(absence_tag(absence)).to eq("<span class=\"badge badge-info\">En cours</span>")
+      expect(absence_tag(absence)).to eq("<span class=\"fr-badge fr-badge--info fr-badge--sm fr-badge--no-icon fr-mx-1w\">En cours</span>")
     end
 
     it "return En cours when absence have an occurrence today" do
@@ -15,7 +15,7 @@ RSpec.describe AbsencesHelper do
                        end_day: today.end_of_day - 1.week,
                        recurrence: Montrose.every(:week, until: today + 1.month, starts: today.beginning_of_day - 1.week))
 
-      expect(absence_tag(absence)).to eq("<span class=\"badge badge-info\">En cours</span>")
+      expect(absence_tag(absence)).to eq("<span class=\"fr-badge fr-badge--info fr-badge--sm fr-badge--no-icon fr-mx-1w\">En cours</span>")
     end
 
     it "return nil when absence is for the future" do
@@ -31,7 +31,7 @@ RSpec.describe AbsencesHelper do
       today = Time.zone.parse("2020-12-24 13:56")
       travel_to(today)
       absence = build(:absence, first_day: today - 3.days, end_day: today - 3.days)
-      expect(absence_tag(absence)).to eq("<span class=\"badge badge-light\">Passée</span>")
+      expect(absence_tag(absence)).to eq("<span class=\"fr-badge fr-badge--sm fr-mx-1w\">Passée</span>")
     end
   end
 end
