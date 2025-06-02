@@ -31,7 +31,7 @@ agent.update!(
   invitation_created_at: nil,
   invitation_sent_at: nil,
   confirmed_at: 10.days.ago,
-  password: "Rdvservicepublictest1!"
+  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"]
 )
 
 orga_ccas = agent.organisations.first
@@ -41,7 +41,7 @@ user = User.new(
   last_name: "Duroy",
   email: "patricia@demo.rdv-solidarites.fr",
   birth_date: Date.parse("20/06/1975"),
-  password: "Rdvservicepublictest1!",
+  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010101",
   organisation_ids: [orga_ccas.id],
   created_through: "user_sign_up"
@@ -56,7 +56,7 @@ agent = Agent.new(
   uid: "bob-sans-orga@demo.rdv-solidarites.fr",
   first_name: "Bob",
   last_name: "Sans Organisation",
-  password: "Rdvservicepublictest1!",
+  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   services: [],
   invitation_accepted_at: 1.day.ago,
   roles_attributes: [],

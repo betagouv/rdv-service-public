@@ -1,5 +1,5 @@
 RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
-  # Le territoire doit avoir au moins un agent admin de territoire restant
+  # Le territory doit avoir au moins un agent admin d'espace restant
   let!(:territory) { create(:territory).tap { |t| t.roles.create!(agent: create(:agent)) } }
 
   describe "POST #update" do

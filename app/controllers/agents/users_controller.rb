@@ -4,7 +4,7 @@ class Agents::UsersController < AgentAuthController
   MAX_RESULTS = 4
 
   def search
-    skip_authorization # On scope les usagers par organisation puis par territoire via de la logique métier plutôt qu'une policy Pundit
+    skip_authorization # On scope les usagers par organisation puis par espace via de la logique métier plutôt qu'une policy Pundit
     # Dans cette recherche, on autorise un périmètre plus grand que la policy de base, puisqu'on est en train d'ajouter un usager à l'organisation en créant un rdv
     # ce skip_authorization ne skippe pas le AgentAuthController#authorize_organisation
 

@@ -7,9 +7,10 @@ RSpec.describe Users::RdvSms, type: :service do
       let(:pmi) { build(:service, short_name: "PMI") }
       let(:motif) { build(:motif, service: pmi, organisation:) }
       let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici, Paris, 75016") }
-      let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 123, name: "Ne Doit pas s'afficher") }
+      let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at:, id: 123, name: "Ne Doit pas s'afficher") }
       let(:user) { build(:user) }
       let(:token) { "12345" }
+      let(:starts_at) { Time.zone.local(2021, 12, 10, 13, 10) }
 
       it do
         expect(subject).to include("RDV PMI vendredi 10/12 13h10")
@@ -17,6 +18,22 @@ RSpec.describe Users::RdvSms, type: :service do
         expect(subject).to include("Infos/annulation")
         expect(subject).to include("www.rdv-solidarites-test.localhost/r/123/12345")
         expect(subject).not_to include("Ne Doit pas s'afficher")
+      end
+
+      context "when rdv is in the following 2 days" do
+        let(:starts_at) { 1.day.from_now }
+
+        it do
+          expect(subject).to include("MDS Centre")
+        end
+      end
+
+      context "when rdv is in more than 2 days" do
+        let(:starts_at) { 3.days.from_now }
+
+        it do
+          expect(subject).not_to include("MDS Centre")
+        end
       end
     end
 
@@ -72,15 +89,32 @@ RSpec.describe Users::RdvSms, type: :service do
     let(:motif) { build(:motif, service: pmi) }
     let(:organisation) { build(:organisation) }
     let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici, Paris, 75016") }
-    let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 124) }
+    let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at:, id: 124) }
     let(:token) { "2345" }
     let(:user) { build(:user) }
+    let(:starts_at) { Time.zone.local(2021, 12, 10, 13, 10) }
 
     it do
       expect(subject).to include("RDV modifié: PMI vendredi 10/12 13h10")
       expect(subject).to include("10 rue d'ici, Paris, 75016")
       expect(subject).to include("Infos/annulation")
       expect(subject).to include("www.rdv-solidarites-test.localhost/r/124/2345")
+    end
+
+    context "when rdv is in the following 2 days" do
+      let(:starts_at) { 1.day.from_now }
+
+      it do
+        expect(subject).to include("MDS Centre")
+      end
+    end
+
+    context "when rdv is in more than 2 days" do
+      let(:starts_at) { 3.days.from_now }
+
+      it do
+        expect(subject).not_to include("MDS Centre")
+      end
     end
   end
 
@@ -154,6 +188,7 @@ RSpec.describe Users::RdvSms, type: :service do
 
     it do
       expect(subject).to include("RDV PMI vendredi 10/12 13h10")
+      expect(subject).to include("MDS Centre")
       expect(subject).to include("10 rue d'ici, Paris, 75016")
       expect(subject).to include("Infos/annulation")
       expect(subject).to include("www.rdv-solidarites-test.localhost/r/140/7777")

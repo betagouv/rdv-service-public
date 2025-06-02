@@ -4,6 +4,7 @@ class WebhookJob < ApplicationJob
   TIMEOUT = 10
 
   queue_as :latency_30s
+  include ExtendedRetryStrategyConcern
 
   discard_on(ActiveRecord::RecordNotFound) { |_job, error| Sentry.capture_exception(error) }
 

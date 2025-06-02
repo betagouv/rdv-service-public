@@ -4,7 +4,7 @@ class AddAllowToManageAccessRightsToAgentTerritorialAccessRights < ActiveRecord:
     add_column :agent_territorial_access_rights, :allow_to_invite_agents, :boolean, default: false, null: false
 
     # Tous les agents qui ont été créé depuis la dernière migration n'ont pas
-    # été associés à un territoire via la table des droits d'accès.
+    # été associés à un espace via la table des droits d'accès.
     # Soit presque l'ensemble des conseillers numériques
     # plus quelques autres agents créés entre temps.
     #
@@ -19,7 +19,7 @@ class AddAllowToManageAccessRightsToAgentTerritorialAccessRights < ActiveRecord:
       end
     end
 
-    # Nous avons besoin de retrouver l'agent et le territoire
+    # Nous avons besoin de retrouver l'agent et le territory
     # pour lequel donner les droits d'accès.
     #
     # Les admin d'organisation ont automatiquement
@@ -32,10 +32,10 @@ class AddAllowToManageAccessRightsToAgentTerritorialAccessRights < ActiveRecord:
       ).update(allow_to_invite_agents: true)
     end
 
-    # Nous avons besoin de retrouver l'agent et le territoire
+    # Nous avons besoin de retrouver l'agent et le territory
     # pour lequel donner les droits d'accès.
     #
-    # Les admin de territoire ont automatiquement le droit de
+    # Les admin d'espace ont automatiquement le droit de
     # - gérer les droits d'accès
     # - d'inviter des agents
     AgentTerritorialRole.all.each do |territorial_role|

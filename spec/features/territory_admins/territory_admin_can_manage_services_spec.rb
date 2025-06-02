@@ -1,5 +1,5 @@
 RSpec.describe "territory admin can manage agents", type: :feature do
-  # Le territoire doit avoir au moins un agent admin de territoire restant
+  # L'espace doit avoir au moins un agent admin d'espace restant
   let!(:territory) { create(:territory, :mairies).tap { |t| t.roles.create!(agent: create(:agent)) } }
   let!(:agent) { create(:agent, role_in_territories: [territory]) }
   let!(:service_a) { create(:service) }

@@ -77,7 +77,7 @@ RSpec.describe Agent::ZonePolicy do
     context "agent has single territorial role in Paris" do
       let(:agent) { create(:agent, role_in_territories: [territory_paris]) }
 
-      context "doesn't find zones in other territoires" do
+      context "doesn't find zones in other espaces" do
         subject do
           described_class.new(
             agent,

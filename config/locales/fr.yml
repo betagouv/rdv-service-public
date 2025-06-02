@@ -3,7 +3,7 @@ fr:
   admin:
     organisations:
       index:
-        configuration: Espace Admin
+        territory_configuration: Paramètres
         create: Créer
     rdvs:
       message:
@@ -30,31 +30,6 @@ fr:
         select_placeholder_existing_lieu: Choisir un lieu existant
         select_placeholder_single_use_lieu: Lieu ponctuel
     territories:
-      agents:
-        index:
-          edit_agents: Modification des équipes de l'agent
-          territory_agents_title: Agents du territoire
-          reset: Reinitialiser
-          search_placeholder: "ex: martine@example.com"
-          search: Rechercher
-          last_name: Nom
-          first_name: Prénom
-          email: Email
-          teams: Équipes
-          actions: Actions
-        edit:
-          agent_title: Modifier un agent
-          teams: Équipes
-      teams:
-        index:
-          edit_agent_teams_title: Modifier les équipes de %{agent_name}
-          back: Retour
-          create_team: Créer une équipe
-          teams_title: Liste des équipes
-        new:
-          territory_teams_title: Créer une équipe
-        edit:
-          territory_teams_title: Modifier une équipe
       agent_roles:
         destroy:
           cannot_delete_because_of_rdvs: Impossible de retirer l'agent %{agent_name} de %{org_name} car il a des RDVs à venir dans cette organisation. Veuillez les supprimer ou les réaffecter avant de retirer cet agent.
@@ -77,7 +52,7 @@ fr:
         team:
           attributes:
             agents:
-              not_from_same_territory: doivent être du même territoire
+              not_from_same_territory: doivent être du même espace
         plage_ouverture:
           attributes:
             lieu:
@@ -238,8 +213,8 @@ fr:
   helpers:
     label:
       agent:
-        territories:  "Admin de Territoires"
-        territorial_roles: "Admin de Territoires"
+        territories:  "Espaces administrés"
+        territorial_roles: "Espaces administrés"
         services: "Services de l'agent"
         agent_services: "Services de l'agent"
         roles: "Rôles dans les organisations"
@@ -252,8 +227,8 @@ fr:
       service:
         agent_services: "Agents du service"
       territory:
-        roles: "Admins du Territoire"
-        admin_agents: "Admins du Territoire"
+        roles: "Admins de l'espace"
+        admin_agents: "Admins de l'espace"
       agent_territorial_access_right:
         allow_to_manage_teams: "Peut gérer les équipes"
         allow_to_manage_access_rights: "Peut gérer les droits d’accès"

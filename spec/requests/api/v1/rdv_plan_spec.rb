@@ -41,6 +41,23 @@ RSpec.describe "RDV Plan API" do
           last_name: "Factice"
         )
       end
+
+      context "when reusing the user id for a second rdv_plan, even if the first was not completed" do
+        before do
+          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+        end
+
+        it "links the user to the second rdv plan as well" do
+          first_rdv_plan = RdvPlan.first
+
+          params_for_second_call = { user: { id: first_rdv_plan.user_id } }
+          expect do
+            post "/api/v1/rdv_plans", headers: headers, params: params_for_second_call, as: :json
+          end.to change(RdvPlan, :count).by(1)
+
+          expect(parsed_response_body.dig("rdv_plan", "user_id")).to eq first_rdv_plan.user_id
+        end
+      end
     end
 
     context "when passing a user id" do

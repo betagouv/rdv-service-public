@@ -42,7 +42,7 @@ module RdvsHelper
   end
 
   def human_location(rdv)
-    text = rdv.address_complete
+    text = rdv.full_address
     text = safe_join([text, "Adresse non renseignée"], " - ") if rdv.address.blank?
     safe_join([text, unavailability_tag(rdv.lieu)])
   end

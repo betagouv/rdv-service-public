@@ -20,8 +20,8 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
     click_link "Ouverture de compte"
 
-    fill_in("Nom du territoire", with: "France Rénov")
-    select("Commune", from: "Catégorie du territoire")
+    fill_in("Nom de l'espace", with: "France Rénov")
+    select("Commune", from: "Catégorie de l'espace")
     fill_in("Nom de la première organisation", with: "Agence de Romainville")
     fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
 
@@ -31,7 +31,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
     fill_in("Numéro du département", with: "FR")
 
-    expect(page).to have_content("Admin de territoire")
+    expect(page).to have_content("Admin d'espace")
 
     fill_in("Prénom", with: "Francis")
     fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input
@@ -86,14 +86,14 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     let!(:cni_passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME) }
     let!(:service) { create(:service, name: "Mairie") }
 
-    it "crée un territoire avec une organisation qui a les catégories de motif pour se brancher à l'ANTS" do
+    it "crée un espace avec une organisation qui a les catégories de motif pour se brancher à l'ANTS" do
       login_as(super_admin, scope: :super_admin)
       visit super_admins_root_url(host: "http://www.rdv-mairie-test.localhost")
 
       click_link "Ouverture de compte"
 
-      fill_in("Nom du territoire", with: "Romainville")
-      select("Commune", from: "Catégorie du territoire")
+      fill_in("Nom de l'espace", with: "Romainville")
+      select("Commune", from: "Catégorie de l'espace")
       fill_in("Nom de la première organisation", with: "Mairie de Romainville")
       fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
 
@@ -103,7 +103,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
       fill_in("Numéro du département", with: "93")
 
-      expect(page).to have_content("Admin de territoire")
+      expect(page).to have_content("Admin d'espace")
 
       fill_in("Prénom", with: "Francis")
       fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input

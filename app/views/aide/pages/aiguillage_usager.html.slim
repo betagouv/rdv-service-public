@@ -9,6 +9,7 @@
 .fr-grid-row.fr-mb-4w
   .fr-col-12.fr-col-md-8
     - if @form.raison.blank?
+      - content_for :subtitle, "Choix de la raison"
       = form_for @form, url: aide_aiguillage_usager_path, method: :GET, builder: Dsfr::FormBuilder do |f|
         = f.dsfr_radio_buttons :raison, @form.raisons_options, legend: "Veuillez sélectionner la raison qui correspond le mieux à votre situation :"
         = f.submit "Valider", class: "fr-btn"
@@ -16,9 +17,10 @@
       .fr-mb-4w
         |> Votre situation :
         b=> @form.raison_label
-        = link_to "modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line"
+        = link_to "modifier", aide_aiguillage_usager_path, class: "fr-link fr-link--icon-right fr-icon-pencil-line", title: "Modifier votre choix"
 
     - if @form.raison_creneaux?
+      - content_for :subtitle, "Prendre un RDV"
       h6 Étapes pour prendre un RDV
       ol
         - if current_domain == Domain::RDV_MAIRIE
@@ -36,7 +38,7 @@
         = link_to "Faire une recherche de RDV depuis l’accueil", root_path, class: "fr-btn"
 
       .fr-callout.fr-mb-2w
-        ' Si vous ne trouvez pas de créneaux, nous vous invitons à contacter l’organisation avec laquelle vous souhaitez prendre RDV
+        p Si vous ne trouvez pas de créneaux, nous vous invitons à contacter l’organisation avec laquelle vous souhaitez prendre RDV
 
       p
         ' Vous pouvez chercher les coordonnées de l’organisation avec laquelle vous souhaitez prendre RDV dans l’annuaire des services publics :
@@ -44,6 +46,7 @@
         = link_to "Consulter l’annuaire du Service Public", "https://lannuaire.service-public.fr/", class: "fr-btn fr-btn--secondary", target: "_blank"
 
     - if @form.raison_annuler?
+      - content_for :subtitle, "Annuler votre RDV"
       .fr-accordions-group.fr-mb-4w
         section.fr-accordion
           h2.fr-accordion__title
@@ -55,8 +58,9 @@
             p
               ' Vous pouvez annuler votre rendez-vous depuis les liens présents dans le SMS et/ou l’e-mail que vous avez reçu.
             .fr-callout.fr-mb-2w
-              ' Si le rendez-vous a lieu dans moins de 4 heures, vous ne pouvez plus annuler le RDV.
-              ' Nous vous invitons à contacter directement le service pour l'informer de votre absence.
+              p
+                ' Si le rendez-vous a lieu dans moins de 4 heures, vous ne pouvez plus annuler le RDV.
+                ' Nous vous invitons à contacter directement le service pour l'informer de votre absence.
             p
               ' Vous trouverez ci-dessous plus de détails et des captures d’écran sur le fonctionnement de l’annulation depuis les SMS ou les emails.
         section.fr-accordion

@@ -13,7 +13,7 @@ h1
         = f.input :service_ids,
               collection: (current_territory.services + @agent.services).uniq,
               label: t(".services"),
-              label_method: lambda { |service| [service.name, (current_territory.services.include?(service) ? nil : "(désactivé dans le territoire courant)") ].compact.join(" ") },
+              label_method: lambda { |service| [service.name, (current_territory.services.include?(service) ? nil : "(désactivé dans l'espace courant)") ].compact.join(" ") },
               input_html: { \
                 multiple: true, \
                 class: "select2-input",\
@@ -34,9 +34,9 @@ h1
       = t(".agent_access_rights_legend")
     = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
       .card-body
-        = f.input :allow_to_manage_teams, as: :boolean, hint: t(".hint_allow_to_manage_teams"), disabled: !can_edit_access_rights
-        = f.input :allow_to_manage_access_rights, as: :boolean, hint: t(".hint_allow_to_manage_access_rights"), disabled: !can_edit_access_rights
-        = f.input :allow_to_invite_agents, as: :boolean, hint: t(".hint_allow_to_invite_agents"), disabled: !can_edit_access_rights
+        = f.input :allow_to_manage_teams, as: :boolean, hint: t(".hint_allow_to_manage_teams", territory_name: current_territory), disabled: !can_edit_access_rights
+        = f.input :allow_to_manage_access_rights, as: :boolean, hint: t(".hint_allow_to_manage_access_rights", territory_name: current_territory), disabled: !can_edit_access_rights
+        = f.input :allow_to_invite_agents, as: :boolean, hint: t(".hint_allow_to_invite_agents", territory_name: current_territory), disabled: !can_edit_access_rights
       .card-footer
         .row
           .col.text-right
@@ -55,7 +55,7 @@ h1
         .card-body
           = check_box_tag :territorial_admin, 1, @agent.territorial_admin_in?(current_territory)
           span>
-          = label_tag :territorial_admin, "Administrateur du territoire"
+          = label_tag :territorial_admin, "Administrateur de l'espace #{current_territory}"
           small.form-text.text-muted
             | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiblité des catégories de motif, …
 

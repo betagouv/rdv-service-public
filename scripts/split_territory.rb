@@ -1,4 +1,4 @@
-# Ce script se base sur le fait que les admin de territoires sont aussi admin d'organisation de toutes leurs orgas
+# Ce script se base sur le fait que la plupart des admins d'espace sont aussi admin d'organisation de toutes leurs orgas
 # Example:
 # load "scripts/split_territory.rb"; SplitTerritory.new(4, 530, "Drôme Insertion", dry_run: true).split!
 
@@ -19,7 +19,7 @@ class SplitTerritory
 
   def split!
     Territory.transaction do
-      puts "# Création du nouveau territoire #{@new_territory_name}"
+      puts "# Création du nouveau territory #{@new_territory_name}"
       @new_territory = @old_territory.dup
       @new_territory.name = @new_territory_name
       @new_territory.save!
@@ -43,7 +43,7 @@ class SplitTerritory
   private
 
   def move_organisations
-    puts "\n\n## Déplacement des organisations suivantes dans le nouveau territoire :"
+    puts "\n\n## Déplacement des organisations suivantes dans le nouveau territory :"
     organisations_to_change = @old_territory.organisations - @main_territory_admin.organisations
 
     organisations_to_change.sort_by(&:name).each do |organisation|
@@ -51,7 +51,7 @@ class SplitTerritory
       organisation.update_columns(territory_id: @new_territory.id) # rubocop:disable Rails/SkipsModelValidations
     end
 
-    puts "\nLes organisations suivantes restent dans le territoire actuel"
+    puts "\nLes organisations suivantes restent dans l'espace actuel"
     @old_territory.organisations.reload.ordered_by_name.each do |org|
       puts "- #{org.name}"
     end
@@ -72,17 +72,17 @@ class SplitTerritory
           new_access_right = agent_territorial_access_right.dup
           new_access_right.update!(territory_id: @new_territory.id)
         else
-          puts "Changement de territoire pour #{agent.email}"
+          puts "Changement d'espace pour #{agent.email}"
           agent_territorial_access_right.update!(territory: @new_territory)
         end
       end
     end
 
-    puts "#{AgentTerritorialAccessRight.where(territory: @new_territory).count} agents dans le nouveau territoire"
+    puts "#{AgentTerritorialAccessRight.where(territory: @new_territory).count} agents dans le nouveau territory"
   end
 
   def move_or_duplicate_agent_territorial_roles
-    puts "\n\n## Déplacement des Admins de territoires"
+    puts "\n\n## Déplacement des Admins d'espace"
     AgentTerritorialRole.where(territory: @old_territory).each do |agent_territorial_role|
       agent = agent_territorial_role.agent
       territory_ids_from_agent_organisations = agent.organisations.pluck(:territory_id)
@@ -95,7 +95,7 @@ class SplitTerritory
           puts "Création de nouveaux AgentTerritorialRole pour #{agent.email}"
           AgentTerritorialRole.create!(territory: @new_territory, agent: agent)
         else
-          puts "Changement de territoire pour l'admin de territoire #{agent.email}"
+          puts "Changement d'espace pour l'admin d'espace #{agent.email}"
           agent_territorial_role.update!(territory: @new_territory)
         end
       end
@@ -111,10 +111,10 @@ class SplitTerritory
       next unless present_in_new_territory
 
       if present_in_old_territory
-        puts "Ajout de la catégorie de motifs #{motif_categories_territory.motif_category.name} au nouveau territoire"
+        puts "Ajout de la catégorie de motifs #{motif_categories_territory.motif_category.name} au nouveau territory"
         MotifCategoriesTerritory.create!(territory: @new_territory, motif_category: motif_categories_territory.motif_category)
       else
-        puts "Déplacement de la catégorie de motifs #{motif_categories_territory.motif_category.name} dans le nouveau territoire"
+        puts "Déplacement de la catégorie de motifs #{motif_categories_territory.motif_category.name} dans le nouveau territory"
         # Cette table n'ayant pas d'id, on est obligés de passer par un update_all plutôt qu'un simple update sur le record
         MotifCategoriesTerritory.where(territory_id: @old_territory.id, motif_category_id: motif_categories_territory.motif_category_id).update_all(territory_id: @new_territory.id) # rubocop:disable Rails/SkipsModelValidations
       end
@@ -162,7 +162,7 @@ class SplitTerritory
       end
 
       if territory_ids == [@new_territory.id]
-        puts "Déplacement du secteur #{sector.id} dans le nouveau territoire"
+        puts "Déplacement du secteur #{sector.id} dans le nouveau territory"
         sector.update!(territory: @new_territory)
       end
     end
@@ -174,9 +174,9 @@ class SplitTerritory
       territory_ids = team.agents.map(&:agent_territorial_access_rights).flatten.map(&:territory_id).uniq
 
       if territory_ids.count > 1
-        raise "L'équipe #{team.id} est partagée entre les deux territoires"
+        raise "L'équipe #{team.id} est partagée entre les deux territories"
       elsif territory_ids == [@new_territory.id]
-        puts "Déplacement de l'équipe #{team.id} dans le nouveau territoire"
+        puts "Déplacement de l'équipe #{team.id} dans le nouveau territory"
         team.update!(territory: @new_territory)
       end
     end

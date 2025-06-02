@@ -31,6 +31,12 @@ module UserRdvWizard
     end
 
     def creneau
+      # La validation de ce paramètre ANTS est faite ici pour simplifier la gestion des cas problématiques
+      # qui peuvent se produire aux étapes de prise de RDV pré sign-in et post-sign-in. Les autres params
+      # sont très peu validés. Le cas d’erreur principal qui peut se produire est qu’aucun créneau ne soit
+      # trouvé pour les params passés. On s’appuie donc sur ce cas pour gérer l’erreur de validation ANTS
+      return nil if ants_pre_demandes_count.present? && !AntsPreDemandesCountValidator.count_valid?(ants_pre_demandes_count)
+
       @creneau ||= CreneauxSearch::ForUser.creneau_for(
         user: @user,
         motif: motif,
@@ -52,7 +58,7 @@ module UserRdvWizard
         @attributes.slice(
           *WebSearchContext::ADDRESS_SELECTION_PARAMS,
           :where, :lieu_id, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
-          :referent_ids, :external_organisation_ids, :duration
+          :referent_ids, :external_organisation_ids, :duration, :ants_pre_demandes_count
         )
       )
     end
@@ -62,10 +68,13 @@ module UserRdvWizard
     end
 
     def lieu_id = @attributes[:lieu_id]
+    def ants_pre_demandes_count = @attributes[:ants_pre_demandes_count].presence&.to_i
 
     def duration_in_min
       if @attributes[:duration]
         @attributes[:duration].to_i
+      elsif @attributes[:ants_pre_demandes_count].present?
+        motif.default_duration_in_min * @attributes[:ants_pre_demandes_count].to_i
       else
         motif.default_duration_in_min
       end

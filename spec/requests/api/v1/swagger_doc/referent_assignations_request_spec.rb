@@ -54,7 +54,7 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
         let!(:agent) { create(:agent, basic_role_in_organisations: [other_organisation]) }
       end
 
-      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent.e n'est pas sur le même territoire que le reférent" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent.e n'est pas sur le même espace que le reférent" do
         let!(:other_territory) { create(:territory) }
         let!(:other_territory_organisation) { create(:organisation, territory: other_territory) }
         let!(:user) { create(:user, organisations: [organisation, other_territory_organisation]) }
@@ -105,7 +105,7 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
         let!(:agent) { create(:agent, basic_role_in_organisations: [other_organisation]) }
       end
 
-      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent.e n'est pas sur le même territoire que le reférent" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent.e n'est pas sur le même espace que le reférent" do
         let!(:other_territory) { create(:territory) }
         let!(:other_territory_organisation) { create(:organisation, territory: other_territory) }
         let!(:user) { create(:user, organisations: [organisation, other_territory_organisation]) }

@@ -1,4 +1,4 @@
-# Comment charger les données anonymisées d'un territoire sur une review app
+# Comment charger les données anonymisées d'un espace sur une review app
 
 # 1. Préparer les données en local
 
@@ -8,7 +8,7 @@ Télécharger un dump de prod depuis Scalingo, puis le charger en local :
  ./scripts/db_dump_load.sh nom_du_dump.pgsql
 ```
 
-Supprimer les données de tous les territoires sauf un +  anonymiser les données à l'aide du script `tronquer_et_anonymiser_db.rb` (peut prendre quelques minutes) :
+Supprimer les données de tous les espaces sauf un + anonymiser les données à l'aide du script `tronquer_et_anonymiser_db.rb` (peut prendre quelques minutes) :
 
 ```bash
 bundle exec rails runner scripts/tronquer_et_anonymiser_db.rb ID_TERRITOIRE
