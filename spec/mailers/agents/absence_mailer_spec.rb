@@ -6,13 +6,13 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
 
       it "mail to absence's agent" do
         mail = described_class.with(absence: absence).send("absence_#{action}")
-        expect(mail[:from].to_s).to eq(%("RDV Solidarités" <secretariat-auto@rdv-solidarites.fr>))
+        expect(mail[:from].to_s).to eq("RDV Service Public <secretariat-auto@rdv-service-public.fr>")
         expect(mail.to).to eq(["bob@demo.rdv-solidarites.fr"])
       end
 
       it "have a good subject" do
         mail = described_class.with(absence: absence).send("absence_#{action}")
-        expect(mail.subject).to eq("RDV Solidarités - Indisponibilité #{verb} - #{absence.title}")
+        expect(mail.subject).to eq("RDV Service Public - Indisponibilité #{verb} - #{absence.title}")
       end
 
       it "has a ICS file join with UID" do
@@ -22,6 +22,7 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
       end
 
       describe "using the agent domain's branding" do
+        stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: "true")
         context "when agent belongs to an organisation with rdv_solidarites verticale" do
           before { agent.organisations.first.update!(verticale: :rdv_solidarites) }
 
