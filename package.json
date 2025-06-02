@@ -1,5 +1,6 @@
 {
   "name": "lapin",
+  "version": "1.22.22",
   "private": true,
   "scripts": {
     "build": "webpack --config webpack.config.js"
