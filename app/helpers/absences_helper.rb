@@ -3,9 +3,9 @@ module AbsencesHelper
 
   def absence_tag(absence)
     if absence.expired?
-      tag.span("Passée", class: "badge badge-light")
+      tag.span("Passée", class: "fr-badge fr-badge--sm fr-mx-1w")
     elsif absence.starts_at.today? || an_ocurrence_after_today?(absence)
-      tag.span("En cours", class: "badge badge-info")
+      tag.span("En cours", class: "fr-badge fr-badge--info fr-badge--sm fr-badge--no-icon fr-mx-1w")
     end
   end
 
