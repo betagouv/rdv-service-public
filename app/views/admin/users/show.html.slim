@@ -7,7 +7,7 @@
   = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Vos usagers", admin_organisation_users_path(current_organisation)]], current_page_title: @user.full_name
 
 - content_for :breadcrumb do
-  = link_to t(".find_rdv"), admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "fr-btn fr-btn--secondary"
+  = link_to "Trouver un RDV pour l’usager", admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "fr-btn fr-btn--secondary", title: "Trouver un RDV pour l’usager #{@user.full_name}"
 
 .row
   .col-md-6
@@ -121,7 +121,7 @@
             | Statuts
             small.text-muted< sur #{@participations.count} RDV
           - if @user.rdvs.count > 0
-            = link_to "Voir tous les rendez-vous de #{@user.full_name}", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "btn btn-outline-primary small"
+            = link_to "Voir tous les RDV de l’usager", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: "Voir tous les RDV de l’usager #{@user.full_name}"
       .card-body
         .row
           .fr-mb-2v
