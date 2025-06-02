@@ -1,13 +1,4 @@
 GIT
-  remote: https://github.com/betagouv/activerecord_defer_persist
-  revision: 59569fa607edf89ad17fbfca08935fae24b21e9c
-  branch: main
-  specs:
-    activerecord_defer_persist (0.4.0)
-      activerecord (>= 7)
-      activesupport (>= 7)
-
-GIT
   remote: https://github.com/nahi/httpclient.git
   revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
   ref: d57cc6d
@@ -121,6 +112,9 @@ GEM
     activerecord-postgres_enum (2.0.1)
       activerecord (>= 5.2)
       pg
+    activerecord_defer_persist (0.6.0)
+      activerecord (>= 7)
+      activesupport (>= 7)
     activestorage (7.1.5.1)
       actionpack (= 7.1.5.1)
       activejob (= 7.1.5.1)
@@ -772,7 +766,7 @@ DEPENDENCIES
   active_link_to
   active_record_doctor
   activerecord-postgres_enum
-  activerecord_defer_persist!
+  activerecord_defer_persist (~> 0.6.0)
   administrate
   anonymizer!
   auto_strip_attributes
