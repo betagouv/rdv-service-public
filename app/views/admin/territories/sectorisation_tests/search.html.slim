@@ -14,7 +14,7 @@ do |f|
         :where, \
         label: "Adresse", \
         placeholder: "ex : 21 rue Anatole France, Calais", \
-        input_html: { data: { "address-autocomplete": "on" } }
+        input_html: { data: { "address-autocomplete": "on" }, dir: "ltr" }
       .row.align-items-center.bg-light.py-2.mb-2
         .col-lg-2 Infos de la Base Adresse
         .col-lg-2= f.input :departement, readonly: true, label: "Département"

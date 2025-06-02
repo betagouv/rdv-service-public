@@ -2,7 +2,10 @@ meta name="viewport" content="width=device-width, initial-scale=1.0"
 meta content="text/html; charset=UTF-8" http-equiv="Content-Type"
 title
   - if content_for? :title
-    = "#{strip_tags(content_for(:title))} - #{current_domain.name}"
+    - if content_for? :subtitle
+      = "#{strip_tags(content_for(:subtitle))} - #{strip_tags(content_for(:title))} - #{current_domain.name}"
+    - else
+      = "#{strip_tags(content_for(:title))} - #{current_domain.name}"
   - else
     | #{current_domain.name}
 

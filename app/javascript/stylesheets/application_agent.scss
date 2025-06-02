@@ -119,3 +119,20 @@ header.header {
 li.nav-item {
   padding-bottom: 0; // Pour les onglets bootstrap
 }
+
+// Les groupes de boutons DSFR ont une marge de 1rem en bas par défaut
+// Quand nous sommes dans un tableau, on ne veut pas de marge
+.fr-table .fr-btns-group .fr-btn {
+  margin-bottom: 0;
+}
+
+// << A SUPPRIMER À LA SUPPRESSION DE BOOTSTRAP REBOOT
+// Suppression d’une marge introduite par Bootstrap Reboot
+.fr-notice p {
+  margin-bottom: 0;
+}
+
+.fr-alert p {
+  margin: var(--text-spacing);
+}
+// >> A SUPPRIMER À LA SUPPRESSION DE BOOTSTRAP REBOOT

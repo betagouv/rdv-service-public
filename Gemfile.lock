@@ -205,8 +205,6 @@ GEM
     common_french_passwords (0.0.1)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
-    coverband (6.1.4)
-      redis (>= 3.0)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -245,13 +243,13 @@ GEM
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
-    drb (2.2.1)
-    dsfr-assets (1.13.0.1)
+    drb (2.2.3)
+    dsfr-assets (1.13.1)
     dsfr-form_builder (0.0.7)
       actionview (>= 6.1, < 9.0)
       activemodel (>= 6.1, < 9.0)
       activesupport (>= 6.1, < 9.0)
-    dsfr-view-components (2.1.2)
+    dsfr-view-components (3.0.2)
       dsfr-assets (~> 1.13)
       html-attributes-utils (~> 1)
       view_component (~> 3)
@@ -732,9 +730,9 @@ GEM
       activemodel (>= 3.0.0)
       public_suffix
     version_gem (1.1.3)
-    view_component (3.21.0)
+    view_component (3.23.2)
       activesupport (>= 5.2.0, < 8.1)
-      concurrent-ruby (~> 1.0)
+      concurrent-ruby (~> 1)
       method_source (~> 1.0)
     virtus (2.0.0)
       axiom-types (~> 0.1)
@@ -788,7 +786,6 @@ DEPENDENCIES
   climate_control
   common_french_passwords
   connection_pool
-  coverband
   crisp-api (~> 1.1)
   csv
   database_cleaner
@@ -800,7 +797,7 @@ DEPENDENCIES
   doorkeeper-i18n
   dotenv-rails
   dsfr-form_builder (= 0.0.7)
-  dsfr-view-components
+  dsfr-view-components (~> 3.0)
   factory_bot
   faker
   foreman
@@ -873,7 +870,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 3.4.3p32
+   ruby 3.4.4p34
 
 BUNDLED WITH
    2.6.4

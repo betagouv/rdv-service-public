@@ -31,6 +31,6 @@ class Agents::ReplyTransferMailer < ApplicationMailer
   private
 
   def domain
-    @rdv&.domain || Domain::RDV_SOLIDARITES
+    @rdv&.domain || Domain.default_domain_for_current_instance
   end
 end

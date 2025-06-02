@@ -80,7 +80,7 @@ Rails.application.config.active_record.sqlite3_adapter_strict_strings_by_default
 ###
 # Disable deprecated singular associations names.
 #++
-# Rails.application.config.active_record.allow_deprecated_singular_associations_name = false
+Rails.application.config.active_record.allow_deprecated_singular_associations_name = false
 
 ###
 # Enable the Active Job `BigDecimal` argument serializer, which guarantees
@@ -92,7 +92,7 @@ Rails.application.config.active_record.sqlite3_adapter_strict_strings_by_default
 # serializer. Therefore, this setting should only be enabled after all replicas
 # have been successfully upgraded to Rails 7.1.
 #++
-# Rails.application.config.active_job.use_big_decimal_serializer = true
+Rails.application.config.active_job.use_big_decimal_serializer = true
 
 ###
 # Specify if an `ArgumentError` should be raised if `Rails.cache` `fetch` or
@@ -187,7 +187,7 @@ Rails.application.config.precompile_filter_parameters = true
 # The previous behavior was to only run the callbacks on the first copy of a record
 # if there were multiple copies of the same record enrolled in the transaction.
 #++
-# Rails.application.config.active_record.before_committed_on_all_records = true
+Rails.application.config.active_record.before_committed_on_all_records = true
 
 ###
 # Disable automatic column serialization into YAML.

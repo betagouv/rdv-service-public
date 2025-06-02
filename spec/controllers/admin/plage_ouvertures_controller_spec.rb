@@ -128,7 +128,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
           perform_enqueued_jobs do
             expect { post(:create, params: valid_params) }.to change { ActionMailer::Base.deliveries.size }.by(1)
           end
-          expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Solidarités - Plage d’ouverture créée - Permanence ecole")
+          expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Service Public - Plage d’ouverture créée - Permanence ecole")
         end
 
         it "skips notification after create when agent has disabled it" do
@@ -184,7 +184,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
           perform_enqueued_jobs
           expect(ActionMailer::Base.deliveries.size).to eq(1)
-          expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Solidarités - Plage d’ouverture modifiée - Le nouveau nom")
+          expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Service Public - Plage d’ouverture modifiée - Le nouveau nom")
         end
 
         it "skips notification after update when agent has disabled it" do
@@ -235,7 +235,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect { perform_enqueued_jobs }.to change { ActionMailer::Base.deliveries.size }.by(1)
-        expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Plage d’ouverture supprimée")
+        expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Service Public - Plage d’ouverture supprimée")
       end
 
       it "skips notification after destroy when agent has disabled it" do

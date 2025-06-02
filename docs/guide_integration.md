@@ -6,6 +6,25 @@ Vous pouvez ajouter un bouton "Prendre rendez-vous" dans votre application méti
 
 Ce bouton déclenchera une connexion par OAuth avec RDV Service Public, puis redirigera l'agent vers un formulaire de prise de rendez-vous.
 
+## Interface recommandée
+
+Vous pouvez vous inspirer des interfaces proposées par Démarches Simplifiées ou Mon Suivi Social pour cette intégration.
+
+Le parcours utilisateur pour les agents est généralement en deux temps :
+
+### Activation de la prise de rendez-vous depuis une page de paramètres
+
+Depuis les paramètres de votre application, vous pouvez proposer aux agents qui utilisent votre application d'activer la prise de rendez-vous.
+
+Les agents n'auront pas besoin d'un compte préexistant sur RDV Service Public. Leur compte sera créé à la volée quand ils utiliseront ProConnect sur RDV Service Public.
+
+Vous pouvez ensuite afficher un lien pour vérifier la configuration sur RDV Service Public, qui leur permettra de décider de leur motifs de rendez-vous, d'inviter des collègues à travailler avec eux, etc...
+
+### Ajout d'un bouton de prise de rendez-vous
+
+Depuis la page d'un usager ou d'un dossier, vous pouvez proposer un bouton de prise de rendez-vous qui récupèrera automatiquement les informations de l'usager.
+
+
 ## Implémentation
 
 ### Connexion OAuth
@@ -15,6 +34,15 @@ La connexion OAuth vous permettra d'obtenir un token d'api pour faire des appels
 Elle passe par les endpoints `https://demo.rdv.anct.gouv.fr/oauth/authorize` et `https://demo.rdv.anct.gouv.fr/oauth/token` lors du développement.
 
 Contactez notre équipe technique à l'adresse support@rdv-service-public.fr pour demander la création d'une appli OAuth et préparer votre intégration.
+
+### Lien vers l'agenda
+
+Les agents peuvent accéder à leur agenda RDV Service Public via le lien `https://rdv.anct.gouv.fr/agents/agenda`
+
+### Configuration
+
+Vous pouvez proposer aux agents de vérifier leur configuration via le lien `https://rdv.anct.gouv.fr/admin/organisations/configuration`.
+Ils seront redirigés vers la création d'un nouvel espace ou la configuration de leur espace existant.
 
 ### Prise de rendez-vous
 
@@ -55,3 +83,10 @@ Vous obtiendrez une réponse à ce format :
 Vous pouvez ensuite rediriger votre agent à l'url indiquée pour qu'il prenne le rendez-vous.
 
 Après ce premier appel, vous pouvez faire des requêtes sur le RDV Plan pour savoir si le rendez-vous associé a été crée: `GET /api/v1/rdv_plans/23`.
+
+### Obtenir des informations sur les rendez-vous après leur création
+
+
+Vous pouvez utiliser l'endpoint `/api/v1/rdvs` pour obtenir une liste de rendez-vous. Il est possible de filtrer cette liste par agent et ou par usager.
+[La documentation Swagger](https://rdv.anct.gouv.fr/api-docs/index.html) donne plus d'informations sur cet endpoint.
+L'api renvoie sur chaque rendez-vous un attribut `url_for_agents`, qui indique l'url de ce rendez-vous pour les agents (les usagers ne peuvent pas y accéder via cette url).

@@ -3,13 +3,12 @@
 p Vous pouvez voir vos rendez-vous de #{current_domain.name} dans votre agenda externe, comme Outlook ou Google Calendar.
 
 div.d-flex.justify-content-center.align-items-center.flex-wrap
-  - if current_domain.can_sync_to_outlook
-    div.card.w-100
-      div.card-body
-        h5.card-title Connexion Outlook
-        p Vos rendez-vous seront synchronisés automatiquement et en temps réel dans votre agenda Outlook.
-        div.rdv-text-align-center
-          = link_to "Connecter mon compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
+  div.card.w-100
+    div.card-body
+      h5.card-title Connexion Outlook (Microsoft 365)
+      p Vos rendez-vous seront synchronisés automatiquement dans votre agenda Outlook.
+      div.rdv-text-align-center
+        = link_to "Connecter mon compte Outlook (Microsoft 365)", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
 
   div.card.w-100
     div.card-body

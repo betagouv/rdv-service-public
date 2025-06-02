@@ -1,8 +1,12 @@
 RSpec.describe ApplicationMailerDeliveryJob do
   let(:my_mailer) do
     Class.new(ApplicationMailer) do
-      def a_sample_email(absence)
-        mail(body: "Voici l'info: #{absence}")
+      def a_sample_email(user)
+        mail(body: "Voici l'info: #{user}", to: user.email)
+      end
+
+      def domain
+        Domain::RDV_SOLIDARITES
       end
     end
   end
@@ -11,17 +15,28 @@ RSpec.describe ApplicationMailerDeliveryJob do
     stub_const("MyMailer", my_mailer)
   end
 
+  it "performs correctly" do
+    user = create(:user, email: "some@email.fr")
+    MyMailer.a_sample_email(user).deliver_later
+    perform_enqueued_jobs
+    expect(enqueued_jobs.count).to eq 0
+    expect(performed_jobs.count).to eq 1
+    expect(performed_jobs.last["job_class"]).to eq("ApplicationMailerDeliveryJob")
+    expect(performed_jobs.last["exception_executions"]).to be_empty
+  end
+
   it "discards job when deserialization fails because if ActiveRecord::RecordNotFound" do
-    absence = create(:absence)
-    MyMailer.a_sample_email(absence).deliver_later
-    absence.destroy!
+    user = create(:user)
+    MyMailer.a_sample_email(user).deliver_later
+    user.destroy!
     expect { perform_enqueued_jobs }.not_to raise_error
+    expect(sentry_events).to be_empty
   end
 
   # Sometimes we have DB failures, these should not cause the job to be discarded
   it "logs to sentry and retries job when hitting a ActiveJob::DeserializationError error that is not a RecordNotFound" do
-    absence = create(:absence)
-    MyMailer.a_sample_email(absence).deliver_later
+    user = create(:user)
+    MyMailer.a_sample_email(user).deliver_later
     expect(enqueued_jobs.last["job_class"]).to eq("ApplicationMailerDeliveryJob")
     expect(enqueued_jobs.last["executions"]).to eq(0)
     expect(sentry_events).to be_empty
@@ -38,8 +53,19 @@ RSpec.describe ApplicationMailerDeliveryJob do
     expect(enqueued_jobs.last["job_class"]).to eq("ApplicationMailerDeliveryJob")
     expect(enqueued_jobs.last["executions"]).to eq(1)
     expect(enqueued_jobs.last[:args][1]).to eq("a_sample_email")
-    expect(enqueued_jobs.last[:args][3]["args"]).to eq([{ "_aj_globalid" => "gid://lapin/Absence/#{absence.id}" }])
+    expect(enqueued_jobs.last[:args][3]["args"]).to eq([{ "_aj_globalid" => "gid://lapin/User/#{user.id}" }])
 
     ActiveRecord::Base.establish_connection # teardown DB failure simulation
+  end
+
+  it "discards job when user does not have an email" do
+    user = create(:user, email: nil)
+    MyMailer.a_sample_email(user).deliver_later
+    perform_enqueued_jobs
+    expect(enqueued_jobs.count).to eq 0
+    expect(performed_jobs.count).to eq 1
+    expect(performed_jobs.last["job_class"]).to eq("ApplicationMailerDeliveryJob")
+    expect(sentry_events.last.exception.values.first.type).to eq("ArgumentError")
+    expect(sentry_events.last.exception.values.first.value).to match(/SMTP To address may not be blank/)
   end
 end
