@@ -3,9 +3,12 @@
 
 - content_for :title do
   - if current_agent == @agent
-    = t("admin.plage_ouvertures.index.your_plage_ouverture")
+    | Vos plages d'ouvertures
   - else
-    = t("admin.plage_ouvertures.index.plage_ouverture_of", full_name: @agent.full_name_and_service)
+    | Plages d'ouvertures de #{@agent.full_name_or_email}
+
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
 
 - content_for :breadcrumb do
   .text-right

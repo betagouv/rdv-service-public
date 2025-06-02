@@ -4,6 +4,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
   before_action :build_plage_ouverture, only: [:create]
   before_action :set_agent
+  before_action :set_previous_page_title, only: %i[show edit]
 
   def show
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
@@ -47,6 +48,7 @@ class Admin::PlageOuverturesController < AgentAuthController
       agent: @agent,
       **defaults
     )
+    set_previous_page_title
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
@@ -102,6 +104,14 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def set_plage_ouverture
     @plage_ouverture = PlageOuverture.find(params[:id])
+  end
+
+  def set_previous_page_title
+    @previous_page_title = if current_agent == @plage_ouverture.agent
+                             "Vos plages d'ouverture"
+                           else
+                             "Plages d'ouverture de #{@plage_ouverture.agent.full_name_or_email}"
+                           end
   end
 
   def build_plage_ouverture
