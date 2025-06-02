@@ -6,9 +6,9 @@ class AnnuaireServicePublic
   def mairie?
     return false unless first_result
 
-    JSON.parse(first_result["pivot"]).find do |pivot|
+    JSON.parse(first_result["pivot"]).any? do |pivot|
       pivot["type_service_local"] == "mairie"
-    end.present?
+    end
   rescue StandardError => e
     Sentry.capture_exception(e)
     nil
