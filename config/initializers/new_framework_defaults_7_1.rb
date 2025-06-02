@@ -150,7 +150,7 @@ Rails.application.config.active_record.query_log_tags_format = :sqlcommenter
 # leave this optimization off on the first deploy, then enable it on a
 # subsequent deploy.
 #++
-# Rails.application.config.active_support.use_message_serializer_for_metadata = true
+Rails.application.config.active_support.use_message_serializer_for_metadata = true
 
 ###
 # Set the maximum size for Rails log files.
