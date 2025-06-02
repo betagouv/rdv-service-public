@@ -2,7 +2,7 @@ module FranceConnectV2Stubs
   extend RSpec::Mocks::ExampleMethods # pour appeler #allow et #receive dans des méthodes de module
 
   def self.stub_and_run_discover_request
-    WebMock.stub_request(:get, "https://fcp-low.integ01.dev-franceconnect.fr/api/v2/.well-known/openid-configuration")
+    WebMock.stub_request(:get, "https://fcp-low.sbx.dev-franceconnect.fr/api/v2/.well-known/openid-configuration")
       .to_return(status: 200, body: File.read(Rails.root.join("spec/fixtures/france_connect_v2/openid-configuration.json").to_s), headers: {})
     load Rails.root.join("config/initializers/france_connect_v2.rb").to_s
   end
@@ -17,7 +17,7 @@ module FranceConnectV2Stubs
     stub_userinfo_request(userinfo_encoded_response_body)
 
     jwks_json = File.read(Rails.root.join("spec/fixtures/france_connect_v2/jwks.json").to_s)
-    WebMock.stub_request(:get, "https://fcp-low.integ01.dev-franceconnect.fr/api/v2/jwks").to_return(status: 200, body: jwks_json, headers: {})
+    WebMock.stub_request(:get, "https://fcp-low.sbx.dev-franceconnect.fr/api/v2/jwks").to_return(status: 200, body: jwks_json, headers: {})
 
     jwks = JSON.parse(jwks_json)
 
@@ -31,20 +31,20 @@ module FranceConnectV2Stubs
   end
 
   def self.stub_token_request(code)
-    WebMock.stub_request(:post, "https://fcp-low.integ01.dev-franceconnect.fr/api/v2/token").with(
+    WebMock.stub_request(:post, "https://fcp-low.sbx.dev-franceconnect.fr/api/v2/token").with(
       body: {
-        "client_id" => "ec41582-1d60-4f11-a63b-d8abaece16aa",
-        "client_secret" => "un faux secret de test",
+        "client_id" => "fake_france_connect_v2_client_id",
+        "client_secret" => "fake_france_connect_v2_client_secret",
         "code" => code,
         "grant_type" => "authorization_code",
-        "redirect_uri" => "http://test.host/franceconnect_v2/callback",
+        "redirect_uri" => "http://test.host/omniauth/franceconnect_v2/callback",
       },
       headers: {
         "Content-Type" => "application/x-www-form-urlencoded",
       }
     ).to_return(status: 200, body: {
-      id_token: "fake france connect v2 id token",
-      access_token: "fake france connect v2 access token",
+      id_token: "fake_france_connect_v2_id_token",
+      access_token: "fake_france_connect_v2_access_token",
     }.to_json, headers: {})
 
     allow(OpenIDConnect::ResponseObject::IdToken).to receive(:decode).and_return(
@@ -53,10 +53,10 @@ module FranceConnectV2Stubs
   end
 
   def self.stub_userinfo_request(response_body)
-    WebMock.stub_request(:get, "https://fcp-low.integ01.dev-franceconnect.fr/api/v2/userinfo?schema=openid")
+    WebMock.stub_request(:get, "https://fcp-low.sbx.dev-franceconnect.fr/api/v2/userinfo?schema=openid")
       .with(
         headers: {
-          "Authorization" => "Bearer fake france connect v2 access token",
+          "Authorization" => "Bearer fake_france_connect_v2_access_token",
           "Expect" => "",
           "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
