@@ -19,16 +19,21 @@
         = active_link_to "Passées", admin_organisation_agent_absences_path(current_organisation, @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
 
   - if @absences.any?
-    table.table
-      thead
-        tr
-          th Description
-          th Dates
-          th Actions
-      tbody
-        = render @absences
-    .d-flex.justify-content-center
-      = paginate @absences, theme: "twitter-bootstrap-4"
+    .fr-table.fr-mx-2w
+      .fr-table__wrapper
+        .fr-table__container
+          .fr-table__content
+            table
+              thead
+                tr
+                  th Description
+                  th Dates
+                  th Actions
+              tbody
+                = render @absences
+      .fr-table__footer
+        .fr-table__footer--middle
+          = paginate @absences
 
   - else
     .row.justify-content-md-center.p-2.mt-3
@@ -43,7 +48,7 @@
           i.fa.fa-circle.fa-stack-2x.text-primary
           i.far.fa-calendar.fa-stack-1x.text-white
   .rdv-text-align-center.py-2
-    = link_to new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-primary" do
+    = link_to new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "fr-btn" do
       - if @agent == current_agent
         = t(".create_absence")
       - else

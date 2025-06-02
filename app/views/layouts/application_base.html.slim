@@ -13,11 +13,11 @@ html lang="fr"
     = content_for(:additional_scripts)
 
   body
-    = render "layouts/rdv_solidarites_instance_name"
-    = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-
     - links = [dsfr_link_to("Contenu", "#content"), link_to("Pied de page", "#footer")]
     = dsfr_skiplink label: "Accès rapide", links: links, html_attributes: { "data-turbolinks": "false" }
+
+    = render "layouts/rdv_solidarites_instance_name"
+    = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
 
     = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: {id: "header"} do |header|
       ruby:
