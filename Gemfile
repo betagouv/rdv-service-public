@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.3"
+ruby "3.4.4"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -32,8 +32,6 @@ gem "sentry-rails"
 gem "skylight"
 # Block & throttle abusive requests
 gem "rack-attack"
-# Ruby production code coverage collection and reporting (line of code usage)
-gem "coverband"
 # Dépendance interne pour anonymiser les records AR
 gem "anonymizer", path: "lib/anonymizer"
 

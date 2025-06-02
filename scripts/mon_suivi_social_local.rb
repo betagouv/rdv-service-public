@@ -15,6 +15,7 @@ class MonSuiviSocial < Sinatra::Base
   end
 
   set :sessions, expire_after: 600 # temps en secondes
+  set :port, ENV.fetch("PORT", 3010)
 
   # Décommentez cette ligne pour avoir des logs sur stdout
   # enable :logging
