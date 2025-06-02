@@ -17,12 +17,14 @@ const defaultFullCalendarConfig = () => ({
   eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
 
-  // Avec la valeur par défaut (15), les RDVs de 15 minutes sont affichés côte-à-côte, car :
+  // Avec la valeur par défaut (15), les RDVs de 10 minutes sont affichés côte-à-côte, car :
   //   1. FullCalendar estime que c'est plus lisible de "gonfler" un peu l'affichage d'un événement très court (augmenter sa hauteur).
   //   2. FullCalendar affiche côte-à-côte des événements qui se chevauchent.
-  //   3. Les événements de 15 minutes se chevauchent une fois gonflés.
-  // Nous disons donc ici à FullCalendar de ne pas gonfler les événements courts.
-  eventMinHeight: 9,
+  //   3. Les événements de 10 minutes se chevauchent une fois gonflés.
+  // Nous disons donc ici à FullCalendar de ne pas gonfler les événements courts, afin qu'ils
+  // soient affichés les uns en dessous des autres, pour une meilleure lisibilité.
+  // Nous gardons malgré tout une hauteur minimale de 8px car c'est la limite à laquelle on ne voit même plus le texte.
+  eventMinHeight: 8,
 
   // This is a hack to make sure that the events will be shown at the proper time in the calendar.
   // If this is removed, there is a bug that causes the events in the calendar to be show at the wrong

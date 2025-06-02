@@ -71,6 +71,8 @@
             h3.fr-tile__title
               = link_to("Informations de contact", admin_organisation_path(current_organisation))
             p.fr-tile__desc
+              = @organisation.name
+              br
               - infos =[@organisation.phone_number, @organisation.email, @organisation.website].compact
               - if infos.present?
                 = infos.join(" ")

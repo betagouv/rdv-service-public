@@ -30,12 +30,14 @@
       label: "Rechercher une commune", \
       input_html: { \
         data: { "address-type": "municipality", "address-autocomplete": "on" }, \
+        dir: "ltr", \
       }
   - elsif zone.level_street?
     = f.input :street_label, \
       label: "Rechercher une rue", \
       input_html: { \
         data: { "address-type": "street", "address-autocomplete": "on" }, \
+        dir: "ltr", \
       }
   .row
     .col-6

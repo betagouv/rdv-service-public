@@ -50,7 +50,6 @@ Rails.application.routes.draw do
 
     authenticate :super_admin do
       mount GoodJob::Engine => "good_job"
-      mount Coverband::Reporters::Web.new, at: "/coverage"
     end
   end
   get "super_admin", to: redirect("super_admins", status: 301)
@@ -299,6 +298,7 @@ Rails.application.routes.draw do
   authenticated :agent do
     root to: "agents/pages#home", as: :authenticated_agent_root
   end
+  get "agents/agenda", to: "agents/agendas#show"
 
   scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do
     get "start"
