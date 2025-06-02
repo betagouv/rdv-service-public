@@ -38,6 +38,8 @@ RSpec.describe "Agents can be managed by organisation admins" do
     end
 
     describe "invitation email domains" do
+      stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: "true")
+
       context "when the organisation is using rdv_aide_numerique verticale" do
         let!(:organisation1) { create(:organisation, territory: territory, verticale: :rdv_aide_numerique) }
 
@@ -67,6 +69,12 @@ RSpec.describe "Agents can be managed by organisation admins" do
         end
       end
     end
+
+    stub_env_with(
+      AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
+      AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
+      AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
+    )
 
     specify "CRUD on agents" do
       create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation1], invitation_accepted_at: nil)
@@ -98,7 +106,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
 
       click_on "Se déconnecter"
       open_email("jean@paul.com")
-      expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
+      expect(current_email.subject).to eq "Vous avez été invité sur RDV Service Public"
 
       current_email.click_link("Accepter l'invitation")
 

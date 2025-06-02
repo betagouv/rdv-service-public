@@ -177,7 +177,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect { click_link("Supprimer") }.to change(enqueued_jobs, :size).by(1)
       expect { perform_enqueued_jobs }.to change { emails_sent_to(plage_ouverture.agent.email).size }.by(1)
       open_email(plage_ouverture.agent.email)
-      expect(current_email.subject).to eq("RDV Solidarités - Plage d’ouverture supprimée - #{plage_ouverture.title_with_default}")
+      expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture supprimée - #{plage_ouverture.title_with_default}")
       expect(current_email.body).to include(plage_ouverture.title_with_default)
       expect(current_email.body).to include(plage_ouverture.agent.full_name)
       expect(current_email.body).to include(plage_ouverture.motifs.first.name)

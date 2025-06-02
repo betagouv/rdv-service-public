@@ -9,8 +9,20 @@ RSpec.describe CustomDeviseMailer, "#domain" do
   context "when user has no RDV" do
     let(:user) { create(:user) }
 
-    it "uses RDV_SOLIDARITES" do
-      expect_to_use_domain(Domain::RDV_SOLIDARITES)
+    context "on the RDV Solidarités instance" do
+      stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: "true")
+
+      it "uses RDV_SOLIDARITES" do
+        expect_to_use_domain(Domain::RDV_SOLIDARITES)
+      end
+    end
+
+    context "on another instance" do
+      stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
+
+      it "uses RDV Service Public" do
+        expect_to_use_domain(Domain::RDV_MAIRIE)
+      end
     end
   end
 
@@ -112,7 +124,7 @@ RSpec.describe CustomDeviseMailer, "#domain" do
 
     it "doesn't override the reply-to address" do
       perform_enqueued_jobs
-      expect(sent_email.from).to eq [Domain::RDV_SOLIDARITES.support_email]
+      expect(sent_email.from).to eq [Domain::RDV_MAIRIE.support_email]
       expect(sent_email.reply_to).to be_blank
     end
 

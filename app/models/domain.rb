@@ -210,6 +210,14 @@ class Domain
     end
   end
 
+  def self.default_domain_for_current_instance
+    if ENV["DEFAULT_DOMAIN_IS_RDV_SOLIDARITES"] == "true"
+      RDV_SOLIDARITES
+    else
+      RDV_MAIRIE
+    end
+  end
+
   def self.find(id)
     ALL.find { _1.id == id } or raise "Can't find domain with id=#{id}"
   end
