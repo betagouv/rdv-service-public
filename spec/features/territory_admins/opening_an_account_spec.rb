@@ -6,6 +6,10 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
   context "quand l'agent a déjà été créé via une connexion ProConnect" do
     let(:agent) { create(:agent, :no_services, email: "francis@factice.org", proconnect_siret: "13002526500013") }
 
+    before do
+      AnnuaireServicePublicStubs.stub_siret_as_anct(agent.proconnect_siret, self)
+    end
+
     before { login_as(agent, scope: :agent) }
 
     context "et qu'il s'est connecté via une application externe" do
