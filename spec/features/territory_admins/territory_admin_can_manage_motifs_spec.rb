@@ -302,7 +302,7 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       expect(page).to have_content("Le motif #{motif.name} a été archivé")
     end
 
-    context "when the motif in invalid" do
+    context "when the motif is invalid" do
       it "archives anyway" do
         # fait échouer la validation :cant_be_for_secretariat_and_follow_up
         motif.update_columns(for_secretariat: true, follow_up: true) # rubocop:disable Rails/SkipsModelValidations
