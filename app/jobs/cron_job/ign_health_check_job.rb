@@ -1,4 +1,6 @@
 class CronJob::IGNHealthCheckJob < CronJob
+  CRON = "every minute".freeze
+
   # Ce job vérifie que l’API adresse de l’IGN est accessible.
   # Cette API étant utilisée uniquement en front pour l’auto-complétion des adresses, nous n’avions pas de remontée d’erreur
   # lorsqu’elle était en panne.

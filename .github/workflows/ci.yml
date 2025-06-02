@@ -169,7 +169,7 @@ jobs:
       matrix:
         # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’exécution
         dirname: [agents, "*"]
-        include: 
+        include:
           - dirname: agents
             command: "parallel:spec[spec/features/agents]"
           - dirname: "*"
@@ -273,6 +273,7 @@ jobs:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
       - run: yarn install
+      - run: FAIL_UNLESS_UNCHANGED=1 rails runner scripts/create_good_job_cron_json.rb
       - run: bin/test_boot
         env:
           HOST: http://www.rdv-test.fr

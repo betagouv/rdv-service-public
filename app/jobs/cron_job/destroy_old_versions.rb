@@ -1,4 +1,6 @@
 class CronJob::DestroyOldVersions < CronJob
+  CRON = "every day at 23:00 Europe/Paris".freeze
+
   MODEL_NAMES_WITH_NO_PERSONAL_INFORMATION = %w[
     WebhookEndpoint
     Service

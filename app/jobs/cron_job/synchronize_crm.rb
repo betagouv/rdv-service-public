@@ -1,4 +1,6 @@
 class CronJob::SynchronizeCrm < CronJob
+  CRON = "every day at 08:00 Europe/Paris".freeze
+
   # Base de données "Activation"
   # ID récupéré dans l’URL de la page
   # Cf: https://developers.notion.com/reference/retrieve-a-database

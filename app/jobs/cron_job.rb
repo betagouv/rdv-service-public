@@ -1,7 +1,15 @@
 class CronJob < ApplicationJob
+  # Rappel des changements d'heure :
+  # - au passage à l'heure d'hiver, on passe deux fois sur l'heure entre 02:00 et 02:59
+  # - au passage à l'heure d'été, on passe de 01:59 à 03:00
+  # Il est donc dangereux de déclarer un cron entre 02:00 et 02:59.
+
   queue_as :latency_whenever
 
   class FileAttenteJob < CronJob
+    # Every 10 minutes, from 9:00 to 18:00
+    CRON = "0/10 9,10,11,12,13,14,15,16,17,18 * * * Europe/Paris".freeze
+
     queue_as :latency_30s
 
     def perform
@@ -10,6 +18,10 @@ class CronJob < ApplicationJob
   end
 
   class ReminderJob < CronJob
+    # Ce job doit impérativement s'exécuter exactement une fois dans la journée,
+    # il schedule les envois des notifs des RDVs ayant lieu le surlendemain.
+    CRON = "every day at 03:00 Europe/Paris".freeze
+
     def perform
       Rdv.not_cancelled.day_after_tomorrow.find_each do |rdv|
         run_at = rdv.starts_at - 48.hours
@@ -19,6 +31,9 @@ class CronJob < ApplicationJob
   end
 
   class UpdateExpirationsJob < CronJob
+    # Pré-calcul d'index : pas essentiel mais idéalement quotidien
+    CRON = "every day at 03:30 Europe/Paris".freeze
+
     def perform
       [PlageOuverture, Absence].each do |klass|
         klass.not_expired.find_each(&:refresh_expired_cached)
@@ -27,6 +42,8 @@ class CronJob < ApplicationJob
   end
 
   class DestroyOldRdvsAndInactiveAccountsJob < CronJob
+    CRON = "every day at 22:00 Europe/Paris".freeze
+
     def perform
       two_years_ago = 2.years.ago
 
@@ -98,6 +115,8 @@ class CronJob < ApplicationJob
   end
 
   class DestroyOldPlageOuvertureJob < CronJob
+    CRON = "every day at 22:30 Europe/Paris".freeze
+
     def perform
       po_exceptionnelle_closed_since_1_year = PlageOuverture.where(recurrence: nil).where(first_day: ..1.year.ago)
       po_recurrent_closed_since_1_year = PlageOuverture.where(recurrence_ends_at: ..1.year.ago)
@@ -109,24 +128,33 @@ class CronJob < ApplicationJob
   end
 
   class AnonymizeOldReceipts < CronJob
+    CRON = "every day at 23:45 Europe/Paris".freeze
+
     def perform
       Anonymizer.anonymize_records!("receipts", scope: Receipt.arel_table[:created_at].lt(6.months.ago))
     end
   end
 
   class DestroyOldApiCalls < CronJob
+    CRON = "every day at 23:30 Europe/Paris".freeze
+
     def perform
       ApiCall.where("received_at < ?", 1.year.ago).delete_all
     end
   end
 
   class DestroyRedisWaitingRoomKeys < CronJob
+    # Reset de la liste d'usagers en salle d'attente, à vider chaque soir
+    CRON = "every day at 21:30 Europe/Paris".freeze
+
     def perform
       Rdv.reset_user_in_waiting_room!
     end
   end
 
   class WarnAboutExpiringAzureAppSecrets < CronJob
+    CRON = "every day at 10:00 Europe/Paris".freeze
+
     def perform
       return if ENV["AZURE_APPLICATION_CLIENT_ID"].blank?
       return if ENV["AZURE_SECRET_EXPIRE_DATE"].blank?
