@@ -134,8 +134,9 @@ class Motif < ApplicationRecord
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
-  def archive!
-    update!(deleted_at: Time.zone.now)
+  def archive
+    self.deleted_at = Time.zone.now
+    save(validate: false)
   end
 
   def unarchive

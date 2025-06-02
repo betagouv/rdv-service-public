@@ -85,7 +85,7 @@ class Admin::MotifsController < AgentAuthController
 
   def archive
     authorize(@motif, policy_class: Agent::MotifPolicy)
-    @motif.archive!
+    @motif.archive
     flash[:success] = "Le motif #{link_to_motif(@motif)} a été archivé."
     redirect_back fallback_location: admin_organisation_motif_path(@motif.organisation, @motif)
   end
