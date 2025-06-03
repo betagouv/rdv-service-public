@@ -21,8 +21,12 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
                 description: "Filtre pour obtenir uniquement les rendez-vous de l'agent qui a cet id",
                 example: 456, required: false
       parameter name: :id, in: :query,
-                description: "Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste. Vous pouvez passer soit un tableau d'entier, soit un seul entier pour obtenir un seul rdv",
-                example: 456, required: false
+                description: <<~DOC,
+                  Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste.
+                  Vous pouvez passer soit un tableau d'entier pour obtenir plusieurs rdvs, soit un seul entier pour obtenir un seul rdv.
+                  Si vous passez un tableau d'entier, le format attendu est id[]=1234&id[]=5678
+                DOC
+                example: "789 ou id[]=1234&id[]=5678", required: false
 
       parameter name: :starts_after, in: :query, type: :string,
                 description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time (iso8601).",

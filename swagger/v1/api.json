@@ -2827,8 +2827,8 @@
           {
             "name": "id",
             "in": "query",
-            "description": "Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste. Vous pouvez passer soit un tableau d'entier, soit un seul entier pour obtenir un seul rdv",
-            "example": 456,
+            "description": "Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste.\nVous pouvez passer soit un tableau d'entier pour obtenir plusieurs rdvs, soit un seul entier pour obtenir un seul rdv.\nSi vous passez un tableau d'entier, le format attendu est id[]=1234&id[]=5678\n",
+            "example": "789 ou id[]=1234&id[]=5678",
             "required": false
           },
           {
