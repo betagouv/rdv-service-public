@@ -33,9 +33,21 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
-    @connected_with_franceconnect = user_signed_in? && session[:connected_with_franceconnect]
-    # so it's accessible in after_sign_out_path_for
-    super
+    france_connect_v2_id_token = session.delete(:france_connect_v2_id_token)
+    signed_out = sign_out_all_scopes
+    set_flash_message! :notice, :signed_out if signed_out
+
+    if user_signed_in? && session[:connected_with_franceconnect]
+      post_logout_redirect_url = "https://#{ENV['FRANCECONNECT_HOST']}/api/v1/logout"
+    elsif user_signed_in? && france_connect_v2_id_token
+      fc_client = FranceConnectV2OpenIdClient::Logout.new(france_connect_v2_id_token)
+      session[:france_connect_v2_logout_state] = fc_client.state
+      post_logout_redirect_url = fc_client.agent_connect_logout_url(omniauth_franceconnect_v2_post_logout_url)
+    else
+      post_logout_redirect_url = after_sign_out_path_for(:user)
+    end
+
+    redirect_to post_logout_redirect_url, allow_other_host: true
   end
 
   private

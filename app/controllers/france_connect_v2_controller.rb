@@ -31,13 +31,24 @@ class FranceConnectV2Controller < ApplicationController
 
     upsert_service = UpsertUserForFranceconnectService.new(OpenStruct.new(callback_client.user_info))
     upsert_service.perform
+
     flash[:success] = upsert_service.new_user? ? "Votre compte a été créé" : "Vous êtes connecté·e"
     bypass_sign_in upsert_service.user, scope: :user
-    session[:connected_with_franceconnect] = true
+    session[:france_connect_v2_id_token] = callback_client.id_token_for_logout
     redirect_to after_sign_in_path_for(upsert_service.user)
   end
 
-  def after_logout; end
+  # voir https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-endpoints/#redirection-vers-le-fournisseur-de-service-apres-deconnexion
+  def post_logout
+    session_state = session[:france_connect_v2_logout_state]
+    params_state = params[:state]
+    if session_state != params_state
+      Sentry.capture_message("State mismatch on FranceConnect logout", extra: { session_state:, params_state: })
+    end
+
+    flash[:success] = "Vous êtes bien déconnecté⋅e de #{current_domain.name}."
+    redirect_to root_url
+  end
 
   def sector_identifier
     urls = [

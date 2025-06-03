@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   get "omniauth/franceconnect_v2/auth" => "france_connect_v2#auth"
   get "omniauth/franceconnect_v2/callback" => "france_connect_v2#callback"
-  get "omniauth/franceconnect_v2/logout" => "france_connect_v2#after_logout"
+  get "omniauth/franceconnect_v2/post_logout" => "france_connect_v2#post_logout"
   get "omniauth/franceconnect_v2/sector_identifier" => "france_connect_v2#sector_identifier", format: :json
 
   devise_for :super_admins # necessary for helpers like super_admin_signed_in?
