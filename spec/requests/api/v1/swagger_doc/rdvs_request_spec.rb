@@ -4,7 +4,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/v1/rdvs" do
-    get "Lister les rendez-vous d'une organisation" do
+    get "Lister les rendez-vous" do
       with_authentication
 
       tags "RDV"
@@ -19,6 +19,9 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
                 example: 123, required: false
       parameter name: :agent_id, in: :query, type: :integer,
                 description: "Filtre pour obtenir uniquement les rendez-vous de l'agent qui a cet id",
+                example: 456, required: false
+      parameter name: :id, in: :query,
+                description: "Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste. Vous pouvez passer soit un tableau d'entier, soit un seul entier pour obtenir un seul rdv",
                 example: 456, required: false
 
       parameter name: :starts_after, in: :query, type: :string,

@@ -32,8 +32,8 @@ RSpec.describe "RDV API" do
       expect(parsed_response_body["rdvs"].first["id"]).to eq rdv_with_user_and_agent.id
     end
 
-    it "filters by id" do
-      get "/api/v1/rdvs", headers: headers, params: { ids: [rdv_with_user_and_other_agent, rdv_with_other_user_and_agent] }, as: :json
+    it "filters by id when passing an array" do
+      get "/api/v1/rdvs", headers: headers, params: { id: [rdv_with_user_and_other_agent.id, rdv_with_other_user_and_agent.id] }, as: :json
       expect(parsed_response_body["rdvs"].count).to eq 2
 
       response_ids = [
@@ -42,6 +42,12 @@ RSpec.describe "RDV API" do
       ]
 
       expect(response_ids).to contain_exactly(rdv_with_user_and_other_agent.id, rdv_with_other_user_and_agent.id)
+    end
+
+    it "filters by id with only one value" do
+      get "/api/v1/rdvs", headers: headers, params: { id: rdv_with_user_and_agent.id }, as: :json
+      expect(parsed_response_body["rdvs"].count).to eq 1
+      expect(parsed_response_body["rdvs"].first["id"]).to eq rdv_with_user_and_agent.id
     end
   end
 end
