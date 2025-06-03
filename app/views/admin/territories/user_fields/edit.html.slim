@@ -11,8 +11,15 @@
 
           p.text-muted.font-14= t(".hint_1")
           p.text-muted.font-14= t(".hint_2")
-          - Territory::OPTIONAL_FIELD_TOGGLES.each do |toggle, field_name|
+          - legitimate_toggles, legacy_toggles = Territory::OPTIONAL_FIELD_TOGGLES.partition { |toggle, _| toggle.in?(Territory::LEGITIMATE_TOGGLES) }.map(&:to_h)
+
+          - legitimate_toggles.each do |toggle, field_name|
             = f.input toggle, label: User.human_attribute_name(field_name)
+
+          p.text-muted.font-14= t(".legacy_toggles_explanations")
+          - legacy_toggles.each do |toggle, field_name|
+            - if current_territory.send(toggle)
+              = f.input toggle, label: User.human_attribute_name(field_name)
 
           .text-right
             = f.button :submit

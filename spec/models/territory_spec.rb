@@ -98,13 +98,5 @@ RSpec.describe Territory, type: :model do
       expect(described_class.new(enable_number_of_children_field: true).any_social_field_enabled?).to be_truthy
     end
   end
-
-  describe "#any_optional_user_field_enabled?" do
-    it "returns true if any optional field is enabled" do
-      expect(described_class.new.any_optional_user_field_enabled?).to be_falsey
-      expect(described_class.new(enable_number_of_children_field: true).any_optional_user_field_enabled?).to be_truthy
-      expect(described_class.new(enable_notes_field: true).any_optional_user_field_enabled?).to be_truthy
-    end
-  end
   # rubocop:enable RSpec/PredicateMatcher
 end
