@@ -4,7 +4,7 @@ class AnnuaireServicePublic
   end
 
   def mairie?
-    return false unless first_result
+    return false unless first_result&.fetch("pivot")
 
     JSON.parse(first_result["pivot"]).any? do |pivot|
       pivot["type_service_local"] == "mairie"
