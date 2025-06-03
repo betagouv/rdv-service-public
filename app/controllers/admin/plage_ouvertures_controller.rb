@@ -108,9 +108,9 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def set_previous_page_title
     @previous_page_title = if current_agent == @plage_ouverture.agent
-                             "Vos plages d'ouverture"
+                             "Plages d’ouverture"
                            else
-                             "Plages d'ouverture de #{@plage_ouverture.agent.full_name_or_email}"
+                             "Plages d’ouverture de #{@plage_ouverture.agent.full_name_and_service}"
                            end
   end
 
