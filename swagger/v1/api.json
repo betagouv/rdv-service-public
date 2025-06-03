@@ -2758,7 +2758,7 @@
     },
     "/api/v1/rdvs": {
       "get": {
-        "summary": "Lister les rendez-vous d'une organisation",
+        "summary": "Lister les rendez-vous",
         "security": [
           {
             "access_token": [],
@@ -2825,6 +2825,13 @@
             }
           },
           {
+            "name": "id",
+            "in": "query",
+            "description": "Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste.\nVous pouvez passer soit un tableau d'entier pour obtenir plusieurs rdvs, soit un seul entier pour obtenir un seul rdv.\nSi vous passez un tableau d'entier, le format attendu est id[]=1234&id[]=5678\n",
+            "example": "789 ou id[]=1234&id[]=5678",
+            "required": false
+          },
+          {
             "name": "starts_after",
             "in": "query",
             "description": "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time (iso8601).",
@@ -2849,7 +2856,7 @@
           "RDV"
         ],
         "operationId": "getRdvs",
-        "description": "Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres optionels passés en paramètre",
+        "description": "Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres facultatifs passés en paramètre",
         "responses": {
           "200": {
             "description": "Appel API réussi",
