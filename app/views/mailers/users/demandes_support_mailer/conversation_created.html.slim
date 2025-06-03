@@ -1,0 +1,20 @@
+h1 Nouvelle demande de support (##{@conversation_id})
+
+p Bonjour,
+
+p Nous avons bien reçu votre demande de support. Nous vous répondrons dès que possible.
+
+hr style="margin-bottom: 1rem;"
+
+div style="font-style: italic;"
+  strong= @sujet
+  br
+  br
+  = simple_format(@message)
+
+hr style="margin-bottom: 1rem;"
+
+p
+  | Cordialement,
+  br
+  | L'équipe de support RDV Service Public

@@ -25,7 +25,7 @@ class DemandeSupportForm
     return unless valid?
 
     if ENV.fetch("CHATWOOT_ENABLED", false)
-      CreateChatwootTicketJob.perform_later(
+      CreateChatwootConversationJob.perform_later(
         first_name:,
         last_name:,
         email:,
@@ -33,7 +33,7 @@ class DemandeSupportForm
         sujet:,
         message:,
         role:,
-        domain: current_domain.to_s
+        domain: current_domain.id
       )
     elsif ENV.fetch("CRISP_ENABLED", false)
       CreateCrispTicketJob.perform_later(
