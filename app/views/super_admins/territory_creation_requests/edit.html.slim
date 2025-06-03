@@ -21,7 +21,12 @@ section.main-content__body
     - siret = @territory_creation_request.agent.proconnect_siret
     - if siret
       dt.attribute-label SIRET
-      dd.attribute-data =link_to(siret, "https://annuaire-entreprises.data.gouv.fr/etablissement/#{siret}", target: "_blank")
+      dd.attribute-data
+        = link_to(siret, "https://annuaire-entreprises.data.gouv.fr/etablissement/#{siret}", target: "_blank")
+        - annuaire_client = AnnuaireServicePublic.new(siret)
+        p= link_title = annuaire_client.nom
+        - if annuaire_client.mairie?
+          p ✅ Cette structure est une mairie
 
     dt.attribute-label.attribute-label--normal-case Service
     dd.attribute-data = @territory_creation_request.service_name

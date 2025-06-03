@@ -22,9 +22,9 @@ RSpec.describe TransferEmailReplyJob do
 
       allow(rdv).to receive(:uuid).and_return("aabb-1122")
       allow(rdv).to receive(:domain).and_return(domain)
-      allow(domain).to receive(:reply_host_name).and_return "reply.rdv-solidarites.fr"
+      allow(domain).to receive(:reply_host_name).and_return "reply.rdv-service-public.fr"
 
-      expect(described_class.reply_address_for_rdv(rdv)).to eq("rdv+aabb-1122@reply.rdv-solidarites.fr")
+      expect(described_class.reply_address_for_rdv(rdv)).to eq("rdv+aabb-1122@reply.rdv-service-public.fr")
     end
 
     it "returns nil for a rdv whose domain reply_host_name is nil" do
@@ -92,8 +92,8 @@ RSpec.describe TransferEmailReplyJob do
       it "sends a notification email to the default mailbox, containing the user reply" do
         expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
         transferred_email = ActionMailer::Base.deliveries.last
-        expect(transferred_email.to).to eq(["support@rdv-solidarites.fr"])
-        expect(transferred_email.from).to eq(["support@rdv-solidarites.fr"])
+        expect(transferred_email.to).to eq(["support@rdv-service-public.fr"])
+        expect(transferred_email.from).to eq(["support@rdv-service-public.fr"])
         expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
         expect(transferred_email.html_part.body.to_s).to include("Je souhaite annuler mon RDV") # reply content
       end
@@ -101,13 +101,13 @@ RSpec.describe TransferEmailReplyJob do
 
     context "when an e-mail address does not match our pattern" do
       let(:sendinblue_payload) do
-        sendinblue_valid_payload.tap { |hash| hash[:Headers][:To] = "nimportequoi@reply.rdv-solidarites.fr" }
+        sendinblue_valid_payload.tap { |hash| hash[:Headers][:To] = "nimportequoi@reply.rdv-service-public.fr" }
       end
 
       it "is forwarded to default mailbox" do
         expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
         transferred_email = ActionMailer::Base.deliveries.last
-        expect(transferred_email.to).to eq(["support@rdv-solidarites.fr"])
+        expect(transferred_email.to).to eq(["support@rdv-service-public.fr"])
         expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
       end
     end
@@ -153,7 +153,7 @@ RSpec.describe TransferEmailReplyJob do
       it "transfère le mail à notre support" do
         expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
         transferred_email = ActionMailer::Base.deliveries.last
-        expect(transferred_email.to).to eq(["support@rdv-solidarites.fr"])
+        expect(transferred_email.to).to eq(["support@rdv-service-public.fr"])
         expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
       end
     end

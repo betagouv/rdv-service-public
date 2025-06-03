@@ -50,7 +50,7 @@ RSpec.describe "Agent can CRUD intervenants" do
 
     expect { perform_enqueued_jobs }.not_to raise_error
     expect(ActionMailer::Base.deliveries.size).to eq(1)
-    expect(ActionMailer::Base.deliveries.last.subject).to eq("Vous avez été invité sur RDV Solidarités")
+    expect(ActionMailer::Base.deliveries.last.subject).to eq("Vous avez été invité sur RDV Service Public")
     expect(ActionMailer::Base.deliveries.last.to).to eq(["ancien_intervenant1@invitation.com"])
 
     expect(Agent.last).to have_attributes(

@@ -26,7 +26,7 @@ module DefaultJobBehaviour
   end
 
   def job_link
-    good_job_domain = ENV["APP"]&.match?(/rdv-mairie/) ? Domain::RDV_MAIRIE : Domain::RDV_SOLIDARITES
+    good_job_domain = Domain.default_domain_for_current_instance
     GoodJob::Engine.routes.url_helpers.job_url(id: job_id, host: good_job_domain.host_name)
   end
 
