@@ -1,19 +1,18 @@
 - content_for(:menu_item) { "menu-users" }
 
+- titles_and_paths = [["Accueil", root_path], ["Usagers", admin_organisation_users_path(current_organisation)]]
+
 - if @user.relative? && @user.responsible.persisted?
   - content_for :title do
     | Ajouter un proche
 
-  - content_for :breadcrumb do
-    ol.breadcrumb.m-0
-      li.breadcrumb-item
-        = link_to "Usagers", admin_organisation_users_path(current_organisation)
-      li.breadcrumb-item
-        = link_to @user.responsible.full_name, admin_organisation_user_path(current_organisation, @user.responsible)
-      li.breadcrumb-item.active Ajouter un proche
+  - titles_and_paths << [@user.responsible.full_name, admin_organisation_user_path(current_organisation, @user.responsible)]
 - else
   - content_for :title do
     | Nouvel usager
+
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths:, current_page_title: yield(:title)
 
 - if from_modal?
   = render "form", user: @user, user_form: @user_form
