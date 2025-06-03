@@ -9,7 +9,7 @@ class Agent::TeamPolicy
   end
 
   def update?
-    allowed_to_manage_teams? && agents_in_team_territory?
+    allowed_to_manage_teams? && all_agents_belong_to_team_territory?
   end
 
   alias new? update?
@@ -24,7 +24,7 @@ class Agent::TeamPolicy
     self.class.allowed_to_manage_teams_in?(@team.territory, @current_agent)
   end
 
-  def agents_in_team_territory?
+  def all_agents_belong_to_team_territory?
     @team.agents.all? { |agent| agent.territories_through_organisations.include?(@team.territory) }
   end
 
