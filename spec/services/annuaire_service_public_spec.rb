@@ -24,9 +24,7 @@ RSpec.describe AnnuaireServicePublic do
     context "pour une mairie" do
       let(:siret) { "21600660100019" }
 
-      before do
-        AnnuaireServicePublicStubs.stub_siret_as_mairie(siret, self)
-      end
+      before { AnnuaireServicePublicStubs.stub_siret_as_mairie(siret, self) }
 
       it { is_expected.to be_truthy }
     end
@@ -34,11 +32,12 @@ RSpec.describe AnnuaireServicePublic do
     context "pour une autre structure" do
       let(:siret) { "13002603200016" }
 
-      before do
-        AnnuaireServicePublicStubs.stub_siret_as_anct(siret, self)
-      end
+      before { AnnuaireServicePublicStubs.stub_siret_as_anct(siret, self) }
 
-      it { is_expected.to be_falsey }
+      it "returns false and doesn't raise any errors" do
+        expect(subject).to be_falsey
+        expect(sentry_events).to be_empty
+      end
     end
   end
 
