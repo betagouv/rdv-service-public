@@ -38,7 +38,10 @@ RSpec.describe AnnuaireServicePublic do
         AnnuaireServicePublicStubs.stub_siret_as_anct(siret, self)
       end
 
-      it { is_expected.to be_falsey }
+      it "returns false and doesn't raise any errors" do
+        expect(subject).to be_falsey
+        expect(sentry_events).to be_empty
+      end
     end
   end
 
