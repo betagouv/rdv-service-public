@@ -46,7 +46,7 @@ RSpec.describe "Agent can CRUD absences" do
     let!(:absence) { create(:absence, agent: other_agent) }
 
     it "can crud a absence" do
-      visit admin_organisation_agent_absences_path(organisation, other_agent.id)
+      visit admin_organisation_planning_absences_path(organisation, agent_id: other_agent.id)
       expect_page_title("Indisponibilités de Jane FAROU (PMI)")
       click_link absence.title
 

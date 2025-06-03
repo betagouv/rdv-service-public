@@ -60,7 +60,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
 
         it "redirects to the created absence" do
           post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
-          expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, agent.id))
+          expect(response).to redirect_to(admin_organisation_planning_absences_path(organisation, agent_id: agent.id))
         end
 
         it "send notification after create" do
@@ -124,7 +124,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
 
         it "redirects to the absence" do
           put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
-          expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
+          expect(response).to redirect_to(admin_organisation_planning_absences_path(organisation, agent_id: absence.agent_id))
         end
 
         it "send notification after update" do
@@ -178,7 +178,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
 
       it "redirects to the absences list" do
         delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
-        expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
+        expect(response).to redirect_to(admin_organisation_planning_absences_path(organisation, agent_id: absence.agent_id))
       end
 
       it "enqueues notification after delete" do

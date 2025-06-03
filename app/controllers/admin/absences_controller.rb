@@ -42,7 +42,7 @@ class Admin::AbsencesController < AgentAuthController
     if @absence.save
       Agents::AbsenceMailer.with(absence: @absence).absence_created.deliver_later if @agent.absence_notification_level == "all"
       flash[:success] = t(".absence_created")
-      redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
+      redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
     else
       render :new
     end
@@ -53,7 +53,7 @@ class Admin::AbsencesController < AgentAuthController
     if @absence.update(absence_params)
       Agents::AbsenceMailer.with(absence: @absence).absence_updated.deliver_later if @agent.absence_notification_level == "all"
       flash[:success] = t(".absence_updated")
-      redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
+      redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
     else
       render :edit
     end
@@ -65,7 +65,7 @@ class Admin::AbsencesController < AgentAuthController
       # On passe l'absence au job sous forme sérialisée puisqu'elle n'existe plus en base.
       Agents::AbsenceMailer.with(absence: Absence.serialize_for_active_job(@absence)).absence_destroyed.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".absence_deleted")
-      redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
+      redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
     else
       render :edit
     end

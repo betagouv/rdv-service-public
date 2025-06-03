@@ -1,5 +1,5 @@
 - content_for(:menu_item) { "menu-absences" }
-- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_agent_absences_path" }
+- content_for(:menu_agent_select_path_helper_name) { "TODO: check that" }
 
 - content_for :title do
   - if current_agent == @agent
@@ -8,15 +8,15 @@
     = t(".absences_of", full_name: @agent.full_name_and_service)
 
 - content_for :breadcrumb do
-  = link_to t(".create_absence"), new_admin_organisation_agent_absence_path(current_organisation, agent_id: @agent.id), class: "btn btn-outline-primary align-bottom"
+  = link_to t(".create_absence"), new_admin_organisation_planning_absences_path(current_organisation, agent_id: @agent.id), class: "btn btn-outline-primary align-bottom"
 
 .card.pb-3
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        = active_link_to "En cours", admin_organisation_agent_absences_path(current_organisation, agent_id: @agent.id), class: "nav-link", active: :exact
+        = active_link_to "En cours", admin_organisation_planning_absences_path(current_organisation, agent_id: agent_id: @agent.id), class: "nav-link", active: :exact
       li.nav-item
-        = active_link_to "Passées", admin_organisation_agent_absences_path(current_organisation, agent_id: @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
+        = active_link_to "Passées", admin_organisation_planning_absences_path(current_organisation, agent_id: agent_id: @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
 
   - if @absences.any?
     .fr-table.fr-mx-2w
@@ -48,7 +48,7 @@
           i.fa.fa-circle.fa-stack-2x.text-primary
           i.far.fa-calendar.fa-stack-1x.text-white
   .rdv-text-align-center.py-2
-    = link_to new_admin_organisation_agent_absence_path(current_organisation, agent_id: @agent.id), class: "fr-btn" do
+    = link_to new_admin_organisation_planning_absences_path(current_organisation, agent_id: @agent.id), class: "fr-btn" do
       - if @agent == current_agent
         = t(".create_absence")
       - else

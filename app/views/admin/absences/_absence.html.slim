@@ -15,7 +15,7 @@ tr
       = link_to "", edit_admin_organisation_absence_path(current_organisation, absence),
               title: t("helpers.edit"),
               class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
-      = link_to "", new_admin_organisation_agent_absence_path(current_organisation, absence.agent, duplicate_absence_id: absence),
+      = link_to "", new_admin_organisation_planning_absences_path(current_organisation, agent_id: absence.agent, duplicate_absence_id: absence),
               title: t("helpers.clone"),
               class: "fr-btn fr-btn--tertiary fr-icon-clipboard-fill"
       = link_to "", admin_organisation_absence_path(current_organisation, absence),

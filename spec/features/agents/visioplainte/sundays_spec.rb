@@ -25,7 +25,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
 
     describe "absences" do
       it "can be created on sunday", js: true do
-        visit new_admin_organisation_agent_absence_path(organisation_id: organisation.id, agent_id: superviseur.id)
+        visit new_admin_organisation_planning_absences_path(organisation_id: organisation.id, agent_id: superviseur.id)
 
         fill_in "Description", with: "réunion hebdo"
         check "Répéter"
@@ -69,7 +69,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
       check "Répéter"
       expect(page).not_to have_content "Dimanche"
 
-      visit new_admin_organisation_agent_absence_path(organisation_id: organisation.id, agent_id: agent.id)
+      visit new_admin_organisation_planning_absences_path(organisation_id: organisation.id, agent_id: agent.id)
       check "Répéter"
       expect(page).not_to have_content "Dimanche"
     end
