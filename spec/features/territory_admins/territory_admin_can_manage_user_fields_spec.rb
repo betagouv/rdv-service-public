@@ -45,10 +45,16 @@ RSpec.describe "admin d'espace peut gérer les champs de fiche usager", type: :f
       it "affiche uniquement les champs légitimes" do
         login_as(agent, scope: :agent)
         visit edit_admin_territory_user_fields_path(territory)
+
+        # Les champs légitimes sont affichés
         expect(page).to have_content("Date de naissance")
         expect(page).to have_content("Complément d'adresse")
         expect(page).to have_content("Numéro de dossier")
 
+        # pas la peine d'afficher les infos sur les champs legacy
+        expect(page).not_to have_content("Les champs ci-dessous sont dépréciés")
+
+        # Aucun champ legacy n'est affiché
         expect(page).not_to have_content("Logement")
         expect(page).not_to have_content("Remarques")
         expect(page).not_to have_content("Caisse d'affiliation")
@@ -83,6 +89,9 @@ RSpec.describe "admin d'espace peut gérer les champs de fiche usager", type: :f
         expect(page).to have_content("Date de naissance")
         expect(page).to have_content("Complément d'adresse")
         expect(page).to have_content("Numéro de dossier")
+
+        # On affiche une explication sur le fonctionnement des champs legacy
+        expect(page).to have_content("Les champs ci-dessous sont dépréciés")
 
         # Ces champs legacy sont affichés car actuellement enabled
         expect(page).to have_content("Nombre d'enfants")

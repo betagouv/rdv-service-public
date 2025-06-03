@@ -98,5 +98,15 @@ RSpec.describe Territory, type: :model do
       expect(described_class.new(enable_number_of_children_field: true).any_social_field_enabled?).to be_truthy
     end
   end
+
+  describe "#any_legacy_fields_enabled?" do
+    it "returns true if any legacy field is enabled" do
+      expect(described_class.new.any_legacy_fields_enabled?).to be_falsey
+      expect(described_class.new(enable_address_details: true).any_legacy_fields_enabled?).to be_falsey
+
+      expect(described_class.new(enable_number_of_children_field: true).any_legacy_fields_enabled?).to be_truthy
+      expect(described_class.new(enable_notes_field: true).any_legacy_fields_enabled?).to be_truthy
+    end
+  end
   # rubocop:enable RSpec/PredicateMatcher
 end
