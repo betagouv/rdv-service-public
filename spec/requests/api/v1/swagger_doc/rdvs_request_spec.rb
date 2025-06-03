@@ -10,7 +10,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       tags "RDV"
       produces "application/json"
       operationId "getRdvs"
-      description "Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres optionels passés en paramètre"
+      description "Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres facultatifs passés en paramètre"
 
       parameter name: :organisation_id, in: :query, type: :string, description: "Identifiant de l'organisation", example: "20", required: false
 
