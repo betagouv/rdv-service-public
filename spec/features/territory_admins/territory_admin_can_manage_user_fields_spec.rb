@@ -1,7 +1,45 @@
-RSpec.describe "territory admin can manage user fields", type: :feature do
+RSpec.describe "admin d'espace peut gérer les champs de fiche usager", type: :feature do
+  let!(:territory) { create(:territory) }
+  let!(:agent) { create(:agent, role_in_territories: [territory]) }
+
+  it "works (cas général)" do
+    login_as(agent, scope: :agent)
+    visit edit_admin_territory_user_fields_path(territory)
+
+    check "Date de naissance"
+    expect { click_on "Enregistrer" }.to change { territory.reload.enable_birth_date_field }.from(false).to(true)
+
+    uncheck "Date de naissance"
+    expect { click_on "Enregistrer" }.to change { territory.reload.enable_birth_date_field }.from(true).to(false)
+  end
+
+  it "permet de décocher les champs legcay précédemment activés" do
+    territory.update!(enable_logement_field: true)
+    login_as(agent, scope: :agent)
+    visit edit_admin_territory_user_fields_path(territory)
+
+    uncheck "Logement"
+    expect { click_on "Enregistrer" }.to change { territory.reload.enable_logement_field }.from(true).to(false)
+    # Le champ n'est plus proposé une fois décoché
+    expect(page).not_to have_content("Logement")
+  end
+
   describe "affichage des champs légitimes ou déjà cochés" do
     context "quand tous les toggles sont désactivés (espace tout juste créé)" do
-      let!(:territory) { create(:territory) }
+      let!(:territory) do
+        create(
+          :territory,
+          enable_notes_field: false,
+          enable_caisse_affiliation_field: false,
+          enable_affiliation_number_field: false,
+          enable_family_situation_field: false,
+          enable_number_of_children_field: false,
+          enable_logement_field: false,
+          enable_case_number: false,
+          enable_birth_date_field: false,
+          enable_address_details: false
+        )
+      end
       let!(:agent) { create(:agent, role_in_territories: [territory]) }
 
       it "affiche uniquement les champs légitimes" do
@@ -21,7 +59,20 @@ RSpec.describe "territory admin can manage user fields", type: :feature do
     end
 
     context "quand certains toggles sont activés sur le territoire" do
-      let!(:territory) { create(:territory, enable_logement_field: true, enable_number_of_children_field: true) }
+      let!(:territory) do
+        create(
+          :territory,
+          enable_notes_field: false,
+          enable_caisse_affiliation_field: false,
+          enable_affiliation_number_field: false,
+          enable_family_situation_field: false,
+          enable_number_of_children_field: true,
+          enable_logement_field: true,
+          enable_case_number: false,
+          enable_birth_date_field: false,
+          enable_address_details: false
+        )
+      end
       let!(:agent) { create(:agent, role_in_territories: [territory]) }
 
       it "affiche les champs légitimes et les champs activés" do
