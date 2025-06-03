@@ -267,6 +267,7 @@ Rails.application.routes.draw do
         resources :agent_agendas, only: %i[show] do
           put :toggle_displays, on: :member
         end
+        resources :agents, except: %i[show]
         namespace :planning do
           get :agenda
           resources :plage_ouvertures do

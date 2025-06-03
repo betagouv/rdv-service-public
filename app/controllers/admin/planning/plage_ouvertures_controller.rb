@@ -88,7 +88,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
         Agents::PlageOuvertureMailer.with(plage_ouverture: plage_attributes).plage_ouverture_destroyed.deliver_later
       end
       flash[:notice] = "La plage d'ouverture a été supprimée."
-      redirect_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+      redirect_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)
     else
       render :edit
     end

@@ -1,8 +1,6 @@
 - content_for :title do
   | RDV Collectifs
 
-- content_for(:menu_item) { "menu-rdvs-collectifs-list" }
-
 - content_for :breadcrumb do
   .btn-group
     = link_to "Nouveau RDV Collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "btn btn-primary"

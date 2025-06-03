@@ -221,7 +221,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     let!(:motif_2_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
 
     it "works", js: true do
-      visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent)
+      visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: agent.id)
       expect(page).not_to have_content("Lieu")
       check avocat.name
       expect(page).to have_checked_field(motif_1_service_avocat.name)
@@ -237,7 +237,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
   describe "selecting a time range" do
     it "works", js: true do
-      visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent)
+      visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: agent.id)
       check motif.name
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
 

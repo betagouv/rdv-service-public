@@ -1,4 +1,4 @@
-class Admin::AbsencesController < AgentAuthController
+class Admin::Planning::AbsencesController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_absence, only: %i[edit update destroy]

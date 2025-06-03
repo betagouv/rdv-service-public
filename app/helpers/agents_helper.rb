@@ -45,7 +45,6 @@ module AgentsHelper
       "menu-agendas" => "planning",
       "menu-plages-ouvertures" => "planning",
       "menu-absences" => "planning",
-      "menu-rdvs-collectifs-list" => "planning",
       "menu-settings" => "settings",
       "menu-organisation-stats" => "stats",
       "menu-stats" => "stats",
