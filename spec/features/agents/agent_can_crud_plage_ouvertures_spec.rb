@@ -8,8 +8,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
   before do
     login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
-    click_link "Plages d'ouverture"
+    visit admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: agent.id)
   end
 
   shared_examples "can crud own plage ouvertures" do

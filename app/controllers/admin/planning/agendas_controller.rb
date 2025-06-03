@@ -1,6 +1,6 @@
-class Admin::AgentAgendasController < AgentAuthController
+class Admin::Planning::AgendasController < AgentAuthController
   def show
-    @agent = Agent.find(params[:id])
+    @agent = params[:agent_id].present? ? Agent.find(params[:agent_id]) : current_agent
     authorize(AgentAgenda.new(agent: @agent, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
     @status = params[:status]
     @organisation = current_organisation
@@ -12,7 +12,8 @@ class Admin::AgentAgendasController < AgentAuthController
     @agent = current_agent
     authorize(@agent, policy_class: Agent::AgentPolicy)
     @agent.update!(agent_role_params)
-    redirect_to admin_organisation_agent_agenda_path(params.permit(:status, :selected_event_id, :date))
+    TODO_YA_PAS_UNE_ORG_A_PASSER_ICI
+    redirect_to admin_organisation_planning_agenda_path(params.permit(:status, :selected_event_id, :date))
   end
 
   private

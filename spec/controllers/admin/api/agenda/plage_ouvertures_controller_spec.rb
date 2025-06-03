@@ -54,7 +54,7 @@ RSpec.describe Admin::Api::Agenda::PlageOuverturesController, type: :controller 
               "backgroundColor" => "#6fceff80",
               "textColor" => "#313131",
               "display" => nil,
-              "url" => "/admin/organisations/#{organisation.id}/plage_ouvertures/#{plage_ouverture.id}",
+              "url" => "/admin/organisations/#{organisation.id}/planning/plage_ouvertures/#{plage_ouverture.id}",
               "extendedProps" => {
                 "organisationName" => organisation.name,
                 "location" => "1 rue de l'adresse, Ville, 12345",

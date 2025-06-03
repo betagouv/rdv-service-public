@@ -9,9 +9,9 @@ class Admin::RdvWizardForm::Step4
   end
 
   def success_path
-    admin_organisation_agent_agenda_path(
+    admin_organisation_planning_agenda_path(
       rdv.organisation,
-      agents.include?(@agent_author) ? @agent_author : agents.first,
+      agent_id: agents.include?(@agent_author) ? @agent_author : agents.first,
       selected_event_id: rdv.id,
       date: starts_at.to_date
     )

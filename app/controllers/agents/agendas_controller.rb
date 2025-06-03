@@ -7,7 +7,7 @@ class Agents::AgendasController < AgentAuthController
     if accessible_organisations.count == 0
       redirect_to authenticated_agent_root_path
     elsif accessible_organisations.count == 1
-      redirect_to admin_organisation_agent_agenda_path(accessible_organisations.first, current_agent)
+      redirect_to admin_organisation_planning_agenda_path(accessible_organisations.first)
     elsif accessible_organisations.count > 1
       redirect_to admin_organisations_path
     end

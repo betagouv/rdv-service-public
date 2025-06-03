@@ -51,7 +51,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
       end
 
       it "can be displayed on sunday", js: true do
-        visit admin_organisation_agent_agenda_path(organisation, superviseur)
+        visit admin_organisation_planning_agenda_path(organisation, agent_id: superviseur)
         expect(page).to have_content(rdv.users.first.first_name)
       end
     end

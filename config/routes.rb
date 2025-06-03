@@ -263,20 +263,21 @@ Rails.application.routes.draw do
           end
           resources :referent_assignations, only: %i[index create destroy]
         end
-        resources :absences, except: %i[index show new]
-        resources :agent_agendas, only: %i[show] do
-          put :toggle_displays, on: :member
-        end
         resources :agents, except: %i[show]
+
         namespace :planning do
-          get :agenda
+          get :agenda, to: "agendas#show"
+          put :toggle_displays, to: "agendas#toggle_displays"
+
           resources :plage_ouvertures do
             collection do
               get :calendar
             end
           end
+
           resources :absences
         end
+
         resources :agent_intervenants, only: %i[update]
         resources :invitations, only: [:index] do
           post :reinvite, on: :member

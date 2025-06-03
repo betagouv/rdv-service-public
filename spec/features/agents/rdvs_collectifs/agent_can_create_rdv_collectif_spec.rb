@@ -22,7 +22,7 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
     # cela peut nous empêcher de cliquer sur une plage horaire et générer une flaky.
     # On les retire pour ce test
     allow(OffDays).to receive(:to_full_calendar_array).and_return([])
-    visit admin_organisation_agent_agenda_path(organisation, agent)
+    visit admin_organisation_planning_agenda_path(organisation, agent_id: agent)
   end
 
   it "default", js: true do

@@ -49,7 +49,7 @@ RSpec.describe Admin::Api::Agenda::AbsencesController, type: :controller do
               "start" => absence.starts_at.as_json,
               "end" => absence.ends_at.as_json,
               "backgroundColor" => "rgba(52, 57, 58, 0.7)",
-              "url" => "/admin/organisations/#{organisation.id}/absences/#{absence.id}/edit",
+              "url" => "/admin/organisations/#{organisation.id}/planning/absences/#{absence.id}/edit",
             },
           ]
           expect(response.parsed_body).to eq(expected_response)
