@@ -171,6 +171,18 @@ RSpec.describe "RDV Plan API" do
         )
       end
     end
+
+    context "when the agent hasn't configured an organisation yet" do
+      let(:agent) { create(:agent, basic_role_in_organisations: []) }
+
+      context "and the instance is RDV Service Public" do
+        stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
+        it "shows a url with the correct domain name" do
+          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          expect(parsed_response_body.dig("rdv_plan", "url")).to include("www.rdv-mairie-test.localhost")
+        end
+      end
+    end
   end
 
   describe "#show" do
