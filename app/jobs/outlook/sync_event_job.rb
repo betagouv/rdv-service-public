@@ -9,6 +9,7 @@ module Outlook
     )
 
     queue_as :latency_30s
+    include ExtendedRetryStrategyConcern
 
     def self.perform_later_for(agents_rdv, queue: :latency_30s)
       if agents_rdv.outlook_id.nil? && !agents_rdv.destroyed?

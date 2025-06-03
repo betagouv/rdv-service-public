@@ -51,6 +51,38 @@ make lint_brakeman        Security Checker
 make autocorrect          Fix autocorrectable lint issues
 ```
 
+Vous pouvez utiliser un pre-commit hook pour faire tourner les linters sur les fichiers modifiés.
+Pour cela ajoutez le fichier `.git/hooks/pre-commit` suivant :
+
+```bash
+#!/bin/bash
+
+echo -en "Validation rubocop_ ⏳"
+
+git diff --cached --name-only | xargs rubocop --force-exclusion --parallel
+
+if [ $? -ne 0 ]; then
+        echo "❌ La validation rubocop a échouée"
+        exit 1
+fi
+
+echo -e "\rValidation rubocop… ✅"
+echo -en "Validation slim-lint_ ⏳"
+
+git diff --cached --name-only | grep '^.*\.slim$' | xargs bundle exec slim-lint
+
+if [ $? -ne 0 ]; then
+        echo "❌ La validation slim-lint a échouée"
+        exit 1
+fi
+
+echo -e "\rValidation slim-lint_ ✅"
+
+exit 0
+```
+Cette proposition de hook fera la validation rubocop et slim-lint sur les fichiers modifiés avant de faire le commit. Si l'un des deux échoue, le commit sera annulé.
+Il est possible d’ignorer cette validation en ajoutant l’option `--no-verify` à la commande de commit.
+
 ## Tests
 
 Note : nos bonnes pratiques sur les tests sont à lire ici : [Bonnes pratiques de test](bonnes-pratiques-de-tests.md)

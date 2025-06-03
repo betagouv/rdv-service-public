@@ -152,11 +152,23 @@ RSpec.describe "Agent can CRUD motifs" do
       expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
       expect(page).to have_content("Le motif Suivi bonjour a été archivé")
     end
+
+    context "when the motif is invalid" do
+      it "archives anyway" do
+        # fait échouer la validation :cant_be_for_secretariat_and_follow_up
+        motif.update_columns(for_secretariat: true, follow_up: true) # rubocop:disable Rails/SkipsModelValidations
+        expect(motif).to be_invalid
+
+        visit admin_organisation_motif_path(motif.organisation, motif)
+        expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
+        expect(page).to have_content("Le motif Suivi bonjour a été archivé")
+      end
+    end
   end
 
   describe "un-archiving" do
     before do
-      motif.archive!
+      motif.archive
     end
 
     it "can be done from the index page in the dedicated tab" do
@@ -189,7 +201,7 @@ RSpec.describe "Agent can CRUD motifs" do
   describe "destroying a motif" do
     context "when it was not used for any RDV" do
       it "removes it from the database" do
-        motif.archive!
+        motif.archive
 
         visit admin_organisation_motif_path(motif.organisation, motif)
         expect { click_on "Supprimer" }.to change { Motif.exists?(motif.id) }.from(true).to(false)

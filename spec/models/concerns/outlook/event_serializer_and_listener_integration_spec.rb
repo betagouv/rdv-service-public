@@ -22,11 +22,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
   end
   let(:expected_description) do
     <<~HTML
-      Plus d'infos sur <a href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Solidarités</a>:
+      Plus d'infos sur <a href="http://www.rdv-mairie-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Service Public</a>:
       <br />
 
-      Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur RDV Solidarités.
-      Pour modifier ce rendez-vous, allez sur <a href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}/edit">RDV Solidarités</a>
+      Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur RDV Service Public.
+      Pour modifier ce rendez-vous, allez sur <a href="http://www.rdv-mairie-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}/edit">RDV Service Public</a>
     HTML
   end
 

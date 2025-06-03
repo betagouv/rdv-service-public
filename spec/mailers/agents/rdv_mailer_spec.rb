@@ -8,7 +8,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
     before { travel_to(t) }
 
     it "renders the headers" do
-      expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
+      expect(mail[:from].to_s).to eq(%(RDV Service Public <support@rdv-service-public.fr>))
       expect(mail.to).to eq([agent.email])
     end
 
@@ -20,7 +20,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       let(:rdv) { create(:rdv, starts_at: t + 10.minutes, agents: [agent]) }
 
       it "has a correct subject" do
-        expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda RDV Solidarités pour aujourd’hui")
+        expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda RDV Service Public pour aujourd’hui")
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       let(:rdv) { create(:rdv, starts_at: t + 1.day, agents: [agent]) }
 
       it "has a correct subject" do
-        expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda RDV Solidarités pour demain")
+        expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda RDV Service Public pour demain")
       end
     end
 
@@ -37,9 +37,9 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
         let(:agent) { build(:agent, service: build(:service, :social)) }
 
         it "works" do
-          expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
-          expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités")
-          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_service_public.png))
+          expect(mail.html_part.body.to_s).to include("Voir sur RDV Service Public")
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-mairie-test.localhost))
         end
       end
 
@@ -72,7 +72,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
 
     it "renders the headers" do
       mail = described_class.with(rdv: rdv, agent: agent, author: agent).rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
-      expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
+      expect(mail[:from].to_s).to eq(%(RDV Service Public <support@rdv-service-public.fr>))
       expect(mail.to).to eq([agent.email])
     end
 

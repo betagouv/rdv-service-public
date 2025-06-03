@@ -2,7 +2,7 @@
   .text-center.w-75.m-auto
     h4.text-dark-50.text-center.mt-0.font-weight-bold Mot de passe oublié ?
     p.text-muted.mb-4 Entrez votre email pour recevoir un lien de réinitialisation de mot de passe
-  = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true, autofocus: true
+  = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true, autofocus: true, autocomplete: "email"
   .text-center
     = f.submit "Envoyer", class: "fr-btn"
 

@@ -41,6 +41,23 @@ RSpec.describe "RDV Plan API" do
           last_name: "Factice"
         )
       end
+
+      context "when reusing the user id for a second rdv_plan, even if the first was not completed" do
+        before do
+          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+        end
+
+        it "links the user to the second rdv plan as well" do
+          first_rdv_plan = RdvPlan.first
+
+          params_for_second_call = { user: { id: first_rdv_plan.user_id } }
+          expect do
+            post "/api/v1/rdv_plans", headers: headers, params: params_for_second_call, as: :json
+          end.to change(RdvPlan, :count).by(1)
+
+          expect(parsed_response_body.dig("rdv_plan", "user_id")).to eq first_rdv_plan.user_id
+        end
+      end
     end
 
     context "when passing a user id" do
@@ -152,6 +169,18 @@ RSpec.describe "RDV Plan API" do
           address: "21 rue des Ardennes, 75019 Paris",
           birth_date: Date.parse("1990-12-31")
         )
+      end
+    end
+
+    context "when the agent hasn't configured an organisation yet" do
+      let(:agent) { create(:agent, basic_role_in_organisations: []) }
+
+      context "and the instance is RDV Service Public" do
+        stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
+        it "shows a url with the correct domain name" do
+          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          expect(parsed_response_body.dig("rdv_plan", "url")).to include("www.rdv-mairie-test.localhost")
+        end
       end
     end
   end
