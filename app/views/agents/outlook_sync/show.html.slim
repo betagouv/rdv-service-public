@@ -18,7 +18,7 @@
     | Vous pouvez synchroniser automatiquement et en temps réel vos rendez-vous sur votre agenda Microsoft Office 365 en connectant votre compte grâce au bouton ci-dessous :
 
   div.rdv-text-align-center
-    = link_to "/omniauth/microsoft_graph?login_hint=#{current_agent.email}", class: "mb-4", method: :post do
+    = link_to "/omniauth/microsoft_graph?login_hint=#{current_agent.email}", class: "mb-4 rdv-external-link-without-arrow", method: :post, target: "_blank", title: "S'identifier avec Microsoft - s’ouvre dans une nouvelle fenêtre" do
       = image_tag("sign_in_with_microsoft.svg", alt: "S'identifier avec Microsoft")
 
   p
@@ -30,9 +30,9 @@
     | Retrouvez toutes les étapes à suivre en consultant notre documentation :
 
   .rdv-text-align-center.fr-mb-2w
-    = link_to "Consulter la documentation", "https://aide.rdv-service-public.fr/toutes-les-notions/synchronisation-outlook-microsoft-365", class: "fr-btn fr-btn--secondary"
+    = link_to "Consulter la documentation", "https://aide.rdv-service-public.fr/toutes-les-notions/synchronisation-outlook-microsoft-365", class: "fr-btn fr-btn--secondary", target: "_blank", rel: "noopener", title: "Consulter la documentation - s’ouvre dans une nouvelle fenêtre"
 
   p
     |> Si vous avez besoin d'aide, vous pouvez nous contacter via le
-    = link_to "formulaire de contact", new_aide_demande_support_path(role: "agent", sujet: "Synchronisation Outlook")
+    = link_to "formulaire de contact", new_aide_demande_support_path(role: "agent", sujet: "Synchronisation Outlook"), target: "_blank", rel: "noopener", title: "formulaire de contact - s’ouvre dans une nouvelle fenêtre"
     | .
