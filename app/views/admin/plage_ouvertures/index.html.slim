@@ -5,7 +5,7 @@
   - if current_agent == @agent
     | Vos plages d'ouvertures
   - else
-    | Plages d'ouvertures de #{@agent.full_name_or_email}
+    | Plages d'ouvertures de #{@agent.full_name_and_service}
 
 - content_for :fil_ariane do
   = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
