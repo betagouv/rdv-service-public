@@ -24,6 +24,40 @@
       "note": ""
     },
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "a2cf886d3529cab1e0317b27821992625f718033d54e5bf44cc462012c0b1783",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/planning/absences/index.html.slim",
+      "line": 34,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => (policy_scope(Absence, :policy_scope_class => (Agent::AbsencePolicy::Scope)).where(:agent_id => ((policy_scope(Agent, :policy_scope_class => (Agent::AgentPolicy::Scope)).find(params[:agent_id]) or (@absence.agent or current_agent)))).includes(:agent).by_starts_at.page(page_number).expired or policy_scope(Absence, :policy_scope_class => (Agent::AbsencePolicy::Scope)).where(:agent_id => ((policy_scope(Agent, :policy_scope_class => (Agent::AgentPolicy::Scope)).find(params[:agent_id]) or (@absence.agent or current_agent)))).includes(:agent).by_starts_at.page(page_number).not_expired), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::Planning::AbsencesController",
+          "method": "index",
+          "line": 16,
+          "file": "app/controllers/admin/planning/absences_controller.rb",
+          "rendered": {
+            "name": "admin/planning/absences/index",
+            "file": "app/views/admin/planning/absences/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/planning/absences/index"
+      },
+      "user_input": "params[:agent_id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
       "fingerprint": "d93227729f1a070feb92d7048272b7c5b0535fc7505c7ba5ab3c6c9c6e510fca",

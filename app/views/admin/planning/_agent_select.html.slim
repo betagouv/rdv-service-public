@@ -1,4 +1,5 @@
 = form_with(url: url_for({}), method: :get) do |form|
   .row
     .col-md-6
-      = form.select :agent_id, Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve.map {[_1.full_name_or_email, _1.id]}, { selected: @agent&.id }, { class: "select2-input", onchange: "this.form.submit()" }
+      - collection = Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve.map { [_1.reverse_full_name, _1.id] }
+      = form.select :agent_id, collection, { selected: @agent&.id }, { class: "select2-input", onchange: "this.form.submit()" }

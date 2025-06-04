@@ -1,4 +1,4 @@
-RSpec.describe Admin::PlageOuverturesController, type: :controller do
+RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
@@ -228,7 +228,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
 
       it "redirect to plages ouverture index" do
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
-        expect(response).to redirect_to(admin_organisation_planning_plage_ouvertures_path(organisation, plage_ouverture.agent_id))
+        expect(response).to redirect_to(admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: plage_ouverture.agent_id))
       end
 
       it "send notification after destroy" do

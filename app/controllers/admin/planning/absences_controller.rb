@@ -1,12 +1,12 @@
 class Admin::Planning::AbsencesController < AgentAuthController
   before_action :set_absence, only: %i[edit update destroy]
-  before_action :build_absence, only: [:create]
   before_action :set_agent
+  before_action :build_absence, only: [:create]
 
   def index
     @show_agent_select = true
     absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
-      .where(agent_id: params[:agent_id])
+      .where(agent_id: @agent)
       .includes(:agent)
       .by_starts_at
       .page(page_number)

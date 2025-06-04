@@ -14,7 +14,7 @@ p
 p Pour bien démarrer, #{link_to("consultez notre tutoriel", tutoriel_url)} pour configurer votre espace, et retrouvez toutes les ressources utiles dans notre #{link_to("centre d'aide", "https://aide.rdv-service-public.fr/")}.
 
 .btn-wrapper
-  = link_to "Accéder à mon espace", admin_organisation_agent_agenda_url(@organisation, @agent),  class: "btn btn-primary"
+  = link_to "Accéder à mon espace", admin_organisation_planning_agenda_url(@organisation, @agent),  class: "btn btn-primary"
 .btn-wrapper
   = link_to "Consulter le tutoriel", tutoriel_url,  class: "btn btn-secondary"
 

@@ -79,7 +79,7 @@ RSpec.describe "User signs up and signs in" do
         fill_in :user_password, with: agent.password
         click_on "Se connecter"
       end
-      expect(page).to have_current_path(admin_organisation_planning_agenda_path(agent.organisations.first, agent_id: agent), ignore_query: true)
+      expect(page).to have_current_path(admin_organisation_planning_agenda_path(agent.organisations.first))
     end
 
     context "when the agent's password is too weak" do

@@ -1,7 +1,7 @@
 class Admin::Planning::PlageOuverturesController < AgentAuthController
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
-  before_action :build_plage_ouverture, only: [:create]
   before_action :set_agent
+  before_action :build_plage_ouverture, only: [:create]
 
   def show
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
@@ -11,7 +11,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     @show_agent_select = true
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
-      .where(agent_id: params[:agent_id])
+      .where(agent_id: @agent)
       .order(updated_at: :desc)
     @plage_ouvertures = all_plage_ouvertures
       .where(expired_cached: params[:current_tab] == "expired")
@@ -28,7 +28,6 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def new
-    @agent = Agent.find(params[:agent_id])
     if params[:duplicate_plage_ouverture_id].present?
       original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
       defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :recurrence)

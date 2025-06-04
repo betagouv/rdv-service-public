@@ -10,15 +10,14 @@ class Admin::Planning::AgendasController < AgentAuthController
   end
 
   def toggle_displays
-    @agent = current_agent
-    authorize(@agent, policy_class: Agent::AgentPolicy)
-    @agent.update!(agent_role_params)
-    redirect_to admin_organisation_planning_agenda_path(current_organisation, params.permit(:status, :selected_event_id, :date))
+    authorize(current_agent, policy_class: Agent::AgentPolicy)
+    current_agent.update!(permitted_agent_params)
+    redirect_back fallback_location: admin_organisation_planning_agenda_path(current_organisation)
   end
 
   private
 
-  def agent_role_params
+  def permitted_agent_params
     params.require(:agent).permit(:display_saturdays, :display_cancelled_rdv)
   end
 end
