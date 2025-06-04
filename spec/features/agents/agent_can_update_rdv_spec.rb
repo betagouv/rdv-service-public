@@ -78,7 +78,7 @@ RSpec.describe "Agent can update a RDV", js: true do
   context "ajout d’un agent au RDV" do
     let!(:agent_jungyoon) { create(:agent, first_name: "Jung Yoon", last_name: "Han", email: "jungyoon@angouleme.fr", service:, basic_role_in_organisations: [organisation]) }
 
-    it "envoie un email à l’agent ajouté" do
+    it "envoie un email à l’agent ajouté", skip: "cf PR #5399" do # rubocop:disable RSpec/Pending
       visit edit_admin_organisation_rdv_path(organisation, rdv)
       select("Jung Yoon HAN (Urbanisme)", from: "rdv_agent_ids")
       click_button "Enregistrer"

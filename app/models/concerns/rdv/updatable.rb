@@ -67,7 +67,8 @@ module Rdv::Updatable
   end
 
   def rdv_updated?
-    starts_at_changed? || lieu_changed? || agents_changed?
+    starts_at_changed? || lieu_changed?
+    # || agents_changed? désactivé pour l’instant cf https://github.com/betagouv/rdv-service-public/pull/5399
   end
 
   private
