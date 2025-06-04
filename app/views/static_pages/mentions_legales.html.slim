@@ -1,6 +1,6 @@
 - content_for :title, "Mentions légales"
 
-.fr-grid-row
+.fr-grid-row.fr-mb-6w
   .fr-col-md-8
 
     h2 Éditeur de la plateforme
@@ -18,7 +18,7 @@
       br
       | Téléphone : +33 1 85 58 60 00
       br
-      | Mail&nbsp;:
+      |> Mail&nbsp;:
       = mail_to "info@anct.gouv.fr"
 
     h2 Directeur de la publication
@@ -30,17 +30,22 @@
     p
       | Ce site est hébergé par
       br
-      | Outscale SASU
+      | Scalingo SAS
       br
-      |1 rue Royale - 319 Bureaux de la Colline
+      | 13 rue Jacques Peirotes
       br
-      | 92210 Saint-Cloud
+      | 67000 Strasbourg
+      br
+      | France
+      br
+      |> Contact&nbsp;:
+      = mail_to "support@scalingo.com"
 
     h2 Accessibilité
 
     p La conformité aux normes d’accessibilité numérique est un objectif ultérieur mais nous tâchons de rendre ce site accessible à toutes et à tous.
 
-    p Si vous rencontrez un défaut d'accessibilité vous empêchant d'accéder à un contenu ou une fonctionnalité du site, merci de nous en faire part. Si vous n'obtenez pas de réponse rapide de notre part, vous êtes en droit de faire parvenir vos doléances ou une demande de saisine au Défenseur des droits. Pour en savoir plus sur la politique d'accessibilité numérique de l'État&nbsp;:
+    p Si vous rencontrez un défaut d'accessibilité vous empêchant d'accéder à un contenu ou une fonctionnalité du site, merci de nous en faire part. Si vous n'obtenez pas de réponse rapide de notre part, vous êtes en droit de faire parvenir vos doléances ou une demande de saisine au Défenseur des droits. Pour en savoir plus sur l’accessibilité veuillez consulter #{link_to "notre page dédiée", accessibility_path}.
 
     h2 Sécurité
 
