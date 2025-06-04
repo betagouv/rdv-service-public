@@ -98,8 +98,8 @@ class Territory < ApplicationRecord
   # En revanche, les autres champs listés ci-dessus sont considérés comme "legacy" et seulement
   # affichés aux espaces qui les avaient déjà activés.
   legitimate_toggle_keys = %i[enable_birth_date_field enable_address_details enable_case_number]
-  LEGITIMATE_TOGGLES = OPTIONAL_FIELD_TOGGLES.slice(*legitimate_toggle_keys)
-  LEGACY_TOGGLES = OPTIONAL_FIELD_TOGGLES.except(*legitimate_toggle_keys)
+  LEGITIMATE_TOGGLES = OPTIONAL_FIELD_TOGGLES.slice(*legitimate_toggle_keys).freeze
+  LEGACY_TOGGLES = OPTIONAL_FIELD_TOGGLES.except(*legitimate_toggle_keys).freeze
 
   def mairies?
     name == MAIRIES_NAME
