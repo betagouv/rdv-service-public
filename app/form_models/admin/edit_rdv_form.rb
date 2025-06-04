@@ -14,7 +14,7 @@ class Admin::EditRdvForm
     @rdv.update_and_notify(agent_context.agent, rdv_attributes) do |rdv_before_save|
       authorize(rdv_before_save, :update?, policy_class: Agent::RdvPolicy)
       @rdv = rdv_before_save
-      validate!
+      valid?
     end
   end
 
