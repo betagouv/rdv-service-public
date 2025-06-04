@@ -26,9 +26,9 @@ RSpec.describe "Agent can update a RDV", js: true do
     expect(page).to have_content("3 Place de la Gare, Strasbourg, 67000")
     expect(page).to have_selector(".badge-info", text: /Ponctuel/)
     perform_enqueued_jobs
-    mail = ActionMailer::Base.deliveries.find { _1.to.first == "shiraz@angouleme.fr" }
-    expect(mail).not_to be_nil
-    expect(mail.subject).to match(/RDV .* modifié/)
+    open_email "shiraz@angouleme.fr"
+    expect(current_email).not_to be_nil
+    expect(current_email.subject).to match(/RDV .* modifié/)
   end
 
   it "update existing RDV with existing lieu" do
@@ -86,12 +86,12 @@ RSpec.describe "Agent can update a RDV", js: true do
       expect(page).to have_content("Jung Yoon HAN (Urbanisme)")
       expect(page).to have_content("Shiraz NADIR (Urbanisme)")
       perform_enqueued_jobs
-      mail_shiraz = ActionMailer::Base.deliveries.find { _1.to.first == "shiraz@angouleme.fr" }
-      expect(mail_shiraz).not_to be_nil
-      expect(mail_shiraz.subject).to match(/RDV .* modifié/)
-      mail_jungyoon = ActionMailer::Base.deliveries.find { _1.to.first == "jungyoon@angouleme.fr" }
-      expect(mail_jungyoon).not_to be_nil
-      expect(mail_jungyoon.subject).to match(/Nouveau RDV/)
+      open_email "shiraz@angouleme.fr"
+      expect(current_email).not_to be_nil
+      expect(current_email.subject).to match(/RDV .* modifié/)
+      open_email "jungyoon@angouleme.fr"
+      expect(current_email).not_to be_nil
+      expect(current_email.subject).to match(/Nouveau RDV/)
     end
 
     context "un RDV existe à la même heure pour l’agent ajouté" do
