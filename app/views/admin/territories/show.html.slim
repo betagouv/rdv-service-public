@@ -46,7 +46,7 @@ h1.m-2.rdv-text-align-center.border-bottom.pb-2 = t("admin.territories.show.titl
           | Sectorisation
         p Créer, importer, affecter vos secteurs géographiques.
 
-  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit? && current_territory.any_optional_user_field_enabled?
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_user_fields_path(current_territory) do
         h2.fw-bold.mb-0
