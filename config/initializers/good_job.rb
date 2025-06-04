@@ -76,5 +76,9 @@ Rails.application.configure do
       cron: "every day at 08:00 Europe/Paris",
       class: "CronJob::SynchronizeCrm",
     },
+    ign_health_check: {
+      cron: "every minute",
+      class: "CronJob::IGNHealthCheckJob",
+    },
   }
 end
