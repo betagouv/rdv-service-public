@@ -6,6 +6,8 @@
   - else
     | Agenda de #{@agent.full_name_and_service}
 
+= render partial: "admin/planning/planning_tabs"
+
 ruby:
   event_sources = [
     admin_api_agenda_rdvs_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),

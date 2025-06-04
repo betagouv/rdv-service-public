@@ -13,6 +13,8 @@
       i.fa.fa-calendar-alt
     = link_to t(".create_plage_ouverture"), new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "btn btn-outline-primary align-bottom"
 
+= render partial: "admin/planning/planning_tabs"
+
 .card.pb-3
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2

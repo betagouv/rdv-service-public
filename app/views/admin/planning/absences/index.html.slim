@@ -9,6 +9,8 @@
 - content_for :breadcrumb do
   = link_to t(".create_absence"), new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id), class: "btn btn-outline-primary align-bottom"
 
+= render partial: "admin/planning/planning_tabs"
+
 .card.pb-3
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
