@@ -1,5 +1,7 @@
 = form_with(url: url_for({}), method: :get) do |form|
   .row
     .col-md-6
-      - collection = Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve.map { [_1.reverse_full_name, _1.id] }
+      ruby:
+        scope = Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve
+        collection = scope.joins(:organisations).where(organisations: { id: current_organisation.id }).map { [_1.reverse_full_name_or_email, _1.id] }
       = form.select :agent_id, collection, { selected: @agent&.id }, { class: "select2-input", onchange: "this.form.submit()" }
