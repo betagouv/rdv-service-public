@@ -11,8 +11,6 @@
 
           p.text-muted.font-14= t(".hint_1")
           p.text-muted.font-14= t(".hint_2")
-          - legitimate_toggles, legacy_toggles = Territory::OPTIONAL_FIELD_TOGGLES.partition { |toggle, _| toggle.in?(Territory::LEGITIMATE_TOGGLES) }.map(&:to_h)
-
           - Territory::LEGITIMATE_TOGGLES.each do |toggle, field_name|
             = f.input toggle, label: User.human_attribute_name(field_name)
 
