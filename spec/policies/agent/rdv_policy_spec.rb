@@ -103,6 +103,31 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     end
   end
 
+  context "RDV existant pour l’agent courant et un autre agent auquel iel a accès" do
+    let(:organisation) { create(:organisation) }
+    let(:service) { create(:service) }
+    let(:agent1) { create(:agent, basic_role_in_organisations: [organisation], service:) }
+    let(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service:) }
+    let(:motif) { create(:motif, organisation:, service: service) }
+    let!(:rdv) { create(:rdv, agents: [agent1, agent2], motif:, organisation:) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent1, organisation) }
+
+    it_behaves_like "permit actions", :rdv, :update?, :status?
+  end
+
+  context "RDV existant pour l’agent courant et un autre agent auquel iel n’a pas accès (autre organisation)" do
+    # NOTE: ce cas de deux agents partageant un RDV mais n’ayant pas d’accès l’un à l’autre est peu probable
+    let(:organisation) { create(:organisation) }
+    let(:service) { create(:service) }
+    let(:agent1) { create(:agent, basic_role_in_organisations: [organisation], service:) }
+    let(:agent2) { create(:agent, basic_role_in_organisations: [create(:organisation)], service:) }
+    let(:motif) { create(:motif, organisation:, service: service) }
+    let!(:rdv) { create(:rdv, agents: [agent1, agent2], motif:, organisation:) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent1, organisation) }
+
+    it_behaves_like "not permit actions", :rdv, :update?, :status?
+  end
+
   # Certains controllers ajoutent des usagers à un RDV à travers
   # `@rdv.participations.build(...)`, puis appellent cette policy.
   # Cette section teste ce cas de figure.
@@ -163,6 +188,4 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     it_behaves_like "not permit actions", :rdv
     it_behaves_like "included in scope"
   end
-
-  # TODO: write cases for :new? and create? which
 end
