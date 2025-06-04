@@ -9,7 +9,7 @@
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
     li.breadcrumb-item
-      = link_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent) do
+      = link_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent) do
         - if @plage_ouverture.agent == current_agent
           | Vos plages d'ouverture
         - else

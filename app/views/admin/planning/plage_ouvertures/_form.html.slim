@@ -62,7 +62,7 @@
           -else
             .col.text-left
               = link_to "Annuler", \
-                admin_organisation_planning_plage_ouvertures_path(current_organisation, current_agent), \
+                admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: plage_ouverture.agent), \
                 class: "btn btn-link"
             .col.text-right
               = f.button :submit, "Créer la plage d'ouverture"

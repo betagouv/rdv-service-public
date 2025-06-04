@@ -6,7 +6,7 @@
 - content_for :breadcrumb do
   ol.breadcrumb.m-0.p-0
     li.breadcrumb-item
-      = link_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent) do
+      = link_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent) do
         - if @plage_ouverture.agent == current_agent
           | Vos plages d'ouverture
         - else
@@ -74,7 +74,7 @@
             "Dupliquer", \
             new_admin_organisation_planning_plage_ouverture_path( \
               current_organisation, \
-              @plage_ouverture.agent.id, \
+              agent_id: @plage_ouverture.agent.id, \
               duplicate_plage_ouverture_id: @plage_ouverture.id \
             ), \
             class: "btn btn-link" \

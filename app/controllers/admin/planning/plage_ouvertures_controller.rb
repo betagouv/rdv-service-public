@@ -1,6 +1,4 @@
 class Admin::Planning::PlageOuverturesController < AgentAuthController
-  respond_to :html
-
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
   before_action :build_plage_ouverture, only: [:create]
   before_action :set_agent
@@ -10,12 +8,13 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def index
+    @show_agent_select = true
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
-      .where(agent_id: filter_params[:agent_id])
+      .where(agent_id: params[:agent_id])
       .order(updated_at: :desc)
     @plage_ouvertures = all_plage_ouvertures
-      .where(expired_cached: filter_params[:current_tab] == "expired")
+      .where(expired_cached: params[:current_tab] == "expired")
       .page(page_number)
     @plage_ouvertures_before_text_search = @plage_ouvertures
     @plage_ouvertures = @plage_ouvertures.search_by_text(params[:search]) if params[:search].present?
@@ -23,6 +22,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def calendar
+    @show_agent_select = true
     # cette page ne charge pas de plages, on setup juste le FullCalendar
     authorize(@agent, :show?, policy_class: Agent::AgentPolicy)
   end
@@ -97,8 +97,8 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   private
 
   def set_agent
-    @agent = if filter_params[:agent_id].present?
-               policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(filter_params[:agent_id])
+    @agent = if params[:agent_id].present?
+               policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:agent_id])
              else
                @plage_ouverture&.agent || current_agent
              end
@@ -116,10 +116,6 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     params.require(:plage_ouverture).permit(
       :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: []
     )
-  end
-
-  def filter_params
-    params.permit(:start, :end, :organisation_id, :agent_id, :page, :current_tab)
   end
 
   def plage_ouverture_mailer

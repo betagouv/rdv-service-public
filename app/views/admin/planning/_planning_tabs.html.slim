@@ -1,10 +1,10 @@
 ul.nav.nav-tabs.mb-2
   li.nav-item
-    = active_link_to(admin_organisation_planning_agenda_path, class: "nav-link") do
+    = active_link_to(admin_organisation_planning_agenda_path(current_organisation, agent_id: @agent&.id), class: "nav-link") do
       | Agenda
   li.nav-item
-    = active_link_to(admin_organisation_planning_plage_ouvertures_path, class: "nav-link") do
+    = active_link_to(admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent&.id), class: "nav-link") do
       | Plages d'ouverture
   li.nav-item
-    = active_link_to(admin_organisation_planning_absences_path, class: "nav-link") do
+    = active_link_to(admin_organisation_planning_absences_path(current_organisation, agent_id: @agent&.id), class: "nav-link") do
       | Indisponibilités

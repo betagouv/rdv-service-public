@@ -95,7 +95,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     end
 
     it "can crud a plage_ouverture", js: true do
-      visit admin_organisation_planning_plage_ouvertures_path(organisation, other_agent.id)
+      visit admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: other_agent.id)
 
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)") # vue liste
       expect(page).to have_content "Permanence"
@@ -138,7 +138,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       let!(:lieu) { nil }
 
       it "still can crud a plage_ouverture" do
-        visit admin_organisation_planning_plage_ouvertures_path(organisation, other_agent.id)
+        visit admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: other_agent.id)
 
         expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
         click_link "Permanence"

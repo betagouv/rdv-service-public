@@ -1,5 +1,6 @@
 class Admin::Planning::AgendasController < AgentAuthController
   def show
+    @show_agent_select = true
     @agent = params[:agent_id].present? ? Agent.find(params[:agent_id]) : current_agent
     authorize(AgentAgenda.new(agent: @agent, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
     @status = params[:status]

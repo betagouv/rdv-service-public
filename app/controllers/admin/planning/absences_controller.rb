@@ -1,13 +1,12 @@
 class Admin::Planning::AbsencesController < AgentAuthController
-  respond_to :html, :json
-
   before_action :set_absence, only: %i[edit update destroy]
   before_action :build_absence, only: [:create]
   before_action :set_agent
 
   def index
+    @show_agent_select = true
     absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
-      .where(agent_id: filter_params[:agent_id])
+      .where(agent_id: params[:agent_id])
       .includes(:agent)
       .by_starts_at
       .page(page_number)
@@ -83,14 +82,14 @@ class Admin::Planning::AbsencesController < AgentAuthController
   end
 
   def set_agent
-    @agent = filter_params[:agent_id].present? ? policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(filter_params[:agent_id]) : @absence&.agent || current_agent
+    @agent = if params[:agent_id].present?
+               policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:agent_id])
+             else
+               @absence&.agent || current_agent
+             end
   end
 
   def absence_params
     params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
-  end
-
-  def filter_params
-    params.permit(:start, :end, :agent_id, :page, :current_tab)
   end
 end
