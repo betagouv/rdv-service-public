@@ -1,7 +1,10 @@
 - content_for(:menu_item) { "menu-users" }
 
 - content_for :title do
-  | Vos usagers
+  | Usagers
+
+- content_for :fil_ariane do
+    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: "Usagers"
 
 - content_for :breadcrumb do
   .btn-group
