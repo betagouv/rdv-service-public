@@ -25,7 +25,7 @@ RSpec.describe CreateChatwootConversationJob do
         sujet: "Problème de connexion",
         message: "Je n'arrive pas à me connecter à mon compte.",
         role: "user",
-        domain: "RDV_SOLIDARITES"
+        domain_id: "RDV_SOLIDARITES"
       )
 
       expect(ChatwootApiClient).to have_received(:upsert_contact).with(
@@ -34,10 +34,10 @@ RSpec.describe CreateChatwootConversationJob do
         last_name: "Dubois",
         phone_number: "0611223344",
         role: "user",
-        domain: "RDV_SOLIDARITES"
+        domain_id: "RDV_SOLIDARITES"
       )
       expect(ChatwootApiClient).to have_received(:create_conversation)
-        .with(contact: chatwoot_contact, domain: "RDV_SOLIDARITES")
+        .with(contact: chatwoot_contact, domain_id: "RDV_SOLIDARITES")
       expect(ChatwootApiClient).to have_received(:create_message).with(
         conversation: chatwoot_conversation,
         content: "Problème de connexion\n\nJe n'arrive pas à me connecter à mon compte.",
@@ -47,7 +47,7 @@ RSpec.describe CreateChatwootConversationJob do
       expect(Users::DemandesSupportMailer).to have_received(:with).with(
         conversation_id: 46,
         email: "sophie.dubois@example.com",
-        domain: "RDV_SOLIDARITES",
+        domain_id: "RDV_SOLIDARITES",
         message: "Je n'arrive pas à me connecter à mon compte.",
         sujet: "Problème de connexion"
       )

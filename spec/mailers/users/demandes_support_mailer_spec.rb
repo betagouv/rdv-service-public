@@ -6,7 +6,7 @@ RSpec.describe Users::DemandesSupportMailer, type: :mailer do
       described_class.with(
         conversation_id: 46,
         email: "user@example.com",
-        domain: "RDV_SOLIDARITES",
+        domain_id: "RDV_SOLIDARITES",
         sujet: "Problème de connexion",
         message: "Je n'arrive pas à me connecter\nPouvez-vous m'aider ?"
       ).conversation_created

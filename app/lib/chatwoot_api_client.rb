@@ -20,7 +20,7 @@ class ChatwootApiClient
     end
   end
 
-  def self.upsert_contact(email:, domain:, phone_number: nil, first_name: nil, last_name: nil, role: nil)
+  def self.upsert_contact(email:, domain_id:, phone_number: nil, first_name: nil, last_name: nil, role: nil)
     existing_contact_by_email = find_contact_by_email(email)
     existing_contact_by_phone_number = find_contact_by_phone_number(phone_number)
 
@@ -36,7 +36,7 @@ class ChatwootApiClient
     elsif existing_contact_by_phone_number
       update_contact(existing_contact_by_phone_number, email:, first_name:, last_name:, role:)
     else
-      create_contact(email:, phone_number:, first_name:, last_name:, role:, domain:)
+      create_contact(email:, phone_number:, first_name:, last_name:, role:, domain_id:)
     end
   end
 
@@ -60,10 +60,10 @@ class ChatwootApiClient
     res.body.dig("meta", "count") < 1 ? [] : res.body["payload"]
   end
 
-  def self.create_contact(email:, domain:, **attributes)
+  def self.create_contact(email:, domain_id:, **attributes)
     # cf https://developers.chatwoot.com/api-reference/contacts/create-contact
     params = create_or_update_params_from_attributes(email:, **attributes)
-    params.merge!(inbox_id: INBOXES_IDS.fetch(domain))
+    params.merge!(inbox_id: INBOXES_IDS.fetch(domain_id))
     res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/contacts", params)
     res.body.dig("payload", "contact")
   end
@@ -94,9 +94,9 @@ class ChatwootApiClient
     params
   end
 
-  def self.create_conversation(contact:, domain:)
+  def self.create_conversation(contact:, domain_id:)
     # https://developers.chatwoot.com/api-reference/conversations/create-new-conversation
-    inbox_id = INBOXES_IDS.fetch(domain)
+    inbox_id = INBOXES_IDS.fetch(domain_id)
     source_id = contact["contact_inboxes"].find { _1.dig("inbox", "id")&.to_s == inbox_id }["source_id"]
     res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/conversations", inbox_id:, source_id:)
     res.body

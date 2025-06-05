@@ -13,6 +13,6 @@ class Users::DemandesSupportMailer < ApplicationMailer
   private
 
   def domain
-    Domain.find(params[:domain])
+    Domain.find(params[:domain_id])
   end
 end

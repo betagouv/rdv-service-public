@@ -33,7 +33,7 @@ class DemandeSupportForm
         sujet:,
         message:,
         role:,
-        domain: current_domain.id
+        domain_id: current_domain.id
       )
     elsif ENV.fetch("CRISP_ENABLED", false)
       CreateCrispTicketJob.perform_later(
