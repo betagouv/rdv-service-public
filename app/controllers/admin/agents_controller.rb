@@ -10,7 +10,7 @@ class Admin::AgentsController < AgentAuthController
     @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
 
     @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.ordered_by_last_name
-    @agents = @agents.page(page_number)
+    @agents = @agents.page(page_number) unless request.format.json?
   end
 
   def new
