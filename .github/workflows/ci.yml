@@ -273,7 +273,9 @@ jobs:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
       - run: yarn install
-      - run: FAIL_UNLESS_UNCHANGED=1 rails runner scripts/create_good_job_cron_json.rb
+      - run: FAIL_UNLESS_UNCHANGED=1 bundle exec rails runner scripts/create_good_job_cron_json.rb
+        env:
+          HOST: http://www.rdv-test.fr
       - run: bin/test_boot
         env:
           HOST: http://www.rdv-test.fr

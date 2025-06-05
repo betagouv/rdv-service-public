@@ -6,7 +6,7 @@
   },
   "destroy_old_api_calls": {
     "class": "CronJob::DestroyOldApiCalls",
-    "cron": "every day at 23:30 Europe/Paris"
+    "cron": "every day at 22:30 Europe/Paris"
   },
   "destroy_old_oauth_objects": {
     "class": "CronJob::DestroyOldOauthObjects",
