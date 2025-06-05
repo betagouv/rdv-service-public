@@ -16,25 +16,67 @@ class ChatwootApiClient
     end
   end
 
-  def self.find_or_create_contact(email:, phone_number: nil, first_name: nil, last_name: nil, role: nil)
-    # TODO: update existing
-    find_contact(email:) || create_contact(email:, phone_number:, first_name:, last_name:, role:)
-  end
+  def self.upsert_contact(email:, phone_number: nil, first_name: nil, last_name: nil, role: nil)
+    existing_contact_by_email = find_contact_by_email(email)
+    existing_contact_by_phone_number = find_contact_by_phone_number(phone_number)
 
-  def self.find_contact(email:)
-    # TODO: find by phone_number because it’s unique
-    # cf https://developers.chatwoot.com/api-reference/contacts/search-contacts
-    res = connection.get("api/v1/accounts/#{ACCOUNT_ID}/contacts/search", { q: email })
-    if res.body.dig("meta", "count") < 1
-      nil
+    if existing_contact_by_email &&
+       existing_contact_by_phone_number &&
+       existing_contact_by_phone_number["id"] != existing_contact_by_email["id"]
+      update_contact(existing_contact_by_phone_number, phone_number: nil)
+      existing_contact_by_phone_number = nil
+    end
+
+    if existing_contact_by_email
+      update_contact(existing_contact_by_email, phone_number:, first_name:, last_name:, role:)
+    elsif existing_contact_by_phone_number
+      update_contact(existing_contact_by_phone_number, email:, first_name:, last_name:, role:)
     else
-      res.body["payload"].find { _1["email"] == email }
+      create_contact(email:, phone_number:, first_name:, last_name:, role:)
     end
   end
 
-  def self.create_contact(email:, phone_number: nil, first_name: nil, last_name: nil, role: nil)
+  def self.find_contact_by_email(email)
+    search_contacts(query: email).find { _1["email"] == email }
+  end
+
+  def self.find_contact_by_phone_number(phone_number_raw)
+    return nil if phone_number_raw.blank?
+
+    phone_number_parsed = Phonelib.parse(phone_number_raw)
+    if phone_number_parsed.valid?
+      search_contacts(query: phone_number_parsed.to_s)
+        .find { _1["phone_number"] == phone_number_parsed.to_s }
+    end
+  end
+
+  def self.search_contacts(query:)
+    # cf https://developers.chatwoot.com/api-reference/contacts/search-contacts
+    res = connection.get("api/v1/accounts/#{ACCOUNT_ID}/contacts/search", { q: query })
+    res.body.dig("meta", "count") < 1 ? [] : res.body["payload"]
+  end
+
+  def self.create_contact(email:, **attributes)
     # cf https://developers.chatwoot.com/api-reference/contacts/create-contact
-    params = { inbox_id: INBOX_ID, email:, custom_attributes: {} }
+    params = create_or_update_params_from_attributes(email:, **attributes)
+    params.merge!(inbox_id: INBOX_ID)
+    res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/contacts", params)
+    res.body.dig("payload", "contact")
+  end
+
+  def self.update_contact(existing_contact, **attributes)
+    # cf https://developers.chatwoot.com/api-reference/contacts/create-contact
+    params = create_or_update_params_from_attributes(**attributes)
+    if attributes.key?(:phone_number) && attributes[:phone_number].blank?
+      params[:phone_number] = nil # mark the phone number for deletion
+    end
+    res = connection.put("api/v1/accounts/#{ACCOUNT_ID}/contacts/#{existing_contact['id']}", params)
+    res.body["payload"]
+  end
+
+  def self.create_or_update_params_from_attributes(email: nil, phone_number: nil, first_name: nil, last_name: nil, role: nil)
+    params = { custom_attributes: {} }
+    params[:email] = email if email.present?
     if phone_number.present?
       phone_number_parsed = Phonelib.parse(phone_number)
       if phone_number_parsed.valid?
@@ -45,8 +87,7 @@ class ChatwootApiClient
     end
     params[:name] = [first_name, last_name].compact.join(" ") if first_name.present? || last_name.present?
     params[:custom_attributes][:role] = role if role.present?
-    res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/contacts", params)
-    res.body.dig("payload", "contact")
+    params
   end
 
   def self.create_conversation(contact:)
@@ -55,6 +96,18 @@ class ChatwootApiClient
     res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/conversations", inbox_id: INBOX_ID, source_id:)
     res.body
   end
+
+  # def self.delete_test_contacts(query:, dry_run: true)
+  #   search_contacts(query:).each do |contact|
+  #     Rails.logger.info "#{dry_run ? 'would delete contact' : 'deleting contact'} #{contact['email']}…"
+  #     delete_contact(contact) unless dry_run
+  #     Rails.logger.info "done!"
+  #   end
+  # end
+  #
+  # def self.delete_contact(contact)
+  #   connection.delete("api/v1/accounts/#{ACCOUNT_ID}/contacts/#{contact['id']}")
+  # end
 
   def self.create_message(conversation:, content:, message_type:, private:)
     raise ArgumentError, "message_type must be outgoing or incoming" if %w[outgoing incoming].exclude?(message_type)

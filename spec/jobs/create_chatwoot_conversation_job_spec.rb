@@ -8,7 +8,7 @@ RSpec.describe CreateChatwootConversationJob do
     let(:message_delivery) { instance_double(ActionMailer::MessageDelivery) }
 
     before do
-      allow(ChatwootApiClient).to receive(:find_or_create_contact).and_return(chatwoot_contact)
+      allow(ChatwootApiClient).to receive(:upsert_contact).and_return(chatwoot_contact)
       allow(ChatwootApiClient).to receive(:create_conversation).and_return(chatwoot_conversation)
       allow(ChatwootApiClient).to receive(:create_message).and_return({ "id" => 789 })
       allow(Users::DemandesSupportMailer).to receive(:with).and_return(mailer_instance)
@@ -28,7 +28,7 @@ RSpec.describe CreateChatwootConversationJob do
         domain: "RDV_SOLIDARITES"
       )
 
-      expect(ChatwootApiClient).to have_received(:find_or_create_contact).with(
+      expect(ChatwootApiClient).to have_received(:upsert_contact).with(
         email: "sophie.dubois@example.com",
         first_name: "Sophie",
         last_name: "Dubois",

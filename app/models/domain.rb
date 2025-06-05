@@ -14,7 +14,6 @@ Domain = Struct.new(
   :can_sync_to_outlook,
   :france_connect_enabled,
   :support_email,
-  :support_email2,
   :secretariat_email,
   :verticale,
   :allow_self_onboarding,
@@ -37,7 +36,6 @@ class Domain
       sms_sender_name: "RdvSoli",
       france_connect_enabled: true,
       support_email: "support@rdv-solidarites.fr",
-      support_email2: "assistance@rdv-solidarites.fr",
       verticale: :rdv_solidarites,
       allow_self_onboarding: false,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
@@ -61,7 +59,6 @@ class Domain
       sms_sender_name: "RdvAideNum",
       france_connect_enabled: false,
       support_email: "support@rdv-aide-numerique.fr",
-      support_email2: "assistance@rdv-aide-numerique.fr",
       verticale: :rdv_aide_numerique,
       allow_self_onboarding: false,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
@@ -81,7 +78,6 @@ class Domain
       sms_sender_name: "RDV S.P.",
       france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
-      support_email2: "assistance@rdv-service-public.fr",
       verticale: :rdv_mairie,
       allow_self_onboarding: true,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
