@@ -1,7 +1,28 @@
+- @multi_agents_mode = @agents.size > 1
+
 = form_with(url: url_for({}), method: :get) do |form|
   .row
     .col-md-6
       ruby:
-        scope = Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve
-        collection = scope.joins(:organisations).where(organisations: { id: current_organisation.id }).map { [_1.reverse_full_name_or_email, _1.id] }
-      = form.select :agent_id, collection, { selected: @agent&.id }, { class: "select2-input", onchange: "this.form.submit()" }
+        #scope = Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve.includes(:services)
+        #collection = scope.joins(:organisations).where(organisations: { id: current_organisation.id }).map do
+        #  ["#{_1.reverse_full_name_or_email} (#{_1.services.map(&:short_name).join(', ')})", _1.id]
+        #end
+        collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
+        data = {
+          "select2-config": {
+            ajax: {
+              url: admin_organisation_agents_path(current_organisation),
+                dataType: "json",
+                delay: 250,
+              },
+            },
+          }
+      = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @multi_agents_mode }, { name: "agent_id[]", class: "select2-input", onchange: "this.form.submit()", data: }
+
+  .row
+    .col
+      - unless @multi_agents_mode
+        button#multi_agent_toggle.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
+      #submit_agents[class=(@multi_agents_mode ? "" : "hidden")]
+        = form.submit "Appliquer", {class: "fr-btn  "}

@@ -21,7 +21,6 @@ import { MergeUsersForm } from './components/merge-users-form.js'
 import { SectorAttributionForm } from './components/sector-attribution-form.js'
 import { ZoneForm } from './components/zone-form.js'
 import { Select2Inputs } from './components/select2-inputs'
-import { PlanningAgentSelect } from './components/planning-agent-select'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { DestroyButton } from './components/destroy-button'
 import { Tooltips } from './components/tooltips'
@@ -30,7 +29,8 @@ import {CheckAll, UnCheckAll} from './components/check-all'
 import './components/motifs_table'
 import './components/calendar'
 import './components/browser-detection'
-import './components/clear-field-on-focus.js'
+import './components/clear-field-on-focus'
+import './components/planning-agents-select'
 
 import { Application } from "@hotwired/stimulus"
 import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
@@ -102,8 +102,6 @@ $(document).on('turbolinks:load', function() {
   new SectorAttributionForm()
 
   new ZoneForm()
-
-  new PlanningAgentSelect()
 
   new ParticipationSelect()
 
