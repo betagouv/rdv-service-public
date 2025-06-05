@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_02_123003) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_30_124357) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -605,6 +605,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_02_123003) do
     t.datetime "updated_at", null: false
     t.enum "location_type", enum_type: "location_type"
     t.bigint "oauth_application_id"
+    t.text "dossier_url"
     t.index ["lieu_id"], name: "index_rdv_plans_on_lieu_id"
     t.index ["motif_id"], name: "index_rdv_plans_on_motif_id"
     t.index ["oauth_application_id"], name: "index_rdv_plans_on_oauth_application_id"
