@@ -33,9 +33,11 @@ RSpec.describe CreateChatwootConversationJob do
         first_name: "Sophie",
         last_name: "Dubois",
         phone_number: "0611223344",
-        role: "user"
+        role: "user",
+        domain: "RDV_SOLIDARITES"
       )
-      expect(ChatwootApiClient).to have_received(:create_conversation).with(contact: chatwoot_contact)
+      expect(ChatwootApiClient).to have_received(:create_conversation)
+        .with(contact: chatwoot_contact, domain: "RDV_SOLIDARITES")
       expect(ChatwootApiClient).to have_received(:create_message).with(
         conversation: chatwoot_conversation,
         content: "Problème de connexion\n\nJe n'arrive pas à me connecter à mon compte.",

@@ -15,7 +15,7 @@ RSpec.describe Users::DemandesSupportMailer, type: :mailer do
     it "renders the headers" do
       expect(mail.subject).to eq("[#46] Nouveaux messages dans cette conversation")
       expect(mail.to).to eq(["user@example.com"])
-      expect(mail.from).to eq(["assistance@rdv-solidarites.fr"])
+      expect(mail.from).to eq(["support@rdv-solidarites.fr"])
     end
 
     it "renders the body" do

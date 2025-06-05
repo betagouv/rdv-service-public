@@ -2,7 +2,11 @@ class ChatwootApiClient
   class Error < StandardError; end
 
   ACCOUNT_ID = "1".freeze
-  INBOX_ID = "1".freeze # l’ID de la boîte de réception email
+  INBOXES_IDS = {
+    RDV_SOLIDARITES: 6, # inbox RDVS
+    RDV_AIDE_NUMERIQUE: 1, # inbox RDVSP
+    RDV_SERVICE_PUBLIC: 1, # inbox RDVSP
+  }.freeze
 
   def self.connection
     @connection ||= Faraday.new(
@@ -16,7 +20,7 @@ class ChatwootApiClient
     end
   end
 
-  def self.upsert_contact(email:, phone_number: nil, first_name: nil, last_name: nil, role: nil)
+  def self.upsert_contact(email:, domain:, phone_number: nil, first_name: nil, last_name: nil, role: nil)
     existing_contact_by_email = find_contact_by_email(email)
     existing_contact_by_phone_number = find_contact_by_phone_number(phone_number)
 
@@ -32,7 +36,7 @@ class ChatwootApiClient
     elsif existing_contact_by_phone_number
       update_contact(existing_contact_by_phone_number, email:, first_name:, last_name:, role:)
     else
-      create_contact(email:, phone_number:, first_name:, last_name:, role:)
+      create_contact(email:, phone_number:, first_name:, last_name:, role:, domain:)
     end
   end
 
@@ -56,10 +60,10 @@ class ChatwootApiClient
     res.body.dig("meta", "count") < 1 ? [] : res.body["payload"]
   end
 
-  def self.create_contact(email:, **attributes)
+  def self.create_contact(email:, domain:, **attributes)
     # cf https://developers.chatwoot.com/api-reference/contacts/create-contact
     params = create_or_update_params_from_attributes(email:, **attributes)
-    params.merge!(inbox_id: INBOX_ID)
+    params.merge!(inbox_id: INBOXES_IDS.fetch(domain))
     res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/contacts", params)
     res.body.dig("payload", "contact")
   end
@@ -90,10 +94,11 @@ class ChatwootApiClient
     params
   end
 
-  def self.create_conversation(contact:)
+  def self.create_conversation(contact:, domain:)
     # https://developers.chatwoot.com/api-reference/conversations/create-new-conversation
-    source_id = contact["contact_inboxes"].find { _1.dig("inbox", "id")&.to_s == INBOX_ID }["source_id"]
-    res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/conversations", inbox_id: INBOX_ID, source_id:)
+    inbox_id = INBOXES_IDS.fetch(domain)
+    source_id = contact["contact_inboxes"].find { _1.dig("inbox", "id")&.to_s == inbox_id }["source_id"]
+    res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/conversations", inbox_id:, source_id:)
     res.body
   end
 
