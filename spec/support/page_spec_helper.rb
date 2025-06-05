@@ -1,6 +1,6 @@
 module PageSpecHelper
   def expect_page_title(title)
-    expect(page).to have_selector("h1.page-title", text: title)
+    expect(page).to have_selector("h1.fr-h2", text: title)
   end
 
   def expect_page_with_no_record_text(text)
