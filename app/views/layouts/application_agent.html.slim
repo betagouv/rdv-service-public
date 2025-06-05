@@ -20,7 +20,7 @@ html lang="fr"
           .container-fluid
             - if content_for :title
               .page-title-box
-                h1.page-title.pb-2= yield :title
+                h1.fr-h2= yield :title
                 // TODO: Nous sommes en train de migrer les breadcrumbs vers des fils d'ariane au DSFR qui sont au dessus du titre.
                 // Voir plus haut
                 // Une fois cette transition terminée il faudra renommer ce bloc qui continuera à être utilisé pour les boutons en haut de page (ou refacto).
