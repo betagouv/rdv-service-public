@@ -18,17 +18,15 @@ div id="creneaux-lieu-#{lieu&.id}"
               br
               = l(date, format: "%d %b")
 
-            - if !creneaux_by_date[date].nil? && creneaux_by_date[date].first.respects_max_public_booking_delay?
+            - if creneaux_by_date[date]&.first&.respects_max_public_booking_delay?
               .fr-grid-row
                 - creneaux_by_date[date].sort.each do |creneau|
-                  ruby:
-                    autofocus = if (@context.autofocus == "first" && creneau == creneaux.min) || (@context.autofocus == "last" && creneau == creneaux.max)
-                                  true
-                                else
-                                  false
-                                end
-                  = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at), "data-turbolinks": false, class: "fr-col-12 fr-btn fr-btn--tertiary fr-mb-1w rdv-justify-content-center", aria: { label: "Choisir le créneau du #{l(creneau.starts_at, format: '%A %d %b')} à #{l(creneau.starts_at, format: '%H:%M')}"}, autofocus: autofocus do
-                    - first_creneau = false
+                  - autofocus = (@context.autofocus == "first" && creneau == creneaux.min) || (@context.autofocus == "last" && creneau == creneaux.max)
+                  = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at),
+                          class: "fr-col-12 fr-btn fr-btn--tertiary fr-mb-1w rdv-justify-content-center",
+                          data: { turbolinks: false },
+                          aria: { label: "Choisir le créneau du #{l(creneau.starts_at, format: '%A %d %b')} à #{l(creneau.starts_at, format: '%H:%M')}"},
+                          autofocus: do
                     = l(creneau.starts_at, format: "%H:%M")
                     - if creneau.motif.follow_up?
                       br
@@ -42,7 +40,10 @@ div id="creneaux-lieu-#{lieu&.id}"
 
         - if next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
-            = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at, autofocus: "first")), class: "fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-s-line", data: { disable_with: "Veuillez patienter…" }, autofocus: @context.autofocus ? true : false do
+            = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at, autofocus: "first")),
+                    class: "fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-s-line",
+                    data: { disable_with: "Veuillez patienter…" },
+                    autofocus: @context.autofocus.present? do
               .d-flex.align-items-center
                 div
                   | Prochaine disponibilité le
