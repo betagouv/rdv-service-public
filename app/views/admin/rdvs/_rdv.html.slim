@@ -15,25 +15,28 @@
         = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv
       - else
         = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv
-  hr.my-0.mx-3
-  .card-body.py-3.row
-    .col-md-8.col-sm-12
-      .d-flex.justify-content-between.flex-wrap.mb-1
-        p.card-text
-          i.fa.fa-fw.fa-calendar.mr-1.text-primary-blue
-          = rdv_starts_at_and_duration(rdv, :time_only)
-          - if rdv.agents.first
-            |&nbsp;
-            = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, rdv.agents.first, selected_event_id: rdv.id, date: rdv.starts_at.to_date)
-      = render "admin/rdvs/rdv_details", rdv: rdv
+  hr.fr-my-0.fr-pb-0.fr-mx-3
+  .card-body.fr-grid-row.fr-pb-0
+    .fr-col-12.d-flex.flex-direction-column.rdv-flex-direction-row-md.rdv-justify-content-space-between.align-items-start-or-stretch
+      div.fr-pb-2w
+        - if rdv.rdv_plan&.dossier_url
+          .fr-btns-group.fr-btns-group--inline-md
+            = link_to("Voir sur #{rdv.rdv_plan.oauth_application&.name}", rdv.rdv_plan&.dossier_url, target: :_blank, class: "fr-btn fr-btn--tertiary fr-mb-2w")
+        .d-flex.justify-content-between.flex-wrap.mb-1
+          p.card-text
+            i.fa.fa-fw.fa-calendar.mr-1.text-primary-blue
+            = rdv_starts_at_and_duration(rdv, :time_only)
+            - if rdv.agents.first
+              |&nbsp;
+              = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, rdv.agents.first, selected_event_id: rdv.id, date: rdv.starts_at.to_date)
+        = render "admin/rdvs/rdv_details", rdv: rdv
 
-    .col-md-4.col-sm-12
-      div.d-flex.justify-content-end.mt-1
-        = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
+      ul.fr-btns-group.fr-btns-group--inline-sm.fr-btns-group--right.fr-mb-0
+        = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "fr-btn fr-btn--secondary fr-btn--sm "
         - if rdv.individuel?
-          = link_to t("admin.rdvs.show.duplicate"), admin_organisation_creneaux_search_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
+          = link_to t("admin.rdvs.show.duplicate"), admin_organisation_creneaux_search_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "fr-btn fr-btn--secondary fr-btn--sm"
         - else
-          = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
+          = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "fr-btn fr-btn--secondary fr-btn--sm fr-mb-0"
 
   .mx-3
   - if rdv.users.any?

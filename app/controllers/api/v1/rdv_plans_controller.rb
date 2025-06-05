@@ -10,7 +10,8 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
         planning_agent: current_agent,
         user: user,
         oauth_application: doorkeeper_token&.application,
-        return_url: params[:return_url]
+        return_url: params[:return_url],
+        dossier_url: params[:dossier_url]
       )
     end
     render json: RdvPlanBlueprint.render(rdv_plan, root: "rdv_plan"), status: :created
