@@ -11,25 +11,12 @@ class Admin::EditRdvForm
   end
 
   def submit(rdv_attributes)
-    raise ArgumentError, "agent_ids est accepté mais pas agents" if rdv_attributes.key?(:agents)
-
-    previous_agent_ids = @rdv.agent_ids
-
-    @rdv.assign_attributes(rdv_attributes)
-
-    @selected_agent_ids = @rdv.agent_ids
-
-    authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
-
-    if valid?
-      @rdv.save_and_notify(agent_context.agent)
-    else
-      @rdv.agent_ids = previous_agent_ids
-      false
+    @rdv.update_and_notify(agent_context.agent, rdv_attributes) do |rdv_before_save|
+      authorize(rdv_before_save, :update?, policy_class: Agent::RdvPolicy)
+      @rdv = rdv_before_save
+      valid?
     end
   end
-
-  attr_reader :selected_agent_ids
 
   private
 

@@ -7,6 +7,10 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
 
     rdvs = rdvs.includes(:organisation, :motif, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
 
+    if params[:id].present?
+      rdvs = rdvs.where(id: params[:id])
+    end
+
     if params[:user_id].present?
       rdvs = rdvs.where(participations: { user_id: params[:user_id] })
     end

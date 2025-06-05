@@ -33,22 +33,6 @@ module ApiSpecSharedExamples
     end
   end
 
-  RSpec.shared_context "an endpoint that returns 429 - too_many_requests" do |method, path|
-    response 429, "Renvoie 'too_many_requests' quand la limite d'appels est atteinte" do
-      schema "$ref" => "#/components/schemas/error_too_many_request"
-
-      before do
-        Rack::Attack.enabled = true
-        Rack::Attack.reset!
-        3.times do
-          send(method, path)
-        end
-      end
-
-      run_test!
-    end
-  end
-
   RSpec.shared_context "rdv_mairie_api_authentication", :rdv_mairie_api_authentication do
     stub_env_with ANTS_RDV_API_URL: "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api",
                   ANTS_RDV_OPT_AUTH_TOKEN: "fake-token",

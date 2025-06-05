@@ -3,16 +3,17 @@
 - content_for :title do
   | #{@user.full_name}
 
-- content_for :breadcrumb do
-  ol.breadcrumb.mr-2.d-inline-flex
-    li.breadcrumb-item
-      = link_to "Vos usagers", admin_organisation_users_path(current_organisation)
-    - if @user.relative?
-      li.breadcrumb-item
-        = link_to @user.responsible.full_name, admin_organisation_user_path(current_organisation, @user.responsible)
-    li.breadcrumb-item.active #{@user.full_name}
+ruby:
+  titles_and_paths = [["Accueil", root_path], ["Usagers", admin_organisation_users_path(current_organisation)]]
+  if @user.relative?
+    titles_and_paths << [@user.responsible.full_name, admin_organisation_user_path(current_organisation, @user.responsible)]
+  end
 
-  = link_to t(".find_rdv"), admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "btn btn-outline-primary"
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths:, current_page_title: @user.full_name
+
+- content_for :breadcrumb do
+  = link_to "Trouver un RDV pour l’usager", admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "fr-btn fr-btn--secondary", title: "Trouver un RDV pour l’usager #{@user.full_name}"
 
 .row
   .col-md-6
@@ -50,14 +51,14 @@
             - if current_territory.enable_notes_field?
               li= object_attribute_tag(@user, :annotation_content, formatted_user_annotation(@user, current_territory))
 
-        .row.mt-3
-          .col.text-left
+        ul.fr-btns-group.fr-btns-group--right.fr-btns-group--inline.fr-btns-group--icon-left.fr-mb-0
+          li
             - if @user.can_be_soft_deleted_from_organisation?(current_organisation)
-              = link_to "Supprimer", admin_organisation_user_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: user_soft_delete_confirm_message(@user)}
+              = link_to "Supprimer", admin_organisation_user_path(current_organisation, @user), method: :delete, class: "fr-btn fr-btn--tertiary fr-icon-delete-fill", data: { confirm: user_soft_delete_confirm_message(@user)}
             - else
-              = link_to "Supprimer", "#", class: "btn btn-outline-danger", onclick: "alert(this.dataset.message)", data: { message: I18n.t("users.can_not_delete_because_has_future_rdvs") }
-          .col.text-right
-            = link_to "Modifier", edit_admin_organisation_user_path(current_organisation, @user), class: "btn btn-primary"
+              = link_to "Supprimer", "#", class: "fr-btn fr-btn--tertiary fr-icon-delete-fill", onclick: "alert(this.dataset.message)", data: { message: I18n.t("users.can_not_delete_because_has_future_rdvs") }
+          li
+            = link_to "Modifier", edit_admin_organisation_user_path(current_organisation, @user), class: "fr-btn fr-btn--secondary fr-icon-edit-fill"
 
     - if @user.responsible?
       .card
@@ -70,7 +71,7 @@
               li.font-italic Aucun référent
 
           .text-right
-            = link_to "Modifier", admin_organisation_user_referent_assignations_path(current_organisation, @user), class: "btn btn-outline-primary"
+            = link_to "Modifier", admin_organisation_user_referent_assignations_path(current_organisation, @user), class: "fr-btn fr-btn--secondary fr-icon-edit-fill fr-btn--icon-left"
 
     - if @user.relative?
       .card#spec-secondary-user-card
@@ -78,7 +79,7 @@
           h2.card-title.mb-3 Informations sur l'usager en charge
           = render "admin/users/responsible_information", user: @user.responsible
           .text-right
-            = link_to "Voir", admin_organisation_user_path(current_organisation, @user.responsible), class: "btn btn-outline-primary"
+            = link_to "Voir", admin_organisation_user_path(current_organisation, @user.responsible), class: "fr-btn fr-btn--secondary fr-icon-eye-line fr-btn--icon-left"
 
       .card
         .card-header Agents référents du responsable
@@ -104,7 +105,7 @@
                 => link_to relative.full_name, admin_organisation_user_path(current_organisation, relative)
                 = "(#{age(relative)})" if relative.birth_date
           .text-right
-            = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
+            = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "fr-btn fr-btn--secondary fr-icon-add-line fr-btn--icon-left"
 
   .col-md-6
 
@@ -126,7 +127,7 @@
             | Statuts
             small.text-muted< sur #{@participations.count} RDV
           - if @user.rdvs.count > 0
-            = link_to "Voir tous les rendez-vous de #{@user.full_name}", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "btn btn-outline-primary small"
+            = link_to "Voir tous les RDV de l’usager", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: "Voir tous les RDV de l’usager #{@user.full_name}"
       .card-body
         .row
           .fr-mb-2v
