@@ -6,8 +6,6 @@
 
 # InStatus est le service dont on se sert pour communiquer les incidents
 in_status = "*.instatus.com"
-# Nous hébergeons la vidéo de la page d'accueil de RDV_MAIRIE sur le s3 de RDV-Insertion
-s3_de_rdv_insertion = "rdv-insertion-medias-production.s3.fr-par.scw.cloud"
 # Nous faisons des appels vers cette API dans notre recherche par adresse
 api_adresse_ign = "data.geopf.fr"
 # Nous utilisons mapbox et les tiles etalab pour les interfaces de config de sectorisation
@@ -34,7 +32,6 @@ Rails.application.config.content_security_policy do |policy|
   policy.worker_src :blob
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, headway_widget, metabase
-  policy.media_src :self, s3_de_rdv_insertion
   policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
