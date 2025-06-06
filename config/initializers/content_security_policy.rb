@@ -35,6 +35,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.worker_src :blob
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, headway_widget, metabase
+  policy.media_src :self
   policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
