@@ -1,3 +1,4 @@
+<%# Mettez à jour la variable sha256_for_headway_widget dans config/initializers/content_security_policy.rb si vous changez ce fichier %>
 <script>
   // @see https://docs.headwayapp.co/widget for more configuration options.
   var HW_config = {
@@ -21,4 +22,5 @@
     },
   };
 </script>
+<%# Le script doit se charger après qu'on ai défini HW_config %>
 <script async src="https://cdn.headwayapp.co/widget.js"></script>

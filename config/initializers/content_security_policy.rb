@@ -25,6 +25,9 @@ headway_widget = "headway-widget.net"
 # Metabase permet d’embedder des rapports dans l’application
 metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
 
+# On récupère cette valeur depuis la console du navigateur si jamais app/views/layouts/_headway_widget.html.erb change
+sha256_for_headway_widget = "'sha256-VMrCl0fKQtD0S8X5Ag+eqTHgasbwftTTlEwcO1VbkbQ='"
+
 Rails.application.config.content_security_policy do |policy|
   policy.default_src :self
   policy.font_src :self, :data # :data est nécessaire pour charger les icônes fullcalendar
@@ -35,7 +38,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
-  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
+  policy.script_src :self, sha256_for_headway_widget, api_mapbox, headway_cnd, unpkg_cdn
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
