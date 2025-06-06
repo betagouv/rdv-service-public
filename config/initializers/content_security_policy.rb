@@ -44,6 +44,11 @@ Rails.application.config.content_security_policy do |policy|
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
     policy.script_src(*(policy.script_src + ["ajax.googleapis.com"]))
   end
+
+  if Rails.env.test?
+    # Il semble qu'un outil de test injecte un petit script
+    policy.script_src(*(policy.script_src + ["'sha256-QHkRHtatX/LwAW/EeytFmJTi1biAwojXF23HeTF90PA='"]))
+  end
 end
 
 # If you are using UJS then enable automatic nonce generation
