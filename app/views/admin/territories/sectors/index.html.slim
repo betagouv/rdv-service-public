@@ -6,7 +6,7 @@
       .p-2.d-grid.grid-three-columns.grid-first-column-empty.grid-align-center
         .rdv-text-align-center= page_entries_info @sectors
         div.text-right
-          = link_to admin_territory_sectors_path(current_territory, view: "map"), class: "btn btn-light", "data-turbolinks": false do
+          = link_to admin_territory_sectors_path(current_territory, view: "map"), class: "btn btn-light" do
             span> Voir la carte
             i.fa.fa-map
 
@@ -24,7 +24,7 @@
         tbody
           - @sectors.each do |sector|
             tr
-              td= link_to sector.name, admin_territory_sector_path(current_territory, sector), "data-turbolinks": false
+              td= link_to sector.name, admin_territory_sector_path(current_territory, sector)
               td= human_id(sector)
               td
                 ul.list-unstyled
