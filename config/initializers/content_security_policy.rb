@@ -35,7 +35,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
-  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
+  policy.script_src :self, :unsafe_inline, headway_cnd, unpkg_cdn
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI

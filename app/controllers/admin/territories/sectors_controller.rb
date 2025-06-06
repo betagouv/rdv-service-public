@@ -1,6 +1,13 @@
 class Admin::Territories::SectorsController < Admin::Territories::BaseController
   before_action :set_sector, only: %i[show edit update destroy]
 
+  # Les scripts pour mapbox nécessitent un changement de la csp
+  # Pour obtenir une csp à jour, il faut désactiver les turbolinks
+  content_security_policy(only: %i[index show]) do |policy|
+    api_mapbox = "api.mapbox.com"
+    policy.script_src :self, api_mapbox
+  end
+
   def index
     @sectors = policy_scope(Sector, policy_scope_class: Agent::SectorPolicy::Scope)
       .where(territory: current_territory)
