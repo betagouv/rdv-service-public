@@ -52,9 +52,8 @@ Rails.application.config.content_security_policy do |policy|
   # Il semble aussi que dans les tests capybara en js: true, un petit script est injecté pour lequel il faut aussi ajouter une directive de type sha256.
   #
   # Les directives de type sha permettent de s'assurer que seul le script correspondant exactement au sha peut-être chargé.
-  # Ça nous protège si jamais un attaquant prenait le contrôle d'un domaine utilisé par un partenaire et essayait de charger un script malveillant via une des urls qu'on utilise.
-  unpkg_maplibre_sha = "'sha384-bLkmUMwRt9nFp2+XvlPOzIkNUx/mnjvxxE7kI6bJWKMz/sfwiK5nra6w+60B9zyF'"
-  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_maplibre_sha
+  # Cependant, elles ne sont pas prises en compte si la directive 'unsafe_inline' est présente
+  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
