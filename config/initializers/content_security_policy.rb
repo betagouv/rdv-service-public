@@ -8,8 +8,7 @@
 in_status = "*.instatus.com"
 # Nous faisons des appels vers cette API dans notre recherche par adresse
 api_adresse_ign = "data.geopf.fr"
-# Nous utilisons mapbox et les tiles etalab pour les interfaces de config de sectorisation
-api_mapbox = "api.mapbox.com"
+# Nous utilisons mapbox via unpkg et les tiles etalab pour les interfaces de config de sectorisation
 tiles_etalab = "etalab-tiles.fr"
 # Nous utilisons unpkg, les tiles OSM et etalab pour afficher une carte des lieux dans les stats avec maplibre
 unpkg_cdn = "unpkg.com"
@@ -39,7 +38,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, headway_widget, metabase
   policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
-  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
+  policy.style_src :self, :unsafe_inline, bootstrap_cdn, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
 
   # La source `unsafe_inline` autorise l'utilisation de js dans un tag `script` dans la page.
@@ -55,7 +54,7 @@ Rails.application.config.content_security_policy do |policy|
   # Cependant, elles ne sont pas prises en compte si la source 'unsafe_inline' est présente
   #
   # L'usage de la directive script-src-elem plutôt que script-src permet de ne pas autoriser les event handlers inline dans le html, comme "onclick"
-  policy.script_src_elem :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
+  policy.script_src_elem :self, :unsafe_inline, headway_cnd, unpkg_cdn
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
