@@ -55,11 +55,6 @@ Rails.application.config.content_security_policy do |policy|
   #
   # L'usage de la directive script-src-elem plutôt que script-src permet de ne pas autoriser les event handlers inline dans le html, comme "onclick"
   policy.script_src_elem :self, :unsafe_inline, headway_cnd, unpkg_cdn
-
-  if ENV["CI"].present?
-    # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
-    policy.script_src(*(policy.script_src + ["ajax.googleapis.com"]))
-  end
 end
 
 # If you are using UJS then enable automatic nonce generation
