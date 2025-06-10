@@ -57,6 +57,10 @@ Rails.application.config.content_security_policy do |policy|
   policy.script_src_elem :self, headway_cnd, unpkg_cdn
 
   policy.script_src_attr :self, :unsafe_inline
+
+  if Rails.env.test?
+    policy.script_src_elem += ["'sha256-QHkRHtatX/LwAW/EeytFmJTi1biAwojXF23HeTF90PA='"]
+  end
 end
 
 # If you are using UJS then enable automatic nonce generation
