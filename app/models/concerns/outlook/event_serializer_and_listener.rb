@@ -105,10 +105,15 @@ module Outlook
       show_link = url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.domain.host_name)
       edit_link = url_helpers.edit_admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.domain.host_name)
 
+      dossier_link = ""
+      if rdv.rdv_plan&.dossier_url
+        dossier_link = "<a href=\"#{rdv.rdv_plan&.dossier_url}\">Voir sur #{rdv.rdv_plan.oauth_application&.name}</a><br />"
+      end
+
       <<~HTML
         Plus d'infos sur <a href="#{show_link}">#{agent.domain_name}</a>:
         <br />
-
+        #{dossier_link}
         Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur #{agent.domain_name}.
         Pour modifier ce rendez-vous, allez sur <a href="#{edit_link}">#{agent.domain_name}</a>
       HTML

@@ -45,6 +45,18 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
           description = "Voir sur RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{rdv.organisation_id}/rdvs/#{rdv.id}"
           expect(rdv.payload(nil, agent)[:description]).to eq(description)
         end
+
+        context "when there is a link to a dossier in an external app" do
+          before do
+            create(:rdv_plan, rdv: rdv, dossier_url: "http://demarches-simplifies.test/exemple", oauth_application:)
+          end
+
+          let(:oauth_application) { create(:oauth_application, name: "Démarches Simplifiées") }
+
+          it "provides the link in the description" do
+            expect(rdv.payload(nil, agent)[:description]).to include("Voir sur Démarches Simplifiées: http://demarches-simplifies.test/exemple")
+          end
+        end
       end
     end
 

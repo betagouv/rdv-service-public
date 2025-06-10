@@ -96,12 +96,6 @@
 @import "./components/rdv_solidarites_instance_name";
 @import "./components/alert";
 
-.page-title-box {
-  h1.page-title {
-    line-height: 1.5;
-  }
-}
-
 @import "./structure/bootstrap_overrides";
 
 a[href]:not(.rdv-fc-event-waiting):not(.fr-link):not(.fr-breadcrumb__link) {

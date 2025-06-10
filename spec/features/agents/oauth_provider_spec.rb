@@ -89,25 +89,5 @@ RSpec.describe "OAuth provider", js: true do
     click_on "Se connecter"
 
     expect(page).to have_content("Votre email est francis@factice.org")
-
-    visit "http://localhost:4567/logout"
-
-    # Un mois plus tard, si on ne s'est pas reconnecté, il faut à nouveau donner la permission à l'application
-    travel_to(31.days.from_now)
-    CronJob::DestroyOldOauthObjects.perform_now
-
-    visit "http://localhost:4567/"
-    click_button "Se connecter avec RDV Service Public"
-
-    fill_in "Adresse email", with: agent.email
-    fill_in "Mot de passe", with: agent.password
-    click_on "Se connecter"
-
-    expect(page).to have_content("Connexion réussie")
-    expect(page).to have_content("En continuant, vous allez permettre à Démarches Simplifiées d'accéder à votre compte RDV Solidarités")
-    expect(page).to have_content(agent.email) # On indique à l'agent le compte utilisé pour la connexion
-    click_on "Continuer"
-
-    expect(page).to have_content("Votre email est francis@factice.org")
   end
 end

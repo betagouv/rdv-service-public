@@ -62,7 +62,7 @@ POST /api/v1/rdv_plans
         "birth_date": "1990-12-31"
     },
     "return_url": "https://monsuivisocial.incubateur.anct.gouv.fr/callback/123", // l'agent sera redirigé vers cette url après la page de confirmation du rdv.
-    "dossier_url": "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123" // sera affiché à l'agent (mais pas à l'usager) sur la page de détail du rdv et la pièce jointe ICS de l'email de confirmation. Pas encore implémenté
+    "dossier_url": "https://monsuivisocial.incubateur.anct.gouv.fr/beneficiaires/123" // sera affiché à l'agent (mais pas à l'usager) sur la page de détail du rdv et la pièce jointe ICS de l'email de confirmation.
 }
 ```
 
