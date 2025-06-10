@@ -27,6 +27,12 @@ headway_widget = "headway-widget.net"
 # Metabase permet d’embedder des rapports dans l’application
 metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
 
+# Tant qu'on utilise les Turbolinks, c'est très difficile d'avoir des CSP différentes pour chaque pages,
+# puisque les CSP sont uniquement chargées lors de la première requête qui charle le premier document,
+# et pas lors des appels XHR fait par les turbolinks.
+#
+# Si on voulait par exemple avoir une CSP uniquement pour les pages de la sectorisation qui affichent des cartes
+# en JS, il faudrait donc s'assurer que tous les liens vers ces pages ont un attribut "data-turbolinks: false".
 Rails.application.config.content_security_policy do |policy|
   policy.default_src :self
   policy.font_src :self, :data # :data est nécessaire pour charger les icônes fullcalendar
@@ -36,6 +42,17 @@ Rails.application.config.content_security_policy do |policy|
   policy.frame_src :self, in_status, headway_widget, metabase
   policy.media_src :self, s3_de_rdv_insertion
   policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
+
+  # La directive `unsafe_inline` autorise l'utilisation de js dans un tag `script` dans la page.
+  # Idéalement, on voudrait donc la supprimer, puisque ça ajouterait une couche de protection contre les injections de JS.
+  # On s'en sert pour deux choses:
+  # - un script de customisation de headway qui est inliné : on pourrait ajouter une directive de type sha256 pour éviter ça
+  # - les mises à jour de statuts de rdvs qui utilisent des forms `js: true` et une view en `js.erb`. Si on pouvait éviter ce fonctionnement
+  # (peut-être en utilisant des turbo-frames), on pourrait s'éviter l'usage de cette directive ici.
+  #
+  # Il semble aussi que dans les tests capybara en js: true, un petit script est injecté pour lequel il faut aussi ajouter une directive de type sha256.
+  #
+  # Pour ajouter un directive de type sha256, le plus simple est de récupérer la valeur depuis l'erreur dans la console.
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
   policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
