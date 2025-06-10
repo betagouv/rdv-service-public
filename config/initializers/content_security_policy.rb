@@ -53,7 +53,7 @@ Rails.application.config.content_security_policy do |policy|
   #
   # Les directives de type sha permettent de s'assurer que seul le script correspondant exactement au sha peut-être chargé.
   # Cependant, elles ne sont pas prises en compte si la directive 'unsafe_inline' est présente
-  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd
+  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
