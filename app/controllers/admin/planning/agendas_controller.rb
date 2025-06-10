@@ -1,7 +1,7 @@
 class Admin::Planning::AgendasController < AgentAuthController
   def show
     @show_agent_select = true
-    @agents = params[:agent_id].present? ? Agent.where(id: params[:agent_id]) : current_agent
+    @agents = params[:agent_id].present? ? Agent.where(id: params[:agent_id]) : [current_agent]
     @agents.each do |agent|
       authorize(AgentAgenda.new(agent:, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
     end

@@ -1,13 +1,10 @@
+- @agents ||= [@agent]
 - @multi_agents_mode = @agents.size > 1
 
 = form_with(url: url_for({}), method: :get) do |form|
   .row
     .col-md-6
       ruby:
-        #scope = Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve.includes(:services)
-        #collection = scope.joins(:organisations).where(organisations: { id: current_organisation.id }).map do
-        #  ["#{_1.reverse_full_name_or_email} (#{_1.services.map(&:short_name).join(', ')})", _1.id]
-        #end
         collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
         data = {
           "select2-config": {

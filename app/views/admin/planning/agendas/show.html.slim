@@ -4,7 +4,7 @@
   - if current_agent == @agent
     | Votre agenda
   - else
-    | Agenda de #{@agents.map(&:full_name_and_service).join(', ')}
+    | Agenda de #{@agents.map(&:full_name_and_service).join(", ")}
 
 = render partial: "admin/planning/planning_tabs"
 
