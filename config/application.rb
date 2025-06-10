@@ -41,7 +41,7 @@ module Lapin
 
     config.x.redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379" }
 
-    config.active_support.cache_format_version = 7.0
+    config.active_support.cache_format_version = 7.1
 
     redis_settings = {
       connect_timeout: 30, # Defaults to 20 seconds
