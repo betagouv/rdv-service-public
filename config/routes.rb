@@ -383,8 +383,6 @@ Rails.application.routes.draw do
 
   # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")
-  # old agenda rule was bookmarked by some agents
-  get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
   post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :brevo # TODO: supprimer après la transition
   post "/inbound_emails/brevo", controller: :inbound_emails, action: :brevo
 

@@ -147,6 +147,7 @@ RSpec.describe "RDV Plan API" do
             birth_date: "1990-12-31",
           },
           return_url: "https://demo.demarches-simplifiees.fr/callback/123",
+          dossier_url: "https://demo.demarches-simplifiees.fr/dossier/456",
         }
       end
 
@@ -158,6 +159,7 @@ RSpec.describe "RDV Plan API" do
         expect(rdv_plan).to have_attributes(
           planning_agent: agent,
           return_url: "https://demo.demarches-simplifiees.fr/callback/123",
+          dossier_url: "https://demo.demarches-simplifiees.fr/dossier/456",
           oauth_application_id: application.id
         )
 

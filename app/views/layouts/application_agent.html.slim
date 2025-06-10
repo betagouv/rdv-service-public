@@ -20,7 +20,7 @@ html lang="fr"
           .container-fluid
             - if content_for :title
               .page-title-box
-                h1.page-title.pb-2
+                h1.fr-h2.pb-2
                   = yield :title
                   - if @show_agent_select
                     = render partial: "admin/planning/agent_select"

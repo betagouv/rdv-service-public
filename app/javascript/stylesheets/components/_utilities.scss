@@ -111,6 +111,17 @@ a[disabled] {
   flex-direction: column;
 }
 
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.align-items-start-or-stretch {
+  align-items: stretch;
+  @include media-breakpoint-up(md) {
+    align-items: flex-start;
+  }
+}
+
 .rdv-flex-direction-row-md {
   @include media-breakpoint-up(md) {
     flex-direction: row;
