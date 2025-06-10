@@ -45,14 +45,16 @@ Rails.application.config.content_security_policy do |policy|
   # La directive `unsafe_inline` autorise l'utilisation de js dans un tag `script` dans la page.
   # Idéalement, on voudrait donc la supprimer, puisque ça ajouterait une couche de protection contre les injections de JS.
   # On s'en sert pour deux choses:
-  # - un script de customisation de headway qui est inliné : on pourrait ajouter une directive de type sha256 pour éviter ça
+  # - un script de customisation de headway qui est inliné : on pourrait ajouter une directive de type sha pour éviter ça
   # - les mises à jour de statuts de rdvs qui utilisent des forms `js: true` et une view en `js.erb`. Si on pouvait éviter ce fonctionnement
   # (peut-être en utilisant des turbo-frames), on pourrait s'éviter l'usage de cette directive ici.
   #
   # Il semble aussi que dans les tests capybara en js: true, un petit script est injecté pour lequel il faut aussi ajouter une directive de type sha256.
   #
-  # Pour ajouter un directive de type sha256, le plus simple est de récupérer la valeur depuis l'erreur dans la console.
-  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
+  # Les directives de type sha permettent de s'assurer que seul le script correspondant exactement au sha peut-être chargé.
+  # Ça nous protège si jamais un attaquant prenait le contrôle d'un domaine utilisé par un partenaire et essayait de charger un script malveillant via une des urls qu'on utilise.
+  unpkg_maplibre_sha = "'sha384-bLkmUMwRt9nFp2+XvlPOzIkNUx/mnjvxxE7kI6bJWKMz/sfwiK5nra6w+60B9zyF'"
+  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_maplibre_sha
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
