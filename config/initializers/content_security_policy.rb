@@ -39,6 +39,8 @@ Rails.application.config.content_security_policy do |policy|
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, headway_widget, metabase
   policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
+  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
+  policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
 
   # La directive `unsafe_inline` autorise l'utilisation de js dans un tag `script` dans la page.
   # Idéalement, on voudrait donc la supprimer, puisque ça ajouterait une couche de protection contre les injections de JS.
@@ -50,8 +52,6 @@ Rails.application.config.content_security_policy do |policy|
   # Il semble aussi que dans les tests capybara en js: true, un petit script est injecté pour lequel il faut aussi ajouter une directive de type sha256.
   #
   # Pour ajouter un directive de type sha256, le plus simple est de récupérer la valeur depuis l'erreur dans la console.
-  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
-  policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
   policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
 
   if ENV["CI"].present?
