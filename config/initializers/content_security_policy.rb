@@ -42,18 +42,20 @@ Rails.application.config.content_security_policy do |policy|
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
 
-  # La directive `unsafe_inline` autorise l'utilisation de js dans un tag `script` dans la page.
+  # La source `unsafe_inline` autorise l'utilisation de js dans un tag `script` dans la page.
   # Idéalement, on voudrait donc la supprimer, puisque ça ajouterait une couche de protection contre les injections de JS.
   # On s'en sert pour deux choses:
-  # - un script de customisation de headway qui est inliné : on pourrait ajouter une directive de type sha pour éviter ça
+  # - un script de customisation de headway qui est inliné : on pourrait ajouter une source de type sha pour éviter ça
   # - les mises à jour de statuts de rdvs qui utilisent des forms `js: true` et une view en `js.erb`. Si on pouvait éviter ce fonctionnement
-  # (peut-être en utilisant des turbo-frames), on pourrait s'éviter l'usage de cette directive ici.
+  # (peut-être en utilisant des turbo-frames), on pourrait s'éviter l'usage de cette source ici.
   #
-  # Il semble aussi que dans les tests capybara en js: true, un petit script est injecté pour lequel il faut aussi ajouter une directive de type sha256.
+  # Il semble aussi que dans les tests capybara en js: true, un petit script est injecté pour lequel il faut aussi ajouter une source de type sha.
   #
-  # Les directives de type sha permettent de s'assurer que seul le script correspondant exactement au sha peut-être chargé.
-  # Cependant, elles ne sont pas prises en compte si la directive 'unsafe_inline' est présente
-  policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
+  # Les sources de type sha permettent de s'assurer que seul le script correspondant exactement au sha peut-être chargé.
+  # Cependant, elles ne sont pas prises en compte si la source 'unsafe_inline' est présente
+  #
+  # L'usage de la directive script-src-elem plutôt que script-src permet de ne pas autoriser les event handlers inline dans le html, comme "onclick"
+  policy.script_src_elem :self, :unsafe_inline, api_mapbox, headway_cnd, unpkg_cdn
 
   if ENV["CI"].present?
     # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
