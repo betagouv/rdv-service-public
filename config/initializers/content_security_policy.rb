@@ -52,15 +52,7 @@ Rails.application.config.content_security_policy do |policy|
   #
   # Les sources de type sha permettent de s'assurer que seul le script correspondant exactement au sha peut-être chargé.
   # Cependant, elles ne sont pas prises en compte si la source 'unsafe_inline' est présente
-  #
-  # L'usage de la directive script-src-elem plutôt que script-src permet de ne pas autoriser les event handlers inline dans le html, comme "onclick"
-  policy.script_src_elem :self, headway_cnd, unpkg_cdn
-
-  policy.script_src_attr :self, :unsafe_inline
-
-  if Rails.env.test?
-    policy.script_src_elem += ["'sha256-QHkRHtatX/LwAW/EeytFmJTi1biAwojXF23HeTF90PA='"]
-  end
+  policy.script_src :self, :unsafe_inline, headway_cnd, unpkg_cdn
 end
 
 # If you are using UJS then enable automatic nonce generation
