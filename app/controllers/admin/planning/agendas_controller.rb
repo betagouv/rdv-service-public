@@ -1,12 +1,13 @@
 class Admin::Planning::AgendasController < AgentAuthController
+  include Admin::Planning::SetAgentsConcern
+
   def show
+    set_agents
+
     @show_agent_select = true
-    scope = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
-    @agents = scope.where(id: params[:agent_id]).presence || [current_agent]
     @agents.each do |agent|
       authorize(AgentAgenda.new(agent:, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
     end
-    @agent = @agents.first if @agents.size == 1
     @status = params[:status]
     @organisation = current_organisation
     @selected_event_id = params[:selected_event_id]

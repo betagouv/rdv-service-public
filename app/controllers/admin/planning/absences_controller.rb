@@ -1,6 +1,8 @@
 class Admin::Planning::AbsencesController < AgentAuthController
+  include Admin::Planning::SetAgentsConcern
+
   before_action :set_absence, only: %i[edit update destroy]
-  before_action :set_agent
+  before_action :set_agents
   before_action :build_absence, only: [:create]
 
   def index
@@ -79,14 +81,6 @@ class Admin::Planning::AbsencesController < AgentAuthController
 
   def build_absence
     @absence = Absence.new(absence_params)
-  end
-
-  def set_agent
-    @agent = if params[:agent_id].present?
-               policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:agent_id])
-             else
-               @absence&.agent || current_agent
-             end
   end
 
   def absence_params

@@ -1,6 +1,8 @@
 class Admin::Planning::PlageOuverturesController < AgentAuthController
+  include Admin::Planning::SetAgentsConcern
+
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
-  before_action :set_agent
+  before_action :set_agents
   before_action :build_plage_ouverture, only: [:create]
 
   def show
@@ -94,14 +96,6 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   private
-
-  def set_agent
-    @agent = if params[:agent_id].present?
-               policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:agent_id])
-             else
-               @plage_ouverture&.agent || current_agent
-             end
-  end
 
   def set_plage_ouverture
     @plage_ouverture = PlageOuverture.find(params[:id])
