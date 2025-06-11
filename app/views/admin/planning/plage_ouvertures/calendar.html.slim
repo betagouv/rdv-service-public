@@ -2,9 +2,12 @@
 
 - content_for :title do
   - if current_agent == @agent
-    = t("admin.planning.plage_ouvertures.index.your_plage_ouverture")
+    | Plages d’ouverture
   - else
-    = t("admin.planning.plage_ouvertures.index.plage_ouverture_of", full_name: @agent.full_name_and_service)
+    | Plages d’ouverture de #{@agent.full_name_and_service}
+
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
 
 - content_for :breadcrumb do
   .text-right
@@ -12,6 +15,8 @@
       span.mr-1= t("admin.planning.plage_ouvertures.index.list_view")
       i.fa.fa-calendar-alt
     = link_to t("admin.planning.plage_ouvertures.index.create_plage_ouverture"), new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "btn btn-outline-primary align-bottom"
+
+= render partial: "admin/planning/planning_tabs"
 
 #calendar [
   data-agent-id="#{@agent.id}"

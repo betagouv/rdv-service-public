@@ -3,8 +3,6 @@ fr:
     planning:
       plage_ouvertures:
         index:
-          your_plage_ouverture: Vos plages d'ouvertures
-          plage_ouverture_of: Plages d'ouverture de %{full_name}
           calendar_view: Vue calendrier
           list_view: Vue liste
           create_plage_ouverture: Créer une plage d'ouverture

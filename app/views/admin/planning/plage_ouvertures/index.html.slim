@@ -2,9 +2,12 @@
 
 - content_for :title do
   - if current_agent == @agent
-    = t(".your_plage_ouverture")
+    | Plages d’ouverture
   - else
-    = t(".plage_ouverture_of", full_name: @agent.full_name_and_service)
+    | Plages d’ouverture de #{@agent.full_name_and_service}
+
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
 
 = render partial: "admin/planning/planning_tabs"
 
