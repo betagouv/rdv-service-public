@@ -32,7 +32,8 @@
                     th Dates
                     th Actions
                 tbody
-                  = render @absences
+                  - @absences.each do |absence|
+                    = render partial: "admin/planning/absences/absence", locals: { absence: }
         .fr-table__footer
           .fr-table__footer--middle
             = paginate @absences, theme: "dsfr"
