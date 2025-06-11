@@ -69,7 +69,7 @@ RSpec.describe AddConseillerNumerique do
 
       expect(invitation_email).to have_attributes(
         to: ["exemple@tierslieuxettransitions.fr"],
-        from: ["support@rdv-aide-numerique.fr"]
+        from: ["support@rdv-service-public.fr"]
       )
 
       # And when trying a second time, it doesn't re-create the agent or the organisation
