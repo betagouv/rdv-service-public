@@ -6,15 +6,10 @@
   - else
     | Modifier la plage d'ouverture de #{@plage_ouverture.agent.full_name_or_email}
 
-- content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent) do
-        - if @plage_ouverture.agent == current_agent
-          | Vos plages d'ouverture
-        - else
-          | Plages d'ouverture de #{@plage_ouverture.agent.full_name_or_email}
-    li.breadcrumb-item.active
-      = link_to truncate(@plage_ouverture.title_with_default, length: 30), admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
+- content_for :fil_ariane do
+  - if current_agent == @plage_ouverture.agent
+    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Plages d’ouverture", admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)]], current_page_title: yield(:title)
+  - else
+    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Plages d’ouverture de #{@plage_ouverture.agent.full_name_and_service}", admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)]], current_page_title: yield(:title)
 
 = render "form", plage_ouverture: @plage_ouverture, agent: @agent
