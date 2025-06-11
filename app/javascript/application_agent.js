@@ -27,7 +27,8 @@ import { Tooltips } from './components/tooltips'
 import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
 import {CheckAll, UnCheckAll} from './components/check-all'
 import './components/motifs_table'
-import './components/calendar'
+import { AgendaMonoAgent } from './components/calendar'
+import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
 import './components/browser-detection'
 import './components/clear-field-on-focus'
 import './components/planning-agents-select'
@@ -112,6 +113,9 @@ $(document).on('turbolinks:load', function() {
 
   new CheckAll()
   new UnCheckAll()
+
+  new AgendaMonoAgent()
+  new AgendaMultiAgent()
 
   Tooltips()
 })

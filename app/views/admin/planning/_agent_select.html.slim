@@ -12,7 +12,7 @@
               },
             },
           }
-      = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: "select2-input", onchange: "this.form.submit()", data: }
+      = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: "select2-input", onchange: @agents.size == 1 ? "this.form.submit()" : "", data: }
 
   .row
     .col
@@ -20,3 +20,5 @@
         button#multi_agent_toggle.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
       #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
         = form.submit "Appliquer", {class: "fr-btn  "}
+      #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
+        = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: current_agent), class: "fr-btn fr-btn--tertiary"

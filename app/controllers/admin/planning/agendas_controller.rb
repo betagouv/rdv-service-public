@@ -3,11 +3,15 @@ class Admin::Planning::AgendasController < AgentAuthController
 
   def show
     set_agents
-
     @show_agent_select = true
     @agents.each do |agent|
       authorize(AgentAgenda.new(agent:, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
     end
+
+    if @agents.size > 1
+      render :multi_agents_agenda and return
+    end
+
     @status = params[:status]
     @organisation = current_organisation
     @selected_event_id = params[:selected_event_id]
