@@ -11,6 +11,8 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def index
     @show_agent_select = true
+    render :multi_agents_index and return if @agents.size > 1
+
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
       .where(agent_id: @agent)
