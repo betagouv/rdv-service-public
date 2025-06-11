@@ -10,7 +10,7 @@
       .fr-tile__content
         h3.fr-tile__title
           a[href=admin_organisation_planning_absences_path(current_organisation, { agent_id: agent.id }.compact_blank)]
-            = agent.full_name
+            = agent.full_name_or_email
         p.fr-tile__detail
           | #{agent.absences.size} indisponibilités
     .fr-tile__header
