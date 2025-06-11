@@ -1,5 +1,3 @@
-- @multi_agents_mode = @agents.size > 1
-
 = form_with(url: url_for({}), method: :get) do |form|
   .row
     .col-md-6
@@ -14,11 +12,11 @@
               },
             },
           }
-      = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @multi_agents_mode }, { name: "agent_id[]", class: "select2-input", onchange: "this.form.submit()", data: }
+      = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: "select2-input", onchange: "this.form.submit()", data: }
 
   .row
     .col
-      - unless @multi_agents_mode
+      - if @agents.size == 1
         button#multi_agent_toggle.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
-      #submit_agents[class=(@multi_agents_mode ? "" : "hidden")]
+      #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
         = form.submit "Appliquer", {class: "fr-btn  "}
