@@ -55,7 +55,7 @@ class Domain
       online_reservation_with_public_link: true,
       sms_sender_name: "RdvAideNum",
       france_connect_enabled: false,
-      support_email: "support@rdv-aide-numerique.fr",
+      support_email: "support@rdv-service-public.fr",
       verticale: :rdv_aide_numerique,
       allow_self_onboarding: false,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
