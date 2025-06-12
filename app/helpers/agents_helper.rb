@@ -1,5 +1,7 @@
 module AgentsHelper
   def may_need_onboarding_help?
+    return false if current_agent.territory_creation_request.blank?
+
     # Pour éviter d'avoir des problèmes de perfs en faisant un COUNT(*) sur tous les rdvs de l'organisation,
     # on limite à 5 puisque c'est le nombre qu'on considère comme un bon indicateur que l'organisation a réussi à configurer son compte
     current_organisation.rdvs.limit(5).count < 5
