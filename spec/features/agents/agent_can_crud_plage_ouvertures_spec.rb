@@ -14,7 +14,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
   shared_examples "can crud own plage ouvertures" do
     it "works" do
-      expect_page_title("Vos plages d'ouverture")
+      expect_page_title("Plages d’ouverture")
       click_link "Permanence"
 
       expect_page_title("Permanence")
@@ -24,18 +24,18 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
-      expect_page_title("Vos plages d'ouverture")
+      expect_page_title("Plages d’ouverture")
       click_on("La belle plage")
       click_link("Supprimer")
 
-      expect_page_title("Vos plages d'ouverture")
+      expect_page_title("Plages d’ouverture")
       expect(page).to have_content("Vous n'avez pas encore créé de plage d'ouverture")
 
       # Navigate back and forth between the list and the detail
       click_link "Créer une plage d'ouverture", match: :first
       expect_page_title("Nouvelle plage d'ouverture")
       click_link("Annuler")
-      expect_page_title("Vos plages d'ouverture")
+      expect_page_title("Plages d’ouverture")
       click_link "Créer une plage d'ouverture", match: :first
       expect_page_title("Nouvelle plage d'ouverture")
 
@@ -44,7 +44,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       check "Suivi bonjour"
       click_button "Créer la plage d'ouverture"
       expect(PlageOuverture.last.title).to eq("Accueil")
-      expect_page_title("Vos plages d'ouverture")
+      expect_page_title("Plages d’ouverture")
     end
   end
 
@@ -69,7 +69,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
 
     it "cannot create plage_ouverture" do
-      expect_page_title("Vos plages d'ouverture")
+      expect_page_title("Plages d’ouverture")
       click_link "Créer une plage d'ouverture", match: :first
       expect(page).to have_content("Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.")
     end
@@ -98,7 +98,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     it "can crud a plage_ouverture", js: true do
       visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
 
-      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)") # vue liste
+      expect_page_title("Plages d’ouverture de Jane FAROU (PMI)") # vue liste
       expect(page).to have_content "Permanence"
       click_link "Vue calendrier"
       expect(page).to have_content "Semaine" # necessary to make sure the calendar page has loaded
@@ -111,14 +111,14 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
-      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+      expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
       click_on("La belle plage")
       expect(page).to have_content("La belle plage")
       accept_confirm do
         click_link("Supprimer")
       end
 
-      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+      expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
       expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
 
       click_link "Renseigner les disponibilités de Jane FAROU", match: :first
@@ -131,7 +131,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(page).to have_content("Plage d'ouverture créée")
 
       expect(PlageOuverture.last.title).to eq("Accueil")
-      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+      expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
     end
 
     context "when the motif doesn't require a lieu" do
@@ -141,7 +141,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       it "still can crud a plage_ouverture" do
         visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
 
-        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+        expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
         click_link "Permanence"
 
         expect_page_title("Permanence")
@@ -151,11 +151,11 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         fill_in "Libellé (facultatif)", with: "La belle plage"
         click_button("Enregistrer")
 
-        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+        expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
         click_on("La belle plage")
         click_link("Supprimer")
 
-        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+        expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
         expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
 
         click_link "Renseigner les disponibilités de Jane FAROU", match: :first
@@ -165,7 +165,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         check "Suivi bonjour"
         click_button "Créer la plage d'ouverture"
         expect(PlageOuverture.last.title).to eq("Accueil")
-        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+        expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
       end
     end
   end

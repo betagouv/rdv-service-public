@@ -1,8 +1,32 @@
 class CronJob < ApplicationJob
   queue_as :latency_whenever
 
+  module MonitorConcern
+    extend ActiveSupport::Concern
+
+    included do
+      crontab = Rails.configuration.good_job.cron.values.find { _1[:class] == name }&.fetch(:cron)
+      if crontab
+        # cf https://docs.sentry.io/platforms/ruby/crons/#job-monitoring
+        # this will send check in events to Sentry on job start and job end
+        # this will also upsert the Cron Monitor config in Sentry
+        # this upsert runs together with the check in events in the job runtime
+        # NOTE: if you delete a CRON job, you have to manually delete it from Sentry
+        include Sentry::Cron::MonitorCheckIns # does nothing until sentry_monitor_check_ins is called
+        sentry_monitor_check_ins(
+          monitor_config: Sentry::Cron::MonitorConfig.from_crontab(
+            Fugit.parse(crontab).to_cron_s.sub(" Europe/Paris", ""),
+            timezone: "Europe/Paris"
+          )
+        )
+      end
+    end
+  end
+
   class FileAttenteJob < CronJob
     queue_as :latency_30s
+
+    include MonitorConcern
 
     def perform
       FileAttente.send_notifications

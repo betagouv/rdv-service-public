@@ -1,8 +1,8 @@
 -content_for :html_head_prepend do
   / mapbox is hard to use with webpack because of
   / https://github.com/mapbox/mapbox-gl-js/issues/1649
-  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
+  script src="https://unpkg.com/mapbox-gl@1.11.1/dist/mapbox-gl.js" crossorigin='anonymous' integrity="sha384-0Zom4D5ryhUWYPBjopSgMAhn3l450eTuFZQypqbSBUPQuS2m2bdUsqi0IYDVgyi6"
+  link href="https://unpkg.com/mapbox-gl@1.11.1/dist/mapbox-gl.css" rel="stylesheet"
 
 = territory_navigation(t(".title", name: @sector.name), [link_to("Sectorisation", admin_territory_sectorization_path(current_territory)), link_to("Secteurs", admin_territory_sectors_path(current_territory))])
 
