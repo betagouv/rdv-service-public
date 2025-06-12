@@ -420,6 +420,24 @@ RSpec.describe "User can search for rdvs" do
     end
   end
 
+  context "pour un motif sans service" do
+    let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, service: nil, location_type: Motif.location_types[:visio]) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], organisation: organisation) }
+    let(:organisation) { create(:organisation) }
+
+    it "permet de prendre rendez-vous" do
+      visit public_link_to_org_path(organisation_id: organisation.id)
+      click_on "Vaccination"
+      click_on "Prochaine disponibilité"
+      first(:link, "08:00").click
+      sign_up
+      click_on "Continuer"
+      click_on "Continuer"
+      click_on "Confirmer"
+      expect(page).to have_content "Votre rendez vous a été confirmé."
+    end
+  end
+
   private
 
   def execute_search
