@@ -41,8 +41,6 @@ class Compte
       if organisation.ants_connectable
         create_mairie_motifs!
         add_mairie_motifs_categories!
-      else
-        create_example_motifs!
       end
 
       AgentTerritorialRole.create!(agent: agent, territory: territory)
@@ -123,19 +121,5 @@ class Compte
     Api::Ants::EditorController::ANTS_MOTIF_CATEGORY_NAMES.each do |name|
       organisation.territory.motif_categories << MotifCategory.find_by(name: name)
     end
-  end
-
-  def create_example_motifs!
-    default_motif_attributes = {
-      organisation: organisation,
-      name: "Suivi de dossier",
-      color: "#99CC99",
-      default_duration_in_min: 30,
-      bookable_by: :agents,
-      service: agent.services.first,
-    }
-    Motif.create!(default_motif_attributes.merge(location_type: :phone))
-    Motif.create!(default_motif_attributes.merge(location_type: :visio))
-    Motif.create!(default_motif_attributes.merge(location_type: :public_office))
   end
 end

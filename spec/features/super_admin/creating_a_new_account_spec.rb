@@ -66,10 +66,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
       longitude: 2.429639
     )
 
-    new_motif = new_organisation.motifs.first
-    expect(new_motif).to have_attributes(
-      name: "Suivi de dossier"
-    )
+    expect(new_organisation.motifs).to be_empty
 
     perform_enqueued_jobs
     invitation_email = ActionMailer::Base.deliveries.last
