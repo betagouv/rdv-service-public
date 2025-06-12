@@ -1,4 +1,3 @@
-# TODO: si ça ne fait pas trop doublon avec d'autres specs, ajouter une variante avec motif sans service
 RSpec.describe "Agent can CRUD plage d'ouverture" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI") }
@@ -61,6 +60,12 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     context "when the motif doesn't require a lieu" do
       let!(:motif) { create(:motif, :at_home, name: "Suivi bonjour", service: service, organisation: organisation) }
       let!(:lieu) { nil }
+
+      it_behaves_like "can crud own plage ouvertures"
+    end
+
+    context "for a motif without a service" do
+      let!(:motif) { create(:motif, name: "Suivi bonjour", service: nil, organisation: organisation) }
 
       it_behaves_like "can crud own plage ouvertures"
     end
