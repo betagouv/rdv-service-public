@@ -250,6 +250,10 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
+          SURGE_LOGIN: victor@ahaoho.io
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          UPLOAD_TO_SURGE: true
+          SPEC_TO_DOC: true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
