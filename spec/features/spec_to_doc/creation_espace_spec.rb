@@ -1,17 +1,21 @@
-# Ce fichier reprend l'idée d'une doc swagger, mais pour communiquer à l'équiep non tech
+# Ce fichier reprend l'idée d'une doc swagger, mais pour communiquer à l'équipe non tech
 RSpec.describe "Ouverture d'un espace" do
   specify do
-    scenar = SpecToDoc::Scenario.new(self.class.top_level_description)
-    scenar.add_step("Pour un agent qui se crée un compte")
+    Capybara.current_driver = :desktop
 
-    visit "/"
-    scenar.add_screenshot
+    scenar = SpecToDoc.build_scenario(self.class.top_level_description)
+    scenar.add_text("Pour un agent qui se crée un compte")
 
-    scenar.add_step("Cliquer sur 'Créer un espace'")
+    visit "http://www.rdv-mairie-test.localhost/"
+    scenar.add_screenshot(page)
+
+    scenar.add_text("Cliquer sur 'Créer un espace'")
     click_on "Créer un espace"
-    sleep 0.2
-    scenar.add_screenshot
+    expect(page).to have_content("Connexion agent à")
+    scenar.add_screenshot(page)
 
-    scenar.add_step("Se connecter via ProConnect")
+    scenar.add_text("Se connecter via ProConnect")
+
+    SpecToDoc.render
   end
 end
