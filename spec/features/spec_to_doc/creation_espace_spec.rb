@@ -1,10 +1,13 @@
 # Ce fichier reprend l'idée d'une doc swagger, mais pour communiquer à l'équipe non tech
-RSpec.describe "Ouverture d'un espace", js: true do
+RSpec.describe "Ouverture d'un espace", js: true, spec_to_doc: true do
   let!(:agent) { create(:agent, :no_services, first_name: "Francis", last_name: "Factice", password: "c0rrecThorse!") }
+
+  around { |example| perform_enqueued_jobs { example.run } }
 
   specify do
     doc = SpecToDoc.start_scenario("Ouverture d'un espace", self)
 
+    doc.start_section("Côté agent")
     doc.add_text("Contexte: Je suis un agent qui n'a jamais utilisé RDV Service Public")
 
     visit "http://www.rdv-mairie-test.localhost/"
@@ -42,5 +45,50 @@ RSpec.describe "Ouverture d'un espace", js: true do
     doc.add_screenshot(page,
                        text: "L'équipe déploiement a ensuite reçu la demande de création de compte dans le super admin",
                        wait_for: "Votre demande a bien été enregistrée.")
+
+    doc.start_section("Côté super admin")
+
+    super_admin = create :super_admin
+
+    create(:service, name: "Service social")
+
+    login_as(super_admin, scope: :super_admin)
+
+    visit super_admins_territory_creation_requests_url(host: "http://www.rdv-mairie-test.localhost")
+
+    doc.add_screenshot(page,
+                       text: "Je consulte la liste des demandes d'ouverture d'espace",
+                       wait_for: "Commune de Montreuil")
+
+    click_on "Commune de Montreuil"
+
+    doc.add_screenshot(page,
+                       text: "J'examine la demande. C'est à cette étape que je peux avoir des informations sur des doublons potentiels",
+                       wait_for: "Accepter")
+
+    click_on "Accepter"
+
+    select "Commune", from: "Catégorie de l'espace"
+
+    select "Service social", from: "Service"
+    doc.add_screenshot(page,
+                       text: "Je remplis le formulaire puis je valide")
+
+    click_on "Enregistrer"
+
+    doc.add_screenshot(page,
+                       text: "J'ai un message de confirmation",
+                       wait_for: "Le nouvel espace a été créé")
+
+    doc.start_section("Côté agent")
+    open_email(agent.email)
+    expect(current_email.subject).to eq "Votre espace RDV Service Public est ouvert 🚀"
+
+    doc.add_screenshot(current_email, text: "J'ai un message de confirmation. Je clique sur le cta principal")
+
+    current_email.click_on "Accéder à mon espace"
+
+    doc.add_screenshot(page,
+                       text: "J'arrive dans mon espace")
   end
 end

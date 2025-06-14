@@ -40,7 +40,7 @@ if ENV["HEADLESS"] == "false"
 end
 
 RSpec.configure do |config|
-  config.after(:each, js: true) do
+  config.after(:each, js: true, spec_to_doc: nil) do
     logs = page.driver.browser.logs.get(:browser)
     aggregate_failures "javascript errors" do
       logs.each do |log|

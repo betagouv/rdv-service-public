@@ -9,7 +9,11 @@ class SpecToDoc
     `mkdir -p tmp/capybara/spec_to_doc`
 
     @scenarios.values.each.with_index do |scenario, i|
-      Rails.root.join("tmp/capybara/spec_to_doc/scenario_#{i}.html").write(scenario.render)
+      Rails.root.join("tmp/capybara/spec_to_doc/scenario_#{i}.html").write(
+        Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/layout.html.slim")).render(scenario) do
+          Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/scenario.html.slim")).render(scenario).html_safe # rubocop:disable Rails/OutputSafety
+        end
+      )
     end
 
     Rails.root.join("tmp/capybara/spec_to_doc/index.html").write(
@@ -33,36 +37,56 @@ class SpecToDoc
       @title = title
       @index = index
       @example = example
-      @steps = []
+      @sections = []
+      @current_section = nil
+    end
+
+    def start_section(title)
+      @current_section = Section.new(title)
+      @sections << @current_section
     end
 
     def add_text(description)
-      @steps << {
+      @current_section.steps << {
         text: description,
       }
     end
 
-    def add_screenshot(page, text: nil, wait_for: nil)
+    def add_screenshot(page_or_email, text: nil, wait_for: nil)
       if wait_for
-        @example.expect(page).to(@example.have_content(wait_for))
+        @example.expect(page_or_email).to(@example.have_content(wait_for))
       end
 
-      filename = "scenario_#{@index}_step_#{@steps.count}.png"
+      filename = "scenario_#{@index}_section_#{@sections.count}_step_#{@current_section.steps.count}.png"
       `mkdir -p tmp/capybara/spec_to_doc`
 
       path = Rails.root.join("tmp/capybara/spec_to_doc/#{filename}")
 
-      page.driver.browser.save_screenshot(path)
+      if page_or_email.is_a?(Capybara::Node::Email)
+        Capybara.current_session.driver.visit "file://#{page_or_email.save_page}"
+        Capybara.current_session.driver.browser.save_screenshot(path)
+      else
+        page_or_email.driver.browser.save_screenshot(path)
+      end
 
       img_src = ENV["UPLOAD_TO_SURGE"] ? "/#{filename}" : path
 
-      @steps << { text: text, img_src: img_src }
+      @current_section.steps << { text: text, img_src: img_src }
     end
 
-    def render
-      Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/layout.html.slim")).render(self) do
-        Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/scenario.html.slim")).render(self).html_safe # rubocop:disable Rails/OutputSafety
-      end
+    def add_email(email, text: nil)
+      File.read(email.save_page)
+      visit "data:text/html,#{email.body}"
+      @current_section.steps << { text: text, email_html: email.body }
     end
+  end
+
+  class Section
+    def initialize(title)
+      @title = title
+      @steps = []
+    end
+
+    attr_accessor :title, :steps
   end
 end
