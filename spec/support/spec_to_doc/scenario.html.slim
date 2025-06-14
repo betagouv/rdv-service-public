@@ -1,0 +1,10 @@
+h1 = @title
+div[style="display: flex"]
+  - @steps.each do |step|
+    div[style="padding: 8px; display: flex; flex-direction: column; align-items: center"]
+      - if step[:img_src]
+        img[src='#{step[:img_src]}' width=800 style='border: solid 2px grey']
+        - if step[:text]
+          p = step[:text]
+      - else
+        p[style="min-width: 300px"] = step[:text]

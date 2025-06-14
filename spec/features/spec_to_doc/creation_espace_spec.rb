@@ -7,29 +7,24 @@ RSpec.describe "Ouverture d'un espace", js: true do
 
     doc.add_text("Contexte: Je suis un agent qui n'a jamais utilisé RDV Service Public")
 
-    doc.add_text("Je me rends sur la page d'accueil")
     visit "http://www.rdv-mairie-test.localhost/"
-    doc.add_screenshot(page, wait_for: "Créer un espace")
+    doc.add_screenshot(page,
+                       text: "Je clique sur 'Créer un espace'",
+                       wait_for: "Créer un espace")
 
-    doc.add_text("Je clique sur 'Créer un espace'")
     click_on "Créer un espace"
-
-    doc.add_spacing
-
-    doc.add_screenshot(page, wait_for: "Connexion agent à")
-
-    doc.add_text("Je me ProConnecte.")
-    doc.add_spacing
+    doc.add_screenshot(page,
+                       text: "Je me ProConnecte.",
+                       wait_for: "Connexion agent à")
 
     # ProConnect ne marche pas en tests, donc on utilise l'email et le mot de passe
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
-    doc.add_screenshot(page, wait_for: "Pour commencer, aidez-nous à en savoir plus")
-
-    doc.add_text("Je clique sur Demander à ouvrir un espace")
-    doc.add_spacing
+    doc.add_screenshot(page,
+                       text: "Je clique sur Demander à ouvrir un espace",
+                       wait_for: "Pour commencer, aidez-nous à en savoir plus")
 
     click_on "Demander à ouvrir un espace"
 
@@ -39,17 +34,13 @@ RSpec.describe "Ouverture d'un espace", js: true do
     fill_in("Nom de votre première organisation", with: "CCAS de Montreuil")
     fill_in("Pour quel service souhaitez-vous gérer des rendez-vous ?", with: "Action Sociale")
 
-    doc.add_text("Je remplis le formulaire puis je valide")
-    doc.add_spacing
-
-    doc.add_screenshot(page)
-
-    doc.add_spacing
+    doc.add_screenshot(page,
+                       text: "Je remplis le formulaire puis je valide")
 
     click_on "Envoyer la demande"
 
-    doc.add_screenshot(page, wait_for: "Votre demande a bien été enregistrée.")
-
-    doc.add_text("L'équipe déploiement a ensuite reçu la demande de création de compte dans le super admin")
+    doc.add_screenshot(page,
+                       text: "L'équipe déploiement a ensuite reçu la demande de création de compte dans le super admin",
+                       wait_for: "Votre demande a bien été enregistrée.")
   end
 end
