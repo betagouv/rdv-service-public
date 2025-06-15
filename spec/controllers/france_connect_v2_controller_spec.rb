@@ -26,13 +26,8 @@ RSpec.describe FranceConnectV2Controller do
   end
 
   describe "#callback" do
-    let(:state) { auth_client.state }
-    let(:auth_client) do
-      FranceConnectV2OpenIdClient::Auth.new(
-        client_id: "abcdef1234"
-      )
-    end
-    let(:code) { "IDej8hpYou2rZLsDgTzZ_nMl1aXmNajpByd20dig4e8" }
+    let(:state) { "une_valeur_random_de_state" }
+    let(:code) { "une_valeur_random_de_code" }
 
     let(:user_info) do
       # Données enregistrées depuis l'env de bac à sable de FranceConnect V2
@@ -54,17 +49,18 @@ RSpec.describe FranceConnectV2Controller do
       session[FranceConnectV2Controller::STATE_SESSION_KEY] = state
       FranceConnectV2Stubs.stub_callback_requests(code, user_info)
 
-      # session[:user_return_to] = "/users/informations" # Pour simuler le retour vers la page demandée avant la connexion
+      session[:user_return_to] = "/users/informations" # Pour simuler le retour vers la page demandée avant la connexion
     end
 
     it "updates and logs in the user" do
       user = create(:user, email: "wossewodda-3728@yopmail.com")
 
-      expect(UpsertUserForFranceconnectService).to receive(:new).with(have_attributes(sub: user_info["sub"])).and_call_original
+      expect(UpsertUserForFranceconnectService).to receive(:new).with(have_attributes(user_info)).and_call_original
 
       get :callback, params: { state: state, code: code }
 
       expect(user.reload).to have_attributes(
+        franceconnect_openid_sub: user_info["sub"],
         logged_once_with_franceconnect: true,
         email: "wossewodda-3728@yopmail.com",
         first_name: "Angela Claire Louise",
@@ -73,7 +69,7 @@ RSpec.describe FranceConnectV2Controller do
       )
       expect(session[:france_connect_v2_id_token]).to eq("fake_france_connect_v2_id_token")
 
-      # expect(response).to redirect_to("/users/informations")
+      expect(response).to redirect_to("/users/informations")
     end
   end
 

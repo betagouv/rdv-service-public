@@ -65,4 +65,10 @@ class FranceConnectV2Controller < ApplicationController
     support_email = current_domain.support_email
     %(Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse <a href="mailto:#{support_email}">#{support_email}</a> si le problème persiste.)
   end
+
+  def storable_location?
+    # Nous souhaitons désactiver le mécanisme `store_location_for` fourni par Devise
+    # pour les actions de ce controller car authentification
+    false
+  end
 end
