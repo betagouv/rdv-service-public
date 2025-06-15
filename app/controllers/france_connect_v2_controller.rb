@@ -13,8 +13,8 @@ class FranceConnectV2Controller < ApplicationController
   end
 
   def callback
-    state = session[STATE_SESSION_KEY]
-    nonce = session[NONCE_SESSION_KEY]
+    state = session.delete(STATE_SESSION_KEY)
+    nonce = session.delete(NONCE_SESSION_KEY)
     callback_client = FranceConnectV2OpenIdClient::Callback.new(
       session_state: state,
       params_state: params[:state],
@@ -40,7 +40,7 @@ class FranceConnectV2Controller < ApplicationController
 
   # voir https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-endpoints/#redirection-vers-le-fournisseur-de-service-apres-deconnexion
   def post_logout
-    session_state = session[:france_connect_v2_logout_state]
+    session_state = session.delete(:france_connect_v2_logout_state)
     params_state = params[:state]
     if session_state != params_state
       Sentry.capture_message("State mismatch on FranceConnect logout", extra: { session_state:, params_state: })
