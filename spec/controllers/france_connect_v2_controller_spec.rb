@@ -16,7 +16,6 @@ RSpec.describe FranceConnectV2Controller do
       expect(redirect_url_query_params.symbolize_keys).to match(
         acr_values: "eidas1",
         client_id: "fake_france_connect_v2_client_id",
-        # TODO: changer pour ""http://test.host/omniauth/franceconnect_v2/callback"" quand on a le bac à sable
         redirect_uri: "http://test.host/omniauth/franceconnect_v2/callback",
         response_type: "code",
         scope: "email openid birthdate given_name family_name",
@@ -72,36 +71,29 @@ RSpec.describe FranceConnectV2Controller do
         last_name: "DUBOIS",
         updated_at: be_within(10.seconds).of(Time.zone.now)
       )
-      expect(session[:connected_with_franceconnect]).to be_truthy
       expect(session[:france_connect_v2_id_token]).to eq("fake_france_connect_v2_id_token")
 
       # expect(response).to redirect_to("/users/informations")
     end
   end
 
-  describe "#post_logout", type: :feature do
-    let(:user_info) do
-      # Données enregistrées depuis l'env de bac à sable de FranceConnect V2
-      {
-        "email" => "wossewodda-3728@yopmail.com",
-        "sub" => "88b65362bb23a04ba9031f244d12b9a45171fc6151c7a84c631170cd3da4b17bv1",
-        "birthdate" => "1962-08-24",
-        "given_name" => "Angela Claire Louise",
-        "given_name_array" => %w[Angela Claire Louise],
-        "family_name" => "DUBOIS",
-        "aud" => "85783108e9a71edf25b7d5ab666c504a542da92400a1cdf6af5b57763cf55337",
-        "exp" => 1748880813,
-        "iat" => 1748880753,
-        "iss" => "https://fcp-low.sbx.dev-franceconnect.fr/api/v2",
-      }
+  describe "#post_logout" do
+    it "redirects home and show a success message" do
+      session[:france_connect_v2_logout_state] = "une_valeur_random_de_state"
+      get :post_logout, params: { state: "une_valeur_random_de_state" }
+      expect(flash[:success]).to eq("Vous êtes bien déconnecté⋅e de RDV Service Public.")
+      expect(response).to redirect_to("/")
     end
 
-    it "redirects to FranceConnect v2's /api/v2/session/end" do
-      user = UpsertUserForFranceconnectService.new(OpenStruct.new(user_info)).perform.user
-      login_as(user, scope: :user)
-      visit users_informations_url
-      click_on "Déconnexion"
-      expect(page).to have_current_path("couco")
+    context "when state in session does not match with the return state" do
+      it "redirects home and show a success message but warns Sentry" do
+        session[:france_connect_v2_logout_state] = "une_valeur_random_de_state"
+        get :post_logout, params: { state: "une_autre_valeur" }
+        expect(flash[:success]).to eq("Vous êtes bien déconnecté⋅e de RDV Service Public.")
+        expect(response).to redirect_to("/")
+        expect(sentry_events.last.message).to eq("State mismatch on FranceConnect logout")
+        expect(sentry_events.last.extra).to eq({ session_state: "une_valeur_random_de_state", params_state: "une_autre_valeur" })
+      end
     end
   end
 end
