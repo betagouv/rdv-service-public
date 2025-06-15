@@ -22,7 +22,7 @@ class SpecToDoc
       end
     )
 
-    if ENV["UPLOAD_TO_SURGE"]
+    if ENV["UPLOAD_TO_SURGE"] && @scenarios.any?
       branch_name = `git rev-parse --abbrev-ref HEAD`.strip
       domain_name = "rdv-service-public-#{branch_name}.surge.sh"
       puts "running yarn run surge tmp/capybara/spec_to_doc #{domain_name}"
