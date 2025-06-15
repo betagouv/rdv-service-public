@@ -257,7 +257,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: artifacts-capybara
+          name: artifacts-capybara-${{ matrix.dirname }}
           path: tmp/capybara
           if-no-files-found: ignore
   test_boot_without_db:
