@@ -35,7 +35,7 @@ module FranceConnectV2OpenIdClient
 
       unless ActiveSupport::SecurityUtils.secure_compare(@session_state, @params_state)
         Sentry.add_breadcrumb(Sentry::Breadcrumb.new(
-                                message: "FranceConnect V2 states",
+                                message: "FranceConnect V2 callback states do not match",
                                 data: {
                                   params: @params_state,
                                   session: @session_state,

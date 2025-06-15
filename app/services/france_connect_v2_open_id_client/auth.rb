@@ -4,8 +4,8 @@ module FranceConnectV2OpenIdClient
     def initialize(client_id:)
       @client_id = client_id
 
-      @state = "fc_v2_state_#{SecureRandom.base58(32)}"
-      @nonce = "fc_v2_nonce_#{SecureRandom.base58(32)}"
+      @state = SecureRandom.base58(32)
+      @nonce = SecureRandom.base58(32)
     end
 
     attr_reader :state, :nonce
