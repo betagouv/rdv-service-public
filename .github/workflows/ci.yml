@@ -175,8 +175,10 @@ jobs:
         include:
           - dirname: agents
             command: "parallel:spec[spec/features/agents]"
+            name: agents
           - dirname: "*"
             command: "parallel:spec['spec/features/(?!agents)']"
+            name: other
     services:
       postgres:
         image: postgres
@@ -257,7 +259,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: artifacts-capybara-${{ matrix.dirname }}
+          name: artifacts-capybara-${{ matrix.name }}
           path: tmp/capybara
           if-no-files-found: ignore
   test_boot_without_db:
