@@ -52,7 +52,13 @@ class FranceConnectV2Controller < ApplicationController
       Sentry.capture_message("State mismatch on FranceConnect logout", extra: { session_state:, params_state: })
     end
 
-    flash[:success] = "Vous êtes bien déconnecté⋅e de #{current_domain.name}."
+    # Quand on revient d'un logout FranceConnect qui a suivi une suppression de compte,
+    # on veut informer que le compte a été supprimé, pas qu'on a été déconnecté.
+    if flash.now[:notice].include?("Votre compte a été supprimé")
+      flash.keep(:notice)
+    else
+      flash[:success] = "Vous êtes bien déconnecté⋅e de #{current_domain.name}."
+    end
     redirect_to root_url
   end
 
