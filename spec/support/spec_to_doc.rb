@@ -1,14 +1,16 @@
 class SpecToDoc
-  @scenarios = {}
+  @scenarios = []
 
   def self.start_scenario(title, example)
-    @scenarios[title] = Scenario.new(title, @scenarios.length, example)
+    scenario = Scenario.new(title, @scenarios.length, example)
+    @scenarios << scenario
+    scenario
   end
 
   def self.render
     `mkdir -p tmp/capybara/spec_to_doc`
 
-    @scenarios.values.each.with_index do |scenario, i|
+    @scenarios.each.with_index do |scenario, i|
       Rails.root.join("tmp/capybara/spec_to_doc/scenario_#{i}.html").write(
         Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/layout.html.slim")).render(scenario) do
           Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/scenario.html.slim")).render(scenario).html_safe # rubocop:disable Rails/OutputSafety
@@ -41,6 +43,8 @@ class SpecToDoc
       @current_section = nil
     end
 
+    attr_reader :title
+
     def start_section(title)
       @current_section = Section.new(title)
       @sections << @current_section
@@ -72,12 +76,6 @@ class SpecToDoc
       img_src = ENV["UPLOAD_TO_SURGE"] ? "/#{filename}" : path
 
       @current_section.steps << { text: text, img_src: img_src }
-    end
-
-    def add_email(email, text: nil)
-      File.read(email.save_page)
-      visit "data:text/html,#{email.body}"
-      @current_section.steps << { text: text, email_html: email.body }
     end
   end
 
