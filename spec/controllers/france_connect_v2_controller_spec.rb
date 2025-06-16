@@ -74,10 +74,9 @@ RSpec.describe FranceConnectV2Controller do
   end
 
   describe "#post_logout" do
-    it "redirects home and show a success message" do
+    it "redirects home" do
       session[:france_connect_v2_logout_state] = "une_valeur_random_de_state"
       get :post_logout, params: { state: "une_valeur_random_de_state" }
-      expect(flash[:success]).to eq("Vous êtes bien déconnecté⋅e de RDV Service Public.")
       expect(response).to redirect_to("/")
     end
 
@@ -85,7 +84,6 @@ RSpec.describe FranceConnectV2Controller do
       it "redirects home and show a success message but warns Sentry" do
         session[:france_connect_v2_logout_state] = "une_valeur_random_de_state"
         get :post_logout, params: { state: "une_autre_valeur" }
-        expect(flash[:success]).to eq("Vous êtes bien déconnecté⋅e de RDV Service Public.")
         expect(response).to redirect_to("/")
         expect(sentry_events.last.message).to eq("State mismatch on FranceConnect logout")
         expect(sentry_events.last.extra).to eq({ session_state: "une_valeur_random_de_state", params_state: "une_autre_valeur" })
