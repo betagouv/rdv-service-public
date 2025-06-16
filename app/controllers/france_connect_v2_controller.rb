@@ -15,6 +15,12 @@ class FranceConnectV2Controller < ApplicationController
   def callback
     state = session.delete(STATE_SESSION_KEY)
     nonce = session.delete(NONCE_SESSION_KEY)
+
+    if params[:error]
+      flash[:error] = "La connexion à FranceConnect n'a pas pu aboutir (#{params[:error]} : #{params[:error_description]})."
+      redirect_to new_user_session_path and return
+    end
+
     callback_client = FranceConnectV2OpenIdClient::Callback.new(
       session_state: state,
       params_state: params[:state],
