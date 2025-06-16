@@ -23,15 +23,15 @@ class SpecToDoc
         Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/index.html.slim")).render(self).html_safe # rubocop:disable Rails/OutputSafety
       end
     )
+  end
 
-    if ENV["UPLOAD_TO_SURGE"] && @scenarios.any?
-      branch_name = `git rev-parse --abbrev-ref HEAD`.strip
-      domain_name = "rdv-service-public-#{branch_name}.surge.sh"
-      puts "running yarn run surge tmp/capybara/spec_to_doc #{domain_name}"
-      `yarn run surge tmp/capybara/spec_to_doc #{domain_name}`
+  def self.upload_to_surge
+    branch_name = `git rev-parse --abbrev-ref HEAD`.strip
+    domain_name = "rdv-service-public-#{branch_name}.surge.sh"
+    puts "running yarn run surge tmp/capybara/spec_to_doc #{domain_name}"
+    `yarn run surge tmp/capybara/spec_to_doc #{domain_name}`
 
-      puts "La documentation est disponible sur https://#{domain_name}"
-    end
+    puts "La documentation est disponible sur https://#{domain_name}"
   end
 
   class Scenario
@@ -51,9 +51,7 @@ class SpecToDoc
     end
 
     def add_text(description)
-      @current_section.steps << {
-        text: description,
-      }
+      @current_section.steps << { text: description }
     end
 
     def add_screenshot(page_or_email, text: nil, wait_for: nil)
