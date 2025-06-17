@@ -16,7 +16,7 @@ module FranceConnectV2OpenIdClient
         response_type: "code",
         client_id: @client_id,
         redirect_uri: callback_url,
-        scope: "email openid birthdate given_name family_name",
+        scope: "email openid birthdate given_name family_name preferred_username",
         state: state,
         nonce: nonce,
         acr_values: "eidas1",
