@@ -7,12 +7,11 @@ class UpsertUserForFranceconnectService < BaseService
   end
 
   def perform
-    @user = User.find_by(franceconnect_openid_sub: omniauth_info.sub) \
-      || User.find_by(email: omniauth_info.email)
+    @user = User.find_by(franceconnect_openid_sub: omniauth_info.sub)
     @new_user = @user.nil?
     if @user.nil?
       create_new_user
-    elsif !@user.logged_once_with_franceconnect?
+    else
       update_existing_user
     end
     self
@@ -21,24 +20,24 @@ class UpsertUserForFranceconnectService < BaseService
   private
 
   def update_existing_user
-    @user.update!(user_attribute_values_from_fc)
+    @user.assign_attributes(user_attribute_values_from_fc)
+    @user.save!(context: :france_connect_login)
   end
 
   def create_new_user
     @user = User.new(
       user_attribute_values_from_fc.merge(
-        email: omniauth_info.email,
-        confirmed_at: Time.zone.now,
         created_through: "franceconnect_sign_up"
       )
     )
     @user.skip_confirmation!
-    @user.save!
+    @user.save!(context: :france_connect_login)
     @user
   end
 
   def user_attribute_values_from_fc
     {
+      notification_email: omniauth_info.email&.downcase,
       first_name: omniauth_info.given_name,
       birth_name: omniauth_info.family_name, # nom de naissance
       birth_date: omniauth_info.birthdate,
