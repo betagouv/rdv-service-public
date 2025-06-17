@@ -18,7 +18,7 @@ RSpec.describe FranceConnectV2Controller do
         client_id: "fake_france_connect_v2_client_id",
         redirect_uri: "http://test.host/franceconnect_v2/callback",
         response_type: "code",
-        scope: "email openid birthdate given_name family_name",
+        scope: "email openid birthdate given_name family_name preferred_username",
         state: be_a(String),
         nonce: be_a(String)
       )
