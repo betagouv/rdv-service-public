@@ -4,13 +4,15 @@
 
 = render partial: "admin/planning/planning_tabs"
 
-- @agents.each do |agent|
+- @agents.includes(:services).each do |agent|
   .fr-tile.fr-tile--sm.fr-tile--horizontal.fr-enlarge-link.mt-2
     .fr-tile__body
       .fr-tile__content
         h3.fr-tile__title
           a[href=admin_organisation_planning_plage_ouvertures_path(current_organisation, { agent_id: agent.id }.compact_blank)]
             = agent.full_name_or_email
+        p.fr-tile__desc
+          = agent.services.map(&:short_name).join(", ")
         p.fr-tile__detail
           | #{agent.plage_ouvertures.size} plages d'ouverture
     .fr-tile__header
