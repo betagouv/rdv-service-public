@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   get "franceconnect_v2/auth" => "france_connect_v2#auth"
   get "franceconnect_v2/callback" => "france_connect_v2#callback"
   get "franceconnect_v2/post_logout" => "france_connect_v2#post_logout"
-  get "franceconnect_v2/sector_identifier" => "france_connect_v2#sector_identifier", format: :json
 
   devise_for :super_admins # necessary for helpers like super_admin_signed_in?
   devise_scope :super_admin do

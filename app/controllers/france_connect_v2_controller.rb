@@ -59,15 +59,6 @@ class FranceConnectV2Controller < ApplicationController
     redirect_to root_url
   end
 
-  def sector_identifier
-    urls = [
-      "https://demo.rdv.numerique.gouv.fr/franceconnect_v2/callback",
-      "https://demo-rdv-solidarites-pr5352.osc-secnum-fr1.scalingo.io/franceconnect_v2/callback",
-      "http://localhost:3000/franceconnect_v2/callback",
-    ]
-    render json: urls
-  end
-
   private
 
   def generic_error_message
