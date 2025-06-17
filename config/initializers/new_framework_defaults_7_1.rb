@@ -195,7 +195,7 @@ Rails.application.config.active_record.before_committed_on_all_records = true
 # recommended to explicitly define the serialization method for each column
 # rather than to rely on a global default.
 #++
-# Rails.application.config.active_record.default_column_serializer = nil
+Rails.application.config.active_record.default_column_serializer = nil
 
 ###
 # Enable a performance optimization that serializes Active Record models
@@ -218,7 +218,7 @@ Rails.application.config.active_record.run_after_transaction_callbacks_in_order_
 ###
 # Whether a `transaction` block is committed or rolled back when exited via `return`, `break` or `throw`.
 #++
-# Rails.application.config.active_record.commit_transaction_on_non_local_return = true
+Rails.application.config.active_record.commit_transaction_on_non_local_return = true
 
 ###
 # Controls when to generate a value for <tt>has_secure_token</tt> declarations.

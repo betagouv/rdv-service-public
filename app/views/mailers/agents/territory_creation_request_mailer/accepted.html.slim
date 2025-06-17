@@ -18,4 +18,6 @@ p Pour bien démarrer, #{link_to("consultez notre tutoriel", tutoriel_url)} pour
 .btn-wrapper
   = link_to "Consulter le tutoriel", tutoriel_url,  class: "btn btn-secondary"
 
+p Besoin d’aide ? Notre équipe est là pour vous accompagner, #{ link_to("planifiez un temps d'échange", "https://cal.com/team/rdv-service-public/accompagnement")}.
+
 = t("mailers.common.farewell_html", domain_name: domain.name)
