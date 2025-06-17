@@ -4,7 +4,7 @@ Rails.configuration.x.france_connect_v2_unreachable_at_boot_time = false
 
 if ENV["FRANCECONNECT_V2_BASE_URL"].present?
   begin
-    # la méthode .discover! fait un appel à l'api d'Agent Connect
+    # la méthode .discover! fait un appel à l'api FranceConnect
     Rails.configuration.x.france_connect_v2_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["FRANCECONNECT_V2_BASE_URL"])
   rescue StandardError => e
     error_message = <<~MSG
