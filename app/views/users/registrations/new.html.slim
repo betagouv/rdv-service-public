@@ -5,14 +5,7 @@
 
   .card-body
     = form_for resource, as: :user, url: registration_path(resource_name), builder: Dsfr::FormBuilder, display_required_tags: false do |f|
-      - if ENV["FRANCECONNECT_V2_BASE_URL"].present?
-        h2 Se connecter avec FranceConnect
-        = render "common/franceconnect_v2_button"
-        p.fr-hr-or ou
-      - elsif current_domain.france_connect_enabled || params[:force_franceconnect].present?
-        h2 Se créer un compte avec FranceConnect
-        = render "common/franceconnect_button"
-        p.fr-hr-or ou
+      = render "common/franceconnect_button"
 
       h2 Se créer un compte avec un email
       p.fr-hint-text Sauf mention contraire, tous les champs sont obligatoires.
