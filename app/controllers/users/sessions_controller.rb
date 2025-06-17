@@ -34,6 +34,8 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
+    # On a besoin d'extraire les tokens de la session avant d'appeler `super` car
+    # cette méthode appelle `sign_out` pour déconnecter l'usager, ce qui vide la session.
     connected_with_franceconnect_v1 = session.delete(:connected_with_franceconnect)
     france_connect_v2_id_token = session.delete(:france_connect_v2_id_token)
 
