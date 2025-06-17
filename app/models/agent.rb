@@ -66,6 +66,7 @@ class Agent < ApplicationRecord
   # Relations
   has_many :agent_services, dependent: :destroy
   has_many :agent_territorial_access_rights, dependent: :destroy
+  has_many :api_calls, dependent: :delete_all
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :restrict_with_error
