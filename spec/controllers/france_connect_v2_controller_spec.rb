@@ -16,7 +16,7 @@ RSpec.describe FranceConnectV2Controller do
       expect(redirect_url_query_params.symbolize_keys).to match(
         acr_values: "eidas1",
         client_id: "fake_france_connect_v2_client_id",
-        redirect_uri: "http://test.host/omniauth/franceconnect_v2/callback",
+        redirect_uri: "http://test.host/franceconnect_v2/callback",
         response_type: "code",
         scope: "email openid birthdate given_name family_name",
         state: be_a(String),

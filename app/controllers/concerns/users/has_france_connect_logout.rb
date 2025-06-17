@@ -5,7 +5,7 @@ module Users::HasFranceConnectLogout
     if france_connect_v2_id_token
       fc_client = FranceConnectV2OpenIdClient::Logout.new(france_connect_v2_id_token)
       session[:france_connect_v2_logout_state] = fc_client.state
-      @france_connect_logout_url = fc_client.agent_connect_logout_url(omniauth_franceconnect_v2_post_logout_url)
+      @france_connect_logout_url = fc_client.agent_connect_logout_url(franceconnect_v2_post_logout_url)
     elsif connected_with_franceconnect_v1
       @france_connect_logout_url = "https://#{ENV['FRANCECONNECT_HOST']}/api/v1/logout"
     end

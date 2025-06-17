@@ -37,7 +37,7 @@ module FranceConnectV2Stubs
         "client_secret" => "fake_france_connect_v2_client_secret",
         "code" => code,
         "grant_type" => "authorization_code",
-        "redirect_uri" => "http://test.host/omniauth/franceconnect_v2/callback",
+        "redirect_uri" => "http://test.host/franceconnect_v2/callback",
       },
       headers: {
         "Content-Type" => "application/x-www-form-urlencoded",

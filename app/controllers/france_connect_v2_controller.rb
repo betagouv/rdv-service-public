@@ -9,7 +9,7 @@ class FranceConnectV2Controller < ApplicationController
     session[STATE_SESSION_KEY] = auth_client.state
     session[NONCE_SESSION_KEY] = auth_client.nonce
 
-    redirect_to auth_client.redirect_url(omniauth_franceconnect_v2_callback_url), allow_other_host: true
+    redirect_to auth_client.redirect_url(franceconnect_v2_callback_url), allow_other_host: true
   end
 
   def callback
@@ -24,7 +24,7 @@ class FranceConnectV2Controller < ApplicationController
     callback_client = FranceConnectV2OpenIdClient::Callback.new(
       session_state: state,
       params_state: params[:state],
-      callback_url: omniauth_franceconnect_v2_callback_url,
+      callback_url: franceconnect_v2_callback_url,
       nonce: nonce,
       client_id: ENV["FRANCECONNECT_V2_CLIENT_ID"],
       client_secret: ENV["FRANCECONNECT_V2_CLIENT_SECRET"]
@@ -61,9 +61,9 @@ class FranceConnectV2Controller < ApplicationController
 
   def sector_identifier
     urls = [
-      "https://demo.rdv.numerique.gouv.fr/omniauth/franceconnect_v2/callback",
-      "https://demo-rdv-solidarites-pr5352.osc-secnum-fr1.scalingo.io/omniauth/franceconnect_v2/callback",
-      "http://localhost:3000/omniauth/franceconnect_v2/callback",
+      "https://demo.rdv.numerique.gouv.fr/franceconnect_v2/callback",
+      "https://demo-rdv-solidarites-pr5352.osc-secnum-fr1.scalingo.io/franceconnect_v2/callback",
+      "http://localhost:3000/franceconnect_v2/callback",
     ]
     render json: urls
   end

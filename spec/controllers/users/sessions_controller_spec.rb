@@ -50,7 +50,7 @@ RSpec.describe Users::SessionsController do
         expect(redirect_url_query_params.symbolize_keys).to match(
           id_token_hint: "token_de_logout",
           state: session[:france_connect_v2_logout_state], # on passe à FC une valeur de state pour l'observer au retour de logout
-          post_logout_redirect_uri: "http://test.host/omniauth/franceconnect_v2/post_logout"
+          post_logout_redirect_uri: "http://test.host/franceconnect_v2/post_logout"
         )
       end
     end
