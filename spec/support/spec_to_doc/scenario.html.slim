@@ -2,9 +2,7 @@
   a[href="index.html"] retour
   h1 = @title
   - @sections.each.with_index do |section, index|
-    h2
-      = "#{index +1}) "
-      = section.title
+    h2 = "#{index +1}) #{section.title}"
     div[style="display: flex"]
       - section.steps.each do |step|
         div[style="padding: 8px; display: flex; flex-direction: column; align-items: center"]
