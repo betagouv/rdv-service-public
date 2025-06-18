@@ -279,6 +279,10 @@ class User < ApplicationRecord
     Annotation.upsert!(content, user: self, territory:)
   end
 
+  def connected_with_sso?
+    (franceconnect_openid_sub || pro_connect_openid_sub).present?
+  end
+
   protected
 
   def generate_rdv_invitation_token
