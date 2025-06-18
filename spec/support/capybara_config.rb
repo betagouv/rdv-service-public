@@ -40,6 +40,8 @@ if ENV["HEADLESS"] == "false"
 end
 
 RSpec.configure do |config|
+  # Les captures d'écran des emails dans spec_to_doc causent des erreurs JS à cause d'images qui ne chargent pas correctement
+  # donc on désactive cette vérification pour ces specs
   config.after(:each, js: true, spec_to_doc: nil) do
     logs = page.driver.browser.logs.get(:browser)
     aggregate_failures "javascript errors" do
