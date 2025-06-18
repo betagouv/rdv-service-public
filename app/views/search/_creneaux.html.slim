@@ -42,7 +42,6 @@ div id="creneaux-lieu-#{lieu&.id}"
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
             = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at, autofocus: "first")),
                     class: "fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-s-line",
-                    data: { disable_with: "Veuillez patienter…" },
                     autofocus: @context.autofocus.present? do
               .d-flex.align-items-center
                 div
