@@ -4,7 +4,7 @@ class Select2Inputs {
     this.initInputs()
     $(document).on('turbo:load', this.initInputs)
     $(document).on('shown.bs.modal', '.modal', this.initInputs)
-    $(document).on("turbolinks:before-cache", this.destroyInputs)
+    $(document).on("turbo:before-cache", this.destroyInputs)
     $(document).on('select2:open', this.focusSearchInput)
   }
 

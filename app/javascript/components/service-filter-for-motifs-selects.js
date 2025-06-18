@@ -3,7 +3,7 @@ class ServiceFilterForMotifsSelects {
 
   constructor() {
     $(document).on("turbo:load", this.initFilter)
-    $(document).on("turbolinks:before-cache", this.destroyFilter)
+    $(document).on("turbo:before-cache", this.destroyFilter)
   }
 
   initFilter = () => {

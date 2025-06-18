@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include ExplicitPunditConcern
   include DomainDetection
+  include Turbo::Redirection
 
   protect_from_forgery
 

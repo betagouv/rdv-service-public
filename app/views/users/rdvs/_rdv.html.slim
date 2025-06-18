@@ -109,7 +109,7 @@ ul.fr-btns-group.fr-btns-group--inline.fr-mb-0
         cancel_message: "Non", \
         confirm_path: cancel_users_rdv_path(rdv), \
         confirm_message: "Oui, annuler le rendez-vous", \
-        confirm_link_options: { method: :put } \
+        confirm_link_options: { data: { turbo_method: :put } } \
 )
 
 = render( \
@@ -119,5 +119,5 @@ ul.fr-btns-group.fr-btns-group--inline.fr-mb-0
         cancel_message: "Non", \
         confirm_path: users_rdv_participations_cancel_path(rdv), \
         confirm_message: "Oui, annuler votre participation", \
-        confirm_link_options: { method: :put } \
+        confirm_link_options: { data: { turbo_method: :put } } \
 )
