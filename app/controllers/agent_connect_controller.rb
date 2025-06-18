@@ -10,11 +10,14 @@ class AgentConnectController < ApplicationController
     )
     session[:agent_connect_state] = auth_client.state
     session[:nonce] = auth_client.nonce
+    if params[:for_user]
+      session[:proconnect_for_user] = true
+    end
 
     redirect_to auth_client.redirect_url(agent_connect_callback_url), allow_other_host: true
   end
 
-  def callback # rubocop:disable Metrics/PerceivedComplexity
+  def callback
     callback_client = AgentConnectOpenIdClient::Callback.new(
       session_state: session.delete(:agent_connect_state),
       params_state: params[:state],
@@ -24,11 +27,45 @@ class AgentConnectController < ApplicationController
       client_secret: current_domain.agent_connect_client_secret
     )
 
-    unless callback_client.fetch_user_info_from_code!(params[:code])
-      flash[:error] = generic_error_message
-      redirect_to(new_agent_session_path) and return
-    end
+    if callback_client.fetch_user_info_from_code!(params[:code])
 
+      if session.delete(:proconnect_for_user)
+        connect_user(callback_client)
+      else
+        connect_agent(callback_client)
+      end
+    else
+      flash[:error] = generic_error_message
+      redirect_to(new_agent_session_path)
+    end
+  end
+
+  private
+
+  # Devise fournit un mécanisme `store_location_for` qui permet de revenir
+  # vers le path demandé après le process de login.
+  # Ce controller gère l'authentification, nous ne souhaitons donc
+  # jamais revenir vers ses paths après un login.
+  def storable_location?
+    false
+  end
+
+  def connect_user(callback_client)
+    user = User.find_or_initialize_by(pro_connect_openid_sub: callback_client.openid_sub)
+
+    user.confirmed_at ||= Time.zone.now # Nécessaire pour que Devise autorise la connexion
+    user.update!(
+      first_name: callback_client.user_first_name,
+      last_name: callback_client.user_last_name,
+      notification_email: callback_client.user_email
+    )
+
+    bypass_sign_in(user, scope: :user)
+    session[:agent_connect_id_token] = callback_client.id_token_for_logout
+    redirect_to after_sign_in_path_for(user)
+  end
+
+  def connect_agent(callback_client)
     # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
     # voir https://github.com/numerique-gouv/agentconnect-documentation/blob/main/doc_fs/donnees_fournies.md#le-champ-sub
     agent = Agent.active.find_by(email: callback_client.user_email)
@@ -60,8 +97,6 @@ class AgentConnectController < ApplicationController
       redirect_to new_agent_session_path
     end
   end
-
-  private
 
   def generic_error_message
     support_email = current_domain.support_email

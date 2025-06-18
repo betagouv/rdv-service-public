@@ -1,9 +1,9 @@
-RSpec.describe Agents::SessionsController do
-  let(:agent) { create(:agent) }
+RSpec.describe Users::SessionsController do
+  let(:user) { create(:user) }
 
   before do
-    request.env["devise.mapping"] = Devise.mappings[:agent] # d'après la doc de Devise
-    sign_in agent
+    request.env["devise.mapping"] = Devise.mappings[:user] # d'après la doc de Devise
+    sign_in user
   end
 
   describe "#destroy" do
