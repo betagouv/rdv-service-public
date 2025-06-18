@@ -1,5 +1,6 @@
-# Ce fichier reprend l'idée d'une doc swagger, mais pour communiquer à l'équipe non tech
-RSpec.describe "Ouverture d'un espace", js: true, spec_to_doc: true do
+# Les captures d'écran des emails dans spec_to_doc causent des erreurs JS à cause d'images qui ne chargent pas correctement
+# donc on désactive cette vérification pour ces specs
+RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
   let!(:agent) { create(:agent, :no_services, first_name: "Francis", last_name: "Factice", password: "c0rrecThorse!") }
 
   around { |example| perform_enqueued_jobs { example.run } }
