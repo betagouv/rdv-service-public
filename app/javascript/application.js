@@ -1,5 +1,5 @@
 require("@rails/ujs").start()
-require("turbolinks").start()
+import "@hotwired/turbo-rails"
 import { PlacesInputs } from './components/places-inputs.js'
 import { Modal } from './components/modal';
 import { NameInitialsForm } from './components/name-initials-form';
@@ -13,7 +13,7 @@ import './stylesheets/print';
 
 new Modal();
 
-$(document).on('turbolinks:load', function() {
+$(document).on('turbo:load', function() {
   new PlacesInputs();
   new NameInitialsForm();
   DsfrNewPassword();
@@ -31,3 +31,5 @@ $(document).on('turbolinks:load', function() {
     })
   }
 });
+import "./controllers"
+import "@hotwired/turbo-rails"

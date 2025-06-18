@@ -172,6 +172,6 @@ class CalendarRdvSolidarites {
   }
 }
 
-document.addEventListener('turbolinks:load', function () {
+document.addEventListener('turbo:load', function () {
   new CalendarRdvSolidarites()
 });

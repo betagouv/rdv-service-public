@@ -1,5 +1,5 @@
 require("@rails/ujs").start()
-require("turbolinks").start()
+import "@hotwired/turbo-rails"
 import DsfrNewPassword from "./components/dsfr-new-password";
 import { Modal } from './components/modal';
 import './components/browser-detection';
@@ -15,7 +15,7 @@ import './stylesheets/print';
 new Modal();
 new Select2Inputs();
 
-$(document).on('turbolinks:load', function () {
+$(document).on('turbo:load', function () {
   DsfrNewPassword();
 
   new Clipboard();

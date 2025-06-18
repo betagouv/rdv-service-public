@@ -80,5 +80,7 @@ module Lapin
       Doorkeeper::AuthorizationsController.layout "application_agent_config" # Lors de l'authorisation d'une application oauth
       Doorkeeper::AuthorizedApplicationsController.layout "application_agent_config"
     end
+
+    config.action_view.form_with_generates_remote_forms = false
   end
 end

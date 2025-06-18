@@ -45,6 +45,6 @@ class RdvPlanCalendar {
   }
 }
 
-document.addEventListener('turbolinks:load', function () {
+document.addEventListener('turbo:load', function () {
   new RdvPlanCalendar()
 });
