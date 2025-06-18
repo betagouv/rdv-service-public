@@ -1,4 +1,3 @@
-require("@rails/ujs").start()
 import "@hotwired/turbo-rails"
 
 import "./stylesheets/administrate/application";

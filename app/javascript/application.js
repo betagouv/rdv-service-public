@@ -1,4 +1,3 @@
-require("@rails/ujs").start()
 import "@hotwired/turbo-rails"
 import { PlacesInputs } from './components/places-inputs.js'
 import { Modal } from './components/modal';

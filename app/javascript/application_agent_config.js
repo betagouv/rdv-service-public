@@ -1,4 +1,3 @@
-require("@rails/ujs").start()
 import "@hotwired/turbo-rails"
 import DsfrNewPassword from "./components/dsfr-new-password";
 import { Modal } from './components/modal';

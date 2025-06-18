@@ -1,4 +1,3 @@
-require("@rails/ujs").start()
 import "@hotwired/turbo-rails"
 import 'bootstrap'
 import 'select2/dist/js/select2.full.min.js'
