@@ -67,6 +67,38 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(page).to have_content("Retour sur Démarches Simplifiées")
   end
 
+  context "quand un autre usager utilise déjà cette adresse email" do
+    let(:user) { create(:user, :unregistered, organisations: [organisation]) }
+    let!(:user_with_same_email) { create(:user, organisations: [organisation], email: "francis@exemple.fr") }
+    let(:rdv_plan) do
+      create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
+                        rdv_agent: agent,
+                        lieu: lieu,
+                        starts_at: 2.days.from_now,
+                        planning_agent: agent,
+                        oauth_application: application)
+    end
+
+    it "permet quand même de prendre le rendez-vous" do
+      visit edit_user_agents_rdv_plan_path(rdv_plan.id)
+      fill_in("Email", with: "francis@exemple.fr")
+
+      expect(page).to have_content "Envoyer une notification de confirmation"
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content "Rendez-vous confirmé"
+      rdv = Rdv.last
+      expect(rdv).to have_attributes(
+        users: [user],
+        agents: [agent],
+        motif: motif,
+        lieu: lieu,
+        organisation: organisation
+      )
+      expect(user.reload.notification_email).to eq "francis@exemple.fr"
+    end
+  end
+
   context "quand l'agent n'appartient à aucune organisation" do
     # Ça arrive s'il n'a pas encore fait d'ouverture de compte avec notre équipe déploiement, ou qu'il n'a pas été invité à rejoindre son organisation par ses collègues
     let!(:agent) do
