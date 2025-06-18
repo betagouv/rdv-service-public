@@ -20,8 +20,7 @@
         = f.fields_for :user, @rdv_plan.user do |ff|
           .row
             .col-6
-              / TODO: gérer le cas des users confirmed (et gérer ce cas dans l'interface principale aussi) : leur nouvelle adresse mail ne sera pas prise en compte tant qu'ils ne la confirment pas
-              = ff.input :email
+              = ff.input :notification_email
             .col-6
               = ff.input :phone_number
         - if @rdv_plan.motif.visible_and_notified?
