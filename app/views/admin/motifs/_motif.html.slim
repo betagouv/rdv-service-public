@@ -35,7 +35,7 @@ tr
 
       - if motif.archived?
         - if motif_policy.unarchive?
-          = link_to unarchive_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.unarchive") do
+          = link_to unarchive_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", title: t("admin.motifs.actions.unarchive"), data: { turbo_method: :post } do
             i.fa.fa-arrow-up-from-bracket
         - if motif_policy.destroy?
           - if motif.destroyable?

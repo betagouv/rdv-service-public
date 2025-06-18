@@ -57,7 +57,7 @@
                     div.mr-3= link_to admin_territory_sector_path(current_territory, sector), title: "Modifier" do
                       i.fa.fa-edit
                   - if policy.destroy?
-                    div= link_to admin_territory_sector_path(current_territory, sector), method: :delete, title: "Supprimer" do
+                    div= link_to admin_territory_sector_path(current_territory, sector), title: "Supprimer", data: { turbo_method: :delete } do
                       i.fa.fa-trash-alt
       .pb-3.pr-3.pl-3
         div= paginate @sectors

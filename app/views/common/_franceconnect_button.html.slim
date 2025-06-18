@@ -1,6 +1,6 @@
 .rdv-text-align-center
   .fr-connect-group
-    = link_to "/omniauth/franceconnect", class: "fr-connect", method: :post, title: "S’identifier avec FranceConnect" do
+    = link_to "/omniauth/franceconnect", class: "fr-connect", title: "S’identifier avec FranceConnect", data: { turbo_method: :post } do
       span.fr-connect__login S’identifier avec
       span.fr-connect__brand FranceConnect
 

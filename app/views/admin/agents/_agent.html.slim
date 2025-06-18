@@ -34,7 +34,7 @@ tr id="agent_#{agent.id}"
       - if agent_policy.create? && !agent.invitation_accepted? && !agent.is_an_intervenant?
         div.mr-3= link_to t("devise.invitations.reinvite"),
                 reinvite_admin_organisation_invitation_path(current_organisation, agent),
-                method: :post
+                data: { turbo_method: :post }
       - if agent_policy.edit?
         div.mr-3= link_to edit_admin_organisation_agent_path(current_organisation, agent), title: t("helpers.edit") do
           i.fa.fa-edit

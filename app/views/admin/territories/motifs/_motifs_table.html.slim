@@ -57,7 +57,7 @@ table.table.table-centered.table-bordered.table-sm.mb-0[class=(display_checkboxe
                   i.fa.fa-edit
               - if motif.archived?
                 - if motif_policy.unarchive?
-                  = link_to unarchive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.unarchive") do
+                  = link_to unarchive_admin_territory_motif_path(current_territory, motif), class: "btn btn-link", title: t("admin.motifs.actions.unarchive"), data: { turbo_method: :post } do
                     i.fa.fa-arrow-up-from-bracket
                 - if motif_policy.destroy?
                   - if motif.destroyable?

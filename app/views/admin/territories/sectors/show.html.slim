@@ -63,7 +63,7 @@
                 td
                   - policy = Agent::ZonePolicy.new(current_agent, zone)
                   - if policy.destroy?
-                    = link_to "retirer", admin_territory_sector_zone_path(current_territory, @sector, zone), method: :delete
+                    = link_to "retirer", admin_territory_sector_zone_path(current_territory, @sector, zone), data: { turbo_method: :delete }
         div= paginate @zones
         .mb-2.rdv-text-align-center
           .mb-2= page_entries_info @zones
@@ -88,7 +88,7 @@
           div.mb-3
             div.mb-1
               span>= "Organisation entière #{attribution.organisation.name}"
-              span.ml-2>= link_to "Retirer", admin_territory_sector_attribution_path(current_territory, @sector, attribution), method: :delete
+              span.ml-2>= link_to "Retirer", admin_territory_sector_attribution_path(current_territory, @sector, attribution), data: { turbo_method: :delete }
             .pl-2.py-1.border-left
               - orga_motifs = Motif.sectorisation_level_organisation.where(organisation: attribution.organisation)
               .text-muted
@@ -118,7 +118,7 @@
                 - attributions_for_this_service.each do |attribution|
                   li.mb-1
                     span>= attribution.agent.full_name
-                    span.ml-2>= link_to "Retirer", admin_territory_sector_attribution_path(current_territory, @sector, attribution), method: :delete
+                    span.ml-2>= link_to "Retirer", admin_territory_sector_attribution_path(current_territory, @sector, attribution), data: { turbo_method: :delete }
 
             .mb-3= link_to \
               "Attribuer un autre agent de #{organisation.name.truncate(20)}", \

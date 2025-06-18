@@ -8,7 +8,7 @@ as defined by the routes in the `admin/` namespace
 %>
 
 <nav class="navigation">
-  <%= link_to "Se déconnecter", super_admins_sign_out_path, method: :delete, class: "navigation__link" %>
+  <%= link_to "Se déconnecter", super_admins_sign_out_path, class: "navigation__link", data: { turbo_method: :delete } %>
 
   <hr />
   <% Administrate::Namespace.new(namespace).resources_with_index_route.excluding("territory_creation_requests").each do |resource| %>
