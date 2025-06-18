@@ -35,7 +35,18 @@ class Users::SessionsController < Devise::SessionsController
   def destroy
     @connected_with_franceconnect = user_signed_in? && session[:connected_with_franceconnect]
     # so it's accessible in after_sign_out_path_for
-    super
+
+    agent_connect_id_token = session.delete(:agent_connect_id_token)
+
+    sign_out(:user)
+
+    if agent_connect_id_token
+      agent_connect_client = AgentConnectOpenIdClient::Logout.new(agent_connect_id_token)
+
+      redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true
+    else
+      redirect_to after_sign_out_path_for(:user)
+    end
   end
 
   private
