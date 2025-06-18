@@ -42,7 +42,6 @@ tr id="agent_#{agent.id}"
         - agent_removal_presenter = AgentRemovalPresenter.new(agent, current_organisation)
         - path = admin_organisation_agent_path(current_organisation, agent)
         = link_to path,
-                method: :delete,
                 title: agent_removal_presenter.button_value,
-                data: { confirm: agent_removal_presenter.confirm_message } do
+                data: { turbo_method: :delete, turbo_confirm: agent_removal_presenter.confirm_message } do
           i.fa.fa-trash-alt

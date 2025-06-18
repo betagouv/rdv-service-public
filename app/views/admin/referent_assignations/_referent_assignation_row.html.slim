@@ -6,7 +6,7 @@ tr id="agent_#{agent.id}"
   td.text-right
     div.mr-3
       - if action == :remove
-        = link_to admin_organisation_user_referent_assignation_path(current_organisation, @user, agent), method: :delete, class: "btn btn-danger", data: { confirm: "Voulez-vous vraiment retirer ce référent ?"} do
+        = link_to admin_organisation_user_referent_assignation_path(current_organisation, @user, agent), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Voulez-vous vraiment retirer ce référent ?"} do
           span> Retirer
           i.fa.fa-angle-right
       - elsif action == :add

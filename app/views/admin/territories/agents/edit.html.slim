@@ -104,7 +104,7 @@ h1
                 .card-footer
                   .row
                     .col.text-left
-                      = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?"}
+                      = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), class: "btn btn-outline-danger", data: { turbo_method: :delete, turbo_confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?"}
                     .col.text-right
                       = f.button :submit, t(".submit")
 

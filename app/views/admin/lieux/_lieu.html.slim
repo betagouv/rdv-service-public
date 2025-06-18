@@ -16,6 +16,5 @@ tr id="lieu_#{lieu.id}"
         - if @lieux_policy.destroy?
           div= link_to admin_organisation_lieu_path(current_organisation, lieu),
                   title: t("helpers.delete"),
-                  method: :delete,
-                  data: { confirm: "Confirmez-vous la suppression de ce lieu ?"} do
+                  data: { turbo_method: :delete, turbo_confirm: "Confirmez-vous la suppression de ce lieu ?"} do
             i.fa.fa-trash-alt

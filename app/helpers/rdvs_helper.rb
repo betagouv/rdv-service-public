@@ -107,9 +107,8 @@ module RdvsHelper
 
   def rdv_status_delete_dropdown_item(rdv)
     link_to admin_organisation_rdv_path(rdv.organisation, rdv),
-            method: :delete,
             class: "dropdown-item",
-            data: { confirm: t("admin.rdvs.delete.confirm") } do
+            data: { turbo_method: :delete, turbo_confirm: t("admin.rdvs.delete.confirm") } do
       tag.div(t("helpers.delete"), class: "text-danger") +
         tag.div(t("admin.rdvs.delete.details"), class: "text-wrap text-muted")
     end

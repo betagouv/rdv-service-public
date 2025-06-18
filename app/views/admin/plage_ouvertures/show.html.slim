@@ -60,8 +60,7 @@
           = link_to( \
             "Supprimer", \
             admin_organisation_plage_ouverture_path(current_organisation, @plage_ouverture), \
-            method: :delete, \
-            data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}, \
+            data: { turbo_method: :delete, turbo_confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}, \
             class: "btn btn-danger" \
           )
         div

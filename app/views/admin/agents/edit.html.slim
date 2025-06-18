@@ -55,8 +55,7 @@
               .col.text-left
                 = link_to @agent_removal_presenter.button_value, \
                   admin_organisation_agent_path(current_organisation, @agent), \
-                  data: { confirm: @agent_removal_presenter.confirm_message }, \
-                  method: :delete, \
+                  data: { turbo_method: :delete, turbo_confirm: @agent_removal_presenter.confirm_message }, \
                   class: "btn btn-outline-danger"
             .col.text-right
               - if AgentRole.find(@agent_role.id).access_level == "intervenant"
@@ -65,7 +64,7 @@
                 .js_agent_role_form__agent_with_account_fields
                   = f.button :submit
                 .js_agent_role_form__intervenant_fields[style="display:none;"]
-                  = f.button :submit, data: { confirm: "Cet agent ne pourra plus se connecter à son compter. Êtes vous sûr de vouloir continuer ?" }
+                  = f.button :submit, data: { turbo_confirm: "Cet agent ne pourra plus se connecter à son compter. Êtes vous sûr de vouloir continuer ?" }
 
 .row.justify-content-center
   .col-md-12.col-lg-8

@@ -19,7 +19,6 @@ tr
               title: t("helpers.clone"),
               class: "fr-btn fr-btn--tertiary fr-icon-clipboard-fill"
       = link_to "", admin_organisation_absence_path(current_organisation, absence),
-              method: :delete,
               title: t("helpers.delete"),
-              data: { confirm: t(".confirm_delete_absence")},
+              data: { turbo_method: :delete, turbo_confirm: t(".confirm_delete_absence")},
                 class: "fr-btn fr-btn--tertiary fr-icon-delete-bin-fill"

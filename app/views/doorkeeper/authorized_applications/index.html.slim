@@ -6,4 +6,4 @@
       h3= application.name
     .card-body.flex
       = form_tag oauth_authorized_application_path(application), method: :delete, class: "mt-2" do
-        = submit_tag "Déconnecter", data: { confirm: "Déconnecter"}, class: "btn btn-outline-danger"
+        = submit_tag "Déconnecter", data: { turbo_confirm: "Déconnecter"}, class: "btn btn-outline-danger"

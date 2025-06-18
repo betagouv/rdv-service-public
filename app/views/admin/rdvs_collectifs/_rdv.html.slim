@@ -6,7 +6,7 @@
       |&nbsp;
       = I18n.l(rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
     - if current_agent.admin_in_organisation?(current_organisation)
-      div.mr-3= link_to admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: nil), method: :delete, title: t("helpers.delete"), data: { confirm: "Confirmez-vous la suppression de ce rendez-vous collectif ?"} do
+      div.mr-3= link_to admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: nil), title: t("helpers.delete"), data: { turbo_method: :delete, turbo_confirm: "Confirmez-vous la suppression de ce rendez-vous collectif ?"} do
         i.fa.fa-trash-alt
   .card-body
     .row
