@@ -79,7 +79,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
           expect(rdv_plan.user).to have_attributes(
             first_name: "Francis",
             last_name: "Factice",
-            email: "francis.factice@gmail.com",
+            notification_email: "francis.factice@gmail.com",
             phone_number: "0611223344",
             address: "21 rue des Ardennes, 75019 Paris"
           )

@@ -34,8 +34,10 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   end
 
   def build_user(user_params)
-    User.new(user_params.permit(:first_name, :last_name, :email, :address, :phone_number, :birth_date))
-      .tap(&:skip_confirmation_notification!)
+    user = User.new(user_params.permit(:first_name, :last_name, :address, :phone_number, :birth_date))
+    user.notification_email = user_params[:email]
+    user.skip_confirmation_notification!
+    user
   end
 
   def find_user(user_params)
