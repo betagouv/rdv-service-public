@@ -2,7 +2,7 @@ class SpecToDoc
   @scenarios = []
 
   def self.start_scenario(title, example)
-    scenario = Scenario.new(title, @scenarios.length, example)
+    scenario = Scenario.new(title, example)
     @scenarios << scenario
     scenario
   end
@@ -10,8 +10,8 @@ class SpecToDoc
   def self.render
     `mkdir -p tmp/capybara/spec_to_doc`
 
-    @scenarios.each.with_index do |scenario, i|
-      Rails.root.join("tmp/capybara/spec_to_doc/scenario_#{i}.html").write(
+    @scenarios.each do |scenario|
+      Rails.root.join("tmp/capybara/spec_to_doc/scenario_#{scenario.index}.html").write(
         Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/layout.html.slim")).render(scenario) do
           Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/scenario.html.slim")).render(scenario).html_safe # rubocop:disable Rails/OutputSafety
         end
@@ -38,15 +38,15 @@ class SpecToDoc
   end
 
   class Scenario
-    def initialize(title, index, example)
+    def initialize(title, example)
       @title = title
-      @index = index
+      @index = Digest::SHA1.hexdigest(title)[0..8]
       @example = example
       @sections = []
       @current_section = nil
     end
 
-    attr_reader :title
+    attr_reader :title, :index
 
     def start_section(title)
       @current_section = Section.new(title)

@@ -2,7 +2,7 @@ h1 Documentation
 
 p Cette page documente différentes fonctionnalités de RDV Service Public
 
-- @scenarios.each.with_index do |scenario, i|
-  a[href='scenario_#{i}.html'] #{scenario.title}
+- @scenarios.each do |scenario|
+  a[href='scenario_#{scenario.index}.html'] #{scenario.title}
 
 p Dernière mise à jour le #{I18n.l(Time.zone.now)}
