@@ -56,7 +56,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       lieu: lieu,
       organisation: organisation
     )
-    expect(user.reload.email).to eq "newaddress@exemple.com"
+    expect(user.reload.notification_email).to eq "newaddress@exemple.com"
 
     perform_enqueued_jobs
     emails = ActionMailer::Base.deliveries
