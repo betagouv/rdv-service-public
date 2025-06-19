@@ -68,7 +68,6 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   end
 
   context "quand l'usager avait déjà une adresse email dans la colonne email et pas notification_email" do
-    let(:user) { create(:user, :unregistered, organisations: [organisation], email: "old_email@exemple.fr") }
     let(:rdv_plan) do
       create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
                         rdv_agent: agent,
@@ -78,23 +77,45 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
                         oauth_application: application)
     end
 
-    it "permet quand même de prendre le rendez-vous" do
-      visit edit_user_agents_rdv_plan_path(rdv_plan.id)
-      fill_in("Email", with: "francis@exemple.fr")
+    context "et l'usager n'a pas de compte devise" do
+      let(:user) { create(:user, :unregistered, organisations: [organisation], email: "old_email@exemple.fr") }
 
-      expect(page).to have_content "Envoyer une notification de confirmation"
-      click_on "Confirmer le rendez-vous"
+      it "remplace l'email par un notification_email" do
+        visit edit_user_agents_rdv_plan_path(rdv_plan.id)
+        fill_in("Email", with: "francis@exemple.fr")
 
-      expect(page).to have_content "Rendez-vous confirmé"
-      rdv = Rdv.last
-      expect(rdv).to have_attributes(
-        users: [user],
-        agents: [agent],
-        motif: motif,
-        lieu: lieu,
-        organisation: organisation
-      )
-      expect(user.reload.notification_email).to eq "francis@exemple.fr"
+        expect(page).to have_content "Envoyer une notification de confirmation"
+        click_on "Confirmer le rendez-vous"
+
+        expect(page).to have_content "Rendez-vous confirmé"
+        rdv = Rdv.last
+        expect(rdv).to have_attributes(
+          users: [user],
+          agents: [agent],
+          motif: motif,
+          lieu: lieu,
+          organisation: organisation
+        )
+        expect(user.reload).to have_attributes(
+          email: nil,
+          notification_email: "francis@exemple.fr"
+        )
+      end
+    end
+
+    context "et l'usager a un compte devise" do
+      let(:user) { create(:user, organisations: [organisation], email: "old_email@exemple.fr") }
+
+      it "lève une erreur" do
+        visit edit_user_agents_rdv_plan_path(rdv_plan.id)
+        fill_in("Email", with: "francis@exemple.fr")
+
+        expect(page).to have_content "Envoyer une notification de confirmation"
+        click_on "Confirmer le rendez-vous"
+
+        expect(page).to have_content("asdf")
+        expect(sentry_events.last.message).to eq("Prescripteur sans infos de creneau. Voir https://github.com/betagouv/rdv-solidarites.fr/issues/3420")
+      end
     end
   end
 
