@@ -1,0 +1,3 @@
+<%= turbo_stream.replace "rdv-status-#{@rdv.id}" do %>
+  <%= render partial: "admin/rdvs/individual_rdv_status_dropdown", locals: { rdv: @rdv } %>
+<% end %>

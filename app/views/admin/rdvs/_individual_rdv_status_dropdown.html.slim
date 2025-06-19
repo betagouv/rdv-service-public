@@ -1,6 +1,6 @@
 /# locals: (rdv:, quick_update: false)
 
-.dropdown id="rdv-status-#{rdv.id}"
+turbo-frame.dropdown id="rdv-status-#{rdv.id}"
   .dropdown-toggle.btn[data-toggle="dropdown" class="rdv-status-#{rdv.temporal_status}"]
     = Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
   .dropdown-menu
