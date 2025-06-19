@@ -96,7 +96,7 @@
                 div= link_to t("admin.motifs.actions.unarchive"), unarchive_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-light w-100", data: { turbo_method: :post }
             - else
               - if @motif_policy.archive?
-                div= link_to t("admin.motifs.actions.archive"), archive_admin_organisation_motif_path(current_organisation, @motif), data: { turbo_method: :delete, turbo_confirm: t("admin.motifs.actions.archive_confirm") }, class: "btn btn-light w-100"
+                div= link_to t("admin.motifs.actions.archive"), archive_admin_organisation_motif_path(current_organisation, @motif), data: { turbo_method: :post, turbo_confirm: t("admin.motifs.actions.archive_confirm") }, class: "btn btn-light w-100"
 
             - if @motif_policy.destroy?
               div= link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(current_organisation, @motif), data: { turbo_method: :delete, turbo_confirm: t("admin.motifs.actions.destroy_confirm") }, class: "btn btn-danger w-100"
