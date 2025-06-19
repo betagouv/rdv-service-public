@@ -38,7 +38,7 @@ class Admin::AgentsController < AgentAuthController
       flash[:alert] = create_agent.warning_message
       redirect_to_index_path_for(@agent)
     else
-      render_new
+      render_new(error: true)
     end
   end
 
@@ -66,7 +66,7 @@ class Admin::AgentsController < AgentAuthController
 
       redirect_to_index_path_for(@agent)
     else
-      render_edit
+      render_edit(error: true)
     end
   end
 
@@ -88,21 +88,29 @@ class Admin::AgentsController < AgentAuthController
 
   private
 
-  def render_new
+  def render_new(error: false)
     @services = current_territory.services
     @roles = access_levels_collection
     @agent_role = AgentRole.new
 
-    render :new, layout: "application_agent"
+    if error
+      render :new, layout: "application_agent", status: :unprocessable_entity
+    else
+      render :new, layout: "application_agent"
+    end
   end
 
-  def render_edit
+  def render_edit(error: false)
     @services = @agent.services # les services sont en lecture seule en édition
     @agent_role = @agent.roles.find { |r| r.organisation == current_organisation }
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
     @roles = access_levels_collection
 
-    render :edit
+    if error
+      render :edit, status: :unprocessable_entity
+    else
+      render :edit
+    end
   end
 
   def redirect_to_index_path_for(agent)
