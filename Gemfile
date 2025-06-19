@@ -23,6 +23,9 @@ gem "rack-cors" # CORS management
 # Mail provides a nice Ruby DSL for making, sending and reading emails.
 gem "mail"
 
+# Hotwire
+gem "hotwire-rails" # Hotwire is a framework for building modern web applications without using much JavaScript
+
 # Ops
 # A gem that provides a client interface for the Sentry error logger
 gem "sentry-ruby"
