@@ -31,7 +31,7 @@ ruby:
   - if user.phone_number.present? && !user.phone_number_mobile?
     .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
   div.mb-2 Préférences de notifications
-  div= f.dsfr_check_box :notify_by_email
+  div= f.dsfr_check_box :notify_by_email, hint: "#{current_user.preferred_email} (définie via FranceConnect)"
   div= f.dsfr_check_box :notify_by_sms
   - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_MAIRIE
     - address_value = rdv_wizard.present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
