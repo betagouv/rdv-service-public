@@ -67,9 +67,8 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(page).to have_content("Retour sur Démarches Simplifiées")
   end
 
-  context "quand un autre usager utilise déjà cette adresse email" do
-    let(:user) { create(:user, :unregistered, organisations: [organisation]) }
-    let!(:user_with_same_email) { create(:user, organisations: [organisation], email: "francis@exemple.fr") }
+  context "quand l'usager avait déjà une adresse email dans la colonne email et pas notification_email" do
+    let(:user) { create(:user, :unregistered, organisations: [organisation], email: "old_email@exemple.fr") }
     let(:rdv_plan) do
       create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
                         rdv_agent: agent,
