@@ -106,15 +106,9 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     context "et l'usager a un compte devise" do
       let(:user) { create(:user, organisations: [organisation], email: "old_email@exemple.fr") }
 
-      it "lève une erreur" do
+      it "ne permet pas la modification de l'email, puisque cela changerait la manière de se connecter pour l'usager" do
         visit edit_user_agents_rdv_plan_path(rdv_plan.id)
-        fill_in("Email", with: "francis@exemple.fr")
-
-        expect(page).to have_content "Envoyer une notification de confirmation"
-        click_on "Confirmer le rendez-vous"
-
-        expect(page).to have_content("asdf")
-        expect(sentry_events.last.message).to eq("Prescripteur sans infos de creneau. Voir https://github.com/betagouv/rdv-solidarites.fr/issues/3420")
+        expect(page).to have_field("Email", with: user.email, disabled: true)
       end
     end
   end
