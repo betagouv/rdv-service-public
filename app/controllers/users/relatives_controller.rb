@@ -22,12 +22,14 @@ class Users::RelativesController < UserAuthController
     )
     authorize(user, policy_class: User::UserPolicy)
     return_location = request.referer
+    status = :unprocessable_entity
     @form = RelativeUserForm.new(user:)
     if @form.submit(**form_params)
       flash[:success] = "#{@form.user.full_name} a été ajouté comme proche."
       return_location = add_query_string_params_to_url(request.referer, created_user_id: @form.user.id)
+      status = :created
     end
-    respond_modal_with @form, location: return_location
+    respond_modal_with @form, location: return_location, status:
   end
 
   def edit
@@ -44,7 +46,7 @@ class Users::RelativesController < UserAuthController
       flash[:success] = "Les informations de votre proche #{@form.user.full_name} ont été mises à jour."
       redirect_to users_informations_path
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
