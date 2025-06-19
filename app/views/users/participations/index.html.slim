@@ -1,4 +1,4 @@
-- content_for :title, "Changer de participants"
+- content_for :title, "Changer de participant"
 
 ul.list-group.fr-mb-3w
   li.list-group-item
@@ -40,15 +40,11 @@ ul.list-group.fr-mb-3w
     span.fr-icon-team-fill.fr-mr-1w[aria-hidden="true"]
     | Participant
 
-    = form_tag users_rdv_participations_path(@rdv) do
-      .form-group
-      - current_user.available_users_for_rdv.each do |possible_participant|
-        label
-          = radio_button_tag :user_id, possible_participant.id, @rdv.users.include?(possible_participant)
-          span>
-          = possible_participant.full_name
-        br
-      .form-group
-        = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?, ants_meeting_point_id: @rdv.lieu_id), data: { modal: true }
-      .form-group
-        = submit_tag "Enregistrer", class: "fr-btn"
+    = form_with url: users_rdv_participations_path(@rdv), builder: Dsfr::FormBuilder do |f|
+      - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, hint: birth_date_and_age(user), value: user.id, checked: user.id.in?(@rdv.user_ids) } }
+      = f.dsfr_radio_buttons :users, users, legend: "", required: true, rich: true, name: "user_id"
+      ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--right
+        li
+          = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?, ants_meeting_point_id: @rdv.lieu_id),  class: "fr-btn fr-btn--tertiary", data: { modal: true }
+        li
+          = submit_tag "Enregistrer", class: "fr-btn"
