@@ -4,4 +4,4 @@
     - if rdv.user_in_waiting_room?
       | Usager en salle d'attente
     - else
-      = link_to "Salle d'attente", admin_organisation_rdv_user_in_waiting_room_path(rdv.organisation, rdv), class: "btn btn-primary", remote: true, data: { turbo_method: :post}
+      = link_to "Salle d'attente", admin_organisation_rdv_user_in_waiting_room_path(rdv.organisation, rdv), class: "btn btn-primary", data: { turbo_method: :post}
