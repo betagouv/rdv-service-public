@@ -472,19 +472,14 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in "Mot de passe", with: "Rdvservicepublictest1!"
       click_on "Enregistrer"
       # Parcours post-connexion
-      expect(page).to have_content("Étape 1 sur 3")
+      expect(page).to have_content("Étape 1 sur 2")
       expect(page).to have_content("Vos informations")
       expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
       expect(page).to have_content("(50 minutes)")
       fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001"
       click_on "Continuer"
-      expect(page).to have_content("Étape 2 sur 3")
+      expect(page).to have_content("Étape 2 sur 2")
       expect(page).to have_content("Choix de l’usager")
-      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
-      expect(page).to have_content("(50 minutes)")
-      click_on "Continuer"
-      expect(page).to have_content("Étape 3 sur 3")
-      expect(page).to have_content("Confirmation")
       expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
       expect(page).to have_content("(50 minutes)")
       click_on "Confirmer mon RDV"
@@ -520,12 +515,12 @@ RSpec.describe "User can search rdv on rdv mairie" do
           starts_at: Time.zone.parse("2021-12-13 9:00"),
         }
         visit(new_users_rdv_wizard_step_path(valid_query))
-        expect(page).to have_content("Étape 1 sur 3")
+        expect(page).to have_content("Étape 1 sur 2")
         expect(page).to have_content("Vos informations")
         expect(page).not_to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
         invalid_query = valid_query.merge(ants_pre_demandes_count: "100")
         visit(new_users_rdv_wizard_step_path(invalid_query))
-        expect(page).not_to have_content("Étape 1 sur 3")
+        expect(page).not_to have_content("Étape 1 sur 2")
         expect(page).to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
       end
     end
@@ -534,7 +529,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       specify do
         login_as(user, scope: :user)
         valid_query = {
-          step: "3",
+          step: "2",
           ants_pre_demandes_count: "2",
           departement: "78",
           lieu_id: lieu.id,
@@ -543,13 +538,12 @@ RSpec.describe "User can search rdv on rdv mairie" do
           user_ids: [user.id],
         }
         visit(new_users_rdv_wizard_step_path(valid_query))
-        expect(page).to have_content("Étape 3 sur 3")
-        expect(page).to have_content("Confirmer mon RDV")
+        expect(page).to have_content("Étape 2 sur 2")
         page.execute_script(%{
-          elt = document.querySelector("a.btn-primary");
+          elt = document.querySelector("form");
           elt.setAttribute(
-            "href",
-            elt.getAttribute("href").replace("ants_pre_demandes_count=2", "ants_pre_demandes_count=100")
+            "action",
+            elt.getAttribute("action").replace("ants_pre_demandes_count=2", "ants_pre_demandes_count=100")
           )
         })
         expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
