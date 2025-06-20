@@ -31,6 +31,30 @@ class RdvPlan < ApplicationRecord
   end
 
   def create_rdv(user_attributes:, participation_attributes:)
+    update_user_before_creating_rdv(user_attributes:)
+
+    rdv = Rdv.create(
+      agents: [rdv_agent],
+      participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
+      motif: motif,
+      organisation: organisation,
+      lieu: lieu,
+      starts_at: starts_at,
+      created_by: planning_agent,
+      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
+    )
+
+    if rdv.persisted?
+      update(rdv: rdv)
+      Notifiers::RdvCreated.perform_with(rdv, planning_agent)
+    end
+
+    rdv
+  end
+
+  private
+
+  def update_user_before_creating_rdv(user_attributes:)
     if user.email
       if user_attributes[:notification_email]&.downcase == user.email || user_attributes[:notification_email].blank?
         # L'email est le même, mais on veut quand même changer le numéro de téléphone
@@ -53,27 +77,7 @@ class RdvPlan < ApplicationRecord
     else
       user.update!(user_attributes)
     end
-
-    rdv = Rdv.create(
-      agents: [rdv_agent],
-      participations: [Participation.new(participation_attributes.merge(user_id: user.id))],
-      motif: motif,
-      organisation: organisation,
-      lieu: lieu,
-      starts_at: starts_at,
-      created_by: planning_agent,
-      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
-    )
-
-    if rdv.persisted?
-      update(rdv: rdv)
-      Notifiers::RdvCreated.perform_with(rdv, planning_agent)
-    end
-
-    rdv
   end
-
-  private
 
   def return_url_is_authorized
     return if return_url.blank?
