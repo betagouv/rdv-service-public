@@ -319,12 +319,15 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-          SURGE_LOGIN: victor@ahaoho.io
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
           UPLOAD_TO_SURGE: true
       - name: SpecToDoc upload to Surge
         run: "ruby -e \"require_relative 'spec/support/spec_to_doc'; SpecToDoc.upload_to_surge\""
         continue-on-error: true # On ne veut pas faire échouer le build si l'upload à surge échoue
+        # if: ${{ github.ref == 'refs/heads/production' }}
+        env:
+          SURGE_LOGIN: victor@ahaoho.io
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          UPLOAD_TO_SURGE: true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
