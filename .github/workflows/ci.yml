@@ -323,7 +323,7 @@ jobs:
       - name: SpecToDoc upload to Surge
         run: "ruby -e \"require_relative 'spec/support/spec_to_doc'; SpecToDoc.upload_to_surge\""
         continue-on-error: true # On ne veut pas faire échouer le build si l'upload à surge échoue
-        # if: ${{ github.ref == 'refs/heads/production' }}
+        if: ${{ github.ref == 'refs/heads/production' }}
         env:
           SURGE_LOGIN: victor@ahaoho.io
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
