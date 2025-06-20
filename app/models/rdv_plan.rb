@@ -58,7 +58,6 @@ class RdvPlan < ApplicationRecord
     if user.email
       if user_attributes[:notification_email]&.downcase == user.email || user_attributes[:notification_email].blank?
         # L'email est le même, mais on veut quand même changer le numéro de téléphone
-        # TODO: ajouter une spec pour ce cas
         user.update!(user_attributes)
       elsif user.encrypted_password.present? # On essaye de changer l'email de l'usager
         # Dans ce cas l'usager a un compte Devise qui lui sert à se connecter
