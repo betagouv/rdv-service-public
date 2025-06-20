@@ -104,11 +104,21 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     end
 
     context "et l'usager a un compte devise" do
-      let(:user) { create(:user, organisations: [organisation], email: "old_email@exemple.fr") }
+      let(:user) { create(:user, organisations: [organisation], email: "old_email@exemple.fr", phone_number: "0611223344") }
 
       it "ne permet pas la modification de l'email, puisque cela changerait la manière de se connecter pour l'usager" do
         visit edit_user_agents_rdv_plan_path(rdv_plan.id)
         expect(page).to have_field("Email", with: user.email, disabled: true)
+
+        fill_in("Téléphone", with: "0612345678")
+
+        click_on "Confirmer le rendez-vous"
+        expect(page).to have_content "Rendez-vous confirmé"
+
+        expect(user.reload).to have_attributes(
+          email: "old_email@exemple.fr",
+          phone_number: "0612345678"
+        )
       end
     end
   end

@@ -32,7 +32,7 @@ class RdvPlan < ApplicationRecord
 
   def create_rdv(user_attributes:, participation_attributes:)
     if user.email
-      if user_attributes[:notification_email] == user.email
+      if user_attributes[:notification_email]&.downcase == user.email || user_attributes[:notification_email].blank?
         # L'email est le même, mais on veut quand même changer le numéro de téléphone
         # TODO: ajouter une spec pour ce cas
         user.update!(user_attributes)
