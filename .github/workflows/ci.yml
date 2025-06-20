@@ -1,5 +1,6 @@
 name: CI
-# On commence par ne donner aucune permission par défaut
+# Cette ligne permet de ne donner aucune permission au GITHUB_TOKEN associé au job qui tourne.
+# On n'utilise pas du tout l'api github dans notre CI (aucun job n'a du code qui va créer des issues ou éditer le wiki du repo), donc on n'en a pas besoin.
 permissions: {}
 on:
   push:
