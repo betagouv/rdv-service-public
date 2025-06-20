@@ -35,6 +35,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
   def build_user(user_params)
     user = User.new(user_params.permit(:first_name, :last_name, :address, :phone_number, :birth_date))
+    # TODO: mettre un commentaire pour expliquer pourquoi cette ligne nous rend triste
     user.notification_email = user_params[:email]
     user.skip_confirmation_notification!
     user

@@ -32,21 +32,23 @@ class RdvPlan < ApplicationRecord
 
   def create_rdv(user_attributes:, participation_attributes:)
     if user.email
-      if user_attributes[:notification_email] != user.email # On essaye de changer l'email de l'usager
-        if user.encrypted_password.present?
-          # Dans ce cas l'usager a un compte Devise qui lui sert à se connecter
-          # A terme, on voudrait ne pas avoir à faire cette vérification, et que la présence d'une valeur dans la colonne email
-          # suffise à déterminer que l'usager a un compte Devise
-          raise "L'email de cet usager ne peut pas être modifié"
-        else
-          # Pour mettre à jour l'email sans renvoyer de mail de confirmation
-          user.skip_confirmation_notification!
-          user.skip_reconfirmation!
+      if user_attributes[:notification_email] == user.email
+        # L'email est le même, mais on veut quand même changer le numéro de téléphone
+        # TODO: ajouter une spec pour ce cas
+        user.update!(user_attributes)
+      elsif user.encrypted_password.present? # On essaye de changer l'email de l'usager
+        # Dans ce cas l'usager a un compte Devise qui lui sert à se connecter
+        # A terme, on voudrait ne pas avoir à faire cette vérification, et que la présence d'une valeur dans la colonne email
+        # suffise à déterminer que l'usager a un compte Devise
+        raise "L'email de cet usager ne peut pas être modifié"
+      else
+        # Pour mettre à jour l'email sans renvoyer de mail de confirmation
+        user.skip_confirmation_notification!
+        user.skip_reconfirmation!
 
-          # Le notification_email peut remplacer l'email sans risque, puisque l'usager n'a pas de compte Devise
-          user.assign_attributes(email: nil)
-          user.update!(user_attributes)
-        end
+        # Le notification_email peut remplacer l'email sans risque, puisque l'usager n'a pas de compte Devise
+        user.assign_attributes(email: nil)
+        user.update!(user_attributes)
       end
     else
       user.update!(user_attributes)
