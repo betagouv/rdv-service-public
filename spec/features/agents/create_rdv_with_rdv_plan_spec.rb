@@ -142,6 +142,9 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
         organisation: organisation
       )
       expect(user.reload.notification_email).to eq "francis@exemple.fr"
+
+      # On a deux usagers avec le même e-mail de notif dans notre base, et c'est pas grave.
+      expect(User.where(notification_email: "francis@exemple.fr").count).to eq(2)
     end
   end
 
