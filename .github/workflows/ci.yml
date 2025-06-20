@@ -1,4 +1,6 @@
 name: CI
+# On commence par ne donner aucune permission par défaut
+permissions: {}
 on:
   push:
     paths-ignore:
@@ -169,7 +171,7 @@ jobs:
       matrix:
         # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’exécution
         dirname: [agents, "*"]
-        include: 
+        include:
           - dirname: agents
             command: "parallel:spec[spec/features/agents]"
           - dirname: "*"
