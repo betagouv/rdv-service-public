@@ -53,6 +53,7 @@ module UserRdvWizard
 
     def to_query
       {
+        # TODO: ne pas mettre les ids de tous les users ici pour un rdv collectif
         motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id), rdv_collectif_id: rdv.id,
       }.merge(
         @attributes.slice(
@@ -116,7 +117,16 @@ module UserRdvWizard
     end
   end
 
-  class Step2 < Base; end
+  class Step2 < Base
+    def initialize(user, attributes)
+      super
+
+      unless @rdv.persisted?
+        # Hacky override of user_ids on step2
+        @rdv.user_ids = [attributes[:created_user_id]] if attributes[:created_user_id].present?
+      end
+    end
+  end
 
   class Step3 < Base; end
 end

@@ -14,7 +14,7 @@
           = f.hidden_field :starts_at
 
           div Pour qui prenez-vous rendez-vous ?
-          - if current_domain == Domain::RDV_MAIRIE
+          - if current_domain == Domain::RDV_MAIRIE || @rdv.collectif?
             .fr-mt-2w
               - current_user.available_users_for_rdv.each do |user|
                 = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, hint: birth_date_and_age(user), checked: (user.id.in?(@rdv.user_ids)), name: "rdv[user_ids][]" }, user.id, nil
