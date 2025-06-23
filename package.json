@@ -40,6 +40,7 @@
     "prettier": "3.3.2",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
+    "surge": "victormours/surge",
     "webpack": "^5.94.0",
     "webpack-cli": "^4.9.2"
   },
