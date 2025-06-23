@@ -177,7 +177,7 @@ jobs:
             command: "parallel:spec[spec/features/agents]"
             name: agents
           - dirname: "*"
-            command: "parallel:spec['spec/features/(?!agents)']"
+            command: "parallel:spec['spec/features/(?!(agents|spec_to_doc))']"
             name: other
     services:
       postgres:
