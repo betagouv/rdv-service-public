@@ -1,8 +1,10 @@
 div
   p= t("mailers.common.hello")
-  - motif = @rdv.motif.service.name
-  - date = l(@rdv.starts_at, format: :human)
-  - translation_key = (@rdv.status == "revoked" ? ".revoked_at_date" : ".cancelled_at_date")
+
+  ruby:
+    motif = @rdv.motif.service.name
+    date = l(@rdv.starts_at, format: :human)
+    translation_key = (@rdv.status == "revoked" ? ".revoked_at_date" : ".cancelled_at_date")
   p= t(translation_key, service: @rdv.service_name, date: l(@rdv.starts_at, format: :human))
 
   - if @rdv.phone_number.present?
