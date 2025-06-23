@@ -330,9 +330,13 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: tmp/capybara/spec_to_doc
+        continue-on-error: true # On ne veut pas faire échouer le build si l'upload à surge échoue
+        if: ${{ github.ref == 'refs/heads/production' }}
       - name: Upload to GitHub Pages
         id: upload-to-github-pages
         uses: actions/deploy-pages@v4
+        continue-on-error: true # On ne veut pas faire échouer le build si l'upload à surge échoue
+        if: ${{ github.ref == 'refs/heads/production' }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -25,18 +25,6 @@ class SpecToDoc
     )
   end
 
-  def self.upload_to_surge
-    files_to_upload = `ls tmp/capybara/spec_to_doc`
-    return unless files_to_upload["index.html"]
-
-    branch_name = `git rev-parse --abbrev-ref HEAD`.strip
-    domain_name = "rdv-service-public-#{branch_name}.surge.sh"
-    puts "running yarn run surge tmp/capybara/spec_to_doc #{domain_name}"
-    `yarn run surge tmp/capybara/spec_to_doc #{domain_name}`
-
-    puts "La documentation est disponible sur https://#{domain_name}"
-  end
-
   class Scenario
     def initialize(title, example)
       @title = title
