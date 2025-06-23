@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_17_121151) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_23_070746) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -842,6 +842,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_121151) do
     t.index ["last_name"], name: "index_users_on_last_name"
     t.index ["notification_email"], name: "index_users_on_notification_email", where: "(notification_email IS NOT NULL)"
     t.index ["phone_number_formatted"], name: "index_users_on_phone_number_formatted"
+    t.index ["pro_connect_openid_sub"], name: "index_users_on_pro_connect_openid_sub", unique: true, where: "(pro_connect_openid_sub IS NOT NULL)"
     t.index ["rdv_invitation_token"], name: "index_users_on_rdv_invitation_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["responsible_id"], name: "index_users_on_responsible_id"
