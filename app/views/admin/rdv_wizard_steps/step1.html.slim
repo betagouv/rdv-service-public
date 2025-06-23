@@ -24,7 +24,7 @@
       label: "Motif du rendez-vous", \
       required: true, \
       include_blank: true, \
-      collection: @motifs.includes(:service).to_a.group_by(&:service_name), \
+      collection: @motifs.to_a.group_by(&:service_name), \
       as: :grouped_select, \
       group_method: :last,
       label_method: -> { motif_name_with_location_and_group_type(_1) }, \

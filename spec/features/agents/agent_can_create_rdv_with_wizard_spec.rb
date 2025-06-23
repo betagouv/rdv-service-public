@@ -219,4 +219,19 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       expect(page).to have_content("Le rendez-vous a été créé.")
     end
   end
+
+  describe "with a motif without a service" do
+    let!(:motif) { create(:motif, :collectif, :at_public_office, service: nil, organisation: organisation, name: "Super Motif") }
+
+    it "works", js: true do
+      step1
+      step2
+      step3(:enabled)
+      step4
+      expect(page).to have_content("Le rendez-vous a été créé.")
+
+      rdv = user.rdvs.first
+      expect(rdv.motif).to eq(motif)
+    end
+  end
 end
