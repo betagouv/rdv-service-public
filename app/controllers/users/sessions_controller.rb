@@ -38,6 +38,7 @@ class Users::SessionsController < Devise::SessionsController
     agent_connect_id_token = session.delete(:agent_connect_id_token)
 
     sign_out(:user)
+    set_flash_message!(:notice, :signed_out)
 
     if agent_connect_id_token
       agent_connect_client = AgentConnectOpenIdClient::Logout.new(agent_connect_id_token)
