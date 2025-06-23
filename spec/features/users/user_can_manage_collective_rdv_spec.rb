@@ -92,6 +92,12 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("Revenir en arrière")
         click_link("S'inscrire")
         click_button("Continuer")
+
+        click_on "Ajouter un proche"
+        fill_in "Prénom", with: "Francis"
+        fill_in "Nom d’usage", with: "Factice"
+        click_on "Enregistrer"
+
         click_link("Revenir en arrière")
         sleep(1)
         click_button("Continuer")

@@ -121,10 +121,10 @@ module UserRdvWizard
     def initialize(user, attributes)
       super
 
-      unless @rdv.persisted?
-        # Hacky override of user_ids on step2
-        @rdv.user_ids = [attributes[:created_user_id]] if attributes[:created_user_id].present?
-      end
+      # unless @rdv.persisted?
+      # Hacky override of user_ids on step2
+      @rdv.user_ids = [attributes[:created_user_id]] if attributes[:created_user_id].present?
+      # end
     end
   end
 
