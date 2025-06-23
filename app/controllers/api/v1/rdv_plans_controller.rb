@@ -34,8 +34,15 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   end
 
   def build_user(user_params)
-    User.new(user_params.permit(:first_name, :last_name, :email, :address, :phone_number, :birth_date))
-      .tap(&:skip_confirmation_notification!)
+    user = User.new(user_params.permit(:first_name, :last_name, :address, :phone_number, :birth_date))
+
+    # Il y a un décalage entre les champs utilisé dans l'api de création de rdv plans, et nos colonnes en base :
+    # on demande au client d'envoyer un `email`, mais on l'enregistre dans `notification_email`.
+    # C'est à la fois pour garder une api rétrocompatible, et aussi parce qu'on aurait préféré que la colonne notification_email
+    # reste juste "email", et que la colonne utilisée pour l'email devise ai un autre nom (peut-être `login_email`, `account_email` ou `devise_email`).
+    user.notification_email = user_params[:email]
+    user.skip_confirmation_notification!
+    user
   end
 
   def find_user(user_params)

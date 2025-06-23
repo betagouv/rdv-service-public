@@ -31,11 +31,7 @@ class RdvPlan < ApplicationRecord
   end
 
   def create_rdv(user_attributes:, participation_attributes:)
-    if user.encrypted_password.blank? # Pour mettre à jour l'email sans renvoyer de mail de confirmation
-      user.skip_confirmation_notification!
-      user.skip_reconfirmation!
-    end
-    user.update!(user_attributes)
+    update_user_before_creating_rdv(user_attributes:)
 
     rdv = Rdv.create(
       agents: [rdv_agent],
@@ -57,6 +53,30 @@ class RdvPlan < ApplicationRecord
   end
 
   private
+
+  def update_user_before_creating_rdv(user_attributes:)
+    if user.email
+      if user_attributes[:notification_email]&.downcase == user.email || user_attributes[:notification_email].blank?
+        # L'email est le même, mais on veut quand même changer le numéro de téléphone
+        user.update!(user_attributes)
+      elsif user.encrypted_password.present? # On essaye de changer l'email de l'usager
+        # Dans ce cas l'usager a un compte Devise qui lui sert à se connecter
+        # A terme, on voudrait ne pas avoir à faire cette vérification, et que la présence d'une valeur dans la colonne email
+        # suffise à déterminer que l'usager a un compte Devise
+        raise "L'email de cet usager ne peut pas être modifié"
+      else
+        # Pour mettre à jour l'email sans renvoyer de mail de confirmation
+        user.skip_confirmation_notification!
+        user.skip_reconfirmation!
+
+        # Le notification_email peut remplacer l'email sans risque, puisque l'usager n'a pas de compte Devise
+        user.assign_attributes(email: nil)
+        user.update!(user_attributes)
+      end
+    else
+      user.update!(user_attributes)
+    end
+  end
 
   def return_url_is_authorized
     return if return_url.blank?
