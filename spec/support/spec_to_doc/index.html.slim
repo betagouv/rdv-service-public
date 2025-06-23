@@ -1,0 +1,10 @@
+h1 Documentation
+
+p Cette page documente différentes fonctionnalités de RDV Service Public
+
+ul
+- @scenarios.each do |scenario|
+  li
+    a[href='scenario_#{scenario.index}.html'] #{scenario.title}
+
+p Dernière mise à jour le #{I18n.l(Time.zone.now)}

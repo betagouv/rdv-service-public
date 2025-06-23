@@ -14,7 +14,7 @@
         - if resource.email.present?
           .fr-col-md-12= f.dsfr_email_field :email, value: resource.email, disabled: true
         - else
-          .fr-col-md-12= f.dsfr_email_field :email, required: true
+          .fr-col-md-12= f.dsfr_email_field :email, required: true, autocomplete: "email"
         .fr-col-md-12= f.dsfr_phone_field :phone_number, hint: "Saisissez un numéro à 10 chiffres de France métropole ou d’outre-mer, ou bien un numéro international avec le préfixe du pays."
         .fr-col-md-12 = render "common/form/new_password_input", f: f
       .rdv-text-align-center= f.submit "Enregistrer", class: "fr-btn"

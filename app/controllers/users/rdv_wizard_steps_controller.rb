@@ -42,7 +42,7 @@ class Users::RdvWizardStepsController < UserAuthController
         name: "step1",
         number: 1,
         title: "Vos informations",
-        next_step: current_user.signed_in_with_invitation_token? ? :step3 : :step2,
+        next_step: UserRdvWizard::Base.skip_proches_step?(current_user) ? :step3 : :step2,
         stepper_index: 1,
       },
       step2: {
@@ -56,12 +56,11 @@ class Users::RdvWizardStepsController < UserAuthController
         name: "step3",
         number: 3,
         title: "Confirmation",
-        stepper_index: current_user.signed_in_with_invitation_token? ? 2 : 3,
+        stepper_index: UserRdvWizard::Base.skip_proches_step?(current_user) ? 2 : 3,
       },
     }
 
-    # Dans le cas d'une invitation, on passe l’étape 2
-    steps.delete(:step2) if current_user.signed_in_with_invitation_token?
+    steps.delete(:step2) if UserRdvWizard::Base.skip_proches_step?(current_user)
 
     steps
   end

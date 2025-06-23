@@ -97,4 +97,37 @@ RSpec.describe "Agents can configure online booking" do
       end
     end
   end
+
+  describe "choix du type d'usager qui participer au rendez-vous" do
+    before do
+      login_as(agent, scope: :agent)
+      visit admin_organisation_online_booking_path(organisation)
+    end
+
+    it "permet de passer de particulier à professionnel" do
+      find("label", text:  "des particuliers").click
+      find("label", text:  "des professionnels").click
+      click_on "Enregistrer"
+
+      expect(page).to have_content "Configuration mise à jour"
+
+      expect(organisation.reload).to have_attributes(
+        online_booking_for_particuliers: false,
+        online_booking_for_professionnels: true
+      )
+    end
+
+    context "si on ne remplit aucune des options" do
+      it "affiche un message d'erreur" do
+        find("label", text:  "des particuliers").click
+        click_on "Enregistrer"
+        expect(page).to have_content "Vous devez choisir au moins un type d'usager entre particulier et professionnels."
+
+        expect(organisation.reload).to have_attributes(
+          online_booking_for_particuliers: true,
+          online_booking_for_professionnels: false
+        )
+      end
+    end
+  end
 end

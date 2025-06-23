@@ -1,6 +1,5 @@
 class Agents::SessionsController < Devise::SessionsController
   include Admin::WeakPasswordControllerConcern
-  before_action :exclude_signed_in_users, only: [:new]
 
   # Lorsqu'un agent est connecté à une application Oauth via notre application,
   # Il est possible qu'il cherche à se déconnecter alors que sa session a déjà expiré.
@@ -72,16 +71,5 @@ class Agents::SessionsController < Devise::SessionsController
     else
       redirect_to after_sign_out_path_for(:agent)
     end
-  end
-
-  private
-
-  def exclude_signed_in_users
-    return true unless user_signed_in?
-
-    redirect_to(
-      root_path,
-      flash: { error: "Déconnectez-vous d'abord de votre compte usager pour vous connecter en tant qu'agent" }
-    )
   end
 end

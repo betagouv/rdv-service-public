@@ -522,6 +522,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_20_082208) do
     t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
     t.enum "verticale", default: "rdv_solidarites", null: false, enum_type: "verticale"
     t.boolean "ants_connectable", default: false, null: false, comment: "Autorise l'organisation à être branchée sur le moteur de recherche de l'ANTS sur https://rendezvouspasseport.ants.gouv.fr/. Pour éviter de brancher n'importe qui sur ce moteur de recherche, cette option n'est pas activable par les agents.\n"
+    t.boolean "online_booking_for_particuliers", default: true, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des particuliers, et donc qu'on propose le bouton FranceConnect lors de la prise de rendez-vous en ligne.\n"
+    t.boolean "online_booking_for_professionnels", default: false, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des professionnels, et donc qu'on propose le bouton ProConnect lors de la prise de rendez-vous en ligne.\n"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
@@ -827,6 +829,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_20_082208) do
     t.datetime "rdv_invitation_token_updated_at"
     t.string "notification_email", comment: "Used for notifications only, multiple users can share the same email notification address"
     t.virtual "text_search_terms_with_notification_email", type: :tsvector, as: "((((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(notification_email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
+    t.string "pro_connect_openid_sub"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"

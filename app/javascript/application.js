@@ -1,5 +1,12 @@
 require("@rails/ujs").start()
+// Nous souhaitons passer de Turbolinks à Turbo
+// Dans un premier temps, nous ajoutons Turbo à l'application sans supprimer Turbolinks et nous désactivons le drive de Turbo.
+// Cela nous permet d’utiliser les Turbo Streams et les Turbo Frames pour pouvoir supprimer l’usage des js.erb.
+// Dans un second temps, nous supprimerons Turbolinks et nous activerons le drive de Turbo.
 require("turbolinks").start()
+import "@hotwired/turbo-rails"
+Turbo.session.drive = false
+
 import { PlacesInputs } from './components/places-inputs.js'
 import { Modal } from './components/modal';
 import { NameInitialsForm } from './components/name-initials-form';
@@ -31,3 +38,5 @@ $(document).on('turbolinks:load', function() {
     })
   }
 });
+import "./controllers"
+import "@hotwired/turbo-rails"

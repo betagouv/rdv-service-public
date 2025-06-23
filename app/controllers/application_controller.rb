@@ -13,14 +13,6 @@ class ApplicationController < ActionController::Base
     stored_location_for(resource) || home_page_when_logged
   end
 
-  def after_sign_out_path_for(resource)
-    if @connected_with_franceconnect
-      return "https://#{ENV['FRANCECONNECT_HOST']}/api/v1/logout"
-    end
-
-    super
-  end
-
   def respond_modal_with(*args, &blk)
     options = args.extract_options!
     options[:responder] = ModalResponder
