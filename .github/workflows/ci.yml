@@ -261,6 +261,12 @@ jobs:
   test_features_spec_to_doc:
     name: Feature Tests using spec to doc
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.upload-to-github-pages.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
     services:
       postgres:
         image: postgres
@@ -320,14 +326,13 @@ jobs:
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
           UPLOAD_TO_SURGE: true
-      - name: SpecToDoc upload to Surge
-        run: "ruby -e \"require_relative 'spec/support/spec_to_doc'; SpecToDoc.upload_to_surge\""
-        continue-on-error: true # On ne veut pas faire échouer le build si l'upload à surge échoue
-        if: ${{ github.ref == 'refs/heads/production' }}
-        env:
-          SURGE_LOGIN: victor@ahaoho.io
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-          UPLOAD_TO_SURGE: true
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: tmp/capybara/spec_to_doc
+      - name: Upload to GitHub Pages
+        id: upload-to-github-pages
+        uses: actions/deploy-pages@v4
       - uses: actions/upload-artifact@v4
         if: always()
         with:
