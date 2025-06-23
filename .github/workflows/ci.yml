@@ -1,4 +1,7 @@
 name: CI
+# Cette ligne permet de ne donner aucune permission au GITHUB_TOKEN associé au job qui tourne.
+# On n'utilise pas du tout l'api github dans notre CI (aucun job n'a du code qui va créer des issues ou éditer le wiki du repo), donc on n'en a pas besoin.
+permissions: {}
 on:
   push:
     paths-ignore:
@@ -169,7 +172,7 @@ jobs:
       matrix:
         # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’exécution
         dirname: [agents, "*"]
-        include: 
+        include:
           - dirname: agents
             command: "parallel:spec[spec/features/agents]"
           - dirname: "*"
