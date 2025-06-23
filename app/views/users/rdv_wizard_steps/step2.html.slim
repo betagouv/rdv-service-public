@@ -14,12 +14,12 @@
           = f.hidden_field :starts_at
 
           div Pour qui prenez-vous rendez-vous ?
-          - if current_domain == Domain::RDV_MAIRIE || @rdv.collectif?
+          - if @rdv.requires_ants_predemande_number? # On autorise l'inscription de plusieurs usagers uniquement pour les rendez-vous de passeport et carte d'identité
             .fr-mt-2w
               - current_user.available_users_for_rdv.each do |user|
-                = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, hint: birth_date_and_age(user), checked: (user.id.in?(@rdv.user_ids)), name: "rdv[user_ids][]" }, user.id, nil
+                = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, hint: birth_date_and_age(user), checked: user.in?(@rdv_wizard.users), name: "rdv[user_ids][]" }, user.id, nil
           - else
-            - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, hint: birth_date_and_age(user), value: user.id, checked: (user.id.in?(@rdv.user_ids) || current_user.id == user.id)} }
+            - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, hint: birth_date_and_age(user), value: user.id, checked: user.in?(@rdv_wizard.users)} }
             = f.dsfr_radio_buttons :users, users, legend: "", required: true, rich: true, name: "rdv[user_ids][]"
 
           .form-group
