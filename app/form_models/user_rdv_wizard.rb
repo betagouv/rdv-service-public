@@ -84,9 +84,9 @@ module UserRdvWizard
       if @rdv.collectif?
         return [] unless @user
 
-        @user.available_users_for_rdv.where(id: @attributes[:user_ids])
+        @user.available_users_for_rdv.where(id: @attributes[:user_ids]).presence || [@user]
       else
-        @rdv.users
+        @rdv.users.presence || [@user]
       end
     end
 
