@@ -1,4 +1,3 @@
-# TODO: faire une variante sans service
 RSpec.describe "Agent can create a Rdv with creneau search" do
   include UsersHelper
 
@@ -49,6 +48,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
     let!(:motif2) { create(:motif, service: agent.services.first, organisation: organisation) }
+    let!(:motif_without_service) { create(:motif, service: nil, organisation: organisation) }
     let!(:another_service) { create(:service) }
     let!(:another_agent) { create(:agent, service: another_service, basic_role_in_organisations: [organisation]) }
     let!(:another_lieu) { create(:lieu, organisation: organisation) }
@@ -148,6 +148,22 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
       let!(:motif) { create(:motif, :at_home, service: agent.services.first, organisation: organisation) }
 
       it_behaves_like "book a rdv without a lieu"
+    end
+  end
+
+  context "when the motif doesn't have a service" do
+    let!(:motif) { create(:motif, service: nil, organisation: organisation) }
+    let!(:motif2) { create(:motif, service: agent.services.first, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], agent: agent, organisation: organisation) }
+
+    it "displays lieux and allow filtering on lieux" do
+      visit admin_organisation_creneaux_search_path(organisation)
+      expect(page).to have_content("Trouver un RDV")
+      select(motif.name, from: "motif_id")
+      click_button("Afficher les créneaux")
+
+      # Display results for both lieux
+      expect(page).to have_content(plage_ouverture.lieu_address)
     end
   end
 end
