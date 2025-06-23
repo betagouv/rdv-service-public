@@ -1,4 +1,3 @@
-# TODO: faire une version pour un motif sans service
 RSpec.describe "Agent can create a Rdv with wizard" do
   include UsersHelper
 

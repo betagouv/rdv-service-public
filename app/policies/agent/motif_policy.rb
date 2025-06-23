@@ -50,6 +50,7 @@ class Agent::MotifPolicy < ApplicationPolicy
       if current_agent.secretaire?
         scope.where(organisation_id: current_agent.organisation_ids)
       else
+        # TODO: ajouter une spec pour les motifs sans service dans ce cas
         scope.where(organisation: current_agent.basic_orgs, service: (current_agent.services + [nil]))
           .or(scope.where(organisation: current_agent.admin_orgs))
       end
