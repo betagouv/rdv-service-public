@@ -20,7 +20,7 @@
         .fr-col-6
           = f.dsfr_text_field :last_name, label: "Nom", required: true, autocomplete: "family-name"
       = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", required: true, autocomplete: "email"
-      = f.dsfr_phone_field :phone_number, label: "Numéro de téléphone", hint: "Facultatif. Vous recevrez les rappels et les informations du RDV sur ce numéro.", autocomplete: "tel"
+      = f.dsfr_phone_field :phone_number, label: "Numéro de téléphone", hint: "Facultatif. Vous recevrez les rappels et les informations du RDV sur ce numéro. Format attendu : 0612345678", autocomplete: "tel", pattern: "[+0-9 ]*"
 
       .form-group
         small

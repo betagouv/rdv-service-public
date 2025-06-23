@@ -27,7 +27,7 @@ ruby:
       / Nous ne voulons pas perdre d'informations si l'utilisateur a déjà un email de notification, donc le champ est requis
       / L'utilisateur peut définir un email de notification s'il n'en a pas encore, mais ce n'est pas obligatoire
       = f.dsfr_email_field :notification_email, required: user.notification_email.present?
-  = f.dsfr_phone_field :phone_number, as: :tel, required: rdv_wizard&.motif&.phone?, autocomplete: "tel"
+  = f.dsfr_phone_field :phone_number, as: :tel, required: rdv_wizard&.motif&.phone?, hint: "Format attendu : 0612345678", autocomplete: "tel", pattern: "[+0-9 ]*"
   - if user.phone_number.present? && !user.phone_number_mobile?
     .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
   div.mb-2 Préférences de notifications
