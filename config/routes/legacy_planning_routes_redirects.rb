@@ -10,7 +10,7 @@ class LegacyPlanningRedirector
     query_params = Rack::Utils.parse_nested_query(req.query_string)
 
     # Si on trouve :agent_id dans les params de path, on le copie en querystring
-    query_params.merge!({ "agent_id[]" => path_params[:agent_id] }) if path_params[:agent_id].present?
+    query_params.merge!({ agent_id: path_params[:agent_id] }) if path_params[:agent_id].present?
 
     target_uri.query = query_params.to_query
     target_uri.to_s
