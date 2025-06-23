@@ -48,7 +48,7 @@ class Users::RdvsController < UserAuthController
       query = {
         address: new_rdv_extra_params[:address] || new_rdv_extra_params[:where],
         city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
-        service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type,
+        service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
         departement: new_rdv_extra_params[:departement], organisation_ids: new_rdv_extra_params[:organisation_ids],
         ants_pre_demandes_count: new_rdv_extra_params[:ants_pre_demandes_count],
       }
