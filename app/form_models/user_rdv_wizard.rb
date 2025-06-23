@@ -86,7 +86,7 @@ module UserRdvWizard
 
         @user.available_users_for_rdv.where(id: @attributes[:user_ids]).presence || [@user]
       else
-        @rdv.users.presence || [@user]
+        @rdv.users.presence || [@user].compact
       end
     end
 
