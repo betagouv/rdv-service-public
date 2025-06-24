@@ -101,9 +101,10 @@ RSpec.describe "Adding a user to a collective RDV" do
         fill_in "Prénom", with: "Francis"
         fill_in "Nom d’usage", with: "Factice"
         click_on "Enregistrer"
-        sleep(1)
 
+        expect(page).to have_content("Francis FACTICE a été ajouté comme proche.")
         click_button("Continuer")
+
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
         expect(page).to have_content("Participation confirmée")
