@@ -79,5 +79,4 @@
     - elsif motif_selected? && params[:commit].present?
       = render partial: "admin/creneaux_search/no_slot_available"
     - else
-      .text-muted= t(".choose_filter_and_refresh")
       = render "admin/creneaux_search/prescription_cta"
