@@ -42,6 +42,7 @@ class Organisation < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
   validate :validate_organisation_phone_number
+  validate :validate_at_least_one_user_type
 
   # Scopes
   scope :attributed_to_sectors, lambda { |sectors:, most_relevant: false|
@@ -104,5 +105,13 @@ class Organisation < ApplicationRecord
 
   def sectorized?
     sector_attributions.any? && motifs.active.sectorized.any?
+  end
+
+  private
+
+  def validate_at_least_one_user_type
+    return if online_booking_for_particuliers || online_booking_for_professionnels
+
+    errors.add(:base, "Vous devez choisir au moins un type d'usager entre particulier et professionnels.")
   end
 end

@@ -24,6 +24,29 @@ RSpec.describe AgentConnectController do
         nonce: be_a(String)
       )
     end
+
+    describe "with the for_user param" do
+      it "saves the information that we want to log in a user rather than an agent in the session" do
+        get :auth, params: { login_hint: "francis.factice@exemple.gouv.fr", for_user: true }
+
+        expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
+
+        redirect_url = response.headers["Location"]
+        redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
+
+        expect(redirect_url_query_params.symbolize_keys).to match(
+          login_hint: "francis.factice@exemple.gouv.fr",
+          acr_values: "eidas1",
+          client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
+          redirect_uri: "http://test.host/agent_connect/callback",
+          response_type: "code",
+          scope: "openid email given_name usual_name siret",
+          state: be_a(String),
+          nonce: be_a(String)
+        )
+        expect(session["proconnect_for_user"]).to be_present
+      end
+    end
   end
 
   describe "#callback" do
@@ -67,6 +90,45 @@ RSpec.describe AgentConnectController do
       expect(session["agent_connect_id_token"]).to be_present
 
       expect(response).to redirect_to("/agents/edit")
+    end
+
+    context "when logging in a user" do
+      before do
+        session["proconnect_for_user"] = true
+        session[:user_return_to] = "/users/informations" # Pour simuler le retour vers la page demandée avant la connexion
+      end
+
+      it "creates the user" do
+        expect do
+          get :callback, params: { state: state, code: code }
+        end.to change(User, :count).by(1)
+
+        expect(User.last).to have_attributes(
+          pro_connect_openid_sub: "ab70770d-1285-46e6-b4d0-3601b49698d4",
+          first_name: "Francis",
+          last_name: "Factice",
+          confirmed_at: be_within(10.seconds).of(Time.zone.now)
+        )
+        expect(session["agent_connect_id_token"]).to be_present
+
+        expect(response).to redirect_to("/users/informations")
+      end
+
+      context "when the user already exists" do
+        let!(:user) { create(:user, pro_connect_openid_sub: "ab70770d-1285-46e6-b4d0-3601b49698d4") }
+
+        it "updates and logs in the user" do
+          get :callback, params: { state: state, code: code }
+
+          expect(user.reload).to have_attributes(
+            first_name: "Francis",
+            last_name: "Factice"
+          )
+          expect(session["agent_connect_id_token"]).to be_present
+
+          expect(response).to redirect_to("/users/informations")
+        end
+      end
     end
 
     context "when the agent has a name with two words" do

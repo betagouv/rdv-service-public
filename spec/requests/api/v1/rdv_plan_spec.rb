@@ -166,7 +166,7 @@ RSpec.describe "RDV Plan API" do
         expect(rdv_plan.user).to have_attributes(
           first_name: "Francis",
           last_name: "Factice",
-          email: "francis@factice.org",
+          notification_email: "francis@factice.org",
           phone_number: "0611223344",
           address: "21 rue des Ardennes, 75019 Paris",
           birth_date: Date.parse("1990-12-31")

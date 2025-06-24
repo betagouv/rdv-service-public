@@ -4,8 +4,6 @@ class Users::SessionsController < Devise::SessionsController
   include CanHaveRdvWizardContext
   include Admin::WeakPasswordControllerConcern
 
-  before_action :exclude_signed_in_agents, only: [:new]
-
   def new
     # Le flash d'erreur est trop aggressif pour le cas d'un usager non connecté.
     # Un flash de style info est plus adapté.
@@ -33,21 +31,25 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
-    @connected_with_franceconnect = user_signed_in? && session[:connected_with_franceconnect]
-    # so it's accessible in after_sign_out_path_for
-    super
+    connected_with_franceconnect = user_signed_in? && session[:connected_with_franceconnect]
+
+    agent_connect_id_token = session.delete(:agent_connect_id_token)
+
+    sign_out(:user)
+    set_flash_message!(:notice, :signed_out)
+
+    if agent_connect_id_token
+      agent_connect_client = AgentConnectOpenIdClient::Logout.new(agent_connect_id_token)
+
+      redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true
+    elsif connected_with_franceconnect
+      redirect_to "https://#{ENV['FRANCECONNECT_HOST']}/api/v1/logout", allow_other_host: true
+    else
+      redirect_to after_sign_out_path_for(:user)
+    end
   end
 
   private
-
-  def exclude_signed_in_agents
-    return true unless agent_signed_in?
-
-    redirect_to(
-      root_path,
-      flash: { error: "Déconnectez-vous d'abord de votre compte agent pour vous connecter en tant qu'utilisateur" }
-    )
-  end
 
   # Copied from devise-4.8.1/app/controllers/devise/sessions_controller.rb
   # We needed to override the call to redirect_to to set `allow_other_host: true`.

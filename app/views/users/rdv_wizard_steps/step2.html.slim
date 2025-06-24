@@ -17,10 +17,10 @@
           - if @rdv.requires_ants_predemande_number? # On autorise l'inscription de plusieurs usagers uniquement pour les rendez-vous de passeport et carte d'identité
             .fr-mt-2w
               - current_user.available_users_for_rdv.each do |user|
-                = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, hint: birth_date_and_age(user), checked: user.in?(@rdv_wizard.users), name: "rdv[user_ids][]" }, user.id, nil
+                = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, checked: (user.in?(@rdv_wizard.users)), name: "rdv[user_ids][]" }, user.id, nil
           - else
-            - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, hint: birth_date_and_age(user), value: user.id, checked: user.in?(@rdv_wizard.users)} }
-            = f.dsfr_radio_buttons :users, users, legend: "", required: true, rich: true, name: "rdv[user_ids][]"
+            - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, value: user.id, checked: (user.in?(@rdv_wizard.users) } }
+            = f.dsfr_radio_buttons :users, users, legend: "", required: true, name: "rdv[user_ids][]"
 
           .form-group
             = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?, ants_meeting_point_id: @rdv_wizard.lieu_id), data: { modal: true }
