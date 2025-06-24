@@ -1,5 +1,7 @@
-.card[id= "rdv-#{rdv.id}"]
-  div[id= "js-rdv-error-message-#{rdv.id}"]
+/locals(rdv:)
+
+turbo-frame.card[id= "rdv-#{rdv.id}"]
+  div[id= "rdv-error-message-#{rdv.id}"]
   - if local_assigns[:success_message]
     .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mx-3w.fr-my-2w
       p.fr-mb-0= local_assigns[:success_message]

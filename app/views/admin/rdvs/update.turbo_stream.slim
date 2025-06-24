@@ -1,0 +1,9 @@
+/locals(rdv:, agent:, quick_update:)
+
+- if rdv.errors.any?
+  = turbo_stream.replace "rdv-error-message-#{rdv.id}" do
+    = render partial: "admin/rdvs/update_error", rdv: rdv
+- else
+    = turbo_stream.replace "rdv-#{rdv.id}" do
+      - template = quick_update.to_bool ? "admin/rdvs/rdv_with_quick_update" : "admin/rdvs/rdv"
+      = render template, rdv: rdv, agent: agent, success_message: "Rendez-vous mis à jour"
