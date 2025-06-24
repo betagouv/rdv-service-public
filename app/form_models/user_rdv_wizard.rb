@@ -90,7 +90,6 @@ module UserRdvWizard
       end
     end
 
-      
     def display_france_connect?
       motif.organisation.online_booking_for_particuliers
     end
