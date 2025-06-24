@@ -1,12 +1,14 @@
 RSpec.describe "Agent can update a RDV", js: true do
   let!(:organisation) { create(:organisation) }
   let(:rdv) do
-    create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu)
+    create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu, starts_at:, ends_at:)
   end
   let!(:service) { create(:service, name: "Urbanisme") }
   let!(:agent_shiraz) { create(:agent, first_name: "Shiraz", last_name: "NADIR", email: "shiraz@angouleme.fr", service:, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, service: service, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
+  let(:starts_at) { 1.hour.from_now }
+  let(:ends_at) { starts_at + 1.hour }
 
   before do
     stub_netsize_ok
@@ -106,6 +108,83 @@ RSpec.describe "Agent can update a RDV", js: true do
         click_button "Confirmer en ignorant les avertissements"
         expect(page).to have_content "Le rendez-vous a été modifié."
         expect(rdv.reload.agents).to contain_exactly(agent_shiraz, agent_jungyoon)
+      end
+    end
+  end
+
+  describe "mise en salle d’attente d’un usager" do
+    context "l’option d’envoi de mail est désactivée" do
+      it "n’affiche pas le bouton salle d’attente" do
+        visit admin_organisation_rdv_path(organisation, rdv)
+        expect(page).not_to have_link("Salle d’attente")
+      end
+    end
+
+    context "l’option salle d’attente est activée par notification mail à l’agent" do
+      let(:organisation) { create(:organisation, territory: create(:territory, enable_waiting_room_mail_field: true)) }
+
+      before do
+        visit admin_organisation_rdv_path(organisation, rdv)
+      end
+
+      it "ajoute l’usager en salle d’attente et retire le bouton" do
+        click_link "Salle d’attente"
+
+        within("#waiting_room_button-#{rdv.id}") do
+          expect(page).to have_content("Usager en salle d'attente")
+          expect(page).not_to have_content("Salle d'attente")
+        end
+        expect(rdv.reload.user_in_waiting_room?).to be true
+      end
+
+      it "envoie un email à l’agent" do
+        expect do
+          click_link "Salle d’attente"
+          expect(page).to have_content("Usager en salle d'attente") # Permet d’attendre que la requête soit traitée
+        end.to have_enqueued_mail(Agents::WaitingRoomMailer, :user_in_waiting_room).with(params: { agent: agent_shiraz, rdv: rdv }, args: [])
+      end
+
+      context "le RDV n’est pas pour aujourd’hui" do
+        let(:starts_at) { 2.days.from_now }
+
+        it "n’affiche pas le bouton salle d’attente" do
+          visit admin_organisation_rdv_path(organisation, rdv)
+          expect(page).not_to have_link("Salle d’attente")
+        end
+      end
+    end
+
+    context "l’option salle d’attente est activée par notification couleur à l’agent" do
+      let(:organisation) { create(:organisation, territory: create(:territory, enable_waiting_room_color_field: true)) }
+
+      before do
+        visit admin_organisation_rdv_path(organisation, rdv)
+      end
+
+      it "ajoute l’usager en salle d’attente et retire le bouton" do
+        click_link "Salle d’attente"
+
+        within("#waiting_room_button-#{rdv.id}") do
+          expect(page).to have_content("Usager en salle d'attente")
+          expect(page).not_to have_content("Salle d'attente")
+        end
+        expect(rdv.reload.user_in_waiting_room?).to be true
+      end
+
+      it "n’envoie pas d’email à l’agent" do
+        expect do
+          click_link "Salle d’attente"
+          expect(page).to have_content("Usager en salle d'attente") # Permet d’attendre que la requête soit traitée
+        end.not_to have_enqueued_mail(Agents::WaitingRoomMailer, :user_in_waiting_room).with(params: { agent: agent_shiraz, rdv: rdv }, args: [])
+      end
+
+      context "le RDV n’est pas pour aujourd’hui" do
+        let(:starts_at) { 2.days.from_now }
+
+        it "n’affiche pas le bouton salle d’attente" do
+          visit admin_organisation_rdv_path(organisation, rdv)
+          expect(page).not_to have_link("Salle d’attente")
+        end
       end
     end
   end
