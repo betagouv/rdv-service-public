@@ -62,7 +62,7 @@ class SpecToDoc
         page_or_email.driver.browser.save_screenshot(path)
       end
 
-      img_src = ENV["UPLOAD_TO_SURGE"] ? "/#{filename}" : path
+      img_src = ENV["UPLOAD_TO_GH_PAGES"] ? "/#{filename}" : path
 
       @current_section.steps << { text: text, img_src: img_src }
     end

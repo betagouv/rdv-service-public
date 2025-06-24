@@ -319,7 +319,7 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-          UPLOAD_TO_SURGE: true
+          UPLOAD_TO_GH_PAGES: true
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
         with:
