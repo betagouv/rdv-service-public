@@ -261,12 +261,6 @@ jobs:
   test_features_spec_to_doc:
     name: Feature Tests using spec to doc
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.upload-to-github-pages.outputs.page_url }}
-    permissions:
-      pages: write
-      id-token: write
     services:
       postgres:
         image: postgres
@@ -331,17 +325,23 @@ jobs:
         with:
           path: tmp/capybara/spec_to_doc
         continue-on-error: true # On ne veut pas faire échouer le build si l'upload à surge échoue
-        if: ${{ github.ref == 'refs/heads/production' }}
-      - name: Upload to GitHub Pages
-        id: upload-to-github-pages
-        uses: actions/deploy-pages@v4
-        continue-on-error: true # On ne veut pas faire échouer le build si l'upload à surge échoue
-        if: ${{ github.ref == 'refs/heads/production' }}
+        # if: ${{ github.ref == 'refs/heads/production' }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: artifacts-capybara-spec-to-doc
           path: tmp/capybara
+  deploy_doc:
+    name: Deploy spec to doc to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: [test_features_spec_to_doc]
+    # if: ${{ github.ref == 'refs/heads/production' }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/deploy-pages@v4
+        continue-on-error: true
   test_boot_without_db:
     name: Boot web server without database
     runs-on: ubuntu-latest
