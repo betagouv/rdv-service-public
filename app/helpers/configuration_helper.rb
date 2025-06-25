@@ -1,4 +1,12 @@
 module ConfigurationHelper
+  def needs_configuration(organisation)
+    organisation.motifs.none? || needs_lieu(organisation)
+  end
+
+  def needs_lieu(organisation)
+    organisation.motifs.active.where(location_type: :public_office).any? && organisation.lieux.none?
+  end
+
   def territory_navigation(title = nil, previous_links = [])
     content_for(:breadcrumbs) do
       tag.nav class: "configuration-title pb-2 mb-2" do

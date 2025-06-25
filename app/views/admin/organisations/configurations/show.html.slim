@@ -40,7 +40,7 @@
             div.fr-tile__desc
               - if current_organisation.lieux.none?
                 i Aucun lieu
-                - if current_organisation.motifs.active.where(location_type: :public_office).any?
+                - if needs_lieu(current_organisation)
                   br
                   p.fr-badge.fr-badge--info.fr-mt-1w À renseigner
               - else
