@@ -23,6 +23,10 @@ class SpecToDoc
         Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/index.html.slim")).render(self).html_safe # rubocop:disable Rails/OutputSafety
       end
     )
+
+    if @scenarios.any?
+      puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/spec_to_doc/index.html')}"
+    end
   end
 
   class Scenario
