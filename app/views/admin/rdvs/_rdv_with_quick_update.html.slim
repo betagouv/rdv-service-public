@@ -1,13 +1,13 @@
-/locals(rdv:)
+/# locals: (rdv:, agent:, success_message: nil)
 
-turbo-frame[id= "rdv-#{rdv.id}"]
+turbo-frame[id= "rdv-#{rdv.id}" target="_top"]
   turbo-frame[id= "rdv-error-message-#{rdv.id}"]
   .card-header.border-white.d-flex.justify-content-between.align-items-center.flex-column.flex-lg-row
     = link_to rdv_starts_at_and_duration(rdv, :time_only), admin_organisation_rdv_path(rdv.organisation, rdv)
     .d-flex.float-right.flex-column.flex-lg-row
-      - if local_assigns[:success_message]
+      - if success_message
         .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mr-2w
-          p.fr-mb-0= local_assigns[:success_message]
+          p.fr-mb-0= success_message
       - if rdv.status != "unknown"
         = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, quick_update: true
       - else
@@ -32,7 +32,7 @@ turbo-frame[id= "rdv-#{rdv.id}"]
   .card-footer.py-1.border-white
     - if rdv.users.any?
       .d-none.d-sm-block
-        = render "admin/rdvs/users_table", rdv: rdv, agent: local_assigns[:agent]
+        = render "admin/rdvs/users_table", rdv:, agent:
     - else
       p Il n'y a pas encore de participant pour ce RDV
 

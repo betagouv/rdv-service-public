@@ -1,10 +1,10 @@
-/locals(rdv:)
+/# locals: (rdv:, agent:, success_message: nil)
 
-turbo-frame.card[id= "rdv-#{rdv.id}"]
+turbo-frame.card[id= "rdv-#{rdv.id}" target="_top"]
   div[id= "rdv-error-message-#{rdv.id}"]
-  - if local_assigns[:success_message]
+  - if success_message
     .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mx-3w.fr-my-2w
-      p.fr-mb-0= local_assigns[:success_message]
+      p.fr-mb-0= success_message
 
   .card-header.border-white
     .d-flex.flex-wrap.align-items-center.flex-gap-1em
@@ -34,7 +34,7 @@ turbo-frame.card[id= "rdv-#{rdv.id}"]
         = render "admin/rdvs/rdv_details", rdv: rdv
 
       ul.fr-btns-group.fr-btns-group--inline-sm.fr-btns-group--right.fr-mb-0
-        = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "fr-btn fr-btn--secondary fr-btn--sm "
+        = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: agent&.id), class: "fr-btn fr-btn--secondary fr-btn--sm "
         - if rdv.individuel?
           = link_to t("admin.rdvs.show.duplicate"), admin_organisation_creneaux_search_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "fr-btn fr-btn--secondary fr-btn--sm"
         - else
@@ -57,10 +57,10 @@ turbo-frame.card[id= "rdv-#{rdv.id}"]
     .card-footer.border-white
       - if rdv.users.any?
         .d-none.d-sm-block
-          = render "admin/rdvs/users_table", rdv: rdv, agent: local_assigns[:agent]
+          = render "admin/rdvs/users_table", rdv:, agent:
         .d-md-none.d-print-none
           - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
-            = render "admin/participations/user_card", participation: participation, agent: local_assigns[:agent]
+            = render "admin/participations/user_card", participation: participation, agent:
       - else
         p Il n'y a pas encore de participant pour ce RDV
 
