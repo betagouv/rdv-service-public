@@ -42,6 +42,7 @@ RSpec.describe "Configuration initiale", js: true do
                        wait_for: "Nouveau RDV")
 
     expect(page).to have_content("Pour prendre un rendez-vous, vous devez d'abord créer un motif.")
+    expect(page).not_to have_content("Vue calendrier")
 
     visit admin_organisation_creneaux_search_url(organisation, host: "http://www.rdv-mairie-test.localhost")
 
@@ -51,11 +52,11 @@ RSpec.describe "Configuration initiale", js: true do
 
     expect(page).to have_content("Pour prendre un rendez-vous, vous devez d'abord créer un motif.")
 
-    visit new_admin_organisation_agent_plage_ouverture_url(organisation, host: "http://www.rdv-mairie-test.localhost", agent_id: agent.id)
+    visit admin_organisation_agent_plage_ouvertures_url(organisation, host: "http://www.rdv-mairie-test.localhost", agent_id: agent.id)
 
     doc.add_screenshot(page,
-                       text: "Création de plage d'ouverture",
-                       wait_for: "Nouvelle plage d'ouverture")
+                       text: "Liste des plages d'ouverture",
+                       wait_for: "Vous n'avez pas encore créé de plage d'ouverture.")
 
     expect(page).to have_content("Pour créer une plage d'ouverture, vous devez d'abord créer un motif")
 
