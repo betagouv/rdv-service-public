@@ -18,7 +18,7 @@
         = t(".calendar_view")
       = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary"
 
-.card.pb-3
+.card
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
@@ -51,7 +51,7 @@
     .fr-grid-row.justify-content-md-center.p-2.mt-3
       .fr-col-md-6.mb-2
         - if params[:search].present?
-          h3= t(".no_results_for_your_search")
+          = t(".no_results_for_your_search")
         - else
           - if current_agent == @agent
             h3= t(".self.not_yet_created_plage_ouverture")
@@ -62,14 +62,14 @@
 
           - if current_organisation.motifs.active.any?
             .mt-3
-              = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
+              = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "fr-btn" do
                 - if current_agent == @agent
                   = t(".self.create_first_plage_cta")
                 - else
                   = t(".other_agent.create_first_plage_cta", full_name: @agent.full_name_or_email)
     - if current_organisation.motifs.active.none?
       .fr-grid-row
-        .fr-col-12
+        .fr-col-12.fr-px-2w
           = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."
 
   - if params[:current_tab] == "expired"
