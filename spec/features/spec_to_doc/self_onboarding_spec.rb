@@ -8,7 +8,10 @@ RSpec.describe "Configuration initiale", js: true do
   end
   let(:organisation) { create(:organisation, name: "Equipe produit de Mon Permis de Construire") }
 
-  before { login_as(agent, scope: :agent) }
+  before do
+    organisation.territory.services << service
+    login_as(agent, scope: :agent)
+  end
 
   specify do
     doc = SpecToDoc.start_scenario("Incitation à la création de motifs et de lieux", self)
@@ -72,7 +75,7 @@ RSpec.describe "Configuration initiale", js: true do
 
     doc.add_screenshot(page,
                        text: "On affiche un badge pour inciter à la création du premier motif",
-                       wait_for: "À renseigner")
+                       wait_for: "À RENSEIGNER")
 
     click_on "Motifs de rendez-vous"
 
@@ -80,12 +83,24 @@ RSpec.describe "Configuration initiale", js: true do
                        text: "",
                        wait_for: "Vous n'avez pas encore créé de motif.")
 
-    click_on "Créer un motif"
+    click_on "Créer un motif", match: :first
 
     fill_in "Nom du motif", with: "Entretien utilisateur"
 
     doc.add_screenshot(page, text: "On crée un motif sur place")
 
-    click_on "Créer un motif"
+    click_on "Créer le motif"
+
+    expect(page).to have_content("Motif Entretien utilisateur créé.")
+
+    visit admin_organisation_configuration_url(organisation, host: "http://www.rdv-mairie-test.localhost")
+
+    doc.add_screenshot(page,
+                       text: "La page de configuration m'incite maintenant à créer un lieu",
+                       wait_for: "Aucun lieu")
+
+    click_on "Lieux"
+
+    doc.add_screenshot(page, wait_for: "Les lieux sont les endroits où sont réalisés les rendez-vous.")
   end
 end

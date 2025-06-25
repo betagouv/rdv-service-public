@@ -86,7 +86,8 @@ nav.left-side-menu-wrapper
             = link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item #{'active' if menu_top_level_item == 'settings'}"
               span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
               | Configuration
-              - if menu_top_level_item != "settings" && needs_configuration(current_organisation)
+              / On ajoute une condition sur la date de création de l'organisation pour éviter de faire des requêtes sur les tables motifs et lieux à chaque chargement de page
+              - if menu_top_level_item != "settings" && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
                 .fr-ml-1w.rdv-pastille
 
         li

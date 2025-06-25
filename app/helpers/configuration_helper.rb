@@ -1,6 +1,6 @@
 module ConfigurationHelper
   def needs_configuration(organisation)
-    organisation.motifs.none? || needs_lieu(organisation)
+    organisation.motifs.active.none? || needs_lieu(organisation)
   end
 
   def needs_lieu(organisation)
