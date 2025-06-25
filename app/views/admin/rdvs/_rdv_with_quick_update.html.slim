@@ -11,10 +11,10 @@ turbo-frame[id= "rdv-#{rdv.id}"]
       - if rdv.status != "unknown"
         = render "admin/rdvs/individual_rdv_status_dropdown", rdv: rdv, quick_update: true
       - else
-        = link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: "seen", ignore_benign_errors: true }, quick_update: true), method: :put, remote: true do
+        = link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: "seen", ignore_benign_errors: true }, quick_update: true), data: { turbo_method: :put } do
           .fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-checkbox-circle-line.fr-mr-2w
             = Rdv.human_attribute_value(:status, "seen", context: :action)
-        = link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: "noshow", ignore_benign_errors: true}, quick_update: true), method: :put, remote: true do
+        = link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: "noshow", ignore_benign_errors: true}, quick_update: true), data: { turbo_method: :put }  do
           .fr-btn.fr-btn--secondary.fr-btn--icon-left.fr-icon-error-line.fr-mr-2w
             = Rdv.human_attribute_value(:status, "noshow", context: :action)
         .dropdown id="rdv-status-#{rdv.id}"
