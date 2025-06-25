@@ -7,7 +7,7 @@
       h6.card-subtitle.mb-2 = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
   .card-body
     - if @motifs.none?
-      = render "admin/motifs/creation_needed_callout"
+      = render "admin/motifs/creation_needed_callout", motivation_text: "Pour prendre un rendez-vous, vous devez d'abord créer un motif."
     - else
       = simple_form_for(@form, as: "", url: admin_organisation_creneaux_search_path(current_organisation), method: :get) do |f|
         - @form.user_ids.each do |user_id|

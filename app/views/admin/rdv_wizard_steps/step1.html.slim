@@ -3,7 +3,7 @@
 
 = render "card", rdv_wizard_form: @rdv_wizard, step_title: t(".step_title"), current_step: 1, next_step_title: t("admin.rdv_wizard_steps.step2.step_title")  do
   - if @motifs.none?
-    = render "admin/motifs/creation_needed_callout"
+    = render "admin/motifs/creation_needed_callout", motivation_text: "Pour prendre un rendez-vous, vous devez d'abord créer un motif."
   - else
     = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
       = render "model_errors", model: @rdv_wizard

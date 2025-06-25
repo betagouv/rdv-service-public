@@ -1,7 +1,8 @@
+/# locals: (motivation_text:)
 .fr-callout
   p.fr-callout__text.fr-icon-info-line
     - if Agent::MotifPolicy.new(current_agent, current_organisation.motifs.new).new?
-      = " Pour prendre un rendez-vous, vous devez d'abord créer un motif."
+      = " #{motivation_text}"
       br
       = "Vous pouvez le faire depuis la page "
       = link_to("Configuration > Motifs de rendez-vous", admin_organisation_motifs_path(organisation_id: current_organisation.id))

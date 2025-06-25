@@ -28,17 +28,7 @@
 
 ul.list-group.my-1
   - if @motifs.none?
-    .fr-callout
-      p.fr-callout__text.fr-icon-info-line
-      - if Agent::MotifPolicy.new(current_agent, current_organisation.motifs.new).new?
-        = " Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
-        br
-        = "Vous pouvez le faire depuis la page "
-        = link_to("Configuration > Motifs de rendez-vous", admin_organisation_motifs_path(organisation_id: current_organisation.id))
-        = "."
-      - else
-        = "Aucun motif de rendez-vous ne vous est accessible. Vous devez demander à un administrateur de votre organisation d'en ajouter un."
-
+    = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
   - @motifs.each do |motif|
     li.card
       .card-header.d-flex.align-items-center
