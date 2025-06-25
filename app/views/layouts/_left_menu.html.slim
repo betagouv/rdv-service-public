@@ -53,8 +53,6 @@ nav.left-side-menu-wrapper
               = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
             li
               = active_link_to "Indisponibilités", admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
-            li
-              = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item side-menu__item--small"
 
         li
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
@@ -65,6 +63,11 @@ nav.left-side-menu-wrapper
           = active_link_to(admin_organisation_rdvs_path(current_organisation), class: "side-menu__item")
             span.fr-icon-survey-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Liste des RDV
+
+        li
+          = active_link_to(admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item")
+            span.fr-icon-team-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
+            | RDV collectifs
 
         li
           = active_link_to(admin_organisation_stats_path(current_organisation), class: "side-menu__item")

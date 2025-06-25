@@ -1,11 +1,16 @@
 - content_for :title do
-  | RDV Collectifs
+  | RDV collectifs
 
 - content_for(:menu_item) { "menu-rdvs-collectifs-list" }
 
+- content_for :fil_ariane do
+  = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "RDV collectifs"
+
 - content_for :breadcrumb do
   .btn-group
-    = link_to "Nouveau RDV Collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "btn btn-primary"
+    = link_to "Nouveau RDV collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
 
 .card
   .card-body
@@ -26,13 +31,13 @@
         .col-md-3.mt-4
           = f.input :with_remaining_seats, as: :boolean, label: "Avec des places disponibles"
         .col-md-1.d-flex-justify-content-end.mt-3
-          = f.submit "Filtrer", class: "btn btn-outline-primary"
+          = f.submit "Filtrer", class: "fr-btn fr-btn--secondary"
 
 .row.justify-content-center.pb-3
   .col-md-12.col-lg-8
     - if @rdvs.any?
       = render(partial: "admin/rdvs_collectifs/rdv", collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :services))
-      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+      .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
     - else
       .card
         .card-body

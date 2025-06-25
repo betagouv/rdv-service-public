@@ -31,7 +31,7 @@
         label for="collectif"
           | Nombre de participants
         select.select2-input[id="collectif" name="collectif" style="width: 100%"]
-          = options_for_select([["-", ""], ["Collectif", "true"], ["Individuel", "false"]], params[:collectif])
+          = options_for_select([["-", ""], ["collectif", "true"], ["Individuel", "false"]], params[:collectif])
       .form-group.col-md-4
         label for="bookable_by"
           | Réservable par

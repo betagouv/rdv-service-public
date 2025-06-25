@@ -1,5 +1,13 @@
 - content_for(:title) { "Ajouter un participant" }
 
+- content_for :fil_ariane do
+  = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)
+    = b.with_breadcrumb label: @rdv.motif_name, href: admin_organisation_rdv_path(current_organisation, @rdv)
+    = b.with_breadcrumb label: "Ajouter un participant"
+  end
+
 .row.justify-content-md-center
   .col-md-12.col-lg-8
     = simple_form_for(@rdv, url: admin_organisation_rdvs_collectif_path(current_organisation), method: :put) do |f|
