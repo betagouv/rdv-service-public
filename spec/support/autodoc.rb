@@ -1,4 +1,5 @@
-class SpecToDoc
+# Autodoc, la doc automatique !
+class Autodoc
   @scenarios = []
 
   def self.start_scenario(title, example)
@@ -8,24 +9,24 @@ class SpecToDoc
   end
 
   def self.render
-    `mkdir -p tmp/capybara/spec_to_doc`
+    `mkdir -p tmp/capybara/autodoc`
 
     @scenarios.each do |scenario|
-      Rails.root.join("tmp/capybara/spec_to_doc/scenario_#{scenario.index}.html").write(
-        Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/layout.html.slim")).render(scenario) do
-          Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/scenario.html.slim")).render(scenario).html_safe # rubocop:disable Rails/OutputSafety
+      Rails.root.join("tmp/capybara/autodoc/scenario_#{scenario.index}.html").write(
+        Slim::Template.new(Rails.root.join("spec/support/autodoc/layout.html.slim")).render(scenario) do
+          Slim::Template.new(Rails.root.join("spec/support/autodoc/scenario.html.slim")).render(scenario).html_safe # rubocop:disable Rails/OutputSafety
         end
       )
     end
 
-    Rails.root.join("tmp/capybara/spec_to_doc/index.html").write(
-      Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/layout.html.slim")).render(self) do
-        Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/index.html.slim")).render(self).html_safe # rubocop:disable Rails/OutputSafety
+    Rails.root.join("tmp/capybara/autodoc/index.html").write(
+      Slim::Template.new(Rails.root.join("spec/support/autodoc/layout.html.slim")).render(self) do
+        Slim::Template.new(Rails.root.join("spec/support/autodoc/index.html.slim")).render(self).html_safe # rubocop:disable Rails/OutputSafety
       end
     )
 
     if @scenarios.any?
-      puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/spec_to_doc/index.html')}"
+      puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/index.html')}"
     end
   end
 
@@ -55,9 +56,9 @@ class SpecToDoc
       end
 
       filename = "scenario_#{@index}_section_#{@sections.count}_step_#{@current_section.steps.count}.png"
-      `mkdir -p tmp/capybara/spec_to_doc`
+      `mkdir -p tmp/capybara/autodoc`
 
-      path = Rails.root.join("tmp/capybara/spec_to_doc/#{filename}")
+      path = Rails.root.join("tmp/capybara/autodoc/#{filename}")
 
       if page_or_email.is_a?(Capybara::Node::Email)
         Capybara.current_session.driver.visit "file://#{page_or_email.save_page}"
