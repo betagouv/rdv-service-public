@@ -1,10 +1,13 @@
-h1 Documentation
+.fr-grid-row[style="min-height: 400px"]
+  .fr-col-12
+    h1 Documentation de RDV Service Public
 
-p Cette page documente différentes fonctionnalités de RDV Service Public
+    p Cette page documente différentes fonctionnalités de RDV Service Public
+    p Elle est mise à jour automatiquement dès que l'application change.
 
-ul
-- @scenarios.each do |scenario|
-  li
-    a[href='scenario_#{scenario.index}.html'] #{scenario.title}
+    ul
+    - @scenarios.each do |scenario|
+      li
+        a[href='scenario_#{scenario.index}.html'] #{scenario.title}
 
-p Dernière mise à jour le #{I18n.l(Time.zone.now)}
+    p Dernière mise à jour le #{I18n.l(Time.zone.now)}
