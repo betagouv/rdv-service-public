@@ -20,13 +20,7 @@ RSpec.describe "Configuration initiale", js: true do
 
     doc.add_text(<<~TEXT
       <p>
-        Pour le moment on crée par défaut des motifs "Suivi de dossier" lors de l'ouverture d'un nouvel espace.
-      </p>
-      <p>
-        Cependant, on va bientôt arrêter de le faire, et encourager les agents à créer leur premier motif et leur premier lieu manuellement.
-      </p>
-      <p>
-        Cette documentation montre ce qui se passe pour une nouvelle organisation créée sans motifs.
+        Quand une nouvelle organisation est créée, elle n'a pas encore de motifs. On veut permettre à l'agent d'explorer les différentes pages, mais l'inciter à créer un premier motif.
       </p>
     TEXT
       .html_safe) # rubocop:disable Rails/OutputSafety

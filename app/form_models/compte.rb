@@ -41,8 +41,6 @@ class Compte
       if organisation.ants_connectable
         create_mairie_motifs!
         add_mairie_motifs_categories!
-      else
-        create_example_motifs!
       end
 
       AgentTerritorialRole.create!(agent: agent, territory: territory)
