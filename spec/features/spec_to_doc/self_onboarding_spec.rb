@@ -91,7 +91,9 @@ RSpec.describe "Configuration initiale", js: true do
 
     click_on "Créer le motif"
 
-    expect(page).to have_content("Motif Entretien utilisateur créé.")
+    doc.add_screenshot(page,
+                       text: "Le message de confirmation m'incite à créer un lieu parce que le motif est sur place",
+                       wait_for: "vous pouvez maintenant ajouter un lieu")
 
     visit admin_organisation_configuration_url(organisation, host: "http://www.rdv-mairie-test.localhost")
 
