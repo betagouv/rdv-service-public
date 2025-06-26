@@ -6,8 +6,8 @@
       |&nbsp;
       = I18n.l(rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
     - if current_agent.admin_in_organisation?(current_organisation)
-      div.mr-3= link_to admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: nil), method: :delete, title: t("helpers.delete"), data: { confirm: "Confirmez-vous la suppression de ce rendez-vous collectif ?"} do
-        i.fa.fa-trash-alt
+      div
+        = link_to "Supprimer", admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: nil), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce rendez-vous collectif ?"}, class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-bin-line"
   .card-body
     .row
       .col-md-6
@@ -30,8 +30,4 @@
       .col-md-6
         = render "admin/rdvs_collectifs/participants_info", rdv: rdv
         - if rdv.remaining_seats? && rdv.not_cancelled?
-          = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "btn btn-outline-primary btn-sm" do
-            span.mr-1
-              i.fa.fa-fw.fa-user-plus>
-            span
-              = "Ajouter un participant"
+          = link_to "Ajouter un participant", edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "fr-btn fr-btn--secondary fr-btn--sm fr-btn--icon-left fr-icon-user-add-fill"

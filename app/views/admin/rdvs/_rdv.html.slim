@@ -36,7 +36,7 @@
         - if rdv.individuel?
           = link_to t("admin.rdvs.show.duplicate"), admin_organisation_creneaux_search_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "fr-btn fr-btn--secondary fr-btn--sm"
         - else
-          = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "fr-btn fr-btn--secondary fr-btn--sm fr-mb-0"
+          = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "fr-btn fr-btn--secondary fr-btn--sm"
 
   .mx-3
   - if rdv.users.any?
