@@ -60,9 +60,9 @@
 
     .fr-grid-row.fr-pb-3w
       .fr-col-12
-        .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
         = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
-        .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
   - else
     .fr-grid-row.fr-py-3w
       .fr-col-12

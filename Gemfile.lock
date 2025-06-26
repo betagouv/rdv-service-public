@@ -168,9 +168,6 @@ GEM
     blueprinter (1.1.0)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
-    bootstrap4-kaminari-views (1.0.1)
-      kaminari (>= 0.13)
-      rails (>= 3.1)
     brakeman (7.0.0)
       racc
     builder (3.3.0)
@@ -780,7 +777,6 @@ DEPENDENCIES
   binding_of_caller
   blueprinter
   bootsnap
-  bootstrap4-kaminari-views
   brakeman
   bullet
   byebug

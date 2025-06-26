@@ -6,7 +6,7 @@
 
 - if @lieux_policy.create?
   - content_for :breadcrumb do
-    = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "btn btn-outline-primary"
+    = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "fr-btn fr-btn--secondary"
 
 .card
   .card-body
@@ -21,7 +21,7 @@
             th Actions
         tbody
           = render @lieux
-      .d-flex.justify-content-center= paginate @lieux, theme: "twitter-bootstrap-4"
+      .d-flex.justify-content-center= paginate @lieux, theme: "dsfr"
     - else
       .fr-grid-row.justify-content-md-center
         .fr-col-md-6.fr-mt-2w.fr-mb-4w
@@ -31,4 +31,4 @@
 
     - if @lieux_policy.create?
       .rdv-text-align-center
-        = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "btn btn-primary"
+        = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "fr-btn"

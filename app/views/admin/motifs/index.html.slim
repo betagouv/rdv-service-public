@@ -76,7 +76,7 @@
         - if @motifs_page.any?
           = render partial: "admin/motifs/motif", collection: @motifs_page, as: :motif
           .d-flex.justify-content-center
-            = paginate @motifs_page, theme: "twitter-bootstrap-4"
+            = paginate @motifs_page, theme: "dsfr"
         - else
           tr
             td(colspan=6)
@@ -94,7 +94,7 @@
 
     - if @motifs_page.any?
       .d-flex.justify-content-center
-        = paginate @motifs_page, theme: "twitter-bootstrap-4"
+        = paginate @motifs_page, theme: "dsfr"
       - if agent_can_create_motif? && @current_tab == :active
         .rdv-text-align-center.m-3
           = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
