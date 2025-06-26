@@ -177,7 +177,7 @@ jobs:
             command: "parallel:spec[spec/features/agents]"
             name: agents
           - dirname: "*"
-            command: "parallel:spec['spec/features/(?!(agents|spec_to_doc))']"
+            command: "parallel:spec['spec/features/(?!(agents|autodoc))']"
             name: other
     services:
       postgres:
@@ -258,8 +258,8 @@ jobs:
           name: artifacts-capybara-${{ matrix.name }}
           path: tmp/capybara
           if-no-files-found: ignore
-  test_features_spec_to_doc:
-    name: Feature Tests using spec to doc
+  test_features_autodoc:
+    name: Feature Tests using Autodoc
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -311,7 +311,7 @@ jobs:
       - name: Precompile assets
         run: yarn run build
       - name: Setup parallel tests and run feature specs
-        run: RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load; bundle exec rspec spec/features/spec_to_doc
+        run: RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load; bundle exec rspec spec/features/autodoc
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
@@ -323,7 +323,7 @@ jobs:
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: tmp/capybara/spec_to_doc
+          path: tmp/capybara/autodoc
         continue-on-error: true # On ne veut pas faire échouer le build si l'upload de l’artifact de la doc échoue
         if: ${{ github.ref == 'refs/heads/production' }}
       - uses: actions/upload-artifact@v4
@@ -334,7 +334,7 @@ jobs:
   deploy_doc:
     name: Deploy spec to doc to GitHub Pages
     runs-on: ubuntu-latest
-    needs: [test_features_spec_to_doc]
+    needs: [test_features_autodoc]
     continue-on-error: true # On ne veut pas faire échouer le build si le déploiement de la doc échoue
     if: ${{ github.ref == 'refs/heads/production' }}
     permissions:
