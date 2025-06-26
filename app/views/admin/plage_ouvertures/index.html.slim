@@ -11,13 +11,12 @@
   = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
 
 - content_for :breadcrumb do
-  .text-right
-    = link_to calendar_admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom mr-3" do
-      span.mr-1= t(".calendar_view")
-      i.fa.fa-calendar-alt
-    = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
+  - if current_organisation.motifs.active.any?
+    .fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left
+      = link_to t(".calendar_view"), calendar_admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary fr-icon-calendar-fill"
+      = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary"
 
-.card.pb-3
+.card
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
@@ -47,25 +46,29 @@
     .d-flex.justify-content-center
       = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
   - else
-    .row.justify-content-md-center.p-2.mt-3
-      .col-md-6.rdv-text-align-center.mb-2
-        p.mb-2.lead
-          - if params[:search].present?
-            = t(".no_results_for_your_search")
+    .fr-grid-row.justify-content-md-center.p-2.mt-3
+      .fr-col-md-6.mb-2
+        - if params[:search].present?
+          = t(".no_results_for_your_search")
+        - else
+          - if current_agent == @agent
+            h3= t(".self.not_yet_created_plage_ouverture")
+            p = t(".self.explanation_plage_ouverture")
           - else
-            - if current_agent == @agent
-              = t(".self.not_yet_created_plage_ouverture")
-              p = t(".self.explanation_plage_ouverture")
-            - else
-              = t(".other_agent.not_yet_created_plage_ouverture", full_name: @agent.full_name_or_email)
-              p = t(".other_agent.explanation_plage_ouverture")
+            h3= t(".other_agent.not_yet_created_plage_ouverture", full_name: @agent.full_name_or_email)
+            p = t(".other_agent.explanation_plage_ouverture")
 
+          - if current_organisation.motifs.active.any?
             .mt-3
-              = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
+              = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "fr-btn" do
                 - if current_agent == @agent
                   = t(".self.create_first_plage_cta")
                 - else
                   = t(".other_agent.create_first_plage_cta", full_name: @agent.full_name_or_email)
+    - if current_organisation.motifs.active.none?
+      .fr-grid-row
+        .fr-col-12.fr-px-2w
+          = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."
 
   - if params[:current_tab] == "expired"
     .rdv-text-align-center.text-muted = t(".hint_delete_old")
