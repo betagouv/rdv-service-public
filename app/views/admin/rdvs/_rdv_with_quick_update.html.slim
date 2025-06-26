@@ -1,6 +1,6 @@
 /# locals: (rdv:, agent:, success_message: nil)
 
-turbo-frame[id= "rdv-#{rdv.id}" target="_top"]
+turbo-frame.card[id= "rdv-#{rdv.id}" target="_top"]
   turbo-frame[id= "rdv-error-message-#{rdv.id}"]
   .card-header.border-white.d-flex.justify-content-between.align-items-center.flex-column.flex-lg-row
     = link_to rdv_starts_at_and_duration(rdv, :time_only), admin_organisation_rdv_path(rdv.organisation, rdv)
