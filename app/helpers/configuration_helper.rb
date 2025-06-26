@@ -4,7 +4,7 @@ module ConfigurationHelper
   end
 
   def needs_lieu(organisation)
-    organisation.motifs.active.where(location_type: :public_office).any? && organisation.lieux.none?
+    organisation.motifs.active.where(location_type: :public_office).any? && organisation.lieux.enabled.none?
   end
 
   def territory_navigation(title = nil, previous_links = [])
