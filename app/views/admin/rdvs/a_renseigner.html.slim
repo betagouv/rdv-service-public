@@ -16,7 +16,7 @@ p Merci d'indiquer si ces rendez-vous se sont bien passés comme prévu.
         - rdvs.sort_by(&:starts_at).each do |rdv|
           = render "rdv_with_quick_update", rdv: rdv, agent: current_agent
         hr.mb-4
-      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+      .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
 - else
   .row.justify-content-center.pb-3
     .col-md-12

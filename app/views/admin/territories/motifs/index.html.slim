@@ -77,9 +77,9 @@
             = t("admin.motifs.archiving_explanation")
 
     - if @motifs_page.any?
-      = paginate @motifs_page, theme: "twitter-bootstrap-4"
+      = paginate @motifs_page, theme: "dsfr"
       = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs_page, display_actions: true, display_checkboxes: @current_tab != :archived }
-      .mt-2 = paginate @motifs_page, theme: "twitter-bootstrap-4"
+      .mt-2 = paginate @motifs_page, theme: "dsfr"
 
     - else
       .rdv-text-align-center
