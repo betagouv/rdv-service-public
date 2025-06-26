@@ -8,43 +8,43 @@
     = b.with_breadcrumb label: "Accueil", href: root_path
     = b.with_breadcrumb label: "RDV collectifs"
 
+- needs_collectif_motif = current_organisation.motifs.collectif.active.none?
 - content_for :breadcrumb do
-  .btn-group
-    = link_to "Nouveau RDV collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
+  - unless needs_collectif_motif
+    .btn-group
+      = link_to "Nouveau RDV collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
 
 .card
-  .card-body
-    = simple_form_for(@form, as: "", url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :get) do |f|
-      .row
-        .col-md-4
-          = date_input(f, :from_date, label = "À partir du", value: @form.from_date)
-        .col-md-4
-          = f.input :motif_id, \
-            include_blank: true, \
-            collection: @motifs, \
-            as: :select, \
-            label_method: -> { motif_name_and_location_type(_1) }, \
-            input_html: { \
-              data: { placeholder: "Sélectionnez un motif", "allow-clear": true }, \
-              class: "select2-input", \
-            }
-        .col-md-3.mt-4
-          = f.input :with_remaining_seats, as: :boolean, label: "Avec des places disponibles"
-        .col-md-1.d-flex-justify-content-end.mt-3
-          = f.submit "Filtrer", class: "fr-btn fr-btn--secondary"
+  - unless needs_collectif_motif
+    .card-header
+      = simple_form_for(@form, as: "", url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :get) do |f|
+        .row
+          .col-md-4
+            = date_input(f, :from_date, label = "À partir du", value: @form.from_date)
+          .col-md-4
+            = f.input :motif_id, \
+              include_blank: true, \
+              collection: @motifs, \
+              as: :select, \
+              label_method: -> { motif_name_and_location_type(_1) }, \
+              input_html: { \
+                data: { placeholder: "Sélectionnez un motif", "allow-clear": true }, \
+                class: "select2-input", \
+              }
+          .col-md-3.mt-4
+            = f.input :with_remaining_seats, as: :boolean, label: "Avec des places disponibles"
+          .col-md-1.d-flex-justify-content-end.mt-3
+            = f.submit "Filtrer", class: "fr-btn fr-btn--secondary"
 
-.row.justify-content-center.pb-3
-  .col-md-12.col-lg-8
+  .card-body
     - if @rdvs.any?
       = render(partial: "admin/rdvs_collectifs/rdv", collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :services))
       .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
     - else
-      .card
-        .card-body
-          .row.justify-content-md-center
-            .col-md-6.rdv-text-align-center.my-5
-              p.mb-2.lead
-                | Aucun RDV
-              span.fa-stack.fa-4x
-                i.fa.fa-circle.fa-stack-2x.text-primary
-                i.far.fa-calendar.fa-stack-1x.text-white
+      - if current_organisation.motifs.collectif.active.none?
+        = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer un RDV collectif, vous devez d'abord créer un motif de rendez-vous collectif."
+      - else
+        .row.justify-content-md-center
+          .col-md-6.rdv-text-align-center.my-5
+            p.mb-2.lead
+              | Aucun RDV collectif
