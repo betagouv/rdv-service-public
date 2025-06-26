@@ -52,6 +52,12 @@ RSpec.describe "Configuration initiale", js: true do
 
     expect(page).to have_content("Pour prendre un rendez-vous, vous devez d'abord créer un motif.")
 
+    visit admin_organisation_rdvs_collectifs_url(organisation, host: "http://www.rdv-mairie-test.localhost", agent_id: agent.id)
+
+    doc.add_screenshot(page,
+                       text: "Liste des RDV collectifs",
+                       wait_for: "Pour créer un RDV collectif")
+
     visit admin_organisation_agent_plage_ouvertures_url(organisation, host: "http://www.rdv-mairie-test.localhost", agent_id: agent.id)
 
     doc.add_screenshot(page,
