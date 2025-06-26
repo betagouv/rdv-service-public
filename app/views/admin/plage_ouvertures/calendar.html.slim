@@ -11,10 +11,8 @@
   = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
 
 - content_for :breadcrumb do
-  .fr-btns-group.fr-btns-group--inline
-    = link_to admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search], current_tab: params[:current_tab]), class: "fr-btn fr-btn--secondary" do
-      = icon("fr-icon-list-unordered", class: "fr-mr-1w")
-      span.mr-1= t("admin.plage_ouvertures.index.list_view")
+  .fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left
+    = link_to t("admin.plage_ouvertures.index.list_view"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search], current_tab: params[:current_tab]), class: "fr-btn fr-btn--secondary fr-icon-list-unordered"
     = link_to t("admin.plage_ouvertures.index.create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary"
 
 #calendar [
