@@ -59,6 +59,9 @@ class RdvLieuController {
 
 class RdvLieu {
   constructor() {
+    document.addEventListener("turbo:load", function () {
+      document.querySelectorAll('[data-controller="rdv-lieu"]').forEach(elt => new RdvLieuController(elt))
+    })
     document.querySelectorAll('[data-controller="rdv-lieu"]').forEach(elt => new RdvLieuController(elt))
   }
 }
