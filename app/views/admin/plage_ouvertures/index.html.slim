@@ -12,10 +12,8 @@
 
 - content_for :breadcrumb do
   - if current_organisation.motifs.active.any?
-    .fr-btns-group.fr-btns-group--inline
-      = link_to calendar_admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary" do
-        = icon("fr-icon-calendar-fill", class: "fr-mr-1w")
-        = t(".calendar_view")
+    .fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left
+      = link_to t(".calendar_view"), calendar_admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary fr-icon-calendar-fill"
       = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary"
 
 .card
