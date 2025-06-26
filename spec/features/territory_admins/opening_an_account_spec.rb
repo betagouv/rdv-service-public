@@ -25,6 +25,11 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         click_on "Enregistrer"
 
         expect(page).to have_content "Configuration"
+
+        new_motif = Organisation.last.motifs.first
+        expect(new_motif).to have_attributes(
+          name: "Suivi de dossier"
+        )
         expect(agent.reload.organisations.last.name).to eq "CCAS de Montreuil"
       end
     end

@@ -15,7 +15,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
       }, current_domain: Domain::RDV_MAIRIE
     ).save!
 
-    Motif.where.not(location_type: :visio).update_all(deleted_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
+    create(:motif, organisation: Organisation.last, location_type: :visio, name: "Suivi de dossier")
   end
 
   specify do
