@@ -206,17 +206,6 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
-      # TODO: Remove this workaround that specify the Chrome version used by the CI
-      # inspired by https://github.com/teamcapybara/capybara/issues/2800#issuecomment-2731100953
-      # once the linked issue on selenium would have been fixed
-      - name: Remove image-bundled Chrome
-        run: sudo apt-get purge google-chrome-stable
-      - name: Setup stable Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 128
-          install-chromedriver: true
-          install-dependencies: true
       - name: Set up Redis
         uses: zhulik/redis-action@1.1.0
       - name: Cache js dependencies
@@ -288,17 +277,6 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
-      # TODO: Remove this workaround that specify the Chrome version used by the CI
-      # inspired by https://github.com/teamcapybara/capybara/issues/2800#issuecomment-2731100953
-      # once the linked issue on selenium would have been fixed
-      - name: Remove image-bundled Chrome
-        run: sudo apt-get purge google-chrome-stable
-      - name: Setup stable Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 128
-          install-chromedriver: true
-          install-dependencies: true
       - name: Set up Redis
         uses: zhulik/redis-action@1.1.0
       - name: Cache js dependencies
