@@ -3,7 +3,7 @@ class Users::SessionsController < Devise::SessionsController
 
   include CanHaveRdvWizardContext
   include Admin::WeakPasswordControllerConcern
-  include Users::HasFranceConnectLogout
+  include Users::DeviseOrSsoLogout
 
   def new
     # Le flash d'erreur est trop aggressif pour le cas d'un usager non connecté.
