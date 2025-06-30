@@ -14,7 +14,7 @@ RSpec.describe "Configuration initiale", js: true do
   end
 
   specify do
-    doc = SpecToDoc.start_scenario("Incitation à la création de motifs et de lieux", self)
+    doc = Autodoc.start_scenario("Incitation à la création de motifs et de lieux", self)
 
     doc.start_section("Contexte")
 
