@@ -118,6 +118,11 @@ class User < ApplicationRecord
   end
 
   def soft_delete(organisation = nil)
+    if (organisation.present? && !can_be_soft_deleted_from_organisation?(organisation)) ||
+       (organisation.nil? && !can_be_soft_deleted?)
+      raise StandardError, "L’usager ou un de ses proches a au moins un RDV à venir"
+    end
+
     self_and_relatives.each { _1.do_soft_delete(organisation) }
   end
 
@@ -182,12 +187,18 @@ class User < ApplicationRecord
     "user_#{id}@deleted.rdv-solidarites.fr"
   end
 
+  def can_be_soft_deleted?
+    upcoming_rdvs_for_self_or_relatives.empty?
+  end
+
   def can_be_soft_deleted_from_organisation?(organisation)
-    Rdv.not_cancelled
-      .future
-      .joins(:users).where(users: self_and_relatives)
+    upcoming_rdvs_for_self_or_relatives
       .where(organisation: organisation)
       .empty?
+  end
+
+  def upcoming_rdvs_for_self_or_relatives
+    Rdv.not_cancelled.future.joins(:users).where(users: self_and_relatives)
   end
 
   def previous_rdvs_ordered_and_truncated(organisation)

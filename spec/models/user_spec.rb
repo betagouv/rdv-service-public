@@ -93,8 +93,8 @@ RSpec.describe User, type: :model do
       expect(other_user.reload.email).to eq("other_user@test.com")
     end
 
-    it "anonymizes rdvs and receipts and deletes versions" do
-      rdv = create(:rdv, context: "des détails sur le rdv")
+    it "anonymizes past RDVs and receipts and deletes versions" do
+      rdv = create(:rdv, :past, context: "des détails sur le rdv")
       user = rdv.users.first
 
       receipt = create(:receipt, user: user, rdv: rdv, sms_phone_number: "0611111111")
@@ -105,10 +105,25 @@ RSpec.describe User, type: :model do
       expect(user.versions).to be_empty
     end
 
+    it "interdit lorsqu’un RDV à venir existe" do
+      user = create(:user)
+      rdv = create(:rdv, starts_at: 3.days.from_now, users: [user], context: "des détails sur le RDV")
+      expect { user.soft_delete }.to raise_error(StandardError, /RDV à venir/)
+      expect(rdv.reload.context).to eq "des détails sur le RDV"
+    end
+
+    it "autorise si le RDV à venir est dans une autre orga" do
+      user = create(:user)
+      orga1, orga2 = create_list(:organisation, 2)
+      rdv = create(:rdv, organisation: orga1, starts_at: 3.days.from_now, users: [user])
+      expect { user.soft_delete(orga2) }.not_to raise_error
+      expect(rdv.reload.context).to be_nil
+    end
+
     it "n’anonymise pas les RDV collectifs avec d’autres participants" do
       user1 = create(:user)
       user2 = create(:user)
-      rdv = create(:rdv, users: [user1, user2], context: "des détails sur le RDV")
+      rdv = create(:rdv, :past, users: [user1, user2], context: "des détails sur le RDV")
       user1.soft_delete
       expect(rdv.reload.context).to eq("des détails sur le RDV")
       user2.soft_delete
