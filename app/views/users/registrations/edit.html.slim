@@ -16,11 +16,16 @@
       = render "common/form/new_password_input", f:, hint: "Choisissez votre mot de passe ou laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.", password_label: "Nouveau mot de passe"
       = render "common/form/current_password_input", f: f, name: :current_password, hint: "Renseignez votre mot de passe actuel pour tout changement.", password_label: "Mot de passe actuel"
       .rdv-text-align-right= f.submit "Modifier", class: "fr-btn"
-      .mt-5.rdv-text-align-center
+      .mt-5
         hr
         p Vous souhaitez supprimer votre compte ?
-        = link_to "Supprimer",
-          user_registration_path,
-          data:{ confirm: @rdv_insertion_organisations.blank? ? "Voulez-vous vraiment supprimer votre compte ?" : "Vous ne pourrez plus vous connecter à votre compte mais les données liées aux structures d'insertion ne seront pas supprimées. Vos données liées à d'autres structures seront bien supprimées." },
-          method: :delete,
-          class: "fr-btn fr-btn--secondary"
+        - if resource.can_be_soft_deleted?
+          = link_to "Supprimer",
+            user_registration_path,
+            data:{ confirm: @rdv_insertion_organisations.blank? ? "Voulez-vous vraiment supprimer votre compte ?" : "Vous ne pourrez plus vous connecter à votre compte mais les données liées aux structures d'insertion ne seront pas supprimées. Vos données liées à d'autres structures seront bien supprimées." },
+            method: :delete,
+            class: "fr-btn fr-btn--secondary"
+        - else
+          p
+            | Vous (ou un de vos proches) a des rendez-vous à venir. Vous ne pouvez pas supprimer votre compte tant que ces rendez-vous ne sont pas passés ou annulés.
+          = link_to "Vos rendez-vous à venir", users_rdvs_path, class: "fr-btn fr-btn--secondary"
