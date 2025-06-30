@@ -29,6 +29,7 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include StrongPasswordConcern
+  include User::SoftDeleteConcern
 
   def self.search_options
     {
@@ -117,15 +118,6 @@ class User < ApplicationRecord
     end
   end
 
-  def soft_delete!(organisation = nil)
-    if (organisation.present? && !can_be_soft_deleted_from_organisation?(organisation)) ||
-       (organisation.nil? && !can_be_soft_deleted?)
-      raise StandardError, "L’usager ou un de ses proches a au moins un RDV à venir"
-    end
-
-    self_and_relatives.each { _1.do_soft_delete(organisation) }
-  end
-
   def delete_credentials_and_access_informations
     update!(
       encrypted_password: "",
@@ -165,10 +157,6 @@ class User < ApplicationRecord
     deleted_at ? :deleted_account : super
   end
 
-  def soft_deleted?
-    deleted_at.present?
-  end
-
   def user_to_notify
     relative? ? responsible : self
   end
@@ -185,16 +173,6 @@ class User < ApplicationRecord
 
   def deleted_email
     "user_#{id}@deleted.rdv-solidarites.fr"
-  end
-
-  def can_be_soft_deleted?
-    upcoming_rdvs_for_self_or_relatives.empty?
-  end
-
-  def can_be_soft_deleted_from_organisation?(organisation)
-    upcoming_rdvs_for_self_or_relatives
-      .where(organisation: organisation)
-      .empty?
   end
 
   def upcoming_rdvs_for_self_or_relatives
@@ -335,30 +313,5 @@ class User < ApplicationRecord
     return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
-  end
-
-  def do_soft_delete(organisation)
-    if organisation.present?
-      organisations.delete(organisation)
-    else
-      self.organisations = []
-    end
-    return save! if organisations.any? # only actually mark deleted when no orgas left
-
-    Anonymizer.anonymize_record!(self)
-    receipts.each { |r| Anonymizer.anonymize_record!(r) }
-    rdvs
-      .select { |r| r.users.where(deleted_at: nil).where.not(id:).empty? }
-      .each { |r| Anonymizer.anonymize_record!(r) }
-    annotations.destroy_all
-    versions.destroy_all
-    update_columns(
-      first_name: "Usager supprimé",
-      last_name: "Usager supprimé",
-      deleted_at: Time.zone.now,
-      email: deleted_email,
-      notification_email: nil
-    )
-    reload # anonymizer operates outside the realm of rails knowledge
   end
 end
