@@ -9,7 +9,7 @@ module Users::DeviseOrSsoLogout
   def logout_and_redirect_user(flash_message_key:)
     connected_with_franceconnect_v1 = session.delete(:connected_with_franceconnect)
     france_connect_v2_id_token = session.delete(:france_connect_v2_id_token)
-    pro_connect_id_token = session.delete(:pro_connect_id_token)
+    pro_connect_id_token = session.delete(:agent_connect_id_token)
 
     sign_out(:user)
     set_flash_message!(:notice, flash_message_key)
