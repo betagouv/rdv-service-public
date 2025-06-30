@@ -219,4 +219,18 @@ RSpec.describe "Agent can CRUD motifs" do
       end
     end
   end
+
+  describe "when the next necessary step is to create a lieu" do
+    let(:motif) { nil } # Pour éviter la création d'un motif par défaut
+
+    it "recommends it in the flash confirmation" do
+      visit new_admin_organisation_motif_path(organisation)
+      fill_in("Nom du motif", with: "Accompagnement")
+      select("PMI", from: "Service associé")
+      fill_in("Couleur associée", with: "#000000")
+      click_on("Créer le motif")
+
+      expect(page).to have_content("Pour finaliser votre configuration, vous pouvez maintenant ajouter un lieu")
+    end
+  end
 end

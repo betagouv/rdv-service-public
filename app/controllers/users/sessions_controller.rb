@@ -5,8 +5,6 @@ class Users::SessionsController < Devise::SessionsController
   include Admin::WeakPasswordControllerConcern
   include Users::HasFranceConnectLogout
 
-  before_action :exclude_signed_in_agents, only: [:new]
-
   def new
     # Le flash d'erreur est trop aggressif pour le cas d'un usager non connecté.
     # Un flash de style info est plus adapté.
@@ -34,35 +32,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
-    # On a besoin d'extraire les tokens de la session avant d'appeler `super` car
-    # cette méthode appelle `sign_out` pour déconnecter l'usager, ce qui vide la session.
-    connected_with_franceconnect_v1 = session.delete(:connected_with_franceconnect)
-    france_connect_v2_id_token = session.delete(:france_connect_v2_id_token)
-
-    super do
-      handle_france_connect_logout(connected_with_franceconnect_v1:, france_connect_v2_id_token:)
-    end
-  end
-
-  private
-
-  def exclude_signed_in_agents
-    return true unless agent_signed_in?
-
-    redirect_to(
-      root_path,
-      flash: { error: "Déconnectez-vous d'abord de votre compte agent pour vous connecter en tant qu'utilisateur" }
-    )
-  end
-
-  # Copied from devise-4.8.1/app/controllers/devise/sessions_controller.rb
-  # We needed to override the call to redirect_to to set `allow_other_host: true`.
-  def respond_to_on_destroy
-    # We actually need to hardcode this as Rails default responder doesn't
-    # support returning empty response on GET request
-    respond_to do |format|
-      format.all { head :no_content }
-      format.any(*navigational_formats) { redirect_to after_sign_out_path_for(resource_name), allow_other_host: true }
-    end
+    logout_and_redirect_user(flash_message_key: :signed_out)
   end
 end

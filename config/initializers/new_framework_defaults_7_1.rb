@@ -64,7 +64,7 @@ Rails.application.config.active_record.encryption.hash_digest_class = OpenSSL::D
 # state which matches what was committed to the database, typically the last
 # instance to save.
 #++
-# Rails.application.config.active_record.run_commit_callbacks_on_first_saved_instances_in_transaction = false
+Rails.application.config.active_record.run_commit_callbacks_on_first_saved_instances_in_transaction = false
 
 ###
 # Configures SQLite with a strict strings mode, which disables double-quoted string literals.
@@ -195,7 +195,7 @@ Rails.application.config.active_record.before_committed_on_all_records = true
 # recommended to explicitly define the serialization method for each column
 # rather than to rely on a global default.
 #++
-# Rails.application.config.active_record.default_column_serializer = nil
+Rails.application.config.active_record.default_column_serializer = nil
 
 ###
 # Enable a performance optimization that serializes Active Record models

@@ -31,8 +31,8 @@
         .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
           .fr-col-12.fr-col-md-6= f.dsfr_text_field :first_name, required: true, label: "Votre prénom"
           .fr-col-12.fr-col-md-6= f.dsfr_text_field :last_name, required: true, label: "Votre nom"
-          .fr-col-12= f.dsfr_email_field :email, required: true, label: "Votre email professionnel", hint: "Format attendu : prenom.prescripteur@domaine.fr"
-          .fr-col-12= f.dsfr_phone_field :phone_number, label: "Votre numéro de téléphone professionnel", hint: "Format attendu : 0122334455"
+          .fr-col-12= f.dsfr_email_field :email, required: true, label: "Votre email professionnel", hint: "Format attendu : prenom.prescripteur@domaine.fr", autocomplete: "email"
+          .fr-col-12= f.dsfr_phone_field :phone_number, label: "Votre numéro de téléphone professionnel", hint: "Format attendu : 0122334455", autocomplete: "tel"
 
         .rdv-text-align-right
           = f.submit "Continuer", class: "fr-btn"

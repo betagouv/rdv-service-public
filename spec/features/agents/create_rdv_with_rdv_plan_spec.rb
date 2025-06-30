@@ -56,7 +56,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       lieu: lieu,
       organisation: organisation
     )
-    expect(user.reload.email).to eq "newaddress@exemple.com"
+    expect(user.reload.notification_email).to eq "newaddress@exemple.com"
 
     perform_enqueued_jobs
     emails = ActionMailer::Base.deliveries
@@ -65,6 +65,99 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(emails.map { [_1.to, _1.subject] }).to include([[agent.email], a_string_matching(/Nouveau RDV ajouté sur votre agenda/)])
 
     expect(page).to have_content("Retour sur Démarches Simplifiées")
+  end
+
+  context "quand l'usager avait déjà une adresse email dans la colonne email et pas notification_email" do
+    let(:rdv_plan) do
+      create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
+                        rdv_agent: agent,
+                        lieu: lieu,
+                        starts_at: 2.days.from_now,
+                        planning_agent: agent,
+                        oauth_application: application)
+    end
+
+    context "et l'usager n'a pas de compte devise" do
+      let(:user) { create(:user, :unregistered, organisations: [organisation], email: "old_email@exemple.fr") }
+
+      it "remplace l'email par un notification_email" do
+        visit edit_user_agents_rdv_plan_path(rdv_plan.id)
+        fill_in("Email", with: "francis@exemple.fr")
+
+        expect(page).to have_content "Envoyer une notification de confirmation"
+        click_on "Confirmer le rendez-vous"
+
+        expect(page).to have_content "Rendez-vous confirmé"
+        rdv = Rdv.last
+        expect(rdv).to have_attributes(
+          users: [user],
+          agents: [agent],
+          motif: motif,
+          lieu: lieu,
+          organisation: organisation
+        )
+        expect(user.reload).to have_attributes(
+          email: nil,
+          notification_email: "francis@exemple.fr"
+        )
+      end
+    end
+
+    context "et l'usager a un compte devise" do
+      let(:user) { create(:user, organisations: [organisation], email: "old_email@exemple.fr", phone_number: "0611223344") }
+
+      it "ne permet pas la modification de l'email, puisque cela changerait la manière de se connecter pour l'usager", js: true do
+        visit edit_user_agents_rdv_plan_path(rdv_plan.id)
+        expect(page).to have_field("Email", with: user.email, disabled: true)
+
+        expect(page).to have_content("Cet usager utilise cette adresse email pour ce connecter. Elle n'est donc pas modifiable.")
+
+        fill_in("Téléphone", with: "0612345678")
+
+        click_on "Confirmer le rendez-vous"
+        expect(page).to have_content "Rendez-vous confirmé"
+
+        expect(user.reload).to have_attributes(
+          email: "old_email@exemple.fr",
+          phone_number: "0612345678"
+        )
+      end
+    end
+  end
+
+  context "quand un autre usager utilise déjà ce notification_email, et qu'on change l'email" do
+    let(:user) { create(:user, :unregistered, organisations: [organisation], email: nil, notification_email: "francis@precedent.fr") }
+    let!(:user_with_same_email) { create(:user, organisations: [organisation], email: nil, notification_email: "francis@exemple.fr") }
+    let(:rdv_plan) do
+      create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
+                        rdv_agent: agent,
+                        lieu: lieu,
+                        starts_at: 2.days.from_now,
+                        planning_agent: agent,
+                        oauth_application: application)
+    end
+
+    it "permet quand même de prendre le rendez-vous" do
+      visit edit_user_agents_rdv_plan_path(rdv_plan.id)
+      fill_in("Email", with: "francis@exemple.fr")
+
+      expect(page).to have_content "Envoyer une notification de confirmation"
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content "Rendez-vous confirmé"
+      rdv = Rdv.last
+      expect(rdv).to have_attributes(
+        users: [user],
+        agents: [agent],
+        motif: motif,
+        lieu: lieu,
+        organisation: organisation
+      )
+      expect(user.reload.notification_email).to eq "francis@exemple.fr"
+
+      # On a deux usagers avec le même e-mail de notif dans notre base, et c'est pas grave.
+      expect(User.where(notification_email: "francis@exemple.fr").count).to eq(2)
+    end
   end
 
   context "quand l'agent n'appartient à aucune organisation" do

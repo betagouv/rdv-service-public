@@ -1,6 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   include CanHaveRdvWizardContext
-  include Users::HasFranceConnectLogout
+  include Users::DeviseOrSsoLogout
 
   before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
@@ -23,14 +23,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       resource.delete_credentials_and_access_informations
     end
 
-    connected_with_franceconnect_v1 = session.delete(:connected_with_franceconnect)
-    france_connect_v2_id_token = session.delete(:france_connect_v2_id_token)
-    handle_france_connect_logout(connected_with_franceconnect_v1:, france_connect_v2_id_token:)
-
-    Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
-    set_flash_message! :notice, :destroyed
-    yield resource if block_given?
-    respond_with_navigational(resource) { redirect_to after_sign_out_path_for(resource_name), allow_other_host: true }
+    logout_and_redirect_user(flash_message_key: :destroyed)
   end
 
   def pending

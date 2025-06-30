@@ -41,6 +41,7 @@ tables:
       - logement
       - ants_pre_demande_number
       - franceconnect_openid_sub
+      - pro_connect_openid_sub
       - encrypted_password
       - confirmation_token
       - reset_password_token

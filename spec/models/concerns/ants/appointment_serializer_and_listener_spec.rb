@@ -433,6 +433,91 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     end
   end
 
+  describe "plusieurs usagers sont retirés d'un RDV" do
+    let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let!(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let!(:motif) { create(:motif, motif_category: create(:motif_category, :passeport), organisation:) }
+    let!(:user1) { create(:user, ants_pre_demande_number: "1111111111", organisations: [organisation]) }
+    let!(:user2) { create(:user, ants_pre_demande_number: "2222222222", organisations: [organisation]) }
+    let!(:user3) { create(:user, ants_pre_demande_number: "3333333333", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user1, user2, user3], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    before do
+      # on nettoie les jobs déclenchés lors de la création du RDV
+      rdv.reload
+      clear_enqueued_jobs
+    end
+
+    it "informe l'ANTS que les RDVs avec ces usagers n'existent plus" do
+      # C'est bien via ce mécanisme (fourni par `accepts_nested_attributes_for`)
+      # que nous utilisons dans notre formulaire d'édition de RDV.
+      params_to_destroy_participations_1_and_3 = {
+        participations_attributes: [
+          {
+            id: rdv.participations.where(user: user1).sole.id,
+            _destroy: true,
+          },
+          {
+            id: rdv.participations.where(user: user3).sole.id,
+            _destroy: true,
+          },
+        ],
+      }
+
+      expect(rdv.users.count).to eq(3)
+      expect { rdv.update_and_notify(rdv.agents.first, params_to_destroy_participations_1_and_3) }.to have_enqueued_job(Ants::SyncAppointmentJob).at_least(2).times
+      expect(rdv.users.count).to eq(1)
+
+      # On vérifie qu'on a bien enqueue au moins un job pour chacun des participations qu'on vient de supprimer.
+      # Le job a pour seule référence le numéro de dossier et synchronise de manière intelligente l'état de l'appointment ANTS.
+      expect(enqueued_jobs.pluck("arguments").map(&:first).pluck("ants_pre_demande_number").uniq).to include("1111111111", "3333333333")
+    end
+  end
+
+  describe "plusieurs usagers sont ajoutés à un RDV" do
+    let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let!(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let!(:motif) { create(:motif, motif_category: create(:motif_category, :passeport), organisation:) }
+    let!(:user1) { create(:user, ants_pre_demande_number: "1111111111", organisations: [organisation]) }
+    let!(:user2) { create(:user, ants_pre_demande_number: "2222222222", organisations: [organisation]) }
+    let!(:user3) { create(:user, ants_pre_demande_number: "3333333333", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user1], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    before do
+      # on nettoie les jobs déclenchés lors de la création du RDV
+      rdv.reload
+      clear_enqueued_jobs
+    end
+
+    it "informe l'ANTS que les RDVs avec ces usagers n'existent plus" do
+      # C'est bien via ce mécanisme (fourni par `accepts_nested_attributes_for`)
+      # que nous utilisons dans notre formulaire d'édition de RDV.
+      params_to_add_user_2_and_3 = {
+        participations_attributes: [
+          {
+            user_id: user2.id,
+            send_lifecycle_notifications: "0",
+            send_reminder_notification: "0",
+            _destroy: "false",
+          },
+          {
+            user_id: user3.id,
+            send_lifecycle_notifications: "1",
+            send_reminder_notification: "1",
+            _destroy: "false",
+          },
+        ],
+      }
+
+      expect(rdv.users.count).to eq(1)
+      expect { rdv.update_and_notify(rdv.agents.first, params_to_add_user_2_and_3) }.to have_enqueued_job(Ants::SyncAppointmentJob).at_least(2).times
+      expect(rdv.users.count).to eq(3)
+
+      # On vérifie qu'on a bien enqueue au moins un job pour chacun des participations qu'on vient d'ajouter.
+      expect(enqueued_jobs.pluck("arguments").map(&:first).pluck("ants_pre_demande_number").uniq).to include("2222222222", "3333333333")
+    end
+  end
+
   describe "un usager est retiré du RDV mais l’ANTS ne renvoie aucun appointment" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
     let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }

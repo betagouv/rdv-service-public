@@ -25,6 +25,11 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         click_on "Enregistrer"
 
         expect(page).to have_content "Configuration"
+
+        new_motif = Organisation.last.motifs.first
+        expect(new_motif).to have_attributes(
+          name: "Suivi de dossier"
+        )
         expect(agent.reload.organisations.last.name).to eq "CCAS de Montreuil"
       end
     end
@@ -82,6 +87,15 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         click_on("Demandes acceptées")
 
         expect(page).to have_content "Commune de Montreuil"
+
+        # On affiche ensuite un bandeau d'aide
+        visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
+        expect(page).to have_content "Besoin d'aide pour bien démarrer ? Nous pouvons vous aider"
+
+        click_on "Paramètres de Commune de Montreuil"
+
+        expect(page).to have_content("Configuration générale") # Pour s'assurer qu'on attend que la nouvelle page charge
+        expect(page).to have_content "Besoin d'aide pour bien démarrer ? Nous pouvons vous aider"
       end
 
       context "quand il y a un doublon probable" do

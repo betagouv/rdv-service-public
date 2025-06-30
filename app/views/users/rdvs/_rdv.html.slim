@@ -71,7 +71,7 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
   .fr-mb-2w
     h2.fr-h6.fr-mt-3w Contact de #{rdv.organisation.name}
     .d-flex
-      - if rdv.phone_number
+      - if rdv.phone_number.present?
         p.fr-mr-2w
           span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
           = phone_to(rdv.phone_number, title: "Numéro de téléphone")

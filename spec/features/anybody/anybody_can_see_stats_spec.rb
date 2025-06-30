@@ -21,4 +21,12 @@ RSpec.describe "Anybody can see stats" do
     visit stats_territory_path(territory: organisation.territory)
     expect(page).to have_content("2 ont des créneaux ouverts au public")
   end
+
+  it "displays the receipts stats on the Notifications page" do
+    rdv = create(:rdv, motif:, organisation:)
+    create(:receipt, rdv:, organisation:, user: rdv.users.first)
+
+    visit stats_territory_notifications_path(territory: organisation.territory)
+    expect(page).to have_content("Notifications envoyées (1)")
+  end
 end

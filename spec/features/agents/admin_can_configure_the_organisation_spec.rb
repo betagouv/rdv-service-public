@@ -33,7 +33,7 @@ RSpec.describe "Admin can configure the organisation" do
     click_link("Supprimer")
 
     expect_page_title("Lieux")
-    expect_page_with_no_record_text("Vous n'avez pas encore ajouté de lieu de consultation.")
+    expect(page).to have_content("Vous n'avez pas encore ajouté de lieu de consultation.")
 
     click_link "Ajouter un lieu", match: :first
 

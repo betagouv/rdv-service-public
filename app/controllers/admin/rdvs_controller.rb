@@ -89,8 +89,8 @@ class Admin::RdvsController < AgentAuthController
     @success = @rdv_form.submit(rdv_update_params)
 
     respond_to do |format|
-      format.js do
-        render "admin/rdvs/update"
+      format.turbo_stream do
+        render locals: { rdv: @rdv, agent: @agent, quick_update: params[:quick_update] }
       end
       format.html do
         if @success

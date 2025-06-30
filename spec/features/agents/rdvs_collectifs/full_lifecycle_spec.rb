@@ -23,7 +23,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     visit admin_organisation_rdvs_collectifs_path(organisation)
     expect(page).to have_content("Aucun RDV")
 
-    click_link "Nouveau RDV Collectif"
+    click_link "Nouveau RDV collectif"
     expect(page).to have_content("Choisissez un motif")
     click_link "Atelier participatif"
 
@@ -98,7 +98,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
       visit admin_organisation_rdvs_collectifs_path(organisation)
       expect(page).to have_content("Aucun RDV")
 
-      click_link "Nouveau RDV Collectif"
+      click_link "Nouveau RDV collectif"
       expect(page).to have_content("Choisissez un motif")
       click_link "Atelier participatif"
 

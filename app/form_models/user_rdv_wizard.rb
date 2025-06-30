@@ -6,7 +6,7 @@ module UserRdvWizard
 
     attr_accessor :rdv, :user
 
-    delegate :motif, :starts_at, :users, :service, to: :rdv
+    delegate :motif, :starts_at, :service, to: :rdv
 
     def initialize(user, attributes)
       @user = user
@@ -53,7 +53,7 @@ module UserRdvWizard
 
     def to_query
       {
-        motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id), rdv_collectif_id: rdv.id,
+        motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: users&.map(&:id), rdv_collectif_id: rdv.id,
       }.merge(
         @attributes.slice(
           *WebSearchContext::ADDRESS_SELECTION_PARAMS,
@@ -78,6 +78,37 @@ module UserRdvWizard
       else
         motif.default_duration_in_min
       end
+    end
+
+    def users
+      if @rdv.collectif?
+        return [] unless @user
+
+        @user.available_users_for_rdv.where(id: @attributes[:user_ids]).presence || [@user]
+      else
+        @rdv.users.presence || [@user].compact
+      end
+    end
+
+    def display_france_connect?
+      motif.organisation.online_booking_for_particuliers
+    end
+
+    def display_pro_connect?
+      motif.organisation.online_booking_for_professionnels
+    end
+
+    # On a parfois besoin de cette méthode avant d'avoir une instance de RdvWizard, donc on factorise l'implémentation
+    # avec cette méthode de classe
+    def self.skip_proches_step?(user)
+      # L'étape 2 propose de prendre rendez-vous pour un proche
+      # Dans le cas d'une invitation, c'est l'usager qui est invité, donc on saute cette étape
+      # Si l'usager est un professionnel connecté via ProConnect, on ne lui propose pas non plus de prendre rendez-vous pour un proche
+      user.signed_in_with_invitation_token? || user.pro_connect_openid_sub
+    end
+
+    def skip_proches_step?
+      self.class.skip_proches_step?(user)
     end
 
     private
@@ -118,9 +149,11 @@ module UserRdvWizard
 
   class Step2 < Base
     def initialize(user, attributes)
+      if attributes[:created_user_id].present?
+        attributes[:user_ids] = [attributes[:created_user_id]]
+      end
+
       super
-      # Hacky override of user_ids on step2
-      @rdv.user_ids = [attributes[:created_user_id]] if attributes[:created_user_id].present?
     end
   end
 
