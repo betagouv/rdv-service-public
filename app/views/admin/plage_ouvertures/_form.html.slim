@@ -67,4 +67,6 @@
             .col.text-right
               = f.button :submit, "Créer la plage d'ouverture"
 - else
-  | Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.
+  .card
+    .card-body
+      = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."

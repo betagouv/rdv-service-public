@@ -2,7 +2,6 @@ fr:
   admin:
     creneaux_search:
       index:
-        choose_filter_and_refresh: Selectionnez des filtres et rafraichissez les résultats
         agents: Agents
         teams: Équipes
         search_for_slots_title: Trouver un RDV

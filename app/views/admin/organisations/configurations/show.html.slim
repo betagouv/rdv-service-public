@@ -15,26 +15,14 @@
         .fr-tile__body
           .fr-tile__content
             h3.fr-tile__title
-              = link_to(admin_organisation_agents_path(current_organisation)) do
-                = icon("fr-icon-user-fill",class: "fr-mr-1w")
-                | Agents
-            p.fr-tile__desc
-              = @agents_scope.limit(3).map(&:full_name).join(", ")
-              - if @agents_scope.count > 3
-                - autres_count = @agents_scope.count - 3
-                = " et #{autres_count} #{'autre'.pluralize(autres_count)}"
-
-    .fr-col-12.fr-col-md-4.fr-mb-2w
-      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
-        .fr-tile__body
-          .fr-tile__content
-            h3.fr-tile__title
               = link_to(admin_organisation_motifs_path(current_organisation)) do
                 = motif_icon(class: "fr-mr-1w")
                 | Motifs de rendez-vous
-            p.fr-tile__desc
+            div.fr-tile__desc
               - if @motif_names.blank?
                 i Aucun motif
+                br
+                p.fr-badge.fr-badge--info.fr-mt-1w À renseigner
               - else
                 = @motif_names[0..2].join(", ")
                 - if @motif_names.count > 3
@@ -49,14 +37,31 @@
               = link_to(admin_organisation_lieux_path(current_organisation)) do
                 = lieu_icon(class: "fr-mr-1w")
                 | Lieux
-            p.fr-tile__desc
+            div.fr-tile__desc
               - if current_organisation.lieux.none?
                 i Aucun lieu
+                - if needs_lieu(current_organisation)
+                  br
+                  p.fr-badge.fr-badge--info.fr-mt-1w À renseigner
               - else
                 = @lieu_names[0..2].join(", ")
                 - if @lieu_names.count > 3
                   - autres_count = @lieu_names.count - 3
                   = " et #{autres_count} #{'autre'.pluralize(autres_count)}"
+
+    .fr-col-12.fr-col-md-4.fr-mb-2w
+      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+        .fr-tile__body
+          .fr-tile__content
+            h3.fr-tile__title
+              = link_to(admin_organisation_agents_path(current_organisation)) do
+                = icon("fr-icon-user-fill",class: "fr-mr-1w")
+                | Agents
+            p.fr-tile__desc
+              = @agents_scope.limit(3).map(&:full_name).join(", ")
+              - if @agents_scope.count > 3
+                - autres_count = @agents_scope.count - 3
+                = " et #{autres_count} #{'autre'.pluralize(autres_count)}"
 
     .fr-col-12.fr-col-md-4.fr-mb-2w
       .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md

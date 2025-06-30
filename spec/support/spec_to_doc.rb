@@ -23,18 +23,10 @@ class SpecToDoc
         Slim::Template.new(Rails.root.join("spec/support/spec_to_doc/index.html.slim")).render(self).html_safe # rubocop:disable Rails/OutputSafety
       end
     )
-  end
 
-  def self.upload_to_surge
-    files_to_upload = `ls tmp/capybara/spec_to_doc`
-    return unless files_to_upload["index.html"]
-
-    branch_name = `git rev-parse --abbrev-ref HEAD`.strip
-    domain_name = "rdv-service-public-#{branch_name}.surge.sh"
-    puts "running yarn run surge tmp/capybara/spec_to_doc #{domain_name}"
-    `yarn run surge tmp/capybara/spec_to_doc #{domain_name}`
-
-    puts "La documentation est disponible sur https://#{domain_name}"
+    if @scenarios.any?
+      puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/spec_to_doc/index.html')}"
+    end
   end
 
   class Scenario
@@ -74,7 +66,7 @@ class SpecToDoc
         page_or_email.driver.browser.save_screenshot(path)
       end
 
-      img_src = ENV["UPLOAD_TO_SURGE"] ? "/#{filename}" : path
+      img_src = ENV["UPLOAD_TO_GH_PAGES"] ? "/rdv-service-public/#{filename}" : path
 
       @current_section.steps << { text: text, img_src: img_src }
     end

@@ -47,8 +47,6 @@ gem "pg_search"
 gem "strong_migrations"
 # A pagination engine plugin for Rails 4+ and other modern frameworks
 gem "kaminari"
-# Bootstrap 4 styling for Kaminari gem
-gem "bootstrap4-kaminari-views"
 # A Rails engine for creating super-flexible admin dashboards
 gem "administrate"
 # Track changes to your models.

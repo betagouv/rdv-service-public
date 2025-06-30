@@ -1,4 +1,20 @@
-head
-  link href="https://unpkg.com/@gouvfr/dsfr@1.13.2/dist/dsfr.min.css" rel="stylesheet"
-body
-  = yield
+doctype html
+html lang="fr"
+  head
+    link href="https://unpkg.com/@gouvfr/dsfr@1.13.2/dist/dsfr.min.css" rel="stylesheet"
+    title Autodoc de RDV Service Public
+  body
+
+    header[role="banner" class="fr-header"]
+      .fr-header__body
+        .fr-container
+          .fr-header__body-row
+            .fr-header__brand.fr-enlarge-link
+              .fr-header__brand-top
+                .fr-header__service
+                  a[href="index.html" title="Accueil - Autodoc RDV Service Public"]
+                    p.fr-header__service-title = "Autodoc - RDV Service Public"
+
+    main#content[role="main"]
+      .fr-container.fr-pt-2w
+        = yield
