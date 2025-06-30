@@ -41,12 +41,9 @@ Rails.application.config.content_security_policy do |policy|
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
 
-  # La source `unsafe_inline` autorise l'utilisation de js dans un tag `script` dans la page.
+  # La source `unsafe_inline` autorise l'utilisation de js dans un tag `script` dans la page ou dans les attributs onchange, onclick….
   # Idéalement, on voudrait donc la supprimer, puisque ça ajouterait une couche de protection contre les injections de JS.
-  # On s'en sert pour deux choses:
-  # - un script de customisation de headway qui est inliné : on pourrait ajouter une source de type sha pour éviter ça
-  # - les mises à jour de statuts de rdvs qui utilisent des forms `js: true` et une view en `js.erb`. Si on pouvait éviter ce fonctionnement
-  # (peut-être en utilisant des turbo-frames), on pourrait s'éviter l'usage de cette source ici.
+  # On s’en sert encore pour certains attributs `onchange`/`onclick`, mais on pourrait s’en passer en utilisant des événements JS.
   #
   # Il semble aussi que dans les tests capybara en js: true, un petit script est injecté pour lequel il faut aussi ajouter une source de type sha.
   #
