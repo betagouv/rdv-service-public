@@ -11,7 +11,7 @@ RSpec.describe User::NotificableConcern do
     context "user is soft deleted" do
       let(:user) { create(:user, email: "jean@lol.fr", notify_by_email: true) }
 
-      before { user.soft_delete }
+      before { user.soft_delete! }
 
       it { is_expected.to be_falsy }
     end
@@ -47,7 +47,7 @@ RSpec.describe User::NotificableConcern do
     context "user is soft deleted" do
       let(:user) { create(:user, phone_number: "0634343434", notify_by_sms: true) }
 
-      before { user.soft_delete }
+      before { user.soft_delete! }
 
       it { is_expected.to be_falsy }
     end

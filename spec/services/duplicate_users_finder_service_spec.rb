@@ -41,7 +41,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         it { is_expected.to include(OpenStruct.new(severity: :error, attributes: [:email], user: duplicated_user)) }
 
         context "but soft deleted" do
-          before { duplicated_user.soft_delete }
+          before { duplicated_user.soft_delete! }
 
           it { is_expected.to be_empty }
         end
@@ -53,7 +53,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: duplicated_user)) }
 
         context "but soft deleted" do
-          before { duplicated_user.soft_delete }
+          before { duplicated_user.soft_delete! }
 
           it { is_expected.to be_empty }
         end
@@ -65,7 +65,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user)) }
 
         context "but soft deleted" do
-          before { duplicated_user.soft_delete }
+          before { duplicated_user.soft_delete! }
 
           it { is_expected.to be_empty }
         end
@@ -80,7 +80,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user2)) }
 
         context "but first soft deleted" do
-          before { duplicated_user1.soft_delete }
+          before { duplicated_user1.soft_delete! }
 
           it { is_expected.not_to include(OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: duplicated_user1)) }
           it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user2)) }
@@ -88,8 +88,8 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
 
         context "but both soft deleted" do
           before do
-            duplicated_user1.soft_delete
-            duplicated_user2.soft_delete
+            duplicated_user1.soft_delete!
+            duplicated_user2.soft_delete!
           end
 
           it { is_expected.to be_empty }
@@ -135,7 +135,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
       it { is_expected.to eq(duplicated_user) }
 
       context "but soft deleted" do
-        before { duplicated_user.soft_delete }
+        before { duplicated_user.soft_delete! }
 
         it { is_expected.to be_nil }
       end

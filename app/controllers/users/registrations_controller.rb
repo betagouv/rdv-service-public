@@ -16,9 +16,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     authorize(resource, policy_class: User::UserPolicy)
     # users from rdv-insertion have to be monitored wether they want it or not, so we don't allow them to destroy themselves
     if @rdv_insertion_organisations.empty?
-      resource.soft_delete
+      resource.soft_delete!
     else
-      non_rdv_insertion_organisations.each { |org| resource.soft_delete(org) }
+      non_rdv_insertion_organisations.each { |org| resource.soft_delete!(org) }
       resource.delete_credentials_and_access_informations
     end
     Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)

@@ -117,7 +117,7 @@ class User < ApplicationRecord
     end
   end
 
-  def soft_delete(organisation = nil)
+  def soft_delete!(organisation = nil)
     if (organisation.present? && !can_be_soft_deleted_from_organisation?(organisation)) ||
        (organisation.nil? && !can_be_soft_deleted?)
       raise StandardError, "L’usager ou un de ses proches a au moins un RDV à venir"
