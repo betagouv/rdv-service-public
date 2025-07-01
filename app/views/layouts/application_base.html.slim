@@ -25,7 +25,7 @@ html lang="fr"
         if current_user
           unless current_user.signed_in_with_invitation_token?
             header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, html_attributes: { class: "fr-icon-calendar-fill" }
-          header.with_tool_link title: "Vos informations", path: users_informations_path
+            header.with_tool_link title: "Vos informations", path: users_informations_path
             header.with_tool_link title: "Votre compte", path: edit_user_registration_path
           end
           header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, html_attributes: { "data-method": "delete", class: "fr-icon-lock-fill" }
