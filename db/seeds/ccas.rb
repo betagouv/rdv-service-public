@@ -69,7 +69,7 @@ agent.save!
 application = OauthApplication.new(
   name: "Mon Suivi Social",
   uid: "Gcz6Hrp8fmqI-4ubjjsJeTcyZg_JF0v_XYsibL7a_Fg",
-  redirect_uri: "http://localhost:4567/auth/rdvservicepublic/callback\nhttp://127.0.0.1:4567/auth/rdvservicepublic/callback",
+  redirect_uri: "http://localhost:3010/auth/rdvservicepublic/callback\nhttp://127.0.0.1:3010/auth/rdvservicepublic/callback",
   post_logout_redirect_uri: "http://localhost:3010/",
   logo_base64: "",
   default_service: service
