@@ -2,10 +2,12 @@ h2.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
 
 .card
   .card-body
-    .d-flex.justify-content-center
-      = image_tag(@pre_auth.client.application.logo_base64, width: 200, alt: "Le logo de #{@pre_auth.client.application.name}")
+    .d-flex.justify-content-center.fr-mb-2w
+      = image_tag(@pre_auth.client.application.logo_base64, width: 120, alt: "Le logo de #{@pre_auth.client.application.name}")
 
-      = image_tag(current_domain.dark_logo_path, width: 200, alt: "Le logo de #{current_domain.name}")
+      = image_tag("custom-artworks/double_arrow.svg", width: 40, alt: "Une double flèche horizontale", class: "fr-m-2w")
+
+      = image_tag("logos/logo-rdv-sombre.svg", width: 120, alt: "Le logo de #{current_domain.name}")
 
     p
       i.fa-solid.fa-circle-check.color-scheme-green.mr-1
@@ -29,7 +31,7 @@ h2.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
           = hidden_field_tag :scope, @pre_auth.scope, id: nil
           = hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil
           = hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil
-          = submit_tag "Annuler", class: "btn btn-outline-primary"
+          = submit_tag "Annuler", class: "fr-btn fr-btn--secondary"
 
       .col-md-1
         = form_tag oauth_authorization_path, method: :post do
@@ -41,4 +43,4 @@ h2.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissions
           = hidden_field_tag :scope, @pre_auth.scope, id: nil
           = hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil
           = hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil
-          = submit_tag "Continuer", class: "btn btn-primary"
+          = submit_tag "Continuer", class: "fr-btn"
