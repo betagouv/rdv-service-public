@@ -1,6 +1,6 @@
 RSpec.describe User::SoftDeleteConcern do
   describe "#soft_delete!" do
-    it "change email to a « deleted.rdv-solidarites.fr » domain and anonymises other attributes" do
+    it "change l’email en @deleted.rdv-solidarites.fr et anonymise les autres attributs" do
       user = create(:user, email: "jean@valjean.fr", first_name: "Jean", last_name: "Valjean")
       other_user = create(:user, email: "other_user@test.com")
       user.soft_delete!
@@ -16,7 +16,7 @@ RSpec.describe User::SoftDeleteConcern do
       expect(other_user.reload.email).to eq("other_user@test.com")
     end
 
-    it "anonymizes past RDVs and receipts and deletes versions" do
+    it "anonymise les RDV passés et les receipts et supprime les versions" do
       rdv = create(:rdv, :past, context: "des détails sur le rdv")
       user = rdv.users.first
 
@@ -53,20 +53,20 @@ RSpec.describe User::SoftDeleteConcern do
       expect(rdv.reload.context).to match %([valeur unique anonymisée \\d+])
     end
 
-    it "is hidden user by default" do
+    specify "le default scope de User n’inclut pas les User soft deleted" do
       user = create(:user)
       user.soft_delete!
       expect(User.all).to be_empty
     end
 
-    it "show user with unscoped" do
+    it "on peut voir les User soft deleted en utilisant unscoped" do
       user = create(:user)
       user.soft_delete!
       expect(User.unscoped.all).to eq([user])
     end
 
-    context "belongs to one organisation" do
-      it "removes this organisation" do
+    context "l’usager appartient à une seule organisation" do
+      it "retire cette organisation" do
         organisation = create(:organisation)
         user = create(:user, organisations: [organisation])
         user.soft_delete!(organisation)
@@ -74,13 +74,13 @@ RSpec.describe User::SoftDeleteConcern do
       end
     end
 
-    context "belongs to 2 organisations" do
+    context "l’usager appartient à 2 organisations" do
       let(:organisation) { create(:organisation) }
       let(:other_organisation) { create(:organisation) }
 
-      context "with organisation given" do
-        context "applied to responsible" do
-          it "removes organisation to relative and responsible" do
+      context "appel avec une orga passée en param" do
+        context "pour un usager responsable" do
+          it "retire l’usager et ses proches de l’orga" do
             responsible = create(:user, organisations: [organisation, other_organisation])
             relative = create(:user, responsible: responsible)
 
@@ -89,7 +89,7 @@ RSpec.describe User::SoftDeleteConcern do
             expect(responsible.reload.organisations).to eq([other_organisation])
           end
 
-          it "doesnt mark relative as deleted" do
+          it "ne marque pas les proches comme soft deleted" do
             responsible = create(:user, organisations: [organisation, other_organisation])
             relative = create(:user, responsible: responsible)
 
@@ -98,14 +98,14 @@ RSpec.describe User::SoftDeleteConcern do
           end
         end
 
-        it "removes given organisation only" do
+        it "retire seulement de l’orga passée en param" do
           user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
           user.soft_delete!(organisation)
           expect(user.reload.organisations).not_to include(organisation)
           expect(user.reload.organisations).to include(other_organisation)
         end
 
-        it "does not mark user as deleted" do
+        it "ne marque pas l’usager comme soft deleted" do
           user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
           user.soft_delete!(organisation)
           expect(user.deleted_at).to be_nil
@@ -113,14 +113,14 @@ RSpec.describe User::SoftDeleteConcern do
         end
       end
 
-      context "without a given organisation" do
-        it "removes all organisations and mark user as deleted" do
+      context "sans orga passée en param" do
+        it "retire l’usager de toutes les orgas et le marque soft deleted" do
           user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
           user.soft_delete!
           expect(user.reload.organisations).to be_empty
         end
 
-        it "set deleted_at to Time.zone.now" do
+        it "définit deleted_at" do
           user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
           user.soft_delete!
           expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
@@ -128,24 +128,24 @@ RSpec.describe User::SoftDeleteConcern do
       end
     end
 
-    context "when user is a relative" do
-      it "deletes user anyhow" do
+    context "l’usager est un proche" do
+      it "marque l’usager soft deleted" do
         user = create(:user, responsible_id: create(:user).id)
         user.soft_delete!
         expect(user.reload.deleted_at).to be_within(5.seconds).of(Time.zone.now)
       end
     end
 
-    context "when user has a relative" do
-      it "deletes relative" do
+    context "l’usager a un proche" do
+      it "marque le proche comme soft deleted" do
         user = create(:user)
         relative = create(:user, responsible: user, organisations: user.organisations)
         user.soft_delete!
         expect(relative.reload.deleted_at).to be_within(5.seconds).of(Time.zone.now)
       end
 
-      context "with given organisation" do
-        it "deletes relative" do
+      context "appel avec une orga passée en param" do
+        it "marque le proche comme soft deleted" do
           organisation = create(:organisation)
           user = create(:user, organisations: [organisation])
           relative = create(:user, responsible: user, organisations: [organisation])
@@ -160,19 +160,19 @@ RSpec.describe User::SoftDeleteConcern do
   describe "#can_be_soft_deleted_from_organisation?" do
     let(:organisation) { create(:organisation) }
 
-    it "return true when no rdv for self and relatives" do
+    it "retourne true quand il n’y a pas de RDV pour l’usager ni ses proches" do
       user = create(:user, organisations: [organisation])
       expect(user.can_be_soft_deleted_from_organisation?(organisation)).to be true
     end
 
-    it "return false when rdv for self" do
+    it "retourne false quand l’usager a un RDV à venir" do
       rdv = create(:rdv, organisation: organisation)
       user = create(:user, organisations: [organisation])
       create(:participation, user: user, rdv: rdv)
       expect(user.can_be_soft_deleted_from_organisation?(organisation)).to be false
     end
 
-    it "return false when rdv for relatives" do
+    it "retourne false quand un des proches a un RDV à venir" do
       rdv = create(:rdv, organisation: organisation)
       responsible = create(:user, organisations: [organisation])
       relative = create(:user, responsible: responsible, organisations: [organisation])
