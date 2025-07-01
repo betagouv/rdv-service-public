@@ -187,6 +187,11 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
+    capybara-lockstep (2.2.3)
+      activesupport (>= 4.2)
+      capybara (>= 3.0)
+      ruby2_keywords
+      selenium-webdriver (>= 4.0)
     capybara-screenshot (1.0.26)
       capybara (>= 1.0, < 4)
       launchy
@@ -782,6 +787,7 @@ DEPENDENCIES
   byebug
   capybara
   capybara-email
+  capybara-lockstep
   capybara-screenshot
   chartkick (~> 5.0.1)
   climate_control

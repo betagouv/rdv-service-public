@@ -1,6 +1,8 @@
 doctype html
 html lang="fr"
   head
+    = capybara_lockstep if defined?(Capybara::Lockstep)
+    - puts("capyb LOCK") if defined?(Capybara::Lockstep)
     = render "common/meta"
     = stylesheet_link_tag "#{dsfr_path}/dsfr.min.css", "data-turbo-track": "reload"
     = stylesheet_link_tag "#{dsfr_path}/utility/icons/icons.min.css", "data-turbo-track": "reload"

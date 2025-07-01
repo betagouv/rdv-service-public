@@ -247,6 +247,8 @@ group :test do
   gem "capybara-screenshot"
   # Selenium is a browser automation tool for automated testing of webapps and more
   gem "selenium-webdriver"
+  # Reduce flakyness due to JS and pending HTTP requests
+  gem "capybara-lockstep"
 
   # Strategies for cleaning databases. Can be used to ensure a clean slate for testing.
   gem "database_cleaner"

@@ -9,7 +9,7 @@ Capybara.register_driver :selenium do |app|
   chrome_bin = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
   binary = chrome_bin if chrome_bin
   # these args seem to reduce test flakyness
-  args = %w[no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen disable-features=MacAppCodeSignClone]
+  args = %w[no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen disable-features=MacAppCodeSignClone auto-open-devtools-for-tabs]
   args.prepend("headless") if ENV["HEADLESS"] != "false"
   options = Selenium::WebDriver::Chrome::Options.new(args:, "goog:loggingPrefs": { browser: "ALL" }, binary:)
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
@@ -68,3 +68,5 @@ end
 def expect_page_to_have_title
   expect(page).to have_title(/.* - RDV Solidarités/)
 end
+
+Capybara::Lockstep.debug = true

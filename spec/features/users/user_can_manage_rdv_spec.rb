@@ -13,6 +13,7 @@ RSpec.describe "User can manage their rdvs" do
 
       it "default", js: true do
         expect(page).to have_content(rdv.motif_name)
+        binding.pry
         click_on("Annuler le RDV")
         expect(page).to have_content("Confirmation")
         click_link("Oui, annuler le rendez-vous")
