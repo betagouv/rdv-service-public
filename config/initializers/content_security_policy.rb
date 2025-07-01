@@ -41,7 +41,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, headway_cnd, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
 
-  policy.script_src :self, headway_cnd, unpkg_cdn, "osjxnKEPL/pQJbFk1dKsF7PYFmTyMWGmVSiL9inhxJY="
+  policy.script_src :self, headway_cnd, unpkg_cdn
 end
 
 # If you are using UJS then enable automatic nonce generation
