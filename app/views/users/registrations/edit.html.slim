@@ -22,7 +22,8 @@
         - if resource.can_be_soft_deleted?
           = link_to "Supprimer",
             user_registration_path,
-            data:{ confirm: @rdv_insertion_organisations.blank? ? "Voulez-vous vraiment supprimer votre compte ?" : "Vous ne pourrez plus vous connecter à votre compte mais les données liées aux structures d'insertion ne seront pas supprimées. Vos données liées à d'autres structures seront bien supprimées.", turbo_method: :delete },
+            data:{ confirm: @rdv_insertion_organisations.blank? ? "Voulez-vous vraiment supprimer votre compte ?" : "Vous ne pourrez plus vous connecter à votre compte mais les données liées aux structures d'insertion ne seront pas supprimées. Vos données liées à d'autres structures seront bien supprimées." },
+            method: :delete,
             class: "fr-btn fr-btn--secondary"
         - else
           p
