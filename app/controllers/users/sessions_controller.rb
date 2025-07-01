@@ -52,6 +52,14 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
+  def verify_signed_out_user
+    if current_user.blank? && session[:invitation.blank?]
+      set_flash_message! :notice, :already_signed_out
+
+      respond_to_on_destroy
+    end
+  end
+
   # Copied from devise-4.8.1/app/controllers/devise/sessions_controller.rb
   # We needed to override the call to redirect_to to set `allow_other_host: true`.
   def respond_to_on_destroy
