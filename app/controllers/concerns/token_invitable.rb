@@ -12,6 +12,7 @@ module TokenInvitable
   private
 
   def store_invitation_in_session_and_redirect
+    # TODO: return si on a déjà un vrai current user pour ne pas faire doublon ?
     return if params[:invitation_token].blank?
 
     invitation = Invitation.new(current_url_params)

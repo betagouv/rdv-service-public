@@ -42,6 +42,7 @@ class Users::RdvsController < UserAuthController
       notifier.perform
       set_user_name_initials_verified
       flash[:success] = t(".rdv_confirmed")
+      # TODO: enlever le invitation_token si l'usager a une connexion normale?
       redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
     else
       # TODO: cette liste de paramètres devrait ressembler a SearchController#search_params, mais sans certains paramètres de choix du wizard de créneaux
