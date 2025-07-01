@@ -5,9 +5,9 @@
 
 - content_for :fil_ariane do
   - if current_agent == @plage_ouverture.agent
-    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Plages d’ouverture", admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)]], current_page_title: yield(:title)
+    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Plages d’ouverture", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
   - else
-    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Plages d’ouverture de #{@plage_ouverture.agent.full_name_and_service}", admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)]], current_page_title: yield(:title)
+    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Plages d’ouverture de #{@plage_ouverture.agent.full_name_and_service}", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
 
 .row.justify-content-center
   .col-md-6.mb-3
@@ -59,7 +59,7 @@
         div
           = link_to( \
             "Supprimer", \
-            admin_organisation_plage_ouverture_path(current_organisation, @plage_ouverture), \
+            admin_organisation_planning_plage_ouverture_path(current_organisation, @plage_ouverture), \
             method: :delete, \
             data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}, \
             class: "btn btn-danger" \
@@ -67,16 +67,16 @@
         div
           = link_to( \
             "Dupliquer", \
-            new_admin_organisation_agent_plage_ouverture_path( \
+             new_admin_organisation_planning_plage_ouverture_path( \
               current_organisation, \
-              @plage_ouverture.agent.id, \
+              agent_id: @plage_ouverture.agent.id, \
               duplicate_plage_ouverture_id: @plage_ouverture.id \
             ), \
             class: "btn btn-link" \
           )
           = link_to( \
             "Modifier", \
-            edit_admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), \
+             edit_admin_organisation_planning_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), \
             class: "btn btn-primary" \
           )
 

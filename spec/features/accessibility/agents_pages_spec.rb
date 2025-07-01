@@ -16,7 +16,7 @@ RSpec.describe "agents page", js: true do
     agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
     login_as(agent, scope: :agent)
 
-    path = admin_organisation_agent_agenda_path(organisation, agent)
+    path = admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
     expect_page_to_be_axe_clean(path, excluding_selector: ".fc-axis") # Full calendar place une case de tableau vide pour laquelle nous ne voulons pas d’alerte
   end
 
@@ -28,7 +28,7 @@ RSpec.describe "agents page", js: true do
     create_list(:rdv, 3, agents: [agent], starts_at: 2.days.from_now, organisation: organisation)
     login_as(agent, scope: :agent)
 
-    path = admin_organisation_agent_agenda_path(organisation, agent)
+    path = admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
 
     visit path
     expect(page).to have_current_path(path)
@@ -43,7 +43,7 @@ RSpec.describe "agents page", js: true do
     create_list(:plage_ouverture, 3, :once_a_week, agent: agent, organisation: organisation)
     login_as(agent, scope: :agent)
 
-    path = admin_organisation_agent_plage_ouvertures_path(organisation, agent)
+    path = admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: agent)
     expect_page_to_be_axe_clean(path)
   end
 

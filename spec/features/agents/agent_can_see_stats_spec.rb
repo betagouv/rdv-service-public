@@ -20,7 +20,7 @@ RSpec.describe "Agent can see stats" do
   context "spec for agent1 (admin)" do
     before do
       login_as(agent1, scope: :agent)
-      visit admin_organisation_agent_agenda_path(organisation1a, agent1)
+      visit admin_organisation_planning_agenda_path(organisation1a, agent_id: agent1.id)
       click_link "Statistiques"
     end
 

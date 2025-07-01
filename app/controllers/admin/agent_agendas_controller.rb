@@ -12,7 +12,7 @@ class Admin::AgentAgendasController < AgentAuthController
     @agent = current_agent
     authorize(@agent, policy_class: Agent::AgentPolicy)
     @agent.update!(agent_role_params)
-    redirect_to admin_organisation_agent_agenda_path(params.permit(:status, :selected_event_id, :date))
+    redirect_to admin_organisation_planning_agenda_path(params.permit(:status, :selected_event_id, :date))
   end
 
   private

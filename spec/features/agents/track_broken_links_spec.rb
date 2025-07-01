@@ -2,7 +2,7 @@ RSpec.describe "Broken links in the application are visible in Sentry" do
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let(:organisation) { create(:organisation) }
 
-  let(:broken_agenda_path) { admin_organisation_agent_agenda_path(organisation, agent.id + 1) }
+  let(:broken_agenda_path) { admin_organisation_planning_agenda_path(organisation, agent.id + 1) }
 
   context "when the agent has kept a link to an obsolete page" do
     context "and they are logged in" do

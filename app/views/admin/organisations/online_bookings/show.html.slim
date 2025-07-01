@@ -69,4 +69,4 @@ ul.list-group.my-1
               - else
                 i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
                 .mr-2 Pas de plages d'ouverture
-              = link_to "ajouter", new_admin_organisation_agent_plage_ouverture_path(current_organisation, current_agent, motif_ids: [motif.id])
+              = link_to "ajouter",  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: current_agent, motif_ids: [motif.id])

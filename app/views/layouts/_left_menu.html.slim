@@ -43,16 +43,16 @@ nav.left-side-menu-wrapper
             class=("show" if menu_top_level_item == "planning")
           ]
             - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
-            - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_agenda_path
+            - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_planning_agenda_path
             li
               form.my-2.pl-2
                 = planning_agent_select(agent_for_left_menu, path_helper_name)
             li
-              = active_link_to "Agenda", admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
+              = active_link_to "Agenda", admin_organisation_planning_agenda_path(current_organisation, agend_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
             li
-              = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
+              = active_link_to "Plages d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
             li
-              = active_link_to "Indisponibilités", admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
+              = active_link_to "Indisponibilités", admin_organisation_planning_absences_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
 
         li
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")

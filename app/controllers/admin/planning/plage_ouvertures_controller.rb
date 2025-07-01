@@ -1,9 +1,10 @@
-class Admin::PlageOuverturesController < AgentAuthController
+class Admin::Planning::PlageOuverturesController < AgentAuthController
+  include Admin::Planning::SetAgentsConcern
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
   before_action :build_plage_ouverture, only: [:create]
-  before_action :set_agent
+  before_action :set_agents
 
   def show
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
@@ -61,7 +62,7 @@ class Admin::PlageOuverturesController < AgentAuthController
 
       Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_created.deliver_later if @agent.plage_ouverture_notification_level == "all"
       flash[:success] = "Plage d'ouverture créée"
-      redirect_to admin_organisation_agent_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
+      redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
       render :new
     end
@@ -72,7 +73,7 @@ class Admin::PlageOuverturesController < AgentAuthController
     if @plage_ouverture.update(plage_ouverture_params)
       Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_updated.deliver_later if @agent.plage_ouverture_notification_level == "all"
       flash[:success] = "La plage d'ouverture a été modifiée."
-      redirect_to admin_organisation_agent_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
+      redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
       render :edit
     end
@@ -88,17 +89,13 @@ class Admin::PlageOuverturesController < AgentAuthController
         Agents::PlageOuvertureMailer.with(plage_ouverture: plage_attributes).plage_ouverture_destroyed.deliver_later
       end
       flash[:notice] = "La plage d'ouverture a été supprimée."
-      redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+      redirect_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)
     else
       render :edit
     end
   end
 
   private
-
-  def set_agent
-    @agent = filter_params[:agent_id].present? ? policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(filter_params[:agent_id]) : @plage_ouverture.agent
-  end
 
   def set_plage_ouverture
     @plage_ouverture = PlageOuverture.find(params[:id])
