@@ -29,7 +29,6 @@ RSpec.describe "Déconnexion" do
     first(:link, "11:00").click
 
     # On vérifie que les infos de l'utilisateur n'ont pas été gardées dans la session
-    
     expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer.")
 
     expect(page).not_to have_content(user.first_name)
