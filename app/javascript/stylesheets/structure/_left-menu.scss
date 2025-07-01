@@ -13,6 +13,7 @@
     100vh - 73px
   ); // 73px correspond à la taille du header, arrondie au supérieur
   padding-bottom: 73px; //idem
+  margin-bottom: 40px; // cette marge évite que le haut du footer soit au-dessus du contenu
 
   @media (max-height: 800px) {
     min-height: calc(100vh - 49px); // taille du header
