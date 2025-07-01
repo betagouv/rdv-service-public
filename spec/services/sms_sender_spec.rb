@@ -59,7 +59,7 @@ RSpec.describe SmsSender, type: :service do
 
     context "with smsfactor" do
       before do
-        stub_smsfactor_ok
+        stub_sms_factor_ok
         described_class.perform_with("RdvSoli", "0612345678", "content", "sms_factor", "key", receipt_params)
       end
 

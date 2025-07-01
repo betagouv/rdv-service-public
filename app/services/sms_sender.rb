@@ -25,7 +25,7 @@ class SmsSender < BaseService
   def perform
     case @provider.to_sym
     when :sms_factor
-      send_with_smsfactor
+      send_with_sms_factor
     when :netsize
       send_with_netsize
     when :clever_technologies
@@ -73,7 +73,7 @@ class SmsSender < BaseService
   # https://dev.smsfactor.com/fr/api/sms/envoi/message-unitaire
   #
   # Suite à un nouveau bon de commande émis par l’ANCT en mai 2025, SMS Factor devient le fournisseur par défaut
-  def send_with_smsfactor
+  def send_with_sms_factor
     request = Faraday.get(
       "https://api.smsfactor.com/send",
       {

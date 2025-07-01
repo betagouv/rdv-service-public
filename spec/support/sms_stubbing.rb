@@ -8,7 +8,7 @@ def stub_netsize_ok
     .to_return(status: 200, body: stubbed_body, headers: {})
 end
 
-def stub_smsfactor_ok
+def stub_sms_factor_ok
   stubbed_body = {
     status: 1,
     cost: 1,
