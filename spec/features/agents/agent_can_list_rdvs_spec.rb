@@ -47,9 +47,9 @@ RSpec.describe "Agent can list RDVs" do
 
     before do
       create(:rdv, organisation: organisation, agents: [current_agent], users: [active_user])
-      create(:rdv, organisation: organisation, agents: [current_agent], users: [deleted_user])
+      create(:rdv, :past, organisation: organisation, agents: [current_agent], users: [deleted_user])
 
-      deleted_user.soft_delete
+      deleted_user.soft_delete!
     end
 
     it "displays deleted users without a link to their profile" do
