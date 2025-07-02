@@ -159,6 +159,20 @@ jobs:
         with:
           key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
           path: app/assets/builds
+      # PLAYWRIGHT
+      - name: Cache Playwright Chromium browser
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      - name: Install Playwright Chromium browser (with deps)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: yarn run playwright install --with-deps chromium
+      - name: Install Playwright Chromium browser deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: yarn run playwright install-deps chromium
+      # END PLAYWRIGHT
       - name: Precompile assets
         if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: yarn run build
@@ -226,6 +240,20 @@ jobs:
           path: node_modules
       - name: Install JS dependencies
         run: yarn install
+      # PLAYWRIGHT
+      - name: Cache Playwright Chromium browser
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      - name: Install Playwright Chromium browser (with deps)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: yarn run playwright install --with-deps chromium
+      - name: Install Playwright Chromium browser deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: yarn run playwright install-deps chromium
+      # END PLAYWRIGHT
       - name: Precompile assets
         run: yarn run build
       - name: Setup parallel tests and run feature specs

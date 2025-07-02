@@ -244,9 +244,9 @@ group :test do
   # Test your ActionMailer and Mailer messages in Capybara
   gem "capybara-email"
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails
-  gem "capybara-screenshot"
-  # Selenium is a browser automation tool for automated testing of webapps and more
-  gem "selenium-webdriver"
+  gem "capybara-screenshot", git: "https://github.com/mattheworiordan/capybara-screenshot.git", ref: "23a27be"
+  # Playwright is an alternative to Selenium
+  gem "capybara-playwright-driver"
 
   # Strategies for cleaning databases. Can be used to ensure a clean slate for testing.
   gem "database_cleaner"

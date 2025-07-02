@@ -79,7 +79,9 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     end
 
     fill_in "Durée en minutes", with: "35"
-    fill_in "Commence à", with: "11/10/2019 14:15"
+    find(:label, "Commence à").click
+    find(".xdsoft_calendar .xdsoft_date", text: "11").click
+    find(".xdsoft_time", text: "14:15").click
     select("DIALO Alain", from: "rdv_agent_ids")
     select("MARTIN Robert", from: "rdv_agent_ids")
     click_button("Continuer")

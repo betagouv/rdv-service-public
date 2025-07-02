@@ -5,17 +5,21 @@ WebMock.disable_net_connect!(allow: [
                                "chromedriver.storage.googleapis.com", # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
                              ])
 
-Capybara.register_driver :selenium do |app|
-  chrome_bin = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
-  binary = chrome_bin if chrome_bin
+Capybara.register_driver :playwright do |app|
+  # chrome_bin = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
+  # binary = chrome_bin if chrome_bin
   # these args seem to reduce test flakyness
-  args = %w[no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen disable-features=MacAppCodeSignClone]
-  args.prepend("headless") if ENV["HEADLESS"] != "false"
-  options = Selenium::WebDriver::Chrome::Options.new(args:, "goog:loggingPrefs": { browser: "ALL" }, binary:)
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
+  # args = %w[no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen disable-features=MacAppCodeSignClone]
+  Capybara::Playwright::Driver.new(
+    app,
+    browser_type: ENV["PLAYWRIGHT_BROWSER"]&.to_sym || :chromium,
+    headless: ENV["HEADLESS"] != "false",
+    timeout: 5
+  )
 end
+Capybara.default_max_wait_time = 3
 
-Capybara.javascript_driver = :selenium
+Capybara.javascript_driver = :playwright
 
 Capybara.configure do |config|
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
@@ -23,7 +27,7 @@ Capybara.configure do |config|
   # config.asset_host = "http://localhost:#{port}"  # for screenshots
   config.server_host = "www.rdv-solidarites-test.localhost"
   config.server_port = port
-  config.javascript_driver = :selenium
+  config.javascript_driver = :playwright
   config.server = :puma, { Silent: true }
   config.disable_animation = true
   config.save_path = Rails.root.join("tmp/capybara")

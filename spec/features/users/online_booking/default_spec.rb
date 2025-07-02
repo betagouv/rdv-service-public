@@ -519,7 +519,7 @@ RSpec.describe "User can search for rdvs" do
 
   def continue_to_rdv(motif, address: nil)
     expect(page).to have_content("Vos informations")
-    fill_in("Date de naissance", with: Time.zone.yesterday.strftime("%d/%m/%Y"))
+    find_field("Date de naissance").send_keys(Time.zone.yesterday.strftime("%d/%m/%Y"))
     fill_in("Nom de naissance", with: "Lapinou")
     fill_in("Adresse", with: address) if address
     click_button("Continuer")
