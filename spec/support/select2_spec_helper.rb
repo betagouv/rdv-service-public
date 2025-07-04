@@ -26,7 +26,7 @@ module Select2SpecHelper
     fill_in("Prénom", with: first_name)
     fill_in("Nom d’usage", with: last_name)
     fill_in("Téléphone", with: phone_number) if options[:with_phone]
-    click_button("Créer usager")
+    click_button("Enregistrer")
 
     # Wait for the user to be added before doing the next action
     expect(page).to have_content("#{first_name} #{last_name}")

@@ -110,7 +110,4 @@
       - else
         = link_to "Annuler", agent_user_form_cancel_path(user), class: "btn btn-link"
 
-      - if user.persisted?
-        = f.button :submit
-      - else
-        = f.button :submit, "Créer usager"
+      = f.submit "Enregistrer", class: "fr-btn"

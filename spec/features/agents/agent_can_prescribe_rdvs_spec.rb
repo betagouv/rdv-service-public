@@ -167,7 +167,7 @@ RSpec.describe "agents can prescribe rdvs" do
       click_on "Créer un usager"
       fill_in :user_first_name, with: "Jean-Paul"
       fill_in :user_last_name, with: "Orvoir"
-      click_on "Créer usager"
+      click_on "Enregistrer"
       expect(page).to have_content("Jean-Paul")
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
@@ -192,7 +192,7 @@ RSpec.describe "agents can prescribe rdvs" do
       click_on "Créer un usager"
       fill_in :user_first_name, with: "Jean-Paul"
       fill_in :user_last_name, with: "Orvoir"
-      click_on "Créer usager"
+      click_on "Enregistrer"
       expect(page).to have_content("Jean-Paul")
       click_on "Continuer"
       # retour à la sélection de l’usager
@@ -200,7 +200,7 @@ RSpec.describe "agents can prescribe rdvs" do
       click_on "Créer un usager"
       fill_in :user_first_name, with: "Jean-Pierre"
       fill_in :user_last_name, with: "Bonjour"
-      click_on "Créer usager"
+      click_on "Enregistrer"
       expect(page).to have_content("BONJOUR Jean-Pierre")
       click_on "Continuer"
       expect do
