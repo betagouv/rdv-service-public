@@ -1,0 +1,9 @@
+/ locals(pre_demandes_count:, edit_path:)
+li.list-group-item
+  .row
+    .col
+      span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+      | Nombre de pré-demandes ANTS à déposer :&nbsp;
+      = pre_demandes_count
+    .col-auto
+      = link_to "modifier", edit_path, title: "Modifier le nombre de pré-demandes ANTS"

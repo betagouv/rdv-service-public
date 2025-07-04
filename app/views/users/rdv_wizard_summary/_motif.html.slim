@@ -1,0 +1,10 @@
+/ locals(motif_name:, edit_path:)
+li.list-group-item
+  .row
+    .col
+      span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
+      = motif_icon(class: "fr-mr-1w fr-icon--sm")
+      | Motif :&nbsp;
+      = motif_name
+    .col-auto
+      = link_to("modifier", edit_path, title: "Modifier le motif")

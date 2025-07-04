@@ -1,13 +1,10 @@
 .card
   ul.list-group.list-group-flush.fr-mt-0
-    li.list-group-item
-      .row
-        .col
-          span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
-          | Motif :&nbsp;
-          = context.first_matching_motif.name
-        .col-auto
-          = link_to "modifier", path_to_service_selection(params), title: "Modifier le motif"
+    = render "users/rdv_wizard_summary/motif", motif_name: context.first_matching_motif.name, edit_path: path_to_service_selection(params)
+
+    - if context.ants_pre_demandes_count.present?
+      = render "users/rdv_wizard_summary/motif", pre_demandes_count: context.ants_pre_demandes_count, edit_path: path_to_ants_pre_demandes_count_selection(params)
+
     - case context.first_matching_motif.location_type
     - when Motif.location_types[:phone]
       li.list-group-item
@@ -22,15 +19,6 @@
         span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
         | RDV par visioconférence
     - when Motif.location_types[:public_office]
-      - if context.ants_pre_demandes_count.present?
-        li.list-group-item
-          .row
-            .col
-              span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
-              | Nombre de pré-demandes ANTS à déposer :&nbsp;
-              = context.ants_pre_demandes_count
-            .col-auto
-              = link_to "modifier", path_to_ants_pre_demandes_count_selection(params), title: "Modifier le nombre de pré-demandes ANTS"
       - if context.lieu
         li.list-group-item
           .row
