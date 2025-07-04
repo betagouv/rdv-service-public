@@ -10,6 +10,7 @@ ul.list-group.list-group-flush.fr-mt-0
         .col-auto
           = link_to "modifier", path_to_ants_pre_demandes_count_selection(rdv_wizard.params_to_selections), title: "Modifier le nombre de pré-demandes ANTS"
 
+  / duplication de app/views/search/_selected_motif_recap.html.slim
   li.list-group-item
     - case rdv_wizard.motif.location_type
     - when Motif.location_types[:phone]

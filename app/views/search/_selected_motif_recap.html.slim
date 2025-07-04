@@ -5,25 +5,30 @@
     - if context.ants_pre_demandes_count.present?
       = render "users/rdv_wizard_summary/motif", pre_demandes_count: context.ants_pre_demandes_count, edit_path: path_to_ants_pre_demandes_count_selection(params)
 
+    / duplication de app/views/users/rdv_wizard_steps/_rdv_wizard_summary.html.slim
     - case context.first_matching_motif.location_type
     - when Motif.location_types[:phone]
       li.list-group-item
-        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+        span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
+        = phone_icon(class: "fr-mr-1w fr-icon--sm")
         | RDV téléphonique
     - when Motif.location_types[:home]
       li.list-group-item
-        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+        span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
+        = home_icon(class: "fr-mr-1w fr-icon--sm")
         | RDV à domicile
     - when Motif.location_types[:visio]
       li.list-group-item
-        span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+        span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
+        = visio_icon(class: "fr-mr-1w fr-icon--sm")
         | RDV par visioconférence
     - when Motif.location_types[:public_office]
       - if context.lieu
         li.list-group-item
           .row
             .col
-              span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
+              span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
+              = lieu_icon(class: "fr-mr-1w fr-icon--sm")
               | Lieu :&nbsp;
               = context.lieu.full_name
             .col-auto
