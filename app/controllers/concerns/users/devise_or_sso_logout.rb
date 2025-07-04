@@ -11,6 +11,7 @@ module Users::DeviseOrSsoLogout
     france_connect_v2_id_token = session.delete(:france_connect_v2_id_token)
     pro_connect_id_token = session.delete(:agent_connect_id_token)
 
+    session.delete(:invitation)
     sign_out(:user)
     set_flash_message!(:notice, flash_message_key)
 
