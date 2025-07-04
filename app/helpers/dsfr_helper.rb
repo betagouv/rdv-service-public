@@ -11,6 +11,18 @@ module DsfrHelper
     tag.span("", class: "#{icon_name} #{html_options.delete(:class)}", "aria-hidden": "true", **html_options)
   end
 
+  def calendar_icon(html_options = {})
+    icon("fr-icon-calendar-fill", html_options)
+  end
+
+  def person_icon(html_options = {})
+    icon("fr-icon-user-fill", html_options)
+  end
+
+  def notification_icon(html_options = {})
+    icon("fr-icon-chat-3-fill", html_options)
+  end
+
   def motif_icon(html_options = {})
     icon("fr-icon-draft-fill", html_options)
   end
