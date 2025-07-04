@@ -15,22 +15,23 @@ ul.list-group.list-group-flush.fr-mt-0
     - case rdv_wizard.motif.location_type
     - when Motif.location_types[:phone]
       span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-      = phone_icon(class: "fr-mr-1w fr-icon--sm")
+      = phone_icon(class: "fr-mr-1w fr-icon--sm rdv-color-text-mention-grey")
       | RDV téléphonique
     - when Motif.location_types[:home]
       span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-      = home_icon(class: "fr-mr-1w fr-icon--sm")
+      = home_icon(class: "fr-mr-1w fr-icon--sm rdv-color-text-mention-grey")
       | RDV à domicile
     - when Motif.location_types[:visio]
       span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-      = visio_icon(class: "fr-mr-1w fr-icon--sm")
+      = visio_icon(class: "fr-mr-1w fr-icon--sm rdv-color-text-mention-grey")
       | RDV par visioconférence
     - when Motif.location_types[:public_office]
       .row
         .col
           span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-          = lieu_icon(class: "fr-mr-1w fr-icon--sm")
-          | Lieu :&nbsp;
+          span.rdv-color-text-mention-grey
+            = lieu_icon(class: "fr-mr-1w fr-icon--sm")
+            | Lieu :&nbsp;
           = rdv_wizard.creneau.lieu.full_name
         .col-auto
           = link_to "modifier", path_to_lieu_selection(rdv_wizard.params_to_selections), title: "Modifier le lieu"
@@ -41,8 +42,9 @@ ul.list-group.list-group-flush.fr-mt-0
     .row
       .col
         span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-        = calendar_icon(class: "fr-mr-1w fr-icon--sm")
-        | Date du rendez-vous :&nbsp;
+        span.rdv-color-text-mention-grey
+          = calendar_icon(class: "fr-mr-1w fr-icon--sm")
+          | Date :&nbsp;
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
       .col-auto
         = link_to "modifier", path_to_creneau_selection(rdv_wizard.params_to_selections), title: "Modifier la date du rendez-vous"
@@ -52,8 +54,9 @@ ul.list-group.list-group-flush.fr-mt-0
       .row
         .col
           span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-          = person_icon(class: "fr-mr-1w fr-icon--sm")
-          | Usager :&nbsp;
+          span.rdv-color-text-mention-grey
+            = person_icon(class: "fr-mr-1w fr-icon--sm")
+            | Usager :&nbsp;
           = users_to_sentence(rdv_wizard.users)
         .col-auto
           - step = @rdv_wizard.skip_proches_step? ? 1 : 2
@@ -62,12 +65,13 @@ ul.list-group.list-group-flush.fr-mt-0
       .fr-grid-row
         .fr-col
           span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-          = notification_icon(class: "fr-mr-1w fr-icon--sm")
-          | Informations de contact :&nbsp;
+          span.rdv-color-text-mention-grey
+            = notification_icon(class: "fr-mr-1w fr-icon--sm")
+            | Informations de contact :&nbsp;
       .fr-grid-row
         .fr-col.fr-ml-8w
-          b>= current_user.preferred_email
-          span>= "(notifications par email #{current_user.notify_by_email? ? 'activées' :  'désactivées'})"
+          = current_user.preferred_email
+          .fr-hint= " (notifications par email #{current_user.notify_by_email? ? 'activées' :  'désactivées'})"
       .fr-grid-row
         .fr-col.fr-ml-8w
           span = user_notifiable_by_sms_text(current_user)

@@ -8,7 +8,7 @@ module UserNotificationsHelper
       else
         user.notify_by_sms? ? "activées" : "désactivées"
       end
-    number_tag = tag.b(user.phone_number.presence || "Non renseigné")
+    number_tag = tag.span(user.phone_number.presence || "Non renseigné")
     details_tag = notif_details ? tag.span("(notifications par SMS #{notif_details})") : ""
     safe_join([number_tag, " ", details_tag])
   end
