@@ -10,17 +10,17 @@
     - when Motif.location_types[:phone]
       li.list-group-item
         span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-        = phone_icon(class: "fr-mr-1w fr-icon--sm")
+        = phone_icon(class: "fr-mr-1w fr-icon--sm rdv-color-text-mention-grey")
         | RDV téléphonique
     - when Motif.location_types[:home]
       li.list-group-item
         span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-        = home_icon(class: "fr-mr-1w fr-icon--sm")
+        = home_icon(class: "fr-mr-1w fr-icon--sm rdv-color-text-mention-grey")
         | RDV à domicile
     - when Motif.location_types[:visio]
       li.list-group-item
         span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-        = visio_icon(class: "fr-mr-1w fr-icon--sm")
+        = visio_icon(class: "fr-mr-1w fr-icon--sm rdv-color-text-mention-grey")
         | RDV par visioconférence
     - when Motif.location_types[:public_office]
       - if context.lieu
@@ -28,8 +28,9 @@
           .row
             .col
               span.fr-icon-check-line.fr-mr-2w.rdv-color-text-default-success
-              = lieu_icon(class: "fr-mr-1w fr-icon--sm")
-              | Lieu :&nbsp;
+              span.rdv-color-text-mention-grey
+                = lieu_icon(class: "fr-mr-1w fr-icon--sm")
+                | Lieu :&nbsp;
               = context.lieu.full_name
             .col-auto
               = link_to "modifier", path_to_organisation_selection(params), title: "Modifier le lieu"
