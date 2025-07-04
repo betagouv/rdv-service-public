@@ -20,10 +20,10 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
     li.list-group-item.fr-pl-0.fr-py-2w
       span.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
       = human_location(rdv)
-      - if rdv.lieu&.phone_number
+      - if rdv.lieu&.humanized_phone_number
         br
         span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-        = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
+        = link_to rdv.lieu.humanized_phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
 
   - elsif rdv.phone?
     li.list-group-item.fr-pl-0.fr-py-2w
@@ -34,7 +34,7 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
         - if current_user.signed_in_with_invitation_token?
           | L'agent vous appellera au numéro que vous lui avez indiqué.
         - else
-          | L'agent vous appellera au #{current_user.phone_number}.
+          | L'agent vous appellera au #{current_user.humanized_phone_number}.
 
   - elsif rdv.motif.visio?
     li.list-group-item.fr-pl-0.fr-py-2w
@@ -67,14 +67,14 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
 
   = render "/users/rdvs/file_attente", rdv: rdv
 
-- if rdv.phone_number || rdv.organisation.website.present?
+- if rdv.humanized_phone_number || rdv.organisation.website.present?
   .fr-mb-2w
     h2.fr-h6.fr-mt-3w Contact de #{rdv.organisation.name}
     .d-flex
-      - if rdv.phone_number.present?
+      - if rdv.humanized_phone_number
         p.fr-mr-2w
           span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-          = phone_to(rdv.phone_number, title: "Numéro de téléphone")
+          = phone_to(rdv.humanized_phone_number, title: "Numéro de téléphone")
       - if rdv.organisation.website.present?
         p
           span.fr-icon-global-fill.fr-mr-1w[aria-hidden="true"]
