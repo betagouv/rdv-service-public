@@ -9,9 +9,7 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
   end
 
   def expect_france_connect_fields_to_be_up_to_date(user)
-    # On utilise `notification_email` et pas `email`, car on ne
-    # veut pas permettre une connexion par email + mot de passe
-    expect(user.email).to be_nil
+    expect(user.email).to be_nil # Pour un usager qui ne se connecte pas par email/mot de passe
     expect(user.notification_email).to eq("jeanne@longo.fr")
 
     expect(user.first_name).to eq("jeanne")
@@ -32,42 +30,75 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
   end
 
   context "pre-existing user with same franceconnect sub but different infos" do
-    before do
-      create(
-        :user,
-        email: nil,
-        franceconnect_openid_sub: "hvdiuds4357",
-        logged_once_with_franceconnect: true,
-        first_name: "Jeannine",
-        birth_name: "LONGINO",
-        birth_date: nil
-      )
-    end
-
-    it "finds the user and updates her info" do
-      service = described_class.new(omniauth_info)
-      expect { service.perform }.not_to change(User, :count)
-      expect(service.new_user?).to be(false)
-
-      expect_france_connect_fields_to_be_up_to_date(service.user.reload)
-    end
-
-    context "when the france connect email has capital letters" do
-      let(:omniauth_info) do
-        OpenStruct.new(email: "JEANNE@longo.fr",
-                       given_name: "jeanne",
-                       family_name: "longo",
-                       preferred_username: "DUPONT",
-                       birthdate: Date.parse("1971-06-20"),
-                       sub: "hvdiuds4357")
+    context "not using devise" do
+      before do
+        create(
+          :user,
+          email: nil,
+          encrypted_password: "",
+          franceconnect_openid_sub: "hvdiuds4357",
+          logged_once_with_franceconnect: true,
+          first_name: "Jeannine",
+          birth_name: "LONGINO",
+          birth_date: nil
+        )
       end
 
-      it "downcases the email" do
+      it "finds the user and updates her info" do
+        service = described_class.new(omniauth_info)
+        expect { service.perform }.not_to change(User, :count)
+        expect(service.new_user?).to be(false)
+
+        expect_france_connect_fields_to_be_up_to_date(service.user.reload)
+      end
+
+      context "when the france connect email has capital letters" do
+        let(:omniauth_info) do
+          OpenStruct.new(email: "JEANNE@longo.fr",
+                         given_name: "jeanne",
+                         family_name: "longo",
+                         preferred_username: "DUPONT",
+                         birthdate: Date.parse("1971-06-20"),
+                         sub: "hvdiuds4357")
+        end
+
+        it "downcases the email" do
+          service = described_class.new(omniauth_info)
+          expect { service.perform }.not_to change(User, :count)
+          expect(service.new_user?).to be(false)
+          user = service.user.reload
+          expect(user.notification_email).to eq("jeanne@longo.fr")
+        end
+      end
+    end
+
+    context "when the user also users Devise to login with an email and a passowrd" do
+      before do
+        create(
+          :user,
+          email: "jeanne@longo.fr",
+          password: "coRrect!h0rse",
+          franceconnect_openid_sub: "hvdiuds4357",
+          logged_once_with_franceconnect: true,
+          first_name: "Jeannine",
+          birth_name: "LONGINO",
+          birth_date: nil
+        )
+      end
+
+      it "finds the user and updates her info" do
         service = described_class.new(omniauth_info)
         expect { service.perform }.not_to change(User, :count)
         expect(service.new_user?).to be(false)
         user = service.user.reload
-        expect(user.notification_email).to eq("jeanne@longo.fr")
+
+        expect(user).to have_attributes(
+          {
+            email: "jeanne@longo.fr",
+            notification_email: nil,
+            birth_name: "longo",
+          }
+        )
       end
     end
   end
