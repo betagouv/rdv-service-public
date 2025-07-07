@@ -50,8 +50,8 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
         Exemple de cas d’usage
       </h3>
       <p>
-        Vous faites partie de l’équipe produit d’un service public numérique. 
-        Vous souhaitez proposer des entretiens utilisateurs aux agents de mairie qui utilisent votre service. 
+        Vous faites partie de l’équipe produit d’un service public numérique.
+        Vous souhaitez proposer des entretiens utilisateurs aux agents de mairie qui utilisent votre service.
         Voici comment vous pouvez faire :
       </p>
       <p>
