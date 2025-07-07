@@ -1,6 +1,9 @@
 {
   "name": "lapin",
   "private": true,
+  "engines": {
+    "node": ">=22.14.0"
+  },
   "scripts": {
     "build": "webpack --config webpack.config.js"
   },
