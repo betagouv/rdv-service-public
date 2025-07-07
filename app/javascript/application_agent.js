@@ -43,6 +43,7 @@ import './components/clear-field-on-focus.js'
 import { Application } from "@hotwired/stimulus"
 import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
 import MotifFormController from './controllers/motif_form_controller'
+import './controllers'
 
 window.Stimulus = Application.start()
 Stimulus.register('checkbox-select-all', CheckboxSelectAll)

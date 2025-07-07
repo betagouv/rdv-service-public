@@ -9,6 +9,10 @@ Rails.application.routes.draw do
   get "agent_connect/auth" => "agent_connect#auth"
   get "agent_connect/callback" => "agent_connect#callback"
 
+  get "franceconnect_v2/auth" => "france_connect_v2#auth"
+  get "franceconnect_v2/callback" => "france_connect_v2#callback"
+  get "franceconnect_v2/post_logout" => "france_connect_v2#post_logout"
+
   devise_for :super_admins # necessary for helpers like super_admin_signed_in?
   devise_scope :super_admin do
     get "omniauth/github/callback" => "omniauth_callbacks#github"
@@ -391,12 +395,6 @@ Rails.application.routes.draw do
   }
 
   if Rails.env.development?
-    namespace :lapin do
-      resources :sms_preview, only: %i[index] do
-        get ":action_name", to: "sms_preview#preview", as: "preview"
-      end
-    end
-
     # LetterOpener
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
