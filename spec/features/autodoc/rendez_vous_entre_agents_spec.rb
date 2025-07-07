@@ -4,7 +4,10 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
   stub_env_with(
     AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
     AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
-    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
+    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa",
+    FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2",
+    FRANCECONNECT_V2_CLIENT_ID: "fake_france_connect_v2_client_id",
+    FRANCECONNECT_V2_CLIENT_SECRET: "fake_france_connect_v2_client_secret"
   )
   before do
     Compte.new(
@@ -137,6 +140,8 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
     doc.add_screenshot(page,
                        text: "L'appli me propose de me connecter avec ProConnect",
                        wait_for: "Vous devez vous connecter ou vous inscrire pour continuer.")
+
+    expect(page).not_to have_content("FranceConnect")
 
     expect(page).to have_content("ProConnect")
     # On triche pour faire semblant de faire une connexion via ProConnect
