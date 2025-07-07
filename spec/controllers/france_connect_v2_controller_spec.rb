@@ -53,7 +53,7 @@ RSpec.describe FranceConnectV2Controller do
     end
 
     it "updates and logs in the user" do
-      user = create(:user, email: "wossewodda-3728@yopmail.com")
+      user = create(:user, franceconnect_openid_sub: "88b65362bb23a04ba9031f244d12b9a45171fc6151c7a84c631170cd3da4b17bv1", email: nil, encrypted_password: "")
 
       expect(UpsertUserForFranceconnectService).to receive(:new).with(have_attributes(user_info)).and_call_original
 
@@ -62,7 +62,8 @@ RSpec.describe FranceConnectV2Controller do
       expect(user.reload).to have_attributes(
         franceconnect_openid_sub: user_info["sub"],
         logged_once_with_franceconnect: true,
-        email: "wossewodda-3728@yopmail.com",
+        notification_email: "wossewodda-3728@yopmail.com",
+        email: nil,
         first_name: "Angela Claire Louise",
         last_name: "DUBOIS",
         updated_at: be_within(10.seconds).of(Time.zone.now)
