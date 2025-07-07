@@ -53,8 +53,6 @@ nav.left-side-menu-wrapper
               = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
             li
               = active_link_to "Indisponibilités", admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu), class: "side-menu__item side-menu__item--small"
-            li
-              = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item side-menu__item--small"
 
         li
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
@@ -65,6 +63,11 @@ nav.left-side-menu-wrapper
           = active_link_to(admin_organisation_rdvs_path(current_organisation), class: "side-menu__item")
             span.fr-icon-survey-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Liste des RDV
+
+        li
+          = active_link_to(admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item")
+            span.fr-icon-team-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
+            | RDV collectifs
 
         li
           = active_link_to(admin_organisation_stats_path(current_organisation), class: "side-menu__item")
@@ -86,6 +89,10 @@ nav.left-side-menu-wrapper
             = link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item #{'active' if menu_top_level_item == 'settings'}"
               span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
               | Configuration
+              / On ajoute une condition sur la date de création de l'organisation pour éviter de faire des requêtes sur les tables motifs et lieux à chaque chargement de page
+              - if menu_top_level_item != "settings" && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
+                .fr-ml-1w.rdv-pastille
+
         li
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
             span.fr-icon-question-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]

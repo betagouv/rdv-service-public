@@ -6,7 +6,7 @@ module UserRdvWizard
 
     attr_accessor :rdv, :user
 
-    delegate :motif, :starts_at, :users, :service, to: :rdv
+    delegate :motif, :starts_at, :service, to: :rdv
 
     def initialize(user, attributes)
       @user = user
@@ -53,7 +53,7 @@ module UserRdvWizard
 
     def to_query
       {
-        motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id), rdv_collectif_id: rdv.id,
+        motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: users&.map(&:id), rdv_collectif_id: rdv.id,
       }.merge(
         @attributes.slice(
           *WebSearchContext::ADDRESS_SELECTION_PARAMS,
@@ -77,6 +77,16 @@ module UserRdvWizard
         motif.default_duration_in_min * @attributes[:ants_pre_demandes_count].to_i
       else
         motif.default_duration_in_min
+      end
+    end
+
+    def users
+      if @rdv.collectif?
+        return [] unless @user
+
+        @user.available_users_for_rdv.where(id: @attributes[:user_ids]).presence || [@user]
+      else
+        @rdv.users.presence || [@user].compact
       end
     end
 
@@ -139,9 +149,11 @@ module UserRdvWizard
 
   class Step2 < Base
     def initialize(user, attributes)
+      if attributes[:created_user_id].present?
+        attributes[:user_ids] = [attributes[:created_user_id]]
+      end
+
       super
-      # Hacky override of user_ids on step2
-      @rdv.user_ids = [attributes[:created_user_id]] if attributes[:created_user_id].present?
     end
   end
 

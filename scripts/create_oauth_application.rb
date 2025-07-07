@@ -14,4 +14,4 @@ puts "Le secret de l'application est :"
 puts application.plaintext_secret
 
 puts "\rEnregistrez-le tout de suite dans un système sécurisé car il ne sera plus consultable."
-puts "Vous pouvez ajouter un logo à l'application."
+puts "Vous pouvez ajouter un logo à l'application via la colonne logo_base64 (il faut un logo carré)."

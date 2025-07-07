@@ -51,7 +51,7 @@ class Users::RelativesController < UserAuthController
   def destroy
     @user = User.find(params[:id])
     authorize(@user, policy_class: User::UserPolicy)
-    flash[:notice] = "Votre proche a été supprimé." if @user.soft_delete
+    flash[:notice] = "Votre proche a été supprimé." if @user.soft_delete!
     redirect_to users_informations_path
   end
 

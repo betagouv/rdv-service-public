@@ -1,17 +1,17 @@
-- content_for(:title) { "Nouveau RDV Collectif" }
+- content_for(:title) { "Nouveau RDV collectif" }
 
-- content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to "RDV Collectifs", admin_organisation_rdvs_collectifs_path(current_organisation)
-    li.breadcrumb-item.active Nouveau RDV Collectif
+- content_for :fil_ariane do
+  = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
+    = b.with_breadcrumb label: "Accueil", href: root_path
+    = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)
+    = b.with_breadcrumb label: "Nouveau RDV collectif"
 
 .row.justify-content-md-center
   .col-md-12.col-lg-8
     = simple_form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :post) do |f|
       .card
         .card-header
-          h3.rdv-text-align-center #{@rdv.motif_name} (#{@rdv.motif.service.short_name})
+          h3.rdv-text-align-center #{motif_name_and_service(@rdv.motif)}
         .card-body.px-3
           = render "model_errors", model: @rdv, f: f
 

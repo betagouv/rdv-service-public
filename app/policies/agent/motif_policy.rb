@@ -8,7 +8,7 @@ class Agent::MotifPolicy < ApplicationPolicy
 
     agent.secretaire? ||
       agent_can_manage_motif?(motif, agent) ||
-      motif.service.in?(agent.services)
+      motif.service_id.in?(agent.service_ids)
   end
 
   def self.organisations_i_can_manage(agent)

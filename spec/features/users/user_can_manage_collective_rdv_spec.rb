@@ -15,7 +15,7 @@ RSpec.describe "Adding a user to a collective RDV" do
   let!(:lieu1) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
   let!(:rdv) { create(:rdv, :without_users, motif: motif, agents: [agent], organisation: organisation, lieu: lieu1) }
-  let!(:logged_user) { create(:user, phone_number: "+33601010101", email: "frederique@example.com") }
+  let!(:logged_user) { create(:user, phone_number: "+33601010101", email: "frederique@example.fr") }
   let!(:invited_user) { create(:user, last_name: "INVITE") }
   let!(:other_user1) { create(:user) }
   let!(:other_user2) { create(:user) }
@@ -92,15 +92,29 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("Revenir en arrière")
         click_link("S'inscrire")
         click_button("Continuer")
+
         click_link("Revenir en arrière")
         sleep(1)
         click_button("Continuer")
+
+        click_on "Ajouter un proche"
+        fill_in "Prénom", with: "Francis"
+        fill_in "Nom d’usage", with: "Factice"
+        click_on "Enregistrer"
+
+        expect(page).to have_content("Francis FACTICE a été ajouté comme proche.")
         click_button("Continuer")
+
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
         expect(page).to have_content("Participation confirmée")
         expect(page).to have_content("modifier") # can_change_participants?
       end.to change { rdv.reload.users.count }.from(0).to(1)
+
+      expect(rdv.users.last).to have_attributes(
+        first_name: "Francis",
+        last_name: "Factice"
+      )
 
       expect_notifications_sent_for(rdv, logged_user, :rdv_created)
       expect_webhooks_for(logged_user)

@@ -29,6 +29,7 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include StrongPasswordConcern
+  include User::SoftDeleteConcern
 
   def self.search_options
     {
@@ -117,10 +118,6 @@ class User < ApplicationRecord
     end
   end
 
-  def soft_delete(organisation = nil)
-    self_and_relatives.each { _1.do_soft_delete(organisation) }
-  end
-
   def delete_credentials_and_access_informations
     update!(
       encrypted_password: "",
@@ -160,10 +157,6 @@ class User < ApplicationRecord
     deleted_at ? :deleted_account : super
   end
 
-  def soft_deleted?
-    deleted_at.present?
-  end
-
   def user_to_notify
     relative? ? responsible : self
   end
@@ -182,12 +175,8 @@ class User < ApplicationRecord
     "user_#{id}@deleted.rdv-solidarites.fr"
   end
 
-  def can_be_soft_deleted_from_organisation?(organisation)
-    Rdv.not_cancelled
-      .future
-      .joins(:users).where(users: self_and_relatives)
-      .where(organisation: organisation)
-      .empty?
+  def upcoming_rdvs_for_self_or_relatives
+    Rdv.not_cancelled.future.joins(:users).where(users: self_and_relatives)
   end
 
   def previous_rdvs_ordered_and_truncated(organisation)
@@ -324,30 +313,5 @@ class User < ApplicationRecord
     return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
-  end
-
-  def do_soft_delete(organisation)
-    if organisation.present?
-      organisations.delete(organisation)
-    else
-      self.organisations = []
-    end
-    return save! if organisations.any? # only actually mark deleted when no orgas left
-
-    Anonymizer.anonymize_record!(self)
-    receipts.each { |r| Anonymizer.anonymize_record!(r) }
-    rdvs
-      .select { |r| r.users.where(deleted_at: nil).where.not(id:).empty? }
-      .each { |r| Anonymizer.anonymize_record!(r) }
-    annotations.destroy_all
-    versions.destroy_all
-    update_columns(
-      first_name: "Usager supprimé",
-      last_name: "Usager supprimé",
-      deleted_at: Time.zone.now,
-      email: deleted_email,
-      notification_email: nil
-    )
-    reload # anonymizer operates outside the realm of rails knowledge
   end
 end

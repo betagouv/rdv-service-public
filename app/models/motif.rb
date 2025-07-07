@@ -53,7 +53,7 @@ class Motif < ApplicationRecord
 
   # Delegates
   delegate :service_social?, to: :service
-  delegate :name, to: :service, prefix: true
+  delegate :name, :short_name, to: :service, prefix: true
 
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }

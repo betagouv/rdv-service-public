@@ -122,7 +122,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
 
       it "notifies on user_profile deletion" do
         expect do
-          user.soft_delete(organisation)
+          user.soft_delete!(organisation)
         end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "destroyed"), webhook_endpoint.id)
           .and have_enqueued_job(WebhookJob).with(json_payload_with_meta("model", "UserProfile"), webhook_endpoint.id)
       end
@@ -130,7 +130,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
       it "User soft delete does not send webhook for user model" do
         # We anonymize users when they are removed from the last organisation but actually there is NO webhook sent for user model deletion
         expect do
-          user.soft_delete(organisation)
+          user.soft_delete!(organisation)
           expect(user.first_name).to eq("Usager supprimé")
         end.not_to have_enqueued_job(WebhookJob).with(json_payload_with_meta("model", "User"), webhook_endpoint.id)
       end
