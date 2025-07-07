@@ -1,4 +1,6 @@
 RSpec.describe "User can login using FranceConnect" do
+  stub_env_with(FRANCECONNECT_HOST: "fcp.integ01.dev-franceconnect.fr")
+
   before do
     mock_france_connect_profile = {
       sub: "12345",

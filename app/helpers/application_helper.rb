@@ -139,6 +139,24 @@ module ApplicationHelper
     ENV["AGENT_CONNECT_BASE_URL"].present?
   end
 
+  def display_france_connect_v2_button?
+    return false unless current_domain.france_connect_enabled
+
+    return true if params[:force_france_connect_v2].present? # Permet de tester manuellement France Connect avant de désactiver la variable d'env FRANCE_CONNECT_V2_DISABLED
+
+    return false if ENV["FRANCE_CONNECT_V2_DISABLED"]
+    return false if Rails.configuration.x.france_connect_v2_unreachable_at_boot_time
+
+    ENV["FRANCECONNECT_V2_BASE_URL"].present?
+  end
+
+  def display_france_connect_v1_button?
+    return true if params[:force_franceconnect].present?
+    return false if ENV["FRANCECONNECT_HOST"].blank?
+
+    current_domain.france_connect_enabled
+  end
+
   def dsfr_path
     "/dsfr-v1.13.2"
   end

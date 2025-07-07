@@ -3,6 +3,7 @@ class Users::SessionsController < Devise::SessionsController
 
   include CanHaveRdvWizardContext
   include Admin::WeakPasswordControllerConcern
+  include Users::DeviseOrSsoLogout
 
   def new
     # Le flash d'erreur est trop aggressif pour le cas d'un usager non connecté.
@@ -31,35 +32,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
-    connected_with_franceconnect = user_signed_in? && session[:connected_with_franceconnect]
-
-    agent_connect_id_token = session.delete(:agent_connect_id_token)
-
-    session.delete(:invitation)
-    sign_out(:user)
-    set_flash_message!(:notice, :signed_out)
-
-    if agent_connect_id_token
-      agent_connect_client = AgentConnectOpenIdClient::Logout.new(agent_connect_id_token)
-
-      redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true
-    elsif connected_with_franceconnect
-      redirect_to "https://#{ENV['FRANCECONNECT_HOST']}/api/v1/logout", allow_other_host: true
-    else
-      redirect_to after_sign_out_path_for(:user)
-    end
-  end
-
-  private
-
-  # Copied from devise-4.8.1/app/controllers/devise/sessions_controller.rb
-  # We needed to override the call to redirect_to to set `allow_other_host: true`.
-  def respond_to_on_destroy
-    # We actually need to hardcode this as Rails default responder doesn't
-    # support returning empty response on GET request
-    respond_to do |format|
-      format.all { head :no_content }
-      format.any(*navigational_formats) { redirect_to after_sign_out_path_for(resource_name), allow_other_host: true }
-    end
+    logout_and_redirect_user(flash_message_key: :signed_out)
   end
 end
