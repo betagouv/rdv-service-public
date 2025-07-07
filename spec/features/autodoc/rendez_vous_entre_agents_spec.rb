@@ -46,8 +46,13 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
       <p>
         Pour une réunion entre collègues, la prise de rendez-vous via votre calendrier partagé habituel reste plus pratique (par exemple la Suite Numérique, Outlook, Thunderbird…). Si vous avez besoin de proposer des rendez-vous à d'autres agents qui ne sont pas vos collègues, RDV Service Public peut vous aider.
       </p>
+      <h3>
+        Exemple de cas d’usage
+      </h3>
       <p>
-        Par exemple, pour une équipe produit d'une startup d'état qui veut proposer des entretiens utilisateurs aux agents de mairie qui utilisent le produit, voici comment vous pouvez faire :
+        Vous faites partie de l’équipe produit d’un service public numérique. 
+        Vous souhaitez proposer des entretiens utilisateurs aux agents de mairie qui utilisent votre service. 
+        Voici comment vous pouvez faire :
       </p>
       <p>
         J'ai un compte sur RDV Service Public, sur lequel j'ai juste un motif "Suivi de dossier" par visio.
