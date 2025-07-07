@@ -1,44 +1,36 @@
 - content_for(:title) { "Support" }
 - content_for(:menu_item) { "menu-support" }
 
-.fr-notice.fr-notice--info.fr-mb-4w
-  .fr-container
-    .fr-notice__body
-      p
-        span.fr-notice__title Besoin d’aide ?
-        span.fr-notice__desc Vous pouvez échanger directement avec un membre de l’équipe.
-        = link_to "Prenez rendez-vous ici", "https://cal.com/forms/937585aa-48a4-4efd-a642-961fad79c9c5", target: "_blank", rel: "noopener external", class: "fr-notice__link"
-
 .fr-grid-row.fr-grid-row--gutters
-  .fr-col.fr-col-md-4
-    .fr-card.fr-enlarge-link
-      .fr-card__body
-        .fr-card__content
-          h3.fr-card__title
+  .fr-col.fr-col-md-6
+    .fr-tile.fr-enlarge-link.fr-tile--horizontal
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
             = link_to "Documentation", current_domain.documentation_url, target: "_blank"
-          p.fr-card__desc
+          p.fr-tile__desc
             | Explorez les fonctionnalités de l'outil à travers la documentation, et trouvez les informations dont vous avez besoin.
-      .fr-card__header
-        .fr-card__img.rdv-background-color-for-card
+      .fr-tile__header
+        .fr-tile__pictogram
           = dsfr_svg "artwork/pictograms/leisure/book", class: "fr-responsive-img"
-  .fr-col.fr-col-md-4
-    .fr-card.fr-enlarge-link
-      .fr-card__body
-        .fr-card__content
-          h3.fr-card__title
+  .fr-col.fr-col-md-6
+    .fr-tile.fr-enlarge-link.fr-tile--horizontal
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
             = link_to "Contactez l’équipe", new_aide_demande_support_path(role: "agent", sujet: "Question")
-          p.fr-card__desc
+          p.fr-tile__desc
             | Vous avez des questions, vous rencontrez une difficulté, ou vous avez une suggéstion à nous partager ? Contactez nous via notre formulaire.
-      .fr-card__header
-        .fr-card__img.rdv-background-color-for-card
+      .fr-tile__header
+        .fr-tile__pictogram
           = dsfr_svg "artwork/pictograms/leisure/community", class: "fr-responsive-img"
 
 .fr-grid-row.fr-grid-row--gutters
-  .fr-col.fr-col-md-4
-    .fr-card.fr-enlarge-link
-      .fr-card__body
-        .fr-card__content
-          h3.fr-card__title
+  .fr-col.fr-col-md-6
+    .fr-tile.fr-enlarge-link.fr-tile--horizontal
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
             = link_to "État des serveurs", "https://rdv-service-public.instatus.com", target: "_blank"
-          .fr-card__desc
+          .fr-tile__desc
             = render "admin/static_pages/instatus_iframe"
