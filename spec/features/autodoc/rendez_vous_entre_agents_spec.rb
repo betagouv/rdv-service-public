@@ -30,10 +30,16 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
     doc.add_text(<<~TEXT
       <h3>Contexte</h3>
       <p>
-        Je suis un agent du service public, par exemple quelqu'un qui travaille pour une startup d'état de la Dinum.
+        Je souhaite proposer de la prise de rendez-vous à d'autres agents du service public, en leur envoyant un lien avec lequel ils pourront directement prendre rendez-vous.
       </p>
       <p>
-        Je souhaite proposer de la prise de rendez-vous à d'autres agents du service public, en leur envoyant un lien avec lequel ils pourront directement prendre rendez-vous.
+        RDV Service Public peut remplacer des solutions de type Cal.com pour la prise de rendez-vous entre agents de différentes structures.
+      </p>
+      <p>
+        Pour une réunion entre collègues, la prise de rendez-vous via votre calendrier partagé habituel reste plus pratique (par exemple la Suite Numérique, Outlook, Thunderbird…). Si vous avez besoin de proposer des rendez-vous à d'autres agents qui ne sont pas vos collègues, RDV Service Public peut vous aider.
+      </p>
+      <p>
+        Par exemple, pour une équipe produit d'une startup d'état qui veut proposer des entretiens utilisateurs aux agents de mairie qui utilisent le produit, voici comment vous pouvez faire :
       </p>
       <p>
         J'ai un compte sur RDV Service Public, sur lequel j'ai juste un motif "Suivi de dossier" par visio.
