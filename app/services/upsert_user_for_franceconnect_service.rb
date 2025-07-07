@@ -21,12 +21,16 @@ class UpsertUserForFranceconnectService < BaseService
 
   def update_existing_user
     @user.assign_attributes(user_attribute_values_from_fc)
+    if @user.encrypted_password.blank?
+      @user.notification_email = omniauth_info.email&.downcase
+    end
     @user.save!(context: :france_connect_login)
   end
 
   def create_new_user
     @user = User.new(
       user_attribute_values_from_fc.merge(
+        notification_email: omniauth_info.email&.downcase,
         created_through: "franceconnect_sign_up"
       )
     )
@@ -37,7 +41,6 @@ class UpsertUserForFranceconnectService < BaseService
 
   def user_attribute_values_from_fc
     {
-      notification_email: omniauth_info.email&.downcase,
       first_name: omniauth_info.given_name,
       birth_name: omniauth_info.family_name, # nom de naissance
       birth_date: omniauth_info.birthdate,
