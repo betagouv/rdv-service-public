@@ -4,7 +4,8 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
-    = render "common/franceconnect_button"
+    - if @rdv_wizard.nil? || @rdv_wizard.display_france_connect?
+      = render "common/franceconnect_button"
 
     / Contrairement à FranceConnect, on n'affiche pas le bouton ProConnect en dehors de la prise de rendez-vous
     - if display_agent_connect_button? && @rdv_wizard&.display_pro_connect?
