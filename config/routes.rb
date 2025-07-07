@@ -395,12 +395,6 @@ Rails.application.routes.draw do
   }
 
   if Rails.env.development?
-    namespace :lapin do
-      resources :sms_preview, only: %i[index] do
-        get ":action_name", to: "sms_preview#preview", as: "preview"
-      end
-    end
-
     # LetterOpener
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
