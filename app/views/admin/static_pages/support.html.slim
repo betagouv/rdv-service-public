@@ -1,47 +1,38 @@
 - content_for(:title) { "Support" }
 - content_for(:menu_item) { "menu-support" }
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: "Support"
 
-.row
-  .col-md-6
-    .card
-      .card-header
-        h5.card-title
-          span> Documentation
-          i.fa.fa-book
-      .card-body
-        p
-          span> Explorez les fonctionnalités de l'outil à travers la
-          = link_to "documentation", current_domain.documentation_url, target: "_blank"
+.fr-grid-row.fr-grid-row--gutters
+  .fr-col.fr-col-md-6
+    .fr-tile.fr-enlarge-link.fr-tile--horizontal
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
+            = link_to "Documentation", current_domain.documentation_url, target: "_blank"
+          p.fr-tile__desc
+            | Explorez les fonctionnalités de l'outil à travers la documentation, et trouvez les informations dont vous avez besoin.
+      .fr-tile__header
+        .fr-tile__pictogram
+          = dsfr_svg "artwork/pictograms/leisure/book", class: "fr-responsive-img"
+  .fr-col.fr-col-md-6
+    .fr-tile.fr-enlarge-link.fr-tile--horizontal
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
+            = link_to "Contactez l’équipe", new_aide_demande_support_path(role: "agent", sujet: "Question")
+          p.fr-tile__desc
+            | Vous avez des questions, vous rencontrez une difficulté, ou vous avez une suggéstion à nous partager ? Contactez nous via notre formulaire.
+      .fr-tile__header
+        .fr-tile__pictogram
+          = dsfr_svg "artwork/pictograms/leisure/community", class: "fr-responsive-img"
 
-    .card
-      .card-header
-        h5.card-title
-          span> Contacter l'équipe technique
-          i.fa.fa-question-circle
-      .card-body
-        = link_to "Envoyer une demande à l’équipe technique",
-          new_aide_demande_support_path(role: "agent", sujet: "Question"),
-          class: "fr-btn fr-btn--icon-left fr-icon-chat-3-line"
-
-    .card
-      .card-header
-        h5.card-title
-          span> État des serveurs
-          i.fa.fa-signal
-      .card-body
-        = render "admin/static_pages/instatus_iframe"
-
-  .col-md-6
-    .card
-      .card-header
-        h5.card-title
-          span> Documents
-          i.fa.fa-file-alt
-      .card-body
-        ul
-          li= link_to mentions_legales_path do
-            span> Mentions Légales
-          li= link_to cgu_path do
-            span> C.G.U.
-          li= link_to politique_de_confidentialite_path do
-            span> Politique de confidentialité
+.fr-grid-row.fr-grid-row--gutters.fr-mt-3w
+  .fr-col.fr-col-md-6
+    .fr-tile.fr-enlarge-link.fr-tile--horizontal
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
+            = link_to "État des serveurs", "https://rdv-service-public.instatus.com", target: "_blank"
+          .fr-tile__desc
+            = render "admin/static_pages/instatus_iframe"
