@@ -4,7 +4,7 @@ class Users::DemandesSupportMailer < ApplicationMailer
     @sujet = params[:sujet]
     @message = params[:message]
     mail(
-      from: domain.support_email,
+      from: domain.support_email.gsub("support@", "assistance@"),
       to: params[:email],
       subject: "[##{@conversation_id}] Nouveaux messages dans cette conversation"
     )
