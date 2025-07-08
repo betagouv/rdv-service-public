@@ -1,6 +1,7 @@
 const path = require("path")
 const webpack = require("webpack")
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   devtool: "source-map",
@@ -42,6 +43,14 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.sass', '.scss', '.css'],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: false, // this fails with bun cf https://github.com/oven-sh/bun/issues/10768#issuecomment-2326996571
+      }),
+    ],
   },
   plugins: [
     new MiniCssExtractPlugin(),
