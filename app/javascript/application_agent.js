@@ -121,6 +121,7 @@ $(document).on('turbolinks:load', function() {
   new PlageOuvertureLieuSelection()
   new PlageOuvertureSecondaryTimes()
 
+
   new CheckAll()
   new UnCheckAll()
 
