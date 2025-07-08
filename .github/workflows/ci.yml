@@ -199,12 +199,12 @@ jobs:
           path: node_modules
       - name: Install JS dependencies
         run: bin/bun install
-      # - name: Cache precompiled assets
-      #   id: cache-precompiled-assets
-      #   uses: actions/cache@v4
-      #   with:
-      #     key: assets-${{ hashFiles('bun.lock', 'app/javascript/**') }}
-      #     path: app/assets/builds
+      - name: Cache precompiled assets
+        id: cache-precompiled-assets
+        uses: actions/cache@v4
+        with:
+          key: assets-${{ hashFiles('bun.lock', 'app/javascript/**') }}
+          path: app/assets/builds
       - name: Precompile assets
         if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: bin/rails assets:precompile
@@ -254,10 +254,6 @@ jobs:
       - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -268,12 +264,19 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
-      - name: Install JS dependencies
-        run: yarn install
+      - name: Cache precompiled assets
+        id: cache-precompiled-assets
+        uses: actions/cache@v4
+        with:
+          key: assets-${{ hashFiles('bun.lock', 'app/javascript/**') }}
+          path: app/assets/builds
       - name: Precompile assets
-        run: yarn run build
+        if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
+        run: bin/rails assets:precompile
+        env:
+          HOST: http://example.com
       - name: Setup parallel tests and run feature specs
         run: RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load; bundle exec rspec spec/features/autodoc
         env:
