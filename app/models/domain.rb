@@ -11,7 +11,6 @@ Domain = Struct.new(
   :search_banner_template_name,
   :sms_sender_name,
   :online_reservation_with_public_link,
-  :can_sync_to_outlook,
   :france_connect_enabled,
   :support_email,
   :secretariat_email,
@@ -32,7 +31,6 @@ class Domain
       address_selection_template_name: "search/address_selection/rdv_solidarites",
       search_banner_template_name: "search/banners/rdv_solidarites",
       online_reservation_with_public_link: false,
-      can_sync_to_outlook: false,
       sms_sender_name: "RdvSoli",
       france_connect_enabled: true,
       support_email: "support@rdv-solidarites.fr",
@@ -55,10 +53,9 @@ class Domain
       address_selection_template_name: "search/address_selection/rdv_aide_numerique",
       search_banner_template_name: "search/banners/rdv_aide_numerique",
       online_reservation_with_public_link: true,
-      can_sync_to_outlook: false,
       sms_sender_name: "RdvAideNum",
       france_connect_enabled: false,
-      support_email: "support@rdv-aide-numerique.fr",
+      support_email: "support@rdv-service-public.fr",
       verticale: :rdv_aide_numerique,
       allow_self_onboarding: false,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
@@ -74,7 +71,6 @@ class Domain
       address_selection_template_name: nil,
       search_banner_template_name: "search/banners/rdv_mairie",
       online_reservation_with_public_link: true,
-      can_sync_to_outlook: false,
       sms_sender_name: "RDV S.P.",
       france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
@@ -211,6 +207,14 @@ class Domain
       find(ENV["REVIEW_APP_DOMAIN"])
     else
       RDV_SOLIDARITES
+    end
+  end
+
+  def self.default_domain_for_current_instance
+    if ENV["DEFAULT_DOMAIN_IS_RDV_SOLIDARITES"] == "true"
+      RDV_SOLIDARITES
+    else
+      RDV_MAIRIE
     end
   end
 

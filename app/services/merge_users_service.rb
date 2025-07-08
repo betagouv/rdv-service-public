@@ -15,7 +15,7 @@ class MergeUsersService < BaseService
       merge_relatives
       merge_file_attentes
       merge_referent_agents
-      @user_to_merge.reload.soft_delete(@organisation) # ! reload refreshes associations to delete
+      @user_to_merge.reload.soft_delete!(@organisation) # ! reload refreshes associations to delete
     end
   end
 
@@ -43,6 +43,10 @@ class MergeUsersService < BaseService
     if @user_to_merge.logged_once_with_franceconnect?
       @user_target.logged_once_with_franceconnect = true
       @user_target.franceconnect_openid_sub = @user_to_merge.franceconnect_openid_sub
+    end
+
+    if @user_to_merge.pro_connect_openid_sub?
+      @user_target.pro_connect_openid_sub = @user_to_merge.pro_connect_openid_sub
     end
     @user_target.save!
   end

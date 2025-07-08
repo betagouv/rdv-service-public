@@ -1,21 +1,38 @@
 - content_for :title, t(".title")
 
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Synchronisation d'agenda", href: agents_calendar_sync_path
+    = b.with_breadcrumb label: "Connexion à votre compte Microsoft 365"
+
 - if current_agent.connected_to_outlook?
   p Votre compte est déjà connecté à outlook et vos rendez-vous y sont donc synchronisés. Vous pouvez vous deconnecter si vous le souhaitez en cliquant sur le bouton ci-dessous.
-  p Attention, cela aura pour effect de supprimer tous vos rendez-vous #{current_domain.name} de votre agenda Outlook.
+  p Attention, cela aura pour effect de supprimer tous vos rendez-vous #{current_domain.name} de votre agenda Outlook (Microsoft 365).
 
   div.rdv-text-align-center
     = link_to "Déconnecter votre compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2 #{'disabled' if current_agent.outlook_disconnect_in_progress?}", method: :delete
 
 - else
 
-  p Vous pouvez envoyer automatiquement vos rendez-vous dans Outlook en vous connectant à votre compte grâce au bouton ci-dessous.
+  p
+    | Vous pouvez synchroniser automatiquement et en temps réel vos rendez-vous sur votre agenda Microsoft Office 365 en connectant votre compte grâce au bouton ci-dessous :
 
   div.rdv-text-align-center
     = link_to "/omniauth/microsoft_graph?login_hint=#{current_agent.email}", class: "mb-4", method: :post do
       = image_tag("sign_in_with_microsoft.svg", alt: "S'identifier avec Microsoft")
 
-  p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
-  p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la documentation", current_domain.documentation_url, target: :blank)}.
+  p
+    |> Pour que la synchronisation fonctionne, il faut au préalable qu'un·e
+    b
+      |> administrateur·ice de votre organisation Microsoft
+    |> (généralement une personne travaillant au service informatique) ait connecté son compte Microsoft Office 365 à #{current_domain.name} afin de permettre aux autres agents d'activer la synchronisation.
+  p
+    | Retrouvez toutes les étapes à suivre en consultant notre documentation :
 
-= link_to "Retour aux méthodes de synchronisation calendrier", agents_calendar_sync_path, class: "btn btn-link float-right mt-3"
+  .rdv-text-align-center.fr-mb-2w
+    = link_to "Consulter la documentation", "https://aide.rdv-service-public.fr/toutes-les-notions/synchronisation-outlook-microsoft-365", class: "fr-btn fr-btn--secondary", target: "_blank", rel: "noopener", title: "Consulter la documentation - s’ouvre dans une nouvelle fenêtre"
+
+  p
+    |> Si vous avez besoin d'aide, vous pouvez nous contacter via le
+    = link_to "formulaire de contact", new_aide_demande_support_path(role: "agent", sujet: "Synchronisation Outlook")
+    | .

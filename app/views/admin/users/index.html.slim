@@ -1,7 +1,10 @@
 - content_for(:menu_item) { "menu-users" }
 
 - content_for :title do
-  | Vos usagers
+  | Usagers
+
+- content_for :fil_ariane do
+    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: "Usagers"
 
 - content_for :breadcrumb do
   .btn-group
@@ -46,7 +49,7 @@
     - elsif @users.total_pages > 1
       .m-3
         .d-flex.justify-content-center id="users-pagination"
-          = paginate @users, theme: "twitter-bootstrap-4"
+          = paginate @users, theme: "dsfr"
           .rdv-text-align-center= page_entries_info @users
   - else
     .card-body

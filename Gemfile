@@ -25,6 +25,9 @@ gem "rack-cors" # CORS management
 # Mail provides a nice Ruby DSL for making, sending and reading emails.
 gem "mail"
 
+# Hotwire
+gem "hotwire-rails" # Hotwire is a framework for building modern web applications without using much JavaScript
+
 # Ops
 # A gem that provides a client interface for the Sentry error logger
 gem "sentry-ruby"
@@ -46,8 +49,6 @@ gem "pg_search"
 gem "strong_migrations"
 # A pagination engine plugin for Rails 4+ and other modern frameworks
 gem "kaminari"
-# Bootstrap 4 styling for Kaminari gem
-gem "bootstrap4-kaminari-views"
 # A Rails engine for creating super-flexible admin dashboards
 gem "administrate"
 # Track changes to your models.

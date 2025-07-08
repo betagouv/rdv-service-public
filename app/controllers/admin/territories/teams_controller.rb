@@ -27,8 +27,14 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
   end
 
   def update
-    authorize(@team, policy_class: Agent::TeamPolicy)
-    if @team.update(team_params)
+    # On utilise ici une transaction pour pouvoir rollback si le second
+    # authorize détecte des `agent_ids` non autorisés et lève une exception.
+    Team.transaction do
+      authorize(@team, policy_class: Agent::TeamPolicy)
+      @team.assign_attributes(team_params)
+      authorize(@team, policy_class: Agent::TeamPolicy)
+    end
+    if @team.save
       redirect_to admin_territory_teams_path(current_territory)
     else
       render :new

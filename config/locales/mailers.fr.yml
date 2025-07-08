@@ -79,8 +79,8 @@ fr:
         title: "[Rappel] RDV le %{date}"
       rdv_cancelled:
         title: RDV annulé le %{date} avec %{organisation}
-        revoked_for_motif_at_date: Votre RDV %{motif} du %{date} a été annulé pour raison administrative.
-        cancelled_for_motif_at_date: Votre RDV %{motif} du %{date} a bien été annulé à votre demande.
+        revoked_at_date: Votre RDV %{service} du %{date} a été annulé pour raison administrative.
+        cancelled_at_date: Votre RDV %{service} du %{date} a bien été annulé à votre demande.
         reschedule_by_phone_html: Vous pouvez reprendre un rendez-vous en appelant au %{telephone_link}.
         reschedule_online: 'Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous :'
         reschedule_button: Reprendre RDV

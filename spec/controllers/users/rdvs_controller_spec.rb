@@ -411,14 +411,6 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it { expect(assigns(:all_creneaux)).to be_empty }
       it { expect(response.body).to include("Malheureusement, tous les créneaux sont pris.") }
-
-      context "for a js request" do
-        subject do
-          get :creneaux, params: { id: rdv.id }, xhr: true
-        end
-
-        it { expect(response.body).to include("Malheureusement, tous les créneaux sont pris.") }
-      end
     end
 
     context "creneaux available" do

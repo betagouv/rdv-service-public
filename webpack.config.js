@@ -14,6 +14,7 @@ module.exports = {
     rdv_plan: "./app/javascript/rdv_plan",
     mail: "./app/javascript/mail",
     instance_name: "./app/javascript/instance_name",
+    headway_config: "./app/javascript/headway_config",
   },
   output: {
     filename: '[name].js',

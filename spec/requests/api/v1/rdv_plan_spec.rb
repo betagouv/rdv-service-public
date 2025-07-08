@@ -147,6 +147,7 @@ RSpec.describe "RDV Plan API" do
             birth_date: "1990-12-31",
           },
           return_url: "https://demo.demarches-simplifiees.fr/callback/123",
+          dossier_url: "https://demo.demarches-simplifiees.fr/dossier/456",
         }
       end
 
@@ -158,17 +159,30 @@ RSpec.describe "RDV Plan API" do
         expect(rdv_plan).to have_attributes(
           planning_agent: agent,
           return_url: "https://demo.demarches-simplifiees.fr/callback/123",
+          dossier_url: "https://demo.demarches-simplifiees.fr/dossier/456",
           oauth_application_id: application.id
         )
 
         expect(rdv_plan.user).to have_attributes(
           first_name: "Francis",
           last_name: "Factice",
-          email: "francis@factice.org",
+          notification_email: "francis@factice.org",
           phone_number: "0611223344",
           address: "21 rue des Ardennes, 75019 Paris",
           birth_date: Date.parse("1990-12-31")
         )
+      end
+    end
+
+    context "when the agent hasn't configured an organisation yet" do
+      let(:agent) { create(:agent, basic_role_in_organisations: []) }
+
+      context "and the instance is RDV Service Public" do
+        stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
+        it "shows a url with the correct domain name" do
+          post "/api/v1/rdv_plans", headers: headers, params: params, as: :json
+          expect(parsed_response_body.dig("rdv_plan", "url")).to include("www.rdv-mairie-test.localhost")
+        end
       end
     end
   end

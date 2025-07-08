@@ -12,6 +12,7 @@ RSpec.describe Agents::SessionsController do
 
       before do
         AgentConnectStubs.stub_and_run_discover_request
+        # C'est compliqué de manipuler la session dans une feature spec, c'est pour ça qu'on utilise une spec de controller ici
         session[:agent_connect_id_token] = "fake_agent_connect_id_token"
       end
 

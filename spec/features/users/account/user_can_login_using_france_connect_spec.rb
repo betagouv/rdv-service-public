@@ -1,4 +1,6 @@
 RSpec.describe "User can login using FranceConnect" do
+  stub_env_with(FRANCECONNECT_HOST: "fcp.integ01.dev-franceconnect.fr")
+
   before do
     mock_france_connect_profile = {
       sub: "12345",
@@ -22,7 +24,8 @@ RSpec.describe "User can login using FranceConnect" do
       expect { click_on "S’identifier avec FranceConnect" }.to change(User, :count).by(1)
 
       expect(User.last).to have_attributes(
-        email: "france@monopolis.fr",
+        email: nil,
+        notification_email: "france@monopolis.fr",
         first_name: "France",
         last_name: "Gall",
         franceconnect_openid_sub: "12345",

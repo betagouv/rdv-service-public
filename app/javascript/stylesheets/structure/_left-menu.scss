@@ -12,11 +12,10 @@
   min-height: calc(
     100vh - 73px
   ); // 73px correspond à la taille du header, arrondie au supérieur
-  padding-bottom: 73px; //idem
+  padding-bottom: 90px; // taille du footer, plus un peu de marge
 
   @media (max-height: 800px) {
-    min-height: calc(100vh - 49px); // taille du header
-    padding-bottom: 49px; //idem
+    min-height: calc(100vh - 53px); // taille du header
   }
 }
 

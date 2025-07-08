@@ -309,6 +309,24 @@ RSpec.describe MergeUsersService, type: :service do
     end
   end
 
+  context "when one user is connected by ProConnect" do
+    it "keep ProConnect attributes when merged user uses ProConnect" do
+      user_to_merge = create(:user, pro_connect_openid_sub: "unechainedecharacteres", organisations: [organisation])
+      user_target = create(:user, organisations: [organisation])
+      described_class.perform_with(user_target, user_to_merge, attributes_to_merge, organisation)
+      user_target.reload
+      expect(user_target.pro_connect_openid_sub).to eq("unechainedecharacteres")
+    end
+
+    it "keep ProConnect attributes when user uses ProConnect" do
+      user_to_merge = create(:user, organisations: [organisation])
+      user_target = create(:user, pro_connect_openid_sub: "unechainedecharacteres", organisations: [organisation])
+      described_class.perform_with(user_target, user_to_merge, attributes_to_merge, organisation)
+      user_target.reload
+      expect(user_target.pro_connect_openid_sub).to eq("unechainedecharacteres")
+    end
+  end
+
   context "when the participation was created by a prescripteur" do
     let(:user_target) { create(:user, organisations: [organisation]) }
     let(:user_to_merge) { create(:user, organisations: [organisation], created_through: :prescripteur) }

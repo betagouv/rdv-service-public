@@ -1,0 +1,20 @@
+.fr-grid-row
+  .fr-col-12
+    div[style="display: flex; position: sticky; top: 0; background: white;"]
+      h1 = @title
+      ul.fr-nav__list.fr-ml-4w[style="display: flex;"]
+        - @sections.each.with_index do |section, index|
+          li.fr-nav__item
+            a.fr-nav__link[href="#section_#{index}"] = section.title
+
+    - @sections.each.with_index do |section, index|
+      / le padding-top et margin-top sont pour compenser la hauteur du headeur sticky
+      h2[id="section_#{index}" style="padding-top: 80px; margin-top: -80px;"] = "#{index +1}) #{section.title}"
+      - section.steps.each do |step|
+        div[style="padding: 8px; display: flex; flex-direction: column; align-items: center"]
+          - if step[:img_src]
+            img[src='#{step[:img_src]}' width=800 style='border: solid 2px grey']
+            - if step[:text]
+              p.fr-mt-2w.fr-mb-5w = step[:text]
+          - else
+            div = step[:text]

@@ -1,0 +1,76 @@
+class FranceConnectV2Controller < ApplicationController
+  STATE_SESSION_KEY = "france_connect_v2_state".freeze
+  NONCE_SESSION_KEY = "france_connect_v2_nonce".freeze
+
+  def auth
+    auth_client = FranceConnectV2OpenIdClient::Auth.new(
+      client_id: ENV["FRANCECONNECT_V2_CLIENT_ID"]
+    )
+    session[STATE_SESSION_KEY] = auth_client.state
+    session[NONCE_SESSION_KEY] = auth_client.nonce
+
+    redirect_to auth_client.redirect_url(franceconnect_v2_callback_url), allow_other_host: true
+  end
+
+  def callback
+    state = session.delete(STATE_SESSION_KEY)
+    nonce = session.delete(NONCE_SESSION_KEY)
+
+    if params[:error]
+      flash[:error] = "La connexion à FranceConnect n'a pas pu aboutir (#{params[:error]} : #{params[:error_description]})."
+      redirect_to new_user_session_path and return
+    end
+
+    callback_client = FranceConnectV2OpenIdClient::Callback.new(
+      session_state: state,
+      params_state: params[:state],
+      callback_url: franceconnect_v2_callback_url,
+      nonce: nonce,
+      client_id: ENV["FRANCECONNECT_V2_CLIENT_ID"],
+      client_secret: ENV["FRANCECONNECT_V2_CLIENT_SECRET"]
+    )
+
+    unless callback_client.fetch_user_info_from_code!(params[:code])
+      flash[:error] = generic_error_message
+      redirect_to(new_user_session_path) and return
+    end
+
+    upsert_service = UpsertUserForFranceconnectService.new(OpenStruct.new(callback_client.user_info))
+    upsert_service.perform
+
+    flash[:success] = upsert_service.new_user? ? "Votre compte a été créé" : "Vous êtes connecté·e"
+    bypass_sign_in upsert_service.user, scope: :user
+    session[:france_connect_v2_id_token] = callback_client.id_token_for_logout
+    redirect_to after_sign_in_path_for(upsert_service.user)
+  end
+
+  # voir https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-endpoints/#redirection-vers-le-fournisseur-de-service-apres-deconnexion
+  def post_logout
+    session_state = session.delete(:france_connect_v2_logout_state)
+    params_state = params[:state]
+    if session_state != params_state
+      Sentry.capture_message("State mismatch on FranceConnect logout", extra: { session_state:, params_state: })
+    end
+
+    # On veut conserver les flash de type "Déconnexion réussie" ou "Votre compte a été supprimé avec succès"
+    # qui ont été stockés en session avant la redirection vers le logout FranceConnect, qui elle-même redirige ici.
+    flash.keep
+
+    redirect_to root_url
+  end
+
+  private
+
+  def generic_error_message
+    support_email = current_domain.support_email
+    %(Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse <a href="mailto:#{support_email}">#{support_email}</a> si le problème persiste.)
+  end
+
+  # Devise fournit un mécanisme `store_location_for` qui permet de revenir
+  # vers le path demandé après le process de login.
+  # Ce controller gère l'authentification, nous ne souhaitons donc
+  # jamais revenir vers ses paths après un login.
+  def storable_location?
+    false
+  end
+end

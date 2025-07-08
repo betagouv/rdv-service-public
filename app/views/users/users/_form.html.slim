@@ -7,11 +7,11 @@ ruby:
 = form_for user, url: form_url, method: form_method, builder: Dsfr::FormBuilder do |f|
   = render "model_errors", model: user, f: f
   .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
-    .fr-col-12.fr-col-md-6= f.dsfr_text_field :first_name, disabled: user.logged_once_with_franceconnect?, autocomplete: "given-name"
-    .fr-col-12.fr-col-md-6= f.dsfr_text_field :last_name, autocomplete: "family-name"
+    .fr-col-12.fr-col-md-6= f.dsfr_text_field :first_name, disabled: user.connected_with_sso?, autocomplete: "given-name"
+    .fr-col-12.fr-col-md-6= f.dsfr_text_field :last_name, disabled: user.pro_connect_openid_sub, autocomplete: "family-name"
   .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
-    - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_MAIRIE
-      .fr-col-12.fr-col-md-6= f.dsfr_text_field :birth_name, placeholder: "Nom de naissance", disabled: user.logged_once_with_franceconnect?
+    - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_MAIRIE || user.pro_connect_openid_sub
+      .fr-col-12.fr-col-md-6= f.dsfr_text_field :birth_name, placeholder: "Nom de naissance", disabled: user.connected_with_sso?
     - if !current_user.signed_in_with_invitation_token? && rdv_wizard&.rdv&.territory&.enable_birth_date_field?
       .fr-col-12.fr-col-md-6= f.dsfr_text_field :birth_date, type: "date", disabled: user.logged_once_with_franceconnect?, autocomplete: "bday"
   - if rdv_wizard&.rdv&.requires_ants_predemande_number?
@@ -27,6 +27,9 @@ ruby:
       / Nous ne voulons pas perdre d'informations si l'utilisateur a déjà un email de notification, donc le champ est requis
       / L'utilisateur peut définir un email de notification s'il n'en a pas encore, mais ce n'est pas obligatoire
       = f.dsfr_email_field :notification_email, required: user.notification_email.present?
+  - elsif user.email.blank? && user.notification_email && user.logged_once_with_franceconnect?
+    = f.dsfr_email_field :notification_email, label: "Email de notification", disabled: true, hint: "Cet email a été importé via FranceConnect. Vous y recevrez toutes vos notifications."
+
   = f.dsfr_phone_field :phone_number, as: :tel, required: rdv_wizard&.motif&.phone?, autocomplete: "tel"
   - if user.phone_number.present? && !user.phone_number_mobile?
     .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile

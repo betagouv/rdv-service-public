@@ -13,7 +13,7 @@ h2= @territory
 h3 Statistiques de notifications
 
 - cache([@territory, Time.zone.today], expires_in: 24.hours) do
-  - if @territory.present? && Organisation.joins(:territory).where(territories: [@territory]).empty?
+  - if @territory.present? && @territory.organisations.none?
     h3 Cette structure n'utilise pas #{current_domain.name}.
   - else
     .card.mb-5

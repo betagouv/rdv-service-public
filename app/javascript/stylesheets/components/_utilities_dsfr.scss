@@ -132,3 +132,12 @@
   justify-content: flex-start;
   text-align: left;
 }
+
+// Une pastille qui reprend la couleur du badge d'info pour guide l'utilisateur vers une page qui comportera ce badge
+.rdv-pastille {
+  background-color: #a9bfff;
+  border-radius: 4px;
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+}

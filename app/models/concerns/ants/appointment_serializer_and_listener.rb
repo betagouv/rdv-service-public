@@ -59,8 +59,11 @@ module Ants
       rdvs.each do |rdv|
         next unless rdv.requires_ants_predemande_number?
 
-        rdv.assign_attributes(needs_sync_to_ants: true)
-        rdv.assign_attributes(obsolete_ants_data:) if obsolete_ants_data.present?
+        rdv.needs_sync_to_ants = true
+        if obsolete_ants_data.present?
+          rdv.obsolete_ants_data ||= Set.new
+          rdv.obsolete_ants_data.add(obsolete_ants_data)
+        end
       end
     end
 
@@ -70,10 +73,12 @@ module Ants
           Ants::SyncAppointmentJob.perform_later(ants_pre_demande_number:)
         end
         if rdv.obsolete_ants_data.present?
-          Ants::SyncAppointmentJob.perform_later(
-            ants_pre_demande_number: rdv.obsolete_ants_data[:pre_demande_number],
-            obsolete_meeting_point_id: rdv.obsolete_ants_data[:meeting_point_id]
-          )
+          rdv.obsolete_ants_data.each do |obsolete_ants_data|
+            Ants::SyncAppointmentJob.perform_later(
+              ants_pre_demande_number: obsolete_ants_data[:pre_demande_number],
+              obsolete_meeting_point_id: obsolete_ants_data[:meeting_point_id]
+            )
+          end
         end
         rdv.assign_attributes(needs_sync_to_ants: false)
       end

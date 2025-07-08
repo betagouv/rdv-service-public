@@ -94,6 +94,13 @@ class Territory < ApplicationRecord
     enable_birth_date_field: :birth_date,
   }.merge(SOCIAL_FIELD_TOGGLES).freeze
 
+  # Nous voulons permettre à tous les espaces d'activer ou non ces champs, qualifiés de "légitimes"
+  # En revanche, les autres champs listés ci-dessus sont considérés comme "legacy" et seulement
+  # affichés aux espaces qui les avaient déjà activés.
+  legitimate_toggle_keys = %i[enable_birth_date_field enable_address_details enable_case_number]
+  LEGITIMATE_TOGGLES = OPTIONAL_FIELD_TOGGLES.slice(*legitimate_toggle_keys).freeze
+  LEGACY_TOGGLES = OPTIONAL_FIELD_TOGGLES.except(*legitimate_toggle_keys).freeze
+
   def mairies?
     name == MAIRIES_NAME
   end
@@ -118,8 +125,8 @@ class Territory < ApplicationRecord
     attributes.symbolize_keys.slice(*SOCIAL_FIELD_TOGGLES.keys).values.any?
   end
 
-  def any_optional_user_field_enabled?
-    attributes.symbolize_keys.slice(*OPTIONAL_FIELD_TOGGLES.keys).values.any?
+  def any_legacy_fields_enabled?
+    attributes.symbolize_keys.slice(*LEGACY_TOGGLES.keys).values.any?
   end
 
   def to_s

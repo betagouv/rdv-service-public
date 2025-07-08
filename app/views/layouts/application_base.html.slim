@@ -21,7 +21,7 @@ html lang="fr"
 
     = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: {id: "header"} do |header|
       ruby:
-        header.with_operator_image title: "Accueil - #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: ""
+        header.with_operator_image title: "", src: asset_path(current_domain.dark_logo_path), alt: "Accueil - #{current_domain.name}"
         if current_user.present? && !current_user.signed_in_with_invitation_token?
           header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, html_attributes: { class: "fr-icon-calendar-fill" }
           header.with_tool_link title: "Vos informations", path: users_informations_path
@@ -49,7 +49,7 @@ html lang="fr"
 
     #modal-holder
 
-    footer.fr-footer.main-footer.fr-pb-12w#footer
+    footer.fr-footer.main-footer.fr-pb-12w#footer[role="contentinfo"]
 
       .fr-container
         .fr-footer__body
@@ -100,7 +100,9 @@ html lang="fr"
             li.fr-footer__bottom-item
               = link_to "Politique de confidentialité", politique_de_confidentialite_path, class: "fr-footer__bottom-link"
             li.fr-footer__bottom-item
-              = link_to "Conditions d’utilisation", cgu_path, class: "fr-footer__bottom-link"
+              = link_to "CGU - Usagers", cgu_path, class: "fr-footer__bottom-link", title: "Conditions générales d’utilisation des usagers"
+            li.fr-footer__bottom-item
+              = link_to "CGU - Agents", cgu_agent_path, class: "fr-footer__bottom-link", title: "Conditions générales d’utilisation des agents"
             li.fr-footer__bottom-item
               = link_to "Code Source sur GitHub", "https://github.com/betagouv/rdv-service-public", class: "fr-footer__bottom-link", target: "_blank", rel: "noopener"
             li.fr-footer__bottom-item

@@ -3,8 +3,7 @@ class Users::SessionsController < Devise::SessionsController
 
   include CanHaveRdvWizardContext
   include Admin::WeakPasswordControllerConcern
-
-  before_action :exclude_signed_in_agents, only: [:new]
+  include Users::DeviseOrSsoLogout
 
   def new
     # Le flash d'erreur est trop aggressif pour le cas d'un usager non connecté.
@@ -33,30 +32,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
-    @connected_with_franceconnect = user_signed_in? && session[:connected_with_franceconnect]
-    # so it's accessible in after_sign_out_path_for
-    super
-  end
-
-  private
-
-  def exclude_signed_in_agents
-    return true unless agent_signed_in?
-
-    redirect_to(
-      root_path,
-      flash: { error: "Déconnectez-vous d'abord de votre compte agent pour vous connecter en tant qu'utilisateur" }
-    )
-  end
-
-  # Copied from devise-4.8.1/app/controllers/devise/sessions_controller.rb
-  # We needed to override the call to redirect_to to set `allow_other_host: true`.
-  def respond_to_on_destroy
-    # We actually need to hardcode this as Rails default responder doesn't
-    # support returning empty response on GET request
-    respond_to do |format|
-      format.all { head :no_content }
-      format.any(*navigational_formats) { redirect_to after_sign_out_path_for(resource_name), allow_other_host: true }
-    end
+    logout_and_redirect_user(flash_message_key: :signed_out)
   end
 end
