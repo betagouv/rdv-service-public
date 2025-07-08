@@ -4,5 +4,11 @@
 
 import { application } from "./application"
 
+import FormController from "./form_controller"
+application.register("form", FormController)
+
 import MotifFormController from "./motif_form_controller"
 application.register("motif-form", MotifFormController)
+
+import PrintController from "./print_controller"
+application.register("print", PrintController)

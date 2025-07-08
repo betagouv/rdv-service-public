@@ -27,4 +27,13 @@ class StaticPagesController < ApplicationController
 
     response.headers["Content-Length"] = response.body.length.to_s
   end
+
+  def france_connect_sector_identifier
+    response.headers["Content-Type"] = "application/json"
+
+    redirect_urls = Domain::ALL.map(&:host_name).map do |host_name|
+      franceconnect_v2_callback_url(host: host_name)
+    end
+    render json: redirect_urls
+  end
 end

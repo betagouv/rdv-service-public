@@ -1,6 +1,14 @@
 RSpec.describe "Prise de rendez-vous entre agents", js: true do
   let(:service) { create(:service, name: "Dinum", short_name: "Dinum") }
 
+  stub_env_with(
+    AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
+    AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
+    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa",
+    FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2",
+    FRANCECONNECT_V2_CLIENT_ID: "fake_france_connect_v2_client_id",
+    FRANCECONNECT_V2_CLIENT_SECRET: "fake_france_connect_v2_client_secret"
+  )
   before do
     Compte.new(
       {
@@ -30,10 +38,21 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
     doc.add_text(<<~TEXT
       <h3>Contexte</h3>
       <p>
-        Je suis un agent du service public, par exemple quelqu'un qui travaille pour une startup d'état de la Dinum.
+        Je souhaite proposer de la prise de rendez-vous à d'autres agents du service public, en leur envoyant un lien avec lequel ils pourront directement prendre rendez-vous.
       </p>
       <p>
-        Je souhaite proposer de la prise de rendez-vous à d'autres agents du service public, en leur envoyant un lien avec lequel ils pourront directement prendre rendez-vous.
+        RDV Service Public peut remplacer des solutions de type Cal.com pour la prise de rendez-vous entre agents de différentes structures.
+      </p>
+      <p>
+        Pour une réunion entre collègues, la prise de rendez-vous via votre calendrier partagé habituel reste plus pratique (par exemple la Suite Numérique, Outlook, Thunderbird…). Si vous avez besoin de proposer des rendez-vous à d'autres agents qui ne sont pas vos collègues, RDV Service Public peut vous aider.
+      </p>
+      <h3>
+        Exemple de cas d’usage
+      </h3>
+      <p>
+        Vous faites partie de l’équipe produit d’un service public numérique.
+        Vous souhaitez proposer des entretiens utilisateurs aux agents de mairie qui utilisent votre service.
+        Voici comment vous pouvez faire :
       </p>
       <p>
         J'ai un compte sur RDV Service Public, sur lequel j'ai juste un motif "Suivi de dossier" par visio.
@@ -127,6 +146,9 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
                        text: "L'appli me propose de me connecter avec ProConnect",
                        wait_for: "Vous devez vous connecter ou vous inscrire pour continuer.")
 
+    expect(page).not_to have_content("FranceConnect")
+
+    expect(page).to have_content("ProConnect")
     # On triche pour faire semblant de faire une connexion via ProConnect
     user = create(:user, pro_connect_openid_sub: "fake_sub", first_name: "Camille", last_name: "Exemple", email: "camille.exemple@demo-rdv-service-public.gouv.fr")
     login_as(user, scope: :user)

@@ -1,4 +1,5 @@
 class JobsNotScheduledCorrectly < StandardError; end
+class JobsCongestionError < StandardError; end
 
 class HealthController < ApplicationController
   def db_connection
@@ -8,20 +9,31 @@ class HealthController < ApplicationController
 
   def jobs_queues
     queues = [
-      { name: "latency_30s", pending_jobs_threshold: 10, delay: 30.seconds },
-      { name: "latency_5m", pending_jobs_threshold: 10, delay: 5.minutes },
-      { name: "latency_whenever", pending_jobs_threshold: 10, delay: 1.hour },
-    ]
-    queues.each do |queue|
-      queue[:pending_jobs_count] = GoodJob::Job
+      { name: "latency_30s", late_jobs_threshold: 10, delay: 30.seconds },
+      { name: "latency_5m", late_jobs_threshold: 10, delay: 5.minutes },
+      { name: "latency_whenever", late_jobs_threshold: 10, delay: 1.hour },
+    ].map do |queue|
+      late_jobs = GoodJob::Job
         .where(finished_at: nil) # finished_at is set upon success or final failure
         .where(queue_name: queue[:name])
         .where("scheduled_at < ?", Time.zone.now - queue[:delay]) # scheduled_at is updated at each retry
+      late_jobs_by_class = late_jobs
+        .group(:job_class)
         .count
+        .to_h do |job_class, count|
+          earliest_scheduled_at = late_jobs.where(job_class:).order(:scheduled_at).first.scheduled_at
+          [job_class, { count:, earliest_scheduled_at: }]
+        end
+      queue.merge(late_jobs_by_class:)
     end
-    congested_queues = queues.select { _1[:pending_jobs_count] >= _1[:pending_jobs_threshold] }
+    congested_queues = queues.select { _1[:late_jobs_by_class].present? }
 
-    return render(status: :service_unavailable, json: { congested_queues: }) if congested_queues.any?
+    if congested_queues.any?
+      Sentry.set_context(:congested_queues, { congested_queues: })
+      Sentry.capture_exception(JobsCongestionError.new(congested_queues.pluck(:name).to_sentence))
+
+      return render(status: :service_unavailable, json: { congested_queues: })
+    end
 
     render(status: :ok, json: {})
   end

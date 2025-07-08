@@ -31,6 +31,6 @@ RSpec.describe "Déconnexion" do
     # On vérifie que les infos de l'utilisateur n'ont pas été gardées dans la session
     expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer.")
 
-    expect(page).not_to have_content(user.first_name)
+    expect(page.body).not_to include(user.first_name) # Le prénom est dans un input, donc on utilise cette méthode plutôt qu'un expect(page).to have_content
   end
 end
