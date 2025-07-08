@@ -1,4 +1,7 @@
 name: CI
+# Cette ligne permet de ne donner aucune permission au GITHUB_TOKEN associé au job qui tourne.
+# On n'utilise pas du tout l'api github dans notre CI (aucun job n'a du code qui va créer des issues ou éditer le wiki du repo), donc on n'en a pas besoin.
+permissions: {}
 on:
   push:
     paths-ignore:
@@ -169,11 +172,13 @@ jobs:
       matrix:
         # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’exécution
         dirname: [agents, "*"]
-        include: 
+        include:
           - dirname: agents
             command: "parallel:spec[spec/features/agents]"
+            name: agents
           - dirname: "*"
-            command: "parallel:spec['spec/features/(?!agents)']"
+            command: "parallel:spec['spec/features/(?!(agents|autodoc))']"
+            name: other
     services:
       postgres:
         image: postgres
@@ -201,17 +206,6 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
-      # TODO: Remove this workaround that specify the Chrome version used by the CI
-      # inspired by https://github.com/teamcapybara/capybara/issues/2800#issuecomment-2731100953
-      # once the linked issue on selenium would have been fixed
-      - name: Remove image-bundled Chrome
-        run: sudo apt-get purge google-chrome-stable
-      - name: Setup stable Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 128
-          install-chromedriver: true
-          install-dependencies: true
       - name: Set up Redis
         uses: zhulik/redis-action@1.1.0
       - name: Cache js dependencies
@@ -250,9 +244,83 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: artifacts-capybara
+          name: artifacts-capybara-${{ matrix.name }}
           path: tmp/capybara
           if-no-files-found: ignore
+  test_features_autodoc:
+    name: Feature Tests using Autodoc
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["5432:5432"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: WitherZuo/set-timezone@v1.0.0
+        with:
+          timezoneLinux: "Europe/Paris"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - name: Set up Redis
+        uses: zhulik/redis-action@1.1.0
+      - name: Cache js dependencies
+        uses: actions/cache@v4
+        with:
+          key: node_modules-${{ hashFiles('yarn.lock') }}
+          path: node_modules
+      - name: Install JS dependencies
+        run: yarn install
+      - name: Precompile assets
+        run: yarn run build
+      - name: Setup parallel tests and run feature specs
+        run: RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load; bundle exec rspec spec/features/autodoc
+        env:
+          HOST: http://example.com
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+          UPLOAD_TO_GH_PAGES: true
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: tmp/capybara/autodoc
+        continue-on-error: true # On ne veut pas faire échouer le build si l'upload de l’artifact de la doc échoue
+        if: ${{ github.ref == 'refs/heads/production' }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: artifacts-capybara-spec-to-doc
+          path: tmp/capybara
+  deploy_doc:
+    name: Deploy spec to doc to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: [test_features_autodoc]
+    continue-on-error: true # On ne veut pas faire échouer le build si le déploiement de la doc échoue
+    if: ${{ github.ref == 'refs/heads/production' }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/deploy-pages@v4
+        continue-on-error: true
   test_boot_without_db:
     name: Boot web server without database
     runs-on: ubuntu-latest

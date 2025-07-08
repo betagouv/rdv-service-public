@@ -1,4 +1,4 @@
-footer.footer#footer
+footer.footer#footer[role="contentinfo"]
   .container-fluid
     .row
       .col-md-12
@@ -8,7 +8,7 @@ footer.footer#footer
             = ENV["RDV_SOLIDARITES_VERSION"]
           = link_to mentions_legales_path, class: "fr-link" do
             | Mentions Légales
-          = link_to cgu_path, class: "fr-link" do
-            | C.G.U.
+          = link_to cgu_agent_path, class: "fr-link", title: "Conditions générales d’utilisation" do
+            | CGU
           = link_to politique_de_confidentialite_path, class: "fr-link" do
             | Politique de confidentialité

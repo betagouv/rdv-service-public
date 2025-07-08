@@ -18,7 +18,17 @@
       - org_booking_link = public_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug)
       = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: org_booking_link }
 
+.card
+  .card-body
+    p Qui participe aux rendez-vous avec les agents de votre organisation ?
+    = simple_form_for @organisation, url: admin_organisation_online_booking_path(@organisation)  do |f|
+      = f.input :online_booking_for_particuliers, label: "des particuliers", hint: sanitize("On leur proposera la connexion avec #{dsfr_link_to('FranceConnect', 'https://franceconnect.gouv.fr/', target: :_blank)}", attributes: %w[href target])
+      = f.input :online_booking_for_professionnels, label: "des professionnels", hint: sanitize("On leur proposera la connexion avec #{dsfr_link_to('ProConnect', 'https://www.proconnect.gouv.fr/', target: :_blank)}", attributes: %w[href target])
+      = f.submit "Enregistrer", class: "fr-btn"
+
 ul.list-group.my-1
+  - if @motifs.none?
+    = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
   - @motifs.each do |motif|
     li.card
       .card-header.d-flex.align-items-center

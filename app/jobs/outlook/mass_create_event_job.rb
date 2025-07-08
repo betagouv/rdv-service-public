@@ -1,5 +1,7 @@
 module Outlook
   class MassCreateEventJob < ApplicationJob
+    include ExtendedRetryStrategyConcern
+
     def perform(agent)
       Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
 

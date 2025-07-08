@@ -62,7 +62,7 @@ RSpec.describe "creating a rdv" do
     expect { create_request }.to change { Rdv.count }.by(1)
     expect(response).to be_successful
     expect(response).to render_template(:show)
-    expect(response).to include("Le RDV a été créé")
+    expect(response.body).to include("Le RDV a été créé")
   end
 end
 ```

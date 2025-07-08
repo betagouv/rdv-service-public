@@ -9,7 +9,8 @@
   link href="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css" rel="stylesheet"
 
 - content_for :additional_scripts do
-  script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js"
+  script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js" crossorigin='anonymous' integrity="sha384-bLkmUMwRt9nFp2+XvlPOzIkNUx/mnjvxxE7kI6bJWKMz/sfwiK5nra6w+60B9zyF"
+
   = javascript_include_tag "lieux_map"
 
 p

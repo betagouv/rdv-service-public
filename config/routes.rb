@@ -9,6 +9,11 @@ Rails.application.routes.draw do
   get "agent_connect/auth" => "agent_connect#auth"
   get "agent_connect/callback" => "agent_connect#callback"
 
+  get "franceconnect_v2/auth" => "france_connect_v2#auth"
+  get "franceconnect_v2/callback" => "france_connect_v2#callback"
+  get "franceconnect_v2/post_logout" => "france_connect_v2#post_logout"
+  get "franceconnect_v2/sector_identifier" => "static_pages#france_connect_sector_identifier"
+
   devise_for :super_admins # necessary for helpers like super_admin_signed_in?
   devise_scope :super_admin do
     get "omniauth/github/callback" => "omniauth_callbacks#github"
@@ -50,7 +55,6 @@ Rails.application.routes.draw do
 
     authenticate :super_admin do
       mount GoodJob::Engine => "good_job"
-      mount Coverband::Reporters::Web.new, at: "/coverage"
     end
   end
   get "super_admin", to: redirect("super_admins", status: 301)
@@ -247,7 +251,7 @@ Rails.application.routes.draw do
           end
         end
         scope module: "organisations" do
-          resource :online_booking, only: [:show]
+          resource :online_booking, only: %i[show update]
           resource :configuration, only: [:show]
           resources :stats, only: :index do
             collection do
@@ -310,7 +314,7 @@ Rails.application.routes.draw do
     get "confirmation"
   end
 
-  %w[mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
+  %w[mds accessibility mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
 
@@ -382,8 +386,6 @@ Rails.application.routes.draw do
 
   # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")
-  # old agenda rule was bookmarked by some agents
-  get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
   post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :brevo # TODO: supprimer après la transition
   post "/inbound_emails/brevo", controller: :inbound_emails, action: :brevo
 
@@ -394,12 +396,6 @@ Rails.application.routes.draw do
   }
 
   if Rails.env.development?
-    namespace :lapin do
-      resources :sms_preview, only: %i[index] do
-        get ":action_name", to: "sms_preview#preview", as: "preview"
-      end
-    end
-
     # LetterOpener
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end

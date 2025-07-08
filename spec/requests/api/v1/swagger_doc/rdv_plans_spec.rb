@@ -68,7 +68,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         specify do
           rdv_plan = RdvPlan.last
-          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
+          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-mairie-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
 
           expect(parsed_response_body["rdv_plan"]).to include(
             "user_id" => User.last.id,
@@ -79,7 +79,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
           expect(rdv_plan.user).to have_attributes(
             first_name: "Francis",
             last_name: "Factice",
-            email: "francis.factice@gmail.com",
+            notification_email: "francis.factice@gmail.com",
             phone_number: "0611223344",
             address: "21 rue des Ardennes, 75019 Paris"
           )
@@ -118,7 +118,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
         let(:rdv) { create(:rdv) }
 
         specify do
-          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
+          expect(parsed_response_body.dig("rdv_plan", "url")).to eq "http://www.rdv-mairie-test.localhost/agents/rdv_plans/#{rdv_plan.id}"
           expect(parsed_response_body.dig("rdv_plan", "rdv").symbolize_keys).to include(
             id: rdv.id,
             status: rdv.status,

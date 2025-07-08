@@ -6,8 +6,7 @@
       - if display_agent_connect_button?
         h2 Se créer un compte avec ProConnect
         .rdv-text-align-center
-          - if display_agent_connect_button?
-            = render "common/proconnect_button_dsfr", login_hint: resource.email
+          = render "common/proconnect_button_dsfr", login_hint: resource.email
 
         p.fr-mt-3w.fr-hr-or = "ou"
 

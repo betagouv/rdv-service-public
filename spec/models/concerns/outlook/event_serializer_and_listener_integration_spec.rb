@@ -22,11 +22,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
   end
   let(:expected_description) do
     <<~HTML
-      Plus d'infos sur <a href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Solidarités</a>:
+      Plus d'infos sur <a href="http://www.rdv-mairie-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Service Public</a>:
       <br />
 
-      Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur RDV Solidarités.
-      Pour modifier ce rendez-vous, allez sur <a href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}/edit">RDV Solidarités</a>
+      Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur RDV Service Public.
+      Pour modifier ce rendez-vous, allez sur <a href="http://www.rdv-mairie-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}/edit">RDV Service Public</a>
     HTML
   end
 
@@ -257,6 +257,22 @@ RSpec.describe Outlook::EventSerializerAndListener do
           rdv.destroy!
         end.not_to have_enqueued_job(Outlook::SyncEventJob)
       end
+    end
+  end
+
+  context "when the rdv has a link in a partner application" do
+    let(:rdv_plan) do
+      create(:rdv_plan, dossier_url: "http://demarches-simplifies.test/exemple", oauth_application: oauth_application)
+    end
+    let(:oauth_application) do
+      create(:oauth_application, name: "Démarches Simplifiées")
+    end
+
+    it "adds a link to the dossier_url" do
+      rdv = create(:rdv, rdv_plan: rdv_plan)
+
+      # On triche en testant directement la méthode qui donne la description pour éviter de passer par des stubs trop compliqués
+      expect(rdv.agents_rdvs.first.send(:event_description)).to include("<a href=\"http://demarches-simplifies.test/exemple\">Voir sur Démarches Simplifiées</a><br />")
     end
   end
 end

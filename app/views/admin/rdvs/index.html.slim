@@ -14,7 +14,7 @@
     - if @breadcrumb_page == "user" && @form.user.present?
       ol.breadcrumb.m-0
         li.breadcrumb-item
-          = link_to "Vos usagers", admin_organisation_users_path(current_organisation)
+          = link_to "Usagers", admin_organisation_users_path(current_organisation)
         li.breadcrumb-item
           = link_to @form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)
         li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
@@ -45,7 +45,7 @@
 
             i.fa.fa-download>
 
-          .btn.btn-sm.btn-link.d-print-none role="button" onclick="window.print();return;"
+          .btn.btn-sm.btn-link.d-print-none role="button" data-controller="print" data-action="click->print#print"
             span> Imprimer
             i.fa.fa-print>
 
@@ -58,18 +58,18 @@
         input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
         label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
 
-    .row.justify-content-center.pb-3
-      .col-md-12.col-lg-8
-        .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+    .fr-grid-row.fr-pb-3w
+      .fr-col-12
+        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
         = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
-        .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
   - else
-    .row.justify-content-center.pb-3
-      .col-md-12.col-lg-8
+    .fr-grid-row.fr-py-3w
+      .fr-col-12
         .card
           .card-body
-            .row.justify-content-md-center
-              .col-md-6.rdv-text-align-center.my-5
+            .fr-grid-row.justify-content-center
+              .fr-col-6.rdv-text-align-center.fr-mt-2w.fr-mb-5w
                 p.mb-2.lead
                   | Aucun RDV
                 span.fa-stack.fa-4x

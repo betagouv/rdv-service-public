@@ -29,7 +29,7 @@
     - elsif @invited_agents.total_pages > 1
       .m-3
         .d-flex.justify-content-center
-          = paginate @invited_agents, theme: "twitter-bootstrap-4"
+          = paginate @invited_agents, theme: "dsfr"
         .rdv-text-align-center= page_entries_info @invited_agents
 
     - if current_agent_can_create_agent_in?(current_organisation)

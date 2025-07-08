@@ -25,6 +25,13 @@ class Select2Inputs {
     if (elt.dataset.autoSelectSoleOption) {
       this.autoSelectSoleOption(elt, config)
     }
+    // select2 change le comportement de l’événement change.
+    // Pour pouvoir intercepter l’événement change, grâce à un data-action stimulus, il faut le re-déclencher manuellement.
+    // cf https://psmy.medium.com/rails-6-stimulus-and-select2-de4a4d2b59e4
+    $(elt).on("change", function () {
+      let event = new Event('change')
+      this.dispatchEvent(event);
+    })
   }
 
   getInputConfig = elt => {

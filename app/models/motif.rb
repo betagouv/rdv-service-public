@@ -53,7 +53,7 @@ class Motif < ApplicationRecord
 
   # Delegates
   delegate :service_social?, to: :service
-  delegate :name, to: :service, prefix: true
+  delegate :name, :short_name, to: :service, prefix: true
 
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
@@ -134,8 +134,9 @@ class Motif < ApplicationRecord
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
-  def archive!
-    update!(deleted_at: Time.zone.now)
+  def archive
+    self.deleted_at = Time.zone.now
+    save(validate: false)
   end
 
   def unarchive

@@ -168,9 +168,6 @@ GEM
     blueprinter (1.1.0)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
-    bootstrap4-kaminari-views (1.0.1)
-      kaminari (>= 0.13)
-      rails (>= 3.1)
     brakeman (7.0.0)
       racc
     builder (3.3.0)
@@ -202,8 +199,6 @@ GEM
     common_french_passwords (0.0.1)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
-    coverband (6.1.4)
-      redis (>= 3.0)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -292,6 +287,10 @@ GEM
     hashdiff (1.0.1)
     hashie (5.0.0)
     hirb (0.7.3)
+    hotwire-rails (0.1.3)
+      rails (>= 6.0.0)
+      stimulus-rails
+      turbo-rails
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
     htmlentities (4.3.4)
@@ -481,7 +480,7 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.1.14)
+    rack (3.1.16)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-cors (2.0.2)
@@ -697,6 +696,8 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     stackprof (0.2.26)
+    stimulus-rails (1.3.4)
+      railties (>= 6.0.0)
     stringio (3.1.1)
     strong_migrations (1.6.4)
       activerecord (>= 5.2)
@@ -710,6 +711,9 @@ GEM
     tilt (2.5.0)
     timeout (0.4.3)
     tod (3.1.2)
+    turbo-rails (2.0.16)
+      actionpack (>= 7.1.0)
+      railties (>= 7.1.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -773,7 +777,6 @@ DEPENDENCIES
   binding_of_caller
   blueprinter
   bootsnap
-  bootstrap4-kaminari-views
   brakeman
   bullet
   byebug
@@ -784,7 +787,6 @@ DEPENDENCIES
   climate_control
   common_french_passwords
   connection_pool
-  coverband
   crisp-api (~> 1.1)
   csv
   database_cleaner
@@ -803,6 +805,7 @@ DEPENDENCIES
   good_job (= 3.27.4)
   groupdate (~> 6.1)
   hirb
+  hotwire-rails
   httpclient!
   icalendar (~> 2.5)
   jb

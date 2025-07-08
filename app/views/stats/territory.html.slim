@@ -12,7 +12,7 @@
 
 h2= @territory
 
-- if Organisation.joins(:territory).where(territory: [@territory]).empty?
+- if @territory.organisations.none?
   h3 Cette structure n'utilise pas #{current_domain.name}.
 
 - cache([@territory, Time.zone.today], expires_in: 24.hours) do

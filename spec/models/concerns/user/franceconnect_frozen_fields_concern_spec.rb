@@ -30,7 +30,8 @@ RSpec.describe User::FranceconnectFrozenFieldsConcern do
     let!(:user) { create(:user, first_name: "Jean", birth_name: "DUPONT", logged_once_with_franceconnect: false) }
 
     it "allows changing frozen fields during the login" do
-      res = user.update(birth_name: "MARCO", logged_once_with_franceconnect: true)
+      user.assign_attributes(birth_name: "MARCO")
+      res = user.save(context: :france_connect_login)
       expect(res).to be_truthy
       expect(user.reload.birth_name).to eq("MARCO")
     end

@@ -70,7 +70,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
             end.to change { ActionMailer::Base.deliveries.size }.by(1)
           end
 
-          expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité créée")
+          expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Service Public - Indisponibilité créée")
         end
 
         it "skips notification after create when agent has disabled it" do
@@ -133,7 +133,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
               put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
             end.to change { ActionMailer::Base.deliveries.size }.by(1)
           end
-          expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité modifiée - Le nouveau nom")
+          expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Service Public - Indisponibilité modifiée - Le nouveau nom")
         end
 
         it "skips notification after update when agent has disabled it" do
@@ -184,7 +184,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       it "enqueues notification after delete" do
         delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
         expect { perform_enqueued_jobs }.to change { ActionMailer::Base.deliveries.size }.by(1)
-        expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité supprimée")
+        expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Service Public - Indisponibilité supprimée")
       end
 
       it "skips notification after delete when agent has disabled it" do

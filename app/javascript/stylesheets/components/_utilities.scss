@@ -40,10 +40,6 @@ a[disabled] {
   font-weight: bold;
 }
 
-.rdv-font-weight-700 {
-  font-weight: 700;
-}
-
 .text-underline {
   text-decoration: underline;
 }
@@ -109,6 +105,17 @@ a[disabled] {
 
 .flex-direction-column {
   flex-direction: column;
+}
+
+.rdv-justify-content-space-between {
+  justify-content: space-between;
+}
+
+.align-items-start-or-stretch {
+  align-items: stretch;
+  @include media-breakpoint-up(md) {
+    align-items: flex-start;
+  }
 }
 
 .rdv-flex-direction-row-md {

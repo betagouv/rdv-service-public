@@ -8,7 +8,7 @@
         = f.label :email, "Adresse e-mail", class: "fr-label" do
           = "Adresse email"
           span.fr-hint-text Format attendu : nom@domaine.fr
-        = f.email_field :email, autofocus: true, required: true, class: "fr-input"
+        = f.email_field :email, autofocus: true, required: true, class: "fr-input", autocomplete: "email"
 
       .rdv-text-align-center
         = f.submit "Envoyer", class: "fr-mb-4v fr-btn"

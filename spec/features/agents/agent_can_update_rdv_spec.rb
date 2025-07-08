@@ -1,17 +1,18 @@
 RSpec.describe "Agent can update a RDV", js: true do
   let!(:organisation) { create(:organisation) }
   let(:rdv) do
-    create(:rdv, organisation: organisation, motif: motif, agents: [agent], lieu: lieu)
+    create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu, starts_at:, ends_at:)
   end
-  let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, basic_role_in_organisations: [organisation]) }
-
+  let!(:service) { create(:service, name: "Urbanisme") }
+  let!(:agent_shiraz) { create(:agent, first_name: "Shiraz", last_name: "NADIR", email: "shiraz@angouleme.fr", service:, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, service: service, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
+  let(:starts_at) { 1.hour.from_now }
+  let(:ends_at) { starts_at + 1.hour }
 
   before do
     stub_netsize_ok
-    login_as(agent, scope: :agent)
+    login_as(agent_shiraz, scope: :agent)
   end
 
   it "update existing RDV with single_use lieu" do
@@ -26,11 +27,15 @@ RSpec.describe "Agent can update a RDV", js: true do
     expect(page).to have_content("Café de la gare")
     expect(page).to have_content("3 Place de la Gare, Strasbourg, 67000")
     expect(page).to have_selector(".badge-info", text: /Ponctuel/)
+    perform_enqueued_jobs
+    open_email "shiraz@angouleme.fr"
+    expect(current_email).not_to be_nil
+    expect(current_email.subject).to match(/RDV .* modifié/)
   end
 
   it "update existing RDV with existing lieu" do
     lieu_ponctuel = create(:lieu, organisation: organisation, availability: :single_use)
-    rdv = create(:rdv, organisation: organisation, motif: motif, agents: [agent], lieu: lieu_ponctuel)
+    rdv = create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu_ponctuel)
 
     visit edit_admin_organisation_rdv_path(organisation, rdv)
 
@@ -72,23 +77,114 @@ RSpec.describe "Agent can update a RDV", js: true do
     end
   end
 
-  context "adding agents" do
-    let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], services: agent.services) }
-    let!(:other_rdv) { create(:rdv, agents: [other_agent], starts_at: rdv.starts_at) }
+  context "ajout d’un agent au RDV" do
+    let!(:agent_jungyoon) { create(:agent, first_name: "Jung Yoon", last_name: "Han", email: "jungyoon@angouleme.fr", service:, basic_role_in_organisations: [organisation]) }
 
-    context "when there is a warning" do
-      it "works" do
+    it "envoie un email à l’agent ajouté", skip: "cf PR #5399" do # rubocop:disable RSpec/Pending
+      visit edit_admin_organisation_rdv_path(organisation, rdv)
+      select("Jung Yoon HAN (Urbanisme)", from: "rdv_agent_ids")
+      click_button "Enregistrer"
+
+      expect(page).to have_content("Jung Yoon HAN (Urbanisme)")
+      expect(page).to have_content("Shiraz NADIR (Urbanisme)")
+      perform_enqueued_jobs
+      open_email "shiraz@angouleme.fr"
+      expect(current_email).not_to be_nil
+      expect(current_email.subject).to match(/RDV .* modifié/)
+      open_email "jungyoon@angouleme.fr"
+      expect(current_email).not_to be_nil
+      expect(current_email.subject).to match(/Nouveau RDV/)
+    end
+
+    context "un RDV existe à la même heure pour l’agent ajouté" do
+      before { create(:rdv, agents: [agent_jungyoon], starts_at: rdv.starts_at) }
+
+      it "affiche un avertissement, une fois contourné l’agent est bien ajouté" do
         visit edit_admin_organisation_rdv_path(organisation, rdv)
-
-        select(other_agent.full_name, from: "rdv_agent_ids")
+        select("Jung Yoon HAN (Urbanisme)", from: "rdv_agent_ids")
         click_button "Enregistrer"
         expect(page).to have_content "Ce rendez-vous en chevauche un autre"
-        expect(rdv.reload.agents).to eq [agent]
-
+        expect(rdv.reload.agents).to contain_exactly(agent_shiraz)
         click_button "Confirmer en ignorant les avertissements"
-
         expect(page).to have_content "Le rendez-vous a été modifié."
-        expect(rdv.reload.agents).to eq [agent, other_agent]
+        expect(rdv.reload.agents).to contain_exactly(agent_shiraz, agent_jungyoon)
+      end
+    end
+  end
+
+  describe "mise en salle d’attente d’un usager" do
+    context "l’option d’envoi de mail est désactivée" do
+      it "n’affiche pas le bouton salle d’attente" do
+        visit admin_organisation_rdv_path(organisation, rdv)
+        expect(page).not_to have_link("Salle d’attente")
+      end
+    end
+
+    context "l’option salle d’attente est activée par notification mail à l’agent" do
+      let(:organisation) { create(:organisation, territory: create(:territory, enable_waiting_room_mail_field: true)) }
+
+      before do
+        visit admin_organisation_rdv_path(organisation, rdv)
+      end
+
+      it "ajoute l’usager en salle d’attente et retire le bouton" do
+        click_link "Salle d’attente"
+
+        within("#waiting_room_button-#{rdv.id}") do
+          expect(page).to have_content("Usager en salle d'attente")
+          expect(page).not_to have_content("Salle d'attente")
+        end
+        expect(rdv.reload.user_in_waiting_room?).to be true
+      end
+
+      it "envoie un email à l’agent" do
+        expect do
+          click_link "Salle d’attente"
+          expect(page).to have_content("Usager en salle d'attente") # Permet d’attendre que la requête soit traitée
+        end.to have_enqueued_mail(Agents::WaitingRoomMailer, :user_in_waiting_room).with(params: { agent: agent_shiraz, rdv: rdv }, args: [])
+      end
+
+      context "le RDV n’est pas pour aujourd’hui" do
+        let(:starts_at) { 2.days.from_now }
+
+        it "n’affiche pas le bouton salle d’attente" do
+          visit admin_organisation_rdv_path(organisation, rdv)
+          expect(page).not_to have_link("Salle d’attente")
+        end
+      end
+    end
+
+    context "l’option salle d’attente est activée par notification couleur à l’agent" do
+      let(:organisation) { create(:organisation, territory: create(:territory, enable_waiting_room_color_field: true)) }
+
+      before do
+        visit admin_organisation_rdv_path(organisation, rdv)
+      end
+
+      it "ajoute l’usager en salle d’attente et retire le bouton" do
+        click_link "Salle d’attente"
+
+        within("#waiting_room_button-#{rdv.id}") do
+          expect(page).to have_content("Usager en salle d'attente")
+          expect(page).not_to have_content("Salle d'attente")
+        end
+        expect(rdv.reload.user_in_waiting_room?).to be true
+      end
+
+      it "n’envoie pas d’email à l’agent" do
+        expect do
+          click_link "Salle d’attente"
+          expect(page).to have_content("Usager en salle d'attente") # Permet d’attendre que la requête soit traitée
+        end.not_to have_enqueued_mail(Agents::WaitingRoomMailer, :user_in_waiting_room).with(params: { agent: agent_shiraz, rdv: rdv }, args: [])
+      end
+
+      context "le RDV n’est pas pour aujourd’hui" do
+        let(:starts_at) { 2.days.from_now }
+
+        it "n’affiche pas le bouton salle d’attente" do
+          visit admin_organisation_rdv_path(organisation, rdv)
+          expect(page).not_to have_link("Salle d’attente")
+        end
       end
     end
   end
