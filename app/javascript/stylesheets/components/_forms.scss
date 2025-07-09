@@ -12,6 +12,10 @@ input.form-control, select.form-control {
   border-left: none;
   border-right: none;
 
+  &:disabled {
+    color: rgb(146, 146, 146);
+    border-bottom-color: rgb(146, 146, 146);
+  }
 }
 
 .custom-select.is-invalid,
