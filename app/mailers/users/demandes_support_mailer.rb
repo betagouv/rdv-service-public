@@ -1,12 +1,12 @@
 class Users::DemandesSupportMailer < ApplicationMailer
   def conversation_created
-    @conversation_id = params[:conversation_id]
-    @sujet = params[:sujet]
-    @message = params[:message]
+    @sujet = params[:demande_support_sujet]
+    @message = params[:demande_support_message]
     mail(
-      from: domain.support_email.gsub("support@", "assistance@"),
+      from: "#{domain} <#{domain.support_email.gsub('support@', 'assistance@')}>",
       to: params[:email],
-      subject: "[##{@conversation_id}] Nouveaux messages dans cette conversation"
+      subject: params[:subject],
+      "In-Reply-To" => params[:in_reply_to]
     )
   end
 

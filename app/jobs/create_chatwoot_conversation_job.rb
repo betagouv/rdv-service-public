@@ -11,7 +11,14 @@ class CreateChatwootConversationJob < ApplicationJob
       private: true
     )
     Users::DemandesSupportMailer
-      .with(conversation_id: conversation["id"], email:, domain_id:, sujet:, message:)
+      .with(
+        subject: conversation.mail_subject,
+        in_reply_to: conversation.mail_reference, # ce header indique aux clients mail de grouper les mails
+        email:,
+        domain_id:,
+        demande_support_sujet: sujet,
+        demande_support_message: message
+      )
       .conversation_created
       .deliver_later
   end

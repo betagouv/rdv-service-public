@@ -2,8 +2,24 @@ require "rails_helper"
 
 RSpec.describe CreateChatwootConversationJob do
   describe "#perform" do
-    let(:chatwoot_contact) { { "id" => 123, "contact_inboxes" => [{ "inbox" => { "id" => "1" }, "source_id" => "source123" }] } }
-    let(:chatwoot_conversation) { { "id" => 46, "messages" => [] } }
+    let(:chatwoot_contact) do
+      {
+        "id" => 123,
+        "contact_inboxes" => [
+          {
+            "inbox" => { "id" => "1" },
+            "source_id" => "source123",
+          },
+        ],
+      }
+    end
+    let(:chatwoot_conversation) do
+      ChatwootApiClient::Conversation.new(
+        "id" => 46,
+        "uuid" => "4ffdb710-5faf-486e-b2a5-1a002eedo54d",
+        "messages" => []
+      )
+    end
     let(:mailer_instance) { instance_double(Users::DemandesSupportMailer) }
     let(:message_delivery) { instance_double(ActionMailer::MessageDelivery) }
 
@@ -17,7 +33,7 @@ RSpec.describe CreateChatwootConversationJob do
     end
 
     specify do
-      described_class.perform_now(
+      described_class.new.perform(
         first_name: "Sophie",
         last_name: "Dubois",
         email: "sophie.dubois@example.com",
@@ -45,11 +61,12 @@ RSpec.describe CreateChatwootConversationJob do
         private: true
       )
       expect(Users::DemandesSupportMailer).to have_received(:with).with(
-        conversation_id: 46,
+        in_reply_to: "account/1/conversation/4ffdb710-5faf-486e-b2a5-1a002eedo54d@test-support.rdv-service-public.fr",
+        subject: "[#46] Nouveaux messages dans cette conversation",
         email: "sophie.dubois@example.com",
         domain_id: "RDV_SOLIDARITES",
-        message: "Je n'arrive pas à me connecter à mon compte.",
-        sujet: "Problème de connexion"
+        demande_support_message: "Je n'arrive pas à me connecter à mon compte.",
+        demande_support_sujet: "Problème de connexion"
       )
       expect(mailer_instance).to have_received(:conversation_created)
       expect(message_delivery).to have_received(:deliver_later)

@@ -41,14 +41,13 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: ENV["HOST"].sub(%r{^https?://}, "") }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  if ENV["DEVELOPMENT_SMTP_USER_NAME"].present?
+  if ENV["DEVELOPMENT_SMTP_USERNAME"].present?
     config.action_mailer.smtp_settings = {
-      user_name: ENV["DEVELOPMENT_SMTP_USER_NAME"],
-      password: ENV["DEVELOPMENT_SMTP_PASWORD"],
-      address: ENV["DEVELOPMENT_SMTP_HOST"],
-      domain: ENV["DEVELOPMENT_SMTP_DOMAIN"],
-      port: ENV["DEVELOPMENT_SMTP_PORT"],
-      authentication: :cram_md5,
+      address: ENV.fetch("DEVELOPMENT_SMTP_ADDRESS"),
+      port: ENV.fetch("DEVELOPMENT_SMTP_PORT"),
+      authentication: :plain,
+      user_name: ENV.fetch("DEVELOPMENT_SMTP_USERNAME"),
+      password: ENV.fetch("DEVELOPMENT_SMTP_PASSWORD"),
     }
   else
     config.action_mailer.delivery_method = :letter_opener_web

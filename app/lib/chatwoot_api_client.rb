@@ -7,6 +7,7 @@ class ChatwootApiClient
     "RDV_AIDE_NUMERIQUE" => 1, # inbox RDVSP
     "RDV_MAIRIE" => 1, # inbox RDVSP
   }.freeze
+  REPLY_HOST = "test-support.rdv-service-public.fr".freeze # doit correspondre à la valeur configurée dans chatwoot
 
   def self.connection
     @connection ||= Faraday.new(
@@ -128,7 +129,7 @@ class ChatwootApiClient
     source_id = contact["email"]
     # source_id = existing_contact["contact_inboxes"].find { _1.dig("inbox", "id") == inbox_id }
     res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/conversations", inbox_id:, source_id:)
-    res.body
+    Conversation.new(res.body)
   end
 
   # def self.delete_test_contacts(query:, dry_run: true)
@@ -154,5 +155,23 @@ class ChatwootApiClient
       content:
     )
     res.body
+  end
+
+  class Conversation
+    def initialize(values)
+      @values = values
+    end
+
+    delegate :[], to: :@values
+
+    def mail_reference
+      # cette valeur a été déduite en inspectant un email envoyé par chatwoot
+      "account/#{ACCOUNT_ID}/conversation/#{@values['uuid']}@#{REPLY_HOST}"
+    end
+
+    def mail_subject
+      # les emails envoyés par chatwoot ont toujours le même format de sujet
+      "[##{@values['id']}] Nouveaux messages dans cette conversation"
+    end
   end
 end
