@@ -13,7 +13,7 @@ class CreateChatwootConversationJob < ApplicationJob
     Users::DemandesSupportMailer
       .with(
         subject: conversation.mail_subject,
-        in_reply_to: conversation.mail_reference, # ce header indique aux clients mail de grouper les mails
+        in_reply_to: conversation.mail_reference,
         email:,
         domain_id:,
         demande_support_sujet: sujet,

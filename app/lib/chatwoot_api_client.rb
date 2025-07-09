@@ -21,10 +21,15 @@ class ChatwootApiClient
     end
   end
 
+  # --------
+  # CONTACTS
+  # --------
+
   def self.upsert_contact(email:, domain_id:, phone_number: nil, first_name: nil, last_name: nil, role: nil)
     existing_contact_by_email = find_contact_by_email(email)
     existing_contact_by_phone_number = find_contact_by_phone_number(phone_number)
 
+    # s’il y a un contact A pour l’email et un autre contact B pour le téléphone, on supprime le téléphone de B
     if existing_contact_by_email &&
        existing_contact_by_phone_number &&
        existing_contact_by_phone_number["id"] != existing_contact_by_email["id"]
@@ -33,22 +38,6 @@ class ChatwootApiClient
     end
 
     existing_contact = [existing_contact_by_email, existing_contact_by_phone_number].compact.first
-    # Le cas ci-dessous est mal géré :(
-    # Il s’agit du cas où un contact nous a écrit via mail sur RDVS puis nous écrit sur RDVSP
-    #
-    # - si on supprime le contact existants, ses conversations sont aussi supprimées
-    # - si on essaie de libérer son email et son num de tel comme ci-dessous,
-    # le contact_inbox.source_id de ce contact reste sur l’ancien email 😭
-    #
-    # if existing_contact && existing_contact["contact_inboxes"].none? { _1.dig("inbox", "id") == inbox_id }
-    # update_contact(
-    #   existing_contact,
-    #   email: "archived+#{existing_contact['id']}@email.com",
-    #   phone_number: nil,
-    #   custom_attributes: { archived_details: existing_contact.values_at("email", "phone_number").compact_blank.join(",") }
-    # )
-    # existing_contact = nil
-    # end
 
     if existing_contact
       update_contact(existing_contact, email:, phone_number:, first_name:, last_name:, role:)
@@ -77,18 +66,9 @@ class ChatwootApiClient
     res.body.dig("meta", "count") < 1 ? [] : res.body["payload"]
   end
 
-  # cet endpoint a été trouvé par tatonnement, mais il n’y a pas d’équivalent en post
-  # je cherchais un moyen de créer un deuxième contact_inbox différent du premier mais impossible
-  # contexte : email déjà utilisé sur une inbox 1 et maintenant sur l’inbox 2
-  #
-  # def self.find_contact_inboxes(contact:)
-  #   res = connection.get("api/v1/accounts/#{ACCOUNT_ID}/contacts/#{contact['id']}/contactable_inboxes")
-  #   res.body
-  # end
-
   def self.create_contact(email:, domain_id:, **attributes)
     # cf https://developers.chatwoot.com/api-reference/contacts/create-contact
-    params = create_or_update_params_from_attributes(email:, **attributes)
+    params = contact_params_from(email:, **attributes)
     params.merge!(inbox_id: INBOXES_IDS.fetch(domain_id))
     res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/contacts", params)
     res.body.dig("payload", "contact")
@@ -96,7 +76,7 @@ class ChatwootApiClient
 
   def self.update_contact(existing_contact, **attributes)
     # cf https://developers.chatwoot.com/api-reference/contacts/create-contact
-    params = create_or_update_params_from_attributes(**attributes)
+    params = contact_params_from(**attributes)
     if attributes.key?(:phone_number) && attributes[:phone_number].blank?
       params[:phone_number] = nil # mark the phone number for deletion
     end
@@ -104,7 +84,7 @@ class ChatwootApiClient
     res.body["payload"]
   end
 
-  def self.create_or_update_params_from_attributes(email: nil, phone_number: nil, first_name: nil, last_name: nil, role: nil, custom_attributes: {})
+  def self.contact_params_from(email: nil, phone_number: nil, first_name: nil, last_name: nil, role: nil, custom_attributes: {})
     params = { custom_attributes: }
     params[:email] = email if email.present?
     if phone_number.present?
@@ -120,29 +100,44 @@ class ChatwootApiClient
     params
   end
 
+  # --------
+  # CONVERSATIONS
+  # --------
+
   def self.create_conversation(contact:, domain_id:)
     # https://developers.chatwoot.com/api-reference/conversations/create-new-conversation
     inbox_id = INBOXES_IDS.fetch(domain_id)
     # NOTE: ici on utilise directement l’email comme source_id car c’est toujours ça qui est utilisé
     # pour le cas où un contact nous a écrit sur RDVS puis nous écrit sur RDVSP
     # ça permettra de ne pas exploser mais de l’orienter vers la mauvaise inbox 🤷
+    # cf https://github.com/betagouv/rdv-service-public/pull/5376#issuecomment-3052702654
     source_id = contact["email"]
-    # source_id = existing_contact["contact_inboxes"].find { _1.dig("inbox", "id") == inbox_id }
     res = connection.post("api/v1/accounts/#{ACCOUNT_ID}/conversations", inbox_id:, source_id:)
     Conversation.new(res.body)
   end
 
-  # def self.delete_test_contacts(query:, dry_run: true)
-  #   search_contacts(query:).each do |contact|
-  #     Rails.logger.info "#{dry_run ? 'would delete contact' : 'deleting contact'} #{contact['email']}…"
-  #     delete_contact(contact) unless dry_run
-  #     Rails.logger.info "done!"
-  #   end
-  # end
-  #
-  # def self.delete_contact(contact)
-  #   connection.delete("api/v1/accounts/#{ACCOUNT_ID}/contacts/#{contact['id']}")
-  # end
+  class Conversation
+    def initialize(values)
+      @values = values
+    end
+
+    delegate :[], to: :@values
+
+    def mail_reference
+      # cette valeur est utilisée dans les headers In-Reply-To des emails envoyés par Chatwoot
+      # pour que les emails soient groupés en threads, par ex par GMail
+      "account/#{ACCOUNT_ID}/conversation/#{@values['uuid']}@#{REPLY_HOST}"
+    end
+
+    def mail_subject
+      # Les emails envoyés par chatwoot respectent toujours ce format de sujet
+      "[##{@values['id']}] Nouveaux messages dans cette conversation"
+    end
+  end
+
+  # --------
+  # MESSAGES
+  # --------
 
   def self.create_message(conversation:, content:, message_type:, private:)
     raise ArgumentError, "message_type must be outgoing or incoming" if %w[outgoing incoming].exclude?(message_type)
@@ -157,21 +152,15 @@ class ChatwootApiClient
     res.body
   end
 
-  class Conversation
-    def initialize(values)
-      @values = values
-    end
-
-    delegate :[], to: :@values
-
-    def mail_reference
-      # cette valeur a été déduite en inspectant un email envoyé par chatwoot
-      "account/#{ACCOUNT_ID}/conversation/#{@values['uuid']}@#{REPLY_HOST}"
-    end
-
-    def mail_subject
-      # les emails envoyés par chatwoot ont toujours le même format de sujet
-      "[##{@values['id']}] Nouveaux messages dans cette conversation"
-    end
-  end
+  # def self.delete_test_contacts(query:, dry_run: true)
+  #   search_contacts(query:).each do |contact|
+  #     Rails.logger.info "#{dry_run ? 'would delete contact' : 'deleting contact'} #{contact['email']}…"
+  #     delete_contact(contact) unless dry_run
+  #     Rails.logger.info "done!"
+  #   end
+  # end
+  #
+  # def self.delete_contact(contact)
+  #   connection.delete("api/v1/accounts/#{ACCOUNT_ID}/contacts/#{contact['id']}")
+  # end
 end
