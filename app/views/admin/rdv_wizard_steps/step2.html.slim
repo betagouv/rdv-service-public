@@ -58,12 +58,7 @@ ruby:
               "select2-config": { ajax: { url: search_agents_users_path(exclude_ids: @rdv.users.map(&:id), organisation_id: @rdv.organisation_id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, \
             }
 
-          span.small.text-muted
-            | Vous ne trouvez pas l'usager ?&nbsp;
-            = link_to("Ajouter un usager", new_admin_organisation_user_path( \
-                  current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
-                  ),
-              data: { modal: true }, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline")
+          = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service))
       - else
         .row.d-flex.justify-content-center
           p
