@@ -34,6 +34,13 @@ class StaticPagesController < ApplicationController
     redirect_urls = Domain::ALL.map(&:host_name).map do |host_name|
       franceconnect_v2_callback_url(host: host_name)
     end
+
+    if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
+      # Le nom de domaine demo.rdv.anct.gouv.fr n'a pas encore été migré pour pointer vers le nouveau serveur de démo
+      # pour ne pas bloquer les agents qui s'en servent pour des tests ou des formations.
+      # On pourra supprimer cette ligne quand ça sera fait.
+      redirect_urls << franceconnect_v2_callback_url(host: "demo-rdv-service-public.osc-secnum-fr1.scalingo.io")
+    end
     render json: redirect_urls
   end
 end
