@@ -150,7 +150,10 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     expect(page).to have_content("ProConnect")
     # On triche pour faire semblant de faire une connexion via ProConnect
-    user = create(:user, pro_connect_openid_sub: "fake_sub", first_name: "Camille", last_name: "Exemple", email: "camille.exemple@demo-rdv-service-public.gouv.fr")
+    user = create(:user, pro_connect_openid_sub: "fake_sub", first_name: "Camille", last_name: "Exemple",
+                         email: nil, encrypted_password: "",
+                         phone_number: nil,
+                         notification_email: "camille.exemple@demo-rdv-service-public.gouv.fr")
     login_as(user, scope: :user)
     find("a[title='Modifier la date du rendez-vous']").click
     click_on "9:00", match: :first
@@ -158,6 +161,8 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
     doc.add_screenshot(page,
                        text: "Mon nom et prénom sont remplis automatiquement, je continue",
                        wait_for: "Vos informations")
+
+    expect(page.body).to include(user.notification_email) # L'email est dans un input, donc on utilise cette méthode plutôt qu'un expect(page).to have_content
 
     click_on "Continuer"
 

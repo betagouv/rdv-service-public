@@ -53,5 +53,15 @@ FactoryBot.define do
       family_situation { nil }
       number_of_children { nil }
     end
+
+    # Correspond à la logique de UpsertUserForFranceconnectService#create_new_user
+    trait :using_france_connect do
+      franceconnect_openid_sub { "fake_sub" }
+      logged_once_with_franceconnect { true }
+      email { nil }
+      notification_email { generate(:user_email) }
+      encrypted_password { "" }
+      phone_number { nil }
+    end
   end
 end
