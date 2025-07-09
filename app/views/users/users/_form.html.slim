@@ -27,7 +27,7 @@ ruby:
       / Nous ne voulons pas perdre d'informations si l'utilisateur a déjà un email de notification, donc le champ est requis
       / L'utilisateur peut définir un email de notification s'il n'en a pas encore, mais ce n'est pas obligatoire
       = f.dsfr_email_field :notification_email, required: user.notification_email.present?
-  - elsif user.email.blank? && user.notification_email && user.logged_once_with_franceconnect?
+  - elsif user.email.blank? && user.notification_email && user.connected_with_sso?
     = f.dsfr_email_field :notification_email, label: "Email de notification"
 
   = f.dsfr_phone_field :phone_number, as: :tel, required: rdv_wizard&.motif&.phone?, autocomplete: "tel"
