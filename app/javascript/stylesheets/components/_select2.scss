@@ -83,31 +83,31 @@
 .select2-container--bootstrap4
   .select2-selection--multiple
   .select2-selection__choice {
-  @include dsfr-input-style;
+    border-radius: 0;
 }
 
 .select2-container--bootstrap4 .select2-selection--single.input-sm,
 .input-group-sm .select2-container--bootstrap4 .select2-selection--single,
 .form-group-sm .select2-container--bootstrap4 .select2-selection--single {
-  @include dsfr-input-style;
+  border-radius: 0;
 }
 
 .select2-container--bootstrap4 .select2-selection--multiple.input-sm,
 .input-group-sm .select2-container--bootstrap4 .select2-selection--multiple,
 .form-group-sm .select2-container--bootstrap4 .select2-selection--multiple {
-  @include dsfr-input-style;
+  border-radius: 0;
 }
 
 .select2-container--bootstrap4 .select2-selection--single.input-lg,
 .input-group-lg .select2-container--bootstrap4 .select2-selection--single,
 .form-group-lg .select2-container--bootstrap4 .select2-selection--single {
-  @include dsfr-input-style;
+  border-radius: 0;
 }
 
 .select2-container--bootstrap4 .select2-selection--multiple.input-lg,
 .input-group-lg .select2-container--bootstrap4 .select2-selection--multiple,
 .form-group-lg .select2-container--bootstrap4 .select2-selection--multiple {
-  @include dsfr-input-style;
+  border-radius: 0;
 }
 
 .select2-container--bootstrap4
@@ -122,7 +122,7 @@
   .select2-selection--multiple
   .select2-selection__choice {
   border-radius: 0;
-  @include dsfr-input-style;
+
 }
 
 // Background color overrides
