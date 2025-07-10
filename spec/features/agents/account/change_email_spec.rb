@@ -13,7 +13,7 @@ RSpec.describe "Agents can change their email" do
     fill_in "Email", with: new_email
     fill_in "Mot de passe actuel", with: "CorrectH0rse!"
 
-    expect { click_button "Modifier" }.not_to change { agent.reload.email }
+    expect { click_button "Enregistrer" }.not_to change { agent.reload.email }
 
     expect(page).to have_content("Votre compte a bien été mis à jour mais nous devons vérifier votre nouvelle adresse email")
     perform_enqueued_jobs
