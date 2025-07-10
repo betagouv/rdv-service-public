@@ -69,7 +69,7 @@ ruby:
               new_admin_organisation_user_path( \
                 current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
                   ), \
-                data: { modal: true }, class: "btn btn-primary"
+                data: { modal: true }, class: "fr-btn"
 
     - if current_organisation.territory.enable_context_field
       .mt-3= f.input :context, as: :text, label: Rdv.human_attribute_name(:context), input_html: { rows: 4 }
