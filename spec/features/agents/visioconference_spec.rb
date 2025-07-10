@@ -18,7 +18,7 @@ RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
     select(motif.name, from: "Motif du rendez-vous")
     click_button("Continuer")
 
-    click_link("Créer un usager")
+    click_link("Ajouter un usager")
 
     # create user with mail
     fill_in :user_first_name, with: "Francis"

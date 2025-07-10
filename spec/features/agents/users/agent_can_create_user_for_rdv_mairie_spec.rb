@@ -12,7 +12,7 @@ RSpec.describe "Agent can create user" do
     login_as(agent, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/"
     click_link "Usagers"
-    click_button "Ajouter un usager"
+    click_on "Ajouter un usager", match: :first
     expect_page_title("Nouvel usager")
   end
 
@@ -21,7 +21,7 @@ RSpec.describe "Agent can create user" do
       fill_in :user_first_name, with: "Marco"
       fill_in :user_last_name, with: "Lebreton"
       fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
-      click_button "Enregistrer"
+      click_on "Enregistrer"
       expect(page).not_to have_content("déjà utilisé")
       expect_page_title("Marco LEBRETON")
       expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to be(true)

@@ -164,7 +164,7 @@ RSpec.describe "agents can prescribe rdvs" do
       # Select créneau
       first(:link, "11:00").click
       # Display User selection
-      click_on "Créer un usager"
+      click_on "Ajouter un usager"
       fill_in :user_first_name, with: "Jean-Paul"
       fill_in :user_last_name, with: "Orvoir"
       click_on "Enregistrer"
@@ -189,7 +189,7 @@ RSpec.describe "agents can prescribe rdvs" do
       # Selection du créneau
       first(:link, "11:00").click
       # Afficher la sélection de l’usager
-      click_on "Créer un usager"
+      click_on "Ajouter un usager"
       fill_in :user_first_name, with: "Jean-Paul"
       fill_in :user_last_name, with: "Orvoir"
       click_on "Enregistrer"
@@ -197,7 +197,7 @@ RSpec.describe "agents can prescribe rdvs" do
       click_on "Continuer"
       # retour à la sélection de l’usager
       page.all("a").find { _1.text == "modifier" && _1[:href].include?("user_selection") }.click
-      click_on "Créer un usager"
+      click_on "Ajouter un usager"
       fill_in :user_first_name, with: "Jean-Pierre"
       fill_in :user_last_name, with: "Bonjour"
       click_on "Enregistrer"
