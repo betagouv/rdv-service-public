@@ -58,20 +58,41 @@ RSpec.describe SmsSender, type: :service do
     end
 
     context "with smsfactor" do
-      before do
-        stub_sms_factor_ok
-        described_class.perform_with("RdvSoli", "0612345678", "content", "sms_factor", "key", receipt_params)
+      context "when sms is sent successfully" do
+        before do
+          stub_sms_factor_ok
+          described_class.perform_with("RdvSoli", "0612345678", "content", "sms_factor", "key", receipt_params)
+        end
+
+        it do
+          receipt = Receipt.last
+          expect(receipt).not_to be_nil
+          expect(receipt).to have_attributes(event: "rdv_created", rdv: rdv, user: user, content: "content", sms_provider: "sms_factor", sms_count: 1)
+        end
+
+        it "save remaining credits" do
+          Redis.with_connection do |redis|
+            expect(redis.get("SMS_FACTOR_REMAINING_CREDITS")).to eq("42")
+          end
+        end
       end
 
-      it do
-        receipt = Receipt.last
-        expect(receipt).not_to be_nil
-        expect(receipt).to have_attributes(event: "rdv_created", rdv: rdv, user: user, content: "content", sms_provider: "sms_factor")
-      end
+      context "when sms is not sent due to moderation" do
+        before do
+          stub_sms_factor_moderation
+          described_class.perform_with("RdvSoli", "0612345678", "content", "sms_factor", "key", receipt_params)
+        end
 
-      it "save remaining credits" do
-        Redis.with_connection do |redis|
-          expect(redis.get("SMS_FACTOR_REMAINING_CREDITS")).to eq("42")
+        it do
+          receipt = Receipt.last
+          expect(receipt).not_to be_nil
+          expect(receipt).to have_attributes(event: "rdv_created", rdv: rdv, user: user, content: "content", sms_provider: "sms_factor", sms_count: 1)
+        end
+
+        it "save remaining credits" do
+          Redis.with_connection do |redis|
+            expect(redis.get("SMS_FACTOR_REMAINING_CREDITS")).to eq("42")
+          end
         end
       end
     end
