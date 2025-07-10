@@ -1,4 +1,4 @@
-RSpec.describe Admin::AbsencesController, type: :controller do
+RSpec.describe Admin::Planning::AbsencesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }

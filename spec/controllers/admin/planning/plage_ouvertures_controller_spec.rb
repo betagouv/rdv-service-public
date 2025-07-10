@@ -1,4 +1,4 @@
-RSpec.describe Admin::PlageOuverturesController, type: :controller do
+RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
