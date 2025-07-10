@@ -69,7 +69,7 @@ ruby:
 
     .fr-grid-row.fr-grid-row--gutters.fr-mt-3w
       .fr-col.rdv-justify-content-space-between.d-flex.flex-row-aligned
-        = dsfr_link_to "Revenir en arrière", prendre_rdv_path(rdv_wizard.to_query), class: "fr-icon-arrow-left-line fr-link--icon-left"
+        = link_to "Revenir en arrière", prendre_rdv_path(rdv_wizard.to_query), class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
         = f.submit "Continuer", class: "fr-btn"
 
   - else
