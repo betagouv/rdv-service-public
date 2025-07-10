@@ -1,7 +1,7 @@
 class MergeUsersForm {
   constructor() {
     // have to use jQuery here because of select2
-    $(".js-merge-users-user-select").on("change", this.userSelected)
+    $(".js-merge-users-user-select").on("select2:select", this.userSelected)
     $(".js-merge-users-collapse-user").on("click", this.toggleDisabledUserFields)
   }
 
