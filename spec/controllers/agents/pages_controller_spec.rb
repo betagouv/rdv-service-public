@@ -22,7 +22,7 @@ RSpec.describe Agents::PagesController, type: :controller do
 
       it "redirige l’agent vers l’agenda de l’organisation" do
         get :home
-        expect(response).to redirect_to(admin_organisation_planning_agenda_path(organisation, agent_id: agent.id))
+        expect(response).to redirect_to(admin_organisation_planning_agenda_path(organisation))
       end
     end
 
