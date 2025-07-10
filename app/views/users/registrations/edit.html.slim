@@ -2,20 +2,21 @@
 
 .card
   .card-body
-    - if resource.logged_once_with_franceconnect?
-      .fr-alert.fr-alert--info.fr-mb-3w
-        | Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
-    - if resource.pro_connect_openid_sub
-      .fr-alert.fr-alert--info.fr-mb-3w
-        | Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de ProConnect
-    = form_for resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }, builder: Dsfr::FormBuilder do |f|
-      = f.dsfr_email_field :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), autocomplete: "email"
-      - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-        .form-text.rdv-color-text-mention-grey.mb-2
-          | En attente de confirmation pour #{resource.unconfirmed_email}
-      = render "common/form/new_password_input", f:, hint: "Choisissez votre mot de passe ou laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.", password_label: "Nouveau mot de passe"
-      = render "common/form/current_password_input", f: f, name: :current_password, hint: "Renseignez votre mot de passe actuel pour tout changement.", password_label: "Mot de passe actuel"
-      .rdv-text-align-right= f.submit "Enregistrer", class: "fr-btn"
+    - if resource.encrypted_password.present?
+      - if resource.logged_once_with_franceconnect?
+        .fr-alert.fr-alert--info.fr-mb-3w
+          | Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
+      - if resource.pro_connect_openid_sub
+        .fr-alert.fr-alert--info.fr-mb-3w
+          | Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de ProConnect
+      = form_for resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }, builder: Dsfr::FormBuilder do |f|
+        = f.dsfr_email_field :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), autocomplete: "email"
+        - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+          .form-text.rdv-color-text-mention-grey.mb-2
+            | En attente de confirmation pour #{resource.unconfirmed_email}
+        = render "common/form/new_password_input", f:, hint: "Choisissez votre mot de passe ou laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.", password_label: "Nouveau mot de passe"
+        = render "common/form/current_password_input", f: f, name: :current_password, hint: "Renseignez votre mot de passe actuel pour tout changement.", password_label: "Mot de passe actuel"
+        .rdv-text-align-right= f.submit "Modifier", class: "fr-btn"
       .mt-5
         hr
     p Vous souhaitez supprimer votre compte ?
