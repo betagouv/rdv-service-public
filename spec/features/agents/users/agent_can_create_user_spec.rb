@@ -20,7 +20,7 @@ RSpec.describe "Agent can create user" do
     fill_in :user_first_name, with: "Marco"
     fill_in :user_last_name, with: "Lebreton"
     fill_in "Remarques", with: "souhaite participer au prochain atelier collectif"
-    click_button "Créer"
+    click_on "Enregistrer"
     expect_page_title("Marco LEBRETON")
 
     user = User.last
@@ -44,7 +44,7 @@ RSpec.describe "Agent can create user" do
       fill_in :user_first_name, with: "Cee-Lo"
       fill_in :user_last_name, with: "Green"
       fill_in :user_email, with: "ceelo@green.com"
-      click_button "Créer"
+      click_on "Enregistrer"
       expect(page).to have_content("Un usager avec le même email a déjà un compte sur RDV Service Public")
       click_link "Importer cet usager"
       expect_page_title("Cee-Lo GREEN")
@@ -60,7 +60,7 @@ RSpec.describe "Agent can create user" do
     fill_in "Téléphone", with: "0606060606"
     uncheck "Accepte les notifications par email"
     uncheck "Accepte les notifications par SMS"
-    click_button "Créer"
+    click_on "Enregistrer"
     expect(find("span", text: /Accepte les notifications par email/).ancestor("li")).to have_content("Désactivées")
     expect(find("span", text: /Accepte les notifications par SMS/).ancestor("li")).to have_content("Désactivées")
   end
