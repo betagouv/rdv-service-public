@@ -52,16 +52,36 @@
   = render "admin/rdvs/rdv_visibility"
 
   - if @rdvs.total_count > 0
-    .mb-2
-      h4>= "#{@rdvs.total_count} rendez-vous"
-      .custom-control.custom-switch
-        input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
-        label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
-
-    .fr-grid-row.fr-pb-3w
+    .fr-mb-4w
+      h4.rdv-text-align-center
+        | #{@rdvs.total_count} RDV trouvés par cette recherche
+    .fr-grid-row
       .fr-col-12
         .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
+    .fr-grid-row
+      .fr-col-12
+        .d-flex.justify-content-center.fr-text--sm
+          .custom-control.custom-switch
+            input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
+            label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
+
+    .fr-grid-row
+      .fr-col-12
+        .d-flex.justify-content-center.form-group.fr-text--sm
+          = form_with url: request.path,
+            method: :get,
+            html: { class: "form-inline mb-3", data: { controller: "form" } } do |f|
+            = f.label :per, "Nombre de RDV par page :", class: "mr-2"
+            = f.select :per,
+              options_for_select(Admin::RdvsController::PERMITTED_PER_PAGE, params[:per]),
+              {},
+              class: "form-control optional mr-2 form-control-sm",
+              data: { action: "change->form#submit" }
+    .fr-grid-row
+      .fr-col-12
         = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
+    .fr-grid-row.fr-pb-3w
+      .fr-col-12
         .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
   - else
     .fr-grid-row.fr-py-3w
