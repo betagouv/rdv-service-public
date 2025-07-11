@@ -26,35 +26,51 @@
         - if @form.status.present?
           li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
 
-  .card
-    .card-body
+  .row.fr-py-4w.fr-mb-4w[style="background-color: #f2f2ff;"]
+    .col-12
       = render "rdv_search_form", form: @form
-
-    - if @rdvs.total_count > 0
-      .card-footer
-        div.d-flex.justify-content-end.align-items-center
-          = button_to participations_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "Veuillez patienter…" do
-            span> Exporter les RDVs par usager en XLS
-            i.fa.fa-download>
-          = button_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "Veuillez patienter…" do
-            span
-              - if @rdvs.total_count == 1
-                |> Exporter le RDV en XLS
-              - else
-                |> Exporter les #{@rdvs.total_count} RDV en XLS
-
-            i.fa.fa-download>
-
-          .btn.btn-sm.btn-link.d-print-none role="button" data-controller="print" data-action="click->print#print"
-            span> Imprimer
-            i.fa.fa-print>
-
-  = render "admin/rdvs/rdv_visibility"
+      = render "admin/rdvs/rdv_visibility"
 
   - if @rdvs.total_count > 0
-    .fr-mb-4w
-      h4.rdv-text-align-center
-        | #{@rdvs.total_count} RDV trouvés par cette recherche
+    .fr-mb-4w.rdv-text-align-center
+      h4
+        |> Résultat :
+        b> #{@rdvs.total_count} RDV trouvés
+        | pour cette recherche
+      .fr-mt-2w
+        = link_to "↓ pagination et export en bas de page ", "#bottom", class: "fr-link fr-link--sm"
+
+    .fr-grid-row
+      .fr-col-12
+        = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
+  - if @rdvs.total_count > 0
+    .fr-mb-4w.d-flex.justify-content-center.rdv-align-items-center.rdv-gap-1rem
+      = button_to export_admin_organisation_rdvs_path(**@form.to_query),
+        method: :post,
+        class: "fr-btn fr-btn--secondary fr-btn--sm",
+        disable_with: "Veuillez patienter…" do
+        span
+          - if @rdvs.total_count == 1
+            |> Exporter le RDV en XLS
+          - else
+            |> Exporter les #{@rdvs.total_count} RDV en XLS
+
+        i.fa.fa-download>
+      = button_to participations_export_admin_organisation_rdvs_path(**@form.to_query),
+        method: :post,
+        class: "fr-btn fr-btn--secondary fr-btn--sm",
+        disable_with: "Veuillez patienter…" do
+        span> Exporter les #{@rdvs.total_count} RDVs par usager en XLS
+        i.fa.fa-download>
+
+      .fr-btn.fr-btn--secondary.fr-btn--sm.d-print-none[
+        role="button"
+        data-controller="print"
+        data-action="click->print#print"
+      ]
+        span> Imprimer la page courante
+        i.fa.fa-print>
+
     .fr-grid-row
       .fr-col-12
         .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
@@ -74,12 +90,6 @@
           .custom-control.custom-switch
             input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
             label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
-    .fr-grid-row
-      .fr-col-12
-        = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
-    .fr-grid-row.fr-pb-3w
-      .fr-col-12
-        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
   - else
     .fr-grid-row.fr-py-3w
       .fr-col-12
