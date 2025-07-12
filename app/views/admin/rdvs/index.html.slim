@@ -43,8 +43,9 @@
     .fr-grid-row
       .fr-col-12
         = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
+
   - if @rdvs.total_count > 0
-    .fr-mb-4w.d-flex.justify-content-center.rdv-align-items-center.rdv-gap-1rem
+    #bottom.fr-mb-4w.d-flex.justify-content-center.rdv-align-items-center.rdv-gap-1rem
       = button_to export_admin_organisation_rdvs_path(**@form.to_query),
         method: :post,
         class: "fr-btn fr-btn--secondary fr-btn--sm",
