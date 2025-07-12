@@ -2,10 +2,7 @@
   - content_for :title do
     .d-print-none Liste des RDV
     .print-context
-      - if @form.agent
-        | Agenda de #{@form.agent.full_name}
-      - else
-        | Agenda de l'organisation #{current_organisation.name}
+      | Liste de RDV de l’organisation #{current_organisation.name}
 
   - content_for(:menu_item) { "menu-rdvs-list" }
 
@@ -82,12 +79,32 @@
                   i.far.fa-calendar.fa-stack-1x.text-white
 
 .print-content.px-20
-  - unless params[:start] == params[:end]
-    h3.fr-mt-4w
-      = dates_interval
+  .fr-grid-row.fr-mb-4w
+    .fr-col-6
+      div #{@rdvs.total_count} RDV au total
+      div #{@rdvs_in_page.count} RDV dans la page courante (p. #{@rdvs.current_page} / #{@rdvs.total_pages})
+    .fr-col-6
+      - if @form.applied_filters.empty?
+        div Aucun filtre appliqué
+      - if @form.agent.present?
+        div Agent: #{@form.agent}
+      - if @form.user.present?
+        div Usager: #{@form.user}
+      - if @form.lieux.present?
+        div
+          |> Lieu#{"x" if @form.lieux.count > 1}
+          | : #{@form.lieux.map(&:name).to_sentence}
+      - if @form.motifs.present?
+        div
+          |> Motif#{"s" if @form.motifs.count > 1}
+          | : #{@form.motifs.map(&:name).to_sentence}
+      - if @form.status.present?
+        div Statut: #{Rdv.human_attribute_value(:status, @form.status)}
+      - if dates_interval.present?
+        div Dates : #{dates_interval}
+
   - rdvs_collection = @rdvs_in_page.group_by { |rdv| rdv.starts_at.to_date }
-  - rdvs_collection.each_with_index do |item, index|
-    - date, rdvs = item
-    h3.fr-mb-4w class=("fr-mt-6w" if index > 0)
+  - rdvs_collection.each do |date, rdvs|
+    h3.fr-mb-4w.fr-mt-6w
       = format_date(date.to_s)
     = render(partial: "admin/rdvs/print/rdv", collection: rdvs)
