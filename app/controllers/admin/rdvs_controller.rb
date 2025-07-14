@@ -151,7 +151,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parse_date_from_params(date_param)
-    Date.parse(date_param)
+    Date.parse(date_param) if date_param.present?
   rescue Date::Error
     nil
   end
