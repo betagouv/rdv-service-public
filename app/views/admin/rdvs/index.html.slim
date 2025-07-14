@@ -80,31 +80,41 @@
 
 .print-content.px-20
   .fr-grid-row.fr-mb-4w
-    .fr-col-6
-      div #{@rdvs.total_count} RDV au total
-      div #{@rdvs_in_page.count} RDV dans la page courante (p. #{@rdvs.current_page} / #{@rdvs.total_pages})
-    .fr-col-6
-      - if @form.applied_filters.empty?
-        div Aucun filtre appliqué
-      - if @form.agent.present?
-        div Agent: #{@form.agent}
-      - if @form.user.present?
-        div Usager: #{@form.user}
-      - if @form.lieux.present?
-        div
-          |> Lieu#{"x" if @form.lieux.count > 1}
-          | : #{@form.lieux.map(&:name).to_sentence}
-      - if @form.motifs.present?
-        div
-          |> Motif#{"s" if @form.motifs.count > 1}
-          | : #{@form.motifs.map(&:name).to_sentence}
-      - if @form.status.present?
-        div Statut: #{Rdv.human_attribute_value(:status, @form.status)}
-      - if dates_interval.present?
-        div Dates : #{dates_interval}
+    - if @form.applied_filters.any?
+      .fr-col-6
+        div.fr-text--bold Filtres appliqués
+        - if @form.agent.present?
+          div Agent: #{@form.agent}
+        - if @form.user.present?
+          div Usager: #{@form.user}
+        - if @form.lieux.present?
+          div
+            |> Lieu#{"x" if @form.lieux.count > 1}
+            | : #{@form.lieux.map(&:name).to_sentence}
+        - if @form.motifs.present?
+          div
+            |> Motif#{"s" if @form.motifs.count > 1}
+            | : #{@form.motifs.map(&:name).to_sentence}
+        - if @form.status.present?
+          div Statut: #{Rdv.human_attribute_value(:status, @form.status)}
+        - if dates_interval.present?
+          div Dates : #{dates_interval}
+    div[class=(@form.applied_filters.any? ? "fr-col-6": "fr-col-12")]
+      - if @form.applied_filters.any?
+        div.fr-text--bold Résultats
+      - if @rdvs.total_pages > 1
+        div #{@rdvs.total_count} RDV au total
+        div #{@rdvs_in_page.count} RDV dans la page courante (p. #{@rdvs.current_page} / #{@rdvs.total_pages})
+      - else
+        div #{@rdvs.total_count} RDV
 
   - rdvs_collection = @rdvs_in_page.group_by { |rdv| rdv.starts_at.to_date }
   - rdvs_collection.each do |date, rdvs|
-    h3.fr-mb-4w.fr-mt-6w
-      = format_date(date.to_s)
-    = render(partial: "admin/rdvs/print/rdv", collection: rdvs)
+    - first_rdv = rdvs.shift
+    / On veut éviter qu’il y ait un saut de page entre la date et le premier RDV de cette date
+    / on utilise un padding-top plutôt qu’une margin qui se fait « manger » au saut de page
+    .fr-pt-2w[style="break-inside: avoid;"]
+      h3.fr-mb-4w
+        = format_date(date.to_s)
+      = render "admin/rdvs/print/rdv", rdv: first_rdv
+    = render partial: "admin/rdvs/print/rdv", collection: rdvs
