@@ -49,15 +49,15 @@
               = "proche de #{user.responsible}"
           = render "admin/rdvs/print/user_details", user: user
 
-        - if current_organisation.territory.enable_context_field
-          div
-            | Contexte&nbsp;:
-            | &nbsp
-            - if rdv.context.present?
-              = rdv.context
-            - else
-              span.font-weight-light.font-italic.text-muted
-                | Pas de contexte renseigné
+      - if current_organisation.territory.enable_context_field
+        div
+          | Contexte&nbsp;:
+          | &nbsp
+          - if rdv.context.present?
+            = rdv.context
+          - else
+            span.font-weight-light.font-italic.text-muted
+              | Pas de contexte renseigné
 
       div
         - case rdv.motif.location_type.to_sym
