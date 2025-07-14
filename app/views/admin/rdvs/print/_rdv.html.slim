@@ -64,7 +64,8 @@
         - when :visio
           .fa.fa-video-camera>
           |> RDV par visioconférence
-          = link_to("rejoindre la visioconférence", rdv.visio_url, target: :_blank)
+          span[style="line-break: anywhere;"]
+            = rdv.visio_url
         - when :phone
           .fa.fa-phone>
           |> RDV par téléphone
