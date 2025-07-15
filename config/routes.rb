@@ -42,7 +42,9 @@ Rails.application.routes.draw do
     resources :agent_services, only: %i[show destroy]
     resources :user_profiles, only: %i[destroy]
     resources :super_admins, only: %i[index destroy]
-    resources :organisations
+    resources :organisations do
+      delete :past_plage_ouvertures
+    end
     resources :services
     resources :motifs
     resources :lieux

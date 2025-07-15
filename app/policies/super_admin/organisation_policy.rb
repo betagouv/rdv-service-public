@@ -5,5 +5,6 @@ class SuperAdmin::OrganisationPolicy < DefaultSuperAdminPolicy
   alias new? team_member?
   alias edit? team_member?
   alias update? team_member?
+  alias past_plage_ouvertures? team_member?
   alias destroy? legacy_admin_member?
 end
