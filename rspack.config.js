@@ -1,6 +1,5 @@
 const path = require("path")
-const webpack = require("webpack")
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { rspack } = require("@rspack/core")
 
 module.exports = {
   devtool: "source-map",
@@ -26,14 +25,14 @@ module.exports = {
       {
         test: /\.css$/i,
         use: [
-          MiniCssExtractPlugin.loader,
+          rspack.CssExtractRspackPlugin,
           'css-loader',
         ],
       },
       {
         test: /\.s[ac]ss$/i,
         use: [
-          MiniCssExtractPlugin.loader,
+          rspack.CssExtractRspackPlugin,
           'css-loader',
           'sass-loader',
         ],
@@ -44,8 +43,8 @@ module.exports = {
     extensions: ['.js', '.sass', '.scss', '.css'],
   },
   plugins: [
-    new MiniCssExtractPlugin(),
-    new webpack.ProvidePlugin({
+    new rspack.CssExtractRspackPlugin(),
+    new rspack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
       Popper: ['popper.js', 'default'],
