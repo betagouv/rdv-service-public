@@ -3,6 +3,22 @@ input.form-control[type="range"] {
   min-height: 39px;
 }
 
+input.form-control,
+select.form-control {
+  border-radius: 4px 4px 0 0;
+  background-color: rgb(238, 238, 238);
+  border-bottom-color: rgb(58, 58, 58);
+  border-bottom-width: 2px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+
+  &:disabled {
+    color: rgb(146, 146, 146);
+    border-bottom-color: rgb(146, 146, 146);
+  }
+}
+
 .custom-select.is-invalid,
 .form-control.is-invalid,
 .custom-select:invalid,

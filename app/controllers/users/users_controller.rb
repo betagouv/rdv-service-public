@@ -24,6 +24,7 @@ class Users::UsersController < UserAuthController
       :first_name,
       :last_name,
       :birth_name,
+      :notification_email,
       :phone_number,
       :birth_date,
       :address,
