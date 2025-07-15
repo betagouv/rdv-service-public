@@ -268,9 +268,6 @@ Rails.application.routes.draw do
           end
           resources :referent_assignations, only: %i[index create destroy]
         end
-        resources :agent_agendas, only: %i[show] do
-          put :toggle_displays, on: :member
-        end
         resources :agent_intervenants, only: %i[update]
         resources :agents, except: %i[show]
         namespace :planning do
@@ -404,6 +401,9 @@ Rails.application.routes.draw do
 
   ## APIs
   draw :api
+
+  # Évite de casser les anciennes routes vers l'agenda, les plages et les absences
+  draw :legacy_planning_routes_redirects
 
   match "/404", to: "errors#not_found", via: :all
   match "/500", to: "errors#internal_server_error", via: :all
