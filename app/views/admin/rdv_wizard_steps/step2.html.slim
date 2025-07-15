@@ -58,23 +58,18 @@ ruby:
               "select2-config": { ajax: { url: search_agents_users_path(exclude_ids: @rdv.users.map(&:id), organisation_id: @rdv.organisation_id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, \
             }
 
-          span.small.text-muted
-            | L'usager n'existe pas ?&nbsp;
-            = link_to("Créer un usager", new_admin_organisation_user_path( \
-                  current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
-                  ),
-              data: { modal: true })
+          = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service))
       - else
         .row.d-flex.justify-content-center
           p
             | Vous n'avez pas d'usager pour le moment, vous pouvez en créer un dès a présent&nbsp;:
         .row.d-flex.justify-content-center
           = link_to \
-            "Créer un usager", \
+            "Ajouter un usager", \
               new_admin_organisation_user_path( \
                 current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
                   ), \
-                data: { modal: true }, class: "btn btn-primary"
+                data: { modal: true }, class: "fr-btn"
 
     - if current_organisation.territory.enable_context_field
       .mt-3= f.input :context, as: :text, label: Rdv.human_attribute_name(:context), input_html: { rows: 4 }
@@ -87,6 +82,6 @@ ruby:
 
       - if (@rdv_wizard.validate || @rdv_wizard.errors[:users].empty?)
         .col.text-right
-            = f.button :submit, "Continuer"
+            = f.submit "Continuer", class: "fr-btn"
 
 input type="hidden" name="js-canonical-path" value=modals_return_location

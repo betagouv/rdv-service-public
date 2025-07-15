@@ -83,14 +83,7 @@
                 "scroll-to-bottom": @add_user_ids.present?, \
                 "select2-config": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
                }
-            span.small.text-muted
-              | L'usager n'existe pas ?&nbsp;
-              = link_to \
-                "Créer un usager", \
-                new_admin_organisation_user_path( \
-                  current_organisation, modal: true, return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids), role: default_service_selection_from(@rdv.motif.service) \
-                    ), \
-                data: { modal: true }
+            = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids), role: default_service_selection_from(@rdv.motif.service))
 
           .text-right
             = link_to t("helpers.back"), admin_organisation_rdvs_collectifs_path(current_organisation), class: "btn btn-link"

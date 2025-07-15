@@ -22,15 +22,8 @@ main.container
                                 width: "auto", \
                                 "select2-config": { ajax: { url: search_agents_users_path(organisation_id: current_organisation.id, exclude_ids: @rdv_wizard.query_params[:user_ids]), dataType: "json", delay: 250 } }, \
                         }
-              span.small.text-muted
-                | L'usager n'existe pas ?&nbsp;
-                - return_url = url_for(@rdv_wizard.query_params.except(:user_ids))
-                = link_to \
-                        "Créer un usager", \
-                        new_admin_organisation_user_path(\
-                                current_organisation, modal: true, return_location: return_url, role: default_service_selection_from(@rdv_wizard.rdv.motif.service) \
-                        ), \
-                        data: { modal: true }
+              - return_url = url_for(@rdv_wizard.query_params.except(:user_ids))
+              = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: return_url, role: default_service_selection_from(@rdv_wizard.rdv.motif.service))
 
             - if current_territory.enable_context_field
               .form-group.mt-3

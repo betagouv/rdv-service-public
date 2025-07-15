@@ -33,21 +33,21 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     select_user(user)
     click_link("Ajouter")
-    expect(page).to have_link("Créer un usager")
-    click_link("Créer un usager")
+    expect(page).to have_link("Ajouter un usager")
+    click_link("Ajouter un usager")
 
     # create user with mail
     fill_in :user_first_name, with: "Jean-Paul"
     fill_in :user_last_name, with: "Orvoir"
     fill_in :user_email, with: "jporvoir@bidule.com"
-    click_button("Créer usager")
+    click_button("Enregistrer")
 
     # create user without email
     click_link("Ajouter")
-    click_link("Créer un usager")
+    click_link("Ajouter un usager")
     fill_in :user_first_name, with: "Jean-Marie"
     fill_in :user_last_name, with: "Lapin"
-    click_button("Créer usager")
+    click_button("Enregistrer")
     sleep(1) # wait for modal to hide completely
     fill_in :rdv_context, with: "RDV très spécial"
     click_button("Continuer")

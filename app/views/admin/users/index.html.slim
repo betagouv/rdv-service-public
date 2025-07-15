@@ -9,7 +9,7 @@
 - content_for :breadcrumb do
   .btn-group
     = link_to "Fusionner deux usagers", new_admin_organisation_merge_users_path(current_organisation), class: "btn btn-outline-primary mr-1"
-    = link_to "Créer un usager", new_admin_organisation_user_path(current_organisation), class: "btn btn-outline-primary"
+    = link_to "Ajouter un usager", new_admin_organisation_user_path(current_organisation), class: "btn btn-outline-primary"
 
 .card
   .card-body
@@ -61,4 +61,4 @@
             i.fa.fa-users.fa-stack-1x.text-white
 
   .m-3.rdv-text-align-center
-    = link_to "Créer un usager", new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"
+    = link_to "Ajouter un usager", new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"
