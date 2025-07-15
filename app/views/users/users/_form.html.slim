@@ -67,5 +67,11 @@ ruby:
     - rdv_wizard.to_query.each do |wizard_key, wizard_value|
       = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
 
-  .rdv-text-align-right
-    = f.submit (rdv_wizard.present? ? "Continuer" : "Modifier"), class: "fr-btn"
+    .fr-grid-row.fr-grid-row--gutters.fr-mt-3w
+      .fr-col.rdv-justify-content-space-between.d-flex.flex-row-aligned
+        = link_to "Revenir en arrière", prendre_rdv_path(rdv_wizard.to_query), class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
+        = f.submit "Continuer", class: "fr-btn"
+
+  - else
+    .rdv-text-align-right
+      = f.submit "Enregistrer", class: "fr-btn"
