@@ -29,7 +29,6 @@
   .row.fr-py-4w.fr-mb-4w[style="background-color: #f2f2ff;"]
     .col-12
       = render "rdv_search_form", form: @form
-      = render "admin/rdvs/rdv_visibility"
 
   - if @rdvs.total_count > 0
     .fr-mb-4w.rdv-text-align-center
@@ -48,49 +47,51 @@
     #bottom.fr-mb-4w.d-flex.justify-content-center.rdv-align-items-center.rdv-gap-1rem
       = button_to export_admin_organisation_rdvs_path(**@form.to_query),
         method: :post,
-        class: "fr-btn fr-btn--secondary fr-btn--sm",
+        class: "fr-btn fr-btn--secondary fr-btn--sm fr-icon-download-line fr-btn--icon-right",
         disable_with: "Veuillez patienter…" do
-        span
-          - if @rdvs.total_count == 1
-            |> Exporter le RDV en XLS
-          - else
-            |> Exporter les #{@rdvs.total_count} RDV en XLS
+        - if @rdvs.total_count == 1
+          | Exporter le RDV en XLS
+        - else
+          | Exporter les #{@rdvs.total_count} RDV en XLS
 
-        i.fa.fa-download>
-      = button_to participations_export_admin_organisation_rdvs_path(**@form.to_query),
+      = button_to "Exporter les #{@rdvs.total_count} RDVs par usager en XLS",
+        participations_export_admin_organisation_rdvs_path(**@form.to_query),
         method: :post,
-        class: "fr-btn fr-btn--secondary fr-btn--sm",
-        disable_with: "Veuillez patienter…" do
-        span> Exporter les #{@rdvs.total_count} RDVs par usager en XLS
-        i.fa.fa-download>
+        class: "fr-btn fr-btn--secondary fr-btn--sm fr-icon-download-line fr-btn--icon-right",
+        disable_with: "Veuillez patienter…"
 
-      .fr-btn.fr-btn--secondary.fr-btn--sm.d-print-none[
+      .fr-btn.fr-btn--secondary.fr-btn--sm.d-print-none.fr-icon-printer-line.fr-btn--icon-right[
         role="button"
         data-controller="print"
         data-action="click->print#print"
       ]
         span> Imprimer la page courante
-        i.fa.fa-print>
 
     .fr-grid-row
       .fr-col-12
         .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
 
-    .fr-grid-row.fr-mb-4w
+    .fr-grid-row
       .fr-col-12
-        .d-flex.justify-content-center.fr-text--sm.rdv-align-items-center.rdv-gap-1rem
-          = form_with url: request.path,
-            method: :get,
-            html: { class: "form-inline", data: { controller: "form" } } do |f|
-            = f.label :per, "Nombre de RDV par page :", class: "mr-2"
-            = f.select :per,
-              options_for_select(Admin::RdvsController::PERMITTED_PER_PAGE, params[:per]),
-              {},
-              class: "form-control optional mr-2 form-control-sm",
-              data: { action: "change->form#submit" }
-          .custom-control.custom-switch
-            input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
-            label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
+        .d-flex.justify-content-center.fr-text--sm
+          span.mr-2.fr-pt-1v Nombre de RDV par page :
+          .fr-pagination__list.rdv-per-page-list
+            - Admin::RdvsController::PERMITTED_PER_PAGE.each do |per|
+              - path = admin_organisation_rdvs_path(current_organisation, @form.to_query.merge(per:, page: params[:page]))
+              - if per == params.fetch(:per, 10).to_i
+                = link_to per, path, class: "fr-pagination__link fr-pagination__link--current", "aria-current": "page"
+              - else
+                = link_to per, path, class: "fr-pagination__link"
+
+    .fr-grid-row
+      .fr-col-12
+        .d-flex.justify-content-center.fr-text--sm
+          span.fr-py-1v
+            | Pourquoi certains RDV n’apparaissent pas ?
+          button.fr-btn.fr-btn--tooltip aria-describedby="tooltip-visibility" type="button"
+          span.fr-tooltip.fr-placement#tooltip-visibility role="tooltip"
+            = Agent::RdvPolicy.explain(current_organisation, current_agent)
+
   - else
     .fr-grid-row.fr-py-3w
       .fr-col-12
