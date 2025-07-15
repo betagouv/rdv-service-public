@@ -10,7 +10,7 @@ Turbo.session.drive = false
 import DsfrNewPassword from "./components/dsfr-new-password";
 import { Modal } from './components/modal';
 import './components/browser-detection';
-import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/select2.full.js';
 import 'select2/dist/js/i18n/fr.js';
 import { Select2Inputs } from './components/select2-inputs';
 import 'bootstrap';

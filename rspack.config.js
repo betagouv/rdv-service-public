@@ -25,17 +25,19 @@ module.exports = {
       {
         test: /\.css$/i,
         use: [
-          rspack.CssExtractRspackPlugin,
+          rspack.CssExtractRspackPlugin.loader,
           'css-loader',
         ],
+        type: 'javascript/auto'
       },
       {
         test: /\.s[ac]ss$/i,
         use: [
-          rspack.CssExtractRspackPlugin,
+          rspack.CssExtractRspackPlugin.loader,
           'css-loader',
           'sass-loader',
         ],
+        type: 'javascript/auto'
       },
     ]
   },
@@ -45,10 +47,11 @@ module.exports = {
   plugins: [
     new rspack.CssExtractRspackPlugin(),
     new rspack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      Popper: ['popper.js', 'default'],
-      Rails: ['@rails/ujs']
+      $: "jquery",
+      jQuery: "jquery",
+      window.jQuery: "jquery",
+      Popper: ["popper.js", "default"],
+      Rails: "@rails/ujs",
     }),
-  ]
+  ],
 }
