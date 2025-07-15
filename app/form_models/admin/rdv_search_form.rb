@@ -2,7 +2,7 @@ class Admin::RdvSearchForm
   include ActiveModel::Model
   include Pundit::Authorization
 
-  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_ids, :status, :motif_ids, :scoped_organisation_ids, :pundit_user
+  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_ids, :status, :motif_ids, :scoped_organisation_ids, :pundit_user, :per
 
   def agent
     @agent ||= agent_scope.find_by(id: agent_id) if agent_id.present?

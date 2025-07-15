@@ -60,22 +60,22 @@
 
     .fr-grid-row.fr-pb-3w
       .fr-col-12
-        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
+        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr", params: { per: params[:per] }.compact
         = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
-        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
+        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr", params: { per: params[:per] }.compact
 
     .fr-grid-row
       .fr-col-12
         .d-flex.justify-content-center.fr-text--sm
           span.mr-2 Nombre de RDV par page :
-          .fr-pagination__list
+          .fr-pagination__list.rdv-per-page-list
             - Admin::RdvsController::PERMITTED_PER_PAGE.each do |per|
               - uri = URI(request.path)
               - uri.query = URI.encode_www_form(@form.to_query.merge(per:, page: params[:page]))
-              - if per_page == params.fetch(:per_page, 10).to_i
-                = link_to per_page, uri.to_s, class: "fr-pagination__link fr-pagination__link--current", "aria-current": "page"
+              - if per == params.fetch(:per, 10).to_i
+                = link_to per, uri.to_s, class: "fr-pagination__link fr-pagination__link--current", "aria-current": "page"
               - else
-                = link_to per_page, uri.to_s, class: "fr-pagination__link"
+                = link_to per, uri.to_s, class: "fr-pagination__link"
 
   - else
     .fr-grid-row.fr-py-3w
