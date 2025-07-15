@@ -27,11 +27,15 @@ class Select2Inputs {
     }
     // select2 change le comportement de l’événement change.
     // Pour pouvoir intercepter l’événement change, grâce à un data-action stimulus, il faut le re-déclencher manuellement.
+    // On ne fait ceci que si il y a un data-action "change->" sur l'élément pour éviter des conflits (notamment avec le formulaire de fusion usagers).
     // cf https://psmy.medium.com/rails-6-stimulus-and-select2-de4a4d2b59e4
     $(elt).on("change", function () {
-      let event = new Event('change')
-      this.dispatchEvent(event);
-    })
+      const action = this.getAttribute("data-action") || "";
+      if (action.includes("change->")) {
+        let event = new Event('change');
+        this.dispatchEvent(event);
+      }
+    });
   }
 
   getInputConfig = elt => {

@@ -91,7 +91,7 @@ class SmsSender < BaseService
     if request.success?
       parsed_response = JSON.parse(request.body)
       sms_factor_status = parsed_response["status"]
-      if sms_factor_status == 1
+      if [1, -8].include?(sms_factor_status) # 1 envoyé avec succès, -8 en attente de modération par SMS Factor
         save_receipt(result: :delivered, sms_count: parsed_response["cost"])
         Redis.with_connection do |redis|
           redis.set("SMS_FACTOR_REMAINING_CREDITS", parsed_response["credits"])
