@@ -8,6 +8,8 @@ fr:
         enabled: Ouvert
         latitude: Latitude
         longitude: Longitude
+        plage_ouvertures_not_expired: plages d’ouvertures actives
+        plage_ouvertures_expired: plages d’ouvertures expirées
       lieu/availabilities:
         enabled: Ouvert
         disabled: Fermé
