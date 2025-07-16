@@ -17,7 +17,7 @@ RSpec.describe "Agent can create a relative" do
     fill_in :user_first_name, with: "Loulou"
     fill_in :user_last_name, with: "Legende"
     fill_in :user_birth_date, with: "07/11/2001"
-    click_button "Créer usager"
+    click_button "Enregistrer"
     expect_page_title("Loulou LEGENDE")
     expect(page).to have_content("L'usager a été créé")
     expect(page).not_to have_content("Aucun proche")

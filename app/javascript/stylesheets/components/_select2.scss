@@ -54,20 +54,30 @@
 
 // Border radius overrides
 // C'est trop compliqué d'utiliser le fichier src plutôt que le dist à cause d'incohérence d'unités entre les px et rem (et de certains calculs sans unités)
-// Le plus simple pour avoir des border-radius de 0 est donc de mettre des override pour toutes les règles de border-radius dans le fichier node_modules/select2-bootstrap4-theme/dist/select2-bootstrap4.css
+// Le plus simple pour avoir des border-radius conformes au dsfr est donc de mettre des override pour toutes les règles de border-radius dans le fichier node_modules/select2-bootstrap4-theme/dist/select2-bootstrap4.css
+
+@mixin dsfr-input-style {
+  border-radius: 4px 4px 0 0;
+  background-color: rgb(238, 238, 238);
+  border-bottom-color: rgb(58, 58, 58);
+  border-bottom-width: 2px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
 
 .select2-container--bootstrap4 .select2-selection {
-  border-radius: 0;
+  @include dsfr-input-style;
 }
 
 .select2-container--bootstrap4 .select2-selection.form-control {
-  border-radius: 0;
+  @include dsfr-input-style;
 }
 
 .select2-container--bootstrap4
   .select2-search--dropdown
   .select2-search__field {
-  border-radius: 0;
+  @include dsfr-input-style;
 }
 
 .select2-container--bootstrap4

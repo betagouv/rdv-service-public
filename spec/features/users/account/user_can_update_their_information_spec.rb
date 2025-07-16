@@ -21,7 +21,7 @@ RSpec.describe "User can update their information" do
       expect(page).not_to have_content "Nombre d'enfants"
       select "MSA", from: "Caisse d'affiliation"
       fill_in "Numéro d'allocataire", with: 123
-      click_on("Modifier")
+      click_on("Enregistrer")
       expect(page).to have_content "Vos informations ont été mises à jour."
       expect(user.reload.affiliation_number).to eq "123"
     end
@@ -34,7 +34,7 @@ RSpec.describe "User can update their information" do
       it "allows changing the notification email" do
         visit users_informations_path
         fill_in("Email de notification", with: "nouvelle.adresse@exemple.fr")
-        click_on("Modifier")
+        click_on("Enregistrer")
         expect(page).to have_content "Vos informations ont été mises à jour."
         expect(user.reload.notification_email).to eq "nouvelle.adresse@exemple.fr"
       end

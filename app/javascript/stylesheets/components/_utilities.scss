@@ -111,6 +111,10 @@ a[disabled] {
   justify-content: space-between;
 }
 
+.rdv-justify-content-flex-end {
+  justify-content: flex-end;
+}
+
 .align-items-start-or-stretch {
   align-items: stretch;
   @include media-breakpoint-up(md) {
