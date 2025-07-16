@@ -47,7 +47,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_longitude').value = 7.735253")
     end
 
-    click_button "Enregistrer"
+    click_on "Enregistrer"
     expect(page).to have_content("Le rendez-vous a été créé")
     expect(page).to have_content("Jeudi 17 mars à 14:00")
     expect(page).to have_content("4 places restantes")
@@ -55,7 +55,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     click_link("Ajouter un participant")
     add_user(user1)
     add_new_user
-    click_button "Enregistrer"
+    click_on "Enregistrer"
     expect(page).to have_content("Participants mis à jour")
 
     expect(Receipt.where(user_id: user1.id, channel: "sms", result: "delivered").count).to eq 1
@@ -66,7 +66,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     click_link("Ajouter un participant")
     add_user(user2)
     add_new_user({ with_phone: true })
-    click_button "Enregistrer"
+    click_on "Enregistrer"
     expect(page).to have_content("Participants mis à jour")
 
     user3 = User.last
@@ -112,7 +112,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
       select("DIALO Alain", from: "rdv_agent_ids")
       select(lieu.name, from: "rdv_lieu_id")
 
-      click_button "Enregistrer"
+      click_on "Enregistrer"
       expect(page).to have_content("L'intitulé est trop long et sera abrégé ainsi dans les notifications SMS : Organiser ses fichiers et ses dossiers sur son ord...")
     end
   end

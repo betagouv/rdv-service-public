@@ -41,10 +41,10 @@ module SuperAdmins
     def destroy
       requested_resource.destroy!
       flash[:notice] = translate_with_resource("destroy.success")
+      redirect_to after_resource_destroyed_path(requested_resource)
     rescue ActiveRecord::RecordNotDestroyed => e
       flash[:error] = e.record.errors.full_messages.join("<br/>")
-    ensure
-      redirect_to after_resource_destroyed_path(requested_resource)
+      redirect_to [namespace, requested_resource]
     end
 
     private

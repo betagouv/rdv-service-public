@@ -54,6 +54,10 @@
 
 // FLEX
 
+.rdv-display-flex {
+  display: flex;
+}
+
 .rdv-flex-wrap-wrap {
   flex-wrap: wrap;
 }
@@ -66,12 +70,20 @@
   justify-content: center;
 }
 
+.rdv-justify-content-space-between {
+  justify-content: space-between;
+}
+
 .rdv-align-items-baseline {
   align-items: baseline;
 }
 
 .rdv-gap-1rem {
   gap: 1rem;
+}
+
+.rdv-flex-direction-column {
+  flex-direction: column;
 }
 
 // DIMENSIONS
