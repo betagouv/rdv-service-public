@@ -153,4 +153,43 @@ RSpec.describe "Agent can list RDVs" do
       end
     end
   end
+
+  describe "configuration du nombre de RDV par page", js: true do
+    before { create_list(:rdv, 54, organisation:, agents: [current_agent]) }
+
+    it "fonctionne de manière cohérente" do
+      # par défaut la liste affiche 10 RDV par page
+      visit admin_organisation_rdvs_path(organisation, current_agent)
+      expect(page).to have_selector(".rdv-item", count: 10)
+      expect(Rack::Utils.parse_query(URI.parse(first(".fr-pagination__link--last")["href"]).query)["page"].to_i).to eq(6)
+      expect(first(".rdv-per-page-list").find(".fr-pagination__link--current").text.to_i).to eq 10
+      # on passe à 25 par page
+      first(".rdv-per-page-list").find(".fr-pagination__link", text: /25/).click
+      expect(page).to have_selector(".rdv-item", count: 25)
+      expect(Rack::Utils.parse_query(URI.parse(first(".fr-pagination__link--last")["href"]).query)["page"].to_i).to eq(3)
+      expect(first(".rdv-per-page-list").find(".fr-pagination__link--current").text.to_i).to eq 25
+      # on passe à 50 par page
+      first(".rdv-per-page-list").find(".fr-pagination__link", text: /50/).click
+      expect(page).to have_selector(".rdv-item", count: 50)
+      expect(Rack::Utils.parse_query(URI.parse(first(".fr-pagination__link--last")["href"]).query)["page"].to_i).to eq(2)
+      expect(first(".rdv-per-page-list").find(".fr-pagination__link--current").text.to_i).to eq 50
+      # on va à la deuxième page et on vérifie que 50 RDV par page est toujours sélectionné
+      first('.fr-pagination__link[title="Page 2"]').click
+      expect(first(".rdv-per-page-list").find(".fr-pagination__link--current").text.to_i).to eq 50
+      expect(page).to have_selector(".rdv-item", count: 4)
+      # on change un filtre et on vérifie que le nombre de RDV par page est retenu
+      select("Rendez-vous à venir", from: "status")
+      click_on "Rafraîchir la liste"
+      expect(first(".rdv-per-page-list").find(".fr-pagination__link--current").text.to_i).to eq 50
+      # en revanche ça fait revenir à la première page, ce qui est raisonnable
+      expect(first(".fr-pagination__link.fr-pagination__link--current")["title"]).to eq "Page 1"
+      expect(page).to have_selector(".rdv-item", count: 50)
+      # on revient à 10 par page
+      first(".rdv-per-page-list").find(".fr-pagination__link", text: /10/).click
+      expect(page).to have_selector(".rdv-item", count: 10)
+      expect(first(".rdv-per-page-list").find(".fr-pagination__link--current").text.to_i).to eq 10
+      # le filtre sur le statut est bien conservé
+      expect(page).to have_select("status", selected: "Rendez-vous à venir")
+    end
+  end
 end

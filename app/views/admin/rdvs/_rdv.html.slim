@@ -1,6 +1,6 @@
 /# locals: (rdv:, agent:, success_message: nil)
 
-turbo-frame.card[id= "rdv-#{rdv.id}" target="_top"]
+turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
   div[id= "rdv-error-message-#{rdv.id}"]
   - if success_message
     .fr-alert.fr-alert--sm.fr-alert--success.fr-pb-1w.fr-mx-3w.fr-my-2w

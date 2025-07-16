@@ -5,16 +5,18 @@ class Admin::RdvsController < AgentAuthController
 
   before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner export participations_export]
 
+  PERMITTED_PER_PAGE = [10, 25, 50].freeze
+
   def index
     set_scoped_organisations
     @breadcrumb_page = params[:breadcrumb_page]
-
+    per_page = PERMITTED_PER_PAGE.include?(params[:per]&.to_i) ? params[:per].to_i : 10
     order = [{ starts_at: :asc }, { id: :asc }]
     distinct_on = "rdvs.starts_at, rdvs.id" # les clauses ORDER BY et DISTINCT ON doivent utiliser les mêmes colonnes
     @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope)
       .select("DISTINCT ON (#{distinct_on}) rdvs.*") # dédoublonnage des RDV renvoyés par Agent::RdvPolicy::Scope
       .search_for(@scoped_organisations, parsed_params)
-      .order(order).page(page_number).per(10)
+      .order(order).page(page_number).per(per_page)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
     # parce que ça fait un sort et beaucoup de left outer joins
@@ -149,7 +151,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parse_date_from_params(date_param)
-    Date.parse(date_param)
+    Date.parse(date_param) if date_param.present?
   rescue Date::Error
     nil
   end
@@ -175,7 +177,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(:organisation_id, :agent_id, :user_id, :status, :start, :end,
+    params.permit(:organisation_id, :agent_id, :user_id, :status, :start, :end, :per,
                   lieu_attributes: %i[name address latitude longitude], motif_ids: [], lieu_ids: [], scoped_organisation_ids: []).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
