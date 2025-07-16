@@ -15,9 +15,9 @@ class Lieu < ApplicationRecord
 
   has_many :rdvs, dependent: :restrict_with_error
 
-  has_many :expired_plage_ouvertures, -> { expired },
+  has_many :plage_ouvertures_expired, -> { expired },
            class_name: "PlageOuverture", dependent: :destroy, inverse_of: :lieu
-  has_many :upcoming_plage_ouvertures, -> { not_expired },
+  has_many :plage_ouvertures_not_expired, -> { not_expired },
            class_name: "PlageOuverture", dependent: :restrict_with_error, inverse_of: :lieu
   has_many :plage_ouvertures # rubocop:disable Rails/HasManyOrHasOneDependent
 
