@@ -30,3 +30,22 @@ $status_colors: (
 .text-primary-blue {
   color: $blue;
 }
+
+.rdv-status-print {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: end;
+}
+.rdv-status-print::before {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+}
+@each $status, $color in $status_colors {
+  .rdv-status-print.rdv-status-print-#{$status}::before {
+    background-color: $color;
+  }
+}

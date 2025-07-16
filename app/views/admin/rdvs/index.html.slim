@@ -1,6 +1,8 @@
 .web-content
   - content_for :title do
-    | Liste des RDV
+    .d-print-none Liste des RDV
+    .print-context
+      | Liste de RDV de l’organisation #{current_organisation.name}
 
   - content_for(:menu_item) { "menu-rdvs-list" }
 
@@ -77,18 +79,42 @@
                   i.far.fa-calendar.fa-stack-1x.text-white
 
 .print-content.px-20
-  h1
-    - if @form.agent
-      | Agenda de #{@form.agent.full_name}
-    - else
-      | Agenda de l'organisation
-    .mt-2
-      = current_organisation.name
+  .fr-grid-row.fr-mb-4w
+    - if @form.applied_filters.any?
+      .fr-col-6
+        div.fr-text--bold Filtres appliqués
+        - if @form.agent.present?
+          div Agent: #{@form.agent}
+        - if @form.user.present?
+          div Usager: #{@form.user}
+        - if @form.lieux.present?
+          div
+            |> Lieu#{"x" if @form.lieux.count > 1}
+            | : #{@form.lieux.map(&:name).to_sentence}
+        - if @form.motifs.present?
+          div
+            |> Motif#{"s" if @form.motifs.count > 1}
+            | : #{@form.motifs.map(&:name).to_sentence}
+        - if @form.status.present?
+          div Statut: #{Rdv.human_attribute_value(:status, @form.status)}
+        - if dates_interval.present?
+          div Dates : #{dates_interval}
+    div[class=(@form.applied_filters.any? ? "fr-col-6": "fr-col-12")]
+      - if @form.applied_filters.any?
+        div.fr-text--bold Résultats
+      - if @rdvs.total_pages > 1
+        div #{@rdvs.total_count} RDV au total
+        div #{@rdvs_in_page.count} RDV dans la page courante (p. #{@rdvs.current_page} / #{@rdvs.total_pages})
+      - else
+        div #{@rdvs.total_count} RDV
 
-  h3.mt-4
-    = dates_interval unless params[:start] == params[:end]
   - rdvs_collection = @rdvs_in_page.group_by { |rdv| rdv.starts_at.to_date }
   - rdvs_collection.each do |date, rdvs|
-    h3.mt-4
-      = format_date(date.to_s)
-    = render(partial: "admin/rdvs/print/rdv", collection: rdvs)
+    - first_rdv = rdvs.shift
+    / On veut éviter qu’il y ait un saut de page entre la date et le premier RDV de cette date
+    / on utilise un padding-top plutôt qu’une margin qui se fait « manger » au saut de page
+    .fr-pt-2w[style="break-inside: avoid;"]
+      h3.fr-mb-4w
+        = format_date(date.to_s)
+      = render "admin/rdvs/print/rdv", rdv: first_rdv
+    = render partial: "admin/rdvs/print/rdv", collection: rdvs
