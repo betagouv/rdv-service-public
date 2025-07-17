@@ -1,4 +1,4 @@
-= simple_form_for [:admin, current_organisation, absence] do |f|
+= simple_form_for [:admin, current_organisation, :planning, absence] do |f|
   = render "model_errors", model: absence
   = f.hidden_field :agent_id
 
@@ -10,6 +10,6 @@
   .row
     - if absence.persisted?
       .col.text-left
-        = link_to "Supprimer", admin_organisation_absence_path(current_organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_absence")}
+        = link_to "Supprimer", admin_organisation_planning_absence_path(current_organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_absence")}
     .col.text-right
       = f.button :submit

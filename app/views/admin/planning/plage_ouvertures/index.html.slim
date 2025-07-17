@@ -1,5 +1,5 @@
 - content_for(:menu_item) { "menu-plages-ouvertures" }
-- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_agent_plage_ouvertures_path" }
+- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_planning_plage_ouvertures_path" }
 
 - content_for :title do
   - if current_agent == @agent
@@ -13,23 +13,24 @@
 - content_for :breadcrumb do
   - if current_organisation.motifs.active.any?
     .fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left
-      = link_to t(".calendar_view"), calendar_admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary fr-icon-calendar-fill"
-      = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary"
+      = link_to t(".calendar_view"), calendar_admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary fr-icon-calendar-fill"
+      = link_to t(".create_plage_ouverture"),  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary"
 
 .card
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        = active_link_to t(".in_progress"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search]), class: "nav-link", active: params[:current_tab] != "expired"
+        = active_link_to t(".in_progress"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id, search: params[:search]), class: "nav-link", active: params[:current_tab] != "expired"
       li.nav-item
-        = active_link_to t(".past"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired", search: params[:search]), class: "nav-link", active: { current_tab: "expired" }
+        = active_link_to t(".past"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id, current_tab: "expired", search: params[:search]), class: "nav-link", active: { current_tab: "expired" }
 
   - if @plage_ouvertures_before_text_search.any?
     .m-2.d-flex.justify-content-end
-      div= link_to t("helpers.reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
-      = simple_form_for "", url: admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+      div= link_to t("helpers.reset"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
+      = simple_form_for "", url: admin_organisation_planning_plage_ouvertures_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
         = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control mr-2", value: params[:search] }, required: false
         = f.hidden_field :current_tab, value: params[:current_tab]
+        = f.hidden_field :agent_id, value: @agent.id
         = f.button :submit, t("helpers.search")
 
   - if @plage_ouvertures.any?
@@ -42,7 +43,7 @@
           th = t(".dates")
           th = t("helpers.actions")
       tbody
-        = render partial: "admin/plage_ouvertures/plage_ouverture", collection: @plage_ouvertures, as: :plage_ouverture
+        = render partial: "admin/planning/plage_ouvertures/plage_ouverture", collection: @plage_ouvertures, as: :plage_ouverture
     .d-flex.justify-content-center
       = paginate @plage_ouvertures, theme: "dsfr"
   - else
@@ -60,7 +61,7 @@
 
           - if current_organisation.motifs.active.any?
             .mt-3
-              = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "fr-btn" do
+              = link_to  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "fr-btn" do
                 - if current_agent == @agent
                   = t(".self.create_first_plage_cta")
                 - else

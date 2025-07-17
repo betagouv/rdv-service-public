@@ -8,7 +8,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
   before do
     travel_to(Time.zone.local(2019, 12, 2))
     login_as(agent, scope: :agent)
-    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
   end
 
   it "default", js: true do
@@ -48,7 +48,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     expect(recurrence_attributes_from_factory + [:until]).to match_array(plage_ouverture.recurrence.to_hash.keys)
 
     # reload page to check if form is filled correctly
-    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     expect_checked("recurrence_has_recurrence")
     expect_checked("recurrence_on_monday")
     expect_checked("recurrence_on_tuesday")
@@ -60,7 +60,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     # expect(page).to have_field("recurrence-until", with: "30/12/2019")
     # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
 
-    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     uncheck("recurrence_on_monday")
     uncheck("recurrence_on_tuesday")
     uncheck("recurrence_on_wednesday")
@@ -84,7 +84,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
 
     expect(recurrence_attributes_from_factory.keys).to match_array(plage_ouverture.recurrence.to_hash.keys)
 
-    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     select("mois", from: "recurrence_every")
     expect(page).not_to have_text("Répéter les")
     expect(page).to have_text("Tous les 1er mardi du mois")
@@ -110,7 +110,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     expect(recurrence_attributes_from_factory + [:until]).to match_array(plage_ouverture.recurrence.to_hash.keys)
 
     # reload page to check if form is filled correctly
-    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    visit edit_admin_organisation_planning_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     expect_checked("recurrence_has_recurrence")
     expect(page).to have_select("recurrence_every", selected: "mois")
     expect(page).to have_select("recurrence_interval", selected: "1")

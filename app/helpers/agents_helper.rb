@@ -61,7 +61,7 @@ module AgentsHelper
   def planning_agent_select(agent, path_helper_name)
     # See also planning-agent-select.js
     # path_helper_name lets us build the path of the current subsection (Agenda, PlageOuverture, Absence)
-    url_template = send(path_helper_name, current_organisation, "__AGENT__")
+    url_template = send(path_helper_name, current_organisation, agent_id: "__AGENT__")
     preselected_option = [
       agent.reverse_full_name_or_email,
       agent.id,
