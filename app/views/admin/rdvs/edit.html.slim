@@ -5,9 +5,9 @@
     = b.with_breadcrumb label: "Accueil", href: root_path
     - if @agent
       - if @agent != current_agent
-        = b.with_breadcrumb label: "Agenda de #{@agent.full_name}", href: admin_organisation_agent_agenda_path(current_organisation, @agent)
+        = b.with_breadcrumb label: "Agenda de #{@agent.full_name}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: @agent.id)
       - else
-        = b.with_breadcrumb label: "Votre agenda", href: admin_organisation_agent_agenda_path(current_organisation, current_agent)
+        = b.with_breadcrumb label: "Votre agenda", href: admin_organisation_planning_agenda_path(current_organisation)
     - else
       - if @rdv.collectif?
         = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)

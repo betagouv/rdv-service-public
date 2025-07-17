@@ -111,7 +111,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       expect(rdv.created_by_agent?).to be(true)
       expect(rdv.context).to eq("RDV très spécial")
 
-      expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
+      expect(page).to have_current_path(admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
       expect(page).to have_content("Le rendez-vous a été créé.")
       expect(page).to have_css("*", text: "14:15", visible: :all)
     end
@@ -214,7 +214,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       expect(rdv.participations.first.created_by_agent?).to be(true)
       expect(rdv.context).to eq("RDV très spécial")
 
-      expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
+      expect(page).to have_current_path(admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
       expect(page).to have_content("Le rendez-vous a été créé.")
     end
   end

@@ -1,5 +1,5 @@
 - content_for(:menu_item) { "menu-plages-ouvertures" }
-- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_agent_plage_ouvertures_path" }
+- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_planning_plage_ouvertures_path" }
 
 - content_for :title do
   - if current_agent == @agent
@@ -12,8 +12,8 @@
 
 - content_for :breadcrumb do
   .fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left
-    = link_to t("admin.plage_ouvertures.index.list_view"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search], current_tab: params[:current_tab]), class: "fr-btn fr-btn--secondary fr-icon-list-unordered"
-    = link_to t("admin.plage_ouvertures.index.create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "fr-btn fr-btn--secondary"
+    = link_to t("admin.planning.plage_ouvertures.index.list_view"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id, search: params[:search], current_tab: params[:current_tab]), class: "fr-btn fr-btn--secondary fr-icon-list-unordered"
+    = link_to t("admin.planning.plage_ouvertures.index.create_plage_ouverture"),  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary"
 
 #calendar [
   data-agent-id="#{@agent.id}"

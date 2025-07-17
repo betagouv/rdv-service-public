@@ -52,7 +52,7 @@ RSpec.describe "Configuration initiale", js: true do
                        text: "Liste des RDV collectifs",
                        wait_for: "Pour créer un RDV collectif")
 
-    visit admin_organisation_agent_plage_ouvertures_url(organisation, host: "http://www.rdv-mairie-test.localhost", agent_id: agent.id)
+    visit admin_organisation_planning_plage_ouvertures_url(organisation, host: "http://www.rdv-mairie-test.localhost", agent_id: agent.id)
 
     doc.add_screenshot(page,
                        text: "Liste des plages d'ouverture",

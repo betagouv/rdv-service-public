@@ -6,7 +6,7 @@ RSpec.describe "Admin can configure the organisation" do
 
     login_as(agent, scope: :agent)
 
-    visit admin_organisation_agent_plage_ouvertures_path(organisation, agent)
+    visit admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: agent)
 
     expect(page).to have_content(plage_ouverture.title_with_default)
 

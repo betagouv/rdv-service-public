@@ -7,7 +7,7 @@
           span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
           = "#{l(@rdv.starts_at, format: :human)} (#{@rdv.duration_in_min} minutes)"
           = " "
-          = dsfr_link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(@rdv.organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date), target: :blank
+          = dsfr_link_to "voir dans l'agenda", admin_organisation_planning_agenda_path(@rdv.organisation, agent_id: @rdv.agents.first.id, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date), target: :blank
 
         .fr-mt-2w
           - if @rdv.lieu

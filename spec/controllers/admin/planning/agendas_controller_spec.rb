@@ -1,4 +1,4 @@
-RSpec.describe Admin::AgentAgendasController, type: :controller do
+RSpec.describe Admin::Planning::AgendasController, type: :controller do
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
@@ -20,7 +20,7 @@ RSpec.describe Admin::AgentAgendasController, type: :controller do
   describe "#toggle_displays" do
     it "redirect to agenda" do
       put :toggle_displays, params: { id: agent.id, organisation_id: organisation.id, agent: { display_cancelled_rdv: true } }
-      expect(response).to redirect_to(admin_organisation_agent_agenda_path)
+      expect(response).to redirect_to(admin_organisation_planning_agenda_path)
     end
 
     context "about saturdays" do
