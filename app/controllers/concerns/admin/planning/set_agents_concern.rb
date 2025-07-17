@@ -3,20 +3,18 @@ module Admin::Planning::SetAgentsConcern
 
   def set_agents
     scope = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
-    agent_ids = Array(params[:agent_id]).compact_blank
+    agents = Agent.where(id: Array(params[:agent_id]).compact_blank)
 
-    case agent_ids.size
+    case agents.size
     when 0
       @agent = current_agent
       @agents = [current_agent]
     when 1
-      @agent = scope.find(agent_ids.first)
+      @agent = scope.where(id: agents).first
       @agents = [@agent]
     else
-      @agents = scope.where(id: agent_ids)
+      # Ce cas ne devrait pour le moment pas arriver, il a été mis en place en préparation de l’agenda multi-agents.
+      @agents = scope.where(id: agents)
     end
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = "L'agent sélectionné est introuvable"
-    redirect_to root_path
   end
 end

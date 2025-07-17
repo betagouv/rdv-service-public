@@ -3,7 +3,7 @@ class Admin::Planning::AgendasController < AgentAuthController
 
   def show
     set_agents
-    @show_agent_select = true
+
     @agents.each do |agent|
       authorize(AgentAgenda.new(agent:, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
     end
