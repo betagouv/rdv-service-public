@@ -3,7 +3,7 @@ class Agent::AgentAgendaPolicy < ApplicationPolicy
 
   def show?
     current_agent_role = current_agent.roles.find_by(organisation_id: record.organisation_id)
-    other_agent_role = record.agent.roles.find_by(organisation_id: record.organisation_id)
+    other_agent_role = record.agent&.roles&.find_by(organisation_id: record.organisation_id)
 
     return false if current_agent_role.nil? || other_agent_role.nil?
 
