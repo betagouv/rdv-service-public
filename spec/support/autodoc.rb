@@ -9,6 +9,8 @@ class Autodoc
   end
 
   def self.render
+    return if @scenarios.empty?
+
     `mkdir -p tmp/capybara/autodoc`
 
     @scenarios.each do |scenario|
