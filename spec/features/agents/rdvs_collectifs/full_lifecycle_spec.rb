@@ -19,6 +19,8 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
   around { |example| perform_enqueued_jobs { example.run } }
 
   def create_rdv_collectif(lieu_availability)
+    Receipt.delete_all
+
     # Creating a new RDV Collectif
     visit admin_organisation_rdvs_collectifs_path(organisation)
     expect(page).to have_content("Aucun RDV")
