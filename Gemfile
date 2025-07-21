@@ -273,4 +273,7 @@ group :test do
   gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
 
   gem "pry"
+
+  # pour générer des résumés lisibles sur GitHub Actions
+  gem "rspec-github-actions-summary", "~> 0.1.0"
 end

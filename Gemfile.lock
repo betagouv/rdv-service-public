@@ -228,6 +228,7 @@ GEM
       devise (> 3.5.2, < 5)
       rails (>= 4.2.0, < 7.3)
     diff-lcs (1.5.0)
+    docile (1.4.1)
     domain_name (0.6.20240107)
     doorkeeper (5.7.1)
       railties (>= 5)
@@ -253,6 +254,7 @@ GEM
       tzinfo
     ethon (0.16.0)
       ffi (>= 1.15.0)
+    facets (3.1.0)
     factory_bot (6.5.0)
       activesupport (>= 5.0.0)
     faker (3.5.1)
@@ -573,6 +575,12 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.4.0)
+    rggen-core (0.35.1)
+      docile (>= 1.1.5, != 1.3.3)
+      erubi (>= 1.7)
+      facets (>= 3.0)
+      tomlrb (>= 2.0)
+    rggen-markdown (0.27.0)
     rouge (4.5.1)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
@@ -583,6 +591,10 @@ GEM
     rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
+    rspec-github-actions-summary (0.1.0)
+      rggen-core
+      rggen-markdown
+      rspec (>= 2.0)
     rspec-mocks (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
@@ -711,6 +723,7 @@ GEM
     tilt (2.5.0)
     timeout (0.4.3)
     tod (3.1.2)
+    tomlrb (2.0.3)
     turbo-rails (2.0.16)
       actionpack (>= 7.1.0)
       railties (>= 7.1.0)
@@ -841,6 +854,7 @@ DEPENDENCIES
   rails_autolink
   redis
   redis-namespace
+  rspec-github-actions-summary (~> 0.1.0)
   rspec-rails
   rspec-wait
   rspec_junit_formatter

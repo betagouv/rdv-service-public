@@ -170,7 +170,7 @@ jobs:
           key: specs-runtime-log-${{ hashFiles(format('tmp/spec_{0}_files.txt', matrix.name)) }}
           path: tmp/parallel_runtime_rspec.log
         # By setting up and running in the same call, we save the app boot time
-      - name: Setup parallel tests and run feature specs
+      - name: Run specs in parallel
         run: "RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema ${{ matrix.command }}"
         env:
           HOST: http://example.com
@@ -187,6 +187,9 @@ jobs:
             tmp/capybara
             tmp/rspec-*
           if-no-files-found: ignore
+      - name: Generate GH Action Summary
+        if: always()
+        run: bundle exec rspec-gh-summary >> $GITHUB_STEP_SUMMARY
   test_features_autodoc:
     name: Feature Tests using Autodoc
     runs-on: ubuntu-latest

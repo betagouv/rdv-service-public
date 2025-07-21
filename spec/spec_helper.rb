@@ -21,6 +21,7 @@ require "capybara-screenshot/rspec"
 require "pundit/rspec"
 require "webmock/rspec"
 require "selenium-webdriver"
+require "rspec_github_actions_summary"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
