@@ -13,8 +13,8 @@ ctrf.summary.stop}} |
 {{#let 0 as |failIndex|}}
 {{#each ctrf.tests}}
 {{#if (eq status "failed")}}
-{{#set failIndex (add failIndex 1)}}
-{{failIndex}}. **{{name}}**
+{{#let (add failIndex 1) as |newFailIndex|}}
+{{newFailIndex}}. **{{name}}**
 
 `{{filePath}}:{{line}}`
 
@@ -26,6 +26,7 @@ Message:
 {{else}}
 No failure message
 {{/if}}
+{{/let}}
 {{/if}}
 {{/each}}
 {{/let}}
