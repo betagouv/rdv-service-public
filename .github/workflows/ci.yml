@@ -183,11 +183,26 @@ jobs:
       - name: Publish GitHub Action Test Report
         uses: ctrf-io/github-test-reporter@v1
         with:
-          report-path: './tmp/rspec-*.ctrf.json'
+          report-path: './tmp/rspec-*.xml'
           custom-report: true
           annotate: false
           write-ctrf-to-file: 'tmp/rspec-ctrf-report.json'
           template-path: spec/test_report_template.hbs
+          integrations-config: |
+            {
+              "junit-to-ctrf": {
+                "enabled": true,
+                "action": "convert",
+                "options": {
+                  "output": "./ctrf-reports/ctrf-report.json",
+                  "toolname": "junit-to-ctrf",
+                  "useSuiteName": false,
+                  "env": {
+                    "appName": "rdvsp"
+                  }
+                }
+              }
+            }
         if: always()
       - uses: actions/upload-artifact@v4
         if: always()
