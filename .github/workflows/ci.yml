@@ -180,6 +180,26 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
+      - name: Publish GitHub Action Test Report
+        uses: ctrf-io/github-test-reporter@v1
+        with:
+          report-path: './tmp/rspec-*.xml'
+          integrations-config: |
+            {
+              "junit-to-ctrf": {
+                "enabled": true,
+                "action": "convert",
+                "options": {
+                  "output": "./ctrf-reports/ctrf-report.json",
+                  "toolname": "junit-to-ctrf",
+                  "useSuiteName": false,
+                  "env": {
+                    "appName": "rdvsp"
+                  }
+                }
+              }
+            }
+        if: always()
       - uses: actions/upload-artifact@v4
         if: always()
         with:
