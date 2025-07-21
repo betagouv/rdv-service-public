@@ -79,8 +79,8 @@ RSpec.describe "User can search for rdvs" do
       create(:motif, :by_phone, name: "RSA orientation par téléphone", organisation: organisation_without_po, restriction_for_rdv: nil, service: service)
     end
 
-    context "when the motif is by phone" do
-      it "can take a RDV in the available organisations", js: true do
+    context "motif téléphonique" do
+      specify js: true do
         visit root_path
         execute_search
 
@@ -108,6 +108,32 @@ RSpec.describe "User can search for rdvs" do
         continue_to_rdv(first_motif)
         add_relative
         confirm_rdv(first_motif)
+      end
+    end
+
+    context "motif téléphonique avec restriction (instruction pré-RDV)" do
+      let!(:first_motif) do
+        create(:motif, :by_phone, name: "RSA orientation par téléphone", organisation: first_organisation_with_po, restriction_for_rdv: "Merci d’apporter les documents nécessaires", service: service)
+      end
+
+      it "oblige à accepter la restriction", js: true do
+        visit root_path
+        execute_search
+
+        ## Motif selection
+        expect(page).to have_content(first_motif.name)
+        click_link(first_motif.name)
+
+        ## Organisation selection
+        click_on first_organisation_with_po.name
+        expect(page).to have_content("Merci d’apporter les documents nécessaires")
+        click_on "Annuler"
+        click_on first_organisation_with_po.name
+        expect(page).to have_content("Merci d’apporter les documents nécessaires")
+        click_on "Accepter"
+
+        ## Sélection créneau
+        expect(page).to have_content("Sélectionnez un créneau")
       end
     end
 
