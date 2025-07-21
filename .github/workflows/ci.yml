@@ -184,11 +184,10 @@ jobs:
         uses: ctrf-io/github-test-reporter@v1
         with:
           report-path: './tmp/rspec-*.ctrf.json'
-          summary-report: true
-          failed-report: true
-          skipped-report: true
+          custom-report: true
           annotate: false
           write-ctrf-to-file: 'tmp/rspec-ctrf-report.json'
+          template-path: spec/test_report_template.hbs
         if: always()
       - uses: actions/upload-artifact@v4
         if: always()
