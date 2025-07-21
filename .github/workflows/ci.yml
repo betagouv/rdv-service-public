@@ -187,6 +187,8 @@ jobs:
           summary-report: true
           failed-report: true
           skipped-report: true
+          file-report: true
+          annotate: false
           write-ctrf-to-file: 'tmp/rspec-ctrf-report.json'
           integrations-config: |
             {
