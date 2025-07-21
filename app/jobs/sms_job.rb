@@ -19,7 +19,6 @@ class SmsJob < ApplicationJob
     provider = ENV["FORCE_SMS_PROVIDER"].presence || territory&.sms_provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
     api_key = territory&.sms_configuration || ENV["DEFAULT_SMS_PROVIDER_KEY"]
 
-    puts "SMS_PROVIDER is #{provider}"
     SmsSender.perform_with(sender_name, phone_number, content, provider, api_key, receipt_params)
   end
 
