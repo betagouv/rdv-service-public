@@ -7,6 +7,7 @@
   p.fr-text--lg = t(".select_lieu")
   p.fr-text--sm = t(".lieu_available", count: context.shown_lieux.count)
   ul.fr-raw-list
+    / similar to app/views/search/_organisation_selection.html.slim:10
     - context.next_availability_by_lieux.each do |lieu, next_availability|
       - motif = next_availability.motif
       - if motif.restriction_for_rdv.blank?
