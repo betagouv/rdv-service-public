@@ -61,6 +61,8 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     expect(page).to have_content("Participants mis à jour")
 
     expect(Receipt.where(user_id: user1.id, channel: "sms", result: "delivered").count).to eq 1
+    receipt_sms = Receipt.where(user_id: user1.id, channel: "sms", result: "delivered").first
+    puts "receipt_sms is #{receipt_sms.attributes}"
     expect(Receipt.where(user_id: user1.id, channel: "mail", result: "processed").count).to eq 1
 
     expect(page).to have_content("2 places restantes")
