@@ -79,8 +79,8 @@ RSpec.describe "User can search for rdvs" do
       create(:motif, :by_phone, name: "RSA orientation par téléphone", organisation: organisation_without_po, restriction_for_rdv: nil, service: service)
     end
 
-    context "motif téléphonique" do
-      specify js: true do
+    context "when the motif is by phone" do
+      it "can take a RDV in the available organisations", js: true do
         visit root_path
         execute_search
 
