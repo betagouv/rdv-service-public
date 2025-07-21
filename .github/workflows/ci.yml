@@ -183,7 +183,9 @@ jobs:
         if: always()
         with:
           name: artifacts-capybara-${{ matrix.name }}
-          path: tmp/capybara
+          path: |
+            tmp/capybara
+            tmp/rspec-*
           if-no-files-found: ignore
   test_features_autodoc:
     name: Feature Tests using Autodoc
