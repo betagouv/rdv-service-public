@@ -184,6 +184,10 @@ jobs:
         uses: ctrf-io/github-test-reporter@v1
         with:
           report-path: './tmp/rspec-*.xml'
+          summary-report: true
+          failed-report: true
+          skipped-report: true
+          write-ctrf-to-file: 'tmp/rspec-ctrf-report.json'
           integrations-config: |
             {
               "junit-to-ctrf": {
