@@ -1,0 +1,8 @@
+--color
+--order rand
+--require rails_helper
+--format progress
+--format ParallelTests::RSpec::RuntimeLogger --out tmp/rspec-parallel_runtime_rspec.log
+--format ParallelTests::RSpec::SummaryLogger --out tmp/rspec-spec_summary.log
+--format ParallelTests::RSpec::FailuresLogger --out tmp/rspec-failing_specs.log
+--format RspecJunitFormatter --out tmp/rspec-<%= ENV["TEST_ENV_NUMBER"] %>.xml
