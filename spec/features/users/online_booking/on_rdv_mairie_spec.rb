@@ -173,7 +173,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       # soumission sans numéro ANTS
       click_button "Enregistrer"
       ants_input_elt = find("label", text: /Numéro de pré-demande ANTS/).sibling("input")
-      expect(ants_input_elt.native.evaluate("el => el.validationMessage")).not_to be_empty # client side HTML5 validation
+      expect(page).to have_field(ants_input_elt[:name], validation_message: /Please fill (in|out) this field/)
 
       # soumission avec un numéro invalide
       fill_in "Numéro de pré-demande ANTS", with: "inva lide"
