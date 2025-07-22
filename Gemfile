@@ -231,11 +231,7 @@ group :test do
   gem "rspec-wait"
 
   # Accessibility
-
-  # Axe API utility methods
-  gem "axe-core-api"
-  # RSpec custom matchers for Axe
-  gem "axe-core-rspec", "4.3.2"
+  # aXe is now required as a JS package
 
   # Web browser simulation
 

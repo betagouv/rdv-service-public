@@ -6,15 +6,12 @@ WebMock.disable_net_connect!(allow: [
                              ])
 
 Capybara.register_driver :playwright do |app|
-  # chrome_bin = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
-  # binary = chrome_bin if chrome_bin
-  # these args seem to reduce test flakyness
-  # args = %w[no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen disable-features=MacAppCodeSignClone]
   Capybara::Playwright::Driver.new(
     app,
     browser_type: ENV["PLAYWRIGHT_BROWSER"]&.to_sym || :chromium,
     headless: ENV["HEADLESS"] != "false",
-    timeout: 5
+    timeout: 5,
+    bypassCSP: true # TODO: limit to accessibility specs
   )
 end
 Capybara.default_max_wait_time = 3

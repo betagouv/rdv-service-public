@@ -14,7 +14,6 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require "axe-rspec"
 require "capybara/rspec"
 require "capybara/email/rspec"
 require "capybara-screenshot/rspec"
