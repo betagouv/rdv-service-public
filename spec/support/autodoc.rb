@@ -64,7 +64,7 @@ class Autodoc
 
       if page_or_email.is_a?(Capybara::Node::Email)
         Capybara.current_session.driver.visit "file://#{page_or_email.save_page}"
-        Capybara.current_session.driver.render(path)
+        Capybara.current_session.driver.save_screenshot(path)
       else
         page_or_email.driver.save_screenshot(path)
       end
