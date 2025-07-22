@@ -32,8 +32,9 @@ RSpec.describe "territory admin can crud webhooks endpoints" do
     expect(organisation.reload.webhook_endpoints.first.secret).to eq("XSECRET")
 
     # Delete
-    click_link "Supprimer"
-    page.driver.browser.switch_to.alert.accept
+    accept_confirm do
+      click_link "Supprimer"
+    end
     expect(page).not_to have_content organisation.name
     expect(organisation.reload.webhook_endpoints.count).to eq(0)
   end
