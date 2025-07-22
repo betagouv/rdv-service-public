@@ -165,8 +165,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          key: playwright-browsers-2-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
       - name: Install Playwright Chromium browser (with deps)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: yarn run playwright install chromium --with-deps --only-shell
       # END PLAYWRIGHT
       - name: Precompile assets
