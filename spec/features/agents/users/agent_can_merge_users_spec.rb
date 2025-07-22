@@ -51,8 +51,7 @@ RSpec.describe "Agent can delete user" do
     accept_confirm do
       find("input[type=submit]").click
     end
-    message = page.find("#merge_users_form_phone_number_1").evaluate_script("this.validationMessage") # cf https://stackoverflow.com/a/48206413
-    expect(message).to eq("Please select one of these options.").or(eq("Veuillez sélectionner l'une de ces options."))
+    expect(page).to have_field("merge_users_form_phone_number_1", validation_message: /(Please select one of these options|Veuillez sélectionner l'une de ces options)/)
 
     choose "01 02 03 04 05"
     accept_confirm do
