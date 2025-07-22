@@ -94,7 +94,7 @@ RSpec.configure do |config|
   end
 
   config.around do |example|
-    DatabaseCleaner.strategy = if example.metadata[:js]
+    DatabaseCleaner.strategy = if example.metadata[:js] || ENV["HEADLESS"] == "false"
                                  :truncation
                                else
                                  :transaction
