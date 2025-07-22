@@ -159,7 +159,6 @@ jobs:
         with:
           key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
           path: app/assets/builds
-      # PLAYWRIGHT
       - name: Cache Playwright Chromium browser
         id: playwright-cache
         uses: actions/cache@v4
@@ -169,7 +168,6 @@ jobs:
       - name: Install Playwright Chromium browser (with deps)
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: yarn run playwright install chromium --with-deps --only-shell
-      # END PLAYWRIGHT
       - name: Precompile assets
         if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: yarn run build
