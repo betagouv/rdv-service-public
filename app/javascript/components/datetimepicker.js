@@ -26,7 +26,6 @@ class Datetimepicker {
         scrollMonth: false,
         scrollInput: false,
         dayOfWeekStart: 1,
-        onClose: (_, $input) => { $input[0].blur(); },
         ...input.dataset,
       });
     });
