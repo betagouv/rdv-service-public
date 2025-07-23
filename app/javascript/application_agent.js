@@ -31,10 +31,9 @@ import { ZoneForm } from './components/zone-form.js'
 import { Select2Inputs } from './components/select2-inputs'
 import { PlanningAgentSelect } from './components/planning-agent-select'
 import { ParticipationSelect } from './components/rdv-user-select'
-import { DestroyButton } from './components/destroy-button'
 import { Tooltips } from './components/tooltips'
 import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
-import {CheckAll, UnCheckAll} from './components/check-all'
+import { CheckAll, UnCheckAll } from './components/check-all'
 import './components/motifs_table'
 import './components/calendar'
 import './components/browser-detection'
@@ -43,11 +42,13 @@ import './components/clear-field-on-focus.js'
 import { Application } from "@hotwired/stimulus"
 import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
 import MotifFormController from './controllers/motif_form_controller'
+import DestroyableController from './controllers/destroyable_controller'
 import './controllers'
 
 window.Stimulus = Application.start()
 Stimulus.register('checkbox-select-all', CheckboxSelectAll)
 Stimulus.register('motif-form', MotifFormController)
+Stimulus.register('destroyable', DestroyableController)
 
 import './stylesheets/print'
 import './stylesheets/application_agent'
@@ -115,8 +116,6 @@ $(document).on('turbolinks:load', function() {
   new PlanningAgentSelect()
 
   new ParticipationSelect()
-
-  new DestroyButton()
 
   new PlageOuvertureLieuSelection()
   new PlageOuvertureSecondaryTimes()
