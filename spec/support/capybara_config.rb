@@ -5,15 +5,19 @@ WebMock.disable_net_connect!(allow: [
                                "chromedriver.storage.googleapis.com", # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
                              ])
 
-Capybara.register_driver :playwright do |app|
+def new_capybara_driver(app, **)
   Capybara::Playwright::Driver.new(
     app,
     browser_type: ENV["PLAYWRIGHT_BROWSER"]&.to_sym || :chromium,
     headless: ENV["HEADLESS"] != "false",
     timeout: 5,
-    bypassCSP: true # TODO: limit to accessibility specs
+    **
   )
 end
+
+Capybara.register_driver(:playwright) { |app| new_capybara_driver(app) }
+Capybara.register_driver(:playwright_bypass_csp) { |app| new_capybara_driver(app, bypassCSP: true) }
+
 Capybara.default_max_wait_time = 3
 
 Capybara.javascript_driver = :playwright
@@ -40,6 +44,16 @@ if ENV["HEADLESS"] == "false"
   Capybara.default_driver = Capybara.javascript_driver
 end
 
+# need to reconfigure capybara_save_screenshot with playwright_bypass_csp
+# from https://github.com/mattheworiordan/capybara-screenshot/blob/master/lib/capybara-screenshot.rb#L202-L207
+Capybara::Screenshot.class_eval do
+  register_driver(:playwright_bypass_csp) do |driver, path|
+    driver.with_playwright_page do |page|
+      page.screenshot(path: path, fullPage: true)
+    end
+  end
+end
+
 RSpec.configure do |config|
   config.after(:each, ignore_js_errors: nil, js: true) do
     logs = page.driver.browser.logs.get(:browser)
@@ -50,17 +64,4 @@ RSpec.configure do |config|
       end
     end
   end
-end
-
-def expect_page_to_be_axe_clean(path)
-  visit path
-  expect(page).to have_current_path(path)
-  expect_page_to_have_title
-  expect(page).to be_axe_clean
-end
-
-# Pour des questions d’accessibilité, chaque page doit avoir un titre explicite
-# suivi du nom de l’application
-def expect_page_to_have_title
-  expect(page).to have_title(/.* - RDV Solidarités/)
 end
