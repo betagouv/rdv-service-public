@@ -14,13 +14,11 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require "axe-rspec"
 require "capybara/rspec"
 require "capybara/email/rspec"
 require "capybara-screenshot/rspec"
 require "pundit/rspec"
 require "webmock/rspec"
-require "selenium-webdriver"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

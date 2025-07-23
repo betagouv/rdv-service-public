@@ -159,6 +159,7 @@ jobs:
         with:
           key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
           path: app/assets/builds
+      - uses: ./.github/actions/setup-playwright
       - name: Precompile assets
         if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
         run: yarn run build
@@ -226,6 +227,7 @@ jobs:
           path: node_modules
       - name: Install JS dependencies
         run: yarn install
+      - uses: ./.github/actions/setup-playwright
       - name: Precompile assets
         run: yarn run build
       - name: Setup parallel tests and run feature specs

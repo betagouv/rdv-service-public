@@ -122,6 +122,12 @@ cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/prod
 Cette manière de faire permet d’éviter de passer par des compilations d’assets inutiles via webpacker ou sprockets.
 Le numéro de version dans les chemins sert de fingerprint pour le cache bump des navigateurs.
 
+### Version de Playwright
+
+Playwright est notre système d’instrumentalisation du navigateur pour les tests E2E.
+On utilise à la fois des gems et un package NPM, avec des contraintes de compatibilité entre les deux.
+Il faut donc les mettre à jour simultanément. Un script permet de faire ça : `./scripts/update_playwright.sh`
+
 ## Review apps
 
 Les review apps ne sont pas créées automatiquement pour chaque PR pour économiser des ressources.

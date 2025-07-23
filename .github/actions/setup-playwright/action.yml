@@ -1,0 +1,21 @@
+# inspired by https://github.com/microsoft/playwright/issues/7249#issuecomment-2806545369
+
+name: Setup Playwright
+runs:
+  using: composite
+  steps:
+    - name: Get Playwright version
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: |
+        echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["playwright"]' package.json)" >> $GITHUB_ENV
+    - name: Cache Playwright Chromium browser
+      id: playwright-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-browsers-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}
+    - name: Install Playwright Chromium browser (with deps)
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
+      run: yarn run playwright install chromium --only-shell # --with-deps is not necessary and much slower
+      shell: bash

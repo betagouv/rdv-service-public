@@ -34,7 +34,8 @@ RSpec.describe "Agent can setup sectorisation", type: :feature do
     fill_in_readonly_input("#zone_city_code", "26004")
     click_on "Enregistrer"
     click_on "Attribuer une organisation ou un agent"
-    choose "Agent désigné"
+    find(:label, text: "Agent désigné").click
+    # we cannot use choose here, it throws 'Element is not attached to the DOM' here
     select "MDS Drôme", from: "Organisation"
     select "DURAS Marguerite (Service social)", from: "Agent"
     click_on "Ajouter"

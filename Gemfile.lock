@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/mattheworiordan/capybara-screenshot.git
+  revision: 23a27be5392c7dbc706651d7adc124d8e7c920a0
+  ref: 23a27be
+  specs:
+    capybara-screenshot (1.0.26)
+      capybara (>= 1.0, < 4)
+      launchy
+
+GIT
   remote: https://github.com/nahi/httpclient.git
   revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
   ref: d57cc6d
@@ -131,8 +140,8 @@ GEM
       mutex_m
       securerandom (>= 0.3)
       tzinfo (~> 2.0)
-    addressable (2.8.6)
-      public_suffix (>= 2.0.2, < 6.0)
+    addressable (2.8.7)
+      public_suffix (>= 2.0.2, < 7.0)
     administrate (0.19.0)
       actionpack (>= 5.0)
       actionview (>= 5.0)
@@ -146,14 +155,6 @@ GEM
     attr_required (1.0.1)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
-    axe-core-api (4.10.2)
-      dumb_delegator
-      ostruct
-      virtus
-    axe-core-rspec (4.3.2)
-      axe-core-api
-      dumb_delegator
-      virtus
     base64 (0.2.0)
     bcrypt (3.1.20)
     benchmark (0.4.0)
@@ -187,15 +188,16 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
-    capybara-screenshot (1.0.26)
-      capybara (>= 1.0, < 4)
-      launchy
+    capybara-playwright-driver (0.5.6)
+      addressable
+      capybara
+      playwright-ruby-client (>= 1.16.0)
     chartkick (5.0.4)
+    childprocess (5.1.0)
+      logger (~> 1.5)
     choice (0.2.0)
     climate_control (1.2.0)
     coderay (1.1.3)
-    coercible (1.0.0)
-      descendants_tracker (~> 0.0.1)
     common_french_passwords (0.0.1)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
@@ -247,7 +249,6 @@ GEM
       dsfr-assets (~> 1.13)
       html-attributes-utils (~> 1)
       view_component (~> 3)
-    dumb_delegator (1.1.0)
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
@@ -338,8 +339,10 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.4)
-    launchy (2.5.2)
+    launchy (3.1.1)
       addressable (~> 2.8)
+      childprocess (~> 5.0)
+      logger (~> 1.6)
     letter_opener (1.10.0)
       launchy (>= 2.2, < 4)
     letter_opener_web (3.0.0)
@@ -366,12 +369,12 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
-    matrix (0.4.2)
+    matrix (0.4.3)
     method_source (1.1.0)
-    mime-types (3.6.0)
+    mime-types (3.7.0)
       logger
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2025.0220)
+      mime-types-data (~> 3.2025, >= 3.2025.0507)
+    mime-types-data (3.2025.0722)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
     minitest (5.25.5)
@@ -459,6 +462,9 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     phonelib (0.7.7)
+    playwright-ruby-client (1.54.0)
+      concurrent-ruby (>= 1.1.6)
+      mime-types (>= 3.0)
     premailer (1.18.0)
       addressable
       css_parser (>= 1.12.0)
@@ -473,7 +479,7 @@ GEM
       method_source (~> 1.0)
     psych (5.1.2)
       stringio
-    public_suffix (5.0.4)
+    public_suffix (6.0.2)
     puma (6.4.3)
       nio4r (~> 2.0)
     pundit (2.2.0)
@@ -500,7 +506,7 @@ GEM
     rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
-    rack-test (2.1.0)
+    rack-test (2.2.0)
       rack (>= 1.3)
     rackup (2.2.1)
       rack (>= 3)
@@ -649,12 +655,6 @@ GEM
       tilt
     securerandom (0.4.1)
     selectize-rails (0.12.6)
-    selenium-webdriver (4.27.0)
-      base64 (~> 0.2)
-      logger (~> 1.4)
-      rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2, < 3.0)
-      websocket (~> 1.0)
     sentry-rails (5.23.0)
       railties (>= 5.0)
       sentry-ruby (~> 5.23.0)
@@ -737,10 +737,6 @@ GEM
       activesupport (>= 5.2.0, < 8.1)
       concurrent-ruby (~> 1)
       method_source (~> 1.0)
-    virtus (2.0.0)
-      axiom-types (~> 0.1)
-      coercible (~> 1.0)
-      descendants_tracker (~> 0.0, >= 0.0.3)
     wannabe_bool (0.7.1)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -752,7 +748,6 @@ GEM
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.8.2)
-    websocket (1.2.10)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -770,8 +765,6 @@ DEPENDENCIES
   administrate
   anonymizer!
   auto_strip_attributes
-  axe-core-api
-  axe-core-rspec (= 4.3.2)
   axiom-types!
   better_errors
   binding_of_caller
@@ -782,7 +775,8 @@ DEPENDENCIES
   byebug
   capybara
   capybara-email
-  capybara-screenshot
+  capybara-playwright-driver
+  capybara-screenshot!
   chartkick (~> 5.0.1)
   climate_control
   common_french_passwords
@@ -851,7 +845,6 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   rubyzip
-  selenium-webdriver
   sentry-rails
   sentry-ruby
   simple_form (~> 5.0)
