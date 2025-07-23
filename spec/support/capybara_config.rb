@@ -16,10 +16,6 @@ def new_capybara_driver(app, **)
 end
 
 Capybara.register_driver(:playwright) { |app| new_capybara_driver(app) }
-Capybara.register_driver(:playwright_bypass_csp) { |app| new_capybara_driver(app, bypassCSP: true) }
-
-Capybara.default_max_wait_time = 3
-
 Capybara.javascript_driver = :playwright
 
 Capybara.configure do |config|
@@ -42,9 +38,11 @@ if ENV["HEADLESS"] == "false"
   Capybara.default_driver = Capybara.javascript_driver
 end
 
-# need to reconfigure capybara_save_screenshot with playwright_bypass_csp
-# from https://github.com/mattheworiordan/capybara-screenshot/blob/master/lib/capybara-screenshot.rb#L202-L207
+# pour les tests d’accessibilité avec aXe en script JS, on a besoin de bypasser les CSP
+Capybara.register_driver(:playwright_bypass_csp) { |app| new_capybara_driver(app, bypassCSP: true) }
 Capybara::Screenshot.class_eval do
+  # need to reconfigure capybara_save_screenshot with playwright_bypass_csp
+  # from https://github.com/mattheworiordan/capybara-screenshot/blob/master/lib/capybara-screenshot.rb#L202-L207
   register_driver(:playwright_bypass_csp) do |driver, path|
     driver.with_playwright_page do |page|
       page.screenshot(path: path, fullPage: true)
