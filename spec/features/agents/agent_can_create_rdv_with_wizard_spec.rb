@@ -40,14 +40,17 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     fill_in :user_first_name, with: "Jean-Paul"
     fill_in :user_last_name, with: "Orvoir"
     fill_in :user_email, with: "jporvoir@bidule.com"
-    click_button("Enregistrer")
+    click_button("Enregistrer l'usager")
+    expect(page).to have_content("ORVOIR Jean-Paul")
 
     # create user without email
     click_link("Ajouter")
     click_link("Ajouter un usager")
     fill_in :user_first_name, with: "Jean-Marie"
     fill_in :user_last_name, with: "Lapin"
-    click_button("Enregistrer")
+    click_button("Enregistrer l'usager")
+    expect(page).to have_content("LAPIN Jean-Marie")
+
     sleep(1) # wait for modal to hide completely
     fill_in :rdv_context, with: "RDV très spécial"
     click_button("Continuer")
