@@ -35,7 +35,8 @@ RSpec.describe "User can manage their rdvs" do
 
       it "default", js: true do
         expect(page).to have_content("Je souhaite être prévenu(e) si un créneau se libère.")
-        find(:label, text: "Je souhaite être prévenu(e) si un créneau se libère.").click # check does not work with playwright
+        find(:label, text: "Je souhaite être prévenu(e) si un créneau se libère.").click
+        # cannot use check/uncheck here, playwright throws Element is not attached to the DOM
         expect(page).to have_content("Vous êtes à présent sur la liste d'attente")
         find(:label, text: "Je souhaite être prévenu(e) si un créneau se libère.").click
         expect(page).to have_content("Vous n'êtes plus sur la liste d'attente")

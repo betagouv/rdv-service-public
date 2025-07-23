@@ -82,6 +82,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     end
 
     fill_in "Durée en minutes", with: "35"
+    # cannot use fill_in here because the datepicker does not autoclose as expected
     find(:label, "Commence à").click
     find(".xdsoft_calendar .xdsoft_date", text: "11").click
     find(".xdsoft_time", text: "14:15").click
