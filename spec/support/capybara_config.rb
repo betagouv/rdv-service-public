@@ -38,8 +38,6 @@ Capybara.configure do |config|
   config.always_include_port = true
 end
 
-# On force le driver JS lorsqu’on debug des tests E2E, mais ça ne
-# fonctionne pas dans tous les cas, il vaut mieux rajouter manuellement js:true
 if ENV["HEADLESS"] == "false"
   Capybara.default_driver = Capybara.javascript_driver
 end
