@@ -29,7 +29,7 @@ RSpec.describe "Agent can see stats" do
       # rdv2
       expect(page).to have_content("À venir\n1")
       # rdv1 & rdv2
-      expect(page).to have_content("RDV créés (3)") # erreur volontaire
+      expect(page).to have_content("RDV créés (2)")
     end
   end
 
