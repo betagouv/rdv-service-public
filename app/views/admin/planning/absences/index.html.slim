@@ -19,7 +19,7 @@
         = active_link_to "Passées", admin_organisation_planning_absences_path(current_organisation, agent_id: @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
 
   - if @absences.any?
-    .fr-table.fr-mx-2w
+    .fr-table.fr-table--no-scroll.fr-mx-2w
       .fr-table__wrapper
         .fr-table__container
           .fr-table__content
