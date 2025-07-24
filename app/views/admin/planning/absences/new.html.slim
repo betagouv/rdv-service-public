@@ -3,20 +3,15 @@
 
 - content_for :title do
   - if @absence.agent == current_agent
-    = t(".new_absence")
+    = "Nouvelle indisponibilité"
   - else
-    = t(".new_absence_for", full_name: @absence.agent.full_name_or_email)
+    = "Nouvelle indisponibilité pour #{@agent.full_name_or_email}"
 
-- content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent) do
-        - if @absence.agent == current_agent
-          = t(".your_absences")
-        - else
-          = t(".absences_of", full_name: @absence.agent.full_name_or_email)
-    li.breadcrumb-item.active
-      = t(".new_absence")
+- content_for :fil_ariane do
+    - if @absence.agent == current_agent
+      = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Vos indisponibilités", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]], current_page_title: yield(:title)
+    - else
+      = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Indisponibilités de #{@absence.agent.full_name_and_service}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]], current_page_title: yield(:title)
 
 .row.justify-content-center
   .col-md-6
