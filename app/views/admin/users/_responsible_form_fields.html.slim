@@ -62,6 +62,8 @@
 
 - if current_territory.enable_notes_field
   = f.input :annotation_content, **input_opts.deep_merge(input_html: { rows: 6, value: user.annotation_for(current_territory)} )
+  small.form-text.text-muted.fr-mb-4w
+    | ⚠️ les remarques sont visibles et modifiables par tous les agents du territoire #{current_territory} mais pas par les usagers
 
 - if current_territory.enable_caisse_affiliation_field || current_territory.enable_affiliation_number_field
   .form-row

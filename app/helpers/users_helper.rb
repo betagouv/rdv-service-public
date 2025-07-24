@@ -117,8 +117,7 @@ module UsersHelper
   end
 
   def formatted_user_annotation(user, current_territory)
-    annotation = user.annotation_for(current_territory)
-    annotation.present? ? simple_format(annotation) : nil
+    user.annotation_for(current_territory)&.gsub(/(\n|\r)/, " ")
   end
 
   def user_soft_delete_confirm_message(user)
