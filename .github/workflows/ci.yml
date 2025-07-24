@@ -207,7 +207,6 @@ jobs:
         with:
           files: |
             tests-results/rspec-*.xml
-  pull-requests: write
   test_features_autodoc:
     name: Feature Tests using Autodoc
     runs-on: ubuntu-latest
