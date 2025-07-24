@@ -206,7 +206,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: |
-            tests-results/rspec-*.xml
+            tests-results/**/rspec-*.xml
   test_features_autodoc:
     name: Feature Tests using Autodoc
     runs-on: ubuntu-latest
