@@ -1,8 +1,6 @@
 .web-content
   - content_for :title do
     .d-print-none Liste des RDV
-    .print-context
-      | Liste de RDV de l’organisation #{current_organisation.name}
 
   - content_for(:menu_item) { "menu-rdvs-list" }
 
@@ -92,6 +90,7 @@
                   i.far.fa-calendar.fa-stack-1x.text-white
 
 .print-content.px-20
+  h1 Liste de RDV de l’organisation #{current_organisation.name}
   .fr-grid-row.fr-mb-4w
     - if @form.applied_filters.any?
       .fr-col-6
