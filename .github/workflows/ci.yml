@@ -192,6 +192,7 @@ jobs:
     name: "Publish Test Results to GitHub"
     needs: tests
     runs-on: ubuntu-latest
+    if: (!cancelled())
     permissions:
       checks: write
       pull-requests: write
@@ -203,7 +204,6 @@ jobs:
           path: tests-results
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: (!cancelled())
         with:
           files: |
             tests-results/rspec-*.xml
