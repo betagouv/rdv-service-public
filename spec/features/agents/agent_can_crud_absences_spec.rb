@@ -59,7 +59,7 @@ RSpec.describe "Agent can CRUD absences" do
 
       click_link("Supprimer")
       expect_page_title("Indisponibilités de Jane FAROU (PMI)")
-      expect(page).to have_content("Jane FAROU n'a pas encore créé d'indisponibilité")
+      expect(page).to have_content("Jane FAROU n’a pas encore créé d’indisponibilité")
 
       click_link "Créer une indisponibilité", match: :first
 

@@ -4,7 +4,7 @@
   - if @absence.agent == current_agent
     = "Modifier votre indisponibilité"
   - else
-    = "Modifier l’indisponibilité de #{@agent.full_name_or_email}"
+    = "Modifier l’indisponibilité de #{@absence.agent.full_name_or_email}"
 
 - content_for :fil_ariane do
   - if @absence.agent == current_agent
