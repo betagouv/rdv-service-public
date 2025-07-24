@@ -1,7 +1,7 @@
 .web-content
   - content_for :title do
     .d-print-none Liste des RDV
-    .print-context
+    .print-content
       | Liste de RDV de l’organisation #{current_organisation.name}
 
   - content_for(:menu_item) { "menu-rdvs-list" }
