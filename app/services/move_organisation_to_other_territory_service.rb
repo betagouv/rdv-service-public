@@ -139,12 +139,13 @@ class MoveOrganisationToOtherTerritoryService < BaseService
 
   def move_territorial_roles
     Rails.logger.info("🔄 Migration des rôles territoriaux d'agents…")
-    @origin_organisation.agents.each do |agent|
-      existing_role = agent.territorial_roles.find_by(territory: @territory_target)
-      if existing_role
+    AgentTerritorialRole.where(territory: @territory_origin).each do |role_origin|
+      agent = role_origin.agent
+      if agent.territorial_roles.exists?(territory: @territory_target)
+        AgentTerritorialRole.where(id: role_origin.id).delete_all # skip validations
         Rails.logger.info("  ℹ️  Agent #{agent.id} a déjà un rôle territorial dans le territoire cible")
       else
-        AgentTerritorialRole.create!(agent: agent, territory: @territory_target)
+        role_origin.update!(territory: @territory_target)
         Rails.logger.info("  ➕ Rôle territorial créé pour l'agent #{agent.id}")
         counters[:territorial_roles_created] += 1
       end

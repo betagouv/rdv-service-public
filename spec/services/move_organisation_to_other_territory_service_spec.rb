@@ -114,11 +114,20 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
   end
 
   context "avec des rôles territoriaux" do
-    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let!(:agent1) { create(:agent, organisations: [organisation]) }
+    let!(:agent2) { create(:agent, organisations: [organisation]) }
 
-    it "crée un nouveau rôle territorial pour l'agent dans le territoire cible" do
+    before do
+      create(:agent_territorial_role, agent: agent1, territory: territory_origin)
+      create(:agent_territorial_role, agent: agent2, territory: territory_origin)
+      create(:agent_territorial_role, agent: agent2, territory: territory_target)
+    end
+
+    specify do
       subject.call
-      expect(agent.reload.territorial_roles.find_by(territory: territory_target)).to be_present
+      expect(agent1.territorial_roles.where(territory: territory_origin)).to be_empty
+      expect(agent1.territorial_roles.where(territory: territory_target)).to be_present
+      expect(agent2.territorial_roles.where(territory: territory_target)).to be_present
     end
   end
 
