@@ -1,0 +1,155 @@
+require "rails_helper"
+
+RSpec.describe MoveOrganisationToOtherTerritoryService do
+  subject { described_class.new(origin_organisation: organisation, target_territory: territory_target) }
+
+  let!(:territory_origin) { create(:territory, name: "Territoire d'origine") }
+  let!(:territory_target) { create(:territory, name: "Territoire cible") }
+  let!(:organisation) { create(:organisation, territory: territory_origin) }
+
+  context "cas simple" do
+    it "déplace l'organisation vers le territoire cible" do
+      expect { subject.call }.to change { organisation.reload.territory }.from(territory_origin).to(territory_target)
+    end
+  end
+
+  describe "gestion des annotations" do
+    let!(:user1) { create(:user, organisations: [organisation]) }
+    let!(:annotation1_origin) { create(:annotation, user: user1, territory: territory_origin, content: "Usager très sympa") }
+    let!(:user2) { create(:user, organisations: [organisation]) }
+    let!(:annotation2_origin) { create(:annotation, user: user2, territory: territory_origin, content: "Super") }
+    let!(:annotation2_target) { create(:annotation, user: user2, territory: territory_target, content: "Réjouissant") }
+
+    specify do
+      subject.call
+      expect(annotation1_origin.reload.territory).to eq(territory_target)
+      expect(annotation2_target.reload.content).to eq("Réjouissant\n---\nSuper")
+      expect(Annotation.find_by(id: annotation2_origin.id)).to be_nil
+    end
+  end
+
+  describe "gestion des catégories de motifs" do
+    let!(:motif_categories_origin) { create_list(:motif_category, 3, territories: [territory_origin]) }
+    let!(:motif_category_both) { create(:motif_category, name: "Catégorie 2", territories: [territory_origin, territory_target]) }
+    let!(:motif_category_target) { create(:motif_category, name: "Catégorie 3", territories: [territory_target]) }
+    let!(:motif_category_other_territory) { create(:motif_category, name: "Catégorie 4", territories: [create(:territory)]) }
+
+    specify do
+      subject.call
+      motif_categories_origin.each do |motif_category|
+        expect(motif_category.reload.territories).to include(territory_origin, territory_target)
+      end
+      expect(motif_category_both.reload.territories).to include(territory_origin, territory_target)
+      expect(motif_category_target.reload.territories).to include(territory_target)
+      expect(motif_category_target.reload.territories).not_to include(territory_origin)
+      expect(motif_category_other_territory.reload.territories).not_to include(territory_origin)
+      expect(motif_category_other_territory.reload.territories).not_to include(territory_target)
+    end
+  end
+
+  describe "gestion des services" do
+    let!(:service_pmi) { create(:service, name: "PMI") }
+    let!(:territory_service_pmi) { create(:territory_service, territory: territory_origin, service: service_pmi) }
+    let!(:service_justice) { create(:service, name: "Justice") }
+    let!(:territory_service_justice1) { create(:territory_service, service: service_justice, territory: territory_origin) }
+    let!(:territory_service_justice2) { create(:territory_service, service: service_justice, territory: territory_target) }
+    let!(:service_aide) { create(:service, name: "Aide") }
+    let!(:territory_service_aide) { create(:territory_service, service: service_aide, territory: territory_target) }
+
+    specify do
+      subject.call
+      expect(territory_target.reload.services).to include(service_pmi)
+      expect(territory_target.reload.services).to include(service_justice)
+      expect(territory_target.reload.services).to include(service_aide)
+    end
+  end
+
+  context "gestion des équipes" do
+    # une équipe à créer + une équipe à fusionner
+    let!(:organisation_target) { create(:organisation, territory: territory_target) }
+    let!(:agent_origin1) { create(:agent, organisations: [organisation]) }
+    let!(:agent_target1) { create(:agent, organisations: [organisation_target]) }
+    let!(:team_habilites_origin) { create(:team, name: "Agents habilités", territory: territory_origin) }
+    let!(:team_visiteurices_origin) { create(:team, name: "Visiteur·ices", territory: territory_origin) }
+    let!(:team_visteurices_target) { create(:team, name: "Visiteur·ices", territory: territory_target) }
+
+    before do
+      team_habilites_origin.agents << agent_origin1
+      team_visiteurices_origin.agents << agent_origin1
+      team_visteurices_target.agents << agent_target1
+    end
+
+    specify do
+      subject.call
+      expect(territory_target.teams.find_by(name: "Agents habilités")).to be_present
+      expect(agent_origin1.reload.teams.where(territory: territory_target).map(&:name)).to contain_exactly("Agents habilités", "Visiteur·ices")
+      expect(team_visteurices_target.agents).to contain_exactly(agent_origin1, agent_target1)
+      expect(territory_origin.teams).to be_empty
+    end
+  end
+
+  context "avec des droits d'accès" do
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let!(:access_right) { create(:agent_territorial_access_right, agent: agent, territory: territory_origin, allow_to_manage_teams: true) }
+
+    it "déplace le droit d'accès au territoire cible" do
+      subject.call
+      expect(access_right.reload.territory).to eq(territory_target)
+    end
+
+    context "quand un droit d'accès existe déjà dans le territoire cible" do
+      let!(:target_access_right) do
+        create(:agent_territorial_access_right, agent: agent, territory: territory_target, allow_to_invite_agents: true)
+      end
+
+      it "fusionne les droits d'accès" do
+        subject.call
+        expect(target_access_right.reload.allow_to_manage_teams).to be(true)
+        expect(target_access_right.reload.allow_to_invite_agents).to be(true)
+        expect(AgentTerritorialAccessRight.find_by(id: access_right.id)).to be_nil
+      end
+    end
+  end
+
+  context "avec des rôles territoriaux" do
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+
+    it "crée un nouveau rôle territorial pour l'agent dans le territoire cible" do
+      subject.call
+      expect(agent.reload.territorial_roles.find_by(territory: territory_target)).to be_present
+    end
+  end
+
+  context "avec des secteurs" do
+    context "quand l'organisation est attribuée à un secteur dans le territoire d'origine" do
+      let!(:sector_in_origin) { create(:sector, territory: territory_origin) }
+      let!(:attribution_to_origin_sector) { create(:sector_attribution, organisation: organisation, sector: sector_in_origin) }
+
+      it "supprime l'attribution" do
+        subject.call
+        expect(SectorAttribution.find_by(id: attribution_to_origin_sector.id)).to be_nil
+      end
+    end
+
+    context "quand l'organisation est attribuée à un secteur dans le territoire cible" do
+      let!(:sector_in_target) { create(:sector, territory: territory_target) }
+      let!(:attribution_to_target_sector) { create(:sector_attribution, organisation: organisation, sector: sector_in_target) }
+
+      it "conserve l'attribution" do
+        subject.call
+        expect(attribution_to_target_sector.reload).to be_present
+      end
+    end
+
+    context "quand l'organisation est attribuée à un secteur dans un autre territoire" do
+      let!(:other_territory) { create(:territory) }
+      let!(:sector_in_other) { create(:sector, territory: other_territory) }
+      let!(:attribution_to_other_sector) { create(:sector_attribution, organisation: organisation, sector: sector_in_other) }
+
+      it "supprime l'attribution" do
+        subject.call
+        expect(SectorAttribution.find_by(id: attribution_to_other_sector.id)).to be_nil
+      end
+    end
+  end
+end
