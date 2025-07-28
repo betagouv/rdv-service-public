@@ -88,26 +88,28 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
     end
   end
 
-  context "avec des droits d'accès" do
-    let!(:agent) { create(:agent, organisations: [organisation]) }
-    let!(:access_right) { create(:agent_territorial_access_right, agent: agent, territory: territory_origin, allow_to_manage_teams: true) }
+  context "gestion des droits d'accès" do
+    let!(:agent_lea) { create(:agent, organisations: [organisation]) }
+    let!(:agent_jean) { create(:agent, organisations: [organisation]) }
 
-    it "déplace le droit d'accès au territoire cible" do
-      subject.call
-      expect(access_right.reload.territory).to eq(territory_target)
+    before do
+      create(:agent_territorial_access_right, agent: agent_lea, territory: territory_origin, allow_to_manage_teams: true)
+      create(:agent_territorial_access_right, agent: agent_jean, territory: territory_origin, allow_to_manage_teams: true)
+      create(:agent_territorial_access_right, agent: agent_jean, territory: territory_target, allow_to_invite_agents: true)
     end
 
-    context "quand un droit d'accès existe déjà dans le territoire cible" do
-      let!(:target_access_right) do
-        create(:agent_territorial_access_right, agent: agent, territory: territory_target, allow_to_invite_agents: true)
-      end
-
-      it "fusionne les droits d'accès" do
-        subject.call
-        expect(target_access_right.reload.allow_to_manage_teams).to be(true)
-        expect(target_access_right.reload.allow_to_invite_agents).to be(true)
-        expect(AgentTerritorialAccessRight.find_by(id: access_right.id)).to be_nil
-      end
+    specify do
+      subject.call
+      agent_lea.reload
+      expect(agent_lea.agent_territorial_access_rights.where(territory: territory_origin)).to be_empty
+      expect(agent_lea.agent_territorial_access_rights.where(territory: territory_target).count).to eq 1
+      expect(agent_lea.agent_territorial_access_rights.find_by(territory: territory_target).allow_to_manage_teams).to be true
+      # jean a un rôle dans les 2 territoires, son nouvel accès combine les droits positifs dans les deux
+      agent_jean.reload
+      expect(agent_jean.agent_territorial_access_rights.where(territory: territory_origin)).to be_empty
+      expect(agent_jean.agent_territorial_access_rights.where(territory: territory_target).count).to eq 1
+      expect(agent_jean.agent_territorial_access_rights.find_by(territory: territory_target).allow_to_manage_teams).to be true
+      expect(agent_jean.agent_territorial_access_rights.find_by(territory: territory_target).allow_to_invite_agents).to be true
     end
   end
 

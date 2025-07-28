@@ -117,22 +117,20 @@ class MoveOrganisationToOtherTerritoryService < BaseService
 
   def move_access_rights
     Rails.logger.info("🔄 Migration des droits d'accès territoriaux…")
-    @origin_organisation.agents.includes(:agent_territorial_access_rights).each do |agent|
-      source_right = agent.agent_territorial_access_rights.find_by(territory: @territory_origin)
-      next unless source_right
-
-      target_right = agent.agent_territorial_access_rights.find_by(territory: @territory_target)
-      if target_right
+    AgentTerritorialAccessRight.where(territory: @territory_origin).each do |access_right_origin|
+      agent = access_right_origin.agent
+      access_right_target = agent.agent_territorial_access_rights.find_by(territory: @territory_target)
+      if access_right_target
         Rails.logger.info("  ⚠️  Droits d'accès existants pour l'agent #{agent.id} - fusion des permissions")
-        target_right.update!(
-          allow_to_manage_teams: target_right.allow_to_manage_teams || source_right.allow_to_manage_teams,
-          allow_to_manage_access_rights: target_right.allow_to_manage_access_rights || source_right.allow_to_manage_access_rights,
-          allow_to_invite_agents: target_right.allow_to_invite_agents || source_right.allow_to_invite_agents
+        access_right_target.update!(
+          allow_to_manage_teams: access_right_target.allow_to_manage_teams || access_right_origin.allow_to_manage_teams,
+          allow_to_manage_access_rights: access_right_target.allow_to_manage_access_rights || access_right_origin.allow_to_manage_access_rights,
+          allow_to_invite_agents: access_right_target.allow_to_invite_agents || access_right_origin.allow_to_invite_agents
         )
-        source_right.destroy!
+        access_right_origin.destroy!
         counters[:access_rights_merges] += 1
       else
-        source_right.update!(territory: @territory_target)
+        access_right_origin.update!(territory: @territory_target)
         counters[:access_rights_moves] += 1
       end
     end
