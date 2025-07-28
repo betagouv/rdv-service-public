@@ -35,7 +35,7 @@ class MoveOrganisationToOtherTerritoryService < BaseService
       move_teams
       move_access_rights
       move_territorial_roles
-      delete_sector_attributions
+      delete_sectors
       move_organisation_record
       suggest_cleanup_origin_territory
 
@@ -153,15 +153,9 @@ class MoveOrganisationToOtherTerritoryService < BaseService
     Rails.logger.info("  ✅ #{counters[:territorial_roles_created]} nouveaux rôles territoriaux créés")
   end
 
-  def delete_sector_attributions
-    Rails.logger.info("🔄  Vérification des secteurs…")
-    @origin_organisation.sector_attributions.includes(:sector).each do |attribution|
-      next unless attribution.sector.territory != @territory_target
-
-      Rails.logger.info("  ⚠️  Suppression de l'attribution au secteur '#{attribution.sector.name}' (territoire différent)")
-      attribution.destroy!
-      counters[:removed_attributions] += 1
-    end
+  def delete_sectors
+    Rails.logger.info("🔄  Suppression des secteurs…")
+    Sector.where(territory: @territory_origin).each(&:destroy!)
     Rails.logger.info("  ✅ #{counters[:removed_attributions]} attributions de secteurs supprimées")
   end
 

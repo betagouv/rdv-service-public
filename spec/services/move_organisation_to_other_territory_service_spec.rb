@@ -113,7 +113,7 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
     end
   end
 
-  context "avec des rôles territoriaux" do
+  context "gestion des rôles territoriaux" do
     let!(:agent1) { create(:agent, organisations: [organisation]) }
     let!(:agent2) { create(:agent, organisations: [organisation]) }
 
@@ -131,36 +131,14 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
     end
   end
 
-  context "avec des secteurs" do
-    context "quand l'organisation est attribuée à un secteur dans le territoire d'origine" do
-      let!(:sector_in_origin) { create(:sector, territory: territory_origin) }
-      let!(:attribution_to_origin_sector) { create(:sector_attribution, organisation: organisation, sector: sector_in_origin) }
+  context "gestion des secteurs" do
+    let!(:sectors) { create_list(:sector, 2, territory: territory_origin) }
+    let!(:attributions) { create(:sector_attribution, organisation: organisation, sector: sectors[0]) }
 
-      it "supprime l'attribution" do
-        subject.call
-        expect(SectorAttribution.find_by(id: attribution_to_origin_sector.id)).to be_nil
-      end
-    end
-
-    context "quand l'organisation est attribuée à un secteur dans le territoire cible" do
-      let!(:sector_in_target) { create(:sector, territory: territory_target) }
-      let!(:attribution_to_target_sector) { create(:sector_attribution, organisation: organisation, sector: sector_in_target) }
-
-      it "conserve l'attribution" do
-        subject.call
-        expect(attribution_to_target_sector.reload).to be_present
-      end
-    end
-
-    context "quand l'organisation est attribuée à un secteur dans un autre territoire" do
-      let!(:other_territory) { create(:territory) }
-      let!(:sector_in_other) { create(:sector, territory: other_territory) }
-      let!(:attribution_to_other_sector) { create(:sector_attribution, organisation: organisation, sector: sector_in_other) }
-
-      it "supprime l'attribution" do
-        subject.call
-        expect(SectorAttribution.find_by(id: attribution_to_other_sector.id)).to be_nil
-      end
+    specify do
+      subject.call
+      expect(Sector.where(territory: territory_origin)).to be_empty
+      expect(SectorAttribution.where(organisation:)).to be_empty
     end
   end
 end
