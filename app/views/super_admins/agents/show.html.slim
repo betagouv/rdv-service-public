@@ -22,7 +22,7 @@ section.main-content__body
 
   header.main-content__header style="width: 100%;"
     h2.main-content__page-title
-      | Feature flags
+      | Fonctionnalités en accès limité
   section.main-content__body
     table.table.table-striped
       thead
@@ -35,10 +35,10 @@ section.main-content__body
           - if page.resource.feature_enabled?(feature)
             tr
               td= feature
-              td= "Activée"
+              td Activée
               td= link_to "Désactiver", toggle_feature_super_admins_agent_path(agent_id: page.resource.id, feature: feature), method: :post, class: "button"
           - else
             tr
               td= feature
-              td= "Désactivée"
+              td Désactivée
               td= link_to "Activer", toggle_feature_super_admins_agent_path(agent_id: page.resource.id, feature: feature), method: :post, class: "button"

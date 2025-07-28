@@ -1,6 +1,6 @@
 RSpec.describe Agent::FeatureFlags, type: :concern do
   describe "feature_enabled?" do
-    let(:agent) { build(:agent, feature_flags: { new_planning: true }) }
+    let(:agent) { create(:agent, feature_flags: { new_planning: true }) }
 
     it "retourne true si la fonctionnalité est activée pour l’agent" do
       expect(agent.feature_enabled?("new_planning")).to be true
@@ -12,7 +12,7 @@ RSpec.describe Agent::FeatureFlags, type: :concern do
   end
 
   describe "enable_feature" do
-    let(:agent) { build(:agent) }
+    let(:agent) { create(:agent) }
 
     it "active la fonctionnalité" do
       agent.enable_feature("new_planning")
@@ -32,7 +32,7 @@ RSpec.describe Agent::FeatureFlags, type: :concern do
   end
 
   describe "disable_feature" do
-    let(:agent) { build(:agent, feature_flags: { new_planning: true }) }
+    let(:agent) { create(:agent, feature_flags: { new_planning: true }) }
 
     it "désactive la fonctionnalité" do
       agent.disable_feature("new_planning")
@@ -46,7 +46,7 @@ RSpec.describe Agent::FeatureFlags, type: :concern do
   end
 
   describe "toggle_feature!" do
-    let(:agent) { build(:agent, feature_flags: { new_planning: true }) }
+    let(:agent) { create(:agent, feature_flags: { new_planning: true }) }
 
     it "désactive une fonctionnalité activée" do
       agent.toggle_feature!("new_planning")
