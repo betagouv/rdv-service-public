@@ -15,18 +15,18 @@ RSpec.describe Agent::FeatureFlags, type: :concern do
     let(:agent) { create(:agent) }
 
     it "active la fonctionnalité" do
-      agent.enable_feature("new_planning")
+      agent.send(:enable_feature, "new_planning")
       expect(agent.feature_enabled?("new_planning")).to be true
     end
 
     it "ne fait rien si la fonctionnalité n’existe pas" do
-      agent.enable_feature("invalid_feature")
+      agent.send(:enable_feature, "invalid_feature")
       expect(agent.feature_enabled?("invalid_feature")).to be false
     end
 
     it "crée le hash si feature_flags est nil" do
       agent.feature_flags = nil
-      agent.enable_feature("new_planning")
+      agent.send(:enable_feature, "new_planning")
       expect(agent.feature_flags).to eq({ "new_planning" => true })
     end
   end
@@ -35,12 +35,12 @@ RSpec.describe Agent::FeatureFlags, type: :concern do
     let(:agent) { create(:agent, feature_flags: { new_planning: true }) }
 
     it "désactive la fonctionnalité" do
-      agent.disable_feature("new_planning")
+      agent.send(:disable_feature, "new_planning")
       expect(agent.feature_enabled?("new_planning")).to be false
     end
 
     it "ne fait rien si on essaye de désactiver une fonctionnalité inexistante" do
-      expect { agent.disable_feature("non_existent_feature") }.not_to raise_error
+      expect { agent.send(:disable_feature, "non_existent_feature") }.not_to raise_error
       expect(agent.feature_flags).to eq({ "new_planning" => true })
     end
   end
@@ -54,7 +54,7 @@ RSpec.describe Agent::FeatureFlags, type: :concern do
     end
 
     it "active une fonctionnalité désactivée" do
-      agent.disable_feature("new_planning")
+      agent.send(:disable_feature, "new_planning")
       agent.toggle_feature!("new_planning")
       expect(agent.reload.feature_enabled?("new_planning")).to be true
     end
