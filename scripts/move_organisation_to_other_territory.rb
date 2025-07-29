@@ -30,6 +30,27 @@ unless target_territory
   exit 1
 end
 
+puts <<~INFO
+
+  Ce script va déplacer une organisation vers un autre territoire. Voici comment les différentes données seront traitées :
+
+  - annotations (remarques usagers) : elles seront fusionnées s’il en existe déjà dans le territoire cible
+  - motif_categories : on ajoutera les catégories de motifs manquantes au territoire cible
+  - territory_services : on ajoutera les services manquants au territoire cible
+  - teams : les équipes sont déplacées ; si une équipe existe déjà avec le même nom, elle sera réutilisée
+  - agent territorial access_rights & roles : les droits sont combinés additivement (on ajoute des droits, on n’en retire pas)
+  - sectors : ⚠️ les secteurs existants seront supprimés, ils ne seront pas déplacés
+  - organisation : déplacée vers le territoire cible
+
+  Êtes-vous sûr(e) de vouloir continuer ? (oui/non)
+INFO
+
+response = $stdin.gets.strip.downcase
+unless response == "oui"
+  puts "Opération annulée."
+  exit 0
+end
+
 MoveOrganisationToOtherTerritoryService.new(
   origin_organisation: origin_organisation,
   target_territory: target_territory
