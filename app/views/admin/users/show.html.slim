@@ -51,8 +51,8 @@ ruby:
             - if current_territory.enable_notes_field?
               li= object_attribute_tag(@user, :annotation_content, formatted_user_annotation(@user, current_territory))
               - if @user.annotation_for(current_territory).present?
-                small.form-text.text-muted.fr-mb-4w
-                | ⚠️ les remarques sont visibles et modifiables par tous les agents du territoire #{current_territory} mais pas par les usagers
+                .fr-mb-2w
+                  = render "admin/users/annotation_visibility_info", territory: current_territory
 
         ul.fr-btns-group.fr-btns-group--right.fr-btns-group--inline.fr-btns-group--icon-left.fr-mb-0
           li

@@ -25,8 +25,8 @@ ul.list-unstyled.mb-5
     .mb-2
       li= object_attribute_tag(user, :annotation_content, formatted_user_annotation(user, current_territory))
       - if @user.annotation_for(current_territory).present?
-        small.form-text.text-muted
-          | ⚠️ les remarques sont visibles et modifiables par tous les agents du territoire #{current_territory} mais pas par les usagers
+        .fr-mb-2w
+          = render "admin/users/annotation_visibility_info", territory: current_territory
 
 - if current_territory.any_social_field_enabled?
   h4.card-title.mb-3 Informations sociales

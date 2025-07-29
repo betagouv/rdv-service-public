@@ -42,6 +42,8 @@
         = date_input(f, :birth_date, **input_opts[:relative])
       - if current_territory.enable_notes_field?
         = f.input :annotation_content, **input_opts[:relative].deep_merge(input_html: { rows: 6, value: user.annotation_for(current_territory) })
+        .fr-mb-4w
+         = render "admin/users/annotation_visibility_info", territory: current_territory
 
     - if user.new_record?
       .form-row.mb-2 *div_opts[:relative]
