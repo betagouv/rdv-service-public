@@ -1,10 +1,11 @@
 class MoveOrganisationToOtherTerritoryService < BaseService
   attr_accessor :counters
 
-  def initialize(origin_organisation:, target_territory:)
+  def initialize(origin_organisation:, target_territory:, fail_on_purpose: false)
     @origin_organisation = origin_organisation
     @territory_origin = origin_organisation.territory
     @territory_target = target_territory
+    @fail_on_purpose = fail_on_purpose
     @counters = Hash.new(0)
   end
 
@@ -38,6 +39,7 @@ class MoveOrganisationToOtherTerritoryService < BaseService
       delete_sectors
       move_organisation_record
       suggest_cleanup_origin_territory
+      raise "Intentional failure for testing" if @fail_on_purpose
 
       Rails.logger.info("✅ MIGRATION TERMINÉE AVEC SUCCÈS!")
     end
