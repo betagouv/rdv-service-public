@@ -54,5 +54,22 @@ module SuperAdmins
         notice: "Invitation envoyée"
       )
     end
+
+    def toggle_feature
+      authorize(:agent, :toggle_feature?, policy_class: SuperAdmin::AgentPolicy)
+      agent = Agent.find(params[:agent_id])
+      feature = params[:feature]
+
+      agent.toggle_feature!(feature)
+
+      flash[:notice] =
+        if agent.feature_enabled?(feature)
+          "#{feature} désactivé pour #{agent.email}"
+        else
+          "#{feature} activé pour #{agent.email}"
+        end
+
+      redirect_to super_admins_agent_path(agent)
+    end
   end
 end

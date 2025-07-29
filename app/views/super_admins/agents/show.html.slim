@@ -19,3 +19,26 @@ section.main-content__body
         = t( "helpers.label.#{resource_name}.#{attribute.name}", default: attribute.name.titleize)
       dd class=("attribute-data attribute-data--#{attribute.html_class}") = render_field attribute,page: page
   = render partial: "super_admins/history", locals: {resource: page.resource}
+
+  header.main-content__header style="width: 100%;"
+    h2.main-content__page-title
+      | Fonctionnalités en accès limité
+  section.main-content__body
+    table.table.table-striped
+      thead
+        tr
+          th Fonctionnalité
+          th État
+          th Action
+      tbody
+        - Agent::AVAILABLE_FEATURES.each do |feature|
+          - if page.resource.feature_enabled?(feature)
+            tr
+              td= feature
+              td Activée
+              td= link_to "Désactiver", toggle_feature_super_admins_agent_path(agent_id: page.resource.id, feature: feature), method: :post, class: "button"
+          - else
+            tr
+              td= feature
+              td Désactivée
+              td= link_to "Activer", toggle_feature_super_admins_agent_path(agent_id: page.resource.id, feature: feature), method: :post, class: "button"
