@@ -37,9 +37,9 @@ puts <<~INFO
   - annotations (remarques usagers) : elles seront fusionnées s’il en existe déjà dans le territoire cible
   - motif_categories : on ajoutera les catégories de motifs manquantes au territoire cible
   - territory_services : on ajoutera les services manquants au territoire cible
-  - teams : les équipes sont déplacées ; si une équipe existe déjà avec le même nom, elle sera réutilisée
+  - teams : les équipes sont copiées ; si une équipe existe déjà avec le même nom, elle sera réutilisée
   - agent territorial access_rights & roles : les droits sont combinés additivement (on ajoute des droits, on n’en retire pas)
-  - sectors : ⚠️ les secteurs existants seront supprimés, ils ne seront pas déplacés
+  - sectors : les secteurs existants ne sont pas déplacés, il faudra les recréer si besoin
   - organisation : déplacée vers le territoire cible
 
   Êtes-vous sûr(e) de vouloir continuer ? (oui/non)

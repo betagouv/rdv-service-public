@@ -72,7 +72,7 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
   end
 
   context "gestion des équipes" do
-    # une équipe à créer + une équipe à fusionner
+    # une équipe à copier + une équipe à fusionner
     let!(:organisation_target) { create(:organisation, territory: territory_target) }
     let!(:agent_origin1) { create(:agent, organisations: [organisation]) }
     let!(:agent_target1) { create(:agent, organisations: [organisation_target]) }
@@ -91,7 +91,8 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
       expect(territory_target.teams.find_by(name: "Agents habilités")).to be_present
       expect(agent_origin1.reload.teams.where(territory: territory_target).map(&:name)).to contain_exactly("Agents habilités", "Visiteur·ices")
       expect(team_visteurices_target.agents).to contain_exactly(agent_origin1, agent_target1)
-      expect(territory_origin.teams).to be_empty
+      expect(team_habilites_origin.reload).to be_present
+      expect(team_visiteurices_origin.reload).to be_present
     end
   end
 
@@ -108,13 +109,13 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
     specify do
       subject.call
       agent_lea.reload
-      expect(agent_lea.agent_territorial_access_rights.where(territory: territory_origin)).to be_empty
-      expect(agent_lea.agent_territorial_access_rights.where(territory: territory_target).count).to eq 1
+      expect(agent_lea.agent_territorial_access_rights.where(territory: territory_origin)).to be_present
+      expect(agent_lea.agent_territorial_access_rights.where(territory: territory_target).count).to eq(1)
       expect(agent_lea.agent_territorial_access_rights.find_by(territory: territory_target).allow_to_manage_teams).to be true
       # jean a un rôle dans les 2 territoires, son nouvel accès combine les droits positifs dans les deux
       agent_jean.reload
-      expect(agent_jean.agent_territorial_access_rights.where(territory: territory_origin)).to be_empty
-      expect(agent_jean.agent_territorial_access_rights.where(territory: territory_target).count).to eq 1
+      expect(agent_jean.agent_territorial_access_rights.where(territory: territory_origin)).to be_present
+      expect(agent_jean.agent_territorial_access_rights.where(territory: territory_target).count).to eq(1)
       expect(agent_jean.agent_territorial_access_rights.find_by(territory: territory_target).allow_to_manage_teams).to be true
       expect(agent_jean.agent_territorial_access_rights.find_by(territory: territory_target).allow_to_invite_agents).to be true
     end
@@ -132,7 +133,7 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
 
     specify do
       subject.call
-      expect(agent1.territorial_roles.where(territory: territory_origin)).to be_empty
+      expect(agent1.territorial_roles.where(territory: territory_origin)).to be_present
       expect(agent1.territorial_roles.where(territory: territory_target)).to be_present
       expect(agent2.territorial_roles.where(territory: territory_target)).to be_present
     end
@@ -144,8 +145,8 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
 
     specify do
       subject.call
-      expect(Sector.where(territory: territory_origin)).to be_empty
-      expect(SectorAttribution.where(organisation:)).to be_empty
+      expect(Sector.where(territory: territory_origin)).not_to be_empty
+      expect(SectorAttribution.where(organisation:)).not_to be_empty
     end
   end
 
