@@ -47,23 +47,20 @@ class MoveOrganisationToOtherTerritoryService < BaseService
 
   def move_annotations
     Rails.logger.info("🔄 Migration des annotations…")
-    @origin_organisation.users.includes(:annotations).each do |user|
-      source_annotation = user.annotations.find_by(territory: @territory_origin)
-      next unless source_annotation
-
+    Annotation.where(user_id: @origin_organisation.user_ids, territory: @territory_origin).each do |source_annotation|
+      user = source_annotation.user
       target_annotation = user.annotations.find_by(territory: @territory_target)
       if target_annotation
         Rails.logger.info("  ⚠️  Conflit d'annotation pour l'utilisateur #{user.id} - fusion du contenu")
         merged_content = [target_annotation.content, source_annotation.content].compact.join("\n---\n")
         target_annotation.update!(content: merged_content)
-        source_annotation.destroy!
         counters[:annotation_conflicts] += 1
       else
-        source_annotation.update!(territory: @territory_target)
-        counters[:annotation_moves] += 1
+        Annotation.create!(content: source_annotation.content, user:, territory: @territory_target)
+        counters[:annotation_copies] += 1
       end
     end
-    Rails.logger.info("  ✅ #{counters[:annotation_moves]} annotations déplacées, #{counters[:annotation_conflicts]} fusions effectuées")
+    Rails.logger.info("  ✅ #{counters[:annotation_copies]} annotations copiées, #{counters[:annotation_conflicts]} fusions effectuées")
   end
 
   def move_motif_categories

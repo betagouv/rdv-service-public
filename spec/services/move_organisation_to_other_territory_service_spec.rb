@@ -22,9 +22,16 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
 
     specify do
       subject.call
-      expect(annotation1_origin.reload.territory).to eq(territory_target)
+      # l’annotation 1 a été copiée vers le territoire cible
+      annotation1_target = Annotation.find_by(user: user1, territory: territory_target)
+      expect(annotation1_target).to be_present
+      expect(annotation1_target.content).to eq("Usager très sympa")
+      # l’annotation 1 existe toujours dans le territoire d’origine
+      expect(annotation1_origin.reload.territory).to eq(territory_origin)
+      # l’annotation 2 cible a été fusionnée
       expect(annotation2_target.reload.content).to eq("Réjouissant\n---\nSuper")
-      expect(Annotation.find_by(id: annotation2_origin.id)).to be_nil
+      # l’annotation 2 d’origine existe toujours
+      expect(annotation2_origin.reload.territory).to eq(territory_origin)
     end
   end
 
