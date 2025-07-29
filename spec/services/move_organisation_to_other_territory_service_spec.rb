@@ -156,7 +156,7 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
       expect(agent_territorial_role.reload.territory).to eq(territory_origin)
       expect(agent_territorial_access_right.reload.territory).to eq(territory_origin)
       expect(team.reload.territory).to eq(territory_origin)
-      expect(Sector.where(territory: territory_origin)).to include(sector)
+      expect(sector.reload.territory).to eq(territory_origin)
     end
   end
 end
