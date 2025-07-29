@@ -25,7 +25,7 @@ RSpec.describe "Agent can CRUD absences" do
 
       click_link("Supprimer")
       expect_page_title("Vos indisponibilités")
-      expect(page).to have_content("Vous n'avez pas encore créé d'indisponibilité")
+      expect(page).to have_content("Vous n’avez pas encore créé d’indisponibilité")
 
       click_link "Créer une indisponibilité", match: :first
 
@@ -50,7 +50,7 @@ RSpec.describe "Agent can CRUD absences" do
       expect_page_title("Indisponibilités de Jane FAROU (PMI)")
       click_link absence.title
 
-      expect_page_title("Modifier l'indisponibilité de Jane FAROU")
+      expect_page_title("Modifier l’indisponibilité de Jane FAROU")
       fill_in "Description", with: "La belle indisponibilité"
       click_button("Enregistrer")
 
@@ -59,7 +59,7 @@ RSpec.describe "Agent can CRUD absences" do
 
       click_link("Supprimer")
       expect_page_title("Indisponibilités de Jane FAROU (PMI)")
-      expect(page).to have_content("Jane FAROU n'a pas encore créé d'indisponibilité")
+      expect(page).to have_content("Jane FAROU n’a pas encore créé d’indisponibilité")
 
       click_link "Créer une indisponibilité", match: :first
 
