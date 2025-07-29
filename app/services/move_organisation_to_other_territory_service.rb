@@ -1,11 +1,10 @@
 class MoveOrganisationToOtherTerritoryService < BaseService
   attr_accessor :counters
 
-  def initialize(origin_organisation:, target_territory:, fail_on_purpose: false)
+  def initialize(origin_organisation:, target_territory:)
     @origin_organisation = origin_organisation
     @territory_origin = origin_organisation.territory
     @territory_target = target_territory
-    @fail_on_purpose = fail_on_purpose
     @counters = Hash.new(0)
   end
 

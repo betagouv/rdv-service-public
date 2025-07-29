@@ -150,17 +150,17 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
     end
   end
 
-  describe "gestion des erreurs" do
-    subject { described_class.new(origin_organisation: organisation, target_territory: territory_target, fail_on_purpose: true) }
-
+  describe "lorsque une exception est levée" do
     let!(:agent) { create(:agent, organisations: [organisation]) }
     let!(:agent_territorial_role) { create(:agent_territorial_role, agent: agent, territory: territory_origin) }
     let!(:agent_territorial_access_right) { create(:agent_territorial_access_right, agent: agent, territory: territory_origin) }
     let!(:team) { create(:team, name: "Erreur", territory: territory_origin) }
     let!(:sector) { create(:sector, name: "Erreur", territory: territory_origin) }
 
+    before { allow(organisation).to receive(:update!).and_raise(RuntimeError) }
+
     it "lève une exception" do
-      expect { subject.call }.to raise_error(RuntimeError, "Intentional failure for testing")
+      expect { subject.call }.to raise_error(RuntimeError)
       expect(agent_territorial_role.reload.territory).to eq(territory_origin)
       expect(agent_territorial_access_right.reload.territory).to eq(territory_origin)
       expect(team.reload.territory).to eq(territory_origin)
