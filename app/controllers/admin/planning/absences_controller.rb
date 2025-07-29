@@ -41,7 +41,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
   def create
     authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.save
-      Agents::AbsenceMailer.with(absence: @absence).absence_created.deliver_later if @agent.absence_notification_level == "all"
+      Notifiers::AbsenceCreated.new(@absence).perform
       flash[:success] = t(".absence_created")
       redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
     else
@@ -52,7 +52,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
   def update
     authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.update(absence_params)
-      Agents::AbsenceMailer.with(absence: @absence).absence_updated.deliver_later if @agent.absence_notification_level == "all"
+      Notifiers::AbsenceUpdated.new(@absence).perform
       flash[:success] = t(".absence_updated")
       redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
     else
@@ -63,8 +63,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
   def destroy
     authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.destroy
-      # On passe l'absence au job sous forme sérialisée puisqu'elle n'existe plus en base.
-      Agents::AbsenceMailer.with(absence: Absence.serialize_for_active_job(@absence)).absence_destroyed.deliver_later if @agent.absence_notification_level == "all"
+      Notifiers::AbsenceDestroyed.new(@absence).perform
       flash[:notice] = t(".absence_deleted")
       redirect_to admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent_id)
     else
