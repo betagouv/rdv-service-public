@@ -9,18 +9,6 @@ class MoveOrganisationToOtherTerritoryService < BaseService
   end
 
   def call
-    check_preconditions
-    move_organisation
-  end
-
-  private
-
-  def check_preconditions
-    raise "Organisation not found" unless @origin_organisation
-    raise "Territory not found" unless @territory_target
-  end
-
-  def move_organisation
     Rails.logger.info("=== MIGRATION D'ORGANISATION VERS UN AUTRE TERRITOIRE ===")
     Rails.logger.info("Organisation: #{@origin_organisation.name} (ID: #{@origin_organisation.id})")
     Rails.logger.info("Territoire source: #{@territory_origin.name} (ID: #{@territory_origin.id})")
@@ -35,14 +23,14 @@ class MoveOrganisationToOtherTerritoryService < BaseService
       copy_teams
       copy_access_rights
       copy_territorial_roles
-
       move_organisation_record
       suggest_cleanup_origin_territory
-      raise "Intentional failure for testing" if @fail_on_purpose
 
       Rails.logger.info("✅ MIGRATION TERMINÉE AVEC SUCCÈS!")
     end
   end
+
+  private
 
   def copy_annotations
     Rails.logger.info("🔄 Migration des annotations…")
