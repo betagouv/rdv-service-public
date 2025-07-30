@@ -14,6 +14,6 @@ class Notifiers::PlageOuvertureBase < BaseService
   end
 
   def agent_notifiable?
-    @plage_ouverture.agent&.email.present?
+    @plage_ouverture.agent&.email.present? && @plage_ouverture.agent.plage_ouverture_notification_level == "all"
   end
 end
