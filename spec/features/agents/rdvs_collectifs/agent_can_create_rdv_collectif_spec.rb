@@ -3,8 +3,8 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
 
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, basic_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, :collectif, service: service, organisation: organisation) }
+  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", email: "alain@tiptop.fr", service: service, basic_role_in_organisations: [organisation]) }
+  let!(:motif) { create(:motif, :collectif, name: "Atelier administratif", service: service, organisation: organisation) }
 
   let!(:user1) { create(:user, organisations: [organisation]) }
   let!(:user2) { create(:user, organisations: [organisation]) }
@@ -28,7 +28,7 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
   it "default", js: true do
     find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click # Click on the agenda
 
-    select(motif.name, from: "rdv_motif_id")
+    select("Atelier administratif", from: "rdv_motif_id")
     click_button("Continuer")
 
     # Step 2
