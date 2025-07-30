@@ -17,9 +17,9 @@ class Agents::RdvMailer < ApplicationMailer
                 if @author.is_a?(Prescripteur)
                   @user = @author.user
                 end
-                t("agents.rdv_mailer.rdv_created.title_participation", domain_name: domain.name, date: relative_date(@rdv.starts_at))
+                "Nouvelle participation au RDV collectif sur votre agenda #{domain.name} pour #{relative_date(@rdv.starts_at)}"
               else
-                t("agents.rdv_mailer.rdv_created.title", domain_name: domain.name, date: relative_date(@rdv.starts_at))
+                "Nouveau RDV ajouté sur votre agenda #{domain.name} pour #{relative_date(@rdv.starts_at)}"
               end
     mail(subject: subject)
   end
@@ -28,9 +28,9 @@ class Agents::RdvMailer < ApplicationMailer
     date = relative_date(old_starts_at || @rdv.starts_at)
     self.ics_payload = @rdv.payload(:destroy, @agent)
     subject = if @rdv.collectif?
-                t("agents.rdv_mailer.rdv_cancelled.title_participation", domain_name: domain.name, date: date)
+                "Participation au RDV collectif annulée #{date}"
               else
-                t("agents.rdv_mailer.rdv_cancelled.title", domain_name: domain.name, date: date)
+                "RDV annulé #{date}"
               end
     mail(subject: subject)
   end
@@ -40,7 +40,7 @@ class Agents::RdvMailer < ApplicationMailer
     @address_name = Lieu.find(lieu_id).full_name if lieu_id
 
     self.ics_payload = @rdv.payload(:update, @agent)
-    subject = t("agents.rdv_mailer.rdv_updated.title", date: relative_date(@old_starts_at))
+    subject = "RDV du #{relative_date(@old_starts_at)} modifié"
     mail(subject: subject)
   end
 
