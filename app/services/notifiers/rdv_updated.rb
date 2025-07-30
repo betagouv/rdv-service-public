@@ -19,7 +19,7 @@ class Notifiers::RdvUpdated < Notifiers::RdvBase
   end
 
   def agents_to_notify
-    Agent.where(id: @old_agent_ids + @rdv.agent_ids).select { should_notify_agent(_1) }
+    Agent.where(id: @old_agent_ids + @rdv.agent_ids).select { should_notify_agent?(_1) }
   end
 
   def notify_agent(agent)
