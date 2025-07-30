@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       get "sign_in_as", on: :member
       post :invite, on: :member
       resources :migrations, only: %i[new create]
+      post :toggle_feature, on: :member, as: :toggle_feature
     end
     resources :agent_roles, only: %i[show edit update destroy]
     resources :agent_territorial_access_rights, only: %i[show edit update]
