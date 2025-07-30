@@ -80,8 +80,9 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def destroy
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+    motif_ids = @plage_ouverture.motifs.ids
     if @plage_ouverture.destroy
-      Notifiers::PlageOuvertureDestroyed.new(@plage_ouverture).perform
+      Notifiers::PlageOuvertureDestroyed.new(@plage_ouverture, motif_ids).perform
       flash[:notice] = "La plage d'ouverture a été supprimée."
       redirect_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)
     else
