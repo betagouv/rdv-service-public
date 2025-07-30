@@ -23,6 +23,15 @@ class Agents::RdvMailer < ApplicationMailer
     mail(subject: subject)
   end
 
+  def participation_created
+    @participation = params[:participation]
+    @user = @participation.user
+    @rdv = @participation.rdv
+    self.ics_payload = @rdv.payload(:create, @agent)
+    subject = "Nouvelle participation au RDV collectif sur votre agenda #{domain.name} pour #{relative_date(@rdv.starts_at)}"
+    mail(subject: subject)
+  end
+
   def rdv_cancelled(old_starts_at: nil)
     date = relative_date(old_starts_at || @rdv.starts_at)
     self.ics_payload = @rdv.payload(:destroy, @agent)
