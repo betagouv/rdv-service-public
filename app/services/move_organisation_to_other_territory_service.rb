@@ -107,7 +107,9 @@ class MoveOrganisationToOtherTerritoryService < BaseService
 
   def copy_access_rights
     Rails.logger.info("🔄 Copie des droits d'accès territoriaux…")
-    AgentTerritorialAccessRight.where(territory: @territory_origin).each do |access_right_origin|
+    AgentTerritorialAccessRight
+      .where(territory: @territory_origin, agent_id: @origin_organisation.agent_ids)
+      .each do |access_right_origin|
       agent = access_right_origin.agent
       access_right_target = agent.agent_territorial_access_rights.find_by(territory: @territory_target)
       if access_right_target
@@ -130,7 +132,9 @@ class MoveOrganisationToOtherTerritoryService < BaseService
 
   def copy_territorial_roles
     Rails.logger.info("🔄 Copie des rôles territoriaux d'agents…")
-    AgentTerritorialRole.where(territory: @territory_origin).each do |role_origin|
+    AgentTerritorialRole
+      .where(territory: @territory_origin, agent_id: @origin_organisation.agent_ids)
+      .each do |role_origin|
       agent = role_origin.agent
       if agent.territorial_roles.exists?(territory: @territory_target)
         Rails.logger.info("  ℹ️  Agent #{agent.id} a déjà un rôle territorial dans le territoire cible")

@@ -99,11 +99,15 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
   context "gestion des droits d'accès" do
     let!(:agent_lea) { create(:agent, organisations: [organisation]) }
     let!(:agent_jean) { create(:agent, organisations: [organisation]) }
+    let!(:other_orga) { create(:organisation, territory: territory_origin) }
+    let!(:agent_wu) { create(:agent, organisations: [other_orga]) }
 
     before do
       create(:agent_territorial_access_right, agent: agent_lea, territory: territory_origin, allow_to_manage_teams: true)
       create(:agent_territorial_access_right, agent: agent_jean, territory: territory_origin, allow_to_manage_teams: true)
       create(:agent_territorial_access_right, agent: agent_jean, territory: territory_target, allow_to_invite_agents: true)
+      # Wu a des accès au territoire d’origine mais n’appartient pas à l’orga d’origine
+      create(:agent_territorial_access_right, agent: agent_wu, territory: territory_origin, allow_to_invite_agents: true)
     end
 
     specify do
@@ -118,17 +122,24 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
       expect(agent_jean.agent_territorial_access_rights.where(territory: territory_target).count).to eq(1)
       expect(agent_jean.agent_territorial_access_rights.find_by(territory: territory_target).allow_to_manage_teams).to be true
       expect(agent_jean.agent_territorial_access_rights.find_by(territory: territory_target).allow_to_invite_agents).to be true
+      agent_wu.reload
+      expect(agent_wu.agent_territorial_access_rights.where(territory: territory_origin)).to be_present
+      expect(agent_wu.agent_territorial_access_rights.where(territory: territory_target)).not_to be_present
     end
   end
 
   context "gestion des rôles territoriaux" do
     let!(:agent1) { create(:agent, organisations: [organisation]) }
     let!(:agent2) { create(:agent, organisations: [organisation]) }
+    let!(:other_orga) { create(:organisation, territory: territory_origin) }
+    let!(:agent_wu) { create(:agent, organisations: [other_orga]) }
 
     before do
       create(:agent_territorial_role, agent: agent1, territory: territory_origin)
       create(:agent_territorial_role, agent: agent2, territory: territory_origin)
       create(:agent_territorial_role, agent: agent2, territory: territory_target)
+      # Wu a un rôle dans le territoire d’origine mais n’appartient pas à l’orga d’origine
+      create(:agent_territorial_role, agent: agent_wu, territory: territory_origin)
     end
 
     specify do
@@ -136,6 +147,8 @@ RSpec.describe MoveOrganisationToOtherTerritoryService do
       expect(agent1.territorial_roles.where(territory: territory_origin)).to be_present
       expect(agent1.territorial_roles.where(territory: territory_target)).to be_present
       expect(agent2.territorial_roles.where(territory: territory_target)).to be_present
+      expect(agent_wu.territorial_roles.where(territory: territory_origin)).to be_present
+      expect(agent_wu.territorial_roles.where(territory: territory_target)).not_to be_present
     end
   end
 
