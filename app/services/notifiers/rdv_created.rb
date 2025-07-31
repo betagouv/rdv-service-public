@@ -4,10 +4,15 @@ class Notifiers::RdvCreated < Notifiers::RdvBase
   end
 
   def notify_user_by_sms(user)
-    # Nous n'envoyons pas de SMS de confirmation si le rendez-vous a été pris en ligne par l’usager sauf si le RDV
-    # est dans moins de 2 jours (car l’usager n’aura pas de SMS de rappel) ou que l’usager n’a pas confirmé son compte
-    # (cas notamment pour la prise de RDV par invitation)
-    if !(@rdv.created_by_user? && user.confirmed?) || @rdv.starts_at < 2.days.from_now
+    # Nous envoyons un SMS lors de la création du RDV si :
+    # - le RDV est dans moins de 48H
+    # - OU le RDV a été créé par un agent
+    # - OU le RDV a été créé par un usager mais iel n’a pas de compte (c’est le parcours pour les invitations de RDVI)
+    #
+    # Pour les RDV créés par un usager plus de 48H avant, iels auront un SMS de rappel 48h avant ce RDV
+    # il n’est donc pas nécessaire d’envoyer ce SMS à la création du RDV.
+
+    if !@rdv.created_by_user? || !user.confirmed? || @rdv.starts_at < 2.days.from_now
       Users::RdvSms.rdv_created(@rdv, user, @participations_tokens_by_user_id[user.id]).deliver_later
     end
   end

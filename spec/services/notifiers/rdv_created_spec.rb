@@ -16,7 +16,7 @@ RSpec.describe Notifiers::RdvCreated, type: :service do
     allow(Users::RdvSms).to receive(:rdv_created).and_call_original
   end
 
-  context "modifié par un agent" do
+  context "créé par un agent" do
     subject { described_class.perform_with(rdv, agent1) }
 
     let(:starts_at) { 3.days.from_now }
