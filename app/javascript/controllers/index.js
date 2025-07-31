@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import DestroyableController from "./destroyable_controller"
+application.register("destroyable", DestroyableController)
+
 import FormController from "./form_controller"
 application.register("form", FormController)
 

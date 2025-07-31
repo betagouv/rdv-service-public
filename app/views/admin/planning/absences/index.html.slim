@@ -3,12 +3,17 @@
 
 - content_for :title do
   - if current_agent == @agent
-    = t(".your_absences")
+    = "Vos indisponibilités"
   - else
-    = t(".absences_of", full_name: @agent.full_name_and_service)
+    = "Indisponibilités de #{@agent.full_name_and_service}"
+
+- content_for :fil_ariane do
+  = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
 
 - content_for :breadcrumb do
-  = link_to t(".create_absence"), new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id), class: "btn btn-outline-primary align-bottom"
+  = link_to "Créer une indisponibilité",
+          new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id),
+          class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line"
 
 .card.pb-3
   - if @display_tabs
@@ -19,7 +24,7 @@
         = active_link_to "Passées", admin_organisation_planning_absences_path(current_organisation, agent_id: @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
 
   - if @absences.any?
-    .fr-table.fr-mx-2w
+    .fr-table.fr-table--no-scroll.fr-mx-2w
       .fr-table__wrapper
         .fr-table__container
           .fr-table__content
@@ -40,19 +45,22 @@
       .col-md-6.rdv-text-align-center.mb-2
         p.mb-2.lead
           - if current_agent == @agent
-            = t(".you_not_yet_create_absence")
+            | Vous n’avez pas encore créé d’indisponibilité
           - else
-            = t(".has_no_absence_yet", full_name: @agent.full_name_or_email)
-        p = t(".explanation_html")
+            | #{@agent.full_name_or_email} n’a pas encore créé d’indisponibilité
+        p
+          |> Les indisponibilités sont des exceptions aux
+          em> plages d’ouvertures.
+          | Vous pouvez les utiliser pour les congés ou les fermetures. Les indisponibilités peuvent être récurrentes (par exemple pour les temps partiels).
         span.fa-stack.fa-4x
           i.fa.fa-circle.fa-stack-2x.text-primary
           i.far.fa-calendar.fa-stack-1x.text-white
   .rdv-text-align-center.py-2
     = link_to new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id), class: "fr-btn" do
       - if @agent == current_agent
-        = t(".create_absence")
+        | Créer une indisponibilité
       - else
-        = t(".create_absence_for", full_name: @agent.full_name_or_email)
+        | Créer une indisponibilité pour #{@agent.full_name_or_email}
 
 - unless current_territory.visioplainte?
   = dsfr_alert type: :info, size: :sm, html_attributes: { class: "fr-mb-2v" } do
