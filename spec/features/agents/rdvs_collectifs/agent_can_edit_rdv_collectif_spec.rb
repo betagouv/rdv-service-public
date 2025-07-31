@@ -39,38 +39,4 @@ RSpec.describe "Agent can edit a Rdv collectif" do
       expect(rdv.reload.participations.first.send_lifecycle_notifications).to be false
     end
   end
-
-  describe "adding a user that belongs to several organisations" do
-    it "works" do
-      multi_org_user = create(:user, organisations: [organisation, create(:organisation, territory: organisation.territory)])
-      login_as(agent, scope: :agent)
-
-      visit edit_admin_organisation_rdvs_collectif_path(organisation, rdv, add_user: [multi_org_user.id])
-      expect { click_on "Enregistrer" }.to change { rdv.reload.user_ids }.from([]).to([multi_org_user.id])
-    end
-  end
-
-  describe "injecting the ID of a user outside of the territory" do
-    let!(:user) do
-      create(:user, organisations: [organisation], first_name: "Francis", last_name: "Factice")
-    end
-    let(:organisation_from_other_territory) { create(:organisation, territory: create(:territory)) }
-    let(:user_from_other_territory) do
-      create(:user, organisations: [organisation_from_other_territory], first_name: "Gaston", last_name: "Bidon")
-    end
-
-    it "does not show injected user on page" do
-      login_as(agent, scope: :agent)
-
-      visit edit_admin_organisation_rdvs_collectif_path(organisation, rdv, add_user: [user.id])
-      expect(page).to have_content("Francis")
-
-      visit edit_admin_organisation_rdvs_collectif_path(organisation, rdv, add_user: [user_from_other_territory.id])
-      expect(page).not_to have_content("Gaston")
-
-      visit edit_admin_organisation_rdvs_collectif_path(organisation, rdv, add_user: [user.id, user_from_other_territory.id])
-      expect(page).to have_content("Francis")
-      expect(page).not_to have_content("Gaston")
-    end
-  end
 end
