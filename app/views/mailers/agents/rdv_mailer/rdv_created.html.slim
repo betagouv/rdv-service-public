@@ -2,11 +2,7 @@ div
   p Bonjour,
   p
     - date = relative_date(@rdv.starts_at)
-    - user = (@user || @author)&.full_name
-    - if @rdv.collectif?
-      | La participation de #{user} au RDV collectif qui aura lieu #{date} vient d’être ajoutée.
-    - else
-      | Un nouveau RDV qui aura lieu #{date} vient d’être ajouté à votre agenda.
+    | Un nouveau RDV qui aura lieu #{date} vient d’être ajouté à votre agenda.
 
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 
