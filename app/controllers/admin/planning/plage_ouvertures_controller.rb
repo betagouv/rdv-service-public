@@ -59,8 +59,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.save
-
-      Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_created.deliver_later if @agent.plage_ouverture_notification_level == "all"
+      Notifiers::PlageOuvertureCreated.new(@plage_ouverture).perform
       flash[:success] = "Plage d'ouverture créée"
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
@@ -71,7 +70,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   def update
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.update(plage_ouverture_params)
-      Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_updated.deliver_later if @agent.plage_ouverture_notification_level == "all"
+      Notifiers::PlageOuvertureUpdated.new(@plage_ouverture).perform
       flash[:success] = "La plage d'ouverture a été modifiée."
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
@@ -81,13 +80,9 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def destroy
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-    motif_ids = @plage_ouverture.motifs.ids
+    notifier = Notifiers::PlageOuvertureDestroyed.new(@plage_ouverture)
     if @plage_ouverture.destroy
-      # On passe la plage au job sous forme sérialisée puisqu'elle n'existe plus en base.
-      if @agent.plage_ouverture_notification_level == "all"
-        plage_attributes = PlageOuverture.serialize_for_active_job(@plage_ouverture).merge(motif_ids: motif_ids)
-        Agents::PlageOuvertureMailer.with(plage_ouverture: plage_attributes).plage_ouverture_destroyed.deliver_later
-      end
+      notifier.perform
       flash[:notice] = "La plage d'ouverture a été supprimée."
       redirect_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)
     else

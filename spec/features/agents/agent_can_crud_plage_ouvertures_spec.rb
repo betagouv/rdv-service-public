@@ -24,9 +24,17 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(agent.email).size }.by(1)
+      open_email(agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture modifiée - La belle plage")
+
       expect_page_title("Plages d’ouverture")
       click_on("La belle plage")
       click_link("Supprimer")
+
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(agent.email).size }.by(1)
+      open_email(agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture supprimée - La belle plage")
 
       expect_page_title("Plages d’ouverture")
       expect(page).to have_content("Vous n'avez pas encore créé de plage d'ouverture")
@@ -45,6 +53,10 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_button "Créer la plage d'ouverture"
       expect(PlageOuverture.last.title).to eq("Accueil")
       expect_page_title("Plages d’ouverture")
+
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(agent.email).size }.by(1)
+      open_email(agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture créée - Accueil")
     end
   end
 
