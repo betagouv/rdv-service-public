@@ -89,7 +89,6 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       let!(:organisationA) { create(:organisation) }
       let!(:organisationB) { create(:organisation) }
 
-      # TODO: ajouter des rdvs pour des motifs sans services
       let!(:service) { create(:service) }
       let!(:service2) { create(:service) }
 
@@ -152,7 +151,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id, rdv2021.id, rdv.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id, rdv2021.id, rdv.id, rdv_sans_service.id) }
         end
 
         response 200, "returns policy scoped RDVs filtered with starts_before only", document: false do
@@ -189,7 +188,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id) }
+        it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id, rdv_sans_service.id) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"
