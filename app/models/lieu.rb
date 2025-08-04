@@ -35,7 +35,7 @@ class Lieu < ApplicationRecord
   # Scopes
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
-      .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
+      .where.not("recurrence IS NULL AND first_day < ?", Time.zone.today)
       .joins(:motifs)
       .where(motifs: { id: motif.id, deleted_at: nil })
       .map(&:lieu_id)
@@ -48,7 +48,7 @@ class Lieu < ApplicationRecord
   # Perhaps need to move this to an other function that allow to list lieux from
   # given parameters
   scope :with_open_slots_for_motifs, lambda { |motifs|
-    plage_ouverture_lieu_ids = PlageOuverture.where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
+    plage_ouverture_lieu_ids = PlageOuverture.where.not("recurrence IS NULL AND first_day < ?", Time.zone.today)
       .joins(:motifs)
       .where(motifs: { id: motifs.pluck(:id) })
       .distinct
