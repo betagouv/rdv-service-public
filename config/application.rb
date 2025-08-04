@@ -19,7 +19,7 @@ Bundler.require(*Rails.groups)
 module Lapin
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 7.1
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -73,6 +73,9 @@ module Lapin
 
     config.exceptions_app = routes # Permet les pages d'erreur custom
 
+    # Les données dans les colonnes chiffrées sont stockées en base de données en utilisant SHA1. Depuis Rails 7.1,
+    # SHA256 est utilisé par défaut. Pour retirer la ligne suivante, il faudrait migrer les données chiffrées.
+    config.active_record.encryption.hash_digest_class = OpenSSL::Digest::SHA1
     config.active_record.async_query_executor = :global_thread_pool
     config.active_record.global_executor_concurrency = 4 # update the pool size in database.yml if you change this
 
