@@ -149,6 +149,7 @@ class Agent::RdvPolicy < ApplicationPolicy
           .joins(:motif, :agents_rdvs)
           .where(
             "agents_rdvs.agent_id = ?
+              OR motifs.service_id is null
               OR (motifs.service_id IN (?) AND agent_roles.access_level = 'basic')
               OR (agent_roles.access_level = 'admin')",
             current_agent.id, current_agent.service_ids

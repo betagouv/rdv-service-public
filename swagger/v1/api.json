@@ -688,7 +688,8 @@
             ]
           },
           "service_id": {
-            "type": "integer"
+            "type": "integer",
+            "nullable": true
           }
         },
         "required": [
@@ -699,7 +700,6 @@
           "organisation_id",
           "bookable_publicly",
           "bookable_by",
-          "service_id"
         ]
       },
       "motif_categories": {
