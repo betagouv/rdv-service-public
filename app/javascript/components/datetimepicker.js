@@ -26,6 +26,7 @@ class Datetimepicker {
         scrollMonth: false,
         scrollInput: false,
         dayOfWeekStart: 1,
+        onClose: (_, $input) => { $input[0].blur(); }, // cf https://github.com/betagouv/rdv-service-public/pull/5484/files#r2224770006
         ...input.dataset,
       });
     });

@@ -1,0 +1,53 @@
+- content_for(:menu_item) { "menu-agendas" }
+- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_planning_agenda_path" }
+
+- content_for :title do
+  - if current_agent == @agent
+    | Votre agenda
+  - else
+    | Agenda de #{@agent.full_name_and_service}
+
+- content_for :fil_ariane do
+    = render "common/fil_ariane", titles_and_paths: [], current_page_title: "Accueil"
+
+ruby:
+  event_sources = [
+    admin_api_agenda_rdvs_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
+    admin_api_agenda_absences_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
+    admin_api_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json),
+  ]
+  event_sources.push(OffDays.to_full_calendar_array) unless current_territory.visioplainte?
+
+#calendar[
+  data-default-date-json="#{@date&.to_json}"
+  data-agent-id="#{@agent.id}"
+  data-selected-event-id="#{@selected_event_id}"
+  data-organisation-id="#{@organisation.id}"
+  data-display-saturdays="#{current_agent.display_saturdays}"
+  data-display-sundays="#{current_territory.visioplainte?}"
+  data-event-sources-json="#{event_sources.to_json}"
+  data-sign-in-path="#{new_agent_session_path}"
+]
+.mt-3.flex-grow-1.text-right
+  .m-2
+    = simple_form_for [:admin, current_agent], url: admin_organisation_planning_toggle_displays_path(params.permit(:selected_event_id, :date)), method: :put, html: {id: "edit_agent_#{current_agent.id}_cancelled_rdv_preferences"} do |f|
+      = f.hidden_field :display_cancelled_rdv, value: !current_agent.display_cancelled_rdv
+      = f.submit Agent.human_attribute_value(:display_cancelled_rdv, !current_agent.display_cancelled_rdv), class: "fr-btn fr-btn--tertiary"
+  .m-2
+    = simple_form_for [:admin, current_agent], url: admin_organisation_planning_toggle_displays_path(params.permit(:selected_event_id, :date)), method: :put, html: {id: "edit_agent_#{current_agent.id}_saturday_preferences"} do |f|
+      = f.hidden_field :display_saturdays, value: !current_agent.display_saturdays
+      = f.submit Agent.human_attribute_value(:display_saturdays, !current_agent.display_saturdays), class: "fr-btn fr-btn--tertiary"
+
+.mt-2
+  = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
+    - if current_agent == @agent
+      |> 🖨 Liste détaillée des RDVs du
+      span.js-date
+      / date is filled from JS
+    - else
+      |> 🖨 Liste détaillée des RDVs du
+      span.js-date>
+      | pour #{@agent.full_name_or_email}
+
+.fr-mb-2v
+  = render "admin/rdvs/rdv_visibility"

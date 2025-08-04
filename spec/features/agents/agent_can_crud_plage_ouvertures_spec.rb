@@ -24,9 +24,17 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(agent.email).size }.by(1)
+      open_email(agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture modifiée - La belle plage")
+
       expect_page_title("Plages d’ouverture")
       click_on("La belle plage")
       click_link("Supprimer")
+
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(agent.email).size }.by(1)
+      open_email(agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture supprimée - La belle plage")
 
       expect_page_title("Plages d’ouverture")
       expect(page).to have_content("Vous n'avez pas encore créé de plage d'ouverture")
@@ -45,6 +53,10 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_button "Créer la plage d'ouverture"
       expect(PlageOuverture.last.title).to eq("Accueil")
       expect_page_title("Plages d’ouverture")
+
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(agent.email).size }.by(1)
+      open_email(agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture créée - Accueil")
     end
   end
 
@@ -77,7 +89,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     it "cannot create plage_ouverture" do
       expect_page_title("Plages d’ouverture")
       click_link "Créer une plage d'ouverture", match: :first
-      expect(page).to have_content("Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.")
+      expect(page).to have_content("Aucun motif de rendez-vous ne vous est accessible. Vous devez demander à un administrateur de votre organisation d'en ajouter un")
     end
 
     context "with motif for_secretariat" do
@@ -102,7 +114,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     end
 
     it "can crud a plage_ouverture", js: true do
-      visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
+      visit admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: other_agent.id)
 
       expect_page_title("Plages d’ouverture de Jane FAROU (PMI)") # vue liste
       expect(page).to have_content "Permanence"
@@ -145,7 +157,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       let!(:lieu) { nil }
 
       it "still can crud a plage_ouverture" do
-        visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
+        visit admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: other_agent.id)
 
         expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
         click_link "Permanence"
@@ -201,7 +213,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     end
 
     it "works" do
-      visit admin_organisation_plage_ouverture_path(organisation, plage_ouverture)
+      visit admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture)
       expect(page).to have_content(plage_ouverture.title_with_default)
       expect(page).to have_content("Conflit de dates et d'horaires avec d'autres plages d'ouvertures\nPlage d'ouverture #{overlapping_plage.id}")
     end
@@ -214,7 +226,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     end
 
     it "works" do
-      visit admin_organisation_plage_ouverture_path(organisation, plage_ouverture)
+      visit admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture)
       expect(page).to have_content("Suivi bonjour déborde de 30 minutes. Il ne sera pas possible de prendre rendez-vous pour ce motif en l'état.")
     end
   end
@@ -227,7 +239,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     let!(:motif_2_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
 
     it "works", js: true do
-      visit new_admin_organisation_agent_plage_ouverture_path(organisation, agent)
+      visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: agent)
       expect(page).not_to have_content("Lieu")
       check avocat.name
       expect(page).to have_checked_field(motif_1_service_avocat.name)
@@ -243,7 +255,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
   describe "selecting a time range" do
     it "works", js: true do
-      visit new_admin_organisation_agent_plage_ouverture_path(organisation, agent)
+      visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: agent)
       check motif.name
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
 

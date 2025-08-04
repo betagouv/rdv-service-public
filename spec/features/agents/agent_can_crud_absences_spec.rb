@@ -25,7 +25,11 @@ RSpec.describe "Agent can CRUD absences" do
 
       click_link("Supprimer")
       expect_page_title("Vos indisponibilités")
-      expect(page).to have_content("Vous n'avez pas encore créé d'indisponibilité")
+      expect(page).to have_content("Vous n’avez pas encore créé d’indisponibilité")
+
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(absence.agent.email).size }.by(1)
+      open_email(absence.agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Indisponibilité supprimée - La belle indisponibilité")
 
       click_link "Créer une indisponibilité", match: :first
 
@@ -34,6 +38,10 @@ RSpec.describe "Agent can CRUD absences" do
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
+
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(absence.agent.email).size }.by(1)
+      open_email(absence.agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Indisponibilité créée - Nouvelle indisponibilité")
 
       expect_page_title("Vos indisponibilités")
       click_link "Nouvelle indisponibilité"
@@ -46,11 +54,11 @@ RSpec.describe "Agent can CRUD absences" do
     let!(:absence) { create(:absence, agent: other_agent) }
 
     it "can crud a absence" do
-      visit admin_organisation_agent_absences_path(organisation, other_agent.id)
+      visit admin_organisation_planning_absences_path(organisation, agent_id: other_agent.id)
       expect_page_title("Indisponibilités de Jane FAROU (PMI)")
       click_link absence.title
 
-      expect_page_title("Modifier l'indisponibilité de Jane FAROU")
+      expect_page_title("Modifier l’indisponibilité de Jane FAROU")
       fill_in "Description", with: "La belle indisponibilité"
       click_button("Enregistrer")
 
@@ -59,7 +67,11 @@ RSpec.describe "Agent can CRUD absences" do
 
       click_link("Supprimer")
       expect_page_title("Indisponibilités de Jane FAROU (PMI)")
-      expect(page).to have_content("Jane FAROU n'a pas encore créé d'indisponibilité")
+      expect(page).to have_content("Jane FAROU n’a pas encore créé d’indisponibilité")
+
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(absence.agent.email).size }.by(1)
+      open_email(absence.agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Indisponibilité supprimée - La belle indisponibilité")
 
       click_link "Créer une indisponibilité", match: :first
 
@@ -68,6 +80,10 @@ RSpec.describe "Agent can CRUD absences" do
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
+
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(absence.agent.email).size }.by(1)
+      open_email(absence.agent.email)
+      expect(current_email.subject).to eq("RDV Service Public - Indisponibilité créée - Nouvelle indisponibilité")
 
       expect_page_title("Indisponibilités de Jane FAROU (PMI)")
       click_link "Nouvelle indisponibilité"

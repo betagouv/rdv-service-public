@@ -2,7 +2,7 @@ module User::NotificableConcern
   extend ActiveSupport::Concern
 
   def notifiable_by_email?
-    valid_email? && notify_by_email?
+    valid_email? && notify_by_email? && !soft_deleted?
   end
 
   def valid_email?
@@ -14,7 +14,7 @@ module User::NotificableConcern
   end
 
   def notifiable_by_sms?
-    phone_number_formatted.present? && phone_number_mobile? && notify_by_sms?
+    phone_number_formatted.present? && phone_number_mobile? && notify_by_sms? && !soft_deleted?
   end
 
   def phone_number_mobile?

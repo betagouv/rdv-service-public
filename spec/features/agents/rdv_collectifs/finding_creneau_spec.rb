@@ -14,7 +14,7 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
   before { login_as(agent, scope: :agent) }
 
   specify do
-    visit admin_organisation_agent_agenda_path(organisation, agent)
+    visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
     click_link "Trouver un RDV", match: :first
 
     select "Atelier participatif", from: "Motif"

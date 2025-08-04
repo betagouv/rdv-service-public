@@ -1,0 +1,24 @@
+- content_for(:menu_item) { "menu-absences" }
+- content_for(:menu_agent_select_path_helper_name) { "new_admin_organisation_planning_absence_path" }
+
+- content_for :title do
+  - if @absence.agent == current_agent
+    | Nouvelle indisponibilité
+  - else
+    | Nouvelle indisponibilité pour #{@absence.agent.full_name_or_email}
+
+- content_for :fil_ariane do
+    - if @absence.agent == current_agent
+      = render "common/fil_ariane",
+              titles_and_paths: [["Accueil", root_path], ["Vos indisponibilités", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
+              current_page_title: yield(:title)
+    - else
+      = render "common/fil_ariane",
+              titles_and_paths: [["Accueil", root_path], ["Indisponibilités de #{@absence.agent.full_name_and_service}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
+              current_page_title: yield(:title)
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = render "form", absence: @absence, agent: @agent

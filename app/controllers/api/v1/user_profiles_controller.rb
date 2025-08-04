@@ -16,7 +16,7 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
     user = user_profile.user
 
     if user.can_be_soft_deleted_from_organisation?(organisation)
-      user.soft_delete(organisation)
+      user.soft_delete!(organisation)
       head :no_content
     else
       render_error :unprocessable_entity, {

@@ -112,6 +112,32 @@ RSpec.describe "User can search for rdvs" do
       end
     end
 
+    context "motif téléphonique avec restriction (instruction pré-RDV)" do
+      let!(:first_motif) do
+        create(:motif, :by_phone, name: "RSA orientation par téléphone", organisation: first_organisation_with_po, restriction_for_rdv: "Merci d’apporter les documents nécessaires", service: service)
+      end
+
+      it "oblige à accepter la restriction", js: true do
+        visit root_path
+        execute_search
+
+        ## Motif selection
+        expect(page).to have_content(first_motif.name)
+        click_link(first_motif.name)
+
+        ## Organisation selection
+        click_on first_organisation_with_po.name
+        expect(page).to have_content("Merci d’apporter les documents nécessaires")
+        click_on "Annuler"
+        click_on first_organisation_with_po.name
+        expect(page).to have_content("Merci d’apporter les documents nécessaires")
+        click_on "Accepter"
+
+        ## Sélection créneau
+        expect(page).to have_content("Sélectionnez un créneau")
+      end
+    end
+
     context "when the motif is at home" do
       before do
         [first_motif, other_motif_with_po, motif_without_po].each { |m| m.update!(location_type: "home") }
@@ -512,7 +538,8 @@ RSpec.describe "User can search for rdvs" do
 
   def continue_to_rdv(motif, address: nil)
     expect(page).to have_content("Vos informations")
-    fill_in("Date de naissance", with: Time.zone.yesterday.strftime("%d/%m/%Y"))
+    find_field("Date de naissance").send_keys(Time.zone.yesterday.strftime("%d/%m/%Y"))
+    # using fill_in with this french date throws Error: Malformed value with playwright
     fill_in("Nom de naissance", with: "Lapinou")
     fill_in("Adresse", with: address) if address
     click_button("Continuer")

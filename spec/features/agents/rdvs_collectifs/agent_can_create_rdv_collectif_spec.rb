@@ -4,8 +4,8 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
 
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, basic_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, :collectif, service: service, organisation: organisation) }
+  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", email: "alain@tiptop.fr", service: service, basic_role_in_organisations: [organisation]) }
+  let!(:motif) { create(:motif, :collectif, name: "Atelier administratif", service: service, organisation: organisation) }
 
   let!(:user1) { create(:user, organisations: [organisation]) }
   let!(:user2) { create(:user, organisations: [organisation]) }
@@ -13,23 +13,29 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
 
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
-  let(:now) { Time.zone.parse("2024-01-21 13:00") }
-
   before do
     stub_netsize_ok
-    travel_to(now)
     login_as(agent, scope: :agent)
     # Depuis que les jours fériés sont affichés sur la journée complète dans le calendrier,
     # cela peut nous empêcher de cliquer sur une plage horaire et générer une flaky.
     # On les retire pour ce test
     allow(OffDays).to receive(:to_full_calendar_array).and_return([])
-    visit admin_organisation_agent_agenda_path(organisation, agent)
+    visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: Time.zone.today.next_occurring(:monday))
   end
 
   it "default", js: true do
-    find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click # Click on the agenda
+    # on souhaite faire le parcours en cliquant depuis l’agenda fullcalendar
+    # le travel_to est inopérant côté serveur avec les drivers JS
+    # fullcalendar fournit des classes qui s’étendent en lignes et en colonnes
+    # si on veut cliquer sur un créneau précis ce n’est pas pratique depuis capybara
+    # ici on clique sur une ligne entière, ce qui a pour effet de cliquer au milieu
+    # et c’est donc le mercredi qui est choisi un peu au hasard
+    # en définissant l’offset on arrive à cliquer sur le lundi 😅
+    cal_line = find('.fc-timegrid-slot-lane[data-time="08:30:00"]')
+    cal_line_width = cal_line.evaluate_script("this.clientWidth")
+    cal_line.click(x: -((cal_line_width / 2)) + 10, y: 0)
 
-    select(motif.name, from: "rdv_motif_id")
+    select("Atelier administratif", from: "rdv_motif_id")
     click_button("Continuer")
 
     # Step 2

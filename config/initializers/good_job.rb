@@ -80,5 +80,9 @@ Rails.application.configure do
       cron: "every minute",
       class: "CronJob::IGNHealthCheckJob",
     },
+    notify_sms_factor_low_credits: {
+      cron: "every day at 08:00 Europe/Paris",
+      class: "CronJob::NotifySmsFactorLowCredits",
+    },
   }
 end

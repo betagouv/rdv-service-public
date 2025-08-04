@@ -1,4 +1,4 @@
-= simple_form_for(form, method: "GET", url: url_for({}), as: "") do |f|
+= simple_form_for(form, method: "GET", url: url_for({}), as: "", data: { controller: "form" }) do |f|
   - if current_agent.multiple_organisations_access?
     .row
       .col-md-6
@@ -7,8 +7,10 @@
                 label: "Organisation", \
                 input_html: { \
                   class: "select2-input", \
-                  onchange: "this.form.submit()", \
                   multiple: true, \
+                  data: { \
+                    action: "change->form#submit", \
+                  },
                 }, \
                 wrapper: "horizontal_form"
     hr
@@ -77,4 +79,5 @@
   .d-flex.justify-content-end
     = link_to "Afficher les RDVs du jour", admin_organisation_rdvs_path(current_organisation, start: Time.zone.today, end: Time.zone.today), class: "btn btn-link"
     = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "btn btn-link"
+    = f.hidden_field :per
     input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"

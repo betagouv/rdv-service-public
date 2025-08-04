@@ -33,21 +33,24 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     select_user(user)
     click_link("Ajouter")
-    expect(page).to have_link("Créer un usager")
-    click_link("Créer un usager")
+    expect(page).to have_link("Ajouter un usager")
+    click_link("Ajouter un usager")
 
     # create user with mail
     fill_in :user_first_name, with: "Jean-Paul"
     fill_in :user_last_name, with: "Orvoir"
     fill_in :user_email, with: "jporvoir@bidule.com"
-    click_button("Créer usager")
+    click_button("Enregistrer l'usager")
+    expect(page).to have_content("ORVOIR Jean-Paul")
 
     # create user without email
     click_link("Ajouter")
-    click_link("Créer un usager")
+    click_link("Ajouter un usager")
     fill_in :user_first_name, with: "Jean-Marie"
     fill_in :user_last_name, with: "Lapin"
-    click_button("Créer usager")
+    click_button("Enregistrer l'usager")
+    expect(page).to have_content("LAPIN Jean-Marie")
+
     sleep(1) # wait for modal to hide completely
     fill_in :rdv_context, with: "RDV très spécial"
     click_button("Continuer")
@@ -79,7 +82,10 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     end
 
     fill_in "Durée en minutes", with: "35"
-    fill_in "Commence à", with: "11/10/2019 14:15"
+    # cannot use fill_in here because the datepicker does not autoclose as expected
+    find(:label, "Commence à").click
+    find(".xdsoft_calendar .xdsoft_date", text: "11").click
+    find(".xdsoft_time", text: "14:15").click
     select("DIALO Alain", from: "rdv_agent_ids")
     select("MARTIN Robert", from: "rdv_agent_ids")
     click_button("Continuer")
@@ -111,7 +117,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       expect(rdv.created_by_agent?).to be(true)
       expect(rdv.context).to eq("RDV très spécial")
 
-      expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
+      expect(page).to have_current_path(admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
       expect(page).to have_content("Le rendez-vous a été créé.")
       expect(page).to have_css("*", text: "14:15", visible: :all)
     end
@@ -214,7 +220,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
       expect(rdv.participations.first.created_by_agent?).to be(true)
       expect(rdv.context).to eq("RDV très spécial")
 
-      expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
+      expect(page).to have_current_path(admin_organisation_planning_agenda_path(organisation, agent_id: agent.id, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
       expect(page).to have_content("Le rendez-vous a été créé.")
     end
   end

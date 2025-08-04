@@ -1,6 +1,8 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
+  include Agent::FeatureFlags
+
   # Mixins
   has_paper_trail(
     only: %w[

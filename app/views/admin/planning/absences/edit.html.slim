@@ -1,0 +1,27 @@
+- content_for(:menu_item) { "menu-absences" }
+
+- content_for :title do
+  - if @absence.agent == current_agent
+    = "Modifier votre indisponibilité"
+  - else
+    = "Modifier l’indisponibilité de #{@absence.agent.full_name_or_email}"
+
+- content_for :fil_ariane do
+  - if @absence.agent == current_agent
+    = render "common/fil_ariane",
+            titles_and_paths: [["Accueil", root_path], ["Vos indisponibilités", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
+            current_page_title: yield(:title)
+  - else
+    = render "common/fil_ariane",
+            titles_and_paths: [["Accueil", root_path], ["Indisponibilités de #{@absence.agent.full_name_and_service}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
+            current_page_title: yield(:title)
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = render "form", absence: @absence, agent: @agent
+
+.row.justify-content-center
+  .col-md-12.col-lg-8
+    = render "admin/versions/resource_versions_row", resource_policy: policy(@absence, policy_class: Agent::AbsencePolicy), resource: @absence

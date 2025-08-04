@@ -20,7 +20,7 @@ RSpec.describe "Agent calendar displays rdvs and plages", js: true do
       starts_at: starts_at
     )
 
-    visit admin_organisation_agent_agenda_path(organisation, agent)
+    visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
     expect(page).to have_content("Atelier collectif : Traitement de texte (2/3)")
   end
 
@@ -39,7 +39,7 @@ RSpec.describe "Agent calendar displays rdvs and plages", js: true do
       end_time: "12:00",
       title: "Ceci est le libellé de la plage"
     )
-    visit admin_organisation_agent_agenda_path(organisation, agent)
+    visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
     expect(page).to have_content("Ceci est le libellé de la plage")
 
     click_button "Mois"

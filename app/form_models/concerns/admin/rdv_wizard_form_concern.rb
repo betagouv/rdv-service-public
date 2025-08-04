@@ -65,7 +65,7 @@ module Admin::RdvWizardFormConcern
 
   def previous_step_path
     if step_number <= 1
-      admin_organisation_agent_agenda_path(organisation, agent_author)
+      admin_organisation_planning_agenda_path(organisation, agent_id: agent_author.id)
     else
       path_for_step(step_number - 1)
     end

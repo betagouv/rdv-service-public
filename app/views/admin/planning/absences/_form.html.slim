@@ -1,0 +1,15 @@
+= simple_form_for [:admin, current_organisation, :planning, absence] do |f|
+  = render "model_errors", model: absence
+  = f.hidden_field :agent_id
+
+  = f.input :title, hint:"Uniquement visible en interne", placeholder: t(".absence_example")
+
+  hr
+  = render partial: "common/recurrence", locals: { f: f, model: absence }
+
+  .row
+    - if absence.persisted?
+      .col.text-left
+        = link_to "Supprimer", admin_organisation_planning_absence_path(current_organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_absence")}
+    .col.text-right
+      = f.button :submit

@@ -4,9 +4,9 @@ div
     - date = relative_date(@rdv.starts_at)
     - user = (@user || @author)&.full_name
     - if @rdv.collectif?
-      = t(".created_participation_at_date_by_user", date: date , user: user)
+      | La participation de #{user} au RDV collectif qui aura lieu #{date} vient d’être ajoutée.
     - else
-      = t(".created_at_date_by_user", date: date)
+      | Un nouveau RDV qui aura lieu #{date} vient d’être ajouté à votre agenda.
 
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 

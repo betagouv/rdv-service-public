@@ -2,35 +2,38 @@
 - content_for(:title) { t(".page_title", starts_at: l(@rdv.starts_at, format: :dense)) }
 
 = render "card", rdv_wizard_form: @rdv_wizard, step_title: t(".step_title"), current_step: 1, next_step_title: t("admin.rdv_wizard_steps.step2.step_title")  do
-  = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
-    = render "model_errors", model: @rdv_wizard
-    = render "hidden_fields", f: f, step: 1, \
-      fields: %i[starts_at lieu_id context service_id], \
-      user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids,
-      lieu_attributes: @rdv.nested_lieu_attributes
+  - if @motifs.none?
+    = render "admin/motifs/creation_needed_callout", motivation_text: "Pour prendre un rendez-vous, vous devez d'abord créer un motif."
+  - else
+    = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
+      = render "model_errors", model: @rdv_wizard
+      = render "hidden_fields", f: f, step: 1, \
+        fields: %i[starts_at lieu_id context service_id], \
+        user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids,
+        lieu_attributes: @rdv.nested_lieu_attributes
 
-    - if @services.count > 1
-      = f.input :service_id, \
-        collection: @services, \
+      - if @services.count > 1
+        = f.input :service_id, \
+          collection: @services, \
+          input_html: { \
+            class: "select2-input js-service-filter", \
+            data: { \
+              placeholder: "Sélectionnez un service pour filtrer les motifs", \
+              "select2-config": { disableSearch: true }, \
+            }, \
+          }
+
+      = f.input :motif_id, \
+        label: "Motif du rendez-vous", \
+        required: true, \
+        include_blank: true, \
+        collection: @motifs.to_a.group_by(&:service_name), \
+        as: :grouped_select, \
+        group_method: :last,
+        label_method: -> { motif_name_with_location_and_group_type(_1) }, \
         input_html: { \
-          class: "select2-input js-service-filter", \
-          data: { \
-            placeholder: "Sélectionnez un service pour filtrer les motifs", \
-            "select2-config": { disableSearch: true }, \
-          }, \
+          data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true },
+          class: @services.count > 1 ? "js-filtered-motifs" : "select2-input", \
         }
 
-    = f.input :motif_id, \
-      label: "Motif du rendez-vous", \
-      required: true, \
-      include_blank: true, \
-      collection: @motifs.to_a.group_by(&:service_name), \
-      as: :grouped_select, \
-      group_method: :last,
-      label_method: -> { motif_name_with_location_and_group_type(_1) }, \
-      input_html: { \
-        data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true },
-        class: @services.count > 1 ? "js-filtered-motifs" : "select2-input", \
-      }
-
-    = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
+      = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

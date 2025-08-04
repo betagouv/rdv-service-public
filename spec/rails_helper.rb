@@ -94,7 +94,7 @@ RSpec.configure do |config|
   end
 
   config.around do |example|
-    DatabaseCleaner.strategy = if example.metadata[:js]
+    DatabaseCleaner.strategy = if example.metadata[:js] || ENV["HEADLESS"] == "false"
                                  :truncation
                                else
                                  :transaction
@@ -105,7 +105,7 @@ RSpec.configure do |config|
     end
   end
 
-  config.after(:suite) { SpecToDoc.render }
+  config.after(:suite) { Autodoc.render }
 
   config.before do
     setup_sentry_test

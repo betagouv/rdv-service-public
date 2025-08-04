@@ -158,19 +158,55 @@ RSpec.describe Lieu, type: :model do
   end
 
   describe "#destroy" do
-    it "dont destroy lieu when it have rdvs" do
-      lieu = create(:lieu, organisation: organisation, rdvs: [create(:rdv)])
-      expect(lieu.destroy).to be(false)
+    let!(:lieu) { create(:lieu, organisation:) }
+
+    context "quand le lieu n'a ni rendez-vous ni plage d'ouverture" do
+      it "détruit le lieu" do
+        expect(lieu.destroy).to be_truthy
+        expect(described_class.find_by(id: lieu.id)).to be_nil
+      end
     end
 
-    it "dont destroy lieu when it have plage_ouvertures" do
-      lieu = create(:lieu, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)])
-      expect(lieu.destroy).to be(false)
+    context "quand le lieu a seulement des plages d'ouverture expirées" do
+      let!(:expired_plage_ouverture) { create(:plage_ouverture, lieu:, first_day: 2.days.ago, recurrence: nil) }
+
+      it "détruit le lieu et la plage d'ouverture" do
+        expect(lieu.destroy).to be_truthy
+        expect(described_class.find_by(id: lieu.id)).to be_nil
+        expect(PlageOuverture.find_by(id: expired_plage_ouverture.id)).to be_nil
+      end
     end
 
-    it "destroy lieu without rdvs or plage d'ouverture" do
-      lieu = create(:lieu, organisation: organisation, rdvs: [], plage_ouvertures: [])
-      expect(lieu.destroy).to eq(lieu)
+    context "quand le lieu a seulement des plages d'ouverture à venir" do
+      let!(:upcoming_plage_ouverture) { create(:plage_ouverture, lieu:, first_day: 2.days.from_now) }
+
+      it "ne détruit pas le lieu et lève une erreur" do
+        expect(lieu.destroy).to be false
+        expect(described_class.find_by(id: lieu.id)).to eq(lieu)
+        expect(PlageOuverture.find_by(id: upcoming_plage_ouverture.id)).to eq(upcoming_plage_ouverture)
+      end
+    end
+
+    context "quand le lieu a des plages d'ouverture expirées et à venir" do
+      let!(:expired_plage_ouverture) { create(:plage_ouverture, lieu:, first_day: 2.days.ago, recurrence: nil) }
+      let!(:upcoming_plage_ouverture) { create(:plage_ouverture, lieu:, first_day: 2.days.from_now) }
+
+      it "ne détruit pas le lieu et aucune plage d'ouverture n'est détruite" do
+        expect(lieu.destroy).to be false
+        expect(described_class.find_by(id: lieu.id)).not_to be_nil
+        expect(PlageOuverture.find_by(id: expired_plage_ouverture.id)).not_to be_nil
+        expect(PlageOuverture.find_by(id: upcoming_plage_ouverture.id)).not_to be_nil
+      end
+    end
+
+    context "quand le lieu a des rendez-vous" do
+      before { create(:rdv, lieu:, organisation:) }
+
+      it "ne détruit pas le lieu" do
+        expect(lieu.reload.destroy).to be false # reload is necessary here for some reason
+        expect(lieu.errors.full_messages).to include("Vous ne pouvez pas supprimer l'enregistrement parce que des rdvs dépendant(e)s existent")
+        expect(lieu.rdvs.count).to eq 1
+      end
     end
   end
 

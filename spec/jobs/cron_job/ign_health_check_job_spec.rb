@@ -46,4 +46,16 @@ RSpec.describe CronJob::IGNHealthCheckJob, type: :job do
       expect(Redis.with_connection { |redis| redis.get("ign_api_health_check_failures").to_i }).to eq(3)
     end
   end
+
+  context "quand l’API de l’IGN timeoute" do
+    before do
+      stub_request(:get, "https://data.geopf.fr/geocodage/search?q=1+place+de+la+republique+75011+paris&limit=1")
+        .to_raise(Faraday::TimeoutError)
+    end
+
+    it "incrémente le compteur Redis" do
+      perform_now
+      expect(Redis.with_connection { |redis| redis.get("ign_api_health_check_failures").to_i }).to eq(1)
+    end
+  end
 end

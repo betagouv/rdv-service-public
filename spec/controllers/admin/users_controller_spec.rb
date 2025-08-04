@@ -162,7 +162,7 @@ RSpec.describe Admin::UsersController, type: :controller do
     context "l’usager a été soft-deleted" do
       let!(:user) { create(:user, organisations: [organisation]) }
 
-      before { user.soft_delete }
+      before { user.soft_delete! }
 
       it "redirige avec un message d’erreur" do
         get :show, params: { organisation_id: organisation.id, id: user.id }

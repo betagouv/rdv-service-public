@@ -66,7 +66,7 @@ class Admin::MotifsController < AgentAuthController
     @motif.organisation ||= current_organisation
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.save
-      flash[:success] = "Motif #{link_to_motif(@motif)} créé."
+      flash[:success] = creation_flash
       redirect_to admin_organisation_motifs_path(@motif.organisation)
     else
       render :new
@@ -113,6 +113,15 @@ class Admin::MotifsController < AgentAuthController
   end
 
   private
+
+  def creation_flash
+    if helpers.needs_lieu(current_organisation)
+      link = helpers.link_to("Configuration > Lieux", admin_organisation_lieux_path(current_organisation))
+      "Motif #{@motif.name} créé. Pour finaliser votre configuration, vous pouvez maintenant ajouter un lieu depuis la page #{link}"
+    else
+      "Motif #{link_to_motif(@motif)} créé."
+    end
+  end
 
   def display_sectorisation_level?
     @display_sectorisation_level ||= current_organisation.motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?

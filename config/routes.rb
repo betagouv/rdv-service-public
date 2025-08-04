@@ -9,6 +9,11 @@ Rails.application.routes.draw do
   get "agent_connect/auth" => "agent_connect#auth"
   get "agent_connect/callback" => "agent_connect#callback"
 
+  get "franceconnect_v2/auth" => "france_connect_v2#auth"
+  get "franceconnect_v2/callback" => "france_connect_v2#callback"
+  get "franceconnect_v2/post_logout" => "france_connect_v2#post_logout"
+  get "franceconnect_v2/sector_identifier" => "static_pages#france_connect_sector_identifier"
+
   devise_for :super_admins # necessary for helpers like super_admin_signed_in?
   devise_scope :super_admin do
     get "omniauth/github/callback" => "omniauth_callbacks#github"
@@ -31,6 +36,7 @@ Rails.application.routes.draw do
       get "sign_in_as", on: :member
       post :invite, on: :member
       resources :migrations, only: %i[new create]
+      post :toggle_feature, on: :member, as: :toggle_feature
     end
     resources :agent_roles, only: %i[show edit update destroy]
     resources :agent_territorial_access_rights, only: %i[show edit update]
@@ -220,7 +226,6 @@ Rails.application.routes.draw do
         get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
         get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
 
-        resources :plage_ouvertures, except: %i[index new]
         resources :lieux, except: :show
         resources :motifs do
           member do
@@ -264,14 +269,14 @@ Rails.application.routes.draw do
           end
           resources :referent_assignations, only: %i[index create destroy]
         end
-        resources :absences, except: %i[index show new]
-        resources :agent_agendas, only: %i[show] do
-          put :toggle_displays, on: :member
-        end
         resources :agent_intervenants, only: %i[update]
-        resources :agents, except: %i[show] do
-          resources :absences, only: %i[index new]
-          resources :plage_ouvertures, only: %i[index new] do
+        resources :agents, except: %i[show]
+        namespace :planning do
+          get :agenda, to: "agendas#show"
+          put :toggle_displays, to: "agendas#toggle_displays"
+
+          resources :absences
+          resources :plage_ouvertures do
             collection do
               get :calendar
             end
@@ -391,18 +396,15 @@ Rails.application.routes.draw do
   }
 
   if Rails.env.development?
-    namespace :lapin do
-      resources :sms_preview, only: %i[index] do
-        get ":action_name", to: "sms_preview#preview", as: "preview"
-      end
-    end
-
     # LetterOpener
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 
   ## APIs
   draw :api
+
+  # Évite de casser les anciennes routes vers l'agenda, les plages et les absences
+  draw :legacy_planning_routes_redirects
 
   match "/404", to: "errors#not_found", via: :all
   match "/500", to: "errors#internal_server_error", via: :all

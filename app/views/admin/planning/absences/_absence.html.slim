@@ -1,0 +1,25 @@
+tr
+  td
+    = link_to absence.title,  edit_admin_organisation_planning_absence_path(current_organisation, absence)
+    = absence_tag(absence)
+  td
+    | Du #{l(absence.starts_at, format: :human)} au #{l(absence.first_occurrence_ends_at, format: :human)}
+
+    - if absence.recurrence.present?
+      br
+      | Se répète&nbsp;:
+      br
+      = sanitize(display_recurrence(absence).join("<br/>"))
+  td
+    .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.rdv-gap-05rem
+      = link_to "",  edit_admin_organisation_planning_absence_path(current_organisation, absence),
+              title: t("helpers.edit"),
+              class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
+      = link_to "", new_admin_organisation_planning_absence_path(current_organisation, absence.agent, duplicate_absence_id: absence),
+              title: t("helpers.clone"),
+              class: "fr-btn fr-btn--tertiary fr-icon-clipboard-fill"
+      = link_to "", admin_organisation_planning_absence_path(current_organisation, absence),
+              method: :delete,
+              title: t("helpers.delete"),
+              data: { confirm: t(".confirm_delete_absence")},
+                class: "fr-btn fr-btn--tertiary fr-icon-delete-bin-fill"

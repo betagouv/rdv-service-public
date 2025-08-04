@@ -1,0 +1,15 @@
+- content_for(:menu_item) { "menu-plages-ouvertures" }
+
+- content_for :title do
+  - if @plage_ouverture.agent == current_agent
+    | Modifier votre plage d'ouverture
+  - else
+    | Modifier la plage d'ouverture de #{@plage_ouverture.agent.full_name_or_email}
+
+- content_for :fil_ariane do
+  - if current_agent == @plage_ouverture.agent
+    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Plages d’ouverture", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
+  - else
+    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Plages d’ouverture de #{@plage_ouverture.agent.full_name_and_service}", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
+
+= render "form", plage_ouverture: @plage_ouverture, agent: @agent

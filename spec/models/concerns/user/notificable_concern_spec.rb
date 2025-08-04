@@ -8,6 +8,14 @@ RSpec.describe User::NotificableConcern do
       it { is_expected.to be_truthy }
     end
 
+    context "user is soft deleted" do
+      let(:user) { create(:user, email: "jean@lol.fr", notify_by_email: true) }
+
+      before { user.soft_delete! }
+
+      it { is_expected.to be_falsy }
+    end
+
     context "user has email but email notifications disabled" do
       let(:user) { build(:user, email: "jean@lol.fr", notify_by_email: false) }
 
@@ -34,6 +42,14 @@ RSpec.describe User::NotificableConcern do
       let(:user) { build(:user, phone_number: "0634343434", notify_by_sms: true) }
 
       it { is_expected.to be_truthy }
+    end
+
+    context "user is soft deleted" do
+      let(:user) { create(:user, phone_number: "0634343434", notify_by_sms: true) }
+
+      before { user.soft_delete! }
+
+      it { is_expected.to be_falsy }
     end
 
     context "user has phone number but SMS notifications disabled" do

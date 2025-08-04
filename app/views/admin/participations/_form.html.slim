@@ -1,15 +1,18 @@
 / Component: the form inputs for a participation
 
 - participation = form.object
-- element_id = "participations-form-#{participation.user.id}"
 
-div id=element_id
+div data-controller="destroyable"
   = form.hidden_field :user_id
   h6
     i.fa.fa-user-alt.mr-1
     = render "admin/users/identity", user: participation.user
     - if participation.rdv.persisted?
-      = render "common/destroy_button", form: form, id: element_id
+      = form.hidden_field :_destroy, "data-target": "destroyable.destroyInput"
+      button.btn.btn-sm.btn-link type="button" data-action="destroyable#destroyItem"
+        i.fa.fa-minus-circle.mr-1
+        = t("helpers.delete")
+
   .ml-3
     = render "admin/users/notifications_preferences", user: participation.user.user_to_notify
     - if participation.user.user_to_notify.valid_email? || participation.user.user_to_notify.phone_number.present?

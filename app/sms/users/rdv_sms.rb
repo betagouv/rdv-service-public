@@ -3,10 +3,11 @@ class Users::RdvSms < Users::BaseSms
   extend ActionView::Helpers::TextHelper
 
   def rdv_title(rdv)
-    [
-      rdv.service_short_name,
-      (truncated_rdv_name if rdv.collectif? && rdv.name.present?).presence,
-    ].compact.join(" : ")
+    if rdv.collectif? && rdv.name.present?
+      "#{rdv.service_short_name} : #{truncated_rdv_name},"
+    else
+      rdv.service_short_name
+    end
   end
 
   def rdv_created(rdv, user, token)

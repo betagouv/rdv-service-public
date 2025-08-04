@@ -1,7 +1,0 @@
-<% creneaux_html = render 'creneaux' %>
-(function(){
-  let element = document.querySelector("#creneaux-lieu");
-  if(element) {
-    element.innerHTML = "<%= escape_javascript creneaux_html %>";
-  }
-})();

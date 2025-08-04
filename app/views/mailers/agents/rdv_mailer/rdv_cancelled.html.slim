@@ -4,13 +4,13 @@ div
     - date = relative_date(@rdv.starts_at)
     - author = @author.full_name
     - if @rdv.status == "revoked"
-      = t(".revoked_at_date_by_agent", date: date , author: author)
+      | Un RDV qui devait avoir lieu #{date} vient d’être annulé par #{author} pour raison administrative.
     - elsif @author.is_a? Agent
-      = t(".cancelled_at_date_by_agent", date: date , author: author)
+      | Un RDV qui devait avoir lieu #{date} vient d’être annulé par #{author} à la demande de l’usager.
     - elsif @author.is_a?(User) && @rdv.collectif?
-      = t(".cancelled_participation_at_date_by_user", date: date , author: author)
+      | La participation au RDV collectif #{date} vient d’être annulé par l’usager #{author}.
     - else
-      = t(".cancelled_at_date_by_user", date: date , author: author)
+      | Un RDV qui devait avoir lieu #{date} vient d’être annulé par l’usager #{author}.
 
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 

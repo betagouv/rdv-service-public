@@ -47,8 +47,6 @@ gem "pg_search"
 gem "strong_migrations"
 # A pagination engine plugin for Rails 4+ and other modern frameworks
 gem "kaminari"
-# Bootstrap 4 styling for Kaminari gem
-gem "bootstrap4-kaminari-views"
 # A Rails engine for creating super-flexible admin dashboards
 gem "administrate"
 # Track changes to your models.
@@ -233,11 +231,7 @@ group :test do
   gem "rspec-wait"
 
   # Accessibility
-
-  # Axe API utility methods
-  gem "axe-core-api"
-  # RSpec custom matchers for Axe
-  gem "axe-core-rspec", "4.3.2"
+  # aXe is now required as a JS package
 
   # Web browser simulation
 
@@ -246,9 +240,9 @@ group :test do
   # Test your ActionMailer and Mailer messages in Capybara
   gem "capybara-email"
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails
-  gem "capybara-screenshot"
-  # Selenium is a browser automation tool for automated testing of webapps and more
-  gem "selenium-webdriver"
+  gem "capybara-screenshot", git: "https://github.com/mattheworiordan/capybara-screenshot.git", ref: "23a27be"
+  # Playwright is an alternative to Selenium
+  gem "capybara-playwright-driver"
 
   # Strategies for cleaning databases. Can be used to ensure a clean slate for testing.
   gem "database_cleaner"

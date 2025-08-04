@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_17_121151) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_24_145810) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -235,6 +235,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_121151) do
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
     t.boolean "connected_with_agent_connect", default: false, null: false
     t.string "proconnect_siret"
+    t.jsonb "feature_flags", default: {}
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -842,6 +843,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_121151) do
     t.index ["last_name"], name: "index_users_on_last_name"
     t.index ["notification_email"], name: "index_users_on_notification_email", where: "(notification_email IS NOT NULL)"
     t.index ["phone_number_formatted"], name: "index_users_on_phone_number_formatted"
+    t.index ["pro_connect_openid_sub"], name: "index_users_on_pro_connect_openid_sub", where: "(pro_connect_openid_sub IS NOT NULL)"
     t.index ["rdv_invitation_token"], name: "index_users_on_rdv_invitation_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["responsible_id"], name: "index_users_on_responsible_id"
