@@ -6,41 +6,6 @@
     - if @form.users.any?
       h6.card-subtitle.mb-2 = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
   .card-body
-<<<<<<< HEAD
-    = simple_form_for(@form, as: "", url: admin_organisation_creneaux_search_path(current_organisation), method: :get) do |f|
-      - @form.user_ids.each do |user_id|
-        = hidden_field_tag "user_ids[]", user_id
-      - if @form.context.present?
-        = hidden_field_tag :context, @form.context
-      .row
-        .col-md-4
-          = f.input :service_id, \
-            collection: @services, \
-            input_html: { \
-              class: "select2-input js-service-filter", \
-              data: { \
-                placeholder: "Sélectionnez un service pour filtrer les motifs", \
-                "select2-config": { disableSearch: true }, \
-              }, \
-            }
-        .col-md-4
-          = f.input :motif_id, \
-            required: true, \
-            include_blank: true, \
-            collection: @motifs.to_a.group_by(&:service_name), \
-            as: :grouped_select, \
-            group_method: :last,
-            label_method: -> { motif_name_and_location_type(_1) }, \
-            input_html: { \
-              data: { placeholder: "Sélectionnez un motif" }, \
-              class: "js-filtered-motifs", \
-            }
-        .col-md-4
-          - input_html = { data: { "min-date": Time.zone.today.strftime("%d/%m/%Y") } } # prevent from selecting past dates
-          = date_input(f, :from_date, "À partir du", input_html: input_html, required: true)
-      .row
-        - if @teams.any?
-=======
     - if @motifs.none?
       = render "admin/motifs/creation_needed_callout", motivation_text: "Pour prendre un rendez-vous, vous devez d'abord créer un motif."
     - else
@@ -50,7 +15,6 @@
         - if @form.context.present?
           = hidden_field_tag :context, @form.context
         .row
->>>>>>> production
           .col-md-4
             = f.input :service_id, \
               collection: @services, \
@@ -65,7 +29,7 @@
             = f.input :motif_id, \
               required: true, \
               include_blank: true, \
-              collection: @motifs.includes(:service).to_a.group_by(&:service_name), \
+              collection: @motifs.to_a.group_by(&:service_name), \
               as: :grouped_select, \
               group_method: :last,
               label_method: -> { motif_name_and_location_type(_1) }, \
