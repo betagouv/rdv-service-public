@@ -1,6 +1,6 @@
 - title = @motif.name
-- title += "(#{@motif.service_short_name})" if @motif.service_short_name
-- title += "(archivé)" if @motif.archived?
+- title += " (#{@motif.service_short_name})" if @motif.service_short_name
+- title += " (archivé)" if @motif.archived?
 
 - content_for :title, title
 

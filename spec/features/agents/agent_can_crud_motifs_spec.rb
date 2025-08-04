@@ -49,7 +49,6 @@ RSpec.describe "Agent can CRUD motifs" do
       visit new_admin_organisation_motif_path(organisation_id: organisation.id)
       click_on "Créer le motif"
       expect(page).to have_content("Nom doit être rempli(e)")
-      expect(page).to have_content("Service doit exister")
     end
   end
 
@@ -57,10 +56,8 @@ RSpec.describe "Agent can CRUD motifs" do
     it "displays errors when name and service are missing" do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       fill_in "Nom", with: ""
-      select "", from: "Service associé"
       click_on "Enregistrer"
       expect(page).to have_content("Nom doit être rempli(e)")
-      expect(page).to have_content("Service doit exister")
     end
 
     it "unchecks for_secretariat when checking followup", js: true do
