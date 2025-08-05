@@ -26,15 +26,6 @@ module Users::CreneauxWizardConcern
     query_params[:date]&.to_date || super
   end
 
-  def wizard_after_creneau_selection_path(params)
-    url_helpers = Rails.application.routes.url_helpers
-    if @prescripteur
-      url_helpers.prescripteur_start_path(query_params.merge(params))
-    else
-      url_helpers.new_users_rdv_wizard_step_path(query_params.merge(params))
-    end
-  end
-
   def user_selected_organisation
     @user_selected_organisation ||=
       @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil

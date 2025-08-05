@@ -5,11 +5,13 @@ class Admin::PrescriptionController < AgentAuthController
   def search_creneau
     skip_authorization
     session[:agent_prescripteur_organisation_id] = params[:organisation_id]
-    starting_conditions = CreneauWizardForUsers::StartingConditions.new(prescripteur: Prescripteur::INTERNE)
+    starting_conditions = CreneauWizardForUsers::StartingConditions.new(
+      prescripteur: Prescripteur::INTERNE,
+      current_organisation: current_organisation
+    )
     @context = AgentPrescriptionSearchContext.new(
       user: user,
       query_params: search_context_params.merge(prescripteur: Prescripteur::INTERNE),
-      current_organisation: current_organisation,
       starting_conditions:,
       agent_prescripteur: current_agent
     )

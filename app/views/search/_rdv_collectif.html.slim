@@ -1,3 +1,5 @@
+/# locals: (rdv:, creneau_selection_service:)
+
 li.card
   .card-body
     - if rdv.name.present?
@@ -27,4 +29,4 @@ li.card
         span.fr-icon-success-line.fr-mr-1w[aria-hidden="true"]
         = "Vous êtes déjà inscrit pour cet atelier."
     - else
-      = link_to "S'inscrire", @context.wizard_after_creneau_selection_path(rdv_collectif_id: rdv.id), class: "fr-btn fr-btn--secondary fr-icon-user-add-line fr-btn--icon-left"
+      = link_to "S'inscrire", creneau_selection_service.wizard_after_creneau_selection_path(rdv_collectif_id: rdv.id), class: "fr-btn fr-btn--secondary fr-icon-user-add-line fr-btn--icon-left"

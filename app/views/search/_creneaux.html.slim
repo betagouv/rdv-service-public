@@ -22,7 +22,7 @@ div id="creneaux-lieu-#{lieu&.id}"
               .fr-grid-row
                 - creneaux_by_date[date].sort.each do |creneau|
                   - autofocus = (@context.autofocus == "first" && creneau == creneaux.min) || (@context.autofocus == "last" && creneau == creneaux.max)
-                  = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at),
+                  = link_to creneau_selection_service.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at),
                           class: "fr-col-12 fr-btn fr-btn--tertiary fr-mb-1w rdv-justify-content-center",
                           data: { turbolinks: false },
                           aria: { label: "Choisir le créneau du #{l(creneau.starts_at, format: '%A %-d %b')} à #{l(creneau.starts_at, format: '%H:%M')}"},
