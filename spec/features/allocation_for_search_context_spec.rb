@@ -1,4 +1,6 @@
 RSpec.describe "Allocation For Search Context" do
+  let(:starting_conditions) { CreneauWizardForUsers::StartingConditions.new }
+
   it "stay under 5500" do
     departement_number = "75"
     address = "20 avenue de Ségur 75007 Paris"
@@ -19,7 +21,7 @@ RSpec.describe "Allocation For Search Context" do
 
     params = { address: address, departement: departement_number, city_code: city_code, lieu_id: lieu.id, motif_name_with_location_type: "#{motif.name}-#{motif.location_type}" }
 
-    search_context = WebSearchContext.new(user: nil, query_params: params)
+    search_context = WebSearchContext.new(user: nil, query_params: params, starting_conditions:)
 
     before = GC.stat[:total_allocated_objects]
     search_context.unique_motifs_by_name_and_location_type
