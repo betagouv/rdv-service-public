@@ -1,8 +1,13 @@
 class SearchContext
-  def initialize(user:, query_params: {})
+  def initialize(user:, starting_conditions:, query_params: {})
     @user = user
+    @starting_conditions = starting_conditions
     @query_params = query_params
   end
+
+  attr_reader :starting_conditions
+
+  delegate :creneaux, to: :creneaux_search
 
   def geo_search
     Users::GeoSearch.new(departement: departement, city_code: city_code, street_ban_id: street_ban_id)
@@ -16,16 +21,12 @@ class SearchContext
     Time.zone.today
   end
 
-  def creneaux
-    @creneaux ||= creneaux_search.creneaux
-  end
-
   def available_collective_rdvs
     @available_collective_rdvs ||= creneaux_search.available_collective_rdvs
   end
 
   def creneaux_search
-    creneaux_search_for(lieu, first_matching_motif)
+    @creneaux_search ||= creneaux_search_for(lieu, first_matching_motif)
   end
 
   def first_matching_motif

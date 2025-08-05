@@ -9,8 +9,8 @@ class AgentPrescriptionSearchContext < WebSearchContext
     },
   ].freeze
 
-  def initialize(user:, current_organisation:, agent_prescripteur:, query_params: {})
-    super(user: user, query_params: query_params)
+  def initialize(user:, current_organisation:, agent_prescripteur:, starting_conditions:, query_params: {})
+    super(user: user, query_params: query_params, starting_conditions: starting_conditions)
     @current_organisation = current_organisation
     @agent_prescripteur = agent_prescripteur
   end

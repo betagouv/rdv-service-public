@@ -96,10 +96,6 @@ module Users::CreneauxWizardConcern
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
-  def no_availability?
-    creneaux.empty? && next_availability.nil?
-  end
-
   def after_max_public_booking_delay?(date)
     # On a déjà le first_matching_motif en mémoire au moment où on appelle cette méthode
     # Dans la plupart des cas, tous les motifs ont le même max_booking_delay

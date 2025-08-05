@@ -36,10 +36,11 @@ class SearchController < ApplicationController
     if current_agent && params[:prescripteur] == Prescripteur::INTERNE && session[:agent_prescripteur_organisation_id]
       redirect_to search_creneau_admin_organisation_prescription_path(session[:agent_prescripteur_organisation_id], agent_search_params)
     else
+      starting_conditions = CreneauWizardForUsers::StartingConditions.new(**params.permit(:prescripteur))
       @context = if invitation&.to_take_rdv?
-                   WebInvitationSearchContext.new(user: current_user, query_params: search_params.merge(invitation.query_params))
+                   WebInvitationSearchContext.new(user: current_user, query_params: search_params.merge(invitation.query_params), starting_conditions:)
                  else
-                   WebSearchContext.new(user: current_user, query_params: search_params)
+                   WebSearchContext.new(user: current_user, query_params: search_params, starting_conditions:)
                  end
 
       if !current_domain.provides_address_selection? && @context.current_step == :address_selection
