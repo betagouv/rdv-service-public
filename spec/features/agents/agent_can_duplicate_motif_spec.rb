@@ -1,16 +1,13 @@
-# TODO: voir s'il faut faire une variante sans service
 RSpec.describe "agent can duplicate motif" do
   let(:territory) { create(:territory).tap { _1.motif_categories << create(:motif_category, name: "Cat de motif") } }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-  let(:motif_service) { create(:service, name: "Service du motif à dupliquer") }
 
   let(:existing_motif) do
     create(
       :motif,
       organisation: organisation,
       motif_category: territory.motif_categories.first,
-      service: motif_service,
       name: "Motif à créer 18 fois",
       default_duration_in_min: 28,
       color: "#00ffff",
@@ -26,10 +23,6 @@ RSpec.describe "agent can duplicate motif" do
       instruction_for_rdv: "Venez très très très tôt",
       custom_cancel_warning_message: "Êtes-vous sûr d'être certain ?"
     )
-  end
-
-  before do
-    organisation.territory.services << motif_service
   end
 
   it "works" do
@@ -53,7 +46,7 @@ RSpec.describe "agent can duplicate motif" do
   context "when agent is in multiple organisations" do
     let(:other_organisation) { create(:organisation, name: "Mon autre orga", territory: territory) }
     let!(:motif_in_other_orga) do
-      create(:motif, organisation: other_organisation, name: existing_motif.name, service: existing_motif.service, location_type: existing_motif.location_type)
+      create(:motif, organisation: other_organisation, name: existing_motif.name, location_type: existing_motif.location_type)
     end
 
     before do
