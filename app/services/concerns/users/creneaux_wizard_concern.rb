@@ -2,13 +2,10 @@ module Users::CreneauxWizardConcern
   extend ActiveSupport::Concern
 
   # *** Method that outputs the current step for the user to complete its rdv journey ***
-  # rubocop:disable Metrics/PerceivedComplexity
   def current_step
     if departement.blank? && query_params[:public_link_organisation_id].blank?
       :address_selection
-    elsif !service_selected?
-      :service_selection
-    elsif !motif_selected?
+    elsif !motif_param_present?
       :motif_selection
     elsif requires_ants_pre_demandes_count_selection?
       :ants_pre_demandes_count_selection
@@ -20,7 +17,6 @@ module Users::CreneauxWizardConcern
       :creneau_selection
     end
   end
-  # rubocop:enable Metrics/PerceivedComplexity
 
   def start_date
     query_params[:date]&.to_date || super
@@ -31,30 +27,6 @@ module Users::CreneauxWizardConcern
       @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
   end
 
-  def unique_motifs_by_name_and_location_type
-    @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq(&:name_with_location_type)
-  end
-
-  def motifs_grouped_by_service_id
-    @motifs_grouped_by_service_id ||= matching_motifs.group_by(&:service_id)
-  end
-
-  def service
-    @service ||= if @service_id.present?
-                   Service.find(@service_id)
-                 elsif services.count == 1
-                   services.first
-                 end
-  end
-
-  def services
-    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by { |service| I18n.transliterate(service.name.downcase) }
-  end
-
-  def follow_up_motifs?
-    @follow_up_motifs ||= Motif.where(service: services).where.not(bookable_by: :agents).exists?(follow_up: true, deleted_at: nil)
-  end
-
   def next_availability
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
@@ -63,15 +35,6 @@ module Users::CreneauxWizardConcern
 
   def requires_organisation_selection?
     !first_matching_motif.requires_lieu? && user_selected_organisation.nil? && public_link_organisation.nil?
-  end
-
-  def motif_selected?
-    motif_param_present? &&
-      unique_motifs_by_name_and_location_type.length == 1
-  end
-
-  def service_selected?
-    service.present?
   end
 
   def requires_lieu_selection?

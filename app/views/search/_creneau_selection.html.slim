@@ -15,7 +15,7 @@
       ul.fr-raw-list
         - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
           = render "search/rdv_collectif", rdv: rdv, creneau_selection_service: creneau_selection_service
-    - elsif context.unique_motifs_by_name_and_location_type.present?
+    - elsif context.matching_motifs.present?
       .card.mb-3
         .card-body
           = render "search/creneaux", lieu: context.lieu, creneaux: creneau_selection_service.creneaux, date_range: context.date_range, next_availability: context.next_availability, query_params: context.query_params, context: context, creneau_selection_service: creneau_selection_service
