@@ -19,7 +19,7 @@ RSpec.describe Agents::UsersController, "#search" do
       get search_agents_users_path(organisation_id: organisation_of_agent, term: "mari")
 
       expect(parsed_response_body[:results].size).to eq(2)
-      expect(response.body).to include("DELORGA Marion - 01/01/1990 - 06 11 22 33 44 - marion@example.com")
+      expect(response.body).to include("DELORGA Marion - 1/01/1990 - 06 11 22 33 44 - marion@example.com")
       expect(response.body).to include("DUTERRITOIRE Marine - 01/01/**** - 06******44 - m******e@example.com")
     end
 
@@ -31,7 +31,7 @@ RSpec.describe Agents::UsersController, "#search" do
         get search_agents_users_path(organisation_id: organisation_of_agent, term: "mari")
 
         expect(parsed_response_body[:results].size).to eq(1)
-        expect(response.body).to include("DELORGA Marion - 01/01/1990 - 06 11 22 33 44 - marion@example.com")
+        expect(response.body).to include("DELORGA Marion - 1/01/1990 - 06 11 22 33 44 - marion@example.com")
         expect(response.body).not_to include("DUTERRITOIRE")
       end
     end
