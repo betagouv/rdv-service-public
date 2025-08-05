@@ -74,7 +74,7 @@ org_arques = human_id_map["1030"][:organisation]
 
 # SERVICES
 
-service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", short_name: "PMI")
+service_pmi = Service.create!(name: "Protection Maternelle Infantile", short_name: "PMI")
 service_social = Service.create!(name: "Service social", short_name: "Service Social")
 service_secretariat = Service.create!(name: Service::SECRETARIAT, short_name: "Secrétariat")
 territory62.services << [service_pmi, service_social, service_secretariat]
