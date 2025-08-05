@@ -65,10 +65,10 @@ module RdvExporter
   def self.row_array_from(rdv)
     [
       rdv.created_at.year,
-      I18n.l(rdv.created_at.to_date),
+      I18n.l(rdv.created_at.to_date, format: "%d/%m/%Y"),
       I18n.l(rdv.created_at, format: :time_only),
       Rdv.human_attribute_value(:created_by_type, rdv.created_by_type, disable_cast: true),
-      I18n.l(rdv.starts_at.to_date),
+      I18n.l(rdv.starts_at.to_date, format: "%d/%m/%Y"),
       I18n.l(rdv.starts_at, format: :time_only),
       rdv.motif.service_name,
       rdv.motif_name,
