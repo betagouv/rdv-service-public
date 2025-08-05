@@ -124,4 +124,17 @@ RSpec.describe Agent::MotifPolicy do
       expect(policy.versions?).to be_falsey
     end
   end
+
+  describe Agent::MotifPolicy::Scope do
+    context "for a basic agent" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [motif.organisation], service: motif.service) }
+      let!(:motif_without_service) { create(:motif, service: nil, organisation: motif.organisation) }
+      let!(:motif_from_other_service) { create(:motif, service: create(:service), organisation: motif.organisation) }
+
+      it "returns the motifs of the agent's service and the motifs without services" do
+        visible_motifs = described_class.new(agent, Motif.all).resolve
+        expect(visible_motifs).to contain_exactly(motif, motif_without_service)
+      end
+    end
+  end
 end
