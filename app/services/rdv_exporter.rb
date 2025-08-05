@@ -81,7 +81,7 @@ module RdvExporter
       rdv.users.any?(&:minor?) ? "oui" : "non",
       Receipt.human_attribute_value(:result, rdv.synthesized_receipts_result),
       rdv.organisation.name,
-      rdv.users.map(&:birth_date).compact.map { |date| I18n.l(date) }.join(", "),
+      rdv.users.map(&:birth_date).compact.map { |date| I18n.l(date, format: "%d/%m/%Y") }.join(", "),
       code_postal_premier_responsable(rdv),
       rdv.author,
       rdv.agents.map(&:email).join(", "),
