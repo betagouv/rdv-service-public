@@ -8,6 +8,10 @@ class CreneauWizardForUsers::Steps::CreneauSelection
     creneaux.empty? && @context.next_availability.nil?
   end
 
+  def next_availability
+    @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
+  end
+
   delegate :creneaux, to: :creneaux_search
 
   def after_max_public_booking_delay?(date)

@@ -22,10 +22,6 @@ module Users::CreneauxWizardConcern
     query_params[:date]&.to_date || super
   end
 
-  def next_availability
-    @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
-  end
-
   private
 
   def requires_organisation_selection?
