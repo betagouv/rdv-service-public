@@ -85,6 +85,7 @@
                }
             = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids), role: default_service_selection_from(@rdv.motif.service))
 
-          .text-right
-            = link_to t("helpers.back"), admin_organisation_rdvs_collectifs_path(current_organisation), class: "btn btn-link"
-            = f.button :submit, t("helpers.submit.submit")
+          .fr-grid-row.fr-grid-row--gutters
+            .fr-col.rdv-justify-content-space-between.d-flex
+              = link_to t("helpers.back"), admin_organisation_rdvs_collectifs_path(current_organisation), class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
+              = f.submit t("helpers.submit.submit"), class: "fr-btn"
