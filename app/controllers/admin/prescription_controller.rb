@@ -9,12 +9,15 @@ class Admin::PrescriptionController < AgentAuthController
       prescripteur: Prescripteur::INTERNE,
       current_organisation: current_organisation
     )
+
     @context = AgentPrescriptionSearchContext.new(
       user: user,
       query_params: search_context_params.merge(prescripteur: Prescripteur::INTERNE),
       starting_conditions:,
       agent_prescripteur: current_agent
     )
+
+    @current_step = CreneauWizardForUsers::CurrentStepPicker.new(@context).current_step
   end
 
   def user_selection
