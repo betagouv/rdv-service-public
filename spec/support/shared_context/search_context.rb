@@ -17,6 +17,7 @@ RSpec.shared_examples "SearchContext" do
       latitude: latitude, longitude: longitude,
     }
   end
+  let(:starting_conditions) { CreneauWizardForUsers::StartingConditions.new }
 
   let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: motif.id)) }
 
@@ -93,7 +94,7 @@ RSpec.shared_examples "SearchContext" do
       motif_a = create(:motif, service: service_a)
       motif_b = create(:motif, service: service_b)
       matching_motifs = Motif.where(id: [motif_a.id, motif_b.id])
-      search_context = described_class.new(user: nil, query_params: { motif_name_with_location_type: "" })
+      search_context = described_class.new(user: nil, query_params: { motif_name_with_location_type: "" }, starting_conditions:)
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.services).to eq([service_a, service_b])
     end
@@ -102,14 +103,14 @@ RSpec.shared_examples "SearchContext" do
   describe "#service" do
     it "returns service from service_id params when given" do
       service = create(:service)
-      search_context = described_class.new(user: nil, query_params: { service_id: service.id })
+      search_context = described_class.new(user: nil, query_params: { service_id: service.id }, starting_conditions:)
       expect(search_context.service).to eq(service)
     end
 
     it "returns service from selected motif" do
       motif = create(:motif)
       matching_motifs = Motif.where(id: motif.id)
-      search_context = described_class.new(user: nil, query_params: {})
+      search_context = described_class.new(user: nil, query_params: {}, starting_conditions:)
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.service).to eq(motif.service)
     end
@@ -118,13 +119,13 @@ RSpec.shared_examples "SearchContext" do
       motif = create(:motif)
       autre_motif = create(:motif, service: motif.service)
       matching_motifs = Motif.where(id: [motif.id, autre_motif.id])
-      search_context = described_class.new(user: nil, query_params: {})
+      search_context = described_class.new(user: nil, query_params: {}, starting_conditions:)
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.service).to eq(motif.service)
     end
 
     it "returns nil without motifs or service_id" do
-      search_context = described_class.new(user: nil, query_params: {})
+      search_context = described_class.new(user: nil, query_params: {}, starting_conditions:)
       matching_motifs = Motif.none
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.service).to be_nil
@@ -134,7 +135,7 @@ RSpec.shared_examples "SearchContext" do
       motif = create(:motif)
       autre_motif = create(:motif)
       matching_motifs = Motif.where(id: [motif.id, autre_motif.id])
-      search_context = described_class.new(user: nil, query_params: {})
+      search_context = described_class.new(user: nil, query_params: {}, starting_conditions:)
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.service).to be_nil
     end
@@ -145,7 +146,7 @@ RSpec.shared_examples "SearchContext" do
       it "returns a CreneauxSearch::ForUser using the lieu and the first matching motif" do
         plage_ouverture = create(:plage_ouverture, motifs: [motif, motif2], organisation: organisation)
         lieu = plage_ouverture.lieu
-        search_context = described_class.new(user:, query_params: query_params.merge(lieu_id: lieu.id))
+        search_context = described_class.new(user:, query_params: query_params.merge(lieu_id: lieu.id), starting_conditions:)
 
         expect(CreneauxSearch::ForUser).to receive(:new).with(
           user: user,
@@ -164,10 +165,7 @@ RSpec.shared_examples "SearchContext" do
 
       it "returns a CreneauxSearch::ForUser using no lieu and the selected motif" do
         create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
-        search_context = described_class.new(
-          user:,
-          query_params: query_params
-        )
+        search_context = described_class.new(user:, query_params:, starting_conditions:)
 
         expect(CreneauxSearch::ForUser).to receive(:new).with(
           user: user,
@@ -184,18 +182,18 @@ RSpec.shared_examples "SearchContext" do
 
   describe "#filter_motifs" do
     it "returns empty without motifs" do
-      search_context = described_class.new(user: nil)
+      search_context = described_class.new(user: nil, starting_conditions:)
       expect(search_context.filter_motifs(Motif.none)).to be_empty
     end
 
     it "returns given motif without specific params" do
-      search_context = described_class.new(user: nil)
+      search_context = described_class.new(user: nil, starting_conditions:)
       motif = create(:motif)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
     end
 
     it "returns collective motif" do
-      search_context = described_class.new(user: nil)
+      search_context = described_class.new(user: nil, starting_conditions:)
       motif = create(:motif, collectif: true)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
     end
@@ -203,7 +201,7 @@ RSpec.shared_examples "SearchContext" do
     it "returns collective motif with lieu_id" do
       organisation = create(:organisation)
       lieu = create(:lieu, organisation:)
-      search_context = described_class.new(user: nil, query_params: { lieu_id: lieu.id })
+      search_context = described_class.new(user: nil, query_params: { lieu_id: lieu.id }, starting_conditions:)
       motif = create(:motif, collectif: true, organisation:)
       create(:rdv, motif: motif, lieu: lieu, organisation:)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
@@ -211,7 +209,7 @@ RSpec.shared_examples "SearchContext" do
 
     it "returns individual motif with lieu_id" do
       lieu = create(:lieu)
-      search_context = described_class.new(user: nil, query_params: { lieu_id: lieu.id })
+      search_context = described_class.new(user: nil, query_params: { lieu_id: lieu.id }, starting_conditions:)
       motif = create(:motif, collectif: false)
       create(:plage_ouverture, motifs: [motif], lieu: lieu)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
