@@ -19,12 +19,11 @@ RSpec.describe Users::GeoSearch, type: :service_model do
     let!(:plage_ouverture_service2) { create(:plage_ouverture, motifs: [motif_service2], organisation: organisation1) }
     let!(:plage_ouverture_orga2) { create(:plage_ouverture, motifs: [motif_orga2], organisation: organisation2) }
 
-    it "filters available motifs and services" do
+    it "filters available motifs" do
       expect(subject.available_motifs).to include(motif_ok)
       expect(subject.available_motifs).to include(motif_service2)
       expect(subject.available_motifs).to include(motif_orga2)
       expect(subject.available_motifs).not_to include(motif_no_plage_ouverture)
-      expect(subject.available_services).to include(service1, service2)
     end
   end
 
@@ -76,7 +75,6 @@ RSpec.describe Users::GeoSearch, type: :service_model do
       expect(subject.available_motifs).to include(motifs_orga1[4])
       expect(subject.available_motifs).to include(motifs_orga2[0])
       expect(subject.available_motifs).not_to include(motifs_orga2[1]) # no plage ouvertures
-      expect(subject.available_services).to include(service1)
     end
   end
 

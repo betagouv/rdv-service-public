@@ -36,10 +36,6 @@ class Users::GeoSearch
     @matching_sectors ||= Sector.where(id: matching_zones&.pluck(:sector_id))
   end
 
-  def available_services
-    @available_services ||= Service.where(id: available_motifs.pluck(:service_id).uniq)
-  end
-
   def available_motifs
     @available_motifs ||= available_motifs_arels.reduce(:or).ordered_by_name
   end
