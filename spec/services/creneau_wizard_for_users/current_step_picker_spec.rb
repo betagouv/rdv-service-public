@@ -2,6 +2,7 @@ RSpec.describe CreneauWizardForUsers::CurrentStepPicker do
   subject { described_class.new(context) }
 
   let(:context) do
+    # TODO: unifier les context pour utiliser un instance double ici
     double(query_params:, first_matching_motif:)
   end
 
