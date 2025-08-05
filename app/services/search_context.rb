@@ -18,7 +18,7 @@ class SearchContext
   end
 
   def start_date
-    Time.zone.today
+    query_params[:date]&.to_date || Time.zone.today
   end
 
   def available_collective_rdvs

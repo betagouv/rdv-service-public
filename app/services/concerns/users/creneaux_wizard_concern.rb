@@ -18,10 +18,6 @@ module Users::CreneauxWizardConcern
     end
   end
 
-  def start_date
-    query_params[:date]&.to_date || super
-  end
-
   private
 
   def requires_organisation_selection?
