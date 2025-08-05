@@ -1,5 +1,7 @@
 RSpec.describe WebInvitationSearchContext, type: :service do
-  subject { described_class.new(user: user, query_params: query_params) }
+  subject { described_class.new(user: user, query_params: query_params, starting_conditions:) }
+
+  let(:starting_conditions) { CreneauWizardForUsers::StartingConditions.new }
 
   include_context "SearchContext"
 
@@ -17,7 +19,7 @@ RSpec.describe WebInvitationSearchContext, type: :service do
     end
 
     context "for an invitation" do
-      subject { described_class.new(user: user, query_params: query_params) }
+      subject { described_class.new(user: user, query_params: query_params, starting_conditions:) }
 
       before do
         query_params[:motif_category_short_name] = "rsa_orientation"
@@ -62,7 +64,7 @@ RSpec.describe WebInvitationSearchContext, type: :service do
       lieu = create(:lieu)
       query_params[:motif_category_short_name] = "rsa_orientation"
       query_params[:lieu_id] = lieu.id
-      search_context = described_class.new(user: nil, query_params: query_params)
+      search_context = described_class.new(user: nil, query_params: query_params, starting_conditions:)
       motif = create(:motif, bookable_by: :agents_and_prescripteurs_and_invited_users, motif_category: rsa_orientation, organisation: organisation)
       create(:plage_ouverture, motifs: [motif], lieu: lieu)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
