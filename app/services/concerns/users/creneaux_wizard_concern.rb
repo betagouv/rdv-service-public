@@ -62,27 +62,6 @@ module Users::CreneauxWizardConcern
     @follow_up_motifs ||= Motif.where(service: services).where.not(bookable_by: :agents).exists?(follow_up: true, deleted_at: nil)
   end
 
-  def next_availability_by_lieux
-    return @next_availability_by_lieux if @next_availability_by_lieux
-
-    next_availability_by_lieux = Lieu.with_open_slots_for_motifs(matching_motifs).includes(:organisation).to_h do |lieu|
-      next_availability = creneaux_search_for(lieu, matching_motifs.where(organisation: lieu.organisation).first).next_availability
-      [lieu, next_availability]
-    end.compact
-
-    sort_order = if @latitude && @longitude
-                   proc { |lieu, _| lieu.distance(@latitude.to_f, @longitude.to_f) }
-                 else
-                   proc { |_, next_availability| next_availability }
-                 end
-
-    @next_availability_by_lieux = next_availability_by_lieux.sort_by(&sort_order).to_h
-  end
-
-  def shown_lieux
-    next_availability_by_lieux.keys
-  end
-
   def next_availability
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end

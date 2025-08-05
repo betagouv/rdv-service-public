@@ -53,6 +53,19 @@ class SearchContext
     motifs
   end
 
+  def creneaux_search_for(lieu, motif)
+    duration_in_min = motif.default_duration_in_min
+    duration_in_min *= ants_pre_demandes_count.to_i if ants_pre_demandes_count.present?
+    CreneauxSearch::ForUser.new(
+      user: @user,
+      motif: motif,
+      lieu: lieu,
+      date_range: date_range,
+      geo_search: geo_search,
+      duration_in_min:
+    )
+  end
+
   private
 
   attr_reader :referent_ids, :lieu_id
@@ -75,19 +88,6 @@ class SearchContext
 
   def ants_pre_demandes_count
     raise NoMethodError
-  end
-
-  def creneaux_search_for(lieu, motif)
-    duration_in_min = motif.default_duration_in_min
-    duration_in_min *= ants_pre_demandes_count.to_i if ants_pre_demandes_count.present?
-    CreneauxSearch::ForUser.new(
-      user: @user,
-      motif: motif,
-      lieu: lieu,
-      date_range: date_range,
-      geo_search: geo_search,
-      duration_in_min:
-    )
   end
 
   def retrieve_referent_agents

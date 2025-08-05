@@ -1,14 +1,16 @@
+- lieu_selection_service = CreneauWizardForUsers::Steps::LieuSelection.new(context)
+
 - content_for :title, "Sélectionnez le lieu"
 
 = render "search/selected_motif_recap", context: context
-- if context.shown_lieux.empty?
+- if lieu_selection_service.shown_lieux.empty?
   = render "search/nothing_to_show", context: context
 - else
   p.fr-text--lg = t(".select_lieu")
-  p.fr-text--sm = t(".lieu_available", count: context.shown_lieux.count)
+  p.fr-text--sm = t(".lieu_available", count: lieu_selection_service.shown_lieux.count)
   ul.fr-raw-list
     / similar to app/views/search/_organisation_selection.html.slim:10
-    - context.next_availability_by_lieux.each do |lieu, next_availability|
+    - lieu_selection_service.next_availability_by_lieux.each do |lieu, next_availability|
       - motif = next_availability.motif
       - if motif.restriction_for_rdv.blank?
         - link = link_to "#{lieu.name} - #{lieu.address}", prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at))

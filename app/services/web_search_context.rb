@@ -79,8 +79,6 @@ class WebSearchContext < SearchContext
       @motif_name_with_location_type.present?
   end
 
-  private
-
   def matching_motifs
     @matching_motifs ||= filter_motifs(geo_search.available_motifs)
   end
