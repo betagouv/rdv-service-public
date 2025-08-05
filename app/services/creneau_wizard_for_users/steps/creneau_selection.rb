@@ -5,7 +5,7 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   end
 
   def no_availability?
-    creneaux.empty? && @context.next_availability.nil?
+    creneaux.empty? && next_availability.nil?
   end
 
   def next_availability

@@ -1,5 +1,4 @@
 class WebInvitationSearchContext < InvitationSearchContext
-  include Users::CreneauxWizardConcern
   attr_reader :errors, :query_params, :organisation_ids, :motif_category_short_name, :autofocus
 
   def initialize(user:, starting_conditions:, query_params: {})

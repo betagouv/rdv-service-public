@@ -1,5 +1,4 @@
 class WebSearchContext < SearchContext
-  include Users::CreneauxWizardConcern
   attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement, :ants_pre_demandes_count, :autofocus, :service_id
 
   # departement est un cas particulier parce qu'il est aussi utilisé en dehors de addresse selection pour

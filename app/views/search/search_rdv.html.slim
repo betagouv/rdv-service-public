@@ -3,7 +3,7 @@
 = render "banner", context: @context
 
 / Adress selection partials have multiple sections
-- if @context.current_step == :address_selection
+- if @current_step == :address_selection
   - content_for :title do
     | Accueil
   // On fait du spécifique pour la bannière de la page de sélection d'adresse en attendant qu’on fasse la refonte au DSFR
@@ -11,4 +11,4 @@
 - else
   .fr-container
     section.py-4.fr-col-12.fr-col-lg-10.fr-col-offset-lg-1
-      = render partial: "search/#{@context.current_step}", locals: { context: @context }
+      = render partial: "search/#{@current_step}", locals: { context: @context }

@@ -43,7 +43,9 @@ class SearchController < ApplicationController
                    WebSearchContext.new(user: current_user, query_params: search_params, starting_conditions:)
                  end
 
-      if !current_domain.provides_address_selection? && @context.current_step == :address_selection
+      @current_step = CreneauWizardForUsers::CurrentStepPicker.new(@context).current_step
+
+      if !current_domain.provides_address_selection? && @current_step == :address_selection
         redirect_to root_path
       else
         render :search_rdv
