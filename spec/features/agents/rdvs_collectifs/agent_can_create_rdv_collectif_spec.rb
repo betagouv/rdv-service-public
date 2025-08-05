@@ -1,11 +1,9 @@
-# TODO: voir s'il faut faire une spec sans service
 RSpec.describe "Agent can create a Rdv collectif from the agenda" do
   include UsersHelper
 
   let!(:organisation) { create(:organisation) }
-  let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", email: "alain@tiptop.fr", service: service, basic_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, :collectif, name: "Atelier administratif", service: service, organisation: organisation) }
+  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", email: "alain@tiptop.fr", basic_role_in_organisations: [organisation]) }
+  let!(:motif) { create(:motif, :collectif, name: "Atelier administratif", organisation: organisation) }
 
   let!(:user1) { create(:user, organisations: [organisation]) }
   let!(:user2) { create(:user, organisations: [organisation]) }
