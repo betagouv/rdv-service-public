@@ -22,11 +22,6 @@ module Users::CreneauxWizardConcern
     query_params[:date]&.to_date || super
   end
 
-  def user_selected_organisation
-    @user_selected_organisation ||=
-      @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
-  end
-
   def next_availability
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
@@ -35,6 +30,11 @@ module Users::CreneauxWizardConcern
 
   def requires_organisation_selection?
     !first_matching_motif.requires_lieu? && user_selected_organisation.nil? && public_link_organisation.nil?
+  end
+
+  def user_selected_organisation
+    @user_selected_organisation ||=
+      @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
   end
 
   def requires_lieu_selection?
