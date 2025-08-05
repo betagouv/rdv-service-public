@@ -13,10 +13,6 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
 
   private
 
-  def user
-    @user ||= Invitation.new(invitation_link_hash).user
-  end
-
   def creneau_availability_count
     @creneau_availability_count ||= begin
       counter = 0
@@ -65,6 +61,10 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
       query_params: invitation_link_hash,
       starting_conditions:
     )
+  end
+
+  def user
+    @user ||= Invitation.new(invitation_link_hash).user
   end
 
   def invitation_link_hash
