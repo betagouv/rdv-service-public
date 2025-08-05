@@ -184,7 +184,7 @@ RSpec.describe RdvsHelper do
       let(:params) { { start: "01/01/2024", end: "01/02/2024" } }
 
       it "displays date interval" do
-        expect(dates_interval).to eq("Lundi 01 janvier 2024 - Jeudi 01 février 2024")
+        expect(dates_interval).to eq("Lundi 1 janvier 2024 - Jeudi 1 février 2024")
       end
     end
 
@@ -192,7 +192,7 @@ RSpec.describe RdvsHelper do
       let(:params) { { start: "01/01/2024", end: "invalid_date" } }
 
       it "displays only one date" do
-        expect(dates_interval).to eq("A partir du Lundi 01 janvier 2024")
+        expect(dates_interval).to eq("A partir du Lundi 1 janvier 2024")
       end
     end
 
@@ -200,7 +200,7 @@ RSpec.describe RdvsHelper do
       let(:params) { { start: "invalid_date", end: "01/02/2024" } }
 
       it "displays only one date" do
-        expect(dates_interval).to eq("Jusqu'au Jeudi 01 février 2024")
+        expect(dates_interval).to eq("Jusqu'au Jeudi 1 février 2024")
       end
     end
 

@@ -53,7 +53,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
 
     expect(page).to have_content("Rendez-vous confirmé")
     expect(page).to have_content("Patricia DUROY")
-    expect(page).to have_content("Le mercredi 09 novembre 2022 à 10h00")
+    expect(page).to have_content("Le mercredi 9 novembre 2022 à 10h00")
     expect(page).to have_content("Bureau")
     expect(page).to have_content("Instructions après confirmation")
 
