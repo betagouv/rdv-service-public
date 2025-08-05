@@ -48,6 +48,10 @@ class Agent::RdvPolicy < ApplicationPolicy
     @record.motif.service_id.in?(current_agent.service_ids)
   end
 
+  def rdv_without_service?
+    @record.motif.service_id.nil?
+  end
+
   def agents_authorized?
     return @agents_authorized if defined?(@agents_authorized)
 
@@ -129,7 +133,7 @@ class Agent::RdvPolicy < ApplicationPolicy
     when AgentRole::ACCESS_LEVEL_ADMIN
       true
     when AgentRole::ACCESS_LEVEL_BASIC
-      same_service? || current_agent.secretaire?
+      same_service? || rdv_without_service? || current_agent.secretaire?
     else
       false
     end

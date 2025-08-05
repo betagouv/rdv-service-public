@@ -1,4 +1,3 @@
-# TODO: ajouter specs pour motifs sans service
 RSpec.describe Agent::RdvPolicy, type: :policy do
   subject { described_class }
 
@@ -61,6 +60,18 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
       it_behaves_like "not permit actions", :rdv, :destroy?
       it_behaves_like "included in scope"
     end
+  end
+
+  context "existing RDV from other agent on a motif without service" do
+    let(:organisation) { create(:organisation) }
+    let(:agents) { create_list(:agent, 2, organisations: [organisation]) }
+    let(:motif) { create(:motif, organisation: organisation, service: nil) }
+    let(:rdv) { create(:rdv, agents: [agents[0]], motif: motif, organisation: organisation) }
+    let(:pundit_context) { AgentOrganisationContext.new(agents[1], organisation) }
+
+    it_behaves_like "permit actions", :rdv, :show?, :edit?, :update?
+    it_behaves_like "not permit actions", :rdv, :destroy?
+    it_behaves_like "included in scope"
   end
 
   context "existing RDV from other agent from same service" do
