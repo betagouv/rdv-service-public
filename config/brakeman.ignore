@@ -43,6 +43,40 @@
       "note": ""
     },
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "8de898647532a842348ff8bd5ad5cdd84ff424c5c1511b19ff76fadef100fb84",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/search/search_rdv.html.slim",
+      "line": 14,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"search/#{(WebInvitationSearchContext.new(:user => current_user, :query_params => search_params.merge(invitation.query_params), :starting_conditions => CreneauWizardForUsers::StartingConditions.new(**params.permit(:prescripteur).to_h.symbolize_keys)) or WebSearchContext.new(:user => current_user, :query_params => search_params, :starting_conditions => CreneauWizardForUsers::StartingConditions.new(**params.permit(:prescripteur).to_h.symbolize_keys))).current_step}\", { :locals => ({ :context => ((WebInvitationSearchContext.new(:user => current_user, :query_params => search_params.merge(invitation.query_params), :starting_conditions => CreneauWizardForUsers::StartingConditions.new(**params.permit(:prescripteur).to_h.symbolize_keys)) or WebSearchContext.new(:user => current_user, :query_params => search_params, :starting_conditions => CreneauWizardForUsers::StartingConditions.new(**params.permit(:prescripteur).to_h.symbolize_keys)))) }) })",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "SearchController",
+          "method": "search_rdv",
+          "line": 49,
+          "file": "app/controllers/search_controller.rb",
+          "rendered": {
+            "name": "search/search_rdv",
+            "file": "app/views/search/search_rdv.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "search/search_rdv"
+      },
+      "user_input": "params.permit(:prescripteur).to_h.symbolize_keys",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
       "fingerprint": "d93227729f1a070feb92d7048272b7c5b0535fc7505c7ba5ab3c6c9c6e510fca",
