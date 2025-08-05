@@ -188,7 +188,7 @@ RSpec.describe SearchController, type: :controller do
           address: address, departement: departement_number, city_code: city_code,
           motif_name_with_location_type: motif.name_with_location_type,
         }
-        expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
+        expect(subject).to match(/Prochaine disponibilité le(.)*lundi 5 août 2019 à 08h00/)
       end
     end
 
@@ -235,7 +235,7 @@ RSpec.describe SearchController, type: :controller do
             lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code,
             motif_name_with_location_type: motif.name_with_location_type,
           }
-          expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
+          expect(subject).to match(/Prochaine disponibilité le(.)*lundi 5 août 2019 à 08h00/)
         end
       end
     end

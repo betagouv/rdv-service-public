@@ -133,7 +133,7 @@ class AntsApp < Sinatra::Base
               <% creneaux.group_by { DateTime.parse(_1["datetime"]).to_date }.each do |date, date_creneaux| %>
                 <div class="fr-col-3">
                   <div style="text-align: center; background: #aaa; padding: 1rem; margin-bottom: 1rem;">
-                    <h4 style="margin: 0;"><%= date.strftime("%a. %d %B") %></h4>
+                    <h4 style="margin: 0;"><%= date.strftime("%a. %-d %B") %></h4>
                   </div>
                   <div class="fr-grid-row fr-grid-row--gutters">
                     <% date_creneaux.each do |creneau| %>

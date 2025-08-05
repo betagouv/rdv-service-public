@@ -14,7 +14,7 @@ div id="creneaux-lieu-#{lieu&.id}"
             p.rdv-text-align-center.sticky-top.bg-white
               strong= l(date, format: "%A")
               br
-              = l(date, format: "%d %b")
+              = l(date, format: "%-d %b")
 
             - if creneaux.empty?
               p.rdv-text-align-center

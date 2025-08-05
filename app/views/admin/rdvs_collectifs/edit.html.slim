@@ -14,7 +14,7 @@
       .card
         .card-header
           h3 = rdv_title_for_agent(@rdv)
-          = I18n.l(@rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
+          = I18n.l(@rdv.starts_at, format: "%A %-d %B à %H:%M").capitalize
         .card-body.px-3
           .row.mt-3
             .col-md-6

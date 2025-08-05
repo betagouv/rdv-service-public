@@ -437,10 +437,13 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       it { expect(assigns(:creneaux)).not_to be_empty }
-      it { expect(response.body).to include("Voici les créneaux disponibles pour déplacer votre rendez-vous du") }
-      it { expect(response.body).to include("dimanche 06 janvier 2019 à 10h00") }
-      it { expect(response.body).to include("10:00") } # heure de créneau pour la plage quotidienne
-      it { expect(response.body).to include("16:00") } # heure de créneau pour la plage ponctuelle
+
+      specify do
+        expect(response.body).to include("Voici les créneaux disponibles pour déplacer votre rendez-vous du")
+        expect(response.body).to include("dimanche 6 janvier 2019 à 10h00")
+        expect(response.body).to include("10:00") # heure de créneau pour la plage quotidienne
+        expect(response.body).to include("16:00") # heure de créneau pour la plage ponctuelle
+      end
     end
 
     context "when the rdv cannot be edited" do
