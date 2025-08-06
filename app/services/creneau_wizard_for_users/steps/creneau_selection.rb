@@ -11,10 +11,6 @@ class CreneauWizardForUsers::Steps::CreneauSelection
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
-  def creneaux_search
-    @creneaux_search ||= @context.creneaux_search_for(lieu, first_matching_motif)
-  end
-
   delegate :creneaux, to: :creneaux_search
 
   def after_max_public_booking_delay?(date)
@@ -54,5 +50,11 @@ class CreneauWizardForUsers::Steps::CreneauSelection
     else
       url_helpers.new_users_rdv_wizard_step_path(@context.query_params.merge(params))
     end
+  end
+
+  private
+
+  def creneaux_search
+    @creneaux_search ||= @context.creneaux_search_for(lieu, first_matching_motif)
   end
 end
