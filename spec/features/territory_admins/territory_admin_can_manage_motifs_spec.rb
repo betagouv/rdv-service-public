@@ -213,8 +213,8 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
           within("#service_form") do
             select "Tous les services", from: "Service"
             click_on "Appliquer"
-            expect(motif_a.reload.service).to  be_nil
-            expect(motif_b.reload.service).to  be_nil
+            expect(motif_a.reload.service).to be_nil
+            expect(motif_b.reload.service).to be_nil
             expect(motif_sans_service.reload.service).to be_nil
           end
         end
