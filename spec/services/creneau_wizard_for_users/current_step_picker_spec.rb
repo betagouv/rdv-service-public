@@ -1,18 +1,13 @@
 RSpec.describe CreneauWizardForUsers::CurrentStepPicker do
-  subject { described_class.new(context) }
+  subject { described_class.new(search_context).current_step }
 
-  let(:context) do
-    # TODO: unifier les context pour utiliser un instance double ici
-    double(query_params:, first_matching_motif:)
-  end
-
-  let(:first_matching_motif) { nil }
+  let(:search_context) { WebSearchContext.new(query_params:, user: create(:user)) }
 
   context "when nothing is passed" do
     let!(:query_params) { {} }
 
-    it "current step is address selection" do
-      expect(subject.current_step).to eq(:address_selection)
+    it "is address selection" do
+      expect(subject).to eq(:address_selection)
     end
   end
 
@@ -23,32 +18,48 @@ RSpec.describe CreneauWizardForUsers::CurrentStepPicker do
     let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "")) }
 
     it "returns motif selection" do
-      expect(subject.current_step).to eq(:motif_selection)
+      expect(subject).to eq(:motif_selection)
     end
   end
 
-  context "with an address but several matching motifs" do
-    let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
-    let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
+  context "with an address" do
+    let!(:query_params) { address_params }
+    let(:address_params) { { address: "20 avenue de Ségur 75007 Paris", departement: "75", city_code: "75007" } }
+    let(:motif) { create(:motif) }
+    let(:motif2) { create(:motif) }
 
-    it "current step is motif selection" do
-      expect(subject.current_step).to eq(:motif_selection)
+    context "and multiple matching motifs" do
+      before do
+        allow(search_context).to receive(:matching_motifs).and_return([motif, motif2])
+      end
+
+      it "is motif selection" do
+        expect(subject).to eq(:motif_selection)
+      end
     end
-  end
 
-  context "with a single matching motif and an address" do
-    let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
+    context "and a single matching motif" do
+      before do
+        allow(search_context).to receive(:matching_motifs).and_return([motif])
+      end
 
-    it "current step is motif selection" do
-      expect(subject.current_step).to eq(:motif_selection)
+      it "is motif selection" do
+        expect(subject).to eq(:motif_selection)
+      end
     end
-  end
 
-  context "with a single matching motif and an address and a motif name in the params" do
-    let!(:query_params) { { address: address, departement: departement_number, city_code: city_code, motif_name_with_location_type: motif.name_with_location_type } }
+    context "with a single matching motif and a motif name in the params" do
+      let!(:query_params) do
+        address_params.merge(motif_name_with_location_type: motif.name_with_location_type)
+      end
 
-    it "current step is lieu selection" do
-      expect(subject.current_step).to eq(:lieu_selection)
+      before do
+        allow(search_context).to receive(:matching_motifs).and_return([motif])
+      end
+
+      it "is lieu selection" do
+        expect(subject).to eq(:lieu_selection)
+      end
     end
   end
 end
