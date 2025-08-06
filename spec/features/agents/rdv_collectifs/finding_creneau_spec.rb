@@ -1,11 +1,9 @@
-# TODO: voir s'il faut une version sans service
 RSpec.describe "Agent can find a creneau for a rdv collectif" do
-  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:motif) do
-    create(:motif, :collectif, name: "Atelier participatif", organisation: organisation, service: service)
+    create(:motif, :collectif, name: "Atelier participatif", organisation: organisation)
   end
   let(:organisation) { create(:organisation) }
-  let!(:service) { create(:service) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:rdv) do
     create(:rdv, motif: motif, organisation: organisation, agents: [agent], max_participants_count: 5, lieu: lieu)
@@ -21,7 +19,7 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
     click_button "Afficher les créneaux"
 
     # The rdv collectif appears in the search results
-    expect(page).to have_content("Créneaux disponibles pour atelier participatif")
+    expect(page).to have_content("Créneaux disponibles pour Atelier participatif")
     expect(page).to have_content("1 participant")
     expect(page).to have_content("4 places restantes")
 
@@ -45,7 +43,7 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
       expect(page).to have_content("2 lieux proposent des créneaux")
       click_link("Prochain créneau", match: :first)
 
-      expect(page).to have_content("Créneaux disponibles pour atelier participatif")
+      expect(page).to have_content("Créneaux disponibles pour Atelier participatif")
     end
   end
 end
