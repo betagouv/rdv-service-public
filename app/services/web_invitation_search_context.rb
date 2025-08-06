@@ -54,8 +54,8 @@ class WebInvitationSearchContext < InvitationSearchContext
   end
 
   def motif_param_present?
-    @motif_id.present? ||
-      @motif_name_with_location_type.present? ||
-      @motif_category_short_name.present?
+    # la deuxième partie de cette condition est une légère duplication de CreneauWizardForUsers::Steps::MotifSelection#unique_motifs_by_name_and_location_type
+    # c'est parce que dans le cas des invitations, on n'affiche pas l'étape de choix de motif si ce n'est pas nécessaire
+    @motif_name_with_location_type.present? || matching_motifs.uniq(&:name_with_location_type).count == 1
   end
 end
