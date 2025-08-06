@@ -4,15 +4,7 @@ class CreneauWizardForUsers::Steps::MotifSelection
   end
 
   def service_selected?
-    service.present?
-  end
-
-  def service
-    @service ||= if @context.service_id.present?
-                   Service.find(@context.service_id)
-                 elsif services.count == 1
-                   services.first
-                 end
+    services.count == 1
   end
 
   def services
