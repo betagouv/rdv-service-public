@@ -104,7 +104,6 @@ RSpec.describe PlageOuverture, type: :model do
   end
 
   describe "#available_motifs" do
-    # TODO: faire une variante pour les motifs sans service
     subject { plage_ouverture.available_motifs }
 
     let!(:orga2) { create(:organisation) }
@@ -113,18 +112,20 @@ RSpec.describe PlageOuverture, type: :model do
     let!(:motif2) { create(:motif, name: "Suivi", service: service, organisation: organisation) }
     let!(:motif3) { create(:motif, :for_secretariat, name: "Test", service: service, organisation: organisation) }
     let!(:motif4) { create(:motif, name: "other orga", service: service, organisation: orga2) }
+    let!(:motif_sans_service) { create(:motif, service: nil, organisation: organisation) }
+
     let(:plage_ouverture) { build(:plage_ouverture, agent: agent, organisation: organisation, motifs: [motif]) }
 
     describe "for secretaire" do
       let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
 
-      it { is_expected.to contain_exactly(motif3) }
+      it { is_expected.to contain_exactly(motif3, motif_sans_service) }
     end
 
     describe "for other service" do
       let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
 
-      it { is_expected.to contain_exactly(motif, motif2, motif3) }
+      it { is_expected.to contain_exactly(motif, motif2, motif3, motif_sans_service) }
     end
   end
 
