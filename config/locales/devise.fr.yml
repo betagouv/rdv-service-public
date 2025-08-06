@@ -106,7 +106,7 @@ fr:
       devise:
         mailer:
           invitation_instructions:
-            accept_until_format: "%d %B"
+            accept_until_format: "%-d %B"
   links:
     session_as_agent: "Se connecter en tant qu'agent"
     agent_space: "Espace agent"

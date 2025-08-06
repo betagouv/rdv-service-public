@@ -21,7 +21,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
   end
 
   def step1
-    expect_page_title("Nouveau RDV pour le 02/10/2019 à 00:00")
+    expect_page_title("Nouveau RDV pour le 2/10/2019 à 00:00")
     expect(page).to have_selector("h2", text: "Motif")
     select(motif.name, from: "rdv_motif_id")
     expect(page).to have_select("rdv_motif_id", text: "Super Motif - RDV collectif Sur place", exact: true)

@@ -121,7 +121,7 @@ class PlageOuverture < ApplicationRecord
   def overflow_motifs_duration
     return Motif.none unless valid_date_and_times?
 
-    motifs.where("default_duration_in_min > ?", daily_max_duration.in_minutes)
+    motifs.where("default_duration_in_min > ?", daily_max_duration.in_minutes.to_i)
   end
 
   private

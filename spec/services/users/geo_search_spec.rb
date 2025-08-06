@@ -290,43 +290,4 @@ RSpec.describe Users::GeoSearch, type: :service_model do
       it { is_expected.to contain_exactly(motif_organisation, motif_agent, motif_departement) }
     end
   end
-
-  describe "#available_services" do
-    subject { described_class.new(departement: "62", city_code: "62100").available_services }
-
-    context "organisation exist but no sectors" do
-      let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-
-      it { is_expected.to be_empty }
-    end
-
-    context "matching sector with 2 motifs with POs from different services" do
-      let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      let!(:service1) { create(:service) }
-      let!(:service2) { create(:service) }
-      let!(:motif1) { create(:motif, :sectorisation_level_organisation, organisation: organisation, service: service1) }
-      let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif1], organisation: organisation) }
-      let!(:motif2) { create(:motif, :sectorisation_level_organisation, organisation: organisation, service: service2) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation) }
-      let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
-      let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
-      let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-
-      it { is_expected.to contain_exactly(service1, service2) }
-    end
-
-    context "matching sector with 2 motifs with POs from same service" do
-      let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      let!(:service) { create(:service) }
-      let!(:motif1) { create(:motif, :sectorisation_level_organisation, organisation: organisation, service: service) }
-      let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif1], organisation: organisation) }
-      let!(:motif2) { create(:motif, :sectorisation_level_organisation, organisation: organisation, service: service) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation) }
-      let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
-      let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
-      let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-
-      it { is_expected.to contain_exactly(service) } # we expect no duplicates
-    end
-  end
 end

@@ -16,7 +16,7 @@ div id="creneaux-lieu-#{lieu&.id}"
             p.rdv-text-align-center
               strong= l(date, format: "%A")
               br
-              = l(date, format: "%d %b")
+              = l(date, format: "%-d %b")
 
             - if creneaux_by_date[date]&.first&.respects_max_public_booking_delay?
               .fr-grid-row
@@ -25,7 +25,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                   = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at),
                           class: "fr-col-12 fr-btn fr-btn--tertiary fr-mb-1w rdv-justify-content-center",
                           data: { turbolinks: false },
-                          aria: { label: "Choisir le créneau du #{l(creneau.starts_at, format: '%A %d %b')} à #{l(creneau.starts_at, format: '%H:%M')}"},
+                          aria: { label: "Choisir le créneau du #{l(creneau.starts_at, format: '%A %-d %b')} à #{l(creneau.starts_at, format: '%H:%M')}"},
                           autofocus: do
                     = l(creneau.starts_at, format: "%H:%M")
                     - if creneau.motif.follow_up?

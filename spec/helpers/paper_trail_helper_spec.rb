@@ -5,7 +5,7 @@ RSpec.describe PaperTrailHelper do
     end
 
     it "returns formatted time value when column looks like a datetime" do
-      expect(helper.paper_trail_change_value("thingified_at", "2020/03/03 10:20")).to eq("03/03/2020 à 10:20")
+      expect(helper.paper_trail_change_value("thingified_at", "2020/03/03 10:20")).to eq("3/03/2020 à 10:20")
     end
 
     it "returns formatted date when column looks like a date" do
