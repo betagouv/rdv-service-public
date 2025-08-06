@@ -1,7 +1,5 @@
 RSpec.describe WebSearchContext, type: :service do
-  subject do
-    described_class.new(user: user, query_params: query_params)
-  end
+  subject { described_class.new(user: user, query_params: query_params) }
 
   include_examples "SearchContext"
 

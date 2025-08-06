@@ -55,6 +55,6 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   private
 
   def creneaux_search
-    @creneaux_search ||= @context.creneaux_search_for(lieu, first_matching_motif)
+    @creneaux_search ||= @context.creneaux_search_for(@context.lieu, @context.first_matching_motif)
   end
 end

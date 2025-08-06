@@ -39,45 +39,6 @@ RSpec.shared_examples "SearchContext" do
     end
   end
 
-  describe "#creneaux_search" do
-    context "when lieu is present" do
-      it "returns a CreneauxSearch::ForUser using the lieu and the first matching motif" do
-        plage_ouverture = create(:plage_ouverture, motifs: [motif, motif2], organisation: organisation)
-        lieu = plage_ouverture.lieu
-        search_context = described_class.new(user:, query_params: query_params.merge(lieu_id: lieu.id))
-
-        expect(CreneauxSearch::ForUser).to receive(:new).with(
-          user: user,
-          motif: motif,
-          lieu: lieu,
-          date_range: search_context.date_range,
-          geo_search: geo_search,
-          duration_in_min: 30
-        )
-        search_context.creneaux_search
-      end
-    end
-
-    context "when lieu is nil" do
-      let!(:motif) { create(:motif, :by_phone, organisation: organisation, default_duration_in_min: 30) }
-
-      it "returns a CreneauxSearch::ForUser using no lieu and the selected motif" do
-        create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
-        search_context = described_class.new(user:, query_params:)
-
-        expect(CreneauxSearch::ForUser).to receive(:new).with(
-          user: user,
-          motif: motif,
-          lieu: nil,
-          date_range: search_context.date_range,
-          geo_search: geo_search,
-          duration_in_min: 30
-        )
-        search_context.creneaux_search
-      end
-    end
-  end
-
   describe "#filter_motifs" do
     it "returns empty without motifs" do
       search_context = described_class.new(user: nil)
