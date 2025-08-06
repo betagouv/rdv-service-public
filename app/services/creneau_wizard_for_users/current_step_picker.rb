@@ -6,7 +6,7 @@ class CreneauWizardForUsers::CurrentStepPicker
   def current_step
     if @context.departement.blank? && public_link_organisation_id.blank?
       :address_selection
-    elsif !@context.motif_param_present? || @context.first_matching_motif.blank?
+    elsif requires_motif_selection?
       :motif_selection
     elsif requires_ants_pre_demandes_count_selection?
       :ants_pre_demandes_count_selection
@@ -20,6 +20,10 @@ class CreneauWizardForUsers::CurrentStepPicker
   end
 
   private
+
+  def requires_motif_selection?
+    !@context.motif_param_present? || @context.first_matching_motif.blank?
+  end
 
   def public_link_organisation_id
     @context.query_params[:public_link_organisation_id]
