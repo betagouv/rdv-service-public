@@ -1,6 +1,6 @@
 class CreneauWizardForUsers::CurrentStepPicker
-  def initialize(context)
-    @context = context
+  def initialize(search_context)
+    @context = search_context
   end
 
   def current_step

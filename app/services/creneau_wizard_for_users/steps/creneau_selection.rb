@@ -1,6 +1,6 @@
 class CreneauWizardForUsers::Steps::CreneauSelection
-  def initialize(web_search_context)
-    @context = web_search_context
+  def initialize(search_context)
+    @context = search_context
     @creneaux_search = @context.creneaux_search
   end
 

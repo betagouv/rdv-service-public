@@ -1,6 +1,6 @@
 class CreneauWizardForUsers::Steps::OrganisationSelection
-  def initialize(web_search_context)
-    @context = web_search_context
+  def initialize(search_context)
+    @context = search_context
   end
 
   # Retourne une liste d'organisations et leur prochaine dispo, ordonnées par date de prochaine dispo
