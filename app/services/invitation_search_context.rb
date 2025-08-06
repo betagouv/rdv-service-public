@@ -5,7 +5,7 @@ class InvitationSearchContext < SearchContext
     organisation_ids: [], referent_ids: [],
   ].freeze
 
-  def initialize(user:, starting_conditions:, query_params: {})
+  def initialize(user:, query_params: {})
     super
     INVITATION_PARAMS.each do |param_name|
       if param_name.is_a?(Hash)

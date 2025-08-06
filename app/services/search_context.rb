@@ -1,11 +1,8 @@
 class SearchContext
-  def initialize(user:, starting_conditions:, query_params: {})
+  def initialize(user:, query_params: {})
     @user = user
-    @starting_conditions = starting_conditions
     @query_params = query_params
   end
-
-  attr_reader :starting_conditions
 
   delegate :creneaux, to: :creneaux_search
 

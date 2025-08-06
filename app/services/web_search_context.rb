@@ -7,7 +7,7 @@ class WebSearchContext < SearchContext
 
   USER_CHOICE_PARAMS = %i[service_id motif_name_with_location_type lieu_id user_selected_organisation_id motif_id ants_pre_demandes_count].freeze
 
-  def initialize(user:, starting_conditions:, query_params: {})
+  def initialize(user:, query_params: {})
     super
 
     # Optional starting conditions

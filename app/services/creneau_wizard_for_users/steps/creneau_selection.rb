@@ -1,7 +1,7 @@
 class CreneauWizardForUsers::Steps::CreneauSelection
   def initialize(web_search_context)
     @context = web_search_context
-    @starting_conditions = @context.starting_conditions
+    @creneaux_search = @context.creneaux_search
   end
 
   def no_availability?
@@ -9,10 +9,10 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   end
 
   def next_availability
-    @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
+    @next_availability ||= creneaux.empty? ? @creneaux_search.next_availability : nil
   end
 
-  delegate :creneaux, to: :creneaux_search
+  delegate :creneaux, to: :@creneaux_search
 
   def after_max_public_booking_delay?(date)
     # On a déjà le first_matching_motif en mémoire au moment où on appelle cette méthode
@@ -31,25 +31,21 @@ class CreneauWizardForUsers::Steps::CreneauSelection
 
   def wizard_after_creneau_selection_path(params)
     url_helpers = Rails.application.routes.url_helpers
-    if @starting_conditions.prescription_interne?
-      organisation = @starting_conditions.current_organisation
+
+    if @context.query_params[:prescripteur] == Prescripteur::INTERNE
+      # context est un AgentPrescriptionSearchContext
+      organisation = @context.current_organisation
       if @context.user
         url_helpers.recapitulatif_admin_organisation_prescription_path(organisation, params.merge(@context.query_params))
       else
         url_helpers.user_selection_admin_organisation_prescription_path(organisation, params.merge(@context.query_params))
       end
 
-    elsif @starting_conditions.prescripteur?
+    elsif @context.prescripteur?
 
       url_helpers.prescripteur_start_path(@context.query_params.merge(params))
     else
       url_helpers.new_users_rdv_wizard_step_path(@context.query_params.merge(params))
     end
-  end
-
-  private
-
-  def creneaux_search
-    @context.creneaux_search
   end
 end

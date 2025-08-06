@@ -55,11 +55,9 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
   end
 
   def invitation_search_context
-    starting_conditions = CreneauWizardForUsers::StartingConditions.new
-    @invitation_search_context ||= WebInvitationSearchContext.new(
+    @invitation_search_context ||= InvitationSearchContext.new(
       user: user,
-      query_params: invitation_link_hash,
-      starting_conditions:
+      query_params: invitation_link_hash
     )
   end
 
