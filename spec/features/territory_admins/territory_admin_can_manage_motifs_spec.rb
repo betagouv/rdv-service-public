@@ -1,4 +1,3 @@
-# TODO: faire une version sans service
 RSpec.describe "territory admin can manage motifs", type: :feature do
   let!(:territory) { create(:territory) }
   let!(:agent) { create(:agent, role_in_territories: [territory]) }
@@ -202,6 +201,22 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
           click_on "Appliquer"
           expect(motif_a.reload.service).to eq(service_social)
           expect(motif_b.reload.service).to eq(service_social)
+        end
+      end
+
+      describe "removing the service" do
+        let(:motif_sans_service) { create(:motif, organisation: organisation_a, service: nil) }
+
+        it "works" do
+          visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id, motif_sans_service.id])
+
+          within("#service_form") do
+            select "Tous les services", from: "Service"
+            click_on "Appliquer"
+            expect(motif_a.reload.service).to  be_nil
+            expect(motif_b.reload.service).to  be_nil
+            expect(motif_sans_service.reload.service).to be_nil
+          end
         end
       end
     end

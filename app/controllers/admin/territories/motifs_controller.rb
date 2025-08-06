@@ -37,13 +37,19 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     custom_cancel_warning_message
   ].freeze
 
-  def batch_update # rubocop:disable Metrics/PerceivedComplexity
+  def batch_update # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
     @motifs = Motif.where(id: params[:motif_ids])
     @motifs.each do |motif|
       authorize(motif, :update?, policy_class: Agent::MotifPolicy)
     end
 
     permitted_params = params.permit(*UPDATABLE_ATTRS).compact_blank
+
+    # Pour permettre d'effacer les services de motifs
+    if params[:service_id] == ""
+      permitted_params[:service_id] = nil
+    end
+
     Motif.transaction do
       @motifs.each do |motif|
         motif.update(permitted_params)
