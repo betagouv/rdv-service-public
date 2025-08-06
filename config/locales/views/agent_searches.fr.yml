@@ -7,9 +7,9 @@ fr:
         search_for_slots_title: Trouver un RDV
         search_for_slots_subtitle: pour %{users_fullname}
         available_places_with_slots:
-          zero: Aucun lieu ne propose de disponibilité
-          one: "Un lieu propose des disponibilités :"
-          other: "%{count} lieux proposent des disponibilités :"
+          zero: Aucun lieu ne propose de créneau
+          one: "Un lieu propose des créneaux :"
+          other: "%{count} lieux proposent des créneaux :"
       selection_creneaux:
         place_index: Revenir aux filtres
         available_slots_title_html: Créneaux disponibles pour <strong>%{motif}</strong>

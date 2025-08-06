@@ -66,16 +66,15 @@
           .col-md-4
             = f.input :lieu_ids, collection: @lieux, label: "Lieu(x)", input_html: { multiple: true, class: "select2-input" }
         .text-right
-          = f.submit "Afficher les créneaux", class: "btn btn-primary", data: { disable_with: "Récupération des créneaux…"}
+          = f.submit "Afficher les créneaux", class: "fr-btn", data: { disable_with: "Récupération des créneaux…"}
 
 #creneaux
   .rdv-text-align-center
     - if @next_availabilities&.any?
-      .container
-        h3.font-weight-bold= t(".available_places_with_slots", count: @next_availabilities.length)
-        - @next_availabilities.each do |next_availability|
-          = render "lieu_search_results", next_availability: next_availability
-        = render "admin/creneaux_search/prescription_cta"
+      h3.font-weight-bold= t(".available_places_with_slots", count: @next_availabilities.length)
+      - @next_availabilities.each do |next_availability|
+        = render "lieu_search_results", next_availability: next_availability
+      = render "admin/creneaux_search/prescription_cta"
     - elsif motif_selected? && params[:commit].present?
       = render partial: "admin/creneaux_search/no_slot_available"
     - else
