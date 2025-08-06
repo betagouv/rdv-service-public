@@ -1,5 +1,5 @@
 RSpec.describe CreneauWizardForUsers::Steps::CreneauSelection do
-  subject(:service) { described_class.new(search_context) }
+  subject(:creneau_selection) { described_class.new(search_context) }
 
   let(:user) { create(:user) }
   let(:motif) { create(:motif, default_duration_in_min: 30) }
@@ -26,7 +26,7 @@ RSpec.describe CreneauWizardForUsers::Steps::CreneauSelection do
           duration_in_min: 30
         ).and_call_original
 
-        service.creneaux
+        creneau_selection.creneaux
       end
     end
 
@@ -46,7 +46,7 @@ RSpec.describe CreneauWizardForUsers::Steps::CreneauSelection do
           duration_in_min: 30
         ).and_call_original
 
-        service.creneaux
+        creneau_selection.creneaux
       end
     end
   end
