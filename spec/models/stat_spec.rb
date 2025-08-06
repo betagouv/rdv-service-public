@@ -66,7 +66,6 @@ RSpec.describe Stat, type: :model do
   end
 
   describe "#rdvs_group_by_service" do
-    # TODO: ajouter un cas pour les rdvs sans services
     let(:organisation) { create(:organisation) }
 
     it "returns rdv group by service" do
@@ -75,7 +74,14 @@ RSpec.describe Stat, type: :model do
       service = create(:service, name: "PMI")
       home_motif = create(:motif, location_type: :home, service: service, organisation:)
       create(:rdv, motif: home_motif, created_at: now, organisation:)
+
+      motif_sans_service = create(:motif, service: nil, organisation:)
+      create(:rdv, motif: motif_sans_service, created_at: now, organisation:)
+
       stats = described_class.new(rdvs: Rdv.all)
+
+      # Pour le moment on ne comptabilise pas les motifs sans service dans ce compte.
+      # On peut changer ce comportement si on en trouve un qui a plus de sens.
       expect(stats.rdvs_group_by_service).to eq({ ["PMI", "23/01/2022"] => 1 })
     end
   end
