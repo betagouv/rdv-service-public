@@ -18,14 +18,6 @@ class SearchContext
     query_params[:date]&.to_date || Time.zone.today
   end
 
-  def available_collective_rdvs
-    @available_collective_rdvs ||= creneaux_search.available_collective_rdvs
-  end
-
-  def creneaux_search
-    @creneaux_search ||= creneaux_search_for(lieu, first_matching_motif)
-  end
-
   def first_matching_motif
     @first_matching_motif ||= matching_motifs.first
   end

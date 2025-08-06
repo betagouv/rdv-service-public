@@ -13,7 +13,7 @@
 
     - if context.first_matching_motif.collectif?
       ul.fr-raw-list
-        - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
+        - creneau_selection_service.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
           = render "search/rdv_collectif", rdv: rdv, creneau_selection_service: creneau_selection_service
     - elsif context.matching_motifs.present?
       .card.mb-3

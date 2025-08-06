@@ -1,7 +1,6 @@
 class CreneauWizardForUsers::Steps::CreneauSelection
   def initialize(search_context)
     @context = search_context
-    @creneaux_search = @context.creneaux_search
   end
 
   def no_availability?
@@ -9,10 +8,14 @@ class CreneauWizardForUsers::Steps::CreneauSelection
   end
 
   def next_availability
-    @next_availability ||= creneaux.empty? ? @creneaux_search.next_availability : nil
+    @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
-  delegate :creneaux, to: :@creneaux_search
+  def creneaux_search
+    @creneaux_search ||= @context.creneaux_search_for(lieu, first_matching_motif)
+  end
+
+  delegate :creneaux, to: :creneaux_search
 
   def after_max_public_booking_delay?(date)
     # On a déjà le first_matching_motif en mémoire au moment où on appelle cette méthode
@@ -27,6 +30,10 @@ class CreneauWizardForUsers::Steps::CreneauSelection
     @max_public_booking_delay ||= @context.matching_motifs.maximum("max_public_booking_delay")
 
     date >= (Time.zone.now + @max_public_booking_delay.seconds).to_date
+  end
+
+  def available_collective_rdvs
+    @available_collective_rdvs ||= creneaux_search.available_collective_rdvs
   end
 
   def wizard_after_creneau_selection_path(params)
