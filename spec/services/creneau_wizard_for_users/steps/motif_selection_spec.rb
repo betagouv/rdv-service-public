@@ -20,14 +20,14 @@ RSpec.describe CreneauWizardForUsers::Steps::MotifSelection do
       end
     end
 
-    describe "#service" do
+    describe "#service_selected?" do
       it "returns nil" do
-        expect(motif_selection.service).to be_nil
+        expect(motif_selection.service_selected?).to be false
       end
     end
   end
 
-  describe "#service" do
+  describe "#services" do
     context "when there are two motifs for the same service" do
       let(:matching_motifs) { Motif.where(id: [motif.id, autre_motif.id]) }
       let(:autre_motif) { create(:motif, service: motif.service) }
@@ -35,7 +35,7 @@ RSpec.describe CreneauWizardForUsers::Steps::MotifSelection do
       let(:search_context) { WebSearchContext.new(user: nil, query_params: {}) }
 
       it "returns the common service" do
-        expect(motif_selection.service).to eq(motif.service)
+        expect(motif_selection.services).to eq([motif.service])
       end
     end
 
@@ -43,19 +43,8 @@ RSpec.describe CreneauWizardForUsers::Steps::MotifSelection do
       let(:matching_motifs) { Motif.none }
       let(:search_context) { WebSearchContext.new(user: nil, query_params: {}) }
 
-      it "returns nil" do
-        expect(motif_selection.service).to be_nil
-      end
-    end
-
-    context "with a service_id" do
-      let(:service) { create(:service) }
-      let(:motif) { create(:motif, service: service) }
-      let(:search_context) { WebSearchContext.new(user: nil, query_params: { service_id: service.id }) }
-      let(:matching_motifs) { Motif.where(id: [motif.id]) }
-
-      it "returns service from service_id params" do
-        expect(motif_selection.service).to eq(service)
+      it "returns nothing" do
+        expect(motif_selection.services).to be_empty
       end
     end
 
@@ -65,7 +54,7 @@ RSpec.describe CreneauWizardForUsers::Steps::MotifSelection do
       let(:matching_motifs) { Motif.where(id: [motif.id]) }
 
       it "returns service from selected motif" do
-        expect(motif_selection.service).to eq(motif.service)
+        expect(motif_selection.services).to eq([motif.service])
       end
     end
   end
