@@ -32,6 +32,8 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       expect(page).to have_content("Aucun résultat")
     end
 
+    # TODO: tester un filtre sur les motifs sans services
+
     it "displays archived motifs in separate tab" do
       visit admin_territory_motifs_path(territory)
       expect(page).to have_content("Consultation prénatale")
