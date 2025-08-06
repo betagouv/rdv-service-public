@@ -22,7 +22,7 @@ RSpec.describe "Allocation For Search Context" do
     search_context = WebSearchContext.new(user: nil, query_params: params)
 
     before = GC.stat[:total_allocated_objects]
-    search_context.unique_motifs_by_name_and_location_type
+    search_context.matching_motifs.to_a
     after = GC.stat[:total_allocated_objects]
     # Le chiffre est baser sur l'expérimentation.
     # Sur l'ancienne façon de faire le filtre sur les lieux, nous avons
@@ -31,6 +31,6 @@ RSpec.describe "Allocation For Search Context" do
     # Edit du 18 octobre.
     # La recherche de RDV collectif lié au lieu ajoute
     # pas mal d'allocations...
-    expect(after - before).to be <= 5500
+    expect(after - before).to be <= 2500
   end
 end
