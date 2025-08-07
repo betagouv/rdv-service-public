@@ -1,13 +1,15 @@
+- organisation_selection_service = CreneauWizardForUsers::Steps::OrganisationSelection.new(context)
+
 - content_for :title, "Sélectionnez la structure"
 
 = render "search/selected_motif_recap", context: context
-- if context.next_availability_by_motifs_organisations.empty?
+- if organisation_selection_service.next_availability_by_motifs_organisations.empty?
   = render "search/nothing_to_show", context: context
 - else
   p.fr-text--lg Sélectionnez la structure avec laquelle prendre RDV&nbsp;:
   ul.fr-raw-list
     / similar to app/views/search/_lieu_selection.html.slim:10
-    - context.next_availability_by_motifs_organisations.each do |organisation, next_availability|
+    - organisation_selection_service.next_availability_by_motifs_organisations.each do |organisation, next_availability|
       - motif = next_availability.motif
       - if motif.restriction_for_rdv.blank?
         - link = link_to organisation.name, prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at))

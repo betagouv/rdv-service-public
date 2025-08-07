@@ -1,5 +1,4 @@
 class WebSearchContext < SearchContext
-  include Users::CreneauxWizardConcern
   attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude, :departement, :ants_pre_demandes_count, :autofocus
 
   # departement est un cas particulier parce qu'il est aussi utilisé en dehors de addresse selection pour
@@ -62,7 +61,7 @@ class WebSearchContext < SearchContext
 
     # dupliqué de WebInvitationSearchContext
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
-    motifs = motifs.where(service: service) if @service_id.present?
+    motifs = motifs.where(service_id: @service_id) if @service_id.present?
     motifs = motifs.where(organisation_id: organisation_id) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs
@@ -78,8 +77,6 @@ class WebSearchContext < SearchContext
     @motif_id.present? ||
       @motif_name_with_location_type.present?
   end
-
-  private
 
   def matching_motifs
     @matching_motifs ||= filter_motifs(geo_search.available_motifs)

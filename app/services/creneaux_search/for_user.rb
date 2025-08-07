@@ -32,7 +32,7 @@ class CreneauxSearch::ForUser
   def creneaux
     # On n'affiche qu'un créneau par horaire, même si plusieurs agents sont dispos
     # car on ne propose pas à l'usager de choisir un agent en particulier
-    all_creneaux.uniq(&:starts_at)
+    @creneaux ||= all_creneaux.uniq(&:starts_at)
   end
 
   def available_collective_rdvs

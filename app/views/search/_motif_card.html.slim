@@ -1,10 +1,10 @@
-/ locals(context:, motif:, service_id:)
+/ locals(context:, motif:)
 
 li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
   .fr-card__body
     .fr-card__content
       .fr-card__title
-        = link_to motif.name, prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type, service_id: service_id))
+        = link_to motif.name, prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type, service_id: motif.service_id))
       .fr-card__start
         ul.fr-badges-group
           - case motif.location_type

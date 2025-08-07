@@ -9,4 +9,4 @@ h1 Nouveau RDV par prescription
       |> Pas d'adresse
       = link_to("ajouter une addresse", edit_admin_organisation_user_path(current_organisation, @context.user))
 section.container
-  = render partial: "search/#{@context.current_step}", locals: { context: @context }
+  = render partial: "search/#{@current_step}", locals: { context: @context }
