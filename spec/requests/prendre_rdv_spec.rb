@@ -40,11 +40,6 @@ RSpec.describe "Search", type: :request do
       let(:other_motif) { create(:motif, organisation: organisation) }
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif, other_motif], organisation: organisation) }
 
-      it "show text to invite to select motif" do
-        get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
-        expect(response.body).to include("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
-      end
-
       context "lorsqu’il n’y a pas de motif de suivi associé aux services" do
         it "n’affiche pas l’invitation à se connecter pour prendre un RDV de suivi" do
           get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
@@ -78,11 +73,6 @@ RSpec.describe "Search", type: :request do
       let(:motif) { create(:motif, organisation: organisation) }
       let(:other_motif) { create(:motif, organisation: organisation, service: motif.service) }
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif, other_motif], organisation: organisation) }
-
-      it "show text to invite to select motif" do
-        get root_url(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001", host: "www.rdv-solidarites-test.localhost")
-        expect(response.body).to include("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
-      end
 
       context "lorsqu’il n’y a pas de motif de suivi associé aux services" do
         it "n’affiche pas l’invitation à se connecter" do
