@@ -10,6 +10,8 @@ class CreneauWizardForUsers::Steps::MotifSelection
   def services
     @services ||= @context.matching_motifs.includes(:service).map(&:service).uniq.sort_by do |service|
       service ? I18n.transliterate(service.name.downcase) : "Autres"
+    end.sort_by do |service|
+      service.present? ? 0 : 1 # Cette ligne permet de mettre les motifs sans service à la fin de la liste
     end
   end
 
