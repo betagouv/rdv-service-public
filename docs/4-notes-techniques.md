@@ -165,14 +165,9 @@ Pour l’activer vous pouvez utiliser cette commande :
 classDiagram
   WebSearchContext <|-- AgentPrescriptionSearchContext
   SearchContext <|-- WebSearchContext
-  WebSearchContext *-- Users-CreneauxWizardConcern
   InvitationSearchContext <|-- WebInvitationSearchContext
   SearchContext <|-- InvitationSearchContext
-  WebInvitationSearchContext *-- Users-CreneauxWizardConcern
 
-  class Users-CreneauxWizardConcern {
-    + to_partial_path()
-  }
   class SearchContext {
     - user
     - query_params

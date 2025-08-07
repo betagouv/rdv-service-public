@@ -1,11 +1,15 @@
-- content_for :title, "Sélectionnez le motif"
+- motif_selection_service = CreneauWizardForUsers::Steps::MotifSelection.new(context)
 
-- if context.unique_motifs_by_name_and_location_type.empty?
+- if motif_selection_service.unique_motifs_by_name_and_location_type.empty?
+  - content_for :title, "Aucun créneau disponible"
   = render "search/nothing_to_show", context: context
-- else
+- elsif motif_selection_service.service_selected?
+  - content_for :title, "Sélectionnez le motif"
   p.fr-text--lg Sélectionnez le motif de votre RDV&nbsp;:
   ul.fr-raw-list
-    - context.unique_motifs_by_name_and_location_type.each do |motif|
-      = render "search/motif_card", context: context, motif: motif, service_id: context.service.id
+    - motif_selection_service.unique_motifs_by_name_and_location_type.each do |motif|
+      = render "search/motif_card", context: context, motif: motif
+- else
+  = render "search/service_selection", context:, motif_selection_service:
 
-= render "search/referent_booking_card", context: context
+= render "search/referent_booking_card", context:, motif_selection_service:

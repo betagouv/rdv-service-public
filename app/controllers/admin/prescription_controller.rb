@@ -11,6 +11,8 @@ class Admin::PrescriptionController < AgentAuthController
       current_organisation: current_organisation,
       agent_prescripteur: current_agent
     )
+
+    @current_step = CreneauWizardForUsers::CurrentStepPicker.new(@context).current_step
   end
 
   def user_selection
