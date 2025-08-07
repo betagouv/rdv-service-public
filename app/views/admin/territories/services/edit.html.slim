@@ -1,10 +1,14 @@
 = territory_navigation("Services")
 
-.row.justify-content-center
-  .col-md-6
+.fr-grid-row
+  .fr-col-md-10
     .card
       .card-body
         h1.card-title Services
+        p Les services vous permettent de classifier vos motifs pour éviter que tous les agents aient accès à tous les rendez-vous.
+
+        p Par exemple, si vous créez un motif « Entretien annuel » pour le service « Ressources Humaines », seuls les agents du service « Ressources Humaines » pourront assurer des rendez-vous pour ce motif. Les agents des autres services ne pourront pas les voir ni les modifier, sauf s'ils sont secrétaires ou admin.
+
         p Vous pouvez activer ou désactiver les services auxquels vos agents peuvent être affectés.
 
         = simple_form_for current_territory, url: admin_territory_services_path(current_territory, redirect_to_organisation_id: params[:redirect_to_organisation_id]) do |f|
@@ -22,4 +26,4 @@
               .col.text-left
                 = link_to("Annuler", new_admin_organisation_agent_path(params[:redirect_to_organisation_id]))
             .col.text-right
-              = f.button :submit
+              = f.submit class: "fr-btn"
