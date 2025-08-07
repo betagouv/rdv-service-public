@@ -1,4 +1,8 @@
 class SearchContext
+  # departement est un cas particulier parce qu'il est aussi utilisé en dehors de addresse selection pour
+  # passer cette première étape
+  ADDRESS_SELECTION_PARAMS = %i[latitude longitude address city_code street_ban_id departement].freeze
+
   def initialize(user:, query_params: {})
     @user = user
     @query_params = query_params

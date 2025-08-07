@@ -108,7 +108,7 @@ class SearchController < ApplicationController
 
   def search_params
     params.permit(
-      *WebSearchContext::ADDRESS_SELECTION_PARAMS,
+      *SearchContext::ADDRESS_SELECTION_PARAMS,
       *WebSearchContext::USER_CHOICE_PARAMS,
       :motif_category_short_name, :date, :public_link_organisation_id, :prescripteur, :autofocus,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []

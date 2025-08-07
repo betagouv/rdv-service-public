@@ -1,6 +1,6 @@
 class AgentPrescriptionSearchContext < WebSearchContext
   STRONG_PARAMS_LIST = [
-    *WebSearchContext::ADDRESS_SELECTION_PARAMS,
+    *SearchContext::ADDRESS_SELECTION_PARAMS,
     *WebSearchContext::USER_CHOICE_PARAMS,
     :date, :motif_category_short_name, :prescripteur,
     :context,

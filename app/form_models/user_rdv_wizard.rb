@@ -56,7 +56,7 @@ module UserRdvWizard
         motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: users&.map(&:id), rdv_collectif_id: rdv.id,
       }.merge(
         @attributes.slice(
-          *WebSearchContext::ADDRESS_SELECTION_PARAMS,
+          *SearchContext::ADDRESS_SELECTION_PARAMS,
           :where, :lieu_id, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
           :referent_ids, :external_organisation_ids, :duration, :ants_pre_demandes_count
         )

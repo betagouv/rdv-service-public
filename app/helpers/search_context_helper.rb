@@ -65,7 +65,7 @@ module SearchContextHelper
 
   def starting_permitted_params_list
     [
-      *WebSearchContext::ADDRESS_SELECTION_PARAMS,
+      *SearchContext::ADDRESS_SELECTION_PARAMS,
       :public_link_organisation_id,
       :prescripteur,
       :duration,
