@@ -1,8 +1,9 @@
 - if show_agent_prescription_feature?(user_provided: @form.user_ids.any?)
-  .rdv-text-align-center.mt-2.mb-4
+  .rdv-text-align-center.fr-my-4v
     p
       | Vous pouvez aussi élargir votre recherche aux créneaux ouverts à la prescription dans d'autres organisations.
-      span  Plus d'informations dans
+      br
+      = "Plus d'informations dans "
       = link_to "la documentation", "https://rdvs.notion.site/Prescription-f1c857697c68421d91592ae88364c05d", target: "_blank"
     p
-      = link_to("Élargir la recherche", search_creneau_admin_organisation_prescription_path(user_ids: @form.user_ids, departement: current_territory.departement_number), class: "btn btn-outline-primary")
+      = link_to("Élargir la recherche", search_creneau_admin_organisation_prescription_path(user_ids: @form.user_ids, departement: current_territory.departement_number), class: "fr-btn fr-btn--secondary")
