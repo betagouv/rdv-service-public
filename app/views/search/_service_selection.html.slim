@@ -14,5 +14,5 @@
           button.fr-accordion__btn.fr-text--lead type="button" aria-expanded="false" aria-controls="fr-accordion-#{service&.id || "all"}" = service&.name || "Autres"
         .fr-collapse id="fr-accordion-#{service&.id || "all"}"
           ul.fr-raw-list
-            - motif_selection_service.motifs_grouped_by_service_id[service.id].uniq(&:name_with_location_type).sort_by { |motif| I18n.transliterate(motif.name.downcase)}.each do |motif|
+            - motif_selection_service.motifs_grouped_by_service_id[service&.id].uniq(&:name_with_location_type).sort_by { |motif| I18n.transliterate(motif.name.downcase)}.each do |motif|
               = render "search/motif_card", context: context, motif: motif
