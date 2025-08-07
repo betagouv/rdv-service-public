@@ -1,6 +1,7 @@
+- creneau_selection_service = CreneauWizardForUsers::Steps::CreneauSelection.new(context)
 .fr-container
   = render "search/selected_motif_recap", context: context
-  - if context.no_availability?
+  - if creneau_selection_service.no_availability?
     = render "search/nothing_to_show", context: context
   - else
     - if context.first_matching_motif.collectif?
@@ -9,14 +10,15 @@
     - else
       - content_for :title, "Sélectionnez le créneau"
       p.fr-text--lg Sélectionnez un créneau&nbsp;:
+
     - if context.first_matching_motif.collectif?
       ul.fr-raw-list
-        - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
-          = render "search/rdv_collectif", rdv: rdv
-    - elsif context.unique_motifs_by_name_and_location_type.present?
+        - creneau_selection_service.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
+          = render "search/rdv_collectif", rdv: rdv, creneau_selection_service: creneau_selection_service
+    - elsif context.matching_motifs.present?
       .card.mb-3
         .card-body
-          = render "search/creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, city_code: context.city_code, next_availability: context.next_availability, query_params: context.query_params, context: context
+          = render "search/creneaux", lieu: context.lieu, creneaux: creneau_selection_service.creneaux, date_range: context.date_range, next_availability: creneau_selection_service.next_availability, query_params: context.query_params, context: context, creneau_selection_service: creneau_selection_service
     - else
       .card.mb-3
         .card-body

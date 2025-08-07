@@ -15,16 +15,7 @@ class AgentPrescriptionSearchContext < WebSearchContext
     @agent_prescripteur = agent_prescripteur
   end
 
-  attr_reader :user
-
-  def wizard_after_creneau_selection_path(creneau_params)
-    url_helpers = Rails.application.routes.url_helpers
-    if @user
-      url_helpers.recapitulatif_admin_organisation_prescription_path(@current_organisation, creneau_params.merge(query_params))
-    else
-      url_helpers.user_selection_admin_organisation_prescription_path(@current_organisation, creneau_params.merge(query_params))
-    end
-  end
+  attr_reader :user, :current_organisation
 
   def city_code
     geolocation_results[:city_code] if geolocation_results

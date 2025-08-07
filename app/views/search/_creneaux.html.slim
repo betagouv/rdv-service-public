@@ -22,7 +22,7 @@ div id="creneaux-lieu-#{lieu&.id}"
               .fr-grid-row
                 - creneaux_by_date[date].sort.each do |creneau|
                   - autofocus = (@context.autofocus == "first" && creneau == creneaux.min) || (@context.autofocus == "last" && creneau == creneaux.max)
-                  = link_to context.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at),
+                  = link_to creneau_selection_service.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at),
                           class: "fr-col-12 fr-btn fr-btn--tertiary fr-mb-1w rdv-justify-content-center",
                           data: { turbolinks: false },
                           aria: { label: "Choisir le créneau du #{l(creneau.starts_at, format: '%A %-d %b')} à #{l(creneau.starts_at, format: '%H:%M')}"},
@@ -31,7 +31,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                     - if creneau.motif.follow_up?
                       br
                       small= creneau.agent.short_name
-            - elsif context.after_max_public_booking_delay?(date)
+            - elsif creneau_selection_service.after_max_public_booking_delay?(date)
               p.rdv-text-align-center.rdv-color-text-mention-grey
                 | Date fermée à la reservation
             - elsif creneaux_by_date[date].nil?
@@ -49,7 +49,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                   | Prochaine disponibilité le
                   br
                   strong= l(next_availability.starts_at, format: :human)
-    - if params[:date].blank? || !context.after_max_public_booking_delay?(params[:date].to_date + 6.days)
+    - if params[:date].blank? || !creneau_selection_service.after_max_public_booking_delay?(params[:date].to_date + 6.days)
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
         = link_to "", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day, autofocus: "first")), class: "fr-btn fr-icon-arrow-right-s-line fr-hidden fr-unhidden-md", aria: { label: "semaine suivante"}
         = link_to "sem. prochaine", prendre_rdv_path(query_params.merge(date: date_range.end + 1.day, autofocus: "first")), class:  "fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line fr-hidden-md", aria: { label: "semaine suivante"}

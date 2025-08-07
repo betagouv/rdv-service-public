@@ -4,6 +4,8 @@ class SearchContext
     @query_params = query_params
   end
 
+  delegate :creneaux, to: :creneaux_search
+
   def geo_search
     Users::GeoSearch.new(departement: departement, city_code: city_code, street_ban_id: street_ban_id)
   end
@@ -13,19 +15,7 @@ class SearchContext
   end
 
   def start_date
-    Time.zone.today
-  end
-
-  def creneaux
-    @creneaux ||= creneaux_search.creneaux
-  end
-
-  def available_collective_rdvs
-    @available_collective_rdvs ||= creneaux_search.available_collective_rdvs
-  end
-
-  def creneaux_search
-    creneaux_search_for(lieu, first_matching_motif)
+    query_params[:date]&.to_date || Time.zone.today
   end
 
   def first_matching_motif
@@ -52,6 +42,19 @@ class SearchContext
     motifs
   end
 
+  def creneaux_search_for(lieu, motif)
+    duration_in_min = motif.default_duration_in_min
+    duration_in_min *= ants_pre_demandes_count.to_i if ants_pre_demandes_count.present?
+    CreneauxSearch::ForUser.new(
+      user: @user,
+      motif: motif,
+      lieu: lieu,
+      date_range: date_range,
+      geo_search: geo_search,
+      duration_in_min:
+    )
+  end
+
   private
 
   attr_reader :referent_ids, :lieu_id
@@ -74,19 +77,6 @@ class SearchContext
 
   def ants_pre_demandes_count
     raise NoMethodError
-  end
-
-  def creneaux_search_for(lieu, motif)
-    duration_in_min = motif.default_duration_in_min
-    duration_in_min *= ants_pre_demandes_count.to_i if ants_pre_demandes_count.present?
-    CreneauxSearch::ForUser.new(
-      user: @user,
-      motif: motif,
-      lieu: lieu,
-      date_range: date_range,
-      geo_search: geo_search,
-      duration_in_min:
-    )
   end
 
   def retrieve_referent_agents

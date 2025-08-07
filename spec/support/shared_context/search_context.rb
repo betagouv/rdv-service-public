@@ -7,7 +7,6 @@ RSpec.shared_examples "SearchContext" do
   let!(:rsa_orientation_on_phone_platform) { create(:motif_category, name: "RSA orientation sur plateforme téléphonique", short_name: "rsa_orientation_on_phone_platform") }
   let!(:motif2) { create(:motif, name: "RSA orientation sur plateforme téléphonique", motif_category: rsa_orientation_on_phone_platform, organisation: organisation, service: motif.service) }
   let!(:departement_number) { "75" }
-  let!(:address) { "20 avenue de Ségur 75007 Paris" }
   let!(:city_code) { "75007" }
   let!(:latitude) { "48.3" }
   let!(:longitude) { "55.5" }
@@ -26,52 +25,6 @@ RSpec.shared_examples "SearchContext" do
       .and_return(geo_search)
   end
 
-  describe "#current_step" do
-    context "when nothing is passed" do
-      let!(:query_params) { {} }
-
-      it "current step is address selection" do
-        expect(subject.current_step).to eq(:address_selection)
-      end
-    end
-
-    context "when using a direct link to an organisation with a territory without departement number" do
-      let!(:query_params) { { public_link_organisation_id: organisation.id } }
-      let(:departement_number) { nil }
-      let(:city_code) { nil }
-      let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "")) }
-
-      it "returns motif selection" do
-        expect(subject.current_step).to eq(:motif_selection)
-      end
-    end
-
-    context "with an address but several matching motifs" do
-      let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
-      let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
-
-      it "current step is motif selection" do
-        expect(subject.current_step).to eq(:motif_selection)
-      end
-    end
-
-    context "with a single matching motif and an address" do
-      let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
-
-      it "current step is motif selection" do
-        expect(subject.current_step).to eq(:motif_selection)
-      end
-    end
-
-    context "with a single matching motif and an address and a motif name in the params" do
-      let!(:query_params) { { address: address, departement: departement_number, city_code: city_code, motif_name_with_location_type: motif.name_with_location_type } }
-
-      it "current step is lieu selection" do
-        expect(subject.current_step).to eq(:lieu_selection)
-      end
-    end
-  end
-
   describe "#matching_motifs" do
     it "is the geo search matching motifs" do
       expect(subject.send(:matching_motifs)).to eq([motif])
@@ -82,102 +35,6 @@ RSpec.shared_examples "SearchContext" do
 
       it "is the returns the two matching motifs" do
         expect(subject.send(:matching_motifs)).to contain_exactly(motif, motif2)
-      end
-    end
-  end
-
-  describe "#services" do
-    it "returns services sort by name" do
-      service_a = create(:service, name: "A")
-      service_b = create(:service, name: "B")
-      motif_a = create(:motif, service: service_a)
-      motif_b = create(:motif, service: service_b)
-      matching_motifs = Motif.where(id: [motif_a.id, motif_b.id])
-      search_context = described_class.new(user: nil, query_params: { motif_name_with_location_type: "" })
-      allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
-      expect(search_context.services).to eq([service_a, service_b])
-    end
-  end
-
-  describe "#service" do
-    it "returns service from service_id params when given" do
-      service = create(:service)
-      search_context = described_class.new(user: nil, query_params: { service_id: service.id })
-      expect(search_context.service).to eq(service)
-    end
-
-    it "returns service from selected motif" do
-      motif = create(:motif)
-      matching_motifs = Motif.where(id: motif.id)
-      search_context = described_class.new(user: nil, query_params: {})
-      allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
-      expect(search_context.service).to eq(motif.service)
-    end
-
-    it "returns service from same service motifs" do
-      motif = create(:motif)
-      autre_motif = create(:motif, service: motif.service)
-      matching_motifs = Motif.where(id: [motif.id, autre_motif.id])
-      search_context = described_class.new(user: nil, query_params: {})
-      allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
-      expect(search_context.service).to eq(motif.service)
-    end
-
-    it "returns nil without motifs or service_id" do
-      search_context = described_class.new(user: nil, query_params: {})
-      matching_motifs = Motif.none
-      allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
-      expect(search_context.service).to be_nil
-    end
-
-    it "returns nil with multiple service from motifs" do
-      motif = create(:motif)
-      autre_motif = create(:motif)
-      matching_motifs = Motif.where(id: [motif.id, autre_motif.id])
-      search_context = described_class.new(user: nil, query_params: {})
-      allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
-      expect(search_context.service).to be_nil
-    end
-  end
-
-  describe "#creneaux_search" do
-    context "when lieu is present" do
-      it "returns a CreneauxSearch::ForUser using the lieu and the first matching motif" do
-        plage_ouverture = create(:plage_ouverture, motifs: [motif, motif2], organisation: organisation)
-        lieu = plage_ouverture.lieu
-        search_context = described_class.new(user:, query_params: query_params.merge(lieu_id: lieu.id))
-
-        expect(CreneauxSearch::ForUser).to receive(:new).with(
-          user: user,
-          motif: motif,
-          lieu: lieu,
-          date_range: search_context.date_range,
-          geo_search: geo_search,
-          duration_in_min: 30
-        )
-        search_context.creneaux_search
-      end
-    end
-
-    context "when lieu is nil" do
-      let!(:motif) { create(:motif, :by_phone, organisation: organisation, default_duration_in_min: 30) }
-
-      it "returns a CreneauxSearch::ForUser using no lieu and the selected motif" do
-        create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
-        search_context = described_class.new(
-          user:,
-          query_params: query_params
-        )
-
-        expect(CreneauxSearch::ForUser).to receive(:new).with(
-          user: user,
-          motif: motif,
-          lieu: nil,
-          date_range: search_context.date_range,
-          geo_search: geo_search,
-          duration_in_min: 30
-        )
-        search_context.creneaux_search
       end
     end
   end
