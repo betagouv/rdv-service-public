@@ -1,12 +1,10 @@
-# TODO: ajouter une variante pour des motifs sans services ?
 RSpec.shared_examples "SearchContext" do
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:organisation) { create(:organisation) }
-  let!(:service) { create(:service) }
   let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
   let!(:motif) { create(:motif, name: "RSA orientation sur site", motif_category: rsa_orientation, organisation: organisation, default_duration_in_min: 30) }
   let!(:rsa_orientation_on_phone_platform) { create(:motif_category, name: "RSA orientation sur plateforme téléphonique", short_name: "rsa_orientation_on_phone_platform") }
-  let!(:motif2) { create(:motif, name: "RSA orientation sur plateforme téléphonique", motif_category: rsa_orientation_on_phone_platform, organisation: organisation, service: motif.service) }
+  let!(:motif2) { create(:motif, name: "RSA orientation sur plateforme téléphonique", motif_category: rsa_orientation_on_phone_platform, organisation: organisation) }
   let!(:departement_number) { "75" }
   let!(:city_code) { "75007" }
   let!(:latitude) { "48.3" }

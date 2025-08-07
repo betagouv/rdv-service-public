@@ -401,7 +401,6 @@ RSpec.describe "agents can prescribe rdvs" do
         end
 
         it "shows the motif" do
-          # TODO: voir s'il faut gérer le cas d'un seul service
           go_to_prescription_page
           expect(page).to have_content(motif_sans_service.name)
 

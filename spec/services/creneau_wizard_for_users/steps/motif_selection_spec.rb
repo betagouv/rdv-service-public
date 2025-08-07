@@ -19,6 +19,7 @@ RSpec.describe CreneauWizardForUsers::Steps::MotifSelection do
         expect(motif_selection.services).to eq([service_a, service_b])
       end
     end
+    # TODO: ajouter une spec pour les motifs sans service
 
     describe "#service_selected?" do
       it "returns nil" do
