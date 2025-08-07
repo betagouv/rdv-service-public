@@ -28,7 +28,8 @@
           = collapsible_form_fields_for_warnings(@rdv_form) do
             = hidden_field_tag :agent_id, @agent&.id
             = f.association :motif, collection: [@rdv_form.motif], disabled: true
-            = f.input :context, input_html: { rows: 3 }
+            - if @rdv_form.organisation.territory.enable_context_field
+              = f.input :context, input_html: { rows: 3 }
             .form-row
               .col-md-6 data={ "controller": "past-date-alert" }
                 = datetime_input(f, :starts_at, input_html: { data: { "past-date-alert-target": "date-input" } })
