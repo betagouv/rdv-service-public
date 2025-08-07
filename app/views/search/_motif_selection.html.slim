@@ -1,6 +1,7 @@
 - motif_selection_service = CreneauWizardForUsers::Steps::MotifSelection.new(context)
 
 - if motif_selection_service.unique_motifs_by_name_and_location_type.empty?
+  - content_for :title, "Aucun créneau disponible"
   = render "search/nothing_to_show", context: context
 - elsif motif_selection_service.service_selected?
   - content_for :title, "Sélectionnez le motif"
