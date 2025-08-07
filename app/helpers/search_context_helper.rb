@@ -69,6 +69,7 @@ module SearchContextHelper
       :public_link_organisation_id,
       :prescripteur,
       :duration,
+      :current_organisation,
       {
         referent_ids: [],
         external_organisation_ids: [],
