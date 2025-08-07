@@ -9,8 +9,10 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
   describe "Listing motifs" do
     let!(:org_arques) { create(:organisation, name: "Arques", territory: territory) }
     let!(:org_bapaume) { create(:organisation, name: "Bapaume", territory: territory) }
-    let!(:motif_consultation_prenatale) { create(:motif, name: "Consultation prénatale", organisation: org_arques) }
-    let!(:motif_suivi_apres_naissance) { create(:motif, name: "Suivi après naissance", organisation: org_bapaume) }
+    let!(:motif_consultation_prenatale) { create(:motif, name: "Consultation prénatale", organisation: org_arques, service: pmi) }
+    let!(:motif_suivi_apres_naissance) { create(:motif, name: "Suivi après naissance", organisation: org_bapaume, service: pmi) }
+    let!(:motif_sans_service) { create(:motif, name: "Orientation", organisation: org_bapaume, service: nil) }
+    let(:pmi) { create(:service, name: "PMI") }
 
     before do
       agent.roles.create!(organisation: org_arques, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
@@ -31,8 +33,6 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       click_on "Filtrer"
       expect(page).to have_content("Aucun résultat")
     end
-
-    # TODO: tester un filtre sur les motifs sans services
 
     it "displays archived motifs in separate tab" do
       visit admin_territory_motifs_path(territory)
