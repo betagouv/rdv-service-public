@@ -69,10 +69,11 @@ module SearchContextHelper
       :public_link_organisation_id,
       :prescripteur,
       :duration,
+      :current_organisation,
+      *AgentPrescriptionSearchContext::STARTING_CONDITIONS_PARAMS,
       {
         referent_ids: [],
         external_organisation_ids: [],
-        user_ids: [], # utilisés par les agents prescripteurs en prescription interne
       },
     ]
   end
