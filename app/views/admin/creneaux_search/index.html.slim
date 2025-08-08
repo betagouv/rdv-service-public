@@ -29,9 +29,10 @@
             = f.input :motif_id, \
               required: true, \
               include_blank: true, \
-              collection: @motifs.includes(:service).to_a.group_by(&:service_name), \
+              collection: sort_motifs_by_service(@motifs.to_a.group_by(&:service)), \
               as: :grouped_select, \
               group_method: :last,
+              group_label_method: -> { _1.first&.name },
               label_method: -> { motif_name_and_location_type(_1) }, \
               input_html: { \
                 data: { placeholder: "Sélectionnez un motif" }, \

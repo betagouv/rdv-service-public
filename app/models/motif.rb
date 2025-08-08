@@ -94,7 +94,7 @@ class Motif < ApplicationRecord
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
                        else
-                         where(service: agent.services)
+                         where(service: (agent.services + [nil]))
                        end
 
     if agent.secretaire?

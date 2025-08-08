@@ -1,10 +1,9 @@
 RSpec.describe "Agent can organize a rdv collectif", js: true do
-  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Alain", last_name: "DIALO") }
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], first_name: "Alain", last_name: "DIALO") }
   let!(:motif) do
-    create(:motif, :collectif, name: "Atelier participatif", organisation: organisation, service: service)
+    create(:motif, :collectif, name: "Atelier participatif", organisation: organisation)
   end
   let(:organisation) { create(:organisation) }
-  let!(:service) { create(:service) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
   let!(:user1) { create(:user, organisations: [organisation]) }

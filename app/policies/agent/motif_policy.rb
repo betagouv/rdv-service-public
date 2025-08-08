@@ -5,6 +5,7 @@ class Agent::MotifPolicy < ApplicationPolicy
 
   def self.agent_can_use_motif?(motif, agent)
     return false unless motif.organisation.in?(agent.organisations)
+    return true if motif.service.blank?
 
     agent.secretaire? ||
       agent_can_manage_motif?(motif, agent) ||
@@ -49,7 +50,7 @@ class Agent::MotifPolicy < ApplicationPolicy
       if current_agent.secretaire?
         scope.where(organisation_id: current_agent.organisation_ids)
       else
-        scope.where(organisation: current_agent.basic_orgs, service: current_agent.services)
+        scope.where(organisation: current_agent.basic_orgs, service: (current_agent.services + [nil]))
           .or(scope.where(organisation: current_agent.admin_orgs))
       end
     end

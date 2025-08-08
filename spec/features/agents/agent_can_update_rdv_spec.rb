@@ -4,9 +4,8 @@ RSpec.describe "Agent can update a RDV", js: true do
   let(:rdv) do
     create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu, starts_at:, ends_at:)
   end
-  let!(:service) { create(:service, name: "Urbanisme") }
-  let!(:agent_shiraz) { create(:agent, first_name: "Shiraz", last_name: "NADIR", email: "shiraz@angouleme.fr", service:, basic_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, service: service, organisation: organisation) }
+  let!(:agent_shiraz) { create(:agent, first_name: "Shiraz", last_name: "NADIR", email: "shiraz@angouleme.fr", basic_role_in_organisations: [organisation]) }
+  let!(:motif) { create(:motif, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let(:starts_at) { 1.hour.from_now }
   let(:ends_at) { starts_at + 1.hour }
@@ -79,7 +78,7 @@ RSpec.describe "Agent can update a RDV", js: true do
   end
 
   context "ajout d’un agent au RDV" do
-    let!(:agent_jungyoon) { create(:agent, first_name: "Jung Yoon", last_name: "Han", email: "jungyoon@angouleme.fr", service:, basic_role_in_organisations: [organisation]) }
+    let!(:agent_jungyoon) { create(:agent, first_name: "Jung Yoon", last_name: "Han", email: "jungyoon@angouleme.fr", basic_role_in_organisations: [organisation]) }
 
     it "envoie un email à l’agent ajouté", skip: "cf PR #5399" do # rubocop:disable RSpec/Pending
       visit edit_admin_organisation_rdv_path(organisation, rdv)
@@ -102,7 +101,7 @@ RSpec.describe "Agent can update a RDV", js: true do
 
       it "affiche un avertissement, une fois contourné l’agent est bien ajouté" do
         visit edit_admin_organisation_rdv_path(organisation, rdv)
-        select("Jung Yoon HAN (Urbanisme)", from: "rdv_agent_ids")
+        select("Jung Yoon HAN", from: "rdv_agent_ids")
         click_button "Enregistrer"
         expect(page).to have_content "Ce rendez-vous en chevauche un autre"
         expect(rdv.reload.agents).to contain_exactly(agent_shiraz)

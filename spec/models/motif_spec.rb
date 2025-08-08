@@ -103,38 +103,39 @@ RSpec.describe Motif, type: :model do
     let!(:motif3) { create(:motif, :for_secretariat, service: service, organisation: organisation) }
     let!(:motif4) { create(:motif, service: service, organisation: create(:organisation)) }
     let!(:motif5) { create(:motif, service: create(:service), organisation: organisation) }
+    let!(:motif_without_service) { create(:motif, service: nil, organisation: organisation) }
     let(:plage_ouverture) { build(:plage_ouverture, agent: agent, organisation: organisation) }
 
     describe "for secretaire" do
       let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
 
-      it { is_expected.to contain_exactly(motif3) }
+      it { is_expected.to contain_exactly(motif3, motif_without_service) }
 
       context "when the agent is also part of another service" do
         before do
           agent.services << service
         end
 
-        it { is_expected.to contain_exactly(motif, motif2, motif3) }
+        it { is_expected.to contain_exactly(motif, motif2, motif3, motif_without_service) }
       end
     end
 
     describe "for other service" do
       let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
 
-      it { is_expected.to contain_exactly(motif, motif2, motif3) }
+      it { is_expected.to contain_exactly(motif, motif2, motif3, motif_without_service) }
     end
 
     describe "for admin" do
       let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
-      it { is_expected.to contain_exactly(motif, motif2, motif3, motif5) }
+      it { is_expected.to contain_exactly(motif, motif2, motif3, motif5, motif_without_service) }
     end
 
     describe "for secretary admin" do
       let(:agent) { create(:agent, :secretaire, admin_role_in_organisations: [organisation]) }
 
-      it { is_expected.to contain_exactly(motif, motif2, motif3, motif5) }
+      it { is_expected.to contain_exactly(motif, motif2, motif3, motif5, motif_without_service) }
     end
   end
 
@@ -163,6 +164,12 @@ RSpec.describe Motif, type: :model do
       let!(:agent_pmi3) { create(:agent, basic_role_in_organisations: [org2], service: service_pmi) }
 
       it { is_expected.not_to include(agent_pmi3) }
+    end
+
+    context "for motif without service" do
+      let!(:motif) { create(:motif, service: nil, organisation: org1) }
+
+      it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1) }
     end
   end
 
