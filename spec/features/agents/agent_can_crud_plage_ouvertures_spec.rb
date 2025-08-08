@@ -75,6 +75,12 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
       it_behaves_like "can crud own plage ouvertures"
     end
+
+    context "for a motif without a service" do
+      let!(:motif) { create(:motif, name: "Suivi bonjour", service: nil, organisation: organisation) }
+
+      it_behaves_like "can crud own plage ouvertures"
+    end
   end
 
   context "for a secretaire" do
