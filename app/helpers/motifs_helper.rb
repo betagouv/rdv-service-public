@@ -21,7 +21,7 @@ module MotifsHelper
   end
 
   def motif_name_and_service(motif)
-    "#{motif.name} - #{motif.service_name}"
+    [motif.name, motif.service_name].compact.join(" - ")
   end
 
   def motif_name_with_special_location_type(motif)
