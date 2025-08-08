@@ -28,6 +28,16 @@ RSpec.describe Motif, type: :model do
       expect(subject.errors.details).to eq({ base: [{ error: :duplicate_detected }] })
       expect(subject.errors.full_messages.to_sentence).to eq(%(Il existe déjà dans Mon orga un motif À domicile nommé "name" pour le service PMI))
     end
+
+    context "without a service" do
+      let(:motif) { create(:motif, name: "name", location_type: :home, service: nil, organisation: organisation) }
+
+      specify do
+        expect(subject).not_to be_valid
+        expect(subject.errors.details).to eq({ base: [{ error: :duplicate_detected }] })
+        expect(subject.errors.full_messages.to_sentence).to eq(%(Il existe déjà dans Mon orga un motif À domicile nommé "name" ouvert à tous les agents))
+      end
+    end
   end
 
   describe ".create when associated with secretariat" do
