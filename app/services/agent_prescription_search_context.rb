@@ -1,17 +1,17 @@
 class AgentPrescriptionSearchContext < WebSearchContext
+  STARTING_CONDITIONS_PARAMS = [:current_organisation, { user_ids: [] }].freeze
+
   STRONG_PARAMS_LIST = [
     *WebSearchContext::ADDRESS_SELECTION_PARAMS,
     *WebSearchContext::USER_CHOICE_PARAMS,
     :date, :motif_category_short_name, :prescripteur,
     :context,
-    { # Paramètre supplémentaire qui n'apparait pas dans le WebSearchContext
-      user_ids: [],
-    },
+    *STARTING_CONDITIONS_PARAMS,
   ].freeze
 
-  def initialize(user:, current_organisation:, agent_prescripteur:, query_params: {})
+  def initialize(user:, agent_prescripteur:, query_params: {})
     super(user: user, query_params: query_params)
-    @current_organisation = current_organisation
+    @current_organisation = query_params[:current_organisation]
     @agent_prescripteur = agent_prescripteur
   end
 
