@@ -11,7 +11,9 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
                end
     end
 
-    motifs = motifs.where(service_id: params[:service_id]) if params[:service_id].present?
+    if params.key?(:service_id) # Il est possible de filtrer les motifs sans service
+      motifs = motifs.where(service_id: params[:service_id].presence)
+    end
 
     motifs = motifs.with_motif_category_short_name(@params[:motif_category_short_name]) if params[:motif_category_short_name].present?
 
