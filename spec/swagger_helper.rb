@@ -366,7 +366,7 @@ RSpec.configure do |config|
               motif_category: { "$ref" => "#/components/schemas/motif_category" },
               bookable_publicly: { type: "boolean" },
               bookable_by: { type: "string", enum: %w[agents agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone] },
-              service_id: { type: "integer" },
+              service_id: { type: "integer", nullable: true },
             },
             required: %w[id deleted_at location_type name organisation_id bookable_publicly bookable_by service_id],
           },
