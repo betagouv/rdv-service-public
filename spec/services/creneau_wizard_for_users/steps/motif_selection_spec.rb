@@ -27,6 +27,31 @@ RSpec.describe CreneauWizardForUsers::Steps::MotifSelection do
     end
   end
 
+  context "when there are only motifs without services" do
+    let(:motif_a) { create(:motif, service: nil) }
+    let(:motif_b) { create(:motif, service: nil) }
+    let(:matching_motifs) { Motif.where(id: [motif_a.id, motif_b.id]) }
+
+    it "considers that there is a selected service and returns the motifs" do
+      expect(motif_selection.services).to eq [nil]
+      expect(motif_selection.service_selected?).to be true
+    end
+  end
+
+  context "when there are motifs with and without services" do
+    let(:motif_a) { create(:motif, service: service_a) }
+    let(:motif_b) { create(:motif, service: service_b) }
+    let(:motif_c) { create(:motif, service: nil) }
+    let(:service_b) { create(:service, name: "B") }
+    let(:service_a) { create(:service, name: "A") }
+    let(:matching_motifs) { Motif.where(id: [motif_a.id, motif_b.id, motif_c.id]) }
+
+    it "sorts the services properly" do
+      expect(motif_selection.services).to eq [service_a, service_b, nil]
+      expect(motif_selection.service_selected?).to be false
+    end
+  end
+
   describe "#services" do
     context "when there are two motifs for the same service" do
       let(:matching_motifs) { Motif.where(id: [motif.id, autre_motif.id]) }
