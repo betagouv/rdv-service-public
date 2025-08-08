@@ -4,7 +4,7 @@ class Users::RdvSms < Users::BaseSms
 
   def rdv_title(rdv)
     if rdv.collectif? && rdv.name.present?
-      "#{rdv.service_short_name} : #{truncated_rdv_name},"
+      [rdv.service_short_name, truncated_rdv_name].compact.join(" : ")
     else
       rdv.service_short_name
     end
@@ -49,7 +49,7 @@ class Users::RdvSms < Users::BaseSms
   MAX_RDV_NAME_LENGTH = 50
 
   def truncated_rdv_name
-    self.class.truncated_rdv_name(@rdv.name)
+    "#{self.class.truncated_rdv_name(@rdv.name)},"
   end
 
   def self.truncated_rdv_name(name)
