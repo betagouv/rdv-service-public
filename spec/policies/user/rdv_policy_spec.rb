@@ -14,9 +14,8 @@ RSpec.describe User::RdvPolicy, type: :policy do
   end
 
   let(:organisation) { create(:organisation) }
-  let(:service) { create(:service) }
-  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
-  let(:motif) { create(:motif, organisation: organisation, service: service) }
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  let(:motif) { create(:motif, organisation: organisation) }
   let(:user) { create(:user) }
   let(:user2) { create(:user) }
   let(:pundit_context) { user }
@@ -46,7 +45,7 @@ RSpec.describe User::RdvPolicy, type: :policy do
   end
 
   context "Rdv belongs to user but motif is not visible" do
-    let(:motif) { create(:motif, organisation: organisation, service: service, visibility_type: Motif::INVISIBLE) }
+    let(:motif) { create(:motif, organisation: organisation, visibility_type: Motif::INVISIBLE) }
 
     it_behaves_like "not included in scope"
     it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :cancel?, :creneaux?, :can_change_participants?

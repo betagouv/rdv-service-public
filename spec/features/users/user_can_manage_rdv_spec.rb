@@ -75,7 +75,7 @@ RSpec.describe "User can manage their rdvs" do
           # User change the date
           click_link("Déplacer le RDV")
           first(:link, "11:00").click
-          expect(page).to have_content("Vous allez modifier votre RDV #{motif.name} - #{motif.service.name} qui a lieu le #{I18n.l(rdv.starts_at, format: :human)}")
+          expect(page).to have_content("Vous allez modifier votre RDV #{motif.name} qui a lieu le #{I18n.l(rdv.starts_at, format: :human)}")
           click_link("Confirmer le nouveau créneau")
           expect(rdv.reload.starts_at).not_to eq(original_date)
 

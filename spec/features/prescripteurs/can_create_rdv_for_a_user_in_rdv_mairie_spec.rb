@@ -3,12 +3,11 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
   let!(:organisation) { create(:organisation, :with_contact, ants_connectable: true) }
-  let(:service) { create(:service) }
   let!(:cni_motif) do
-    create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: cni_motif_category)
+    create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, motif_category: cni_motif_category)
   end
   let!(:passport_motif) do
-    create(:motif, name: "Passeport", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: passport_motif_category)
+    create(:motif, name: "Passeport", organisation: organisation, restriction_for_rdv: nil, motif_category: passport_motif_category)
   end
 
   let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }

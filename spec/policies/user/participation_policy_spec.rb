@@ -14,8 +14,7 @@ RSpec.describe User::ParticipationPolicy, type: :policy do
   end
 
   let!(:organisation) { create(:organisation) }
-  let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:user) { create(:user) }
   let!(:user2) { create(:user) }
   let!(:pundit_context) { user }
