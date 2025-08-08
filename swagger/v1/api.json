@@ -688,7 +688,8 @@
             ]
           },
           "service_id": {
-            "type": "integer"
+            "type": "integer",
+            "nullable": true
           }
         },
         "required": [
