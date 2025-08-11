@@ -1,5 +1,6 @@
 RSpec.describe "Agent can update a RDV", js: true do
-  let!(:organisation) { create(:organisation) }
+  let(:territory) { create(:territory) }
+  let!(:organisation) { create(:organisation, territory:) }
   let(:rdv) do
     create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu, starts_at:, ends_at:)
   end
@@ -185,6 +186,30 @@ RSpec.describe "Agent can update a RDV", js: true do
           visit admin_organisation_rdv_path(organisation, rdv)
           expect(page).not_to have_link("Salle d’attente")
         end
+      end
+    end
+  end
+
+  describe "edition du contexte" do
+    context "l’option de contexte est activée" do
+      let(:territory) { create(:territory, enable_context_field: true) }
+
+      it "permet de modifier le contexte du RDV" do
+        visit edit_admin_organisation_rdv_path(organisation, rdv)
+        fill_in "Contexte", with: "Besoin d'aide pour la déclaration d'impôts"
+        click_button "Enregistrer"
+
+        expect(page).to have_content("Le rendez-vous a été modifié.")
+        expect(rdv.reload.context).to eq("Besoin d'aide pour la déclaration d'impôts")
+      end
+    end
+
+    context "l’option de contexte n’est pas activée" do
+      let(:territory) { create(:territory, enable_context_field: false) }
+
+      it "n'affiche pas le champ de contexte" do
+        visit edit_admin_organisation_rdv_path(organisation, rdv)
+        expect(page).not_to have_field("Contexte")
       end
     end
   end
