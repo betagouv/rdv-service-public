@@ -25,7 +25,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     ActiveRecord::Base.transaction do
       @user.save!
 
-      external_references_params = params[:external_references].first&.permit(:external_id, :external_url)
+      external_references_params = params[:external_references]&.first&.permit(:external_id, :external_url)
 
       if external_references_params.present? && @user.user_profiles.count == 1
         @user.user_profiles.first
