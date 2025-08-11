@@ -9,6 +9,8 @@ class UserProfile < ApplicationRecord
   belongs_to :organisation
   belongs_to :user
 
+  has_many :external_references, as: :item, dependent: :destroy
+
   # Through relations
   has_many :webhook_endpoints, through: :organisation
 

@@ -41,7 +41,7 @@ class Agents::InstanceMigrationsController < AgentAuthController
 
   def update
     @instance_export = find_instance_export
-    @instance_export.copy_users!
+    @instance_export.copy_users!(current_domain)
     redirect_to agents_instance_migration_path(@instance_export.id)
   end
 
