@@ -149,10 +149,15 @@ Rails.application.routes.draw do
       end
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
+
+      get "instance_migration" => "instance_migrations#show"
+
       resources :exports, only: %i[index] do
         get :download
       end
     end
+
+    get "omniauth/rdvservicepublic/callback" => "agents/instance_migrations#oauth_callback"
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
   end
 
