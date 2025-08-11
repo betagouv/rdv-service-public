@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_24_145810) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_11_100214) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -389,6 +389,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_24_145810) do
     t.index ["priority", "scheduled_at"], name: "index_good_jobs_on_priority_scheduled_at_unfinished_unlocked", where: "((finished_at IS NULL) AND (locked_by_id IS NULL))"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
+  end
+
+  create_table "instance_exports", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.integer "destination_organisation_id", null: false
+    t.text "api_token", null: false
+    t.text "refresh", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_instance_exports_on_agent_id"
   end
 
   create_table "lieux", force: :cascade do |t|
@@ -903,6 +913,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_24_145810) do
   add_foreign_key "exports", "agents"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
+  add_foreign_key "instance_exports", "agents"
   add_foreign_key "lieux", "organisations"
   add_foreign_key "motif_categories_territories", "motif_categories"
   add_foreign_key "motif_categories_territories", "territories"
