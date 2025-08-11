@@ -1,8 +1,20 @@
-class Agent::ExportPolicy < ApplicationPolicy
+class Agent::InstanceExportPolicy < ApplicationPolicy
   alias current_agent pundit_user
 
-  def download?
+  def show?
     record.agent == current_agent
+  end
+
+  def create?
+    show?
+  end
+
+  def edit?
+    show?
+  end
+
+  def update?
+    show?
   end
 
   class Scope < Scope

@@ -18,6 +18,10 @@ class InstanceExport < ApplicationRecord
     agent.organisations.first
   end
 
+  def destination_organisation
+    @destination_organisation ||= Organisation.new(new_instance_organisations.first).tap(&:readonly!)
+  end
+
   def copy_users!
     source_organisation.users.limit(1).map do |user|
       request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])

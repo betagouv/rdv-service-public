@@ -150,7 +150,7 @@ Rails.application.routes.draw do
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
 
-      get "instance_migration" => "instance_migrations#show"
+      resources :instance_migrations, only: %i[index new edit update show]
 
       resources :exports, only: %i[index] do
         get :download
