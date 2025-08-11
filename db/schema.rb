@@ -393,9 +393,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_100214) do
 
   create_table "instance_exports", force: :cascade do |t|
     t.bigint "agent_id", null: false
-    t.integer "destination_organisation_id", null: false
+    t.integer "destination_organisation_id"
     t.text "api_token", null: false
-    t.text "refresh", null: false
+    t.text "refresh_token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_instance_exports_on_agent_id"

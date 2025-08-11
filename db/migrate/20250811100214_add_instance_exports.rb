@@ -4,9 +4,9 @@ class AddInstanceExports < ActiveRecord::Migration[7.2]
   def change
     create_table :instance_exports do |t|
       t.references :agent, foreign_key: true, index: false, null: false
-      t.integer :destination_organisation_id, null: false
+      t.integer :destination_organisation_id
       t.text :api_token, null: false
-      t.text :refresh, null: false
+      t.text :refresh_token, null: false
 
       t.timestamps
     end
