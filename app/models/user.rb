@@ -69,7 +69,7 @@ class User < ApplicationRecord
   has_many :webhook_endpoints, through: :organisations
   has_many :rdvs, through: :participations
 
-  accepts_nested_attributes_for :user_profiles, :user_references
+  accepts_nested_attributes_for :user_profiles, :external_references
 
   include User::ResponsabilityConcern # relies on belongs_to :responsible
 
