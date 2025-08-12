@@ -15,11 +15,15 @@
             = collapsible_form_fields_for_warnings(plage_ouverture) do
               = f.hidden_field :agent_id
               - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
-              - motifs_by_services.each do |service, motifs|
+              - sort_motifs_by_service(motifs_by_services).each do |service, motifs|
                 .form-group data-controller="checkbox-select-all"
                   label.h4.d-flex
                     input.mr-1 type="checkbox" data-checkbox-select-all-target="checkboxAll"
-                    span.cursor-pointer Motifs de #{service.name}
+                    span.cursor-pointer
+                      - if service
+                        | Motifs de #{service.name}
+                      - else
+                        | Motifs ouverts à tous les agents
                   - motifs.each do |motif|
                     .pl-4
                       = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}", data: { checkbox_select_all_target: "checkbox" } }, motif.id, false

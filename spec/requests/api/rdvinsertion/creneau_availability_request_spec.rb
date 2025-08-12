@@ -83,7 +83,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
           min_public_booking_delay: 3.days,
           max_public_booking_delay: 1.month,
           bookable_by: "agents_and_prescripteurs_and_invited_users",
-          name: "RSA orientation",
+          name: "RSA orientation suivi",
           motif_category: rsa_orientation,
           organisation: organisation1
         )

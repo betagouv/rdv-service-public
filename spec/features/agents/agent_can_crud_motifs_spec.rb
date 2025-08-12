@@ -8,39 +8,71 @@ RSpec.describe "Agent can CRUD motifs" do
     login_as(agent, scope: :agent)
   end
 
-  it "works" do
-    visit authenticated_agent_root_path
-    click_link "Configuration"
-    click_link "Motifs"
-    expect_page_title("Motifs de rendez-vous")
-    click_link motif.name
+  context "with a service" do
+    it "works" do
+      visit authenticated_agent_root_path
+      click_link "Configuration"
+      click_link "Motifs"
+      expect_page_title("Motifs de rendez-vous")
+      click_link motif.name
 
-    expect(page).to have_content(motif.name)
-    click_link "Modifier"
+      expect(page).to have_content(motif.name)
+      click_link "Modifier"
 
-    expect_page_title("Modifier le motif")
-    fill_in "Nom", with: "Suivi bonsoir"
-    click_button("Enregistrer")
+      expect_page_title("Modifier le motif")
+      fill_in "Nom", with: "Suivi bonsoir"
+      click_button("Enregistrer")
 
-    expect(page).to have_content("Suivi bonsoir (PMI)")
-    click_link("Archiver")
-    expect(page).to have_content("Suivi bonsoir (PMI) (archivé)")
-    click_link("Supprimer")
+      expect(page).to have_content("Suivi bonsoir (PMI)")
+      click_link("Archiver")
+      expect(page).to have_content("Suivi bonsoir (PMI) (archivé)")
+      click_link("Supprimer")
 
-    expect_page_title("Motifs de rendez-vous")
-    expect(page).to have_content("Vous n'avez pas encore créé de motif.")
-    click_link "Créer un motif", match: :first
+      expect_page_title("Motifs de rendez-vous")
+      expect(page).to have_content("Vous n'avez pas encore créé de motif.")
+      click_link "Créer un motif", match: :first
 
-    expect_page_title("Créer un motif")
-    ## Check secretariat is unavailable
-    expect(page.all("select#motif_service_id option").map(&:value)).to contain_exactly("", service.id.to_s)
-    find("#motif_service_id").find(:option, service.name).select_option
-    fill_in "Nom", with: "Suivi bonne nuit"
-    fill_in "Couleur associée", with: "#000"
-    click_button "Créer le motif"
+      expect_page_title("Créer un motif")
+      ## Check secretariat is unavailable
+      expect(page.all("select#motif_service_id option").map(&:value)).to contain_exactly("", service.id.to_s)
+      find("#motif_service_id").find(:option, service.name).select_option
+      fill_in "Nom", with: "Suivi bonne nuit"
+      fill_in "Couleur associée", with: "#000"
+      click_button "Créer le motif"
 
-    expect_page_title("Motifs de rendez-vous")
-    expect(page).to have_content("Suivi bonne nuit")
+      expect_page_title("Motifs de rendez-vous")
+      expect(page).to have_content("Suivi bonne nuit")
+    end
+  end
+
+  context "without a service" do
+    let!(:motif) { nil }
+
+    it "works" do
+      visit new_admin_organisation_motif_path(organisation_id: organisation.id)
+
+      expect_page_title("Créer un motif")
+
+      fill_in "Nom", with: "Demande de permis de construire"
+      fill_in "Couleur associée", with: "#000"
+      click_button "Créer le motif"
+
+      expect_page_title("Motifs de rendez-vous")
+
+      expect(organisation.motifs.count).to eq 1
+      expect(page).to have_content("Demande de permis de construire")
+
+      click_link "Modifier"
+
+      expect_page_title("Modifier le motif")
+      fill_in "Nom", with: "Renouvellement de permis de construire"
+      click_button("Enregistrer")
+
+      expect(page).to have_content("Renouvellement de permis de construire")
+      click_link("Archiver")
+      expect(page).to have_content("Renouvellement de permis de construire (archivé)")
+      click_link("Supprimer")
+    end
   end
 
   describe "new" do
@@ -48,7 +80,6 @@ RSpec.describe "Agent can CRUD motifs" do
       visit new_admin_organisation_motif_path(organisation_id: organisation.id)
       click_on "Créer le motif"
       expect(page).to have_content("Nom doit être rempli(e)")
-      expect(page).to have_content("Service doit exister")
     end
   end
 
@@ -56,10 +87,8 @@ RSpec.describe "Agent can CRUD motifs" do
     it "displays errors when name and service are missing" do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       fill_in "Nom", with: ""
-      select "", from: "Service associé"
       click_on "Enregistrer"
       expect(page).to have_content("Nom doit être rempli(e)")
-      expect(page).to have_content("Service doit exister")
     end
 
     it "unchecks for_secretariat when checking followup", js: true do

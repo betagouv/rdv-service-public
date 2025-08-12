@@ -96,10 +96,12 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       let!(:motifA2) { create(:motif, service: service2, organisation: organisationA) }
       let!(:motifB1) { create(:motif, service: service, organisation: organisationB) }
       let!(:motifB2) { create(:motif, service: service2, organisation: organisationB) }
+      let!(:motif_sans_service) { create(:motif, service: nil, organisation: organisationA) }
 
       let!(:rdv) { create(:rdv, organisation: organisationA, motif: motifA1, starts_at: "2022-01-01 09:00:00 +0200") }
       let!(:rdv2) { create(:rdv, organisation: organisationB, motif: motifB1, starts_at: "2023-01-01 09:00:00 +0200") }
       let!(:rdv3) { create(:rdv, organisation: organisationA, motif: motifA2, starts_at: "2024-01-01 09:00:00 +0200") }
+      let!(:rdv_sans_service) { create(:rdv, organisation: organisationA, motif: motif_sans_service, starts_at: "2024-01-01 09:00:00 +0200") }
 
       let!(:basic_agent) { create(:agent, basic_role_in_organisations: [organisationA], service: service) }
       let(:organisation_id) { organisationA.id }
@@ -110,8 +112,8 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
         run_test!
 
         it "returns policy scoped RDVs" do
-          expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id)
-          expect(response.parsed_body["rdvs"].pluck("created_by")).to contain_exactly("agent")
+          expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv_sans_service.id)
+          expect(response.parsed_body["rdvs"].pluck("created_by").uniq).to contain_exactly("agent")
         end
       end
 
@@ -149,7 +151,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id, rdv2021.id, rdv.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id, rdv2021.id, rdv.id, rdv_sans_service.id) }
         end
 
         response 200, "returns policy scoped RDVs filtered with starts_before only", document: false do
@@ -186,7 +188,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id) }
+        it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id, rdv_sans_service.id) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"

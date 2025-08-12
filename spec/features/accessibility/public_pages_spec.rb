@@ -106,7 +106,8 @@ RSpec.describe "public pages", driver: :playwright_bypass_csp, js: true do
           service_id: motif.service_id
         )
         visit path
-        expect(page).to have_content("Sélectionnez le motif de votre RDV")
+
+        expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV :")
 
         expect_page_to_be_axe_clean(path)
       end
@@ -161,7 +162,7 @@ RSpec.describe "public pages", driver: :playwright_bypass_csp, js: true do
             service_id: motif.service_id
           )
           visit path
-          expect(page).to have_content("Sélectionnez le motif de votre RDV")
+          expect(page).to have_content("Sélectionnez le service puis le motif pour lequel vous voulez prendre un RDV")
 
           expect_page_to_be_axe_clean(path)
         end

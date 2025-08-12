@@ -3,7 +3,6 @@ FactoryBot.define do
 
   factory :motif do
     organisation { association(:organisation) }
-    service { association(:service) }
     motif_category { association(:motif_category) }
 
     name { generate(:motif_name) }
@@ -17,6 +16,10 @@ FactoryBot.define do
 
     trait :at_home do
       location_type { :home }
+    end
+
+    trait :with_service do
+      service { association(:service) }
     end
 
     trait :at_public_office do

@@ -15,7 +15,8 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       parameter name: :active, in: :query, type: :boolean, description: "filtre sur les motifs actifs", required: false
       parameter name: :bookable_publicly, in: :query, type: :boolean, description: "filtre sur les motifs réservables en ligne", required: false
-      parameter name: :service_id, in: :query, type: :integer, description: "filtre sur les services", example: "1", required: false
+      parameter name: :service_id, in: :query, type: :integer,
+                description: "filtre sur les services. Il est possible de passer ce parametre avec une valeur vide pour filtrer les motifs sans services", example: "1", required: false
 
       with_examples
 
@@ -134,11 +135,22 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
           let!(:another_service) { create(:service) }
           let!(:motif1) { create(:motif, organisation: organisation, service: service) }
           let!(:motif2) { create(:motif, organisation: organisation, service: another_service) }
+          let!(:motif_sans_service) { create(:motif, organisation: organisation, service: nil) }
           let(:service_id) { service.id }
 
           run_test!
 
           it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id) }
+        end
+
+        response 200, "Renvoie les motifs sans services si on passe un service_id vide", document: false do
+          let!(:motif1) { create(:motif, organisation: organisation, service: service) }
+          let!(:motif_sans_service) { create(:motif, organisation: organisation, service: nil) }
+          let(:service_id) { "" }
+
+          run_test!
+
+          it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif_sans_service.id) }
         end
       end
     end

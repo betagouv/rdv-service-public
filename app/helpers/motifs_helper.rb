@@ -1,4 +1,13 @@
 module MotifsHelper
+  def sort_motifs_by_service(motifs_by_service)
+    motifs_by_service.sort_by do |service_and_motifs|
+      service, _motifs = service_and_motifs
+      service ? I18n.transliterate(service.name.downcase) : ""
+    end.sort_by do |service, _motifs|
+      service.present? ? 1 : 0 # Permet de mettre les motifs sans service au début de la liste
+    end
+  end
+
   def motif_name_and_location_type(motif)
     "#{motif.name} (#{motif.human_attribute_value(:location_type)})"
   end

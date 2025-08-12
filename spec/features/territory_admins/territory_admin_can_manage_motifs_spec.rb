@@ -9,8 +9,10 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
   describe "Listing motifs" do
     let!(:org_arques) { create(:organisation, name: "Arques", territory: territory) }
     let!(:org_bapaume) { create(:organisation, name: "Bapaume", territory: territory) }
-    let!(:motif_consultation_prenatale) { create(:motif, name: "Consultation prénatale", organisation: org_arques) }
-    let!(:motif_suivi_apres_naissance) { create(:motif, name: "Suivi après naissance", organisation: org_bapaume) }
+    let!(:motif_consultation_prenatale) { create(:motif, name: "Consultation prénatale", organisation: org_arques, service: pmi) }
+    let!(:motif_suivi_apres_naissance) { create(:motif, name: "Suivi après naissance", organisation: org_bapaume, service: pmi) }
+    let!(:motif_sans_service) { create(:motif, name: "Orientation", organisation: org_bapaume, service: nil) }
+    let(:pmi) { create(:service, name: "PMI") }
 
     before do
       agent.roles.create!(organisation: org_arques, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
@@ -201,6 +203,22 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
           click_on "Appliquer"
           expect(motif_a.reload.service).to eq(service_social)
           expect(motif_b.reload.service).to eq(service_social)
+        end
+      end
+
+      describe "removing the service" do
+        let(:motif_sans_service) { create(:motif, organisation: organisation_a, service: nil) }
+
+        it "works" do
+          visit batch_edit_admin_territory_motifs_path(territory_id: territory.id, motif_ids: [motif_a.id, motif_b.id, motif_sans_service.id])
+
+          within("#service_form") do
+            select "Pas de service", from: "Service"
+            click_on "Appliquer"
+            expect(motif_a.reload.service).to be_nil
+            expect(motif_b.reload.service).to be_nil
+            expect(motif_sans_service.reload.service).to be_nil
+          end
         end
       end
     end

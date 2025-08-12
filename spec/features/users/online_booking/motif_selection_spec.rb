@@ -51,4 +51,29 @@ RSpec.describe "Motif selection" do
       expect(page).to have_content("Sélectionnez le motif")
     end
   end
+
+  context "un motif avec service et un motif sans service" do
+    let(:organisation) { create(:organisation) }
+    let(:service) { create(:service, name: "Action Sociale") }
+    let(:lieu) { create(:lieu, organisation: organisation, name: "MDS Centre") }
+    let!(:motif_avec_service) { create(:motif, name: "RSA", organisation: organisation, service: service) }
+    let!(:motif_sans_service) { create(:motif, name: "Orientation", organisation: organisation, service: nil) }
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif_avec_service, motif_sans_service], lieu: lieu, organisation: organisation)
+    end
+
+    it "permet d'ouvrir et de fermer l'accordéon", js: true do
+      visit prendre_rdv_path(departement: organisation.territory.departement_number)
+      expect(page).not_to have_content("Orientation")
+      click_on("Autres")
+      sleep 0.5 # Pour attendre le temps de l'animation css
+
+      expect(page).to have_content("Orientation")
+
+      click_on("Autres")
+      sleep 0.5 # Pour attendre le temps de l'animation css
+
+      expect(page).not_to have_content("Orientation")
+    end
+  end
 end

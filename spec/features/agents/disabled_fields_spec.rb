@@ -1,7 +1,6 @@
 RSpec.describe "some fields that are specific to a certain domain can be disabled and hidden from the interface" do
   let!(:organisation) { create(:organisation, territory: territory) }
-  let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:user) { create(:user, organisations: [organisation]) }
   let(:territory) do
     create(:territory, enable_affiliation_number_field: true)

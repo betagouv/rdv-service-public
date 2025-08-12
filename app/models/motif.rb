@@ -36,7 +36,7 @@ class Motif < ApplicationRecord
 
   # Relations
   belongs_to :organisation
-  belongs_to :service
+  belongs_to :service, optional: true
   belongs_to :motif_category, optional: true
   has_many :rdvs, dependent: :restrict_with_exception
   has_many :motifs_plage_ouvertures, dependent: :delete_all
@@ -53,7 +53,7 @@ class Motif < ApplicationRecord
 
   # Delegates
   delegate :service_social?, to: :service
-  delegate :name, :short_name, to: :service, prefix: true
+  delegate :name, :short_name, to: :service, prefix: true, allow_nil: true
 
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
@@ -94,7 +94,7 @@ class Motif < ApplicationRecord
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
                        else
-                         where(service: agent.services)
+                         where(service: (agent.services + [nil]))
                        end
 
     if agent.secretaire?
@@ -296,11 +296,13 @@ class Motif < ApplicationRecord
 
   def unique_in_org
     if Motif.active.where.not(id: id).exists?(organisation_id:, name:, service_id:, location_type:)
-      errors.add(
-        :base,
-        :duplicate_detected,
-        message: %(Il existe déjà dans #{organisation.name} un motif #{human_attribute_value(:location_type)} nommé "#{name}" pour le service #{service.name})
-      )
+      error_message = if service.present?
+                        %(Il existe déjà dans #{organisation.name} un motif #{human_attribute_value(:location_type)} nommé "#{name}" pour le service #{service.name})
+                      else
+                        %(Il existe déjà dans #{organisation.name} un motif #{human_attribute_value(:location_type)} nommé "#{name}" ouvert à tous les agents)
+                      end
+
+      errors.add(:base, :duplicate_detected, message: error_message)
     end
   end
 end

@@ -391,6 +391,23 @@ RSpec.describe "agents can prescribe rdvs" do
         expect(page).to have_content(service_rsa.name)
         expect(page).not_to have_content(service_autre.name)
       end
+
+      context "and the motif doesn't have a service" do
+        let!(:motif_sans_service) { create(:motif, organisation: org_mds, service: nil) }
+
+        before do
+          next_month = (now + 1.month).to_date
+          create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_sans_service], lieu: mds_paris_nord, organisation: org_mds)
+        end
+
+        it "shows the motif" do
+          go_to_prescription_page
+          expect(page).to have_content(motif_sans_service.name)
+
+          expect(page).to have_content(service_rsa.name)
+          expect(page).not_to have_content(service_autre.name)
+        end
+      end
     end
   end
 end

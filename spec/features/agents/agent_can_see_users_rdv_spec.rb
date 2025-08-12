@@ -1,10 +1,8 @@
 RSpec.describe "can see users' RDV" do
   context "with no RDV" do
     let!(:organisation) { create(:organisation) }
-    let!(:service) { create(:service) }
-    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:user) { create(:user, first_name: "Tanguy", last_name: "Laverdure", organisations: [organisation]) }
-    let!(:motif) { create(:motif, organisation: organisation, service: service) }
 
     it do
       login_as(agent, scope: :agent)
@@ -19,7 +17,7 @@ RSpec.describe "can see users' RDV" do
     let!(:service) { create(:service) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
     let!(:user) { create(:user, first_name: "Tanguy", last_name: "Laverdure", organisations: [organisation]) }
-    let!(:motif) { create(:motif, organisation: organisation, service: service) }
+    let!(:motif) { create(:motif, organisation: organisation) }
 
     let!(:rdv) { create :rdv, :future, users: [user], organisation: organisation, motif: motif, agents: [agent] }
 

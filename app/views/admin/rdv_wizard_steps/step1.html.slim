@@ -27,9 +27,10 @@
         label: "Motif du rendez-vous", \
         required: true, \
         include_blank: true, \
-        collection: @motifs.includes(:service).to_a.group_by { _1.service.name }, \
+        collection: sort_motifs_by_service(@motifs.to_a.group_by(&:service)), \
         as: :grouped_select, \
         group_method: :last,
+        group_label_method: -> { _1.first&.name },
         label_method: -> { motif_name_with_location_and_group_type(_1) }, \
         input_html: { \
           data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true },

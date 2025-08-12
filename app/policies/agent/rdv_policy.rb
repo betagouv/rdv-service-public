@@ -129,10 +129,14 @@ class Agent::RdvPolicy < ApplicationPolicy
     when AgentRole::ACCESS_LEVEL_ADMIN
       true
     when AgentRole::ACCESS_LEVEL_BASIC
-      same_service? || current_agent.secretaire?
+      same_service? || rdv_without_service? || current_agent.secretaire?
     else
       false
     end
+  end
+
+  def rdv_without_service?
+    @record.motif.service_id.nil?
   end
 
   class Scope < Scope
@@ -149,6 +153,7 @@ class Agent::RdvPolicy < ApplicationPolicy
           .joins(:motif, :agents_rdvs)
           .where(
             "agents_rdvs.agent_id = ?
+              OR motifs.service_id is null
               OR (motifs.service_id IN (?) AND agent_roles.access_level = 'basic')
               OR (agent_roles.access_level = 'admin')",
             current_agent.id, current_agent.service_ids

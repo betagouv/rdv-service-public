@@ -1,8 +1,7 @@
 RSpec.describe "Agent can edit a Rdv collectif" do
   let!(:organisation) { create(:organisation) }
-  let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, service: service, admin_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, :collectif, service: service, organisation: organisation, name: "Atelier Collectif") }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  let!(:motif) { create(:motif, :collectif, organisation: organisation, name: "Atelier Collectif") }
   let(:rdv) do
     create(:rdv,
            :without_users,
