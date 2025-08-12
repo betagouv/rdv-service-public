@@ -2,4 +2,5 @@
 
 p Vous allez copier les #{@instance_export.source_organisation.users.count} usagers de #{@instance_export.source_organisation.name} dans #{current_domain.name} vers #{@instance_export.source_organisation.name} dans RDV Service Public
 
-= link_to  "Copier les usagers", agents_instance_migration_path(@instance_export), class: "fr-btn", method: :put
+.rdv-text-align-center
+  = link_to  "Copier les usagers", agents_instance_migration_path(@instance_export), class: "fr-btn", method: :put
