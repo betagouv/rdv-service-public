@@ -12,6 +12,6 @@ class CreateExternalReferences < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :external_references, %i[item_id item_type oauth_application_id external_id], algorithm: :concurrently, unique: true
+    add_index :external_references, %i[item_id item_type oauth_application_id], algorithm: :concurrently, unique: true
   end
 end

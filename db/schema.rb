@@ -300,7 +300,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.text "external_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_id", "item_type", "oauth_application_id", "external_id"], name: "idx_on_item_id_item_type_oauth_application_id_exter_32336282e8", unique: true
+    t.index ["item_id", "item_type", "oauth_application_id"], name: "idx_on_item_id_item_type_oauth_application_id_fa816313d2", unique: true
   end
 
   create_table "file_attentes", force: :cascade do |t|
