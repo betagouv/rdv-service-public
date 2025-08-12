@@ -49,6 +49,33 @@ RSpec.describe "/api/v1/users" do
         expect(User.last.referent_agents).to eq([myself])
       end
     end
+
+    describe "external references" do
+      let(:params) do
+        {
+          first_name: "Francis",
+          last_name: "Factice",
+          organisation_ids: [my_organisation.id],
+          external_references: [{
+            external_id: "123456",
+            external_url: "monsuivisocial.anct.gouv.fr/users/123456",
+          }],
+        }
+      end
+
+      it "stores the external reference" do
+        post "/api/v1/users", headers:, params:, as: :json
+        references = User.last.user_references
+
+        expect(references.count).to 1
+        expect(references.last).to have_attributes(
+          external_id: "123456",
+          external_url: "monsuivisocial.anct.gouv.fr/users/123456",
+          territory_id: my_organisation.territory.id
+          # TODO: continuer ici avec l'appli oauth
+        )
+      end
+    end
   end
 
   describe "PUT #update" do
