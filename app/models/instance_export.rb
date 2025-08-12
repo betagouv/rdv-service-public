@@ -1,5 +1,6 @@
 class InstanceExport < ApplicationRecord
   belongs_to :agent
+  belongs_to :good_job_batch, class_name: "GoodJob::BatchRecord", optional: true
 
   encrypts :api_token
   encrypts :refresh_token
@@ -23,21 +24,40 @@ class InstanceExport < ApplicationRecord
   end
 
   def copy_users!(current_domain)
-    source_organisation.users.limit(1).map do |user|
-      request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])
-      request_body[:organisation_ids] = [destination_organisation_id]
+    batch = GoodJob::Batch.new(instance_export_id: id)
 
-      request_body[:external_references] = [{
-        external_id: user.id,
-        external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(source_organisation.id, user.id, host: current_domain.host_name),
-      }]
-
-      Faraday.post(
-        "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/users",
-        request_body.to_json,
-        request_headers
-      )
+    batch.add do
+      source_organisation.users.pluck(:id) do |user_id|
+        CopyUserJob.perform_later(id, user_id, current_domain)
+      end
     end
+    update(good_job_batch_id: batch.id)
+  end
+
+  class CopyUserJob < ApplicationJob
+    queue_as :latency_5m
+
+    def perform(instance_export_id, user_id, domain)
+      export = InstanceExport.find(instance_export_id)
+      user = User.find(user_id)
+      export.copy_user!(user, domain)
+    end
+  end
+
+  def copy_user!(user, domain)
+    request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])
+    request_body[:organisation_ids] = [destination_organisation_id]
+
+    request_body[:external_references] = [{
+      external_id: user.id,
+      external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(source_organisation.id, user.id, host: domain.host_name),
+    }]
+
+    Faraday.post(
+      "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/users",
+      request_body.to_json,
+      request_headers
+    )
   end
 
   private

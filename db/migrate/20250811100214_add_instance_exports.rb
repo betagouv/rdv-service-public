@@ -7,6 +7,7 @@ class AddInstanceExports < ActiveRecord::Migration[7.2]
       t.integer :destination_organisation_id
       t.text :api_token, null: false
       t.text :refresh_token, null: false
+      t.references :good_job_batch, foreign_key: true, type: :uuid
 
       t.timestamps
     end

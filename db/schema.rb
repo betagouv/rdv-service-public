@@ -300,7 +300,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.text "external_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["oauth_application_id"], name: "index_external_references_on_oauth_application_id"
+    t.index ["item_id", "item_type", "oauth_application_id", "external_id"], name: "idx_on_item_id_item_type_oauth_application_id_exter_32336282e8", unique: true
   end
 
   create_table "file_attentes", force: :cascade do |t|
@@ -407,9 +407,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.integer "destination_organisation_id"
     t.text "api_token", null: false
     t.text "refresh_token", null: false
+    t.uuid "good_job_batch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_instance_exports_on_agent_id"
+    t.index ["good_job_batch_id"], name: "index_instance_exports_on_good_job_batch_id"
   end
 
   create_table "lieux", force: :cascade do |t|
@@ -926,6 +928,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "instance_exports", "agents"
+  add_foreign_key "instance_exports", "good_job_batches"
   add_foreign_key "lieux", "organisations"
   add_foreign_key "motif_categories_territories", "motif_categories"
   add_foreign_key "motif_categories_territories", "territories"
