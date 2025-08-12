@@ -1,6 +1,8 @@
 class Agents::InstanceMigrationsController < AgentAuthController
   layout "application_agent_config"
 
+  # TODO: faire un redirect si le current domain n'est pas rdv an
+
   # décommenter cette ligne quand on rendra cette page acessible via le menu
   # before_action { @active_agent_preferences_menu_item = :instance_migrations }
   #
