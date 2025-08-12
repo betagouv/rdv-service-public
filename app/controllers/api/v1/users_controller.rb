@@ -22,20 +22,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
 
     @user.skip_confirmation_notification!
 
-    ActiveRecord::Base.transaction do
-      @user.save!
-
-      external_references_params = params[:external_references]&.first&.permit(:external_id, :external_url)
-
-      if external_references_params.present? && @user.user_profiles.count == 1
-        @user.user_profiles.first
-        ExternalReference.create!(external_references_params.merge(
-                                    item: @user.user_profiles.first,
-                                    oauth_application: doorkeeper_token&.application
-                                  ))
-
-      end
-    end
+    @user.save!
 
     render_record @user
   end

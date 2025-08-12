@@ -58,6 +58,7 @@ class User < ApplicationRecord
   has_many :file_attentes, dependent: :destroy
   has_many :receipts, dependent: :destroy
   has_many :annotations, dependent: :destroy
+  has_many :external_references, as: :item, dependent: :destroy
 
   # Through relations
   # we specify dependent: :destroy because by default user_profiles and referent_assignations
@@ -68,7 +69,7 @@ class User < ApplicationRecord
   has_many :webhook_endpoints, through: :organisations
   has_many :rdvs, through: :participations
 
-  accepts_nested_attributes_for :user_profiles
+  accepts_nested_attributes_for :user_profiles, :user_references
 
   include User::ResponsabilityConcern # relies on belongs_to :responsible
 
