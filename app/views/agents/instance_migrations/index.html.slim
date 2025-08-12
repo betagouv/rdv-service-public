@@ -1,7 +1,19 @@
 - content_for :title, "Copier vos données vers RDV Service Public"
 
+p #{link_to "RDV Service Public", "https://rdv.anct.gouv.fr", target: :_blank} est une version améliorée de RDV Aide Numérique. Cette nouvelle version vous permettra de :
+ul
+  li
+    b Inviter vos collègues
+    |  qui travaillent dans d'autre domaines que la médiation numérique à rejoindre votre organisation sur RDV Service Public.
+  li
+    b ="Prendre des rendez-vous depuis la Coop de la Médiation Numérique"
+    |  sans avoir à copier les information des bénéficiaires.
+  li
+    b Pré-remplir vos comptes-rendus d'activité sur la Coop de la Médiation Numérique
+    |  en fonction de vos rendez-vous.
+
 p Vous pouvez copier vos fiches usagers depuis #{current_domain.name} vers RDV Service Public
 
-p Si vous n'avez pas encore de compte sur RDV Service Public, vous pouvez en créer un depuis cette page.
+p Vos données sur RDV Aide Numérique seront conservées, et resteront accessibles.
 
-= link_to  "Migrer vers RDV Service Public", new_agents_instance_migration_path, class: "fr-btn"
+= link_to  "Commencer la migration vers RDV Service Public", new_agents_instance_migration_path, class: "fr-btn"

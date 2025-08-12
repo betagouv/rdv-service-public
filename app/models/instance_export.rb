@@ -27,8 +27,8 @@ class InstanceExport < ApplicationRecord
     batch = GoodJob::Batch.new(instance_export_id: id)
 
     batch.add do
-      source_organisation.users.pluck(:id) do |user_id|
-        CopyUserJob.perform_later(id, user_id, current_domain)
+      source_organisation.users.pluck(:id).each do |user_id|
+        CopyUserJob.perform_later(id, user_id, current_domain.id)
       end
     end
     update(good_job_batch_id: batch.id)
@@ -37,10 +37,10 @@ class InstanceExport < ApplicationRecord
   class CopyUserJob < ApplicationJob
     queue_as :latency_5m
 
-    def perform(instance_export_id, user_id, domain)
+    def perform(instance_export_id, user_id, domain_id)
       export = InstanceExport.find(instance_export_id)
       user = User.find(user_id)
-      export.copy_user!(user, domain)
+      export.copy_user!(user, Domain.find(domain_id))
     end
   end
 
