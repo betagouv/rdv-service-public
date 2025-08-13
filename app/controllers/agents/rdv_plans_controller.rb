@@ -11,8 +11,20 @@ class Agents::RdvPlansController < AgentAuthController
     end
   end
 
+  def update_agent
+    rdv_plan_params = params.require(:rdv_plan).permit(:rdv_agent_id)
+    # TODO: Vérifier que l'agent connecté a bien le droit de placer un RDV pour l'agent sélectionné
+    @rdv_plan.update!(rdv_plan_params)
+  end
+
   def edit_starts_at
     @rdv_plan.starts_at = nil
+    # TODO: gèrer la cas multi-organisation
+    organisation = current_agent.organisations.first
+    @other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
+                                                                                      .joins(:organisations)
+                                                                                      .where(organisations: { id: organisation.id })
+                                                                                      .where.not(id: current_agent.id)
   end
 
   def update_starts_at

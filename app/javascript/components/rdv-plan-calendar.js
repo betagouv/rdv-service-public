@@ -5,13 +5,17 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { defaultFullCalendarConfig, eventRenderer } from  './calendar/utils'
 
-class RdvPlanCalendar {
+export class RdvPlanCalendar {
 
   constructor() {
+    console.log("CONSTRUCTOR RDV PLAN CALENDAR")
     const calendarEl = document.getElementById('rdvPlanCalendar');
+    console.log("calendarEl", calendarEl);
     if (calendarEl == null || calendarEl.innerHTML !== "")
       return
 
+
+    console.log("New calendar instance")
     return new Calendar(calendarEl, this.calendarConfig(calendarEl.dataset)).render();
   }
 
@@ -45,6 +49,11 @@ class RdvPlanCalendar {
   }
 }
 
-document.addEventListener('turbolinks:load', function () {
+document.addEventListener('turbo:load', function () {
+  console.log('LOAD');
   new RdvPlanCalendar()
+});
+
+document.addEventListener('turbo:render', function (event) {
+  console.log('RENDER');
 });

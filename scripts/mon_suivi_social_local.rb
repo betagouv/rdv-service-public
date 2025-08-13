@@ -7,7 +7,7 @@ OmniAuth.config.request_validation_phase = nil
 
 # Cette classe est une application Sinatra minimaliste qui utilise l'oauth de RDV Service Public pour les tests
 class MonSuiviSocial < Sinatra::Base
-  base_url = "http://www.rdv-mairie.localhost:3000"
+  base_url = "http://localhost:3000"
   app_id = "Gcz6Hrp8fmqI-4ubjjsJeTcyZg_JF0v_XYsibL7a_Fg"
 
   use OmniAuth::Builder do
@@ -18,7 +18,7 @@ class MonSuiviSocial < Sinatra::Base
   set :port, ENV.fetch("PORT", 3010)
 
   # Décommentez cette ligne pour avoir des logs sur stdout
-  # enable :logging
+  enable :logging
 
   get "/" do
     status 200

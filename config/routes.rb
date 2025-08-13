@@ -124,6 +124,8 @@ Rails.application.routes.draw do
       resources :rdvs, only: %i[show]
       resources :rdv_plans, only: %i[show] do
         member do
+          patch :update_agent
+
           get :edit_starts_at
           patch :update_starts_at
 
