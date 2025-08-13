@@ -7,11 +7,12 @@ class Api::Justice::LieuxController < ActionController::Base
     lieux_with_match = possible_lieux.select { |lieu| matching_ee_id_for(lieu) }
 
     render json: {
+      match_percentage: (lieux_with_match.count * 100.0 / possible_lieux.count).round(1),
       lieux: lieux_with_match.map do |lieu|
         {
           ee_id: matching_ee_id_for(lieu),
-          reservation_en_ligne: lieu.joins(plage_ouvertures: :motifs).where(motifs: { bookable_by: :everyone }).where(plage_ouvertures: { expired_cached: false }).any?,
-          url: Rails.application.routes.url_helpers.public_link_to_org_url(oragnisation_id: lieu.organisation_id, org_slug: lieu.organisation.slug),
+          reservation_en_ligne: lieu.plage_ouvertures.joins(:motifs).where(motifs: { bookable_by: :everyone }).where(plage_ouvertures: { expired_cached: false }).any?,
+          url: Rails.application.routes.url_helpers.public_link_to_org_url(organisation_id: lieu.organisation_id, org_slug: lieu.organisation.slug, host: URI.parse(request.url).host),
         }
       end,
     }
@@ -19,10 +20,11 @@ class Api::Justice::LieuxController < ActionController::Base
 
   private
 
-  def matching_ee_id(lieu)
-    csv_content.find do |csv_line|
+  def matching_ee_id_for(lieu)
+    matching_line = csv_content.find do |csv_line|
       csv_line["geo"] == "#{lieu.longitude},#{lieu.latitude}"
     end
+    matching_line&.fetch("ee_id")
   end
 
   def csv_content
