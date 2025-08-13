@@ -1,4 +1,5 @@
-class Api::Justice::LieuxController < ActionController::Base
+class Api::Justice::LieuxController < ActionController::Base # rubocop:disable Rails/ApplicationController
+  # Cet endpoint renvoie des données publiques similaire à l'annuaire des services publics, donc on n'a pas besoin d'authentification
   def index
     lieux = []
 
