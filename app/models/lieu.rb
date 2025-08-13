@@ -91,6 +91,10 @@ class Lieu < ApplicationRecord
     earth_radius * c
   end
 
+  def code_postal
+    address[/\d{5}/]
+  end
+
   private
 
   def longitude_and_latitude_must_be_present

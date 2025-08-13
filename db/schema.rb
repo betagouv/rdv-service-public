@@ -404,6 +404,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
+  create_table "justice_lieux_matches", force: :cascade do |t|
+    t.string "ee_id", null: false
+    t.bigint "lieu_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "lieux", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "organisation_id", null: false
