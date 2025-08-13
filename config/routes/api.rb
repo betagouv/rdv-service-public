@@ -28,6 +28,10 @@ namespace :api do
     get "searchApplicationIds", to: "editor#search_application_ids"
   end
 
+  namespace :justice do
+    get "lieux", to: "lieux#index"
+  end
+
   namespace :rdvinsertion do
     resources :invitations, only: [] do
       get "creneau_availability", to: "invitations#creneau_availability", on: :collection
