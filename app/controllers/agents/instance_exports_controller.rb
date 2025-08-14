@@ -1,16 +1,12 @@
 class Agents::InstanceExportsController < AgentAuthController
   layout "application_agent_config"
 
-  # TODO: faire un redirect si le current domain n'est pas rdv an
   before_action do
     if current_domain != Domain::RDV_AIDE_NUMERIQUE
       redirect_to root_path
     end
   end
 
-  # décommenter cette ligne quand on rendra cette page acessible via le menu
-  # before_action { @active_agent_preferences_menu_item = :instance_migrations }
-  #
   def index
     @exports = policy_scope(InstanceExport, policy_scope_class: Agent::InstanceExportPolicy::Scope)
   end
