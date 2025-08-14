@@ -33,4 +33,18 @@ RSpec.describe "Agent can display user" do
       expect(page).to have_content("Cet usager a reçu une invitation via un partenaire de RDV Solidarités (ex : rdv-insertion).")
     end
   end
+
+  context "when the user has an external reference visible for the agent" do
+    let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
+    let!(:user) { create(:user, organisations: [organisation]) }
+    let(:application) { create(:oauth_application, name: "Démarches Simplifiées") }
+    let!(:external_reference) do
+      create(:external_reference, oauth_application: application, territory: organisation.territory, item: user)
+    end
+
+    it "shows a link to the external reference" do
+      visit admin_organisation_user_path(organisation, user)
+      expect(page).to have_content("Voir sur Démarches Simplifiées")
+    end
+  end
 end
