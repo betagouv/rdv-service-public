@@ -43,7 +43,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
     RDV_SERVICE_PUBLIC_OAUTH_APP_ID: "fake-app-id",
     RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET: "fake-app-secret",
-    RDV_SERVICE_PUBLIC_OAUTH_BASE_URL: "http://#{Domain::RDV_MAIRIE.host_name}:#{Capybara.server_port}"
+    RDV_SERVICE_PUBLIC_OAUTH_BASE_URL: "http://localhost:#{Capybara.server_port}"
   )
 
   specify do
@@ -76,8 +76,21 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
                        text: "Je me connecte sur RDV Service Public",
                        wait_for: "Connexion agent à RDV Service Public")
 
-    login_as(agent_rdv_sp, scope: :agent)
-    visit 
+    # Et on triche à nouveau pour faire le callback d'oauth
+    # en imitant le code de Agents::InstanceExportsController#oauth_callback
+
+    rdv_sp_token = create(:access_token, resource_owner_id: agent_rdv_sp.id, application: oauth_application)
+
+    instance_export = InstanceExport.create!(
+      agent: agent_rdv_aide_num,
+      api_token: rdv_sp_token.plaintext_token,
+      refresh_token: rdv_sp_token.refresh_token
+    )
+
+    orgs = instance_export.new_instance_organisations
+    instance_export.update!(destination_organisation_id: orgs.first["id"])
+
+    visit "http://www.rdv-aide-numerique-test.localhost/agents/instance_exports/#{instance_export.id}"
 
     doc.add_screenshot(page,
                        text: "Je clique sur Copier les usagers",
