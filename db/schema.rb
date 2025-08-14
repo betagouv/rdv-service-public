@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_24_145810) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_13_133437) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -292,6 +292,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_24_145810) do
     t.index ["expires_at"], name: "index_exports_on_expires_at"
   end
 
+  create_table "external_references", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.bigint "item_id", null: false
+    t.bigint "oauth_application_id", null: false
+    t.bigint "territory_id", null: false
+    t.bigint "external_id", null: false
+    t.text "external_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id", "item_type", "oauth_application_id", "territory_id"], name: "idx_on_item_id_item_type_oauth_application_id_terri_6db34b5548", unique: true
+  end
+
   create_table "file_attentes", force: :cascade do |t|
     t.bigint "rdv_id", null: false
     t.bigint "user_id", null: false
@@ -389,6 +401,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_24_145810) do
     t.index ["priority", "scheduled_at"], name: "index_good_jobs_on_priority_scheduled_at_unfinished_unlocked", where: "((finished_at IS NULL) AND (locked_by_id IS NULL))"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
+  end
+
+  create_table "justice_lieux_matches", force: :cascade do |t|
+    t.string "ee_id", null: false
+    t.bigint "lieu_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "lieux", force: :cascade do |t|
@@ -901,6 +920,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_24_145810) do
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
   add_foreign_key "exports", "agents"
+  add_foreign_key "external_references", "oauth_applications"
+  add_foreign_key "external_references", "territories"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "lieux", "organisations"
