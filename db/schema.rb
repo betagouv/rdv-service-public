@@ -404,6 +404,25 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
+  create_table "instance_exports", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.integer "destination_organisation_id"
+    t.text "api_token", null: false
+    t.text "refresh_token", null: false
+    t.uuid "good_job_batch_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_instance_exports_on_agent_id"
+    t.index ["good_job_batch_id"], name: "index_instance_exports_on_good_job_batch_id"
+  end
+
+  create_table "justice_lieux_matches", force: :cascade do |t|
+    t.string "ee_id", null: false
+    t.bigint "lieu_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "lieux", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "organisation_id", null: false
@@ -918,6 +937,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
   add_foreign_key "external_references", "territories"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
+  add_foreign_key "instance_exports", "agents"
+  add_foreign_key "instance_exports", "good_job_batches"
   add_foreign_key "lieux", "organisations"
   add_foreign_key "motif_categories_territories", "motif_categories"
   add_foreign_key "motif_categories_territories", "territories"
