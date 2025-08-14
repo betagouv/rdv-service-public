@@ -18,3 +18,6 @@ application.register("print", PrintController)
 
 import RdvPlanController from "./rdv_plan_controller"
 application.register("rdv-plan", RdvPlanController)
+
+import RdvPlanCalendarController from "./rdv_plan_calendar_controller"
+application.register("rdv-plan-calendar", RdvPlanCalendarController)

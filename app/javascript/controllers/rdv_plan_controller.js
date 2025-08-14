@@ -1,7 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
 
-import { RdvPlanCalendar } from "../components/rdv-plan-calendar"
-
 export default class extends Controller {
   connect() {
     console.log("CONNECT RDV PLAN CONTROLLER")
@@ -20,16 +18,6 @@ export default class extends Controller {
       }
     }).then(r => r.text())
       .then(html => {
-        document.addEventListener('turbo:before-stream-render', function (event) {
-          const fallbackToDefaultActions = event.detail.render
-
-          event.detail.render = function (streamElement) {
-            fallbackToDefaultActions(streamElement)
-            console.log("REFRESH RDV PLAN CALENDAR")
-            new RdvPlanCalendar()
-          }
-        });
-
         Turbo.renderStreamMessage(html)
       })
   }

@@ -8,14 +8,10 @@ import { defaultFullCalendarConfig, eventRenderer } from  './calendar/utils'
 export class RdvPlanCalendar {
 
   constructor() {
-    console.log("CONSTRUCTOR RDV PLAN CALENDAR")
     const calendarEl = document.getElementById('rdvPlanCalendar');
-    console.log("calendarEl", calendarEl);
     if (calendarEl == null || calendarEl.innerHTML !== "")
       return
 
-
-    console.log("New calendar instance")
     return new Calendar(calendarEl, this.calendarConfig(calendarEl.dataset)).render();
   }
 
@@ -48,12 +44,3 @@ export class RdvPlanCalendar {
     document.getElementById('rdvPlanCalendarForm').submit()
   }
 }
-
-document.addEventListener('turbo:load', function () {
-  console.log('LOAD');
-  new RdvPlanCalendar()
-});
-
-document.addEventListener('turbo:render', function (event) {
-  console.log('RENDER');
-});

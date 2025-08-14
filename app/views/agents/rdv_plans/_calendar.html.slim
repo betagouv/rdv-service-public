@@ -20,7 +20,7 @@ ruby:
     }]
   end
 
-turbo-frame id="rdv-plan-calendar"
+turbo-frame id="rdv-plan-calendar" data-controller="rdv-plan-calendar"
   #rdvPlanCalendar[
     data-default-date-json="#{(rdv_plan.starts_at&.to_date || Time.zone.today).to_json}"
     data-display-saturdays="#{agent.display_saturdays}"
