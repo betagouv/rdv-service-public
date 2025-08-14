@@ -139,7 +139,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
 
           it do
             expect(parsed_response_body["creneau_availability"]).to be_falsey
-            expect(parsed_response_body["error"]).to eq("Couldn't find Lieu with 'id'=666")
+            expect(parsed_response_body["error"]).to eq("Couldn't find Lieu with 'id'=\"666\"")
           end
         end
 
