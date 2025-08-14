@@ -12,7 +12,10 @@ export class RdvPlanCalendar {
     if (calendarEl == null || calendarEl.innerHTML !== "")
       return
 
-    return new Calendar(calendarEl, this.calendarConfig(calendarEl.dataset)).render();
+    let calendar = new Calendar(calendarEl, this.calendarConfig(calendarEl.dataset))
+    calendar.render();
+
+    return calendar;
   }
 
   calendarConfig = (dataset) => {

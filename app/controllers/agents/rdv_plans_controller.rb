@@ -146,9 +146,9 @@ class Agents::RdvPlansController < AgentAuthController
     if @rdv_plan.starts_at
       event_sources << [
         {
-          title: rdv_plan.user.full_name,
-          start: rdv_plan.starts_at.as_json,
-          end: (rdv_plan.starts_at + (rdv_plan.duration_in_minutes || 30).minutes).as_json,
+          title: @rdv_plan.user.full_name,
+          start: @rdv_plan.starts_at.as_json,
+          end: (@rdv_plan.starts_at + (@rdv_plan.duration_in_minutes || 30).minutes).as_json,
           textColor: "white",
           backgroundColor: "#6a6af4",
         },
