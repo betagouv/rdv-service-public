@@ -43,6 +43,8 @@ class Agents::RdvPlansController < AgentAuthController
 
   def edit_modalites
     @available_location_types = available_motifs(@rdv_plan).pluck(:location_type)
+
+    render locals: { event_sources: }
   end
 
   def update_modalites
@@ -51,7 +53,7 @@ class Agents::RdvPlansController < AgentAuthController
     if @rdv_plan.update(rdv_plan_params)
       redirect_to edit_motif_agents_rdv_plan_path(@rdv_plan)
     else
-      render "edit_modalites"
+      render "edit_modalites", locals: { event_sources: }
     end
   end
 
@@ -61,6 +63,8 @@ class Agents::RdvPlansController < AgentAuthController
       @rdv_plan.motif_id ||= @motifs.first.id
     end
     @rdv_plan.duration_in_minutes ||= @motifs.first.default_duration_in_min
+
+    render locals: { event_sources: }
   end
 
   def update_motif
@@ -69,11 +73,13 @@ class Agents::RdvPlansController < AgentAuthController
     if @rdv_plan.update(rdv_plan_params)
       redirect_to edit_user_agents_rdv_plan_path(@rdv_plan)
     else
-      render "edit_motif_from_calendar"
+      render "edit_motif_from_calendar", locals: { event_sources: }
     end
   end
 
-  def edit_user; end
+  def edit_user
+    render locals: { event_sources: }
+  end
 
   def create_rdv
     rdv_plan_params = params.require(:rdv_plan)

@@ -2,17 +2,16 @@
 
 - agent = rdv_plan.rdv_agent || current_agent
 
-turbo-frame id="rdv-plan-calendar"
-  #rdvPlanCalendar[
-    data-default-date-json="#{(rdv_plan.starts_at&.to_date || Time.zone.today).to_json}"
-    data-display-saturdays="#{agent.display_saturdays}"
-    data-display-sundays="false"
-    data-event-sources-json="#{event_sources.to_json}"
-    data-slot-min-time="#{I18n.l(rdv_plan.starts_at - 2.hours, format: "%H:%M:%S") if single_day}"
-    data-slot-max-time="#{I18n.l(rdv_plan.starts_at + 3.hours, format: "%H:%M:%S") if single_day}"
-    data-single-day="#{single_day}"
-    style="margin-top: -60px; margin-bottom: 24px;"
-  ]
+#rdvPlanCalendar[
+  data-default-date-json="#{(rdv_plan.starts_at&.to_date || Time.zone.today).to_json}"
+  data-display-saturdays="#{agent.display_saturdays}"
+  data-display-sundays="false"
+  data-event-sources-json="#{event_sources.to_json}"
+  data-slot-min-time="#{I18n.l(rdv_plan.starts_at - 2.hours, format: "%H:%M:%S") if single_day}"
+  data-slot-max-time="#{I18n.l(rdv_plan.starts_at + 3.hours, format: "%H:%M:%S") if single_day}"
+  data-single-day="#{single_day}"
+  style="margin-top: -60px; margin-bottom: 24px;"
+]
 
-  = simple_form_for rdv_plan, url: update_starts_at_agents_rdv_plan_path(rdv_plan),html: { id: "rdvPlanCalendarForm"} do |f|
-    = f.hidden_field :starts_at, id: "rdvPlanCalendarField"
+= simple_form_for rdv_plan, url: update_starts_at_agents_rdv_plan_path(rdv_plan),html: { id: "rdvPlanCalendarForm"} do |f|
+  = f.hidden_field :starts_at, id: "rdvPlanCalendarField"

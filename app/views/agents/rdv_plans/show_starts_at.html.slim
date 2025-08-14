@@ -1,7 +1,9 @@
+/# locals: (event_sources:)
+
 .fr-row
   .fr-col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
 
 .fr-row.fr-mb-16w
   .fr-col-4
-    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: true
+    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true
