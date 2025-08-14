@@ -18,8 +18,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     create(:agent, first_name: "Camille", last_name: "Clavier", admin_role_in_organisations: [organisation_rdv_aide_num])
   end
 
-  let(:users) do
-    create_list(:user, organisations: [organisation_rdv_aide_num])
+  let!(:users) do
+    create_list(:user, 3, organisations: [organisation_rdv_aide_num])
   end
 
   let!(:agent_rdv_sp) do
