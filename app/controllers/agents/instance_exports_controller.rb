@@ -1,11 +1,7 @@
 class Agents::InstanceExportsController < AgentAuthController
   layout "application_agent_config"
 
-  before_action do
-    if current_domain != Domain::RDV_AIDE_NUMERIQUE
-      redirect_to root_path
-    end
-  end
+  before_action { redirect_to(root_path) unless current_domain == Domain::RDV_AIDE_NUMERIQUE }
 
   def index
     @exports = policy_scope(InstanceExport, policy_scope_class: Agent::InstanceExportPolicy::Scope)
