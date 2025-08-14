@@ -2,6 +2,11 @@ class Agents::InstanceExportsController < AgentAuthController
   layout "application_agent_config"
 
   # TODO: faire un redirect si le current domain n'est pas rdv an
+  before_action do
+    if current_domain != Domain::RDV_AIDE_NUMERIQUE
+      redirect_to root_path
+    end
+  end
 
   # décommenter cette ligne quand on rendra cette page acessible via le menu
   # before_action { @active_agent_preferences_menu_item = :instance_migrations }
@@ -34,7 +39,7 @@ class Agents::InstanceExportsController < AgentAuthController
 
     instance_export.update!(destination_organisation_id: orgs.first["id"])
 
-    redirect_to edit_agents_instance_migration_path(instance_export.id)
+    redirect_to edit_agents_instance_export_path(instance_export.id)
   end
 
   def edit
@@ -44,7 +49,7 @@ class Agents::InstanceExportsController < AgentAuthController
   def update
     @instance_export = find_instance_export
     @instance_export.copy_users!(current_domain)
-    redirect_to agents_instance_migration_path(@instance_export.id)
+    redirect_to agents_instance_export_path(@instance_export.id)
   end
 
   def show
