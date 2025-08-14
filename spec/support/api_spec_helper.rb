@@ -1,4 +1,11 @@
 module ApiSpecHelper
+  def oauth_client_headers(oauth_token)
+    {
+      "Content-Type": "application/json",
+      Authorization: "Bearer #{oauth_token.plaintext_token}",
+    }
+  end
+
   def api_auth_headers_for_agent(agent)
     # inspired by https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing
     agent_with_token_auth = AgentWithTokenAuth.find(agent.id)
