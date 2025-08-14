@@ -31,6 +31,7 @@ class Agents::InstanceExportsController < AgentAuthController
 
     instance_export.update!(destination_organisation_id: orgs.first["id"])
 
+    flash[:success] = "Connexion à RDV Service Public réussie"
     redirect_to edit_agents_instance_export_path(instance_export.id)
   end
 

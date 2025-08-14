@@ -1,0 +1,92 @@
+RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", js: true do
+  around { |example| perform_enqueued_jobs { example.run } }
+
+  around do |example|
+    previous_mode = OmniAuth.config.test_mode
+
+    OmniAuth.config.test_mode = false # On fait un vrai parcours d'oauth
+
+    example.run
+
+    OmniAuth.config.test_mode = previous_mode
+  end
+
+  # Pour simplifier les test, on crée deux agents sur la même instance
+  let(:organisation_rdv_aide_num) { create(:organisation) }
+  let(:organisation_rdv_sp) { create(:organisation) }
+  let!(:agent_rdv_aide_num) do
+    create(:agent, first_name: "Camille", last_name: "Clavier", admin_role_in_organisations: [organisation_rdv_aide_num])
+  end
+
+  let!(:agent_rdv_sp) do
+    create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [organisation_rdv_sp])
+  end
+
+  let!(:oauth_application) do
+    application = OauthApplication.new(
+      name: "RDV Aide Numérique",
+      uid: "fake-app-id",
+      redirect_uri: "http://www.rdv-aide-numerique-test.localhost/omniauth/rdvservicepublic/callback",
+      logo_base64: ""
+    )
+
+    application.secret_strategy.store_secret(application, :secret, "fake-app-secret")
+    application.save!
+
+    application
+  end
+
+  stub_env_with(
+    AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
+    AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
+    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa",
+
+    RDV_SERVICE_PUBLIC_OAUTH_APP_ID: "fake-app-id",
+    RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET: "fake-app-secret",
+    RDV_SERVICE_PUBLIC_OAUTH_BASE_URL: "http://#{Domain::RDV_MAIRIE.host_name}:#{Capybara.server_port}"
+  )
+
+  specify do
+    doc = Autodoc.start_scenario("Migration depuis RDV Aide Numérique vers RDV Service Public", self)
+
+    doc.start_section("Migration")
+    doc.add_text(<<~TEXT
+      Dans un premier temps, cette fonctionnalité n'est accessible que en ayant directement l'url.
+      On va la communiquer aux beta testeurs, et on pourra ensuite la rendre accessible depuis le menu des paramètres.
+    TEXT
+                )
+
+    login_as(agent_rdv_aide_num, scope: :agent)
+    visit "http://www.rdv-aide-numerique-test.localhost/agents/instance_exports"
+
+    doc.add_screenshot(page,
+                       text: "J'ouvre la page à https://www.rdv-aide-numerique.fr/agents/instance_exports, puis je clique sur le bouton pour commencer",
+                       wait_for: "Migration vers RDV Service Public")
+
+    click_on "Commencer"
+
+    doc.add_screenshot(page,
+                       text: "On m'explique l'étape suivante. Je clique sur le bouton de connexion",
+                       wait_for: "Pour commencer")
+
+    # On triche un peu pour simuler la connexion à RDV SP
+    visit "http://#{Domain::RDV_MAIRIE.host_name}/agents/sign_in"
+
+    doc.add_screenshot(page,
+                       text: "Je me connecte sur RDV Service Public",
+                       wait_for: "Connexion agent à RDV Service Public")
+
+    login_as(agent_rdv_sp, scope: :agent)
+    visit 
+
+    doc.add_screenshot(page,
+                       text: "Je clique sur Copier les usagers",
+                       wait_for: "Vous allez copier ")
+
+    click_on "Copier les usagers"
+
+    doc.add_screenshot(page,
+                       text: "La migration est réussie",
+                       wait_for: "Migration terminée")
+  end
+end

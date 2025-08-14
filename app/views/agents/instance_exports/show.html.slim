@@ -1,10 +1,10 @@
-- content_for :title, "Copier vos données vers RDV Service Public"
+- content_for :title, "Copier vos usagers vers RDV Service Public"
 
-- if @instance_export.good_job_batch
-  - if @instance_export.good_job_batch.jobs.where(finished_at: nil).none?
-    .rdv-text-align-center
+.rdv-text-align-center
+  - if @instance_export.good_job_batch
+    - if @instance_export.good_job_batch.jobs.where(finished_at: nil).none?
       p Migration terminée !
 
       = link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], class: "fr-btn fr-btn--secondary"
-  - else
-    p Migration en cours. Rechargez cette page dans quelques instants.
+    - else
+      p Migration en cours. Rechargez cette page dans quelques instants.
