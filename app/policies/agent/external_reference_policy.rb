@@ -1,0 +1,14 @@
+class Agent::ExternalReferencePolicy < ApplicationPolicy
+  alias current_agent pundit_user
+
+  class Scope < Scope
+    alias current_agent pundit_user
+
+    def resolve
+      scope.where(territory_id: @pundit_user.organisations.select(:territory_id))
+        .joins(:oauth_application).merge(
+          OauthApplication.joins(:access_tokens).merge(current_agent.access_tokens)
+        )
+    end
+  end
+end

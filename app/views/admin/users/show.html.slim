@@ -51,6 +51,11 @@ ruby:
             - if current_territory.enable_notes_field?
               li= object_attribute_tag(@user, :annotation_content, formatted_user_annotation(@user, current_territory))
 
+        - references = Agent::ExternalReferencePolicy::Scope.new(current_agent, @user.external_references.where(territory: current_territory)).resolve
+        - if references.present?
+          - references.each do |reference|
+            = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-mb-2w")
+
         ul.fr-btns-group.fr-btns-group--right.fr-btns-group--inline.fr-btns-group--icon-left.fr-mb-0
           li
             - if @user.can_be_soft_deleted_from_organisation?(current_organisation)

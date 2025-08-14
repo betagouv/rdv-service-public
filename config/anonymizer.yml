@@ -467,3 +467,10 @@ tables:
       - created_at
       - updated_at
       - location_type
+  - table_name: external_references
+    anonymized_column_names:
+      - external_url
+      - external_id
+    non_anonymized_column_names:
+      - item_type
+      - item_id

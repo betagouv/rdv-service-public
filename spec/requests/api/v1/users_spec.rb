@@ -2,7 +2,10 @@ RSpec.describe "/api/v1/users" do
   let(:my_organisation) { create(:organisation) }
   let(:myself) { create(:agent, basic_role_in_organisations: [my_organisation]) }
 
-  let(:headers) { api_auth_headers_for_agent(myself) }
+  let(:headers) do
+    oauth_client_headers(oauth_token)
+  end
+  let(:oauth_token) { create(:access_token, resource_owner_id: myself.id) }
 
   describe "POST #create" do
     context "simple case, create a user in my org" do
@@ -47,6 +50,54 @@ RSpec.describe "/api/v1/users" do
       it "agent ids outside my orgs are ignored" do
         post "/api/v1/users", headers:, params:, as: :json
         expect(User.last.referent_agents).to eq([myself])
+      end
+    end
+
+    describe "external references" do
+      let(:params) do
+        {
+          first_name: "Francis",
+          last_name: "Factice",
+          organisation_ids: [my_organisation.id],
+          external_reference: {
+            external_id: "123456",
+            external_url: "monsuivisocial.anct.gouv.fr/users/123456",
+          },
+        }
+      end
+
+      it "stores the external reference" do
+        post "/api/v1/users", headers:, params:, as: :json
+        references = User.last.external_references
+
+        expect(references.count).to eq 1
+        expect(references.last).to have_attributes(
+          external_id: "123456",
+          external_url: "monsuivisocial.anct.gouv.fr/users/123456",
+          territory_id: my_organisation.territory.id,
+          oauth_application_id: oauth_token.application_id
+        )
+      end
+
+      context "when another user already exists with this external reference" do
+        before do
+          ExternalReference.create(
+            item: create(:user),
+            external_id: "123456",
+            external_url: "monsuivisocial.anct.gouv.fr/users/123456",
+            territory_id: my_organisation.territory.id,
+            oauth_application_id: oauth_token.application_id
+          )
+        end
+
+        it "doesn't create a new user, and returns an error" do
+          expect do
+            post "/api/v1/users", headers:, params:, as: :json
+          end.not_to change(User, :count)
+
+          expect(parsed_response_body["error_messages"]).to eq ["external_references.external_id est déjà utilisé"]
+          expect(response.status).to eq 422
+        end
       end
     end
   end
