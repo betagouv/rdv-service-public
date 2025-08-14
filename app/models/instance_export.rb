@@ -48,10 +48,10 @@ class InstanceExport < ApplicationRecord
     request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])
     request_body[:organisation_ids] = [destination_organisation_id]
 
-    request_body[:external_references] = [{
+    request_body[:external_reference] = {
       external_id: user.id,
       external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(source_organisation.id, user.id, host: domain.host_name),
-    }]
+    }
 
     Faraday.post(
       "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/users",

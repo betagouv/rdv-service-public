@@ -8,7 +8,7 @@ class Agent::ExternalReferencePolicy < ApplicationPolicy
       scope.where(territory_id: @pundit_user.organisations.select(:territory_id))
         .joins(:oauth_application).merge(
           OauthApplication.joins(:access_tokens).merge(current_agent.access_tokens)
-        )
+        ).uniq
     end
   end
 end
