@@ -6,12 +6,15 @@ export default class extends Controller {
     fetch(`/agents/rdv_plans/${this.data.element.getAttribute("data-rdv-plan-id")}/update_agent?rdv_plan[rdv_agent_id]=${agentId}`, {
       method: "PATCH",
       headers: {
-        "Accept": "text/vnd.turbo-stream.html",
+        "Accept": "application/json",
         "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
       }
-    }).then(r => r.text())
-      .then(html => {
-        Turbo.renderStreamMessage(html)
-      })
+    }).then(response => {
+      if (response.ok) {
+        console.log(response.json())
+      } else {
+        throw new Error("Network response was not ok")
+      }
+    })
   }
 }

@@ -15,6 +15,14 @@ class Agents::RdvPlansController < AgentAuthController
     rdv_plan_params = params.require(:rdv_plan).permit(:rdv_agent_id)
     # TODO: Vérifier que l'agent connecté a bien le droit de placer un RDV pour l'agent sélectionné
     @rdv_plan.update!(rdv_plan_params)
+    respond_to do |format|
+      format.json do
+        render json: {
+          event_sources:,
+          display_saturdays: @rdv_plan.rdv_agent.display_saturdays,
+        }
+      end
+    end
   end
 
   def edit_starts_at
@@ -24,6 +32,8 @@ class Agents::RdvPlansController < AgentAuthController
     @other_agents = policy_scope(
       Agent, policy_scope_class: Agent::AgentPolicy::Scope
     ).active.joins(:organisations).where(organisations: { id: organisation.id }).where.not(id: current_agent.id)
+
+    render locals: { event_sources: }
   end
 
   def update_starts_at
@@ -120,5 +130,31 @@ class Agents::RdvPlansController < AgentAuthController
 
   def pundit_user
     current_agent
+  end
+
+  def event_sources
+    agent = @rdv_plan.rdv_agent
+    organisation = agent.organisations.first
+
+    event_sources = [
+      admin_api_agenda_rdvs_path(agent_id: agent, organisation_id: organisation.id, format: :json),
+      admin_api_agenda_absences_path(agent_id: agent, organisation_id: organisation.id, format: :json),
+      admin_api_agenda_plage_ouvertures_path(agent_id: agent, organisation_id: organisation.id, mixed_with_rdvs: true, format: :json),
+      OffDays.to_full_calendar_array,
+    ]
+
+    if @rdv_plan.starts_at
+      event_sources << [
+        {
+          title: rdv_plan.user.full_name,
+          start: rdv_plan.starts_at.as_json,
+          end: (rdv_plan.starts_at + (rdv_plan.duration_in_minutes || 30).minutes).as_json,
+          textColor: "white",
+          backgroundColor: "#6a6af4",
+        },
+      ]
+    end
+
+    event_sources
   end
 end

@@ -1,24 +1,6 @@
-/# locals: (rdv_plan:, single_day: false)
-ruby:
-  # TODO: Peut-être qu’on pourrait mettre le current_agent directement à la création du plan
-  agent = rdv_plan.rdv_agent || current_agent
-  organisation = agent.organisations.first
-  event_sources = [
-    admin_api_agenda_rdvs_path(agent_id: agent, organisation_id: organisation.id, format: :json),
-    admin_api_agenda_absences_path(agent_id: agent, organisation_id: organisation.id, format: :json),
-    admin_api_agenda_plage_ouvertures_path(agent_id: agent, organisation_id: organisation.id, mixed_with_rdvs: true, format: :json),
-    OffDays.to_full_calendar_array,
-  ]
+/# locals: (rdv_plan:, event_sources:, single_day: false)
 
-  if rdv_plan.starts_at
-    event_sources << [{
-      title: rdv_plan.user.full_name,
-      start: rdv_plan.starts_at.as_json,
-      end: (rdv_plan.starts_at + (rdv_plan.duration_in_minutes || 30).minutes).as_json,
-      textColor: "white",
-      backgroundColor: "#6a6af4",
-    }]
-  end
+- agent = rdv_plan.rdv_agent || current_agent
 
 turbo-frame id="rdv-plan-calendar" data-controller="rdv-plan-calendar"
   #rdvPlanCalendar[
