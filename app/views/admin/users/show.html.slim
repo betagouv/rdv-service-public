@@ -135,8 +135,6 @@ ruby:
             = link_to "Voir tous les RDV de l’usager", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: "Voir tous les RDV de l’usager #{@user.full_name}"
       .card-body
         .row
-          .fr-mb-2v
-            = render "admin/rdvs/rdv_visibility"
           .col-lg-6
             - %i[seen excused revoked noshow].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
@@ -150,6 +148,7 @@ ruby:
                 count: @participations.joins(:rdv).status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
       .card-footer
+        = render "admin/rdvs/rdv_visibility"
         = dsfr_alert type: :info, size: :sm
           | Les RDV sont supprimés au bout de 2 ans.
 
