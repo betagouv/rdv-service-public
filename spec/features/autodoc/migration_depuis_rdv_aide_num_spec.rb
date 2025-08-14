@@ -12,10 +12,14 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   end
 
   # Pour simplifier les test, on crée deux agents sur la même instance
-  let(:organisation_rdv_aide_num) { create(:organisation) }
-  let(:organisation_rdv_sp) { create(:organisation) }
+  let(:organisation_rdv_aide_num) { create(:organisation, name: "France Service de Montreuil") }
+  let(:organisation_rdv_sp) { create(:organisation, name: "MFS de Montreuil") }
   let!(:agent_rdv_aide_num) do
     create(:agent, first_name: "Camille", last_name: "Clavier", admin_role_in_organisations: [organisation_rdv_aide_num])
+  end
+
+  let(:users) do
+    create_list(:user, organisations: [organisation_rdv_aide_num])
   end
 
   let!(:agent_rdv_sp) do
@@ -90,16 +94,16 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     orgs = instance_export.new_instance_organisations
     instance_export.update!(destination_organisation_id: orgs.first["id"])
 
-    visit "http://www.rdv-aide-numerique-test.localhost/agents/instance_exports/#{instance_export.id}"
+    visit "http://www.rdv-aide-numerique-test.localhost/agents/instance_exports/#{instance_export.id}/edit"
 
     doc.add_screenshot(page,
-                       text: "Je clique sur Copier les usagers",
+                       text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les usagers",
                        wait_for: "Vous allez copier ")
 
     click_on "Copier les usagers"
 
     doc.add_screenshot(page,
-                       text: "La migration est réussie",
+                       text: "La migration est réussie. Mes usagers sont maintenant disponibles sur RDV Service Public",
                        wait_for: "Migration terminée")
   end
 end
