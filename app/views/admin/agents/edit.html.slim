@@ -15,12 +15,15 @@
           = render "model_errors", model: @agent
 
           p
-            - if @agent.services.count == 1
-              | #{@agent.full_name} appartient à un seul service :
+            - if @agent.services.count == 0
+              | #{@agent.full_name_or_email} n'appartient à aucun service
+            - elsif @agent.services.count == 1
+              = "#{@agent.full_name_or_email} appartient au service "
+              b #{@agent.services.first.name}
             - else
-              | #{@agent.full_name} appartient à #{@agent.services.count} services :
-            ul.fr-pl-2w
-            - @agent.services.each do |service|
+              | #{@agent.full_name_or_email} appartient à #{@agent.services.count} services :
+              ul.fr-pl-2w
+              - @agent.services.each do |service|
               li.rdv-font-weight-bold= service.name
 
           - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
