@@ -5,7 +5,6 @@ RSpec.describe Admin::AgentsController, type: :controller do
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:agent1) { create(:agent, admin_role_in_organisations: [organisation], invitation_sent_at: 3.days.ago, invitation_accepted_at: nil) }
   let!(:organisation2) { create(:organisation) }
-  let(:service_id) { agent.services.first.id }
 
   before do
     request.env["devise.mapping"] = Devise.mappings[:agent]
@@ -82,7 +81,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "hacker@renard.com",
-            service_ids: [service_id],
+            service_ids: [],
             agent_role: {
               access_level: "basic",
             },
@@ -103,7 +102,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation2.id,
           agent: {
             email: "hacker@renard.com",
-            service_ids: [service_id],
+            service_ids: [],
             agent_role: { access_level: "basic" },
           },
         }
@@ -123,7 +122,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "hacker@renard.com",
-            service_ids: [service_id],
+            service_ids: [],
             agent_role: { access_level: "basic", organisation_id: organisation2.id },
           },
         }
@@ -148,7 +147,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
       end
 
       before do
-        agent.services.first.update!(name: Service::CONSEILLER_NUMERIQUE)
+        agent.services << create(:service, name: Service::CONSEILLER_NUMERIQUE)
       end
 
       it "creates a new basic agent instead of an admin" do
@@ -188,7 +187,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "michel@lapin.com",
-            service_ids: [service_id],
+            service_ids: [],
             agent_role: { access_level: "basic" },
           },
         }
@@ -210,7 +209,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "aa@hhh",
-            service_ids: [service_id],
+            service_ids: [],
             agent_role: {
               access_level: "basic",
             },
@@ -231,7 +230,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: existing_agent.email,
-            service_ids: [service_id],
+            service_ids: [],
             agent_role: {
               access_level: "basic",
             },
@@ -293,7 +292,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "MARCO@demo.rdv-solidarites.fr",
-            service_ids: [service_id],
+            service_ids: [],
             agent_role: { access_level: "basic" },
           },
         }
@@ -310,7 +309,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
         params = { organisation_id: organisation.id,
                    agent: {
                      email: "hacker@renard.com",
-                     service_ids: [service_id],
+                     service_ids: [],
                      agent_role: { access_level: "basic" },
                    }, }
         expect do
@@ -325,7 +324,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
         params = { organisation_id: organisation.id,
                    agent: {
                      email: "hacker@renard.com",
-                     service_ids: [service_id],
+                     service_ids: [],
                      agent_role: { access_level: "basic" },
                    }, }
         expect do

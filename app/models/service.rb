@@ -26,10 +26,6 @@ class Service < ApplicationRecord
 
   ## -
 
-  def self.secretariat
-    find_by!(name: SECRETARIAT)
-  end
-
   def secretariat?
     name == SECRETARIAT
   end
