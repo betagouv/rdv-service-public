@@ -145,7 +145,7 @@ class Agent < ApplicationRecord
   end
 
   def reverse_full_name_and_service
-    services.present? ? "#{reverse_full_name_or_email} (#{services_short_names})" : full_name
+    services.present? ? "#{reverse_full_name_or_email} (#{services_short_names})" : reverse_full_name
   end
 
   def full_name_and_service
