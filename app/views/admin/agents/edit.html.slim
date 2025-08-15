@@ -35,13 +35,11 @@
           hr
 
           = f.simple_fields_for @agent_role do |ff|
-            - # rubocop:disable Rails/OutputSafety
-            = ff.input :access_level, \
-              collection: @roles, \
-              label_method: -> { AgentRole.human_attribute_value(:access_level, _1, context: :explanation).html_safe }, \
-              hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
+            = ff.input :access_level,
+              collection: @roles,
+              label_method: -> { render("admin/agents/role_labels/#{_1}") },
+              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_agent.organisations.count > 1),
               as: :radio_buttons
-          - # rubocop:enable Rails/OutputSafety
 
           / allow turning an intervenant into an agent with an account
           - if AgentRole.find(@agent_role.id).access_level == "intervenant"
