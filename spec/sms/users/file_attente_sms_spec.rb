@@ -8,9 +8,19 @@ RSpec.describe Users::FileAttenteSms, type: :service do
     let(:token) { "12324" }
 
     it do
-      expect(subject).to include("RDV Service 1: des créneaux se sont libérés")
+      expect(subject).to include("Des créneaux se sont libérés pour votre RDV")
       expect(subject).to include("Pour voir les disponibilités")
       expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/82/cr?tkn=12324")
+    end
+
+    context "with a service" do
+      let(:rdv) { build(:rdv, id: 82, organisation: organisation, motif: create(:motif, :with_service)) }
+
+      it do
+        expect(subject).to include("RDV Service 1: des créneaux se sont libérés")
+        expect(subject).to include("Pour voir les disponibilités")
+        expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/82/cr?tkn=12324")
+      end
     end
   end
 end
