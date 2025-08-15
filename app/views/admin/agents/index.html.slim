@@ -20,7 +20,8 @@
         tr
           th= Agent.human_attribute_name(:name)
           th= Agent.human_attribute_name(:email)
-          th= Agent.human_attribute_name(:services)
+          - if @display_services
+            th= Agent.human_attribute_name(:services)
           th= AgentRole.human_attribute_name(:access_level)
           th Actions
       tbody

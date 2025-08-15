@@ -22,9 +22,10 @@ tr id="agent_#{agent.id}"
     = me_tag(agent)
   td.word-break-all
     = agent.email
-  td
-    - agent.services.each do |service|
-      .badge.badge-primary= service.short_name
+  - if @display_services
+    td
+      - agent.services.each do |service|
+        .badge.badge-primary= service.short_name
   td.text-nowrap
     span>= agent_role.human_attribute_value(:access_level)
     - if agent_role.admin?

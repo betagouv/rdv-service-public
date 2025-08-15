@@ -29,16 +29,17 @@
           .js_agent_role_form__intervenant_fields
             = f.input :last_name, input_html: { autocomplete: "off"}, label: "Nom", label_html: { class: "big-label mt-3" }
 
-          label.big-label.mt-3 Services
-          .text-muted.form-text
-            | Dans quel domaine d'activité est-ce que cet agent effectue des rendez-vous ?
-          = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
-          - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
-            small.form-text.text-muted.mb-4
-              |> Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez
-              = link_to("activer des services supplémentaires", edit_admin_territory_services_path(current_territory, redirect_to_organisation_id: current_organisation.id))
-          - else
-            | Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez demander à un admin de votre espace d'activer des services supplémentaires.
+          - if @services.any?
+            label.big-label.mt-3 Services
+            .text-muted.form-text
+              | Dans quel domaine d'activité est-ce que cet agent effectue des rendez-vous ?
+            = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
+            - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
+              small.form-text.text-muted.mb-4
+                |> Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez
+                = link_to("activer des services supplémentaires", edit_admin_territory_services_path(current_territory, redirect_to_organisation_id: current_organisation.id))
+            - else
+              | Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez demander à un admin de votre espace d'activer des services supplémentaires.
 
           .text-right
             = f.button :submit, "Enregistrer"

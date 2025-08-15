@@ -7,6 +7,8 @@ class Admin::AgentsController < AgentAuthController
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
     @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.ordered_by_last_name
 
+    @display_services = current_territory.services.any? || current_organisation.agents.joins(:agent_services).any?
+
     if request.format.html?
       @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
       @agents = @agents.includes(:services, :roles, :organisations)
