@@ -7,7 +7,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
   context "when there are multiple plage d'ouverture and lieux" do
-    let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
+    let!(:motif) { create(:motif, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], agent: agent, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :weekdays, motifs: [motif], organisation: organisation) }
 
@@ -32,6 +32,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
   end
 
   context "when there is only one option for service and motif selector", js: true do
+    let!(:agent) { create(:agent, :with_service, basic_role_in_organisations: [organisation]) }
     let!(:motif) { create(:motif, name: "Mon unique motif", service: agent.services.first, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], agent: agent, organisation: organisation) }
 
@@ -44,7 +45,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
   end
 
   context "when there is more than one option for lieux, services and motifs selector", js: true do
-    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:agent) { create(:agent, :with_service, admin_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
     let!(:motif2) { create(:motif, service: agent.services.first, organisation: organisation) }
@@ -67,8 +68,8 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     before { travel_to(Date.new(2023, 5, 2)) }
 
     let(:first_day_of_plages) { 2.weeks.from_now.beginning_of_week.to_date }
-    let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: agent.services.first) }
-    let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
+    let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let!(:motif) { create(:motif, organisation: organisation) }
     let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif], first_day: first_day_of_plages, agent: agent, organisation: organisation) }
     let!(:plage_ouverture2) do
       create(:plage_ouverture, motifs: [motif], first_day: first_day_of_plages, agent: other_agent, organisation: organisation, lieu: plage_ouverture1.lieu)
@@ -88,7 +89,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
   end
 
   context "when there are multiple plages from the same agent in the same lieu" do
-    let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
+    let!(:motif) { create(:motif, organisation: organisation) }
     let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation) }
     let!(:plage_ouverture2) do
       create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, lieu: plage_ouverture1.lieu,
@@ -107,7 +108,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
   end
 
   context "when the motif is bookable online and the next creneau is after the max booking delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, max_public_booking_delay: 7.days, service: agent.services.first) }
+    let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, max_public_booking_delay: 7.days) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: 8.days.since, motifs: [motif], organisation: organisation) }
 
     it "still allows the agent to book a rdv, because the booking delays should only apply to agents" do
@@ -139,13 +140,13 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     end
 
     context "when the motif is by phone and there is a plage d'ouverture without lieu" do
-      let!(:motif) { create(:motif, :by_phone, service: agent.services.first, organisation: organisation) }
+      let!(:motif) { create(:motif, :by_phone, organisation: organisation) }
 
       it_behaves_like "book a rdv without a lieu"
     end
 
     context "when the motif is at home and there is a plage d'ouverture without lieu" do
-      let!(:motif) { create(:motif, :at_home, service: agent.services.first, organisation: organisation) }
+      let!(:motif) { create(:motif, :at_home, organisation: organisation) }
 
       it_behaves_like "book a rdv without a lieu"
     end
@@ -153,7 +154,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
 
   context "when the motif doesn't have a service" do
     let!(:motif) { create(:motif, service: nil, organisation: organisation) }
-    let!(:motif2) { create(:motif, service: agent.services.first, organisation: organisation) }
+    let!(:motif2) { create(:motif, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], agent: agent, organisation: organisation) }
 
     it "displays lieux and allow filtering on lieux" do
