@@ -109,7 +109,6 @@ class Agent < ApplicationRecord
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
   validates :last_name, presence: true, unless: -> { allow_blank_name }
-  validates :agent_services, presence: true, unless: -> { roles.none? }
 
   # Hooks
   before_destroy :prevent_destroy_if_rdvs
