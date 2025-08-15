@@ -129,11 +129,19 @@ class Agent < ApplicationRecord
   delegate :name, to: :domain, prefix: true
 
   def confrere_of?(other_agent)
-    services.to_set.intersect?(other_agent.services.to_set)
+    if services.any?
+      services.to_set.intersect?(other_agent.services.to_set)
+    else
+      other_agent.services.none?
+    end
   end
 
   def confreres
-    Agent.in_any_of_these_services(services)
+    if services.any?
+      Agent.in_any_of_these_services(services)
+    else
+      Agent.where.missing(:agent_services)
+    end
   end
 
   def reverse_full_name_and_service
@@ -141,7 +149,7 @@ class Agent < ApplicationRecord
   end
 
   def full_name_and_service
-    services.present? ? "#{full_name_or_email} (#{services_short_names})" : full_name
+    services.present? ? "#{full_name_or_email} (#{services_short_names})" : full_name_or_email
   end
 
   def services_short_names
