@@ -85,7 +85,6 @@ class Agent < ApplicationRecord
   has_many :services, through: :agent_services
   has_many :teams, through: :agent_teams
   has_many :lieux, through: :plage_ouvertures
-  has_many :motifs, through: :services
   has_many :rdvs, dependent: :restrict_with_error, through: :agents_rdvs
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
