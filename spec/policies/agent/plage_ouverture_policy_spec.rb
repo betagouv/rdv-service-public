@@ -88,7 +88,7 @@ RSpec.describe Agent::PlageOuverturePolicy, type: :policy do
     end
 
     context "when she belongs to the plage's organisation as basic member" do
-      let(:agent) { create(:agent, basic_role_in_organisations: [plage_ouverture.organisation]) }
+      let(:agent) { create(:agent, :with_service, basic_role_in_organisations: [plage_ouverture.organisation]) }
 
       context "when she shares a service with the plage's agent" do
         before do
@@ -112,6 +112,8 @@ RSpec.describe Agent::PlageOuverturePolicy, type: :policy do
       end
 
       context "when she shares no service with the plage's agent" do
+        let(:plage_ouverture) { create(:plage_ouverture, agent: create(:agent, :with_service)) }
+
         before do
           expect(agent.services.to_set.intersection(plage_ouverture.agent.services.to_set)).to be_empty # rubocop:disable RSpec/ExpectInHook
         end

@@ -1,7 +1,7 @@
 RSpec.describe AdminCreatesAgent do
   context "when inviting an agent that doesn't have any services" do
     let(:agent) do
-      create(:agent, :no_services, organisations: [])
+      create(:agent, organisations: [])
     end
     let(:service1) { create(:service) }
     let(:service2) { create(:service) }

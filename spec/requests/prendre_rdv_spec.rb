@@ -25,9 +25,9 @@ RSpec.describe "Search", type: :request do
 
       context "with agent_id params" do
         it "render motif_selection template" do
-          motif = create(:motif, service: agent.services.first, follow_up: true, organisation: organisation)
+          motif = create(:motif, follow_up: true, organisation: organisation)
           create(:plage_ouverture, agent: agent, motifs: [motif], organisation: organisation)
-          get prendre_rdv_url(referent_ids: [agent.id], service: agent.services.first.id, departement: organisation.territory.departement_number, host: "www.rdv-solidarites-test.localhost")
+          get prendre_rdv_url(referent_ids: [agent.id], departement: organisation.territory.departement_number, host: "www.rdv-solidarites-test.localhost")
           expect(response).to render_template("search/_motif_selection")
         end
       end

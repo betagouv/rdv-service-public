@@ -10,25 +10,27 @@ FactoryBot.define do
     confirmed_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
     invitation_accepted_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
 
-    transient do
-      service { build(:service) }
-      no_services { false }
-
-      trait :no_services do
-        no_services { true }
-      end
+    trait :with_service do
+      service { association(:service) }
     end
-    after(:build) do |agent, evaluator|
-      next if evaluator.no_services
-      next if agent.agent_services.any?
-      next if agent.services.any?
+    transient do
+      services { [] }
+      service { nil }
+    end
 
-      if agent.agent_services.empty? && agent.services.empty?
-        agent.services = if evaluator.service
-                           [evaluator.service]
-                         else
-                           [build(:service)]
-                         end
+    trait :secretaire do
+      services { [Service.find_by(name: Service::SECRETARIAT) || build(:service, :secretariat)] }
+    end
+    trait :cnfs do
+      services { [Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique)] }
+    end
+
+    after(:build) do |agent, evaluator|
+      if evaluator.service
+        agent.agent_services << build(:agent_service, service: evaluator.service, agent:)
+      end
+      evaluator.services.each do |service|
+        agent.agent_services << build(:agent_service, service:, agent:)
       end
     end
 
@@ -83,12 +85,6 @@ FactoryBot.define do
       invitation_sent_at { 2.days.ago }
       invitation_accepted_at { nil }
       confirmed_at { nil }
-    end
-    trait :secretaire do
-      services { [Service.find_by(name: Service::SECRETARIAT) || build(:service, :secretariat)] }
-    end
-    trait :cnfs do
-      services { [Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique)] }
     end
     trait :intervenant do
       email { nil }
