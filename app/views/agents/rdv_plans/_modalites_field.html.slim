@@ -1,10 +1,8 @@
-- available_location_types = rdv_plan.rdv_agent.motifs.individuel.active.where(organisation_id: rdv_plan.rdv_agent.roles.select(:organisation_id)).pluck(:location_type)
-
 fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich-no-pictogram-inline-legend radio-rich-no-pictogram-inline-messages"]
   legend[class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-rich-no-pictogram-inline-legend"]
     | Comment souhaitez-vous faire le rendez-vous ?
 
-  - if available_location_types.include?("public_office")
+  - if @available_location_types.include?("public_office")
     - lieux = policy_scope(Lieu.enabled, policy_scope_class: Agent::LieuPolicy::Scope)
     - lieux.each do |lieu|
       .fr-fieldset__element
@@ -16,7 +14,7 @@ fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich
               = " Sur place à #{lieu.name}"
             span.fr-hint-text = lieu.address
 
-  - if available_location_types.include?("phone")
+  - if @available_location_types.include?("phone")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
         input[value="phone" type="radio" id="rdv_plan_modalite_phone" name="rdv_plan[modalite]" required]
@@ -25,7 +23,7 @@ fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich
             = phone_icon
             = " Par téléphone"
 
-  - if available_location_types.include?("visio")
+  - if @available_location_types.include?("visio")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
         input[value="visio" type="radio" id="rdv_plan_modalite_visio" name="rdv_plan[modalite]" required]
@@ -36,7 +34,7 @@ fieldset[class="fr-fieldset" id="rdv_plan[modalite]" aria-labelledby="radio-rich
           span.fr-hint-text
             | Nous vous fournirons un lien de visio
 
-  - if available_location_types.include?("home")
+  - if @available_location_types.include?("home")
     .fr-fieldset__element
       .fr-radio-group.fr-radio-rich
         input[value="home" type="radio" id="rdv_plan_modalite_home" name="rdv_plan[modalite]" required]

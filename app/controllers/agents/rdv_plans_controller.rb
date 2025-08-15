@@ -20,7 +20,9 @@ class Agents::RdvPlansController < AgentAuthController
     redirect_to edit_modalites_agents_rdv_plan_path(@rdv_plan)
   end
 
-  def edit_modalites; end
+  def edit_modalites
+    @available_location_types = available_motifs(@rdv_plan).pluck(:location_type)
+  end
 
   def update_modalites
     rdv_plan_params = params.require(:rdv_plan).permit(:starts_at, :modalite)
@@ -33,11 +35,7 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_motif
-    @motifs = current_agent.motifs.individuel.where(
-      organisation_id: current_agent.roles.select(:organisation_id),
-      location_type: @rdv_plan.location_type,
-      service: @rdv_plan.rdv_agent.services
-    )
+    @motifs = available_motifs(@rdv_plan).ordered_by_name
     if @motifs.count == 1
       @rdv_plan.motif_id ||= @motifs.first.id
     end
@@ -86,6 +84,18 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   private
+
+  def available_motifs(rdv_plan)
+    motif_scope = Agent::MotifPolicy::Scope.new(
+      current_agent,
+      Motif.individuel.active
+    ).resolve
+
+    motif_scope.where(
+      service: rdv_plan.rdv_agent.services + [nil],
+      organisation_id: rdv_plan.rdv_agent.roles.select(:organisation_id)
+    )
+  end
 
   def find_rdv_plan
     @rdv_plan = RdvPlan.find(params[:id])
