@@ -1,7 +1,7 @@
 # Les captures d'écran des emails dans autodoc causent des erreurs JS à cause d'images qui ne chargent pas correctement
 # donc on désactive cette vérification pour ces specs
 RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
-  let!(:agent) { create(:agent, :no_services, first_name: "Francis", last_name: "Factice", password: "c0rrecThorse!") }
+  let!(:agent) { create(:agent, first_name: "Francis", last_name: "Factice", password: "c0rrecThorse!") }
 
   around { |example| perform_enqueued_jobs { example.run } }
 

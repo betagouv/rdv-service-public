@@ -11,24 +11,15 @@ FactoryBot.define do
     invitation_accepted_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
 
     transient do
-      service { build(:service) }
-      no_services { false }
-
-      trait :no_services do
-        no_services { true }
-      end
+      services { [] }
+      service { nil }
     end
     after(:build) do |agent, evaluator|
-      next if evaluator.no_services
-      next if agent.agent_services.any?
-      next if agent.services.any?
-
-      if agent.agent_services.empty? && agent.services.empty?
-        agent.services = if evaluator.service
-                           [evaluator.service]
-                         else
-                           [build(:service)]
-                         end
+      if evaluator.service
+        agent.agent_services << build(:agent_service, service: evaluator.service, agent:)
+      end
+      evaluator.services.each do |service|
+        agent.agent_services << build(:agent_service, service:, agent:)
       end
     end
 
