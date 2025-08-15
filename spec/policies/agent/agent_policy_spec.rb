@@ -112,23 +112,20 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       let!(:organisations) { create_list(:organisation, 4) }
       let!(:agent) do
         create(
-          :agent,
+          :agent, :with_service,
           basic_role_in_organisations: [organisations[0]],
           admin_role_in_organisations: [organisations[1], organisations[2]]
         )
       end
-      let!(:other_agent1) { create(:agent, basic_role_in_organisations: [organisations[0]]) }
-      let!(:other_agent2) { create(:agent, basic_role_in_organisations: [organisations[1]]) }
-      let!(:other_agent3) { create(:agent, basic_role_in_organisations: [organisations[2]]) }
-      let!(:other_agent4) { create(:agent, basic_role_in_organisations: [organisations[3]]) }
-      let!(:other_agent5) { create(:agent, admin_role_in_organisations: [organisations[2]]) }
+      # TODO: ajouter une spec pour un agent sans service
+      let!(:other_agent1) { create(:agent, :with_service, basic_role_in_organisations: [organisations[0]]) }
+      let!(:other_agent2) { create(:agent, :with_service, basic_role_in_organisations: [organisations[1]]) }
+      let!(:other_agent3) { create(:agent, :with_service, basic_role_in_organisations: [organisations[2]]) }
+      let!(:other_agent4) { create(:agent, :with_service, basic_role_in_organisations: [organisations[3]]) }
+      let!(:other_agent5) { create(:agent, :with_service, admin_role_in_organisations: [organisations[2]]) }
 
-      it do
-        expect(subject).not_to include(other_agent1)
-        expect(subject).to include(other_agent2)
-        expect(subject).to include(other_agent3)
-        expect(subject).not_to include(other_agent4)
-        expect(subject).to include(other_agent5)
+      specify do
+        expect(subject).to contain_exactly(agent, other_agent2, other_agent3, other_agent5)
       end
     end
 
@@ -138,7 +135,7 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       let!(:other_territory_organisations) { create_list(:organisation, 3, territory: territories[1]) }
       let!(:agent) do
         create(
-          :agent,
+          :agent, :with_service,
           basic_role_in_organisations: [same_territory_organisations[0], other_territory_organisations[0]],
           admin_role_in_organisations: [same_territory_organisations[1], other_territory_organisations[1]],
           role_in_territories: [territories[0]]
@@ -147,17 +144,19 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       let!(:other_agent_same_territory1) { create(:agent, basic_role_in_organisations: [same_territory_organisations[0]]) }
       let!(:other_agent_same_territory2) { create(:agent, basic_role_in_organisations: [same_territory_organisations[1]]) }
       let!(:other_agent_same_territory3) { create(:agent, basic_role_in_organisations: [same_territory_organisations[2]]) }
-      let!(:other_agent_different_territory1) { create(:agent, basic_role_in_organisations: [other_territory_organisations[0]]) }
+      # TODO: ajouter un agent sans service
+      let!(:other_agent_different_territory1) { create(:agent, :with_service, basic_role_in_organisations: [other_territory_organisations[0]]) }
       let!(:other_agent_different_territory2) { create(:agent, basic_role_in_organisations: [other_territory_organisations[1]]) }
       let!(:other_agent_different_territory3) { create(:agent, basic_role_in_organisations: [other_territory_organisations[2]]) }
 
       it do
-        expect(subject).to include(other_agent_same_territory1)
-        expect(subject).to include(other_agent_same_territory2)
-        expect(subject).to include(other_agent_same_territory3)
-        expect(subject).not_to include(other_agent_different_territory1)
-        expect(subject).to include(other_agent_different_territory2)
-        expect(subject).not_to include(other_agent_different_territory3)
+        expect(subject).to contain_exactly(
+          agent,
+          other_agent_same_territory1,
+          other_agent_same_territory2,
+          other_agent_same_territory3,
+          other_agent_different_territory2
+        )
       end
     end
   end

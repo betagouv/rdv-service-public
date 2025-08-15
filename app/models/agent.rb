@@ -120,28 +120,17 @@ class Agent < ApplicationRecord
     where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
   }
   scope :active, -> { where(deleted_at: nil) }
-  scope :in_any_of_these_services, lambda { |services|
-    joins(:agent_services).where(agent_services: { service_id: services.select(:id) })
-  }
 
   ## -
 
   delegate :name, to: :domain, prefix: true
 
   def confrere_of?(other_agent)
-    if services.any?
-      services.to_set.intersect?(other_agent.services.to_set)
-    else
-      other_agent.services.none?
-    end
+    services.to_set.intersect?(other_agent.services.to_set) || other_agent.services.none?
   end
 
   def confreres
-    if services.any?
-      Agent.in_any_of_these_services(services)
-    else
-      Agent.where.missing(:agent_services)
-    end
+    Agent.left_outer_joins(:agent_services).where(agent_services: { service_id: services.select(:id) + [nil] })
   end
 
   def reverse_full_name_and_service
