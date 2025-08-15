@@ -88,7 +88,7 @@ RSpec.describe Agent::PlageOuverturePolicy, type: :policy do
     end
 
     context "when she belongs to the plage's organisation as basic member" do
-      let(:agent) { create(:agent, basic_role_in_organisations: [plage_ouverture.organisation]) }
+      let(:agent) { create(:agent, :with_service, basic_role_in_organisations: [plage_ouverture.organisation]) }
 
       context "when she shares a service with the plage's agent" do
         before do

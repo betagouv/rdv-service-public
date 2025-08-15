@@ -10,10 +10,21 @@ FactoryBot.define do
     confirmed_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
     invitation_accepted_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
 
+    trait :with_service do
+      service { association(:service) }
+    end
     transient do
       services { [] }
       service { nil }
     end
+
+    trait :secretaire do
+      services { [Service.find_by(name: Service::SECRETARIAT) || build(:service, :secretariat)] }
+    end
+    trait :cnfs do
+      services { [Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique)] }
+    end
+
     after(:build) do |agent, evaluator|
       if evaluator.service
         agent.agent_services << build(:agent_service, service: evaluator.service, agent:)
@@ -74,12 +85,6 @@ FactoryBot.define do
       invitation_sent_at { 2.days.ago }
       invitation_accepted_at { nil }
       confirmed_at { nil }
-    end
-    trait :secretaire do
-      services { [Service.find_by(name: Service::SECRETARIAT) || build(:service, :secretariat)] }
-    end
-    trait :cnfs do
-      services { [Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique)] }
     end
     trait :intervenant do
       email { nil }
