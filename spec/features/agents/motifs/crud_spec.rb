@@ -73,6 +73,24 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(page).to have_content("Renouvellement de permis de construire (archivé)")
       click_link("Supprimer")
     end
+
+    context "when the territory doesn't have any services" do
+      let!(:service) { nil }
+
+      it "doesn't display the service field or information" do
+        visit new_admin_organisation_motif_path(organisation_id: organisation.id)
+        expect(page).not_to have_content("Service")
+
+        fill_in "Nom", with: "Demande de permis de construire"
+        fill_in "Couleur associée", with: "#000"
+        click_button "Créer le motif"
+
+        expect_page_title("Motifs de rendez-vous")
+
+        visit admin_organisation_motif_path(organisation_id: organisation.id, id: Motif.last.id)
+        expect(page).not_to have_content("Service")
+      end
+    end
   end
 
   describe "new" do

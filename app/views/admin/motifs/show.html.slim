@@ -12,10 +12,11 @@
     .card.mt-2
       .card-body
         = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
-        = motif_attribute_row(Motif.human_attribute_name(:service)) do
-          = @motif.service_name
-          - if @motif.service.blank?
-            span.text-muted= I18n.t("admin.motifs.motif_without_service_explanation")
+        - if current_territory.services.any? || @motif.service
+          = motif_attribute_row(Motif.human_attribute_name(:service)) do
+            = @motif.service_name
+            - if @motif.service.blank?
+              span.text-muted= I18n.t("admin.motifs.motif_without_service_explanation")
         - if @motif.motif_category.present?
           = motif_attribute_row(MotifCategory.model_name.human, @motif.motif_category.name)
         = motif_attribute_row \

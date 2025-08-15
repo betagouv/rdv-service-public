@@ -33,6 +33,7 @@ class Admin::MotifsController < AgentAuthController
     unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
     @filtered_motifs = filtered(unfiltered_motifs, params)
     @need_search = enough_motifs_to_need_search?(unfiltered_motifs)
+    @display_services = current_territory.services.any? || current_organisation.motifs.where.not(service_id: nil).any?
 
     @motifs_page = @filtered_motifs
       .active(@current_tab == :active)

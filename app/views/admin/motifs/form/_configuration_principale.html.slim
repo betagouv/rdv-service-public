@@ -20,16 +20,18 @@ p
         datalist#motif_names
           - Motif.where(organisation_id: current_agent.organisations).map(&:name).uniq.each do |org_name|
             option= org_name
-    .form-row
-      .col-md-12
-        = f.association :service, label: "Service associé", collection: current_territory.services.reject(&:secretariat?), required: false, input_html: { \
-          class: "select2-input", \
-          data: { \
-            placeholder: "Sélectionnez le service auquel le motif sera associé", \
-            "select2-config": { disableSearch: true, allowClear: true }, \
-            "auto-select-sole-option": true,
-          }, \
-        }
+    - available_services = (current_territory.services.reject(&:secretariat?) + [motif.service].compact)
+    - if available_services.any? || motif.service_id.present?
+      .form-row
+        .col-md-12
+          = f.association :service, label: "Service associé", collection: available_services, required: false, input_html: { \
+            class: "select2-input", \
+            data: { \
+              placeholder: "Sélectionnez le service auquel le motif sera associé", \
+              "select2-config": { disableSearch: true, allowClear: true }, \
+              "auto-select-sole-option": true,
+            }, \
+          }
     .form-row
       .col-md-6= f.input :default_duration_in_min, label: "Durée du RDV (en minutes)"
       .col-md-6= f.input :color, as: "color", label: "Couleur associée"
