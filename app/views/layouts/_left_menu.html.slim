@@ -45,7 +45,7 @@ nav.left-side-menu-wrapper
             - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
             - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_planning_agenda_path
             li
-              form.my-2.pl-2
+              form.fr-my-3v
                 = planning_agent_select(agent_for_left_menu, path_helper_name)
             li
               = active_link_to "Agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
