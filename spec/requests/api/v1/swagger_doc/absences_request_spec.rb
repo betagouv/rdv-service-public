@@ -18,7 +18,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let!(:organisation3) { create(:organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2], service: create(:service)) }
       let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation1], service: agent.services.first) }
-      let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
+      let!(:agent2) { create(:agent, :with_service, basic_role_in_organisations: [organisation2]) }
       let!(:agent3) { create(:agent, basic_role_in_organisations: [organisation3]) }
       let!(:absence1) { create(:absence, agent: agent1) }
       let!(:absence2) { create(:absence, agent: agent2) }
