@@ -27,7 +27,7 @@ nav.left-side-menu-wrapper
                   i.fa.fa-angle-down.menu-arrow.mt-1
           = render "layouts/left_menu/organisation_switcher"
 
-        li
+        li.fr-pb-0
           a.side-menu__item[
             data-toggle="collapse"
             href=".left-submenu-planning"
@@ -44,8 +44,8 @@ nav.left-side-menu-wrapper
           ]
             - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
             - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_planning_agenda_path
-            li
-              form.my-2.pl-2
+            li.fr-pb-0
+              form.fr-my-3v
                 = planning_agent_select(agent_for_left_menu, path_helper_name)
             li
               = active_link_to "Agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
@@ -54,38 +54,38 @@ nav.left-side-menu-wrapper
             li
               = active_link_to "Indisponibilités", admin_organisation_planning_absences_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
 
-        li
+        li.fr-pb-0
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
             span.fr-icon-group-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Usagers
 
-        li
+        li.fr-pb-0
           = active_link_to(admin_organisation_rdvs_path(current_organisation), class: "side-menu__item")
             span.fr-icon-survey-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Liste des RDV
 
-        li
+        li.fr-pb-0
           = active_link_to(admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__item")
             span.fr-icon-team-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | RDV collectifs
 
-        li
+        li.fr-pb-0
           = active_link_to(admin_organisation_stats_path(current_organisation), class: "side-menu__item")
             span.fr-icon-bar-chart-box-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Statistiques
 
         - unless current_agent_role.admin?
-          li
+          li.fr-pb-0
             = active_link_to admin_organisation_lieux_path(current_organisation), class: "side-menu__item"
               = lieu_icon(class: "fr-icon--sm fr-mr-1w")
               | Lieux
-          li
+          li.fr-pb-0
             = active_link_to admin_organisation_motifs_path(current_organisation), class: "side-menu__item"
               = motif_icon(class: "fr-icon--sm fr-mr-1w")
               | Motifs
 
         - if current_agent_role.admin?
-          li
+          li.fr-pb-0
             = link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item #{'active' if menu_top_level_item == 'settings'}"
               span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
               | Configuration
@@ -93,7 +93,7 @@ nav.left-side-menu-wrapper
               - if menu_top_level_item != "settings" && current_organisation.created_at > 30.days.ago && needs_configuration(current_organisation)
                 .fr-ml-1w.rdv-pastille
 
-        li
+        li.fr-pb-0
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
             span.fr-icon-question-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Support
