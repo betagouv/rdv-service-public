@@ -100,21 +100,18 @@ class Compte
   end
 
   def create_mairie_motifs!
-    service = Service.find_by(name: Service::MAIRIE)
-
     create_mairie_motif!(service, "Carte d'identité", Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME)
     create_mairie_motif!(service, "Passeport", Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME)
     create_mairie_motif!(service, "Passeport et carte d'identité", Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME)
   end
 
-  def create_mairie_motif!(service, name, motif_category_name)
+  def create_mairie_motif!(name, motif_category_name)
     Motif.create!(
       name: name,
       color: "#99CC99",
       default_duration_in_min: 15,
       location_type: :public_office,
       organisation: organisation,
-      service: service,
       motif_category: MotifCategory.find_by(name: motif_category_name),
       bookable_by: :everyone
     )
@@ -133,7 +130,6 @@ class Compte
       color: "#99CC99",
       default_duration_in_min: 30,
       bookable_by: :agents,
-      service: agent.services.first,
     }
     Motif.create!(default_motif_attributes.merge(location_type: :phone))
     Motif.create!(default_motif_attributes.merge(location_type: :visio))
