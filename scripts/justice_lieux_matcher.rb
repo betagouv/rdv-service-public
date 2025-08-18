@@ -80,6 +80,18 @@ class JusticeLieuxMatcher
         puts "Match créé !"
       end
     end
+
+    code_postaux_with_multiple_distant_matches = all_code_postaux.select do |code_postal|
+      official_matches(code_postal).count > 1
+    end.select do |code_postal|
+      local_matches(code_postal).count == 1
+    end
+
+    puts code_postaux_with_multiple_distant_matches.count
+
+    code_postaux_with_multiple_distant_matches.each.with_index do |_code_postal, index|
+      puts "Progrès : #{index}/#{total}"
+    end
   end
 
   private
