@@ -27,9 +27,11 @@
       input.btn.btn-primary.d-print-none type="submit" value="Rechercher"
 
       - if @search_needed
-      .fr-grid-row
-        .fr-col-12.rdv-text-align-center
-          p Utilisez le champ de recherche pour trouver&nbsp;un&nbsp;usager
+        p.fr-mt-2w.text-muted
+          = icon("fr-icon-lock-line", class: "fr-mr-1w")
+          | Pour protéger la confidentialité de vos usagers, ils sont accessibles uniquement via une recherche, et pas directement en liste.
+          br
+          | Lancez une recherche pour trouver des usagers.
 
   - if @users.any? && !@search_needed
     .table-responsive
@@ -55,7 +57,3 @@
         .d-flex.justify-content-center id="users-pagination"
           = paginate @users, theme: "dsfr"
           .rdv-text-align-center= page_entries_info @users
-
-- if @search_needed
-  = dsfr_alert type: :info, size: :sm, html_attributes: { class: "fr-mb-2v" } do
-    |< Pour protéger la confidentialité de vos usagers, ils sont accessibles uniquement via une recherche, et pas directement en liste.
