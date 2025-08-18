@@ -100,9 +100,9 @@ class Compte
   end
 
   def create_mairie_motifs!
-    create_mairie_motif!(service, "Carte d'identité", Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME)
-    create_mairie_motif!(service, "Passeport", Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME)
-    create_mairie_motif!(service, "Passeport et carte d'identité", Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME)
+    create_mairie_motif!("Carte d'identité", Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME)
+    create_mairie_motif!("Passeport", Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME)
+    create_mairie_motif!("Passeport et carte d'identité", Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME)
   end
 
   def create_mairie_motif!(name, motif_category_name)
