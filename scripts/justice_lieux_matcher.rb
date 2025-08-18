@@ -84,7 +84,10 @@ class JusticeLieuxMatcher
     code_postaux_with_multiple_distant_matches = all_code_postaux.select do |code_postal|
       official_matches(code_postal).count > 1
     end.select do |code_postal|
-      local_matches(code_postal).count == 1
+      local_matches = local_matches(code_postal)
+      local_matches.select do |lieu|
+        JusticeLieuxMatch.find_by(lieu_id: lieu.id).none?
+      end.count == 1
     end
 
     puts code_postaux_with_multiple_distant_matches.count
