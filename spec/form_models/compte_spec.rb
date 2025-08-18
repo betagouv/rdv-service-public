@@ -1,6 +1,6 @@
 RSpec.describe Compte do
   context "when the agent already has an account because they logged in with ProConnect" do
-    let!(:agent) { create(:agent, :no_services) }
+    let!(:agent) { create(:agent) }
     let(:super_admin) { create(:super_admin) }
     let(:service) { create(:service) }
 

@@ -85,7 +85,6 @@ class Agent < ApplicationRecord
   has_many :services, through: :agent_services
   has_many :teams, through: :agent_teams
   has_many :lieux, through: :plage_ouvertures
-  has_many :motifs, through: :services
   has_many :rdvs, dependent: :restrict_with_error, through: :agents_rdvs
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
@@ -109,7 +108,6 @@ class Agent < ApplicationRecord
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
   validates :last_name, presence: true, unless: -> { allow_blank_name }
-  validates :agent_services, presence: true, unless: -> { roles.none? }
 
   # Hooks
   before_destroy :prevent_destroy_if_rdvs
@@ -121,28 +119,25 @@ class Agent < ApplicationRecord
     where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
   }
   scope :active, -> { where(deleted_at: nil) }
-  scope :in_any_of_these_services, lambda { |services|
-    joins(:agent_services).where(agent_services: { service_id: services.select(:id) })
-  }
 
   ## -
 
   delegate :name, to: :domain, prefix: true
 
   def confrere_of?(other_agent)
-    services.to_set.intersect?(other_agent.services.to_set)
+    services.to_set.intersect?(other_agent.services.to_set) || other_agent.services.none?
   end
 
   def confreres
-    Agent.in_any_of_these_services(services)
+    Agent.left_outer_joins(:agent_services).where(agent_services: { service_id: services.select(:id) + [nil] })
   end
 
   def reverse_full_name_and_service
-    services.present? ? "#{reverse_full_name_or_email} (#{services_short_names})" : full_name
+    services.present? ? "#{reverse_full_name_or_email} (#{services_short_names})" : reverse_full_name
   end
 
   def full_name_and_service
-    services.present? ? "#{full_name_or_email} (#{services_short_names})" : full_name
+    services.present? ? "#{full_name_or_email} (#{services_short_names})" : full_name_or_email
   end
 
   def services_short_names

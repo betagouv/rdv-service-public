@@ -100,8 +100,4 @@ module AgentsHelper
       tag.div(class: "pt-2 pr-2 pb-2 pl-3", &block)
     end
   end
-
-  def access_level_label(access_level)
-    AgentRole.human_attribute_value(:access_level, access_level, context: :explanation).html_safe # rubocop:disable Rails/OutputSafety
-  end
 end

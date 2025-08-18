@@ -8,7 +8,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   let!(:agent) do
     create(:agent, basic_role_in_organisations: [organisation], rdv_notifications_level: :all)
   end
-  let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation, location_type: :public_office) }
+  let!(:motif) { create(:motif, organisation: organisation, location_type: :public_office) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
   let!(:user) do

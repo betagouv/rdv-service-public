@@ -15,12 +15,15 @@
           = render "model_errors", model: @agent
 
           p
-            - if @agent.services.count == 1
-              | #{@agent.full_name} appartient à un seul service :
+            - if @agent.services.count == 0
+              | #{@agent.full_name_or_email} n'appartient à aucun service
+            - elsif @agent.services.count == 1
+              = "#{@agent.full_name_or_email} appartient au service "
+              b #{@agent.services.first.name}
             - else
-              | #{@agent.full_name} appartient à #{@agent.services.count} services :
-            ul.fr-pl-2w
-            - @agent.services.each do |service|
+              | #{@agent.full_name_or_email} appartient à #{@agent.services.count} services :
+              ul.fr-pl-2w
+              - @agent.services.each do |service|
               li.rdv-font-weight-bold= service.name
 
           - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
@@ -32,13 +35,11 @@
           hr
 
           = f.simple_fields_for @agent_role do |ff|
-            - # rubocop:disable Rails/OutputSafety
-            = ff.input :access_level, \
-              collection: @roles, \
-              label_method: -> { AgentRole.human_attribute_value(:access_level, _1, context: :explanation).html_safe }, \
-              hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
+            = ff.input :access_level,
+              collection: @roles,
+              label_method: -> { render("admin/agents/role_labels/#{_1}", { services: @agent.services }) },
+              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_agent.organisations.count > 1),
               as: :radio_buttons
-          - # rubocop:enable Rails/OutputSafety
 
           / allow turning an intervenant into an agent with an account
           - if AgentRole.find(@agent_role.id).access_level == "intervenant"

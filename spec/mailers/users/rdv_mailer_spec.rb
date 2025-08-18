@@ -141,7 +141,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     it "body contains cancelled confirmation with motif's service name" do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
-      rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
+      rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user], motif: build(:motif, :with_service))
       mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
 
       expect(mail.html_part.body).to match(rdv.motif.service_name)

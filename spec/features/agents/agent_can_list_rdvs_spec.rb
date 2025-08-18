@@ -1,6 +1,6 @@
 RSpec.describe "Agent can list RDVs" do
   let!(:organisation) { create(:organisation) }
-  let!(:current_agent) { create(:agent, organisations: [organisation]) }
+  let!(:current_agent) { create(:agent, organisations: [organisation], service: create(:service)) }
   let!(:user) { create(:user) }
 
   def user_profile_path(user)
@@ -25,7 +25,7 @@ RSpec.describe "Agent can list RDVs" do
 
   describe "RDV visibility within organisation" do
     let!(:agent_from_same_service) { create(:agent, organisations: [organisation], service: current_agent.services.first) }
-    let!(:agent_from_other_service) { create(:agent, organisations: [organisation]) }
+    let!(:agent_from_other_service) { create(:agent, organisations: [organisation], service: create(:service)) }
 
     before do
       [current_agent, agent_from_same_service, agent_from_other_service].each do |agent|
