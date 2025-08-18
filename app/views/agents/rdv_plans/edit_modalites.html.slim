@@ -3,14 +3,14 @@
 .fr-row
   .fr-col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
-.row.fr-mb-16w[data-controller="rdv-plan"]
-  .col-12.col-md-4
+.fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
+  .fr-col-12.fr-col-md-4.fr-mt-4w
     = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true
     = link_to edit_starts_at_agents_rdv_plan_path(@rdv_plan) do
       = back_icon(class: "fr-mr-1w")
       = "retour"
 
-  .col-12.col-md-4
+  .fr-col-12.fr-col-md-8.fr-px-2w
     = simple_form_for @rdv_plan, url: update_modalites_agents_rdv_plan_path(@rdv_plan) do |f|
       .fr-mb-4w
         .input-group
