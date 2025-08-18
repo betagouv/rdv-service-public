@@ -6,6 +6,5 @@
         = form_for @territory_creation_request, url: agents_territory_creation_requests_path, builder: Dsfr::FormBuilder do |f|
           = f.dsfr_text_field :territory_name, hint: "par exemple : Commune de Montreuil, Préfecture de Seine-Saint-Denis", required: true
           = f.dsfr_text_field :organisation_name, hint: "par exemple : CCAS de Montreuil, Bureau de Bobigny", autocomplete: "organization", required: true
-          = f.dsfr_text_field :service_name, label: "Pour quel service souhaitez-vous gérer des rendez-vous ?", hint: "par exemple : Action Sociale, Ressources Humaines", required: true
 
           = f.submit "Envoyer la demande", class: "fr-btn float-right"
