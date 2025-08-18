@@ -1,7 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
 
-import 'bootstrap';
-
 import { Calendar } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
