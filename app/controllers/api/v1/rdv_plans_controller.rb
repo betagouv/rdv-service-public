@@ -7,6 +7,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
 
       user.save!
       RdvPlan.create!(
+        rdv_agent: current_agent,
         planning_agent: current_agent,
         user: user,
         oauth_application: doorkeeper_token&.application,
