@@ -23,8 +23,11 @@ class Admin::UsersController < AgentAuthController
     agent_id = params[:agent_id]
     search_params = params[:search]
 
+    @search_needed = agent_id.blank? && search_params.blank?
+
     @users = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope)
-    @users = @users.none if agent_id.blank? && search_params.blank?
+
+    @users = @users.none if @search_needed
     @users = @users.merge(Agent.find(agent_id).users) if agent_id.present?
     @users = @users.search_by_text(search_params) if search_params.present?
     @users = @users.ordered_by_last_name.page(page_number)
