@@ -4,7 +4,7 @@ class JusticeLieuxMatcher
     @official_matches_by_code_postal = {}
   end
 
-  def match
+  def match # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     puts "Nombre de code postaux total"
     puts all_code_postaux.count
 
@@ -66,8 +66,8 @@ class JusticeLieuxMatcher
 
       puts ">>>  #{format_official_address(line['adresse'], code_postal)}      :      #{line['titre']}\n\n"
 
-      lieux.each.with_index do |lieu, index|
-        puts "#{index + 1} )  #{lieu.address}      :      #{lieu.name} (#{lieu.id}) (#{lieu.rdvs.count} rdvs) (organisation #{lieu.organisation_id})"
+      lieux.each.with_index do |lieu, i|
+        puts "#{i + 1} )  #{lieu.address}      :      #{lieu.name} (#{lieu.id}) (#{lieu.rdvs.count} rdvs) (organisation #{lieu.organisation_id})"
       end
 
       puts "\nQuel lieux correspond ? (entrez 0 pour aucun)"
@@ -148,3 +148,5 @@ class JusticeLieuxMatcher
     end
   end
 end
+
+JusticeLieuxMatcher.new.match
