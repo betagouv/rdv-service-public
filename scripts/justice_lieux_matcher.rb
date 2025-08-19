@@ -100,7 +100,9 @@ class JusticeLieuxMatcher
   private
 
   def format_official_address(adresse, code_postal)
-    adresse.gsub("\n", ",").gsub(code_postal, "") + ", #{code_postal}"
+    (adresse.gsub("\n", ",").gsub(code_postal, "") + ", #{code_postal}").split(", ").tap do |split_address|
+      split_address[1].capitalize
+    end.join(", ")
   end
 
   def all_code_postaux
