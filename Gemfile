@@ -71,6 +71,9 @@ gem "devise-async"
 gem "omniauth-github"
 # omniauth provider for Microsoft Graph
 gem "omniauth-microsoft_graph"
+# omniauth provider for inter-instance migrations
+gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
+
 # OpenID Connect Strategy for OmniAuth
 gem "omniauth_openid_connect"
 # Oauth provider
@@ -266,7 +269,6 @@ group :test do
   gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
 
   gem "sinatra"
-  gem "omniauth-rdv-service-public", path: "lib/omniauth-rdv-service-public"
 
   gem "pry"
 end

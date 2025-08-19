@@ -1,4 +1,5 @@
 require "omniauth/strategies/franceconnect"
+require "omniauth-rdv-service-public"
 
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :github, ENV.fetch("GITHUB_APP_ID", nil), ENV.fetch("GITHUB_APP_SECRET", nil), scope: "user:email"
@@ -18,6 +19,11 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       host: ENV.fetch("FRANCECONNECT_HOST", nil),
     }
   )
+
+  if ENV["RDV_SERVICE_PUBLIC_OAUTH_APP_ID"]
+    provider :rdv_service_public, ENV["RDV_SERVICE_PUBLIC_OAUTH_APP_ID"], ENV["RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET"],
+             scope: "write", base_url: ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"]
+  end
 
   on_failure do |env|
     http_host = env["HTTP_HOST"]

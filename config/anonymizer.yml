@@ -474,3 +474,12 @@ tables:
     non_anonymized_column_names:
       - item_type
       - item_id
+  - table_name: instance_exports
+    anonymized_column_names:
+      - api_token
+      - refresh_token
+    non_anonymized_column_names:
+      - destination_organisation_id
+      - good_job_batch_id
+      - created_at
+      - updated_at

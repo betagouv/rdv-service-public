@@ -149,11 +149,13 @@ Rails.application.routes.draw do
       end
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
+      resources :instance_exports, only: %i[index new edit update show]
       resources :exports, only: %i[index] do
         get :download
       end
     end
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
+    get "omniauth/rdvservicepublic/callback" => "agents/instance_exports#oauth_callback"
   end
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
