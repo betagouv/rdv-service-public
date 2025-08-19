@@ -44,6 +44,19 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     end
   end
 
+  context "when there is one motif with service and one without", js: true do
+    let!(:agent) { create(:agent, :with_service, basic_role_in_organisations: [organisation]) }
+    let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
+    let!(:motif_without_service) { create(:motif, service: nil, name: "Orientation", organisation:) }
+
+    it "allows selecting the motif without service" do
+      visit admin_organisation_creneaux_search_path(organisation)
+      expect(page).to have_content("Trouver un RDV")
+
+      select("Orientation", from: "motif_id")
+    end
+  end
+
   context "when there is more than one option for lieux, services and motifs selector", js: true do
     let!(:agent) { create(:agent, :with_service, admin_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
