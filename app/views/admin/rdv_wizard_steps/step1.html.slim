@@ -33,7 +33,7 @@
         group_label_method: -> { _1.first&.name },
         label_method: -> { motif_name_with_location_and_group_type(_1) }, \
         input_html: { \
-          data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true },
+          data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true, "select2-config": { disableSearch: @motifs.count <= 5  } },
           class: @services.count > 1 ? "js-filtered-motifs" : "select2-input", \
         }
 
