@@ -151,12 +151,29 @@ class JusticeLieuxMatcher
 
       puts "======================"
 
-      local_lieux = local_matches(code_postal)
+      # TODO: traiter de cas où il y a plusieurs lieux qui correspondent
+      local_lieux = local_matches(code_postal).sort_by(&:address)
       local_lieux.each.with_index do |lieu, i|
         puts "#{i + 1} )  #{lieu.address}      :      #{lieu.name} (#{lieu.id}) (#{lieu.rdvs.count} rdvs) (organisation #{lieu.organisation_id})"
       end
 
-      gets.chomp
+      puts "\nQuel lieux correspond dans la première liste ? (entrez 0 pour aucun)"
+      response1 = gets.chomp
+
+      if response1 != "0"
+
+        official_lieu = official_lieux[response1.to_i - 1]
+
+        puts "\nQuel lieux correspond dans la deuxième liste ? (entrez 0 pour aucun)"
+        response2 = gets.chomp
+
+        if response2 != "0"
+          local_lieu = local_lieux[response2.to_i - 1]
+
+          JusticeLieuxMatch.create(ee_id: official_lieu.ee_id, lieu: local_lieu)
+          puts "Match créé !"
+        end
+      end
     end
   end
 
