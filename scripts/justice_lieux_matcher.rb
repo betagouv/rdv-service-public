@@ -12,7 +12,8 @@ class JusticeLieuxMatcher
 
     # one_to_one_matches
     # one_local_to_many_official_matches
-    many_local_to_one_official_matches
+    # many_local_to_one_official_matches
+    many_to_many_matches
   end
 
   private
@@ -126,6 +127,36 @@ class JusticeLieuxMatcher
         JusticeLieuxMatch.create(ee_id: official_lieu.ee_id, lieu: lieu)
         puts "Match créé !"
       end
+    end
+  end
+
+  def many_to_many_matches
+    codes_postaux = all_code_postaux.select do |code_postal|
+      official_matches(code_postal).count > 1
+    end.select do |code_postal|
+      local_matches(code_postal).count > 1
+    end
+
+    total = codes_postaux.count
+
+    codes_postaux.each.with_index do |code_postal, index|
+      puts "\n\n\n\n\n"
+      puts "Progrès : #{index}/#{total}"
+
+      official_lieux = official_matches(code_postal)
+
+      official_lieux.each.with_index do |official_lieu, i|
+        puts "#{i + 1} ) #{official_lieu.formatted_address}            :  #{official_lieu.titre}  (#{official_lieu.ee_id})"
+      end
+
+      puts "======================"
+
+      local_lieux = local_matches(code_postal)
+      local_lieux.each.with_index do |lieu, i|
+        puts "#{i + 1} )  #{lieu.address}      :      #{lieu.name} (#{lieu.id}) (#{lieu.rdvs.count} rdvs) (organisation #{lieu.organisation_id})"
+      end
+
+      gets.chomp
     end
   end
 
