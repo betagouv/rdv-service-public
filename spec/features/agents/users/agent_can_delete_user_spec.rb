@@ -13,6 +13,6 @@ RSpec.describe "Agent can delete user" do
       click_link("Supprimer")
     end
     expect_page_title("Usagers")
-    expect_page_with_no_record_text("Utilisez le champ de recherche pour trouver un usager")
+    expect(organisation.users).to be_empty
   end
 end
