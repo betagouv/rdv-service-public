@@ -146,4 +146,23 @@ RSpec.describe "Agents can be managed by organisation admins" do
       expect(Agent.last.services.first).to eq(new_service)
     end
   end
+
+  describe "editing an agent with multiple services" do
+    before do
+      login_as(organisation_admin, scope: :agent)
+      visit admin_organisation_agents_path(organisation1)
+    end
+
+    let!(:other_agent) do
+      create(:agent, basic_role_in_organisations: [organisation1], services: [pmi, other_service])
+    end
+
+    it "works" do
+      visit edit_admin_organisation_agent_path(organisation1, other_agent)
+      find("label", text: "Administrateur").click
+      click_on "Enregistrer"
+      expect(page).to have_content "Agents"
+      expect(other_agent.reload.roles.last.access_level).to eq "admin"
+    end
+  end
 end
