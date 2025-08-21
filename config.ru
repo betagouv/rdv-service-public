@@ -5,21 +5,17 @@ require "sentry-rails"
 module Sentry
   class SingleExceptionInterface
     def initialize(exception:, mechanism:, stacktrace: nil)
-      ::Rails.logger.error("logging from start of initialize")
-
       @type = exception.class.to_s
       exception_message =
         if exception.respond_to?(:detailed_message)
           ::Rails.logger.error("logging from before detailed message")
           exception.detailed_message(highlight: false)
         else
-          ::Rails.logger.error("logging from before exception.message")
           exception.message || ""
         end
       ::Rails.logger.error("logging from before turning into string")
       exception_message = exception_message.inspect unless exception_message.is_a?(String)
 
-      ::Rails.logger.error("logging from before value")
       @value = Utils::EncodingHelper.encode_to_utf_8(exception_message.byteslice(0..Event::MAX_MESSAGE_SIZE_IN_BYTES))
 
       @module = exception.class.to_s.split("::")[0...-1].join("::")
