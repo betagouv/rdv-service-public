@@ -12,7 +12,12 @@ module Sentry
           ::Rails.logger.error("exception is #{exception.inspect}")
           ::Rails.logger.error("exception class #{exception.class}")
           ::Rails.logger.error("detailed_message is implemented in #{exception.method(:detailed_message).source_location}")
-          ::Rails.logger.error("detailed_message is #{exception.detailed_message}")
+          begin
+            ::Rails.logger.error("detailed_message is #{exception.detailed_message(highlight: false)}")
+          rescue Exception => e
+            ::Rails.logger.error("exception rescued !")
+            ::Rails.logger.error(e.inspect)
+          end
           exception.detailed_message(highlight: false)
         else
           exception.message || ""
