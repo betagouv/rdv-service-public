@@ -1,7 +1,6 @@
 RSpec.describe "Configuration initiale", js: true do
-  let(:service) { create(:service, name: "Dinum", short_name: "Dinum") }
   let(:agent) do
-    create(:agent, services: [service], admin_role_in_organisations: [organisation],
+    create(:agent, admin_role_in_organisations: [organisation],
                    first_name: "Francis",
                    last_name: "Factice",
                    email: "francis.factice@demo-rdv-service-public.gouv.fr")
@@ -9,7 +8,6 @@ RSpec.describe "Configuration initiale", js: true do
   let(:organisation) { create(:organisation, name: "Equipe produit de Mon Permis de Construire") }
 
   before do
-    organisation.territory.services << service
     login_as(agent, scope: :agent)
   end
 
