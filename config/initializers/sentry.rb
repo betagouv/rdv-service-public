@@ -15,6 +15,9 @@ Sentry.init do |config|
   config.excluded_exceptions -= ["ActiveRecord::RecordNotFound"]
 
   config.before_send = lambda do |event, _hint|
+    Rails.logger.error("running before_send callback")
+    Rails.logger.error(event)
+    Rails.logger(_hint)
     return event if !event.respond_to?(:exception) || !event.exception
 
     referer = event.request&.headers&.fetch("Referer", "")
