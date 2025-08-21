@@ -14,25 +14,26 @@
         = simple_form_for [:admin, current_organisation, @agent] do |f|
           = render "model_errors", model: @agent
 
-          p
-            - if @agent.services.count == 0
-              | #{@agent.full_name_or_email} n'appartient à aucun service
-            - elsif @agent.services.count == 1
-              = "#{@agent.full_name_or_email} appartient au service "
-              b #{@agent.services.first.name}
+          - if current_territory.services.any? || @agent.agent_services.any?
+            p
+              - if @agent.services.count == 0
+                | #{@agent.full_name_or_email} n'appartient à aucun service
+              - elsif @agent.services.count == 1
+                = "#{@agent.full_name_or_email} appartient au service "
+                b #{@agent.services.first.name}
+              - else
+                | #{@agent.full_name_or_email} appartient à #{@agent.services.count} services :
+                ul.fr-pl-2w
+                - @agent.services.each do |service|
+                  li.rdv-font-weight-bold= service.name
+
+            - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
+              = link_to "Ajouter ou retirer des services", edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id), class: "fr-link fr-icon-pencil-line fr-link--icon-left"
             - else
-              | #{@agent.full_name_or_email} appartient à #{@agent.services.count} services :
-              ul.fr-pl-2w
-              - @agent.services.each do |service|
-                li.rdv-font-weight-bold= service.name
+              .fr-mb-0.fr-text--sm.text-muted
+                | Le changement ou l’ajout de service est réservé aux admins d'espace avec ce droit d’accès
 
-          - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
-            = link_to "Ajouter ou retirer des services", edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id), class: "fr-link fr-icon-pencil-line fr-link--icon-left"
-          - else
-            .fr-mb-0.fr-text--sm.text-muted
-              | Le changement ou l’ajout de service est réservé aux admins d'espace avec ce droit d’accès
-
-          hr
+            hr
 
           = f.simple_fields_for @agent_role do |ff|
             = ff.input :access_level,

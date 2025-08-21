@@ -36,11 +36,10 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     let!(:motif) { create(:motif, name: "Mon unique motif", service: agent.services.first, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], agent: agent, organisation: organisation) }
 
-    it "automatically selects the service and motif" do
+    it "automatically selects the motif" do
       visit admin_organisation_creneaux_search_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       expect(page).to have_select("motif_id", selected: "Mon unique motif (Sur place)")
-      expect(page).to have_select("service_id", selected: agent.services.first.name)
     end
   end
 
@@ -54,6 +53,17 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
       expect(page).to have_content("Trouver un RDV")
 
       select("Orientation", from: "motif_id")
+    end
+  end
+
+  context "when there are no services available" do
+    let!(:motif) { create(:motif, name: "Mon unique motif", service: nil, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], agent: agent, organisation: organisation) }
+
+    it "doesn't show the service input" do
+      visit admin_organisation_creneaux_search_path(organisation)
+      expect(page).to have_content("Trouver un RDV")
+      expect(page).not_to have_content "Service"
     end
   end
 
