@@ -1,3 +1,26 @@
+module Sentry
+  module Rails
+    class RescuedExceptionInterceptor
+      def initialize(app)
+        @app = app
+      end
+
+      def call(env)
+        return @app.call(env) unless Sentry.initialized?
+
+        begin
+          @app.call(env)
+        rescue StandardError => e
+          Rails.logger.error("rescuing in RescuedExceptionInterceptor")
+          Rails.logger.error("error is #{e.inspect}")
+          env["sentry.rescued_exception"] = e if report_rescued_exceptions?
+          raise e
+        end
+      end
+    end
+  end
+end
+
 Sentry.init do |config|
   config.dsn = ENV["SENTRY_DSN_RAILS"]
 
@@ -16,9 +39,6 @@ Sentry.init do |config|
   config.excluded_exceptions -= ["ActiveRecord::RecordNotFound"]
 
   config.before_send = lambda do |event, _hint|
-    Rails.logger.error("running before_send callback")
-    Rails.logger.error(event)
-    Rails.logger(_hint)
     return event if !event.respond_to?(:exception) || !event.exception
 
     referer = event.request&.headers&.fetch("Referer", "")
