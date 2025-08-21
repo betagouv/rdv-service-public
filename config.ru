@@ -1,6 +1,6 @@
 # This file is used by Rack-based servers to start the application.
 
-require "sentry/rails"
+require "sentry-rails"
 module Sentry
   module Rails
     class RescuedExceptionInterceptor
