@@ -17,11 +17,75 @@ module Sentry
 end
 
 module Sentry
+  class Hub
+    def capture_exception(exception, **options, &block)
+      ::Rails.logger.error("logging from Sentry::Hub.capture_exception")
+      if RUBY_PLATFORM == "java"
+        check_argument_type!(exception, ::Exception, ::Java::JavaLang::Throwable)
+      else
+        check_argument_type!(exception, ::Exception)
+      end
+
+      return if Sentry.exception_captured?(exception)
+
+      return unless current_client
+
+      options[:hint] ||= {}
+      options[:hint][:exception] = exception
+
+      event = current_client.event_from_exception(exception, options[:hint])
+
+      return unless event
+
+      current_scope.session&.update_from_exception(event.exception)
+
+      capture_event(event, **options, &block).tap do
+        # mark the exception as captured so we can use this information to avoid duplicated capturing
+        exception.instance_variable_set(Sentry::CAPTURED_SIGNATURE, true)
+      end
+    end
+
+    def capture_event(event, **options, &block)
+      ::Rails.logger.error("logging from Sentry::Hub.capture_event")
+      check_argument_type!(event, Sentry::Event)
+
+      return unless current_client
+
+      hint = options.delete(:hint) || {}
+      scope = current_scope.dup
+
+      if block
+        block.call(scope)
+      elsif custom_scope = options[:scope]
+        scope.update_from_scope(custom_scope)
+      elsif !options.empty?
+        unsupported_option_keys = scope.update_from_options(**options)
+
+        unless unsupported_option_keys.empty?
+          configuration.log_debug <<~MSG
+            Options #{unsupported_option_keys} are not supported and will not be applied to the event.
+            You may want to set them under the `extra` option.
+          MSG
+        end
+      end
+
+      # Dans le cas du bug, on n'arrive pas jusqu'à cette ligne
+      event = current_client.capture_event(event, scope, hint)
+
+      if event && configuration.debug
+        configuration.log_debug(event.to_json_compatible)
+      end
+
+      @last_event_id = event&.event_id if event.is_a?(Sentry::ErrorEvent)
+      event
+    end
+  end
+end
+
+module Sentry
   class Client
     def capture_event(event, scope, hint = {})
       ::Rails.logger.error("logging from Sentry::Client#capture_event")
-      ::Rails.logger.error("caller is #{caller.inspect}")
-      ::Rails.logger.error("event is #{event.inspect}")
 
       return unless configuration.sending_allowed?
 
@@ -67,25 +131,6 @@ module Sentry
   end
 end
 
-module Sentry
-  class Transport
-    def send_envelope(envelope)
-      ::Rails.logger.error("logging from Sentry::Transport#send_envelope")
-      ::Rails.logger.error("envelope is #{envelope.inspect}")
-      ::Rails.logger.error("caller is #{caller.inspect}")
-      reject_rate_limited_items(envelope)
-
-      return if envelope.items.empty?
-
-      data, serialized_items = serialize_envelope(envelope)
-
-      if data
-        log_debug("[Transport] Sending envelope with items [#{serialized_items.map(&:type).join(', ')}] #{envelope.event_id} to Sentry")
-        send_data(data)
-      end
-    end
-  end
-end
 require_relative "config/environment"
 
 run Rails.application
