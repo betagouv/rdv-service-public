@@ -30,7 +30,6 @@ class Admin::MotifsController < AgentAuthController
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
 
-    @test.should_raise_error
     unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
     @filtered_motifs = filtered(unfiltered_motifs, params)
     @need_search = enough_motifs_to_need_search?(unfiltered_motifs)

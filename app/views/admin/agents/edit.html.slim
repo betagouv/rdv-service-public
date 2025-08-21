@@ -25,7 +25,7 @@
                 | #{@agent.full_name_or_email} appartient à #{@agent.services.count} services :
                 ul.fr-pl-2w
                 - @agent.services.each do |service|
-                li.rdv-font-weight-bold= service.name
+                  li.rdv-font-weight-bold= service.name
 
             - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
               = link_to "Ajouter ou retirer des services", edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id), class: "fr-link fr-icon-pencil-line fr-link--icon-left"
