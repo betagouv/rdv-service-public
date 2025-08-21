@@ -1,6 +1,9 @@
 Sentry.init do |config|
   config.dsn = ENV["SENTRY_DSN_RAILS"]
 
+  config.logger = Sentry::Logger.new(STDOUT)
+  config.logger.level = Logger::DEBUG
+
   # Most 4xx errors are excluded by default.
   # See Sentry::Configuration::IGNORE_DEFAULT
   # and Sentry::Rails::IGNORE_DEFAULT
