@@ -8,26 +8,32 @@
 
 - content_for :breadcrumb do
   .btn-group
-    = link_to "Fusionner deux usagers", new_admin_organisation_merge_users_path(current_organisation), class: "btn btn-outline-primary mr-1"
-    = link_to "Ajouter un usager", new_admin_organisation_user_path(current_organisation), class: "btn btn-outline-primary"
+    = link_to "Fusionner deux usagers", new_admin_organisation_merge_users_path(current_organisation), class: "fr-btn fr-btn--secondary mr-1"
+    = link_to "Ajouter un usager", new_admin_organisation_user_path(current_organisation), class: "fr-btn"
 
-.card
+.card[class="#{"fr-mt-6w" if @search_needed}"]
   .card-body
     = form_with url: admin_organisation_users_path(current_organisation), method: :get  do |f|
       .row
-        .col-md-6
+        .col-md-8
           .form-group.string.optional._search
             = label_tag :search, "Recherche", {class: "form-control-label string optional"}
             = text_field_tag :search, {}, {placeholder: "Prénom, Nom, Email, Téléphone", autocomplete: "off", class: "form-control string optional search-form-control", value: params[:search] }
-        .col-md-6
+        .col-md-4
           .form-group.string.optional._search
             = f.label :agent_id, "Agent référent", {class: "form-control-label select optional"}
             = f.select :agent_id, [], {}, { class: "form-control select optional select2-input", data: { "select2-config": { ajax: { url: admin_organisation_agents_path(current_organisation), dataType: "json", delay: 250 } } } }
 
       input.btn.btn-primary.d-print-none type="submit" value="Rechercher"
 
-.card
-  - if @users.any? || params[:search].present? || params[:agent_id].present?
+      - if @search_needed
+        p.fr-mt-4w.text-muted.fr-mb-0.fr-text--sm
+          = icon("fr-icon-lock-line", class: "fr-mr-1w fr-mb-1w")
+          | Pour protéger la confidentialité de vos usagers, ils sont accessibles uniquement via une recherche, et pas directement en liste.
+          br
+          | Lancez une recherche pour trouver des usagers.
+
+  - if @users.any? && !@search_needed
     .table-responsive
       table.table
         thead
@@ -51,14 +57,3 @@
         .d-flex.justify-content-center id="users-pagination"
           = paginate @users, theme: "dsfr"
           .rdv-text-align-center= page_entries_info @users
-  - else
-    .card-body
-      .row.justify-content-md-center
-        .col-md-6.rdv-text-align-center.my-5
-          p.mb-2.fr-text--lead Utilisez le champ de recherche pour trouver&nbsp;un&nbsp;usager
-          span.fa-stack.fa-4x
-            i.fa.fa-circle.fa-stack-2x.text-primary
-            i.fa.fa-users.fa-stack-1x.text-white
-
-  .m-3.rdv-text-align-center
-    = link_to "Ajouter un usager", new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"
