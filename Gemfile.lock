@@ -161,7 +161,7 @@ GEM
     binding_of_caller (1.0.1)
       debug_inspector (>= 1.2.0)
     blueprinter (1.1.0)
-    bootsnap (1.17.0)
+    bootsnap (1.18.6)
       msgpack (~> 1.2)
     brakeman (7.0.0)
       racc
@@ -374,7 +374,7 @@ GEM
     minitest (5.25.5)
     montrose (0.16.0)
       activesupport (>= 5.2, < 8)
-    msgpack (1.7.2)
+    msgpack (1.8.0)
     multi_xml (0.6.0)
     multipart-post (2.4.1)
     mustermann (3.0.3)
