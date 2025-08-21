@@ -3,23 +3,19 @@
 require "sentry-rails"
 
 module Sentry
-  module Rails
-    class CaptureExceptions < Sentry::Rack::CaptureExceptions
-      def capture_exception(exception, env)
-        # the exception will be swallowed by ShowExceptions middleware
-        return if show_exceptions?(exception, env) && !Sentry.configuration.rails.report_rescued_exceptions
+  class << self
+    def capture_exception(exception, **options, &block)
+      ::Rails.logger.error("logging from Sentry.capture_exception")
+      ::Rails.logger.error("error is #{exception.inspect}")
+      ::Rails.logger.error("options are #{options.inspect}")
 
-        ::Rails.logger.error("rescuing in CaptureExceptions middleware")
-        ::Rails.logger.error("error is #{exception.inspect}")
-        ::Rails.logger.error("json of error is #{exception.to_json}")
+      return unless initialized?
 
-        Sentry::Rails.capture_exception(exception).tap do |event|
-          env[ERROR_EVENT_ID_KEY] = event.event_id if event
-        end
-      end
+      get_current_hub.capture_exception(exception, **options, &block)
     end
   end
 end
+
 require_relative "config/environment"
 
 run Rails.application
