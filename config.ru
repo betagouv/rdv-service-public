@@ -2,6 +2,13 @@
 
 require "sentry-rails"
 
+# Maybe this will fix it
+class NameError
+  def detailed_message(highlight: true, did_you_mean: true, **)
+    original_message
+  end
+end
+
 module Sentry
   class SingleExceptionInterface
     def initialize(exception:, mechanism:, stacktrace: nil)
