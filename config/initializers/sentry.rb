@@ -3,7 +3,6 @@ Sentry.init do |config|
 
   config.logger = Sentry::Logger.new(STDOUT)
   config.logger.level = Logger::DEBUG
-  config.debug = true
 
   # Most 4xx errors are excluded by default.
   # See Sentry::Configuration::IGNORE_DEFAULT

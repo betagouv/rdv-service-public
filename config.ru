@@ -16,6 +16,25 @@ module Sentry
   end
 end
 
+module Sentry
+  class Transport
+    def send_envelope(envelope)
+      ::Rails.logger.error("logging from Sentry::Transport#send_envelope")
+      ::Rails.logger.error("envelope is #{envelope.inspect}")
+      ::Rails.logger.error("caller is #{caller.inspect}")
+      reject_rate_limited_items(envelope)
+
+      return if envelope.items.empty?
+
+      data, serialized_items = serialize_envelope(envelope)
+
+      if data
+        log_debug("[Transport] Sending envelope with items [#{serialized_items.map(&:type).join(', ')}] #{envelope.event_id} to Sentry")
+        send_data(data)
+      end
+    end
+  end
+end
 require_relative "config/environment"
 
 run Rails.application
