@@ -47,7 +47,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         fill_in("Nom de l’espace", with: "Commune de Montreuil")
         fill_in("Nom de votre première organisation", with: "CCAS de Montreuil")
-        fill_in("Pour quel service souhaitez-vous gérer des rendez-vous ?", with: "Action Sociale")
         click_on "Envoyer la demande"
 
         expect(page).to have_content("Votre demande a bien été enregistrée. Notre équipe va l'étudier et revenir vers vous dans les meilleurs délais")
@@ -63,7 +62,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         select "Commune", from: "Catégorie de l'espace"
 
-        select "Service social", from: "Service"
         click_on "Enregistrer"
         expect(page).to have_content "Le nouvel espace a été créé"
 

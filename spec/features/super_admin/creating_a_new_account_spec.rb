@@ -10,8 +10,6 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
   before do
     stub_request(:get, "https://data.geopf.fr/geocodage/search/?q=Place%20de%20la%20mairie,%20Romainville,%2093230")
       .to_return(status: 200, body: autocomplete_response, headers: {})
-
-    create(:service, name: "Urbanisme")
   end
 
   it "creates a new organisation" do
@@ -36,7 +34,6 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     fill_in("Prénom", with: "Francis")
     fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input
     fill_in("Adresse mail", with: "francis@factice.org")
-    select("Urbanisme", from: "Service")
 
     click_button("Enregistrer")
     expect(page).to have_content("Le nouvel espace a été créé, et une invitation a été envoyée à francis@factice.org")
@@ -50,9 +47,9 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
       category: "Commune"
     )
 
-    new_agent = new_territory.admin_agents.first
+    new_territory.admin_agents.first
 
-    expect(new_territory.services).to eq new_agent.services
+    expect(new_territory.services).to be_empty
 
     new_organisation = new_territory.organisations.first
     expect(new_organisation).to have_attributes(
@@ -81,7 +78,6 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
     let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
     let!(:cni_passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME) }
-    let!(:service) { create(:service, name: "Mairie") }
 
     it "crée un espace avec une organisation qui a les catégories de motif pour se brancher à l'ANTS" do
       login_as(super_admin, scope: :super_admin)
@@ -105,7 +101,6 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
       fill_in("Prénom", with: "Francis")
       fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input
       fill_in("Adresse mail", with: "francis@factice.org")
-      select("Mairie", from: "Service")
 
       find(:label, text: "Autoriser le branchement au moteur de recherche de l'ANTS").click
 

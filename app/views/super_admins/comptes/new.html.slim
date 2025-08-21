@@ -42,8 +42,8 @@ section.main-content__body
         = ff.input :first_name, label: "Prénom"
         = ff.input :last_name, label: "Nom"
         = ff.input :email, label: "Adresse mail", hint: "Une invitation sera envoyée automatiquement"
-      = ff.input :service_ids, label: "Service", collection: Service.all, hint: sanitize("Si nécessaire, vous pouvez #{link_to('créer un nouveau service', new_super_admins_service_path, target: :blank)}")
-      - if @territory_creation_request
+      = ff.input :service_ids, label: "Service", required: false, collection: Service.all, hint: sanitize("Si nécessaire, vous pouvez #{link_to('créer un nouveau service', new_super_admins_service_path, target: :blank)}")
+      - if @territory_creation_request&.service_name
         .form-text.text-muted[style="margin-bottom: 12px"]
           = "L'agent a indiqué travailler pour le service "
           b #{@territory_creation_request.service_name}

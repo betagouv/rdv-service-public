@@ -36,7 +36,6 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
 
     fill_in("Nom de l’espace", with: "Commune de Montreuil")
     fill_in("Nom de votre première organisation", with: "CCAS de Montreuil")
-    fill_in("Pour quel service souhaitez-vous gérer des rendez-vous ?", with: "Action Sociale")
 
     doc.add_screenshot(page,
                        text: "Je remplis le formulaire puis je valide")
