@@ -11,7 +11,6 @@ module Sentry
       exceptions = exceptions.map do |e|
         if e.backtrace && !processed_backtrace_ids.include?(e.backtrace.object_id)
           processed_backtrace_ids << e.backtrace.object_id
-          ::Rails.logger.error("logging: about to build with stacktrace")
           SingleExceptionInterface.build_with_stacktrace(exception: e, stacktrace_builder: stacktrace_builder, mechanism: mechanism)
         else
           SingleExceptionInterface.new(exception: exception, mechanism: mechanism)
@@ -27,10 +26,8 @@ end
 module Sentry
   class SingleExceptionInterface
     def self.build_with_stacktrace(exception:, stacktrace_builder:, mechanism:)
-      ::Rails.logger.error("logging from start of build_with_stacktrace")
       stacktrace = stacktrace_builder.build(backtrace: exception.backtrace)
 
-      ::Rails.logger.error("logging from middle of build_with_stacktrace")
       if locals = exception.instance_variable_get(:@sentry_locals)
         locals.each do |k, v|
           locals[k] =
@@ -52,6 +49,28 @@ module Sentry
 
       ::Rails.logger.error("logging from end of build_with_stacktrace")
       new(exception: exception, stacktrace: stacktrace, mechanism: mechanism)
+    end
+
+    def initialize(exception:, mechanism:, stacktrace: nil)
+      ::Rails.logger.error("logging from start of initialize")
+      @type = exception.class.to_s
+      exception_message =
+        if exception.respond_to?(:detailed_message)
+          exception.detailed_message(highlight: false)
+        else
+          exception.message || ""
+        end
+      exception_message = exception_message.inspect unless exception_message.is_a?(String)
+
+      ::Rails.logger.error("logging from before value")
+      @value = Utils::EncodingHelper.encode_to_utf_8(exception_message.byteslice(0..Event::MAX_MESSAGE_SIZE_IN_BYTES))
+
+      ::Rails.logger.error("logging from before module")
+      @module = exception.class.to_s.split("::")[0...-1].join("::")
+      @thread_id = Thread.current.object_id
+      @stacktrace = stacktrace
+      @mechanism = mechanism
+      ::Rails.logger.error("logging from end of initialize")
     end
   end
 end
