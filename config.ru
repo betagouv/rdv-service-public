@@ -9,21 +9,49 @@ module Sentry
       processed_backtrace_ids = Set.new
 
       exceptions = exceptions.map do |e|
-        ::Rails.logger.error("logging from loop: e is #{e.inspect}")
-        ::Rails.logger.error("e properties are backtrace: #{e.backtrace.inspect}, ")
-
         if e.backtrace && !processed_backtrace_ids.include?(e.backtrace.object_id)
           processed_backtrace_ids << e.backtrace.object_id
           ::Rails.logger.error("logging: about to build with stacktrace")
           SingleExceptionInterface.build_with_stacktrace(exception: e, stacktrace_builder: stacktrace_builder, mechanism: mechanism)
         else
-          ::Rails.logger.error("logging: about to initialize")
           SingleExceptionInterface.new(exception: exception, mechanism: mechanism)
         end
       end
 
       ::Rails.logger.error("logging from end of build")
       new(exceptions: exceptions)
+    end
+  end
+end
+
+module Sentry
+  class SingleExceptionInterface
+    def self.build_with_stacktrace(exception:, stacktrace_builder:, mechanism:)
+      ::Rails.logger.error("logging from start of build_with_stacktrace")
+      stacktrace = stacktrace_builder.build(backtrace: exception.backtrace)
+
+      ::Rails.logger.error("logging from middle of build_with_stacktrace")
+      if locals = exception.instance_variable_get(:@sentry_locals)
+        locals.each do |k, v|
+          locals[k] =
+            begin
+              v = v.inspect unless v.is_a?(String)
+
+              if v.length >= MAX_LOCAL_BYTES
+                v = v.byteslice(0..MAX_LOCAL_BYTES - 1) + OMISSION_MARK
+              end
+
+              Utils::EncodingHelper.encode_to_utf_8(v)
+            rescue StandardError
+              PROBLEMATIC_LOCAL_VALUE_REPLACEMENT
+            end
+        end
+
+        stacktrace.frames.last.vars = locals
+      end
+
+      ::Rails.logger.error("logging from end of build_with_stacktrace")
+      new(exception: exception, stacktrace: stacktrace, mechanism: mechanism)
     end
   end
 end
