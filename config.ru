@@ -9,6 +9,9 @@ module Sentry
       exception_message =
         if exception.respond_to?(:detailed_message)
           ::Rails.logger.error("logging from before detailed message")
+          ::Rails.logger.error("exception is #{exception.inspect}")
+          ::Rails.logger.error("exception class #{exception.class}")
+          ::Rails.logger.error("detailed_message is implemented in #{exception.method(:detailed_message).source_location}")
           exception.detailed_message(highlight: false)
         else
           exception.message || ""
