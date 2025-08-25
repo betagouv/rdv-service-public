@@ -11,24 +11,25 @@
       = back_icon(class: "fr-mr-1w")
       = "retour"
   .fr-col-12.fr-col-md-8.fr-px-2w
-      = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
-      = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
-      = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
+    = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
+    = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
+    = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
+    = render "agents/rdv_plans/summary/motif", rdv_plan: @rdv_plan
 
-      hr.fr-mt-2w
-      h3 Coordonnées de #{@rdv_plan.user.full_name}
-      p Des notifications seront envoyées par email et/ou par sms
-      = simple_form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post do |f|
-        = f.fields_for :user, @rdv_plan.user do |ff|
-          .row
-            .col-6
-              = ff.input :notification_email, input_html: { value: @rdv_plan.user.email.presence || @rdv_plan.user.notification_email}, disabled: @rdv_plan.user.encrypted_password.present?, hint: "Cet usager utilise cette adresse email pour ce connecter. Elle n'est donc pas modifiable."
-            .col-6
-              = ff.input :phone_number
-        - if @rdv_plan.motif.visible_and_notified?
-          = f.fields_for :participation, (Participation.new(send_lifecycle_notifications: true, send_reminder_notification: true)) do |ff|
-            = ff.input :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
-            = ff.input :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
-        - else
-          | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
-        = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right fr-btn--lg"
+    hr.fr-mt-2w
+    h3 Coordonnées de #{@rdv_plan.user.full_name}
+    p Des notifications seront envoyées par email et/ou par sms
+    = simple_form_for @rdv_plan, url: create_rdv_agents_rdv_plan_path(@rdv_plan), method: :post do |f|
+      = f.fields_for :user, @rdv_plan.user do |ff|
+        .row
+          .col-6
+            = ff.input :notification_email, input_html: { value: @rdv_plan.user.email.presence || @rdv_plan.user.notification_email}, disabled: @rdv_plan.user.encrypted_password.present?, hint: "Cet usager utilise cette adresse email pour ce connecter. Elle n'est donc pas modifiable."
+          .col-6
+            = ff.input :phone_number
+      - if @rdv_plan.motif.visible_and_notified?
+        = f.fields_for :participation, (Participation.new(send_lifecycle_notifications: true, send_reminder_notification: true)) do |ff|
+          = ff.input :send_lifecycle_notifications, label: "Envoyer une notification de confirmation"
+          = ff.input :send_reminder_notification, label: "Envoyer une notification de rappel 48h avant le rendez-vous"
+      - else
+        | Les notifications ne sont pas envoyées pour ce motif de rendez-vous.
+      = f.submit "Confirmer le rendez-vous", class: "fr-btn float-right fr-btn--lg"

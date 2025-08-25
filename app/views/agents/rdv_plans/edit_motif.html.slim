@@ -11,6 +11,7 @@
       = "retour"
 
   .fr-col-12.fr-col-md-8.fr-px-2w
+    = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
     = render "agents/rdv_plans/summary/starts_at", rdv_plan: @rdv_plan
     = render "agents/rdv_plans/summary/location_type", rdv_plan: @rdv_plan
     hr.fr-mt-2w.fr-mb-4w

@@ -11,6 +11,9 @@
       = "retour"
 
   .fr-col-12.fr-col-md-8.fr-px-2w
+    = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
+    hr.fr-mt-2w.fr-mb-4w
+
     = simple_form_for @rdv_plan, url: update_modalites_agents_rdv_plan_path(@rdv_plan) do |f|
       .fr-mb-4w
         .input-group
