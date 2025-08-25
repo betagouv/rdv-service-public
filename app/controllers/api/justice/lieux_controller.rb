@@ -8,13 +8,13 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
       lieux << {
         ee_id: "612f2ed9b473e40555def46c",
         reservation_en_ligne: false,
-        url: "https://demo.rdv.anct.gouv.fr/prendre_rdv?departement=&public_link_organisation_id=877",
+        url: "https://demo.rdv.anct.gouv.fr/org/877/ccas-de-lille",
       }
 
       lieux << {
         ee_id: "612f2ed9b473e40555def46e",
         reservation_en_ligne: true,
-        url: "https://demo.rdv.anct.gouv.fr/prendre_rdv?departement=&public_link_organisation_id=878",
+        url: "https://demo.rdv.anct.gouv.fr/org/878/ccas-de-montreuil",
       }
     end
 
