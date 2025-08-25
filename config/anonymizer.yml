@@ -8,7 +8,20 @@ tables:
   - table_name: good_job_settings
     truncated: true
   - table_name: good_job_batches
-    truncated: true
+    anonymized_column_names:
+      - description
+      - serialized_properties
+      - on_finish
+      - on_success
+      - on_discard
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - finished_at
+      - discarded_at
+      - enqueued_at
+      - callback_queue_name
+      - callback_priority
   - table_name: good_job_processes
     truncated: true
   - table_name: annotations
