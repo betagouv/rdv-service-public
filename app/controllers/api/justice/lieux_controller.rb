@@ -16,8 +16,56 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
         reservation_en_ligne: true,
         url: "https://demo.rdv.anct.gouv.fr/org/878/ccas-de-montreuil",
       }
+    else
+      # Il y a beaucoup de requêtes N+1 dans ce code, mais c'est acceptable tant que c'est derrière un cache
+      # et qu'on a relativement peu de lieux concernées
+      lieux = Rails.cache.fetch("justice/lieux_controller", expires_in: 1.hour) do
+        matches.map do |ee_id, lieu_id|
+          lieu = Lieu.find_by(id: lieu_id)
+          next unless lieu
+
+          {
+            ee_id: ee_id,
+            reservation_en_ligne: reservation_en_ligne(lieu),
+            url: url(lieu),
+          }
+        end.compact
+      end
     end
 
     render json: { lieux: }
+  end
+
+  private
+
+  def reservation_en_ligne(lieu)
+    lieu.plage_ouvertures.joins(:motifs).where(
+      motifs: { bookable_by: :everyone },
+      plage_ouvertures: { expired_cached: false }
+    ).any?
+  end
+
+  def url(lieu)
+    Rails.application.routes.url_helpers.public_link_to_org_url(
+      organisation_id: lieu.organisation_id,
+      org_slug: lieu.organisation.slug,
+      host: "rdv.anct.gouv.fr"
+    )
+  end
+
+  # Cette liste est générée manuellement à partir d'un dump de données de prods en utilisant un script
+  def matches
+    {
+      "612f2ebab473e40555dee806": 2098,
+      "612f2ebfb473e40555dee9d4": 1861,
+      "612f2ec1b473e40555deeb00": 1933,
+      "612f2ec1b473e40555deeb04": 1904,
+      "612f2ec1b473e40555deeb06": 1906,
+      "612f2ec1b473e40555deeb08": 1932,
+      "612f2ec1b473e40555deeb1a": 1926,
+      "612f2ec2b473e40555deeb1c": 1927,
+      "612f2ec2b473e40555deeb20": 1942,
+      "612f2ec2b473e40555deeb26": 1936,
+    }
   end
 end
