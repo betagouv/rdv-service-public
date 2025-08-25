@@ -28,13 +28,12 @@ class Agents::RdvPlansController < AgentAuthController
   def edit_starts_at
     @rdv_plan.starts_at = nil
 
-    other_agents_group_by_organisation = current_agent.organisations.index_with do |organisation|
-      policy_scope(
-        Agent, policy_scope_class: Agent::AgentPolicy::Scope
-      ).active.joins(:organisations).where(organisations: { id: organisation.id }).where.not(id: current_agent.id)
-    end
+    other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
+      .joins(:organisations)
+      .where(organisations: current_agent.organisations)
+      .where.not(id: current_agent.id)
 
-    render locals: { event_sources:, other_agents_group_by_organisation: }
+    render locals: { event_sources:, other_agents: }
   end
 
   def update_starts_at
