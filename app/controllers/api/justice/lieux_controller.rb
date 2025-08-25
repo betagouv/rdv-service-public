@@ -53,6 +53,7 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
     )
   end
 
+  # Cette liste est générée manuellement à partir d'un dump de données de prods en utilisant un script
   def matches
     {
       "612f2ebab473e40555dee806": 2098,
