@@ -46,7 +46,7 @@ class Territory < ApplicationRecord
 
   # Validations
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
-  validates :name, presence: true, if: -> { persisted? }
+
   validate do
     if name_changed? && name_was.in?(SPECIAL_NAMES)
       errors.add(:name, "Le nom de cet espace lui donne des propriétés particulières et ne peut donc pas être changé")
@@ -130,7 +130,11 @@ class Territory < ApplicationRecord
   end
 
   def to_s
-    [name, departement_number.presence].compact.join(" - ")
+    if name
+      [name, departement_number.presence].compact.join(" - ")
+    else
+      "Espace sans nom"
+    end
   end
 
   def waiting_room_enabled?
