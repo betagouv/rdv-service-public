@@ -19,7 +19,7 @@ Bundler.require(*Rails.groups)
 module Lapin
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
+    config.load_defaults 7.2
 
     # À partir de Rails 7.2, YJIT est activé par défaut avec Ruby 3.3
     # Compte tenu de notre environnement mémoire contraint sur Scalingo, on le désactive pour l'instant.
