@@ -14,24 +14,17 @@ class Agents::RdvPlansController < AgentAuthController
   def update_agent
     rdv_plan_params = params.require(:rdv_plan).permit(:rdv_agent_id)
 
-    @rdv_plan.update!(rdv_plan_params)
-    respond_to do |format|
-      format.json do
-        render json: {
-          event_sources:,
-          display_saturdays: @rdv_plan.rdv_agent.display_saturdays,
-        }
-      end
-    end
+    rdv_agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active.find(rdv_plan_params[:rdv_agent_id])
+
+    @rdv_plan.update!(rdv_agent:)
+
+    render json: { event_sources: }
   end
 
   def edit_starts_at
     @rdv_plan.starts_at = nil
 
-    other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
-      .joins(:organisations)
-      .where(organisations: current_agent.organisations)
-      .where.not(id: current_agent.id)
+    other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active.where.not(id: current_agent.id).ordered_by_last_name
 
     render locals: { event_sources:, other_agents: }
   end
