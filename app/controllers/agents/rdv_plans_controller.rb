@@ -24,9 +24,11 @@ class Agents::RdvPlansController < AgentAuthController
   def edit_starts_at
     @rdv_plan.starts_at = nil
 
-    other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active.where.not(id: current_agent.id).ordered_by_last_name
+    other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active.ordered_by_last_name.where.not(id: current_agent.id)
 
-    render locals: { event_sources:, other_agents: }
+    agents = [current_agent] + other_agents
+
+    render locals: { event_sources:, agents: }
   end
 
   def update_starts_at
