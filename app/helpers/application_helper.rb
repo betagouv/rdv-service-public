@@ -174,6 +174,7 @@ module ApplicationHelper
   end
 
   def column_chart(path, options = {})
+    # Ce helper est un remplacement de chartkick
     tag.div(class: "js-column-chart", data: { path: path, options: options.to_json })
   end
 end

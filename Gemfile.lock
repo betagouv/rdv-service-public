@@ -186,7 +186,6 @@ GEM
       addressable
       capybara
       playwright-ruby-client (>= 1.16.0)
-    chartkick (5.0.4)
     childprocess (5.1.0)
       logger (~> 1.5)
     choice (0.2.0)
@@ -772,7 +771,6 @@ DEPENDENCIES
   capybara-email
   capybara-playwright-driver
   capybara-screenshot!
-  chartkick (~> 5.0.1)
   climate_control
   common_french_passwords
   connection_pool
