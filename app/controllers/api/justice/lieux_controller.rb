@@ -66,8 +66,6 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
       "612f2ec2b473e40555deeb1c": 1927,
       "612f2ec2b473e40555deeb20": 1942,
       "612f2ec2b473e40555deeb26": 1936,
-      "612f2ec1b473e40555deeb04": 1904,
-      "612f2ec1b473e40555deeb06": 1906,
       "612f2ec1b473e40555deeafe": 1910,
       "612f2ec2b473e40555deeb32": 1910,
       "612f2ec2b473e40555deeb2a": 1905,
