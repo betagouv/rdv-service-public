@@ -24,12 +24,14 @@ RSpec.describe "Agent can see stats" do
       click_link "Statistiques"
     end
 
-    it "displays correct stats for organisation1a" do
+    it "displays correct stats for organisation1a", js: true do
       expect(page).to have_content("Statistiques de #{organisation1a.name}")
       # rdv2
       expect(page).to have_content("À venir\n1")
       # rdv1 & rdv2
       expect(page).to have_content("RDV créés (2)")
+
+      expect(page).to have_element("canvas") # On vérifie que le js crée bien un élément pour les charts
     end
   end
 
