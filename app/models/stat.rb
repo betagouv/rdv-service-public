@@ -10,10 +10,6 @@ class Stat
     agents.active
   end
 
-  def rdvs_group_by_week
-    rdvs.group(:created_by_type).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
-  end
-
   def rdvs_group_by_type
     rdvs.joins(:motif).group("motifs.location_type").group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count.transform_keys { |key| [I18n.t(Motif.location_types.invert[key[0]]), key[1]] }
   end
@@ -90,5 +86,11 @@ class Stat
 
   def active_agents_group_by_month
     rdvs.joins(:agents_rdvs).where("rdvs.starts_at < ?", Time.zone.now).group_by_month("rdvs.starts_at").count("distinct agents_rdvs.agent_id")
+  end
+
+  private
+
+  def rdvs_group_by_week
+    rdvs.group(:created_by_type).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
   end
 end
