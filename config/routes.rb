@@ -86,10 +86,7 @@ Rails.application.routes.draw do
     get "/", action: "index"
     get :territories
     get :territory
-    get :territory_notifications
     get :territory_rdvs
-    get :territory_active_agents
-    get :territory_receipts
     get :lieux_map_data, format: :json
   end
 
