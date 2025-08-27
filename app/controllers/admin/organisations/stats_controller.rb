@@ -20,7 +20,7 @@ class Admin::Organisations::StatsController < AgentAuthController
             else
               stats.rdvs_group_by_week_fr
             end
-    render json: stats.chart_json
+    render json: stats.to_json
   end
 
   private

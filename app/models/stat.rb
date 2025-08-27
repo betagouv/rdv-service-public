@@ -10,10 +10,6 @@ class Stat
     agents.active
   end
 
-  def rdvs_group_by_week
-    rdvs.group(:created_by_type).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
-  end
-
   def rdvs_group_by_type
     rdvs.joins(:motif).group("motifs.location_type").group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count.transform_keys { |key| [I18n.t(Motif.location_types.invert[key[0]]), key[1]] }
   end
@@ -29,7 +25,7 @@ class Stat
       FileAttente: "File d'attente (#{rdvs.where(created_by_type: 'FileAttente').count})",
       Prescripteur: "Prescripteur (#{rdvs.where(created_by_type: 'Prescripteur').count})",
     }
-    rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] }
+    chart_json(rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] })
   end
 
   def rdvs_group_by_status
@@ -90,5 +86,20 @@ class Stat
 
   def active_agents_group_by_month
     rdvs.joins(:agents_rdvs).where("rdvs.starts_at < ?", Time.zone.now).group_by_month("rdvs.starts_at").count("distinct agents_rdvs.agent_id")
+  end
+
+  private
+
+  def chart_json(hash_of_counts)
+    [{
+      name: hash_of_counts.first.first.first,
+      data: hash_of_counts.map do |title_and_date, count|
+        [title_and_date.last, count]
+      end,
+    }]
+  end
+
+  def rdvs_group_by_week
+    rdvs.group(:created_by_type).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
   end
 end
