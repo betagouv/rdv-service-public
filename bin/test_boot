@@ -10,7 +10,7 @@ Timeout.timeout(30) do
   loop do
     begin
       res = Net::HTTP.get_response(URI('http://localhost:3000'))
-      break if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection)
+      break if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection) || res.is_a?(Net::HTTPServerError)
     rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
       # Le serveur n'est pas encore prêt
     end
