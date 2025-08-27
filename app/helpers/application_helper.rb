@@ -172,4 +172,8 @@ module ApplicationHelper
         tag.use(class: "fr-artwork-major", "xlink:href": "#{path}#artwork-major")
     end
   end
+
+  def column_chart(path, options = {})
+    tag.div(class: "js-column-chart", data: { path: path, options: options.to_json })
+  end
 end
