@@ -6,10 +6,6 @@ class Stat
 
   delegate :active, to: :users, prefix: true
 
-  def rdvs_group_by_week
-    rdvs.group(:created_by_type).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
-  end
-
   def rdvs_group_by_type
     rdvs.joins(:motif).group("motifs.location_type").group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count.transform_keys { |key| [I18n.t(Motif.location_types.invert[key[0]]), key[1]] }
   end
@@ -74,5 +70,11 @@ class Stat
         date_rdvs_count.zero? ? 0 : (rdvs_count.to_f * 100 / date_rdvs_count).round,
       ]
     end
+  end
+
+  private
+
+  def rdvs_group_by_week
+    rdvs.group(:created_by_type).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
   end
 end
