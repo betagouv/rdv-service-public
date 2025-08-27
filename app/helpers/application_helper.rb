@@ -173,8 +173,8 @@ module ApplicationHelper
     end
   end
 
+  # Ce helper est un remplacement de chartkick qui est compatible avec notre security content policy qui interdit les unsafe inline
   def column_chart(path, options = {})
-    # Ce helper est un remplacement de chartkick
     tag.div(class: "js-column-chart", data: { path: path, options: options.to_json })
   end
 end
