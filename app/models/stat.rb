@@ -25,7 +25,7 @@ class Stat
       FileAttente: "File d'attente (#{rdvs.where(created_by_type: 'FileAttente').count})",
       Prescripteur: "Prescripteur (#{rdvs.where(created_by_type: 'Prescripteur').count})",
     }
-    chart_json(rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] })
+    rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] }
   end
 
   def rdvs_group_by_status
@@ -89,15 +89,6 @@ class Stat
   end
 
   private
-
-  def chart_json(hash_of_counts)
-    [{
-      name: hash_of_counts.first.first.first,
-      data: hash_of_counts.map do |title_and_date, count|
-        [title_and_date.last, count]
-      end,
-    }]
-  end
 
   def rdvs_group_by_week
     rdvs.group(:created_by_type).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count

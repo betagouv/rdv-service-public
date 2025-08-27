@@ -128,6 +128,8 @@ gem "auto_strip_attributes"
 
 # Slim is a template language.
 gem "slim"
+# Create beautiful JavaScript charts with one line of Ruby
+gem "chartkick", "~> 5.0.1"
 # The simplest way to group temporal data
 gem "groupdate", "~> 6.1"
 # Automatic generation of html links in texts
