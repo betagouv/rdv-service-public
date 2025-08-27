@@ -1,8 +1,22 @@
 #!/usr/bin/env ruby
 # from https://stackoverflow.com/a/69014550
 
+require 'net/http'
+require 'timeout'
+
 pid = Process.spawn("bundle exec rails s")
-sleep 5 # time in seconds you need to ensure the server boots without errors
+
+Timeout.timeout(30) do
+  loop do
+    begin
+      res = Net::HTTP.get_response(URI('http://localhost:3000'))
+      break if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection)
+    rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+      # Le serveur n'est pas encore prêt
+    end
+    sleep 0.5
+  end
+end
 
 Process.kill("INT", pid) # send ^C, gracefully terminate the server
 
