@@ -6,10 +6,6 @@ class Stat
 
   delegate :active, to: :users, prefix: true
 
-  def agents_for_default_range
-    agents.active
-  end
-
   def rdvs_group_by_week
     rdvs.group(:created_by_type).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
   end
@@ -78,17 +74,5 @@ class Stat
         date_rdvs_count.zero? ? 0 : (rdvs_count.to_f * 100 / date_rdvs_count).round,
       ]
     end
-  end
-
-  def receipts_group_by(attribute)
-    receipts
-      .group(attribute)
-      .group_by_day(:created_at)
-      .count
-      .transform_keys { |key| [Receipt.human_attribute_value(attribute, key[0]), key[1]] }
-  end
-
-  def active_agents_group_by_month
-    rdvs.joins(:agents_rdvs).where("rdvs.starts_at < ?", Time.zone.now).group_by_month("rdvs.starts_at").count("distinct agents_rdvs.agent_id")
   end
 end
