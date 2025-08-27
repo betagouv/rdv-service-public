@@ -7,6 +7,7 @@ RSpec.describe Admin::Organisations::StatsController do
       agent = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
 
       create(:rdv, organisation: organisation)
+      create(:rdv, organisation: organisation, starts_at: Time.zone.parse("2023-09-31"))
       create(:rdv, organisation: other_organisation)
       sign_in agent
       get :rdvs, params: { organisation_id: organisation.id, agent_id: agent.id, format: :json }
