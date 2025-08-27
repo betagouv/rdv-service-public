@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# from https://stackoverflow.com/a/69014550
+# from https://stackoverflow.com/a/69014550 (avec un petit changement pour éviter d’avoir un temps d’attente en dur).
 
 require 'net/http'
 require 'timeout'
@@ -10,6 +10,8 @@ Timeout.timeout(30) do
   loop do
     begin
       res = Net::HTTP.get_response(URI('http://localhost:3000'))
+      # On attend un code 200, 3xx ou 5xx (le serveur est prêt à répondre)
+      # En l’occurrence, on reçoit un 500, car nous n’avons pas de base de données dans ce cas.
       break if res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPRedirection) || res.is_a?(Net::HTTPServerError)
     rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
       # Le serveur n'est pas encore prêt
