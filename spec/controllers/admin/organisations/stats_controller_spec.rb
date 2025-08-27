@@ -7,7 +7,7 @@ RSpec.describe Admin::Organisations::StatsController do
       agent = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
 
       create(:rdv, organisation: organisation)
-      create(:rdv, organisation: organisation, starts_at: Time.zone.parse("2023-09-31"))
+      create(:rdv, organisation: organisation, created_at: Time.zone.parse("2023-09-11"))
       create(:rdv, organisation: other_organisation)
       sign_in agent
       get :rdvs, params: { organisation_id: organisation.id, agent_id: agent.id, format: :json }
@@ -15,9 +15,14 @@ RSpec.describe Admin::Organisations::StatsController do
       expect(response).to be_successful
 
       expect(response.parsed_body).to eq(
-        [
-          { "data" => [["24/09/2023", 1]], "name" => "Agent (1)" },
-        ]
+        [{
+          "name" => "Agent (2)",
+          "data" => [
+            ["10/09/2023", 1],
+            ["17/09/2023", 0],
+            ["24/09/2023", 1],
+          ],
+        }]
       )
     end
   end
