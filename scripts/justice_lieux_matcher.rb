@@ -12,8 +12,8 @@ class JusticeLieuxMatcher
 
     # one_to_one_matches
     # one_local_to_many_official_matches
-    # many_local_to_one_official_matches
-    many_to_many_matches
+    many_local_to_one_official_matches
+    # many_to_many_matches
   end
 
   private
@@ -77,7 +77,7 @@ class JusticeLieuxMatcher
       puts "\n\n\n"
       lieux = local_matches(code_postal)
 
-      puts ">>>  #{line.formatted_address}      :      #{line['titre']}\n\n"
+      puts ">>>  #{line.formatted_address} #{line['ee_id']}     :      #{line['titre']}\n\n"
 
       lieux.each.with_index do |lieu, i|
         puts "#{i + 1} )  #{lieu.address}      :      #{lieu.name} (#{lieu.id}) (#{lieu.rdvs.count} rdvs) (organisation #{lieu.organisation_id})"
@@ -110,7 +110,7 @@ class JusticeLieuxMatcher
       lieu = local_matches(code_postal).first
 
       puts "\n\n\n"
-      puts "#{lieu.address}            : #{lieu.name}"
+      puts "#{lieu.address}  #{lieu.id}          : #{lieu.name}"
 
       official_lieux = official_matches(code_postal)
 
