@@ -21,7 +21,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         click_on "Ouvrir un espace"
 
         fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
-        fill_in("Nom du territoire", with: "Commune de Montreuil")
         click_on "Enregistrer"
 
         expect(page).to have_content "Configuration"
@@ -99,13 +98,13 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         click_on("Demandes acceptées")
 
-        expect(page).to have_content "Commune de Montreuil"
+        expect(page).to have_content "CCAS de Montreuil"
 
         # On affiche ensuite un bandeau d'aide
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
         expect(page).to have_content "Besoin d'aide pour bien démarrer ? Nous pouvons vous aider"
 
-        click_on "Paramètres votre espace"
+        click_on "Paramètres de votre espace"
 
         expect(page).to have_content("Configuration générale") # Pour s'assurer qu'on attend que la nouvelle page charge
         expect(page).to have_content "Besoin d'aide pour bien démarrer ? Nous pouvons vous aider"
