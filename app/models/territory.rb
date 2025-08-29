@@ -129,11 +129,11 @@ class Territory < ApplicationRecord
     attributes.symbolize_keys.slice(*LEGACY_TOGGLES.keys).values.any?
   end
 
-  def to_s
-    if name
+  def name_in_stats
+    if name.present?
       [name, departement_number.presence].compact.join(" - ")
     else
-      "Espace sans nom"
+      organisations.first.name
     end
   end
 
