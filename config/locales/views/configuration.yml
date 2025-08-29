@@ -12,7 +12,7 @@ fr:
       show:
         title: Paramètres de %{territory}
       edit:
-        title: Configuration %{name}
+        title: Configuration de %{name}
 
       sectorisation_tests:
         search:

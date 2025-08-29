@@ -12,5 +12,5 @@
           collection: [@organisation.territory], \
           include_blank: false, \
           readonly: true, \
-          label_method: -> { _1.to_s }
-        = f.submit value: "Enregistrer", class: "btn btn-primary"
+          label_method: -> { _1.name_for_agent.capitalize }
+        = f.submit value: "Enregistrer", class: "fr-btn"

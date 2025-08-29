@@ -137,6 +137,10 @@ class Territory < ApplicationRecord
     end
   end
 
+  def name_for_agent
+    name.presence || "votre espace"
+  end
+
   def waiting_room_enabled?
     OPTIONAL_RDV_WAITING_ROOM_FIELD_TOGGLES.keys.any? do |waiting_room_field|
       send(waiting_room_field)
