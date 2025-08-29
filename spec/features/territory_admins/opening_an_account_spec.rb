@@ -31,6 +31,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
           name: "Suivi de dossier"
         )
         expect(agent.reload.organisations.last.name).to eq "CCAS de Montreuil"
+        expect(agent.services).to be_empty
       end
     end
 
