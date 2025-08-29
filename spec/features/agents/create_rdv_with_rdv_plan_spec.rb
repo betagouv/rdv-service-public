@@ -173,4 +173,31 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       expect(page).to have_content("Vous pouvez demander à ouvrir un espace pour votre organisation.")
     end
   end
+
+  context "avec plusieurs motifs qui ont des location types différents" do
+    let(:rdv_plan) do
+      create(:rdv_plan,
+             user: user,
+             starts_at: 2.weeks.from_now,
+             planning_agent: agent,
+             rdv_agent: agent,
+             return_url: "https://demo.demarches-simplifiees.fr/callback/123",
+             oauth_application: application)
+    end
+
+    let!(:other_motif) do
+      create(:motif, organisation: organisation, location_type: :phone, name: "Rappel téléphonique")
+    end
+
+    it "filtre les motifs par location type" do
+      visit edit_modalites_agents_rdv_plan_path(rdv_plan.id)
+
+      find("label", text: "Sur place").click
+      click_on "Continuer"
+
+      expect(page).to have_content "Motif du rendez-vous"
+
+      expect(page).not_to have_content(other_motif.name)
+    end
+  end
 end
