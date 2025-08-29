@@ -33,6 +33,22 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         expect(agent.reload.organisations.last.name).to eq "CCAS de Montreuil"
         expect(agent.services).to be_empty
       end
+
+      context "et qu'il a un rdv plan qui a été créé par intégration" do
+        before do
+          create(:rdv_plan, planning_agent: agent)
+        end
+
+        it "permet d'ouvrir l'organisation et redirige vers le rdv plan" do
+          visit new_agents_territory_path
+
+          fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
+          fill_in("Nom du territoire", with: "Commune de Montreuil")
+          click_on "Enregistrer"
+
+          expect(page).to have_content "Nouveau rendez-vous"
+        end
+      end
     end
 
     context "mais que son compte n'est pas vérifié par une application partenaire" do
