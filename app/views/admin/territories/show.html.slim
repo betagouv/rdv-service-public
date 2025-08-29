@@ -1,10 +1,10 @@
-- content_for :title, "Paramètres de votre espace"
+- content_for :title, "Paramètres de #{current_territory.name_for_agent}"
 
 = link_to(root_path, class: "pt-1 pb-4") do
   i.fa.fa-arrow-left
   |< Retour à l'accueil
 
-h1.m-2.rdv-text-align-center.border-bottom.pb-2 = "Paramètres de votre espace"
+h1.m-2.rdv-text-align-center.border-bottom.pb-2 =  t("admin.territories.show.title", territory: current_territory.name_for_agent)
 .row.mb-3
   - if Agent::TerritoryPolicy.new(pundit_user, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
