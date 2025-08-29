@@ -6,8 +6,9 @@ header.main-content__header
 
 section.main-content__body
   dl
-    dt.attribute-label.attribute-label--normal-case Espace
-    dd.attribute-data = @territory_creation_request.territory_name
+    - if @territory_creation_request.territory_name.present?
+      dt.attribute-label.attribute-label--normal-case Espace
+      dd.attribute-data = @territory_creation_request.territory_name
 
     dt.attribute-label.attribute-label--normal-case Organisation
     dd.attribute-data = @territory_creation_request.organisation_name
@@ -28,8 +29,9 @@ section.main-content__body
         - if annuaire_client.mairie?
           p ✅ Cette structure est une mairie
 
-    dt.attribute-label.attribute-label--normal-case Service
-    dd.attribute-data = @territory_creation_request.service_name
+    - if @territory_creation_request.service_name.present?
+      dt.attribute-label.attribute-label--normal-case Service
+      dd.attribute-data = @territory_creation_request.service_name
 
   section.main-content__body[style=""]
     - if @territory_creation_request.possible_duplicate_organisations_by_email_domain.none?
