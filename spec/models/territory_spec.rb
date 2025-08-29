@@ -44,15 +44,15 @@ RSpec.describe Territory, type: :model do
     end
   end
 
-  describe "#to_s" do
+  describe "#name_in_stats" do
     it "returns name and departement number if exist" do
       territory = build(:territory, departement_number: "93", name: "Seine Saint-Denis")
-      expect(territory.to_s).to eq("Seine Saint-Denis - 93")
+      expect(territory.name_in_stats).to eq("Seine Saint-Denis - 93")
     end
 
     it "returns name" do
       territory = build(:territory, departement_number: nil, name: "Seine Saint-Denis")
-      expect(territory.to_s).to eq("Seine Saint-Denis")
+      expect(territory.name_in_stats).to eq("Seine Saint-Denis")
     end
   end
 
