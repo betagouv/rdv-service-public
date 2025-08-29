@@ -3,6 +3,8 @@ class OauthApplication < Doorkeeper::Application
 
   def self.agent_is_verified_by_an_application?(agent)
     # Les applications qui ont un default_service_id permettent la création de territoire
+    # TODO: les default_services ne sont plus utilisés pour créer des services par défaut à l'agent
+    #       Il faudrait donc les remplacer par un booléen qui indique si l'application permet la création d'espace
     default_service_ids_for(agent).present?
   end
 
