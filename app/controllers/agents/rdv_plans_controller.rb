@@ -53,7 +53,7 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_motif
-    @motifs = available_motifs(@rdv_plan).ordered_by_name
+    @motifs = available_motifs(@rdv_plan).where(location_type: @rdv_plan.location_type).ordered_by_name
     if @motifs.count == 1
       @rdv_plan.motif_id ||= @motifs.first.id
     end
