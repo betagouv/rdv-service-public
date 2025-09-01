@@ -73,6 +73,12 @@ FactoryBot.define do
       end
     end
 
+    trait :francis_factice do
+      email { "francis.factice@exemple.gouv.fr" }
+      first_name { "Francis" }
+      last_name {  "Factice" }
+    end
+
     trait :not_confirmed do
       confirmed_at { nil }
       first_name { nil }

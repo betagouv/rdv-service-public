@@ -1,10 +1,8 @@
 RSpec.describe "Prise de rendez-vous entre agents", js: true do
   let(:service) { create(:service, name: "Dinum", short_name: "Dinum") }
 
+  stub_env_for_proconnect
   stub_env_with(
-    AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
-    AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
-    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa",
     FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2",
     FRANCECONNECT_V2_CLIENT_ID: "fake_france_connect_v2_client_id",
     FRANCECONNECT_V2_CLIENT_SECRET: "fake_france_connect_v2_client_secret"
