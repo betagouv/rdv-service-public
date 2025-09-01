@@ -1,4 +1,4 @@
-RSpec.describe "Configuration de RDV Service Public par un administrateur de DS après avoir connecté son compte", js: true do
+RSpec.describe "Configuration de RDV Service Public par un administrateur de DS", js: true do
   let(:application) { create(:oauth_application, name: "Démarches Simplifiées", default_service: create(:service)) }
   let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
   let!(:agent) do
@@ -13,7 +13,7 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS 
   end
 
   specify do
-    doc = Autodoc.start_scenario("Configuration de RDV Service Public par un administrateur de DS après avoir connecté son compte", self)
+    doc = Autodoc.start_scenario("Configuration de RDV Service Public par un administrateur de DS", self)
 
     login_as(agent, scope: :agent)
     visit("/admin/organisations/configuration")
