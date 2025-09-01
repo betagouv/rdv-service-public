@@ -1,4 +1,5 @@
 /# locals: (rdv_plan:)
+br
 span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
 = "#{l(rdv_plan.starts_at, format: :human)} (#{rdv_plan.duration_in_minutes} minutes)"
 = link_to "modifier", edit_starts_at_agents_rdv_plan_path(rdv_plan), class: "fr-ml-2w"

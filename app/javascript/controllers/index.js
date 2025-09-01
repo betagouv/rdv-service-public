@@ -15,3 +15,6 @@ application.register("motif-form", MotifFormController)
 
 import PrintController from "./print_controller"
 application.register("print", PrintController)
+
+import RdvPlanController from "./rdv_plan_controller"
+application.register("rdv-plan", RdvPlanController)

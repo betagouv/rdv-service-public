@@ -11,7 +11,13 @@ class Agents::TerritoriesController < AgentAuthController
     @compte_form.agent = current_agent
 
     if @compte_form.save!
-      redirect_to admin_organisation_configuration_path(@compte_form.organisation)
+      latest_rdv_plan = RdvPlan.where(planning_agent: current_agent).order("created_at desc").first
+
+      if latest_rdv_plan
+        redirect_to agents_rdv_plan_path(latest_rdv_plan)
+      else
+        redirect_to admin_organisation_configuration_path(@compte_form.organisation)
+      end
     else
       render :new
     end
@@ -22,13 +28,12 @@ class Agents::TerritoriesController < AgentAuthController
   def compte_params
     params[:compte][:agent] = {
       id: current_agent.id,
-      service_ids: OauthApplication.default_service_ids_for(current_agent),
     }
 
     params.require(:compte).permit(
       territory: %i[name departement_number],
       organisation: %i[name],
-      agent: [:id, { service_ids: [] }]
+      agent: [:id]
     )
   end
 
