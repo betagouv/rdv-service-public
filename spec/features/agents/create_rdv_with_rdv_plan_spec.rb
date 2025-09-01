@@ -17,6 +17,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   let(:rdv_plan) do
     create(:rdv_plan,
            user: user,
+           rdv_agent: agent,
            planning_agent: agent,
            return_url: "https://demo.demarches-simplifiees.fr/callback/123",
            oauth_application: application)

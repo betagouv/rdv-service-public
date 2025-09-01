@@ -23,9 +23,15 @@
 
         .fr-mt-2w
           span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
+          |> Usager :
           = @rdv_plan.user.full_name
           .fr-ml-4w= @rdv_plan.user.preferred_email
           .fr-ml-4w= @rdv_plan.user.phone_number
+
+        .fr-mt-2w
+          span.fr-icon-user-line.fr-mr-1w[aria-hidden="true"]
+          |> Agent :
+          = @rdv_plan.rdv_agent.full_name
 
         .fr-mt-4w
           = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv), class: "fr-btn fr-btn--secondary", target: :blank
