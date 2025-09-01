@@ -36,7 +36,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
       context "et qu'il a un rdv plan qui a été créé par intégration" do
         before do
-          create(:rdv_plan, planning_agent: agent)
+          create(:rdv_plan, planning_agent: agent, rdv_agent: agent)
         end
 
         it "permet d'ouvrir l'organisation et redirige vers le rdv plan" do
