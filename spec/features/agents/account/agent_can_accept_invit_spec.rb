@@ -2,7 +2,12 @@ RSpec.describe "Agent can accept invitation" do
   let(:agent) { create(:agent) }
 
   context "when using ProConnect" do
-    stub_env_for_proconnect
+    stub_env_with(
+      AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
+      AGENT_CONNECT_RDVS_CLIENT_SECRET: "un faux secret de test",
+      AGENT_CONNECT_RDVS_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
+    )
+
     it "sets the login_hint to make sure the agent uses ProConnect with the right email and avoids getting stuck" do
       agent.deliver_invitation
       visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
