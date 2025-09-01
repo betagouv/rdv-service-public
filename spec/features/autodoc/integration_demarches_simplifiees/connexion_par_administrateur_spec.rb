@@ -1,4 +1,4 @@
-RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par un administrateur de DS", js: true do
+RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par un admin", js: true do
   let!(:agent) do
     create(:agent, :francis_factice, password: "RdvServicePublicTest1!")
   end
@@ -44,7 +44,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
   end
 
   specify do
-    doc = Autodoc.start_scenario("Connexion de Démarches Simplifiées à RDV Service Public par un administrateur de DS", self)
+    doc = Autodoc.start_scenario("Connexion de Démarches Simplifiées à RDV Service Public par un admin", self)
 
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"
