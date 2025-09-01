@@ -1,4 +1,4 @@
-RSpec.describe AgentConnectController do
+RSpec.describe ProConnectController do
   stub_env_for_proconnect
 
   describe "#auth" do

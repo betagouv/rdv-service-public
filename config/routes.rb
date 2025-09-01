@@ -2,8 +2,9 @@ Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
 
-  get "agent_connect/auth" => "agent_connect#auth"
-  get "agent_connect/callback" => "agent_connect#callback"
+  # AgentConnect est l'ancien nom de ProConnect. On garde l'ancienne route pour la compatibilité.
+  get "agent_connect/auth" => "pro_connect#auth"
+  get "agent_connect/callback" => "pro_connect#callback"
 
   get "franceconnect_v2/auth" => "france_connect_v2#auth"
   get "franceconnect_v2/callback" => "france_connect_v2#callback"
