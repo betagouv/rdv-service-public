@@ -129,7 +129,7 @@ class ProConnectController < ApplicationController
     )
 
     bypass_sign_in(user, scope: :user)
-    session[:agent_connect_id_token] = callback_client.id_token_for_logout
+    session[:pro_connect_id_token] = callback_client.id_token_for_logout
     redirect_to after_sign_in_path_for(user)
   end
 

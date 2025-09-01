@@ -1,12 +1,12 @@
 module ProConnectOpenIdClient
   class Logout
-    def initialize(agent_connect_id_token)
-      @agent_connect_id_token = agent_connect_id_token
+    def initialize(pro_connect_id_token)
+      @pro_connect_id_token = pro_connect_id_token
     end
 
     def pro_connect_logout_url(post_logout_redirect_url)
       query_params = {
-        id_token_hint: @agent_connect_id_token,
+        id_token_hint: @pro_connect_id_token,
         state: SecureRandom.base58(32),
         post_logout_redirect_uri: post_logout_redirect_url,
       }

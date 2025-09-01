@@ -48,12 +48,12 @@ RSpec.describe Users::SessionsController do
       before do
         AgentConnectStubs.stub_and_run_discover_request
         # C'est compliqué de manipuler la session dans une feature spec, c'est pour ça qu'on utilise une spec de controller ici
-        session[:agent_connect_id_token] = "fake_agent_connect_id_token"
+        session[:pro_connect_id_token] = "fake_pro_connect_id_token"
       end
 
       it "signs out the agent and redirects them to the ProConnect logout url with the right params" do
         get :destroy
-        expect(session[:agent_connect_id_token]).to be_nil
+        expect(session[:pro_connect_id_token]).to be_nil
 
         redirect_url = response.headers["Location"]
 
@@ -62,7 +62,7 @@ RSpec.describe Users::SessionsController do
         redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
 
         expect(redirect_url_query_params.symbolize_keys).to match(
-          id_token_hint: "fake_agent_connect_id_token",
+          id_token_hint: "fake_pro_connect_id_token",
           state: anything,
           post_logout_redirect_uri: "http://test.host/"
         )
