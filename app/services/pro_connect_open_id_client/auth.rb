@@ -28,7 +28,7 @@ module ProConnectOpenIdClient
         claims: claims(force_2fa:).to_json,
       }.compact_blank
 
-      "#{ENV['AGENT_CONNECT_BASE_URL']}/authorize?#{query_params.to_query}"
+      "#{ENV['PRO_CONNECT_BASE_URL']}/authorize?#{query_params.to_query}"
     end
 
     private

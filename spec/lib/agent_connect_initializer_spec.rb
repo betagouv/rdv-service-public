@@ -1,5 +1,5 @@
 RSpec.describe "ProConnect initializer" do # rubocop:disable RSpec/DescribeClass
-  stub_env_with(AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
+  stub_env_with(PRO_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
 
   context "when ProConnect is not accessible" do
     before do

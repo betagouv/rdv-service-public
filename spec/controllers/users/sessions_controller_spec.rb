@@ -43,7 +43,7 @@ RSpec.describe Users::SessionsController do
     end
 
     context "when the agent was logged in with ProConnect" do
-      stub_env_with(AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
+      stub_env_with(PRO_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
 
       before do
         AgentConnectStubs.stub_and_run_discover_request
