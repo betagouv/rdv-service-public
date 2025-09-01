@@ -42,7 +42,7 @@ RSpec.describe Users::SessionsController do
       end
     end
 
-    context "when the agent was logged in with Agent Connect" do
+    context "when the agent was logged in with ProConnect" do
       stub_env_with(AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
 
       before do
@@ -51,7 +51,7 @@ RSpec.describe Users::SessionsController do
         session[:agent_connect_id_token] = "fake_agent_connect_id_token"
       end
 
-      it "signs out the agent and redirects them to the Agent Connect logout url with the right params" do
+      it "signs out the agent and redirects them to the ProConnect logout url with the right params" do
         get :destroy
         expect(session[:agent_connect_id_token]).to be_nil
 

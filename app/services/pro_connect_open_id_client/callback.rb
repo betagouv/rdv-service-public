@@ -31,7 +31,7 @@ module ProConnectOpenIdClient
     end
 
     def user_first_name
-      # Agent Connect renvoie aussi le nom de famille après un espace
+      # ProConnect renvoie aussi le nom de famille après un espace
       @user_info["given_name"].gsub(/ #{@user_info['usual_name']}$/i, "")
     end
 
@@ -61,7 +61,7 @@ module ProConnectOpenIdClient
 
       unless ActiveSupport::SecurityUtils.secure_compare(@session_state, @params_state)
         Sentry.add_breadcrumb(Sentry::Breadcrumb.new(
-                                message: "Agent Connect states",
+                                message: "ProConnect states",
                                 data: {
                                   params: @params_state,
                                   session: @session_state,

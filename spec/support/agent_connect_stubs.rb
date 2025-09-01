@@ -47,8 +47,8 @@ module AgentConnectStubs
         "Content-Type" => "application/x-www-form-urlencoded",
       }
     ).to_return(status: 200, body: {
-      id_token: "fake agent connect id token",
-      access_token: "fake agent connect access token",
+      id_token: "fake proconnect id token",
+      access_token: "fake proconnect access token",
     }.to_json, headers: {})
 
     allow(OpenIDConnect::ResponseObject::IdToken).to receive(:decode).and_return(
@@ -60,7 +60,7 @@ module AgentConnectStubs
     WebMock.stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/userinfo?schema=openid")
       .with(
         headers: {
-          "Authorization" => "Bearer fake agent connect access token",
+          "Authorization" => "Bearer fake proconnect access token",
           "Expect" => "",
           "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }

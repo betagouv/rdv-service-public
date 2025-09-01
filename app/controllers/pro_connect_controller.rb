@@ -1,4 +1,3 @@
-# Pour la doc d'Agent Connect: voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs.md#32-je-veux-savoir-comment-fonctionne-agentconnect-et-comment-identifierauthentifier-les-agents
 class ProConnectController < ApplicationController
   def auth
     auth_client = ProConnectOpenIdClient::Auth.new(
