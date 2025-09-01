@@ -1,6 +1,6 @@
 RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par un administrateur de DS", js: true do
   let!(:agent) do
-    create(:agent, email: "francis.factice@exemple.gouv.fr", password: "RdvServicePublicTest1!", first_name: "Francis", last_name: "Factice")
+    create(:agent, :francis_factice, password: "RdvServicePublicTest1!")
   end
 
   around do |example|

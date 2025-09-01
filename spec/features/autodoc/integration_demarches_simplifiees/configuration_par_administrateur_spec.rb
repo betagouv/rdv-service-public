@@ -1,9 +1,7 @@
 RSpec.describe "Configuration de RDV Service Public par un administrateur de DS", js: true do
   let(:application) { create(:oauth_application, name: "Démarches Simplifiées", default_service: create(:service)) }
   let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
-  let!(:agent) do
-    create(:agent, email: "francis.factice@exemple.gouv.fr", password: "RdvServicePublicTest1!", first_name: "Francis", last_name: "Factice")
-  end
+  let!(:agent) { create(:agent, :francis_factice) }
 
   around do |example|
     previous_host = Capybara.app_host
