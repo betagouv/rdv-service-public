@@ -7,8 +7,8 @@ module ProConnectOpenIdClient
     def initialize(client_id:, client_secret:, login_hint: nil, force_login: false)
       @login_hint = login_hint
       @force_login = force_login
-      @state = "agent_connect_state_#{SecureRandom.base58(32)}"
-      @nonce = "agent_connect_nonce_#{SecureRandom.base58(32)}"
+      @state = "pro_connect_state_#{SecureRandom.base58(32)}"
+      @nonce = "pro_connect_nonce_#{SecureRandom.base58(32)}"
       @client_id = client_id
       @client_secret = client_secret
     end
