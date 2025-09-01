@@ -74,6 +74,18 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
       "612f2ec2b473e40555deeb30": 1935,
       "612f2ed8b473e40555def3fc": 1431,
       "680126c3eb6d1e45d3eb20cb": 1621,
+
+      # Correspondances trouvées en filtrant sur la colonne "type-organisme" avec la valeur "mjd"
+      "67597dc989a4c84487c231a1" => 1163,
+      "67597db289a4c84487c22f1b" => 1431,
+      "67597dba89a4c84487c22ffc" => 1762,
+      "67597dc289a4c84487c230c1" => 2163,
+      "67597dc289a4c84487c230c3" => 1434,
+      "67597df189a4c84487c23592" => 2159,
+      "67597df489a4c84487c235da" => 1621,
+      "67597db289a4c84487c22f19" => 1622,
+      "67597dba89a4c84487c22ff4" => 1598,
+      "67597dc489a4c84487c23108" => 2299,
     }
   end
 end
