@@ -134,7 +134,7 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def event_sources
-    agent = @rdv_plan.rdv_agent
+    agent = @rdv_plan.rdv_agent || current_agent
     organisation = agent.organisations.first
 
     event_sources = [
