@@ -1,11 +1,23 @@
-.fr-row.fr-mb-16w
+/# locals: (event_sources:, agents:)
+
+.fr-row.fr-mb-16w[data-controller="rdv-plan" data-rdv-plan-id="#{@rdv_plan.id}"]
   .fr-col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
 
-    h2.fr-h3 Calendrier de #{current_agent.full_name}
-    p Convenez d'un horaire avec #{@rdv_plan.user.full_name}, et cliquez dessus dans le calendrier
-    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, single_day: false
-    - if @rdv_plan.return_url
-      = link_to @rdv_plan.return_url do
-        = back_icon(class: "fr-mr-1w")
-        = "Retour sur #{@rdv_plan.oauth_application.name}"
+    p Convenez d'un horaire avec #{@rdv_plan.user.full_name}, et cliquez dessus dans l'agenda de l'agent de votre choix
+
+    .fr-mt-6w
+      h2.d-flex
+        | Agenda de
+        .fr-select-group.fr-col-4.fr-ml-1w
+          select.fr-select[data-action="change->rdv-plan#updateAgent"]
+            - agents.each do |agent|
+              - if agent == @rdv_plan.rdv_agent
+                option[value="#{agent.id}" selected] #{agent.full_name_or_email}
+              - else
+                option[value="#{agent.id}"] #{agent.full_name_or_email}
+      = render "agents/rdv_plans/calendar", event_sources:, rdv_plan: @rdv_plan, single_day: false
+      - if @rdv_plan.return_url
+        = link_to @rdv_plan.return_url do
+          = back_icon(class: "fr-mr-1w")
+          = "Retour sur #{@rdv_plan.oauth_application.name}"
