@@ -36,7 +36,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
       uid: "fake_app_id",
       redirect_uri: "http://localhost:4567/omniauth/rdvservicepublic/callback",
       post_logout_redirect_uri: "http://localhost:4567/",
-      logo_base64: file_fixture("logo_demarches_simplifiees_base_64.tx").read
+      logo_base64: file_fixture("logo_demarches_simplifiees_base_64.txt").read
     )
 
     application.secret_strategy.store_secret(application, :secret, "fake_app_secret")
