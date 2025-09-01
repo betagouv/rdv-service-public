@@ -6,12 +6,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
   let!(:organisation) { create(:organisation, :with_contact, ants_connectable: true, name: "Mairie de Wavignies", territory:) }
   let(:service) { create(:service) }
   let!(:cni_motif) do
-    create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: cni_motif_category, default_duration_in_min: 25)
+    create(:motif, name: "Carte d'identité", organisation:, restriction_for_rdv: nil, service:, motif_category: cni_motif_category, default_duration_in_min: 25, bookable_by:)
   end
   let!(:passport_motif) do
-    create(:motif, name: "Passeport", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: passport_motif_category, default_duration_in_min: 25)
+    create(:motif, name: "Passeport", organisation:, restriction_for_rdv: nil, service:, motif_category: passport_motif_category, default_duration_in_min: 25)
   end
 
+  let(:bookable_by) { :everyone }
   let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
   let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
@@ -139,6 +140,26 @@ RSpec.describe "User can search rdv on rdv mairie" do
     it "displays the organisation name for a public link" do
       visit public_link_to_org_url(organisation_id: organisation.id)
       expect(page).to have_content "Prenez rendez-vous avec Mairie de Wavignies"
+    end
+  end
+
+  context "quand la mairie a désactivé la réservation en ligne sur un motif ANTS" do
+    let(:bookable_by) { :agents }
+
+    it "le point d’API ne retourne pas de créneau" do
+      visit api_ants_getManagedMeetingPoints_url
+      lieux_ids = json_response.pluck("id")
+      expect(lieux_ids).to eq([lieu.id.to_s])
+
+      visit api_ants_availableTimeSlots_url(
+        meeting_point_ids: lieux_ids.first,
+        start_date: Date.yesterday,
+        end_date: Date.tomorrow,
+        reason: "CNI",
+        documents_number: 2
+      )
+
+      expect(json_response).to eq({ lieu.id.to_s => [] })
     end
   end
 
