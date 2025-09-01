@@ -23,6 +23,7 @@ class Agents::RdvPlansController < AgentAuthController
 
   def edit_starts_at
     @rdv_plan.starts_at = nil
+    @rdv_plan.update!(rdv_agent: current_agent) unless @rdv_plan.rdv_agent
 
     other_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active.ordered_by_last_name.where.not(id: current_agent.id)
 
@@ -134,7 +135,7 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def event_sources
-    agent = @rdv_plan.rdv_agent || current_agent
+    agent = @rdv_plan.rdv_agent
     organisation = agent.organisations.first
 
     event_sources = [
