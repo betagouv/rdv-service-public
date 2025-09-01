@@ -29,12 +29,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
     Process.wait(pid) # pour éviter d'avoir un process zombie
   end
 
-  stub_env_with(
-    AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
-    AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
-    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
-  )
-
+  stub_env_for_proconnect
   before do
     application = Doorkeeper::Application.new(
       name: "Démarches Simplifiées",
