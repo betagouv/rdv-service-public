@@ -90,7 +90,7 @@ RSpec.describe AgentConnectController do
   describe "#callback" do
     let(:state) { auth_client.state }
     let(:auth_client) do
-      AgentConnectOpenIdClient::Auth.new(
+      ProConnectOpenIdClient::Auth.new(
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         client_secret: "un faux secret de test"
       )

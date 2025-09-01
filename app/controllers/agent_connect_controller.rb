@@ -1,7 +1,7 @@
 # Pour la doc d'Agent Connect: voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs.md#32-je-veux-savoir-comment-fonctionne-agentconnect-et-comment-identifierauthentifier-les-agents
 class AgentConnectController < ApplicationController
   def auth
-    auth_client = AgentConnectOpenIdClient::Auth.new(
+    auth_client = ProConnectOpenIdClient::Auth.new(
       login_hint: params[:login_hint],
       client_id: current_domain.agent_connect_client_id,
       client_secret: current_domain.agent_connect_client_secret
@@ -32,7 +32,7 @@ class AgentConnectController < ApplicationController
 
     pro_connect_session.symbolize_keys!
 
-    callback_client = AgentConnectOpenIdClient::Callback.new(
+    callback_client = ProConnectOpenIdClient::Callback.new(
       session_state: pro_connect_session[:state],
       params_state: params[:state],
       callback_url: agent_connect_callback_url,

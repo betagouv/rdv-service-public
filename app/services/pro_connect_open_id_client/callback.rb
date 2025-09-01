@@ -1,5 +1,5 @@
 # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
-module AgentConnectOpenIdClient
+module ProConnectOpenIdClient
   class Callback
     class OpenIdFlowError < StandardError; end
     class ApiRequestError < StandardError; end

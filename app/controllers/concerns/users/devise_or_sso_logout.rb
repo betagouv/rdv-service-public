@@ -14,7 +14,7 @@ module Users::DeviseOrSsoLogout
     set_flash_message!(:notice, flash_message_key)
 
     if pro_connect_id_token
-      agent_connect_client = AgentConnectOpenIdClient::Logout.new(pro_connect_id_token)
+      agent_connect_client = ProConnectOpenIdClient::Logout.new(pro_connect_id_token)
 
       redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true
 
