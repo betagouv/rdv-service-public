@@ -42,7 +42,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
           visit new_agents_territory_path
 
           fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
-          fill_in("Nom du territoire", with: "Commune de Montreuil")
           click_on "Enregistrer"
 
           expect(page).to have_content "Nouveau rendez-vous"
