@@ -49,7 +49,7 @@ class Agents::SessionsController < Devise::SessionsController
       @oauth_client_app_post_logout_redirect_url = oauth_app.post_logout_redirect_uri
     end
 
-    agent_connect_id_token = session.delete(:agent_connect_id_token)
+    pro_connect_id_token = session.delete(:agent_connect_id_token)
 
     sign_out(:agent)
 
@@ -64,10 +64,10 @@ class Agents::SessionsController < Devise::SessionsController
     if session[:super_admin_signed_in_as_agent]
       session.delete(:super_admin_signed_in_as_agent)
       redirect_to super_admins_agents_path
-    elsif agent_connect_id_token
-      agent_connect_client = ProConnectOpenIdClient::Logout.new(agent_connect_id_token)
+    elsif pro_connect_id_token
+      pro_connect_client = ProConnectOpenIdClient::Logout.new(pro_connect_id_token)
 
-      redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true
+      redirect_to pro_connect_client.pro_connect_logout_url(root_url), allow_other_host: true
     else
       redirect_to after_sign_out_path_for(:agent)
     end

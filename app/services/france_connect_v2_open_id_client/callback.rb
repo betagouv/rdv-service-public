@@ -46,13 +46,13 @@ module FranceConnectV2OpenIdClient
       end
     end
 
-    def fetch_token(code, agent_connect_callback_url)
+    def fetch_token(code, pro_connect_callback_url)
       data = {
         client_id: @client_id,
         client_secret: @client_secret,
         code: code,
         grant_type: "authorization_code",
-        redirect_uri: agent_connect_callback_url,
+        redirect_uri: pro_connect_callback_url,
       }
 
       response = Typhoeus.post(

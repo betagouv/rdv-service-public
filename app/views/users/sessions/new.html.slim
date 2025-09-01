@@ -8,7 +8,7 @@
       = render "common/franceconnect_button"
 
     / Contrairement à FranceConnect, on n'affiche pas le bouton ProConnect en dehors de la prise de rendez-vous
-    - if display_agent_connect_button? && @rdv_wizard&.display_pro_connect?
+    - if display_pro_connect_button? && @rdv_wizard&.display_pro_connect?
       h2 Se connecter avec ProConnect
 
       .rdv-text-align-center

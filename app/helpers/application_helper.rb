@@ -124,8 +124,8 @@ module ApplicationHelper
     tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
   end
 
-  def display_agent_connect_button?
-    return false unless current_domain.agent_connect_client_id
+  def display_pro_connect_button?
+    return false unless current_domain.pro_connect_client_id
 
     return true if params[:force_pro_connect].present? # Permet de tester manuellement ProConnect avant de désactiver la variable d'env PRO_CONNECT_DISABLED
 

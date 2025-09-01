@@ -7,7 +7,7 @@ module FranceConnectV2OpenIdClient
 
     attr_reader :state
 
-    def agent_connect_logout_url(post_logout_redirect_url)
+    def pro_connect_logout_url(post_logout_redirect_url)
       query_params = {
         id_token_hint: @france_connect_v2_id_token,
         state: @state,

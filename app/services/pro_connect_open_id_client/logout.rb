@@ -4,7 +4,7 @@ module ProConnectOpenIdClient
       @agent_connect_id_token = agent_connect_id_token
     end
 
-    def agent_connect_logout_url(post_logout_redirect_url)
+    def pro_connect_logout_url(post_logout_redirect_url)
       query_params = {
         id_token_hint: @agent_connect_id_token,
         state: SecureRandom.base58(32),
