@@ -101,7 +101,7 @@ module ProConnectOpenIdClient
       decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, agent_connect_config.jwks)
 
       decoded_id_token.verify!(
-        issuer: agent_connect_config.issuer,
+        issuer: pro_connect_config.issuer,
         client_id: @client_id,
         nonce: @nonce
       )
@@ -116,7 +116,7 @@ module ProConnectOpenIdClient
 
       handle_response_error(response)
 
-      JWT.decode(response.body, nil, true, algorithms: agent_connect_config.jwks.first["alg"], jwks: agent_connect_config.jwks).first
+      JWT.decode(response.body, nil, true, algorithms: pro_connect_config.jwks.first["alg"], jwks: pro_connect_config.jwks).first
     end
 
     def handle_response_error(response)
@@ -125,8 +125,8 @@ module ProConnectOpenIdClient
       end
     end
 
-    def agent_connect_config
-      Rails.configuration.x.agent_connect_config
+    def pro_connect_config
+      Rails.configuration.x.pro_connect_config
     end
   end
 end

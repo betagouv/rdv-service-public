@@ -13,7 +13,7 @@ module ProConnectOpenIdClient
 
       # Voir la section "Implémentation de la route post_logout_redirect_uri" de
       # https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
-      "#{Rails.configuration.x.agent_connect_config.end_session_endpoint}?#{query_params.to_query}"
+      "#{Rails.configuration.x.pro_connect_config.end_session_endpoint}?#{query_params.to_query}"
     end
   end
 end

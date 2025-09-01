@@ -9,7 +9,7 @@ RSpec.describe "ProConnect initializer" do # rubocop:disable RSpec/DescribeClass
 
     it "doesn't raise an error that would keep the application from booting up, but it sends an exception in Sentry" do
       expect { load Rails.root.join("config/initializers/agent_connect.rb").to_s }.not_to(raise_error)
-      expect(Rails.configuration.x.agent_connect_unreachable_at_boot_time).to be true
+      expect(Rails.configuration.x.pro_connect_unreachable_at_boot_time).to be true
 
       expect(sentry_events.last.message).to include("ProConnect n'est pas joignable au démarrage de l'application")
     end
@@ -23,7 +23,7 @@ RSpec.describe "ProConnect initializer" do # rubocop:disable RSpec/DescribeClass
 
     it "starts the application normally" do
       load Rails.root.join("config/initializers/agent_connect.rb").to_s
-      expect(Rails.configuration.x.agent_connect_unreachable_at_boot_time).to be false
+      expect(Rails.configuration.x.pro_connect_unreachable_at_boot_time).to be false
     end
   end
 end

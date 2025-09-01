@@ -130,7 +130,7 @@ module ApplicationHelper
     return true if params[:force_pro_connect].present? # Permet de tester manuellement ProConnect avant de désactiver la variable d'env PRO_CONNECT_DISABLED
 
     return false if ENV["PRO_CONNECT_DISABLED"]
-    return false if Rails.configuration.x.agent_connect_unreachable_at_boot_time
+    return false if Rails.configuration.x.pro_connect_unreachable_at_boot_time
 
     ENV["PRO_CONNECT_BASE_URL"].present?
   end

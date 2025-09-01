@@ -1,11 +1,11 @@
 require_relative "sentry"
 
-Rails.configuration.x.agent_connect_unreachable_at_boot_time = false
+Rails.configuration.x.pro_connect_unreachable_at_boot_time = false
 
 if ENV["PRO_CONNECT_BASE_URL"].present?
   begin
     # la méthode .discover! fait un appel à l'API de ProConnect
-    Rails.configuration.x.agent_connect_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["PRO_CONNECT_BASE_URL"])
+    Rails.configuration.x.pro_connect_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["PRO_CONNECT_BASE_URL"])
   rescue StandardError => e
     error_message = <<~MSG
       ProConnect n'est pas joignable au démarrage de l'application.
@@ -15,6 +15,6 @@ if ENV["PRO_CONNECT_BASE_URL"].present?
     Rails.logger.warn(error_message)
     Sentry.capture_exception(e, level: :warning)
     Sentry.capture_message(error_message)
-    Rails.configuration.x.agent_connect_unreachable_at_boot_time = true
+    Rails.configuration.x.pro_connect_unreachable_at_boot_time = true
   end
 end
