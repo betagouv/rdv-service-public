@@ -61,9 +61,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
       Si j'ai déjà un compte, je peux aussi me connecter par email et mot de passe.
       Si je suis déjà connecté à RDV Service Public, cet écran ne s'affiche pas et je passe directement au suivant.
     TEXT
-    doc.add_screenshot(page,
-                       text: text,
-                       wait_for: "Vous devez vous connecter pour continuer")
+    doc.add_screenshot(page, text: text, wait_for: "Vous devez vous connecter pour continuer")
 
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
@@ -73,8 +71,6 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
                        text: "On me demande de confirmer que j'accepte de connecter les deux applications.",
                        wait_for: "vous allez permettre à Démarches Simplifiées")
 
-    doc.add_text <<~TEXT
-      Je suis ensuite redirigé vers Démarches Simplifiées.
-    TEXT
+    doc.add_text("Je suis ensuite redirigé vers Démarches Simplifiées.")
   end
 end
