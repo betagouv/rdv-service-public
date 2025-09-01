@@ -3,18 +3,11 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
   let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
   let!(:agent) { create(:agent, :francis_factice) }
 
-  around do |example|
-    previous_host = Capybara.app_host
-    Capybara.app_host = "http://www.rdv-mairie-test.localhost:#{previous_host[/\d+/]}"
-    example.run
-    Capybara.app_host = previous_host
-  end
-
   specify do
     doc = Autodoc.start_scenario("Configuration de RDV Service Public par un administrateur de DS", self)
 
     login_as(agent, scope: :agent)
-    visit("/admin/organisations/configuration")
+    visit configuration_admin_organisations_url(host: "http://www.rdv-mairie-test.localhost")
 
     doc.start_section("Ouverture de l'espace")
 
