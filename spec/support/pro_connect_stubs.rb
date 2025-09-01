@@ -1,10 +1,10 @@
-module AgentConnectStubs
+module ProConnectStubs
   extend RSpec::Mocks::ExampleMethods # pour appeler #allow et #receive dans des méthodes de module
 
   def self.stub_and_run_discover_request
     WebMock.stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/.well-known/openid-configuration")
-      .to_return(status: 200, body: File.read(Rails.root.join("spec/fixtures/agent_connect/openid-configuration.json").to_s), headers: {})
-    load Rails.root.join("config/initializers/agent_connect.rb").to_s
+      .to_return(status: 200, body: File.read(Rails.root.join("spec/fixtures/pro_connect/openid-configuration.json").to_s), headers: {})
+    load Rails.root.join("config/initializers/pro_connect.rb").to_s
   end
 
   def self.stub_callback_requests(code, user_info, with_2fa: false)
@@ -20,7 +20,7 @@ module AgentConnectStubs
 
     stub_userinfo_request(userinfo_encoded_response_body)
 
-    jwks_json = File.read(Rails.root.join("spec/fixtures/agent_connect/jwks.json").to_s)
+    jwks_json = File.read(Rails.root.join("spec/fixtures/pro_connect/jwks.json").to_s)
     WebMock.stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/jwks").to_return(status: 200, body: jwks_json, headers: {})
 
     jwks = JSON.parse(jwks_json)

@@ -16,7 +16,7 @@ class ProConnectController < ApplicationController
 
     force_2fa = %w[super_admin operator_manager].include?(connection_for)
 
-    redirect_to auth_client.redirect_url(agent_connect_callback_url, force_2fa:), allow_other_host: true
+    redirect_to auth_client.redirect_url(pro_connect_callback_url, force_2fa:), allow_other_host: true
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -34,10 +34,10 @@ class ProConnectController < ApplicationController
     callback_client = ProConnectOpenIdClient::Callback.new(
       session_state: pro_connect_session[:state],
       params_state: params[:state],
-      callback_url: agent_connect_callback_url,
+      callback_url: pro_connect_callback_url,
       nonce: pro_connect_session[:nonce],
-      client_id: current_domain.agent_connect_client_id,
-      client_secret: current_domain.agent_connect_client_secret
+      client_id: current_domain.pro_connect_client_id,
+      client_secret: current_domain.pro_connect_client_secret
     )
 
     if callback_client.fetch_user_info_from_code!(params[:code])
@@ -94,7 +94,7 @@ class ProConnectController < ApplicationController
     if super_admin
       bypass_sign_in super_admin, scope: :super_admin
 
-      session[:agent_connect_id_token] = callback_client.id_token_for_logout
+      session[:pro_connect_id_token] = callback_client.id_token_for_logout
       redirect_to super_admin_return_to || super_admins_agents_path
     else
       flash[:error] = "Compte ProConnect non autorisé"
@@ -108,7 +108,7 @@ class ProConnectController < ApplicationController
     if operator_manager
       bypass_sign_in operator_manager, scope: :operator_manager
 
-      session[:agent_connect_id_token] = callback_client.id_token_for_logout
+      session[:pro_connect_id_token] = callback_client.id_token_for_logout
 
       operator_manager.update(pro_connect_openid_sub: callback_client.openid_sub)
     else
@@ -198,7 +198,7 @@ class ProConnectController < ApplicationController
     agent.save!
 
     bypass_sign_in agent, scope: :agent
-    session[:agent_connect_id_token] = callback_client.id_token_for_logout
+    session[:pro_connect_id_token] = callback_client.id_token_for_logout
     redirect_to after_sign_in_path_for(agent)
   end
   # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity

@@ -49,7 +49,7 @@ module ProConnectOpenIdClient
 
     # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/double_authentification
     def went_through_2fa?
-      @acr.in?(AgentConnectOpenIdClient::Auth::ACR_FOR_2FA)
+      @acr.in?(ProConnectOpenIdClient::Auth::ACR_FOR_2FA)
     end
 
     private
@@ -72,13 +72,13 @@ module ProConnectOpenIdClient
       end
     end
 
-    def fetch_token(code, agent_connect_callback_url)
+    def fetch_token(code, pro_connect_callback_url)
       data = {
         client_id: @client_id,
         client_secret: @client_secret,
         code: code,
         grant_type: "authorization_code",
-        redirect_uri: agent_connect_callback_url,
+        redirect_uri: pro_connect_callback_url,
       }
 
       response = Typhoeus.post(
@@ -98,7 +98,7 @@ module ProConnectOpenIdClient
     end
 
     def validate_nonce!(encoded_id_token)
-      decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, agent_connect_config.jwks)
+      decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, pro_connect_config.jwks)
 
       decoded_id_token.verify!(
         issuer: pro_connect_config.issuer,

@@ -46,7 +46,7 @@ RSpec.describe Users::SessionsController do
       stub_env_with(PRO_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
 
       before do
-        AgentConnectStubs.stub_and_run_discover_request
+        ProConnectStubs.stub_and_run_discover_request
         # C'est compliqué de manipuler la session dans une feature spec, c'est pour ça qu'on utilise une spec de controller ici
         session[:pro_connect_id_token] = "fake_pro_connect_id_token"
       end

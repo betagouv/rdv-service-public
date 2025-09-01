@@ -10,9 +10,9 @@ end
 
 def stub_env_for_proconnect
   stub_env_with(
-    AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
-    AGENT_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
-    AGENT_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
+    PRO_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2",
+    PRO_CONNECT_RDVSP_CLIENT_SECRET: "un faux secret de test",
+    PRO_CONNECT_RDVSP_CLIENT_ID: "ec41582-1d60-4f11-a63b-d8abaece16aa"
   )
 end
 
