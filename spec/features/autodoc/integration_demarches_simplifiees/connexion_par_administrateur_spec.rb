@@ -53,7 +53,6 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
 
     visit "http://localhost:4567/"
     click_button "Se connecter avec RDV Service Public"
-    sleep 0.1 # Pour attendre le chargement de l'image du logo
 
     doc.start_section("Connexion initiale")
 
