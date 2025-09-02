@@ -14,7 +14,7 @@ ul.list-unstyled.mb-5
     - if user.phone_number.present? && DuplicateUsersFinderService.find_duplicate_based_on_phone_number(user, current_organisation).present?
       = dsfr_alert type: :warning, size: :sm, html_attributes: { class: "fr-mt-1v" } do
         span> D'autres usagers utilisent ce numéro de téléphone.
-        = link_to "voir la liste", admin_organisation_users_path(current_organisation, "search": user.phone_number), class: "fr-link"
+        = link_to "voir la liste", admin_organisation_users_path(current_organisation, "search": user.humanized_phone_number), class: "fr-link"
 
   li.mb-2= object_attribute_tag(user, :notify_by_sms, notify_by_sms_description(user))
   - if user.pending_reconfirmation?
