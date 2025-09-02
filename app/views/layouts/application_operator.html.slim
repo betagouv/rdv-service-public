@@ -10,7 +10,7 @@ html lang="fr"
     - links = [dsfr_link_to("Contenu", "#content"), dsfr_link_to("Menu", "#sidemenu"), dsfr_link_to("Pied de page", "#footer")]
     = dsfr_skiplink label: "Accès rapide", links: links
 
-    = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: { id: "header" } do |header|
+    = dsfr_header logo_text: sanitize("République<br>Française"), html_attributes: { id: "header" } do |header|
       ruby:
         header.with_operator_image title: "", src: asset_path(current_domain.dark_logo_path), alt: "Accueil - #{current_domain.name}"
         if operator_manager_signed_in?

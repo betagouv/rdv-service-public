@@ -1,4 +1,6 @@
 RSpec.describe "Embarquement en autonomie pour les admins", js: true do
+  include ActionView::Helpers::SanitizeHelper
+
   let(:agent) do
     create(:agent, admin_role_in_organisations: [organisation],
                    first_name: "Francis",
@@ -14,7 +16,7 @@ RSpec.describe "Embarquement en autonomie pour les admins", js: true do
 
     doc.start_section("Pour un admin")
 
-    doc.add_text(<<~TEXT
+    text = <<~TEXT
       <p>
         On veut guider les agents qui ouvrent un compte en autonomie pour qu'ils puissent se servir du produit sans avoir besoin de suivre une formation.
       </p>
@@ -22,7 +24,7 @@ RSpec.describe "Embarquement en autonomie pour les admins", js: true do
         On part ici d'un compte qui vient d'être ouvert. L'agent a reçu un email qui l'envoie vers la configuration de son organisation qui n'a pas encore de motifs ou de lieux
       </p>
     TEXT
-      .html_safe) # rubocop:disable Rails/OutputSafety
+    doc.add_text(sanitize(text))
 
     visit admin_organisation_configuration_url(organisation, host: "http://www.rdv-service-public-test.localhost")
 

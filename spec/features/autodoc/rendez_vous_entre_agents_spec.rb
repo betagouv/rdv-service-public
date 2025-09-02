@@ -1,4 +1,6 @@
 RSpec.describe "Prise de rendez-vous entre agents", js: true do
+  include ActionView::Helpers::SanitizeHelper
+
   let(:service) { create(:service, name: "Dinum", short_name: "Dinum") }
 
   stub_env_for_proconnect
@@ -33,7 +35,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
     doc = Autodoc.start_scenario("Prise de rendez-vous entre agents", self, accessibility_checks: false, category: "3) Produit")
 
     doc.start_section("Côté agent")
-    doc.add_text(<<~TEXT
+    text = <<~TEXT
       <h3>Contexte</h3>
       <p>
         Je souhaite proposer de la prise de rendez-vous à d'autres agents du service public, en leur envoyant un lien avec lequel ils pourront directement prendre rendez-vous.
@@ -56,7 +58,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
         J'ai un compte sur RDV Service Public, sur lequel j'ai juste un motif "Suivi de dossier" par visio.
       </p>
     TEXT
-      .html_safe) # rubocop:disable Rails/OutputSafety
+    doc.add_text(sanitize(text))
 
     visit "http://www.rdv-service-public-test.localhost/agents/agenda"
 

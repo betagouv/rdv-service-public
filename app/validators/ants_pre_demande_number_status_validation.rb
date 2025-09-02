@@ -53,11 +53,14 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
     return true if appointments.empty? || record.ignore_benign_errors
 
     record.add_benign_error(
-      I18n.t(
-        "activerecord.warnings.models.user.ants_pre_demande_number_already_used_html",
-        management_url: appointments.first["management_url"],
-        meeting_point: appointments.first["meeting_point"]
-      ).html_safe
+      sanitize(
+        I18n.t(
+          "activerecord.warnings.models.user.ants_pre_demande_number_already_used_html",
+          management_url: appointments.first["management_url"],
+          meeting_point: appointments.first["meeting_point"]
+        ),
+        attributes: %w[href target]
+      )
     )
     false
   end
