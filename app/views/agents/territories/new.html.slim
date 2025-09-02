@@ -6,6 +6,4 @@
         = form_for @compte_form, url: agents_territories_path, builder: Dsfr::FormBuilder, as: :compte do |f|
           = f.fields_for :organisation, @compte_form.organisation do |ff|
             = ff.dsfr_text_field :name, label: "Nom de votre organisation", hint: "par exemple : CCAS de Montreuil", autocomplete: "organization", required: true
-          = f.fields_for :territory, @compte_form.territory do |ff|
-            = ff.dsfr_text_field :name, label: "Nom du territoire", hint: "par exemple : Commune de Montreuil ou Communauté de communes de Saint-Clément", required: true
           = f.submit "Enregistrer", class: "fr-btn float-right"

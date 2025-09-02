@@ -21,7 +21,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         click_on "Ouvrir un espace"
 
         fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
-        fill_in("Nom du territoire", with: "Commune de Montreuil")
         click_on "Enregistrer"
 
         expect(page).to have_content "Configuration"
@@ -43,7 +42,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
           visit new_agents_territory_path
 
           fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
-          fill_in("Nom du territoire", with: "Commune de Montreuil")
           click_on "Enregistrer"
 
           expect(page).to have_content "Nouveau rendez-vous"
@@ -62,7 +60,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
         click_on "Demander à ouvrir un espace"
 
-        fill_in("Nom de l’espace", with: "Commune de Montreuil")
         fill_in("Nom de votre première organisation", with: "CCAS de Montreuil")
         click_on "Envoyer la demande"
 
@@ -71,7 +68,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         login_as(super_admin, scope: :super_admin)
 
         visit super_admins_territory_creation_requests_url(host: "http://www.rdv-mairie-test.localhost")
-        click_on "Commune de Montreuil"
+        click_on "CCAS de Montreuil"
 
         expect(page).to have_content("Demande d'ouverture d'espace")
 
@@ -83,7 +80,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         expect(page).to have_content "Le nouvel espace a été créé"
 
         expect(Territory.last).to have_attributes(
-          name: "Commune de Montreuil",
           admin_agents: [agent]
         )
 
@@ -101,13 +97,13 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         click_on("Demandes acceptées")
 
-        expect(page).to have_content "Commune de Montreuil"
+        expect(page).to have_content "CCAS de Montreuil"
 
         # On affiche ensuite un bandeau d'aide
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
         expect(page).to have_content "Besoin d'aide pour bien démarrer ? Nous pouvons vous aider"
 
-        click_on "Paramètres de Commune de Montreuil"
+        click_on "Paramètres de votre espace"
 
         expect(page).to have_content("Configuration générale") # Pour s'assurer qu'on attend que la nouvelle page charge
         expect(page).to have_content "Besoin d'aide pour bien démarrer ? Nous pouvons vous aider"

@@ -34,7 +34,6 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
 
     doc.add_screenshot(page, wait_for: "Nom de")
 
-    fill_in("Nom de l’espace", with: "Commune de Montreuil")
     fill_in("Nom de votre première organisation", with: "CCAS de Montreuil")
 
     doc.add_screenshot(page,
@@ -58,9 +57,9 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
 
     doc.add_screenshot(page,
                        text: "Je consulte la liste des demandes d'ouverture d'espace",
-                       wait_for: "Commune de Montreuil")
+                       wait_for: "CCAS de Montreuil")
 
-    click_on "Commune de Montreuil"
+    click_on "CCAS de Montreuil"
 
     doc.add_screenshot(page,
                        text: "J'examine la demande. C'est à cette étape que je peux avoir des informations sur des doublons potentiels",

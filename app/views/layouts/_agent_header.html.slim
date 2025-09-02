@@ -23,7 +23,7 @@ header.header.bg-white
             - Agent::TerritoryPolicy::Scope.new(current_agent, Territory.all).resolve.distinct.order(:name).each do |territory|
               li = link_to admin_territory_path(territory), class: "dropdown-item-dsfr dropdown-item" do
                 span.fr-icon--sm.fr-mr-2v.fr-icon-settings-5-line[aria-hidden="true"]
-                | Paramètres de #{territory}
+                | Paramètres de #{territory.name_for_agent}
             .dropdown-divider.my-1[aria-hidden="true"]
             li = link_to destroy_agent_session_path, method: :delete, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-logout-box-r-line[aria-hidden="true"]

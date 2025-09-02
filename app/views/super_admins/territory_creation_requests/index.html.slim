@@ -20,7 +20,7 @@ section.main-content__body.main-content__body--flush
     - @territory_creation_requests.each do |request|
         h3
           = link_to(edit_super_admins_territory_creation_request_path(request.id))
-            = request.territory_name
+            = request.territory_name || request.organisation_name
         p
           = "demandé par #{request.agent.full_name}"
           br
