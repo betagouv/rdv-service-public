@@ -1,4 +1,8 @@
 class RdvPlan < ApplicationRecord
+  has_paper_trail(
+    only: %i[planning_agent_id rdv_id user_id rdv_agent_id motif_id lieu_id starts_at duration_in_minutes return_url location_type dossier_url]
+  )
+
   belongs_to :planning_agent, class_name: "Agent"
   belongs_to :user
 
