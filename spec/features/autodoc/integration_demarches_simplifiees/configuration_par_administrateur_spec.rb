@@ -17,7 +17,6 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
 
     click_on "Ouvrir un espace"
 
-    fill_in("Nom du territoire", with: "Préfecture de Police de Paris")
     fill_in("Nom de votre organisation", with: "Préfecture de Police de Paris")
 
     doc.add_screenshot(page,
