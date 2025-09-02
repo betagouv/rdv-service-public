@@ -47,9 +47,10 @@ RSpec.describe TransferEmailReplyJob do
     end
 
     let!(:user) { create(:user, email: "bene_ficiaire@lapin.fr", first_name: "Bénédicte", last_name: "Ficiaire") }
-    let!(:agent) { create(:agent, email: "je_suis_un_agent@departement.fr") }
+    let!(:organisation) { create(:organisation, email: "contact@departement.fr") }
+    let!(:agent) { create(:agent, email: "je_suis_un_agent@departement.fr", organisations: [organisation]) }
     let(:rdv_uuid) { "8fae4d5f-4d63-4f60-b343-854d939881a3" }
-    let!(:rdv) { create(:rdv, users: [user], agents: [agent], uuid: rdv_uuid) }
+    let!(:rdv) { create(:rdv, users: [user], agents: [agent], uuid: rdv_uuid, organisation:) }
 
     let(:sendinblue_valid_payload) do
       # The usual payload has more info, but I removed non-essential fields for readability.
@@ -148,13 +149,24 @@ RSpec.describe TransferEmailReplyJob do
     end
 
     context "quand le RDV est avec un agent intervenant sans email" do
-      let!(:agent) { create(:agent, :intervenant) }
+      let!(:agent) { create(:agent, :intervenant, first_name: "Jeanne", last_name: "Intervenante") }
 
-      it "transfère le mail à notre support" do
+      it "transfère le mail à l’adresse générique de l’organisation" do
         expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
         transferred_email = ActionMailer::Base.deliveries.last
-        expect(transferred_email.to).to eq(["support@rdv-service-public.fr"])
-        expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
+        expect(transferred_email.to).to eq([organisation.email])
+        expect(transferred_email.html_part.body.to_s).to include(%(Dans le cadre du RDV du 20 mai avec J. INTERVENANTE, l'usager⋅e Bénédicte FICIAIRE a envoyé))
+      end
+
+      context "et que l'organisation n'a pas d'adresse email" do
+        let!(:organisation) { create(:organisation, email: nil) }
+
+        it "transfère le mail à notre support" do
+          expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
+          transferred_email = ActionMailer::Base.deliveries.last
+          expect(transferred_email.to).to eq(["support@rdv-service-public.fr"])
+          expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
+        end
       end
     end
   end

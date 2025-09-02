@@ -25,11 +25,13 @@ class TransferEmailReplyJob < ApplicationJob
     email_address.match(UUID_EXTRACTOR)&.captures&.first
   end
 
-  def perform(sendinblue_hash)
+  def perform(sendinblue_hash) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     @sendinblue_hash = sendinblue_hash.with_indifferent_access
 
     if rdv&.agents&.pluck(:email)&.compact&.any?
       notify_agents
+    elsif rdv&.organisation&.email.present?
+      notify_organisation
     else
       forward_to_default_mailbox
     end
@@ -42,6 +44,16 @@ class TransferEmailReplyJob < ApplicationJob
       rdv: rdv,
       author: user || source_mail.header[:from],
       agents: rdv.agents,
+      reply_body: extracted_response,
+      source_mail: source_mail
+    ).deliver_now
+  end
+
+  def notify_organisation
+    Agents::ReplyTransferMailer.notify_organisation(
+      rdv: rdv,
+      author: user || source_mail.header[:from],
+      organisation: rdv.organisation,
       reply_body: extracted_response,
       source_mail: source_mail
     ).deliver_now
