@@ -104,7 +104,6 @@ gem "typhoeus"
 
 # External services
 gem "notion-ruby-client", "~> 1.2"
-gem "crisp-api", "~> 1.1"
 
 # API documentation
 
