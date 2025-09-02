@@ -5,7 +5,7 @@
 
 - if current_agent_can_create_agent_in?(current_organisation)
   - content_for :breadcrumb do
-    = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class:"btn btn-outline-primary"
+    = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class:"fr-btn fr-btn--secondary"
 
 = simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
   .container-fluid.bg-white.rounded
@@ -37,7 +37,8 @@
     - if current_agent_can_create_agent_in?(current_organisation)
       .m-3.d-flex.justify-content-center.align-items-center
         = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class: "btn btn-primary"
-        - if @invited_agents_count > 0
-          = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
-        - else
-          .m-2 Aucune invitation en attente
+        - if needs_agent_search?
+          - if @invited_agents_count > 0
+            = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
+          - else
+            .m-2 Aucune invitation en attente
