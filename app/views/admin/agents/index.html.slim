@@ -12,9 +12,9 @@
     - if needs_agent_search?
       .fr-my-2w.d-flex.justify-content-end
         - search = params[:term].blank? && "d-none"
-        div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "btn btn-link #{search}"
+        div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline #{search}"
         = f.input :term, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
-        = f.button :submit, t("helpers.search")
+        = f.submit t("helpers.search"), class: "fr-btn"
     table.table
       thead
         tr
@@ -36,7 +36,7 @@
 
     - if current_agent_can_create_agent_in?(current_organisation)
       .m-3.d-flex.justify-content-center.align-items-center
-        = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class: "btn btn-primary"
+        = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class: "fr-btn"
         - if needs_agent_search?
           - if @invited_agents_count > 0
             = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
