@@ -43,7 +43,7 @@
           |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
           = link_to "Contactez-nous",
               new_aide_demande_support_path(role: :agent,
-                sujet: "Déplacer ou corriger un RDV pris via prescription",
+                sujet: "Déplacer ou corriger un RDV pris via prescription (RDV ID: #{rdv.id})",
                 first_name: @prescripteur.first_name,
                 last_name: @prescripteur.last_name,
                 phone_number: @prescripteur.phone_number,
