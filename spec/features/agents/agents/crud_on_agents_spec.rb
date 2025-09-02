@@ -29,7 +29,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
       click_button("Enregistrer")
       expect(Agent.count).to eq(2)
 
-      expect(page).to have_content("Invitations en cours")
+      expect(page).to have_content("Agents de ")
       expect(organisation2.reload.agents.count).to eq 2
     end
 
@@ -92,7 +92,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
       check(pmi.name)
       click_button "Enregistrer"
 
-      expect_page_title("Invitations en cours pour Organisation n°1")
+      expect_page_title("Agents de Organisation n°1")
       expect(page).to have_content("jean@paul.com")
 
       click_on "Se déconnecter"
