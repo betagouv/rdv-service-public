@@ -10,6 +10,40 @@
       .card-body
         = simple_form_for [:admin, @lieu.organisation, @lieu] do |f|
           = render "lieu_fields", f: f
+          .col.text-right.fr-p-0
+            = link_to t("helpers.cancel"), admin_organisation_lieux_path(@lieu.organisation), class: "fr-btn fr-btn--tertiary-no-outline fr-mr-1w"
+            = f.submit "Enregistrer", class: "fr-btn"
+
+.row.justify-content-center
+  .col-md-12.col-lg-8
+    .card
+      .card-body
+        - if @lieu.enabled?
+          h2.fr-h6 Ce lieu est ouvert aux nouveaux rendez-vous
+          p Vous pouvez fermer ce lieu pour empêcher que de nouveaux rendez-vous ou des nouvelles plages d'ouvertures y soient associées.
+          p Il sera ensuite possible de rouvrir ce lieu dès que vous le souhaitez.
+          = link_to "Fermer ce lieu", archive_admin_organisation_motif_path(current_organisation, @lieu), method: :post, data: { confirm: t("admin.motifs.actions.archive_confirm") }, class: "fr-btn fr-btn--secondary"
+
+
+        - else
+          - lieu_is_referenced = @lieu.plage_ouvertures.any? || @lieu.rdvs.any?
+          .row
+            .col.text-left
+              - if lieu_is_referenced
+                = button_tag t("helpers.delete"), type: "button", disabled: true, class: "btn btn-outline-danger"
+              - else
+                = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?" }
+          .row.mt-3
+            .col
+              - if lieu_is_referenced
+                .alert.alert-info
+                  h5.alert-heading Ce lieu ne peut pas être supprimé.
+                  - if @lieu.plage_ouvertures.any?
+                    p Des plages d’ouvertures sont programmées à ce lieu. Déplacez-les pour pouvoir le supprimer.
+                  - if @lieu.rdvs.any?
+                    p
+                      = link_to "Des RDVs sont associés à ce lieu.", admin_organisation_rdvs_path(current_organisation, lieu_id: @lieu.id)
+                      =< "Supprimez-les avant de pouvoir supprimer ce lieu."
 
 .row.justify-content-center
   .col-md-12.col-lg-8
