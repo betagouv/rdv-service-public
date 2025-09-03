@@ -23,19 +23,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
       FakeOauthClient.run!
     end
 
-    Timeout.timeout(30) do
-      loop do
-        begin
-          res = Net::HTTP.get_response(URI("http://localhost:4567"))
-          # On attend que l’app soit prête avant de lancer les tests
-          break if res.is_a?(Net::HTTPSuccess)
-        rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
-          # Le serveur n'est pas encore prêt
-        end
-        sleep 0.5
-      end
-    end
-    sleep 0.5 # Pour attendre que le serveur démarre et éviter une flaky spec
+    sleep 0.5 # on attend que le serveur soit démarré pour éviter les flaky
 
     example.run
 
