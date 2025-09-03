@@ -17,7 +17,9 @@ ul.list-unstyled.mb-5
         span> D'autres usagers utilisent ce numéro de téléphone.
         = link_to "voir la liste", admin_organisation_users_path(current_organisation, "search": user.humanized_phone_number), class: "fr-link"
 
+    - if user.phone_number.present?
       li.mb-2= object_attribute_tag(user, :notify_by_sms, notify_by_sms_description(user))
+
   - if user.pending_reconfirmation?
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
