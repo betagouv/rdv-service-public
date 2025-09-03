@@ -35,14 +35,10 @@ RSpec.describe Admin::AgentsController, type: :controller do
   describe "DELETE #destroy" do
     subject { delete :destroy, params: { organisation_id: organisation.id, id: agent1.id } }
 
-    it "destroys the requested agent" do
+    it "destroys the requested agent and redirects to the agents list" do
       subject
       expect(agent1.reload.organisations).not_to include(organisation)
-    end
-
-    it "redirects to the invitations list" do
-      subject
-      expect(response).to redirect_to(admin_organisation_invitations_path(organisation))
+      expect(response).to redirect_to(admin_organisation_agents_path(organisation))
     end
   end
 
@@ -193,10 +189,10 @@ RSpec.describe Admin::AgentsController, type: :controller do
         }
       end
 
-      it "creates a new agent, sends an email and redirect to invitations list" do
+      it "creates a new agent, sends an email and redirect to agents list" do
         expect { subject }.to change(Agent, :count).by(1)
 
-        expect(response).to redirect_to(admin_organisation_invitations_path(organisation.id))
+        expect(response).to redirect_to(admin_organisation_agents_path(organisation.id))
 
         perform_enqueued_jobs
         expect(Devise.mailer.deliveries.count).to eq(1)

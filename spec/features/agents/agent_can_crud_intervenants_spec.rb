@@ -61,7 +61,7 @@ RSpec.describe "Agent can CRUD intervenants" do
       absence_notification_level: "all"
     )
 
-    expect_page_title("Invitations en cours pour Organisation n°1")
+    expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("ancien_intervenant1@invitation.com")
     expect(page).to have_content("FICTIF Bob")
 
