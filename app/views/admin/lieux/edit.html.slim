@@ -54,8 +54,6 @@
             p Vous pouvez supprimer ce lieu
             = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?" }
 
-
-
 .row.justify-content-center
   .col-md-12.col-lg-8
     = render "admin/versions/resource_versions_row", resource_policy: @lieu_policy, resource: @lieu
