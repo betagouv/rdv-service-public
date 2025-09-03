@@ -37,7 +37,7 @@
       .card
         .card-body
           - lieu_is_referenced = @lieu.plage_ouvertures.any? || @lieu.rdvs.any?
-          .row.mt-3
+          .row
             .col
               - if lieu_is_referenced
                 .alert.alert-info
@@ -51,6 +51,7 @@
           - if lieu_is_referenced
             = button_tag t("helpers.delete"), type: "button", disabled: true, class: "btn btn-outline-danger"
           - else
+            p Vous pouvez supprimer ce lieu
             = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?" }
 
 

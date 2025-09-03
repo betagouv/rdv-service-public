@@ -10,3 +10,4 @@
       .card-body
         = simple_form_for [:admin, @lieu.organisation, @lieu] do |f|
           = render "lieu_fields", f: f
+          = f.submit "Enregistrer", class: "fr-btn"
