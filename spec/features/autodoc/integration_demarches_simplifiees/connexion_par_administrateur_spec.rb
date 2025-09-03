@@ -22,6 +22,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
       $stdout.reopen("log/test_sinatra.log", "r+") # Pour ne pas logger sur stdout
       FakeOauthClient.run!
     end
+    sleep 0.5 # Pour attendre que le serveur démarre et éviter une flaky spec
 
     example.run
 

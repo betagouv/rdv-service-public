@@ -58,7 +58,7 @@
                 = icon("fr-icon-user-fill",class: "fr-mr-1w")
                 | Agents
             p.fr-tile__desc
-              = @agents_scope.limit(3).map(&:full_name).join(", ")
+              = @agents_scope.limit(3).map(&:full_name_or_email).join(", ")
               - if @agents_scope.count > 3
                 - autres_count = @agents_scope.count - 3
                 = " et #{autres_count} #{'autre'.pluralize(autres_count)}"

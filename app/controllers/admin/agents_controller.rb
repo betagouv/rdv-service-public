@@ -38,7 +38,7 @@ class Admin::AgentsController < AgentAuthController
     if @agent.valid?
       flash[:success] = create_agent.confirmation_message
       flash[:alert] = create_agent.warning_message
-      redirect_to_index_path_for(@agent)
+      redirect_to admin_organisation_agents_path(current_organisation)
     else
       render_new
     end
@@ -66,7 +66,7 @@ class Admin::AgentsController < AgentAuthController
     if update_agent.call
       flash[:success] = update_agent.confirmation_message
 
-      redirect_to_index_path_for(@agent)
+      redirect_to admin_organisation_agents_path(current_organisation)
     else
       render_edit
     end
@@ -82,7 +82,7 @@ class Admin::AgentsController < AgentAuthController
       agent_removal.remove!
       flash[:notice] = agent_removal.confirmation_message
 
-      redirect_to_index_path_for(@agent)
+      redirect_to admin_organisation_agents_path(current_organisation)
     else
       redirect_to edit_admin_organisation_agent_path(current_organisation, @agent), flash: { error: agent_removal.errors.full_messages.join }
     end
@@ -105,14 +105,6 @@ class Admin::AgentsController < AgentAuthController
     @roles = access_levels_collection
 
     render :edit
-  end
-
-  def redirect_to_index_path_for(agent)
-    if agent.invitation_sent_at? && !agent.invitation_accepted?
-      redirect_to admin_organisation_invitations_path(current_organisation)
-    else
-      redirect_to admin_organisation_agents_path(current_organisation)
-    end
   end
 
   def index_params
