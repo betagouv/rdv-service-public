@@ -30,25 +30,29 @@ RSpec.describe "Admin can configure the organisation" do
       click_link "Modifier"
     end
 
+    click_link("Fermer ce lieu")
+    expect_page_title("Lieux")
+
+    expect(nouveau_lieu.reload).to have_attributes(availability: "disabled")
+
+    expect(page).to have_content("Le lieu a été fermé.")
+
+    click_on("Le nouveau lieu")
+    expect(page).to have_content("Ce lieu est fermé")
+
+    click_link("Réouvrir ce lieu")
+    expect(page).to have_content("Le lieu a été réouvert.")
+    expect(nouveau_lieu.reload).to have_attributes(availability: "enabled")
+
+    nouveau_lieu.update!(availability: :disabled)
+
+    click_on("Le nouveau lieu")
     click_link("Supprimer")
 
     expect_page_title("Lieux")
     expect(page).to have_content("Vous n'avez pas encore ajouté de lieu de consultation.")
 
     click_link "Ajouter un lieu", match: :first
-
-    expect_page_title("Nouveau lieu")
-    fill_in "Nom", with: "Un autre nouveau lieu"
-    fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000"
-    first("input#lieu_latitude", visible: false).set(48.583844)
-    first("input#lieu_longitude", visible: false).set(7.735253)
-    click_button "Enregistrer"
-    expect_page_title("Lieux")
-
-    le_nouveau_lieu = Lieu.find_by(name: "Un autre nouveau lieu")
-    within("#lieu_#{le_nouveau_lieu.id}") do
-      click_link "Modifier"
-    end
   end
 
   it "Update organisation contact information" do
