@@ -23,6 +23,7 @@ html lang="fr"
           - else
             = content_for :fil_ariane
             .container-fluid
+              .fr-mx-2w= render "layouts/flash"
               - if content_for :title
                 .page-title-box
                   h1.fr-h2= yield :title
