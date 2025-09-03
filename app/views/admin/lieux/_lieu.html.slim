@@ -1,11 +1,11 @@
-.fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--sm.fr-mb-2w.fr-pt-2w.fr-pb-0.fr-col-8
+.fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--sm.fr-mb-2w.fr-pt-2w.fr-pb-0.fr-col-10
   .fr-tile__body
-    .fr-tile__content
-      h3.fr-tile__title
+    .fr-tile__content[style="flex-direction: row; align-items: baseline;"]
+      h3.fr-tile__title.fr-mr-2w
         = link_to edit_admin_organisation_lieu_path(current_organisation, lieu) do
           .d-flex
             = lieu.name
-      .fr-tile__desc[style="width: 100%"]
+      .fr-tile__desc
         .fr-grid-row
           .fr-col-6
             = lieu.address
@@ -14,4 +14,4 @@
       - if lieu.disabled?
         .fr-tile-start
           p.fr-badge.fr-badge--purple-glycine.fr-mb-0 Fermé
-.fr-col-4
+.fr-col-2
