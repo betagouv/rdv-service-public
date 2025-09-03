@@ -82,15 +82,6 @@ class Admin::Planning::AbsencesController < AgentAuthController
     @absence = Absence.new(absence_params)
   end
 
-  def set_agents
-    if @absence&.agent
-      @agent = @absence.agent
-      @agents = [@agent]
-    else
-      super
-    end
-  end
-
   def absence_params
     params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
   end

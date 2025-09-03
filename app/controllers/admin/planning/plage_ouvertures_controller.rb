@@ -100,15 +100,6 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
   end
 
-  def set_agents
-    if @plage_ouverture&.agent
-      @agent = @plage_ouverture.agent
-      @agents = [@agent]
-    else
-      super
-    end
-  end
-
   def plage_ouverture_params
     params.require(:plage_ouverture).permit(
       :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: []
