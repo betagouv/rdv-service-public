@@ -92,7 +92,6 @@ Nos apps sont cependant toutes situées sur la zone `SecNumCloud` de Scalingo, q
 | Navigateur redirigé par App Rails | API Microsoft          | HTTPS (OAuth) | 443  | Amsterdam, Pays-Bas | login.microsoftonline.com                             |
 | App Rails                         | API dédoublonnage ANTS | HTTPS         | 443  | Paris, France       | api-coordination.rendezvouspasseport.ants.gouv.fr/api |
 | Moteur de recherche ANTS          | App Rails              | HTTPS         | 443  | Paris, France       | rdv.anct.gouv.fr/api/ants/availableTimeSlots          |
-| App Rails                         | Crisp                  | HTTPS         | 443  | Amsterdam, Pays-Bas | api.crisp.chat                                        |
 
 ##### Webhooks
 
