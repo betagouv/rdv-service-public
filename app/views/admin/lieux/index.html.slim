@@ -8,27 +8,16 @@
   - content_for :breadcrumb do
     = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "fr-btn fr-btn--secondary"
 
-.card
-  .card-body
-    - if @lieux.any?
-      table.table
-        thead
-          tr
-            th Nom
-            th Adresse
-            th Téléphone
-            th RDV aujourd'hui
-            th Actions
-        tbody
-          = render @lieux
-      .d-flex.justify-content-center= paginate @lieux, theme: "dsfr"
-    - else
-      .fr-grid-row.justify-content-md-center
-        .fr-col-md-6.fr-mt-2w.fr-mb-4w
-          h3.fr-mb-2w Vous n'avez pas encore ajouté de lieu de consultation.
-          p Les lieux sont les endroits où sont réalisés les rendez-vous.
-          p L'adresse du lieu est contenue dans les notifications envoyées à l'usager.
+- if @lieux.any?
+  .fr-grid-row
+    = render @lieux
+  .d-flex.justify-content-center= paginate @lieux, theme: "dsfr"
+- else
+  .fr-grid-row.justify-content-md-center
+    .fr-col-md-6.fr-mt-2w.fr-mb-4w
+      h3.fr-mb-2w Vous n'avez pas encore ajouté de lieu de consultation.
+      p Les lieux sont les endroits où sont réalisés les rendez-vous.
+      p L'adresse du lieu est contenue dans les notifications envoyées à l'usager.
 
-    - if @lieux_policy.create?
-      .rdv-text-align-center
-        = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "fr-btn"
+- if @lieux_policy.create?
+    = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "fr-btn"
