@@ -69,7 +69,7 @@ class Domain
       name: "RDV Service Public",
       presentation_for_agents_template_name: nil, # C'est la homepage qui joue ce rôle pour ce domaine
       address_selection_template_name: nil,
-      search_banner_template_name: "search/banners/rdv_mairie",
+      search_banner_template_name: "search/banners/rdv_service_public",
       online_reservation_with_public_link: true,
       sms_sender_name: "RDV S.P.",
       france_connect_enabled: true,
