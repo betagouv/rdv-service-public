@@ -52,6 +52,7 @@ Rails.application.routes.draw do
     resources :users
     resources :comptes, only: %i[new create]
     resources :rdvs, only: %i[show]
+    resources :prescripteurs, only: %i[show]
     root to: "agents#index"
 
     authenticate :super_admin do
