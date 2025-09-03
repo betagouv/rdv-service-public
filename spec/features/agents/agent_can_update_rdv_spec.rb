@@ -47,6 +47,16 @@ RSpec.describe "Agent can update a RDV", js: true do
     expect(page).not_to have_selector(".badge-info", text: /Ponctuel/)
   end
 
+  it "works when the lieu has been disabled" do
+    lieu_disabled = create(:lieu, organisation: organisation, availability: :disabled)
+    rdv = create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu_disabled, starts_at: 3.days.ago)
+
+    visit edit_admin_organisation_rdv_path(organisation, rdv)
+
+    click_on "Enregistrer"
+    expect(page).to have_content("Ce rendez-vous a une date située dans le passé")
+  end
+
   describe "adding users" do
     context "when injecting the id of a user that isn't visible to the agent" do
       let(:user_from_other_territory) do
