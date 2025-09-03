@@ -53,6 +53,26 @@ class Admin::LieuxController < AgentAuthController
     end
   end
 
+  def close
+    set_and_authorize_lieu
+    if @lieu.update(availability: :disabled)
+      flash[:success] = "Le lieu a été fermé."
+      redirect_to admin_organisation_lieux_path(@lieu.organisation)
+    else
+      render :edit
+    end
+  end
+
+  def reopen
+    set_and_authorize_lieu
+    if @lieu.update(availability: :enabled)
+      flash[:success] = "Le lieu a été réouvert."
+      redirect_to admin_organisation_lieux_path(@lieu.organisation)
+    else
+      render :edit
+    end
+  end
+
   private
 
   def set_and_authorize_lieu

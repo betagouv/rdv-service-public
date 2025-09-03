@@ -21,18 +21,22 @@
         - if @lieu.enabled?
           h2.fr-h6 Ce lieu est ouvert aux nouveaux rendez-vous
           p Vous pouvez fermer ce lieu pour empêcher que de nouveaux rendez-vous ou des nouvelles plages d'ouvertures y soient associées.
-          p Il sera ensuite possible de rouvrir ce lieu dès que vous le souhaitez.
-          = link_to "Fermer ce lieu", archive_admin_organisation_motif_path(current_organisation, @lieu), method: :post, data: { confirm: t("admin.motifs.actions.archive_confirm") }, class: "fr-btn fr-btn--secondary"
-
+          p Il sera ensuite possible de réouvrir ce lieu dès que vous le souhaitez.
+          = link_to "Fermer ce lieu", close_admin_organisation_lieu_path(current_organisation, @lieu), method: :post, class: "fr-btn fr-btn--secondary"
 
         - else
+          h2.fr-h6 Ce lieu est fermé aux nouveaux rendez-vous
+
+          p Il n'est pas possible d'ajouter des rendez-vous ou des plages d'ouverture pour ce lieu.
+          p Si vous le souhaitez, vous pouvez le réouvrir
+          = link_to "Réouvrir ce lieu", reopen_admin_organisation_lieu_path(current_organisation, @lieu), method: :post, class: "fr-btn fr-btn--secondary"
+
+- if @lieu.disabled?
+  .row.justify-content-center
+    .col-md-12.col-lg-8
+      .card
+        .card-body
           - lieu_is_referenced = @lieu.plage_ouvertures.any? || @lieu.rdvs.any?
-          .row
-            .col.text-left
-              - if lieu_is_referenced
-                = button_tag t("helpers.delete"), type: "button", disabled: true, class: "btn btn-outline-danger"
-              - else
-                = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?" }
           .row.mt-3
             .col
               - if lieu_is_referenced
@@ -44,6 +48,12 @@
                     p
                       = link_to "Des RDVs sont associés à ce lieu.", admin_organisation_rdvs_path(current_organisation, lieu_id: @lieu.id)
                       =< "Supprimez-les avant de pouvoir supprimer ce lieu."
+          - if lieu_is_referenced
+            = button_tag t("helpers.delete"), type: "button", disabled: true, class: "btn btn-outline-danger"
+          - else
+            = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?" }
+
+
 
 .row.justify-content-center
   .col-md-12.col-lg-8

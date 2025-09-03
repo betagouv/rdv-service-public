@@ -8,6 +8,8 @@ class Agent::LieuPolicy < ApplicationPolicy
   alias new? update?
   alias create? update?
   alias edit? update?
+  alias close? update?
+  alias reopen? update?
   alias destroy? update?
   alias versions? update?
 
