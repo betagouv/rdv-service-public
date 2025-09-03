@@ -10,4 +10,7 @@
       .card-body
         = simple_form_for [:admin, @lieu.organisation, @lieu] do |f|
           = render "lieu_fields", f: f
-          = f.submit "Enregistrer", class: "fr-btn"
+
+          .col.text-right.fr-p-0
+            = link_to t("helpers.cancel"), admin_organisation_lieux_path(@lieu.organisation), class: "fr-btn fr-btn--tertiary-no-outline fr-mr-1w"
+            = f.submit "Enregistrer", class: "fr-btn"
