@@ -21,17 +21,18 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
       `touch log/test_sinatra.log`
       $stdout.reopen("log/test_sinatra.log", "r+") # Pour ne pas logger sur stdout
       FakeOauthClient.run!
-      Timeout.timeout(30) do
-        loop do
-          begin
-            res = Net::HTTP.get_response(URI("http://localhost:4567"))
-            # On attend que l’app soit prête avant de lancer les tests
-            break if res.is_a?(Net::HTTPSuccess)
-          rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
-            # Le serveur n'est pas encore prêt
-          end
-          sleep 0.5
+    end
+
+    Timeout.timeout(30) do
+      loop do
+        begin
+          res = Net::HTTP.get_response(URI("http://localhost:4567"))
+          # On attend que l’app soit prête avant de lancer les tests
+          break if res.is_a?(Net::HTTPSuccess)
+        rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+          # Le serveur n'est pas encore prêt
         end
+        sleep 0.5
       end
     end
     sleep 0.5 # Pour attendre que le serveur démarre et éviter une flaky spec
