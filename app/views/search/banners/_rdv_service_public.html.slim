@@ -1,0 +1,14 @@
+/# locals: (context:)
+span Prenez rendez-vous
+- if context&.public_link_organisation
+  = " avec "
+  br.fr-hidden.fr-unhidden-md
+  span<
+      =  context.public_link_organisation.name
+- else
+  - territory =  Territory.where(departement_number: context.departement).sole
+  - if territory&.name.present?
+    = " avec "
+    br.fr-hidden.fr-unhidden-md
+    span<
+      =  territory.name
