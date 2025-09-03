@@ -83,9 +83,7 @@ module UsersHelper
   end
 
   def notify_by_email_description(user)
-    if user.preferred_email.blank?
-      "🔴 pas d'email renseigné"
-    elsif user.responsible_notify_by_email?
+    if user.responsible_notify_by_email?
       "🟢 Activées"
     else
       "🔴 Désactivées"
@@ -101,9 +99,7 @@ module UsersHelper
   end
 
   def notify_by_sms_description(user)
-    if user.responsible_phone_number.blank?
-      "🔴 pas de numéro de téléphone renseigné"
-    elsif !user.responsible_phone_number_mobile?
+    if !user.responsible_phone_number_mobile?
       "🔴 le numéro de téléphone renseigné n'est pas un mobile"
     elsif user.responsible_notify_by_sms?
       "🟢 Activées"
