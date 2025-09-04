@@ -8,23 +8,20 @@
 - else
   p.fr-text--lg Sélectionnez la structure avec laquelle prendre RDV&nbsp;:
   ul.fr-raw-list
-    / similar to app/views/search/_lieu_selection.html.slim:10
     - organisation_selection_service.next_availability_by_motifs_organisations.each do |organisation, next_availability|
       - motif = next_availability.motif
-      - if motif.restriction_for_rdv.blank?
-        - link = link_to organisation.name, prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at))
-      - else
-        - link = link_to organisation.name, prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at)), "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{organisation.id}" }
-        = render "/common/modal",
-          id: "js-rdv-restriction-motif#{organisation.id}",
-          title: "À lire avant de prendre un rendez-vous",
-          confirm_path: prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at)) do
-          = restriction_for_rdv_to_html(motif)
-      li.fr-card.fr-enlarge-link.fr-card--horizontal.fr-mb-2w
-        .fr-card__body
+      - if motif.restriction_for_rdv.present?
+        = render "/common/dsfr_modal", id: "rdv-restriction-motif-#{organisation.id}", title: "À lire avant de prendre un rendez-vous", body: restriction_for_rdv_to_html(motif), confirm_path: prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at)), confirm_message: "Continuer", cancel_message: "Annuler"
+      li.fr-card.fr-enlarge-button.fr-card--horizontal.fr-mb-2w
+        .fr-card__body aria-controls="rdv-restriction-motif-#{organisation.id}" data-fr-opened="false"
           .fr-card__content
-            .fr-card__title
-              = link
+            - if motif.restriction_for_rdv.blank?
+              .fr-card__title
+                = link_to organisation.name, prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at))
+            - else
+              h3.fr-card__title
+                button type="button"
+                  = organisation.name
             .fr-card__end
               = render "search/organisation_card_subtitles", organisation: organisation
               .fr-card__detail
