@@ -15,5 +15,5 @@ dialog.fr-modal id=id role="dialog" aria-labelledby="#{id}-title" data-fr-concea
           .fr-modal__footer
             .fr-btns-group.fr-btns-group--right.fr-btns-group--inline-reverse.fr-btns-group--inline-lg.fr-btns-group--icon-left
               = link_to(confirm_message || "Accepter", confirm_path, class: "fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left") if confirm_path.present?
-              button.fr-btn.fr-icon-checkbox-circle-line.fr-btn--icon-left.fr-btn--secondary data-dismiss="modal" type="button" aria-controls=id
+              button.fr-btn.fr-icon-close-circle-line.fr-btn--icon-left.fr-btn--secondary data-dismiss="modal" type="button" aria-controls=id
                 = cancel_message || "Annuler"
