@@ -31,7 +31,7 @@
           .fr-card__body
             .fr-card__content
               .fr-card__title
-                link_to "#{lieu.name} - #{lieu.address}", prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at))
+                = link_to "#{lieu.name} - #{lieu.address}", prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at))
               p.fr-card__desc = lieu.organisation.name
               .fr-card__end
                 .fr-card__detail
