@@ -17,6 +17,10 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
     current_agent.territorial_admin_in?(record.territory)
   end
 
+  def close?
+    new?
+  end
+
   def destroy?
     false
   end
