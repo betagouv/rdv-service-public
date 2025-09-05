@@ -4,22 +4,14 @@
   i.fa.fa-arrow-left
   |< Retour à l'accueil
 
-h1.m-2.rdv-text-align-center.border-bottom.pb-2 =  t("admin.territories.show.title", territory: current_territory.name_for_agent)
+h1.fr-my-2w.rdv-text-align-center.border-bottom.fr-pb-2w =  t("admin.territories.show.title", territory: current_territory.name_for_agent)
 .row.mb-3
   .col.col-md-4.p-2.rounded.settings-box
     = link_to admin_territory_organisations_path(current_territory) do
       h2.fw-bold.mb-0
-        i.fa.fa-home>
+        i.fa.fa-building-columns>
         | Organisations
       p Gérer les organisations.
-
-  - if Agent::TerritoryPolicy.new(pundit_user, current_territory).edit?
-    .col.col-md-4.p-2.rounded.settings-box
-      = link_to edit_admin_territory_path(current_territory) do
-        h2.fw-bold.mb-0
-          i.fa.fa-house>
-          | Configuration générale
-        p Nom de l'espace et département
 
   - if Configuration::AgentPolicy.allowed_to_manage_agents_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
@@ -29,6 +21,32 @@ h1.m-2.rdv-text-align-center.border-bottom.pb-2 =  t("admin.territories.show.tit
           | Agents
         p Inviter des agents, affecter à des équipes
 
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to admin_territory_motifs_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-calendar>
+          = t("admin.territories.motifs.index.title")
+        p Lister, modifier, supprimer les motifs de toutes vos organisations
+
+  - if Agent::TerritoryPolicy.new(pundit_user, current_territory).edit?
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to edit_admin_territory_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-font>
+          | Nom de l'espace
+        p Nom de l'espace et département
+
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to edit_admin_territory_services_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-calendar>
+          | Services
+        p Choisir la liste des services auxquels les agents peuvent être affectés
+
+h2.border-bottom.fr-pt-4w.fr-bt-2w Paramètre avancés
+.row.mb-3
   - if Agent::TeamPolicy.allowed_to_manage_teams_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_teams_path(current_territory) do
@@ -69,25 +87,9 @@ h1.m-2.rdv-text-align-center.border-bottom.pb-2 =  t("admin.territories.show.tit
           | Fiches RDV
         p Gérer les informations enregistrées sur les rendez-vous
 
-  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
-    .col.col-md-4.p-2.rounded.settings-box
-      = link_to admin_territory_motifs_path(current_territory) do
-        h2.fw-bold.mb-0
-          i.fa.fa-calendar>
-          = t("admin.territories.motifs.index.title")
-        p Lister, modifier, supprimer les motifs de toutes vos organisations
-
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_motif_fields_path(current_territory) do
         h2.fw-bold.mb-0
           i.fa.fa-calendar>
           = t("admin.territories.motif_fields.edit.card_title")
         p Gérer les options de configuration des motifs
-
-  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
-    .col.col-md-4.p-2.rounded.settings-box
-      = link_to edit_admin_territory_services_path(current_territory) do
-        h2.fw-bold.mb-0
-          i.fa.fa-calendar>
-          | Services
-        p Activer ou désactiver la liste des services auxquels les agents peuvent être affectés
