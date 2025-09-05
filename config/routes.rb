@@ -179,10 +179,14 @@ Rails.application.routes.draw do
             end
           end
           resources :webhook_endpoints, except: %i[show]
-          resources :organisations, only: %i[index] do
+          resources :organisations, only: %i[new create index] do
             collection do
               get :select_for_close
               patch :close
+            end
+            member do
+              get :confirm_reopen
+              post :reopen
             end
           end
           resources :agents, only: %i[index new create edit] do
