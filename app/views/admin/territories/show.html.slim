@@ -6,6 +6,13 @@
 
 h1.m-2.rdv-text-align-center.border-bottom.pb-2 =  t("admin.territories.show.title", territory: current_territory.name_for_agent)
 .row.mb-3
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to admin_territory_organisations_path(current_territory) do
+      h2.fw-bold.mb-0
+        i.fa.fa-home>
+        | Organisations
+      p Gérer les organisations.
+
   - if Agent::TerritoryPolicy.new(pundit_user, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_path(current_territory) do
@@ -85,10 +92,3 @@ h1.m-2.rdv-text-align-center.border-bottom.pb-2 =  t("admin.territories.show.tit
           | Services
         p Activer ou désactiver la liste des services auxquels les agents peuvent être affectés
 
-  / Ce lien est la manière principale de sortir de la configuration pour retourner à l'écran métier, donc on le garde à la fin de la liste
-  .col.col-md-4.p-2.rounded.settings-box
-    = link_to admin_organisations_path do
-      h2.fw-bold.mb-0
-        i.fa.fa-home>
-        | Organisations
-      p Lister mes organisations.

@@ -1,0 +1,16 @@
+= territory_navigation("Organisations")
+
+.fr-grid-row
+  .fr-col-md-10
+    h1 Organisations de #{current_territory.name_for_agent}
+
+    .card
+      .card-body
+        ul
+          - @organisations.each do |organisation|
+            li
+              span>= link_to organisation.name, admin_organisation_configuration_path(organisation)
+
+        - if policy(Organisation.new(territory: current_territory), policy_class: Agent::OrganisationPolicy).new?
+          .fr-mt-4w
+            = link_to "Ajouter une organisation", new_admin_organisation_path(territory_id: current_territory.id), class: "fr-btn"
