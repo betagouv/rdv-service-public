@@ -6,6 +6,8 @@
 
     .card
       .card-body
+        p Vous ne pouvez que fermer les organisations qui n'ont pas de rendez-vous à venir.
+        p Si vous voulez empêcher la prise de nouveaux rendez-vous dans une organisation, vous pouvez archiver ses motifs depuis sa page de configuration.
         p Quelle organisation souhaitez-vous fermer ?
 
         = form_with url: close_admin_territory_organisations_path(current_territory), method: :patch, builder: Dsfr::FormBuilder do |f|

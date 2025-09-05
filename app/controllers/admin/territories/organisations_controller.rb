@@ -4,8 +4,20 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
   end
 
   def select_for_close
-    @organisations = organisations
-    authorize(@organisations.first, :close?, policy_class: Agent::OrganisationPolicy)
+    sanitized_outer_join = ApplicationRecord.sanitize_sql(
+      [
+        "LEFT OUTER JOIN rdvs ON (rdvs.organisation_id = organisations.id AND rdvs.status in (:statuses) AND rdvs.starts_at  > :starts_at)",
+        { statuses: Rdv::NOT_CANCELLED_STATUSES, starts_at: Time.zone.now },
+      ]
+    )
+    @organisations = organisations.joins(sanitized_outer_join).where.missing(:rdvs).uniq
+
+    if @organisations.empty?
+      skip_authorization
+    else
+
+      authorize(@organisations.first, :close?, policy_class: Agent::OrganisationPolicy)
+    end
   end
 
   def close
