@@ -59,7 +59,7 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
       agent_removal.remove! if agent_removal.valid?
     end
 
-    if organisation.agents.reload.empty?
+    if organisation.reload.agents.empty?
       flash[:success] = "L'organisation a été fermée."
     else
       flash[:error] = "L'organisation n'a pas pu être fermée parce que des agents on encore des rendez-vous à venir dans cette organisation."
