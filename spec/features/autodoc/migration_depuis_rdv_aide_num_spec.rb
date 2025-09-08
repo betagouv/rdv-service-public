@@ -91,7 +91,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     orgs = instance_export.new_instance_organisations
     instance_export.update!(destination_organisation_id: orgs.first["id"])
 
-    visit "http://www.rdv-aide-numerique-test.localhost/agents/instance_exports/#{instance_export.id}/edit"
+    visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}/edit"
 
     doc.add_screenshot(page,
                        text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les usagers",
