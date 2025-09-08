@@ -13,7 +13,6 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
   # Pour simplifier les test, on crée deux agents sur la même instance
   let(:organisation_rdv_aide_num) { create(:organisation, name: "France Service de Montreuil") }
-  let(:organisation_rdv_sp) { create(:organisation, name: "MFS de Montreuil") }
   let!(:agent_rdv_aide_num) do
     create(:agent, first_name: "Camille", last_name: "Clavier", admin_role_in_organisations: [organisation_rdv_aide_num])
   end
@@ -23,7 +22,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   end
 
   let!(:agent_rdv_sp) do
-    create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [organisation_rdv_sp])
+    create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
   end
 
   let!(:oauth_application) do
@@ -88,10 +87,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       refresh_token: rdv_sp_token.refresh_token
     )
 
-    orgs = instance_export.new_instance_organisations
-    instance_export.update!(destination_organisation_id: orgs.first["id"])
-
-    visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}/edit"
+    visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}/new_organisation"
 
     doc.add_screenshot(page,
                        text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les usagers",

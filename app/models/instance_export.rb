@@ -15,6 +15,18 @@ class InstanceExport < ApplicationRecord
     JSON.parse(response.body)["organisations"]
   end
 
+  def create_organisation_on_new_instance!
+    response = Faraday.post(
+      "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/organisations",
+      { name: source_organisation.name }.to_json,
+      request_headers
+    )
+
+    destination_orgs = JSON.parse(response.body)["organisations"]
+
+    update(destination_organisation_id: destination_orgs.first["id"])
+  end
+
   def source_organisation
     agent.organisations.first
   end

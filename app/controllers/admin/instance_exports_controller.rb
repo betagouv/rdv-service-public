@@ -23,13 +23,28 @@ class Admin::InstanceExportsController < AgentAuthController
     end
 
     orgs = instance_export.new_instance_organisations
-    if orgs.count != 1
+    if orgs.empty?
+
+      redirect_to new_organisation_admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
+    elsif orgs.count == 1
+      instance_export.update!(destination_organisation_id: orgs.first["id"])
+      redirect_to edit_admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
+    else
       raise "on ne sait pas dans quelle organisation ajouter les usagers"
     end
 
-    instance_export.update!(destination_organisation_id: orgs.first["id"])
-
     flash[:success] = "Connexion à RDV Service Public réussie"
+  end
+
+  def new_organisation
+    @instance_export = find_instance_export
+  end
+
+  def create_organisation
+    instance_export = find_instance_export
+
+    instance_export.create_organisation_on_new_instance!
+
     redirect_to edit_admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
   end
 

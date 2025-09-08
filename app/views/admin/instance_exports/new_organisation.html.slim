@@ -1,0 +1,13 @@
+- content_for :title, "Migration vers RDV Service Public"
+
+.fr-grid-row
+  .fr-col-10.fr-col-offset-1
+    .card
+      .card-header
+        h2.fr-h3 Ouverture de votre espace sur RDV Service Public
+      .card-body
+        p Nous allons ouvrir un nouvel espace sur RDV Service Public pour #{current_organisation.name}
+        p Contrairement à RDV Aide Numérique, vous aurez accès à toute la configuration de cet espace, et vous pourrez aussi ouvrir de nouvelles organisations.
+
+        .col-auto.rdv-text-align-right
+          = link_to  "Continuer", create_organisation_admin_organisation_instance_export_path(current_organisation, @instance_export), class: "fr-btn", method: :post
