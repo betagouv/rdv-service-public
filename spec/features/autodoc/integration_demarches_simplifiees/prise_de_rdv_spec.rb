@@ -4,7 +4,9 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
                                logo_base64: file_fixture("logo_demarches_simplifiees_base_64.txt").read)
   end
   let!(:user) do
-    create(:user, :unregistered, organisations: [organisation], first_name: "Camille", last_name: "Dupont") # créé par appel d'api par l'appli qui s'intègre avec nous
+    create(:user, :unregistered, organisations: [organisation],
+                                 email: "camille.dupont@exemple.fr", phone_number: nil,
+                                 first_name: "Camille", last_name: "Dupont") # créé par appel d'api par l'appli qui s'intègre avec nous
   end
   let!(:motif) { create(:motif, organisation: organisation, location_type: :public_office, name: "Suivi de dossier") }
   let!(:phone_motif) { create(:motif, organisation: organisation, location_type: :phone, name: "Suivi de dossier") }
@@ -79,12 +81,12 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
 
     find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click # Clic sans l'agenda
 
-    find("label", text: "Par téléphone").click
+    find("label", text: "Sur place").click
 
     Capybara.page.current_window.resize_to(1280, 880)
 
     doc.add_screenshot(page,
-                       text: "Je choisis de faire le rendez-vous par téléphone.",
+                       text: "Je choisis de faire le rendez-vous sur place.",
                        wait_for: "Comment souhaitez-vous faire le rendez-vous ?")
 
     click_on "Continuer"
@@ -107,5 +109,9 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
     doc.add_screenshot(page,
                        text: "J'ai un récapitulatif du rendez-vous, et je peux retourner sur Démarches Simplifiées",
                        wait_for: "Rendez-vous confirmé")
+
+    doc.start_section("Deuxième prise de rendez-vous")
+
+    doc.add_text("Pour les rendez-vous suivants, on ne repasse plus par l'étape de validation des permissions, mais on arrive directement sur le choix de l'horaire (si on est déjà connecté).")
   end
 end
