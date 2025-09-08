@@ -149,7 +149,7 @@ Rails.application.routes.draw do
       end
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
-      resources :instance_exports, only: %i[index new edit update show]
+      resources :instance_exports, only: %i[index]
       resources :exports, only: %i[index] do
         get :download
       end
@@ -228,6 +228,7 @@ Rails.application.routes.draw do
         get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
         get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
 
+        resources :instance_exports, only: %i[index new edit update show]
         resources :lieux, except: :show do
           member do
             post :close
