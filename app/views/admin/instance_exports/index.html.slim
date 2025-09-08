@@ -2,6 +2,7 @@
 
 .card.fr-mb-8w
   .card-body
+    h2.fr-h2 Pourquoi passer à RDV Service Public
     p #{link_to "RDV Service Public", "https://rdv.anct.gouv.fr", target: :_blank} est une version améliorée de RDV Aide Numérique. Cette nouvelle version vous permettra de :
     ul
       li
@@ -16,16 +17,23 @@
 
 .card
   .card-body
-    h2.fr-h5 Copie automatique des usagers
+    h2.fr-h2 Comment se passe la migration ?
 
-    p Pour faciliter la migration, nous fournissons une copie automatique vos fiches usagers depuis #{current_domain.name} vers RDV Service Public.
+    p La migration se fait en trois étapes
 
-    p
-      | Pour le moment, cette fonctionnalité ne fonctionne que pour les agents qui ont une seule organisation sur RDV Aide Numérique et sur RDV Service Public.
-      |  Elle sera bientôt étendue aux autres cas.
-    p
+    h3.fr-h3 Connexion à RDV Service Public
+    p Vous allez vous connecter à RDV Service Public avec ProConnect pour permettre l'échange de données entre les deux applications
+
+    h3.fr-h3 Ouverture de votre espace sur RDV Service Public
+    p Votre configuration sera copiée sur ce nouvel espace. Cette étape est facultative si vous avez déjà un espace sur RDV Service Public.
+
+    h3.fr-h3 Copie de vos usagers
+    p Vos usagers seront copiés automatiquement sur RDV Service Public. Leur historique de rendez-vous ne sera pas copié, mais vous pourrez retrouver un lien vers RDV Aide Numérique sur chaque fiche usager.
+    p Si vous avez de nouveaux usagers qui sont ajoutés sur #{current_domain.name} après votre première migration, vous pouvez répéter cette étape sans créer de doublons.
+
+    p.fr-mt-2w
       = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w")
-      | Vos données sur RDV Aide Numérique seront conservées, et resteront accessibles.
+      | Vos données sur RDV Aide Numérique seront conservées, et resteront accessibles même après la migration.
 
     .rdv-text-align-center
-      = link_to  "Commencer l'export de mes usagers", new_admin_organisation_instance_export_path, class: "fr-btn"
+      = link_to  "Commencer la migration", new_admin_organisation_instance_export_path, class: "fr-btn"
