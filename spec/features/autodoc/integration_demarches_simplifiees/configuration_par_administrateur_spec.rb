@@ -4,7 +4,7 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
   let!(:agent) { create(:agent, :francis_factice) }
 
   specify do
-    doc = Autodoc.start_scenario("Configuration de RDV Service Public par un administrateur de DS", self)
+    doc = Autodoc.start_scenario("Intégration à Démarches Simplifiées : 2) Configuration de RDV Service Public par un admin", self)
 
     login_as(agent, scope: :agent)
     visit configuration_admin_organisations_url(host: "http://www.rdv-mairie-test.localhost")
@@ -51,5 +51,11 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
     doc.add_screenshot(page,
                        text: "Mon collègue reçoit un email lui permettant d'accéder à son compte. Je peux inviter d'autres collègues si nécessaire.",
                        wait_for: "a été invité à rejoindre votre organisation")
+
+    doc.start_section("Inviter les agents qui vont gérer les rendez-vous (facultatif)")
+    doc.add_text <<~TEXT
+      Dans la plupart des cas, les rendez-vous seront assurés par des gens qui sont aussi instructeurs dans Démarches Simplifiées.
+      Mais il peut arriver que ça ne soit pas le cas, et que l'agent qui assure le rendez-vous n'ai même pas de compte sur Démarches Simplifiées. Il suffit alors d'inviter ces agents dans RDV Service Public, comme on l'a déjà fait pour les agents.
+    TEXT
   end
 end
