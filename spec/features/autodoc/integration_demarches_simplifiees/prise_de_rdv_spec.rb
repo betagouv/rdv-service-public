@@ -109,5 +109,9 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
     doc.add_screenshot(page,
                        text: "J'ai un récapitulatif du rendez-vous, et je peux retourner sur Démarches Simplifiées",
                        wait_for: "Rendez-vous confirmé")
+
+    doc.start_section("Deuxième prise de rendez-vous")
+
+    doc.add_text("Pour les rendez-vous suivants, on ne repasse plus par l'étape de validation des permissions, mais on arrive directement sur le choix de l'horaire (si on est déjà connecté).")
   end
 end
