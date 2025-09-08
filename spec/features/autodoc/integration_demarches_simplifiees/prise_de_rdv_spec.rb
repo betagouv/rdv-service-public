@@ -81,12 +81,12 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
 
     find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click # Clic sans l'agenda
 
-    find("label", text: "Par téléphone").click
+    find("label", text: "Sur place").click
 
     Capybara.page.current_window.resize_to(1280, 880)
 
     doc.add_screenshot(page,
-                       text: "Je choisis de faire le rendez-vous par téléphone.",
+                       text: "Je choisis de faire le rendez-vous sur place.",
                        wait_for: "Comment souhaitez-vous faire le rendez-vous ?")
 
     click_on "Continuer"
