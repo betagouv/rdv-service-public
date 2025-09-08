@@ -90,7 +90,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}/new_organisation"
 
     doc.add_screenshot(page,
-                       text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les usagers",
+                       text: "Je suis redirigé vers RDV Aide Numérique, on m'indique qu'on va créer une nouvelle organisation.",
+                       wait_for: "Nous allons ouvrir un nouvel espace")
+
+    click_on "Continuer"
+
+    doc.add_screenshot(page,
+                       text: "Je clique sur Copier les usagers",
                        wait_for: "Vous allez copier ")
 
     click_on "Copier les usagers"
