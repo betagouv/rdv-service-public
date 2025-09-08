@@ -72,7 +72,7 @@ class AgentRole < ApplicationRecord
 
   def organisation_have_at_least_one_admin_before_destroy
     return if organisation.agent_roles.where.not(id: id).any?(&:admin?)
-    return if organisation.agent_roles.empty? # On est en train de supprimer le dernier admin, donc de fermer l'organisation
+    return if organisation.agent_roles == [self] # On est en train de supprimer le dernier admin, donc de fermer l'organisation
 
     errors.add(:base, "Il doit toujours y avoir au moins un agent Admin par organisation")
     throw :abort
