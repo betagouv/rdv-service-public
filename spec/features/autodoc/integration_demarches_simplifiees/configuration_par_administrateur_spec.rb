@@ -4,7 +4,7 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
   let!(:agent) { create(:agent, :francis_factice) }
 
   specify do
-    doc = Autodoc.start_scenario("Configuration de RDV Service Public par un administrateur de DS", self)
+    doc = Autodoc.start_scenario("Intégration à Démarches Simplifiées : 2) Configuration de RDV Service Public par un admin", self)
 
     login_as(agent, scope: :agent)
     visit configuration_admin_organisations_url(host: "http://www.rdv-mairie-test.localhost")

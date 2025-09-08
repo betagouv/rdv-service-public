@@ -6,7 +6,7 @@
     p Elle est mise à jour automatiquement dès que l'application change.
 
     ul
-    - @scenarios.each do |scenario|
+    - @scenarios.sort_by(&:title).each do |scenario|
       li
         a[href='scenario_#{scenario.index}.html'] #{scenario.title}
 
