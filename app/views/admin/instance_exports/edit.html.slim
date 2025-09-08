@@ -22,4 +22,4 @@
     |  de #{@instance_export.source_organisation.name} sur #{current_domain.name}
     |  vers #{@instance_export.destination_organisation.name} sur RDV Service Public
 
-  = link_to  "Copier les usagers", agents_instance_export_path(@instance_export), class: "fr-btn", method: :put
+  = link_to  "Copier les usagers", admin_organisation_instance_export_path(current_organisation, @instance_export), class: "fr-btn", method: :put
