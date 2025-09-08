@@ -7,6 +7,27 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
     render_collection(organisations.order(:id))
   end
 
+  # Cet endpoint n'est pas encore documenté, puisqu'il ne permet que de créer une nouvelle organisation pour les comptes sans espace
+  def create
+    policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)
+
+    if policy.new?
+
+      ActiveRecord::Base.transaction do
+        @organisation = Organisation.new(params.require(:organisation).permit(:name))
+        @organisation.territory = Territory.create!
+        @organisation.save!
+
+        AgentRole.create!(agent: current_agent, access_level: :admin, organisation: @organisation)
+        AgentTerritorialRole.create!(agent: current_agent, territory: @organisation.territory)
+      end
+
+      render_record @organisation
+    else
+      render(status: :unauthorized, json: {})
+    end
+  end
+
   def show
     render_record @organisation
   end

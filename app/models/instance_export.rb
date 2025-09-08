@@ -22,9 +22,9 @@ class InstanceExport < ApplicationRecord
       request_headers
     )
 
-    destination_orgs = JSON.parse(response.body)["organisations"]
+    destination_org = JSON.parse(response.body)
 
-    update(destination_organisation_id: destination_orgs.first["id"])
+    update(destination_organisation_id: destination_org["id"])
   end
 
   def source_organisation

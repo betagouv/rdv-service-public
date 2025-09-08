@@ -10,7 +10,7 @@ namespace :api do
     end
     resource :user_profiles, only: %i[create destroy]
     resource :referent_assignations, only: %i[create destroy]
-    resources :organisations, only: %i[index show update] do
+    resources :organisations, only: %i[index show update create] do
       resources :webhook_endpoints, only: %i[index create update]
       resources :users, only: %i[index show]
       resources :motifs, only: %i[index]
