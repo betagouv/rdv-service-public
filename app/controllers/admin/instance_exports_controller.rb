@@ -48,10 +48,6 @@ class Admin::InstanceExportsController < AgentAuthController
     redirect_to edit_admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
   end
 
-  def edit_organisation
-    @instance_export = find_instance_export
-  end
-
   def edit
     @instance_export = find_instance_export
   end
