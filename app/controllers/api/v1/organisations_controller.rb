@@ -20,6 +20,19 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
 
         AgentRole.create!(agent: current_agent, access_level: :admin, organisation: @organisation)
         AgentTerritorialRole.create!(agent: current_agent, territory: @organisation.territory)
+        # ajouter les territorial access rights
+
+        external_reference_params = params.require(:organisation)[:external_reference]
+
+        if external_reference_params.present?
+          ExternalReference.create!(
+            params.require(:organisation).require(:external_reference).permit(:external_id, :external_url).merge(
+              item: @organisation,
+              oauth_application: doorkeeper_token&.application,
+              territory_id: @organisation.territory_id
+            )
+          )
+        end
       end
 
       render_record @organisation
