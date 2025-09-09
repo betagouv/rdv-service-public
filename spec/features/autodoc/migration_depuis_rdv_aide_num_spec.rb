@@ -2,7 +2,12 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   around { |example| perform_enqueued_jobs { example.run } }
 
   # Pour simplifier les test, on crée deux agents sur la même instance
-  let(:organisation_rdv_aide_num) { create(:organisation, name: "France Service de Montreuil") }
+  let(:organisation_rdv_aide_num) do
+    create(:organisation, name: "France Service de Montreuil",
+                          phone_number: "01 22 33 44 55",
+                          website: "www.montreuil.fr/france-service",
+                          email: "contact@exemple.montreuil.fr")
+  end
   let!(:agent_rdv_aide_num) do
     create(:agent, first_name: "Camille", last_name: "Clavier", admin_role_in_organisations: [organisation_rdv_aide_num])
   end
@@ -90,6 +95,14 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
                        text: "La migration est réussie. Mes usagers sont maintenant disponibles sur RDV Service Public",
                        wait_for: "Migration terminée")
 
-    expect(Organisation.last.external_references.last.external_id).to eq organisation_rdv_aide_num.id.to_s
+    created_organisation = Organisation.last
+    expect(created_organisation.external_references.last.external_id).to eq organisation_rdv_aide_num.id.to_s
+
+    expect(created_organisation).to have_attributes(
+      name: "France Service de Montreuil",
+      phone_number: "01 22 33 44 55",
+      website: "www.montreuil.fr/france-service",
+      email: "contact@exemple.montreuil.fr"
+    )
   end
 end

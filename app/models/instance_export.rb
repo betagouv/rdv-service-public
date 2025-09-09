@@ -20,10 +20,9 @@ class InstanceExport < ApplicationRecord
   def create_organisation_on_new_instance!
     response = Faraday.post(
       "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/organisations",
-      {
-        name: source_organisation.name,
-        external_reference: { external_id: source_organisation.id },
-      }.to_json,
+      source_organisation.attributes.slice(*%w[name website phone_number email]).merge(
+        { external_reference: { external_id: source_organisation.id } }
+      ).to_json,
       request_headers
     )
 

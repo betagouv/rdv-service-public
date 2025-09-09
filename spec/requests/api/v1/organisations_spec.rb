@@ -10,6 +10,9 @@ RSpec.describe "RDV API" do
     let(:params) do
       {
         name: "CCAS de Montreuil",
+        phone_number: "01 22 33 44 55",
+        website: "www.montreuil.fr/ccas",
+        email: "contact@exemple.montreuil.fr",
         external_reference: {
           external_id: 123,
         },
@@ -21,7 +24,12 @@ RSpec.describe "RDV API" do
       expect(parsed_response_body["organisation"]["name"]).to eq "CCAS de Montreuil"
 
       created_organisation = agent.reload.organisations.first
-      expect(created_organisation).to have_attributes(name: "CCAS de Montreuil")
+      expect(created_organisation).to have_attributes(
+        name: "CCAS de Montreuil",
+        phone_number: "01 22 33 44 55",
+        website: "www.montreuil.fr/ccas",
+        email: "contact@exemple.montreuil.fr"
+      )
 
       expect(created_organisation.external_references.first).to have_attributes(
         oauth_application_id: application.id,

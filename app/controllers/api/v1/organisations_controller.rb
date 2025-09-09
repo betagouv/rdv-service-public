@@ -16,7 +16,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
     end
 
     ActiveRecord::Base.transaction do
-      @organisation = Organisation.new(params.require(:organisation).permit(:name))
+      @organisation = Organisation.new(organisation_params)
       @organisation.territory = Territory.create!
       @organisation.save!
 
@@ -59,7 +59,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
   end
 
   def organisation_params
-    params.permit(:name, :phone_number, :email, :verticale)
+    params.permit(:name, :phone_number, :email, :verticale, :website)
   end
 
   def organisations_relevant_to_sector
