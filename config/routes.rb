@@ -52,6 +52,7 @@ Rails.application.routes.draw do
     resources :users
     resources :comptes, only: %i[new create]
     resources :rdvs, only: %i[show]
+    resources :prescripteurs, only: %i[show]
     root to: "agents#index"
 
     authenticate :super_admin do
@@ -227,7 +228,13 @@ Rails.application.routes.draw do
         get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
         get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
 
-        resources :lieux, except: :show
+        resources :lieux, except: :show do
+          member do
+            post :close
+            post :reopen
+          end
+        end
+
         resources :motifs do
           member do
             post :archive

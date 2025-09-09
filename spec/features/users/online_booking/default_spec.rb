@@ -300,7 +300,7 @@ RSpec.describe "User can search for rdvs" do
       find(".fr-card__title", text: /#{motif1.name}/).ancestor(".fr-card__body").find("a").click
 
       expect(page).to have_content(lieu.name)
-      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("a").click
+      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("button").click
       click_link("Accepter")
 
       ### Creneau selection

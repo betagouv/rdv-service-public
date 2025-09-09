@@ -167,7 +167,7 @@ RSpec.describe "User can be invited" do
 
       # Lieu selection
       expect(page).to have_content(lieu.name)
-      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("a").click
+      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("button").click
 
       # Restriction Page
       expect(page).to have_content("À lire avant de prendre un rendez-vous")

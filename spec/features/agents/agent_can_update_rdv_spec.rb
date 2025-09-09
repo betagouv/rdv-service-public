@@ -34,7 +34,8 @@ RSpec.describe "Agent can update a RDV", js: true do
   end
 
   it "update existing RDV with existing lieu" do
-    lieu_ponctuel = create(:lieu, organisation: organisation, availability: :single_use)
+    lieu_ponctuel = create(:lieu, organisation:, availability: :single_use)
+    create(:lieu, organisation:)
     rdv = create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu_ponctuel)
 
     visit edit_admin_organisation_rdv_path(organisation, rdv)
@@ -45,6 +46,18 @@ RSpec.describe "Agent can update a RDV", js: true do
 
     expect(page).to have_content(lieu.full_name)
     expect(page).not_to have_selector(".badge-info", text: /Ponctuel/)
+  end
+
+  it "works when the lieu has been disabled" do
+    lieu = create(:lieu, organisation: organisation)
+    create(:lieu, organisation:) # Pour avoir un deuxième lieux et empêcher le déclenchement de la sélection auto de la seule option
+    rdv = create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu)
+    lieu.update!(availability: :disabled)
+
+    visit edit_admin_organisation_rdv_path(organisation, rdv)
+
+    click_on "Enregistrer"
+    expect(page).to have_content("Lieu doit être un lieu ouvert de l’organisation")
   end
 
   describe "adding users" do
