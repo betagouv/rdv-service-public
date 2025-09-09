@@ -18,33 +18,7 @@ class Admin::InstanceExportsController < AgentAuthController
     )
     authorize(instance_export, :create?, policy_class: Agent::InstanceExportPolicy)
 
-    if current_agent.organisations.count != 1
-      raise "on ne sait pas depuis organisation copier les usagers"
-    end
-
-    orgs = instance_export.new_instance_organisations
-
-    if orgs.empty?
-      redirect_to new_organisation_admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
-    elsif orgs.count == 1
-      instance_export.update!(destination_organisation_id: orgs.first["id"])
-      redirect_to edit_admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
-    else
-      redirect_to edit_admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
-    end
-
     flash[:success] = "Connexion à RDV Service Public réussie"
-  end
-
-  def new_organisation
-    @instance_export = find_instance_export
-  end
-
-  def create_organisation
-    instance_export = find_instance_export
-
-    instance_export.create_organisation_on_new_instance!
-
     redirect_to edit_admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
   end
 
@@ -55,7 +29,11 @@ class Admin::InstanceExportsController < AgentAuthController
   def update
     @instance_export = find_instance_export
 
-    if @instance_export.destination_organisation_id.blank?
+    destination_organisation_id = params[:destination_organisation_id]
+
+    if destination_organisation_id.blank?
+      instance_export.create_organisation_on_new_instance!
+    else
       @instance_export.update!(params.permit(:destination_organisation_id))
     end
 

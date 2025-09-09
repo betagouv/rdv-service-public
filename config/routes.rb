@@ -228,12 +228,7 @@ Rails.application.routes.draw do
         get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
         get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
 
-        resources :instance_exports, only: %i[index new edit update show] do
-          member do
-            get :new_organisation
-            post :create_organisation
-          end
-        end
+        resources :instance_exports, only: %i[index new edit update show]
         resources :lieux, except: :show do
           member do
             post :close

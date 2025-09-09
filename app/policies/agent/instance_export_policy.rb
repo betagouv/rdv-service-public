@@ -7,8 +7,6 @@ class Agent::InstanceExportPolicy < ApplicationPolicy
 
   alias create? show?
   alias edit? show?
-  alias new_organisation? show?
-  alias create_organisation? show?
   alias update? show?
 
   class Scope < Scope

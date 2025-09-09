@@ -6,13 +6,15 @@ class InstanceExport < ApplicationRecord
   encrypts :refresh_token
 
   def new_instance_organisations
+    return @new_instance_organisations if defined?(@new_instance_organisations)
+
     response = Faraday.get(
       "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/organisations",
       {},
       request_headers
     )
 
-    JSON.parse(response.body)["organisations"]
+    @new_instance_organisations = JSON.parse(response.body)["organisations"]
   end
 
   def create_organisation_on_new_instance!

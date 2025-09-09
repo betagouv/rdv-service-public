@@ -15,8 +15,11 @@
       .card-header
         b RDV Service Public
       .card-body
-        - if @instance_export.destination_organisation_id
+        - if @instance_export.new_instance_organisations.empty?
           h6= @instance_export.destination_organisation.name
+        - elsif @instance_export.new_instance_organisations.count == 1
+          h6= @instance_export.source_organisation.name
+          = form.hidden_field :destination_organisation_id, value: @instance_export.new_instance_organisations.first["id"]
         - else
           = form.select :destination_organisation_id, @instance_export.new_instance_organisations.map { |o| [o["name"], o["id"]] }, {}, { class: "select2-input" }
 
