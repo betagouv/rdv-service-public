@@ -1,12 +1,7 @@
 RSpec.describe "RDV API" do
-  let!(:oauth_token) do
-    create(:access_token, resource_owner_id: agent.id, application:)
-  end
+  let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
   let(:headers) do
-    {
-      "Content-Type": "application/json",
-      Authorization: "Bearer #{oauth_token.plaintext_token}",
-    }
+    { "Content-Type": "application/json", Authorization: "Bearer #{oauth_token.plaintext_token}" }
   end
   let(:application) { create(:oauth_application, default_service: create(:service)) }
   let(:agent) { create(:agent) }
