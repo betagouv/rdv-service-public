@@ -1,16 +1,6 @@
 RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", js: true do
   around { |example| perform_enqueued_jobs { example.run } }
 
-  around do |example|
-    previous_mode = OmniAuth.config.test_mode
-
-    OmniAuth.config.test_mode = false # On fait un vrai parcours d'oauth
-
-    example.run
-
-    OmniAuth.config.test_mode = previous_mode
-  end
-
   # Pour simplifier les test, on crée deux agents sur la même instance
   let(:organisation_rdv_aide_num) { create(:organisation, name: "France Service de Montreuil") }
   let!(:agent_rdv_aide_num) do
@@ -30,7 +20,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       name: "RDV Aide Numérique",
       uid: "fake-app-id",
       redirect_uri: "http://www.rdv-aide-numerique-test.localhost/omniauth/rdvservicepublic/callback",
-      logo_base64: ""
+      logo_base64: "",
+      default_service: create(:service)
     )
 
     application.secret_strategy.store_secret(application, :secret, "fake-app-secret")
@@ -98,5 +89,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     doc.add_screenshot(page,
                        text: "La migration est réussie. Mes usagers sont maintenant disponibles sur RDV Service Public",
                        wait_for: "Migration terminée")
+
+    expect(Organisation.last.external_references.last.external_id).to eq organisation_rdv_aide_num.id.to_s
   end
 end
