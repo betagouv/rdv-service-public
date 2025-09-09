@@ -29,7 +29,7 @@ nav.left-side-menu-wrapper
 
         li.fr-pb-0
           - if current_agent.feature_enabled?("new_planning")
-            = active_link_to(admin_organisation_planning_agenda_path(current_organisation), class: "side-menu__item")
+            = active_link_to(admin_organisation_planning_agenda_path(current_organisation), active: @beta_planning_layout, class: "side-menu__item")
               span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
               | Planning
           - else
