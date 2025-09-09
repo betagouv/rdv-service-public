@@ -8,7 +8,6 @@
   .flex-grow-1
     = render partial: "admin/planning/planning_tabs"
 
-  - if content_for :breadcrumb
-    = yield :breadcrumb
+  = content_for :breadcrumb
 
 .fr-mx-2w= render "layouts/flash"

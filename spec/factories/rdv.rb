@@ -20,6 +20,9 @@ FactoryBot.define do
       motif { build(:motif, :by_phone, organisation: organisation) }
       lieu { nil }
     end
+    trait :no_service do
+      motif { build(:motif, organisation:, service: nil) }
+    end
     trait :past do
       starts_at { 1.day.ago.at_noon }
     end
