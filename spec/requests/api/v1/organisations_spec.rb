@@ -14,11 +14,9 @@ RSpec.describe "RDV API" do
   describe "#create" do
     let(:params) do
       {
-        organisation: {
-          name: "CCAS de Montreuil",
-          external_reference: {
-            external_id: 123,
-          },
+        name: "CCAS de Montreuil",
+        external_reference: {
+          external_id: 123,
         },
       }
     end
