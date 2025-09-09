@@ -87,13 +87,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       refresh_token: rdv_sp_token.refresh_token
     )
 
-    visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}/new_organisation"
-
-    doc.add_screenshot(page,
-                       text: "Je suis redirigé vers RDV Aide Numérique, on m'indique qu'on va créer une nouvelle organisation.",
-                       wait_for: "Nous allons ouvrir un nouvel espace")
-
-    click_on "Continuer"
+    visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}/edit"
 
     doc.add_screenshot(page,
                        text: "Je clique sur Copier les usagers",

@@ -32,7 +32,7 @@ class Admin::InstanceExportsController < AgentAuthController
     destination_organisation_id = params[:destination_organisation_id]
 
     if destination_organisation_id.blank?
-      instance_export.create_organisation_on_new_instance!
+      @instance_export.create_organisation_on_new_instance!
     else
       @instance_export.update!(params.permit(:destination_organisation_id))
     end
