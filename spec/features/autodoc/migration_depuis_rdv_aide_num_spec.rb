@@ -73,7 +73,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
                        wait_for: "Connexion agent à RDV Service Public")
 
     # Et on triche à nouveau pour faire le callback d'oauth
-    # en imitant le code de Agents::InstanceExportsController#oauth_callback
+    # en imitant le code de Admin::InstanceExportsController#oauth_callback
 
     rdv_sp_token = create(:access_token, resource_owner_id: agent_rdv_sp.id, application: oauth_application)
 
