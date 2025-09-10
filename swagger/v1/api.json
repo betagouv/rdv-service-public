@@ -994,9 +994,6 @@
       "error_unprocessable_entity": {
         "type": "object",
         "properties": {
-          "success": {
-            "type": "boolean"
-          },
           "errors": {
             "type": "object"
           },
@@ -1008,7 +1005,6 @@
           }
         },
         "required": [
-          "success",
           "errors",
           "error_messages"
         ]
@@ -1340,7 +1336,6 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "success": false,
                       "errors": {
                         "end_time": [
                           {
@@ -3545,7 +3540,6 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "success": false,
                       "errors": [
                         "Couldn't find ReferentAssignation with [WHERE \"referent_assignations\".\"agent_id\" = $1 AND \"referent_assignations\".\"user_id\" = $2]"
                       ]
@@ -3840,7 +3834,6 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "success": false,
                       "errors": {
                         "user": [
                           {
@@ -3986,7 +3979,6 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "success": false,
                       "errors": [
                         "Couldn't find UserProfile with [WHERE \"user_profiles\".\"organisation_id\" = $1 AND \"user_profiles\".\"user_id\" = $2]"
                       ]
@@ -4430,7 +4422,6 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "success": false,
                       "errors": {
                         "last_name": [
                           {
@@ -5024,7 +5015,6 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "success": false,
                       "errors": {
                         "last_name": [
                           {
@@ -5637,7 +5627,6 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "success": false,
                       "errors": {
                         "target_url": [
                           {
@@ -5835,7 +5824,6 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "success": false,
                       "errors": {
                         "target_url": [
                           {
