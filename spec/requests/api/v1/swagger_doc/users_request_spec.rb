@@ -118,35 +118,25 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(user.reload.organisations).to contain_exactly(organisation) }
-
-        it { expect(user.reload.first_name).to eq(first_name) }
-
-        it { expect(user.reload.last_name).to eq(last_name) }
-
-        it { expect(user.reload.birth_name).to eq(birth_name) }
-
-        it { expect(user.reload.birth_date).to eq(Date.new(1976, 10, 1)) }
-
-        it { expect(user.reload.email).to eq(email) }
-
-        it { expect(user.reload.phone_number).to eq(phone_number) }
-
-        it { expect(user.reload.address).to eq(address) }
-
-        it { expect(user.reload.caisse_affiliation).to eq(caisse_affiliation) }
-
-        it { expect(user.reload.affiliation_number).to eq(affiliation_number) }
-
-        it { expect(user.reload.family_situation).to eq(family_situation) }
-
-        it { expect(user.reload.number_of_children).to eq(number_of_children) }
-
-        it { expect(user.reload.notify_by_sms).to eq(notify_by_sms) }
-
-        it { expect(user.reload.notify_by_email).to eq(notify_by_email) }
-
-        it { expect(user.reload.responsible).to eq(user_responsible) }
+        specify do
+          expect(user.reload).to have_attributes(
+            organisations: [organisation],
+            first_name: first_name,
+            last_name: last_name,
+            birth_name: birth_name,
+            birth_date: Date.new(1976, 10, 1),
+            email: email,
+            phone_number: phone_number,
+            address: address,
+            caisse_affiliation: caisse_affiliation,
+            affiliation_number: affiliation_number,
+            family_situation: family_situation,
+            number_of_children: number_of_children,
+            notify_by_sms: notify_by_sms,
+            notify_by_email: notify_by_email,
+            responsible: user_responsible
+          )
+        end
       end
 
       response 200, "updates a user with a minimal set of params", document: false do
