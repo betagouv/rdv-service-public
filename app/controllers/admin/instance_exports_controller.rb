@@ -37,7 +37,7 @@ class Admin::InstanceExportsController < AgentAuthController
       @instance_export.update!(params.permit(:destination_organisation_id))
     end
 
-    @instance_export.copy_users!(current_domain)
+    @instance_export.copy_to_new_instance!(current_domain)
     redirect_to admin_organisation_instance_export_path(current_organisation, @instance_export.id)
   end
 

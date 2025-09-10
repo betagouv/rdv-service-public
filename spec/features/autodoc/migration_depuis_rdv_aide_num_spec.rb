@@ -12,6 +12,10 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     create(:agent, first_name: "Camille", last_name: "Clavier", admin_role_in_organisations: [organisation_rdv_aide_num])
   end
 
+  let!(:collegue) do
+    create(:agent, first_name: "Francis", last_name: "Factice", basic_role_in_organisations: [organisation_rdv_aide_num])
+  end
+
   let!(:users) do
     create_list(:user, 3, organisations: [organisation_rdv_aide_num])
   end
@@ -86,10 +90,10 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}/edit"
 
     doc.add_screenshot(page,
-                       text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les usagers",
+                       text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les données",
                        wait_for: "Vous allez copier ")
 
-    click_on "Copier les usagers"
+    click_on "Copier les données"
 
     doc.add_screenshot(page,
                        text: "La migration est réussie. Mes usagers sont maintenant disponibles sur RDV Service Public",
@@ -104,5 +108,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       website: "www.montreuil.fr/france-service",
       email: "contact@exemple.montreuil.fr"
     )
+
+    expect(created_organisation.agents.count).to eq 2
   end
 end
