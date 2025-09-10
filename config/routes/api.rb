@@ -3,7 +3,7 @@ namespace :api do
     # Need agent authentication to
     mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
     resources :absences, except: %i[new edit]
-    resources :agents, only: %i[index]
+    resources :agents, only: %i[index create]
     get "agents/me", to: "agents#me"
     resources :users, only: %i[create index show update] do
       post :rdv_invitation_token, to: "users#rdv_invitation_token", on: :member
