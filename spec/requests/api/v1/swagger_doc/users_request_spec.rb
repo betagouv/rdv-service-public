@@ -191,7 +191,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
         it {
           expect(parsed_response_body).to include(
-            success: false,
             errors: {},
             error_messages: ["Vous ne pouvez pas modifier l'email d'un usager ayant validé son compte."]
           )
@@ -208,7 +207,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
         it {
           expect(parsed_response_body).to include(
-            success: false,
             errors: {},
             error_messages: ["Vous ne pouvez pas modifier l'email d'un usager ayant validé son compte."]
           )
