@@ -529,7 +529,6 @@ RSpec.configure do |config|
           error_unprocessable_entity: {
             type: "object",
             properties: {
-              success: { type: "boolean" },
               errors: {
                 type: "object",
               },
@@ -538,7 +537,7 @@ RSpec.configure do |config|
                 items: { type: "string" },
               },
             },
-            required: %w[success errors error_messages],
+            required: %w[errors error_messages],
           },
         },
       },
