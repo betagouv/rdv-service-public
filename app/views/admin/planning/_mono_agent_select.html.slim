@@ -1,0 +1,4 @@
+- selected_agent = @agent&.persisted? ? @agent : current_agent
+- path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_planning_agenda_path
+form
+  = planning_agent_select(selected_agent, path_helper_name)

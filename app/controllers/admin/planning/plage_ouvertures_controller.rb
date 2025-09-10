@@ -13,7 +13,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   def index
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
-      .where(agent_id: filter_params[:agent_id])
+      .where(agent: @agent)
       .order(updated_at: :desc)
     @plage_ouvertures = all_plage_ouvertures
       .where(expired_cached: filter_params[:current_tab] == "expired")
@@ -98,6 +98,15 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def build_plage_ouverture
     @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
+  end
+
+  def set_agents
+    if @plage_ouverture&.agent
+      @agent = @plage_ouverture.agent
+      @agents = [@agent]
+    else
+      super
+    end
   end
 
   def plage_ouverture_params

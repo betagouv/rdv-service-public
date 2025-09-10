@@ -1,0 +1,13 @@
+.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
+  h1.fr-h2.my-1.d-flex
+    | Planning de
+    .ml-2 = render partial: "admin/planning/mono_agent_select"
+
+.container-fluid.px-2.d-flex[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
+
+  .flex-grow-1
+    = render partial: "admin/planning/planning_tabs"
+
+  = content_for :breadcrumb
+
+.fr-mx-2w= render "layouts/flash"

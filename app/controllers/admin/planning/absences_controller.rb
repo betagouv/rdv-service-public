@@ -8,7 +8,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
 
   def index
     absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
-      .where(agent_id: filter_params[:agent_id])
+      .where(agent: @agent)
       .includes(:agent)
       .by_starts_at
       .page(page_number)
@@ -80,6 +80,15 @@ class Admin::Planning::AbsencesController < AgentAuthController
 
   def build_absence
     @absence = Absence.new(absence_params)
+  end
+
+  def set_agents
+    if @absence&.agent
+      @agent = @absence.agent
+      @agents = [@agent]
+    else
+      super
+    end
   end
 
   def absence_params
