@@ -5,17 +5,9 @@ class Agent::InstanceExportPolicy < ApplicationPolicy
     record.agent == current_agent
   end
 
-  def create?
-    show?
-  end
-
-  def edit?
-    show?
-  end
-
-  def update?
-    show?
-  end
+  alias create? show?
+  alias edit? show?
+  alias update? show?
 
   class Scope < Scope
     alias current_agent pundit_user

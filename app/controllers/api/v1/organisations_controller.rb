@@ -7,6 +7,41 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
     render_collection(organisations.order(:id))
   end
 
+  # Cet endpoint n'est pas encore documenté, puisqu'il ne permet que de créer une nouvelle organisation pour les comptes sans espace
+  def create
+    policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)
+
+    unless policy.new?
+      render(status: :unauthorized, json: {}) and return
+    end
+
+    ActiveRecord::Base.transaction do
+      @organisation = Organisation.new(organisation_params)
+      @organisation.territory = Territory.create!
+      @organisation.save!
+
+      AgentRole.create!(agent: current_agent, access_level: :admin, organisation: @organisation)
+      AgentTerritorialRole.create!(agent: current_agent, territory: @organisation.territory)
+      AgentTerritorialAccessRight.create!(agent: current_agent, territory: @organisation.territory,
+                                          allow_to_manage_access_rights: true,
+                                          allow_to_invite_agents: true)
+
+      external_reference_params = params[:external_reference]
+
+      if external_reference_params.present?
+        ExternalReference.create!(
+          params.require(:external_reference).permit(:external_id, :external_url).merge(
+            item: @organisation,
+            oauth_application: doorkeeper_token&.application,
+            territory_id: @organisation.territory_id
+          )
+        )
+      end
+    end
+
+    render_record @organisation
+  end
+
   def show
     render_record @organisation
   end
@@ -24,7 +59,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
   end
 
   def organisation_params
-    params.permit(:name, :phone_number, :email, :verticale)
+    params.permit(:name, :phone_number, :email, :verticale, :website)
   end
 
   def organisations_relevant_to_sector
