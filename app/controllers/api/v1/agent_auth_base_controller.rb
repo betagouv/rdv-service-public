@@ -41,14 +41,14 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   def parameter_missing(exception)
     render(
       status: :unprocessable_entity,
-      json: { success: false, errors: [exception.to_s] }
+      json: { errors: [exception.to_s] }
     )
   end
 
   def record_not_found(exception)
     render(
       status: :not_found,
-      json: { success: false, errors: [exception.to_s] }
+      json: { errors: [exception.to_s] }
     )
   end
 
@@ -56,7 +56,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     render(
       status: :unprocessable_entity,
       json: {
-        success: false,
         errors: exception.record.errors.details,
         error_messages: exception.record.errors.map { "#{_1.attribute} #{_1.message}" },
       }
