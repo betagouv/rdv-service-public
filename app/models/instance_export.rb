@@ -6,28 +6,14 @@ class InstanceExport < ApplicationRecord
   encrypts :refresh_token
 
   def new_instance_organisations
-    return @new_instance_organisations if defined?(@new_instance_organisations)
-
-    response = Faraday.get(
-      "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/organisations",
-      {},
-      request_headers
-    )
-
-    @new_instance_organisations = JSON.parse(response.body)["organisations"]
+    @new_instance_organisations ||= api_client.get("organisations")["organisations"]
   end
 
   def create_organisation_on_new_instance!
     new_org_attributes = source_organisation.attributes.slice(*%w[name website phone_number email])
     new_org_attributes.merge!({ external_reference: { external_id: source_organisation.id } })
 
-    response = Faraday.post(
-      "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/organisations",
-      new_org_attributes.to_json,
-      request_headers
-    )
-
-    destination_org = JSON.parse(response.body)
+    destination_org = api_client.post("organisations", new_org_attributes)
 
     update!(destination_organisation_id: destination_org["id"])
   end
@@ -70,19 +56,12 @@ class InstanceExport < ApplicationRecord
       external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(source_organisation.id, user.id, host: domain.host_name),
     }
 
-    Faraday.post(
-      "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/users",
-      request_body.to_json,
-      request_headers
-    )
+    api_client.post("users", request_body)
   end
 
   private
 
-  def request_headers
-    {
-      "Authorization" => "Bearer #{api_token}",
-      "Content-Type" => "application/json",
-    }
+  def api_client
+    @api_client ||= RdvServicePublicApiClient.new(api_token)
   end
 end
