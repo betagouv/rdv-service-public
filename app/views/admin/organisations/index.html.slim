@@ -17,4 +17,4 @@
               i.fa.fa-user-cog.text-muted[title="Vous administrez cette organisation"]
       - if policy(Organisation.new(territory: territory), policy_class: Agent::OrganisationPolicy).new?
         .fr-mt-4w.fr-ml-2w
-          p Vous pouvez gérer vos organisations depuis les paramètres de votre espace.
+          = link_to "Gérer les organisation", admin_territory_organisations_path(current_territory), class: "fr-btn fr-btn--secondary"
