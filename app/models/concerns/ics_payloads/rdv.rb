@@ -7,9 +7,16 @@ module IcsPayloads
         ends_at: ends_at,
         ical_uid: uuid,
         summary: "RDV #{motif&.name}",
-        address: motif.phone? ? nil : address,
         domain: domain,
       }
+
+      payload[:address] = if motif.phone?
+                            nil
+                          elsif motif.visio?
+                            visio_url
+                          else
+                            address
+                          end
 
       payload[:description] = ics_description(recipient)
 
@@ -29,6 +36,7 @@ module IcsPayloads
     def ics_description(recipient)
       description = ""
       description += "RDV Téléphonique " if motif.phone?
+      description += "RDV par visioconférence " if motif.visio?
       description += case recipient
                      when User
                        "Infos et annulation: #{Rails.application.routes.url_helpers.rdvs_short_url(host: domain.host_name)}"
