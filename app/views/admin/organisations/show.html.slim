@@ -2,18 +2,21 @@
 - content_for(:menu_item) { "menu-settings" }
 
 - content_for :title do
-  | Informations de contact
+  | Informations de #{@organisation.name}
 
-p
-  | Ces informations seront affichées aux usagers qui prennent rendez-vous avec votre organisation.
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.fr-grid-row
+  .fr-col-10
     .card
       .card-body
+        h2.fr-h4 Informations de contact
+        p
+          | Ces informations seront affichées aux usagers qui prennent rendez-vous avec votre organisation.
+
         ul.list-unstyled
           li.mb-2
             strong> Nom&nbsp;:
             | #{@organisation.name}
+
           li.mb-2
             strong> Téléphone&nbsp;:
             | #{display_value_or_na_placeholder(@organisation.phone_number)}
@@ -28,6 +31,22 @@ p
             | #{display_value_or_na_placeholder(@organisation.horaires)}
         .text-right= link_to "Modifier", edit_admin_organisation_path(@organisation), class: "btn btn-primary"
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.fr-grid-row
+  .fr-col-10
+    .card
+      .card-body
+        h2.fr-h4 Fermer l'organisation
+        - if @organisation.rdvs.not_cancelled.future.none?
+          p Vous pouvez fermer cette organisation si son activité cesse ou si vous l'avez ouverte par erreur.
+          p Les agents n'y auront plus accès et il ne sera plus possible d’y poser un rendez-vous.
+          p Vous pourrez néanmoins réouvrir cette organisation : les motifs, lieux et rendez-vous passés seront conservés.
+
+          = form_with url: close_admin_territory_organisations_path(current_territory), method: :patch, builder: Dsfr::FormBuilder do |f|
+            = f.hidden_field :organisation_id, value: @organisation.id
+            = f.submit "Fermer #{@organisation.name}", class: "fr-btn fr-btn--secondary fr-mt-2w", data: { confirm: "Êtes vous sûr(e) de vouloir fermer l’organisation ?"}
+        - else
+          p Vous ne pouvez pas fermer cette organisation car elle a des rendez-vous à venir. Si vous voulez éviter de que nouveaux rendez-vous soient pris, vous pouvez archiver ses motifs.
+
+.fr-grid-row
+  .fr-col-10
     = render "admin/versions/resource_versions_row", resource_policy: policy(@organisation, policy_class: Agent::OrganisationPolicy), resource: @organisation

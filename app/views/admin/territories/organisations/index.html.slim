@@ -2,11 +2,12 @@
 
 .fr-grid-row
   .fr-col-md-10
-    h1 Organisations de #{current_territory.name_for_agent}
+    h1.fr-h2 Organisations de #{current_territory.name_for_agent}
 
     .card
       .card-body
-        ul
+        h2.fr-h3 Organisations actives
+        ul.list-unstyled
           - @organisations.each do |organisation|
             li
               span>= link_to organisation.name, admin_organisation_configuration_path(organisation)
@@ -15,20 +16,13 @@
           .fr-mt-4w
             = link_to "Ajouter une organisation", new_admin_territory_organisation_path(current_territory), class: "fr-btn"
 
-    - if policy(Organisation.new(territory: current_territory), policy_class: Agent::OrganisationPolicy).new?
+    - if @closed_organisations.any?
       .card
         .card-body
-          h2.card-title Fermer une organisation
-          p Si vous cessez votre activité de rendez-vous dans une organisation ou si vous l'avez ouverte par erreur, vous pouvez fermer une organisation.
-          = link_to "Fermer une organisation", select_for_close_admin_territory_organisations_path(current_territory), class: "fr-btn fr-btn--secondary"
+          h2.fr-h3 Organisations fermées
+          p Ces organisations sont fermées et ne peuvent plus assurer de nouveaux rendez-vous.
+          p Vous pouvez les réouvrir si nécessaire.
 
-      - if @closed_organisations.any?
-        .card
-          .card-body
-            h2.card-title Organisations fermées
-            p Ces organisations sont fermées et ne peuvent plus assurer de nouveaux rendez-vous.
-            p Vous pouvez les réouvrir si nécessaire.
-
-            ul
-              - @closed_organisations.each do |organisation|
-                li= link_to organisation.name, confirm_reopen_admin_territory_organisation_path(current_territory, organisation.id)
+          ul.list-unstyled
+            - @closed_organisations.each do |organisation|
+              li= link_to organisation.name, confirm_reopen_admin_territory_organisation_path(current_territory, organisation.id)
