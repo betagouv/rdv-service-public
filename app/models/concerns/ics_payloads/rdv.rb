@@ -7,16 +7,9 @@ module IcsPayloads
         ends_at: ends_at,
         ical_uid: uuid,
         summary: "RDV #{motif&.name}",
+        location: ics_location,
         domain: domain,
       }
-
-      payload[:address] = if motif.phone?
-                            nil
-                          elsif motif.visio?
-                            visio_url
-                          else
-                            address
-                          end
 
       payload[:description] = ics_description(recipient)
 
@@ -32,6 +25,16 @@ module IcsPayloads
     end
 
     private
+
+    def ics_location
+      if motif.phone?
+        nil
+      elsif motif.visio?
+        visio_url
+      else
+        address
+      end
+    end
 
     def ics_description(recipient) # rubocop:disable Metrics/CyclomaticComplexity
       description = ""
