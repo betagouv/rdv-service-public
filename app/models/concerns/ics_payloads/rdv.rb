@@ -33,7 +33,7 @@ module IcsPayloads
 
     private
 
-    def ics_description(recipient)
+    def ics_description(recipient) # rubocop:disable Metrics/CyclomaticComplexity
       description = ""
       description += "RDV Téléphonique " if motif.phone?
       description += "RDV par visioconférence " if motif.visio?
