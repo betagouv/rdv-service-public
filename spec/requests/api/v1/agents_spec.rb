@@ -17,7 +17,9 @@ RSpec.describe "Agents API" do
     end
 
     it "invites the agent into the organisation" do
-      post "/api/v1/agents", headers:, params:, as: :json
+      expect do
+        post "/api/v1/agents", headers:, params:, as: :json
+      end.to change(Agent, :count).by(1)
 
       expect(parsed_response_body["agent"]["email"]).to eq "francis@factice.fr"
 
