@@ -1,6 +1,6 @@
 RSpec.describe IcsPayloads::Rdv, type: :service do
   describe "#payload" do
-    %i[name ical_uid summary ends_at description address].each do |key|
+    %i[name ical_uid summary ends_at description location].each do |key|
       it "return an hash with key #{key}" do
         user = build(:user)
         rdv = build(:rdv, users: [user])
@@ -40,6 +40,14 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
         expect(rdv.payload[:description]).to eq("Infos et annulation: http://www.rdv-solidarites-test.localhost/r")
       end
 
+      context "with a visio motif" do
+        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, location_type: :visio), uuid: 123) }
+
+        it "indicates the location type" do
+          expect(rdv.payload[:description]).to start_with "RDV par visioconférence"
+        end
+      end
+
       context "when sending to an agent" do
         it "provides a link to the RDV in the agent interface" do
           description = "Voir sur RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{rdv.organisation_id}/rdvs/#{rdv.id}"
@@ -60,19 +68,27 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       end
     end
 
-    describe ":address" do
+    describe ":location" do
       let(:user) { build(:user) }
 
       context "with a phone motif" do
         let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :by_phone)) }
 
-        it { expect(rdv.payload[:address]).to be_nil }
+        it { expect(rdv.payload[:location]).to be_nil }
       end
 
       context "without a phone motif" do
         let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :public_office), lieu: build(:lieu, address: "17 rue de l'adresse, Paris, 75016")) }
 
-        it { expect(rdv.payload[:address]).to eq("17 rue de l'adresse, Paris, 75016") }
+        it { expect(rdv.payload[:location]).to eq("17 rue de l'adresse, Paris, 75016") }
+      end
+
+      context "with a visio motif" do
+        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, location_type: :visio), uuid: 123) }
+
+        it "shows the link to the visio" do
+          expect(rdv.payload[:location]).to eq "https://webconf.numerique.gouv.fr/RdvServicePublic"
+        end
       end
     end
 
