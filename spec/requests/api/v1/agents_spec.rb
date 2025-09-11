@@ -23,7 +23,7 @@ RSpec.describe "Agents API" do
 
       created_agent = Agent.find_by(email: "francis@factice.fr")
 
-      expect(created_agent.roles.first).to have_attributes(
+      expect(created_agent.roles.sole).to have_attributes(
         access_level: "basic",
         organisation_id: organisation.id
       )
