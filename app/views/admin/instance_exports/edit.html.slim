@@ -10,7 +10,7 @@
         p #{@instance_export.source_organisation.users.count} usagers
         - if @instance_export.source_organisation.agents.count > 1
           p #{@instance_export.source_organisation.agents.count} agents
-        p #{@instance_export.lieux.count} lieux
+        p #{@instance_export.source_organisation.lieux.count} lieux
 
     .fr-mx-4w[style="align-self: center"]= icon("fr-icon-arrow-right-fill")
 
