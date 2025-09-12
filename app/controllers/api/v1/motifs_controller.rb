@@ -20,7 +20,53 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
     render_collection(motifs.order(:id))
   end
 
+  def create
+    motif = Motif.new(params.permit(*motif_attribute_names))
+
+    authorize(motif, policy_class: Agent::MotifPolicy)
+
+    motif.transaction do
+      motif.save
+
+      if params[:external_reference].present?
+        ExternalReference.create!(
+          params.require(:external_reference).permit(:external_id, :external_url).merge(
+            item: motif,
+            oauth_application: doorkeeper_token&.application,
+            territory_id: motif.organisation.territory_id
+          )
+        )
+      end
+    end
+
+    if motif.persisted?
+      render json: MotifBlueprint.render(motif)
+    else
+      render status: :unprocessable_entity, json: { error_messages: motif.errors.full_messages }
+    end
+  end
+
   private
+
+  def motif_attribute_names
+    %i[
+      organisation_id name color
+      default_duration_in_min
+      min_public_booking_delay
+      max_public_booking_delay
+      restriction_for_rdv
+      instruction_for_rdv
+      for_secretariat
+      follow_up
+      visibility_type
+      custom_cancel_warning_message
+      collectif
+      location_type
+      rdvs_editable_by_user
+      rdvs_cancellable_by_user
+      bookable_by
+    ]
+  end
 
   def pundit_user
     current_agent
