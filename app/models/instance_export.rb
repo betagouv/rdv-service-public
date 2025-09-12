@@ -34,15 +34,55 @@ class InstanceExport < ApplicationRecord
         source_organisation.users.pluck(:id).each do |user_id|
           CopyUserJob.perform_later(id, user_id, current_domain.id)
         end
+
         source_organisation.agents.where.not(id: agent.id).pluck(:id).each do |agent_id|
           CopyAgentJob.perform_later(id, agent_id)
         end
+
         source_organisation.lieux.enabled.each do |lieu|
           CopyLieuJob.perform_later(id, lieu.id)
+        end
+
+        source_organisation.motifs.active.each do |motif|
+          CopyMotifJob.perform_later(id, motif.id)
         end
       end
       update(good_job_batch_id: batch.id)
     end
+  end
+
+  class CopyMotifJob < ApplicationJob
+    queue_as :latency_5m
+
+    def perform(instance_export_id, motif_id)
+      InstanceExport.find(instance_export_id).copy_motif!(motif_id)
+    end
+  end
+
+  def copy_motif!(motif_id)
+    motif = Motif.find(motif_id)
+    attributes = motif.attributes.slice(*%w[
+                                          name color
+                                          default_duration_in_min
+                                          min_public_booking_delay
+                                          max_public_booking_delay
+                                          restriction_for_rdv
+                                          instruction_for_rdv
+                                          for_secretariat
+                                          follow_up
+                                          visibility_type
+                                          custom_cancel_warning_message
+                                          collectif
+                                          location_type
+                                          rdvs_editable_by_user
+                                          rdvs_cancellable_by_user
+                                          bookable_by
+                                        ])
+
+    attributes[:external_reference] = { external_id: motif.id }
+    attributes[:organisation_id] = destination_organisation_id
+
+    api_client.post("motifs", attributes)
   end
 
   class CopyLieuJob < ApplicationJob

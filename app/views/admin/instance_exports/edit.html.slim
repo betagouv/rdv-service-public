@@ -6,11 +6,13 @@
       .card-header
         b= current_domain.name
       .card-body
-        h6= @instance_export.source_organisation.name
-        p #{@instance_export.source_organisation.users.count} usagers
-        - if @instance_export.source_organisation.agents.count > 1
-          p #{@instance_export.source_organisation.agents.count} agents
-        p #{@instance_export.source_organisation.lieux.count} lieux
+        - source_org = @instance_export.source_organisation
+        h6= source_org.name
+        p #{source_org.users.count} usagers
+        - if source_org.agents.count > 1
+          p #{source_org.agents.count} agents
+        p #{source_org.lieux.count} lieux
+        p #{source_org.motifs.count} motifs
 
     .fr-mx-4w[style="align-self: center"]= icon("fr-icon-arrow-right-fill")
 
