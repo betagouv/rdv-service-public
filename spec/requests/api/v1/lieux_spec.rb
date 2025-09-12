@@ -44,7 +44,7 @@ RSpec.describe "Lieux API" do
       let!(:existing_lieu) do
         create(:lieu, organisation_id: organisation.id)
       end
-      let!(:external_refenrece) do
+      let!(:external_reference) do
         create(:external_reference, oauth_application: application, item: existing_lieu, territory_id: organisation.territory_id, external_id: "123ABC")
       end
 
