@@ -18,6 +18,13 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
       parameter name: "latitude", in: :query, type: :float
       parameter name: "longitude", in: :query, type: :float
       parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33600008012", required: false
+      parameter name: "external_reference", in: :query, schema: {
+        type: :object,
+        properties: { external_reference: {
+          type: :object,
+          properties: { external_id: { type: :string } },
+        } },
+      }, description: "L'id du lieu dans votre système pour éviter la création de doublons", required: false
 
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
@@ -33,6 +40,11 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
         let(:name) { "Maison France Service de Montreuil" }
         let(:address) { "77 avenue de Ségur, 75015 Paris" }
         let(:phone_number) { "01 22 33 44 55" }
+        let(:external_reference) do
+          {
+            external_reference: { external_id: "123ABC" },
+          }
+        end
 
         schema "$ref" => "#/components/schemas/lieu"
 
@@ -41,6 +53,10 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
         specify do
           expect(Lieu.last).to have_attributes(
             address:, name:, latitude:, longitude:, organisation_id:, phone_number:
+          )
+
+          expect(Lieu.last.external_references.last).to have_attributes(
+            external_id: "123ABC", territory_id: organisation.territory_id
           )
         end
       end
