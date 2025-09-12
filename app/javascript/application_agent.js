@@ -30,12 +30,14 @@ import { SectorAttributionForm } from './components/sector-attribution-form.js'
 import { ZoneForm } from './components/zone-form.js'
 import { Select2Inputs } from './components/select2-inputs'
 import { PlanningAgentSelect } from './components/planning-agent-select'
+import { planningAgentsSelect } from './components/planning-agents-select'
+import { AgendaMonoAgent } from './components/calendar'
+import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { Tooltips } from './components/tooltips'
 import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
 import { CheckAll, UnCheckAll } from './components/check-all'
 import './components/motifs_table'
-import './components/calendar'
 import './components/browser-detection'
 import './components/clear-field-on-focus.js'
 
@@ -114,6 +116,10 @@ $(document).on('turbolinks:load', function() {
   new ZoneForm()
 
   new PlanningAgentSelect()
+  planningAgentsSelect()
+
+  new AgendaMonoAgent()
+  new AgendaMultiAgent()
 
   new ParticipationSelect()
 

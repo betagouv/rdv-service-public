@@ -11,6 +11,8 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def index
+    render :multi_agents_index and return if @agents.size > 1
+
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
       .where(agent: @agent)
@@ -29,7 +31,6 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def new
-    @agent = Agent.find(params[:agent_id])
     if params[:duplicate_plage_ouverture_id].present?
       original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
       defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :recurrence)

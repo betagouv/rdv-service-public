@@ -15,6 +15,9 @@ json = {
     past: rdv.past?,
     duration: rdv.duration_in_min,
   },
+
+  # https://fullcalendar.io/docs/resources-and-events
+  resourceIds: rdv.agents_rdvs.map(&:agent_id),
 }
 
 if @organisation.territory.enable_waiting_room_color_field

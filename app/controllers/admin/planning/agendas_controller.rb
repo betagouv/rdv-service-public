@@ -8,11 +8,7 @@ class Admin::Planning::AgendasController < AgentAuthController
       authorize(AgentAgenda.new(agent:, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
     end
 
-    # À l’arrivée du multi-agent, on affichera une nouvelle vue
-    # En attendant, on redirige vers la page d’accueil si plusieurs agents sont sélectionnés (ce qui ne devrait pas arriver sauf si quelqu’un a modifié l’URL à la main)
-    if @agents.size > 1
-      redirect_to root_path and return
-    end
+    render :multi_agents_agenda and return if @agents.size > 1
 
     @status = params[:status]
     @organisation = current_organisation
