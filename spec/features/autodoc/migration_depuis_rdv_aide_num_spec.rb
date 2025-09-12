@@ -60,9 +60,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     login_as(agent_rdv_aide_num, scope: :agent)
     visit "http://www.rdv-aide-numerique-test.localhost/agents/instance_exports"
 
+    Capybara.page.current_window.resize_to(1280, 1200)
+
     doc.add_screenshot(page,
                        text: "J'ouvre la page à https://www.rdv-aide-numerique.fr/agents/instance_exports, puis je clique sur le bouton pour commencer",
                        wait_for: "Migration vers RDV Service Public")
+
+    Capybara.page.current_window.resize_to(1280, 720)
 
     click_on "Commencer"
 
