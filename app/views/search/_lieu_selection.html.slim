@@ -11,31 +11,15 @@
   ul.fr-raw-list
     - lieu_selection_service.next_availability_by_lieux.each do |lieu, next_availability|
       - motif = next_availability.motif
-      - if motif.restriction_for_rdv.present?
-        = render "/common/modal", id: "rdv-restriction-motif-#{lieu.id}", title: "À lire avant de prendre un rendez-vous", body: restriction_for_rdv_to_html(motif), confirm_path: prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), confirm_message: "Accepter", cancel_message: "Annuler"
-        li.fr-card.fr-enlarge-button.fr-card--lg.fr-card--horizontal.fr-mb-3w
-          .fr-card__body aria-controls="rdv-restriction-motif-#{lieu.id}" data-fr-opened="false"
-            .fr-card__content
-              h3.fr-card__title
-                button type="button"
-                  = "#{lieu.name} - #{lieu.address}"
-              p.fr-card__desc = lieu.organisation.name
-              .fr-card__end
-                .fr-card__detail
-                  p.fr-text.rdv-color-text-default-grey
-                    span.fr-icon-calendar-2-fill.fr-mr-1w
-                    = "#{t('.next_availability')} "
-                    strong= l(next_availability.starts_at, format: :human)
-      - else
-        li.fr-card.fr-enlarge-link.fr-card--lg.fr-card--horizontal.fr-mb-3w
-          .fr-card__body
-            .fr-card__content
-              .fr-card__title
-                = link_to "#{lieu.name} - #{lieu.address}", prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at))
-              p.fr-card__desc = lieu.organisation.name
-              .fr-card__end
-                .fr-card__detail
-                  p.fr-text.rdv-color-text-default-grey
-                    span.fr-icon-calendar-2-fill.fr-mr-1w
-                    = "#{t('.next_availability')} "
-                    strong= l(next_availability.starts_at, format: :human)
+      li.fr-card.fr-enlarge-link.fr-card--lg.fr-card--horizontal.fr-mb-3w
+        .fr-card__body
+          .fr-card__content
+            .fr-card__title
+              = link_to "#{lieu.name} - #{lieu.address}", prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at))
+            p.fr-card__desc = lieu.organisation.name
+            .fr-card__end
+              .fr-card__detail
+                p.fr-text.rdv-color-text-default-grey
+                  span.fr-icon-calendar-2-fill.fr-mr-1w
+                  = "#{t('.next_availability')} "
+                  strong= l(next_availability.starts_at, format: :human)

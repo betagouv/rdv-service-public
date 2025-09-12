@@ -188,7 +188,8 @@ Organisation.where(territory: territory62).each do |org|
     organisation_id: org.id,
     service_id: service_pmi.id,
     bookable_by: :everyone,
-    location_type: :phone
+    location_type: :phone,
+    restriction_for_rdv: "Merci d’apporter les documents nécessaires"
   )
   motifs[org][:pmi_prenatale] = Motif.create!(
     name: "Consultation prénatale",
@@ -196,7 +197,8 @@ Organisation.where(territory: territory62).each do |org|
     organisation_id: org.id,
     service_id: service_pmi.id,
     bookable_by: :everyone,
-    location_type: :public_office
+    location_type: :public_office,
+    restriction_for_rdv: "Merci d’apporter les documents nécessaires"
   )
 end
 
