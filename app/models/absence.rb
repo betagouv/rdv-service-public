@@ -11,6 +11,7 @@ class Absence < ApplicationRecord
 
   # Relations
   belongs_to :agent
+  has_many :external_references, as: :item, dependent: :destroy
 
   # Through relations
   def webhook_endpoints

@@ -16,6 +16,12 @@
             titles_and_paths: [["Accueil", root_path], ["Indisponibilités de #{@absence.agent.full_name_and_service}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
             current_page_title: yield(:title)
 
+- content_for :breadcrumb do
+  - references = Agent::ExternalReferencePolicy::Scope.new(current_agent, @absence.external_references.where(territory: current_territory)).resolve
+  - if references.present?
+    - references.each do |reference|
+      = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-btn fr-btn--secondary fr-mr-2w")
+
 .row.justify-content-center
   .col-md-6
     .card

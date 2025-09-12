@@ -4,6 +4,7 @@ class InstanceExport < ApplicationRecord
 
   encrypts :api_token
   encrypts :refresh_token
+
   def new_instance_organisations
     @new_instance_organisations ||= api_client.get("organisations")["organisations"]
   end
@@ -51,7 +52,7 @@ class InstanceExport < ApplicationRecord
         end
 
         source_organisation.rdvs.future.not_cancelled.pluck(:id).each do |rdv_id|
-          CopyRdvAsAbsenceJob.perform_later(id, rdv_id)
+          CopyRdvAsAbsenceJob.perform_later(id, rdv_id, current_domain.id)
         end
       end
       update(good_job_batch_id: batch.id)
@@ -61,7 +62,8 @@ class InstanceExport < ApplicationRecord
   class CopyRdvAsAbsenceJob < ApplicationJob
     queue_as :latency_5m
 
-    def perform(instance_export_id, rdv_id)
+    def perform(instance_export_id, rdv_id, domain_id)
+      domain = Domain.find(domain_id)
       rdv = Rdv.find(rdv_id)
       rdv.agents.each do |agent|
         params = {
@@ -71,6 +73,11 @@ class InstanceExport < ApplicationRecord
           end_day: rdv.starts_at.strftime("%Y-%m-%d"),
           start_time: rdv.starts_at.strftime("%H:%M"),
           end_time: rdv.ends_at.strftime("%H:%M"),
+          external_reference: {
+            external_id: rdv_id,
+            external_url: Rails.application.routes.url_helpers.admin_organisations_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
+
+          },
         }
 
         api_client = InstanceExport.find(instance_export_id).api_client
