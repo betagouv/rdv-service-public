@@ -11,8 +11,8 @@
         p #{source_org.users.count} usagers
         - if source_org.agents.count > 1
           p #{source_org.agents.count} agents
-        p #{source_org.lieux.count} lieux
-        p #{source_org.motifs.count} motifs
+        p #{source_org.lieux.count}  #{"lieu".pluralize(source_org.lieux.count)}
+        p #{source_org.motifs.count} #{"motif".pluralize(source_org.motifs.count)}
 
     .fr-mx-4w[style="align-self: center"]= icon("fr-icon-arrow-right-fill")
 
