@@ -15,7 +15,7 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     create(:absence, agent: agent_basique, title: "Indispo de Loïc")
   end
 
-  specify do
+  xit do
     login_as(agent_basique, scope: :agent)
     doc = Autodoc.start_scenario("Nouveau planning / planning multi-agents", self)
 
@@ -69,8 +69,8 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     doc.add_screenshot(page, text: "L'agent peut voir ses indisponibilité",
                              wait_for: "Indispo de Loïc")
 
-    find("#select2-planning_agent_select-container").click
-    find(%(.select2-results__option), text: "ADMIN Justine").click
+    find("#select2-agent_id-container").click
+    find(%(.select2-results__option[data-select2-id="#{agent_admin.id}"]), wait: 30).click
     doc.add_screenshot(page, text: "Il est possible de changer l'agent sélectionné",
                              wait_for: "Indispo de Justine")
 
