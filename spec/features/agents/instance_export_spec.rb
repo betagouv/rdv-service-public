@@ -30,7 +30,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
       select "France Service de Montreuil", from: :destination_organisation_id
 
-      click_on "Copier les usagers"
+      click_on "Copier les données"
 
       expect(page).to have_content "Migration terminée !"
 
