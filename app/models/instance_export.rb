@@ -68,7 +68,7 @@ class InstanceExport < ApplicationRecord
       rdv.agents.each do |agent|
         params = {
           agent_email: agent.email,
-          title: "RDV pris sur RDV Aide Numérique",
+          title: "RDV pris sur #{domain.name}",
           first_day: rdv.starts_at.strftime("%Y-%m-%d"),
           end_day: rdv.starts_at.strftime("%Y-%m-%d"),
           start_time: rdv.starts_at.strftime("%H:%M"),
@@ -76,7 +76,6 @@ class InstanceExport < ApplicationRecord
           external_reference: {
             external_id: rdv_id,
             external_url: Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
-
           },
         }
 
@@ -145,7 +144,7 @@ class InstanceExport < ApplicationRecord
       instance_export.api_client.post("agents", {
                                         email: agent.email,
                                         organisation_ids: [instance_export.destination_organisation_id],
-                                        access_level: agent.role_in_organisation(source_organisation).access_level,
+                                        access_level: agent.role_in_organisation(instance_export.source_organisation).access_level,
                                       })
     end
   end
@@ -154,19 +153,19 @@ class InstanceExport < ApplicationRecord
     queue_as :latency_5m
 
     def perform(instance_export_id, user_id, domain_id)
-      api_client = InstanceExport.find(instance_export_id).api_client
+      instance_export = InstanceExport.find(instance_export_id)
       domain = Domain.find(domain_id)
       user = User.find(user_id)
 
       request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])
-      request_body[:organisation_ids] = [destination_organisation_id]
+      request_body[:organisation_ids] = [instance_export.destination_organisation_id]
 
       request_body[:external_reference] = {
         external_id: user.id,
-        external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(source_organisation.id, user.id, host: domain.host_name),
+        external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(instance_export.source_organisation.id, user.id, host: domain.host_name),
       }
 
-      api_client.post("users", request_body)
+      instance_export.api_client.post("users", request_body)
     end
   end
 end

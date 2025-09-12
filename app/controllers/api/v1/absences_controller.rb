@@ -14,8 +14,7 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
       ExternalReference.create!(
         params.require(:external_reference).permit(:external_id, :external_url).merge(
           item: absence,
-          oauth_application: doorkeeper_token&.application,
-          territory_id: absence.agent.territories.first.id
+          oauth_application: doorkeeper_token&.application
         )
       )
     end
