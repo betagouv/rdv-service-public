@@ -4,7 +4,6 @@ class InstanceExport < ApplicationRecord
 
   encrypts :api_token
   encrypts :refresh_token
-
   def new_instance_organisations
     @new_instance_organisations ||= api_client.get("organisations")["organisations"]
   end
@@ -24,6 +23,10 @@ class InstanceExport < ApplicationRecord
 
   def destination_organisation
     @destination_organisation ||= Organisation.new(new_instance_organisations.first).tap(&:readonly!)
+  end
+
+  def api_client
+    @api_client ||= RdvServicePublicApiClient.new(api_token)
   end
 
   def copy_to_new_instance!(current_domain)
@@ -59,8 +62,6 @@ class InstanceExport < ApplicationRecord
     queue_as :latency_5m
 
     def perform(instance_export_id, rdv_id)
-      api_client = InstanceExport.find(instance_export_id).api_client
-
       rdv = Rdv.find(rdv_id)
       rdv.agents.each do |agent|
         params = {
@@ -72,16 +73,9 @@ class InstanceExport < ApplicationRecord
           end_time: rdv.ends_at.strftime("%H:%M"),
         }
 
+        api_client = InstanceExport.find(instance_export_id).api_client
         api_client.post("absences", params)
       end
-    end
-  end
-
-  class CopyMotifJob < ApplicationJob
-    queue_as :latency_5m
-
-    def perform(instance_export_id, motif_id)
-      InstanceExport.find(instance_export_id).copy_motif!(motif_id)
     end
   end
 
@@ -104,73 +98,68 @@ class InstanceExport < ApplicationRecord
     bookable_by
   ].freeze
 
-  def copy_motif!(motif_id)
-    motif = Motif.find(motif_id)
-    attributes = motif.attributes.symbolize_keys.slice(*MOTIF_ATTRIBUTE_NAMES)
+  class CopyMotifJob < ApplicationJob
+    queue_as :latency_5m
 
-    attributes[:external_reference] = { external_id: motif.id }
-    attributes[:organisation_id] = destination_organisation_id
+    def perform(instance_export_id, motif_id)
+      InstanceExport.find(instance_export_id).copy_motif!(motif_id)
+      motif = Motif.find(motif_id)
+      attributes = motif.attributes.symbolize_keys.slice(*MOTIF_ATTRIBUTE_NAMES)
 
-    api_client.post("motifs", attributes)
+      attributes[:external_reference] = { external_id: motif.id }
+      attributes[:organisation_id] = destination_organisation_id
+
+      api_client = InstanceExport.find(instance_export_id).api_client
+      api_client.post("motifs", attributes)
+    end
   end
 
   class CopyLieuJob < ApplicationJob
     queue_as :latency_5m
 
     def perform(instance_export_id, lieu_id)
-      InstanceExport.find(instance_export_id).copy_lieu!(lieu_id)
+      lieu = Lieu.find(lieu_id)
+      attributes = lieu.attributes.slice(*%w[name address latitude longitude phone_number])
+
+      attributes[:external_reference] = { external_id: lieu.id }
+      attributes[:organisation_id] = destination_organisation_id
+
+      api_client = InstanceExport.find(instance_export_id).api_client
+      api_client.post("lieux", attributes)
     end
-  end
-
-  def copy_lieu!(lieu_id)
-    lieu = Lieu.find(lieu_id)
-    attributes = lieu.attributes.slice(*%w[name address latitude longitude phone_number])
-
-    attributes[:external_reference] = { external_id: lieu.id }
-    attributes[:organisation_id] = destination_organisation_id
-
-    api_client.post("lieux", attributes)
   end
 
   class CopyAgentJob < ApplicationJob
     queue_as :latency_5m
 
     def perform(instance_export_id, agent_id)
-      InstanceExport.find(instance_export_id).copy_agent!(agent_id)
+      agent = Agent.find(agent_id)
+      api_client = InstanceExport.find(instance_export_id).api_client
+      api_client.post("agents", {
+                        email: agent.email,
+                        organisation_ids: [destination_organisation_id],
+                        access_level: agent.role_in_organisation(source_organisation).access_level,
+                      })
     end
-  end
-
-  def copy_agent!(agent_id)
-    agent = Agent.find(agent_id)
-    api_client.post("agents", {
-                      email: agent.email,
-                      organisation_ids: [destination_organisation_id],
-                      access_level: agent.role_in_organisation(source_organisation).access_level,
-                    })
   end
 
   class CopyUserJob < ApplicationJob
     queue_as :latency_5m
 
     def perform(instance_export_id, user_id, domain_id)
-      InstanceExport.find(instance_export_id).copy_user!(user_id, Domain.find(domain_id))
+      api_client = InstanceExport.find(instance_export_id).api_client
+      domain = Domain.find(domain_id)
+      user = User.find(user_id)
+
+      request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])
+      request_body[:organisation_ids] = [destination_organisation_id]
+
+      request_body[:external_reference] = {
+        external_id: user.id,
+        external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(source_organisation.id, user.id, host: domain.host_name),
+      }
+
+      api_client.post("users", request_body)
     end
-  end
-
-  def copy_user!(user_id, domain)
-    user = User.find(user_id)
-    request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])
-    request_body[:organisation_ids] = [destination_organisation_id]
-
-    request_body[:external_reference] = {
-      external_id: user.id,
-      external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(source_organisation.id, user.id, host: domain.host_name),
-    }
-
-    api_client.post("users", request_body)
-  end
-
-  def api_client
-    @api_client ||= RdvServicePublicApiClient.new(api_token)
   end
 end
