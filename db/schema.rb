@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_12_045657) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -689,12 +689,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.string "sms_phone_number"
     t.string "email_address"
     t.bigint "organisation_id", null: false
-    t.index ["channel"], name: "index_receipts_on_channel"
     t.index ["created_at"], name: "index_receipts_on_created_at"
-    t.index ["event"], name: "index_receipts_on_event"
     t.index ["organisation_id"], name: "index_receipts_on_organisation_id"
     t.index ["rdv_id"], name: "index_receipts_on_rdv_id"
-    t.index ["result"], name: "index_receipts_on_result"
     t.index ["user_id"], name: "index_receipts_on_user_id"
   end
 
