@@ -75,7 +75,7 @@ class InstanceExport < ApplicationRecord
           end_time: rdv.ends_at.strftime("%H:%M"),
           external_reference: {
             external_id: rdv_id,
-            external_url: Rails.application.routes.url_helpers.admin_organisations_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
+            external_url: Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
 
           },
         }
@@ -109,15 +109,14 @@ class InstanceExport < ApplicationRecord
     queue_as :latency_5m
 
     def perform(instance_export_id, motif_id)
-      InstanceExport.find(instance_export_id).copy_motif!(motif_id)
+      instance_export = InstanceExport.find(instance_export_id)
       motif = Motif.find(motif_id)
       attributes = motif.attributes.symbolize_keys.slice(*MOTIF_ATTRIBUTE_NAMES)
 
       attributes[:external_reference] = { external_id: motif.id }
-      attributes[:organisation_id] = destination_organisation_id
+      attributes[:organisation_id] = instance_export.destination_organisation_id
 
-      api_client = InstanceExport.find(instance_export_id).api_client
-      api_client.post("motifs", attributes)
+      instance_export.api_client.post("motifs", attributes)
     end
   end
 
@@ -125,14 +124,14 @@ class InstanceExport < ApplicationRecord
     queue_as :latency_5m
 
     def perform(instance_export_id, lieu_id)
+      instance_export = InstanceExport.find(instance_export_id)
       lieu = Lieu.find(lieu_id)
       attributes = lieu.attributes.slice(*%w[name address latitude longitude phone_number])
 
       attributes[:external_reference] = { external_id: lieu.id }
-      attributes[:organisation_id] = destination_organisation_id
+      attributes[:organisation_id] = instance_export.destination_organisation_id
 
-      api_client = InstanceExport.find(instance_export_id).api_client
-      api_client.post("lieux", attributes)
+      instance_export.api_client.post("lieux", attributes)
     end
   end
 
@@ -140,13 +139,14 @@ class InstanceExport < ApplicationRecord
     queue_as :latency_5m
 
     def perform(instance_export_id, agent_id)
+      instance_export = InstanceExport.find(instance_export_id)
       agent = Agent.find(agent_id)
-      api_client = InstanceExport.find(instance_export_id).api_client
-      api_client.post("agents", {
-                        email: agent.email,
-                        organisation_ids: [destination_organisation_id],
-                        access_level: agent.role_in_organisation(source_organisation).access_level,
-                      })
+
+      instance_export.api_client.post("agents", {
+                                        email: agent.email,
+                                        organisation_ids: [instance_export.destination_organisation_id],
+                                        access_level: agent.role_in_organisation(source_organisation).access_level,
+                                      })
     end
   end
 
