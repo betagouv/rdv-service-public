@@ -39,15 +39,41 @@ class InstanceExport < ApplicationRecord
           CopyAgentJob.perform_later(id, agent_id)
         end
 
-        source_organisation.lieux.enabled.each do |lieu|
-          CopyLieuJob.perform_later(id, lieu.id)
+        source_organisation.lieux.enabled.pluck(:id).each do |lieu_id|
+          CopyLieuJob.perform_later(id, lieu_id)
         end
 
-        source_organisation.motifs.active.each do |motif|
-          CopyMotifJob.perform_later(id, motif.id)
+        source_organisation.motifs.active.pluck(:id).each do |motif_id|
+          CopyMotifJob.perform_later(id, motif_id)
+        end
+
+        source_organisation.rdvs.future.not_cancelled.pluck(:id).each do |rdv_id|
+          CopyRdvAsAbsenceJob.perform_later(id, rdv_id)
         end
       end
       update(good_job_batch_id: batch.id)
+    end
+  end
+
+  class CopyRdvAsAbsenceJob < ApplicationJob
+    queue_as :latency_5m
+
+    def perform(instance_export_id, rdv_id)
+      api_client = InstanceExport.find(instance_export_id).api_client
+
+      rdv = Rdv.find(rdv_id)
+      rdv.agents.each do |agent|
+        params = {
+          agent_email: agent.email,
+          title: "RDV pris sur RDV Aide Numérique",
+          first_day: rdv.starts_at.strftime("%Y-%m-%d"),
+          end_day: rdv.starts_at.strftime("%Y-%m-%d"),
+          start_time: rdv.starts_at.strftime("%H:%M"),
+          end_time: rdv.ends_at.strftime("%H:%M"),
+        }
+
+        api_client.post("absences", params)
+      end
     end
   end
 
@@ -143,8 +169,6 @@ class InstanceExport < ApplicationRecord
 
     api_client.post("users", request_body)
   end
-
-  private
 
   def api_client
     @api_client ||= RdvServicePublicApiClient.new(api_token)
