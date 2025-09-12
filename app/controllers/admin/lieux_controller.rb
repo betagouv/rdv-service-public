@@ -18,7 +18,6 @@ class Admin::LieuxController < AgentAuthController
   def create
     @lieu = Lieu.new(organisation_id: current_organisation.id)
     @lieu.assign_attributes(lieu_params)
-    @lieu.availability = :enabled # Always enable new Lieux
 
     authorize(@lieu, policy_class: Agent::LieuPolicy)
     if @lieu.save
