@@ -5,7 +5,7 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
 
   path "/api/v1/lieux" do
     post "Créer un profil utilisateur" do
-      with_authentication
+      with_oauth_token_authentication
 
       tags "Lieux"
       produces "application/json"
@@ -28,10 +28,8 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
 
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
+      let(:oauth_token) { create(:access_token, resource_owner_id: agent.id) }
+      let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
 
       response 200, "Crée et renvoie un lieu" do
         let(:organisation_id) { organisation.id }
