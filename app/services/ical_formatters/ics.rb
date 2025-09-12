@@ -51,7 +51,7 @@ module IcalFormatters
         payload[:attendees].each { |attendee| event.append_attendee("mailto:#{attendee}") }
       end
       event.summary = payload[:summary]
-      event.location = payload[:address]
+      event.location = payload[:location]
       event.rrule = payload[:rrule]
       event.sequence = 0 # not sure if this is necessary, but not worth investigating right now
       event.description = payload[:description]
