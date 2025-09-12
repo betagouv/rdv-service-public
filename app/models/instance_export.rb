@@ -37,9 +37,30 @@ class InstanceExport < ApplicationRecord
         source_organisation.agents.where.not(id: agent.id).pluck(:id).each do |agent_id|
           CopyAgentJob.perform_later(id, agent_id)
         end
+        source_organisation.lieux.enabled.each do |lieu|
+          CopyLieuJob.perform_later(id, lieu.id)
+        end
       end
       update(good_job_batch_id: batch.id)
     end
+  end
+
+  class CopyLieuJob < ApplicationJob
+    queue_as :latency_5m
+
+    def perform(instance_export_id, lieu_id)
+      InstanceExport.find(instance_export_id).copy_lieu!(lieu_id)
+    end
+  end
+
+  def copy_lieu!(lieu_id)
+    lieu = Lieu.find(lieu_id)
+    attributes = lieu.attributes.slice(*%w[name address latitude longitude phone_number])
+
+    attributes[:external_reference] = { external_id: lieu.id }
+    attributes[:organisation_id] = destination_organisation_id
+
+    api_client.post("lieux", attributes)
   end
 
   class CopyAgentJob < ApplicationJob

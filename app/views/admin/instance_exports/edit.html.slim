@@ -1,4 +1,4 @@
-- content_for :title, "Copier vos données vers RDV Service Public"
+- content_for :title, "Migration vers RDV Service Public"
 
 = form_with url: admin_organisation_instance_export_path(current_organisation, @instance_export), method: :put, builder: Dsfr::FormBuilder do |form|
   .d-flex.rdv-justify-content-center
@@ -10,6 +10,7 @@
         p #{@instance_export.source_organisation.users.count} usagers
         - if @instance_export.source_organisation.agents.count > 1
           p #{@instance_export.source_organisation.agents.count} agents
+        p #{@instance_export.source_organisation.lieux.count} lieux
 
     .fr-mx-4w[style="align-self: center"]= icon("fr-icon-arrow-right-fill")
 

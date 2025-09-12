@@ -15,6 +15,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let!(:collegue) do
     create(:agent, first_name: "Francis", last_name: "Factice", basic_role_in_organisations: [organisation_rdv_aide_num])
   end
+  let!(:lieu) { create(:lieu, organisation: organisation_rdv_aide_num) }
 
   let!(:users) do
     create_list(:user, 3, organisations: [organisation_rdv_aide_num])
@@ -59,9 +60,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     login_as(agent_rdv_aide_num, scope: :agent)
     visit "http://www.rdv-aide-numerique-test.localhost/agents/instance_exports"
 
+    Capybara.page.current_window.resize_to(1280, 1200)
+
     doc.add_screenshot(page,
                        text: "J'ouvre la page à https://www.rdv-aide-numerique.fr/agents/instance_exports, puis je clique sur le bouton pour commencer",
                        wait_for: "Migration vers RDV Service Public")
+
+    Capybara.page.current_window.resize_to(1280, 720)
 
     click_on "Commencer"
 
@@ -110,6 +115,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     )
 
     expect(created_organisation.agents.count).to eq 2
+    expect(created_organisation.lieux.last).to have_attributes(name: lieu.name)
+    expect(created_organisation.lieux.last.external_references.last).to have_attributes(external_id: lieu.id.to_s)
 
     login_as(agent_rdv_sp, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"
