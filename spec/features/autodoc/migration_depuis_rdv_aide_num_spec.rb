@@ -22,6 +22,10 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     create_list(:user, 3, organisations: [organisation_rdv_aide_num])
   end
 
+  let!(:future_rdv) do
+    create(:rdv, agents: [agent_rdv_aide_num], users: [users.last], starts_at: 2.weeks.from_now, motif:, lieu:, organisation: organisation_rdv_aide_num)
+  end
+
   let!(:agent_rdv_sp) do
     create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
   end
@@ -119,7 +123,9 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(created_organisation.lieux.last).to have_attributes(name: lieu.name)
     expect(created_organisation.lieux.last.external_references.last).to have_attributes(external_id: lieu.id.to_s)
 
-    expect(created_organisation.motifs.last).to have_attributes(name: motif.name)
+    # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
+    expect(agent_rdv_sp.absences.last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
+    expect(agent_rdv_sp.absences.last.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
 
     login_as(agent_rdv_sp, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"

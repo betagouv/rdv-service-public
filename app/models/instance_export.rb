@@ -26,6 +26,10 @@ class InstanceExport < ApplicationRecord
     @destination_organisation ||= Organisation.new(new_instance_organisations.first).tap(&:readonly!)
   end
 
+  def api_client
+    @api_client ||= RdvServicePublicApiClient.new(api_token)
+  end
+
   def copy_to_new_instance!(current_domain)
     batch = GoodJob::Batch.new(instance_export_id: id)
 
@@ -39,23 +43,48 @@ class InstanceExport < ApplicationRecord
           CopyAgentJob.perform_later(id, agent_id)
         end
 
-        source_organisation.lieux.enabled.each do |lieu|
-          CopyLieuJob.perform_later(id, lieu.id)
+        source_organisation.lieux.enabled.pluck(:id).each do |lieu_id|
+          CopyLieuJob.perform_later(id, lieu_id)
         end
 
-        source_organisation.motifs.active.each do |motif|
-          CopyMotifJob.perform_later(id, motif.id)
+        source_organisation.motifs.active.pluck(:id).each do |motif_id|
+          CopyMotifJob.perform_later(id, motif_id)
+        end
+
+        source_organisation.rdvs.future.not_cancelled.pluck(:id).each do |rdv_id|
+          CopyRdvAsAbsenceJob.perform_later(id, rdv_id, current_domain.id)
         end
       end
       update(good_job_batch_id: batch.id)
     end
   end
 
-  class CopyMotifJob < ApplicationJob
+  class CopyRdvAsAbsenceJob < ApplicationJob
     queue_as :latency_5m
 
-    def perform(instance_export_id, motif_id)
-      InstanceExport.find(instance_export_id).copy_motif!(motif_id)
+    def perform(instance_export_id, rdv_id, domain_id)
+      domain = Domain.find(domain_id)
+      instance_export = InstanceExport.find(instance_export_id)
+      rdv = Rdv.find(rdv_id)
+      rdv.agents.each do |agent|
+        params = {
+          title: "RDV pris sur #{domain.name}",
+          first_day: rdv.starts_at.strftime("%Y-%m-%d"),
+          end_day: rdv.starts_at.strftime("%Y-%m-%d"),
+          start_time: rdv.starts_at.strftime("%H:%M"),
+          end_time: rdv.ends_at.strftime("%H:%M"),
+          external_reference: {
+            external_id: "rdv:#{rdv_id}", # on créera aussi des external_reference pour des absences, donc on préfixe par "rdv"
+            external_url: Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
+          },
+        }
+
+        if agent != instance_export.agent
+          params[:agent_email] = agent.email
+        end
+        api_client = instance_export.api_client
+        api_client.post("absences", params)
+      end
     end
   end
 
@@ -78,75 +107,68 @@ class InstanceExport < ApplicationRecord
     bookable_by
   ].freeze
 
-  def copy_motif!(motif_id)
-    motif = Motif.find(motif_id)
-    attributes = motif.attributes.symbolize_keys.slice(*MOTIF_ATTRIBUTE_NAMES)
+  class CopyMotifJob < ApplicationJob
+    queue_as :latency_5m
 
-    attributes[:external_reference] = { external_id: motif.id }
-    attributes[:organisation_id] = destination_organisation_id
+    def perform(instance_export_id, motif_id)
+      instance_export = InstanceExport.find(instance_export_id)
+      motif = Motif.find(motif_id)
+      attributes = motif.attributes.symbolize_keys.slice(*MOTIF_ATTRIBUTE_NAMES)
 
-    api_client.post("motifs", attributes)
+      attributes[:external_reference] = { external_id: motif.id }
+      attributes[:organisation_id] = instance_export.destination_organisation_id
+
+      instance_export.api_client.post("motifs", attributes)
+    end
   end
 
   class CopyLieuJob < ApplicationJob
     queue_as :latency_5m
 
     def perform(instance_export_id, lieu_id)
-      InstanceExport.find(instance_export_id).copy_lieu!(lieu_id)
+      instance_export = InstanceExport.find(instance_export_id)
+      lieu = Lieu.find(lieu_id)
+      attributes = lieu.attributes.slice(*%w[name address latitude longitude phone_number])
+
+      attributes[:external_reference] = { external_id: lieu.id }
+      attributes[:organisation_id] = instance_export.destination_organisation_id
+
+      instance_export.api_client.post("lieux", attributes)
     end
-  end
-
-  def copy_lieu!(lieu_id)
-    lieu = Lieu.find(lieu_id)
-    attributes = lieu.attributes.slice(*%w[name address latitude longitude phone_number])
-
-    attributes[:external_reference] = { external_id: lieu.id }
-    attributes[:organisation_id] = destination_organisation_id
-
-    api_client.post("lieux", attributes)
   end
 
   class CopyAgentJob < ApplicationJob
     queue_as :latency_5m
 
     def perform(instance_export_id, agent_id)
-      InstanceExport.find(instance_export_id).copy_agent!(agent_id)
-    end
-  end
+      instance_export = InstanceExport.find(instance_export_id)
+      agent = Agent.find(agent_id)
 
-  def copy_agent!(agent_id)
-    agent = Agent.find(agent_id)
-    api_client.post("agents", {
-                      email: agent.email,
-                      organisation_ids: [destination_organisation_id],
-                      access_level: agent.role_in_organisation(source_organisation).access_level,
-                    })
+      instance_export.api_client.post("agents", {
+                                        email: agent.email,
+                                        organisation_ids: [instance_export.destination_organisation_id],
+                                        access_level: agent.role_in_organisation(instance_export.source_organisation).access_level,
+                                      })
+    end
   end
 
   class CopyUserJob < ApplicationJob
     queue_as :latency_5m
 
     def perform(instance_export_id, user_id, domain_id)
-      InstanceExport.find(instance_export_id).copy_user!(user_id, Domain.find(domain_id))
+      instance_export = InstanceExport.find(instance_export_id)
+      domain = Domain.find(domain_id)
+      user = User.find(user_id)
+
+      request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])
+      request_body[:organisation_ids] = [instance_export.destination_organisation_id]
+
+      request_body[:external_reference] = {
+        external_id: user.id,
+        external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(instance_export.source_organisation.id, user.id, host: domain.host_name),
+      }
+
+      instance_export.api_client.post("users", request_body)
     end
-  end
-
-  def copy_user!(user_id, domain)
-    user = User.find(user_id)
-    request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])
-    request_body[:organisation_ids] = [destination_organisation_id]
-
-    request_body[:external_reference] = {
-      external_id: user.id,
-      external_url: Rails.application.routes.url_helpers.admin_organisation_user_url(source_organisation.id, user.id, host: domain.host_name),
-    }
-
-    api_client.post("users", request_body)
-  end
-
-  private
-
-  def api_client
-    @api_client ||= RdvServicePublicApiClient.new(api_token)
   end
 end

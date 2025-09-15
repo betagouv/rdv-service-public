@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_12_081158) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_12_170321) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -296,7 +296,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_12_081158) do
     t.string "item_type", null: false
     t.bigint "item_id", null: false
     t.bigint "oauth_application_id", null: false
-    t.bigint "territory_id", null: false
+    t.bigint "territory_id"
     t.text "external_id", null: false
     t.text "external_url"
     t.datetime "created_at", null: false

@@ -9,6 +9,16 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
     absence = Absence.new(create_params)
     authorize(absence, policy_class: Agent::AbsencePolicy) if absence.valid?
     absence.save!
+
+    if params[:external_reference].present?
+      ExternalReference.create!(
+        params.require(:external_reference).permit(:external_id, :external_url).merge(
+          item: absence,
+          oauth_application: doorkeeper_token&.application
+        )
+      )
+    end
+
     render_record absence
   rescue ActiveRecord::RecordNotFound
     render_error :not_found, not_found: :agent
@@ -57,6 +67,8 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
       params[:agent_id] = agent.id
       params.delete(:agent_email)
     end
+
+    params[:agent_id] ||= current_agent.id
 
     params.permit(:agent_id, :title, :first_day, :start_time, :end_day, :end_time)
   end
