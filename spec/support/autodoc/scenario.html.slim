@@ -13,7 +13,7 @@
       - section.steps.each do |step|
         div[style="padding: 8px; display: flex; flex-direction: column; align-items: center"]
           - if step[:img_src]
-            img[src='#{step[:img_src]}' width=800 style='border: solid 2px grey']
+            img[src='#{step[:img_src]}' width=800 style='box-shadow: rgba(0, 0, 0, 0.20) 0px 7px 20px; border-radius: 4px']
             - if step[:text]
               p.fr-mt-2w.fr-mb-5w = step[:text]
           - else

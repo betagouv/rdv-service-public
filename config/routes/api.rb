@@ -17,6 +17,7 @@ namespace :api do
       resources :motifs, only: %i[index]
       resources :rdvs, only: %i[index]
     end
+    resources :motifs, only: %i[create]
     resources :rdvs, only: %i[index]
     resources :participations, only: %i[update]
     resources :rdv_plans, only: %i[create show]
