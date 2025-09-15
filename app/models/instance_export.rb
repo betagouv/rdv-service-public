@@ -1,6 +1,7 @@
 class InstanceExport < ApplicationRecord
   belongs_to :agent
   belongs_to :good_job_batch, class_name: "GoodJob::BatchRecord", optional: true
+  belongs_to :source_organisation, optional: true, class_name: "Organisation"
 
   encrypts :api_token
   encrypts :refresh_token
@@ -19,7 +20,7 @@ class InstanceExport < ApplicationRecord
   end
 
   def source_organisation
-    agent.organisations.first
+    super || agent.organisations.first
   end
 
   def destination_organisation
