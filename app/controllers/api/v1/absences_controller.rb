@@ -7,6 +7,14 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
 
   def create
     absence = Absence.new(create_params)
+
+    # On ne documente pas encore la possibilité d'utiliser le param recurrence, puisqu'on s'en sert uniquement
+    # pour la migration des Conseillers Numériques, et que l'api actuelle permettrait de créer des absences qu'on
+    # ne saurait pas gérer sur l'interface web avec le formulaire actuel.
+    if params[:recurrence].present?
+      absence.recurrence = Montrose::Recurrence.load(params[:recurrence])
+    end
+
     authorize(absence, policy_class: Agent::AbsencePolicy) if absence.valid?
     absence.save!
 

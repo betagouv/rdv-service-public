@@ -23,8 +23,12 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   end
 
   let!(:future_rdv) do
-    create(:rdv, agents: [agent_rdv_aide_num], users: [users.last], starts_at: 2.weeks.from_now, motif:, lieu:, organisation: organisation_rdv_aide_num)
+    create(:rdv, agents: [collegue], users: [users.last], starts_at: 2.weeks.from_now, motif:, lieu:, organisation: organisation_rdv_aide_num)
   end
+
+  let!(:absence) { create(:absence, :no_recurrence, agent: agent_rdv_aide_num) }
+  let!(:recurrent_absence) { create(:absence, :weekly_on_monday, agent: agent_rdv_aide_num) }
+  let!(:recurrent_absence_with_end_date) { create(:absence, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num) }
 
   let!(:agent_rdv_sp) do
     create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
@@ -126,8 +130,21 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(created_organisation.lieux.last.external_references.last).to have_attributes(external_id: lieu.id.to_s)
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
-    expect(agent_rdv_sp.absences.last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
-    expect(agent_rdv_sp.absences.last.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
+    expect(collegue.absences.last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
+    expect(collegue.absences.last.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
+
+    # On crée aussi des copies des absences futures
+    expect(agent_rdv_sp.absences.exceptionnelles.first.starts_at).to eq absence.starts_at
+
+    new_absence_without_end_date = agent_rdv_sp.absences.regulieres.where(recurrence_ends_at: nil).first
+    expect(Montrose::Recurrence.dump(new_absence_without_end_date.recurrence)).to eq Montrose::Recurrence.dump(recurrent_absence.recurrence)
+    expect(new_absence_without_end_date.recurrence_ends_at).to eq recurrent_absence.recurrence_ends_at
+
+    new_absence_with_end_date = agent_rdv_sp.absences.regulieres.where.not(recurrence_ends_at: nil).first
+    expect(Montrose::Recurrence.dump(new_absence_with_end_date.recurrence)).to eq Montrose::Recurrence.dump(recurrent_absence_with_end_date.recurrence)
+    expect(new_absence_with_end_date.recurrence_ends_at).to eq recurrent_absence_with_end_date.recurrence_ends_at
+
+    agent_rdv_sp.absences.regulieres.where.not(recurrence_ends_at: nil).first
 
     login_as(agent_rdv_sp, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"

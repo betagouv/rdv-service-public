@@ -18,6 +18,10 @@ FactoryBot.define do
       recurrence { Montrose.every(:week, on: [:monday], starts: first_day, interval: 1) }
     end
 
+    trait :weekly_on_monday_until_next_month do
+      recurrence { Montrose.every(:week, on: [:monday], starts: first_day, interval: 1, until: 1.month.from_now) }
+    end
+
     trait :once_a_week do
       recurrence { Montrose.every(:week, starts: first_day, interval: 1) }
     end
