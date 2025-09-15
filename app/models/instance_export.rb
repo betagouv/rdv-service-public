@@ -59,25 +59,28 @@ class InstanceExport < ApplicationRecord
     end
   end
 
+  MOTIF_ATTRIBUTE_NAMES = %i[
+    name
+    color
+    default_duration_in_min
+    min_public_booking_delay
+    max_public_booking_delay
+    restriction_for_rdv
+    instruction_for_rdv
+    for_secretariat
+    follow_up
+    visibility_type
+    custom_cancel_warning_message
+    collectif
+    location_type
+    rdvs_editable_by_user
+    rdvs_cancellable_by_user
+    bookable_by
+  ].freeze
+
   def copy_motif!(motif_id)
     motif = Motif.find(motif_id)
-    attributes = motif.attributes.slice(*%w[
-                                          name color
-                                          default_duration_in_min
-                                          min_public_booking_delay
-                                          max_public_booking_delay
-                                          restriction_for_rdv
-                                          instruction_for_rdv
-                                          for_secretariat
-                                          follow_up
-                                          visibility_type
-                                          custom_cancel_warning_message
-                                          collectif
-                                          location_type
-                                          rdvs_editable_by_user
-                                          rdvs_cancellable_by_user
-                                          bookable_by
-                                        ])
+    attributes = motif.attributes.slice(*MOTIF_ATTRIBUTE_NAMES)
 
     attributes[:external_reference] = { external_id: motif.id }
     attributes[:organisation_id] = destination_organisation_id

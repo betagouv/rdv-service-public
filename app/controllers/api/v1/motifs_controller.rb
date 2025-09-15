@@ -49,23 +49,7 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
   private
 
   def motif_attribute_names
-    %i[
-      organisation_id name color
-      default_duration_in_min
-      min_public_booking_delay
-      max_public_booking_delay
-      restriction_for_rdv
-      instruction_for_rdv
-      for_secretariat
-      follow_up
-      visibility_type
-      custom_cancel_warning_message
-      collectif
-      location_type
-      rdvs_editable_by_user
-      rdvs_cancellable_by_user
-      bookable_by
-    ]
+    InstanceExport::MOTIF_ATTRIBUTE_NAMES + [:organisation_id]
   end
 
   def pundit_user
