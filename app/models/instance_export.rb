@@ -64,10 +64,10 @@ class InstanceExport < ApplicationRecord
 
     def perform(instance_export_id, rdv_id, domain_id)
       domain = Domain.find(domain_id)
+      instance_export = InstanceExport.find(instance_export_id)
       rdv = Rdv.find(rdv_id)
       rdv.agents.each do |agent|
         params = {
-          agent_email: agent.email,
           title: "RDV pris sur #{domain.name}",
           first_day: rdv.starts_at.strftime("%Y-%m-%d"),
           end_day: rdv.starts_at.strftime("%Y-%m-%d"),
@@ -79,7 +79,10 @@ class InstanceExport < ApplicationRecord
           },
         }
 
-        api_client = InstanceExport.find(instance_export_id).api_client
+        if agent != instance_export.agent
+          params[:agent_email] = agent.email
+        end
+        api_client = instance_export.api_client
         api_client.post("absences", params)
       end
     end

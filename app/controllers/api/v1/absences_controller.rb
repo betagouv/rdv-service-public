@@ -68,6 +68,8 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
       params.delete(:agent_email)
     end
 
+    params[:agent_id] ||= current_agent.id
+
     params.permit(:agent_id, :title, :first_day, :start_time, :end_day, :end_time)
   end
 
