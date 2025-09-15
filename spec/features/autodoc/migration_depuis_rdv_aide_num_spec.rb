@@ -125,6 +125,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
     expect(collegue.absences.last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
+    expect(collegue.absences.last.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
 
     login_as(agent_rdv_sp, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"

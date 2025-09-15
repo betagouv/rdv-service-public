@@ -74,7 +74,7 @@ class InstanceExport < ApplicationRecord
           start_time: rdv.starts_at.strftime("%H:%M"),
           end_time: rdv.ends_at.strftime("%H:%M"),
           external_reference: {
-            external_id: rdv_id,
+            external_id: "rdv:#{rdv_id}", # on créera aussi des external_reference pour des absences, donc on préfixe par "rdv"
             external_url: Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
           },
         }
