@@ -14,9 +14,8 @@ ruby:
 
 - content_for :breadcrumb do
   - references = Agent::ExternalReferencePolicy::Scope.new(current_agent, @user.external_references.where(territory: current_territory)).resolve
-  - if references.present?
-    - references.each do |reference|
-      = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-btn fr-btn--secondary fr-mr-2w")
+  - references.each do |reference|
+    = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-btn fr-btn--secondary fr-mr-2w")
 
   = link_to "Trouver un RDV pour l’usager", admin_organisation_creneaux_search_path(current_organisation, user_ids: [@user.id]), class: "fr-btn fr-btn--secondary", title: "Trouver un RDV pour l’usager #{@user.full_name}"
 
