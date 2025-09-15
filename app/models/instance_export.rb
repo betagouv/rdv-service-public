@@ -80,7 +80,7 @@ class InstanceExport < ApplicationRecord
 
   def copy_motif!(motif_id)
     motif = Motif.find(motif_id)
-    attributes = motif.attributes.slice(*MOTIF_ATTRIBUTE_NAMES)
+    attributes = motif.attributes.symbolize_keys.slice(*MOTIF_ATTRIBUTE_NAMES)
 
     attributes[:external_reference] = { external_id: motif.id }
     attributes[:organisation_id] = destination_organisation_id
