@@ -8,19 +8,23 @@ module Admin::Planning::SetAgentsConcern
   end
 
   def set_agents
-    scope = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
-    agents = Agent.where(id: Array(params[:agent_id]).compact_blank)
+    agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
+      .where(id: Array(params[:agent_id]).compact_blank)
+      .load
+
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "agent_id", data: { params: params[:agent_id], scoped: agents.ids }))
 
     case agents.size
     when 0
       @agent = current_agent
       @agents = [current_agent]
     when 1
-      @agent = scope.where(id: agents).first
-      @agents = [@agent]
+      @agent = agents.sole
+      @agents = agents
     else
       # Ce cas ne devrait pour le moment pas arriver, il a été mis en place en préparation de l’agenda multi-agents.
-      @agents = scope.where(id: agents)
+      @agents = agents
+      Sentry.capture_message("Plusieurs valeurs pour agent_id : cela ne devrait pas arriver")
     end
   end
 end
