@@ -70,9 +70,7 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
             address:, name:, latitude:, longitude:, organisation_id:, phone_number:
           )
 
-          expect(Lieu.last.external_references.last).to have_attributes(
-            external_id: "123ABC", territory_id: organisation.territory_id
-          )
+          expect(Lieu.last.external_references.last).to have_attributes(external_id: "123ABC")
         end
       end
     end

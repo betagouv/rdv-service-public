@@ -39,8 +39,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
         ExternalReference.create!(
           params.require(:external_reference).permit(:external_id, :external_url).merge(
             item: @organisation,
-            oauth_application: doorkeeper_token&.application,
-            territory_id: @organisation.territory_id
+            oauth_application: doorkeeper_token&.application
           )
         )
       end

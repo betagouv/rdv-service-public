@@ -122,7 +122,7 @@ RSpec.describe "Lieux API" do
         create(:lieu, organisation_id: organisation.id)
       end
       let!(:external_reference) do
-        create(:external_reference, oauth_application: application, item: existing_lieu, territory_id: organisation.territory_id, external_id: "123ABC")
+        create(:external_reference, oauth_application: application, item: existing_lieu, external_id: "123ABC")
       end
 
       it "doesn't create the lieu and returns an error message" do

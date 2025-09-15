@@ -233,8 +233,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.text "external_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["external_id", "item_type", "oauth_application_id", "territory_id"], name: "idx_on_external_id_item_type_oauth_application_id_t_09b6418013", unique: true
-    t.index ["item_id", "item_type", "oauth_application_id", "territory_id"], name: "idx_on_item_id_item_type_oauth_application_id_terri_6db34b5548", unique: true
+    t.index ["external_id", "item_type", "oauth_application_id"], name: "idx_on_external_id_item_type_oauth_application_id_a18ac19e34", unique: true
+    t.index ["item_id", "item_type", "oauth_application_id"], name: "idx_on_item_id_item_type_oauth_application_id_fa816313d2", unique: true
   end
 
   create_table "file_attentes", force: :cascade do |t|

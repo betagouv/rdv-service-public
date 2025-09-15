@@ -73,12 +73,9 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     if params[:external_reference].present?
       attributes_from_params = params.require(:external_reference).permit(:external_id, :external_url)
 
-      territory_id = Organisation.find_by(id: params[:organisation_ids])&.territory_id
+      Organisation.find_by(id: params[:organisation_ids])&.territory_id
       permitted_params.merge!(
-        external_references_attributes: [attributes_from_params.merge(
-          oauth_application: doorkeeper_token&.application,
-          territory_id: territory_id
-        )]
+        external_references_attributes: [attributes_from_params.merge(oauth_application: doorkeeper_token&.application)]
       )
     end
 

@@ -39,7 +39,7 @@ RSpec.describe "Agent can display user" do
     let!(:user) { create(:user, organisations: [organisation]) }
     let(:application) { create(:oauth_application, name: "Démarches Simplifiées") }
     let!(:external_reference) do
-      create(:external_reference, oauth_application: application, territory: organisation.territory, item: user)
+      create(:external_reference, oauth_application: application, item: user)
     end
 
     it "shows a link to the external reference" do

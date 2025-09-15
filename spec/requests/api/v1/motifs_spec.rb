@@ -49,8 +49,9 @@ RSpec.describe "Motifs API" do
       let!(:existing_motif) do
         create(:motif, organisation_id: organisation.id)
       end
+
       let!(:external_reference) do
-        create(:external_reference, oauth_application: application, item: existing_motif, territory_id: organisation.territory_id, external_id: "123ABC")
+        create(:external_reference, oauth_application: application, item: existing_motif, external_id: "123ABC")
       end
 
       it "doesn't create the motif and returns an error message" do

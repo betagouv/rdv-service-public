@@ -33,7 +33,6 @@ RSpec.describe "RDV API" do
 
       expect(created_organisation.external_references.first).to have_attributes(
         oauth_application_id: application.id,
-        territory: created_organisation.territory,
         external_id: "123"
       )
     end

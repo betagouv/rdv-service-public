@@ -32,8 +32,7 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
         ExternalReference.create!(
           params.require(:external_reference).permit(:external_id, :external_url).merge(
             item: motif,
-            oauth_application: doorkeeper_token&.application,
-            territory_id: motif.organisation.territory_id
+            oauth_application: doorkeeper_token&.application
           )
         )
       end

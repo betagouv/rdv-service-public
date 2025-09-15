@@ -93,7 +93,6 @@ RSpec.describe "/api/v1/users" do
         expect(references.last).to have_attributes(
           external_id: "123456",
           external_url: "monsuivisocial.anct.gouv.fr/users/123456",
-          territory_id: my_organisation.territory.id,
           oauth_application_id: oauth_token.application_id
         )
       end
@@ -104,7 +103,6 @@ RSpec.describe "/api/v1/users" do
             item: create(:user),
             external_id: "123456",
             external_url: "monsuivisocial.anct.gouv.fr/users/123456",
-            territory_id: my_organisation.territory.id,
             oauth_application_id: oauth_token.application_id
           )
         end

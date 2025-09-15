@@ -17,8 +17,7 @@ class Api::V1::LieuxController < Api::V1::AgentAuthBaseController
         ExternalReference.create!(
           params.require(:external_reference).permit(:external_id, :external_url).merge(
             item: lieu,
-            oauth_application: doorkeeper_token&.application,
-            territory_id: lieu.organisation.territory_id
+            oauth_application: doorkeeper_token&.application
           )
         )
       end
