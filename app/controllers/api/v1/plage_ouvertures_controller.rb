@@ -1,5 +1,5 @@
 class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
-  def create
+  def create # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     plage_ouverture = PlageOuverture.new(create_params)
 
     # On ne documente pas encore la possibilité d'utiliser le param recurrence, puisqu'on s'en sert uniquement
@@ -32,7 +32,7 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
     end
 
     if plage_ouverture.persisted?
-      render json: PlageOuvertureBlueprint.render(lieu)
+      render json: PlageOuvertureBlueprint.render(plage_ouverture)
     else
       render status: :unprocessable_entity, json: { error_messages: plage_ouverture.errors.full_messages }
     end
@@ -53,7 +53,7 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
 
     params[:agent_id] ||= current_agent.id
 
-    params.permit(:agent_id, :title, :first_day, :start_time, :end_day, :end_time, :lieu_id)
+    params.permit(:agent_id, :title, :first_day, :start_time, :end_day, :end_time, :organisation_id)
   end
 
   def external_reference_scope

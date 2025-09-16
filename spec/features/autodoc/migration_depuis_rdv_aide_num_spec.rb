@@ -29,7 +29,9 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let!(:absence) { create(:absence, :no_recurrence, agent: agent_rdv_aide_num) }
   let!(:recurrent_absence) { create(:absence, :weekly_on_monday, agent: agent_rdv_aide_num) }
   let!(:recurrent_absence_with_end_date) { create(:absence, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num, organisation: organisation_rdv_aide_num) }
+  let!(:plage_ouverture) do
+    create(:plage_ouverture, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num, organisation: organisation_rdv_aide_num, lieu: lieu)
+  end
 
   let!(:agent_rdv_sp) do
     create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
