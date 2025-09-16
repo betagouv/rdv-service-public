@@ -61,6 +61,10 @@ class InstanceExport < ApplicationRecord
         organisation_absences.pluck(:id).each do |absence_id|
           CopyAbsenceJob.perform_later(id, absence_id, current_domain.id)
         end
+
+        source_organisation.plage_ouvertures.not_expired.pluck(:id).each do |plage_ouverture_id|
+          CopyPlageOuvertureJob.perform_later(id, plage_ouverture_id)
+        end
       end
       update(good_job_batch_id: batch.id)
     end
@@ -125,6 +129,37 @@ class InstanceExport < ApplicationRecord
 
       api_client = instance_export.api_client
       api_client.post("absences", params)
+    end
+  end
+
+  class CopyPlageOuvertureJob < ApplicationJob
+    queue_as :latency_5m
+
+    def perform(instance_export_id, plage_ouverture_id)
+      plage_ouverture = PlageOuverture.find(plage_ouverture_id)
+      instance_export = InstanceExport.find(instance_export_id)
+
+      params = {
+        title: plage_ouverture.title,
+        recurrence: Montrose::Recurrence.dump(plage_ouverture.recurrence),
+        first_day: plage_ouverture.first_day.strftime("%Y-%m-%d"),
+        start_time: plage_ouverture.start_time.strftime("%H:%M"),
+        end_time: plage_ouverture.end_time.strftime("%H:%M"),
+        lieu_external_id: plage_ouverture.lieu_id,
+        secondary_start_time: plage_ouverture.secondary_start_time&.strftime("%H:%M"),
+        secondary_end_time: plage_ouverture.secondary_end_time&.strftime("%H:%M"),
+        motif_external_ids: plage_ouverture.motif_ids,
+        organisation_id: instance_export.destination_organisation_id,
+
+        external_reference: { external_id: plage_ouverture_id },
+      }
+
+      if plage_ouverture.agent != instance_export.agent
+        params[:agent_email] = agent.email
+      end
+
+      api_client = instance_export.api_client
+      api_client.post("plage_ouvertures", params)
     end
   end
 
