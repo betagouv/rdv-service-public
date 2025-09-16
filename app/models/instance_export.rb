@@ -54,6 +54,12 @@ class InstanceExport < ApplicationRecord
         source_organisation.rdvs.future.not_cancelled.pluck(:id).each do |rdv_id|
           CopyRdvAsAbsenceJob.perform_later(id, rdv_id, current_domain.id)
         end
+
+        organisation_absences = Absence.where(agent_id: source_organisation.agents.select(:agent_id)).not_expired
+
+        organisation_absences.pluck(:id).each do |absence_id|
+          CopyAbsenceJob.perform_later(id, absence_id, current_domain.id)
+        end
       end
       update(good_job_batch_id: batch.id)
     end
@@ -85,6 +91,39 @@ class InstanceExport < ApplicationRecord
         api_client = instance_export.api_client
         api_client.post("absences", params)
       end
+    end
+  end
+
+  class CopyAbsenceJob < ApplicationJob
+    queue_as :latency_5m
+
+    def perform(instance_export_id, absence_id, domain_id)
+      domain = Domain.find(domain_id)
+      absence = Absence.find(absence_id)
+      instance_export = InstanceExport.find(instance_export_id)
+
+      params = {
+        title: absence.title,
+        recurrence: Montrose::Recurrence.dump(absence.recurrence),
+        first_day: absence.first_day.strftime("%Y-%m-%d"),
+        end_day: absence.end_day.strftime("%Y-%m-%d"),
+        start_time: absence.start_time.strftime("%H:%M"),
+        end_time: absence.end_time.strftime("%H:%M"),
+
+        external_reference: {
+          external_id: "absence:#{absence_id}", # on préfixe par absence pour éviter la collision avec les rendez-vous
+          external_url: Rails.application.routes.url_helpers.edit_admin_organisation_planning_absence_url(
+            instance_export.source_organisation.id, absence.id, host: domain.host_name
+          ),
+        },
+      }
+
+      if absence.agent != instance_export.agent
+        params[:agent_email] = agent.email
+      end
+
+      api_client = instance_export.api_client
+      api_client.post("absences", params)
     end
   end
 
