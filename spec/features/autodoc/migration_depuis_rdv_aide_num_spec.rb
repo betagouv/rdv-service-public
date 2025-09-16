@@ -98,7 +98,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     instance_export = InstanceExport.create!(
       agent: agent_rdv_aide_num,
       api_token: rdv_sp_token.plaintext_token,
-      refresh_token: rdv_sp_token.refresh_token
+      refresh_token: rdv_sp_token.refresh_token,
+      source_organisation_id: organisation_rdv_aide_num
     )
 
     visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}/edit"

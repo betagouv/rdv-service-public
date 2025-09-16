@@ -7,6 +7,7 @@ class Admin::InstanceExportsController < AgentAuthController
 
   def new
     skip_authorization
+    session[:instance_export_source_organisation_id] = current_organisation.id
   end
 
   def oauth_callback
@@ -14,7 +15,8 @@ class Admin::InstanceExportsController < AgentAuthController
     instance_export = InstanceExport.create!(
       agent: current_agent,
       api_token: credentials.token,
-      refresh_token: credentials.refresh_token
+      refresh_token: credentials.refresh_token,
+      source_organisation_id: session[:instance_export_source_organisation_id]
     )
     authorize(instance_export, :create?, policy_class: Agent::InstanceExportPolicy)
 
