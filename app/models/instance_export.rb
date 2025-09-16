@@ -34,6 +34,7 @@ class InstanceExport < ApplicationRecord
   def copy_to_new_instance!(current_domain)
     batch = GoodJob::Batch.new(instance_export_id: id)
 
+    # batch.on_success = "MyBatchCallbackJob" TODO: séparer en deux batches les créations
     transaction do
       batch.add do
         source_organisation.users.pluck(:id).each do |user_id|
