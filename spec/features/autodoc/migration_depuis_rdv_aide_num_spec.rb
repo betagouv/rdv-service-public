@@ -29,6 +29,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let!(:absence) { create(:absence, :no_recurrence, agent: agent_rdv_aide_num) }
   let!(:recurrent_absence) { create(:absence, :weekly_on_monday, agent: agent_rdv_aide_num) }
   let!(:recurrent_absence_with_end_date) { create(:absence, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num) }
 
   let!(:agent_rdv_sp) do
     create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
@@ -147,7 +148,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(Montrose::Recurrence.dump(new_absence_with_end_date.recurrence)).to eq Montrose::Recurrence.dump(recurrent_absence_with_end_date.recurrence)
     expect(new_absence_with_end_date.recurrence_ends_at).to eq recurrent_absence_with_end_date.recurrence_ends_at
 
-    agent_rdv_sp.absences.regulieres.where.not(recurrence_ends_at: nil).first
+    new_plage_ouverture = agent_rdv_sp.plage_ouvertures.last
+    expect(Montrose::Recurrence.dump(new_plage_ouverture.recurrence)).to eq Montrose::Recurrence.dump(plage_ouverture.recurrence)
 
     login_as(agent_rdv_sp, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"
