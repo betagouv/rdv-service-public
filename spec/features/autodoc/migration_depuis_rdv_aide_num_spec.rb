@@ -117,6 +117,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     created_organisation = Organisation.last
     expect(created_organisation.external_references.last.external_id).to eq organisation_rdv_aide_num.id.to_s
 
+    expect(created_organisation.territory.enable_context_field).to be true
+
     expect(created_organisation).to have_attributes(
       name: "France Service de Montreuil",
       phone_number: "01 22 33 44 55",
