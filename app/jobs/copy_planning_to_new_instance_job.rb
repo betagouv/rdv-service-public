@@ -1,4 +1,7 @@
 class CopyPlanningToNewInstanceJob < ApplicationJob
+  # Les objets qu'on copie dans ce job (rdvs, plage ouverture, absence) ont besoin que les objets
+  # de configuration (agents, motifs, lieux) soient déjà créés dans la nouvelle organisation.
+  # On les copie donc dans ce deuxième batch, après que le premier ai copié tous les objets de config.
   def perform(batch, _context)
     instance_export = InstanceExport.find(batch.properties[:instance_export_id])
     current_domain_id = batch.properties[:current_domain_id]
