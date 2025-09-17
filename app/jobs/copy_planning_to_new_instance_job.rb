@@ -6,19 +6,25 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
     source_organisation = instance_export.source_organisation
 
     instance_export.transaction do
-      source_organisation.rdvs.future.not_cancelled.pluck(:id).each do |rdv_id|
-        CopyRdvAsAbsenceJob.perform_later(instance_export.id, rdv_id, current_domain_id)
+      batch = GoodJob::Batch.new(instance_export_id: instance_export.id)
+
+      batch.enqueue do
+        source_organisation.rdvs.future.not_cancelled.pluck(:id).each do |rdv_id|
+          CopyRdvAsAbsenceJob.perform_later(instance_export.id, rdv_id, current_domain_id)
+        end
+
+        organisation_absences = Absence.where(agent_id: source_organisation.agents.select(:agent_id)).not_expired
+
+        organisation_absences.pluck(:id).each do |absence_id|
+          CopyAbsenceJob.perform_later(instance_export.id, absence_id, current_domain_id)
+        end
+
+        source_organisation.plage_ouvertures.not_expired.pluck(:id).each do |plage_ouverture_id|
+          CopyPlageOuvertureJob.perform_later(instance_export.id, plage_ouverture_id)
+        end
       end
 
-      organisation_absences = Absence.where(agent_id: source_organisation.agents.select(:agent_id)).not_expired
-
-      organisation_absences.pluck(:id).each do |absence_id|
-        CopyAbsenceJob.perform_later(instance_export.id, absence_id, current_domain_id)
-      end
-
-      source_organisation.plage_ouvertures.not_expired.pluck(:id).each do |plage_ouverture_id|
-        CopyPlageOuvertureJob.perform_later(instance_export.id, plage_ouverture_id)
-      end
+      instance_export.update(good_job_batch_id: batch.id)
     end
   end
 

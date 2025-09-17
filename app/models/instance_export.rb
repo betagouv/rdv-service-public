@@ -56,7 +56,6 @@ class InstanceExport < ApplicationRecord
           CopyMotifJob.perform_later(id, motif_id)
         end
       end
-      update(good_job_batch_id: batch.id)
     end
   end
 
