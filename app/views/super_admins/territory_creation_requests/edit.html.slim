@@ -19,6 +19,9 @@ section.main-content__body
       = " "
       = mail_to(@territory_creation_request.agent.email)
 
+    dt.attribute-label.attribute-label--normal-case Le
+    dd.attribute-data = "#{l(@territory_creation_request.created_at, format: :human)} (il y a #{time_ago_in_words(@territory_creation_request.created_at)})"
+
     - siret = @territory_creation_request.agent.proconnect_siret
     - if siret
       dt.attribute-label SIRET
