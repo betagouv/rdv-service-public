@@ -18,6 +18,11 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
     ActiveRecord::Base.transaction do
       @organisation = Organisation.new(organisation_params)
       @organisation.territory = Territory.create!
+
+      if doorkeeper_token&.application&.name == "RDV Aide Numérique"
+        # Pour garder le même fonctionnement que sur le territoire historique des cnfs, on active ce champs dans la config
+        @organisation.territory.update!(enable_context_field: true)
+      end
       @organisation.save!
 
       AgentRole.create!(agent: current_agent, access_level: :admin, organisation: @organisation)
