@@ -11,6 +11,11 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
 
     if params[:lieu_external_id].present?
       plage_ouverture.lieu_id = external_reference_scope.find_by(item_type: "Lieu", external_id: params[:lieu_external_id])&.item_id
+
+      if plage_ouverture.lieu_id.nil?
+        render status: :not_found, json: { error_messages: ["Aucun lieu trouvé pour le lieux_external_id #{params[:lieu_external_id]}"] }
+        return
+      end
     end
 
     if params[:motif_external_ids].present?
