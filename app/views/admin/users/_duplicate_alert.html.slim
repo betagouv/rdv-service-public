@@ -22,4 +22,11 @@ div.flex-grow-1
       - else
         = link_to "Modifier cet usager", edit_admin_organisation_user_path(current_organisation, user), class: "btn btn-secondary btn-small"
     - else
-      = link_to "Importer cet usager", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, modal: from_modal), class: "btn btn-warning"
+      ruby:
+        secure_key = nil
+        Redis.with_connection do |redis|
+          secure_key = SecureRandom.uuid
+          redis_key = "link_to_organisation:secure_key:#{secure_key}"
+          redis.set(redis_key, user.id.to_s, ex: 30.seconds)
+        end
+      = link_to "Importer cet usager", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, modal: from_modal, secure_key:), class: "btn btn-warning"
