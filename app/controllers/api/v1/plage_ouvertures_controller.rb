@@ -10,7 +10,7 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
     end
 
     if params[:lieu_external_id].present?
-      plage_ouverture.lieu_id = external_reference_scope.find_by(item_type: "Lieu", external_id: params[:lieu_external_id])&.item_id
+      plage_ouverture.lieu_id = ExternalReference.find_by(item_type: "Lieu", external_id: params[:lieu_external_id])&.item_id
 
       if plage_ouverture.lieu_id.nil?
         render status: :not_found, json: { error_messages: ["Aucun lieu trouvé pour le lieu_external_id #{params[:lieu_external_id]}"] }
@@ -19,7 +19,7 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
     end
 
     if params[:motif_external_ids].present?
-      plage_ouverture.motif_ids = external_reference_scope.where(item_type: "Motif", external_id: params[:motif_external_ids]).pluck(:item_id)
+      plage_ouverture.motif_ids = ExternalReference.where(item_type: "Motif", external_id: params[:motif_external_ids]).pluck(:item_id)
 
       if plage_ouverture.motif_ids.count != params[:motif_external_ids].count
         render status: :not_found, json: { error_messages: ["Certains motifs n'ont pas été trouvés pour les motif_external_ids #{params[:motif_external_ids].join(', ')}"] }
@@ -65,12 +65,5 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
     params[:agent_id] ||= current_agent.id
 
     params.permit(:agent_id, :title, :first_day, :start_time, :end_day, :end_time, :organisation_id)
-  end
-
-  def external_reference_scope
-    @external_reference_scope ||= Agent::ExternalReferencePolicy::Scope.new(
-      current_agent,
-      ExternalReference.where(oauth_application_id: doorkeeper_token.application_id)
-    ).resolve
   end
 end
