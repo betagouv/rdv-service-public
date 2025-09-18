@@ -24,7 +24,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                   ruby:
                     autofocus = (@context.autofocus == "first" && creneau == creneaux.min) || (@context.autofocus == "last" && creneau == creneaux.max)
                     confirm_path = creneau_selection_service.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at)
-                    show_instructions = creneau.motif.restriction_for_rdv.present?
+                    show_instructions = creneau.motif.restriction_for_rdv.present? && params[:accepted_restrictions_for].to_i != creneau.motif.id
                     modal_id = "rdv-restriction-motif-#{creneau.motif.id}-#{creneau.starts_at.to_i}"
                   = render "/common/modal", id: modal_id, title: "À lire avant de prendre un rendez-vous", body: restriction_for_rdv_to_html(creneau.motif), confirm_path:, confirm_message: "Accepter", cancel_message: "Annuler"
                   a.fr-col-12.fr-btn.fr-btn--tertiary.fr-mb-1w.rdv-justify-content-center(
