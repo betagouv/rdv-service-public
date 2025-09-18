@@ -60,6 +60,7 @@ class Territory < ApplicationRecord
 
   # Hooks
   before_create :fill_name_for_departements
+  before_save { self.departement_number ||= "" }
 
   # Scopes
   scope :with_upcoming_rdvs, lambda {
