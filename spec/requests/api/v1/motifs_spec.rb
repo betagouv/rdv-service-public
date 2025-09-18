@@ -1,4 +1,4 @@
-RSpec.describe "Lieux API" do
+RSpec.describe "Motifs API" do
   let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
   let(:headers) do
     { "Content-Type": "application/json", Authorization: "Bearer #{oauth_token.plaintext_token}" }
@@ -49,7 +49,7 @@ RSpec.describe "Lieux API" do
       let!(:existing_motif) do
         create(:motif, organisation_id: organisation.id)
       end
-      let!(:external_refenrece) do
+      let!(:external_reference) do
         create(:external_reference, oauth_application: application, item: existing_motif, territory_id: organisation.territory_id, external_id: "123ABC")
       end
 
