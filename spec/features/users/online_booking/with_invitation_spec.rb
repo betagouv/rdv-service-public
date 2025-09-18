@@ -167,16 +167,16 @@ RSpec.describe "User can be invited" do
 
       # Lieu selection
       expect(page).to have_content(lieu.name)
-      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("a").click
-
-      # Creneau selection
-      expect(page).to have_content(lieu.name)
-      click_on("11:00")
+      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("button").click
 
       # Restriction Page
       expect(page).to have_content("À lire avant de prendre un rendez-vous")
       expect(page).to have_content(motif.restriction_for_rdv)
       click_link("Accepter")
+
+      # Creneau selection
+      expect(page).to have_content(lieu.name)
+      first(:link, "11:00").click
 
       # RDV informations
       expect(page).to have_content("Vos informations")

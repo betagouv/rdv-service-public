@@ -300,7 +300,8 @@ RSpec.describe "User can search for rdvs" do
       find(".fr-card__title", text: /#{motif1.name}/).ancestor(".fr-card__body").find("a").click
 
       expect(page).to have_content(lieu.name)
-      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("a").click
+      find(".fr-card__title", text: /#{lieu.name}/).ancestor(".fr-card__body").find("button").click
+      click_link("Accepter")
 
       ### Creneau selection
       expect(page).to have_content(agent.last_name.upcase)
@@ -308,7 +309,6 @@ RSpec.describe "User can search for rdvs" do
       expect(page).not_to have_content("14:00")
 
       first(:link, "09:00").click
-      click_link("Accepter")
 
       ## Take rdv
       expect(page).to have_content("Vos informations")
