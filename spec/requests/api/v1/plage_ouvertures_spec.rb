@@ -57,5 +57,19 @@ RSpec.describe "Plage ouvertures API" do
         expect(parsed_response_body["error_messages"].first).to eq "Aucun lieu trouvé pour le lieux_external_id 123456"
       end
     end
+
+    context "quand on ne trouve pas le motif par external id" do
+      before do
+        params[:motif_external_ids] = %w[123456 345678]
+      end
+
+      it "returns a 404 status" do
+        expect { post "/api/v1/plage_ouvertures", headers:, params:, as: :json }.not_to change(PlageOuverture, :count)
+
+        expect(response.status).to eq 404
+
+        expect(parsed_response_body["error_messages"].first).to eq "Certains motifs n'ont pas été trouvés pour les motif_external_ids 123456, 345678"
+      end
+    end
   end
 end

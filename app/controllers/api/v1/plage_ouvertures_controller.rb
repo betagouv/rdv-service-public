@@ -20,6 +20,12 @@ class Api::V1::PlageOuverturesController < Api::V1::AgentAuthBaseController
 
     if params[:motif_external_ids].present?
       plage_ouverture.motif_ids = external_reference_scope.where(item_type: "Motif", external_id: params[:motif_external_ids]).pluck(:item_id)
+
+      if plage_ouverture.motif_ids.count != params[:motif_external_ids].count
+        render status: :not_found, json: { error_messages: ["Certains motifs n'ont pas été trouvés pour les motif_external_ids #{params[:motif_external_ids].join(', ')}"] }
+        return
+      end
+
     end
 
     authorize(plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
