@@ -49,6 +49,7 @@ RSpec.describe "Agent can display user" do
 
     context "quand l'agent peut voir l'usager, mais qu'il n'a pas fait de connexion oauth explicite (ça arrive pour les migrations de Conums pour les agents qui sont invités automatiquement)" do
       let!(:oauth_token) { nil }
+
       it "shows a link to the external reference" do
         visit admin_organisation_user_path(organisation, user)
         expect(page).to have_content("Voir sur Démarches Simplifiées")
