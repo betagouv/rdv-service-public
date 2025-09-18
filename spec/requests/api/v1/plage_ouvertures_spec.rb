@@ -54,7 +54,7 @@ RSpec.describe "Plage ouvertures API" do
 
         expect(response.status).to eq 404
 
-        expect(parsed_response_body["error_messages"].first).to eq "Aucun lieu trouvé pour le lieux_external_id 123456"
+        expect(parsed_response_body["error_messages"].first).to eq "Aucun lieu trouvé pour le lieu_external_id 123456"
       end
     end
 

@@ -7,7 +7,7 @@ RSpec.describe RdvServicePublicApiClient do
         .to_return(
           status: 404,
           headers: { "Content-Type": "application/json" },
-          body: { error_message: ["Aucun lieu trouvé pour le lieux_external_id 123456"] }.to_json
+          body: { error_message: ["Aucun lieu trouvé pour le lieu_external_id 123456"] }.to_json
         )
     end
 
