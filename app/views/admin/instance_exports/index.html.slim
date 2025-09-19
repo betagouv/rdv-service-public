@@ -42,7 +42,7 @@
       | Vos données sur #{current_domain.name} seront conservées, et resteront accessibles même après la migration.
 
     .rdv-text-align-center
-      - instance_export = InstanceExport.find_by(agent: current_agent, organisation: current_organisation)
+      - instance_export = InstanceExport.find_by(agent: current_agent, source_organisation: current_organisation)
       - if instance_export
         = link_to "Continuer la migration", admin_organisation_instance_export_path(current_organisation, instance_export.id)
       - else
