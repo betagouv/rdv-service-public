@@ -136,7 +136,7 @@ jobs:
         with:
           timezoneLinux: "Europe/Paris"
       - name: Prevent https://github.com/rails/rails/issues/53661
-        run: touch tmp/local_secret.txt && head -c 96 /dev/urandom | base64 | head -c 128 > tmp/local_secret.txt
+        run: touch tmp/local_secret.txt && openssl rand -hex 64 > tmp/local_secret.txt
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
