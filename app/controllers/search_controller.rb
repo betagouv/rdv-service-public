@@ -35,10 +35,10 @@ class SearchController < ApplicationController
     end
   end
 
-  # rubocop:disable Metrics/PerceivedComplexity
-  def search_rdv
-    # TODO : public_link_organisation_id has to work if agent is logged in ?
-    if current_agent && params[:prescripteur] == Prescripteur::INTERNE && params[:current_organisation]
+  def search_rdv # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    if search_on_migrated_organisation
+      redirect_to migrated_organisation_booking_url, allow_other_host: true
+    elsif current_agent && params[:prescripteur] == Prescripteur::INTERNE && params[:current_organisation]
       redirect_to search_creneau_admin_organisation_prescription_path(params[:current_organisation], agent_search_params)
     else
       @context = if invitation&.to_take_rdv?
@@ -56,7 +56,6 @@ class SearchController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/PerceivedComplexity
 
   def public_link_with_internal_organisation_id
     organisation = Organisation.find(params[:organisation_id])
@@ -99,6 +98,24 @@ class SearchController < ApplicationController
   end
 
   private
+
+  def search_on_migrated_organisation
+    return false unless current_domain == Domain::RDV_AIDE_NUMERIQUE && params[:public_link_organisation_id]
+
+    organisation = Organisation.find(params[:public_link_organisation_id])
+
+    return false if organisation.motifs.active.any?
+
+    InstanceExport.where(source_organisation_id: organisation.id, status: "motifs_archived").any?
+  end
+
+  def migrated_organisation_booking_url
+    organisation = Organisation.find(params[:public_link_organisation_id])
+
+    export = InstanceExport.find_by(source_organisation_id: organisation.id, status: "motifs_archived")
+
+    public_link_to_org_url(organisation_id: export.destination_organisation_id, org_slug: organisation.slug, host: ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"])
+  end
 
   def redirect_to_organisation_search(organisation)
     if organisation
