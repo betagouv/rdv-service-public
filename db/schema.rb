@@ -412,7 +412,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_154948) do
     t.uuid "good_job_batch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "copy_planning_batch_id"
     t.integer "source_organisation_id"
     t.string "status"
     t.index ["agent_id"], name: "index_instance_exports_on_agent_id"
