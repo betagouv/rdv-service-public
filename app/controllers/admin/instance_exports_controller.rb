@@ -1,6 +1,8 @@
 class Admin::InstanceExportsController < AgentAuthController
   before_action { redirect_to(root_path) unless current_domain == Domain::RDV_AIDE_NUMERIQUE }
 
+  before_action { @hide_instance_export_banner = true }
+
   def index
     @exports = policy_scope(InstanceExport, policy_scope_class: Agent::InstanceExportPolicy::Scope)
   end

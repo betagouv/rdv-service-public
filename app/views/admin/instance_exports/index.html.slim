@@ -3,15 +3,15 @@
 .card.fr-mb-8w
   .card-body
     h2.fr-h3 Pourquoi passer à RDV Service Public ?
-    p #{link_to "RDV Service Public", "https://rdv.anct.gouv.fr", target: :_blank} est une version améliorée de RDV Aide Numérique. Cette nouvelle version vous permettra de :
+    p #{link_to "RDV Service Public", "https://rdv.anct.gouv.fr", target: :_blank} est une version améliorée de #{current_domain.name}. Cette nouvelle version vous permettra de :
     ul
-      li
+      li.fr-mb-2w
         b Pré-remplir vos comptes-rendus d'activité sur la Coop de la Médiation Numérique
         |  en fonction de vos rendez-vous.
-      li
+      li.fr-mb-2w
         b Prendre des rendez-vous depuis la Coop de la Médiation Numérique
         |  sans avoir à copier les information des bénéficiaires.
-      li
+      li.fr-mb-2w
         b Inviter vos collègues
         |  qui travaillent dans d'autre domaines que la médiation numérique à rejoindre votre organisation sur RDV Service Public.
 
@@ -19,22 +19,27 @@
   .card-body
     h2.fr-h3 Comment se passe la migration ?
 
-    p La migration se fait en deux étapes
+    p La migration se fait en trois étapes.
 
-    h3.fr-h4 Connexion à RDV Service Public
-    p Vous allez vous connecter à RDV Service Public avec ProConnect pour permettre l'échange de données entre les deux applications
+    h3.fr-h4.fr-mt-6w Connexion à RDV Service Public
+    p <b>ProConnect</b> vous permettra de vous connecter à RDV Service Public pour autoriser l'échange de données entre les deux applications.
 
-    p Vous n'avez pas besoin d'avoir un compte sur RDV Service Public pour faire cette connexion. Il sera créé automatiquement si vous n'en avez pas.
+    p Si vous n'avez pas de compte sur RDV Service Public, il sera créé automatiquement.
 
-    h3.fr-h4 Copie de vos données
-    p Vos usagers seront copiés automatiquement sur RDV Service Public. Leur historique de rendez-vous ne sera pas copié, mais vous pourrez retrouver un lien vers RDV Aide Numérique sur chaque fiche usager.
-    p Si vous avez de nouveaux usagers qui sont ajoutés sur #{current_domain.name} après votre première migration, vous pouvez répéter cette étape sans créer de doublons.
+    h3.fr-h4.fr-mt-6w Copie de vos données
+    p Toute la configuration de #{current_organisation.name}, les fiches des usagers, et les planning des agents seront copiés automatiquement sur RDV Service Public.
+
+    p Les historiques de rendez-vous de vos usagers ne seront pas copiés, mais vous pourrez les retrouver facilement à l'aide de liens depuis RDV Service Public vers #{current_domain.name}.
 
     p Les agents de votre organisation actuelle seront aussi invités à se créer un compte sur RDV Service Public
 
-    p.fr-mt-2w
-      = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w")
-      | Vos données sur RDV Aide Numérique seront conservées, et resteront accessibles même après la migration.
+    h3.fr-h4.fr-mt-6w Bascule vers RDV Service Public
+
+    p Vous pourrez ensuite prendre vos nouveaux rendez-vous depuis RDV Service Public, et vos anciens motifs sur #{current_domain.name} seront archivés.
+
+    p.fr-mt-6w
+      = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w color-scheme-green")
+      | Vos données sur #{current_domain.name} seront conservées, et resteront accessibles même après la migration.
 
     .rdv-text-align-center
       = link_to  "Commencer la migration", new_admin_organisation_instance_export_path, class: "fr-btn"

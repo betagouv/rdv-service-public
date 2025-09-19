@@ -1,4 +1,4 @@
-- if current_domain == Domain::RDV_AIDE_NUMERIQUE && InstanceExport.find_by(source_organisation: current_organisation)
+- if current_domain == Domain::RDV_AIDE_NUMERIQUE && !@hide_instance_export_banner && InstanceExport.find_by(source_organisation: current_organisation)
   .fr-notice.fr-notice--info
     .fr-notice__body
       p.fr-mb-0.fr-mx-2w

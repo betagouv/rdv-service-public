@@ -377,7 +377,7 @@ user_org_bapaume.save!
 # Insert a lot of users and add them to the paris_nord organisation
 # rubocop:disable Rails/SkipsModelValidations
 now = Time.zone.now
-users_attributes = 10_000.times.map do |i|
+users_attributes = 1_000.times.map do |i|
   {
     created_at: now,
     updated_at: now,

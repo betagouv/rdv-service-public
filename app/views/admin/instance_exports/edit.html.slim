@@ -1,37 +1,49 @@
 - content_for :title, "Migration vers RDV Service Public"
 
 = form_with url: admin_organisation_instance_export_path(current_organisation, @instance_export), method: :put, builder: Dsfr::FormBuilder do |form|
-  .d-flex.rdv-justify-content-center
-    .card
-      .card-header
-        b= current_domain.name
-      .card-body
-        - source_org = @instance_export.source_organisation
-        h6= source_org.name
-        p #{source_org.users.count} usagers
-        - if source_org.agents.count > 1
-          p #{source_org.agents.count} agents
-        p #{source_org.lieux.count}  #{"lieu".pluralize(source_org.lieux.count)}
-        p #{source_org.motifs.count} #{"motif".pluralize(source_org.motifs.count)}
+  .fr-grid-row.fr-pt-4w
+    .fr-col-6
+      .card
+        .card-header
+          h2.fr-h3= current_domain.name
+        .card-body
+          - source_org = @instance_export.source_organisation
+          h3.fr-h4= source_org.name
+          h4.fr-h5 Configuration
+          .fr-grid-row
+            .fr-col-4
+              p #{source_org.motifs.count} #{"motif".pluralize(source_org.motifs.count)}
+            .fr-col-4
+              p #{source_org.lieux.count}  #{"lieu".pluralize(source_org.lieux.count)}
+            .fr-col-4
+              p #{source_org.agents.count} #{"agent".pluralize(source_org.agents.count)}
 
-    .fr-mx-4w[style="align-self: center"]= icon("fr-icon-arrow-right-fill")
+          p.fr-my-2w #{source_org.users.count} usagers
 
-    .card
-      .card-header
-        b RDV Service Public
-      .card-body
-        - if @instance_export.new_instance_organisations.empty?
-          h6= @instance_export.source_organisation.name
-        - elsif @instance_export.new_instance_organisations.count == 1
-          h6= @instance_export.source_organisation.name
-          = form.hidden_field :destination_organisation_id, value: @instance_export.new_instance_organisations.first["id"]
-        - else
-          = form.select :destination_organisation_id, @instance_export.new_instance_organisations.map { |o| [o["name"], o["id"]] }, {}, { class: "select2-input" }
+          h4.fr-h5.fr-mt-2w Planning
+          p #{source_org.rdvs.future.count} rendez-vous à venir
+          p #{source_org.plage_ouvertures.not_expired.count} plages d'ouverture
+          p #{Absence.where(agent_id: source_org.agents.select(:id)).not_expired.count} absences
+
+    .fr-col-6
+      .d-flex
+        .fr-mx-4w[style="align-self: center"]= icon("fr-icon-arrow-right-fill")
+        .card
+          .card-header
+            h2.fr-h3 RDV Service Public
+          .card-body
+            - if @instance_export.new_instance_organisations.empty?
+              h6= @instance_export.source_organisation.name
+            - elsif @instance_export.new_instance_organisations.count == 1
+              h6= @instance_export.source_organisation.name
+              = form.hidden_field :destination_organisation_id, value: @instance_export.new_instance_organisations.first["id"]
+            - else
+              = form.select :destination_organisation_id, @instance_export.new_instance_organisations.map { |o| [o["name"], o["id"]] }, {}, { class: "select2-input" }
 
   .rdv-text-align-center
-    p
-      | Vous allez copier ces données
-      |  de #{@instance_export.source_organisation.name} sur #{current_domain.name}
-      |  vers RDV Service Public
+    .card
+      .card-body
+        p
+          |  Ces données vont être copiées automatiquement depuis  #{current_domain.name} vers RDV Service Public
 
-    = form.submit  "Copier les données", class: "fr-btn"
+        = form.submit  "Copier les données", class: "fr-btn"
