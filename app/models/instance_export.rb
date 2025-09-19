@@ -55,6 +55,8 @@ class InstanceExport < ApplicationRecord
           CopyMotifJob.perform_later(id, motif_id)
         end
       end
+
+      update(status: "copying_configuration")
     end
   end
 
