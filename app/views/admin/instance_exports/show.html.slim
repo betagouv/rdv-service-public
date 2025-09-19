@@ -6,6 +6,13 @@
       - if @instance_export.good_job_batch && @instance_export.good_job_batch.jobs.where(finished_at: nil).none?
         p Migration terminée !
 
-        = link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], class: "fr-btn fr-btn--secondary"
+        p Vos données ont été copiées dans RDV Service Public.
+        = link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], target: "_blank", class: "fr-btn fr-btn--secondary"
+
+        - if current_organisation.motifs.active.any?
+          p Pour éviter que de nouveaux rendez-vous soient pris par erreur sur #{current_domain.name}, nous pouvons archiver vos motifs.
+
+          = button_to "Archiver les motifs", close_motifs_instance_export_admin_organisation_path(current_organisation), method: :patch, class: "fr-btn", disable_with: "Veuillez patienter…"
+
       - else
         p Migration en cours. Rechargez cette page dans quelques instants.

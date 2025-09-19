@@ -47,6 +47,14 @@ class Admin::InstanceExportsController < AgentAuthController
     @instance_export = find_instance_export
   end
 
+  def close_motifs
+    @instance_export = find_instance_export
+    @instance_export.motifs.active.each(&:archive)
+
+    flash[:success] = "Les motifs ont été archivés sur #{current_domain.name}"
+    redirect_to admin_organisation_instance_export_path(current_organisation, @instance_export.id)
+  end
+
   private
 
   def find_instance_export

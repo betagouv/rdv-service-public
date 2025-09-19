@@ -2,7 +2,6 @@ class InstanceExport < ApplicationRecord
   belongs_to :agent
   belongs_to :good_job_batch, class_name: "GoodJob::BatchRecord", optional: true
   belongs_to :source_organisation, optional: true, class_name: "Organisation"
-  belongs_to :copy_planning_batch, class_name: "GoodJob::BatchRecord", optional: true
 
   encrypts :api_token
   encrypts :refresh_token
