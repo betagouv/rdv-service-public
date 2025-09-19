@@ -40,4 +40,26 @@ RSpec.describe Agent::SectorAttributionPolicy do
                     :create?,
                     :destroy?
   end
+
+  context "organisation is not in the territory" do
+    let(:territory) { create(:territory) }
+    let(:sector) { create(:sector, territory: territory) }
+    let(:sector_attribution) { build(:sector_attribution, sector:, organisation: create(:organisation)) }
+    let(:agent) { create(:agent, role_in_territories: [territory]) }
+
+    it_behaves_like "not permit actions", :sector_attribution,
+                    :create?,
+                    :destroy?
+  end
+
+  context "agent is not in the territory" do
+    let(:territory) { create(:territory) }
+    let(:sector) { create(:sector, territory: territory) }
+    let(:sector_attribution) { build(:sector_attribution, :level_agent, sector:, agent: create(:agent)) }
+    let(:agent) { create(:agent, role_in_territories: [territory]) }
+
+    it_behaves_like "not permit actions", :sector_attribution,
+                    :create?,
+                    :destroy?
+  end
 end
