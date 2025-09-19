@@ -4,8 +4,8 @@ RSpec.describe SectorAttribution, type: :model do
   let!(:sector) { build_stubbed(:sector, territory:) }
 
   it "validation of presence of level" do
-    expect(build(:sector_attribution, :level_organisation, organisation:, sector:, agent: nil)).to be_valid
-    expect(build(:sector_attribution, :level_organisation, organisation:, sector:, agent:)).not_to be_valid
+    expect(build(:sector_attribution, level: SectorAttribution::LEVEL_ORGANISATION)).to be_valid
+    expect(build(:sector_attribution, level: nil)).not_to be_valid
   end
 
   describe "validation of presence of agent only if level is agent" do
