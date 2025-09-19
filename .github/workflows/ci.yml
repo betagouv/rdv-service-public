@@ -135,7 +135,7 @@ jobs:
       - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
-      - name: Prevent https://github.com/rails/rails/issues/53661 (test de lancement CI 9)
+      - name: Prevent https://github.com/rails/rails/issues/53661
         run: touch tmp/local_secret.txt && openssl rand -hex 64 > tmp/local_secret.txt
       - name: Set up Node.js
         uses: actions/setup-node@v4
