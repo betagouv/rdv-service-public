@@ -49,7 +49,7 @@ development:
   collation: en_US.UTF-8 # pour être raccord avec la config sur Scalingo
   ctype: en_US.UTF-8
   template: template0 # cette base est immutable sur Postgresql v16+
-  database: lapin_development
+  database: <%= ENV['LAPIN_DATABASE_NAME'] || "lapin_development" %>
 
 test:
   <<: *default

@@ -21,6 +21,7 @@ html lang="fr"
               = yield
 
           - else
+            = render "layouts/instance_migration_banner"
             = content_for :fil_ariane
             .container-fluid
               = render "layouts/flash"

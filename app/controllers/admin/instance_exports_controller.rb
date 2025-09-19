@@ -48,7 +48,7 @@ class Admin::InstanceExportsController < AgentAuthController
     @instance_export = find_instance_export
   end
 
-  def close_motifs
+  def archive_motifs
     instance_export = find_instance_export(:update?)
     instance_export.transaction do
       current_organisation.motifs.active.each(&:archive)

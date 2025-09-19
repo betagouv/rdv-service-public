@@ -230,7 +230,7 @@ Rails.application.routes.draw do
 
         resources :instance_exports, only: %i[index new edit update show] do
           member do
-            patch :close_motifs
+            patch :archive_motifs
           end
         end
         resources :lieux, except: :show do

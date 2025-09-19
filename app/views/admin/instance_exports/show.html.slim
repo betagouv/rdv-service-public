@@ -10,7 +10,7 @@
             p Pour éviter que de nouveaux rendez-vous soient pris par erreur sur #{current_domain.name}, nous pouvons archiver vos motifs.
 
             = link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], target: "_blank", class: "fr-btn fr-btn--secondary"
-            = button_to "Archiver les motifs", close_motifs_admin_organisation_instance_export_path(current_organisation, @instance_export.id), method: :patch, class: "fr-btn", disable_with: "Veuillez patienter…"
+            = button_to "Archiver les motifs", archive_motifs_admin_organisation_instance_export_path(current_organisation, @instance_export.id), method: :patch, class: "fr-btn", disable_with: "Veuillez patienter…"
 
           - else
             p Migration terminée !

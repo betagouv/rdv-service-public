@@ -1,0 +1,10 @@
+- if current_domain == Domain::RDV_AIDE_NUMERIQUE && InstanceExport.find_by(source_organisation: current_organisation)
+  .fr-notice.fr-notice--info
+    .fr-notice__body
+      p.fr-mb-0.fr-mx-2w
+        span.fr-notice__desc
+          - if InstanceExport.find_by(source_organisation: current_organisation, status: "motifs_archived")
+            | Cette organisation a été migrée vers RDV Service Public. Vous pouvez continuer de consulter votre historique sur #{current_domain.name}, mais les nouveaux rendez-vous ou les changements de planning doivent être faits sur RDV Service Public.
+          - else
+            | Cette organisation est en cours de migration vers RDV Service Public.
+        = link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], class: "fr-btn fr-btn--secondary fr-m-1w"
