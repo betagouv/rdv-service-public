@@ -55,6 +55,8 @@ class Admin::AgentsController < AgentAuthController
     @agent = Agent.find(params[:id])
     authorize(@agent, policy_class: Agent::AgentPolicy)
 
+    raise Pundit::NotAuthorizedError, "Current agent is not admin" unless current_agent.admin_in_organisation?(current_organisation)
+
     update_agent = AdminUpdatesAgent.new(
       agent: @agent,
       organisation: current_organisation,
