@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :sector_attribution do
     sector
-    organisation
+    organisation { build(:organisation, territory: sector.territory) }
     level { SectorAttribution::LEVEL_ORGANISATION }
 
     trait :level_organisation do
