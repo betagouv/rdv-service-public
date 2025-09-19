@@ -1,6 +1,8 @@
 class Admin::AgentsController < AgentAuthController
   respond_to :html, :json
 
+  before_action :ensure_agent_is_admin
+
   def index
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
 
@@ -55,8 +57,6 @@ class Admin::AgentsController < AgentAuthController
     @agent = Agent.find(params[:id])
     authorize(@agent, policy_class: Agent::AgentPolicy)
 
-    raise Pundit::NotAuthorizedError, "Current agent is not admin" unless current_agent.admin_in_organisation?(current_organisation)
-
     update_agent = AdminUpdatesAgent.new(
       agent: @agent,
       organisation: current_organisation,
@@ -91,6 +91,10 @@ class Admin::AgentsController < AgentAuthController
   end
 
   private
+
+  def ensure_agent_is_admin
+    raise Pundit::NotAuthorizedError unless current_agent.admin_in_organisation?(current_organisation)
+  end
 
   def render_new
     @services = current_territory.services

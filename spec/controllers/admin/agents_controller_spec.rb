@@ -343,6 +343,9 @@ RSpec.describe Admin::AgentsController, type: :controller do
         expect do
           patch :update, params:
         end.not_to change { agent.reload.access_level_in(organisation) }
+
+        expect(response).to redirect_to("/")
+        expect(flash[:error]).to eq "Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action"
       end
     end
   end
