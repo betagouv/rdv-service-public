@@ -329,4 +329,24 @@ RSpec.describe Admin::AgentsController, type: :controller do
       end
     end
   end
+
+  describe "PATCH #update" do
+    describe "preventing the current basic agent to self-elevate to admin" do
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+      it "works" do
+        params = {
+          organisation_id: organisation,
+          id: agent.id,
+          agent: { agent_role: { access_level: "admin" } },
+        }
+        expect do
+          patch :update, params:
+        end.not_to change { agent.reload.access_level_in(organisation) }
+
+        expect(response).to redirect_to("/")
+        expect(flash[:error]).to eq "Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action"
+      end
+    end
+  end
 end
