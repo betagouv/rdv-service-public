@@ -1,0 +1,13 @@
+= render "admin/organisations/configurations/fil_ariane", current_page_title: "Réservation en ligne"
+- content_for(:menu_item) { "menu-settings" }
+
+- content_for :title do
+  | Réservation en ligne
+
+.card
+  .card-body
+    = simple_form_for @organisation, url: admin_organisation_online_booking_path(@organisation)  do |f|
+      /f.collection :motifs
+      /- @motifs.each do |motif|
+
+

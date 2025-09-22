@@ -6,7 +6,16 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
     set_motifs
   end
 
+  def edit
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
+    set_motifs
+  end
+
   def update
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
+  end
+
+  def update_user_types
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
 
     if @organisation.update(permitted_params)

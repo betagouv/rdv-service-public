@@ -260,7 +260,11 @@ Rails.application.routes.draw do
           end
         end
         scope module: "organisations" do
-          resource :online_booking, only: %i[show update]
+          resource :online_booking, only: %i[show edit update] do
+            member do
+              post :update_user_types
+            end
+          end
           resource :configuration, only: [:show]
           resources :stats, only: :index do
             collection do
