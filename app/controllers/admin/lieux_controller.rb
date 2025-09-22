@@ -34,6 +34,7 @@ class Admin::LieuxController < AgentAuthController
 
   def update
     set_and_authorize_lieu
+    skip_second_authorization # On ne modifie pas d'association
     if @lieu.update(lieu_params)
       flash[:success] = "Le lieu a été modifié."
       redirect_to admin_organisation_lieux_path(@lieu.organisation)

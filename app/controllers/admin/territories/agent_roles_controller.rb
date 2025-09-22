@@ -2,7 +2,11 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
   def update
     agent_role = AgentRole.find(params[:id])
     authorize(agent_role, policy_class: Agent::AgentRolePolicy)
-    if agent_role.update(agent_role_params)
+
+    agent_role.assign_attributes(agent_role_params)
+    authorize(agent_role, policy_class: Agent::AgentRolePolicy)
+
+    if agent_role.save
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
     else
       flash[:error] = agent_role.errors.full_messages.join(", ")
