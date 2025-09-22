@@ -24,9 +24,13 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
   def edit; end
 
   def update
-    params = webhook_endpoint_params[:secret] == @webhook.partially_hidden_secret ? webhook_endpoint_params.except(:secret) : webhook_endpoint_params
+    update_params = webhook_endpoint_params[:secret] == @webhook.partially_hidden_secret ? webhook_endpoint_params.except(:secret) : webhook_endpoint_params
 
-    if @webhook.update(params)
+    @webhook.assign_attributes(update_params)
+
+    authorize(@webhook, policy_class: Agent::WebhookEndpointPolicy)
+
+    if @webhooks.save
       redirect_to admin_territory_webhook_endpoints_path(current_territory)
     else
       render :new
