@@ -40,6 +40,7 @@ class Users::RelativesController < UserAuthController
     user = User.find(params.require(:id))
     authorize(user, policy_class: User::UserPolicy)
     @form = RelativeUserForm.new(user:)
+    skip_second_authorizatioj
     if @form.submit(**form_params)
       flash[:success] = "Les informations de votre proche #{@form.user.full_name} ont été mises à jour."
       redirect_to users_informations_path
