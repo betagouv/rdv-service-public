@@ -1,16 +1,17 @@
-# voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/technique_fca/endpoints.md
+# voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
 module AgentConnectOpenIdClient
   class Callback
     class OpenIdFlowError < StandardError; end
     class ApiRequestError < StandardError; end
 
-    def initialize(session_state:, params_state:, callback_url:, nonce:, client_id:, client_secret:)
+    def initialize(session_state:, params_state:, callback_url:, nonce:, client_id:, client_secret:, force_2fa: false)
       @session_state = session_state
       @params_state = params_state
       @callback_url = callback_url
       @nonce = nonce
       @client_id = client_id
       @client_secret = client_secret
+      @force_2fa = force_2fa
     end
 
     attr_reader :id_token_for_logout
@@ -45,6 +46,11 @@ module AgentConnectOpenIdClient
 
     def openid_sub
       @user_info["sub"]
+    end
+
+    # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/double_authentification
+    def have_2fa_enabled?
+      %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa].include?(@acr)
     end
 
     private
@@ -94,11 +100,13 @@ module AgentConnectOpenIdClient
 
     def validate_nonce!(encoded_id_token)
       decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, agent_connect_config.jwks)
+
       decoded_id_token.verify!(
         issuer: agent_connect_config.issuer,
         client_id: @client_id,
         nonce: @nonce
       )
+      @acr = decoded_id_token.acr
     end
 
     def fetch_user_info(token)

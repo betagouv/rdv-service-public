@@ -10,11 +10,15 @@ class AgentConnectController < ApplicationController
     )
     session[:agent_connect_state] = auth_client.state
     session[:nonce] = auth_client.nonce
+    force_2fa = false
     if params[:for_user]
       session[:proconnect_for_user] = true
+    elsif params[:for_super_admin]
+      session[:proconnect_for_super_admin] = true
+      force_2fa = true
     end
 
-    redirect_to auth_client.redirect_url(agent_connect_callback_url), allow_other_host: true
+    redirect_to auth_client.redirect_url(agent_connect_callback_url, force_2fa:), allow_other_host: true
   end
 
   def callback
@@ -31,6 +35,13 @@ class AgentConnectController < ApplicationController
 
       if session.delete(:proconnect_for_user)
         connect_user(callback_client)
+      elsif session.delete(:proconnect_for_super_admin)
+        if callback_client.have_2fa_enabled?
+          connect_super_admin(callback_client)
+        else
+          flash[:error] = "Vous devez activer la double authentification sur votre compte ProConnect pour vous connecter en tant que super administrateur."
+          redirect_to connexion_super_admins_path
+        end
       else
         connect_agent(callback_client)
       end
@@ -48,6 +59,24 @@ class AgentConnectController < ApplicationController
   # jamais revenir vers ses paths après un login.
   def storable_location?
     false
+  end
+
+  def connect_super_admin(callback_client)
+    # Création d'un super admin en dev si aucun n'existe
+    if Rails.env.development? && SuperAdmin.none?
+      SuperAdmin.create!(email: callback_client.user_email, first_name: callback_client.user_first_name, last_name: callback_client.user_last_name, role: :legacy_admin)
+    end
+
+    super_admin = SuperAdmin.find_by(email: callback_client.user_email)
+
+    if super_admin
+      bypass_sign_in super_admin, scope: :super_admin
+      session[:agent_connect_id_token] = callback_client.id_token_for_logout
+      redirect_to super_admins_agents_path
+    else
+      flash[:error] = "Compte ProConnect non autorisé"
+      redirect_to connexion_super_admins_path
+    end
   end
 
   def connect_user(callback_client)
