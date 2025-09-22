@@ -106,13 +106,13 @@ class SearchController < ApplicationController
 
     return false if organisation.motifs.active.any?
 
-    InstanceExport.where(source_organisation_id: organisation.id, status: "motifs_archived").any?
+    InstanceExport.finished_exports_for_organisation(organisation.id).any?
   end
 
   def migrated_organisation_booking_url
     organisation = Organisation.find(params[:public_link_organisation_id])
 
-    export = InstanceExport.find_by(source_organisation_id: organisation.id, status: "motifs_archived")
+    export = InstanceExport.finished_exports_for_organisation(organisation.id).first
 
     public_link_to_org_url(organisation_id: export.destination_organisation_id, org_slug: organisation.slug, host: ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"])
   end

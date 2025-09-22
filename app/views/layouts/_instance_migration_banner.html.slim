@@ -3,7 +3,7 @@
     .fr-notice__body
       p.fr-mb-0.fr-mx-2w
         span.fr-notice__desc
-          - if InstanceExport.find_by(source_organisation: current_organisation, status: "motifs_archived")
+          - if InstanceExport.finished_exports_for_organisation(current_organisation.id).any?
             | Cette organisation a été migrée vers RDV Service Public. Vous pouvez continuer de consulter votre historique sur #{current_domain.name}, mais les nouveaux rendez-vous ou les changements de planning doivent être faits sur RDV Service Public.
           - else
             | Cette organisation est en cours de migration vers RDV Service Public.
