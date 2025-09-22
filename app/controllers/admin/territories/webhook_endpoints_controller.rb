@@ -30,7 +30,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
 
     authorize(@webhook, policy_class: Agent::WebhookEndpointPolicy)
 
-    if @webhooks.save
+    if @webhook.save
       redirect_to admin_territory_webhook_endpoints_path(current_territory)
     else
       render :new
