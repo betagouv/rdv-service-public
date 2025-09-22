@@ -32,6 +32,7 @@ class Admin::InstanceExportsController < AgentAuthController
 
   def update
     @instance_export = find_instance_export
+    skip_second_authorization
 
     destination_organisation_id = params[:destination_organisation_id]
 
