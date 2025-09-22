@@ -64,6 +64,7 @@ class Admin::AgentsController < AgentAuthController
       agent_params: update_agent_params,
       inviting_agent: current_agent
     )
+    skip_second_authorization
 
     if update_agent.call
       flash[:success] = update_agent.confirmation_message
