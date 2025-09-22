@@ -9,7 +9,11 @@ class Users::UsersController < UserAuthController
   def update
     @user = current_user
     authorize(@user, policy_class: User::UserPolicy)
-    if @user.update(user_params)
+
+    @user.assign_attributes(user_params)
+    authorize(@user, policy_class: User::UserPolicy)
+
+    if @user.save
       flash[:success] = "Vos informations ont été mises à jour."
       redirect_to users_informations_path
     else

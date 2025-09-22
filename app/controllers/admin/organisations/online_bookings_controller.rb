@@ -8,6 +8,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
 
   def update
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
+    skip_second_authorization
 
     if @organisation.update(permitted_params)
       flash[:success] = "Configuration mise à jour"

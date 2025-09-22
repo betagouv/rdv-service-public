@@ -2,6 +2,8 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
   def update
     agent = Agent.find(params[:id])
     agent_territorial_access_right = AgentTerritorialAccessRight.find_by(agent: agent, territory: current_territory)
+    authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
+
     agent_territorial_access_right.assign_attributes(agent_territorial_access_right_params)
     authorize(agent_territorial_access_right, policy_class: Agent::AgentTerritorialAccessRightPolicy)
 

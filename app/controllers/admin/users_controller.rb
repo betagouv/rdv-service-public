@@ -86,6 +86,8 @@ class Admin::UsersController < AgentAuthController
 
   def update
     @user.assign_attributes(user_params)
+    authorize(current_organisation, policy_class: Agent::OrganisationPolicy)
+
     @user_form = user_form_object
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
