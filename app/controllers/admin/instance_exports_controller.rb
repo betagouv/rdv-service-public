@@ -52,10 +52,8 @@ class Admin::InstanceExportsController < AgentAuthController
 
   def archive_motifs
     instance_export = find_instance_export(:update?)
-    instance_export.transaction do
-      current_organisation.motifs.active.each(&:archive)
-      instance_export.update(status: "motifs_archived")
-    end
+    current_organisation.motifs.active.each(&:archive)
+    instance_export.update(status: "motifs_archived")
 
     flash[:success] = "Les motifs ont été archivés sur #{current_domain.name}"
     redirect_to admin_organisation_instance_export_path(current_organisation, instance_export.id)
