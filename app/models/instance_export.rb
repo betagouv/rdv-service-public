@@ -2,10 +2,13 @@ class InstanceExport < ApplicationRecord
   belongs_to :agent
   belongs_to :good_job_batch, class_name: "GoodJob::BatchRecord", optional: true
   belongs_to :source_organisation, optional: true, class_name: "Organisation"
-  belongs_to :copy_planning_batch, class_name: "GoodJob::BatchRecord", optional: true
 
   encrypts :api_token
   encrypts :refresh_token
+
+  scope :finished_exports_for_organisation, lambda { |source_organisation_id|
+    where(source_organisation_id: source_organisation_id, status: "motifs_archived")
+  }
 
   def new_instance_organisations
     @new_instance_organisations ||= api_client.get("organisations")["organisations"]
@@ -56,6 +59,8 @@ class InstanceExport < ApplicationRecord
           CopyMotifJob.perform_later(id, motif_id)
         end
       end
+
+      update(status: "copying_configuration")
     end
   end
 

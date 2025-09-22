@@ -16,7 +16,8 @@ class Admin::InstanceExportsController < AgentAuthController
       agent: current_agent,
       api_token: credentials.token,
       refresh_token: credentials.refresh_token,
-      source_organisation_id: session[:instance_export_source_organisation_id]
+      source_organisation_id: session[:instance_export_source_organisation_id],
+      status: "oauth_connected"
     )
     authorize(instance_export, :create?, policy_class: Agent::InstanceExportPolicy)
 
@@ -25,6 +26,7 @@ class Admin::InstanceExportsController < AgentAuthController
   end
 
   def edit
+    @hide_instance_export_banner = true
     @instance_export = find_instance_export
   end
 
@@ -44,14 +46,24 @@ class Admin::InstanceExportsController < AgentAuthController
   end
 
   def show
+    @hide_instance_export_banner = true
     @instance_export = find_instance_export
+  end
+
+  def archive_motifs
+    instance_export = find_instance_export(:update?)
+    current_organisation.motifs.active.each(&:archive)
+    instance_export.update(status: "motifs_archived")
+
+    flash[:success] = "Les motifs ont été archivés sur #{current_domain.name}"
+    redirect_to admin_organisation_instance_export_path(current_organisation, instance_export.id)
   end
 
   private
 
-  def find_instance_export
+  def find_instance_export(action_name = nil)
     InstanceExport.find(params[:id]).tap do |export|
-      authorize(export, policy_class: Agent::InstanceExportPolicy)
+      authorize(export, action_name, policy_class: Agent::InstanceExportPolicy)
     end
   end
 

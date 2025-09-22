@@ -26,7 +26,7 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
     authorize(motif, policy_class: Agent::MotifPolicy)
 
     motif.transaction do
-      motif.save
+      motif.save!
 
       if params[:external_reference].present?
         ExternalReference.create!(

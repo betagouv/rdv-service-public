@@ -109,13 +109,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
     doc.add_screenshot(page,
                        text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les données",
-                       wait_for: "Vous allez copier ")
+                       wait_for: "Ces données vont être copiées")
 
     click_on "Copier les données"
 
     doc.add_screenshot(page,
                        text: "La migration est réussie. Mes usagers sont maintenant disponibles sur RDV Service Public",
-                       wait_for: "Migration terminée")
+                       wait_for: "Vos données ont été copiées dans RDV Service Public")
 
     created_organisation = Organisation.last
     expect(created_organisation.external_references.last.external_id).to eq organisation_rdv_aide_num.id.to_s

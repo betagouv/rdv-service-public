@@ -21,9 +21,10 @@ html lang="fr"
               = yield
 
           - else
+            = render "layouts/instance_migration_banner"
             = content_for :fil_ariane
             .container-fluid
-              .fr-mx-2w= render "layouts/flash"
+              = render "layouts/flash"
               - if content_for :title
                 .page-title-box
                   h1.fr-h2= yield :title

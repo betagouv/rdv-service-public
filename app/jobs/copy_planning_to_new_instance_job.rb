@@ -9,9 +9,9 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
     source_organisation = instance_export.source_organisation
 
     instance_export.transaction do
-      batch = GoodJob::Batch.new(instance_export_id: instance_export.id)
+      copy_planning_batch = GoodJob::Batch.new(instance_export_id: instance_export.id)
 
-      batch.enqueue do
+      copy_planning_batch.enqueue do
         source_organisation.rdvs.future.not_cancelled.pluck(:id).each do |rdv_id|
           CopyRdvAsAbsenceJob.perform_later(instance_export.id, rdv_id, current_domain_id)
         end
@@ -27,7 +27,10 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
         end
       end
 
-      instance_export.update(good_job_batch_id: batch.id)
+      instance_export.update(
+        good_job_batch_id: copy_planning_batch.id,
+        status: "copying_planning"
+      )
     end
   end
 
@@ -85,7 +88,7 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
       }
 
       if absence.agent != instance_export.agent
-        params[:agent_email] = agent.email
+        params[:agent_email] = instance_export.agent.email
       end
 
       api_client = instance_export.api_client
@@ -116,7 +119,7 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
       }
 
       if plage_ouverture.agent != instance_export.agent
-        params[:agent_email] = agent.email
+        params[:agent_email] = instance_export.agent.email
       end
 
       api_client = instance_export.api_client

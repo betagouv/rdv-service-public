@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_15_181126) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_18_154948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -413,6 +413,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_181126) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "source_organisation_id"
+    t.string "status"
     t.index ["agent_id"], name: "index_instance_exports_on_agent_id"
     t.index ["good_job_batch_id"], name: "index_instance_exports_on_good_job_batch_id"
     t.index ["source_organisation_id"], name: "index_instance_exports_on_source_organisation_id"
