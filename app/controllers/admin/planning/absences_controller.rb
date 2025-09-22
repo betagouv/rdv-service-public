@@ -20,6 +20,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
   def new
     if params[:duplicate_absence_id].present?
       original_abs = Absence.find(params[:duplicate_absence_id])
+      authorize(original_abs, :show?, policy_class: Agent::AbsencePolicy)
       defaults = original_abs.slice(:title, :first_day, :start_time, :end_day, :end_time, :recurrence)
     else
       defaults = {
