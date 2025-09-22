@@ -9,9 +9,9 @@ RSpec.describe "Plage ouvertures API" do
   let!(:motif) { create(:motif, organisation:) }
   let!(:lieu) { create(:lieu, organisation:) }
   let!(:motif_external_reference) do
-    create(:external_reference, item: motif, external_id: 123, oauth_application: application, territory_id: nil)
+    create(:external_reference, item: motif, external_id: 123, oauth_application: application)
   end
-  let!(:lieu_external_reference) { create(:external_reference, item: lieu, external_id: 456, oauth_application: application, territory_id: nil) }
+  let!(:lieu_external_reference) { create(:external_reference, item: lieu, external_id: 456, oauth_application: application) }
 
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
