@@ -29,19 +29,16 @@ ul.list-group.my-1
   - else
     .card
       .card-body
-        h2.fr-h3 Motifs ouverts à la réservation en ligne
-        - @motifs.where(bookable_by: :everyone).each do |motif|
-          h4.mr-2
-            = motif.name
-          .mr-1 = motif.human_attribute_value(:location_type)
-          .mr-1 = "#{motif.default_duration_in_min} min."
+        .d-flex
+          .flex-grow-1
+            h2.fr-h3 Motifs ouverts à la réservation en ligne
+          .flex-grow-0
+            = link_to("Modifier", "#", class: "fr-btn fr-btn--secondary")
+        .fr-grid-row
+          - @motifs.where(bookable_by: :everyone).each do |motif|
+            = render "motif_card", motif: motif
     .card
       .card-body
         h2.fr-h3 Motifs fermés à la réservation en ligne
         - @motifs.where.not(bookable_by: :everyone).each do |motif|
-          h4.mr-2
-            = motif.name
-          .mr-1 = motif.human_attribute_value(:location_type)
-          .mr-1 = "#{motif.default_duration_in_min} min."
-
-
+          = render "motif_card", motif: motif

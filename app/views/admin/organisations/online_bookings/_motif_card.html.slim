@@ -1,0 +1,12 @@
+/# locals: (motif: )
+.fr-col-12.fr-col-sm-6.fr-col-lg-4.fr-col-xl-3.fr-mb-2w
+  / On pourra remettre la classe .fr-enlarge-link quand on voudra ajouter un lien
+  .fr-tile.fr-tile--sm.fr-mr-2w
+    .fr-tile__body
+      .fr-tile__content
+        h3.fr-tile__title = motif.name
+        p.fr-tile__detail
+          = motif.human_attribute_value(:location_type)
+          = " - "
+          = "#{motif.default_duration_in_min} min."
+
