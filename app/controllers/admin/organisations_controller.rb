@@ -23,7 +23,10 @@ class Admin::OrganisationsController < AgentAuthController
   def update
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
 
-    if @organisation.update(organisation_params)
+    @organisation.assign_attributes(organisation_params)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
+
+    if @organisation.save
       flash[:success] = "Les informations de contact ont été modifiées"
       redirect_to admin_organisation_path(@organisation)
     else
