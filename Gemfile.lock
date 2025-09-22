@@ -41,8 +41,8 @@ GIT
 
 GIT
   remote: https://github.com/victormours/pundit
-  revision: ca876c2683f141f7597216c601f8b81ec0d21ea5
-  ref: ca876c2683f141f7597216c601f8b81ec0d21ea5
+  revision: 83604c368ec41f7db66a529603a8b886c7d5f68b
+  ref: 83604c368ec41f7db66a529603a8b886c7d5f68b
   specs:
     pundit (2.5.1)
       activesupport (>= 3.0.0)

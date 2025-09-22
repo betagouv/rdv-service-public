@@ -89,6 +89,7 @@ class Admin::RdvsController < AgentAuthController
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     @success = @rdv_form.submit(rdv_update_params)
+    skip_second_authorization # cette authorization est faite dans le form object
 
     respond_to do |format|
       format.turbo_stream do

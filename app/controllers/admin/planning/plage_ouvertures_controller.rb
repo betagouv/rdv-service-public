@@ -69,7 +69,11 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def update
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-    if @plage_ouverture.update(plage_ouverture_params)
+
+    @plage_ouverture.assign_attributes(plage_ouverture_params)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+
+    if @plage_ouverture.save
       Notifiers::PlageOuvertureUpdated.new(@plage_ouverture).perform
       flash[:success] = "La plage d'ouverture a été modifiée."
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)

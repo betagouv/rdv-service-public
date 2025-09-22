@@ -6,8 +6,11 @@ class Admin::AgentIntervenantsController < AgentAuthController
     authorize(@agent, policy_class: Agent::AgentPolicy)
 
     agent_role = @agent.roles.find_by(organisation: current_organisation)
+    agent_role.intervenant? && @agent.assign_attributes(last_name: params[:agent][:last_name])
 
-    if agent_role.intervenant? && @agent.update(last_name: params[:agent][:last_name])
+    authorize(@agent, policy_class: Agent::AgentPolicy)
+
+    if @agent.save
       flash[:success] = "Intervenant modifié avec succès."
 
       redirect_to admin_organisation_agents_path(current_organisation)
