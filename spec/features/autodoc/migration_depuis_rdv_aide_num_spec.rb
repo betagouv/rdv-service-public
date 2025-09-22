@@ -29,6 +29,9 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let!(:absence) { create(:absence, :no_recurrence, agent: agent_rdv_aide_num) }
   let!(:recurrent_absence) { create(:absence, :weekly_on_monday, agent: agent_rdv_aide_num) }
   let!(:recurrent_absence_with_end_date) { create(:absence, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num) }
+  let!(:plage_ouverture) do
+    create(:plage_ouverture, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num, organisation: organisation_rdv_aide_num, lieu: lieu, motifs: [motif])
+  end
 
   let!(:agent_rdv_sp) do
     create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
@@ -106,13 +109,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
     doc.add_screenshot(page,
                        text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les données",
-                       wait_for: "Vous allez copier ")
+                       wait_for: "Ces données vont être copiées")
 
     click_on "Copier les données"
 
     doc.add_screenshot(page,
                        text: "La migration est réussie. Mes usagers sont maintenant disponibles sur RDV Service Public",
-                       wait_for: "Migration terminée")
+                       wait_for: "Vos données ont été copiées dans RDV Service Public")
 
     created_organisation = Organisation.last
     expect(created_organisation.external_references.last.external_id).to eq organisation_rdv_aide_num.id.to_s
@@ -129,8 +132,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(created_organisation.users.last.notification_email).to be_present
 
     expect(created_organisation.agents.count).to eq 2
-    expect(created_organisation.lieux.last).to have_attributes(name: lieu.name)
-    expect(created_organisation.lieux.last.external_references.last).to have_attributes(external_id: lieu.id.to_s)
+
+    created_lieu = created_organisation.lieux.sole
+    expect(created_lieu).to have_attributes(name: lieu.name)
+    expect(created_lieu.external_references.last).to have_attributes(external_id: lieu.id.to_s)
+
+    created_motif = created_organisation.motifs.sole
+    expect(created_motif).to have_attributes(name: motif.name)
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
     expect(collegue.absences.last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
@@ -147,7 +155,14 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(Montrose::Recurrence.dump(new_absence_with_end_date.recurrence)).to eq Montrose::Recurrence.dump(recurrent_absence_with_end_date.recurrence)
     expect(new_absence_with_end_date.recurrence_ends_at).to eq recurrent_absence_with_end_date.recurrence_ends_at
 
-    agent_rdv_sp.absences.regulieres.where.not(recurrence_ends_at: nil).first
+    new_plage_ouverture = agent_rdv_sp.plage_ouvertures.last
+    expect(Montrose::Recurrence.dump(new_plage_ouverture.recurrence)).to eq Montrose::Recurrence.dump(plage_ouverture.recurrence)
+
+    # Les external_ids permettent de configurer les associations correctement
+    expect(new_plage_ouverture).to have_attributes(
+      lieu_id: created_lieu.id,
+      motif_ids: [created_motif.id]
+    )
 
     login_as(agent_rdv_sp, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"

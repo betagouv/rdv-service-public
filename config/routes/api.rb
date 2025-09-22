@@ -3,6 +3,7 @@ namespace :api do
     # Need agent authentication to
     mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
     resources :absences, except: %i[new edit]
+    resources :plage_ouvertures, only: %i[create]
     resources :agents, only: %i[index create]
     resources :lieux, only: %i[create]
     get "agents/me", to: "agents#me"

@@ -4,21 +4,28 @@ class RdvServicePublicApiClient
   end
 
   def post(path, params)
-    response = Faraday.post(
+    response = Typhoeus.post(
       "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/#{path}",
-      params.to_json,
-      request_headers
+      body: params.to_json,
+      headers: request_headers
     )
+    if response.failure?
+      Sentry.capture_message("Erreur lors de l'appel à l'api de RDV Service Public")
+    end
 
     JSON.parse(response.body)
   end
 
   def get(path, params = {})
-    response = Faraday.get(
+    response = Typhoeus.get(
       "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/#{path}",
-      params,
-      request_headers
+      params:,
+      headers: request_headers
     )
+
+    if response.failure?
+      Sentry.capture_message("Erreur lors de l'appel à l'api de RDV Service Public")
+    end
 
     JSON.parse(response.body)
   end

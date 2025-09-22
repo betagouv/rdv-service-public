@@ -1,4 +1,6 @@
 RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", js: true do
+  around { |example| perform_enqueued_jobs { example.run } }
+
   context "quand l'agent a deux organisations sur RDV SP" do
     let(:organisation_rdv_aide_num) { create(:organisation, name: "France Service de Montreuil") }
     let!(:agent_rdv_aide_num) do

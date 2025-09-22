@@ -32,9 +32,28 @@ RSpec.describe Admin::Planning::AbsencesController, type: :controller do
     end
 
     describe "GET #new" do
-      it "returns a success response" do
-        get :new, params: { organisation_id: organisation.id, agent_id: agent.id }
-        expect(response).to be_successful
+      it "displays a form to create an absence for the current agent" do
+        get :new, params: { organisation_id: organisation.id }
+        expect(response.body).to include(%(value="#{agent.id}" name="absence[agent_id]"))
+      end
+
+      context "when duplicating an absence from an agent I can manage" do
+        it "copies the absence's name" do
+          colleague = create(:agent, basic_role_in_organisations: [organisation])
+          absence_of_colleague = create(:absence, agent: colleague)
+          get :new, params: { organisation_id: organisation.id, agent_id: colleague.id, duplicate_absence_id: absence_of_colleague.id }
+          expect(response.body).to include(absence_of_colleague.title)
+          expect(response.body).to include(%(value="#{colleague.id}" name="absence[agent_id]"))
+        end
+      end
+
+      context "when duplicating an absence from an arbitrary agent" do
+        it "shows error message and redirects" do
+          arbitrary_absence = create(:absence)
+          get :new, params: { organisation_id: organisation.id, duplicate_absence_id: arbitrary_absence.id }
+          expect(response.body).not_to include(arbitrary_absence.title)
+          expect(response).to redirect_to("/")
+        end
       end
     end
 

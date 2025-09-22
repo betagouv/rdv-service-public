@@ -37,7 +37,8 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
   def edit; end
 
   def update
-    @sector.assign_attributes(**sector_params)
+    @sector.assign_attributes(sector_params)
+    authorize(@sector, policy_class: Agent::SectorPolicy)
     if @sector.save
       redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: t(".updated") }
     else
@@ -61,6 +62,6 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
   end
 
   def sector_params
-    params.require(:sector).permit(:territory_id, :name, :human_id)
+    params.require(:sector).permit(:name, :human_id)
   end
 end
