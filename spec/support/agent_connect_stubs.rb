@@ -48,7 +48,7 @@ module AgentConnectStubs
     }.to_json, headers: {})
 
     allow(OpenIDConnect::ResponseObject::IdToken).to receive(:decode).and_return(
-      instance_double(OpenIDConnect::ResponseObject::IdToken, verify!: true)
+      instance_double(OpenIDConnect::ResponseObject::IdToken, verify!: true, acr: "eidas1")
     )
   end
 

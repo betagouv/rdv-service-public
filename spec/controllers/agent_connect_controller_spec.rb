@@ -11,13 +11,20 @@ RSpec.describe AgentConnectController do
 
       expect(redirect_url_query_params.symbolize_keys).to match(
         login_hint: "francis.factice@exemple.gouv.fr",
-        acr_values: "eidas1",
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         redirect_uri: "http://test.host/agent_connect/callback",
         response_type: "code",
         scope: "openid email given_name usual_name siret",
         state: be_a(String),
-        nonce: be_a(String)
+        nonce: be_a(String),
+        claims: {
+          id_token: {
+            acr: {
+              essential: true,
+              values: ["eidas1"],
+            },
+          },
+        }.to_json
       )
     end
 
@@ -32,13 +39,20 @@ RSpec.describe AgentConnectController do
 
         expect(redirect_url_query_params.symbolize_keys).to match(
           login_hint: "francis.factice@exemple.gouv.fr",
-          acr_values: "eidas1",
           client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
           redirect_uri: "http://test.host/agent_connect/callback",
           response_type: "code",
           scope: "openid email given_name usual_name siret",
           state: be_a(String),
-          nonce: be_a(String)
+          nonce: be_a(String),
+          claims: {
+            id_token: {
+              acr: {
+                essential: true,
+                values: ["eidas1"],
+              },
+            },
+          }.to_json
         )
         expect(session["proconnect_for_user"]).to be_present
       end
