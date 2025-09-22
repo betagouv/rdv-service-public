@@ -6,7 +6,8 @@ class Admin::Territories::BaseController < ApplicationController
   before_action :set_territory
 
   # rubocop:disable Rails/LexicallyScopedActionFilter
-  after_action :verify_authorized, except: %i[index search]
+  after_action :verify_authorized, except: %i[index search update]
+  after_action :verify_authorized_twice, only: :update
   after_action :verify_policy_scoped, only: %i[index search]
   # rubocop:enable Rails/LexicallyScopedActionFilter
 

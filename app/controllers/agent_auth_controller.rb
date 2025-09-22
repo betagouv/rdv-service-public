@@ -4,7 +4,8 @@ class AgentAuthController < ApplicationController
   layout "application_agent"
 
   before_action :authorize_organisation, if: -> { params[:organisation_id].present? }
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, except: %i[index update]
+  after_action :verify_authorized_twice, only: :update
   after_action :verify_policy_scoped, only: :index
 
   helper_method :current_organisation, :current_territory, :policy_scope, :from_modal?

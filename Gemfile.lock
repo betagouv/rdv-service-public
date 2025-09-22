@@ -39,6 +39,14 @@ GIT
       responders
       warden (~> 1.2.3)
 
+GIT
+  remote: https://github.com/victormours/pundit
+  revision: ca876c2683f141f7597216c601f8b81ec0d21ea5
+  ref: ca876c2683f141f7597216c601f8b81ec0d21ea5
+  specs:
+    pundit (2.5.1)
+      activesupport (>= 3.0.0)
+
 PATH
   remote: lib/anonymizer
   specs:
@@ -469,8 +477,6 @@ GEM
     public_suffix (6.0.2)
     puma (6.4.3)
       nio4r (~> 2.0)
-    pundit (2.2.0)
-      activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.1.16)
@@ -807,7 +813,7 @@ DEPENDENCIES
   premailer-rails
   pry
   puma
-  pundit
+  pundit!
   rack-attack
   rack-cors
   rack-mini-profiler

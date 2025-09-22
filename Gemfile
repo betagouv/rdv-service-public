@@ -83,7 +83,7 @@ gem "doorkeeper-i18n"
 # Provides CSRF protection on OmniAuth request endpoint on Rails application.
 gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails
-gem "pundit"
+gem "pundit", git: "https://github.com/victormours/pundit", ref: "ca876c2683f141f7597216c601f8b81ec0d21ea5"
 # Token based authentication for rails. Uses Devise + OmniAuth.
 gem "devise_token_auth", "1.2.4"
 # List of frequently used passwords

@@ -4,7 +4,8 @@ class UserAuthController < ApplicationController
   before_action :authenticate_user!
   before_action :set_paper_trail_whodunnit
 
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, except: %i[index update]
+  after_action :verify_authorized_twice, only: :update
   after_action :verify_policy_scoped, only: :index
 
   private
