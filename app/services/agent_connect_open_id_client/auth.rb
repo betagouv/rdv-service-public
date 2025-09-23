@@ -1,6 +1,10 @@
 # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
 module AgentConnectOpenIdClient
   class Auth
+    SCOPES = "openid email given_name usual_name siret".freeze
+    EIDAS1 = ["eidas1"].freeze
+    EIDAS_FOR_2FA = %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa].freeze
+
     def initialize(client_id:, client_secret:, login_hint: nil, force_login: false)
       @login_hint = login_hint
       @force_login = force_login
@@ -13,44 +17,32 @@ module AgentConnectOpenIdClient
     attr_reader :state, :nonce
 
     def redirect_url(callback_url, force_2fa: false)
-      scopes = "openid email given_name usual_name siret"
-
-      # Voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/double_authentification
-      claims = if force_2fa
-                 {
-                   id_token: {
-                     acr: {
-                       essential: true,
-                       values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
-                     },
-                   },
-                 }
-               else
-                 {
-                   id_token: {
-                     acr: {
-                       essential: true,
-                       values: [
-                         "eidas1",
-                       ],
-                     },
-                   },
-                 }
-               end
-
       query_params = {
         response_type: "code",
         client_id: @client_id,
         redirect_uri: callback_url,
-        scope: scopes,
+        scope: SCOPES,
         state: state,
         nonce: nonce,
         login_hint: @login_hint,
         prompt: @force_login ? "login" : nil,
-        claims: claims.to_json,
+        claims: claims(force_2fa:).to_json,
       }.compact_blank
 
       "#{ENV['AGENT_CONNECT_BASE_URL']}/authorize?#{query_params.to_query}"
+    end
+
+    private
+
+    def claims(force_2fa:)
+      {
+        id_token: {
+          acr: {
+            essential: true,
+            values: force_2fa ? EIDAS_FOR_2FA : EIDAS1,
+          },
+        },
+      }
     end
   end
 end
