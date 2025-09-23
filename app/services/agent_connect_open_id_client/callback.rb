@@ -4,14 +4,13 @@ module AgentConnectOpenIdClient
     class OpenIdFlowError < StandardError; end
     class ApiRequestError < StandardError; end
 
-    def initialize(session_state:, params_state:, callback_url:, nonce:, client_id:, client_secret:, force_2fa: false)
+    def initialize(session_state:, params_state:, callback_url:, nonce:, client_id:, client_secret:)
       @session_state = session_state
       @params_state = params_state
       @callback_url = callback_url
       @nonce = nonce
       @client_id = client_id
       @client_secret = client_secret
-      @force_2fa = force_2fa
     end
 
     attr_reader :id_token_for_logout
