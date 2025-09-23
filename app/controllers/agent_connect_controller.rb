@@ -36,7 +36,7 @@ class AgentConnectController < ApplicationController
       if session.delete(:proconnect_for_user)
         connect_user(callback_client)
       elsif session.delete(:proconnect_for_super_admin)
-        if callback_client.have_2fa_enabled?
+        if callback_client.went_through_2fa?
           connect_super_admin(callback_client)
         else
           flash[:error] = "Vous devez activer la double authentification sur votre compte ProConnect pour vous connecter en tant que super administrateur."

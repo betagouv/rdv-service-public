@@ -48,7 +48,7 @@ module AgentConnectOpenIdClient
     end
 
     # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/double_authentification
-    def have_2fa_enabled?
+    def went_through_2fa?
       %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa].include?(@acr)
     end
 
