@@ -40,8 +40,7 @@ RSpec.describe Admin::Territories::SectorsController do
 
   describe "#destroy" do
     it "works" do
-      let!(:sector) { create(:sector, territory:) }
-
+      sector = create(:sector, territory:)
       expect do
         delete admin_territory_sector_path(territory_id: territory.id, id: sector.id)
       end.to change(Sector, :count).by(-1)
