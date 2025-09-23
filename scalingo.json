@@ -54,12 +54,16 @@
       "value": "change_me_if_needed"
     },
 
+    "FRANCECONNECT_V2_BASE_URL": {
+      "description": "Environnement de sandbox, il est possible de créer des apps librement sur https://espace.partenaires.franceconnect.gouv.fr",
+      "value": "https://fcp-low.sbx.dev-franceconnect.fr/api/v2"
+    },
     "FRANCECONNECT_V2_CLIENT_ID": {
-      "description": "App ID de notre app FranceConnect ; à priori désactivé sur les review apps car le mécanisme de callback pointe vers la prod.",
+      "description": "Environnement de sandbox, il est possible de créer des apps librement sur https://espace.partenaires.franceconnect.gouv.fr",
       "value": "change_me_if_needed"
     },
     "FRANCECONNECT_V2_CLIENT_SECRET": {
-      "description": "App secret de notre app FranceConnect ; à priori désactivé sur les review apps car le mécanisme de callback pointe vers la prod.",
+      "description": "Environnement de sandbox, il est possible de créer des apps librement sur https://espace.partenaires.franceconnect.gouv.fr",
       "value": "change_me_if_needed"
     },
 
