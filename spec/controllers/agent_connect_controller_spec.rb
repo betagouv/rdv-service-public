@@ -59,6 +59,34 @@ RSpec.describe AgentConnectController do
     end
   end
 
+  describe "with the for_super_admin param" do
+    it "adds the force_2fa param to the request" do
+      get :auth, params: { for_super_admin: true }
+      expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
+
+      redirect_url = response.headers["Location"]
+      redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
+
+      expect(redirect_url_query_params.symbolize_keys).to match(
+        client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
+        redirect_uri: "http://test.host/agent_connect/callback",
+        response_type: "code",
+        scope: "openid email given_name usual_name siret",
+        state: be_a(String),
+        nonce: be_a(String),
+        claims: {
+          id_token: {
+            acr: {
+              essential: true,
+              values: ["eidas2", "eidas3", "https://proconnect.gouv.fr/assurance/consistency-checked-2fa", "https://proconnect.gouv.fr/assurance/self-asserted-2fa"],
+            },
+          },
+        }.to_json
+      )
+      expect(session["proconnect_for_super_admin"]).to be_present
+    end
+  end
+
   describe "#callback" do
     let(:state) { auth_client.state }
     let(:auth_client) do
@@ -137,6 +165,69 @@ RSpec.describe AgentConnectController do
           expect(session["agent_connect_id_token"]).to be_present
 
           expect(response).to redirect_to("/users/informations")
+        end
+      end
+    end
+
+    context "when logging in a super admin" do
+      before do
+        session["proconnect_for_super_admin"] = true
+        session[:super_admin_return_to] = "/super_admins/agents" # Pour simuler le retour vers la page demandée avant la connexion
+      end
+
+      context "with a non 2FA account" do
+        it "redirects to the super admin sign in page if the super admin does not activate 2FA" do
+          get :callback, params: { state: state, code: code }
+
+          expect(session["agent_connect_id_token"]).to be_nil
+          expect(response).to redirect_to("/connexion_super_admins")
+          expect(flash[:error]).to eq("Vous devez activer la double authentification sur votre compte ProConnect pour vous connecter en tant que super administrateur.")
+        end
+      end
+
+      context "with a 2FA account" do
+        before do
+          AgentConnectStubs.stub_callback_requests(code, user_info, with_2fa: true)
+        end
+
+        context "when the super admin does not exist" do
+          it "redirects to the super admin sign in page" do
+            get :callback, params: { state: state, code: code }
+
+            expect(session["agent_connect_id_token"]).to be_nil
+            expect(response).to redirect_to("/connexion_super_admins")
+            expect(flash[:error]).to eq("Compte ProConnect non autorisé")
+          end
+        end
+
+        context "when the super admin already exists" do
+          let!(:super_admin) { create(:super_admin, email: "francis.factice@exemple.gouv.fr") }
+
+          it "redirects to the super admin agents page" do
+            get :callback, params: { state: state, code: code }
+
+            expect(session["agent_connect_id_token"]).to be_present
+            expect(response).to redirect_to("/super_admins/agents")
+          end
+        end
+
+        context "in development, when no super admin exists" do
+          before do
+            allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("development"))
+          end
+
+          it "creates the super admin and redirects to the super admin agents page" do
+            expect(SuperAdmin.count).to eq(0)
+
+            get :callback, params: { state: state, code: code }
+
+            expect(SuperAdmin.count).to eq(1)
+            expect(SuperAdmin.last).to have_attributes(
+              email: "francis.factice@exemple.gouv.fr"
+            )
+            expect(session["agent_connect_id_token"]).to be_present
+            expect(response).to redirect_to("/super_admins/agents")
+          end
         end
       end
     end

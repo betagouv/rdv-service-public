@@ -7,10 +7,14 @@ module AgentConnectStubs
     load Rails.root.join("config/initializers/agent_connect.rb").to_s
   end
 
-  def self.stub_callback_requests(code, user_info)
+  def self.stub_callback_requests(code, user_info, with_2fa: false)
     stub_and_run_discover_request
 
-    stub_token_request(code)
+    if with_2fa
+      stub_token_request(code, acr: "https://proconnect.gouv.fr/assurance/self-asserted-2fa")
+    else
+      stub_token_request(code)
+    end
 
     userinfo_encoded_response_body = "fake_userinfo_encoded_response_body"
 
@@ -30,7 +34,7 @@ module AgentConnectStubs
     ).and_return([user_info])
   end
 
-  def self.stub_token_request(code)
+  def self.stub_token_request(code, acr: "eidas1")
     WebMock.stub_request(:post, "https://fca.integ01.dev-agentconnect.fr/api/v2/token").with(
       body: {
         "client_id" => "ec41582-1d60-4f11-a63b-d8abaece16aa",
@@ -48,7 +52,7 @@ module AgentConnectStubs
     }.to_json, headers: {})
 
     allow(OpenIDConnect::ResponseObject::IdToken).to receive(:decode).and_return(
-      instance_double(OpenIDConnect::ResponseObject::IdToken, verify!: true, acr: "eidas1")
+      instance_double(OpenIDConnect::ResponseObject::IdToken, verify!: true, acr:)
     )
   end
 
