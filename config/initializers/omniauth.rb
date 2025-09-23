@@ -1,4 +1,3 @@
-require "omniauth/strategies/franceconnect"
 require "omniauth-rdv-service-public"
 
 Rails.application.config.middleware.use OmniAuth::Builder do
@@ -6,19 +5,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
   provider :microsoft_graph, ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil), ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
            scope: %w[offline_access openid email profile User.Read Calendars.ReadWrite]
-
-  provider(
-    :franceconnect,
-    name: :franceconnect,
-    scope: %i[email openid birthdate birthplace given_name family_name birthcountry],
-    issuer: "https://#{ENV.fetch('FRANCECONNECT_HOST', nil)}",
-    client_options: {
-      identifier: ENV.fetch("FRANCECONNECT_APP_ID", nil),
-      secret: ENV.fetch("FRANCECONNECT_APP_SECRET", nil),
-      redirect_uri: "#{ENV.fetch('HOST', nil)}/omniauth/franceconnect/callback",
-      host: ENV.fetch("FRANCECONNECT_HOST", nil),
-    }
-  )
 
   if ENV["RDV_SERVICE_PUBLIC_OAUTH_APP_ID"]
     provider :rdv_service_public, ENV["RDV_SERVICE_PUBLIC_OAUTH_APP_ID"], ENV["RDV_SERVICE_PUBLIC_OAUTH_APP_SECRET"],

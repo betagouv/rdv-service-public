@@ -150,13 +150,6 @@ module ApplicationHelper
     ENV["FRANCECONNECT_V2_BASE_URL"].present?
   end
 
-  def display_france_connect_v1_button?
-    return true if params[:force_franceconnect].present?
-    return false if ENV["FRANCECONNECT_HOST"].blank?
-
-    current_domain.france_connect_enabled
-  end
-
   def dsfr_path
     "/dsfr-v1.13.2"
   end

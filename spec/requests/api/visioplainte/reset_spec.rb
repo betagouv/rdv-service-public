@@ -24,7 +24,7 @@ RSpec.describe "Réinitialisation des données (voir l'intro de la doc Swagger)"
   context "in a staging environnement" do
     stub_env_with(
       VISIOPLAINTE_API_KEY: "visioplainte-staging-api-key-123456",
-      FRANCECONNECT_HOST: "fcp.integ01.dev-franceconnect.fr"
+      FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2"
     )
 
     around do |example|
@@ -46,7 +46,7 @@ RSpec.describe "Réinitialisation des données (voir l'intro de la doc Swagger)"
     context "with authentication and the proper variables" do
       stub_env_with(
         VISIOPLAINTE_API_KEY: "visioplainte-staging-api-key-123456",
-        FRANCECONNECT_HOST: "fcp.integ01.dev-franceconnect.fr"
+        FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2"
       )
 
       let(:auth_header) do
