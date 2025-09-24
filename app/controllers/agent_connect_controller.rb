@@ -8,42 +8,54 @@ class AgentConnectController < ApplicationController
       client_id: current_domain.agent_connect_client_id,
       client_secret: current_domain.agent_connect_client_secret
     )
-    session[:agent_connect_state] = auth_client.state
-    session[:nonce] = auth_client.nonce
-    force_2fa = false
-    if params[:for_user]
-      session[:proconnect_for_user] = true
-    elsif params[:for_super_admin]
-      session[:proconnect_for_super_admin] = true
-      force_2fa = true
-    end
+
+    connection_for = if params[:for_user]
+                       "user"
+                     elsif params[:for_super_admin]
+                       "super_admin"
+                     else
+                       "agent"
+                     end
+
+    session[:pro_connect] = {
+      state: auth_client.state,
+      nonce: auth_client.nonce,
+      connection_for:,
+    }
+
+    force_2fa = connection_for == "super_admin"
 
     redirect_to auth_client.redirect_url(agent_connect_callback_url, force_2fa:), allow_other_host: true
   end
 
   def callback
+    pro_connect_session = session.delete(:pro_connect).symbolize_keys
+
     callback_client = AgentConnectOpenIdClient::Callback.new(
-      session_state: session.delete(:agent_connect_state),
+      session_state: pro_connect_session[:state],
       params_state: params[:state],
       callback_url: agent_connect_callback_url,
-      nonce: session.delete(:nonce),
+      nonce: pro_connect_session[:nonce],
       client_id: current_domain.agent_connect_client_id,
       client_secret: current_domain.agent_connect_client_secret
     )
 
     if callback_client.fetch_user_info_from_code!(params[:code])
 
-      if session.delete(:proconnect_for_user)
+      case pro_connect_session[:connection_for]
+      when "user"
         connect_user(callback_client)
-      elsif session.delete(:proconnect_for_super_admin)
+      when "super_admin"
         if callback_client.went_through_2fa?
           connect_super_admin(callback_client)
         else
           flash[:error] = "Vous devez activer la double authentification sur votre compte ProConnect pour vous connecter en tant que super administrateur."
           redirect_to connexion_super_admins_path
         end
-      else
+      when "agent"
         connect_agent(callback_client)
+      else
+        raise "Unknown connection_for #{pro_connect_session[:connection_for]}"
       end
     else
       flash[:error] = generic_error_message
@@ -71,6 +83,7 @@ class AgentConnectController < ApplicationController
 
     if super_admin
       bypass_sign_in super_admin, scope: :super_admin
+
       session[:agent_connect_id_token] = callback_client.id_token_for_logout
       redirect_to super_admins_agents_path
     else

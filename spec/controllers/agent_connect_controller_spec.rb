@@ -54,7 +54,7 @@ RSpec.describe AgentConnectController do
             },
           }.to_json
         )
-        expect(session["proconnect_for_user"]).to be_present
+        expect(session["pro_connect"][:connection_for]).to eq("user")
       end
     end
   end
@@ -83,7 +83,7 @@ RSpec.describe AgentConnectController do
           },
         }.to_json
       )
-      expect(session["proconnect_for_super_admin"]).to be_present
+      expect(session["pro_connect"][:connection_for]).to eq("super_admin")
     end
   end
 
@@ -109,7 +109,10 @@ RSpec.describe AgentConnectController do
     end
 
     before do
-      session[:agent_connect_state] = state
+      session[:pro_connect] = {
+        state: state,
+        connection_for: "agent",
+      }
       AgentConnectStubs.stub_callback_requests(code, user_info)
 
       session[:agent_return_to] = "/agents/edit" # Pour simuler le retour vers la page demandée avant la connexion
@@ -132,7 +135,10 @@ RSpec.describe AgentConnectController do
 
     context "when logging in a user" do
       before do
-        session["proconnect_for_user"] = true
+        session[:pro_connect] = {
+          state:,
+          connection_for: "user",
+        }
         session[:user_return_to] = "/users/informations" # Pour simuler le retour vers la page demandée avant la connexion
       end
 
@@ -171,7 +177,10 @@ RSpec.describe AgentConnectController do
 
     context "when logging in a super admin" do
       before do
-        session["proconnect_for_super_admin"] = true
+        session[:pro_connect] = {
+          state:,
+          connection_for: "super_admin",
+        }
         session[:super_admin_return_to] = "/super_admins/agents" # Pour simuler le retour vers la page demandée avant la connexion
       end
 
