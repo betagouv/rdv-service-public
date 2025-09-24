@@ -276,8 +276,6 @@ jobs:
     name: Deploy spec to doc to GitHub Pages
     runs-on: ubuntu-latest
     needs: [test_features_autodoc]
-    continue-on-error: true # On ne veut pas faire échouer le build si le déploiement de la doc échoue
-    if: ${{ github.ref == 'refs/heads/production' }}
     permissions:
       pages: write
       id-token: write
