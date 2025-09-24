@@ -405,9 +405,6 @@ GEM
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
       rack-protection
-    omniauth-github (2.0.1)
-      omniauth (~> 2.0)
-      omniauth-oauth2 (~> 1.8)
     omniauth-microsoft_graph (2.0.0)
       jwt (~> 2.0)
       omniauth (~> 2.0)
@@ -793,7 +790,6 @@ DEPENDENCIES
   mail
   montrose
   notion-ruby-client (~> 1.2)
-  omniauth-github
   omniauth-microsoft_graph
   omniauth-rails_csrf_protection
   omniauth-rdv-service-public!
