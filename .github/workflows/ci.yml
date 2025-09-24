@@ -272,16 +272,6 @@ jobs:
         with:
           name: artifacts-capybara-spec-to-doc
           path: tmp/capybara
-  deploy_doc:
-    name: Deploy spec to doc to GitHub Pages
-    runs-on: ubuntu-latest
-    needs: [test_features_autodoc]
-    permissions:
-      pages: write
-      id-token: write
-    steps:
-      - uses: actions/deploy-pages@v4
-        continue-on-error: true
   test_boot_without_db:
     name: Boot web server without database
     runs-on: ubuntu-latest
