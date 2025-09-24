@@ -6,16 +6,17 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
     # Des données de test pour l'équipe tech de l'appli Justice.fr
     if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
       lieux << {
-        ee_id: "612f2ed9b473e40555def46c",
+        ee_id: "67597dc989a4c84487c231a1",
         reservation_en_ligne: false,
-        url: "https://demo.rdv.anct.gouv.fr/org/877/ccas-de-lille",
+        url: "https://demo.rdv.anct.gouv.fr/org/939/maison-de-justice-et-du-droit-de-menton",
       }
 
       lieux << {
-        ee_id: "612f2ed9b473e40555def46e",
+        ee_id: "67597db289a4c84487c22f1b",
         reservation_en_ligne: true,
-        url: "https://demo.rdv.anct.gouv.fr/org/878/ccas-de-montreuil",
+        url: "https://demo.rdv.anct.gouv.fr/org/938/maison-de-justice-et-du-droit-de-chambery",
       }
+
     else
       # Il y a beaucoup de requêtes N+1 dans ce code, mais c'est acceptable tant que c'est derrière un cache
       # et qu'on a relativement peu de lieux concernées
