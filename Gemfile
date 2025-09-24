@@ -67,8 +67,6 @@ gem "devise", git: "https://github.com/victormours/devise", ref: "0c502c8ab7f11e
 gem "devise_invitable"
 # Deliver Devise's emails in the background using ActiveJob.
 gem "devise-async"
-# Official OmniAuth strategy for GitHub.
-gem "omniauth-github"
 # omniauth provider for Microsoft Graph
 gem "omniauth-microsoft_graph"
 # omniauth provider for inter-instance migrations
