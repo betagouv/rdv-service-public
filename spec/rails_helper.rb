@@ -105,6 +105,8 @@ RSpec.configure do |config|
     end
   end
 
+  config.after(:suite) { Autodoc.render }
+
   config.before do
     setup_sentry_test
 
