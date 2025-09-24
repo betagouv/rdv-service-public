@@ -1,10 +1,6 @@
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
-  ## OAUTH ##
-  devise_scope :user do
-    get "omniauth/franceconnect/callback" => "omniauth_callbacks#franceconnect"
-  end
 
   get "agent_connect/auth" => "agent_connect#auth"
   get "agent_connect/callback" => "agent_connect#callback"
