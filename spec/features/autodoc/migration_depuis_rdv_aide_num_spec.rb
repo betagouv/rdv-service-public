@@ -146,8 +146,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(created_motif).to have_attributes(name: motif.name)
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
-    expect(collegue.absences.last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
-    expect(collegue.absences.last.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
+    expect(collegue.absences.where(title: "RDV pris sur RDV Aide Numérique").last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
+    expect(collegue.absences.where(title: "RDV pris sur RDV Aide Numérique").last.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
 
     # On crée aussi des copies des absences futures
     expect(agent_rdv_sp.absences.exceptionnelles.first.starts_at).to eq absence.starts_at
@@ -170,7 +170,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     )
 
     # Les absences et plages d'ouverture du collègue sont copiées
-    expect(collegue.reload.absences.count).to eq 2
+    expect(collegue.reload.absences.count).to eq 3
     expect(collegue.reload.plage_ouvertures.count).to eq 2
 
     login_as(agent_rdv_sp, scope: :agent)
