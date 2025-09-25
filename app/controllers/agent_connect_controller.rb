@@ -29,7 +29,15 @@ class AgentConnectController < ApplicationController
   end
 
   def callback
-    pro_connect_session = session.delete(:pro_connect).symbolize_keys
+    pro_connect_session = session.delete(:pro_connect)
+
+    unless pro_connect_session
+      flash[:error] = generic_error_message
+      redirect_to root_path
+      return
+    end
+
+    pro_connect_session.symbolize_keys!
 
     callback_client = AgentConnectOpenIdClient::Callback.new(
       session_state: pro_connect_session[:state],
