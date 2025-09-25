@@ -1,0 +1,19 @@
+h1 Configuration de la synchronisation Caldav
+
+p.fr-badge.fr-badge--pink-tuile Beta
+
+p
+  |> Vous pouvez ajouter automatiquement à votre calendrier professionnel vos RDV pris via RDV Service Public.
+  | Pour cela, vous devez disposer d’un agenda compatible Caldav (comme celui de la Suite numérique).
+
+form
+  .fr-input-group
+    label.fr-label for="caldav_username" Nom d'utilisateur
+    input#caldav_username.fr-input type="text" name="username"
+  .fr-input-group
+    label.fr-label for="caldav_password" Mot de passe
+    input#caldav_password.fr-input type="password" name="password"
+  .fr-input-group
+    label.fr-label for="caldav_agenda_url" URL de l’agenda Caldav
+    input#caldav_agenda_url.fr-input type="text" name="caldav_agenda_url"
+  submit.fr-btn type="submit" Enregistrer
