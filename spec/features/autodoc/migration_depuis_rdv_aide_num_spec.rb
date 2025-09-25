@@ -167,7 +167,9 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     )
 
     # Les absences du collègue sont copiées
-    expect(collegue.reload.absences.count).to eq 3
+    copied_absence = collegue.reload.absences.joins(:external_references)
+      .where(external_references: { external_id: "absence:#{absence_du_collegue.id}" })
+    expect(copied_absence).to be_present
 
     login_as(agent_rdv_sp, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"
