@@ -1,8 +1,8 @@
 .container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
-  h1.fr-h2.my-1.d-flex.rdv-align-items-baseline
+  h1.fr-h2.my-1.d-flex
     | Planning de
     .ml-2
-      = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-baseline") do |form|
+      = form_with(url: url_for({}), method: :get, id: "agent_id_form", class: "d-flex rdv-align-items-end") do |form|
         div
           ruby:
             collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
@@ -10,6 +10,8 @@
             klasses.push("js-submit-on-change") if @agents.size == 1 # Le select mono-agent recharge la page dès qu'on en sélectionne un
             data = {
               "select2-config": {
+                      dropdownCssClass: "dropdownCssClassdropdownCssClass",
+                      containerCssClass: "containerCssClasscontainerCssClass",
                 ajax: {
                   url: admin_organisation_agents_path(current_organisation),
                     dataType: "json",
@@ -19,7 +21,7 @@
               }
           = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: klasses, data: }
 
-        .ml-2
+        .ml-2.d-flex[style="gap: 0 0.5em"]
           - if @agents.size == 1
             button#multi_agent_toggle.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
           #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]

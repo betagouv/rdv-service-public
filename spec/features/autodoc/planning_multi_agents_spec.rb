@@ -81,5 +81,21 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     click_on "Agenda"
     doc.add_screenshot(page, text: "Lorsque l'on navigue vers l'agenda, on garde l'agent sélectionné",
                              wait_for: "DEJUSTINE") # On vérifie que le RDV de Justine apparaît bien dans l'agenda
+
+    #
+    # SÉLECTION MULTI-AGENT : on fait un tour du planning
+    #
+
+    # doc.start_section("Sélection multi-agent")
+    #
+    # click_on("Sélectionner plusieurs agents")
+    # doc.add_screenshot(page, text: "Il est possible de sélectionner plusieurs agents",
+    #                          wait_for: "Revenir à mon agenda")
+    #
+    # find("#select2-agent_id-container").click
+    # find(%(.select2-results__option), text: "BASIQUE Loïc").click
+    # click_on("Appliquer")
+    # expect(page).to have_path("todo")
+    # doc.add_screenshot(page, text: "On affiche l'agenda des agents sélectionnés")
   end
 end

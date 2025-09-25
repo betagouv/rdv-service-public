@@ -11,7 +11,7 @@ const planningAgentsSelect = () => {
   toggle.addEventListener("click", (e) => {
     e.preventDefault();
     agentSelect.multiple = true;
-    agentSelect.onchange = "";
+    agentSelect.classList.add("js-submit-on-change-cancel");
     initInput(agentSelect);
     toggle.classList.add("hidden");
     submit.classList.remove("hidden");
