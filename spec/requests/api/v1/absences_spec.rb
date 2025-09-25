@@ -25,7 +25,7 @@ RSpec.describe "Plage ouvertures API" do
       let(:previous_absence) { create(:absence) }
 
       before do
-        create(:external_reference, item: previous_absence, external_id: 123, oauth_application: application)
+        create(:external_reference, item: previous_absence, external_id: 123, oauth_application: application, territory_id: nil)
       end
 
       it "doesn't create the absence" do
