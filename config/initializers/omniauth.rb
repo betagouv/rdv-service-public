@@ -1,6 +1,8 @@
 require "omniauth-rdv-service-public"
 
 Rails.application.config.middleware.use OmniAuth::Builder do
+  provider :github, ENV.fetch("GITHUB_APP_ID", nil), ENV.fetch("GITHUB_APP_SECRET", nil), scope: "user:email"
+
   provider :microsoft_graph, ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil), ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
            scope: %w[offline_access openid email profile User.Read Calendars.ReadWrite]
 

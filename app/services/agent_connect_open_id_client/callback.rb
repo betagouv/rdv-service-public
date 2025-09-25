@@ -1,4 +1,4 @@
-# voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
+# voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/technique_fca/endpoints.md
 module AgentConnectOpenIdClient
   class Callback
     class OpenIdFlowError < StandardError; end
@@ -45,11 +45,6 @@ module AgentConnectOpenIdClient
 
     def openid_sub
       @user_info["sub"]
-    end
-
-    # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/double_authentification
-    def went_through_2fa?
-      @acr.in?(AgentConnectOpenIdClient::Auth::EIDAS_FOR_2FA)
     end
 
     private
@@ -99,13 +94,11 @@ module AgentConnectOpenIdClient
 
     def validate_nonce!(encoded_id_token)
       decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, agent_connect_config.jwks)
-
       decoded_id_token.verify!(
         issuer: agent_connect_config.issuer,
         client_id: @client_id,
         nonce: @nonce
       )
-      @acr = decoded_id_token.acr
     end
 
     def fetch_user_info(token)
