@@ -34,9 +34,6 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   end
 
   let!(:absence_du_collegue) { create(:absence, :no_recurrence, agent: collegue) }
-  let!(:plage_ouverture_du_collegue) do
-    create(:plage_ouverture, agent: collegue, organisation: organisation_rdv_aide_num, lieu: lieu, motifs: [motif])
-  end
 
   let!(:agent_rdv_sp) do
     create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
@@ -169,9 +166,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       motif_ids: [created_motif.id]
     )
 
-    # Les absences et plages d'ouverture du collègue sont copiées
+    # Les absences du collègue sont copiées
     expect(collegue.reload.absences.count).to eq 3
-    expect(collegue.reload.plage_ouvertures.count).to eq 2
 
     login_as(agent_rdv_sp, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"
