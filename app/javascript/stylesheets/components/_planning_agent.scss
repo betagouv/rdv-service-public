@@ -1,15 +1,6 @@
-select#agent_id {
-  &[multiple] {
-    min-width: 200px;
-    max-width: 600px;
+#agent_id_form {
+  select#agent_id[multiple] {
+    width: 600px;
+    max-width: 40vw;
   }
-  &:not([multiple]) {
-    min-width: 200px;
-    max-width: 800px;
-  }
-}
-
-#agent_id_form .select2-container {
-  width: 50vw !important;
-  max-width: 600px !important;
 }
