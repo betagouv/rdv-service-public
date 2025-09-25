@@ -2,8 +2,7 @@
 module AgentConnectOpenIdClient
   class Auth
     SCOPES = "openid email given_name usual_name siret".freeze
-    EIDAS1 = ["eidas1"].freeze
-    EIDAS_FOR_2FA = %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa].freeze
+    ACR_FOR_2FA = %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa].freeze
 
     def initialize(client_id:, client_secret:, login_hint: nil, force_login: false)
       @login_hint = login_hint
@@ -38,8 +37,8 @@ module AgentConnectOpenIdClient
       {
         id_token: {
           acr: {
-            essential: true,
-            values: force_2fa ? EIDAS_FOR_2FA : EIDAS1,
+            essential: force_2fa,
+            values: ACR_FOR_2FA,
           },
         },
       }
