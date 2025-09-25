@@ -33,6 +33,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     create(:plage_ouverture, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num, organisation: organisation_rdv_aide_num, lieu: lieu, motifs: [motif])
   end
 
+  let!(:absence_du_collegue) { create(:absence, :no_recurrence, agent: collegue) }
+
   let!(:agent_rdv_sp) do
     create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
   end
@@ -141,8 +143,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(created_motif).to have_attributes(name: motif.name)
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
-    expect(collegue.absences.last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
-    expect(collegue.absences.last.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
+    expect(collegue.absences.where(title: "RDV pris sur RDV Aide Numérique").last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
+    expect(collegue.absences.where(title: "RDV pris sur RDV Aide Numérique").last.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
 
     # On crée aussi des copies des absences futures
     expect(agent_rdv_sp.absences.exceptionnelles.first.starts_at).to eq absence.starts_at
@@ -163,6 +165,11 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       lieu_id: created_lieu.id,
       motif_ids: [created_motif.id]
     )
+
+    # Les absences du collègue sont copiées
+    copied_absence = collegue.reload.absences.joins(:external_references)
+      .where(external_references: { external_id: "absence:#{absence_du_collegue.id}" })
+    expect(copied_absence).to be_present
 
     login_as(agent_rdv_sp, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"

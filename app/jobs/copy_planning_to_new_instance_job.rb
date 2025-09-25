@@ -88,7 +88,7 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
       }
 
       if absence.agent != instance_export.agent
-        params[:agent_email] = instance_export.agent.email
+        params[:agent_email] = absence.agent.email
       end
 
       api_client = instance_export.api_client
@@ -119,7 +119,7 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
       }
 
       if plage_ouverture.agent != instance_export.agent
-        params[:agent_email] = instance_export.agent.email
+        params[:agent_email] = plage_ouverture.agent.email
       end
 
       api_client = instance_export.api_client
