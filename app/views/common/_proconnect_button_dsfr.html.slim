@@ -1,12 +1,10 @@
-/# locals: (login_hint: nil, for_user: false, for_super_admin: false)
+/# locals: (login_hint: nil, for_user: false)
 form.fr-connect-group[action="#{agent_connect_auth_path}" method="get"]
 
   - if login_hint
     input[type="hidden" value="#{login_hint}" name="login_hint"]
   - if for_user
     input[type="hidden" value="1" name="for_user"]
-  - elsif for_super_admin
-    input[type="hidden" value="1" name="for_super_admin"]
   button.fr-connect.fr-proconnect
     span.fr-connect__login
       | S’identifier avec

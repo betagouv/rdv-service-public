@@ -1,6 +1,6 @@
 .fr-mb-3w
   .rdv-text-align-center
-    = render "common/proconnect_button_dsfr", for_super_admin: true
+    = link_to "Accéder à superadmin", "/omniauth/github", class: "fr-btn", method: :post
 
   - if Rails.env.development?
     .fr-col-lg-3.fr-col-offset-lg-5.fr-mt-3w
