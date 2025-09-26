@@ -43,7 +43,6 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
       rdv = Rdv.find(rdv_id)
       rdv.agents.each do |agent|
         params = {
-          title: "RDV pris sur #{domain.name}",
           first_day: rdv.starts_at.strftime("%Y-%m-%d"),
           end_day: rdv.starts_at.strftime("%Y-%m-%d"),
           start_time: rdv.starts_at.strftime("%H:%M"),
@@ -53,6 +52,15 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
             external_url: Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
           },
         }
+        params[:title] = if rdv.collectif?
+                           if rdv.title.present?
+                             "#{rdv.motif_name} : #{rdv.title}"
+                           else
+                             rdv.motif_name
+                           end
+                         else
+                           "RDV pris sur #{domain.name}"
+                         end
 
         if agent != instance_export.agent
           params[:agent_email] = agent.email
