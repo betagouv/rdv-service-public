@@ -5,6 +5,12 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
       .where(oauth_applications: { name: "RDV Aide Numérique" }).any?
   end
 
+  def self.external_reference_to_rdv_on_old_instance(absence)
+    absence.external_references.joins(:oauth_application)
+      .where("external_references.external_id ilike ?", "#{CopyRdvAsAbsenceJob::EXTERNAL_ID_PREFIX}%")
+      .where(oauth_applications: { name: "RDV Aide Numérique" }).first
+  end
+
   # Les objets qu'on copie dans ce job (rdvs, plage ouverture, absence) ont besoin que les objets
   # de configuration (agents, motifs, lieux) soient déjà créés dans la nouvelle organisation.
   # On les copie donc dans ce deuxième batch, après que le premier ai copié tous les objets de config.
