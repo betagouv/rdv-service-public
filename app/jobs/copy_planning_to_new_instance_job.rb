@@ -1,4 +1,11 @@
 class CopyPlanningToNewInstanceJob < ApplicationJob
+  # Cette méthode permet de savoir sur la nouvelle instance s'il est possible que des absences aient été créées par ce job
+  def self.agent_might_have_rdvs_on_old_instance?(agent, start_date)
+    agent.absences.joins(external_references: :oauth_application).where("first_day >= ?", start_date)
+      .where("external_references.external_id ilike ?", "rdv:%")
+      .where(oauth_applications: { name: "RDV Aide Numérique" }).any?
+  end
+
   # Les objets qu'on copie dans ce job (rdvs, plage ouverture, absence) ont besoin que les objets
   # de configuration (agents, motifs, lieux) soient déjà créés dans la nouvelle organisation.
   # On les copie donc dans ce deuxième batch, après que le premier ai copié tous les objets de config.
