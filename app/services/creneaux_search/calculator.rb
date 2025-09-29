@@ -14,7 +14,12 @@ module CreneauxSearch::Calculator
       scope = PlageOuverture.not_expired
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
+        .joins(agent: [:roles])
         .includes(:agent)
+        .where(agent_roles: { organisation_id: motif.organisation_id })
+      scope = scope
+        .where.not(agent: { confirmed_at: nil })
+        .or(scope.where(agent_roles: { access_level: "intervenant" }))
       scope = scope.includes(:organisation, organisation: :territory) if motif.organisation.territory.visioplainte?
       scope = scope.where(agent: agents) if agents&.any?
       scope = scope.where(lieu: lieu) if lieu.present?
