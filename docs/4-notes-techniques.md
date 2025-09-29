@@ -124,7 +124,7 @@ Les review apps ne sont pas créées automatiquement pour chaque PR pour économ
 La commande pour créer une review app pour la PR #4242 est
 
 ```bash
-scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites integration-link-manual-review-app 4242
+scalingo --region osc-secnum-fr1 --app rdv-service-public-review-app integration-link-manual-review-app 4242
 ```
 
 Un raccourci existe pour retrouver le numéro de la PR correspondant à la branche courante automatiquement : `make review_app`
@@ -132,7 +132,7 @@ Un raccourci existe pour retrouver le numéro de la PR correspondant à la branc
 Par défaut, seul un worker web est activé, si vous souhaitez que les jobs s’exécutent il faut activer un worker jobs depuis le dashboard ou avec cette commande :
 
 ```sh
-scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 scale jobs:1
+scalingo --region osc-secnum-fr1 --app rdv-service-public-review-app-pr4242 scale jobs:1
 ```
 
 Le fichier `scalingo.json` décrit la configuration initiale et les variables d’environnement des review apps.
@@ -144,8 +144,8 @@ L’envoi d’email est désactivé par défaut sur les review apps.
 Pour l’activer vous pouvez utiliser cette commande :
 
 ```sh
-    scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 env-unset DISABLE_SENDING_EMAILS && \
-    scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 restart
+    scalingo --region osc-secnum-fr1 --app rdv-service-public-review-app-pr4242 env-unset DISABLE_SENDING_EMAILS && \
+    scalingo --region osc-secnum-fr1 --app rdv-service-public-review-app-pr4242 restart
 ```
 
 ## Search Contexts
