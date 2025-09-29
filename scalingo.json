@@ -7,6 +7,11 @@
       "generator": "url"
     },
 
+    "DB_SEEDS_USERS_AND_AGENTS_PASSWORD": {
+      "description": "Mot de passe par défaut pour tous les comptes agents des seeds",
+      "value": "Rdvservicepublictest1!"
+    },
+
     "ADMIN_BASIC_AUTH_PASSWORD": {
       "description": "Basic auth password for review apps super admin",
       "generator": "secret"
