@@ -222,6 +222,20 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
 
       expect(plage_ouvertures).to eq([matching_po])
     end
+
+    it "excludes plage ouvertures for unconfirmed agents" do
+      agent1 = create(:agent, organisations: [organisation])
+      po1 = create(:plage_ouverture, agent_id: agent1.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      agent2_not_confirmed = create(:agent, organisations: [organisation], confirmed_at: nil)
+      po2 = create(:plage_ouverture, agent_id: agent2_not_confirmed.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      agent3_intervenant = create(:agent, :intervenant, organisations: [organisation], confirmed_at: nil)
+      po3 = create(:plage_ouverture, agent_id: agent3_intervenant.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
+      expect(plage_ouvertures).to include(po1)
+      expect(plage_ouvertures).to include(po3)
+      expect(plage_ouvertures).not_to include(po2)
+    end
   end
 
   describe "#free_times_from" do
