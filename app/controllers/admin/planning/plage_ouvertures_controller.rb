@@ -29,7 +29,6 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def new
-    @agent = Agent.find(params[:agent_id])
     if params[:duplicate_plage_ouverture_id].present?
       original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
       defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :recurrence)

@@ -19,8 +19,14 @@ module Admin::Planning::SetAgentsConcern
       @agent = scope.where(id: agents).first
       @agents = [@agent]
     else
-      # Ce cas ne devrait pour le moment pas arriver, il a été mis en place en préparation de l’agenda multi-agents.
-      @agents = scope.where(id: agents)
+      if current_agent.feature_enabled?("new_planning")
+        @agents = scope.where(id: agents)
+      else
+        # Si l'agent courant n'a pas activé la feature on ne considère qu'il n'y
+        # a qu'un seul agent sélectionné, car le code sera en mode mono-agent.
+        @agent = agents.first
+        @agents = [@agent]
+      end
     end
   end
 end
