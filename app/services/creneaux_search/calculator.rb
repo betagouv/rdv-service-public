@@ -15,7 +15,7 @@ module CreneauxSearch::Calculator
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
         .includes(:agent)
-        .where(agent: Agent.invited_but_not_accepted)
+        .where(agent: Agent.excluding_pending_invitation)
       scope = scope.includes(:organisation, organisation: :territory) if motif.organisation.territory.visioplainte?
       scope = scope.where(agent: agents) if agents&.any?
       scope = scope.where(lieu: lieu) if lieu.present?
