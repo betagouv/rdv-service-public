@@ -52,15 +52,9 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
             external_url: Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
           },
         }
-        params[:title] = if rdv.collectif?
-                           if rdv.title.present?
-                             "#{rdv.motif_name} : #{rdv.title}"
-                           else
-                             rdv.motif_name
-                           end
-                         else
-                           "RDV pris sur #{domain.name}"
-                         end
+
+        rdv_title = ApplicationController.helpers.rdv_title_for_agent(rdv)
+        params[:title] = "#{rdv_title} (sur #{domain.name})"
 
         if agent != instance_export.agent
           params[:agent_email] = agent.email
