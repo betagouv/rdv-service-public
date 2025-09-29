@@ -1,8 +1,7 @@
 class CopyPlanningToNewInstanceJob < ApplicationJob
-  # Cette méthode permet de savoir sur la nouvelle instance s'il est possible que des absences aient été créées par ce job
   def self.agent_might_have_rdvs_on_old_instance?(agent, start_date)
     agent.absences.joins(external_references: :oauth_application).where("first_day >= ?", start_date)
-      .where("external_references.external_id ilike ?", "rdv:%")
+      .where("external_references.external_id ilike ?", "#{CopyRdvAsAbsenceJob::EXTERNAL_ID_PREFIX}%")
       .where(oauth_applications: { name: "RDV Aide Numérique" }).any?
   end
 
@@ -44,6 +43,8 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
   class CopyRdvAsAbsenceJob < ApplicationJob
     queue_as :latency_5m
 
+    EXTERNAL_ID_PREFIX = "rdv:".freeze
+
     def perform(instance_export_id, rdv_id, domain_id)
       domain = Domain.find(domain_id)
       instance_export = InstanceExport.find(instance_export_id)
@@ -55,7 +56,7 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
           start_time: rdv.starts_at.strftime("%H:%M"),
           end_time: rdv.ends_at.strftime("%H:%M"),
           external_reference: {
-            external_id: "rdv:#{rdv_id}", # on créera aussi des external_reference pour des absences, donc on préfixe par "rdv"
+            external_id: "#{EXTERNAL_ID_PREFIX}#{rdv_id}", # on créera aussi des external_reference pour des absences, donc on préfixe par "rdv"
             external_url: Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
           },
         }
