@@ -6,14 +6,19 @@ p
   |> Vous pouvez ajouter automatiquement à votre calendrier professionnel vos RDV pris via RDV Service Public.
   | Pour cela, vous devez disposer d’un agenda compatible Caldav (comme celui de la Suite numérique).
 
-form
-  .fr-input-group
-    label.fr-label for="caldav_username" Nom d'utilisateur
-    input#caldav_username.fr-input type="text" name="username"
-  .fr-input-group
-    label.fr-label for="caldav_password" Mot de passe
-    input#caldav_password.fr-input type="password" name="password"
-  .fr-input-group
-    label.fr-label for="caldav_agenda_url" URL de l’agenda Caldav
-    input#caldav_agenda_url.fr-input type="text" name="caldav_agenda_url"
-  submit.fr-btn type="submit" Enregistrer
+- if current_agent.caldav_configured?
+  p Vos identifiants Caldav sont déjà configurés.
+  = form_tag agents_calendar_sync_caldav_sync_path, method: :delete do
+    = submit_tag "Supprimer la configuration Caldav", class: "fr-btn fr-btn--secondary", data: { confirm: "Êtes-vous sûr de vouloir supprimer vos identifiants Caldav ?" }
+- else
+  = form_tag agents_calendar_sync_caldav_sync_path, method: :put do
+    .fr-input-group
+      label.fr-label for="caldav_username" Nom d'utilisateur
+      input#caldav_username.fr-input type="text" name="caldav_username"
+    .fr-input-group
+      label.fr-label for="caldav_password" Mot de passe
+      input#caldav_password.fr-input type="password" name="caldav_password"
+    .fr-input-group
+      label.fr-label for="caldav_agenda_url" URL de l’agenda Caldav
+      input#caldav_agenda_url.fr-input type="text" name="caldav_agenda_url"
+    = submit_tag "Enregistrer", class: "fr-btn"

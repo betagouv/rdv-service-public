@@ -5,6 +5,25 @@ class Agents::CaldavSyncController < ApplicationController
 
   def show; end
 
+  def update
+    current_agent.update!(
+      caldav_agenda_url: params[:caldav_agenda_url],
+      caldav_username: params[:caldav_username],
+      caldav_password: params[:caldav_password]
+    )
+    redirect_to agents_calendar_sync_caldav_sync_path
+  end
+
+  def destroy
+    # TODO: À terme, il faudrait aussi supprimer les événements importés
+    current_agent.update!(
+      caldav_agenda_url: nil,
+      caldav_username: nil,
+      caldav_password: nil
+    )
+    redirect_to agents_calendar_sync_caldav_sync_path
+  end
+
   private
 
   def feature_flag_verification!
