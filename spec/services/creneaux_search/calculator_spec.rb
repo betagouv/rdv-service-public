@@ -226,14 +226,32 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "excludes plage ouvertures for unconfirmed agents" do
       agent1 = create(:agent, organisations: [organisation])
       po1 = create(:plage_ouverture, agent_id: agent1.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-      agent2_not_confirmed = create(:agent, organisations: [organisation], confirmed_at: nil)
+      agent2_not_confirmed = create(
+        :agent,
+        organisations: [organisation],
+        invitation_sent_at: first_day - 48.hours,
+        invitation_accepted_at: nil,
+        confirmed_at: nil
+      )
       po2 = create(:plage_ouverture, agent_id: agent2_not_confirmed.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-      agent3_intervenant = create(:agent, :intervenant, organisations: [organisation], confirmed_at: nil)
+      agent3_intervenant = create(
+        :agent, :intervenant,
+        organisations: [organisation],
+        confirmed_at: nil,
+        invitation_sent_at: nil
+      )
       po3 = create(:plage_ouverture, agent_id: agent3_intervenant.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      agent4_confirmed = create(
+        :agent,
+        organisations: [organisation],
+        invitation_sent_at: first_day - 48.hours,
+        invitation_accepted_at: first_day - 24.hours,
+        confirmed_at: first_day - 24.hours
+      )
+      po4 = create(:plage_ouverture, agent_id: agent4_confirmed.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
-      expect(plage_ouvertures).to include(po1)
-      expect(plage_ouvertures).to include(po3)
+      expect(plage_ouvertures).to include(po1, po3, po4)
       expect(plage_ouvertures).not_to include(po2)
     end
   end
