@@ -1,4 +1,4 @@
-import { Select2Inputs } from "./select2-inputs"
+import { initializeSelect2 } from "./select2-inputs"
 import 'custom-event-polyfill'
 
 class AgentUserForm {
@@ -46,7 +46,7 @@ class AgentUserForm {
       )
         inputElt.previousSibling.disabled = newDisabledValue
     })
-    new Select2Inputs()
+    initializeSelect2()
   }
 
   divShouldBeVisible = (divElt) => {
