@@ -147,7 +147,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(created_motif).to have_attributes(name: motif.name)
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
-    absence_representing_rdv = collegue.absences.find_by(title: "#{future_rdv.users.first.full_name} (sur RDV Aide Numérique)")
+    absence_representing_rdv = collegue.absences.find_by(title: "RDV avec #{future_rdv.users.first.full_name} (sur RDV Aide Numérique)")
     expect(absence_representing_rdv.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
     expect(absence_representing_rdv.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
 

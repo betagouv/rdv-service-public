@@ -68,7 +68,7 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
         }
 
         rdv_title = ApplicationController.helpers.rdv_title_for_agent(rdv)
-        params[:title] = "#{rdv_title} (sur #{domain.name})"
+        params[:title] = "RDV avec #{rdv_title} (sur #{domain.name})"
 
         if agent != instance_export.agent
           params[:agent_email] = agent.email
