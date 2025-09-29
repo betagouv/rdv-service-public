@@ -56,4 +56,15 @@ RSpec.describe CronJob::DestroyOldAbsencesJob do
       expect(Absence.all).not_to include(absence)
     end
   end
+
+  it "sends webhooks events" do
+    organisation = create(:organisation)
+    agent = create(:agent, basic_role_in_organisations: [organisation])
+    create(:absence, first_day: now - 2.years - 3.days, recurrence: nil, agent:)
+    create(:webhook_endpoint, organisation:, subscriptions: ["absence"])
+
+    described_class.new.perform
+
+    expect(enqueued_jobs.last["job_class"]).to eq("WebhookJob")
+  end
 end
