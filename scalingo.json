@@ -16,10 +16,24 @@
       "description": "Basic auth password for review apps super admin",
       "generator": "secret"
     },
+
     "SECRET_KEY_BASE": {
       "description": "See: https://guides.rubyonrails.org/security.html#custom-credentials",
       "generator": "secret"
     },
+    "ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY": {
+      "description": "See: https://guides.rubyonrails.org/active_record_encryption.html#setup",
+      "generator": "secret"
+    },
+    "ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT": {
+      "description": "See: https://guides.rubyonrails.org/active_record_encryption.html#setup",
+      "generator": "secret"
+    },
+    "ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY": {
+      "description": "See: https://guides.rubyonrails.org/active_record_encryption.html#setup",
+      "generator": "secret"
+    },
+
     "RDV_SOLIDARITES_INSTANCE_NAME": {
       "description": "Indicate that this is not the production website.",
       "generator": "template",
