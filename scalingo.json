@@ -8,7 +8,7 @@
     },
 
     "DB_SEEDS_USERS_AND_AGENTS_PASSWORD": {
-      "description": "Mot de passe par défaut pour tous les comptes agents des seeds",
+      "description": "Mot de passe par défaut pour tous les comptes agents et usagers des seeds",
       "value": "Rdvservicepublictest1!"
     },
 
