@@ -1,21 +1,19 @@
 import { initInput } from "./select2-inputs"
 
-const planningAgentsSelect = () => {
+export const planningAgentsSelect = () => {
   const agentSelect = document.querySelector("#agent_id");
-  const toggle = document.querySelector("#multi_agent_toggle");
+  const multiAgentEnableButton = document.querySelector("#multi_agent_enable");
   const submit = document.querySelector("#submit_agents");
-  if(!toggle) {
+  if(!multiAgentEnableButton) {
     return;
   }
 
-  toggle.addEventListener("click", (e) => {
+  multiAgentEnableButton.addEventListener("click", (e) => {
     e.preventDefault();
     agentSelect.multiple = true;
     agentSelect.classList.add("js-submit-on-change-cancel");
     initInput(agentSelect);
-    toggle.classList.add("hidden");
+    multiAgentEnableButton.classList.add("hidden");
     submit.classList.remove("hidden");
   });
 }
-
-export { planningAgentsSelect }
