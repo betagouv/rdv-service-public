@@ -70,7 +70,7 @@ RSpec.describe "Admin can configure the organisation" do
 
   it "Update organisation contact information" do
     click_link "Configuration"
-    click_link "Informations de contact"
+    click_link "Informations de l'organisation"
     click_link "Modifier"
     fill_in "Nom", with: la_nouvelle_org.name
     fill_in "Téléphone", with: la_nouvelle_org.phone_number
