@@ -1,6 +1,14 @@
-const SELECTOR = ".select2-input";
+export const initializeSelect2 = () => {
+  initInputs()
+  $(document).on("turbolinks:load", initInputs)
+  $(document).on("shown.bs.modal", ".modal", initInputs)
+  $(document).on("turbolinks:before-cache", destroyInputs)
+  $(document).on("select2:open", focusSearchInput)
+};
 
-const initInput = (elt) => {
+export const SELECTOR = ".select2-input";
+
+export const initInput = (elt) => {
   const config = getInputConfig(elt)
   $(elt).select2(config)
   if (elt.dataset.autoSelectSoleOption) {
@@ -80,13 +88,3 @@ const focusSearchInput = (e) => {
     value.focus()
   })
 };
-
-const initializeSelect2 = () => {
-  initInputs()
-  $(document).on("turbolinks:load", initInputs)
-  $(document).on("shown.bs.modal", ".modal", initInputs)
-  $(document).on("turbolinks:before-cache", destroyInputs)
-  $(document).on("select2:open", focusSearchInput)
-};
-
-export { initializeSelect2 };
