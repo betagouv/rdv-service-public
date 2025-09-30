@@ -307,6 +307,7 @@ Nous avons les applications suivantes :
 - `osc-secnum-fr1/production-rdv-mairie` : appli métier de production
 - `osc-secnum-fr1/demo-rdv-solidarites` : appli métier de préproduction
 - `osc-secnum-fr1/staging-rdv-service-public` : appli métier de préproduction
+- `osc-secnum-fr1/rdv-service-public-review-app` : appli template pour générer les review apps
 - `osc-secnum-fr1/rdv-service-public-etl` : appli de tooling de production
 - `osc-secnum-fr1/rdv-service-public-etl-staging` : appli de tooling de préproduction
 - `osc-secnum-fr1/rdv-service-public-metabase` : appli de tooling de production
@@ -349,7 +350,7 @@ notre checklist d'onboarding un point précisant qu'il faut impérativement acti
 TOTP, Scalingo propose une procédure qui inclut la vérification de l'identité de l'utilisateur concerné par la
 transmission d'un document d'identité.
 
-Note : les review apps sont créées manuellement et héritent de l'app de démo. Le fichier `scalingo.json` contient la liste des variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de la création d'une review app. Les review apps sont automatiquement détruites lors de la fermeture d'une PR.
+Note : les review apps sont créées manuellement et héritent de l'app `rdv-service-public-review-app`. Le fichier `scalingo.json` contient la liste des variables nécessaires au fonctionnement d'une review app. Une review app est automatiquement détruite lors de la fermeture de la PR liée.
 
 ### Détection de fuite de secrets
 
