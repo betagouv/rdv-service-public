@@ -15,7 +15,7 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     create(:absence, agent: agent_basique, title: "Indispo de Loïc")
   end
 
-  it do
+  specify do
     login_as(agent_basique, scope: :agent)
     doc = Autodoc.start_scenario("Nouveau planning / planning multi-agents", self)
 
@@ -86,16 +86,21 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     # SÉLECTION MULTI-AGENT : on fait un tour du planning
     #
 
-    # doc.start_section("Sélection multi-agent")
-    #
-    # click_on("Sélectionner plusieurs agents")
-    # doc.add_screenshot(page, text: "Il est possible de sélectionner plusieurs agents",
-    #                          wait_for: "Revenir à mon agenda")
-    #
-    # find("#select2-agent_id-container").click
-    # find(%(.select2-results__option), text: "BASIQUE Loïc").click
-    # click_on("Appliquer")
-    # expect(page).to have_path("todo")
-    # doc.add_screenshot(page, text: "On affiche l'agenda des agents sélectionnés")
+    doc.start_section("Sélection multi-agent")
+
+    # Je n'arrive pas à cliquer sur "Sélectionner plusieurs agents" dans cette spec.
+    # On visite donc la page multi-agents directement.
+    # Note : on dirait que FullCalendar ne s'affiche pas sur le screenshot, je ne comprends pas pourquoi.
+    visit admin_organisation_planning_agenda_path(organisation_id: organisation.id, agent_id: [agent_admin.id, agent_basique.id])
+    doc.add_screenshot(page, text: "Il est possible de sélectionner plusieurs agents",
+                             wait_for: "Revenir à mon agenda")
+
+    click_on "Plages d'ouverture"
+    expect(page).to have_content(["Justine ADMIN", "1 plage d'ouverture", "Loïc BASIQUE", "1 plage d'ouverture"].join("\n"))
+    doc.add_screenshot(page, text: "La section des plages d'ouvertures liste tous les agents sélectionnés.")
+
+    click_on "Indisponibilités"
+    expect(page).to have_content(["Justine ADMIN", "1 indisponibilité", "Loïc BASIQUE", "1 indisponibilité"].join("\n"))
+    doc.add_screenshot(page, text: "La section des indisponibilités liste tous les agents sélectionnés.")
   end
 end

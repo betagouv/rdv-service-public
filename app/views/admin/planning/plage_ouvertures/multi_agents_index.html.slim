@@ -12,7 +12,7 @@
         p.fr-tile__desc
           = agent.services.map(&:short_name).join(", ")
         p.fr-tile__detail
-          | #{agent.plage_ouvertures.size} plages d'ouverture
+          | #{pluralize(agent.plage_ouvertures.size, "plage", plural: "plages")} d'ouverture
     .fr-tile__header
       .fr-tile__pictogram
         = dsfr_svg "artwork/pictograms/digital/avatar", class: "fr-responsive-img"
