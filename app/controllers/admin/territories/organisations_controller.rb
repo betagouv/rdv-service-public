@@ -43,6 +43,7 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
     end
 
     if organisation.reload.agents.empty?
+      organisation.update!(closed_at: Time.zone.now)
       flash[:success] = "L'organisation a été fermée."
     else
       flash[:error] = "L'organisation n'a pas pu être fermée parce que des agents on encore des rendez-vous à venir dans cette organisation."
@@ -59,9 +60,12 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
   def reopen
     @organisation = Organisation.find(params[:id])
     authorize(@organisation, :create?, policy_class: Agent::OrganisationPolicy)
-    AgentRole.create!(organisation: @organisation, agent: current_agent, access_level: :admin)
+    @organisation.transaction do
+      AgentRole.create!(organisation: @organisation, agent: current_agent, access_level: :admin)
+      @organisation.update!(closed_at: nil)
+    end
     redirect_to admin_organisation_configuration_path(@organisation),
-                flash: { success: "Organisation réouverte ! Vous pouvez inviter des agents à la rejoindre" }
+                flash: { success: "Organisation réouverte ! Vous pouvez inviter des agents à la rejoindre." }
   end
 
   private
