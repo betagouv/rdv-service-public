@@ -41,8 +41,7 @@
           p Les agents n'y auront plus accès et il ne sera plus possible d’y poser un rendez-vous.
           p Vous pourrez néanmoins réouvrir cette organisation : les motifs, lieux et rendez-vous passés seront conservés.
 
-          = form_with url: close_admin_territory_organisations_path(current_territory), method: :patch, builder: Dsfr::FormBuilder do |f|
-            = f.hidden_field :organisation_id, value: @organisation.id
+          = form_with url: close_admin_territory_organisation_path(current_territory, @organisation), method: :patch, builder: Dsfr::FormBuilder do |f|
             = f.submit "Fermer #{@organisation.name}", class: "fr-btn fr-btn--secondary fr-mt-2w", data: { confirm: "Êtes vous sûr(e) de vouloir fermer l’organisation ?"}
         - else
           p Vous ne pouvez pas fermer cette organisation car elle a des rendez-vous à venir. Si vous voulez éviter de que nouveaux rendez-vous soient pris, vous pouvez archiver ses motifs.

@@ -2,8 +2,10 @@
 
 .fr-grid-row
   .fr-col-md-10
-    h1 = @organisation.name
+    .card
+      .card-body
+        h1 = @organisation.name
 
-    p Cette organisation est fermée, mais vous pouvez la réouvrir pour y assurer des rendez-vous à nouveau.
+        p Cette organisation est fermée, mais vous pouvez la réouvrir pour y assurer des rendez-vous à nouveau.
 
-    = button_to "Réouvrir cette organisation", reopen_admin_territory_organisation_path(current_territory, @organisation.id), class: "fr-btn"
+        = button_to "Réouvrir cette organisation", reopen_admin_territory_organisation_path(current_territory, @organisation.id), class: "fr-btn"
