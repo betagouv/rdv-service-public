@@ -1,4 +1,18 @@
 class CopyPlanningToNewInstanceJob < ApplicationJob
+  def self.agent_might_have_rdvs_on_old_instance?(agent, start_date)
+    Rails.cache.fetch("CopyPlanningToNewInstanceJob:#{agent.id}:#{start_date.to_date}", expires_in: 24.hours) do
+      agent.absences.joins(external_references: :oauth_application).where("first_day >= ?", start_date)
+        .where("external_references.external_id ilike ?", "#{CopyRdvAsAbsenceJob::EXTERNAL_ID_PREFIX}%")
+        .where(oauth_applications: { name: "RDV Aide Numérique" }).any?
+    end
+  end
+
+  def self.external_reference_to_rdv_on_old_instance(absence)
+    absence.external_references.joins(:oauth_application)
+      .where("external_references.external_id ilike ?", "#{CopyRdvAsAbsenceJob::EXTERNAL_ID_PREFIX}%")
+      .where(oauth_applications: { name: "RDV Aide Numérique" }).first
+  end
+
   # Les objets qu'on copie dans ce job (rdvs, plage ouverture, absence) ont besoin que les objets
   # de configuration (agents, motifs, lieux) soient déjà créés dans la nouvelle organisation.
   # On les copie donc dans ce deuxième batch, après que le premier ai copié tous les objets de config.
@@ -37,22 +51,26 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
   class CopyRdvAsAbsenceJob < ApplicationJob
     queue_as :latency_5m
 
+    EXTERNAL_ID_PREFIX = "rdv:".freeze
+
     def perform(instance_export_id, rdv_id, domain_id)
       domain = Domain.find(domain_id)
       instance_export = InstanceExport.find(instance_export_id)
       rdv = Rdv.find(rdv_id)
       rdv.agents.each do |agent|
         params = {
-          title: "RDV pris sur #{domain.name}",
           first_day: rdv.starts_at.strftime("%Y-%m-%d"),
           end_day: rdv.starts_at.strftime("%Y-%m-%d"),
           start_time: rdv.starts_at.strftime("%H:%M"),
           end_time: rdv.ends_at.strftime("%H:%M"),
           external_reference: {
-            external_id: "rdv:#{rdv_id}", # on créera aussi des external_reference pour des absences, donc on préfixe par "rdv"
+            external_id: "#{EXTERNAL_ID_PREFIX}#{rdv_id}", # on créera aussi des external_reference pour des absences, donc on préfixe par "rdv"
             external_url: Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
           },
         }
+
+        rdv_title = ApplicationController.helpers.rdv_title_for_agent(rdv)
+        params[:title] = "RDV avec #{rdv_title} (sur #{domain.name})"
 
         if agent != instance_export.agent
           params[:agent_email] = agent.email
@@ -88,7 +106,7 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
       }
 
       if absence.agent != instance_export.agent
-        params[:agent_email] = instance_export.agent.email
+        params[:agent_email] = absence.agent.email
       end
 
       api_client = instance_export.api_client
@@ -119,7 +137,7 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
       }
 
       if plage_ouverture.agent != instance_export.agent
-        params[:agent_email] = instance_export.agent.email
+        params[:agent_email] = plage_ouverture.agent.email
       end
 
       api_client = instance_export.api_client

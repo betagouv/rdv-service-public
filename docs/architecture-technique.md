@@ -1,18 +1,12 @@
 # Dossier technique
 
-> Ce dossier a pour but de présenter l’architecture technique du SI. Il n’est par conséquent ni un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
+> Ce dossier présente l’architecture technique du SI. Il n’est pas un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
 
 **Nom du projet :** RDV Service Public
 
 **Dépôt de code :** https://github.com/betagouv/rdv-service-public
 
 **Hébergeur :** Scalingo, Paris (région Scalingo "osc-secnum-fr1", région Outscale "cloudgouv-eu-west-1")
-
-**Décision d’homologation :** !!<date>!!
-
-**France Relance :** ❌
-
-**Inclusion numérique :** ✅
 
 ## Suivi du document
 
@@ -313,6 +307,7 @@ Nous avons les applications suivantes :
 - `osc-secnum-fr1/production-rdv-mairie` : appli métier de production
 - `osc-secnum-fr1/demo-rdv-solidarites` : appli métier de préproduction
 - `osc-secnum-fr1/staging-rdv-service-public` : appli métier de préproduction
+- `osc-secnum-fr1/rdv-service-public-review-app` : appli template pour générer les review apps
 - `osc-secnum-fr1/rdv-service-public-etl` : appli de tooling de production
 - `osc-secnum-fr1/rdv-service-public-etl-staging` : appli de tooling de préproduction
 - `osc-secnum-fr1/rdv-service-public-metabase` : appli de tooling de production
@@ -355,7 +350,7 @@ notre checklist d'onboarding un point précisant qu'il faut impérativement acti
 TOTP, Scalingo propose une procédure qui inclut la vérification de l'identité de l'utilisateur concerné par la
 transmission d'un document d'identité.
 
-Note : les review apps sont créées manuellement et héritent de l'app de démo. Le fichier `scalingo.json` contient la liste des variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de la création d'une review app. Les review apps sont automatiquement détruites lors de la fermeture d'une PR.
+Note : les review apps sont créées manuellement et héritent de l'app `rdv-service-public-review-app`. Le fichier `scalingo.json` contient la liste des variables nécessaires au fonctionnement d'une review app. Une review app est automatiquement détruite lors de la fermeture de la PR liée.
 
 ### Détection de fuite de secrets
 
@@ -562,6 +557,7 @@ Pour les membres de l'équipe technique, on prend ces mesures supplémentaires :
 Voici les suppressions automatiques mises en place :
 - Suppression des RDVs de plus de 2 ans
 - Suppression des plages d'ouverture de plus de 1 an
+- Suppression des indisponibilités de plus de 2 ans
 - Suppression des logs PaperTrail (auditing) de plus de 1 an contenant des données personnelles autres que l'identité de la personne dont on journalise l'action.
 - Anonymisation des logs PaperTrail(auditing) de plus de 1 an ne contenant pas données personnelles autre que l'identité de la personne dont on journalise l'action
 - Suppression des logs PaperTrail (auditing) de plus de 5 ans

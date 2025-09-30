@@ -12,8 +12,13 @@ class Admin::Planning::AbsencesController < AgentAuthController
     absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
       .where(agent: @agent)
       .includes(:agent)
-      .by_starts_at
       .page(page_number)
+
+    absences = if params[:current_tab] == "expired"
+                 absences.by_starts_at(:desc)
+               else
+                 absences.by_starts_at(:asc)
+               end
 
     @absences = params[:current_tab] == "expired" ? absences.expired : absences.not_expired
     @display_tabs = absences.expired.any? || params[:current_tab] == "expired"
