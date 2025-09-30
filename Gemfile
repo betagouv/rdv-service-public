@@ -158,9 +158,6 @@ gem "icalendar", "~> 2.5"
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"
 
-# TODO: retirer cette ligne quand une nouvelle version de httpclient est released
-gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
-
 # Utilisée pour les imports
 gem "csv"
 
