@@ -12,7 +12,8 @@
     - lieu_selection_service.next_availability_by_lieux.each do |lieu, next_availability|
       - motif = next_availability.motif
       - if motif.restriction_for_rdv.present?
-        = render "/common/modal", id: "rdv-restriction-motif-#{lieu.id}", title: "À lire avant de prendre un rendez-vous", body: restriction_for_rdv_to_html(motif), confirm_path: prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), confirm_message: "Accepter", cancel_message: "Annuler"
+        - confirm_path = prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at, accepted_restrictions_for: motif.id))
+        = render "/common/modal", id: "rdv-restriction-motif-#{lieu.id}", title: "À lire avant de prendre un rendez-vous", body: restriction_for_rdv_to_html(motif), confirm_path:, confirm_message: "Accepter", cancel_message: "Annuler"
         li.fr-card.fr-enlarge-button.fr-card--lg.fr-card--horizontal.fr-mb-3w
           .fr-card__body aria-controls="rdv-restriction-motif-#{lieu.id}" data-fr-opened="false"
             .fr-card__content

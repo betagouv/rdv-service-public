@@ -132,6 +132,13 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyOldAbsencesJob < CronJob
+    def perform
+      Absence.where(recurrence: nil).where("end_day < ?", 2.years.ago).find_each(&:destroy)
+      Absence.where.not(recurrence: nil).where("recurrence_ends_at < ?", 2.years.ago).find_each(&:destroy)
+    end
+  end
+
   class AnonymizeOldReceipts < CronJob
     def perform
       Anonymizer.anonymize_records!("receipts", scope: Receipt.arel_table[:created_at].lt(6.months.ago))

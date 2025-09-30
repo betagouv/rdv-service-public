@@ -21,12 +21,21 @@ div id="creneaux-lieu-#{lieu&.id}"
             - if creneaux_by_date[date]&.first&.respects_max_public_booking_delay?
               .fr-grid-row
                 - creneaux_by_date[date].sort.each do |creneau|
-                  - autofocus = (@context.autofocus == "first" && creneau == creneaux.min) || (@context.autofocus == "last" && creneau == creneaux.max)
-                  = link_to creneau_selection_service.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at),
-                          class: "fr-col-12 fr-btn fr-btn--tertiary fr-mb-1w rdv-justify-content-center",
-                          data: { turbolinks: false },
-                          aria: { label: "Choisir le créneau du #{l(creneau.starts_at, format: '%A %-d %b')} à #{l(creneau.starts_at, format: '%H:%M')}"},
-                          autofocus: do
+                  ruby:
+                    autofocus = (@context.autofocus == "first" && creneau == creneaux.min) || (@context.autofocus == "last" && creneau == creneaux.max)
+                    confirm_path = creneau_selection_service.wizard_after_creneau_selection_path(motif_id: creneau.motif.id, starts_at: creneau.starts_at)
+                    show_instructions = creneau.motif.restriction_for_rdv.present? && params[:accepted_restrictions_for].to_i != creneau.motif.id
+                    modal_id = "rdv-restriction-motif-#{creneau.motif.id}-#{creneau.starts_at.to_i}"
+                  = render "/common/modal", id: modal_id, title: "À lire avant de prendre un rendez-vous", body: restriction_for_rdv_to_html(creneau.motif), confirm_path:, confirm_message: "Accepter", cancel_message: "Annuler"
+                  a.fr-col-12.fr-btn.fr-btn--tertiary.fr-mb-1w.rdv-justify-content-center(
+                    class=(show_instructions ? "js-prevent-default-onclick" : "")
+                    href=confirm_path
+                    data-turbolinks="false"
+                    aria-controls=(show_instructions ? modal_id : "")
+                    data-fr-opened=(show_instructions ? "false" : "")
+                    aria-label=%(Choisir le créneau du #{l(creneau.starts_at, format: '%A %-d %b')} à #{l(creneau.starts_at, format: '%H:%M')})
+                    autofocus
+                  )
                     = l(creneau.starts_at, format: "%H:%M")
                     - if creneau.motif.follow_up?
                       br

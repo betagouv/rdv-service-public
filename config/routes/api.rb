@@ -3,19 +3,22 @@ namespace :api do
     # Need agent authentication to
     mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
     resources :absences, except: %i[new edit]
-    resources :agents, only: %i[index]
+    resources :plage_ouvertures, only: %i[create]
+    resources :agents, only: %i[index create]
+    resources :lieux, only: %i[create]
     get "agents/me", to: "agents#me"
     resources :users, only: %i[create index show update] do
       post :rdv_invitation_token, to: "users#rdv_invitation_token", on: :member
     end
     resource :user_profiles, only: %i[create destroy]
     resource :referent_assignations, only: %i[create destroy]
-    resources :organisations, only: %i[index show update] do
+    resources :organisations, only: %i[index show update create] do
       resources :webhook_endpoints, only: %i[index create update]
       resources :users, only: %i[index show]
       resources :motifs, only: %i[index]
       resources :rdvs, only: %i[index]
     end
+    resources :motifs, only: %i[create]
     resources :rdvs, only: %i[index]
     resources :participations, only: %i[update]
     resources :rdv_plans, only: %i[create show]

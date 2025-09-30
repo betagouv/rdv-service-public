@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_18_154948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -296,7 +296,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.string "item_type", null: false
     t.bigint "item_id", null: false
     t.bigint "oauth_application_id", null: false
-    t.bigint "territory_id", null: false
+    t.bigint "territory_id"
     t.text "external_id", null: false
     t.text "external_url"
     t.datetime "created_at", null: false
@@ -412,8 +412,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.uuid "good_job_batch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "source_organisation_id"
+    t.string "status"
     t.index ["agent_id"], name: "index_instance_exports_on_agent_id"
     t.index ["good_job_batch_id"], name: "index_instance_exports_on_good_job_batch_id"
+    t.index ["source_organisation_id"], name: "index_instance_exports_on_source_organisation_id"
   end
 
   create_table "lieux", force: :cascade do |t|
@@ -425,7 +428,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.float "longitude"
     t.string "phone_number"
     t.string "phone_number_formatted"
-    t.enum "availability", null: false, comment: "Permet de savoir si le lieu est un lieu normal (enabled), un lieu ponctuel qui sera utilisé pour un seul rdv (single_use), ou un lieu supprimé par soft-delete (disabled). Dans la plupart des cas on s'intéresse uniquement aux lieux enabled\n", enum_type: "lieu_availability"
+    t.enum "availability", default: "enabled", null: false, comment: "Permet de savoir si le lieu est un lieu normal (enabled), un lieu ponctuel qui sera utilisé pour un seul rdv (single_use), ou un lieu supprimé par soft-delete (disabled). Dans la plupart des cas on s'intéresse uniquement aux lieux enabled\n", enum_type: "lieu_availability"
     t.string "address", null: false
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
@@ -689,12 +692,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.string "sms_phone_number"
     t.string "email_address"
     t.bigint "organisation_id", null: false
-    t.index ["channel"], name: "index_receipts_on_channel"
     t.index ["created_at"], name: "index_receipts_on_created_at"
-    t.index ["event"], name: "index_receipts_on_event"
     t.index ["organisation_id"], name: "index_receipts_on_organisation_id"
     t.index ["rdv_id"], name: "index_receipts_on_rdv_id"
-    t.index ["result"], name: "index_receipts_on_result"
     t.index ["user_id"], name: "index_receipts_on_user_id"
   end
 

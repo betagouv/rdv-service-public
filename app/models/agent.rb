@@ -1,6 +1,7 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
+  self.ignored_columns += %w[external_id]
   include Agent::FeatureFlags
 
   # Mixins

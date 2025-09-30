@@ -1,39 +1,14 @@
 RSpec.describe "User can login using FranceConnect" do
-  stub_env_with(FRANCECONNECT_HOST: "fcp.integ01.dev-franceconnect.fr")
-
-  before do
-    mock_france_connect_profile = {
-      sub: "12345",
-      email: "france@monopolis.fr",
-      given_name: "France",
-      family_name: "Gall",
-      birthdate: "1947-10-09",
-    }
-    OmniAuth.config.add_mock(:franceconnect, info: mock_france_connect_profile)
-  end
-
-  after do
-    OmniAuth.config.mock_auth[:franceconnect] = nil
-  end
+  stub_env_with(
+    FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2",
+    FRANCECONNECT_V2_CLIENT_ID: "fake_france_connect_v2_client_id",
+    FRANCECONNECT_V2_CLIENT_SECRET: "fake_france_connect_v2_client_secret"
+  )
 
   context "visiting rdv-solidarites domain" do
     it "allows a user to create an account using the FranceConnect button" do
       visit "http://www.rdv-solidarites-test.localhost/users/sign_in"
-      expect(page).to have_link(href: "/omniauth/franceconnect")
-
-      expect { click_on "S’identifier avec FranceConnect" }.to change(User, :count).by(1)
-
-      expect(User.last).to have_attributes(
-        email: nil,
-        notification_email: "france@monopolis.fr",
-        first_name: "France",
-        last_name: "Gall",
-        franceconnect_openid_sub: "12345",
-        birth_date: Date.new(1947, 10, 9)
-      )
-
-      expect(page).to have_current_path("/users/rdvs")
-      expect(page).to have_link("Déconnexion")
+      expect(page).to have_link(href: "/franceconnect_v2/auth")
     end
   end
 

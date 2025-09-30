@@ -1,9 +1,17 @@
 = territory_navigation(t(".webhook_title"))
 
-.row.justify-content-center
-  .col-md-10
+.fr-grid-row.justify-content-center
+  .fr-col-10.fr-col-offset-1
+    h1.fr-h2 = t(".webhook_title")
     .card
       .card-body
+        p Les webhooks permettent à #{current_domain.name} de communiquer automatiquement avec le système d’information de votre structure.
+
+        p Ils sont particulièrement utiles pour mettre à jour automatiquement vos calendriers internes ou vos logiciels métiers.
+        p Pour plus d'exemples, vous pouvez consulter #{dsfr_link_to("notre documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/configurer-son-espace#webhook", target: "_blank")}.
+
+        p Pour les détails techniques et la mise en place, vous pouvez consulter la #{dsfr_link_to("documentation technique", "https://github.com/betagouv/rdv-service-public/blob/production/docs/api/webhooks/api-notifications-webhooks.md", target: "_blank")} dédiée.
+
         - if @webhooks.any?
           table.table
             thead
@@ -24,5 +32,4 @@
                         i.fa.fa-trash-alt
 
         .d-flex.flex-gap-1em
-          = link_to "Ajouter un webhook", new_admin_territory_webhook_endpoint_path(current_territory), class: "btn btn-primary"
-          = link_to "Voir la documentation", "https://github.com/betagouv/rdv-service-public/blob/production/docs/api/webhooks/api-notifications-webhooks.md", target: "_blank", class: "btn btn-link"
+          = link_to "Ajouter un webhook", new_admin_territory_webhook_endpoint_path(current_territory), class: "fr-btn"

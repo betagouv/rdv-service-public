@@ -20,7 +20,37 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
     render_collection(motifs.order(:id))
   end
 
+  def create
+    motif = Motif.new(params.permit(*motif_attribute_names))
+
+    authorize(motif, policy_class: Agent::MotifPolicy)
+
+    motif.transaction do
+      motif.save!
+
+      if params[:external_reference].present?
+        ExternalReference.create!(
+          params.require(:external_reference).permit(:external_id, :external_url).merge(
+            item: motif,
+            oauth_application: doorkeeper_token&.application,
+            territory_id: motif.organisation.territory_id
+          )
+        )
+      end
+    end
+
+    if motif.persisted?
+      render json: MotifBlueprint.render(motif)
+    else
+      render status: :unprocessable_entity, json: { error_messages: motif.errors.full_messages }
+    end
+  end
+
   private
+
+  def motif_attribute_names
+    InstanceExport::MOTIF_ATTRIBUTE_NAMES + [:organisation_id]
+  end
 
   def pundit_user
     current_agent

@@ -26,9 +26,9 @@ fr:
   simple_form:
     hints:
       lieu:
-        address: L’adresse apparaîtra dans les notifications mails et SMS aux usagers.
+        address: L’adresse apparaît dans les notifications par email et SMS aux usagers.
         enabled: |
           Si le lieu est ouvert, de nouveaux rendez-vous et plages d’ouvertures peuvent y être posés.
           Fermez un lieu pour ne plus le voir dans les menus.
-        name: Le nom apparaîtra dans les notifications par email et SMS aux usagers.
-        phone_number: Ce numéro sera affiché coté usager pour leurs permettre de vous contacter. Faites en sorte que les personnes qui répondront au téléphone puissent avoir accès à %{app_name}.
+        name: Le nom apparaît dans les notifications par email et SMS aux usagers.
+        phone_number: Ce numéro permet aux usagers de vous contacter. Faites en sorte que les personnes qui répondent au téléphone puissent avoir accès à %{app_name}.

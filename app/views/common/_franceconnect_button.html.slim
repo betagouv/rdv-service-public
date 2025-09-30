@@ -1,16 +1,9 @@
-ruby:
-  http_method, auth_path = if display_france_connect_v2_button?
-                             [:get, "/franceconnect_v2/auth"]
-                           elsif display_france_connect_v1_button?
-                             [:post, "/omniauth/franceconnect"]
-                           end
-
-- if auth_path
+- if display_france_connect_v2_button?
   h2 Se connecter avec FranceConnect
   .rdv-text-align-center
     .fr-connect-group
       p FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion à vos services en ligne
-      = link_to auth_path, class: "fr-connect", method: http_method, title: "S’identifier avec FranceConnect V2" do
+      = link_to "/franceconnect_v2/auth", class: "fr-connect", method: :get, title: "S’identifier avec FranceConnect V2" do
         span.fr-connect__login S’identifier avec
         span.fr-connect__brand FranceConnect
 

@@ -12,19 +12,6 @@ RSpec.describe Users::SessionsController do
       end
     end
 
-    context "quand l'usager s'est connecté avec FranceConnect V1" do
-      stub_env_with(FRANCECONNECT_HOST: "fcp.integ01.dev-franceconnect.fr")
-
-      it "redirects to FranceConnect v1's /api/v1/logout" do
-        session[:connected_with_franceconnect] = true
-
-        delete :destroy
-
-        expect(session[:connected_with_franceconnect]).to be_nil
-        expect(response).to redirect_to("https://fcp.integ01.dev-franceconnect.fr/api/v1/logout")
-      end
-    end
-
     context "quand l'usager s'est connecté avec FranceConnect V2" do
       stub_env_with(
         FRANCECONNECT_V2_BASE_URL: "https://fcp-low.sbx.dev-franceconnect.fr/api/v2",

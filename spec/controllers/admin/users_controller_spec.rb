@@ -171,4 +171,38 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
     end
   end
+
+  describe "GET #link_to_organisation" do
+    let!(:user_from_other_territory) { create(:user, organisations: [create(:organisation)]) }
+
+    context "without a secure key" do
+      it "redirects with an error message" do
+        expect do
+          get :link_to_organisation, params: { organisation_id: organisation.id, id: user_from_other_territory.id }
+        end.not_to change { user_from_other_territory.reload.organisation_ids }
+
+        expect(response).to redirect_to(authenticated_agent_root_url)
+        expect(flash[:error]).to match(/Vous n’avez pas les droits suffisants/)
+      end
+    end
+
+    context "with a secure key" do
+      let(:secure_key) { SecureRandom.uuid }
+
+      before do
+        Redis.with_connection do |redis|
+          redis_key = "link_to_organisation:secure_key:#{secure_key}"
+          redis.set(redis_key, user_from_other_territory.id.to_s, ex: 30.seconds)
+        end
+      end
+
+      it "redirects with an error message" do
+        expect do
+          get :link_to_organisation, params: { organisation_id: organisation.id, id: user_from_other_territory.id, secure_key: }
+        end.to change { user_from_other_territory.organisations.count }.by(1)
+
+        expect(response).to redirect_to("/admin/organisations/#{organisation.id}/users/#{user_from_other_territory.id}")
+      end
+    end
+  end
 end

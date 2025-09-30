@@ -135,6 +135,8 @@ jobs:
       - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
+      - name: Prevent https://github.com/rails/rails/issues/53661
+        run: touch tmp/local_secret.txt && openssl rand -hex 64 > tmp/local_secret.txt
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -249,7 +251,7 @@ jobs:
       - uses: ./.github/actions/setup-playwright
       - name: Precompile assets
         run: yarn run build
-      - name: Setup parallel tests and run feature specs
+      - name: Setup DB and run autodoc feature specs
         run: RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load; bundle exec rspec spec/features/autodoc
         env:
           HOST: http://example.com

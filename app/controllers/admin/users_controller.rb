@@ -121,6 +121,14 @@ class Admin::UsersController < AgentAuthController
   def link_to_organisation
     @user = User.find(params.require(:id))
     authorize(current_organisation, policy_class: Agent::OrganisationPolicy)
+
+    Redis.with_connection do |redis|
+      matching_user_id = redis.get("link_to_organisation:secure_key:#{params[:secure_key]}")
+      unless matching_user_id == @user.id.to_s
+        raise Pundit::NotAuthorizedError, "Can't import user: invalid secure key"
+      end
+    end
+
     flash[:success] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
 
     if from_modal?

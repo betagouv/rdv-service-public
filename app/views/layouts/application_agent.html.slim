@@ -15,19 +15,26 @@ html lang="fr"
       = render "layouts/left_menu"
       main#main.content-page[style="flex-grow: 1;" role="main"]
         .content
-          = content_for :fil_ariane
-          .fr-mx-2w= render "layouts/flash"
-          .container-fluid
-            - if content_for :title
-              .page-title-box
-                h1.fr-h2= yield :title
-                // TODO: Nous sommes en train de migrer les breadcrumbs vers des fils d'ariane au DSFR qui sont au dessus du titre.
-                // Voir plus haut
-                // Une fois cette transition terminée il faudra renommer ce bloc qui continuera à être utilisé pour les boutons en haut de page (ou refacto).
-                - if content_for :breadcrumb
-                  .page-title-right
-                    = yield :breadcrumb
-            = yield
+          - if @beta_planning_layout
+            = render partial: "admin/planning/beta_planning_header"
+            .p-3
+              = yield
+
+          - else
+            = render "layouts/instance_migration_banner"
+            = content_for :fil_ariane
+            .container-fluid
+              = render "layouts/flash"
+              - if content_for :title
+                .page-title-box
+                  h1.fr-h2= yield :title
+                  // TODO: Nous sommes en train de migrer les breadcrumbs vers des fils d'ariane au DSFR qui sont au dessus du titre.
+                  // Voir plus haut
+                  // Une fois cette transition terminée il faudra renommer ce bloc qui continuera à être utilisé pour les boutons en haut de page (ou refacto).
+                  - if content_for :breadcrumb
+                    .page-title-right
+                      = yield :breadcrumb
+              = yield
 
       = render "layouts/agent_footer"
     #modal-holder
