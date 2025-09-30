@@ -22,8 +22,8 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
   end
 
   def index
-    @organisations = organisations.joins(:agent_roles).uniq
-    @closed_organisations = current_territory.organisations.where.missing(:agent_roles).uniq
+    @organisations = organisations.where(closed_at: nil)
+    @closed_organisations = current_territory.organisations.where.not(closed_at: nil)
   end
 
   def close
