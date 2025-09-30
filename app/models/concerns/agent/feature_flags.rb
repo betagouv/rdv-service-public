@@ -1,7 +1,7 @@
 module Agent::FeatureFlags
   extend ActiveSupport::Concern
 
-  AVAILABLE_FEATURES = %w[new_planning instance_migration].freeze
+  AVAILABLE_FEATURES = %w[new_planning].freeze
 
   def feature_enabled?(feature)
     feature_flags && feature_flags[feature] == true
