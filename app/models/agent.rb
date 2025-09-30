@@ -123,7 +123,7 @@ class Agent < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :excluding_pending_invitation, lambda {
     where(invitation_sent_at: nil) # permet de ne pas inclure les intervenants & les ProConnectés
-      .or(Agent.where.not(confirmed_at: nil)) # plus générique que invitation_sent_at, évite les faux négatifs
+      .or(where.not(confirmed_at: nil)) # plus générique que invitation_sent_at, évite les faux négatifs
   }
 
   ## -
