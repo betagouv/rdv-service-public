@@ -1,11 +1,14 @@
-class Agents::CaldavSyncController < ApplicationController
+class Agents::CaldavSyncController < AgentAuthController
   layout "application_agent_config"
 
   before_action :feature_flag_verification!
 
-  def show; end
+  def show
+    authorize(current_agent, policy_class: Agent::AgentPolicy)
+  end
 
   def update
+    authorize(current_agent, policy_class: Agent::AgentPolicy)
     current_agent.update!(
       caldav_agenda_url: params[:caldav_agenda_url],
       caldav_username: params[:caldav_username],
@@ -15,6 +18,7 @@ class Agents::CaldavSyncController < ApplicationController
   end
 
   def destroy
+    authorize(current_agent, policy_class: Agent::AgentPolicy)
     # TODO: À terme, il faudrait aussi supprimer les événements importés
     current_agent.update!(
       caldav_agenda_url: nil,
@@ -25,6 +29,10 @@ class Agents::CaldavSyncController < ApplicationController
   end
 
   private
+
+  def pundit_user
+    AgentContext.new(current_agent)
+  end
 
   def feature_flag_verification!
     return if current_agent.feature_enabled?(Agent::FeatureFlags::CALDAV_SYNC)
