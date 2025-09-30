@@ -12,7 +12,6 @@ ruby:
   resources = @agents.map { { id: _1.id, title: _1.full_name_or_email } }
 
 #agenda-multi-agent.mt-2[
-  data-default-date-json="#{Time.zone.today.to_json}"
   data-event-sources-json="#{event_sources.to_json}"
   data-resources-json="#{resources.to_json}"
   data-organisation-id="#{current_organisation.id}"

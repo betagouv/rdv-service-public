@@ -22,13 +22,9 @@ class AgendaMultiAgent {
       resources: JSON.parse(this.data.resourcesJson),
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
-      // initialDate: this.getDefaultDate(),
       initialView: "resourceTimeGridDay",
       select: this.selectEvent,
-      // headerToolbar: {
-      //   center: 'resourceTimeGridDay'
-      // },
-      eventDidMount: eventRenderer(this.data.selectedEventId),
+      eventDidMount: eventRenderer(),
     }
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
   }

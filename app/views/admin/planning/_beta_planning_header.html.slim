@@ -8,8 +8,6 @@
             collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
             data = {
               "select2-config": {
-                dropdownCssClass: "dropdownCssClassdropdownCssClass",
-                containerCssClass: "containerCssClasscontainerCssClass",
                 ajax: {
                   url: admin_organisation_agents_path(current_organisation),
                   dataType: "json",
