@@ -1,8 +1,10 @@
 class CopyPlanningToNewInstanceJob < ApplicationJob
   def self.agent_might_have_rdvs_on_old_instance?(agent, start_date)
-    agent.absences.joins(external_references: :oauth_application).where("first_day >= ?", start_date)
-      .where("external_references.external_id ilike ?", "#{CopyRdvAsAbsenceJob::EXTERNAL_ID_PREFIX}%")
-      .where(oauth_applications: { name: "RDV Aide Numérique" }).any?
+    Rails.cache.fetch("CopyPlanningToNewInstanceJob:#{agent.id}:#{start_date.to_date}", expires_in: 24.hours) do
+      agent.absences.joins(external_references: :oauth_application).where("first_day >= ?", start_date)
+        .where("external_references.external_id ilike ?", "#{CopyRdvAsAbsenceJob::EXTERNAL_ID_PREFIX}%")
+        .where(oauth_applications: { name: "RDV Aide Numérique" }).any?
+    end
   end
 
   def self.external_reference_to_rdv_on_old_instance(absence)
