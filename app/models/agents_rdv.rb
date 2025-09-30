@@ -14,6 +14,8 @@ class AgentsRdv < ApplicationRecord
   after_commit :update_unknown_past_rdv_count
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
 
+  # A DÉPLACER
+
   def update_unknown_past_rdv_count
     agent.update_unknown_past_rdv_count!
   end

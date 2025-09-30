@@ -236,6 +236,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.boolean "connected_with_agent_connect", default: false, null: false
     t.string "proconnect_siret"
     t.jsonb "feature_flags", default: {}
+    t.string "caldav_agenda_url"
+    t.string "caldav_username"
+    t.string "caldav_password"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -255,6 +258,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.bigint "rdv_id", null: false
     t.text "outlook_id"
     t.boolean "outlook_create_in_progress", default: false, null: false
+    t.string "caldav_url"
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
