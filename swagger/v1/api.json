@@ -2823,7 +2823,7 @@
           {
             "name": "status",
             "in": "query",
-            "description": "Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste.\nVous pouvez passer soit une seule chaine de caractères, soit un tableau de chaines de caractères.\nLes différentes valeurs possibles sont [\"unknown\", \"seen\", \"excused\", \"revoked\", \"noshow\"].\nSi vous passez un tableau, le format attendu est status[]=excused&status[]=revoked\n",
+            "description": "Filtre les rendez-vous par statut.\nVous pouvez passer soit une seule chaine de caractères, soit un tableau de chaines de caractères.\nLes différentes valeurs possibles sont [\"unknown\", \"seen\", \"excused\", \"revoked\", \"noshow\"].\nSi vous passez un tableau, le format attendu est status[]=excused&status[]=revoked\n",
             "example": "seen ou status[]=excused&status[]=revoked",
             "required": false
           },
