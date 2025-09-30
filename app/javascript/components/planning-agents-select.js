@@ -11,7 +11,7 @@ export const planningAgentsSelect = () => {
   multiAgentEnableButton.addEventListener("click", (e) => {
     e.preventDefault();
     agentSelect.multiple = true;
-    agentSelect.classList.add("js-submit-on-change-cancel");
+    agentSelect.dataset.action = null; // On retire "change->form#submit"
     initInput(agentSelect);
     multiAgentEnableButton.classList.add("hidden");
     submit.classList.remove("hidden");
