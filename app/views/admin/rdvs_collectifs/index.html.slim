@@ -37,6 +37,14 @@
             = f.submit "Filtrer", class: "fr-btn fr-btn--secondary"
 
   .card-body
+    - if CopyPlanningToNewInstanceJob.agent_might_have_rdvs_on_old_instance?(current_agent, @form.from_date)
+      .fr-notice.fr-notice--info.fr-mb-3w
+        .fr-notice__body
+          p.fr-mb-0.fr-mx-2w
+            span.fr-notice__desc
+              | Il est possible que vous ayez des RDV collectifs prévus sur RDV Aide Numérique avant votre migration sur RDV Service Public.
+            = link_to  "Ouvrir RDV Aide Numérique", "https://#{Domain::RDV_AIDE_NUMERIQUE.host_name}", class: "fr-btn fr-btn--secondary fr-m-1w"
+
     - if @rdvs.any?
       = render(partial: "admin/rdvs_collectifs/rdv", collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :services))
       .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"

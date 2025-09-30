@@ -1,18 +1,12 @@
 # Dossier technique
 
-> Ce dossier a pour but de présenter l’architecture technique du SI. Il n’est par conséquent ni un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
+> Ce dossier présente l’architecture technique du SI. Il n’est pas un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
 
 **Nom du projet :** RDV Service Public
 
 **Dépôt de code :** https://github.com/betagouv/rdv-service-public
 
 **Hébergeur :** Scalingo, Paris (région Scalingo "osc-secnum-fr1", région Outscale "cloudgouv-eu-west-1")
-
-**Décision d’homologation :** !!<date>!!
-
-**France Relance :** ❌
-
-**Inclusion numérique :** ✅
 
 ## Suivi du document
 
@@ -563,6 +557,7 @@ Pour les membres de l'équipe technique, on prend ces mesures supplémentaires :
 Voici les suppressions automatiques mises en place :
 - Suppression des RDVs de plus de 2 ans
 - Suppression des plages d'ouverture de plus de 1 an
+- Suppression des indisponibilités de plus de 2 ans
 - Suppression des logs PaperTrail (auditing) de plus de 1 an contenant des données personnelles autres que l'identité de la personne dont on journalise l'action.
 - Anonymisation des logs PaperTrail(auditing) de plus de 1 an ne contenant pas données personnelles autre que l'identité de la personne dont on journalise l'action
 - Suppression des logs PaperTrail (auditing) de plus de 5 ans
