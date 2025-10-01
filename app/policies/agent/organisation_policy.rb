@@ -9,17 +9,9 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
 
   alias creneau_availability? link_to_organisation?
 
-  def new?
-    current_agent.territorial_admin_in?(record.territory)
-  end
-
-  def create?
-    current_agent.territorial_admin_in?(record.territory)
-  end
-
-  def close?
-    new?
-  end
+  alias new? territorial_admin?
+  alias create? territorial_admin?
+  alias close? territorial_admin?
 
   def destroy?
     false
@@ -43,6 +35,12 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
 
   def show?
     link_to_organisation?
+  end
+
+  private
+
+  def territorial_admin?
+    current_agent.territorial_admin_in?(record.territory)
   end
 
   class Scope < Scope
