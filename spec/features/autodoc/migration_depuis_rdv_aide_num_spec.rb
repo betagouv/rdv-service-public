@@ -17,6 +17,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   end
   let!(:lieu) { create(:lieu, organisation: organisation_rdv_aide_num) }
   let!(:motif) { create(:motif, organisation: organisation_rdv_aide_num) }
+  let!(:motif_collectif) { create(:motif, :collectif, organisation: organisation_rdv_aide_num) }
 
   let!(:users) do
     create_list(:user, 3, organisations: [organisation_rdv_aide_num])
@@ -24,6 +25,9 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
   let!(:future_rdv) do
     create(:rdv, agents: [collegue], users: [users.last], starts_at: 2.weeks.from_now, motif:, lieu:, organisation: organisation_rdv_aide_num)
+  end
+  let!(:future_rdv_collectif) do
+    create(:rdv, agents: [collegue], users: [], starts_at: 2.weeks.from_now, motif: motif_collectif, lieu:, organisation: organisation_rdv_aide_num)
   end
 
   let!(:absence) { create(:absence, :no_recurrence, agent: agent_rdv_aide_num) }
@@ -139,12 +143,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(created_lieu).to have_attributes(name: lieu.name)
     expect(created_lieu.external_references.last).to have_attributes(external_id: lieu.id.to_s)
 
-    created_motif = created_organisation.motifs.sole
+    created_motif = created_organisation.motifs.individuel.sole
     expect(created_motif).to have_attributes(name: motif.name)
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
-    expect(collegue.absences.where(title: "RDV pris sur RDV Aide Numérique").last.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
-    expect(collegue.absences.where(title: "RDV pris sur RDV Aide Numérique").last.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
+    absence_representing_rdv = collegue.absences.find_by(title: "RDV avec #{future_rdv.users.first.full_name} (sur RDV Aide Numérique)")
+    expect(absence_representing_rdv.starts_at).to be_within(1.minute).of(future_rdv.starts_at)
+    expect(absence_representing_rdv.external_references.last.external_url).to eq "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{future_rdv.id}"
 
     # On crée aussi des copies des absences futures
     expect(agent_rdv_sp.absences.exceptionnelles.first.starts_at).to eq absence.starts_at

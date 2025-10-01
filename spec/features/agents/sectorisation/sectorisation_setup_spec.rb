@@ -15,6 +15,7 @@ RSpec.describe "Agent can setup sectorisation", type: :feature do
     fill_in :sector_name, with: "Secteur Nord"
     fill_in :sector_human_id, with: "nord"
     click_on "Enregistrer"
+    expect(page).to have_content("Communes ou rues associées")
     click_on "Ajouter une commune ou une rue"
     fill_in_readonly_input("#zone_city_name", "Valence")
     fill_in_readonly_input("#zone_city_code", "26362")
