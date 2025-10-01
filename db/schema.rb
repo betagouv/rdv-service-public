@@ -239,6 +239,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.string "caldav_agenda_url"
     t.string "caldav_username"
     t.string "caldav_password"
+    t.boolean "caldadv_disconnect_in_progress", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
