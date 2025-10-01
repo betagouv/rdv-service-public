@@ -21,14 +21,14 @@
         - if @lieu.enabled?
           h2.fr-h6 Ce lieu est ouvert aux nouveaux rendez-vous
           p Vous pouvez fermer ce lieu pour empêcher que de nouveaux rendez-vous ou des nouvelles plages d'ouvertures y soient associées.
-          p Il sera ensuite possible de réouvrir ce lieu dès que vous le souhaitez.
+          p Il sera ensuite possible de rouvrir ce lieu dès que vous le souhaitez.
           = link_to "Fermer ce lieu", close_admin_organisation_lieu_path(current_organisation, @lieu), method: :post, class: "fr-btn fr-btn--secondary"
 
         - else
           h2.fr-h6 Ce lieu est fermé aux nouveaux rendez-vous
 
           p Il n'est pas possible d'ajouter des rendez-vous ou des plages d'ouverture pour ce lieu.
-          p Si vous le souhaitez, vous pouvez le réouvrir
+          p Si vous le souhaitez, vous pouvez le rouvrir
           = link_to "Réouvrir ce lieu", reopen_admin_organisation_lieu_path(current_organisation, @lieu), method: :post, class: "fr-btn fr-btn--secondary"
 
 - if @lieu.disabled?

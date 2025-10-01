@@ -65,7 +65,7 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
       @organisation.update!(disabled_at: nil)
     end
     redirect_to admin_organisation_configuration_path(@organisation),
-                flash: { success: "Organisation réouverte ! Vous pouvez inviter des agents à la rejoindre." }
+                flash: { success: "Organisation rouverte ! Vous pouvez inviter des agents à la rejoindre." }
   end
 
   private
