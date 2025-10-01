@@ -1,12 +1,12 @@
-import { Calendar } from '@fullcalendar/core';
-import resourceTimegridPlugin from '@fullcalendar/resource-timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import {defaultFullCalendarConfig, eventRenderer} from "./utils";
-import {handleAjaxError} from "../calendar"
+import { Calendar } from "@fullcalendar/core";
+import resourceTimegridPlugin from "@fullcalendar/resource-timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { defaultFullCalendarConfig, eventRenderer } from "./utils";
+import { handleAjaxError } from "../calendar"
 
 class AgendaMultiAgent {
   constructor() {
-    this.calendarEl = document.querySelector('#agenda-multi-agent');
+    this.calendarEl = document.querySelector("#agenda-multi-agent");
     if (this.calendarEl == null || this.calendarEl.innerHTML !== "") {
       return;
     }
