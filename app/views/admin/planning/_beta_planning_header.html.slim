@@ -6,6 +6,8 @@
         div
           ruby:
             collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
+            klasses = ["select2-input"]
+            klasses.push("js-submit-on-change") if @agents.size == 1 # Le select mono-agent recharge la page dès qu'on en sélectionne un
             data = {
               "select2-config": {
                 ajax: {
@@ -15,9 +17,8 @@
                 },
               },
             }
-            data[:action] = "change->form#submit" if @agents.size == 1 # Le select mono-agent recharge la page dès qu'on en sélectionne un
 
-          = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input"], data: }
+          = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: klasses, data: }
 
         .ml-2.d-flex[style="gap: 0 0.5em"]
           - if @agents.size == 1
