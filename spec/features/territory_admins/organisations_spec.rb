@@ -27,14 +27,14 @@ RSpec.describe "Gestion des organisations depuis les paramètres d'espace" do
 
     expect(page).to have_content "L'organisation a été fermée."
 
-    expect(new_organisation.reload.closed_at).to be_present
+    expect(new_organisation.reload.disabled_at).to be_present
 
     click_on "MDS de Paris"
     click_on "Réouvrir cette organisation"
     expect(page).to have_content "Organisation réouverte ! Vous pouvez inviter des agents à la rejoindre"
 
     expect(new_organisation.agents).to eq [agent]
-    expect(new_organisation.reload.closed_at).to be_nil
+    expect(new_organisation.reload.disabled_at).to be_nil
   end
 
   describe "fermer une organisation" do
