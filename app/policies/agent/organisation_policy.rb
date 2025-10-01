@@ -12,6 +12,7 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
   alias new? territorial_admin?
   alias create? territorial_admin?
   alias close? territorial_admin?
+  alias reopen? territorial_admin?
 
   def destroy?
     false

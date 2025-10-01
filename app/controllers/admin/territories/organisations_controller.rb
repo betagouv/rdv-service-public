@@ -54,12 +54,12 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
 
   def confirm_reopen
     @organisation = Organisation.find(params[:id])
-    authorize(@organisation, :create?, policy_class: Agent::OrganisationPolicy)
+    authorize(@organisation, :reopen?, policy_class: Agent::OrganisationPolicy)
   end
 
   def reopen
     @organisation = Organisation.find(params[:id])
-    authorize(@organisation, :create?, policy_class: Agent::OrganisationPolicy)
+    authorize(@organisation, :reopen?, policy_class: Agent::OrganisationPolicy)
     @organisation.transaction do
       AgentRole.create!(organisation: @organisation, agent: current_agent, access_level: :admin)
       @organisation.update!(disabled_at: nil)
