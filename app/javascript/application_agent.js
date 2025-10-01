@@ -28,7 +28,7 @@ import { RecurrenceForm } from './components/recurrence-form.js'
 import { MergeUsersForm } from './components/merge-users-form.js'
 import { SectorAttributionForm } from './components/sector-attribution-form.js'
 import { ZoneForm } from './components/zone-form.js'
-import { Select2Inputs } from './components/select2-inputs'
+import { initializeSelect2 } from './components/select2-inputs'
 import { PlanningAgentSelect } from './components/planning-agent-select'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { Tooltips } from './components/tooltips'
@@ -57,7 +57,7 @@ $.fn.select2.defaults.set("theme", "bootstrap4")
 $.fn.select2.defaults.set("language", "fr")
 
 new Modal()
-new Select2Inputs()
+initializeSelect2()
 new ServiceFilterForMotifsSelects()
 
 global.$ = require('jquery')
