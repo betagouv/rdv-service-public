@@ -8,7 +8,8 @@ import { defaultFullCalendarConfig, eventRenderer } from  './calendar/utils'
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
 
-class AgendaMonoAgent {
+class CalendarRdvSolidarites {
+
   constructor() {
     this.calendarEl = document.getElementById('calendar');
     if (this.calendarEl == null || this.calendarEl.innerHTML !== "")
@@ -149,7 +150,7 @@ class AgendaMonoAgent {
   }
 }
 
-const handleAjaxError = (response) => {
+export const handleAjaxError = (response) => {
   if (window.ajaxErrorHandledAt) {
     const secondsSinceLast = (Date.now() - window.ajaxErrorHandledAt) / 1000;
     if (secondsSinceLast < 60) return
@@ -158,7 +159,7 @@ const handleAjaxError = (response) => {
 
   switch (response.xhr.status) {
     case 401:
-      window.location = window.calendarEl.attributes["data-sign-in-path"].value;
+      window.location = this.calendarEl.attributes["data-sign-in-path"].value;
       break;
     case 500:
       alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
@@ -171,4 +172,6 @@ const handleAjaxError = (response) => {
   }
 };
 
-export { AgendaMonoAgent, handleAjaxError }
+document.addEventListener('turbolinks:load', function () {
+  new CalendarRdvSolidarites()
+});

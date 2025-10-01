@@ -1,6 +1,14 @@
+export const initializeSelect2 = () => {
+  initInputs()
+  $(document).on("turbolinks:load", initInputs)
+  $(document).on("shown.bs.modal", ".modal", initInputs)
+  $(document).on("turbolinks:before-cache", destroyInputs)
+  $(document).on("select2:open", focusSearchInput)
+};
 
+export const SELECTOR = ".select2-input";
 
-const initInput = (elt) => {
+export const initInput = (elt) => {
   const config = getInputConfig(elt)
   $(elt).select2(config)
   if (elt.dataset.autoSelectSoleOption) {
@@ -13,13 +21,13 @@ const initInput = (elt) => {
   $(elt).on("change", function () {
     const action = this.getAttribute("data-action") || "";
     if (action.includes("change->")) {
-      let event = new Event('change');
+      let event = new Event("change");
       this.dispatchEvent(event);
     }
   });
 };
 
-const getInputConfig = elt => {
+const getInputConfig = (elt) => {
   let config = {}
   if (elt.dataset.select2Config !== undefined)
     config = JSON.parse(elt.dataset.select2Config)
@@ -61,37 +69,22 @@ const autoSelectSoleOption = (elt, options) => {
     // if one option is already selected, return
     if ($(elt).val() === optionsList.val()) return;
     // Otherwise, set the value of the select element to the value of its sole option and trigger a change event on it.
-    $(elt).val(optionsList.val()).trigger('change');
+    $(elt).val(optionsList.val()).trigger("change");
   }
 };
 
+const initInputs = () => {
+  document.querySelectorAll(SELECTOR).forEach(initInput)
+};
 
-class Select2Inputs {
-  constructor() {
-    this.selector = '.select2-input'
-    this.initInputs()
-    $(document).on('turbolinks:load', this.initInputs)
-    $(document).on('shown.bs.modal', '.modal', this.initInputs)
-    $(document).on("turbolinks:before-cache", this.destroyInputs)
-    $(document).on('select2:open', this.focusSearchInput)
-  }
+const destroyInputs = () => {
+  if ($(SELECTOR).first().data("select2") != undefined)
+    $(SELECTOR).select2("destroy")
+};
 
-  focusSearchInput = (e) => {
-    const selectId = e.target.id
-    $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function (key,value,) {
-      value.focus()
-    })
-  }
-
-  initInputs = () => {
-    document.querySelectorAll(this.selector).forEach(initInput)
-  }
-
-  destroyInputs = () => {
-    if ($(this.selector).first().data('select2') != undefined)
-      $(this.selector).select2('destroy')
-  }
-
-}
-
-export { Select2Inputs, initInput };
+const focusSearchInput = (e) => {
+  const selectId = e.target.id
+  $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function (key,value,) {
+    value.focus()
+  })
+};
