@@ -5,13 +5,6 @@ class Rdv < ApplicationRecord
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
   )
 
-  # TODO: Déplacer ce callbak
-  after_commit do |rdv|
-    rdv.agents_rdvs.each do |agents_rdv|
-      Caldav::SyncEventJob.perform_later(agents_rdv.id)
-    end
-  end
-
   include WebhookDeliverable
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern

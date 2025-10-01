@@ -1,5 +1,6 @@
 class AgentsRdv < ApplicationRecord
   include Outlook::EventSerializerAndListener
+  include Rdv::CaldavConcern
 
   # Relations
   belongs_to :rdv, touch: true
@@ -12,7 +13,7 @@ class AgentsRdv < ApplicationRecord
 
   # Hooks
   after_commit :update_unknown_past_rdv_count
-  # voir Outlook::EventSerializerAndListener pour d'autres callbacks
+  # voir Outlook::EventSerializerAndListener et Rdv::CaldavConcern pour d'autres callbacks
 
   # A DÉPLACER
 
