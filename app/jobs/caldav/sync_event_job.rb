@@ -14,12 +14,16 @@ module Caldav
 
       return unless agents_rdv.agent.caldav_configured?
 
-      if agents_rdv.caldav_id.present?
-        # TODO: update event in Caldav
+      if agents_rdv.caldav_url.present?
+        ics = IcalFormatters::Ics.from_payload(agents_rdv.rdv.payload(:update, agents_rdv.agent)).to_ical
+        caldav_client.events.update(agents_rdv.caldav_url, ics)
       else
         ics = IcalFormatters::Ics.from_payload(agents_rdv.rdv.payload(:create, agents_rdv.agent)).to_ical
         identifier = "agents_rdv-#{agents_rdv.id}.ics"
-        caldav_client.events.create(agents_rdv.agent.caldav_agenda_url, identifier, ics)
+        event = caldav_client.events.create(agents_rdv.agent.caldav_agenda_url, identifier, ics)
+        # Le provider Caldav n’utilise pas forcément l’identifiant qu’on lui donne pour créer l’event
+        # on stocke donc l’url complète de l’event créé pour être sûr de pouvoir le retrouver.
+        agents_rdv.update!(caldav_url: event.url)
       end
     end
 
