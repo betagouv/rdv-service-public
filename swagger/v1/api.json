@@ -2821,6 +2821,13 @@
             }
           },
           {
+            "name": "status",
+            "in": "query",
+            "description": "Filtre les rendez-vous par statut.\nVous pouvez passer soit une seule chaine de caractères, soit un tableau de chaines de caractères.\nLes différentes valeurs possibles sont [\"unknown\", \"seen\", \"excused\", \"revoked\", \"noshow\"].\nSi vous passez un tableau, le format attendu est status[]=excused&status[]=revoked\n",
+            "example": "seen ou status[]=excused&status[]=revoked",
+            "required": false
+          },
+          {
             "name": "id",
             "in": "query",
             "description": "Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste.\nVous pouvez passer soit un tableau d'entier pour obtenir plusieurs rdvs, soit un seul entier pour obtenir un seul rdv.\nSi vous passez un tableau d'entier, le format attendu est id[]=1234&id[]=5678\n",
