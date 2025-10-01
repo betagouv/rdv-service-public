@@ -1,16 +1,23 @@
 = territory_navigation("Organisations")
 
 .fr-grid-row
-  .fr-col-md-10
+  .fr-col-12
     h1.fr-h2 Organisations de #{current_territory.name_for_agent}
 
     .card
       .card-body
         h2.fr-h3 Organisations actives
-        ul.list-unstyled
+        .fr-grid-row
           - @organisations.each do |organisation|
-            li
-              span>= link_to organisation.name, admin_organisation_configuration_path(organisation)
+            .fr-col-12.fr-col-md-6.fr-col-lg-4
+              .fr-tile.fr-enlarge-link.fr-mb-2w.fr-mr-2w
+                .fr-tile__body
+                  .fr-tile__content
+                    h3.fr-tile__title
+                      = link_to organisation.name, admin_organisation_configuration_path(organisation)
+                    .fr-tile__desc
+                      - agents_count = organisation.agents.active.count
+                      | #{agents_count} #{"agents".pluralize(agents_count)}
 
         - if policy(Organisation.new(territory: current_territory), policy_class: Agent::OrganisationPolicy).new?
           .fr-mt-4w
