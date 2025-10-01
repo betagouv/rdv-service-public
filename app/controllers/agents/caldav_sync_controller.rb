@@ -4,11 +4,11 @@ class Agents::CaldavSyncController < AgentAuthController
   before_action :feature_flag_verification!
 
   def show
-    authorize(current_agent, policy_class: Agent::CaldavSyncPolicy)
+    skip_authorization
   end
 
   def update
-    authorize(current_agent, policy_class: Agent::CaldavSyncPolicy)
+    skip_authorization
     current_agent.update!(
       caldav_agenda_url: params[:caldav_agenda_url],
       caldav_username: params[:caldav_username],
@@ -19,7 +19,7 @@ class Agents::CaldavSyncController < AgentAuthController
   end
 
   def destroy
-    authorize(current_agent, policy_class: Agent::CaldavSyncPolicy)
+    skip_authorization
     current_agent.update!(caldadv_disconnect_in_progress: true)
     Caldav::MassDestroyEventJob.perform_later(current_agent)
     redirect_to agents_calendar_sync_caldav_sync_path
