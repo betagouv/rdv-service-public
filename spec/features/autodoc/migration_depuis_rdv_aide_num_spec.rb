@@ -86,7 +86,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
     Capybara.page.current_window.resize_to(1280, 720)
 
-    click_on "Commencer"
+    click_on "Commencer", match: :first
 
     doc.add_screenshot(page,
                        text: "On m'explique l'étape suivante. Je clique sur le bouton de connexion",
