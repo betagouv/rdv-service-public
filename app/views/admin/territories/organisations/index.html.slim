@@ -16,7 +16,7 @@
                     h3.fr-tile__title
                       = link_to organisation.name, admin_organisation_configuration_path(organisation)
                     .fr-tile__desc
-                      - agents_count = organisation.agents.active.count
+                      - agents_count = organisation.agents_roles.count
                       | #{agents_count} #{"agents".pluralize(agents_count)}
 
         - if policy(Organisation.new(territory: current_territory), policy_class: Agent::OrganisationPolicy).new?
