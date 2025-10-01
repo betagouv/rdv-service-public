@@ -7,6 +7,10 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
     current_agent.roles.access_level_admin.pluck(:organisation_id).include?(record.id)
   end
 
+  def territorial_admin?
+    current_agent.territorial_admin_in?(record.territory)
+  end
+
   alias creneau_availability? link_to_organisation?
 
   alias new? territorial_admin?
@@ -36,12 +40,6 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
 
   def show?
     link_to_organisation?
-  end
-
-  private
-
-  def territorial_admin?
-    current_agent.territorial_admin_in?(record.territory)
   end
 
   class Scope < Scope
