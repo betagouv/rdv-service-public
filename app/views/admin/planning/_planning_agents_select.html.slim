@@ -1,13 +1,12 @@
-.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
+#planning_agents_select.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
   h1.fr-h2.my-1.d-flex
     | Planning de
     .ml-2
-      = form_with(url: url_for({}), method: :get, id: "agent_id_form", class: "d-flex rdv-align-items-end", data: { controller: "form" }) do |form|
+      = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end", data: { controller: "form" }) do |form|
         div
           ruby:
+            # Le select initial contient tous les agents sélectionnés, puis il sera alimenté en Ajax.
             collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
-            klasses = ["select2-input"]
-            klasses.push("js-submit-on-change") if @agents.size == 1 # Le select mono-agent recharge la page dès qu'on en sélectionne un
             data = {
               "select2-config": {
                 ajax: {
@@ -18,7 +17,7 @@
               },
             }
 
-          = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: klasses, data: }
+          = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input"], data: }
 
         .ml-2.d-flex[style="gap: 0 0.5em"]
           - if @agents.size == 1

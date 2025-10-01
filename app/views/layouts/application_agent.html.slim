@@ -16,7 +16,7 @@ html lang="fr"
       main#main.content-page[style="flex-grow: 1;" role="main"]
         .content
           - if @beta_planning_layout
-            = render partial: "admin/planning/beta_planning_header"
+            = render partial: "admin/planning/planning_agents_select"
             .p-3
               = yield
 
