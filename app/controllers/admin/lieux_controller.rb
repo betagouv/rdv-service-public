@@ -65,7 +65,7 @@ class Admin::LieuxController < AgentAuthController
   def reopen
     set_and_authorize_lieu
     if @lieu.update(availability: :enabled)
-      flash[:success] = "Le lieu a été réouvert."
+      flash[:success] = "Le lieu a été rouvert."
       redirect_to admin_organisation_lieux_path(@lieu.organisation)
     else
       render :edit

@@ -41,7 +41,7 @@ RSpec.describe "Admin can configure the organisation" do
     expect(page).to have_content("Ce lieu est fermé")
 
     click_link("Réouvrir ce lieu")
-    expect(page).to have_content("Le lieu a été réouvert.")
+    expect(page).to have_content("Le lieu a été rouvert.")
     expect(nouveau_lieu.reload).to have_attributes(availability: "enabled")
 
     nouveau_lieu.update!(availability: :disabled)
@@ -70,7 +70,7 @@ RSpec.describe "Admin can configure the organisation" do
 
   it "Update organisation contact information" do
     click_link "Configuration"
-    click_link "Informations de contact"
+    click_link "Informations de l'organisation"
     click_link "Modifier"
     fill_in "Nom", with: la_nouvelle_org.name
     fill_in "Téléphone", with: la_nouvelle_org.phone_number
