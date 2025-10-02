@@ -86,7 +86,7 @@ RSpec.describe "Agent can list RDVs" do
     end
 
     it "allows searching by user", js: true do
-      visit admin_organisation_rdvs_path(organisation, current_agent)
+      visit admin_organisation_rdvs_path(organisation)
 
       find("#select2-user_id-container").click
       within(".select2-search--dropdown") do
@@ -109,7 +109,7 @@ RSpec.describe "Agent can list RDVs" do
       let!(:rdv) { create(:rdv, organisation: organisation, agents: [current_agent, other_agent]) }
 
       it "devrait afficher des compteurs de RDV égaux à 1" do
-        visit admin_organisation_rdvs_path(organisation, current_agent)
+        visit admin_organisation_rdvs_path(organisation)
         expect(page).to have_content("Exporter le RDV en XLS")
         expect(find("h4", text: /1 rendez-vous/)).to be_present
       end
@@ -128,7 +128,7 @@ RSpec.describe "Agent can list RDVs" do
       end
 
       it "devrait afficher le bon nombre de RDV" do
-        visit admin_organisation_rdvs_path(organisation, current_agent)
+        visit admin_organisation_rdvs_path(organisation)
         expect(page).to have_content("Exporter les 4 RDV en XLS")
         expect(find("h4", text: /4 rendez-vous/)).to be_present
       end
@@ -159,7 +159,7 @@ RSpec.describe "Agent can list RDVs" do
 
     it "fonctionne de manière cohérente" do
       # par défaut la liste affiche 10 RDV par page
-      visit admin_organisation_rdvs_path(organisation, current_agent)
+      visit admin_organisation_rdvs_path(organisation)
       expect(page).to have_selector(".rdv-item", count: 10)
       expect(Rack::Utils.parse_query(URI.parse(first(".fr-pagination__link--last")["href"]).query)["page"].to_i).to eq(6)
       expect(first(".rdv-per-page-list").find(".fr-pagination__link--current").text.to_i).to eq 10
