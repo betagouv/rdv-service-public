@@ -11,6 +11,10 @@ export const planningAgentsSelect = () => {
     $(agentSelect).on("change", event => event.target.form.submit());
   }
 
+  if(!multiAgentEnableButton) {
+    return;
+  }
+
   multiAgentEnableButton.addEventListener("click", (e) => {
     e.preventDefault();
     agentSelect.multiple = true;
