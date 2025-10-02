@@ -14,6 +14,8 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
       description "Liste les lieux"
 
       parameter name: :organisation_id, in: :query, type: :integer, description: "Filtre les lieux appartenant à cette organisation", example: 12, required: false
+      parameter name: :disabled, in: :query, type: :boolean, description: "Permet de récupérer les lieux désactivés. Par défaut ils ne sont pas retournés par cette route.", example: true,
+                required: false
 
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
@@ -21,31 +23,9 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
       let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
 
       response 200, "Renvoie une liste des lieux" do
-        let!(:lieu1) { create(:lieu, organisation: organisation, name: "MJD Nice", address: "1 rue de la République, Nice") }
-        let!(:lieu2) { create(:lieu, organisation: organisation, name: "TJ Menton", address: "10 rue de la Gare, Menton") }
-
         schema "$ref" => "#/components/schemas/lieux"
 
         run_test!
-
-        specify do
-          expect(parsed_response_body["lieux"].length).to eq 2
-          expect(parsed_response_body["meta"]["total_count"]).to eq 2
-        end
-      end
-
-      response 200, "Liste filtrée par organisation_id", document: false do
-        let!(:lieu) { create(:lieu, organisation:, name: "Lieu Filtré") }
-        let(:organisation_id) { organisation.id }
-
-        schema "$ref" => "#/components/schemas/lieux"
-
-        run_test!
-
-        specify do
-          expect(parsed_response_body["lieux"].length).to eq 1
-          expect(parsed_response_body["lieux"].first["organisation_id"]).to eq organisation.id
-        end
       end
     end
 

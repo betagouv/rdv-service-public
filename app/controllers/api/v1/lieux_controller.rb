@@ -2,6 +2,12 @@ class Api::V1::LieuxController < Api::V1::AgentAuthBaseController
   def index
     lieux = policy_scope(Lieu, policy_scope_class: Agent::LieuPolicy::Scope)
     lieux = lieux.where(organisation_id: params[:organisation_id]) if params[:organisation_id].present?
+    lieux =
+      if params[:disabled].present? && ActiveModel::Type::Boolean.new.cast(params[:disabled])
+        lieux.where(availability: "disabled")
+      else
+        lieux.where.not(availability: "disabled")
+      end
     render_collection(lieux.order(:id))
   end
 
