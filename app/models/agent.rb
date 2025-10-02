@@ -5,7 +5,7 @@ class Agent < ApplicationRecord
   include Agent::CaldavConfiguration
   include Agent::FeatureFlags
 
-  encrypts :caldav_agent_password, deterministic: true
+  encrypts :caldav_password, deterministic: true
 
   # Mixins
   has_paper_trail(

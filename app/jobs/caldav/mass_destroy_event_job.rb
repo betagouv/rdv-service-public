@@ -20,7 +20,7 @@ module Caldav
         agents_rdv.update_columns(caldav_url: nil) # rubocop:disable Rails/SkipsModelValidations
       end
 
-      agent.update!(caldav_username: nil, caldav_password: nil, caldav_agenda_url: nil, caldadv_disconnect_in_progress: false)
+      agent.update!(caldav_username: nil, caldav_password: nil, caldav_agenda_url: nil, caldav_disconnect_in_progress: false)
     end
   end
 end
