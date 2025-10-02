@@ -249,7 +249,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_18_154948) do
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
   end
-  sirets = Agent.all.joins(:agents_rdvs).where.not(proconnect_siret: nil).pluck(:proconnect_siret).uniq
+
   create_table "agents_rdvs", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.bigint "rdv_id", null: false
