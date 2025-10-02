@@ -236,7 +236,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.boolean "connected_with_agent_connect", default: false, null: false
     t.string "proconnect_siret"
     t.jsonb "feature_flags", default: {}
-    t.datetime "blog_read_at", default: "2025-09-28 18:00:00", null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -302,8 +301,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.text "external_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["external_id", "item_type", "oauth_application_id"], name: "idx_on_external_id_item_type_oauth_application_id_a18ac19e34", unique: true
-    t.index ["item_id", "item_type", "oauth_application_id"], name: "idx_on_item_id_item_type_oauth_application_id_fa816313d2", unique: true
+    t.index ["external_id", "item_type", "oauth_application_id", "territory_id"], name: "idx_on_external_id_item_type_oauth_application_id_t_09b6418013", unique: true
+    t.index ["item_id", "item_type", "oauth_application_id", "territory_id"], name: "idx_on_item_id_item_type_oauth_application_id_terri_6db34b5548", unique: true
   end
 
   create_table "file_attentes", force: :cascade do |t|
