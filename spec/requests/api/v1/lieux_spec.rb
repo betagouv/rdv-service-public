@@ -97,6 +97,39 @@ RSpec.describe "Lieux API" do
         expect(parsed_response_body["lieux"]).to be_empty
       end
     end
+
+    context "lieu 1 with all attributes specified" do
+      let!(:lieu1) do
+        create(
+          :lieu,
+          :enabled,
+          organisation:,
+          address: "1 rue de la République, Nice",
+          latitude: 43.7034,
+          longitude: 7.2663,
+          phone_number: "0492123456",
+          name: "MJD Nice"
+        )
+      end
+
+      it "returns the expected fields" do
+        get "/api/v1/lieux", headers: headers
+
+        expect(response.status).to eq 200
+        lieu = parsed_response_body["lieux"].find { |l| l["name"] == "MJD Nice" }
+        expect(lieu).to include(
+          "id" => lieu1.id,
+          "name" => "MJD Nice",
+          "address" => "1 rue de la République, Nice",
+          "phone_number" => "0492123456",
+          "organisation_id" => organisation.id,
+          "latitude" => be_within(0.0001).of(43.7034),
+          "longitude" => be_within(0.0001).of(7.2663),
+          "single_use" => false,
+          "enabled" => true
+        )
+      end
+    end
   end
 
   describe "#create" do

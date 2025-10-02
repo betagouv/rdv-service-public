@@ -342,8 +342,10 @@ RSpec.configure do |config|
               phone_number: { type: "string", nullable: true },
               single_use: { type: "boolean" },
               enabled: { type: "boolean" },
+              latitude: { type: "number", format: "float", nullable: true },
+              longitude: { type: "number", format: "float", nullable: true },
             },
-            required: %w[id address name organisation_id phone_number single_use enabled],
+            required: %w[id address name organisation_id phone_number single_use enabled latitude longitude],
           },
           lieux: {
             type: "object",
