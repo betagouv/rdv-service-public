@@ -57,7 +57,15 @@ RSpec.describe IcalFormatters::Ics do
       context "update" do
         let(:action) { :update }
 
-        it { expect(subject).to include "STATUS:CONFIRMED" }
+        context "when status is not provided" do
+          it { expect(subject).to include "STATUS:CONFIRMED" }
+        end
+
+        context "when status is provided" do
+          let(:payload) { super().merge(status: "CANCELLED") }
+
+          it { expect(subject).to include "STATUS:CANCELLED" }
+        end
       end
 
       context "destroy" do

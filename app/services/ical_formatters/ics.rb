@@ -32,11 +32,16 @@ module IcalFormatters
       cal
     end
 
+    # rubocop:disable Metrics/PerceivedComplexity
     def self.populate_event(event, payload)
       event.uid = payload[:ical_uid]
-      if payload[:action].present?
-        event.status = (payload[:action] == :destroy ? "CANCELLED" : "CONFIRMED")
-      end
+      event.status = if payload[:action].present? && payload[:action] == :destroy
+                       "CANCELLED"
+                     elsif payload[:status]
+                       payload[:status]
+                     else
+                       "CONFIRMED"
+                     end
       if payload[:starts_at].present?
         dtstart = Icalendar::Values::DateTime.new(payload[:starts_at],
                                                   "tzid" => Time.zone_default.tzinfo.identifier)
@@ -56,8 +61,8 @@ module IcalFormatters
       event.sequence = 0 # not sure if this is necessary, but not worth investigating right now
       event.description = payload[:description]
       event.organizer = "mailto:#{payload[:domain].secretariat_email}"
-      event.status = payload[:status]
       event.categories = ["RDV Service Public"] # Cette catégorie permet de filtrer tous les événements que nous créons.
     end
+    # rubocop:enable Metrics/PerceivedComplexity
   end
 end
