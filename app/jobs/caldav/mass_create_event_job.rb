@@ -11,18 +11,5 @@ module Caldav
         Caldav::SyncEventJob.perform_later(agents_rdv.id, agent.id)
       end
     end
-
-    private
-
-    def caldav_client
-      @caldav_client ||= Calendav::Client.new(
-        Calendav::Credentials::Standard.new(
-          host: agents_rdv.agent.caldav_agenda_url,
-          username: agents_rdv.agent.caldav_username,
-          password: agents_rdv.agent.caldav_password,
-          authentication: :basic_auth
-        )
-      )
-    end
   end
 end
