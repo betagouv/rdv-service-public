@@ -7,7 +7,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
   before_action :set_agents
 
   def index
-    @allow_selecting_multiple_agents = true if current_agent.feature_enabled?("new_planning")
+    @multiple_agents_makes_sense = true
     render :multi_agents_index and return if @agents.size > 1
 
     absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
