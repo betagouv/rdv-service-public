@@ -1,0 +1,11 @@
+= territory_navigation("Organisations")
+
+.fr-grid-row
+  .fr-col-md-10
+    h1 Nouvelle organisation dans #{current_territory.name_for_agent}
+
+    .card
+      .card-body
+        = simple_form_for [:admin, :territory, @organisation] do |f|
+          = f.input :name, label: "Nom de votre organisation", placeholder: "Maison départementale des solidarités de Beaupréau-en-Mauges"
+          = f.submit value: "Enregistrer", class: "fr-btn"

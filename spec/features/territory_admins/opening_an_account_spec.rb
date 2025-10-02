@@ -105,7 +105,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         click_on "Paramètres de votre espace"
 
-        expect(page).to have_content("Configuration générale") # Pour s'assurer qu'on attend que la nouvelle page charge
+        expect(page).to have_content("Gérer les organisations") # Pour s'assurer qu'on attend que la nouvelle page charge
         expect(page).to have_content "Besoin d'aide pour bien démarrer ? Nous pouvons vous aider"
       end
 

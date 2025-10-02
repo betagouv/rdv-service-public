@@ -1,0 +1,35 @@
+= territory_navigation("Organisations")
+
+.fr-grid-row
+  .fr-col-12
+    h1.fr-h2 Organisations de #{current_territory.name_for_agent}
+
+    .card
+      .card-body
+        h2.fr-h3 Organisations actives
+        .fr-grid-row
+          - @organisations.each do |organisation|
+            .fr-col-12.fr-col-md-6.fr-col-lg-4.fr-mb-2w.fr-mr-2w
+              .fr-tile.fr-enlarge-link
+                .fr-tile__body
+                  .fr-tile__content
+                    h3.fr-tile__title
+                      = link_to organisation.name, admin_organisation_configuration_path(organisation)
+                    .fr-tile__desc
+                      - agents_count = organisation.agent_roles.count
+                      | #{agents_count} #{"agents".pluralize(agents_count)}
+
+        - if policy(Organisation.new(territory: current_territory), policy_class: Agent::OrganisationPolicy).new?
+          .fr-mt-4w
+            = link_to "Ajouter une organisation", new_admin_territory_organisation_path(current_territory), class: "fr-btn"
+
+    - if @closed_organisations.any?
+      .card
+        .card-body
+          h2.fr-h3 Organisations fermées
+          p Ces organisations sont fermées et ne peuvent plus assurer de nouveaux rendez-vous.
+          p Vous pouvez les rouvrir si nécessaire.
+
+          ul.list-unstyled
+            - @closed_organisations.each do |organisation|
+              li= link_to organisation.name, confirm_reopen_admin_territory_organisation_path(current_territory, organisation.id)
