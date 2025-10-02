@@ -56,6 +56,7 @@ module IcalFormatters
       event.sequence = 0 # not sure if this is necessary, but not worth investigating right now
       event.description = payload[:description]
       event.organizer = "mailto:#{payload[:domain].secretariat_email}"
+      event.status = payload[:status]
     end
   end
 end
