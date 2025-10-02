@@ -1,5 +1,7 @@
 - content_for :title, "Migration vers RDV Service Public"
 
+- instance_export = InstanceExport.find_by(agent: current_agent, source_organisation: current_organisation)
+
 .card.fr-mb-8w
   .card-body
     h2.fr-h3 Pourquoi passer à RDV Service Public ?
@@ -14,6 +16,12 @@
       li.fr-mb-2w
         b Inviter vos collègues
         |  qui travaillent dans d'autre domaines que la médiation numérique à rejoindre votre organisation sur RDV Service Public.
+
+    .rdv-text-align-center
+      - if instance_export
+        = link_to "Continuer la migration", admin_organisation_instance_export_path(current_organisation, instance_export.id), class: "fr-btn fr-btn--lg"
+      - else
+        = link_to  "Commencer la migration", new_admin_organisation_instance_export_path, class: "fr-btn fr-btn--lg"
 
 .card
   .card-body
@@ -42,8 +50,7 @@
       | Vos données sur #{current_domain.name} seront conservées, et resteront accessibles même après la migration.
 
     .rdv-text-align-center
-      - instance_export = InstanceExport.find_by(agent: current_agent, source_organisation: current_organisation)
       - if instance_export
-        = link_to "Continuer la migration", admin_organisation_instance_export_path(current_organisation, instance_export.id)
+        = link_to "Continuer la migration", admin_organisation_instance_export_path(current_organisation, instance_export.id), class: "fr-btn fr-btn--lg"
       - else
-        = link_to  "Commencer la migration", new_admin_organisation_instance_export_path, class: "fr-btn"
+        = link_to  "Commencer la migration", new_admin_organisation_instance_export_path, class: "fr-btn fr-btn--lg"

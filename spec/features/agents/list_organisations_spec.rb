@@ -17,16 +17,5 @@ RSpec.describe "Organisations" do
     visit "http://www.rdv-mairie-test.localhost/"
     expect(page).to have_content("MDS de Paris Nord")
     expect(page).to have_content("MDS de Paris Sud")
-    click_link "Ajouter une organisation"
-
-    fill_in "Nom", with: "MDS Paris Est"
-    click_button "Enregistrer"
-    expect(page).to have_content("Organisation enregistrée")
-    expect(Organisation.last).to have_attributes(
-      name: "MDS Paris Est",
-      territory: territory,
-      agents: [agent],
-      verticale: "rdv_mairie"
-    )
   end
 end

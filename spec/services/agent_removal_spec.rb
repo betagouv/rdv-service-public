@@ -80,6 +80,7 @@ RSpec.describe AgentRemoval, type: :service do
   context "when the agent is the only admin of the org" do
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
     it "raises" do
       expect do
