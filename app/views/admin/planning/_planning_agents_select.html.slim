@@ -2,7 +2,7 @@
   h1.fr-h2.my-1.d-flex
     | Planning de
     .ml-2
-      = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end", data: { controller: "form" }) do |form|
+      = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end") do |form|
         div
           ruby:
             # Le select initial contient tous les agents sélectionnés, puis il sera alimenté en Ajax.
@@ -28,7 +28,6 @@
             = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: current_agent), class: "fr-btn fr-btn--tertiary"
 
 .container-fluid.px-2.d-flex[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
-
   .flex-grow-1
     = render partial: "admin/planning/planning_tabs"
 
