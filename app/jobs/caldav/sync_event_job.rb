@@ -30,7 +30,8 @@ module Caldav
         event = agent.caldav_client.events.create(agent.caldav_agenda_url, identifier, ics)
         # Le provider Caldav n’utilise pas forcément l’identifiant qu’on lui donne pour créer l’event
         # on stocke donc l’url complète de l’event créé pour être sûr de pouvoir le retrouver.
-        agents_rdv.update!(caldav_url: event.url)
+        # On utilise update_columns pour éviter de déclencher des callbacks
+        agents_rdv.update_columns(caldav_url: event.url) # rubocop:disable Rails/SkipsModelValidations
       end
     end
 
