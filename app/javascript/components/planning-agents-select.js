@@ -7,7 +7,7 @@ export const planningAgentsSelect = () => {
   const agentSelect = document.querySelector("#agent_id");
   const multiAgentEnableButton = document.querySelector("#multi_agent_enable");
 
-  if(agentSelect.multiple) {
+  if(!agentSelect.multiple) {
     $(agentSelect).on("change", event => event.target.form.submit());
   }
 
