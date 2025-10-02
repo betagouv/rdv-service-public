@@ -261,6 +261,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.boolean "outlook_create_in_progress", default: false, null: false
     t.string "caldav_url"
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
+    t.index ["caldav_url"], name: "index_agents_rdvs_on_caldav_url", where: "(caldav_url IS NOT NULL)"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
