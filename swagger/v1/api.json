@@ -619,6 +619,9 @@
           },
           "single_use": {
             "type": "boolean"
+          },
+          "enabled": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -627,7 +630,26 @@
           "name",
           "organisation_id",
           "phone_number",
-          "single_use"
+          "single_use",
+          "enabled"
+        ]
+      },
+      "lieux": {
+        "type": "object",
+        "properties": {
+          "lieux": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/lieu"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/meta"
+          }
+        },
+        "required": [
+          "lieux",
+          "meta"
         ]
       },
       "motifs": {
@@ -1985,6 +2007,281 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lieux": {
+      "get": {
+        "summary": "Lister les lieux",
+        "security": [
+          {
+            "content-type": [],
+            "autorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "Bearer 123456",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "La page souhaitée",
+            "example": "1",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "query",
+            "description": "Filtre les lieux appartenant à cette organisation",
+            "example": 12,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "Lieux"
+        ],
+        "operationId": "listLieux",
+        "description": "Liste les lieux",
+        "responses": {
+          "200": {
+            "description": "Renvoie une liste des lieux",
+            "content": {
+              "Sans filtres": {
+                "examples": {
+                  "example_0": {
+                    "value": {
+                      "summary": "Tous les lieux de l'organisation",
+                      "description": "Retourne tous les lieux accessibles par l’agent connecté",
+                      "value": {
+                        "lieux": [
+                          {
+                            "name": "MJD Nice",
+                            "address": "1 rue de la République, Nice",
+                            "organisation_id": 1
+                          },
+                          {
+                            "name": "TJ Menton",
+                            "address": "10 rue de la Gare, Menton",
+                            "organisation_id": 1
+                          }
+                        ],
+                        "meta": {
+                          "total_count": 2
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "Filtre par organisation": {
+                "examples": {
+                  "example_1": {
+                    "value": {
+                      "summary": "Lieux filtrés par organisation_id",
+                      "description": "Retourne uniquement les lieux de l'organisation (si l’agent y a accès)",
+                      "value": {
+                        "lieux": [
+                          {
+                            "name": "MJD Nice",
+                            "address": "1 rue de la République, Nice",
+                            "organisation_id": 1
+                          }
+                        ],
+                        "meta": {
+                          "total_count": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "lieux": [
+                        {
+                          "id": 3,
+                          "address": "1 rue de la République, Nice",
+                          "enabled": true,
+                          "name": "MJD Nice",
+                          "organisation_id": 75,
+                          "phone_number": null,
+                          "single_use": false
+                        },
+                        {
+                          "id": 4,
+                          "address": "10 rue de la Gare, Menton",
+                          "enabled": true,
+                          "name": "TJ Menton",
+                          "organisation_id": 75,
+                          "phone_number": null,
+                          "single_use": false
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 2
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/lieux"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un lieu",
+        "security": [
+          {
+            "content-type": [],
+            "autorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "Bearer 123456",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "query",
+            "description": "ID de l'organisation",
+            "example": 12,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Le nom de l'organisation",
+            "example": "Maison France Service de Montreuil",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "L'adresse au format 123 Rue Exemple, 12345 Ville",
+            "example": "77 avenue de Ségur, 75015 Paris",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "schema": {
+              "type": "float"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "schema": {
+              "type": "float"
+            }
+          },
+          {
+            "name": "phone_number",
+            "in": "query",
+            "description": "Numéro de téléphone",
+            "example": "33600008012",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "external_reference",
+            "in": "query",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "external_reference": {
+                  "type": "object",
+                  "properties": {
+                    "external_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "L'id du lieu dans votre système pour éviter la création de doublons",
+            "required": false
+          }
+        ],
+        "tags": [
+          "Lieux"
+        ],
+        "operationId": "createLieu",
+        "description": "Crée un lieu",
+        "responses": {
+          "200": {
+            "description": "Crée et renvoie un lieu",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": 8,
+                      "address": "77 avenue de Ségur, 75015 Paris",
+                      "enabled": true,
+                      "name": "Maison France Service de Montreuil",
+                      "organisation_id": 79,
+                      "phone_number": "01 22 33 44 55",
+                      "single_use": false
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/lieu"
                 }
               }
             }

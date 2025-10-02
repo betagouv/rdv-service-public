@@ -3,4 +3,5 @@ class LieuBlueprint < Blueprinter::Base
 
   fields :name, :address, :phone_number, :organisation_id
   field :single_use?, name: :single_use
+  field :enabled?, name: :enabled
 end

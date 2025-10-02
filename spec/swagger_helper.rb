@@ -341,8 +341,20 @@ RSpec.configure do |config|
               organisation_id: { type: "integer" },
               phone_number: { type: "string", nullable: true },
               single_use: { type: "boolean" },
+              enabled: { type: "boolean" },
             },
-            required: %w[id address name organisation_id phone_number single_use],
+            required: %w[id address name organisation_id phone_number single_use enabled],
+          },
+          lieux: {
+            type: "object",
+            properties: {
+              lieux: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/lieu" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[lieux meta],
           },
           motifs: {
             type: "object",

@@ -8,6 +8,63 @@ RSpec.describe "Lieux API" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
+  describe "#index" do
+    let!(:lieu1) { create(:lieu, organisation: organisation, name: "MJD Nice") }
+    let!(:lieu2) { create(:lieu, organisation: organisation, name: "TJ Menton") }
+    let!(:other_organisation) { create(:organisation) }
+    let!(:lieu_other_org) { create(:lieu, organisation: other_organisation, name: "CDAD Lille") }
+
+    it "returns lieux from organizations the agent has access to" do
+      get "/api/v1/lieux", headers: headers
+
+      expect(response.status).to eq 200
+      expect(parsed_response_body["lieux"]).to be_an(Array)
+      expect(parsed_response_body["lieux"].length).to eq 2
+      expect(parsed_response_body["lieux"].pluck("name")).to contain_exactly("MJD Nice", "TJ Menton")
+    end
+
+    it "filters by organisation_id when provided" do
+      get "/api/v1/lieux", headers:, params: { organisation_id: organisation.id }
+
+      expect(response.status).to eq 200
+      expect(parsed_response_body["lieux"].length).to eq 2
+
+      parsed_response_body["lieux"].each do |lieu|
+        expect(lieu["organisation_id"]).to eq organisation.id
+      end
+    end
+
+    it "returns empty array when filtering by organisation_id agent doesn't have access to" do
+      get "/api/v1/lieux", headers:, params: { organisation_id: other_organisation.id }
+
+      expect(response.status).to eq 200
+      expect(parsed_response_body["lieux"]).to be_empty
+    end
+
+    it "includes pagination metadata" do
+      get "/api/v1/lieux", headers: headers
+
+      expect(response.status).to eq 200
+      expect(parsed_response_body["meta"]).to include(
+        "current_page" => 1,
+        "total_pages" => 1,
+        "total_count" => 2
+      )
+    end
+
+    context "when agent has no access to any organisation" do
+      let!(:agent_no_access) { create(:agent) }
+      let(:oauth_token) { create(:access_token, resource_owner_id: agent_no_access.id, application:) }
+
+      it "returns empty array" do
+        get "/api/v1/lieux", headers: headers
+
+        expect(response.status).to eq 200
+        expect(parsed_response_body["lieux"]).to be_empty
+      end
+    end
+  end
+
   describe "#create" do
     context "without an external reference" do
       let(:params) do

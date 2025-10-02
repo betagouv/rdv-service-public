@@ -4,7 +4,52 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/v1/lieux" do
-    post "Créer un profil utilisateur" do
+    get "Lister les lieux" do
+      with_oauth_token_authentication
+      with_pagination
+
+      tags "Lieux"
+      produces "application/json"
+      operationId "listLieux"
+      description "Liste les lieux"
+
+      parameter name: :organisation_id, in: :query, type: :integer, description: "Filtre les lieux appartenant à cette organisation", example: 12, required: false
+
+      let!(:organisation) { create(:organisation) }
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+      let(:oauth_token) { create(:access_token, resource_owner_id: agent.id) }
+      let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
+
+      response 200, "Renvoie une liste des lieux" do
+        let!(:lieu1) { create(:lieu, organisation: organisation, name: "MJD Nice", address: "1 rue de la République, Nice") }
+        let!(:lieu2) { create(:lieu, organisation: organisation, name: "TJ Menton", address: "10 rue de la Gare, Menton") }
+
+        schema "$ref" => "#/components/schemas/lieux"
+
+        run_test!
+
+        specify do
+          expect(parsed_response_body["lieux"].length).to eq 2
+          expect(parsed_response_body["meta"]["total_count"]).to eq 2
+        end
+      end
+
+      response 200, "Liste filtrée par organisation_id", document: false do
+        let!(:lieu) { create(:lieu, organisation:, name: "Lieu Filtré") }
+        let(:organisation_id) { organisation.id }
+
+        schema "$ref" => "#/components/schemas/lieux"
+
+        run_test!
+
+        specify do
+          expect(parsed_response_body["lieux"].length).to eq 1
+          expect(parsed_response_body["lieux"].first["organisation_id"]).to eq organisation.id
+        end
+      end
+    end
+
+    post "Créer un lieu" do
       with_oauth_token_authentication
 
       tags "Lieux"
