@@ -8,7 +8,7 @@ module Caldav
       return unless agent.caldav_configured?
 
       agent.agents_rdvs.joins(:rdv).where(rdv: { starts_at: Time.zone.today.. }).find_each do |agents_rdv|
-        Caldav::SyncEventJob.perform_later(agents_rdv.id)
+        Caldav::SyncEventJob.perform_later(agents_rdv.id, agent.id)
       end
     end
 

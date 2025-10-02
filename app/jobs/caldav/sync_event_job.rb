@@ -7,20 +7,27 @@ module Caldav
       key: -> { "Caldav::SyncEventJob-#{arguments.first}" }
     )
 
-    def perform(agents_rdv_id)
+    def perform(agents_rdv_id, agent_id, caldav_event_url: nil)
       @agents_rdv_id = agents_rdv_id
+      @agent_id = agent_id
 
-      Sentry.set_user({ id: agents_rdv.agent.id, role: "Agent", email: agents_rdv.agent.email })
+      return unless agent
 
-      return unless agents_rdv.agent.caldav_configured?
+      Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
 
-      if agents_rdv.caldav_url.present?
-        ics = IcalFormatters::Ics.from_payload(agents_rdv.rdv.payload(:update, agents_rdv.agent)).to_ical
-        caldav_client.events.update(agents_rdv.caldav_url, ics)
+      return unless agent.caldav_configured?
+
+      if caldav_event_url.present?
+        if agents_rdv
+          ics = IcalFormatters::Ics.from_payload(agents_rdv.rdv.payload(:update, agents_rdv.agent)).to_ical
+          caldav_client.events.update(caldav_event_url, ics)
+        else
+          caldav_client.events.delete(caldav_event_url)
+        end
       else
         ics = IcalFormatters::Ics.from_payload(agents_rdv.rdv.payload(:create, agents_rdv.agent)).to_ical
         identifier = "agents_rdv-#{agents_rdv.id}.ics"
-        event = caldav_client.events.create(agents_rdv.agent.caldav_agenda_url, identifier, ics)
+        event = caldav_client.events.create(agent.caldav_agenda_url, identifier, ics)
         # Le provider Caldav n’utilise pas forcément l’identifiant qu’on lui donne pour créer l’event
         # on stocke donc l’url complète de l’event créé pour être sûr de pouvoir le retrouver.
         agents_rdv.update!(caldav_url: event.url)
@@ -29,12 +36,16 @@ module Caldav
 
     private
 
+    def agent
+      @agent ||= Agent.find_by_id(@agent_id)
+    end
+
     def caldav_client
       @caldav_client ||= Calendav::Client.new(
         Calendav::Credentials::Standard.new(
-          host: agents_rdv.agent.caldav_agenda_url,
-          username: agents_rdv.agent.caldav_username,
-          password: agents_rdv.agent.caldav_password,
+          host: agent.caldav_agenda_url,
+          username: agent.caldav_username,
+          password: agent.caldav_password,
           authentication: :basic_auth
         )
       )
