@@ -88,5 +88,9 @@ Rails.application.configure do
       cron: "every day at 08:00 Europe/Paris",
       class: "CronJob::NotifySmsFactorLowCredits",
     },
+    send_mattermost_notifications_for_zammad_tickets: {
+      cron: "every day at 10:15 Europe/Paris",
+      class: "CronJob::SendMattermostNotificationsForZammadTicketsJob",
+    },
   }
 end
