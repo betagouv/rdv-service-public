@@ -1287,13 +1287,13 @@
                         "agent": {
                           "id": 12,
                           "email": "agent@example.com",
-                          "first_name": "Aleth",
-                          "last_name": "Monnier"
+                          "first_name": "Paule",
+                          "last_name": "Fabre"
                         },
                         "end_day": "2023-11-20",
                         "end_time": "15:00:00",
                         "first_day": "2023-11-20",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20251002T100620Z\r\nUID:absence_12@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-service-public.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20251002T101536Z\r\nUID:absence_12@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-service-public.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_12@RDV Solidarités",
                         "organisation": {
                           "id": 12,
@@ -1471,13 +1471,13 @@
                         "agent": {
                           "id": 23,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Clotaire",
-                          "last_name": "Bouchet"
+                          "first_name": "Barbe",
+                          "last_name": "Hubert"
                         },
                         "end_day": "2025-10-03",
                         "end_time": "15:30:00",
                         "first_day": "2025-10-03",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20251026T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20251002T100621Z\r\nUID:absence_21@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20251003T100000\r\nDTEND;TZID=Europe/Paris:20251003T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-service-public.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20251026T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20251002T101536Z\r\nUID:absence_21@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20251003T100000\r\nDTEND;TZID=Europe/Paris:20251003T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-service-public.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_21@RDV Solidarités",
                         "organisation": {
                           "id": 26,
@@ -1677,13 +1677,13 @@
                         "agent": {
                           "id": 35,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Caroline",
-                          "last_name": "Langlois"
+                          "first_name": "Jeanne",
+                          "last_name": "André"
                         },
                         "end_day": "2025-10-03",
                         "end_time": "15:30:00",
                         "first_day": "2025-10-03",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20251026T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20251002T100621Z\r\nUID:absence_33@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20251003T100000\r\nDTEND;TZID=Europe/Paris:20251003T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-service-public.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20250330T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20251026T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20251002T101537Z\r\nUID:absence_33@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20251003T100000\r\nDTEND;TZID=Europe/Paris:20251003T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-service-public.fr\r\nSEQUENCE:0\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_33@RDV Solidarités",
                         "organisation": {
                           "id": 38,
@@ -1972,8 +1972,8 @@
                         {
                           "id": 59,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Titien",
-                          "last_name": "Chauvin"
+                          "first_name": "Léonie",
+                          "last_name": "Clement"
                         }
                       ],
                       "meta": {
@@ -2068,6 +2068,20 @@
             "required": false,
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "enum": [
+              "normal",
+              "single_use"
+            ],
+            "description": "Permet de filtrer les lieux par type. Valeurs possibles : 'single_use' pour les lieux ponctuels, 'normal' pour les lieux récurrents. Par défaut tous les types sont retournés.:\n * `normal` \n * `single_use` \n ",
+            "example": "normal",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2857,9 +2871,9 @@
                     "value": {
                       "rdv_plan": {
                         "id": 2,
-                        "created_at": "2025-10-02 12:06:26 +0200",
+                        "created_at": "2025-10-02 12:15:41 +0200",
                         "rdv": null,
-                        "updated_at": "2025-10-02 12:06:26 +0200",
+                        "updated_at": "2025-10-02 12:15:41 +0200",
                         "url": "http://www.rdv-mairie-test.localhost/agents/rdv_plans/2",
                         "user_id": 8
                       }
@@ -2971,14 +2985,14 @@
                     "value": {
                       "rdv_plan": {
                         "id": 4,
-                        "created_at": "2025-10-02 12:06:26 +0200",
+                        "created_at": "2025-10-02 12:15:41 +0200",
                         "rdv": {
                           "id": 5,
                           "status": "unknown",
-                          "starts_at": "2025-10-05 12:06:00 +0200",
+                          "starts_at": "2025-10-05 12:15:00 +0200",
                           "location_type": "public_office"
                         },
-                        "updated_at": "2025-10-02 12:06:26 +0200",
+                        "updated_at": "2025-10-02 12:15:41 +0200",
                         "url": "http://www.rdv-mairie-test.localhost/agents/rdv_plans/4",
                         "user_id": 12
                       }
@@ -3115,14 +3129,14 @@
                             {
                               "id": 127,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Yseult",
-                              "last_name": "Marechal"
+                              "first_name": "Améliane",
+                              "last_name": "Leroux"
                             }
                           ],
                           "cancelled_at": null,
                           "collectif": false,
                           "context": null,
-                          "created_at": "2025-10-02 12:06:26 +0200",
+                          "created_at": "2025-10-02 12:15:41 +0200",
                           "created_by": "agent",
                           "created_by_id": 127,
                           "created_by_type": "Agent",
@@ -3181,17 +3195,17 @@
                                 "affiliation_number": "39012093812038",
                                 "birth_date": "1985-07-20",
                                 "birth_name": null,
-                                "created_at": "2025-10-02 12:06:26 +0200",
+                                "created_at": "2025-10-02 12:15:41 +0200",
                                 "email": "usager_1@lapin.fr",
-                                "first_name": "Étienne",
+                                "first_name": "Brieuc",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "HUBERT",
+                                "last_name": "CARLIER",
                                 "notification_email": null,
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
-                                "phone_number": "7 69 41 56 37",
-                                "phone_number_formatted": "+33769415637",
+                                "phone_number": "07 58 08 96 40",
+                                "phone_number_formatted": "+33758089640",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
@@ -3209,24 +3223,24 @@
                               "affiliation_number": "39012093812038",
                               "birth_date": "1985-07-20",
                               "birth_name": null,
-                              "created_at": "2025-10-02 12:06:26 +0200",
+                              "created_at": "2025-10-02 12:15:41 +0200",
                               "email": "usager_1@lapin.fr",
-                              "first_name": "Étienne",
+                              "first_name": "Brieuc",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "HUBERT",
+                              "last_name": "CARLIER",
                               "notification_email": null,
                               "notify_by_email": true,
                               "notify_by_sms": true,
-                              "phone_number": "7 69 41 56 37",
-                              "phone_number_formatted": "+33769415637",
+                              "phone_number": "07 58 08 96 40",
+                              "phone_number_formatted": "+33758089640",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "4e3593c4-6777-4ab1-ac30-7636cdc5da36"
+                          "uuid": "212b1400-8849-4e42-b505-252fa6783242"
                         }
                       ],
                       "meta": {
@@ -3358,14 +3372,14 @@
                             {
                               "id": 134,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Rémi",
-                              "last_name": "Guérin"
+                              "first_name": "Florent",
+                              "last_name": "Antoine"
                             }
                           ],
                           "cancelled_at": null,
                           "collectif": false,
                           "context": null,
-                          "created_at": "2025-10-02 12:06:26 +0200",
+                          "created_at": "2025-10-02 12:15:42 +0200",
                           "created_by": "agent",
                           "created_by_id": 134,
                           "created_by_type": "Agent",
@@ -3424,17 +3438,17 @@
                                 "affiliation_number": "39012093812038",
                                 "birth_date": "1985-07-20",
                                 "birth_name": null,
-                                "created_at": "2025-10-02 12:06:26 +0200",
+                                "created_at": "2025-10-02 12:15:42 +0200",
                                 "email": "usager_1@lapin.fr",
-                                "first_name": "Léandre",
+                                "first_name": "Laurane",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "LE GALL",
+                                "last_name": "LACROIX",
                                 "notification_email": null,
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
-                                "phone_number": "6 72 53 23 44",
-                                "phone_number_formatted": "+33672532344",
+                                "phone_number": "0788155216",
+                                "phone_number_formatted": "+33788155216",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
@@ -3452,24 +3466,24 @@
                               "affiliation_number": "39012093812038",
                               "birth_date": "1985-07-20",
                               "birth_name": null,
-                              "created_at": "2025-10-02 12:06:26 +0200",
+                              "created_at": "2025-10-02 12:15:42 +0200",
                               "email": "usager_1@lapin.fr",
-                              "first_name": "Léandre",
+                              "first_name": "Laurane",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "LE GALL",
+                              "last_name": "LACROIX",
                               "notification_email": null,
                               "notify_by_email": true,
                               "notify_by_sms": true,
-                              "phone_number": "6 72 53 23 44",
-                              "phone_number_formatted": "+33672532344",
+                              "phone_number": "0788155216",
+                              "phone_number_formatted": "+33788155216",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "d55ba890-7586-44ee-9c80-961b7d5b3a5b"
+                          "uuid": "47d48370-5ecc-47cd-ae98-d7e9ecf6f222"
                         },
                         {
                           "id": 14,
@@ -3478,14 +3492,14 @@
                             {
                               "id": 137,
                               "email": "agent_4@lapin.fr",
-                              "first_name": "Adalbéron",
-                              "last_name": "Olivier"
+                              "first_name": "Constant",
+                              "last_name": "Hamon"
                             }
                           ],
                           "cancelled_at": null,
                           "collectif": false,
                           "context": null,
-                          "created_at": "2025-10-02 12:06:27 +0200",
+                          "created_at": "2025-10-02 12:15:42 +0200",
                           "created_by": "agent",
                           "created_by_id": 137,
                           "created_by_type": "Agent",
@@ -3544,17 +3558,17 @@
                                 "affiliation_number": "39012093812038",
                                 "birth_date": "1985-07-20",
                                 "birth_name": null,
-                                "created_at": "2025-10-02 12:06:27 +0200",
+                                "created_at": "2025-10-02 12:15:42 +0200",
                                 "email": "usager_4@lapin.fr",
-                                "first_name": "Muriel",
+                                "first_name": "Clélie",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "BLANC",
+                                "last_name": "PERROT",
                                 "notification_email": null,
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
-                                "phone_number": "0664178146",
-                                "phone_number_formatted": "+33664178146",
+                                "phone_number": "7 95 32 64 07",
+                                "phone_number_formatted": "+33795326407",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
@@ -3572,24 +3586,24 @@
                               "affiliation_number": "39012093812038",
                               "birth_date": "1985-07-20",
                               "birth_name": null,
-                              "created_at": "2025-10-02 12:06:27 +0200",
+                              "created_at": "2025-10-02 12:15:42 +0200",
                               "email": "usager_4@lapin.fr",
-                              "first_name": "Muriel",
+                              "first_name": "Clélie",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "BLANC",
+                              "last_name": "PERROT",
                               "notification_email": null,
                               "notify_by_email": true,
                               "notify_by_sms": true,
-                              "phone_number": "0664178146",
-                              "phone_number_formatted": "+33664178146",
+                              "phone_number": "7 95 32 64 07",
+                              "phone_number_formatted": "+33795326407",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "62c597b1-fe9b-4722-b055-38adc460a571"
+                          "uuid": "2416b965-87ef-455c-aa7d-d00436c3a7ad"
                         }
                       ],
                       "meta": {
@@ -3704,8 +3718,8 @@
                         "agent": {
                           "id": 252,
                           "email": "agent_2@lapin.fr",
-                          "first_name": "Céleste",
-                          "last_name": "Germain"
+                          "first_name": "Hélène",
+                          "last_name": "Menard"
                         },
                         "user": {
                           "id": 111,
@@ -3714,17 +3728,17 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-10-02 12:06:32 +0200",
+                          "created_at": "2025-10-02 12:15:48 +0200",
                           "email": "usager_1@lapin.fr",
-                          "first_name": "Aliénor",
+                          "first_name": "Vigile",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "MEUNIER",
+                          "last_name": "ROGER",
                           "notification_email": null,
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "phone_number": "0647429283",
-                          "phone_number_formatted": "+33647429283",
+                          "phone_number": "0658541479",
+                          "phone_number_formatted": "+33658541479",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -3979,23 +3993,23 @@
                             {
                               "id": 284,
                               "email": "agent_2@lapin.fr",
-                              "first_name": "Richard",
-                              "last_name": "Schneider"
+                              "first_name": "Amante",
+                              "last_name": "Millet"
                             },
                             {
                               "id": 285,
                               "email": "agent_3@lapin.fr",
-                              "first_name": "Anatolie",
-                              "last_name": "Benoit"
+                              "first_name": "Ludolphe",
+                              "last_name": "Carre"
                             },
                             {
                               "id": 286,
                               "email": "agent_4@lapin.fr",
-                              "first_name": "Adrien",
-                              "last_name": "Schmitt"
+                              "first_name": "Daphné",
+                              "last_name": "Poulain"
                             }
                           ],
-                          "name": "Haute-Normandie frogs 1f5e1606",
+                          "name": "Limousin sheep 158bff31",
                           "territory": {
                             "id": 232,
                             "departement_number": "01",
@@ -4127,17 +4141,17 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-10-02 12:06:34 +0200",
+                          "created_at": "2025-10-02 12:15:50 +0200",
                           "email": "usager_1@lapin.fr",
-                          "first_name": "Clodion",
+                          "first_name": "Agathange",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "LE ROUX",
+                          "last_name": "MARECHAL",
                           "notification_email": null,
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "phone_number": "0677106736",
-                          "phone_number_formatted": "+33677106736",
+                          "phone_number": "747571601",
+                          "phone_number_formatted": "+33747571601",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4428,7 +4442,7 @@
                         "affiliation_number": "39012093812038",
                         "birth_date": "1985-07-20",
                         "birth_name": null,
-                        "created_at": "2025-10-02 12:06:35 +0200",
+                        "created_at": "2025-10-02 12:15:51 +0200",
                         "email": "jean@jacques.fr",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,
@@ -4437,8 +4451,8 @@
                         "notification_email": null,
                         "notify_by_email": true,
                         "notify_by_sms": true,
-                        "phone_number": "07 46 51 67 34",
-                        "phone_number_formatted": "+33746516734",
+                        "phone_number": "0684821505",
+                        "phone_number_formatted": "+33684821505",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
@@ -4738,7 +4752,7 @@
                         "affiliation_number": "101010",
                         "birth_date": "1976-10-01",
                         "birth_name": "Fripouille",
-                        "created_at": "2025-10-02 12:06:35 +0200",
+                        "created_at": "2025-10-02 12:15:51 +0200",
                         "email": "jean@jacques.fr",
                         "first_name": "Alain",
                         "invitation_accepted_at": null,
@@ -4756,17 +4770,17 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-10-02 12:06:35 +0200",
+                          "created_at": "2025-10-02 12:15:51 +0200",
                           "email": "usager_1@lapin.fr",
-                          "first_name": "Odon",
+                          "first_name": "Ségolène",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "LAMBERT",
+                          "last_name": "DA SILVA",
                           "notification_email": null,
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "phone_number": "6 43 86 79 89",
-                          "phone_number_formatted": "+33643867989",
+                          "phone_number": "07 46 92 62 72",
+                          "phone_number_formatted": "+33746926272",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4900,7 +4914,7 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "invitation_token": "KYYRKLFA"
+                      "invitation_token": "RBM3ONWH"
                     }
                   }
                 },
@@ -5039,17 +5053,17 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-10-02 12:06:36 +0200",
+                          "created_at": "2025-10-02 12:15:53 +0200",
                           "email": "usager_1@lapin.fr",
-                          "first_name": "Agnès",
+                          "first_name": "Briac",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "RICHARD",
+                          "last_name": "BARBIER",
                           "notification_email": null,
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "phone_number": "7 82 41 96 81",
-                          "phone_number_formatted": "+33782419681",
+                          "phone_number": "699136756",
+                          "phone_number_formatted": "+33699136756",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -5312,7 +5326,7 @@
                         "affiliation_number": "101010",
                         "birth_date": "1976-10-01",
                         "birth_name": "Fripouille",
-                        "created_at": "2025-10-02 12:06:37 +0200",
+                        "created_at": "2025-10-02 12:15:53 +0200",
                         "email": "jean@jacques.fr",
                         "first_name": "Johnny",
                         "invitation_accepted_at": null,
@@ -5330,17 +5344,17 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-10-02 12:06:37 +0200",
+                          "created_at": "2025-10-02 12:15:53 +0200",
                           "email": "usager_1@lapin.fr",
-                          "first_name": "Pascal",
+                          "first_name": "Oger",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "GARCIA",
+                          "last_name": "ANDRE",
                           "notification_email": null,
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "phone_number": "0760176160",
-                          "phone_number_formatted": "+33760176160",
+                          "phone_number": "746300548",
+                          "phone_number_formatted": "+33746300548",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -5491,17 +5505,17 @@
                           "affiliation_number": "39012093812038",
                           "birth_date": "1985-07-20",
                           "birth_name": null,
-                          "created_at": "2025-10-02 12:06:37 +0200",
+                          "created_at": "2025-10-02 12:15:54 +0200",
                           "email": "usager_1@lapin.fr",
-                          "first_name": "Améliane",
+                          "first_name": "Anceline",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "LANGLOIS",
+                          "last_name": "BOULANGER",
                           "notification_email": null,
                           "notify_by_email": true,
                           "notify_by_sms": true,
-                          "phone_number": "0653140611",
-                          "phone_number_formatted": "+33653140611",
+                          "phone_number": "06 76 76 95 91",
+                          "phone_number_formatted": "+33676769591",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -5624,7 +5638,7 @@
                         "affiliation_number": "39012093812038",
                         "birth_date": "1985-07-20",
                         "birth_name": null,
-                        "created_at": "2025-10-02 12:06:38 +0200",
+                        "created_at": "2025-10-02 12:15:54 +0200",
                         "email": "jean@jacques.fr",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,
@@ -5633,8 +5647,8 @@
                         "notification_email": null,
                         "notify_by_email": true,
                         "notify_by_sms": true,
-                        "phone_number": "627724461",
-                        "phone_number_formatted": "+33627724461",
+                        "phone_number": "06 38 59 65 97",
+                        "phone_number_formatted": "+33638596597",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [

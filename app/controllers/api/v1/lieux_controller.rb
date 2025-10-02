@@ -8,6 +8,11 @@ class Api::V1::LieuxController < Api::V1::AgentAuthBaseController
       else
         lieux.where.not(availability: "disabled")
       end
+    if params[:type] == "single_use"
+      lieux = lieux.where(availability: "single_use")
+    elsif params[:type] == "normal"
+      lieux = lieux.where(availability: "enabled")
+    end
     render_collection(lieux.order(:id))
   end
 

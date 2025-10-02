@@ -52,7 +52,27 @@ RSpec.describe "Lieux API" do
       expect(parsed_response_body["lieux"].length).to eq 1
       names = parsed_response_body["lieux"].pluck("name")
       expect(names).to include("Ancien Tribunal")
-      expect(names).not_to include("MJD Nice", "TJ Menton", "Place des Fêtes", "CDAD Lille")
+      expect(names).not_to include("MJD Nice", "TJ Menton")
+    end
+
+    it "filters by type 'normal'" do
+      get "/api/v1/lieux", headers:, params: { type: "normal" }
+
+      expect(response.status).to eq 200
+      expect(parsed_response_body["lieux"].length).to eq 2
+      names = parsed_response_body["lieux"].pluck("name")
+      expect(names).to include("MJD Nice", "TJ Menton")
+      expect(names).not_to include("Place des Fêtes")
+    end
+
+    it "filters by type 'single_use'" do
+      get "/api/v1/lieux", headers:, params: { type: "single_use" }
+
+      expect(response.status).to eq 200
+      expect(parsed_response_body["lieux"].length).to eq 1
+      names = parsed_response_body["lieux"].pluck("name")
+      expect(names).to include("Place des Fêtes")
+      expect(names).not_to include("MJD Nice", "TJ Menton")
     end
 
     it "includes pagination metadata" do
