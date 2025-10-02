@@ -1,4 +1,5 @@
 class SendMattermostNotificationsForZammadTicketsJob < ApplicationJob
+  include  ActionView::Helpers::DateHelper
   queue_as :latency_5m
 
   def perform
@@ -14,13 +15,17 @@ class SendMattermostNotificationsForZammadTicketsJob < ApplicationJob
     message += "[Voir ces 10 tickets](https://zammad10.ethibox.fr/#ticket/view/all_unassigned)"
     message += "\n\n#{assigned_tickets.count} tickets assignés en attente de réponse. "
     message += "Le plus ancien attend depuis #{time_ago_in_words(assigned_tickets.map(&:awaiting_response_since).min)}. "
-    message += "[Voir les tickets qui vous sont assignés](https://zammad10.ethibox.fr/#ticket/view/my_assigned)"
-    message += "\n\n| responsable | tickets |"
+    message += "\n\n| "
+    message += assigned_tickets_counts_by_agent_email.keys.sort.map do |agent_email|
+      agent_email == "-" ? "N/A" : agent_email.split("@").first.split(".").first
+    end.join(" | ")
+    message += " |"
     message += "\n| - | - |"
-    assigned_tickets_counts_by_agent_email.sort.each do |agent_email, agent_tickets_count|
-      agent = agent_email == "-" ? "N/A" : agent_email.split("@").first.split(".").first
-      message += "\n| #{agent} | #{agent_tickets_count} ticket(s) |"
-    end
+    message += "\n| "
+    message += assigned_tickets_counts_by_agent_email.keys.sort.map { "#{assigned_tickets_counts_by_agent_email[_1]}&nbsp;ticket(s)" }.join(" | ")
+    message += " |"
+    message += "\n\n[Voir les tickets qui vous sont assignés](https://zammad10.ethibox.fr/#ticket/view/my_assigned)"
+    message += "\n\n 💁‍♀️ *La vraie générosité envers l'avenir consiste à tout donner au présent*"
     Rails.logger.debug "Done building message."
 
     Rails.logger.debug "Sending message to Mattermost channel"
