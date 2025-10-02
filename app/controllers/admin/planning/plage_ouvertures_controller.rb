@@ -11,6 +11,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def index
+    @allow_selecting_multiple_agents = true if current_agent.feature_enabled?("new_planning")
     render :multi_agents_index and return if @agents.size > 1
 
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)

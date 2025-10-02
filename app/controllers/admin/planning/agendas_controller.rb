@@ -8,6 +8,7 @@ class Admin::Planning::AgendasController < AgentAuthController
       authorize(AgentAgenda.new(agent:, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
     end
 
+    @allow_selecting_multiple_agents = true if current_agent.feature_enabled?("new_planning")
     render :multi_agents_agenda and return if @agents.size > 1
 
     @status = params[:status]
