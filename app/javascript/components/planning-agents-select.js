@@ -8,7 +8,13 @@ export const planningAgentsSelect = () => {
   const multiAgentEnableButton = document.querySelector("#multi_agent_enable");
 
   if(!agentSelect.multiple) {
-    $(agentSelect).on("change", event => event.target.form.submit());
+    $(agentSelect).on("change", (event) => {
+      // On doit re-vérifier ici car le champ peut devenir multiple via JS (ci-dessous),
+      // mais cette fonction de callback d'event est toujours bindée.
+      if(!agentSelect.multiple) {
+        event.target.form.submit();
+      }
+    });
   }
 
   if(!multiAgentEnableButton) {

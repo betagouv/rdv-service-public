@@ -88,10 +88,15 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
 
     doc.start_section("Sélection multi-agent")
 
+    click_on "Sélectionner plusieurs agents"
+    find("#select2-agent_id-container").click
+    find(%(.select2-results__option), text: "LOIC Basique").click
+    expect(page).to have_content("Appliquer")
+    click_on "Appliquer"
     # Je n'arrive pas à cliquer sur "Sélectionner plusieurs agents" dans cette spec.
     # On visite donc la page multi-agents directement.
     # Note : on dirait que FullCalendar ne s'affiche pas sur le screenshot, je ne comprends pas pourquoi.
-    visit admin_organisation_planning_agenda_path(organisation_id: organisation.id, agent_id: [agent_admin.id, agent_basique.id])
+    # visit admin_organisation_planning_agenda_path(organisation_id: organisation.id, agent_id: [agent_admin.id, agent_basique.id])
     doc.add_screenshot(page, text: "Il est possible de sélectionner plusieurs agents",
                              wait_for: "Revenir à mon agenda")
 
