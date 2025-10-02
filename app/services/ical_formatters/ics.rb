@@ -57,6 +57,7 @@ module IcalFormatters
       event.description = payload[:description]
       event.organizer = "mailto:#{payload[:domain].secretariat_email}"
       event.status = payload[:status]
+      event.categories = ["RDV Service Public"] # Cette catégorie permet de filtrer tous les événements que nous créons.
     end
   end
 end
