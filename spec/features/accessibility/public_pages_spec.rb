@@ -1,6 +1,6 @@
 RSpec.describe "public pages", driver: :playwright_bypass_csp, js: true do
-  it "accessibility_path page is accessible" do
-    expect_page_to_be_axe_clean(accessibility_path)
+  it "accessibilite_path page is accessible" do
+    expect_page_to_be_axe_clean(accessibilite_path)
   end
 
   it "aide/aiguillage_role page is accessible" do
