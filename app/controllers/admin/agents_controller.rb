@@ -1,29 +1,19 @@
 class Admin::AgentsController < AgentAuthController
-  respond_to :html, :json
+  respond_to :html
 
   before_action :ensure_agent_is_admin, except: :index
 
   def index
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
 
-    unless current_organisation
-      raise "boom!"
-    end
-
-    @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
+    @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id })
     @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.ordered_by_last_name
 
     @display_services = current_territory.services.any? || current_organisation.agents.joins(:agent_services).any?
 
-    if request.format.html?
-      @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
-      @agents = @agents.includes(:services, :roles, :organisations)
-      @agents = @agents.page(page_number)
-    end
-  end
-
-  def search
-    todo
+    @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
+    @agents = @agents.includes(:services, :roles, :organisations)
+    @agents = @agents.page(page_number)
   end
 
   def new

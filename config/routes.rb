@@ -143,6 +143,7 @@ Rails.application.routes.draw do
           get "search"
         end
       end
+      get "agents/search", to: "agents#search", as: :ajax_agents_search
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
       resources :instance_exports, only: %i[index]
@@ -286,11 +287,7 @@ Rails.application.routes.draw do
           resources :referent_assignations, only: %i[index create destroy]
         end
         resources :agent_intervenants, only: %i[update]
-        resources :agents, except: %i[show] do
-          collection do
-            get :search
-          end
-        end
+        resources :agents, except: %i[show]
         namespace :planning do
           get :agenda, to: "agendas#show"
           put :toggle_displays, to: "agendas#toggle_displays"
