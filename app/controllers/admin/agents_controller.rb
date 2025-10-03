@@ -6,6 +6,10 @@ class Admin::AgentsController < AgentAuthController
   def index
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
 
+    unless current_organisation
+      raise "boom!"
+    end
+
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
     @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.ordered_by_last_name
 
@@ -16,6 +20,10 @@ class Admin::AgentsController < AgentAuthController
       @agents = @agents.includes(:services, :roles, :organisations)
       @agents = @agents.page(page_number)
     end
+  end
+
+  def search
+    todo
   end
 
   def new

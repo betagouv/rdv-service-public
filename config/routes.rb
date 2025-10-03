@@ -286,7 +286,11 @@ Rails.application.routes.draw do
           resources :referent_assignations, only: %i[index create destroy]
         end
         resources :agent_intervenants, only: %i[update]
-        resources :agents, except: %i[show]
+        resources :agents, except: %i[show] do
+          collection do
+            get :search
+          end
+        end
         namespace :planning do
           get :agenda, to: "agendas#show"
           put :toggle_displays, to: "agendas#toggle_displays"
