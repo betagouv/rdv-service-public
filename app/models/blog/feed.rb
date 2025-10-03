@@ -13,7 +13,31 @@ module Blog
     end
 
     def self.load
-      from_rss(fetch_rss)
+      from_headway
+    end
+
+    def self.from_headway
+      headway_html = Net::HTTP.get_response(URI("https://headwayapp.co/rdv-service-public-changelog")).body
+
+      feed = new
+      doc = Nokogiri::HTML(headway_html)
+
+      post_nodes = doc.css('div.changelogItem.published')
+      feed.posts = post_nodes.map do |post_node|
+        title_link = post_node.at_css('h2.title a')
+        title = title_link&.text&.strip
+        link   = title_link&.[]('href')
+        # Description = first <p> inside articleBody (can change to join all <p>)
+        description = post_node.at_css('div[ itemprop="articleBody" ] p')&.text&.strip
+        published_at = Time.zone.parse(post_node.at_css('time')&.[]('datetime'))
+        Blog::Post.new(title:, link:, description:, published_at:)
+      end
+
+      feed.title = "Nouveautés"
+      feed.link = "https://headwayapp.co/rdv-service-public-changelog"
+      feed.description = "coucou"
+      feed.last_built_at = feed.posts.map(&:published_at).max
+      feed
     end
 
     def self.from_rss(rss_str)
@@ -23,14 +47,24 @@ module Blog
         feed.link = channel.xpath("//link")[0].content
         feed.description = channel.xpath("//description")[0].content
         feed.last_built_at = Time.zone.parse(channel.xpath("//lastBuildDate")[0].content)
-        feed.posts = channel.xpath("//item").map { |item| Blog::Post.from_xml_item(item) }
+        feed.posts = channel.xpath("//item").map do |item|
+          Blog::Post.from_xml_item(item)
+        end
       end
       feed
     end
 
-    # Pour l'instant cette réponse est en dur, mais à l'avenir
-    # ce sera un appel HTTP au flux RSS, avec un cache évidemment.
     def self.fetch_rss
+      response = Net::HTTP.get_response(URI("https://aide-rdv-service-public.sites.beta.gouv.fr/nouveautes/rss/"))
+      case response
+      when Net::HTTPSuccess
+        response.body
+      else
+        raise response.inspect
+      end
+    end
+
+    def self.fetch_rss_stubbed
       <<~XML
         <?xml version="1.0" encoding="UTF-8"?>
         <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
