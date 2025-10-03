@@ -9,6 +9,7 @@ module IcsPayloads
         summary: "RDV #{motif&.name}",
         location: ics_location,
         domain: domain,
+        status: ics_status,
       }
 
       payload[:description] = ics_description(recipient)
@@ -25,6 +26,14 @@ module IcsPayloads
     end
 
     private
+
+    def ics_status
+      if cancelled?
+        "CANCELLED"
+      else
+        "CONFIRMED"
+      end
+    end
 
     def ics_location
       if motif.phone?

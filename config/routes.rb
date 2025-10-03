@@ -115,6 +115,7 @@ Rails.application.routes.draw do
     namespace :agents do
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
+        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
