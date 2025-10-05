@@ -7,4 +7,4 @@
         .fr-card__detail.fr-icon-calendar-2-fill.rdv-align-items-center.mt-1
           = l(post.published_at.to_date, format: :long)
       p.fr-card__desc
-        = post.description.truncate_words(35)
+        = post.description
