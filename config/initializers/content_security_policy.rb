@@ -18,9 +18,6 @@ tiles_data_gouv = "openmaptiles.data.gouv.fr"
 voxusagers = "voxusagers.numerique.gouv.fr"
 # Utilisé sur nos pages statiques (404.html, 500.html)
 bootstrap_cdn = "*.bootstrapcdn.com"
-# Headway nous permet de publier un changelog au sein de l'app
-headway_cnd = "cdn.headwayapp.co"
-headway_widget = "headway-widget.net"
 # Metabase permet d’embedder des rapports dans l’application
 metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
 
@@ -39,12 +36,12 @@ Rails.application.config.content_security_policy do |policy|
   policy.object_src :none
   policy.worker_src :blob
   policy.child_src :blob, :self
-  policy.frame_src :self, in_status, headway_widget, metabase
+  policy.frame_src :self, in_status, metabase
   policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
-  policy.style_src :self, :unsafe_inline, bootstrap_cdn, headway_cnd, unpkg_cdn
+  policy.style_src :self, :unsafe_inline, bootstrap_cdn, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
 
-  policy.script_src :self, headway_cnd, unpkg_cdn, *swagger_shas
+  policy.script_src :self, unpkg_cdn, *swagger_shas
 end
 
 # If you are using UJS then enable automatic nonce generation
