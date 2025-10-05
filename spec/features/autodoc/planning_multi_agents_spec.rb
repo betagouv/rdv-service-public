@@ -4,9 +4,9 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
   let!(:agent_basique) { create(:agent, first_name: "Loïc", last_name: "Basique", basic_role_in_organisations: [organisation]) }
 
   before do
-    today_at_9 = Time.zone.today.at(Tod::TimeOfDay.parse("09:00"))
-    create(:rdv, :no_service, organisation:, starts_at: today_at_9, agents: [agent_admin], users: [create(:user, last_name: "DEJUSTINE")])
-    create(:rdv, :no_service, organisation:, starts_at: today_at_9, agents: [agent_basique], users: [create(:user, last_name: "DELOIC")])
+    monday_at_9 = Time.zone.now.beginning_of_week.to_date.at(Tod::TimeOfDay.parse("09:00"))
+    create(:rdv, :no_service, organisation:, starts_at: monday_at_9, agents: [agent_admin], users: [create(:user, last_name: "DEJUSTINE")])
+    create(:rdv, :no_service, organisation:, starts_at: monday_at_9, agents: [agent_basique], users: [create(:user, last_name: "DELOIC")])
 
     create(:plage_ouverture, agent: agent_admin, organisation:, title: "Plage de Justine")
     create(:plage_ouverture, agent: agent_basique, organisation:, title: "Plage de Loïc")
