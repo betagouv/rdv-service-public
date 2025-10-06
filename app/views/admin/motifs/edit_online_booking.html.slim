@@ -1,0 +1,13 @@
+- content_for :title do
+  | Réservation en ligne pour #{@motif.name}
+
+= render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
+- content_for(:menu_item) { "menu-settings" }
+
+.row
+  .col-md-12
+    = simple_form_for [:admin, @motif.organisation, @motif], html: { "data-controller": "motif-form" } do |f|
+      = render "model_errors", model: @motif, f: f
+      = render "admin/motifs/form/resa_en_ligne", motif: @motif, f: f, rdvi_mode: current_organisation.rdv_insertion?
+      = f.submit "Enregistrer", class: "fr-btn"
+

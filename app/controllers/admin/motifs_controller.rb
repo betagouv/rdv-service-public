@@ -25,7 +25,7 @@ class Admin::MotifsController < AgentAuthController
   ].freeze
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update archive unarchive destroy]
+  before_action :set_motif, only: %i[show edit update archive unarchive destroy edit_online_booking update_online_booking]
 
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
@@ -85,6 +85,25 @@ class Admin::MotifsController < AgentAuthController
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
       render :edit
+    end
+  end
+
+  def edit_online_booking
+    authorize(@motif, :edit?, policy_class: Agent::MotifPolicy)
+  end
+
+  def update_online_booking
+    @motif = Motif.find(params[:motif_id])
+    authorize(@motif, :update?, policy_class: Agent::OrganisationPolicy)
+
+    @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
+    authorize(@motif, policy_class: Agent::MotifPolicy)
+
+    if @motif.save
+      flash[:success] = "Le motif #{link_to_motif(@motif)} a été modifié."
+      redirect_to admin_organisation_online_booking_path(@motif.organisation)
+    else
+      render :edit_online_booking
     end
   end
 

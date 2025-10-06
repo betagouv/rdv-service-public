@@ -4,7 +4,7 @@
     .card-body
       .d-flex
         .flex-grow-1.d-flex.rdv-align-items-baseline
-          h4.fr-h5 =link_to motif.name, "#"
+          h4.fr-h5 = link_to motif.name, edit_online_booking_admin_organisation_motif_path(@organisation, motif.id)
         .flex-grow-0
           - if motif.bookable_by_everyone_or_bookable_by_invited_users?
             - if availabilities_count && availabilities_count > 0
@@ -15,15 +15,17 @@
               p.fr-badge.fr-badge--yellow-tournesol
                 = icon("fr-icon-warning-fill", class: "fr-mr-1w fr-icon--sm")
                 | Pas de disponibilités
+          - else
+            p.fr-badge Non réservable
 
       p
         = location_type_icon(motif.location_type, class: "fr-mr-1w")
         = motif.human_attribute_value(:location_type)
-        = " | "
+        = " · "
         = "#{motif.default_duration_in_min} mn"
 
         - if availabilities_count
-          = " | "
+          = " · "
           - if motif.collectif?
             - if availabilities_count > 0
               | #{availabilities_count} rendez-vous avec des places disponibles
