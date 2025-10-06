@@ -20,8 +20,8 @@ RSpec.describe AgentConnectController do
         claims: {
           id_token: {
             acr: {
-              essential: true,
-              values: ["eidas1"],
+              essential: false,
+              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
             },
           },
         }.to_json
@@ -48,8 +48,8 @@ RSpec.describe AgentConnectController do
           claims: {
             id_token: {
               acr: {
-                essential: true,
-                values: ["eidas1"],
+                essential: false,
+                values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
               },
             },
           }.to_json
@@ -78,7 +78,7 @@ RSpec.describe AgentConnectController do
           id_token: {
             acr: {
               essential: true,
-              values: ["eidas2", "eidas3", "https://proconnect.gouv.fr/assurance/consistency-checked-2fa", "https://proconnect.gouv.fr/assurance/self-asserted-2fa"],
+              values: %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa],
             },
           },
         }.to_json
