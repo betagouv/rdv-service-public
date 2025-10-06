@@ -4,7 +4,7 @@ module Blog
 
     attr_accessor :title, :link, :latest_post_at, :posts
 
-    HEADWAY_URL = "https://headwayapp.co/rdv-service-public-changelog".freeze
+    SITES_FACILES_RSS_URL = "https://aide-rdv-service-public.sites.beta.gouv.fr/nouveautes/rss/".freeze
     CACHE_KEY = "blog_feed".freeze
 
     def self.new_content_for_agent?(agent)
@@ -18,11 +18,11 @@ module Blog
     def self.refresh_cache = Rails.cache.write(CACHE_KEY, fetch)
 
     def self.fetch
-      headway_html = Net::HTTP.get_response(URI(HEADWAY_URL)).body
+      headway_html = Net::HTTP.get_response(URI(SITES_FACILES_RSS_URL)).body
       feed = new
-      feed.posts = HeadwayParser.new(headway_html).posts
+      feed.posts = RssParser.new(headway_html).posts
       feed.title = "Nouveautés"
-      feed.link = HEADWAY_URL
+      feed.link = "https://aide-rdv-service-public.sites.beta.gouv.fr/nouveautes/"
       feed.latest_post_at = feed.posts.map(&:published_at).max
       feed
     end
