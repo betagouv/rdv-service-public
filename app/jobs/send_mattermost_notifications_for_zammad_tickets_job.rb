@@ -25,7 +25,6 @@ class SendMattermostNotificationsForZammadTicketsJob < ApplicationJob
     message += assigned_tickets_counts_by_agent_email.keys.sort.map { "#{assigned_tickets_counts_by_agent_email[_1]}&nbsp;ticket(s)" }.join(" | ")
     message += " |"
     message += "\n\n[Voir les tickets qui vous sont assignés](https://zammad10.ethibox.fr/#ticket/view/my_assigned)"
-    message += "\n\n 💁‍♀️ *La vraie générosité envers l'avenir consiste à tout donner au présent*"
     Rails.logger.debug "Done building message."
 
     Rails.logger.debug "Sending message to Mattermost channel"
