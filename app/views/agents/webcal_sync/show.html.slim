@@ -6,8 +6,7 @@ p.mb-1 Allez dans votre agenda externe et ajoutez un nouveau calendrier avec cet
 .input-group.mb-3[data-controller="clipboard"]
   input.form-control[readonly name="calendar_url" value=calendar_url data-clipboard-target="input-to-copy"]
   .input-group-append
-    button.btn.btn-primary[data-clipboard-target="copy-button"]
-      | Copier
+    = render "common/copy_to_clipboard_button", { clipboard_content: calendar_url }
 
 p
   |> Tous vos rendez-vous de #{current_domain.name} seront affichés automatiquement au fur et à mesure de leur création (ou modification).
