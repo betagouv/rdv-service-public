@@ -10,21 +10,21 @@ class SendMattermostNotificationsForZammadTicketsJob < ApplicationJob
     Rails.logger.debug { "Done fetching data from Zammad. Got #{unassigned_tickets.count} unassigned tickets and #{assigned_tickets.count} assigned tickets." }
 
     Rails.logger.debug "Building message…"
-    message = "#{unassigned_tickets.count} tickets non-assignés en attente de réponse. "
-    message += "Le plus ancien attend une réponse depuis #{time_ago_in_words(unassigned_tickets.map(&:awaiting_response_since).min)} "
-    message += "[Voir ces 10 tickets](https://zammad10.ethibox.fr/#ticket/view/all_unassigned)"
-    message += "\n\n#{assigned_tickets.count} tickets assignés en attente de réponse. "
-    message += "Le plus ancien attend depuis #{time_ago_in_words(assigned_tickets.map(&:awaiting_response_since).min)}. "
-    message += "\n\n| "
-    message += assigned_tickets_counts_by_agent_email.keys.sort.map do |agent_email|
+    agent_emails = assigned_tickets_counts_by_agent_email.keys.sort.map do |agent_email|
       agent_email == "-" ? "N/A" : agent_email.split("@").first.split(".").first
-    end.join(" | ")
-    message += " |"
-    message += "\n| - | - |"
-    message += "\n| "
-    message += assigned_tickets_counts_by_agent_email.keys.sort.map { "#{assigned_tickets_counts_by_agent_email[_1]}&nbsp;ticket(s)" }.join(" | ")
-    message += " |"
-    message += "\n\n[Voir les tickets qui vous sont assignés](https://zammad10.ethibox.fr/#ticket/view/my_assigned)"
+    end
+    ticket_counts = assigned_tickets_counts_by_agent_email.keys.sort.map { "#{assigned_tickets_counts_by_agent_email[_1]}&nbsp;ticket(s)" }
+    message = <<~MSG
+      #{unassigned_tickets.count} tickets non-assignés en attente de réponse. Le plus ancien attend une réponse depuis #{time_ago_in_words(unassigned_tickets.map(&:awaiting_response_since).min)} [Voir ces 10 tickets](https://zammad10.ethibox.fr/#ticket/view/all_unassigned)
+
+      #{assigned_tickets.count} tickets assignés en attente de réponse. Le plus ancien attend depuis #{time_ago_in_words(assigned_tickets.map(&:awaiting_response_since).min)}.
+
+      | #{agent_emails.join(' | ')} |
+      | - | - |
+      | #{ticket_counts.join(' | ')} |
+
+      [Voir les tickets qui vous sont assignés](https://zammad10.ethibox.fr/#ticket/view/my_assigned)
+    MSG
     Rails.logger.debug "Done building message."
 
     Rails.logger.debug "Sending message to Mattermost channel"
