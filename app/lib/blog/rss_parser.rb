@@ -11,7 +11,7 @@ class Blog::RssParser
           title: item.children.find { _1.name == "title" }.content,
           link: item.children.find { _1.name == "link" }.content.squish,
           description: item.children.find { _1.name == "description" }.content.squish,
-          published_at: Time.zone.parse(item.children.find { _1.name == "pubDate" }.content),
+          published_at: Time.zone.parse(item.children.find { _1.name == "pubDate" }.content)
         )
       end
     end
