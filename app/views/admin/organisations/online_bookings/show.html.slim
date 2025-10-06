@@ -7,7 +7,7 @@
 - if @motifs.none?
   = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
 
-- if @motifs_with_missing_availabilities
+/- if @motifs_with_missing_availabilities.any?
   .fr-callout.fr-callout--yellow-moutarde.fr-pb-2w
     - count = @motifs_with_missing_availabilities.count
     - if count == 1
@@ -47,49 +47,19 @@
 
 .card
   .card-body
-    h3.fr-h4 Motifs
-    p La réservation en ligne peut être configurée pour chaque motif de rendez-vous.
+    h3.fr-h4 Motifs ouverts à la réservation en ligne
 
-    ul.list-group.my-1
+    .fr-grid-row
+      - @motifs_with_missing_availabilities.each do |motif|
+        = render "motif_tile", motif:, availabilities_count: 0
+
       - @motifs_with_availabilities.each do |motif_with_availabilities|
         - motif = motif_with_availabilities[:motif]
         - availabilities_count = motif_with_availabilities[:availabilities_count]
-        li.card
-          .card-header.d-flex.align-items-center
-            h4.mr-2
-              - if motif.bookable_by_everyone_or_bookable_by_invited_users? && availabilities_count > 0
-                i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-              - else
-                i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-              = motif.name
-            .mr-1 = motif.human_attribute_value(:location_type)
-            .mr-1 = "#{motif.default_duration_in_min} min."
-          .card-body
-            .row.mb-1
-              .col-12.d-flex.align-items-center
-                - if motif.bookable_by_everyone_or_bookable_by_invited_users?
-                  i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-                  .mr-2 Réservable en ligne
-                - else
-                  i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-                  .mr-2 Ce motif n'est pas réservable en ligne
-                = link_to "modifier", edit_admin_organisation_motif_path(motif.organisation, motif, anchor: "tab_resa_en_ligne")
-
-            .row
-              .col-12.d-flex.align-items-center
-                - if motif.collectif?
-                  - if availabilities_count > 0
-                    i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-                    .mr-2 #{availabilities_count} rendez-vous avec des places disponibles
-                  - else
-                    i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-                    .mr-2 Aucun rendez-vous avec des places disponibles
-                  = link_to "ajouter", new_admin_organisation_rdvs_collectif_path(current_organisation, current_agent, motif_id: motif.id)
-                - else
-                  - if availabilities_count > 0
-                    i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-                    .mr-2 #{pluralize(availabilities_count, "plage", plural: "plages")} d'ouverture
-                  - else
-                    i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-                    .mr-2 Pas de plages d'ouverture
-                  = link_to "ajouter",  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: current_agent, motif_ids: [motif.id])
+        = render "motif_tile", motif:, availabilities_count:
+.card
+  .card-body
+    h3.fr-h4 Motifs fermés à la réservation en ligne
+    .fr-grid-row
+      - @unavailable_motifs.each do |motif|
+        = render "motif_tile", motif:

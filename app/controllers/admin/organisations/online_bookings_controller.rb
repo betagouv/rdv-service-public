@@ -4,17 +4,23 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   def show
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
     set_motifs
-    @motifs_with_availabilities = @motifs.map do |motif|
+
+    @motifs_and_availabilities = @motifs.bookable_by_everyone_or_bookable_by_invited_users.map do |motif|
       {
         motif: motif,
         availabilities_count: available_slots_count(motif),
       }
     end
 
-    @motifs_with_missing_availabilities = @motifs_with_availabilities.select do |motif_with_availabilities|
-      motif_with_availabilities[:motif].bookable_by_everyone_or_bookable_by_invited_users? &&
-        motif_with_availabilities[:availabilities_count] = 0
+    @motifs_with_availabilities = @motifs_and_availabilities.select do |motif_with_availabilities|
+      motif_with_availabilities[:availabilities_count] > 0
+    end
+
+    @motifs_with_missing_availabilities = @motifs_and_availabilities.select do |motif_with_availabilities|
+      motif_with_availabilities[:availabilities_count] == 0
     end.pluck(:motif)
+
+    @unavailable_motifs = @motifs.not_bookable_by_everyone_or_not_bookable_by_invited_users
   end
 
   def edit_user_type
