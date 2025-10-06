@@ -53,7 +53,7 @@ module IcalFormatters
         event.dtend = dtend
       end
       if payload[:attendees].present?
-        payload[:attendees].each { |attendee| event.append_attendee("mailto:#{attendee}") }
+        payload[:attendees].each { |attendee| event.append_attendee("PARTSTAT=ACCEPTED;mailto:#{attendee}") }
       end
       event.summary = payload[:summary]
       event.location = payload[:location]
