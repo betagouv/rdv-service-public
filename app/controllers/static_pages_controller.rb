@@ -7,7 +7,7 @@ class StaticPagesController < ApplicationController
     end
   end
 
-  def accessibility; end
+  def accessibilite; end
 
   def domaines; end
 
