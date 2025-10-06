@@ -4,18 +4,18 @@
 - content_for :title do
   | Réservation en ligne
 
+- if @motifs.none?
+  = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
+
 .card
   .card-body
     h3.fr-h4 Lien de réservation
     p Permettez à vos usagers de prendre rendez-vous en ligne, sur les créneaux qui vous conviennent.
 
-    p La réservation en ligne peut être configurée pour chaque motif de rendez-vous.
-
     - if current_organisation.sectorized?
       p Cette organisation est sectorisée, les usagers peuvent prendre rendez-vous en saisissant leur adresse sur la page d'accueil&nbsp;:
       = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: prendre_rdv_url }
     - else
-      p Une fois qu'elle est activée, vous pouvez envoyer ce lien à vos usagers pour qu'ils prennent rendez-vous&nbsp;:
       - org_booking_link = public_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug)
       = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: org_booking_link }
 
@@ -23,22 +23,22 @@
   .card-body
     .d-flex
       .flex-grow-1
-        h3.fr-h4 Types d'usagers
+        h3.fr-h4 Profil des usagers
       .flex-grow-0
          = link_to "Modifer", edit_user_type_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
     - if @organisation.online_booking_for_particuliers && @organisation.online_booking_for_professionnels
-      p La réservation en ligne est ouverte pour les particuliers et les professionnels. Il pourront se connecter avec #{dsfr_link_to("FranceConnect", "https://franceconnect.gouv.fr/", target: :_blank)} ou #{dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank)}.
+      p La réservation en ligne est ouverte pour les <b>particuliers</b> et les <b>professionnels</b>. Il pourront se connecter avec #{dsfr_link_to("FranceConnect", "https://franceconnect.gouv.fr/", target: :_blank)} ou #{dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank)}.
     - elsif @organisation.online_booking_for_particuliers
-      p La réservation en ligne est ouverte pour les particuliers. Il pourront se connecter avec #{dsfr_link_to("FranceConnect", "https://franceconnect.gouv.fr/", target: :_blank)}.
+      p La réservation en ligne est ouverte pour les <b>particuliers</b>. Il pourront se connecter avec #{dsfr_link_to("FranceConnect", "https://franceconnect.gouv.fr/", target: :_blank)}.
     - elsif @organisation.online_booking_for_professionnels
-      p La réservation en ligne est ouverte pour les professionnels. Il pourront se connecter avec #{dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank)}.
+      p La réservation en ligne est ouverte pour les <b>professionnels</b>. Il pourront se connecter avec #{dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank)}.
 
 .card
   .card-body
     h3.fr-h4 Motifs
+    p La réservation en ligne peut être configurée pour chaque motif de rendez-vous.
+
     ul.list-group.my-1
-      - if @motifs.none?
-        = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
       - @motifs.each do |motif|
         li.card
           .card-header.d-flex.align-items-center
