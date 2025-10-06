@@ -29,7 +29,7 @@ class SendMattermostNotificationsForZammadTicketsJob < ApplicationJob
 
     Rails.logger.debug "Sending message to Mattermost channel"
     MattermostApiClient.send_message(
-      channel: "@adipasquale",
+      channel: "startup-rdv-service-public-dev-notifs",
       text: message,
       username: "Zammad",
       icon_url: "https://raw.githubusercontent.com/zammad/zammad/refs/heads/develop/public/assets/images/logo.svg"
