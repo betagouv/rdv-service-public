@@ -68,7 +68,7 @@ class ZammadApiClient
     def initialize(raw_ticket)
       @raw_ticket = raw_ticket
       ATTRIBUTES.each do |attr|
-        instance_variable_set(:"@#{attr}", raw_ticket.fetch(attr.to_s))
+        instance_variable_set(:"@#{attr}", raw_ticket[attr.to_s])
       end
     end
 

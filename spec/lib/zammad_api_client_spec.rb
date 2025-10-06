@@ -15,8 +15,6 @@ RSpec.describe ZammadApiClient, type: :service do
                 "customer_id": 445,
                 "number": "2204",
                 "title": "J’ai besoin d’aide",
-                "owner": "-",
-                "owner_id": "-"
               }
             JSON
           )
