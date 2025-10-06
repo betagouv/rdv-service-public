@@ -197,10 +197,7 @@ class Rdv < ApplicationRecord
   end
 
   def editable_by_user?
-    !cancelled? &&
-      !collectif? &&
-      motif.rdvs_editable_by_user? &&
-      starts_at > 2.days.from_now &&
+    !cancelled? && !collectif? && motif.rdvs_editable_by_user? && starts_at > 2.days.from_now &&
       motif.bookable_by_everyone_or_bookable_by_invited_users?
   end
 
