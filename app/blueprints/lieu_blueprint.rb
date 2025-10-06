@@ -8,5 +8,4 @@ class LieuBlueprint < Blueprinter::Base
          :latitude,
          :longitude
   field :single_use?, name: :single_use
-  field :enabled?, name: :enabled
 end

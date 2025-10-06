@@ -1,18 +1,7 @@
 class Api::V1::LieuxController < Api::V1::AgentAuthBaseController
   def index
     lieux = policy_scope(Lieu, policy_scope_class: Agent::LieuPolicy::Scope)
-    lieux = lieux.where(organisation_id: params[:organisation_id]) if params[:organisation_id].present?
-    lieux =
-      if params[:disabled].present? && ActiveModel::Type::Boolean.new.cast(params[:disabled])
-        lieux.where(availability: "disabled")
-      else
-        lieux.where.not(availability: "disabled")
-      end
-    if params[:type] == "single_use"
-      lieux = lieux.where(availability: "single_use")
-    elsif params[:type] == "normal"
-      lieux = lieux.where(availability: "enabled")
-    end
+      .where(availability: "enabled")
     render_collection(lieux.order(:id))
   end
 

@@ -11,17 +11,7 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
       tags "Lieux"
       produces "application/json"
       operationId "listLieux"
-      description "Liste les lieux"
-
-      parameter name: :organisation_id, in: :query, type: :integer, description: "Filtre les lieux appartenant à cette organisation", example: 12, required: false
-      parameter name: :disabled, in: :query, type: :boolean, description: "Permet de récupérer les lieux désactivés. Par défaut ils ne sont pas retournés par cette route.", example: true,
-                required: false
-      parameter name: :type, in: :query, type: :string,
-                enum: %w[normal single_use],
-                description:
-                  "Permet de filtrer les lieux par type. Valeurs possibles : 'single_use' pour les lieux ponctuels, 'normal' pour les lieux récurrents. Par défaut tous les types sont retournés.",
-                example: "normal",
-                required: false
+      description "Liste tous les lieux accessibles par l’agent connecté. N’inclut pas les lieux ponctuels ni les lieux désactivés."
 
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }

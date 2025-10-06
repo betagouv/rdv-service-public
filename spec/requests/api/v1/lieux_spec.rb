@@ -16,63 +16,17 @@ RSpec.describe "Lieux API" do
     let!(:other_organisation) { create(:organisation) }
     let!(:lieu_other_org) { create(:lieu, :enabled, organisation: other_organisation, name: "CDAD Lille") }
 
-    it "returns lieux from organizations the agent has access to" do
+    it "returns enabled lieux from organizations the agent has access to" do
       get "/api/v1/lieux", headers: headers
 
       expect(response.status).to eq 200
       expect(parsed_response_body["lieux"]).to be_an(Array)
-      expect(parsed_response_body["lieux"].length).to eq 3
-      names = parsed_response_body["lieux"].pluck("name")
-      expect(names).to include("MJD Nice", "TJ Menton", "Place des Fêtes")
-      expect(names).not_to include("Ancien Tribunal") # disabled lieux are excluded by default
-      expect(names).not_to include("CDAD Lille") # other organisation
-    end
-
-    it "filters by organisation_id when provided" do
-      get "/api/v1/lieux", headers:, params: { organisation_id: organisation.id }
-
-      expect(response.status).to eq 200
-      expect(parsed_response_body["lieux"].length).to eq 3
-      names = parsed_response_body["lieux"].pluck("name")
-      expect(names).to include("MJD Nice", "TJ Menton", "Place des Fêtes")
-      expect(names).not_to include("Ancien Tribunal", "CDAD Lille")
-    end
-
-    it "returns empty array when filtering by organisation_id agent doesn't have access to" do
-      get "/api/v1/lieux", headers:, params: { organisation_id: other_organisation.id }
-
-      expect(response.status).to eq 200
-      expect(parsed_response_body["lieux"].length).to eq 0
-    end
-
-    it "returns disabled lieux when using the disabled filter" do
-      get "/api/v1/lieux", headers:, params: { disabled: true }
-
-      expect(response.status).to eq 200
-      expect(parsed_response_body["lieux"].length).to eq 1
-      names = parsed_response_body["lieux"].pluck("name")
-      expect(names).to include("Ancien Tribunal")
-      expect(names).not_to include("MJD Nice", "TJ Menton")
-    end
-
-    it "filters by type 'normal'" do
-      get "/api/v1/lieux", headers:, params: { type: "normal" }
-
-      expect(response.status).to eq 200
       expect(parsed_response_body["lieux"].length).to eq 2
       names = parsed_response_body["lieux"].pluck("name")
       expect(names).to include("MJD Nice", "TJ Menton")
-      expect(names).not_to include("Place des Fêtes")
-    end
-
-    it "filters by type 'single_use'" do
-      get "/api/v1/lieux", headers:, params: { type: "single_use" }
-
-      expect(response.status).to eq 200
-      expect(parsed_response_body["lieux"].length).to eq 1
-      names = parsed_response_body["lieux"].pluck("name")
-      expect(names).to include("Place des Fêtes")
-      expect(names).not_to include("MJD Nice", "TJ Menton")
+      expect(names).not_to include("Ancien Tribunal") # disabled lieux are excluded by default
+      expect(names).not_to include("CDAD Lille") # other organisation
+      expect(names).not_to include("Place des Fêtes") # lieu ponctuel
     end
 
     it "includes pagination metadata" do
@@ -82,7 +36,7 @@ RSpec.describe "Lieux API" do
       expect(parsed_response_body["meta"]).to include(
         "current_page" => 1,
         "total_pages" => 1,
-        "total_count" => 3
+        "total_count" => 2
       )
     end
 
@@ -125,8 +79,7 @@ RSpec.describe "Lieux API" do
           "organisation_id" => organisation.id,
           "latitude" => be_within(0.0001).of(43.7034),
           "longitude" => be_within(0.0001).of(7.2663),
-          "single_use" => false,
-          "enabled" => true
+          "single_use" => false
         )
       end
     end
