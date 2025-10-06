@@ -4,6 +4,17 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   def show
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
     set_motifs
+    @motifs_with_availabilities = @motifs.map do |motif|
+      {
+        motif: motif,
+        availabilities_count: available_slots_count(motif),
+      }
+    end
+
+    @motifs_with_missing_availabilities = @motifs_with_availabilities.select do |motif_with_availabilities|
+      motif_with_availabilities[:motif].bookable_by_everyone_or_bookable_by_invited_users? &&
+        motif_with_availabilities[:availabilities_count] = 0
+    end.pluck(:motif)
   end
 
   def edit_user_type
@@ -35,5 +46,16 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
 
   def permitted_params
     params.require(:organisation).permit(:online_booking_for_particuliers, :online_booking_for_professionnels)
+  end
+
+  def available_slots_count(motif)
+    if motif.collectif?
+      motif.rdvs.collectif_and_available_for_reservation.count
+    else
+      policy_scope(PlageOuverture, policy_scope_class: Agent::PlageOuverturePolicy::Scope).joins(:motifs).where(
+        organisation: current_organisation,
+        motifs: { id: motif.id }
+      ).in_range(Time.zone.now..).count
+    end
   end
 end

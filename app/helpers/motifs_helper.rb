@@ -123,17 +123,6 @@ module MotifsHelper
         tag.div(value, class: "col-md-8 text-bold"), class: "row")
   end
 
-  def available_slots_count(motif)
-    if motif.collectif?
-      motif.rdvs.collectif_and_available_for_reservation.count
-    else
-      policy_scope(PlageOuverture, policy_scope_class: Agent::PlageOuverturePolicy::Scope).joins(:motifs).where(
-        organisation: current_organisation,
-        motifs: { id: motif.id }
-      ).in_range(Time.zone.now..).count
-    end
-  end
-
   def restriction_for_rdv_to_html(motif)
     auto_link(simple_format(motif.restriction_for_rdv, {}, wrapper_tag: "span"), html: { target: "_blank" })
   end
