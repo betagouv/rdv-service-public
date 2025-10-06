@@ -1,5 +1,7 @@
 - content_for(:title) do
-  = link_to(@feed.title, @feed.link, target: "_blank")
+  h2.h4 = @feed.title
 - @feed.posts.each do |post|
   .m-2
     = render partial: "agents/blog_posts/post", locals: { post: post }
+.m-2
+  = dsfr_link_to("Voir toutes les nouveautés", @feed.link, target: "_blank")
