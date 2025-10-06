@@ -6,8 +6,12 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
     set_motifs
   end
 
-  def update
-    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
+  def edit_user_type
+    authorize(@organisation, :edit?, policy_class: Agent::OrganisationPolicy)
+  end
+
+  def update_user_type
+    authorize(@organisation, :update?, policy_class: Agent::OrganisationPolicy)
 
     if @organisation.update(permitted_params)
       flash[:success] = "Configuration mise à jour"

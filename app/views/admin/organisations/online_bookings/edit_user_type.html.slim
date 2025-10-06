@@ -1,0 +1,13 @@
+= render "admin/organisations/configurations/fil_ariane", current_page_title: "Réservation en ligne"
+- content_for(:menu_item) { "menu-settings" }
+
+- content_for :title do
+  | Réservation en ligne
+
+.card
+  .card-body
+    p Qui participe aux rendez-vous avec les agents de votre organisation ?
+    = simple_form_for @organisation, url: update_user_type_admin_organisation_online_booking_path(@organisation)  do |f|
+      = f.input :online_booking_for_particuliers, label: "des particuliers", hint: sanitize("On leur proposera la connexion avec #{dsfr_link_to('FranceConnect', 'https://franceconnect.gouv.fr/', target: :_blank)}", attributes: %w[href target])
+      = f.input :online_booking_for_professionnels, label: "des professionnels", hint: sanitize("On leur proposera la connexion avec #{dsfr_link_to('ProConnect', 'https://www.proconnect.gouv.fr/', target: :_blank)}", attributes: %w[href target])
+      = f.submit "Enregistrer", class: "fr-btn"

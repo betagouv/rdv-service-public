@@ -6,6 +6,7 @@
 
 .card
   .card-body
+    h3.fr-h4 Lien de réservation
     p Permettez à vos usagers de prendre rendez-vous en ligne, sur les créneaux qui vous conviennent.
 
     p La réservation en ligne peut être configurée pour chaque motif de rendez-vous.
@@ -20,53 +21,62 @@
 
 .card
   .card-body
-    p Qui participe aux rendez-vous avec les agents de votre organisation ?
-    = simple_form_for @organisation, url: admin_organisation_online_booking_path(@organisation)  do |f|
-      = f.input :online_booking_for_particuliers, label: "des particuliers", hint: sanitize("On leur proposera la connexion avec #{dsfr_link_to('FranceConnect', 'https://franceconnect.gouv.fr/', target: :_blank)}", attributes: %w[href target])
-      = f.input :online_booking_for_professionnels, label: "des professionnels", hint: sanitize("On leur proposera la connexion avec #{dsfr_link_to('ProConnect', 'https://www.proconnect.gouv.fr/', target: :_blank)}", attributes: %w[href target])
-      = f.submit "Enregistrer", class: "fr-btn"
+    .d-flex
+      .flex-grow-1
+        h3.fr-h4 Types d'usagers
+      .flex-grow-0
+         = link_to "Modifer", edit_user_type_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
+    - if @organisation.online_booking_for_particuliers && @organisation.online_booking_for_professionnels
+      p La réservation en ligne est ouverte pour les particuliers et les professionnels. Il pourront se connecter avec #{dsfr_link_to("FranceConnect", "https://franceconnect.gouv.fr/", target: :_blank)} ou #{dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank)}.
+    - elsif @organisation.online_booking_for_particuliers
+      p La réservation en ligne est ouverte pour les particuliers. Il pourront se connecter avec #{dsfr_link_to("FranceConnect", "https://franceconnect.gouv.fr/", target: :_blank)}.
+    - elsif @organisation.online_booking_for_professionnels
+      p La réservation en ligne est ouverte pour les professionnels. Il pourront se connecter avec #{dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank)}.
 
-ul.list-group.my-1
-  - if @motifs.none?
-    = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
-  - @motifs.each do |motif|
-    li.card
-      .card-header.d-flex.align-items-center
-        - slots_count = available_slots_count(motif)
-        h4.mr-2
-          - if motif.bookable_by_everyone_or_bookable_by_invited_users? && slots_count > 0
-            i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-          - else
-            i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-          = motif.name
-        .mr-1 = motif.human_attribute_value(:location_type)
-        .mr-1 = "#{motif.default_duration_in_min} min."
-      .card-body
-        .row.mb-1
-          .col-12.d-flex.align-items-center
-            - if motif.bookable_by_everyone_or_bookable_by_invited_users?
-              i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-              .mr-2 Réservable en ligne
-            - else
-              i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-              .mr-2 Ce motif n'est pas réservable en ligne
-            = link_to "modifier", edit_admin_organisation_motif_path(motif.organisation, motif, anchor: "tab_resa_en_ligne")
-
-        .row
-          .col-12.d-flex.align-items-center
-            - if motif.collectif?
-              - if slots_count > 0
+.card
+  .card-body
+    h3.fr-h4 Motifs
+    ul.list-group.my-1
+      - if @motifs.none?
+        = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
+      - @motifs.each do |motif|
+        li.card
+          .card-header.d-flex.align-items-center
+            - slots_count = available_slots_count(motif)
+            h4.mr-2
+              - if motif.bookable_by_everyone_or_bookable_by_invited_users? && slots_count > 0
                 i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-                .mr-2 #{slots_count} rendez-vous avec des places disponibles
               - else
                 i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-                .mr-2 Aucun rendez-vous avec des places disponibles
-              = link_to "ajouter", new_admin_organisation_rdvs_collectif_path(current_organisation, current_agent, motif_id: motif.id)
-            - else
-              - if slots_count > 0
-                i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-                .mr-2 #{pluralize(slots_count, "plage", plural: "plages")} d'ouverture
-              - else
-                i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-                .mr-2 Pas de plages d'ouverture
-              = link_to "ajouter",  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: current_agent, motif_ids: [motif.id])
+              = motif.name
+            .mr-1 = motif.human_attribute_value(:location_type)
+            .mr-1 = "#{motif.default_duration_in_min} min."
+          .card-body
+            .row.mb-1
+              .col-12.d-flex.align-items-center
+                - if motif.bookable_by_everyone_or_bookable_by_invited_users?
+                  i.fa-solid.fa-circle-check.color-scheme-green.mr-1
+                  .mr-2 Réservable en ligne
+                - else
+                  i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
+                  .mr-2 Ce motif n'est pas réservable en ligne
+                = link_to "modifier", edit_admin_organisation_motif_path(motif.organisation, motif, anchor: "tab_resa_en_ligne")
+
+            .row
+              .col-12.d-flex.align-items-center
+                - if motif.collectif?
+                  - if slots_count > 0
+                    i.fa-solid.fa-circle-check.color-scheme-green.mr-1
+                    .mr-2 #{slots_count} rendez-vous avec des places disponibles
+                  - else
+                    i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
+                    .mr-2 Aucun rendez-vous avec des places disponibles
+                  = link_to "ajouter", new_admin_organisation_rdvs_collectif_path(current_organisation, current_agent, motif_id: motif.id)
+                - else
+                  - if slots_count > 0
+                    i.fa-solid.fa-circle-check.color-scheme-green.mr-1
+                    .mr-2 #{pluralize(slots_count, "plage", plural: "plages")} d'ouverture
+                  - else
+                    i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
+                    .mr-2 Pas de plages d'ouverture
+                  = link_to "ajouter",  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: current_agent, motif_ids: [motif.id])
