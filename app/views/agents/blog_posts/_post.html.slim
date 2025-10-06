@@ -2,6 +2,10 @@
   .fr-card__body
     .fr-card__content
       h3.fr-card__title
+        ul.fr-tag-group.float-right[style="padding-top: -6px"]
+          - post.categories.each do |category|
+            li.fr-tag.fr-tag--sm
+              p.my-1 = category
         a[href=post.link target="_blank"]
           = post.title
         .fr-card__detail.fr-icon-calendar-2-fill.rdv-align-items-center.mt-1

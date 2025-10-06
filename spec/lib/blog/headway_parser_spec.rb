@@ -6,6 +6,7 @@ RSpec.describe Blog::HeadwayParser do
     expected_attrs = {
       title: "Mots de passe forts obligatoires",
       description: start_with("Dites adieu aux mots de passe vulnérables ! 👋🏼 Dans le cadre de notre démarche d'homologation"),
+      categories: ["Sécurité"],
       link: "https://headwayapp.co/rdv-service-public-changelog/mots-de-passe-forts-obligatoires-314702",
       published_at: Time.zone.parse("2025-05-05 15:24:46.000000000 +0200"),
     }

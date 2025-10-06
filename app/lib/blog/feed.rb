@@ -15,7 +15,7 @@ module Blog
     end
 
     def self.from_cache = Rails.cache.fetch(CACHE_KEY) { fetch }
-    def self.refresh_cache = Rails.cache.write(CACHE_KEY) { fetch }
+    def self.refresh_cache = Rails.cache.write(CACHE_KEY, fetch)
 
     def self.fetch
       headway_html = Net::HTTP.get_response(URI(HEADWAY_URL)).body

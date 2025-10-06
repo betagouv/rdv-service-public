@@ -1,3 +1,3 @@
 module Blog
-  Post = Data.define(:title, :description, :link, :published_at)
+  Post = Data.define(:title, :description, :categories, :link, :published_at)
 end
