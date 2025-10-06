@@ -3,8 +3,8 @@
 p.mb-1 Allez dans votre agenda externe et ajoutez un nouveau calendrier avec cette URL&nbsp;:
 
 - calendar_url = ics_calendar_url(current_agent.calendar_uid, protocol: request.protocol, format: :ics)
-.input-group.mb-3[data-controller="clipboard"]
-  input.form-control[readonly name="calendar_url" value=calendar_url data-clipboard-target="input-to-copy"]
+.input-group.mb-3
+  input.form-control[readonly value=calendar_url]
   .input-group-append
     = render "common/copy_to_clipboard_button", { clipboard_content: calendar_url }
 
