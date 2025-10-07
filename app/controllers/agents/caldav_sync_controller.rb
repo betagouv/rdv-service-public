@@ -14,7 +14,7 @@ class Agents::CaldavSyncController < AgentAuthController
       caldav_username: params[:caldav_username],
       caldav_password: params[:caldav_password]
     )
-    if check_caldav_configuration?
+    if caldav_config_ok?
       current_agent.save!
       Caldav::MassCreateEventJob.perform_later(current_agent)
     else
@@ -33,7 +33,7 @@ class Agents::CaldavSyncController < AgentAuthController
 
   private
 
-  def check_caldav_configuration?
+  def caldav_config_ok?
     # Pour vérifier la configuration Caldav, on tente de récupérer l'URL principale.
     current_agent.caldav_client.principal_url
 
