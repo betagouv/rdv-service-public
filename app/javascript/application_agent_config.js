@@ -14,7 +14,7 @@ import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
 import { initializeSelect2 } from './components/select2-inputs';
 import 'bootstrap';
-import { Clipboard } from './components/clipboard.js'
+import setupCopyToClipBoardButtons from './components/copy_to_clipboard_button.js'
 
 import './stylesheets/application_agent_config';
 import './stylesheets/print';
@@ -25,5 +25,5 @@ initializeSelect2();
 $(document).on('turbolinks:load', function () {
   DsfrNewPassword();
 
-  new Clipboard();
+  setupCopyToClipBoardButtons()
 });
