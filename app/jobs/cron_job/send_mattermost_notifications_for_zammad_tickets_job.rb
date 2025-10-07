@@ -1,4 +1,4 @@
-class SendMattermostNotificationsForZammadTicketsJob < ApplicationJob
+class CronJob::SendMattermostNotificationsForZammadTicketsJob < CronJob
   include  ActionView::Helpers::DateHelper
   queue_as :latency_5m
 

@@ -108,7 +108,6 @@ plusieurs tables dans la base de données de RDV Insertion.
 |------------|------------------|---------------|------|---------------------|--------------------------------|
 | Navigateur | FranceConnect    | HTTPS (OAuth) | 443  | Paris, France       | smtp-relay.sendinblue.com      |
 | Navigateur | ProConnect       | HTTPS (OAuth) | 443  | France              | auth.agentconnect.gouv.fr      |
-| Navigateur | GitHub           | HTTPS (OAuth) | 443  | USA                 | github.com                     |
 
 ### Inventaire des dépendances
 
@@ -232,13 +231,11 @@ C4Container
 
     System_Ext(france_connect, "FranceConnect", "")
     System_Ext(oauth_microsoft, "Oauth Microsoft", "")
-    System_Ext(oauth_github, "Oauth GitHub", "")
 
     Rel(user, web_app, "HTTPS redirect")
 
     Rel(user, france_connect, "HTTPS redirect")
     Rel(user, oauth_microsoft, "HTTPS redirect")
-    Rel(user, oauth_github, "HTTPS redirect")
 ```
 
 #### Échanges entre l'app et Metabase
@@ -418,12 +415,12 @@ Il existe deux niveaux d'accès pour les super-admins : "complet" et "support". 
 niveau "complet", ainsi que l'équipe produit de RDV Service Public. L'équipe produit de RDV Insertion est quant à elle
 limitée à un niveau "support".
 
-Pour se connecter aux interfaces de super-admin, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alors fournie
-par GitHub doit être présente dans une table `super_admins`, où les entrées sont créées et supprimées à la main lors
+Pour se connecter aux interfaces de super-admin, il faut utiliser ProConnect. L'adresse e-mail du compte ProConnect
+doit être présente dans une table `super_admins`, où les entrées sont créées et supprimées à la main lors
 de l'arrivée et du départ de membres de l'équipe.
 
-Tous les membres de l'équipe faisant partie de [l'organisation `betagouv` sur Github](https://github.com/betagouv),
-ils utilisent forcément une authentification à 2 facteurs (car cette politique est imposée au niveau de l'organisation GitHub).
+Pour assurer la sécurité des comptes super-admins, l’authentification à deux facteurs (2FA) est obligatoire.
+Si celle-ci n’est pas activée, le super-admin ne peut pas se connecter.
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
