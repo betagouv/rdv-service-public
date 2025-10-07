@@ -48,6 +48,7 @@ RSpec.describe Admin::Api::Agenda::AbsencesController, type: :controller do
               "title" => absence.title,
               "start" => absence.starts_at.as_json,
               "end" => absence.ends_at.as_json,
+              "resourceIds" => [absence.agent.id],
               "backgroundColor" => "rgba(52, 57, 58, 0.7)",
               "url" => "/admin/organisations/#{organisation.id}/planning/absences/#{absence.id}/edit",
             },

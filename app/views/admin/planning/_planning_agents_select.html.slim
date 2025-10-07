@@ -1,0 +1,36 @@
+#planning_agents_select.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
+  h1.fr-h2.my-1.d-flex
+    | Planning de
+    .ml-2
+      = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end") do |form|
+        div
+          ruby:
+            # Le select initial contient tous les agents sélectionnés, puis il sera alimenté en Ajax.
+            collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
+            data = {
+              "select2-config": {
+                ajax: {
+                  url: admin_organisation_agents_path(current_organisation),
+                  dataType: "json",
+                  delay: 250,
+                },
+              },
+            }
+
+          = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input"], data: }
+
+        .ml-2.d-flex[style="gap: 0 0.5em"]
+          - if @agents.size == 1 && @multiple_agents_makes_sense
+            button#multi_agent_enable.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
+          #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
+            = form.submit "Appliquer", {class: "fr-btn  "}
+          #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
+            = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: current_agent), class: "fr-btn fr-btn--tertiary"
+
+.container-fluid.px-2.d-flex[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
+  .flex-grow-1
+    = render partial: "admin/planning/planning_tabs"
+
+  = content_for :breadcrumb
+
+.fr-mx-2w= render "layouts/flash"

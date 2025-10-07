@@ -2,7 +2,10 @@ class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
   self.ignored_columns += %w[external_id]
+  include Agent::CaldavConfiguration
   include Agent::FeatureFlags
+
+  encrypts :caldav_password, deterministic: true
 
   # Mixins
   has_paper_trail(

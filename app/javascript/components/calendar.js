@@ -8,7 +8,7 @@ import { defaultFullCalendarConfig, eventRenderer } from  './calendar/utils'
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
 
-class CalendarRdvSolidarites {
+export class AgendaMonoAgent {
 
   constructor() {
     this.calendarEl = document.getElementById('calendar');
@@ -171,7 +171,3 @@ export const handleAjaxError = (response) => {
       alert(`Le chargement du calendrier a échoué avec une erreur ${response.xhr.status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
   }
 };
-
-document.addEventListener('turbolinks:load', function () {
-  new CalendarRdvSolidarites()
-});

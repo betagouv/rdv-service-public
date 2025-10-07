@@ -13,5 +13,8 @@
       location: sanitize(plage_ouverture.lieu_address),
       lieu: sanitize(plage_ouverture.lieu_name),
     },
+
+    # https://fullcalendar.io/docs/resources-and-events
+    resourceIds: [plage_ouverture.agent.id],
   }
 end

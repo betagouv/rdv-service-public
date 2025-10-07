@@ -8,16 +8,25 @@ div.d-flex.justify-content-center.align-items-center.flex-wrap
       h5.card-title Connexion Outlook (Microsoft 365)
       p Vos rendez-vous seront synchronisés automatiquement dans votre agenda Outlook.
       div.rdv-text-align-center
-        = link_to "Connecter mon compte Outlook (Microsoft 365)", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
+        = link_to "Connecter mon compte Outlook (Microsoft 365)", agents_calendar_sync_outlook_sync_path, class: "fr-btn"
 
   div.card.w-100
     div.card-body
       h5.card-title Lien Webcal
       p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Vos rendez-vous seront visibles sur votre agenda externe, mais parfois avec quelques heures de retard.
       div.rdv-text-align-center
-        = link_to "Synchronisation par lien Webcal", agents_calendar_sync_webcal_sync_path, class: "btn btn-primary m-2"
+        = link_to "Synchronisation par lien Webcal", agents_calendar_sync_webcal_sync_path, class: "fr-btn"
+
+  - if current_agent.feature_enabled?(Agent::FeatureFlags::CALDAV_SYNC)
+    div.card.w-100
+      div.card-body
+        h5.card-title Caldav
+        p.fr-badge.fr-badge--pink-tuile Beta
+        p Vous pouvez ajouter automatiquement à votre calendrier professionnel vos RDV pris via RDV Service Public.
+        div.rdv-text-align-center
+          = link_to "Synchronisation Caldav", agents_calendar_sync_caldav_sync_path, class: "fr-btn"
 
   p.lead.font-weight-bold.mt-4 Notifications par email
   p Vous pouvez aussi recevoir un email avec une invitation ics pour chaque rendez-vous, absence et plage d'ouverture.
   div.rdv-text-align-center
-    = link_to t("agents.preferences.show.title"), agents_preferences_path, class: "btn btn-tertiary m-2"
+    = link_to t("agents.preferences.show.title"), agents_preferences_path, class: "fr-btn fr-btn--secondary"

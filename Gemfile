@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.5"
+ruby "3.4.6"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -154,6 +154,8 @@ gem "montrose"
 gem "tod"
 # A ruby implementation of the iCalendar specification (RFC-5545).
 gem "icalendar", "~> 2.5"
+# Caldav client library
+gem "calendav", "~> 0.5"
 
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"
