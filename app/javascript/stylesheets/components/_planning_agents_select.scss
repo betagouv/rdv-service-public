@@ -1,0 +1,8 @@
+#planning_agents_select {
+  form {
+    select#agent_id[multiple] {
+      width: 600px;
+      max-width: 40vw;
+    }
+  }
+}

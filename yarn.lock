@@ -52,7 +52,47 @@
     "@fullcalendar/common" "~5.11.5"
     tslib "^2.1.0"
 
-"@fullcalendar/timegrid@^5.11.5":
+"@fullcalendar/premium-common@~5.11.5":
+  version "5.11.5"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/premium-common/-/premium-common-5.11.5.tgz#06ee413355c7ea4b8047ab6339bd2adf13d2972e"
+  integrity sha512-QMLOm+MKxvsbji4wt7YGqB73IqwHD+y2JD1DZ3t0LCq2Ul6QtQjNxRP7/7DklXPI8atXoJRRXzwqRq+8O9FFHw==
+  dependencies:
+    "@fullcalendar/common" "~5.11.5"
+    tslib "^2.1.0"
+
+"@fullcalendar/resource-common@~5.11.5":
+  version "5.11.5"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/resource-common/-/resource-common-5.11.5.tgz#83d568b4a5a405f84058c435fd6f548b4f464771"
+  integrity sha512-r7Jsd9ge65m9AShyWAOUUdRulyOKI3p0a7lOcilQ1KXDy0d1O2KpPa27sqRzpofLoDoSrteVP7dirU8Lg20sTA==
+  dependencies:
+    "@fullcalendar/common" "~5.11.5"
+    "@fullcalendar/premium-common" "~5.11.5"
+    tslib "^2.1.0"
+
+"@fullcalendar/resource-daygrid@~5.11.5":
+  version "5.11.5"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/resource-daygrid/-/resource-daygrid-5.11.5.tgz#21ac6721abf08a91e55f0c06432d368dc247c1c1"
+  integrity sha512-/QCdpZ1Soy8xfT6W3/JDi4l9ZIsPe92monvH2o7zJ6NcVd5vVQY0AwGYdQNWyNd5WJy5jVC9/pX1lhE0ARup9A==
+  dependencies:
+    "@fullcalendar/common" "~5.11.5"
+    "@fullcalendar/daygrid" "~5.11.5"
+    "@fullcalendar/premium-common" "~5.11.5"
+    "@fullcalendar/resource-common" "~5.11.5"
+    tslib "^2.1.0"
+
+"@fullcalendar/resource-timegrid@^5.11.5":
+  version "5.11.5"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/resource-timegrid/-/resource-timegrid-5.11.5.tgz#c9333874f6537e16ebf9c104eb7fbf112226c270"
+  integrity sha512-pq1tGd5U7oEK5makuEec8zWVTIOCTvHI/xW92fOZoI5JhSq4qAR5xl3SdYCrDheHhtztkQyEmP3bfQnC4dnQSw==
+  dependencies:
+    "@fullcalendar/common" "~5.11.5"
+    "@fullcalendar/premium-common" "~5.11.5"
+    "@fullcalendar/resource-common" "~5.11.5"
+    "@fullcalendar/resource-daygrid" "~5.11.5"
+    "@fullcalendar/timegrid" "~5.11.5"
+    tslib "^2.1.0"
+
+"@fullcalendar/timegrid@^5.11.5", "@fullcalendar/timegrid@~5.11.5":
   version "5.11.5"
   resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-5.11.5.tgz#b2a823c6102acaa58f1958fb1a67a5a1951bc076"
   integrity sha512-OEH5mrTclwxgUbb51N6qr7ifzNkR74ygUEFpiMLyyUjkp7a76N6BsAP5mBQnTOpTTUZBu9tAOmfcnvi7skUayQ==
