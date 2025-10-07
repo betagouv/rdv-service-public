@@ -17,7 +17,7 @@ RSpec.describe "Agent can list RDVs" do
     create(:rdv, organisation: organisation, agents: [current_agent], users: [user], motif: motif)
     user.annotate!("Ma remarque", territory: organisation.territory)
 
-    visit admin_organisation_rdvs_url(organisation, current_agent)
+    visit admin_organisation_rdvs_url(organisation)
     expect(page).to have_content(user.full_name)
     expect(page).to have_content(motif.name)
     expect(page.html).to include("Ma remarque")
@@ -34,7 +34,7 @@ RSpec.describe "Agent can list RDVs" do
     end
 
     it "displays RDVs whose motif are in the same service as current agent" do
-      visit admin_organisation_rdvs_url(organisation, current_agent)
+      visit admin_organisation_rdvs_url(organisation)
       expect(page).to have_content(current_agent.rdvs.last.motif.name)
       expect(page).to have_content(agent_from_same_service.rdvs.last.motif.name)
       expect(page).not_to have_content(agent_from_other_service.rdvs.last.motif.name)
@@ -53,7 +53,7 @@ RSpec.describe "Agent can list RDVs" do
     end
 
     it "displays deleted users without a link to their profile" do
-      visit admin_organisation_rdvs_url(organisation, current_agent)
+      visit admin_organisation_rdvs_url(organisation)
 
       # Active user has a link to her profile
       expect(page).to have_link(active_user.full_name, href: user_profile_path(active_user))
@@ -70,7 +70,7 @@ RSpec.describe "Agent can list RDVs" do
     end
 
     it "displays RDVs list with no error" do
-      visit admin_organisation_rdvs_url(organisation, current_agent)
+      visit admin_organisation_rdvs_url(organisation)
 
       expect(page).to have_content("RDV téléphonique")
       expect(page).to have_content(current_agent.first_name)

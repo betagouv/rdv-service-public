@@ -63,7 +63,7 @@
           span.mr-2.fr-pt-1v Nombre de RDV par page :
           .fr-pagination__list.rdv-per-page-list
             - Admin::RdvsController::PERMITTED_PER_PAGE.each do |per|
-              - path = admin_organisation_rdvs_path(current_organisation, @form.to_query.merge(per:, page: params[:page]))
+              - path = admin_organisation_rdvs_path(@form.to_query.merge(per:, page: params[:page], organisation_id: current_organisation.id))
               - if per == params.fetch(:per, 10).to_i
                 = link_to per, path, class: "fr-pagination__link fr-pagination__link--current", "aria-current": "page"
               - else
