@@ -89,7 +89,7 @@ Rails.application.configure do
       class: "CronJob::NotifySmsFactorLowCredits",
     },
     send_mattermost_notifications_for_zammad_tickets: {
-      cron: "every day at 10:15 Europe/Paris",
+      cron: "every weekday at 10:15 Europe/Paris",
       class: "CronJob::SendMattermostNotificationsForZammadTicketsJob",
     },
   }
