@@ -94,10 +94,10 @@ class Admin::MotifsController < AgentAuthController
 
   def update_online_booking
     @motif = Motif.find(params[:motif_id])
-    authorize(@motif, :update?, policy_class: Agent::OrganisationPolicy)
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
 
     @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
-    authorize(@motif, policy_class: Agent::MotifPolicy)
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
 
     if @motif.save
       flash[:success] = "Le motif #{link_to_motif(@motif)} a été modifié."
