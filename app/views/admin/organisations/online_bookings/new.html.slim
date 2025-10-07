@@ -10,6 +10,25 @@
 
   .card
     .card-body
-      Vous pouvez activer la réservation en ligne pour permmettre à vosLes usagers pourront ensuite prendre des rendez-vous en toute autonomie sur les plages d'ouverture de votre choix.
+      p Vous pouvez activer la réservation en ligne pour permettre à vos usagers de prendre des rendez-vous en autonomie.
+
+      p Vous garder le contrôle : la prise de rendez-vous sera possible uniquement sur les plages d'ouverture de votre choix, et pour les motifs de votre choix.
+
+      = form_for @online_booking_motifs_form, url: admin_organisation_online_booking_path(current_organisation), method: :post, builder: Dsfr::FormBuilder do |f|
+        fieldset.fr-fieldset aria-labelledby="checkboxes-legend checkboxes-messages" data-controller="checkbox-select-all"
+          legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-h4#checkboxes-legend
+            | Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?
+
+          .fr-fieldset__element
+            .fr-checkbox-group
+              input.fr-mr-1w type="checkbox" data-checkbox-select-all-target="checkboxAll"
+              label.fr-label Tout sélectionner
+
+          - @motifs.each do |motif|
+            .fr-fieldset__element
+              .fr-checkbox-group
+                = f.check_box :motif_ids, { multiple: true, data: { checkbox_select_all_target: "checkbox" } }, motif.id, false
+                = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "fr-label"
+        = f.submit "Enregistrer", class: "fr-btn"
 
 
