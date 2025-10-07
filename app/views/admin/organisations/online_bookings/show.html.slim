@@ -21,15 +21,19 @@
   .card-body
     h3.fr-h4 Lien de réservation
 
-    p Ce lien permet de  prendre rendez-vous avec votre organisation sur les plages d'ouverture disponibles.
-    p Vous pouvez l'intégrer à votre site internet, votre signature d'email, ou l'envoyer directement à vos usagers.
-
     - if current_organisation.sectorized?
       p Cette organisation est sectorisée, les usagers peuvent prendre rendez-vous en saisissant leur adresse sur la page d'accueil&nbsp;:
       = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: prendre_rdv_url }
     - else
       - org_booking_link = public_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug)
       = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: org_booking_link }
+
+    p.fr-mt-2w Ce lien permet de  prendre rendez-vous avec votre organisation sur les plages d'ouverture disponibles.
+
+    p Vous pouvez l'intégrer à votre site internet, votre signature d'email, ou l'envoyer directement à vos usagers.
+    /p.fr-text--sm
+      = icon("fr-icon-lightbulb-line", class: "fr-mr-1w fr-icon--sm")
+      | Vous pouvez l'intégrer à votre site internet, votre signature d'email, ou l'envoyer directement à vos usagers.
 
 .card
   .card-body

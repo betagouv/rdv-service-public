@@ -16,7 +16,7 @@
             .col-md-12
               = label_tag do
                 = f.radio_button(:bookable_by, :agents, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
-                span.ml-1 Fermer la réservation en ligne
+                span.ml-1 Fermé à la réservation en ligne
                 p.text-muted.font-14.mt-1
                   = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents"))
 
@@ -24,7 +24,7 @@
               .col-md-12
                 = label_tag do
                   = f.radio_button(:bookable_by, :agents_and_prescripteurs, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
-                  span.ml-1 Ouvrir la réservation en ligne uniquement aux prescripteurs
+                  span.ml-1 Ouvert à la réservation en ligne uniquement pour les prescripteurs
                   p.text-muted.font-14.mt-1
                     / Le scrubber: :prune permet de conserver le target _blank sur un lien
                     = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"), scrubber: :prune)
@@ -42,7 +42,7 @@
             .col-md-12
               = label_tag do
                 = f.radio_button(:bookable_by, :everyone, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
-                span.ml-1 Ouvrir la réservation en ligne à tout le monde
+                span.ml-1 Ouvert à la réservation en ligne pour tout le monde
                 p.text-muted.font-14.mt-1 N'importe qui ayant accès à votre lien de prise de rendez-vous pourra prendre rendez vous pour ce motif.
 
       .card.collapse [data-motif-form-target="bookingDelaySection"]
