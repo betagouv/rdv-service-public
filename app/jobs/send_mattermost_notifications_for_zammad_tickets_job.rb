@@ -15,7 +15,7 @@ class SendMattermostNotificationsForZammadTicketsJob < ApplicationJob
     end
     ticket_counts = assigned_tickets_counts_by_agent_email.keys.sort.map { "#{assigned_tickets_counts_by_agent_email[_1]}&nbsp;ticket(s)" }
     message = <<~MSG
-      #{unassigned_tickets.count} tickets non-assignés en attente de réponse. Le plus ancien attend une réponse depuis #{time_ago_in_words(unassigned_tickets.map(&:awaiting_response_since).min)} [Voir ces 10 tickets](https://zammad10.ethibox.fr/#ticket/view/all_unassigned)
+      #{unassigned_tickets.count} tickets non-assignés en attente de réponse. Le plus ancien attend une réponse depuis #{time_ago_in_words(unassigned_tickets.map(&:awaiting_response_since).min)} [Voir ces #{unassigned_tickets.count} tickets](https://zammad10.ethibox.fr/#ticket/view/all_unassigned)
 
       #{assigned_tickets.count} tickets assignés en attente de réponse. Le plus ancien attend depuis #{time_ago_in_words(assigned_tickets.map(&:awaiting_response_since).min)}.
 
