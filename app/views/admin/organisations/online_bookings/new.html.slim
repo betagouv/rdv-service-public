@@ -16,12 +16,19 @@
 
       = form_for @online_booking_motifs_form, url: admin_organisation_online_booking_path(current_organisation), method: :post, builder: Dsfr::FormBuilder do |f|
         fieldset.fr-fieldset aria-labelledby="checkboxes-legend checkboxes-messages" data-controller="checkbox-select-all"
-          legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-h4#checkboxes-legend
+          legend.fr-fieldset__legend--bold.fr-fieldset__legend#checkboxes-legend
             | Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?
 
           - @motifs.each do |motif|
             .fr-fieldset__element
               .fr-checkbox-group
                 = f.check_box :motif_ids, { multiple: true, data: { checkbox_select_all_target: "checkbox" } }, motif.id, false
-                = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "fr-label"
+                = f.label "motif_ids_#{motif.id}", class: "fr-label" do
+                  = motif.name
+                  span.fr-hint-text
+                    = location_type_icon(motif.location_type, class: "fr-mr-1w fr-icon--sm")
+                    = motif.human_attribute_value(:location_type)
+                    = " · "
+                    = "#{motif.default_duration_in_min} mn"
+
         = f.submit "Enregistrer", class: "fr-btn"
