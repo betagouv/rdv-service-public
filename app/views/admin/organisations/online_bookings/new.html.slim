@@ -19,16 +19,9 @@
           legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-h4#checkboxes-legend
             | Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?
 
-          .fr-fieldset__element
-            .fr-checkbox-group
-              input.fr-mr-1w type="checkbox" data-checkbox-select-all-target="checkboxAll"
-              label.fr-label Tout sélectionner
-
           - @motifs.each do |motif|
             .fr-fieldset__element
               .fr-checkbox-group
                 = f.check_box :motif_ids, { multiple: true, data: { checkbox_select_all_target: "checkbox" } }, motif.id, false
                 = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "fr-label"
         = f.submit "Enregistrer", class: "fr-btn"
-
-

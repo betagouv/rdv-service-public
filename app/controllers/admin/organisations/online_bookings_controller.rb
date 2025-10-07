@@ -30,6 +30,17 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
 
   def create
     authorize(@organisation, :edit?, policy_class: Agent::OrganisationPolicy)
+
+    motif_ids = params.require(:admin_online_booking_motifs_form).permit(motif_ids: []).fetch(:motif_ids)
+
+    # TODO: ajouter un appel de policy scope
+    motifs = current_organisation.motifs.where(id: motif_ids)
+
+    motifs.each do |motif|
+      motif.update!(bookable_by: :everyone)
+    end
+
+    redirect_to admin_organisation_online_booking_path(current_organisation)
   end
 
   def edit_user_type
