@@ -1,4 +1,10 @@
 class Api::V1::LieuxController < Api::V1::AgentAuthBaseController
+  def index
+    lieux = policy_scope(Lieu, policy_scope_class: Agent::LieuPolicy::Scope)
+      .where(availability: "enabled")
+    render_collection(lieux.order(:id))
+  end
+
   def create
     lieu = Lieu.new(params.permit(:organisation_id, :name, :address, :latitude, :longitude, :phone_number))
 
