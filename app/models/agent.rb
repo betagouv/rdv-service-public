@@ -303,4 +303,15 @@ class Agent < ApplicationRecord
       throw :abort
     end
   end
+
+  # on retire les espaces parfois présents dans le SIRET ProConnect
+  def proconnect_siret=(value)
+    if value.present?
+      formatted = value.gsub(/\s/, "")
+      super(formatted)
+      Sentry.capture_message("Format de SIRET invalide: #{value.inspect}") unless formatted.match?(/\A\d{14}\z/)
+    else
+      super(nil)
+    end
+  end
 end
