@@ -227,12 +227,12 @@ RSpec.describe Users::RdvsController, type: :controller do
     context "when the rdv is created by an agent" do
       let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: agent, organisation:) }
 
-      it "does show link to edit" do
+      it "show links to edit and to cancel" do
         get :show, params: { id: rdv.id }
 
         expect(response).to be_successful
         expect(response.body).to match(/Votre RDV/)
-        expect(response.body).not_to match(/Déplacer le RDV/)
+        expect(response.body).to match(/Déplacer le RDV/)
         expect(response.body).to match(/Annuler le RDV/)
       end
 
@@ -507,11 +507,10 @@ RSpec.describe Users::RdvsController, type: :controller do
     context "when the rdv is created by an agent" do
       let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: agent) }
 
-      it "is not authorized" do
-        subject
-        expect(response).to redirect_to(users_rdvs_path)
-        expect(flash[:error]).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
-      end
+      before { subject }
+
+      it { expect(response.body).to include("Modification du RDV") }
+      it { expect(response.body).to include("Confirmer le nouveau créneau") }
     end
   end
 
