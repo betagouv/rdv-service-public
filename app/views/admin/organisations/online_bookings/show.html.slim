@@ -4,7 +4,7 @@
 - content_for :title do
   | Réservation en ligne
 
-/- if @motifs_with_missing_availabilities.any?
+- if @motifs_with_missing_availabilities.any?
   .fr-callout.fr-callout--yellow-moutarde.fr-pb-2w
     - count = @motifs_with_missing_availabilities.count
     - if count == 1
