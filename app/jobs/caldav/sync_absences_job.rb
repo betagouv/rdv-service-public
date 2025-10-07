@@ -16,6 +16,7 @@ module Caldav
             upsert_absence(event)
           end
         end
+        @agent.update!(caldav_sync_token: collection.sync_token)
       else
         sync_token = @agent.caldav_client.calendars.find(@agent.caldav_agenda_url, sync: true).sync_token
         events = @agent.caldav_client.events.list(@agent.caldav_agenda_url)
