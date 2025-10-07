@@ -21,6 +21,10 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
     end.pluck(:motif)
 
     @unavailable_motifs = @motifs.not_bookable_by_everyone_or_not_bookable_by_invited_users
+
+    if @motifs_and_availabilities.empty?
+      render :new
+    end
   end
 
   def edit_user_type

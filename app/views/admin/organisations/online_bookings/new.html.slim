@@ -1,0 +1,15 @@
+= render "admin/organisations/configurations/fil_ariane", current_page_title: "Réservation en ligne"
+- content_for(:menu_item) { "menu-settings" }
+
+- content_for :title do
+  | Réservation en ligne
+
+- if @motifs.none?
+  = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
+- else
+
+  .card
+    .card-body
+      Vous pouvez activer la réservation en ligne pour permmettre à vosLes usagers pourront ensuite prendre des rendez-vous en toute autonomie sur les plages d'ouverture de votre choix.
+
+

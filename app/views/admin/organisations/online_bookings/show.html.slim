@@ -4,9 +4,6 @@
 - content_for :title do
   | Réservation en ligne
 
-- if @motifs.none?
-  = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
-
 /- if @motifs_with_missing_availabilities.any?
   .fr-callout.fr-callout--yellow-moutarde.fr-pb-2w
     - count = @motifs_with_missing_availabilities.count
