@@ -51,6 +51,8 @@ class Agent < ApplicationRecord
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
   normalizes :email, with: ->(email) { email.downcase }
+  # on retire les espaces parfois présents dans les SIRET ProConnect
+  normalizes :proconnect_siret, with: -> { _1.presence&.gsub(/\s/, "") }
 
   enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
@@ -301,17 +303,6 @@ class Agent < ApplicationRecord
     if rdvs.any?
       errors.add(:base, "Un agent ne peut pas être définitivement supprimé si il a des RDVs")
       throw :abort
-    end
-  end
-
-  # on retire les espaces parfois présents dans le SIRET ProConnect
-  def proconnect_siret=(value)
-    if value.present?
-      formatted = value.gsub(/\s/, "")
-      super(formatted)
-      Sentry.capture_message("Format de SIRET invalide: #{value.inspect}") unless formatted.match?(/\A\d{14}\z/)
-    else
-      super(nil)
     end
   end
 end
