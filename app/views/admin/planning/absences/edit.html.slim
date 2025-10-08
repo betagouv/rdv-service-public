@@ -16,6 +16,18 @@
             titles_and_paths: [["Accueil", root_path], ["Indisponibilités de #{@absence.agent.full_name_and_service}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
             current_page_title: yield(:title)
 
+- content_for :breadcrumb do
+  - @absence.external_references.each do |reference|
+    = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-btn fr-btn--secondary fr-mr-2w")
+
+- reference_to_rdv_on_old_instance = CopyPlanningToNewInstanceJob.external_reference_to_rdv_on_old_instance(@absence)
+- if reference_to_rdv_on_old_instance
+  .fr-notice.fr-notice--info.fr-mb-3w.fr-mt-2w
+    .fr-notice__body
+      p.fr-mb-0.fr-mx-2w
+        span.fr-notice__desc
+        | Cette indisponibilité correspond à un rendez-vous pris sur RDV Aide Numérique avant la migration sur RDV Service Public.
+
 .row.justify-content-center
   .col-md-6
     .card

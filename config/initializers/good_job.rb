@@ -52,6 +52,10 @@ Rails.application.configure do
       cron: "every day at 22:30 Europe/Paris",
       class: "CronJob::DestroyOldPlageOuvertureJob",
     },
+    destroy_old_absences_job: {
+      cron: "every day at 22:35 Europe/Paris",
+      class: "CronJob::DestroyOldAbsencesJob",
+    },
     destroy_old_oauth_objects: {
       cron: "every day at 22:45 Europe/Paris",
       class: "CronJob::DestroyOldOauthObjects",
@@ -83,6 +87,10 @@ Rails.application.configure do
     notify_sms_factor_low_credits: {
       cron: "every day at 08:00 Europe/Paris",
       class: "CronJob::NotifySmsFactorLowCredits",
+    },
+    send_mattermost_notifications_for_zammad_tickets: {
+      cron: "every weekday at 10:15 Europe/Paris",
+      class: "CronJob::SendMattermostNotificationsForZammadTicketsJob",
     },
   }
 end

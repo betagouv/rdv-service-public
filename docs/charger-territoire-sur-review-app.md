@@ -21,7 +21,7 @@ bundle exec rails runner scripts/tronquer_et_anonymiser_db.rb ID_TERRITOIRE
 Il faut d'abord supprimer les données existantes sur la review app. Pour ce faire, lancer une console
 
 ```bash
-REVIEW_APP_NAME=demo-rdv-solidarites-prXXXX
+REVIEW_APP_NAME=rdv-service-public-review-app-prXXXX
 scalingo --app $REVIEW_APP_NAME --region osc-secnum-fr1 pgsql-console
 ```
 

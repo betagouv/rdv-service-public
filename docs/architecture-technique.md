@@ -1,18 +1,12 @@
 # Dossier technique
 
-> Ce dossier a pour but de présenter l’architecture technique du SI. Il n’est par conséquent ni un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
+> Ce dossier présente l’architecture technique du SI. Il n’est pas un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
 
 **Nom du projet :** RDV Service Public
 
 **Dépôt de code :** https://github.com/betagouv/rdv-service-public
 
 **Hébergeur :** Scalingo, Paris (région Scalingo "osc-secnum-fr1", région Outscale "cloudgouv-eu-west-1")
-
-**Décision d’homologation :** !!<date>!!
-
-**France Relance :** ❌
-
-**Inclusion numérique :** ✅
 
 ## Suivi du document
 
@@ -114,7 +108,6 @@ plusieurs tables dans la base de données de RDV Insertion.
 |------------|------------------|---------------|------|---------------------|--------------------------------|
 | Navigateur | FranceConnect    | HTTPS (OAuth) | 443  | Paris, France       | smtp-relay.sendinblue.com      |
 | Navigateur | ProConnect       | HTTPS (OAuth) | 443  | France              | auth.agentconnect.gouv.fr      |
-| Navigateur | GitHub           | HTTPS (OAuth) | 443  | USA                 | github.com                     |
 
 ### Inventaire des dépendances
 
@@ -238,13 +231,11 @@ C4Container
 
     System_Ext(france_connect, "FranceConnect", "")
     System_Ext(oauth_microsoft, "Oauth Microsoft", "")
-    System_Ext(oauth_github, "Oauth GitHub", "")
 
     Rel(user, web_app, "HTTPS redirect")
 
     Rel(user, france_connect, "HTTPS redirect")
     Rel(user, oauth_microsoft, "HTTPS redirect")
-    Rel(user, oauth_github, "HTTPS redirect")
 ```
 
 #### Échanges entre l'app et Metabase
@@ -313,6 +304,7 @@ Nous avons les applications suivantes :
 - `osc-secnum-fr1/production-rdv-mairie` : appli métier de production
 - `osc-secnum-fr1/demo-rdv-solidarites` : appli métier de préproduction
 - `osc-secnum-fr1/staging-rdv-service-public` : appli métier de préproduction
+- `osc-secnum-fr1/rdv-service-public-review-app` : appli template pour générer les review apps
 - `osc-secnum-fr1/rdv-service-public-etl` : appli de tooling de production
 - `osc-secnum-fr1/rdv-service-public-etl-staging` : appli de tooling de préproduction
 - `osc-secnum-fr1/rdv-service-public-metabase` : appli de tooling de production
@@ -355,7 +347,7 @@ notre checklist d'onboarding un point précisant qu'il faut impérativement acti
 TOTP, Scalingo propose une procédure qui inclut la vérification de l'identité de l'utilisateur concerné par la
 transmission d'un document d'identité.
 
-Note : les review apps sont créées manuellement et héritent de l'app de démo. Le fichier `scalingo.json` contient la liste des variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de la création d'une review app. Les review apps sont automatiquement détruites lors de la fermeture d'une PR.
+Note : les review apps sont créées manuellement et héritent de l'app `rdv-service-public-review-app`. Le fichier `scalingo.json` contient la liste des variables nécessaires au fonctionnement d'une review app. Une review app est automatiquement détruite lors de la fermeture de la PR liée.
 
 ### Détection de fuite de secrets
 
@@ -423,12 +415,12 @@ Il existe deux niveaux d'accès pour les super-admins : "complet" et "support". 
 niveau "complet", ainsi que l'équipe produit de RDV Service Public. L'équipe produit de RDV Insertion est quant à elle
 limitée à un niveau "support".
 
-Pour se connecter aux interfaces de super-admin, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alors fournie
-par GitHub doit être présente dans une table `super_admins`, où les entrées sont créées et supprimées à la main lors
+Pour se connecter aux interfaces de super-admin, il faut utiliser ProConnect. L'adresse e-mail du compte ProConnect
+doit être présente dans une table `super_admins`, où les entrées sont créées et supprimées à la main lors
 de l'arrivée et du départ de membres de l'équipe.
 
-Tous les membres de l'équipe faisant partie de [l'organisation `betagouv` sur Github](https://github.com/betagouv),
-ils utilisent forcément une authentification à 2 facteurs (car cette politique est imposée au niveau de l'organisation GitHub).
+Pour assurer la sécurité des comptes super-admins, l’authentification à deux facteurs (2FA) est obligatoire.
+Si celle-ci n’est pas activée, le super-admin ne peut pas se connecter.
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
@@ -562,6 +554,7 @@ Pour les membres de l'équipe technique, on prend ces mesures supplémentaires :
 Voici les suppressions automatiques mises en place :
 - Suppression des RDVs de plus de 2 ans
 - Suppression des plages d'ouverture de plus de 1 an
+- Suppression des indisponibilités de plus de 2 ans
 - Suppression des logs PaperTrail (auditing) de plus de 1 an contenant des données personnelles autres que l'identité de la personne dont on journalise l'action.
 - Anonymisation des logs PaperTrail(auditing) de plus de 1 an ne contenant pas données personnelles autre que l'identité de la personne dont on journalise l'action
 - Suppression des logs PaperTrail (auditing) de plus de 5 ans

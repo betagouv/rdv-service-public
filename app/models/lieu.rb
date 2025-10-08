@@ -20,12 +20,12 @@ class Lieu < ApplicationRecord
   has_many :plage_ouvertures_not_expired, -> { not_expired },
            class_name: "PlageOuverture", dependent: :restrict_with_error, inverse_of: :lieu
   has_many :plage_ouvertures # rubocop:disable Rails/HasManyOrHasOneDependent
-
-  has_many :webhook_endpoints, through: :organisation
+  has_many :external_references, as: :item, dependent: :destroy
 
   # Through relations
   has_many :motifs, through: :plage_ouvertures
   has_many :agents, through: :plage_ouvertures
+  has_many :webhook_endpoints, through: :organisation
 
   # Validations
   validates :name, :address, :availability, presence: true

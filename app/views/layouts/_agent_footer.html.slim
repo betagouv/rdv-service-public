@@ -3,7 +3,7 @@ footer.footer#footer[role="contentinfo"]
     .row
       .col-md-12
         .d-none.d-md-flex.flex-wrap.flex-gap-1em.justify-content-end.mb-2
-          = link_to "Accessibilité : partiellement conforme", accessibility_path, class: "fr-link"
+          = link_to "Accessibilité : partiellement conforme", accessibilite_path, class: "fr-link"
           = link_to "https://github.com/betagouv/rdv-service-public/commit/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de #{current_domain.name}", target: "_blank", class: "fr-link" do
             = ENV["RDV_SOLIDARITES_VERSION"]
           = link_to mentions_legales_path, class: "fr-link" do

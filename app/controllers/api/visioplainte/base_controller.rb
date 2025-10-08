@@ -12,7 +12,7 @@ class Api::Visioplainte::BaseController < ActionController::Base # rubocop:disab
     # On met plusieurs guard clauses de sécurité pour s'assurer qu'on ne peut appeler cette méthode destructive que sur la staging
     return unless ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
     return unless ENV["VISIOPLAINTE_API_KEY"].start_with?("visioplainte-staging-api-key-")
-    return unless ENV["FRANCECONNECT_HOST"] == "fcp.integ01.dev-franceconnect.fr"
+    return unless ENV["FRANCECONNECT_V2_BASE_URL"] == "https://fcp-low.sbx.dev-franceconnect.fr/api/v2"
 
     territory = Territory.visioplainte.first
 

@@ -1,10 +1,6 @@
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
-  ## OAUTH ##
-  devise_scope :user do
-    get "omniauth/franceconnect/callback" => "omniauth_callbacks#franceconnect"
-  end
 
   get "agent_connect/auth" => "agent_connect#auth"
   get "agent_connect/callback" => "agent_connect#callback"
@@ -119,6 +115,7 @@ Rails.application.routes.draw do
     namespace :agents do
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
+        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
@@ -149,13 +146,13 @@ Rails.application.routes.draw do
       end
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
-      resources :instance_exports, only: %i[index new edit update show]
+      resources :instance_exports, only: %i[index]
       resources :exports, only: %i[index] do
         get :download
       end
     end
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
-    get "omniauth/rdvservicepublic/callback" => "agents/instance_exports#oauth_callback"
+    get "omniauth/rdvservicepublic/callback" => "admin/instance_exports#oauth_callback"
   end
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
@@ -179,6 +176,13 @@ Rails.application.routes.draw do
             end
           end
           resources :webhook_endpoints, except: %i[show]
+          resources :organisations, only: %i[new create index] do
+            member do
+              patch :close
+              get :confirm_reopen
+              post :reopen
+            end
+          end
           resources :agents, only: %i[index new create edit] do
             member do
               put :territory_admin
@@ -228,6 +232,11 @@ Rails.application.routes.draw do
         get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
         get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
 
+        resources :instance_exports, only: %i[index new edit update show] do
+          member do
+            patch :archive_motifs
+          end
+        end
         resources :lieux, except: :show do
           member do
             post :close
@@ -322,7 +331,7 @@ Rails.application.routes.draw do
     get "confirmation"
   end
 
-  %w[mds accessibility mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
+  %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
 

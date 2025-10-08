@@ -68,7 +68,14 @@
         .fr-tile__body
           .fr-tile__content
             h3.fr-tile__title
-              = link_to("Informations de contact", admin_organisation_path(current_organisation))
+              = link_to("Réservation en ligne", admin_organisation_online_booking_path(current_organisation))
+
+    .fr-col-12.fr-col-md-4.fr-mb-2w
+      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+        .fr-tile__body
+          .fr-tile__content
+            h3.fr-tile__title
+              = link_to("Informations de l'organisation", admin_organisation_path(current_organisation))
             p.fr-tile__desc
               = @organisation.name
               br
@@ -78,12 +85,13 @@
               - else
                 i Pas d'informations de contact
 
-    .fr-col-12.fr-col-md-4.fr-mb-2w
-      .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
-        .fr-tile__body
-          .fr-tile__content
-            h3.fr-tile__title
-              = link_to("Réservation en ligne", admin_organisation_online_booking_path(current_organisation))
+    - if current_domain == Domain::RDV_AIDE_NUMERIQUE
+      .fr-col-12.fr-col-md-4.fr-mb-2w
+        .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
+          .fr-tile__body
+            .fr-tile__content
+              h3.fr-tile__title
+                = link_to("Migration vers RDV Service Public", admin_organisation_instance_exports_path(current_organisation))
 
   / Un bricolage pour éviter que le footer déborde sur les tuiles
   br.fr-my-2w

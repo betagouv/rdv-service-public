@@ -7,14 +7,33 @@
       "generator": "url"
     },
 
+    "DB_SEEDS_USERS_AND_AGENTS_PASSWORD": {
+      "description": "Mot de passe par défaut pour tous les comptes agents et usagers des seeds",
+      "value": "Rdvservicepublictest1!"
+    },
+
     "ADMIN_BASIC_AUTH_PASSWORD": {
       "description": "Basic auth password for review apps super admin",
       "generator": "secret"
     },
+
     "SECRET_KEY_BASE": {
       "description": "See: https://guides.rubyonrails.org/security.html#custom-credentials",
       "generator": "secret"
     },
+    "ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY": {
+      "description": "See: https://guides.rubyonrails.org/active_record_encryption.html#setup",
+      "generator": "secret"
+    },
+    "ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT": {
+      "description": "See: https://guides.rubyonrails.org/active_record_encryption.html#setup",
+      "generator": "secret"
+    },
+    "ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY": {
+      "description": "See: https://guides.rubyonrails.org/active_record_encryption.html#setup",
+      "generator": "secret"
+    },
+
     "RDV_SOLIDARITES_INSTANCE_NAME": {
       "description": "Indicate that this is not the production website.",
       "generator": "template",
@@ -30,56 +49,6 @@
     "DISABLE_SENDING_EMAILS": {
       "description": "Delete that variable (and setup Sendinblue password) to enable sending email in a review app",
       "value": "true"
-    },
-    "SENDINBLUE_PASSWORD": {
-      "description": "Password pour Sendinblue",
-      "value": "change_me_if_needed"
-    },
-
-    "ALTERNATE_SMTP_USERNAME": {
-      "description": "Config SMTP du système SFR with mail2SMS - seulement utilisée par le 92",
-      "value": "change_me_if_needed"
-    },
-    "ALTERNATE_SMTP_PASSWORD": {
-      "description": "Config SMTP du système SFR with mail2SMS - seulement utilisée par le 92",
-      "value": "change_me_if_needed"
-    },
-
-    "DEFAULT_SMS_PROVIDER": {
-      "description": "Système d'envoi des SMS par défaut : cette valeur ne fait que logger l'envoi mais n'envoie rien",
-      "value": "debug_logger"
-    },
-    "DEFAULT_SMS_PROVIDER_KEY": {
-      "description": "Credentials des SMS par défaut : définir cette valeur si l'on veut tester un système d'envoi",
-      "value": "change_me_if_needed"
-    },
-
-    "FRANCECONNECT_APP_ID": {
-      "description": "App ID de notre app FranceConnect ; à priori désactivé sur les review apps car le mécanisme de callback pointe vers la prod.",
-      "value": "change_me_if_needed"
-    },
-    "FRANCECONNECT_APP_SECRET": {
-      "description": "App secret de notre app FranceConnect ; à priori désactivé sur les review apps car le mécanisme de callback pointe vers la prod.",
-      "value": "change_me_if_needed"
-    },
-
-    "GITHUB_APP_ID": {
-      "description": " Identifiant de notre app GitHub utilisée pour se connecter en super admin. Nous avons une app pour la prod, une pour la démo, mais rien pour les review apps.",
-      "value": "change_me_if_needed"
-    },
-      "GITHUB_APP_SECRET": {
-      "description": " Password de notre app GitHub utilisée pour se connecter en super admin. Nous avons une app pour la prod, une pour la démo, mais rien pour les review apps.",
-      "value": "change_me_if_needed"
-    },
-
-    "BREVO_INBOUND_PASSWORD": {
-      "description": "Cette valeur est passée en paramètre dans le webhook que nous avons défini chez SendInBlue. C'est un secret, donc non hérité en review app.",
-      "value": "change_me_if_needed"
-    },
-
-    "SKYLIGHT_AUTHENTICATION": {
-      "description": "Pas besoin de skylight en review app, sauf cas particulier.",
-      "value": "change_me_if_needed"
     }
   },
   "scripts": {

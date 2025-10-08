@@ -51,7 +51,7 @@ RSpec.describe Agent, type: :model do
       create(:agent_territorial_role, agent: agent, territory: territory)
       agent.teams << create(:team)
       create(:referent_assignation, agent: agent)
-      create(:sector_attribution, agent: agent)
+      create(:sector_attribution, :level_agent, agent: agent)
 
       agent.soft_delete
       agent.reload

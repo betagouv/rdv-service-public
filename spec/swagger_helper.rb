@@ -341,8 +341,21 @@ RSpec.configure do |config|
               organisation_id: { type: "integer" },
               phone_number: { type: "string", nullable: true },
               single_use: { type: "boolean" },
+              latitude: { type: "number", format: "float", nullable: true },
+              longitude: { type: "number", format: "float", nullable: true },
             },
-            required: %w[id address name organisation_id phone_number single_use],
+            required: %w[id address name organisation_id phone_number single_use latitude longitude],
+          },
+          lieux: {
+            type: "object",
+            properties: {
+              lieux: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/lieu" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[lieux meta],
           },
           motifs: {
             type: "object",
@@ -529,7 +542,6 @@ RSpec.configure do |config|
           error_unprocessable_entity: {
             type: "object",
             properties: {
-              success: { type: "boolean" },
               errors: {
                 type: "object",
               },
@@ -538,7 +550,7 @@ RSpec.configure do |config|
                 items: { type: "string" },
               },
             },
-            required: %w[success errors error_messages],
+            required: %w[errors error_messages],
           },
         },
       },

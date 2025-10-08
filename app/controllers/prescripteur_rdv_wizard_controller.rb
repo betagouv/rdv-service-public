@@ -1,6 +1,7 @@
 class PrescripteurRdvWizardController < ApplicationController
   include SearchContextHelper
 
+  before_action :log_session_to_sentry
   before_action :check_rdv_wizard_attributes, except: %i[start confirmation]
   before_action :set_rdv_wizard, only: %i[new_prescripteur new_beneficiaire create_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
@@ -69,6 +70,10 @@ class PrescripteurRdvWizardController < ApplicationController
   end
 
   private
+
+  def log_session_to_sentry
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Session", data: session.to_h.slice("rdv_wizard_attributes", "autocomplete_prescripteur_attributes")))
+  end
 
   def check_rdv_wizard_attributes
     if session[:rdv_wizard_attributes].blank?

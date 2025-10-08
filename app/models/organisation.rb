@@ -22,6 +22,7 @@ class Organisation < ApplicationRecord
   has_many :plage_ouvertures, dependent: :destroy
   has_many :agent_roles, dependent: :delete_all # skips last admin validation
   has_many :user_profiles, dependent: :restrict_with_error
+  has_many :external_references, as: :item, dependent: :destroy
 
   # Through relations
   has_many :sectors, through: :sector_attributions

@@ -5,7 +5,7 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
     user_profile.save!
     render_record user_profile
   rescue ArgumentError => e
-    render_error :unprocessable_entity, { success: false, errors: {}, error_messages: [e] }
+    render_error :unprocessable_entity, { errors: {}, error_messages: [e] }
   end
 
   def destroy
@@ -20,7 +20,7 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
       head :no_content
     else
       render_error :unprocessable_entity, {
-        success: false, errors: {},
+        errors: {},
         error_messages: [I18n.t("users.can_not_delete_because_has_future_rdvs")],
       }
     end

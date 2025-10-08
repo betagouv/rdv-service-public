@@ -19,6 +19,10 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
       rdvs = rdvs.where(agents: { id: params[:agent_id] })
     end
 
+    if params[:status].present?
+      rdvs = rdvs.where(status: params[:status])
+    end
+
     render_collection(rdvs)
   end
 end

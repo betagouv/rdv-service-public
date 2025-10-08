@@ -1,0 +1,131 @@
+- content_for :title, "Déclaration d'accessibilité"
+
+.fr-grid-row
+  .fr-col-md-8
+    p Établie le 16 avril 2025.
+    p
+      b> L’Agence Nationale de la Cohésion des Territoires (ANCT) et la direction interministérielle du numérique (DINUM)
+      | s’engagent à rendre leur service accessible, conformément à l’article 47 de la loi n° 2005-102 du 11 février 2005.
+    p À cette fin, nous mettons en œuvre la stratégie et les actions suivantes&nbsp;:
+    ul
+      li
+        a href="https://beta.gouv.fr/accessibilite/schema-pluriannuel" Schéma pluriannuel
+      li
+        a href="https://beta.gouv.fr/accessibilite/schema-pluriannuel#plan-2025" Plan 2025
+      li
+        a href="https://beta.gouv.fr/accessibilite/schema-pluriannuel#bilan-2024" Bilan 2024
+    p
+      | Cette déclaration d’accessibilité s’applique à
+      b<> #{current_domain.name}
+      | (#{current_domain.host_name}).
+
+    h2 État de conformité
+
+    p
+      b> #{current_domain.name}
+      span> est
+      b
+        span> partiellement conforme
+      span> avec le
+      abbr[title="Référentiel général d’amélioration de l’accessibilité"] RGAA
+      | .
+
+    h2 Résultats des tests
+
+    p L’audit de conformité réalisé par RDV Service Public révèle que 94 % des critères du RGAA version 4.1.2 sont respectés.
+
+    h2 Contenus non accessibles
+
+    h3 Non conformité
+
+    p Malgré nos efforts, certains contenus sont inaccessibles. Vous trouverez ci-dessous une liste des limitations connues et des solutions potentielles :
+
+    ol
+      li L'information ne doit pas être donnée uniquement par la couleur dans la saisie de l'adresse recherchée
+      li Les propositions de résultats de la recherche ne sont pas restitués par les technologies d'assistance
+      li Absence d'indication d'erreur de saisie et de certains formulaires (champ téléphone)
+      li Certaines pages n'ont pas la hiérarchie appropriée pour les titres.
+
+    h3 Dérogations pour charge disproportionnée
+
+    ul
+      li La page de statistiques du service composée uniquement de graphiques et de cartes basées sur un outil externe.
+
+    h2 Établissement de cette déclaration d’accessibilité
+
+    p Cette déclaration a été établie le 5 mai 2025. Elle a été mise à jour le 24 septembre 2025.
+
+    h3 Technologies utilisées
+
+    p L’accessibilité de #{current_domain.name} s’appuie sur les technologies suivantes :
+
+    ul
+      li HTML
+      li WAI-ARIA
+      li CSS
+      li JavaScript
+      li Ruby on Rails
+
+    h3 Environnement de test
+
+    p Les tests des pages web ont été effectués avec les combinaisons de navigateurs web et lecteurs d’écran suivants :
+
+    ul
+      li Sur Mobile iOS avec Safari et VoiceOver
+      li Sur Ordinateur macOS avec Safari et VoiceOver
+      li Sur Ordinateur Windows avec Firefox et JAWS
+      li Sur Ordinateur Windows avec Firefox et NVDA
+
+    h3 Outils pour évaluer l’accessibilité
+
+    ul
+      li HeadingsMap
+      li Assistant RGAA
+
+    h3 Pages du site ayant fait l’objet de la vérification de conformité
+
+    ul
+      li Page d’accueil
+      li Contact
+      li Mentions légales
+      li Déclaration d’accessibilité
+      li Politique de confidentialité
+      li Authentification
+      li Création de compte
+      li Mot de passe oublié
+      li Prise de rendez-vous - Sélection du service/motif
+      li Prise de rendez-vous - Sélection du lieu
+      li Prise de rendez-vous - Sélection du créneau
+      li Vos RDV
+      li Vos informations
+      li Votre compte
+
+    h2 Amélioration et contact
+
+    p
+      span> Si vous n’arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable de
+      b> #{current_domain.name}
+      | pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme.
+
+    ul
+      li E-mail&nbsp;: <a href="mailto:#{current_domain.support_email}">#{current_domain.support_email}</a>
+      li Formulaire de contact&nbsp;: #{link_to "Nous contacter", contact_path}
+    p
+      span> Nous essayons de répondre dans les
+      b 2 jours ouvrés.
+
+    h2 Voie de recours
+
+    p Cette procédure est à utiliser dans le cas suivant&nbsp;: vous avez signalé au responsable du site internet un défaut d’accessibilité qui vous empêche d’accéder à un contenu ou à un des services du portail et vous n’avez pas obtenu de réponse satisfaisante.
+
+    p
+      | Vous pouvez&nbsp;:
+      ul
+        li Écrire un message au <a href="https://formulaire.defenseurdesdroits.fr/">Défenseur des droits</a>
+        li Contacter <a href="https://www.defenseurdesdroits.fr/saisir/delegues">le délégué du Défenseur des droits dans votre région</a>
+        li
+          | Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre)&nbsp;:
+          br
+          | Défenseur des droits
+          br
+          | Libre réponse 71120 75342 Paris CEDEX 07

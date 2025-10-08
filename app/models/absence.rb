@@ -11,6 +11,7 @@ class Absence < ApplicationRecord
 
   # Relations
   belongs_to :agent
+  has_many :external_references, as: :item, dependent: :destroy
 
   # Through relations
   def webhook_endpoints
@@ -30,7 +31,7 @@ class Absence < ApplicationRecord
   before_validation :set_end_day
 
   # Scopes
-  scope :by_starts_at, -> { order(first_day: :desc, start_time: :desc) }
+  scope :by_starts_at, ->(direction = :desc) { order(first_day: direction, start_time: direction) }
   scope :in_range, lambda { |range|
     return all if range.nil?
 

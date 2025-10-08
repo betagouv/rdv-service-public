@@ -1,3 +1,4 @@
+# TODO: voir si ces specs sont nécessaires
 RSpec.describe Admin::MotifsController, type: :controller do
   render_views
 
@@ -131,6 +132,19 @@ RSpec.describe Admin::MotifsController, type: :controller do
       it "does not change motif name" do
         motif.reload
         expect(motif.name).not_to eq("")
+      end
+    end
+
+    context "when trying to set the organisation_id to an unauthorized organisation" do
+      let(:unauthorized_organisation) { create(:organisation) }
+      let(:new_attributes) do
+        {
+          organisation_id: unauthorized_organisation.id,
+        }
+      end
+
+      it "doesn't update the motif" do
+        expect(motif.reload.organisation).not_to eq unauthorized_organisation
       end
     end
   end

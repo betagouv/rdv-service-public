@@ -7,11 +7,19 @@ class Admin::Planning::AbsencesController < AgentAuthController
   before_action :set_agents
 
   def index
+    @multiple_agents_makes_sense = true
+    render :multi_agents_index and return if @agents.size > 1
+
     absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
-      .where(agent_id: filter_params[:agent_id])
+      .where(agent: @agent)
       .includes(:agent)
-      .by_starts_at
       .page(page_number)
+
+    absences = if params[:current_tab] == "expired"
+                 absences.by_starts_at(:desc)
+               else
+                 absences.by_starts_at(:asc)
+               end
 
     @absences = params[:current_tab] == "expired" ? absences.expired : absences.not_expired
     @display_tabs = absences.expired.any? || params[:current_tab] == "expired"
@@ -20,6 +28,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
   def new
     if params[:duplicate_absence_id].present?
       original_abs = Absence.find(params[:duplicate_absence_id])
+      authorize(original_abs, :show?, policy_class: Agent::AbsencePolicy)
       defaults = original_abs.slice(:title, :first_day, :start_time, :end_day, :end_time, :recurrence)
     else
       defaults = {
@@ -82,11 +91,16 @@ class Admin::Planning::AbsencesController < AgentAuthController
     @absence = Absence.new(absence_params)
   end
 
-  def absence_params
-    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
+  def set_agents
+    if @absence&.agent
+      @agent = @absence.agent
+      @agents = [@agent]
+    else
+      super
+    end
   end
 
-  def filter_params
-    params.permit(:start, :end, :agent_id, :page, :current_tab)
+  def absence_params
+    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
   end
 end

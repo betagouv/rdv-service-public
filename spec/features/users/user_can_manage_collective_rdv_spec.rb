@@ -39,7 +39,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
   def select_lieu
     expect(page).to have_content("Sélectionnez un lieu de RDV")
-    click_link("Lieu n°1")
+    click_on("Lieu n°1")
   end
 
   def expect_cancel_participation

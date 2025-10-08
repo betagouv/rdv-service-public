@@ -18,10 +18,10 @@ section.main-content__body.main-content__body--flush
     - if @territory_creation_requests.empty?
       p Il n'y a aucune demande avec ce statut
     - @territory_creation_requests.each do |request|
-        h3
-          = link_to(edit_super_admins_territory_creation_request_path(request.id))
-            = request.territory_name || request.organisation_name
-        p
-          = "demandé par #{request.agent.full_name}"
-          br
-          = request.agent.email
+      h3
+        = link_to(edit_super_admins_territory_creation_request_path(request.id))
+          = request.territory_name || request.organisation_name
+      p
+        = "demandé par #{request.agent.full_name} (#{request.agent.email})"
+        br
+        = "le #{l(request.created_at, format: :human)} (il y a #{time_ago_in_words(request.created_at)})"

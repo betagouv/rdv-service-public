@@ -14,6 +14,8 @@ class SectorAttribution < ApplicationRecord
   validates :level, inclusion: { in: LEVELS }
   validates :level, presence: true
   validates :agent, presence: true, if: :level_agent?
+  validates :agent, absence: true, if: :level_organisation?
+  validate :organisation_is_in_sector_territory
 
   # Scopes
   scope :level_agent, -> { where(level: LEVEL_AGENT) }
@@ -43,5 +45,13 @@ class SectorAttribution < ApplicationRecord
           attributions: attributions,
         }
       end
+  end
+
+  private
+
+  def organisation_is_in_sector_territory
+    if organisation.territory != sector.territory
+      errors.add(:base, "L'organisation doit faire partie de l'espace du secteur")
+    end
   end
 end

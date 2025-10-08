@@ -26,6 +26,8 @@ RSpec.describe "RDV API" do
     let!(:rdv_with_other_user_and_agent) { create(:rdv, organisation: organisation, motif: motif, users: [other_user], agents: [agent]) }
     let!(:rdv_with_other_user_and_other_agent) { create(:rdv, organisation: organisation, motif: motif, users: [other_user], agents: [other_agent]) }
 
+    let!(:cancelled_rdv) { create(:rdv, organisation:, motif:, agents: [agent], status: :excused) }
+
     it "filters by agent and user id" do
       get "/api/v1/rdvs", headers: headers, params: { user_id: user.id, agent_id: agent.id }, as: :json
       expect(parsed_response_body["rdvs"].count).to eq 1
@@ -48,6 +50,13 @@ RSpec.describe "RDV API" do
       get "/api/v1/rdvs", headers: headers, params: { id: rdv_with_user_and_agent.id }, as: :json
       expect(parsed_response_body["rdvs"].count).to eq 1
       expect(parsed_response_body["rdvs"].first["id"]).to eq rdv_with_user_and_agent.id
+    end
+
+    it "filters by statuses" do
+      get "/api/v1/rdvs", headers: headers, params: { status: "excused" }, as: :json
+
+      expect(parsed_response_body["rdvs"].count).to eq 1
+      expect(parsed_response_body["rdvs"].first["id"]).to eq cancelled_rdv.id
     end
   end
 end

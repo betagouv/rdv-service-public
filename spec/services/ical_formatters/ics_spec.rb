@@ -11,7 +11,7 @@ RSpec.describe IcalFormatters::Ics do
         ends_at: Time.zone.parse("20190704 15h45"),
         sequence: 0,
         description: "Infos et annulation:",
-        address: "10 rue de la Ferronerie 44100 Nantes",
+        location: "10 rue de la Ferronerie 44100 Nantes",
         ical_uid: "rdv_15@RDV Solidarités",
         rrule: "FREQ=WEEKLY;",
         domain: domain,
@@ -57,7 +57,15 @@ RSpec.describe IcalFormatters::Ics do
       context "update" do
         let(:action) { :update }
 
-        it { expect(subject).to include "STATUS:CONFIRMED" }
+        context "when status is not provided" do
+          it { expect(subject).to include "STATUS:CONFIRMED" }
+        end
+
+        context "when status is provided" do
+          let(:payload) { super().merge(status: "CANCELLED") }
+
+          it { expect(subject).to include "STATUS:CANCELLED" }
+        end
       end
 
       context "destroy" do
