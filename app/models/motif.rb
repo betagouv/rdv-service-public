@@ -44,11 +44,11 @@ class Motif < ApplicationRecord
   # Through relations
   has_many :webhook_endpoints, through: :organisation
   has_many :plage_ouvertures, -> { distinct }, through: :motifs_plage_ouvertures
-  has_many :lieux_through_po, through: :plage_ouvertures, source: :lieu
-  has_many :lieux_through_rdvs, through: :rdvs, source: :lieu
+  has_many :lieux_through_po, -> { distinct }, through: :plage_ouvertures, source: :lieu
+  has_many :lieux_through_rdvs, -> { distinct }, through: :rdvs, source: :lieu
 
   def lieux
-    collectif? ? lieux_through_rdvs.distinct : lieux_through_po.distinct
+    collectif? ? lieux_through_rdvs : lieux_through_po
   end
 
   # Delegates
