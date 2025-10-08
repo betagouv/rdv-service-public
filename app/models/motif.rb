@@ -48,7 +48,7 @@ class Motif < ApplicationRecord
   has_many :lieux_through_rdvs, through: :rdvs, source: :lieu
 
   def lieux
-    collectif? ? lieux_through_rdvs : lieux_through_po
+    collectif? ? lieux_through_rdvs.distinct : lieux_through_po.distinct
   end
 
   # Delegates
