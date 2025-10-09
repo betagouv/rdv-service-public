@@ -43,6 +43,14 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
     redirect_to admin_organisation_online_booking_path(current_organisation)
   end
 
+  def edit
+    set_motifs
+    authorize(@organisation, :edit?, policy_class: Agent::OrganisationPolicy)
+
+    motif_ids = @motifs.bookable_by_everyone_or_bookable_by_invited_users.pluck(:id)
+    @online_booking_motifs_form = Admin::OnlineBookingMotifsForm.new(motif_ids)
+  end
+
   def edit_user_type
     authorize(@organisation, :edit?, policy_class: Agent::OrganisationPolicy)
   end

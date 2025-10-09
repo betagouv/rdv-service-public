@@ -51,7 +51,11 @@
 
 .card
   .card-body
-    h3.fr-h4 Motifs ouverts à la réservation en ligne
+    .d-flex
+      .flex-grow-1
+        h3.fr-h4 Motifs ouverts à la réservation en ligne
+      .flex-grow-0
+        = link_to "Modifier", edit_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
 
     .fr-grid-row
       - @motifs_with_missing_availabilities.each do |motif|
@@ -63,7 +67,11 @@
         = render "motif_tile", motif:, availabilities_count:
 .card
   .card-body
-    h3.fr-h4 Motifs fermés à la réservation en ligne
+    .d-flex
+      .flex-grow-1
+        h3.fr-h4 Motifs fermés à la réservation en ligne
+      .flex-grow-0
+        = link_to "Modifier", edit_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
     .fr-grid-row
       - @unavailable_motifs.each do |motif|
         = render "motif_tile", motif:
