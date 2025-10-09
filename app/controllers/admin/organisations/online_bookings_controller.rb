@@ -40,6 +40,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
       motif.update!(bookable_by: :everyone)
     end
 
+    session[:motifs_opened] = true
     # flash[:success] = "Les motifs #{motifs.pluck(:name).to_sentence} sont ouverts pour la réservation en ligne."
     redirect_to admin_organisation_online_booking_path(current_organisation)
   end

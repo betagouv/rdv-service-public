@@ -16,7 +16,6 @@
       = link_to t(".calendar_view"), calendar_admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary fr-icon-calendar-fill mb-0"
       = link_to t(".create_plage_ouverture"),  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary mb-0"
 
-
 .card
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2

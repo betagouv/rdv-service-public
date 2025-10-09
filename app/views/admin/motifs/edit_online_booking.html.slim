@@ -4,6 +4,7 @@
 = render "admin/motifs/fil_ariane", current_page_title: content_for(:title)
 - content_for(:menu_item) { "menu-settings" }
 
+/ TODO: Remplacer ce formulaire par un #show qui permet d'ouvrir des plages d'ouverture ou d'accéder à ce formulaire
 .row
   .col-md-12
     = simple_form_for @motif, url: update_online_booking_admin_organisation_motif_path(current_organisation, motif_id: @motif.id), html: { "data-controller": "motif-form" } do |f|
