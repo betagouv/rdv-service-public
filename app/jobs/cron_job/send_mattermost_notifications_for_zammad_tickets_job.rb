@@ -1,8 +1,12 @@
 class CronJob::SendMattermostNotificationsForZammadTicketsJob < CronJob
   include  ActionView::Helpers::DateHelper
+
   queue_as :latency_5m
 
   def perform
+    return if Rails.env.production? && # on veut pouvoir exécuter ce job en dev
+              ENV["HOST"] != "https://rdv.anct.gouv.fr" # en prod on ne veut pas l’éxécuter sur chaque app scalingo
+
     Rails.logger.debug "Fetching data from Zammad…"
     unassigned_tickets = ZammadApiClient.search_unassigned_tickets
     assigned_tickets = ZammadApiClient.search_assigned_tickets
