@@ -50,6 +50,13 @@
             i.fa.fa-print>
 
   = render "admin/rdvs/rdv_visibility"
+  - if CopyPlanningToNewInstanceJob.agent_might_have_rdvs_on_old_instance?(current_agent, @form.start || Time.zone.today)
+    .fr-notice.fr-notice--info.fr-mb-3w.fr-mt-2w
+      .fr-notice__body
+        p.fr-mb-0.fr-mx-2w
+          span.fr-notice__desc
+            | Il est possible que vous ayez des RDV prévus sur RDV Aide Numérique avant votre migration sur RDV Service Public.
+          = link_to  "Ouvrir RDV Aide Numérique", "https://#{Domain::RDV_AIDE_NUMERIQUE.host_name}", class: "fr-btn fr-btn--secondary fr-m-1w"
 
   - if @rdvs.total_count > 0
     .mb-2

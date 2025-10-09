@@ -7,8 +7,29 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
 
   def create
     absence = Absence.new(create_params)
+
+    # On ne documente pas encore la possibilité d'utiliser le param recurrence, puisqu'on s'en sert uniquement
+    # pour la migration des Conseillers Numériques, et que l'api actuelle permettrait de créer des absences qu'on
+    # ne saurait pas gérer sur l'interface web avec le formulaire actuel.
+    if params[:recurrence].present?
+      absence.recurrence = Montrose::Recurrence.load(params[:recurrence])
+    end
+
     authorize(absence, policy_class: Agent::AbsencePolicy) if absence.valid?
-    absence.save!
+
+    absence.transaction do
+      absence.save!
+
+      if params[:external_reference].present?
+        ExternalReference.create!(
+          params.require(:external_reference).permit(:external_id, :external_url).merge(
+            item: absence,
+            oauth_application: doorkeeper_token&.application
+          )
+        )
+      end
+    end
+
     render_record absence
   rescue ActiveRecord::RecordNotFound
     render_error :not_found, not_found: :agent
@@ -57,6 +78,8 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
       params[:agent_id] = agent.id
       params.delete(:agent_email)
     end
+
+    params[:agent_id] ||= current_agent.id
 
     params.permit(:agent_id, :title, :first_day, :start_time, :end_day, :end_time)
   end

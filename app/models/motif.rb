@@ -40,6 +40,7 @@ class Motif < ApplicationRecord
   belongs_to :motif_category, optional: true
   has_many :rdvs, dependent: :restrict_with_exception
   has_many :motifs_plage_ouvertures, dependent: :delete_all
+  has_many :external_references, as: :item, dependent: :destroy
 
   # Through relations
   has_many :webhook_endpoints, through: :organisation

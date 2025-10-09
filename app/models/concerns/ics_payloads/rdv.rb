@@ -7,8 +7,9 @@ module IcsPayloads
         ends_at: ends_at,
         ical_uid: uuid,
         summary: "RDV #{motif&.name}",
-        address: motif.phone? ? nil : address,
+        location: ics_location,
         domain: domain,
+        status: ics_status,
       }
 
       payload[:description] = ics_description(recipient)
@@ -26,9 +27,28 @@ module IcsPayloads
 
     private
 
-    def ics_description(recipient)
+    def ics_status
+      if cancelled?
+        "CANCELLED"
+      else
+        "CONFIRMED"
+      end
+    end
+
+    def ics_location
+      if motif.phone?
+        nil
+      elsif motif.visio?
+        visio_url
+      else
+        address
+      end
+    end
+
+    def ics_description(recipient) # rubocop:disable Metrics/CyclomaticComplexity
       description = ""
       description += "RDV Téléphonique " if motif.phone?
+      description += "RDV par visioconférence " if motif.visio?
       description += case recipient
                      when User
                        "Infos et annulation: #{Rails.application.routes.url_helpers.rdvs_short_url(host: domain.host_name)}"

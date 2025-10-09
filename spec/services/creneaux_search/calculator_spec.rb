@@ -222,6 +222,45 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
 
       expect(plage_ouvertures).to eq([matching_po])
     end
+
+    it "excludes plage ouvertures for agents with a pending invitation" do
+      agents = {
+        normal: create(:agent, organisations: [organisation]),
+        pending_invitation: create(
+          :agent,
+          organisations: [organisation],
+          invitation_sent_at: first_day - 48.hours,
+          invitation_accepted_at: nil,
+          confirmed_at: nil
+        ),
+        intervenant: create(
+          :agent, :intervenant,
+          organisations: [organisation],
+          confirmed_at: nil,
+          invitation_sent_at: nil
+        ),
+        invited_accepted: create(
+          :agent,
+          organisations: [organisation],
+          invitation_sent_at: first_day - 48.hours,
+          invitation_accepted_at: first_day - 24.hours,
+          confirmed_at: first_day - 24.hours
+        ),
+      }
+      plage_ouvertures = agents.transform_values do |agent|
+        create(
+          :plage_ouverture,
+          agent:,
+          lieu: lieu, motifs: [motif],
+          first_day: first_day,
+          start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)
+        )
+      end
+
+      filtered_plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
+      expect(filtered_plage_ouvertures).to include(plage_ouvertures[:normal], plage_ouvertures[:intervenant], plage_ouvertures[:invited_accepted])
+      expect(filtered_plage_ouvertures).not_to include(plage_ouvertures[:pending_invitation])
+    end
   end
 
   describe "#free_times_from" do

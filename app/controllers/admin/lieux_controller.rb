@@ -18,7 +18,6 @@ class Admin::LieuxController < AgentAuthController
   def create
     @lieu = Lieu.new(organisation_id: current_organisation.id)
     @lieu.assign_attributes(lieu_params)
-    @lieu.availability = :enabled # Always enable new Lieux
 
     authorize(@lieu, policy_class: Agent::LieuPolicy)
     if @lieu.save
@@ -66,7 +65,7 @@ class Admin::LieuxController < AgentAuthController
   def reopen
     set_and_authorize_lieu
     if @lieu.update(availability: :enabled)
-      flash[:success] = "Le lieu a été réouvert."
+      flash[:success] = "Le lieu a été rouvert."
       redirect_to admin_organisation_lieux_path(@lieu.organisation)
     else
       render :edit

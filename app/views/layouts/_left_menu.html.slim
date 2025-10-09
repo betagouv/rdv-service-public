@@ -28,31 +28,36 @@ nav.left-side-menu-wrapper
           = render "layouts/left_menu/organisation_switcher"
 
         li.fr-pb-0
-          a.side-menu__item[
-            data-toggle="collapse"
-            href=".left-submenu-planning"
-            aria-expanded=(menu_top_level_item == "planning" ? "true" : "false")
-          ]
-            .d-flex.justify-content-between
-              div
-                span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
-                | Planning
-              div
-                i.fa.fa-angle-down.menu-arrow.mt-1
-          ul.list-unstyled.ml-4.pr-2.left-submenu-planning.collapse[
-            class=("show" if menu_top_level_item == "planning")
-          ]
-            - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
-            - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_planning_agenda_path
-            li.fr-pb-0
-              form.fr-my-3v
-                = planning_agent_select(agent_for_left_menu, path_helper_name)
-            li
-              = active_link_to "Agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
-            li
-              = active_link_to "Plages d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
-            li
-              = active_link_to "Indisponibilités", admin_organisation_planning_absences_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
+          - if current_agent.feature_enabled?("new_planning")
+            = active_link_to(admin_organisation_planning_agenda_path(current_organisation), active: @beta_planning_layout, class: "side-menu__item")
+              span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
+              | Planning
+          - else
+            a.side-menu__item[
+              data-toggle="collapse"
+              href=".left-submenu-planning"
+              aria-expanded=(menu_top_level_item == "planning" ? "true" : "false")
+            ]
+              .d-flex.justify-content-between
+                div
+                  span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
+                  | Planning
+                div
+                  i.fa.fa-angle-down.menu-arrow.mt-1
+            ul.list-unstyled.ml-4.pr-2.left-submenu-planning.collapse[
+              class=("show" if menu_top_level_item == "planning")
+            ]
+              - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
+              - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_planning_agenda_path
+              li.fr-pb-0
+                form.fr-my-3v
+                  = planning_agent_select(agent_for_left_menu, path_helper_name)
+              li
+                = active_link_to "Agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
+              li
+                = active_link_to "Plages d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
+              li
+                = active_link_to "Indisponibilités", admin_organisation_planning_absences_path(current_organisation, agent_id: agent_for_left_menu), class: "side-menu__item side-menu__item--small"
 
         li.fr-pb-0
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")

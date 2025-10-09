@@ -76,7 +76,11 @@ class Admin::MotifsController < AgentAuthController
 
   def update
     authorize(@motif, policy_class: Agent::MotifPolicy)
-    if @motif.update(params.require(:motif).permit(*FORM_ATTRIBUTES))
+
+    @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
+    authorize(@motif, policy_class: Agent::MotifPolicy)
+
+    if @motif.save
       flash[:success] = "Le motif #{link_to_motif(@motif)} a été modifié."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else

@@ -51,6 +51,7 @@ RSpec.describe Admin::Api::Agenda::PlageOuverturesController, type: :controller 
               "title" => plage_ouverture.title_with_default,
               "start" => plage_ouverture.starts_at.as_json,
               "end" => plage_ouverture.ends_at.as_json,
+              "resourceIds" => [plage_ouverture.agent.id],
               "backgroundColor" => "#6fceff80",
               "textColor" => "#313131",
               "display" => nil,

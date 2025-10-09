@@ -20,6 +20,15 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       parameter name: :agent_id, in: :query, type: :integer,
                 description: "Filtre pour obtenir uniquement les rendez-vous de l'agent qui a cet id",
                 example: 456, required: false
+      parameter name: :status, in: :query,
+                description: <<~DOC,
+                  Filtre les rendez-vous par statut.
+                  Vous pouvez passer soit une seule chaine de caractères, soit un tableau de chaines de caractères.
+                  Les différentes valeurs possibles sont #{Rdv.statuses.keys}.
+                  Si vous passez un tableau, le format attendu est status[]=excused&status[]=revoked
+                DOC
+                example: "seen ou status[]=excused&status[]=revoked", required: false
+
       parameter name: :id, in: :query,
                 description: <<~DOC,
                   Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste.

@@ -20,7 +20,7 @@ import { PlacesInputs } from './components/places-inputs.js'
 import { RdvWizardStep2 } from './components/rdv_wizard_step2.js'
 import { RdvLieu } from './components/rdv_lieu.js'
 import { PastDateAlert } from './components/past-date-alert.js'
-import { Clipboard } from './components/clipboard.js'
+import setupCopyToClipBoardButtons from './components/copy_to_clipboard_button.js'
 import { ZonesMap } from './components/zones-map.js'
 import { AgentUserForm } from './components/agent-user-form.js'
 import { AgentRoleForm } from './components/agent-role-form.js'
@@ -28,14 +28,16 @@ import { RecurrenceForm } from './components/recurrence-form.js'
 import { MergeUsersForm } from './components/merge-users-form.js'
 import { SectorAttributionForm } from './components/sector-attribution-form.js'
 import { ZoneForm } from './components/zone-form.js'
-import { Select2Inputs } from './components/select2-inputs'
+import { initializeSelect2 } from './components/select2-inputs'
 import { PlanningAgentSelect } from './components/planning-agent-select'
+import { planningAgentsSelect } from './components/planning-agents-select'
+import { AgendaMonoAgent } from './components/calendar'
+import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { Tooltips } from './components/tooltips'
 import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
 import { CheckAll, UnCheckAll } from './components/check-all'
 import './components/motifs_table'
-import './components/calendar'
 import './components/browser-detection'
 import './components/clear-field-on-focus.js'
 
@@ -57,7 +59,7 @@ $.fn.select2.defaults.set("theme", "bootstrap4")
 $.fn.select2.defaults.set("language", "fr")
 
 new Modal()
-new Select2Inputs()
+initializeSelect2()
 new ServiceFilterForMotifsSelects()
 
 global.$ = require('jquery')
@@ -97,7 +99,7 @@ $(document).on('turbolinks:load', function() {
 
   new PastDateAlert()
 
-  new Clipboard()
+  setupCopyToClipBoardButtons()
 
   new ZonesMap()
 
@@ -114,6 +116,10 @@ $(document).on('turbolinks:load', function() {
   new ZoneForm()
 
   new PlanningAgentSelect()
+  planningAgentsSelect()
+
+  new AgendaMonoAgent()
+  new AgendaMultiAgent()
 
   new ParticipationSelect()
 

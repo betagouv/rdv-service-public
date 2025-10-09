@@ -188,7 +188,8 @@ Organisation.where(territory: territory62).each do |org|
     organisation_id: org.id,
     service_id: service_pmi.id,
     bookable_by: :everyone,
-    location_type: :phone
+    location_type: :phone,
+    restriction_for_rdv: "Merci d’apporter les documents nécessaires"
   )
   motifs[org][:pmi_prenatale] = Motif.create!(
     name: "Consultation prénatale",
@@ -196,7 +197,8 @@ Organisation.where(territory: territory62).each do |org|
     organisation_id: org.id,
     service_id: service_pmi.id,
     bookable_by: :everyone,
-    location_type: :public_office
+    location_type: :public_office,
+    restriction_for_rdv: "Merci d’apporter les documents nécessaires"
   )
 end
 
@@ -411,7 +413,8 @@ agent_org_paris_nord_pmi_martine = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
-  }]
+  }],
+  feature_flags: { new_planning: true }
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
@@ -431,7 +434,8 @@ agent_org_paris_nord_pmi_marco = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-  }]
+  }],
+  feature_flags: { new_planning: true }
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!

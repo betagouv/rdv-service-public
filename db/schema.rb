@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -236,6 +236,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.boolean "connected_with_agent_connect", default: false, null: false
     t.string "proconnect_siret"
     t.jsonb "feature_flags", default: {}
+    t.string "caldav_agenda_url"
+    t.string "caldav_username"
+    t.string "caldav_password"
+    t.boolean "caldav_disconnect_in_progress", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -255,7 +259,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.bigint "rdv_id", null: false
     t.text "outlook_id"
     t.boolean "outlook_create_in_progress", default: false, null: false
+    t.string "caldav_url"
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
+    t.index ["caldav_url"], name: "index_agents_rdvs_on_caldav_url", where: "(caldav_url IS NOT NULL)"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
@@ -296,7 +302,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.string "item_type", null: false
     t.bigint "item_id", null: false
     t.bigint "oauth_application_id", null: false
-    t.bigint "territory_id", null: false
+    t.bigint "territory_id"
     t.text "external_id", null: false
     t.text "external_url"
     t.datetime "created_at", null: false
@@ -412,8 +418,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.uuid "good_job_batch_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "source_organisation_id"
+    t.string "status"
     t.index ["agent_id"], name: "index_instance_exports_on_agent_id"
     t.index ["good_job_batch_id"], name: "index_instance_exports_on_good_job_batch_id"
+    t.index ["source_organisation_id"], name: "index_instance_exports_on_source_organisation_id"
   end
 
   create_table "lieux", force: :cascade do |t|
@@ -425,7 +434,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.float "longitude"
     t.string "phone_number"
     t.string "phone_number_formatted"
-    t.enum "availability", null: false, comment: "Permet de savoir si le lieu est un lieu normal (enabled), un lieu ponctuel qui sera utilisé pour un seul rdv (single_use), ou un lieu supprimé par soft-delete (disabled). Dans la plupart des cas on s'intéresse uniquement aux lieux enabled\n", enum_type: "lieu_availability"
+    t.enum "availability", default: "enabled", null: false, comment: "Permet de savoir si le lieu est un lieu normal (enabled), un lieu ponctuel qui sera utilisé pour un seul rdv (single_use), ou un lieu supprimé par soft-delete (disabled). Dans la plupart des cas on s'intéresse uniquement aux lieux enabled\n", enum_type: "lieu_availability"
     t.string "address", null: false
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
@@ -550,6 +559,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.boolean "ants_connectable", default: false, null: false, comment: "Autorise l'organisation à être branchée sur le moteur de recherche de l'ANTS sur https://rendezvouspasseport.ants.gouv.fr/. Pour éviter de brancher n'importe qui sur ce moteur de recherche, cette option n'est pas activable par les agents.\n"
     t.boolean "online_booking_for_particuliers", default: true, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des particuliers, et donc qu'on propose le bouton FranceConnect lors de la prise de rendez-vous en ligne.\n"
     t.boolean "online_booking_for_professionnels", default: false, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des professionnels, et donc qu'on propose le bouton ProConnect lors de la prise de rendez-vous en ligne.\n"
+    t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
@@ -689,12 +699,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_11_132916) do
     t.string "sms_phone_number"
     t.string "email_address"
     t.bigint "organisation_id", null: false
-    t.index ["channel"], name: "index_receipts_on_channel"
     t.index ["created_at"], name: "index_receipts_on_created_at"
-    t.index ["event"], name: "index_receipts_on_event"
     t.index ["organisation_id"], name: "index_receipts_on_organisation_id"
     t.index ["rdv_id"], name: "index_receipts_on_rdv_id"
-    t.index ["result"], name: "index_receipts_on_result"
     t.index ["user_id"], name: "index_receipts_on_user_id"
   end
 

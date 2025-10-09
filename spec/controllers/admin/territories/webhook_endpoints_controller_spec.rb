@@ -124,6 +124,15 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
         expect(WebhookEndpoint.first.target_url).to eq("https://example.org")
       end
     end
+
+    it "doesn't allow setting the organisation id to an unauthorized organisation" do
+      other_organisation = create(:organisation)
+      webhook = create(:webhook_endpoint, organisation: organisation, target_url: "https://example.com", secret: "123")
+
+      post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { target_url: "https://example.org", organisation_id: other_organisation.id } }
+      expect(webhook.reload.organisation).not_to eq other_organisation
+      expect(response).not_to be_successful
+    end
   end
 
   describe "#edit" do
