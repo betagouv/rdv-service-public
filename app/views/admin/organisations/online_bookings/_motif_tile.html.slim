@@ -8,12 +8,10 @@
         .flex-grow-0
           - if motif.bookable_by_everyone_or_bookable_by_invited_users?
             - if availabilities_count && availabilities_count > 0
-              p.fr-badge.fr-badge--green-tilleul-verveine
-                = icon("fr-icon-success-fill", class: "fr-mr-1w fr-icon--sm")
+              p.fr-badge.fr-badge--success
                 | Réservable en ligne
             - else
-              p.fr-badge.fr-badge--yellow-tournesol
-                = icon("fr-icon-warning-fill", class: "fr-mr-1w fr-icon--sm")
+              p.fr-badge.fr-badge--warning
                 | Pas de disponibilités
           - else
             p.fr-badge Non réservable

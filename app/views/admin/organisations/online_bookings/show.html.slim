@@ -6,16 +6,21 @@
 
 - if @motifs_with_missing_availabilities.any?
   .fr-callout.fr-pb-2w
-    - count = @motifs_with_missing_availabilities.count
-    - if count == 1
-      p
-        = icon("fr-icon-alert-line", class: "fr-mr-1w")
-        | Il n'y a pas de disponibilités pour le motif #{@motifs_with_missing_availabilities.to_sentence} alors qu'il est ouvert à la réservation en ligne.
-    - else
-      p
-        = icon("fr-icon-alert-line", class: "fr-mr-1w")
-        | Les motifs #{@motifs_with_missing_availabilities.to_sentence} sont ouverts à la réservation en ligne, mais n'ont pas de disponibilités à venir.
-    = link_to "Voir les plages d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
+    p 🎉 Vous y êtes presques !
+    /- count = @motifs_with_missing_availabilities.count
+    /- if count == 1
+    /  p
+    /    = icon("fr-icon-alert-line", class: "fr-mr-1w")
+    /    | Il n'y a pas de disponibilités pour le motif #{@motifs_with_missing_availabilities.to_sentence} alors qu'il est ouvert à la réservation en ligne.
+    /- else
+    /  p
+    /    = icon("fr-icon-alert-line", class: "fr-mr-1w")
+    /    | Les motifs #{@motifs_with_missing_availabilities.to_sentence} sont ouverts à la réservation en ligne, mais n'ont pas de disponibilités à venir.
+    p = "Les motifs #{@motifs_with_missing_availabilities.pluck(:name).to_sentence} sont ouverts pour la réservation en ligne."
+
+    p Vous devez maintenant ouvrir des plages d'ouverture pour que la réservation en ligne soit possible.
+
+    = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
 
 .card
   .card-body

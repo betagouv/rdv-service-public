@@ -11,6 +11,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def index
+    @plage_ouverture_created = session.delete(:plage_ouverture_created)
     @multiple_agents_makes_sense = true
     render :multi_agents_index and return if @agents.size > 1
 
@@ -60,6 +61,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   def create
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+    session[:plage_ouverture_created] = true
     if @plage_ouverture.save
       Notifiers::PlageOuvertureCreated.new(@plage_ouverture).perform
       flash[:success] = "Plage d'ouverture créée"
