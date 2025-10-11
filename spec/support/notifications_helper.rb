@@ -1,5 +1,6 @@
 module NotificationsHelper
   include DateHelper
+  include Capybara::Email::DSL
 
   EVENTS = %i[rdv_created rdv_cancelled rdv_updated rdv_upcoming_reminder].freeze
 
@@ -47,21 +48,21 @@ module NotificationsHelper
   def expect_email_sent_for(rdv, person, event)
     if person.instance_of?(User)
       expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(person.preferred_email)
-      expect(email_sent_to(person.preferred_email).subject).to include(email_title_for_user(rdv, event))
+      expect(first_email_sent_to(person.preferred_email).subject).to include(email_title_for_user(rdv, event))
     elsif person.instance_of?(Agent)
       expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(person.email)
-      expect(email_sent_to(person.email).subject).to include(email_title_for_agent(rdv, person, event))
+      expect(first_email_sent_to(person.email).subject).to include(email_title_for_agent(rdv, person, event))
     end
   end
 
   def expect_no_email_sent_for(rdv, person, event)
     if person.instance_of?(User)
       if ActionMailer::Base.deliveries.map(&:to).flatten.include?(person.preferred_email)
-        expect(email_sent_to(person.preferred_email).subject).not_to include(email_title_for_user(rdv, event))
+        expect(first_email_sent_to(person.preferred_email).subject).not_to include(email_title_for_user(rdv, event))
       end
     elsif person.instance_of?(Agent)
       if ActionMailer::Base.deliveries.map(&:to).flatten.include?(person.email)
-        expect(email_sent_to(person.email).subject).not_to include(email_title_for_agent(rdv, person, event))
+        expect(first_email_sent_to(person.email).subject).not_to include(email_title_for_agent(rdv, person, event))
       end
     end
   end
