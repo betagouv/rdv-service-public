@@ -1,6 +1,12 @@
 p Bonjour #{@email} !
 
-- if @resource.try(:unconfirmed_email?)
-  p Nous vous contactons pour vous notifier du changement de votre adresse mail en #{@resource.unconfirmed_email}
-- else
-  p Nous vous contactons pour vous notifier du changement de votre adresse mail en #{@resource.email}
+p
+  ' Vous venez de demander à changer d’adresse e-mail.
+  ' Un e-mail de confirmation a été envoyé à votre future adresse,
+  ' il contient un lien qui permet de confirmer le changement.
+
+ul
+  li Adresse actuelle : #{@email}
+  li Future adresse : #{@resource.unconfirmed_email}
+
+p Si vous n’êtes pas à l'origine de cette demande, il est vivement recommandé de changer notre mot de passe immédiatement.
