@@ -1,8 +1,6 @@
 class Export < ApplicationRecord
   include RedisFileStorable
 
-  EXPIRATION_DELAY = 6.hours
-
   STATUS_PENDING = :pending
   STATUS_EXPIRED = :expired
   STATUS_AVAILABLE = :available
@@ -22,7 +20,7 @@ class Export < ApplicationRecord
   validates :expires_at, :file_name, presence: true
 
   # Hooks
-  after_initialize { self.expires_at ||= EXPIRATION_DELAY.from_now }
+  after_initialize :set_expires_at, if: :new_record?
 
   # Scopes
   scope :recent, -> { where("created_at > ?", 2.weeks.ago) }
@@ -55,7 +53,10 @@ class Export < ApplicationRecord
     expires_at <= Time.zone.now
   end
 
-  def redis_file_key
-    "Export#redis_file_key-#{id}"
+  def set_expires_at
+    # En expirant les exports à minuit, on empêche qu'ils soient inclus dans le
+    # backup Scalingo lancé tous les matins à 2h en été / 1h en hiver (0:00 UTC).
+    midnight = Time.zone.tomorrow.change(hour: 0, minute: 0)
+    self.expires_at = midnight
   end
 end
