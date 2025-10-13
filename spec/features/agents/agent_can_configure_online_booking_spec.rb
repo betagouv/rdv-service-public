@@ -101,7 +101,7 @@ RSpec.describe "Agents can configure online booking" do
   describe "choix du type d'usager qui participer au rendez-vous" do
     before do
       login_as(agent, scope: :agent)
-      visit admin_organisation_online_booking_path(organisation)
+      visit edit_user_type_admin_organisation_online_booking_path(organisation)
     end
 
     it "permet de passer de particulier à professionnel" do
@@ -109,7 +109,7 @@ RSpec.describe "Agents can configure online booking" do
       find("label", text:  "des professionnels").click
       click_on "Enregistrer"
 
-      expect(page).to have_content "Configuration mise à jour"
+      expect(page).to have_content "Profil des usagers mis à jour"
 
       expect(organisation.reload).to have_attributes(
         online_booking_for_particuliers: false,

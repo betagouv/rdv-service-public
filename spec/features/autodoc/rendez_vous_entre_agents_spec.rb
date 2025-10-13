@@ -90,7 +90,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     click_on "Réservation en ligne"
 
-    doc.add_screenshot(page, text: "J'ouvre le menu de réservation en ligne", wait_for: "Permettez à vos usagers de prendre rendez-vous en ligne")
+    doc.add_screenshot(page, text: "J'ouvre le menu de réservation en ligne", wait_for: "Ce lien permet de prendre rendez-vous avec votre organisation sur les plages d'ouverture disponibles.")
 
     click_on "modifier"
 
@@ -112,15 +112,18 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     doc.add_screenshot(page,
                        text: "Je retourne sur la page de configuration de la prise de rendez-vous en ligne",
-                       wait_for: "Permettez à vos usagers de prendre rendez-vous en ligne")
+                       wait_for: "Ce lien permet de prendre rendez-vous avec votre organisation sur les plages d'ouverture disponibles.")
+
+    click_on "Modifier"
 
     find(:label, text: "des particuliers").click
     find(:label, text: "des professionnels").click
-    click_on "Enregistrer"
 
     doc.add_screenshot(page,
                        text: "Je sélectionne la prise de rendez-vous par des professionnels et j'enregistre.",
-                       wait_for: "Configuration mise à jour")
+                       wait_for: "Qui participe aux rendez-vous avec les agents de votre organisation ?")
+
+    click_on "Enregistrer"
 
     doc.add_text("Je transmets le lien de prise de rendez-vous à un de mes usagers")
 
