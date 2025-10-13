@@ -8,7 +8,7 @@ module Blog
     CACHE_KEY = "blog_feed".freeze
 
     def self.new_content_for_agent?(agent)
-      feed.latest_post_at < agent.blog_read_at
+      from_cache.latest_post_at > agent.blog_read_at
     rescue StandardError => e
       Sentry.capture_exception(e)
       false
