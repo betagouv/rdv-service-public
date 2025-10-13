@@ -25,7 +25,7 @@ class Admin::MotifsController < AgentAuthController
   ].freeze
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update archive unarchive destroy]
+  before_action :set_motif, only: %i[show edit update archive unarchive destroy edit_online_booking update_online_booking]
 
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
@@ -114,6 +114,25 @@ class Admin::MotifsController < AgentAuthController
     else
       flash[:error] = "Impossible de supprimer le motif : il est lié à #{@motif.rdvs.count} rendez-vous."
       redirect_back fallback_location: admin_organisation_motifs_path(@motif.organisation)
+    end
+  end
+
+  def edit_online_booking
+    authorize(@motif, :edit?, policy_class: Agent::MotifPolicy)
+  end
+
+  def update_online_booking
+    @motif = Motif.find(params[:motif_id])
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
+
+    @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
+    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
+
+    if @motif.save
+      flash[:success] = "Les options de réservation en ligne ont été mises à jour."
+      redirect_to motif_admin_organisation_online_booking_path(current_organisation, motif_id: @motif.id)
+    else
+      render :edit_online_booking
     end
   end
 

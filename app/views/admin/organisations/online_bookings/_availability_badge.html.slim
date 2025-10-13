@@ -1,0 +1,14 @@
+/# locals: (motif:, availabilities_count: )
+- if motif.bookable_by_everyone?
+  - if availabilities_count && availabilities_count > 0
+    p.fr-badge.fr-badge--success
+      | Réservable en ligne
+  - else
+    p.fr-badge.fr-badge--warning
+      | Pas de disponibilités
+- elsif motif.bookable_by_invited_users?
+  p.fr-badge Réservable uniquement par les usagers invités
+- elsif motif.bookable_by_agents_and_prescripteurs?
+  p.fr-badge Réservable uniquement par les prescripteurs
+- else
+  p.fr-badge Non réservable

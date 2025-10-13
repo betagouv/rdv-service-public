@@ -55,6 +55,11 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
     end
   end
 
+  def motif
+    @motif = Motif.find(params[:motif_id])
+    authorize(@motif, :show?, policy_class: Agent::MotifPolicy)
+  end
+
   private
 
   def pundit_user

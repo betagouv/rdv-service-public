@@ -251,6 +251,9 @@ Rails.application.routes.draw do
           member do
             post :archive
             post :unarchive
+
+            get :edit_online_booking
+            patch :update_online_booking
           end
         end
         resources :rdvs_collectifs, only: %i[index new create edit update] do
@@ -275,6 +278,8 @@ Rails.application.routes.draw do
             member do
               get :edit_user_type
               patch :update_user_type
+
+              get :motif
             end
           end
           resource :configuration, only: [:show]
