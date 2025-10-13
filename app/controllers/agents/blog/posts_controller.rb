@@ -1,4 +1,4 @@
-class Agents::BlogPostsController < AgentAuthController
+class Agents::Blog::PostsController < AgentAuthController
   layout "modal"
 
   respond_to :html

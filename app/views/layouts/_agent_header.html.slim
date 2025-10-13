@@ -12,7 +12,7 @@ header.header.bg-white
         = render "layouts/rdv_a_renseigner", organisation: defined?(current_organisation) && current_organisation
         li.list-inline-item
           - if current_domain != Domain::RDV_AIDE_NUMERIQUE
-            a.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center[href=blog_path data-modal="true"]
+            a.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center[href=agents_blog_posts_path data-modal="true"]
               | Nouveautés
               - if unread_blog_posts?(current_agent)
                 .ml-1.fr-badge.fr-badge--new.fr-badge--sm
