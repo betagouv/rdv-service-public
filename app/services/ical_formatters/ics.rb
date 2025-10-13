@@ -17,11 +17,14 @@ module IcalFormatters
     # See also mailers/concerns/ics_multipart_attached.rb
 
     def self.from_payload(payload)
+      tzid = payload[:tzid] || Time.zone_default.tzinfo.identifier
+
       cal = Icalendar::Calendar.new
 
-      cal.add_timezone Time.zone_default.tzinfo.ical_timezone payload[:starts_at]
+      tz = TZInfo::Timezone.get(tzid)
+      cal.add_timezone(tz.ical_timezone(payload[:starts_at]))
       cal.prodid = ICS_UID_SUFFIX
-      cal.event { |event| populate_event(event, payload) }
+      cal.event { |event| populate_event(event, payload, tzid) }
       cal.ip_method = if payload[:action] == :destroy
                         "CANCEL"
                       elsif payload[:attendees].present?
@@ -33,7 +36,7 @@ module IcalFormatters
     end
 
     # rubocop:disable Metrics/PerceivedComplexity
-    def self.populate_event(event, payload)
+    def self.populate_event(event, payload, tzid)
       event.uid = payload[:ical_uid]
       event.status = if payload[:action].present? && payload[:action] == :destroy
                        "CANCELLED"
@@ -44,12 +47,12 @@ module IcalFormatters
                      end
       if payload[:starts_at].present?
         dtstart = Icalendar::Values::DateTime.new(payload[:starts_at],
-                                                  "tzid" => Time.zone_default.tzinfo.identifier)
+                                                  "tzid" => tzid)
         event.dtstart = dtstart
       end
       if payload[:ends_at].present?
         dtend = Icalendar::Values::DateTime.new(payload[:ends_at],
-                                                "tzid" => Time.zone_default.tzinfo.identifier)
+                                                "tzid" => tzid)
         event.dtend = dtend
       end
       if payload[:attendees].present?

@@ -47,7 +47,7 @@ class Organisation < ApplicationRecord
   validates :time_zone,
             presence: true,
             inclusion: {
-              in: ActiveSupport::TimeZone.all.map(&:tzinfo).map(&:identifier),
+              in: TZInfo::Timezone.all_identifiers,
             }
 
   # Scopes

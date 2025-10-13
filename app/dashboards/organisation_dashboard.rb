@@ -21,7 +21,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     territory: Field::BelongsTo,
     verticale: EnumField,
     time_zone: Field::Select.with_options(
-      collection: ActiveSupport::TimeZone.all.map(&:tzinfo).map(&:identifier).sort
+      collection: TZInfo::Timezone.all_identifiers.sort
     ),
     created_at: Field::DateTime,
     updated_at: Field::DateTime,

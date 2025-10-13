@@ -43,13 +43,13 @@ class IcsCalendarController < ActionController::Base
       cal.event do |event|
         dtstart = Icalendar::Values::DateTime.new(
           rdv.starts_at,
-          "tzid" => Time.zone_default.tzinfo.identifier
+          "tzid" => rdv.organisation.time_zone
         )
         event.dtstart = dtstart
 
         dtend = Icalendar::Values::DateTime.new(
           rdv.ends_at,
-          "tzid" => Time.zone_default.tzinfo.identifier
+          "tzid" => rdv.organisation.time_zone
         )
         event.dtend = dtend
 
