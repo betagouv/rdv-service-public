@@ -36,7 +36,7 @@ class DemandeSupportForm
   private
 
   def ticket_subject
-    "Demande Support #{role.to_s.capitalize} - #{first_name} #{last_name} - #{sujet}"
+    "#{sujet} – depuis le formulaire de demande de support"
   end
 
   # Nous utilisons cette méthode uniquement pour Zammad car Crisp permet de stocker les informations de contact
