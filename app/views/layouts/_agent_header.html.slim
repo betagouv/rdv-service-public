@@ -14,7 +14,7 @@ header.header.bg-white
           - if current_domain != Domain::RDV_AIDE_NUMERIQUE
             a.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center[href=blog_path data-modal="true"]
               | Nouveautés
-              - if Blog::Feed.new_content_for_agent?(current_agent)
+              - if unread_blog_posts?(current_agent)
                 .ml-1.fr-badge.fr-badge--new.fr-badge--sm
           - elsif defined?(current_organisation) && current_organisation && current_agent.organisations.count <= 1 && current_agent.admin_in_organisation?(current_organisation)
             = link_to "Passer à RDV Service Public", admin_organisation_instance_exports_path(current_organisation), class: "btn text-primary-blue link-dsfr"

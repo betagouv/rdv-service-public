@@ -170,4 +170,11 @@ module ApplicationHelper
   def column_chart(path, options = {})
     tag.div(class: "js-column-chart", data: { path: path, options: options.to_json })
   end
+
+  def unread_blog_posts?(agent)
+    Blog::Feed.instance.new_content_for_agent?(agent)
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    false
+  end
 end
