@@ -9,18 +9,28 @@ module Blog
     CACHE_KEY = "headway_html".freeze
 
     def initialize
-      self.posts = HeadwayParser.new(headway_html_from_cache).posts
+      posts = HeadwayParser.new(headway_html_from_cache).posts
       self.title = "Nouveautés"
       self.link = HEADWAY_URL
+      self.posts = posts
       self.latest_post_at = posts.map(&:published_at).max
+      @loading_successful = posts.any?
+    rescue StandardError => e
+      Sentry.capture_exception(e)
+      @loading_successful = false
+    rescue WebMock::NetConnectNotAllowedError
+      @loading_successful = false
+    end
+
+    def available?
+      !!@loading_successful
     end
 
     def new_content_for_agent?(agent)
-      agent.blog_read_at.nil? || latest_post_at > agent.blog_read_at
-    end
+      return false unless available?
+      return true if agent.blog_read_at.nil?
 
-    def agent_up_to_date!(agent)
-      agent.update_columns(blog_read_at: latest_post_at) # rubocop:disable Rails/SkipsModelValidations
+      latest_post_at > agent.blog_read_at
     end
 
     private
@@ -30,7 +40,7 @@ module Blog
     end
 
     def refresh_cache
-      Rails.cache.write(CACHE_KEY, fetch_headway_html)
+      Rails.cache.write(CACHE_KEY, html)
     end
 
     def fetch_headway_html
