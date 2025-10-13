@@ -176,5 +176,7 @@ module ApplicationHelper
   rescue StandardError => e
     Sentry.capture_exception(e)
     false
+  rescue WebMock::NetConnectNotAllowedError
+    false
   end
 end
