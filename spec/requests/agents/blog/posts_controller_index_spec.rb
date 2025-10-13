@@ -1,14 +1,15 @@
 RSpec.describe Agents::Blog::PostsController, "#index" do
   let!(:agent) { create(:agent) }
 
-  before do
-    stub_request(:get, Blog::Feed::HEADWAY_URL).to_return(body: file_fixture("headway_home.html"))
-    sign_in agent
-  end
+  before { sign_in agent }
 
   it "displays all posts" do
+    create(:blog_post, title: "Un titre de post", description: "Une description de post", link: "https://example.com")
     get agents_blog_posts_path
-    expect(response.body).to include("Mots de passe forts obligatoires")
+
+    expect(response.body).to include("Un titre de post")
+    expect(response.body).to include("Une description de post")
+    expect(response.body).to include("https://example.com")
   end
 
   it "updates the agent's blog_read_at" do
@@ -17,14 +18,10 @@ RSpec.describe Agents::Blog::PostsController, "#index" do
     end.to change { agent.reload.blog_read_at }
   end
 
-  context "when posts can't be fetched" do
-    before do
-      stub_request(:get, Blog::Feed::HEADWAY_URL).to_timeout
-    end
-
-    it "returns a response error" do
+  context "when no posts in DB" do
+    it "declares that no posts were found" do
       get agents_blog_posts_path
-      expect(response).to have_http_status(:service_unavailable)
+      expect(response.body).to include("Aucune nouveauté")
     end
   end
 end

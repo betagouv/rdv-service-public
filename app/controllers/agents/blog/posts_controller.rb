@@ -5,12 +5,7 @@ class Agents::Blog::PostsController < AgentAuthController
 
   def index
     skip_policy_scope
-    @feed = Blog::Feed.instance
-
-    if @feed.available?
-      current_agent.update_columns(blog_read_at: @feed.latest_post_at) # rubocop:disable Rails/SkipsModelValidations
-    else
-      head :service_unavailable
-    end
+    @posts = BlogPost.all
+    current_agent.update_columns(blog_read_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
   end
 end

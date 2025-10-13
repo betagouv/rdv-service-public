@@ -176,4 +176,16 @@ class CronJob < ApplicationJob
       end
     end
   end
+
+  class RefreshBlogPostsFromHeadwayJob < CronJob
+    def perform
+      headway_html = Net::HTTP.get_response(URI(BlogPost::HEADWAY_URL)).body
+      posts = HeadwayParser.extract_posts_from_html(headway_html)
+      if posts.any?
+        BlogPost.refresh_from_posts(posts)
+      else
+        raise "no posts found on Headway"
+      end
+    end
+  end
 end
