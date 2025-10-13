@@ -1,26 +1,6 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :log_params_to_sentry
 
-  def github
-    email = request.env["omniauth.auth"]["info"]["email"]
-
-    # Automatically create the first SuperAdmin in development
-    if Rails.env.development? && SuperAdmin.none?
-      first_name, last_name = request.env["omniauth.auth"]["info"]["name"].split
-      SuperAdmin.create!(email: email, first_name: first_name, last_name: last_name, role: :legacy_admin)
-    end
-
-    super_admin = SuperAdmin.find_by(email: email)
-    if super_admin.present?
-      bypass_sign_in super_admin, scope: :super_admin
-      redirect_to super_admins_agents_path
-    else
-      flash[:alert] = "Compte GitHub non autorisé"
-      Rails.logger.error("OmniAuth failed for #{email}")
-      redirect_to root_path
-    end
-  end
-
   def microsoft_graph
     if current_agent.update(microsoft_graph_token: microsoft_graph_token, refresh_microsoft_graph_token: refresh_microsoft_graph_token)
       Outlook::MassCreateEventJob.perform_later(current_agent)

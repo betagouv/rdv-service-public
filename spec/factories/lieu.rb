@@ -10,5 +10,15 @@ FactoryBot.define do
     latitude { 38.8951 }
     longitude { -77.0364 }
     availability { :enabled }
+
+    trait :single_use do
+      availability { :single_use }
+    end
+    trait :disabled do
+      availability { :disabled }
+    end
+    trait :enabled do
+      availability { :enabled }
+    end
   end
 end

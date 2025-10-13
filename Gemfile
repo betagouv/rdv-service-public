@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.5"
+ruby "3.4.6"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -67,8 +67,6 @@ gem "devise", git: "https://github.com/victormours/devise", ref: "0c502c8ab7f11e
 gem "devise_invitable"
 # Deliver Devise's emails in the background using ActiveJob.
 gem "devise-async"
-# Official OmniAuth strategy for GitHub.
-gem "omniauth-github"
 # omniauth provider for Microsoft Graph
 gem "omniauth-microsoft_graph"
 # omniauth provider for inter-instance migrations
@@ -191,7 +189,7 @@ group :development do
   # help to kill N+1 queries and unused eager loading.
   gem "bullet"
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem "byebug", platforms: %i[mri mingw x64_mingw]
+  gem "byebug"
   # Better error page for Rails and other Rack apps
   gem "better_errors"
   # Retrieve the binding of a method's caller, or further up the stack.

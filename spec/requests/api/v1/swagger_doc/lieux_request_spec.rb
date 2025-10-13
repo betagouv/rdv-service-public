@@ -4,7 +4,28 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/v1/lieux" do
-    post "Créer un profil utilisateur" do
+    get "Lister les lieux" do
+      with_oauth_token_authentication
+      with_pagination
+
+      tags "Lieux"
+      produces "application/json"
+      operationId "listLieux"
+      description "Liste tous les lieux accessibles par l’agent connecté. N’inclut pas les lieux ponctuels ni les lieux désactivés."
+
+      let!(:organisation) { create(:organisation) }
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+      let(:oauth_token) { create(:access_token, resource_owner_id: agent.id) }
+      let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
+
+      response 200, "Renvoie une liste des lieux" do
+        schema "$ref" => "#/components/schemas/lieux"
+
+        run_test!
+      end
+    end
+
+    post "Créer un lieu" do
       with_oauth_token_authentication
 
       tags "Lieux"

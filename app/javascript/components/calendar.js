@@ -77,8 +77,14 @@ export class AgendaMonoAgent {
         timeGridOneDay: {
           type: 'timeGrid',
           duration: { days: 1 },
-          buttonText: 'Journée'
-        }
+          buttonText: 'Journée',
+          titleFormat: {
+            month: 'long',
+            year: 'numeric',
+            day: 'numeric',
+            weekday: 'long'
+          },
+        },
       },
       datesSet: this.datesSet,
       eventDidMount: eventRenderer(this.data.selectedEventId),

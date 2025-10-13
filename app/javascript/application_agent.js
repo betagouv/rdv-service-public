@@ -20,7 +20,7 @@ import { PlacesInputs } from './components/places-inputs.js'
 import { RdvWizardStep2 } from './components/rdv_wizard_step2.js'
 import { RdvLieu } from './components/rdv_lieu.js'
 import { PastDateAlert } from './components/past-date-alert.js'
-import { Clipboard } from './components/clipboard.js'
+import setupCopyToClipBoardButtons from './components/copy_to_clipboard_button.js'
 import { ZonesMap } from './components/zones-map.js'
 import { AgentUserForm } from './components/agent-user-form.js'
 import { AgentRoleForm } from './components/agent-role-form.js'
@@ -99,7 +99,7 @@ $(document).on('turbolinks:load', function() {
 
   new PastDateAlert()
 
-  new Clipboard()
+  setupCopyToClipBoardButtons()
 
   new ZonesMap()
 

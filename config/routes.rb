@@ -334,7 +334,7 @@ Rails.application.routes.draw do
     get "confirmation"
   end
 
-  %w[mds accessibility mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
+  %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
 
