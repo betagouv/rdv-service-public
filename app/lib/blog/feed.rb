@@ -14,10 +14,10 @@ module Blog
       false
     end
 
-    def self.from_cache = Rails.cache.fetch(CACHE_KEY) { fetch }
-    def self.refresh_cache = Rails.cache.write(CACHE_KEY, fetch)
+    def self.from_cache = Rails.cache.fetch(CACHE_KEY) { init_from_headway_website }
+    def self.refresh_cache = Rails.cache.write(CACHE_KEY, init_from_headway_website)
 
-    def self.fetch
+    def self.init_from_headway_website
       headway_html = Net::HTTP.get_response(URI(HEADWAY_URL)).body
       feed = new
       feed.posts = HeadwayParser.new(headway_html).posts
