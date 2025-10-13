@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_13_123924) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -240,7 +240,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.string "caldav_username"
     t.string "caldav_password"
     t.boolean "caldav_disconnect_in_progress", default: false, null: false
-    t.datetime "blog_read_at", default: "2025-09-28 18:00:00", null: false
+    t.datetime "blog_read_at"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true

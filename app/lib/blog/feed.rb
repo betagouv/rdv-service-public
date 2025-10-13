@@ -16,7 +16,7 @@ module Blog
     end
 
     def new_content_for_agent?(agent)
-      latest_post_at > agent.blog_read_at
+      agent.blog_read_at.nil? || latest_post_at > agent.blog_read_at
     end
 
     def agent_up_to_date!(agent)
