@@ -1,0 +1,5 @@
+class AddTimeZoneInOrganisation < ActiveRecord::Migration[7.2]
+  def change
+    add_column :organisations, :time_zone, :string, null: false, default: "Europe/Paris"
+  end
+end
