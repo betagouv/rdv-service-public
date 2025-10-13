@@ -5,7 +5,7 @@ class Agents::Blog::PostsController < AgentAuthController
 
   def index
     skip_policy_scope
-    @posts = BlogPost.all
+    @posts = BlogPost.order(published_at: :desc).limit(10)
     current_agent.update_columns(blog_read_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
   end
 end
