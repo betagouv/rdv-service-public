@@ -114,7 +114,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
                        text: "Je retourne sur la page de configuration de la prise de rendez-vous en ligne",
                        wait_for: "Ce lien permet de prendre rendez-vous avec votre organisation sur les plages d'ouverture disponibles.")
 
-    click_on "Modifier"
+    click_on "Modifier", match: :first
 
     find(:label, text: "des particuliers").click
     find(:label, text: "des professionnels").click
