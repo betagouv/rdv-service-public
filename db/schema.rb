@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_17_142741) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_21_160825) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -240,6 +240,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_142741) do
     t.string "caldav_password"
     t.boolean "caldav_disconnect_in_progress", default: false, null: false
     t.datetime "blog_read_at"
+    t.string "pro_connect_openid_sub"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -248,6 +249,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_142741) do
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_agents_on_last_name"
+    t.index ["pro_connect_openid_sub"], name: "index_agents_on_pro_connect_openid_sub", where: "(pro_connect_openid_sub IS NOT NULL)"
     t.index ["proconnect_siret"], name: "index_agents_on_proconnect_siret"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
