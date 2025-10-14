@@ -54,7 +54,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
       let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
       let!(:rsa_orientation_on_phone_platform) { create(:motif_category, name: "RSA orientation sur plateforme téléphonique", short_name: "rsa_orientation_on_phone_platform") }
 
-      let!(:motif) do
+      let!(:motif_rsa_orientation) do
         create(
           :motif,
           min_public_booking_delay: 3.days,
@@ -65,7 +65,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
           organisation: organisation1
         )
       end
-      let!(:motif2) do
+      let!(:motif_rsa_orientation_on_phone_platform) do
         create(
           :motif,
           min_public_booking_delay: 3.days,
@@ -100,10 +100,19 @@ RSpec.describe "Available Creneaux Count for Invitation" do
         )
       end
 
-      let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation1) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], lieu: lieu2, organisation: organisation1) }
-      let!(:plage_ouverture_follow_up) { create(:plage_ouverture, agent: agent, motifs: [motif_follow_up], lieu: lieu2, organisation: organisation1) }
-      let!(:plage_ouverture_with_secto) { create(:plage_ouverture, motifs: [motif_with_secto], lieu: lieu, organisation: org_with_secto) }
+      let!(:plage_ouverture_rsa_orientation_1) { create(:plage_ouverture, motifs: [motif_rsa_orientation], lieu: lieu, organisation: organisation1, first_day: now + 4.days) }
+      let!(:plage_ouverture_rsa_orientation_2) { create(:plage_ouverture, motifs: [motif_rsa_orientation], lieu: lieu, organisation: organisation1, first_day: now + 4.days) }
+      let!(:plage_ouverture_rsa_orientation_on_phone_platform) do
+        create(:plage_ouverture, motifs: [motif_rsa_orientation_on_phone_platform], lieu: lieu2, organisation: organisation1, first_day: now + 5.days)
+      end
+      let!(:plage_ouverture_rsa_orientation_expired) { create(:plage_ouverture, motifs: [motif_rsa_orientation], lieu: lieu, organisation: organisation1, first_day: now - 10.days) }
+      let!(:plage_ouverture_rsa_orientation_on_phone_platform_expired) do
+        create(:plage_ouverture, motifs: [motif_rsa_orientation_on_phone_platform], lieu: lieu2, organisation: organisation1, first_day: now - 20.days)
+      end
+      let!(:plage_ouverture_follow_up) { create(:plage_ouverture, agent: agent, motifs: [motif_follow_up], lieu: lieu2, organisation: organisation1, first_day: now + 4.days) }
+      let!(:plage_ouverture_follow_up_expired) { create(:plage_ouverture, agent: agent, motifs: [motif_follow_up], lieu: lieu2, organisation: organisation1, first_day: now - 10.days) }
+      let!(:plage_ouverture_with_secto) { create(:plage_ouverture, motifs: [motif_with_secto], lieu: lieu, organisation: org_with_secto, first_day: now + 4.days) }
+      let!(:plage_ouverture_with_secto_expired) { create(:plage_ouverture, motifs: [motif_with_secto], lieu: lieu, organisation: org_with_secto, first_day: now - 10.days) }
 
       let!(:lieu) { create(:lieu, name: "Bordeaux Centre", address: "Place de la bourse, Bordeaux, 33000", organisation: organisation1) }
       let!(:lieu2) { create(:lieu, name: "Bruges", address: "3 Rue Gabriel Fauré, Bruges, 33520", organisation: organisation1) }
@@ -222,7 +231,10 @@ RSpec.describe "Available Creneaux Count for Invitation" do
           context "Avec le paramètre total_count" do
             let!(:total_count) { "true" }
 
-            it { expect(parsed_response_body["creneau_availability_count"]).to eq(5) }
+            # Il y a 10 créneaux disponibles en tout, 5 par plage d'ouverture valides
+            # plage_ouverture_rsa_orientation_1 et plage_ouverture_rsa_orientation_2
+            # Ce sont des plages de 4 heures et le motif est de 45 minutes
+            it { expect(parsed_response_body["creneau_availability_count"]).to eq(10) }
           end
         end
 
