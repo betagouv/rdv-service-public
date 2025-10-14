@@ -34,6 +34,25 @@ RSpec.describe "/api/v1/users" do
       end
     end
 
+    context "when passing arbitrary organisation_ids outside my orgs" do
+      let!(:other_organisation) { create(:organisation) }
+
+      let(:params) do
+        {
+          first_name: "Francis",
+          last_name: "Factice",
+          organisation_ids: [other_organisation.id],
+        }
+      end
+
+      it "creation is forbidden" do
+        expect do
+          post "/api/v1/users", headers:, params:, as: :json
+        end.not_to change(User, :count)
+        expect(response.parsed_body["error_messages"].first).to eq("Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action")
+      end
+    end
+
     context "when passing arbitrary referent_agent_ids" do
       let(:agent_from_my_org) { create(:agent, basic_role_in_organisations: [my_organisation]) }
       let(:agent_from_other_org) { create(:agent) }

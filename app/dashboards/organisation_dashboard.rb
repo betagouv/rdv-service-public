@@ -20,6 +20,9 @@ class OrganisationDashboard < Administrate::BaseDashboard
     email: Field::String,
     territory: Field::BelongsTo,
     verticale: EnumField,
+    time_zone: Field::Select.with_options(
+      collection: ActiveSupport::TimeZone.all.map(&:tzinfo).map(&:identifier).sort
+    ),
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -49,6 +52,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     lieux
     ants_connectable
     verticale
+    time_zone
     created_at
     updated_at
   ].freeze
@@ -64,6 +68,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     ants_connectable
     verticale
     territory
+    time_zone
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

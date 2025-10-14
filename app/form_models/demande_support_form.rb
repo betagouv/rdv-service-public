@@ -27,17 +27,13 @@ class DemandeSupportForm
     CreateZammadTicketJob.perform_later(
       sender_role: role,
       email:,
-      subject: ticket_subject,
+      subject: sujet,
       body: ticket_body,
-      tags: [current_domain.to_s]
+      tags: [current_domain.to_s, "Formulaire Demande Support"]
     )
   end
 
   private
-
-  def ticket_subject
-    "Demande Support #{role.to_s.capitalize} - #{first_name} #{last_name} - #{sujet}"
-  end
 
   # Nous utilisons cette méthode uniquement pour Zammad car Crisp permet de stocker les informations de contact
   # dans les métadonnées de la conversation
