@@ -29,7 +29,7 @@ class DemandeSupportForm
       email:,
       subject: sujet,
       body: ticket_body,
-      tags: [current_domain.to_s]
+      tags: [current_domain.to_s, "Formulaire Demande Support"]
     )
   end
 
