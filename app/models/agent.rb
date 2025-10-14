@@ -51,6 +51,8 @@ class Agent < ApplicationRecord
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
   normalizes :email, with: ->(email) { email.downcase }
+  # on retire les espaces parfois présents dans les SIRET ProConnect
+  normalizes :proconnect_siret, with: -> { _1.presence&.gsub(/\s/, "") }
 
   enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes

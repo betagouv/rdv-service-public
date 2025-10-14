@@ -199,4 +199,13 @@ RSpec.describe Agent, type: :model do
       end
     end
   end
+
+  describe "#proconnect_siret" do
+    it "is formatted upon assignation" do
+      expect(described_class.new(proconnect_siret: "13000680200016").proconnect_siret).to     eq("13000680200016")
+      expect(described_class.new(proconnect_siret: "130 006 802 00016").proconnect_siret).to  eq("13000680200016")
+      expect(described_class.new(proconnect_siret: "").proconnect_siret).to                   be_nil
+      expect(described_class.new(proconnect_siret: nil).proconnect_siret).to                  be_nil
+    end
+  end
 end
