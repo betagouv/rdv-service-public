@@ -16,11 +16,17 @@
     - if @banner.motifs_with_missing_availabilities.any?(&:individuel?)
       p Vous devez maintenant ouvrir une plage d'ouverture pour que la réservation en ligne soit possible.
 
-      = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
-
     - if @banner.motifs_with_missing_availabilities.any?(&:collectif?)
-      p Pour les motifs de rendez-vous collectifs, vous devez planifier des prochains rendez-vous
+      p Pour les motifs de rendez-vous collectifs, vous devez planifier des prochains rendez-vous.
+
+    - if @banner.motifs_with_missing_availabilities.all?(&:individuel?)
+      = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
+    - elsif @banner.motifs_with_missing_availabilities.all?(&:collectif?)
       = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
+    - else
+      .fr-btns-group.fr-btns-group--inline
+        = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn fr-btn--secondary"
+        = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn fr-btn--secondary"
 
 .card
   .card-body
