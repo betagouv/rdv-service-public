@@ -12,9 +12,11 @@ class IcsCalendarController < ActionController::Base
         cal = Icalendar::Calendar.new
         cal.x_wr_calname = "#{@agent.full_name} sur #{@agent.domain_name}"
 
-        tz = TZInfo::Timezone.get(Time.zone_default.tzinfo.identifier)
-        timezone = tz.ical_timezone(rdvs.last&.starts_at || 1.year.ago)
-        cal.add_timezone(timezone)
+        @agent.organisations.each do |organisation|
+          tz = TZInfo::Timezone.get(organisation.time_zone)
+          timezone = tz.ical_timezone(rdvs.last&.starts_at || 1.year.ago)
+          cal.add_timezone(timezone)
+        end
 
         add_events(cal)
         cal.publish
