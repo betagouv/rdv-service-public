@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -226,7 +226,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.boolean "display_cancelled_rdv", default: true, comment: "Indique si l'agent veut que les rdv annulés s'affichent quand il consulte un calendrier (pas forcément le sien). Cela n'affecte pas ce que voient les autres agents. Modifiable par le bouton en bas de la vue calendrier\n"
     t.enum "plage_ouverture_notification_level", default: "all", enum_type: "agents_plage_ouverture_notification_level"
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
-    t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
     t.datetime "last_sign_in_at"
     t.text "microsoft_graph_token"
@@ -244,7 +243,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true, where: "(email IS NOT NULL)"
-    t.index ["external_id"], name: "index_agents_on_external_id", unique: true
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
@@ -560,6 +558,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140515) do
     t.boolean "online_booking_for_particuliers", default: true, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des particuliers, et donc qu'on propose le bouton FranceConnect lors de la prise de rendez-vous en ligne.\n"
     t.boolean "online_booking_for_professionnels", default: false, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des professionnels, et donc qu'on propose le bouton ProConnect lors de la prise de rendez-vous en ligne.\n"
     t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
+    t.string "time_zone", default: "Europe/Paris", null: false
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
