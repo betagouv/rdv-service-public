@@ -8,7 +8,7 @@ class OnlineBookingOnboardingBanner
   end
 
   def motifs_with_missing_availabilities
-    @motifs_with_missing_availabilities ||= @organisation.motifs.bookable_by_everyone.select do |motif|
+    @motifs_with_missing_availabilities ||= @organisation.motifs.active.bookable_by_everyone.select do |motif|
       motif.upcoming_availabilities.none?
     end
   end
