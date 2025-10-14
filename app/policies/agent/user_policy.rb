@@ -4,10 +4,9 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def create?
-    # Un agent est toujours autorisé à créer un usager.
-    # Il y a des contraintes sur l'association à une organisation,c'est sur le `user_profile`,
-    # lié au système d'erreur et de contrainte `ActiveRecord`, et non aux authorisation.
-    true
+    return true if @record.organisations.none?
+
+    @record.organisations.all? { |user_org| user_org.in?(current_agent.organisations) }
   end
 
   def invite?

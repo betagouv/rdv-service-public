@@ -5,7 +5,7 @@ namespace :api do
     resources :absences, except: %i[new edit]
     resources :plage_ouvertures, only: %i[create]
     resources :agents, only: %i[index create]
-    resources :lieux, only: %i[create]
+    resources :lieux, only: %i[index create]
     get "agents/me", to: "agents#me"
     resources :users, only: %i[create index show update] do
       post :rdv_invitation_token, to: "users#rdv_invitation_token", on: :member

@@ -25,7 +25,17 @@ class AgendaMultiAgent {
       initialView: "resourceTimeGridDay",
       select: this.selectEvent,
       eventDidMount: eventRenderer(),
-    }
+      views: {
+        resourceTimeGridDay: {
+          titleFormat: {
+            month: 'long',
+            year: 'numeric',
+            day: 'numeric',
+            weekday: 'long'
+          },
+        },
+      },
+    };
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
   }
 
