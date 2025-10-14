@@ -1,7 +1,7 @@
 li.card
-  .card-header.d-flex.align-items-center
+  .card-header.d-flex.rdv-align-items-baseline
     - slots_count = available_slots_count(motif)
-    h3.mr-2
+    h3.fr-h6.mr-2.fr-mb-1v
       - if motif.bookable_by_everyone_or_bookable_by_invited_users? && slots_count > 0
         i.fa-solid.fa-circle-check.color-scheme-green.mr-1
       - else
