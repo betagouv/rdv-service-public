@@ -34,7 +34,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
 
     form = Admin::OnlineBookingMotifsForm.new(current_organisation)
 
-    form.submit(params.dig(:admin_online_booking_motifs_form, :motif_ids), flash)
+    form.submit(params.dig(:admin_online_booking_motifs_form, :motif_ids), flash, session)
 
     redirect_to admin_organisation_online_booking_path(current_organisation)
   end

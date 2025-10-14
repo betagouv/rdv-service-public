@@ -8,7 +8,7 @@ class Admin::OnlineBookingMotifsForm
     @motif_ids = motifs.bookable_by_everyone.pluck(:id)
   end
 
-  def submit(new_motif_ids, flash)
+  def submit(new_motif_ids, flash, session)
     new_motif_ids ||= []
 
     motifs_open_before_update = motifs.bookable_by_everyone.any?
@@ -23,7 +23,7 @@ class Admin::OnlineBookingMotifsForm
 
     motifs_open_after_update = motifs.bookable_by_everyone.any?
 
-    prepare_flash(flash, motifs_open_before_update, motifs_open_after_update)
+    prepare_flash_and_session(flash, session, motifs_open_before_update, motifs_open_after_update)
   end
 
   private
@@ -32,7 +32,7 @@ class Admin::OnlineBookingMotifsForm
     @motifs ||= @organisation.motifs.active
   end
 
-  def prepare_flash(flash, motifs_open_before_update, motifs_open_after_update)
+  def prepare_flash_and_session(flash, session, motifs_open_before_update, motifs_open_after_update)
     if motifs_open_before_update
       if motifs_open_after_update
         flash[:success] = "La liste des motifs ouverts à la réservation en ligne a été mise à jour."
@@ -44,7 +44,9 @@ class Admin::OnlineBookingMotifsForm
       banner = OnlineBookingOnboardingBanner.new(@organisation)
 
       # Si on affiche la bannière, on ne met pas le flash, parce que ça fait doublon d'avoir une confirmation au dessus du titre et un avertissement sous le titre
-      unless banner.display?
+      if banner.display?
+        session["OnlineBookingMotifsForm:completed"] = true
+      else
         flash[:success] = "Les motifs #{motifs.bookable_by_everyone.pluck(:name).to_sentence} sont ouverts pour la réservation en ligne."
       end
     else

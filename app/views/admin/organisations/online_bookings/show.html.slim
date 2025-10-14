@@ -4,7 +4,7 @@
 - content_for :title do
   | Réservation en ligne
 
-- if @banner.display?
+- if @banner.display? &&  session["OnlineBookingMotifsForm:completed"]
   .fr-callout.fr-pb-2w
     p 🎉 Vous y êtes presque !
 
