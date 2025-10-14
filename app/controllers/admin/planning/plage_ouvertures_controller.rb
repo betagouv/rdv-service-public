@@ -100,7 +100,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     if session["OnlineBookingMotifsForm:completed"]
       banner = OnlineBookingOnboardingBanner.new(current_organisation)
       # S'il n'y a plus besoin de la bannière, on arrête de l'afficher
-      unless banner.display?
+      unless banner.availabilities_needed?
         session.delete("OnlineBookingMotifsForm:completed")
       end
     end

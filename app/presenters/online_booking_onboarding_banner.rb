@@ -3,7 +3,7 @@ class OnlineBookingOnboardingBanner
     @organisation = organisation
   end
 
-  def display?
+  def availabilities_needed?
     motifs_with_missing_availabilities.any?
   end
 

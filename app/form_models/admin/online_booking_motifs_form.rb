@@ -40,17 +40,26 @@ class Admin::OnlineBookingMotifsForm
         flash[:notice] = "La réservation en ligne a été fermée"
       end
     elsif motifs_open_after_update
-
-      banner = OnlineBookingOnboardingBanner.new(@organisation)
-
-      # Si on affiche la bannière, on ne met pas le flash, parce que ça fait doublon d'avoir une confirmation au dessus du titre et un avertissement sous le titre
-      if banner.display?
-        session["OnlineBookingMotifsForm:completed"] = true
-      else
-        flash[:success] = "Les motifs #{motifs.bookable_by_everyone.pluck(:name).to_sentence} sont ouverts pour la réservation en ligne."
-      end
+      prepare_flash_and_session_for_activation(flash, session)
     else
       flash[:error] = "Vous devez choisir au moins un motif pour ouvrir la réservation en ligne"
+    end
+  end
+
+  def prepare_flash_and_session_for_activation(flash, session)
+    banner = OnlineBookingOnboardingBanner.new(@organisation)
+
+    if banner.availabilities_needed?
+      # Si on affiche la bannière, on ne met pas le flash, parce que ça fait doublon d'avoir une confirmation au dessus du titre et un avertissement sous le titre
+      session["OnlineBookingMotifsForm:completed"] = true
+    else
+      motif_names = motifs.bookable_by_everyone.pluck(:name)
+      flash[:success] = if motif_names.count == 1
+                          "Le motif #{motif_names.first} est ouvert pour la réservation en ligne."
+                        else
+                          "Les motifs #{motif_names.to_sentence} sont ouverts pour la réservation en ligne."
+                        end
+
     end
   end
 end

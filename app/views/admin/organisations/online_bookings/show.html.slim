@@ -4,7 +4,7 @@
 - content_for :title do
   | Réservation en ligne
 
-- if @banner.display? &&  session["OnlineBookingMotifsForm:completed"]
+- if @banner.availabilities_needed? && session["OnlineBookingMotifsForm:completed"]
   .fr-callout.fr-pb-2w
     p 🎉 Vous y êtes presque !
 
@@ -12,7 +12,7 @@
       p Le motif <b>#{@banner.motifs_with_missing_availabilities.first.name}</b> est ouvert pour la réservation en ligne.
     - else
       - bold_motif_names = @banner.motifs_with_missing_availabilities.pluck(:name).map { |name| tag.b(name) }
-      p Les motifs #{bold_motif_names.to_sentence} sont ouverts pour la réservation en ligne.
+      p Les motifs #{sanitize(bold_motif_names.to_sentence)} sont ouverts pour la réservation en ligne.
 
     - if @banner.motifs_with_missing_availabilities.any?(&:individuel?)
       p Vous devez maintenant ouvrir une plage d'ouverture pour que la réservation en ligne soit possible.
