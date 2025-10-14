@@ -16,6 +16,6 @@ class Agents::AgendasController < AgentAuthController
   private
 
   def pundit_user
-    AgentContext.new(current_agent)
+    current_agent
   end
 end

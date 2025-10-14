@@ -75,8 +75,4 @@ class Admin::Territories::OrganisationsController < Admin::Territories::BaseCont
       .where(territory: current_territory)
       .ordered_by_name
   end
-
-  def pundit_user
-    AgentContext.new(current_agent)
-  end
 end

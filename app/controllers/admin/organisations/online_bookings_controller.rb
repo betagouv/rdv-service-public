@@ -25,6 +25,10 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
 
   private
 
+  def pundit_user
+    current_agent
+  end
+
   def set_motifs
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif)
       .available_motifs_for_organisation_and_agent(current_organisation, current_agent)
