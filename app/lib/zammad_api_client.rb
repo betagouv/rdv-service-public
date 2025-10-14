@@ -41,21 +41,10 @@ class ZammadApiClient
     connection.post("api/v1/tickets/search?#{query}", { condition: }).body
   end
 
-  def self.search_assigned_tickets
+  def self.search_new_and_open_tickets
     search_tickets(
       condition: {
         "ticket.state_id": { operator: "is", value: [1, 2] }, # new or open
-        "ticket.owner_id": { operator: "is not", value: [1] },
-      },
-      query: "per_page=200&expand=true" # 200 seems to be the max
-    ).map { Ticket.new(_1) }
-  end
-
-  def self.search_unassigned_tickets
-    search_tickets(
-      condition: {
-        "ticket.state_id": { operator: "is", value: [1, 2] }, # new or open
-        "ticket.owner_id": { operator: "is", value: [1] },
       },
       query: "per_page=200&expand=true" # 200 seems to be the max
     ).map { Ticket.new(_1) }
