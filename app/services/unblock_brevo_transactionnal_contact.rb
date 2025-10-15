@@ -10,7 +10,9 @@ class UnblockBrevoTransactionnalContact
       req.headers["api-key"] = ENV["BREVO_API_KEY"]
     end
 
-    unless response.status.in?([204])
+    # On reçoit une 204 si le contact a été débloqué avec succès et une 404 si le contact n’était pas bloqué
+    # Dans les deux cas, on considère que l’opération est un succès. Dans les autres cas, on logue l’erreur dans Sentry.
+    unless response.status.in?([204, 404])
       Sentry.capture_message("Failed to unblock Brevo transactional contact", level: :error, extra: { email: @email, status: response.status, body: response.body })
     end
   end
