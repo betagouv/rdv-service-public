@@ -33,6 +33,10 @@ RSpec.describe Admin::InvitationsController, type: :controller do
   describe "POST #reinvite" do
     let(:agent_invitee) { create(:agent, invited_by: agent, confirmed_at: nil, first_name: nil, last_name: nil, allow_blank_name: true, basic_role_in_organisations: [organisation]) }
 
+    before do
+      allow(UnblockBrevoTransactionnalContact).to receive(:new).and_return(instance_double(UnblockBrevoTransactionnalContact, call: true))
+    end
+
     it "returns a success response" do
       post :reinvite, params: { organisation_id: organisation.id, id: agent_invitee.to_param }
       expect(response).to redirect_to(admin_organisation_invitations_path(organisation))
