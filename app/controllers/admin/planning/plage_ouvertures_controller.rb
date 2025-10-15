@@ -63,6 +63,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     if @plage_ouverture.save
       Notifiers::PlageOuvertureCreated.new(@plage_ouverture).perform
       flash[:success] = "Plage d'ouverture créée"
+      update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
       render :new
@@ -74,6 +75,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     if @plage_ouverture.update(plage_ouverture_params)
       Notifiers::PlageOuvertureUpdated.new(@plage_ouverture).perform
       flash[:success] = "La plage d'ouverture a été modifiée."
+      update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
       render :edit
@@ -93,6 +95,16 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   private
+
+  def update_online_booking_banner_display
+    if session["OnlineBookingMotifsForm:completed"]
+      banner = OnlineBookingOnboardingBanner.new(current_organisation)
+      # S'il n'y a plus besoin de la bannière, on arrête de l'afficher
+      unless banner.availabilities_needed?
+        session.delete("OnlineBookingMotifsForm:completed")
+      end
+    end
+  end
 
   def set_plage_ouverture
     @plage_ouverture = PlageOuverture.find(params[:id])

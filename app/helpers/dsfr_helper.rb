@@ -42,4 +42,17 @@ module DsfrHelper
   def external_link_to(name, url, html_options = {})
     link_to(name, url, { target: "_blank", rel: "noopener", title: "#{name} - nouvel onglet" }.merge(html_options))
   end
+
+  def location_type_icon(location_type, html_options = {})
+    case location_type.to_sym
+    when :public_office
+      lieu_icon(html_options)
+    when :phone
+      phone_icon(html_options)
+    when :home
+      home_icon(html_options)
+    when :visio
+      visio_icon(html_options)
+    end
+  end
 end

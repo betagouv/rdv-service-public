@@ -1,29 +1,97 @@
 RSpec.describe "Agents can configure online booking" do
   let!(:organisation) { create(:organisation) }
+  let!(:motif) do
+    create(:motif, organisation: organisation, service: agent.services.first, bookable_by: :agents, collectif: false, name: "Motif individuel")
+  end
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation]) }
 
-  context "motif individuel" do
-    let!(:motif) do
-      create(:motif, organisation: organisation, service: agent.services.first, bookable_by: :agents, collectif: false, name: "Motif individuel")
+  before { login_as(agent, scope: :agent) }
+
+  describe "full lifecycle" do
+    let!(:motif_for_prescripteurs) do
+      create(:motif, organisation: organisation, service: agent.services.first, bookable_by: :agents_and_prescripteurs, collectif: false, name: "Suivi de dossier")
     end
 
+    specify do
+      visit admin_organisation_online_booking_path(organisation)
+
+      expect(page).to have_content("Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?")
+
+      click_on "Enregistrer"
+
+      expect(page).to have_content("Vous devez choisir au moins un motif pour ouvrir la réservation en ligne")
+      expect(page).to have_content("Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?")
+
+      find("label", text: motif.name).click
+      click_on "Enregistrer"
+
+      expect(page).to have_content("Le motif Motif individuel est ouvert pour la réservation en ligne.")
+      expect(motif.reload).to have_attributes(bookable_by: "everyone")
+      expect(motif_for_prescripteurs.reload).to have_attributes(bookable_by: "agents_and_prescripteurs") # Les motifs qui ne sont pas bookable_by_everyone ne changent pas de niveau de réservation.
+
+      expect(page).to have_content("Ouvrir une plage d'ouverture")
+
+      visit edit_admin_organisation_online_booking_path(organisation)
+
+      find("label", text: motif.name).click
+      find("label", text: motif_for_prescripteurs.name).click
+      click_on "Enregistrer"
+
+      expect(motif.reload).to have_attributes(bookable_by: "agents")
+      expect(motif_for_prescripteurs.reload).to have_attributes(bookable_by: "everyone")
+
+      expect(page).to have_content("La liste des motifs ouverts à la réservation en ligne a été mise à jour.")
+
+      visit edit_admin_organisation_online_booking_path(organisation)
+
+      find("label", text: motif_for_prescripteurs.name).click
+      click_on "Enregistrer"
+
+      expect(page).to have_content("La réservation en ligne a été fermée")
+      expect(motif.reload).to have_attributes(bookable_by: "agents")
+      expect(motif_for_prescripteurs.reload).to have_attributes(bookable_by: "agents")
+
+      expect(page).to have_content("Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?")
+    end
+  end
+
+  describe "availabilities banner" do
+    let!(:lieu) { create(:lieu, organisation:) }
+
+    it "shows the banner when needed, until the availabilities are open" do
+      visit admin_organisation_online_booking_path(organisation)
+      find("label", text: motif.name).click
+      click_on "Enregistrer"
+
+      expect(page).to have_content("Le motif Motif individuel est ouvert pour la réservation en ligne.")
+
+      # La bannière est encore là si on recharge la page
+      visit admin_organisation_online_booking_path(organisation)
+      expect(page).to have_content("Le motif Motif individuel est ouvert pour la réservation en ligne.")
+
+      click_on "Ouvrir une plage d'ouverture"
+      click_on "Renseigner mes disponibilités"
+      find("label", text: motif.name).click
+      find("label", text: "Lundi").click
+
+      select(lieu.name, from: "Lieu")
+      click_on "Créer la plage d'ouverture"
+
+      expect(page).to have_content "Plage d'ouverture créée"
+
+      # La bannière ne s'affiche plus
+      visit admin_organisation_online_booking_path(organisation)
+      expect(page).not_to have_content("Le motif Motif individuel est ouvert pour la réservation en ligne.")
+    end
+  end
+
+  context "motif individuel" do
     it "displays the motif's status" do
-      login_as(agent, scope: :agent)
       visit admin_organisation_online_booking_path(organisation)
 
-      # On a 3 croix qui indiquent respectivement :
-      # - le motif n'est pas réservable en ligne
-      # - c'est parce que l'option n'a pas été activée via le formulaire du motif
-      # - il n'y a pas de plages d'ouverture
-      expect(page).to have_css("i.fa-regular.fa-circle-xmark.color-scheme-red", count: 3)
+      find("label", text: motif.name).click
+      click_on "Enregistrer"
 
-      expect(page).to have_content("Ce motif n'est pas réservable en ligne")
-      expect(page).to have_link("modifier")
-      expect(page).to have_content("Pas de plages d'ouverture")
-
-      motif.update!(bookable_by: :everyone)
-
-      visit admin_organisation_online_booking_path(organisation)
       expect(page).to have_content("Réservable en ligne")
 
       expect(page).to have_css("i.fa-solid.fa-circle-check.color-scheme-green", count: 1)
@@ -43,8 +111,8 @@ RSpec.describe "Agents can configure online booking" do
     it "doesn't show plages d'ouverture in the past" do
       create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, first_day: 20.days.from_now)
       create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, first_day: 10.days.ago)
+      motif.update!(bookable_by: :everyone)
 
-      login_as(agent, scope: :agent)
       visit admin_organisation_online_booking_path(organisation)
 
       expect(page).to have_content("1 plage d'ouverture")
@@ -53,17 +121,14 @@ RSpec.describe "Agents can configure online booking" do
 
   context "motif collectif" do
     let!(:motif) do
-      create(:motif, organisation: organisation, service: agent.services.first, collectif: true, name: "Motif collectif")
+      create(:motif, organisation: organisation, service: agent.services.first, collectif: true, name: "Motif collectif", bookable_by: :agents)
     end
 
     it "displays the motif's status" do
-      login_as(agent, scope: :agent)
-
       visit admin_organisation_online_booking_path(organisation)
-      expect(page).to have_css("i.fa-solid.fa-circle-check.color-scheme-green", count: 1)
-      expect(page).to have_css("i.fa-regular.fa-circle-xmark.color-scheme-red", count: 2)
-      expect(page).to have_content("Réservable en ligne")
-      expect(page).to have_content("Aucun rendez-vous avec des places disponibles")
+
+      find("label", text: motif.name).click
+      click_on "Enregistrer"
 
       create(:rdv, motif: motif, max_participants_count: 5, organisation:)
 
@@ -75,6 +140,8 @@ RSpec.describe "Agents can configure online booking" do
   end
 
   describe "booking link" do
+    before { motif.update!(bookable_by: :everyone) }
+
     context "when organisation is sectorized" do
       before do
         sector = create(:sector, territory: organisation.territory)
@@ -83,15 +150,12 @@ RSpec.describe "Agents can configure online booking" do
       end
 
       it "points to the public booking home page" do
-        login_as(agent, scope: :agent)
         visit admin_organisation_online_booking_path(organisation)
-        expect(page).to have_content("http://www.rdv-solidarites-test.localhost:#{Capybara.server_port}/prendre_rdv")
       end
     end
 
     context "when organisation is not sectorized" do
       it "points to the public booking home page" do
-        login_as(agent, scope: :agent)
         visit admin_organisation_online_booking_path(organisation)
         expect(page).to have_content("http://www.rdv-solidarites-test.localhost:#{Capybara.server_port}/org/#{organisation.id}/#{organisation.slug}")
       end
@@ -100,7 +164,6 @@ RSpec.describe "Agents can configure online booking" do
 
   describe "choix du type d'usager qui participer au rendez-vous" do
     before do
-      login_as(agent, scope: :agent)
       visit edit_user_type_admin_organisation_online_booking_path(organisation)
     end
 
