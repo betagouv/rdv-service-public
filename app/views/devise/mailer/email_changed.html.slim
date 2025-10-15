@@ -9,4 +9,7 @@ ul
   li Adresse actuelle : #{@email}
   li Future adresse : #{@resource.unconfirmed_email}
 
-p Si vous n’êtes pas à l'origine de cette demande, il est vivement recommandé de changer notre mot de passe immédiatement.
+p 
+  |> Si vous n’êtes pas à l'origine de cette demande, il est vivement recommandé de 
+  => link_to "changer votre mot de passe", edit_agent_mot_de_passes_url 
+  |> immédiatement.
