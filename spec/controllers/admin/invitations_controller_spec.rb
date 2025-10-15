@@ -34,7 +34,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
     let(:agent_invitee) { create(:agent, invited_by: agent, confirmed_at: nil, first_name: nil, last_name: nil, allow_blank_name: true, basic_role_in_organisations: [organisation]) }
 
     before do
-      allow(UnblockBrevoTransactionnalContact).to receive(:new).and_return(instance_double(UnblockBrevoTransactionnalContact, call: true))
+      allow(UnblockBrevoTransactionalContact).to receive(:new).and_return(instance_double(UnblockBrevoTransactionalContact, call: true))
     end
 
     it "returns a success response" do

@@ -1,5 +1,5 @@
 # https://developers.brevo.com/reference/delete_smtp-blockedcontacts-email
-class UnblockBrevoTransactionnalContact
+class UnblockBrevoTransactionalContact
   def initialize(email)
     @email = email
   end
