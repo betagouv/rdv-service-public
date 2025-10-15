@@ -17,6 +17,7 @@ module IcalFormatters
     # See also mailers/concerns/ics_multipart_attached.rb
 
     def self.from_payload(payload)
+      # Pour la gestion des fuseaux horaires, voir : https://github.com/betagouv/rdv-service-public/pull/5719#discussion_r2431975425
       tzid = payload[:tzid] || Time.zone_default.tzinfo.identifier
 
       cal = Icalendar::Calendar.new
