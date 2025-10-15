@@ -34,7 +34,7 @@ html lang="fr"
           header.with_tool_link title: "Centre d’aide", path: "https://aide.rdv-service-public.fr", html_attributes: { class: "fr-icon-questionnaire-line" }
           header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, html_attributes: { class: "fr-icon-admin-line" }
           header.with_tool_link title: "Connexion Usager", path: new_user_session_path, html_attributes: { class: "fr-icon-account-line" }
-        elsif !stats_path?
+        elsif !request.path.match(%r{^/stats.*})
           header.with_tool_link title: "Espace Agent", path: new_agent_session_path
           header.with_tool_link title: "Se connecter", path: new_user_session_path,html_attributes: { class: "fr-fi-account-fill" }
         end
