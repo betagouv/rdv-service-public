@@ -1,0 +1,10 @@
+/# locals: (in_agenda: false)
+- content_for :onboarding_banner do
+  .fr-callout.fr-pb-2w
+    - if in_agenda
+      p 🪴 Vous pouvez prendre votre premier rendez-vous en cliquant à l'horaire de votre choix dans l'agenda
+    - else
+      p 🪴 Tout est prêt pour votre premier rendez-vous ! Vous pouvez l'ajouter directement dans l'agenda, ou ouvrir la réservation en ligne pour vos usagers.
+      .fr-btns-group.fr-btns-group--inline
+        = link_to("Aller à l'agenda", admin_organisation_planning_agenda_path(current_organisation), class: "fr-btn fr-btn--secondary")
+        = link_to("Ouvrir la réservation en ligne", admin_organisation_online_booking_path(current_organisation), class: "fr-btn fr-btn--secondary")

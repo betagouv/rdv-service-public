@@ -7,8 +7,10 @@
   = settings_icon(class: "fr-mr-1w")
   | Configuration
 
+= render "admin/onboarding/banner"
+
 .fr-container-fluid
-  .fr-grid-row.fr-grid-row--gutters.fr-mt-4w
+  .fr-grid-row.fr-grid-row--gutters
 
     .fr-col-12.fr-col-md-4.fr-mb-2w
       .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
@@ -38,7 +40,7 @@
                 = lieu_icon(class: "fr-mr-1w")
                 | Lieux
             div.fr-tile__desc
-              - if current_organisation.lieux.none?
+              - if @lieu_name.blank?
                 i Aucun lieu
                 - if needs_lieu(current_organisation)
                   br

@@ -4,6 +4,9 @@
 = render "admin/organisations/configurations/fil_ariane", current_page_title: content_for(:title)
 - content_for(:menu_item) { "menu-settings" }
 
+- if flash[:onboarding] == "first_motif_created"
+  = render "admin/onboarding/banner"
+
 - if agent_can_create_motif?
   - content_for :breadcrumb do
     = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"

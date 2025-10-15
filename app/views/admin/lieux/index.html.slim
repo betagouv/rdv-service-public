@@ -4,6 +4,9 @@
 = render "admin/lieux/fil_ariane"
 - content_for(:menu_item) { "menu-settings" }
 
+- if flash[:onboarding] == "first_lieu_created"
+  = render "admin/onboarding/banner"
+
 - if @lieux_policy.create?
   - content_for :breadcrumb do
     = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "fr-btn fr-btn--secondary"

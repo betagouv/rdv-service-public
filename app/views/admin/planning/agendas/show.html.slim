@@ -1,6 +1,8 @@
 - content_for(:menu_item) { "menu-agendas" }
 - content_for(:menu_agent_select_path_helper_name) { "admin_organisation_planning_agenda_path" }
 
+= render "admin/onboarding/banner", in_agenda: true
+
 - content_for :title do
   - if current_agent == @agent
     | Votre agenda
