@@ -64,6 +64,7 @@ RSpec.describe "Agents can configure online booking" do
       click_on "Enregistrer"
 
       expect(page).to have_content("Le motif Motif individuel est ouvert pour la réservation en ligne.")
+      expect(page).to have_content("Vous devez maintenant ouvrir une plage d'ouverture")
 
       # La bannière est encore là si on recharge la page
       visit admin_organisation_online_booking_path(organisation)
@@ -79,9 +80,11 @@ RSpec.describe "Agents can configure online booking" do
 
       expect(page).to have_content "Plage d'ouverture créée"
 
-      # La bannière ne s'affiche plus
-      visit admin_organisation_online_booking_path(organisation)
-      expect(page).not_to have_content("Le motif Motif individuel est ouvert pour la réservation en ligne.")
+      expect(page).to have_content "La réservation en ligne est maintenant disponible"
+      click_on "Voir la réservation en ligne"
+
+      # La bannière d'avertissement pour les disponibilités ne s'affiche plus
+      expect(page).not_to have_content("Vous devez maintenant ouvrir une plage d'ouverture")
     end
   end
 
