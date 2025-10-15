@@ -62,16 +62,11 @@ class IcsCalendarController < ActionController::Base
   end
 
   def add_timezones(cal)
-    if @agent.organisations.any?
-      @agent.organisations.each do |organisation|
-        tz = TZInfo::Timezone.get(organisation.time_zone)
-        timezone = tz.ical_timezone(rdvs.last&.starts_at || 1.year.ago)
-        cal.add_timezone(timezone)
-      end
-    else
-      tz = TZInfo::Timezone.get(Time.zone_default.tzinfo.identifier)
-      timezone = tz.ical_timezone(rdvs.last&.starts_at || 1.year.ago)
-      cal.add_timezone(timezone)
+    tzids = (@agent.organisations.pluck(:time_zone) + [Time.zone_default.tzinfo.identifier]).uniq
+    tzids.each do |tzid|
+      tz = TZInfo::Timezone.get(tzid)
+      ical_timezone = tz.ical_timezone(Time.zone.now)
+      cal.add_timezone(ical_timezone)
     end
   end
 
