@@ -117,25 +117,6 @@ class Admin::MotifsController < AgentAuthController
     end
   end
 
-  def edit_online_booking
-    authorize(@motif, :edit?, policy_class: Agent::MotifPolicy)
-  end
-
-  def update_online_booking
-    @motif = Motif.find(params[:motif_id])
-    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
-
-    @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
-    authorize(@motif, :update?, policy_class: Agent::MotifPolicy)
-
-    if @motif.save
-      flash[:success] = "Les options de réservation en ligne ont été mises à jour."
-      redirect_to motif_admin_organisation_online_booking_path(current_organisation, motif_id: @motif.id)
-    else
-      render :edit_online_booking
-    end
-  end
-
   private
 
   def creation_flash

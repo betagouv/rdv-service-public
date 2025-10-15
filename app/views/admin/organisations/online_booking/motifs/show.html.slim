@@ -33,7 +33,7 @@
         .card-body
           .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
             h3.fr-h4 Options de réservation
-            = link_to "Modifier", edit_online_booking_admin_organisation_motif_path(@organisation, @motif.id), class: "fr-btn fr-btn--secondary"
+            = link_to "Modifier", edit_admin_organisation_online_booking_motif_path(@organisation, @motif.id), class: "fr-btn fr-btn--secondary"
 
           ul
             li.fr-my-2w Les rendez-vous seront pris au moins #{ min_max_delay_int_to_human(@motif.min_public_booking_delay) } à l'avance.
