@@ -25,7 +25,7 @@ class Admin::MotifsController < AgentAuthController
   ].freeze
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update archive unarchive destroy edit_online_booking update_online_booking]
+  before_action :set_motif, only: %i[show edit update archive unarchive destroy]
 
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
