@@ -31,7 +31,9 @@
                         = " · "
                         = "#{motif.default_duration_in_min} mn"
 
-            p Vous gardez le contrôle : la prise de rendez-vous sera possible uniquement sur les plages d'ouverture de votre choix, et pour les motifs de votre choix.
+            p
+              = icon("fr-icon-lock-fill", class: "fr-mr-1w")
+              | Vous gardez le contrôle : la prise de rendez-vous sera possible uniquement sur les plages d'ouverture de votre choix, et pour les motifs de votre choix.
 
             .d-flex.rdv-justify-content-space-between
               = link_to("Annuler", @cancel_path, class: "fr-btn fr-btn--tertiary-no-outline")
