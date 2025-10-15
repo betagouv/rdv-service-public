@@ -95,19 +95,14 @@ RSpec.describe "Agents can configure online booking" do
       find("label", text: motif.name).click
       click_on "Enregistrer"
 
-      expect(page).to have_content("Réservable en ligne")
-
-      expect(page).to have_css("i.fa-solid.fa-circle-check.color-scheme-green", count: 1)
-      expect(page).to have_css("i.fa-regular.fa-circle-xmark.color-scheme-red", count: 2)
-
-      click_link("ajouter")
-      expect(page).to have_checked_field(motif.name)
+      expect(page).to have_content("Pas de disponibilités")
+      expect(page).to have_content("Pas de plage d'ouverture")
 
       create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation)
 
       visit admin_organisation_online_booking_path(organisation)
-      expect(page).to have_css("i.fa-solid.fa-circle-check.color-scheme-green", count: 3)
-      expect(page).not_to have_css("i.fa-regular.fa-circle-xmark.color-scheme-red")
+
+      expect(page).to have_content("Réservable en ligne")
       expect(page).to have_content("1 plage d'ouverture")
     end
 
@@ -136,8 +131,8 @@ RSpec.describe "Agents can configure online booking" do
       create(:rdv, motif: motif, max_participants_count: 5, organisation:)
 
       visit admin_organisation_online_booking_path(organisation)
-      expect(page).to have_css("i.fa-solid.fa-circle-check.color-scheme-green", count: 3)
-      expect(page).not_to have_css("i.fa-regular.fa-circle-xmark.color-scheme-red")
+
+      expect(page).to have_content("Réservable en ligne")
       expect(page).to have_content("1 rendez-vous avec des places disponibles")
     end
   end
