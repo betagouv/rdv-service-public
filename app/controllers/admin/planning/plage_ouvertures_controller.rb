@@ -22,6 +22,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
       .where(expired_cached: filter_params[:current_tab] == "expired")
       .page(page_number)
     @plage_ouvertures_before_text_search = @plage_ouvertures
+
     @plage_ouvertures = @plage_ouvertures.search_by_text(params[:search]) if params[:search].present?
     @display_tabs = all_plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
   end

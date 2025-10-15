@@ -7,7 +7,8 @@ RSpec.describe "Agent can search plage ouverture" do
   let!(:expired_perm_scolaire) { create(:plage_ouverture, :expired, title: "Permanence Scolaire passée", agent: agent, organisation: organisation) }
 
   let!(:additional_po_to_show_search) do
-    create(:plage_ouverture, title: "Permanence", agent: agent, organisation: organisation)
+    # Pour s'assurer que le champs de recherche s'affiche
+    create_list(:plage_ouverture, 4, title: "Permanence", agent:, organisation:)
   end
 
   before do
