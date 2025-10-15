@@ -127,7 +127,8 @@ class Admin::RdvsController < AgentAuthController
 
   def set_scoped_organisations
     @selected_organisations_ids = params[:scoped_organisation_ids]&.compact_blank
-    accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
+    skip_policy_scope # on fait un policy scope à la ligne suivante
+    accessible_organisations = Agent::OrganisationPolicy::Scope.apply(current_agent, Organisation)
     @scoped_organisations = if @selected_organisations_ids.blank?
                               # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
                               # Nous sélectionnons par défaut l'organisation courante

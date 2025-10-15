@@ -1,0 +1,38 @@
+= render "admin/organisations/configurations/fil_ariane", current_page_title: "Réservation en ligne"
+- content_for(:menu_item) { "menu-settings" }
+
+- content_for :title do
+  | Réservation en ligne
+
+.fr-grid-row
+  .fr-col-12.fr-col-lg-10
+    - if @motifs.none?
+      = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
+    - else
+
+      .card
+        .card-body
+          h2.fr-h5 Permettez à vos usagers de prendre rendez-vous en autonomie
+
+          = form_for @online_booking_motifs_form, url: admin_organisation_online_booking_path(current_organisation), method: :patch, builder: Dsfr::FormBuilder do |f|
+            fieldset.fr-fieldset aria-labelledby="checkboxes-legend checkboxes-messages"
+              legend.fr-fieldset__legend--regular.fr-fieldset__legend#checkboxes-legend
+                | Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?
+
+              - @motifs.each do |motif|
+                .fr-fieldset__element
+                  .fr-checkbox-group
+                    = f.check_box :motif_ids, { multiple: true }, motif.id, false
+                    = f.label "motif_ids_#{motif.id}", class: "fr-label" do
+                      = motif.name
+                      span.fr-hint-text
+                        = location_type_icon(motif.location_type, class: "fr-mr-1w fr-icon--sm")
+                        = motif.human_attribute_value(:location_type)
+                        = " · "
+                        = "#{motif.default_duration_in_min} mn"
+
+            p Vous gardez le contrôle : la prise de rendez-vous sera possible uniquement sur les plages d'ouverture de votre choix, et pour les motifs de votre choix.
+
+            .d-flex.rdv-justify-content-space-between
+              = link_to("Annuler", @cancel_path, class: "fr-btn fr-btn--tertiary-no-outline")
+              = f.submit "Enregistrer", class: "fr-btn"

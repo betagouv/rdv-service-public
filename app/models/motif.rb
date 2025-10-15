@@ -45,8 +45,8 @@ class Motif < ApplicationRecord
   # Through relations
   has_many :webhook_endpoints, through: :organisation
   has_many :plage_ouvertures, -> { distinct }, through: :motifs_plage_ouvertures
-  has_many :lieux_through_po, through: :plage_ouvertures, source: :lieu
-  has_many :lieux_through_rdvs, through: :rdvs, source: :lieu
+  has_many :lieux_through_po, -> { distinct }, through: :plage_ouvertures, source: :lieu
+  has_many :lieux_through_rdvs, -> { distinct }, through: :rdvs, source: :lieu
 
   def lieux
     collectif? ? lieux_through_rdvs : lieux_through_po
@@ -260,6 +260,14 @@ class Motif < ApplicationRecord
 
   def duplicated_from_motif
     Motif.find_by(id: duplicated_from_motif_id) if duplicated_from_motif_id
+  end
+
+  def upcoming_availabilities
+    if collectif?
+      rdvs.collectif_and_available_for_reservation
+    else
+      plage_ouvertures.in_range(Time.zone.now..)
+    end
   end
 
   private
