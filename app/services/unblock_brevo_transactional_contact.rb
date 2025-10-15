@@ -5,6 +5,11 @@ class UnblockBrevoTransactionalContact
   end
 
   def call
+    if ENV["BREVO_API_KEY"].blank?
+      Sentry.capture_message("BREVO_API_KEY is not set, cannot unblock Brevo transactional contact", level: :error) if Rails.env.production?
+      return
+    end
+
     response = Faraday.delete("https://api.brevo.com/v3/smtp/blockedContacts/#{CGI.escape(@email)}") do |req|
       req.headers["accept"] = "application/json"
       req.headers["api-key"] = ENV["BREVO_API_KEY"]
