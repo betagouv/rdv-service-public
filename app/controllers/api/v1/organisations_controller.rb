@@ -78,4 +78,8 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
   def geo_params?
     [params[:city_code], params[:street_ban_id]].any?(&:present?)
   end
+
+  def pundit_user
+    current_agent
+  end
 end

@@ -120,7 +120,10 @@ class Admin::UsersController < AgentAuthController
 
   def link_to_organisation
     @user = User.find(params.require(:id))
-    authorize(current_organisation, policy_class: Agent::OrganisationPolicy)
+
+    # On fait un appel à Pundit.authorize parce que le pundit_user est un AgentOrganisationContext
+    Pundit.authorize(current_agent, current_organisation, :show?, policy_class: Agent::OrganisationPolicy)
+    skip_authorization
 
     Redis.with_connection do |redis|
       matching_user_id = redis.get("link_to_organisation:secure_key:#{params[:secure_key]}")
