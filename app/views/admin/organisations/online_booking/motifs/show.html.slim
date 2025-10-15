@@ -24,8 +24,7 @@
       .card
         .card-body
           p Ce motif n'est pas ouvert à la réservation en ligne
-          .fr-btns-group.fr-btns-group--inline
-            = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
+          = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
 
     - if @motif.bookable_outside_of_organisation?
       .card
@@ -42,12 +41,6 @@
               li.fr-my-2w Les usagers sont autorisés à déplacer le rendez-vous jusqu'à 48 heures avant qu'il commence.
             - else
               li.fr-my-2w Les usagers ne sont pas autorisés à déplacer le rendez-vous.
-
-        - if !current_domain.online_reservation_with_public_link && !@motif.follow_up?
-          / TODO: voir la tête que ça a pour la résa en ligne
-          = motif_attribute_row("Sectorisation") do
-              div= @motif.human_attribute_value(:sectorisation_level)
-              div.text-muted= @motif.human_attribute_value(:sectorisation_level, context: :hint)
 
     - if @motif.bookable_by_everyone?
       .card

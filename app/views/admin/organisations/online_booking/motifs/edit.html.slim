@@ -11,7 +11,6 @@
   .fr-col-12.fr-col-lg-10
     .card
       .card-body
-
         = simple_form_for @motif, url: admin_organisation_online_booking_motif_path(current_organisation, @motif) do |f|
           = render "model_errors", model: @motif, f: f
 
