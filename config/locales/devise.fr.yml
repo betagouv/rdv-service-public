@@ -58,6 +58,8 @@ fr:
         ignore: "Si vous n'acceptez pas cette invitation, ignorez cet email. Aucun compte ne sera créé sans votre autorisation."
       confirmation_instructions_email_update:
         subject: "Instructions de confirmation de votre nouvelle adresse email"
+      email_changed:
+        subject: "Notification : demande de changement d’email"
       confirmation_instructions_signup:
         subject: "Instructions de confirmation"
       reset_password_instructions:
