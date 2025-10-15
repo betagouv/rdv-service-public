@@ -279,7 +279,12 @@ Rails.application.routes.draw do
           end
 
           namespace :online_booking do
-            resources :motifs, only: %i[show edit update]
+            resources :motifs, only: %i[show edit update] do
+              member do
+                post :open
+                post :close
+              end
+            end
           end
 
           resource :configuration, only: [:show]

@@ -15,13 +15,29 @@ class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthControlle
       flash[:success] = "Les options de réservation en ligne ont été mises à jour."
       redirect_to admin_organisation_online_booking_motif_path(current_organisation, motif_id: @motif.id)
     else
-      render :edit_online_booking
+      render :edit
     end
   end
 
-  def open; end
+  def open
+    if @motif.update(bookable_by: :everyone)
+      flash[:success] = "Le motif a été ouvert à la réservation en ligne"
+    else
+      flash[:error] = @motif.errors.full_messages
+    end
 
-  def close; end
+    redirect_to admin_organisation_online_booking_motif_path(current_organisation, motif_id: @motif.id)
+  end
+
+  def close
+    if @motif.update(bookable_by: :agents)
+      flash[:success] = "Le motif a été fermé à la réservation en ligne"
+    else
+      flash[:error] = @motif.errors.full_messages
+    end
+
+    redirect_to admin_organisation_online_booking_motif_path(current_organisation, motif_id: @motif.id)
+  end
 
   private
 

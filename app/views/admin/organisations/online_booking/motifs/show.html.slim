@@ -23,17 +23,16 @@
     - unless @motif.bookable_by_everyone?
       .card
         .card-body
-          / TODO: gérer les autres niveaux de réservation
           p Ce motif n'est pas ouvert à la réservation en ligne
           .fr-btns-group.fr-btns-group--inline
-            = link_to "Ouvrir à la réservation en ligne", "#", class: "fr-btn"
+            = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
 
     - if @motif.bookable_outside_of_organisation?
       .card
         .card-body
           .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
             h3.fr-h4 Options de réservation
-            = link_to "Modifier", edit_admin_organisation_online_booking_motif_path(@organisation, @motif.id), class: "fr-btn fr-btn--secondary"
+            = link_to "Modifier", edit_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary"
 
           ul
             li.fr-my-2w Les rendez-vous seront pris au moins #{ min_max_delay_int_to_human(@motif.min_public_booking_delay) } à l'avance.
@@ -55,6 +54,4 @@
         .card-body
           h3.fr-h4 Niveau d'ouverture
           p Ce motif est ouvert à la réservation en ligne. Tous les usagers qui ont accès à votre lien peuvent prendre des rendez-vous.
-          / TODO: peut-être qu'on garde prescripteurs et usagers invités pour plus tard.
-          .fr-btns-group.fr-btns-group--inline
-            = link_to "Fermer la réservation en ligne", "#", class: "fr-btn fr-btn--secondary"
+          = button_to "Fermer à la réservation en ligne", close_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary", method: :post
