@@ -39,6 +39,9 @@ html lang="fr"
           header.with_tool_link title: "Se connecter", path: new_user_session_path,html_attributes: { class: "fr-fi-account-fill" }
         end
 
+        header.with_direct_link_simple title: "Accueil", path: root_path, html_attributes: current_page?(root_path) ? { "aria-current": "page" } : {}
+        header.with_direct_link_simple title: "Statistiques", path: stats_path, html_attributes: current_page?(stats_path) ? { "aria-current": "page" } : {}
+
     main#content[role="main"]
       - if content_for :main_content
         = yield :main_content
