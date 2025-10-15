@@ -72,4 +72,8 @@ class Admin::OrganisationsController < AgentAuthController
   def new_organisation_params
     params.require(:organisation).permit(:name, :territory_id)
   end
+
+  def pundit_user
+    current_agent
+  end
 end
