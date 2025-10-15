@@ -6,6 +6,10 @@ RSpec.describe "Agent can search plage ouverture" do
   let!(:expired_perm_enfance) { create(:plage_ouverture, :expired, title: "Permanence Enfance passée", agent: agent, organisation: organisation) }
   let!(:expired_perm_scolaire) { create(:plage_ouverture, :expired, title: "Permanence Scolaire passée", agent: agent, organisation: organisation) }
 
+  let!(:additional_po_to_show_search) do
+    create(:plage_ouverture, title: "Permanence", agent: agent, organisation: organisation)
+  end
+
   before do
     login_as(agent, scope: :agent)
     visit admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: agent)
