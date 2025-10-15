@@ -19,6 +19,10 @@
           p Ce motif est ouvert à la réservation en ligne, mais il n'a pas de plage d'ouverture disponible.
           p Vous devez ouvrir une plage d'ouverture pour permettre la réservation en ligne sur ce motif.
           = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
+        - else
+          p Ce motif est ouvert à la réservation en ligne, mais il n'y a pas de rendez-vous à venir avec des disponibilités.
+          p Vous devez planifier un nouveau rendez-vous pour permettre la réservation en ligne sur ce motif.
+          = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
 
     - unless @motif.bookable_by_everyone?
       .card
