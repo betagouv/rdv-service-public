@@ -2,12 +2,12 @@ p Bonjour #{@email} !
 
 p
   ' Vous venez de demander à changer d’adresse e-mail.
-  ' Un e-mail de confirmation a été envoyé à votre future adresse,
+  ' Un e-mail de confirmation a été envoyé à votre nouvelle adresse,
   ' il contient un lien qui permet de confirmer le changement.
 
 ul
   li Adresse actuelle : #{@email}
-  li Future adresse : #{@resource.unconfirmed_email}
+  li Nouvelle adresse : #{@resource.unconfirmed_email}
 
 p 
   |> Si vous n’êtes pas à l'origine de cette demande, il est vivement recommandé de 

@@ -26,7 +26,7 @@ RSpec.describe "Agents can change their email" do
     body = notification_email.text_part.body.decoded.squish
     expect(body).to include("Vous venez de demander à changer d’adresse e-mail")
     expect(body).to include("Adresse actuelle : #{old_email}")
-    expect(body).to include("Future adresse : #{new_email}")
+    expect(body).to include("Nouvelle adresse : #{new_email}")
 
     # La nouvelle adresse reçoit le mail de confirmation
     expect do
