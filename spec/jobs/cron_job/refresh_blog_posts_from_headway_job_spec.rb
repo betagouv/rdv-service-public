@@ -21,7 +21,9 @@ RSpec.describe CronJob::RefreshBlogPostsFromHeadwayJob do
       expect(enqueued_jobs).to be_empty
       expect(sentry_events).to be_empty
 
-      described_class.perform_now
+      expect do
+        described_class.perform_now
+      end.not_to change { BlogPost.all.map(&:attributes) }
 
       next_try = enqueued_jobs.last
       expect(next_try[:job]).to eq(described_class)
