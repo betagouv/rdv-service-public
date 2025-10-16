@@ -287,7 +287,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
     t.string "title", null: false
     t.string "description", null: false
     t.string "categories", default: [], array: true
-    t.string "link", null: false
+    t.string "external_url", null: false
     t.datetime "published_at", null: false
   end
 
