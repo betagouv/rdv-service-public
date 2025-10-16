@@ -239,6 +239,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
     t.string "caldav_username"
     t.string "caldav_password"
     t.boolean "caldav_disconnect_in_progress", default: false, null: false
+    t.datetime "blog_read_at"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -280,6 +281,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
     t.string "action_name", null: false
     t.bigint "agent_id", null: false
     t.string "authentication_type"
+  end
+
+  create_table "blog_posts", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "description", null: false
+    t.string "categories", default: [], array: true
+    t.string "external_url", null: false
+    t.datetime "published_at", null: false
   end
 
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

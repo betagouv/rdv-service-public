@@ -26,6 +26,8 @@ tables:
     truncated: true
   - table_name: annotations
     truncated: true
+  - table_name: blog_posts
+    truncated: true
   - table_name: schema_migrations
     truncated: true
   - table_name: oauth_access_grants
