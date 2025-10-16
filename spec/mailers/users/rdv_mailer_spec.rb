@@ -25,9 +25,9 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(cal.decoded).to match("STATUS:CANCELLED") if rdv.cancelled?
     end
 
-    it "contains the link to the rdv for cancellation without phone" do
-      expect(mail.html_part.body.encoded).to match("Vous pouvez annuler votre rendez-vous</span> <strong>jusqu'à 4h avant celui-ci</strong> en cliquant sur le lien ci-dessous.")
-      expect(mail.html_part.body.encoded).to match("Annuler le rendez-vous</a>")
+    it "contains the link to the rdv for cancellation or update without phone" do
+      expect(mail.html_part.body.encoded).to match("Vous pouvez annuler ou modifier votre rendez-vous</span> <strong>jusqu'à 4h avant celui-ci</strong> en cliquant sur le lien ci-dessous.")
+      expect(mail.html_part.body.encoded).to match("Annuler ou modifier le rendez-vous</a>")
       expect(mail.html_part.body.encoded).not_to match("en appelant au")
       expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}?invitation_token=12345")
     end
@@ -40,12 +40,12 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(mail.html_part.body.encoded).to match("Voir le rendez-vous</a>")
     end
 
-    it "contains the link to the rdv for cancellation with phone" do
+    it "contains the link to the rdv for cancellation or update with phone" do
       rdv.organisation.update(phone_number: "0601010101")
       mail = described_class.with(rdv: rdv, user: user, token: token).rdv_created
-      expect(mail.html_part.body.encoded).to match("<span>Vous pouvez annuler votre rendez-vous</span> <strong>jusqu'à 4h avant celui-ci</strong>")
+      expect(mail.html_part.body.encoded).to match("<span>Vous pouvez annuler ou modifier votre rendez-vous</span> <strong>jusqu'à 4h avant celui-ci</strong>")
       expect(mail.html_part.body.encoded).to match("<span>en appelant au <a href=\"tel:0601010101\">0601010101</a> ou</span> en cliquant sur le lien ci-dessous")
-      expect(mail.html_part.body.encoded).to match("Annuler le rendez-vous</a>")
+      expect(mail.html_part.body.encoded).to match("Annuler ou modifier le rendez-vous</a>")
     end
 
     it "contains the link to the rdv for view only with phone" do

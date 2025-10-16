@@ -44,6 +44,11 @@ class Organisation < ApplicationRecord
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
   validate :validate_organisation_phone_number
   validate :validate_at_least_one_user_type
+  validates :time_zone,
+            presence: true,
+            inclusion: {
+              in: ActiveSupport::TimeZone.all.map(&:tzinfo).map(&:identifier),
+            }
 
   # Scopes
   scope :attributed_to_sectors, lambda { |sectors:, most_relevant: false|

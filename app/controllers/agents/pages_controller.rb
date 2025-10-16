@@ -31,7 +31,7 @@ class Agents::PagesController < AgentAuthController
   private
 
   def pundit_user
-    AgentContext.new(current_agent)
+    current_agent
   end
 
   # << REMOVE AFTER 01/01/2026

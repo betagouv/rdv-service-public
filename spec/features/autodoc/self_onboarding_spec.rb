@@ -66,9 +66,7 @@ RSpec.describe "Configuration initiale", js: true do
 
     doc.add_screenshot(page,
                        text: "Réservation en ligne",
-                       wait_for: "Permettez à vos usagers de prendre rendez-vous en ligne")
-
-    expect(page).to have_content("Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous")
+                       wait_for: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous")
 
     doc.start_section("Configuration")
 

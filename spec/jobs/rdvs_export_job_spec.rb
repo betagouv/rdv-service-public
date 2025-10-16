@@ -1,4 +1,6 @@
 RSpec.describe RdvsExportJob do
+  include Capybara::Email::DSL
+
   describe "#rdv_export" do
     it "has an attachment file name which contains the current date without org ID when more than one orga" do
       organisation = create(:organisation)
@@ -29,7 +31,7 @@ RSpec.describe RdvsExportJob do
       perform_enqueued_jobs
 
       expect(Export.last.file_name).to eq("export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls")
-      email = email_sent_to(agent.email)
+      email = first_email_sent_to(agent.email)
       expect(email.html_part.body.to_s).to include("Votre export est prêt")
     end
 

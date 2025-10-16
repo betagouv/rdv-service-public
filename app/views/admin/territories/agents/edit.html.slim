@@ -23,7 +23,7 @@ h1
         .row
           .col.text-right
             - if can_edit_services
-              = f.submit class: "btn btn-primary", value: "Enregistrer les services"
+              = f.submit class: "fr-btn", value: "Enregistrer les services"
             - else
               .fr-mb-0.fr-text--sm.text-muted
                 | Vous n’avez pas les droits nécessaires pour modifier les services des agents
@@ -34,14 +34,14 @@ h1
       = t(".agent_access_rights_legend")
     = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
       .card-body
-        = f.input :allow_to_manage_teams, as: :boolean, hint: t(".hint_allow_to_manage_teams", territory_name: current_territory), disabled: !can_edit_access_rights
-        = f.input :allow_to_manage_access_rights, as: :boolean, hint: t(".hint_allow_to_manage_access_rights", territory_name: current_territory), disabled: !can_edit_access_rights
-        = f.input :allow_to_invite_agents, as: :boolean, hint: t(".hint_allow_to_invite_agents", territory_name: current_territory), disabled: !can_edit_access_rights
+        = f.input :allow_to_manage_teams, as: :boolean, hint: "Créer, supprimer, modifier toutes les équipes de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
+        = f.input :allow_to_manage_access_rights, as: :boolean, hint: "Modifier les droits d'accès et les services de tous les agents de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
+        = f.input :allow_to_invite_agents, as: :boolean, hint: "Inviter d'autre personne sur l'espace, les affecter ou retirer de chacune des organisations de #{current_territory.name_for_agent}", disabled: !can_edit_access_rights
       .card-footer
         .row
           .col.text-right
             - if can_edit_access_rights
-              = f.submit class: "btn btn-primary", value: "Enregistrer les droits d'accès"
+              = f.submit class: "fr-btn", value: "Enregistrer les droits d'accès"
             - else
               .fr-mb-0.fr-text--sm.text-muted
                 | Vous n’avez pas les droits nécessaires pour modifier les droits d’accès des agents
@@ -55,14 +55,14 @@ h1
         .card-body
           = check_box_tag :territorial_admin, 1, @agent.territorial_admin_in?(current_territory)
           span>
-          = label_tag :territorial_admin, "Administrateur de l'espace #{current_territory}"
+          = label_tag :territorial_admin, "Administrateur de #{current_territory.name_for_agent}"
           small.form-text.text-muted
             | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiblité des catégories de motif, …
 
         .card-footer
           .row
             .col.text-right
-              = f.submit class: "btn btn-primary"
+              = f.submit class: "fr-btn"
 
   - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_teams?
     .card.m-2.rounded
@@ -80,7 +80,7 @@ h1
         .card-footer
           .row
             .col.text-right
-              = f.submit class: "btn btn-primary"
+              = f.submit class: "fr-btn"
 
   .card.m-2.rounded
     h2.card-header
@@ -104,7 +104,7 @@ h1
                 .card-footer
                   .row
                     .col.text-left
-                      = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?"}
+                      = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), class: "fr-btn fr-btn--tertiary", data: { turbo_confirm: "Vous confirmez retirer l'agent #{@agent.full_name_or_email} de l'organisation #{role.organisation.name} ?", turbo_method: :delete }
                     .col.text-right
                       = f.button :submit, t(".submit")
 
@@ -117,7 +117,7 @@ h1
           = f.input :organisation_id, collection: available_other_organisations, include_blank: "-- sélectionner une organisation --",
                   required: false,
                   label: false
-          = f.submit "Affecter cette organisation", class: "btn btn-outline-primary"
+          = f.submit "Affecter cette organisation", class: "fr-btn fr-btn--secondary"
       - elsif Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
         => t(".no_other_organisation")
         = link_to t(".create_organisation"), new_admin_organisation_path(territory_id: current_territory.id)

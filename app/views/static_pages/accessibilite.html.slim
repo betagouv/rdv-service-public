@@ -32,7 +32,7 @@
 
     h2 Résultats des tests
 
-    p L’audit de conformité réalisé en auto-évaluation révèle que 85% des critères sont respectés.
+    p L’audit de conformité réalisé par RDV Service Public révèle que 94 % des critères du RGAA version 4.1.2 sont respectés.
 
     h2 Contenus non accessibles
 
@@ -41,24 +41,19 @@
     p Malgré nos efforts, certains contenus sont inaccessibles. Vous trouverez ci-dessous une liste des limitations connues et des solutions potentielles :
 
     ol
-      li
-        b> Recherche d’adresse :
-        span Les résultats de la recherche d’adresse ainsi que les erreurs de saisie ne sont pas correctement vocalisés par les technologies d’assistance. Le problème est dû à l’utilisation d’un système de recherche d’adresse qui n’est pas nativement accessible. Nous avons planifié le changement de ce système. Si vous rencontrez des difficultés dans son utilisation, n’hésitez pas à nous contacter afin que nous puissions vous débloquer.
-      li
-        b> Formulaires :
-        span Certains champs de formulaires peuvent être améliorés, notamment en précisant les formats attendus en cas d’erreur de saisie. Nous allons continuer d’améliorer la qualité du contexte donné dans nos formulaires. Si vous rencontrez des difficultés dans la compréhension de certaines étapes, n’hésitez pas à prendre contact avec nous.
-      li
-        b> Interface a destination des agents :
-        span L’interface à destination des agents n’a pas été prise en compte dans le cadre de cet audit. Elle est donc considérée comme inaccessible. Notre équipe travaille déjà à sa mise en accessibilité et à la préparation d’un audit de l’interface à destination des agents. En tant qu’agent, si vous rencontrez des difficultés, n’hésitez pas à nous les faire parvenir afin que nous puissions corriger les problèmes rencontrés.
+      li L'information ne doit pas être donnée uniquement par la couleur dans la saisie de l'adresse recherchée
+      li Les propositions de résultats de la recherche ne sont pas restitués par les technologies d'assistance
+      li Absence d'indication d'erreur de saisie et de certains formulaires (champ téléphone)
+      li Certaines pages n'ont pas la hiérarchie appropriée pour les titres.
 
     h3 Dérogations pour charge disproportionnée
 
     ul
-      li La page de statistiques du service composée uniquement de graphiques et de  cartes basées sur un outil externe.
+      li La page de statistiques du service composée uniquement de graphiques et de cartes basées sur un outil externe.
 
     h2 Établissement de cette déclaration d’accessibilité
 
-    p Cette déclaration a été établie le 16 avril 2025.
+    p Cette déclaration a été établie le 5 mai 2025. Elle a été mise à jour le 24 septembre 2025.
 
     h3 Technologies utilisées
 
@@ -69,14 +64,41 @@
       li WAI-ARIA
       li CSS
       li JavaScript
+      li Ruby on Rails
 
-    h3 Agents utilisateurs, technologies d’assistance et outils utilisés pour vérifier l’accessibilité
+    h3 Environnement de test
 
     p Les tests des pages web ont été effectués avec les combinaisons de navigateurs web et lecteurs d’écran suivants :
 
     ul
       li Sur Mobile iOS avec Safari et VoiceOver
       li Sur Ordinateur macOS avec Safari et VoiceOver
+      li Sur Ordinateur Windows avec Firefox et JAWS
+      li Sur Ordinateur Windows avec Firefox et NVDA
+
+    h3 Outils pour évaluer l’accessibilité
+
+    ul
+      li HeadingsMap
+      li Assistant RGAA
+
+    h3 Pages du site ayant fait l’objet de la vérification de conformité
+
+    ul
+      li Page d’accueil
+      li Contact
+      li Mentions légales
+      li Déclaration d’accessibilité
+      li Politique de confidentialité
+      li Authentification
+      li Création de compte
+      li Mot de passe oublié
+      li Prise de rendez-vous - Sélection du service/motif
+      li Prise de rendez-vous - Sélection du lieu
+      li Prise de rendez-vous - Sélection du créneau
+      li Vos RDV
+      li Vos informations
+      li Votre compte
 
     h2 Amélioration et contact
 
@@ -107,10 +129,3 @@
           | Défenseur des droits
           br
           | Libre réponse 71120 75342 Paris CEDEX 07
-
-    hr
-
-    p
-      span> Cette déclaration d'accessibilité a été créé le
-      b> 16 avril 2025
-      | grâce au <a href="https://betagouv.github.io/a11y-generateur-declaration/#create">Générateur de Déclaration d'Accessibilité de BetaGouv</a>.

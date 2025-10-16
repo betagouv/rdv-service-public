@@ -139,10 +139,12 @@ RSpec.describe Rdv, type: :model do
     end
 
     context "when the rdv is created by an agent" do
+      # historiquement on interdisait l’édition par les usagers de RDV créés par un agent
+      # on a décidé que ça n’avait plus lieu d’être
       let(:agent) { create(:agent) }
       let(:rdv) { build(:rdv, created_by: agent, starts_at: starts_at, motif: motif) }
 
-      it { expect(rdv.editable_by_user?).to be(false) }
+      it { expect(rdv.editable_by_user?).to be(true) }
     end
   end
 

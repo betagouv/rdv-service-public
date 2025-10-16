@@ -115,6 +115,7 @@ Rails.application.routes.draw do
     namespace :agents do
       resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
+        resource :caldav_sync, only: %i[show update destroy], controller: :caldav_sync
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
@@ -268,7 +269,12 @@ Rails.application.routes.draw do
           end
         end
         scope module: "organisations" do
-          resource :online_booking, only: %i[show update]
+          resource :online_booking, only: %i[show edit update] do
+            member do
+              get :edit_user_type
+              patch :update_user_type
+            end
+          end
           resource :configuration, only: [:show]
           resources :stats, only: :index do
             collection do
@@ -331,7 +337,7 @@ Rails.application.routes.draw do
     get "confirmation"
   end
 
-  %w[mds accessibility mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
+  %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
 
