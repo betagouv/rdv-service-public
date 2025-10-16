@@ -1,11 +1,11 @@
 module Notifiers::AgentsFilter
   include DateHelper
 
-  def self.agents_to_notify(rdv)
-    rdv.agents.select { |agent| should_notify_agent?(rdv, agent) }
+  def self.agents_to_notify(rdv:, author:)
+    rdv.agents.select { |agent| should_notify_agent?(rdv:, agent:, author:) }
   end
 
-  def self.should_notify_agent?(rdv, agent)
+  def self.should_notify_agent?(rdv:, agent:, author:)
     level = agent.rdv_notifications_level
     return true if level == "all"
     return false if level == "none"
