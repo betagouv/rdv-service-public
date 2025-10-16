@@ -9,7 +9,7 @@ class Notifiers::Agents::ParticipationCreated < BaseService
   end
 
   def notify_agents
-    Notifiers::AgentsFilter.agents_to_notify(rdv, rdv.agents).each do |agent|
+    Notifiers::AgentsFilter.agents_to_notify(rdv).each do |agent|
       Agents::RdvMailer.with(participation:, agent:).participation_created.deliver_later
     end
   end

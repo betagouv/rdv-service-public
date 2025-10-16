@@ -1,8 +1,8 @@
 module Notifiers::AgentsFilter
   include DateHelper
 
-  def self.agents_to_notify(rdv, agents)
-    agents.select { |agent| should_notify_agent?(rdv, agent) }
+  def self.agents_to_notify(rdv)
+    rdv.agents.select { |agent| should_notify_agent?(rdv, agent) }
   end
 
   def self.should_notify_agent?(rdv, agent)
