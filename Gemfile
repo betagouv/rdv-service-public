@@ -154,6 +154,10 @@ gem "tod"
 gem "icalendar", "~> 2.5"
 # Caldav client library
 gem "calendav", "~> 0.5"
+# Base de données des fuseaux horaires
+# Au lieu d’utiliser la base de données système qui peut différer entre les environnements (local, CI, production)
+# on utilise cette gem pour avoir la même partout.
+gem "tzinfo-data"
 
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"
