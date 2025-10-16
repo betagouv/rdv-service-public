@@ -132,8 +132,6 @@ jobs:
         ports: ["5432:5432"]
     steps:
       - uses: actions/checkout@v4
-      - name: Update tzdata
-        run: sudo apt-get install --only-upgrade tzdata
       - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
