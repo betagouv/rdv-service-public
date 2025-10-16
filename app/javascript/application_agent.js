@@ -14,6 +14,7 @@ import 'select2/dist/js/i18n/fr.js'
 import { Datetimepicker } from './components/datetimepicker'
 import { Menu } from './components/menu'
 import { Modal } from './components/modal'
+import DsfrAlertClose from "./components/dsfr-alert-close";
 import { ServiceFilterForMotifsSelects } from './components/service-filter-for-motifs-selects'
 import { SubmitOnChange } from './components/submit-on-change'
 import { PlacesInputs } from './components/places-inputs.js'
@@ -130,4 +131,5 @@ $(document).on('turbolinks:load', function() {
   new UnCheckAll()
 
   Tooltips()
+  DsfrAlertClose();
 })
