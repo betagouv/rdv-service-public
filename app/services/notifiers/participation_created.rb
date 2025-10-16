@@ -1,6 +1,5 @@
 class Notifiers::ParticipationCreated < BaseService
   include DateHelper
-  include Notifiers::AgentsConcern
 
   attr_reader :participation, :author
 
@@ -17,7 +16,7 @@ class Notifiers::ParticipationCreated < BaseService
     participation.set_restricted_authentication_token_if_missing_and_save
 
     notify_user
-    notify_agents
+    Notifiers::Agents::ParticipationCreated.new(participation:, author:).notify_agents
   end
 
   private
@@ -32,10 +31,6 @@ class Notifiers::ParticipationCreated < BaseService
     if user.notifiable_by_sms? && Notifiers::RdvCreated.should_send_sms_to_user?(user:, rdv:, author:)
       Users::RdvSms.rdv_created(rdv, user, token).deliver_later
     end
-  end
-
-  def notify_agent(agent)
-    Agents::RdvMailer.with(participation:, agent:, token:).participation_created.deliver_later
   end
 
   def rdv = participation.rdv
