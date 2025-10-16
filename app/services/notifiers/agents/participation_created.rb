@@ -1,6 +1,4 @@
 class Notifiers::Agents::ParticipationCreated < BaseService
-  include Notifiers::AgentsConcern
-
   attr_reader :participation
 
   delegate :rdv, to: :participation
@@ -10,7 +8,9 @@ class Notifiers::Agents::ParticipationCreated < BaseService
     @author = author
   end
 
-  def notify_agent(agent)
-    Agents::RdvMailer.with(participation:, agent:).participation_created.deliver_later
+  def notify_agents
+    Notifiers::AgentsFilter.agents_to_notify(rdv, rdv.agents).each do |agent|
+      Agents::RdvMailer.with(participation:, agent:).participation_created.deliver_later
+    end
   end
 end
