@@ -6,8 +6,7 @@
           - post.categories.each do |category|
             li.fr-tag.fr-tag--sm
               p.my-1 = category
-        a[href=post.link target="_blank"]
-          = post.title
+        = link_to post.title, post.link, target: "_blank"
         .fr-card__detail.fr-icon-calendar-2-fill.rdv-align-items-center.mt-1
           = l(post.published_at.to_date, format: :long)
       p.fr-card__desc
