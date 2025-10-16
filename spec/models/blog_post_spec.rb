@@ -16,7 +16,7 @@ RSpec.describe BlogPost do
       end
     end
 
-    context "when their is a post in db" do
+    context "when there is a post in db" do
       before { create(:blog_post, published_at: 5.hours.ago) }
 
       context "when agent has never read the blog posts" do
