@@ -7,5 +7,11 @@ class CreateBlogPosts < ActiveRecord::Migration[7.2]
       t.string :external_url, null: false
       t.datetime :published_at, null: false
     end
+
+    reversible do
+      dir.up do
+        CronJob::RefreshBlogPostsFromHeadwayJob.perform_now
+      end
+    end
   end
 end
