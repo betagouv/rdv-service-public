@@ -73,4 +73,8 @@ namespace :api do
   end
 
   post "/coop-mediation-numerique/accounts", to: "coop_mediation_numerique/accounts#create"
+
+  namespace :zammad do
+    resource :incoming_webhooks, only: [:create]
+  end
 end
