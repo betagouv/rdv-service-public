@@ -277,7 +277,7 @@ RSpec.describe "Agent can CRUD motifs" do
       fill_in("Couleur associée", with: "#000000")
       click_on("Créer le motif")
 
-      expect(page).to have_content("Pour finaliser votre configuration, vous pouvez maintenant ajouter un lieu")
+      expect(page).to have_content("Vous pouvez maintenant ajouter le lieu où vous allez faire vos rendez-vous.")
     end
   end
 end
