@@ -62,6 +62,6 @@ RSpec.describe "Embarquement en autonomie pour les admins", js: true do
 
     doc.add_screenshot(page,
                        text: "Sur l'agenda on m'incite à créer le premier rendez-vous",
-                       wait_for: "Vous pouvez prendre votre premier rendez-vous en cliquant à l'horaire de votre choix")
+                       wait_for: "Vous pouvez prendre votre premier rendez-vous en cliquant sur l'horaire de votre choix")
   end
 end
