@@ -111,10 +111,6 @@ class Territory < ApplicationRecord
     name == CNFS_NAME
   end
 
-  def visioplainte?
-    name == VISIOPLAINTE_NAME
-  end
-
   def sectorized?
     sectors.joins(:attributions).any? && motifs.active.sectorized.any?
   end
