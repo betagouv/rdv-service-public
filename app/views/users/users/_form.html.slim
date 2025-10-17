@@ -36,7 +36,7 @@ ruby:
   div.mb-2 Préférences de notifications
   div= f.dsfr_check_box :notify_by_email
   div= f.dsfr_check_box :notify_by_sms
-  - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_MAIRIE
+  - unless current_user.signed_in_with_invitation_token? || territories.map(&:enable_address_field).none?
     - address_value = rdv_wizard.present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
     = f.dsfr_text_field :address, value: address_value, required: rdv_wizard&.motif&.home?, data: { "address-autocomplete": "on" }, autocomplete: "street-address", dir: "ltr"
 
