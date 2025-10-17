@@ -47,7 +47,7 @@
   .mt-1.text-muted
     | L'usager ayant validé son compte, vous ne pouvez plus modifier ses préférences
 
-- unless current_domain == Domain::RDV_MAIRIE
+- if current_territory.enable_address_field?
   = f.input :address, **(input_opts.deep_merge(input_html: { data: { "address-autocomplete": "on" }, dir: "ltr" }))
 
   = f.input :city_code, as: :hidden, **input_opts
