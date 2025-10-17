@@ -15,12 +15,12 @@ RSpec.describe "Agents can configure online booking" do
     specify do
       visit admin_organisation_online_booking_path(organisation)
 
-      expect(page).to have_content("Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?")
+      expect(page).to have_content("Pour quels motifs souhaitez-vous ouvrir la prise de rendez-vous en ligne ?")
 
       click_on "Enregistrer"
 
       expect(page).to have_content("Vous devez choisir au moins un motif pour ouvrir la réservation en ligne")
-      expect(page).to have_content("Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?")
+      expect(page).to have_content("Pour quels motifs souhaitez-vous ouvrir la prise de rendez-vous en ligne ?")
 
       find("label", text: motif.name).click
       click_on "Enregistrer"
@@ -51,7 +51,7 @@ RSpec.describe "Agents can configure online booking" do
       expect(motif.reload).to have_attributes(bookable_by: "agents")
       expect(motif_for_prescripteurs.reload).to have_attributes(bookable_by: "agents")
 
-      expect(page).to have_content("Pour quels motifs souhaitez-vous activer la prise de rendez-vous en ligne ?")
+      expect(page).to have_content("Pour quels motifs souhaitez-vous ouvrir la prise de rendez-vous en ligne ?")
     end
   end
 
