@@ -1,4 +1,9 @@
-h1 Nouveau RDV par prescription
+- content_for(:title) do
+  | Nouveau RDV par prescription
+  / On ajoute des br pour espacer ce titre et celui qui est ajouté par le partial search/#{current_step}
+  br
+  br
+
 - if @context.user
   h6.card-subtitle.mt-2 = t("admin.creneaux_search.index.search_for_slots_subtitle", users_fullname: @context.user.full_name)
   p
