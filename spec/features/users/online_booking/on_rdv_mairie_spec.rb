@@ -572,7 +572,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         expect(page).to have_content("Étape 3 sur 3")
         expect(page).to have_content("Confirmer mon RDV")
         page.execute_script(%{
-          elt = document.querySelector("a.btn-primary");
+          elt = document.querySelector("a.fr-btn[data-disable-with='Veuillez patienter…']");
           elt.setAttribute(
             "href",
             elt.getAttribute("href").replace("ants_pre_demandes_count=2", "ants_pre_demandes_count=100")
