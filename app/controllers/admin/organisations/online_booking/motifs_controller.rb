@@ -9,6 +9,8 @@ class Admin::Organisations::OnlineBooking::MotifsController < AgentAuthControlle
   def update
     @motif.assign_attributes(params.require(:motif).permit(:min_public_booking_delay, :max_public_booking_delay, :rdvs_editable_by_user))
 
+    # On fait un deuxième authorize pour s'assurer que les permissions sont encore valides sur la nouvelle version du motif.
+    # C'est pas strictement nécessaire ici vu qu'on ne change pas d'association, mais on le met quand même au cas où des changements de permissions soient ajoutés plus tard.
     authorize(@motif, policy_class: Agent::MotifPolicy)
 
     if @motif.save
