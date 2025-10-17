@@ -4,30 +4,31 @@
 - content_for :title do
   | Réservation en ligne
 
-- if @banner.availabilities_needed? && session["OnlineBookingMotifsForm:completed"]
-  .fr-callout.fr-pb-2w
-    p 🎉 Vous y êtes presque !
+- content_for :onboarding_banner do
+  - if @banner.availabilities_needed? && session["OnlineBookingMotifsForm:completed"]
+    .fr-callout.fr-pb-2w
+      h2.fr-h6 🎉 Vous y êtes presque !
 
-    - if @banner.motifs_with_missing_availabilities.count == 1
-      p Le motif <b>#{@banner.motifs_with_missing_availabilities.first.name}</b> est ouvert pour la réservation en ligne.
-    - else
-      - bold_motif_names = @banner.motifs_with_missing_availabilities.pluck(:name).map { |name| tag.b(name) }
-      p Les motifs #{sanitize(bold_motif_names.to_sentence)} sont ouverts pour la réservation en ligne.
+      - if @banner.motifs_with_missing_availabilities.count == 1
+        p Le motif <b>#{@banner.motifs_with_missing_availabilities.first.name}</b> est ouvert à la réservation en ligne.
+      - else
+        - bold_motif_names = @banner.motifs_with_missing_availabilities.pluck(:name).map { |name| tag.b(name) }
+        p Les motifs #{sanitize(bold_motif_names.to_sentence)} sont ouverts pour la réservation en ligne.
 
-    - if @banner.motifs_with_missing_availabilities.any?(&:individuel?)
-      p Vous devez maintenant ouvrir une plage d'ouverture pour que la réservation en ligne soit possible.
+      - if @banner.motifs_with_missing_availabilities.any?(&:individuel?)
+        p Vous devez maintenant ouvrir une plage d'ouverture pour que la réservation en ligne soit possible.
 
-    - if @banner.motifs_with_missing_availabilities.any?(&:collectif?)
-      p Pour les motifs de rendez-vous collectifs, vous devez planifier des prochains rendez-vous.
+      - if @banner.motifs_with_missing_availabilities.any?(&:collectif?)
+        p Pour les motifs de rendez-vous collectifs, vous devez planifier des prochains rendez-vous.
 
-    - if @banner.motifs_with_missing_availabilities.all?(&:individuel?)
-      = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
-    - elsif @banner.motifs_with_missing_availabilities.all?(&:collectif?)
-      = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
-    - else
-      .fr-btns-group.fr-btns-group--inline
-        = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn fr-btn--secondary"
-        = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn fr-btn--secondary"
+      - if @banner.motifs_with_missing_availabilities.all?(&:individuel?)
+        = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
+      - elsif @banner.motifs_with_missing_availabilities.all?(&:collectif?)
+        = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
+      - else
+        .fr-btns-group.fr-btns-group--inline
+          = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn fr-btn--secondary"
+          = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn fr-btn--secondary"
 
 .card
   .card-body

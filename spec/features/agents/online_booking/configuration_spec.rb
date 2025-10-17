@@ -25,7 +25,7 @@ RSpec.describe "Agents can configure online booking" do
       find("label", text: motif.name).click
       click_on "Enregistrer"
 
-      expect(page).to have_content("Le motif Motif individuel est ouvert pour la réservation en ligne.")
+      expect(page).to have_content("Le motif Motif individuel est ouvert à la réservation en ligne.")
       expect(motif.reload).to have_attributes(bookable_by: "everyone")
       expect(motif_for_prescripteurs.reload).to have_attributes(bookable_by: "agents_and_prescripteurs") # Les motifs qui ne sont pas bookable_by_everyone ne changent pas de niveau de réservation.
 
@@ -63,12 +63,12 @@ RSpec.describe "Agents can configure online booking" do
       find("label", text: motif.name).click
       click_on "Enregistrer"
 
-      expect(page).to have_content("Le motif Motif individuel est ouvert pour la réservation en ligne.")
+      expect(page).to have_content("Le motif Motif individuel est ouvert à la réservation en ligne.")
       expect(page).to have_content("Vous devez maintenant ouvrir une plage d'ouverture")
 
       # La bannière est encore là si on recharge la page
       visit admin_organisation_online_booking_path(organisation)
-      expect(page).to have_content("Le motif Motif individuel est ouvert pour la réservation en ligne.")
+      expect(page).to have_content("Le motif Motif individuel est ouvert à la réservation en ligne.")
 
       click_on "Ouvrir une plage d'ouverture"
       click_on "Renseigner mes disponibilités"
