@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_16_161600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -566,8 +566,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
     t.boolean "ants_connectable", default: false, null: false, comment: "Autorise l'organisation à être branchée sur le moteur de recherche de l'ANTS sur https://rendezvouspasseport.ants.gouv.fr/. Pour éviter de brancher n'importe qui sur ce moteur de recherche, cette option n'est pas activable par les agents.\n"
     t.boolean "online_booking_for_particuliers", default: true, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des particuliers, et donc qu'on propose le bouton FranceConnect lors de la prise de rendez-vous en ligne.\n"
     t.boolean "online_booking_for_professionnels", default: false, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des professionnels, et donc qu'on propose le bouton ProConnect lors de la prise de rendez-vous en ligne.\n"
-    t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
     t.string "time_zone", default: "Europe/Paris", null: false
+    t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
@@ -792,6 +792,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
     t.boolean "visible_users_throughout_the_territory", default: false
     t.boolean "enable_birth_date_field", default: false
     t.string "category", comment: "La catégorie permet classifier les différents territoires principalement pour faire des statistiques dans metabase,\net pour avoir un suivi approprié de chaque territoire pour notre équipe déploiement et support. Par exemple, les besoins d'une commune\nne seront pas les mêmes que ceux d'un service de l'état.\n"
+    t.boolean "enable_address_field", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
   end
 
