@@ -17,6 +17,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     roles: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
+    work_on_sunday: Field::Boolean,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -38,6 +39,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     name
     departement_number
     category
+    work_on_sunday
     roles
     organisations
     created_at
@@ -52,6 +54,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     admin_agents
     departement_number
     category
+    work_on_sunday
   ].freeze
 
   def display_resource(territory)
