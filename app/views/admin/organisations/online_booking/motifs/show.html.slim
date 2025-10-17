@@ -16,8 +16,8 @@
     - if @motif.bookable_by_everyone? && count == 0
       .fr-callout.fr-pb-2w
         - if @motif.individuel?
-          p Ce motif est ouvert à la réservation en ligne, mais il n'a pas de plage d'ouverture disponible.
-          p Vous devez ouvrir une plage d'ouverture pour permettre la réservation en ligne sur ce motif.
+          p Attention, ce motif est ouvert à la réservation en ligne, mais il n’est pas encore accessible à vos usagers.
+          p Vous devez renseigner des disponibilités associées à ce motif pour le rendre réservable.
           = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
         - else
           p Ce motif est ouvert à la réservation en ligne, mais il n'y a pas de rendez-vous à venir avec des disponibilités.
@@ -42,13 +42,13 @@
             li.fr-my-2w Ils seront pris au maximum #{ min_max_delay_int_to_human(@motif.max_public_booking_delay) } à l'avance.
 
             - if @motif.rdvs_editable_by_user
-              li.fr-my-2w Les usagers sont autorisés à déplacer le rendez-vous jusqu'à 48 heures avant qu'il commence.
+              li.fr-my-2w Les usagers sont autorisés à déplacer le rendez-vous jusqu'à 48 heures avant celui-ci.
             - else
               li.fr-my-2w Les usagers ne sont pas autorisés à déplacer le rendez-vous.
 
     - if @motif.bookable_by_everyone?
       .card
         .card-body
-          h3.fr-h4 Niveau d'ouverture
-          p Ce motif est ouvert à la réservation en ligne. Tous les usagers qui ont accès à votre lien peuvent prendre des rendez-vous.
+          h3.fr-h4 Réservation en ligne
+          p Ce motif est <b>ouvert</b> à la réservation en ligne : les usagers pourront prendre rendez-vous pour ce motif depuis le lien de réservation (sous réserve d’avoir une plage d’ouverture associée).
           = button_to "Fermer à la réservation en ligne", close_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--secondary", method: :post
