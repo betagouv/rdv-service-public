@@ -1,10 +1,12 @@
-h1 Nouveau RDV par prescription
+- content_for(:title) do
+  | Nouveau RDV par prescription
+
 main.container
   .row.justify-content-center.mt-4
     .col-lg-7.col-md-10.col-sm-11
       .card
         .card-body
-          h3 Récapitulatif
+          h2.fr-h3 Récapitulatif
 
           = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard
 
@@ -29,4 +31,4 @@ main.container
 
           .row.mt-2
             .col.text-right
-              = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "btn btn-primary", data: { disable_with: "Veuillez patienter…"})
+              = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "fr-btn", data: { disable_with: "Veuillez patienter…"})

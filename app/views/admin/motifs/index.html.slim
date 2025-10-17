@@ -9,7 +9,7 @@
 
 - if agent_can_create_motif?
   - content_for :breadcrumb do
-    = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"
+    = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class:"fr-btn fr-btn--secondary"
 
 = simple_form_for "", url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
   = f.hidden_field :current_tab, value: @current_tab
@@ -20,9 +20,9 @@
       / Le margin-bottom négatif compense la hauteur des onglets
       .fr-mt-2w.d-flex.justify-content-end[style="margin-bottom: -32px"]
         - if [params[:search], params[:online_filter], params[:service_filter], params[:location_type_filter]].compact_blank.any?
-          div = link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation, current_tab: @current_tab), class: "btn btn-link"
+          div = link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation, current_tab: @current_tab), class: "fr-btn fr-btn--tertiary-no-outline"
         = f.input :search, placeholder: "ex. Être appelé par la MDS", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
-        = f.button :submit, "Rechercher"
+        = f.submit "Rechercher", class: "fr-btn"
 
     ul.nav.nav-tabs.fr-mt-2w
       - [[:active, "Actifs", @filtered_motifs.active.count], [:archived, "Archivés", @filtered_motifs.archived.count]].each do |value, label, count|
@@ -94,11 +94,11 @@
                     p.mb-2.lead Aucun motif ne correspond à votre filtre
                   - if agent_can_create_motif?
                     .rdv-text-align-center.m-3
-                      = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
+                      = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class: "fr-btn"
 
     - if @motifs_page.any?
       .d-flex.justify-content-center
         = paginate @motifs_page, theme: "dsfr"
       - if agent_can_create_motif? && @current_tab == :active
         .rdv-text-align-center.m-3
-          = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
+          = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class: "fr-btn"

@@ -19,6 +19,14 @@ module DsfrHelper
     icon("fr-icon-building-fill", html_options)
   end
 
+  def user_icon(html_options = {})
+    icon("fr-icon-user-fill", html_options)
+  end
+
+  def calendar_icon(html_options = {})
+    icon("fr-icon-calendar-fill", html_options)
+  end
+
   def visio_icon(html_options = {})
     icon("fr-icon-mac-fill", html_options)
   end
