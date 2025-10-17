@@ -12,12 +12,13 @@ module CreneauxSearch::Calculator
 
     def plage_ouvertures_for(motif, lieu, datetime_range, agents)
       scope = PlageOuverture.not_expired
+        .joins(:agent_plages)
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
-        .includes(:agent)
-        .where(agent: Agent.excluding_pending_invitation)
+        .includes(:agents)
+        .where(agent_plages: { agent: Agent.excluding_pending_invitation })
       scope = scope.includes(:organisation, organisation: :territory) if motif.organisation.territory.visioplainte?
-      scope = scope.where(agent: agents) if agents&.any?
+      scope = scope.where(agent_plages: { agent_id: agents }) if agents&.any?
       scope = scope.where(lieu: lieu) if lieu.present?
       scope
     end
@@ -95,13 +96,15 @@ module CreneauxSearch::Calculator
       slots = []
 
       while possible_slot_start <= last_possible_slot_start
-        slots << Creneau.new(
-          starts_at: possible_slot_start,
-          motif: motif,
-          duration_in_min:,
-          lieu_id: plage_ouverture.lieu_id,
-          agent: plage_ouverture.agent
-        )
+        plage_ouverture.agents.each do |agent|
+          slots << Creneau.new(
+            starts_at: possible_slot_start,
+            motif: motif,
+            duration_in_min:,
+            lieu_id: plage_ouverture.lieu_id,
+            agent: agent
+          )
+        end
         possible_slot_start += duration_in_min.minutes
       end
       slots
@@ -156,9 +159,12 @@ module CreneauxSearch::Calculator
       # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
       #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
 
-      @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
+      @absences = Absence.not_expired.in_range(range).where(agent: plage_ouverture.agents).load_async
 
-      @rdvs_starts_and_ends_at = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).async_pluck(:starts_at, :ends_at)
+      @rdvs_starts_and_ends_at = Rdv.joins(:agents_rdvs).where(agents_rdvs: { agent_id: plage_ouverture.agents })
+                                    .not_cancelled
+                                    .where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+                                    .async_pluck(:starts_at, :ends_at)
     end
 
     def busy_times_from_absences

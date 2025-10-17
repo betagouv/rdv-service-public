@@ -7,13 +7,25 @@
         .card
           .card-body
             h3.card-title Motifs
+
+            = f.association :agents,
+              collection: Agent::AgentPolicy::Scope.apply(current_agent, Agent.all).joins(:roles).where(agent_roles: { organisation_id: current_organisation }),
+              label_method: :full_name_or_email,
+              input_html: { \
+                  class: "select2-input", \
+                  data: { \
+                    placeholder: "Sélectionnez un lieu", \
+                    "select2-config": { disableSearch: true }, \
+                    "allow-clear": true, \
+                  }, \
+                }
+
             - if plage_ouverture.agent == current_agent
               p.mb-4 Pour quels motifs de rendez-vous êtes-vous disponible ?
             - else
               p.mb-4 Pour quels motifs de rendez-vous l'agent est-t-il disponible ?
 
             = collapsible_form_fields_for_warnings(plage_ouverture) do
-              = f.hidden_field :agent_id
               - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
               - sort_motifs_by_service(motifs_by_services).each do |service, motifs|
                 .form-group data-controller="checkbox-select-all"
@@ -31,15 +43,7 @@
               .collapse.js-lieu-field
                 = f.association :lieu,
                   collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
-                  label_method: :full_name,
-                  input_html: { \
-                      class: "select2-input", \
-                      data: { \
-                        placeholder: "Sélectionnez un lieu", \
-                        "select2-config": { disableSearch: true }, \
-                        "allow-clear": true, \
-                      }, \
-                    }
+                  label_method: :full_name
 
     .row.justify-content-center
       .col-md-6

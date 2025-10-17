@@ -27,11 +27,12 @@ class PlageOuverture < ApplicationRecord
 
   # Relations
   belongs_to :organisation
-  belongs_to :agent
   belongs_to :lieu, optional: true
   has_many :motifs_plage_ouvertures, dependent: :delete_all
+  has_many :agent_plages, dependent: :delete_all
 
   # Through relations
+  has_many :agents, through: :agent_plages
   has_many :webhook_endpoints, through: :organisation
   has_many :motifs, -> { distinct }, through: :motifs_plage_ouvertures
 
@@ -58,12 +59,29 @@ class PlageOuverture < ApplicationRecord
   }
   scope :bookable_by_everyone, -> { joins(:motifs).merge(Motif.bookable_by_everyone) }
   scope :bookable_by_everyone_or_bookable_by_invited_users, -> { joins(:motifs).merge(Motif.bookable_by_everyone_or_bookable_by_invited_users) }
+  scope :for_agent, ->(agent_id) { joins(:agent_plages).where(agent_plages: { agent_id: agent_id }) }
 
   # Delegations
   delegate :name, :address, :enabled?, to: :lieu, prefix: true, allow_nil: true
   delegate :domain, to: :organisation
 
   ## -
+
+  def agent
+    agents.first
+  end
+
+  def agent_id
+    agent.id
+  end
+
+  def agent=(value)
+    self.agents = [value]
+  end
+
+  def agent_id=(value)
+    self.agents = [Agent.find(value)]
+  end
 
   def secondary_starts_at
     return nil if secondary_start_time.blank? || first_day.blank?

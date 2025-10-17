@@ -12,7 +12,7 @@ class Admin::Api::Agenda::PlageOuverturesController < Admin::Api::BaseController
     @display_in_background = params[:mixed_with_rdvs] && !month_view_detected
 
     plage_ouvertures = policy_scope(PlageOuverture, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
-      .where(agent_id: params[:agent_id])
+      .for_agent(params[:agent_id])
       .includes(:lieu, :organisation)
 
     @plage_ouverture_occurrences = plage_ouvertures.all_occurrences_for(date_range_params)

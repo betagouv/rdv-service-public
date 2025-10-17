@@ -2,7 +2,7 @@ class Agent::PlageOuverturePolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def update?
-    same_agent_or_has_access?
+    can_manage_all_agent?
   end
 
   alias new? update?
@@ -15,21 +15,15 @@ class Agent::PlageOuverturePolicy < ApplicationPolicy
 
   private
 
-  def same_agent_or_has_access?
-    return true if @record.agent == current_agent
+  def can_manage_all_agent?
+    return true if @record.agents == [current_agent]
 
-    case current_agent.access_level_in(@record.organisation)
-    when AgentRole::ACCESS_LEVEL_ADMIN
-      true
-    when AgentRole::ACCESS_LEVEL_BASIC
-      same_service? || current_agent.secretaire?
-    else
-      false
-    end
+    agents_i_can_manage = Agent::AgentPolicy::Scope.apply(current_agent, Agent.all).merge(@record.organisation.agents).ids
+    @record.agents.all? { |agent| agent.id.in?(agents_i_can_manage) }
   end
 
-  def same_service?
-    @record.agent.confrere_of?(current_agent)
+  def can_set_all_motifs?
+    @record.motifs.all? { |motif| motif.organisation == @record.organisation }
   end
 
   class Scope < Scope
@@ -46,9 +40,10 @@ class Agent::PlageOuverturePolicy < ApplicationPolicy
           .where(agent_roles: { organisation_id: current_agent.organisations })
 
         plages_of_my_orgs
+          .joins(:agent_plages)
           .where(
-            "plage_ouvertures.agent_id = ?
-              OR (plage_ouvertures.agent_id IN (?) AND agent_roles.access_level = 'basic')
+            "agent_plages.agent_id = ?
+              OR (agent_plages.agent_id IN (?) AND agent_roles.access_level = 'basic')
               OR (agent_roles.access_level = 'admin')",
             current_agent.id, confreres_of_my_orgs.ids
           )

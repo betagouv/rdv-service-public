@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_17_100225) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -147,6 +147,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
     t.index ["first_day"], name: "index_absences_on_first_day"
     t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
     t.index ["updated_at"], name: "index_absences_on_updated_at"
+  end
+
+  create_table "agent_plages", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.bigint "plage_ouverture_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["agent_id"], name: "index_agent_plages_on_agent_id"
+    t.index ["plage_ouverture_id"], name: "index_agent_plages_on_plage_ouverture_id"
   end
 
   create_table "agent_roles", force: :cascade do |t|
@@ -603,7 +611,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
   end
 
   create_table "plage_ouvertures", force: :cascade do |t|
-    t.bigint "agent_id", null: false
     t.string "title"
     t.bigint "organisation_id", null: false
     t.date "first_day", null: false
@@ -618,7 +625,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
     t.time "secondary_start_time"
     t.time "secondary_end_time"
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
-    t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
     t.index ["first_day"], name: "index_plage_ouvertures_on_first_day"
     t.index ["lieu_id"], name: "index_plage_ouvertures_on_lieu_id"
@@ -925,6 +931,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
   end
 
   add_foreign_key "absences", "agents"
+  add_foreign_key "agent_plages", "agents"
+  add_foreign_key "agent_plages", "plage_ouvertures"
   add_foreign_key "agent_roles", "agents"
   add_foreign_key "agent_roles", "organisations"
   add_foreign_key "agent_services", "agents"
@@ -963,7 +971,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_161513) do
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"
-  add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
   add_foreign_key "rdv_plans", "agents", column: "planning_agent_id"

@@ -194,6 +194,8 @@ group :development do
   gem "bullet"
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug"
+  #
+  gem "debug"
   # Better error page for Rails and other Rack apps
   gem "better_errors"
   # Retrieve the binding of a method's caller, or further up the stack.

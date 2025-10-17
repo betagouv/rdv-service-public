@@ -15,8 +15,8 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     render :multi_agents_index and return if @agents.size > 1
 
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
-      .includes(:lieu, :organisation, :motifs, :agent)
-      .where(agent: @agent)
+      .includes(:lieu, :organisation, :motifs, :agents)
+      .for_agent(@agent.id)
       .order(updated_at: :desc)
     @plage_ouvertures = all_plage_ouvertures
       .where(expired_cached: filter_params[:current_tab] == "expired")
@@ -71,14 +71,19 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def update
-    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-    if @plage_ouverture.update(plage_ouverture_params)
-      Notifiers::PlageOuvertureUpdated.new(@plage_ouverture).perform
-      flash[:success] = "La plage d'ouverture a été modifiée."
-      update_online_booking_banner_display
-      redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
-    else
-      render :edit
+    PlageOuverture.transaction do
+      authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+      if @plage_ouverture.update(plage_ouverture_params)
+        # on vérifie que les permissions sont bonnes même après avoir persisté les agent_ids
+        authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+
+        Notifiers::PlageOuvertureUpdated.new(@plage_ouverture).perform
+        flash[:success] = "La plage d'ouverture a été modifiée."
+        update_online_booking_banner_display
+        redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
+      else
+        render :edit
+      end
     end
   end
 
@@ -125,7 +130,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def plage_ouverture_params
     params.require(:plage_ouverture).permit(
-      :title, :agent_id, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: []
+      :title, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: [], agent_ids: []
     )
   end
 

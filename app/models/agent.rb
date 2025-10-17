@@ -75,7 +75,7 @@ class Agent < ApplicationRecord
   has_many :agent_services, dependent: :destroy
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :api_calls, dependent: :delete_all
-  has_many :plage_ouvertures, dependent: :destroy
+  has_many :agent_plages, dependent: :destroy
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :restrict_with_error
   has_many :roles, class_name: "AgentRole", dependent: :destroy
@@ -89,6 +89,7 @@ class Agent < ApplicationRecord
   accepts_nested_attributes_for :roles, :agent_territorial_access_rights
 
   # Through relations
+  has_many :plage_ouvertures, through: :agent_plages
   has_many :services, through: :agent_services
   has_many :teams, through: :agent_teams
   has_many :lieux, through: :plage_ouvertures

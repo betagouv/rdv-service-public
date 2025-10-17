@@ -203,6 +203,9 @@ GEM
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
     date (3.4.1)
+    debug (1.11.0)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
     debug_inspector (1.2.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
@@ -376,7 +379,6 @@ GEM
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2025.0722)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (5.25.5)
     montrose (0.16.0)
       activesupport (>= 5.2, < 8)
@@ -398,8 +400,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
-    nokogiri (1.18.9)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.18.9-x86_64-linux-gnu)
       racc (~> 1.4)
     notion-ruby-client (1.2.2)
       faraday (>= 2.0)
@@ -749,7 +750,7 @@ GEM
     zeitwerk (2.7.0)
 
 PLATFORMS
-  ruby
+  x86_64-linux
 
 DEPENDENCIES
   active_link_to
@@ -777,6 +778,7 @@ DEPENDENCIES
   connection_pool
   csv
   database_cleaner
+  debug
   devise!
   devise-async
   devise_invitable
