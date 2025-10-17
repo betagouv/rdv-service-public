@@ -40,7 +40,7 @@
                 = lieu_icon(class: "fr-mr-1w")
                 | Lieux
             div.fr-tile__desc
-              - if @lieu_name.blank?
+              - if @lieu_names.blank?
                 i Aucun lieu
                 - if needs_lieu(current_organisation)
                   br
