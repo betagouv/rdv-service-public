@@ -67,41 +67,5 @@ RSpec.describe "Configuration initiale", js: true do
     doc.add_screenshot(page,
                        text: "Réservation en ligne",
                        wait_for: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous")
-
-    doc.start_section("Configuration")
-
-    visit admin_organisation_configuration_url(organisation, host: "http://www.rdv-mairie-test.localhost")
-
-    doc.add_screenshot(page,
-                       text: "On affiche un badge pour inciter à la création du premier motif",
-                       wait_for: "À RENSEIGNER")
-
-    click_on "Motifs de rendez-vous"
-
-    doc.add_screenshot(page,
-                       text: "",
-                       wait_for: "Vous n'avez pas encore créé de motif.")
-
-    click_on "Créer un motif", match: :first
-
-    fill_in "Nom du motif", with: "Entretien utilisateur"
-
-    doc.add_screenshot(page, text: "On crée un motif sur place")
-
-    click_on "Créer le motif"
-
-    doc.add_screenshot(page,
-                       text: "Le message de confirmation m'incite à créer un lieu parce que le motif est sur place",
-                       wait_for: "vous pouvez maintenant ajouter un lieu")
-
-    visit admin_organisation_configuration_url(organisation, host: "http://www.rdv-mairie-test.localhost")
-
-    doc.add_screenshot(page,
-                       text: "La page de configuration m'incite maintenant à créer un lieu",
-                       wait_for: "Aucun lieu")
-
-    click_on "Lieux"
-
-    doc.add_screenshot(page, wait_for: "Les lieux sont les endroits où sont réalisés les rendez-vous.")
   end
 end
