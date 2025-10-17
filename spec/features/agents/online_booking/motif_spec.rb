@@ -47,7 +47,7 @@ RSpec.describe "Réservation en ligne pour un motif en particulier" do
 
     context "pour un motif individuel" do
       it "incite à créer un nouveau rendez-vous collectif" do
-        expect(page).to have_content("Ce motif est ouvert à la réservation en ligne, mais il n'a pas de plage d'ouverture disponible.")
+        expect(page).to have_content("Attention, ce motif est ouvert à la réservation en ligne, mais il n’est pas encore accessible à vos usagers.")
         expect(page).to have_content("Ouvrir une plage d'ouverture")
       end
     end
