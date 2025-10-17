@@ -19,6 +19,7 @@
 - if flash[:onboarding] == "online_booking_ready"
   - content_for :onboarding_banner do
     .fr-callout.fr-pb-2w
+      h2.fr-h6 Vous avez terminé !
       p La réservation en ligne est maintenant disponible grâce à cette plage d'ouverture !
       = link_to("Voir la réservation en ligne", admin_organisation_online_booking_path(current_organisation), class: "fr-btn")
 
