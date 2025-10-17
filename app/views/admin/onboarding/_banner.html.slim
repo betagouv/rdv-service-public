@@ -6,7 +6,8 @@
   - if needs_motif && current_organisation.lieux.enabled.none?
     - content_for :onboarding_banner do
       .fr-callout.fr-pb-2w
-        p 🌱 Bienvenue sur votre espace #{current_domain.name} ! Pour commencer, vous pouvez créer votre premier motif de rendez-vous.
+        h2.fr-h6 🌱 Bienvenue sur votre espace #{current_domain.name} !
+        p Pour commencer, vous pouvez créer votre premier motif de rendez-vous.
         = link_to("Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "fr-btn")
   - elsif needs_lieu(current_organisation)
     - content_for :onboarding_banner do
@@ -16,15 +17,16 @@
   - elsif needs_motif
     - content_for :onboarding_banner do
       .fr-callout.fr-pb-2w
-        p.fr-mr-2w 🌿 Vous pouvez maintenant créer un motif de rendez-vous
+        p.fr-mr-2w 🌿 Vous pouvez maintenant créer un motif de rendez-vous.
         = link_to("Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "fr-btn")
   - elsif current_organisation.rdvs.none? && current_organisation.motifs.bookable_by_everyone.none?
     - content_for :onboarding_banner do
       .fr-callout.fr-pb-2w
         - if in_agenda
-          p 🪴 Vous pouvez prendre votre premier rendez-vous en cliquant à l'horaire de votre choix dans l'agenda
+          p 🪴 Vous pouvez prendre votre premier rendez-vous en cliquant sur l'horaire de votre choix dans l'agenda
         - else
-          p 🪴 Tout est prêt pour votre premier rendez-vous ! Vous pouvez l'ajouter directement dans l'agenda, ou ouvrir la réservation en ligne pour vos usagers.
+          h2.fr-h6 🪴 Tout est prêt pour votre premier rendez-vous !
+          p Vous pouvez l'ajouter directement dans l'agenda, ou ouvrir la réservation en ligne pour vos usagers.
           .fr-btns-group.fr-btns-group--inline
             = link_to("Aller à l'agenda", admin_organisation_planning_agenda_path(current_organisation), class: "fr-btn fr-btn--secondary")
             = link_to("Ouvrir la réservation en ligne", admin_organisation_online_booking_path(current_organisation), class: "fr-btn fr-btn--secondary")
