@@ -75,6 +75,19 @@ class ZammadApiClient
     }.compact
   end
 
+  # https://docs.zammad.org/en/latest/api/ticket/articles.html#create
+  def self.create_note(ticket_id:, body_html:)
+    params = {
+      ticket_id:,
+      body: body_html,
+      type: "note",
+      internal: true,
+      content_type: "text/html",
+      sender: "System",
+    }
+    connection.post("api/v1/ticket_articles", params).body
+  end
+
   def self.search_tickets(condition:, query: nil)
     connection.post("api/v1/tickets/search?#{query}", { condition: }).body
   end
