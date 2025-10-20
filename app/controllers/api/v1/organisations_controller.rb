@@ -22,6 +22,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
       if doorkeeper_token&.application&.name == "RDV Aide Numérique"
         # Pour garder le même fonctionnement que sur le territoire historique des cnfs, on active ce champs dans la config
         @organisation.territory.update!(enable_context_field: true)
+        @organisation.verticale = "rdv_mairie"
       end
       @organisation.save!
 
