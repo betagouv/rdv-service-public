@@ -18,7 +18,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
       it "redirects" do
         create(:agent, first_name: "Francis", last_name: "Factice", organisations: [organisation])
         get :index, params: { term: "fra", organisation_id: organisation.id, format: :json }
-        expect(response).to redirect_to(agents_ajax_agents_search_path(organisation_id: organisation.id, term: "fra"))
+        expect(response).to redirect_to(search_agents_agents_path(organisation_id: organisation.id, term: "fra"))
       end
     end
   end

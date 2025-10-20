@@ -22,7 +22,7 @@
         .col-md-4
           .form-group.string.optional._search
             = f.label :agent_id, "Agent référent", {class: "form-control-label select optional"}
-            = f.select :agent_id, [], {}, { class: "form-control select optional select2-input", data: { "select2-config": { ajax: { url: agents_ajax_agents_search_path(organisation_id: current_organisation), dataType: "json", delay: 250 } } } }
+            = f.select :agent_id, [], {}, { class: "form-control select optional select2-input", data: { "select2-config": { ajax: { url: search_agents_agents_path(organisation_id: current_organisation), dataType: "json", delay: 250 } } } }
 
       input.fr-btn.d-print-none type="submit" value="Rechercher"
 

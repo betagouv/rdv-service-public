@@ -12,7 +12,7 @@ RSpec.describe Agents::AgentsController, "#search" do
     expect(Agent::AgentPolicy::Scope).to receive(:new).and_call_original
 
     francis = create(:agent, first_name: "Francis", last_name: "Factice", admin_role_in_organisations: [organisation])
-    get agents_ajax_agents_search_path(organisation_id: organisation, term: "fra"), as: :json
+    get search_agents_agents_path(organisation_id: organisation, term: "fra"), as: :json
     expect(parsed_response_body[:results]).to eq([{ "id" => francis.id, "text" => "FACTICE Francis" }])
   end
 
@@ -20,7 +20,7 @@ RSpec.describe Agents::AgentsController, "#search" do
     let!(:unconfirmed_agent) { create(:agent, :not_confirmed, email: "francis@exemple.fr", admin_role_in_organisations: [organisation]) }
 
     it "renvoie son adresse mail" do
-      get agents_ajax_agents_search_path(organisation_id: organisation, term: "fra"), as: :json
+      get search_agents_agents_path(organisation_id: organisation, term: "fra"), as: :json
       expect(parsed_response_body[:results]).to include({ "id" => unconfirmed_agent.id, "text" => unconfirmed_agent.email })
     end
   end
@@ -32,7 +32,7 @@ RSpec.describe Agents::AgentsController, "#search" do
     let!(:francis) { create(:agent, first_name: "Francis", last_name: "Factice", basic_role_in_organisations: [orga_1, orga_2]) }
 
     it "ne s'affiche qu'une seule fois dans la liste" do
-      get agents_ajax_agents_search_path(organisation_id: [orga_1, orga_2], term: "fra"), as: :json
+      get search_agents_agents_path(organisation_id: [orga_1, orga_2], term: "fra"), as: :json
       expect(parsed_response_body[:results].sole).to match({ "id" => francis.id, "text" => "FACTICE Francis" })
     end
   end

@@ -7,7 +7,7 @@ class Admin::AgentsController < AgentAuthController
     # TODO: Supprimer ce redirect une semaine après la mise en prod
     if request.format.json?
       skip_policy_scope
-      redirect_to agents_ajax_agents_search_path(organisation_id: current_organisation, term: params[:term]) and return
+      redirect_to search_agents_agents_path(organisation_id: current_organisation, term: params[:term]) and return
     end
 
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
