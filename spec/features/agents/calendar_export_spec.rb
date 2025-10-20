@@ -27,26 +27,50 @@ RSpec.describe "Agents can export their calendar to other tools, such as Outlook
     expect(status_code).to eq 404
   end
 
-  it "doesn't allow reading a calendar without a uid" do
-    create(:agent, calendar_uid: nil)
-    webcal_url = "http://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/.ics"
+  describe "consultation du calendrier par lien ICS" do
+    let(:organisation) { create(:organisation, id: 123_000) }
+    let(:agent) { create(:agent, basic_role_in_organisations: [organisation], calendar_uid:, first_name: "Marceau", last_name: "COLIN") }
+    let(:motif) { create(:motif, name: "Accompagnement individuel", organisation: organisation) }
+    let(:motif_collectif) { create(:motif, :collectif, name: "Atelier collectif", organisation: organisation) }
 
-    expect { visit webcal_url }.to raise_error(ActionController::RoutingError)
-  end
+    context "quand l’agent n’a pas de UID de calendrier" do
+      let(:calendar_uid) { nil }
 
-  it "displays rdvs in the proper format for calendars, without including personal information" do
-    travel_to(Time.zone.local(2022, 7, 8))
-    org = create(:organisation, id: 123_000)
-    agent = create(:agent, calendar_uid: SecureRandom.uuid, first_name: "Marceau", last_name: "COLIN")
-    motif = create(:motif, name: "Accompagnement individuel", organisation: org)
-    create(:rdv, motif: motif, agents: [agent], status: "unknown", starts_at: 1.day.from_now, uuid: "e0a8dbac-d06c-4d18-98c6-a48f47fddd4c", organisation: org, id: 456_000)
-    create(:rdv, motif: motif, agents: [agent], status: "revoked", starts_at: 2.days.from_now, uuid: "749336ce-eaca-40a3-8c28-246ed8d18849", organisation: org, id: 789_000)
-    motif_collectif = create(:motif, :collectif, name: "Atelier collectif", organisation: org)
-    create(:rdv, motif: motif_collectif, agents: [agent], status: "unknown", starts_at: 3.days.from_now, uuid: "abb701a5-381a-4fae-9157-129b5843834c", organisation: org, id: 123_123,
-                 max_participants_count: 5)
+      it "n’autoriser pas la consultation" do
+        create(:agent, calendar_uid: nil)
+        webcal_url = "http://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/.ics"
 
-    visit ics_calendar_path(agent.calendar_uid, format: :ics)
+        expect { visit webcal_url }.to raise_error(ActionController::RoutingError)
+      end
+    end
 
-    expect(page.body.gsub("\r\n", "\n")).to eq Rails.root.join("spec/support/calendar.ics").read
+    context "quand l’agent à un UID de calendrier" do
+      let(:calendar_uid) { SecureRandom.uuid }
+
+      before do
+        travel_to(Time.zone.local(2022, 7, 8))
+        create(:rdv, motif: motif, agents: [agent], status: "unknown", starts_at: 1.day.from_now, uuid: "e0a8dbac-d06c-4d18-98c6-a48f47fddd4c", organisation:, id: 456_000)
+      end
+
+      it "displays rdvs in the proper format for calendars, without including personal information" do
+        create(:rdv, motif: motif, agents: [agent], status: "revoked", starts_at: 2.days.from_now, uuid: "749336ce-eaca-40a3-8c28-246ed8d18849", organisation:, id: 789_000)
+        create(:rdv, motif: motif_collectif, agents: [agent], status: "unknown", starts_at: 3.days.from_now, uuid: "abb701a5-381a-4fae-9157-129b5843834c", organisation:, id: 123_123,
+                     max_participants_count: 5)
+
+        visit ics_calendar_path(agent.calendar_uid, format: :ics)
+
+        expect(page.body.gsub("\r\n", "\n")).to eq Rails.root.join("spec/support/calendar.ics").read
+      end
+
+      context "lorsque l’agent est dans une organisation ayant un fuseau horaire différent de celui de la métropole" do
+        let(:organisation) { create(:organisation, time_zone: "America/Guadeloupe", id: 123_000) }
+
+        it "renvoie le bon VTIMEZONE dans le fichier ICS" do
+          visit ics_calendar_path(agent.calendar_uid, format: :ics)
+
+          expect(page.body.gsub("\r\n", "\n")).to eq Rails.root.join("spec/support/calendar_guadeloupe.ics").read
+        end
+      end
+    end
   end
 end

@@ -16,7 +16,7 @@ module CreneauxSearch::Calculator
         .in_range(datetime_range)
         .includes(:agent)
         .where(agent: Agent.excluding_pending_invitation)
-      scope = scope.includes(:organisation, organisation: :territory) if motif.organisation.territory.visioplainte?
+      scope = scope.includes(:organisation, organisation: :territory) if motif.organisation.territory.work_on_sunday?
       scope = scope.where(agent: agents) if agents&.any?
       scope = scope.where(lieu: lieu) if lieu.present?
       scope
@@ -178,7 +178,7 @@ module CreneauxSearch::Calculator
     end
 
     def busy_times_from_off_days
-      return [] if @plage_ouverture.organisation.territory.visioplainte?
+      return [] if @plage_ouverture.organisation.territory.work_on_sunday?
 
       OffDays.all_in_date_range(range).map do |off_day|
         BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)

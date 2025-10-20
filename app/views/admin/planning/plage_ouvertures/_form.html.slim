@@ -6,7 +6,7 @@
 
         .card
           .card-body
-            h3.card-title Motifs
+            h2.card-title Motifs
             - if plage_ouverture.agent == current_agent
               p.mb-4 Pour quels motifs de rendez-vous êtes-vous disponible ?
             - else
@@ -15,6 +15,7 @@
             = collapsible_form_fields_for_warnings(plage_ouverture) do
               = f.hidden_field :agent_id
               - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
+              - lieu_required = plage_ouverture.available_motifs.all?(&:public_office?)
               - sort_motifs_by_service(motifs_by_services).each do |service, motifs|
                 .form-group data-controller="checkbox-select-all"
                   label.h4.d-flex
@@ -28,7 +29,7 @@
                     .pl-4
                       = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}", data: { checkbox_select_all_target: "checkbox" } }, motif.id, false
                       = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
-              .collapse.js-lieu-field
+              .js-lieu-field[class="#{:collapse unless lieu_required}"]
                 = f.association :lieu,
                   collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
                   label_method: :full_name,
@@ -37,7 +38,8 @@
                       data: { \
                         placeholder: "Sélectionnez un lieu", \
                         "select2-config": { disableSearch: true }, \
-                        "allow-clear": true, \
+                        "auto-select-sole-option": lieu_required,
+                        "allow-clear": !lieu_required, \
                       }, \
                     }
 
@@ -67,9 +69,9 @@
             .col.text-left
               = link_to "Annuler", \
                 admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: current_agent), \
-                class: "btn btn-link"
+                class: "fr-btn fr-btn--tertiary-no-outline"
             .col.text-right
-              = f.button :submit, "Créer la plage d'ouverture"
+              = f.submit "Créer la plage d'ouverture", class: "fr-btn"
 - else
   .card
     .card-body

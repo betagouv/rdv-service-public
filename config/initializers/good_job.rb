@@ -92,5 +92,9 @@ Rails.application.configure do
       cron: "every weekday at 10:15 Europe/Paris",
       class: "CronJob::SendMattermostNotificationsForZammadTicketsJob",
     },
+    refresh_blog_posts_from_headway: {
+      cron: "every day at 06:00 Europe/Paris",
+      class: "CronJob::RefreshBlogPostsFromHeadwayJob",
+    },
   }
 end

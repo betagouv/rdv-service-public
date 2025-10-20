@@ -8,6 +8,7 @@ import "@hotwired/turbo-rails"
 Turbo.session.drive = false
 
 import DsfrNewPassword from "./components/dsfr-new-password";
+import DsfrAlertClose from "./components/dsfr-alert-close";
 import { Modal } from './components/modal';
 import './components/browser-detection';
 import 'select2/dist/js/select2.min.js';
@@ -24,6 +25,7 @@ initializeSelect2();
 
 $(document).on('turbolinks:load', function () {
   DsfrNewPassword();
+  DsfrAlertClose();
 
   setupCopyToClipBoardButtons()
 });

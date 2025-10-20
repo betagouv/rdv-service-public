@@ -12,11 +12,9 @@ class IcsCalendarController < ActionController::Base
         cal = Icalendar::Calendar.new
         cal.x_wr_calname = "#{@agent.full_name} sur #{@agent.domain_name}"
 
-        tz = TZInfo::Timezone.get(Time.zone_default.tzinfo.identifier)
-        timezone = tz.ical_timezone(rdvs.last&.starts_at || 1.year.ago)
-        cal.add_timezone(timezone)
-
+        add_timezones(cal)
         add_events(cal)
+
         cal.publish
         render plain: cal.to_ical
       end
@@ -43,13 +41,13 @@ class IcsCalendarController < ActionController::Base
       cal.event do |event|
         dtstart = Icalendar::Values::DateTime.new(
           rdv.starts_at,
-          "tzid" => Time.zone_default.tzinfo.identifier
+          "tzid" => rdv.organisation.time_zone
         )
         event.dtstart = dtstart
 
         dtend = Icalendar::Values::DateTime.new(
           rdv.ends_at,
-          "tzid" => Time.zone_default.tzinfo.identifier
+          "tzid" => rdv.organisation.time_zone
         )
         event.dtend = dtend
 
@@ -60,6 +58,15 @@ class IcsCalendarController < ActionController::Base
         event.summary = rdv.object
         event.description = rdv.event_description_for(@agent)
       end
+    end
+  end
+
+  def add_timezones(cal)
+    tzids = (@agent.organisations.pluck(:time_zone) + [Time.zone_default.tzinfo.identifier]).uniq
+    tzids.each do |tzid|
+      tz = TZInfo::Timezone.get(tzid)
+      ical_timezone = tz.ical_timezone(Time.zone.now)
+      cal.add_timezone(ical_timezone)
     end
   end
 

@@ -1,7 +1,8 @@
 RSpec.describe Admin::UsersController, type: :controller do
   render_views
 
-  let(:organisation) { create(:organisation) }
+  let(:territory) { create(:territory) }
+  let(:organisation) { create(:organisation, territory:) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
   before do
@@ -37,6 +38,24 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect do
         delete :destroy, params: { organisation_id: organisation.id, id: user.id }
       end.not_to change { User.unscoped.count }
+    end
+  end
+
+  describe "GET new" do
+    it "n’affiche pas le champ d’adresse par défaut" do
+      get :new, params: { organisation_id: organisation.id }
+      expect(response).to be_successful
+      expect(response.body).not_to include("Adresse")
+    end
+
+    context "l’espace a le champ d’adresse activé" do
+      let(:territory) { create(:territory, enable_address_field: true) }
+
+      it "affiche le champ d’adresse" do
+        get :new, params: { organisation_id: organisation.id }
+        expect(response).to be_successful
+        expect(response.body).to include("Adresse")
+      end
     end
   end
 
@@ -156,6 +175,23 @@ RSpec.describe Admin::UsersController, type: :controller do
         get :show, params: { organisation_id: organisation.id, id: user.id }
         expect(response).to be_successful
         expect(response.body).to include("Lola")
+      end
+
+      it "n'affiche pas l’adresse de l’usager par défaut" do
+        get :show, params: { organisation_id: organisation.id, id: user.id }
+        expect(response).to be_successful
+        expect(response.body).not_to include("Adresse")
+      end
+
+      context "l’espace a le champ d’adresse activé" do
+        let(:territory) { create(:territory, enable_address_field: true) }
+
+        it "montre l’adresse de l’usager" do
+          user.update(address: "10 rue des Lilas")
+          get :show, params: { organisation_id: organisation.id, id: user.id }
+          expect(response).to be_successful
+          expect(response.body).to include("10 rue des Lilas")
+        end
       end
     end
 

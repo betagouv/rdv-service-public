@@ -9,7 +9,6 @@ html lang="fr"
 
     = render "layouts/agent_header"
     / doit être dans <body> et pas dans <head>
-    = render "layouts/headway_widget"
 
     .content-and-left-menu-wrapper
       = render "layouts/left_menu"
@@ -25,6 +24,7 @@ html lang="fr"
             = content_for :fil_ariane
             .container-fluid
               = render "layouts/flash"
+              = content_for :onboarding_banner
               - if content_for :title
                 .page-title-box
                   h1.fr-h2= yield :title
