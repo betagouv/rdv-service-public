@@ -17,7 +17,7 @@ RSpec.describe Agents::AgentsController, "#search" do
   end
 
   context "quand un des agents n'a pas encore accepté son invitation" do
-    let!(:unconfirmed_agent) { create(:agent, :not_confirmed, first_name: "Francis", admin_role_in_organisations: [organisation]) }
+    let!(:unconfirmed_agent) { create(:agent, :not_confirmed, email: "francis@exemple.fr", admin_role_in_organisations: [organisation]) }
 
     it "renvoie son adresse mail" do
       get agents_ajax_agents_search_path(organisation_id: organisation, term: "fra"), as: :json
