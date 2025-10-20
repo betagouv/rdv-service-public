@@ -90,6 +90,7 @@ class Territory < ApplicationRecord
   }.freeze
 
   OPTIONAL_FIELD_TOGGLES = {
+    enable_address_field: :address,
     enable_notes_field: :annotation_content,
     enable_logement_field: :logement,
     enable_birth_date_field: :birth_date,
@@ -98,7 +99,7 @@ class Territory < ApplicationRecord
   # Nous voulons permettre à tous les espaces d'activer ou non ces champs, qualifiés de "légitimes"
   # En revanche, les autres champs listés ci-dessus sont considérés comme "legacy" et seulement
   # affichés aux espaces qui les avaient déjà activés.
-  legitimate_toggle_keys = %i[enable_birth_date_field enable_address_details enable_case_number]
+  legitimate_toggle_keys = %i[enable_birth_date_field enable_address_field enable_address_details enable_case_number]
   LEGITIMATE_TOGGLES = OPTIONAL_FIELD_TOGGLES.slice(*legitimate_toggle_keys).freeze
   LEGACY_TOGGLES = OPTIONAL_FIELD_TOGGLES.except(*legitimate_toggle_keys).freeze
 
@@ -108,10 +109,6 @@ class Territory < ApplicationRecord
 
   def cn?
     name == CNFS_NAME
-  end
-
-  def visioplainte?
-    name == VISIOPLAINTE_NAME
   end
 
   def sectorized?

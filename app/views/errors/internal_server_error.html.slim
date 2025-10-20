@@ -1,6 +1,6 @@
-.row
-  .col.col-md-8
-    h1 Erreur inattendue
+.fr-grid-row
+  .fr-col-12.fr-col-md-8
+    h1.fr-h1 Erreur inattendue
 
     p Erreur 500
 
@@ -10,16 +10,15 @@
 
     = render "admin/static_pages/instatus_iframe"
 
-    p.mt-4
+    p.fr-mt-4w
       |> Essayez de rafraîchir la page ou bien réessayez plus tard.
       |> Si vous avez besoin d’une aide immédiate, merci de nous contacter avec le bouton ci-dessous ou en nous écrivant directement à l’adresse
 
       = mail_to(current_domain.support_email, current_domain.support_email)
 
-    .row.my-4
-      .col.flex
-        = link_to "Contactez-nous", new_aide_demande_support_path(sujet: "Erreur 500"), class: "btn btn-primary"
-        = link_to("Retour à l'accueil", root_path, class: "btn btn-outline-primary ml-2")
+    .fr-btns-group.fr-btns-group--inline
+      = link_to "Contactez-nous", new_aide_demande_support_path(sujet: "Erreur 500"), class: "fr-btn"
+      = link_to("Retour à l'accueil", root_path, class: "fr-btn fr-btn--secondary")
 
-  .col-0.col-md-4
-    = image_tag "static_pages/not_found_illustration.svg", class: "img-fluid p-3", alt: ""
+  .fr-col-0.fr-col-md-4
+    = image_tag "static_pages/not_found_illustration.svg", class: "img-fluid fr-p-3w", alt: ""

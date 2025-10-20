@@ -277,6 +277,16 @@ Rails.application.routes.draw do
               patch :update_user_type
             end
           end
+
+          namespace :online_booking do
+            resources :motifs, only: %i[show edit update] do
+              member do
+                post :open
+                post :close
+              end
+            end
+          end
+
           resource :configuration, only: [:show]
           resources :stats, only: :index do
             collection do

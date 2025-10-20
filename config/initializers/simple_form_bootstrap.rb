@@ -1,8 +1,5 @@
 # Configuration de simple_form pour Boostrap
 SimpleForm.setup do |config|
-  # Default class for buttons
-  config.button_class = "btn btn-primary"
-
   # Define the default class of the input wrapper of the boolean input.
   config.boolean_label_class = "form-check-label"
 

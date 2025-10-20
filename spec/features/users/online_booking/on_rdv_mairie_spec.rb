@@ -84,20 +84,20 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (50 minutes)")
 
       # lien pour modifier le motif
-      expect(page).to have_link("modifier", href: prendre_rdv_path(
+      expect(page).to have_link("Modifier", href: prendre_rdv_path(
         departement: organisation.territory.departement_number,
         public_link_organisation_id: organisation.id
       ))
 
       # lien pour modifier le nombre de pré-demandes
-      expect(page).to have_link("modifier", href: prendre_rdv_path(
+      expect(page).to have_link("Modifier", href: prendre_rdv_path(
         departement: organisation.territory.departement_number,
         motif_name_with_location_type: passport_motif.name_with_location_type,
         public_link_organisation_id: organisation.id
       ))
 
       # lien pour modifier le lieu
-      expect(page).to have_link("modifier", href: prendre_rdv_path(
+      expect(page).to have_link("Modifier", href: prendre_rdv_path(
         departement: organisation.territory.departement_number,
         motif_name_with_location_type: passport_motif.name_with_location_type,
         public_link_organisation_id: organisation.id,
@@ -105,7 +105,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       ))
 
       # lien pour modifier le créneau
-      expect(page).to have_link("modifier", href: prendre_rdv_path(
+      expect(page).to have_link("Modifier", href: prendre_rdv_path(
         departement: organisation.territory.departement_number,
         lieu_id: lieu.id,
         motif_name_with_location_type: passport_motif.name_with_location_type,
@@ -572,7 +572,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         expect(page).to have_content("Étape 3 sur 3")
         expect(page).to have_content("Confirmer mon RDV")
         page.execute_script(%{
-          elt = document.querySelector("a.btn-primary");
+          elt = document.querySelector("a.fr-btn[data-disable-with='Veuillez patienter…']");
           elt.setAttribute(
             "href",
             elt.getAttribute("href").replace("ants_pre_demandes_count=2", "ants_pre_demandes_count=100")

@@ -21,7 +21,12 @@ class Admin::LieuxController < AgentAuthController
 
     authorize(@lieu, policy_class: Agent::LieuPolicy)
     if @lieu.save
-      flash[:success] = "Le lieu a été créé."
+      flash[:success] = "Le lieu a été ajouté."
+
+      if current_organisation.lieux.enabled.count == 1
+        flash[:onboarding] = "first_lieu_created"
+      end
+
       redirect_to admin_organisation_lieux_path(@lieu.organisation)
     else
       render :new

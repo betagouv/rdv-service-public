@@ -26,7 +26,7 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
             = link_to("Voir sur #{rdv.rdv_plan.oauth_application&.name}", rdv.rdv_plan&.dossier_url, target: :_blank, class: "fr-btn fr-btn--tertiary fr-mb-2w")
         .d-flex.justify-content-between.flex-wrap.mb-1
           p.card-text
-            i.fa.fa-fw.fa-calendar.mr-1.text-primary-blue
+            = calendar_icon(class: "text-primary-blue fr-mr-1w")
             = rdv_starts_at_and_duration(rdv, :time_only)
             - if rdv.agents.first
               |&nbsp;

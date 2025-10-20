@@ -413,7 +413,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       expect(computed_dates.call).to eq(xmas_week.to_a - [Date.new(2024, 12, 25)])
 
       # Les agents de visioplainte travaillent les jours fériés
-      plage_ouverture.organisation.territory.update_columns(name: Territory::VISIOPLAINTE_NAME) # rubocop:disable Rails/SkipsModelValidations
+      plage_ouverture.organisation.territory.update_columns(work_on_sunday: true) # rubocop:disable Rails/SkipsModelValidations
       expect(computed_dates.call).to eq(xmas_week.to_a)
     end
   end

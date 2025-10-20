@@ -22,7 +22,7 @@
           = "Motif : #{@rdv.motif.name}"
 
         .fr-mt-2w
-          span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
+          = user_icon(class: "fr-mr-1w")
           |> Usager :
           = @rdv_plan.user.full_name
           .fr-ml-4w= @rdv_plan.user.preferred_email
