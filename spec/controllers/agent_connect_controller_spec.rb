@@ -165,10 +165,10 @@ RSpec.describe AgentConnectController do
 
       context "when an agent exists with the given sub and another email address" do
         it "replaces the agents email address with the one from ProConnect" do
-          agent = create(:agent, pro_connect_openid_sub: user_info["sub"], email: "ancienne@exemple.fr")
+          agent = create(:agent, pro_connect_openid_sub: user_info["sub"], email: "autre@exemple.fr")
           expect do
             get :callback, params: { state:, code: }
-          end.to change { agent.reload.email }.from("ancienne@exemple.fr").to(user_info["email"])
+          end.to change { agent.reload.email }.from("autre@exemple.fr").to(user_info["email"])
           expect_agent_to_be_updated_and_logged_in(agent)
         end
       end
@@ -179,7 +179,31 @@ RSpec.describe AgentConnectController do
           expect do
             get :callback, params: { state:, code: }
           end.not_to change { Agent.maximum(:updated_at) }
-          expect(flash[:error]).to include("Ce compte ProConnect est lié à l'adresse e-mail #{user_info["email"]}.")
+          expect(flash[:error]).to include("cette adresse est déjà liée à compte existant")
+          expect(current_agent_id).to be_nil
+        end
+      end
+
+      context "when an agent exists with the given email but with another sub, and another agent exists with the given sub but another email" do
+        it "raises an error" do
+          create(:agent, pro_connect_openid_sub: "another_sub", email: user_info["email"])
+          create(:agent, pro_connect_openid_sub: user_info["sub"], email: "autre@exemple.fr")
+          expect do
+            get :callback, params: { state:, code: }
+          end.not_to change { Agent.maximum(:updated_at) }
+          expect(flash[:error]).to include("cette adresse est déjà liée à compte existant")
+          expect(current_agent_id).to be_nil
+        end
+      end
+
+      context "when an agent exists with the given sub, and another agent exists with the given email" do
+        it "raises an error" do
+          create(:agent, pro_connect_openid_sub: user_info["sub"])
+          create(:agent, email: user_info["email"])
+          expect do
+            get :callback, params: { state:, code: }
+          end.not_to change { Agent.maximum(:updated_at) }
+          expect(flash[:error]).to include("cette adresse est déjà liée à compte existant")
           expect(current_agent_id).to be_nil
         end
       end
