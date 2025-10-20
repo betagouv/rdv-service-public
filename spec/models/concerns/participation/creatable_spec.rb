@@ -35,7 +35,7 @@ RSpec.describe Participation::Creatable, type: :concern do
       it "for self (user)" do
         participation1.create_and_notify!(user)
         expect_notifications_sent_for(rdv, user, :rdv_created)
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
         expect(rdv.reload.participations).to eq([participation1])
       end
 
@@ -43,7 +43,7 @@ RSpec.describe Participation::Creatable, type: :concern do
         participation1.save!
         participation_relative.create_and_notify!(user)
         expect_notifications_sent_for(rdv, user, :rdv_created)
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
         expect(rdv.reload.participations).to eq([participation_relative])
       end
     end
@@ -55,7 +55,7 @@ RSpec.describe Participation::Creatable, type: :concern do
       it "for self (user2)" do
         participation1.create_and_notify!(user2)
         expect_notifications_sent_for(rdv, user2, :rdv_created)
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
         expect(rdv.reload.participations).to eq([participation1])
       end
 
@@ -63,7 +63,7 @@ RSpec.describe Participation::Creatable, type: :concern do
         participation1.save!
         participation_relative.create_and_notify!(user2)
         expect_notifications_sent_for(rdv, user2, :rdv_created)
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
         expect(rdv.reload.participations).to eq([participation_relative])
       end
     end
@@ -76,14 +76,14 @@ RSpec.describe Participation::Creatable, type: :concern do
       it "for self (user)" do
         participation_with_lifecycle_disabled.create_and_notify!(user3)
         expect_no_notifications_for(rdv, user, :rdv_created)
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
         expect(rdv.reload.participations).to eq([participation_with_lifecycle_disabled])
       end
 
       it "for a relative" do
         participation_relative.create_and_notify!(user)
         expect_no_notifications_for(rdv, user, :rdv_created)
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
         expect(rdv.reload.participations).to eq([participation_relative])
       end
     end

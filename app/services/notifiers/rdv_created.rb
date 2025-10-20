@@ -12,9 +12,13 @@ class Notifiers::RdvCreated < Notifiers::RdvBase
     # Pour les RDV créés par un usager plus de 48H avant, iels auront un SMS de rappel 48h avant ce RDV
     # il n’est donc pas nécessaire d’envoyer ce SMS à la création du RDV.
 
-    if !@rdv.created_by_user? || !user.confirmed? || @rdv.starts_at < 2.days.from_now
+    if self.class.should_send_sms_to_user?(user:, rdv: @rdv, author: @rdv.created_by)
       Users::RdvSms.rdv_created(@rdv, user, @participations_tokens_by_user_id[user.id]).deliver_later
     end
+  end
+
+  def self.should_send_sms_to_user?(user:, rdv:, author:)
+    author != user || !user.confirmed? || rdv.starts_at < 2.days.from_now
   end
 
   protected

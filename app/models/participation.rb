@@ -100,6 +100,14 @@ class Participation < ApplicationRecord
     self.restricted_auth_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8) until restricted_auth_token && Participation.where(restricted_auth_token:).none?
   end
 
+  def set_restricted_authentication_token_if_missing_and_save
+    # TODO: Supprimer cette méthode une fois que toutes les participations ont des restricted_auth_token
+    return if restricted_auth_token.present?
+
+    set_restricted_authentication_token
+    save
+  end
+
   def prescription?
     created_by_prescripteur? || created_by_agent_prescripteur?
   end

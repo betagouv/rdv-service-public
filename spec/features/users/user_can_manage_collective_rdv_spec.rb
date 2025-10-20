@@ -116,7 +116,8 @@ RSpec.describe "Adding a user to a collective RDV" do
         last_name: "Factice"
       )
 
-      expect_notifications_sent_for(rdv, logged_user, :rdv_created)
+      expect_notifications_sent_for(rdv, logged_user, :rdv_created, :mail) # pas de SMS car le RDV est dans plus de 48h
+
       expect_webhooks_for(logged_user)
     end
 
@@ -138,7 +139,9 @@ RSpec.describe "Adding a user to a collective RDV" do
       click_on("Confirmer ma participation")
       expect(page).to have_content("Participation confirmée")
       expect(rdv.reload.users.count).to eq(1)
-      expect_notifications_sent_for(rdv, logged_user, :rdv_created)
+
+      expect_notifications_sent_for(rdv, logged_user, :rdv_created, :mail) # pas de SMS car le RDV est dans plus de 48h
+
       expect_webhooks_for(logged_user)
     end
 
@@ -153,7 +156,8 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       expect(page).not_to have_content("modifier") # can_change_participants?
 
-      expect_notifications_sent_for(rdv, invited_user, :rdv_created)
+      expect_notifications_sent_for(rdv, invited_user, :rdv_created, :mail) # pas de SMS car le RDV est dans plus de 48h
+
       expect_webhooks_for(invited_user)
     end
   end
@@ -200,7 +204,10 @@ RSpec.describe "Adding a user to a collective RDV" do
         select_lieu
         expect_confirm_participation.not_to change { rdv.reload.users.count }
 
-        expect_notifications_sent_for(rdv, user, :rdv_created)
+        perform_enqueued_jobs
+
+        expect_notifications_sent_for(user, :rdv_created, :mail) # pas de SMS car le RDV est dans plus de 48h
+
         expect_webhooks_for(user)
       end
 
@@ -231,7 +238,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         select_lieu
         expect_confirm_participation(notif: false).to change { rdv.reload.users.count }.from(0).to(1)
 
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
         expect_no_notifications_for(rdv, user, :rdv_created)
       end
 
@@ -292,8 +299,10 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_confirm_participation.to change { rdv.reload.users.count }.from(2).to(3)
         expect(rdv.users_count).to eq(2) # users_count doesnt count other_user1 excused participation
 
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
-        expect_notifications_sent_for(rdv, user, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
+
+        expect_notifications_sent_for(rdv, user, :rdv_created, :mail) # pas de SMS car le RDV est dans plus de 48h
+
         expect_no_notifications_for(rdv, other_user1, :rdv_created)
         expect_no_notifications_for(rdv, other_user2, :rdv_created)
         expect_webhooks_for(user)
@@ -358,8 +367,9 @@ RSpec.describe "Adding a user to a collective RDV" do
         select_lieu
         expect_confirm_participation.not_to change { rdv.reload.users.count }
 
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
-        expect_notifications_sent_for(rdv, user, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
+        expect_notifications_sent_for(rdv, user, :rdv_created, :mail) # pas de SMS car le RDV est dans plus de 48h
+
         expect_webhooks_for(user)
       end
 
@@ -387,7 +397,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         select_lieu
         expect_confirm_participation(notif: false).to change { rdv.reload.users.count }.from(0).to(1)
 
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
         expect_no_notifications_for(rdv, user, :rdv_created)
       end
 
@@ -439,8 +449,9 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_confirm_participation.to change { rdv.reload.users.count }.from(2).to(3)
         expect(rdv.users_count).to eq(2) # users_count doesnt count other_user1 excused participation
 
-        expect_notifications_sent_for(rdv, agent, :rdv_created)
-        expect_notifications_sent_for(rdv, user, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :participation_created)
+        expect_notifications_sent_for(rdv, user, :rdv_created, :mail) # pas de SMS car le RDV est dans plus de 48h
+
         expect_no_notifications_for(rdv, other_user1, :rdv_created)
         expect_no_notifications_for(rdv, other_user2, :rdv_created)
         expect_webhooks_for(user)
