@@ -15,4 +15,8 @@ class Agents::AgentsController < AgentAuthController
     # la jointure peut créer des doublons, et impossible d'utiliser DISTINCT avec pg_search
     @agents = @agents.load.uniq
   end
+
+  def pundit_user
+    current_agent
+  end
 end
