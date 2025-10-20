@@ -1,42 +1,41 @@
-h1 Nouveau RDV par prescription
+- content_for(:title) do
+  | Nouveau RDV par prescription
 main.container
   .row.justify-content-center.mt-4
     .col-lg-7.col-md-10.col-sm-11
       .card
         .card-body
-          h3
-            i.fa.fa-check-circle
+          h2.fr-h3
+            = icon("fr-icon-checkbox-fill", class: "fr-mr-1w")
             |< Rendez-vous confirmé
           - rdv = @rdv
           ul.list-group.list-group-flush
             li.list-group-item
-              .fa.fa-calendar>
+              = calendar_icon(class: "fr-mr-1w")
               = rdv_title(rdv)
-              = rdv_tag(rdv)
 
             - if rdv.public_office?
               li.list-group-item
-                .fa.fa-map-marker-alt>
+                = lieu_icon(class: "fr-mr-1w")
                 = human_location(rdv)
                 - if rdv.lieu&.phone_number
-                  span>
-                  span.fa.fa-phone>
+                  = phone_icon(class: "fr-mr-1w")
                   = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
 
             - elsif rdv.phone?
               li.list-group-item
-                .fa.fa-phone>
+                = phone_icon(class: "fr-mr-1w")
                 | RDV Téléphonique
 
             li.list-group-item
-              .fa.fa-user>
+              = user_icon(class: "fr-mr-1w")
               = @rdv.users.first.full_name
               = " (#{@rdv.users.first.phone_number})" if @rdv.users.first.phone_number.present?
 
             li.list-group-item
               .row
                 .col-auto.pr-0
-                  i.fa.fa-info-circle>
+                  = motif_icon(class: "fr-mr-1w")
                 .col-auto.pl-1
                   = rdv.motif.name
                   - if current_territory.enable_context_field && @rdv.context.present?
@@ -51,4 +50,4 @@ main.container
             li.list-group-item
               |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
               = link_to "Contactez-nous", new_aide_demande_support_path(role: :agent, sujet: "Déplacer ou corriger un RDV pris via prescription (RDV ID: #{rdv.id})")
-          .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", admin_organisation_planning_agenda_path(current_organisation)
+          .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", admin_organisation_planning_agenda_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline"

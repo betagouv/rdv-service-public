@@ -152,8 +152,11 @@ Rails.application.routes.draw do
         get :download
       end
     end
+
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
     get "omniauth/rdvservicepublic/callback" => "admin/instance_exports#oauth_callback"
+
+    get "agents/blog/posts" => "agents/blog/posts#index"
   end
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
@@ -275,6 +278,16 @@ Rails.application.routes.draw do
               patch :update_user_type
             end
           end
+
+          namespace :online_booking do
+            resources :motifs, only: %i[show edit update] do
+              member do
+                post :open
+                post :close
+              end
+            end
+          end
+
           resource :configuration, only: [:show]
           resources :stats, only: :index do
             collection do

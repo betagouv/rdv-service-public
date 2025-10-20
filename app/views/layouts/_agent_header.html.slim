@@ -12,8 +12,10 @@ header.header.bg-white
         = render "layouts/rdv_a_renseigner", organisation: defined?(current_organisation) && current_organisation
         li.list-inline-item
           - if current_domain != Domain::RDV_AIDE_NUMERIQUE
-            #js-headway-anchor.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center
+            = link_to agents_blog_posts_path, class: "btn text-primary-blue link-dsfr d-flex justify-content-center", data: { modal: true } do
               | Nouveautés
+              - if BlogPost.new_content_for_agent?(current_agent)
+                .ml-1.fr-badge.fr-badge--new.fr-badge--sm.fr-pl-3v
           - elsif defined?(current_organisation) && current_organisation && current_agent.organisations.count <= 1 && current_agent.admin_in_organisation?(current_organisation)
             = link_to "Passer à RDV Service Public", admin_organisation_instance_exports_path(current_organisation), class: "btn text-primary-blue link-dsfr"
 

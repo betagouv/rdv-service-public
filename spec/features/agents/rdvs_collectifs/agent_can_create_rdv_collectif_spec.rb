@@ -54,6 +54,9 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
 
     click_button("Confirmer le RDV")
     sleep 1
+    perform_enqueued_jobs
+    open_email("alain@tiptop.fr")
+    expect(current_email.subject).to include("Nouveau RDV ajouté sur votre agenda RDV Service Public")
 
     rdv = Rdv.last
     expect(rdv.users.count).to eq(0)

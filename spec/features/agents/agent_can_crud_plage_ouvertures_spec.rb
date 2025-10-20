@@ -235,21 +235,39 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     let!(:avocat) { create(:service, name: "Avocat") }
     let!(:notaire) { create(:service, name: "Notaire") }
 
-    let!(:motif_1_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
-    let!(:motif_2_service_avocat) { create(:motif, organisation: organisation, service: avocat) }
+    context "when some motifs don't need a lieu" do
+      let!(:motif_public_office) { create(:motif, organisation: organisation, service: avocat, location_type: :public_office) }
+      let!(:motif_phone) { create(:motif, organisation: organisation, service: avocat, location_type: :phone) }
 
-    it "works", js: true do
-      visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: agent)
-      expect(page).not_to have_content("Lieu")
-      check avocat.name
-      expect(page).to have_checked_field(motif_1_service_avocat.name)
-      expect(page).to have_checked_field(motif_2_service_avocat.name)
-      expect(page).not_to have_checked_field(motif.name)
-      expect(page).to have_content("Lieu")
-      select(lieu.full_name, from: "plage_ouverture_lieu_id")
-      click_on "Créer la plage d'ouverture"
-      expect(page).to have_content("Plage d'ouverture créée")
-      expect(PlageOuverture.last.motifs).to contain_exactly(motif_1_service_avocat, motif_2_service_avocat)
+      it "only displays the lieu input when necessary and allows selecting multiple motifs", js: true do
+        visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: agent)
+        expect(page).not_to have_content("Lieu")
+        check avocat.name
+        expect(page).to have_checked_field(motif_public_office.name)
+        expect(page).to have_checked_field(motif_phone.name)
+        expect(page).not_to have_checked_field(motif.name)
+        expect(page).to have_content("Lieu")
+        select(lieu.full_name, from: "plage_ouverture_lieu_id")
+        click_on "Créer la plage d'ouverture"
+        expect(page).to have_content("Plage d'ouverture créée")
+        expect(PlageOuverture.last.motifs).to contain_exactly(motif_public_office, motif_phone)
+      end
+    end
+
+    context "when all motifs are public_office" do
+      let!(:motif_public_office) { create(:motif, organisation: organisation, service: avocat, location_type: :public_office) }
+      let!(:other_motif_public_office) { create(:motif, organisation: organisation, service: avocat, location_type: :public_office) }
+
+      it "displays the lieu input (because it will always be necessary) and auto-selects the only option", js: true do
+        visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: agent)
+        expect(page).to have_content("Lieu")
+
+        check avocat.name
+
+        click_on "Créer la plage d'ouverture"
+        expect(page).to have_content("Plage d'ouverture créée")
+        expect(PlageOuverture.last.lieu).to eq lieu
+      end
     end
   end
 

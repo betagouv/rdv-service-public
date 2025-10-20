@@ -2,7 +2,7 @@ module NotificationsHelper
   include DateHelper
   include Capybara::Email::DSL
 
-  EVENTS = %i[rdv_created rdv_cancelled rdv_updated rdv_upcoming_reminder].freeze
+  EVENTS = %i[rdv_created rdv_cancelled rdv_updated rdv_upcoming_reminder participation_created].freeze
 
   def expect_notifications_sent_for(rdv, person, event, notif_type = nil)
     perform_enqueued_jobs
@@ -77,12 +77,10 @@ module NotificationsHelper
 
   def email_title_for_agent(rdv, person, event)
     case event
+    when :participation_created
+      "Nouvelle participation au RDV collectif sur votre agenda #{person.domain.name} pour #{relative_date(rdv.starts_at)}"
     when :rdv_created
-      if rdv.collectif?
-        "Nouvelle participation au RDV collectif sur votre agenda #{person.domain.name} pour #{relative_date(rdv.starts_at)}"
-      else
-        "Nouveau RDV ajouté sur votre agenda #{person.domain.name} pour #{relative_date(rdv.starts_at)}"
-      end
+      "Nouveau RDV ajouté sur votre agenda #{person.domain.name} pour #{relative_date(rdv.starts_at)}"
     when :rdv_cancelled
       if rdv.collectif?
         "Participation au RDV collectif annulée #{relative_date(rdv.starts_at)}"
@@ -106,6 +104,8 @@ module NotificationsHelper
       "modifié"
     when :rdv_upcoming_reminder
       I18n.t("users.rdv_mailer.rdv_upcoming_reminder.title", date: I18n.l(rdv.starts_at, format: :human))
+    when :participation_created
+      "cet email n’existe pas encore mais on a besoin de ce cas pour que les specs passent 🤷"
     end
   end
 end

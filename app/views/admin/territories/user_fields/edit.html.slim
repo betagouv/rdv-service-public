@@ -4,7 +4,7 @@
   .col-md-6
     .card
       .card-body
-        = simple_form_for current_territory, url: admin_territory_user_fields_path(current_territory) do |f|
+        = form_for current_territory, url: admin_territory_user_fields_path(current_territory), builder: Dsfr::FormBuilder do |f|
           = render "model_errors", model: current_territory
 
           h5.card-title= t(".card_title")
@@ -12,13 +12,13 @@
           p.text-muted.font-14= t(".hint_1")
           p.text-muted.font-14= t(".hint_2")
           - Territory::LEGITIMATE_TOGGLES.each do |toggle, field_name|
-            = f.input toggle, label: User.human_attribute_name(field_name)
+            = f.dsfr_check_box toggle, label: User.human_attribute_name(field_name)
 
           - if current_territory.any_legacy_fields_enabled?
             p.text-muted.font-14= t(".legacy_toggles_explanations")
             - Territory::LEGACY_TOGGLES.each do |toggle, field_name|
               - if current_territory.send(toggle)
-                = f.input toggle, label: User.human_attribute_name(field_name)
+                = f.dsfr_check_box toggle, label: User.human_attribute_name(field_name)
 
           .text-right
-            = f.button :submit
+            = f.submit "Enregistrer", class: "fr-btn"

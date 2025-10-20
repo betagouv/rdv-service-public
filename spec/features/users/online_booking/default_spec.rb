@@ -55,7 +55,7 @@ RSpec.describe "User can search for rdvs" do
   describe "Prise de RDV en ligne" do
     let!(:service) { create(:service) }
     let!(:territory) do
-      create(:territory, departement_number: "92", enable_birth_date_field: true)
+      create(:territory, departement_number: "92", enable_birth_date_field: true, enable_address_field: true)
     end
 
     let!(:first_organisation_with_po) { create(:organisation, :with_contact, territory: territory) }

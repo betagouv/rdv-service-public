@@ -10,6 +10,7 @@ module IcsPayloads
         location: ics_location,
         domain: domain,
         status: ics_status,
+        tzid: organisation&.time_zone,
       }
 
       payload[:description] = ics_description(recipient)
