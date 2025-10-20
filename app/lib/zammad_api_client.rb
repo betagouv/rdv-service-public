@@ -39,7 +39,8 @@ class ZammadApiClient
 
   def self.upsert_user(email:, sender_role:, first_name:, last_name:, phone_number:, user_id: nil, agent_id: nil)
     attributes = upsert_user_attributes(sender_role:, first_name:, last_name:, phone_number:, user_id:, agent_id:)
-    existing_user = connection.get("api/v1/users/search", condition: { "user.email": { operator: "is", value: email } }).body.first
+    condition = { "user.email": { operator: "is", value: email.downcase } } # strict match and zammad downcases emails when saving
+    existing_user = connection.get("api/v1/users/search", condition:).body.first
     if existing_user
       return existing_user if existing_user.symbolize_keys.slice(*attributes.keys) == attributes
 
