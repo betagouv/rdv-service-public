@@ -118,17 +118,32 @@ class AgentConnectController < ApplicationController
   end
 
   def connect_agent(callback_client)
-    # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
-    # voir https://github.com/numerique-gouv/agentconnect-documentation/blob/main/doc_fs/donnees_fournies.md#le-champ-sub
-    agent = Agent.active.find_by(email: callback_client.user_email)
+    agent_by_sub = Agent.active.find_by(pro_connect_openid_sub: callback_client.openid_sub)
+    agent_by_email = Agent.active.find_by(email: callback_client.user_email)
+
+    # Edge case : on trouve un agent par e-mail et cet agent porte un autre sub.
+    # Il faudrait inviter l'agent à se connecter par e-mail à cet autre compte et à unlink.
+    if agent_by_email&.pro_connect_openid_sub && agent_by_email.pro_connect_openid_sub != callback_client.openid_sub
+      flash[:error] = "Ce compte ProConnect est lié à l'adresse e-mail #{callback_client.user_email}.<br />" \
+                      "Or cette adresse est déjà liée à compte existant qui est connecté avec un autre compte ProConnect.<br />" \
+                      "Nous vous invitons à vous connecter par email + mot de passe avec cet e-mail.<br />" \
+                      "Vous pouvez contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a>."
+      Sentry.capture_message("L'email ProConnect est attribué à un agent qui porte un autre sub.", extra: { email_from_pro_connect: callback_client.user_email })
+      redirect_to new_agent_session_path and return
+    end
+
+    agent = agent_by_sub || agent_by_email
 
     if current_domain.allow_self_onboarding
       agent ||= Agent.new(email: callback_client.user_email, password: SecureRandom.base64(32))
     end
 
     if agent
+      agent.skip_confirmation!
+      agent.skip_reconfirmation!
       agent.update!(
-        connected_with_agent_connect: true,
+        pro_connect_openid_sub: callback_client.openid_sub,
+        email: callback_client.user_email,
         first_name: callback_client.user_first_name,
         last_name: callback_client.user_last_name,
         proconnect_siret: callback_client.user_siret,

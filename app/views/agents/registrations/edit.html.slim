@@ -1,6 +1,6 @@
 - content_for :title, "Votre compte"
 
-- if resource.connected_with_agent_connect?
+- if resource.pro_connect_openid_sub
   = render "infos", resource: resource, resource_name: resource_name, devise_mapping: devise_mapping
 - else
   = render "form", resource: resource, resource_name: resource_name, devise_mapping: devise_mapping

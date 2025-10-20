@@ -118,19 +118,71 @@ RSpec.describe AgentConnectController do
       session[:agent_return_to] = "/agents/edit" # Pour simuler le retour vers la page demandée avant la connexion
     end
 
-    it "updates and logs in the agent" do
-      agent = create(:agent, email: "francis.factice@exemple.gouv.fr")
-      get :callback, params: { state: state, code: code }
+    describe "agent login" do
+      def expect_agent_to_be_updated_and_logged_in(agent)
+        expected_attrs = {
+          pro_connect_openid_sub: user_info["sub"],
+          email: user_info["email"],
+          first_name: "Francis",
+          last_name: "Factice",
+          confirmed_at: be_within(10.seconds).of(Time.zone.now),
+        }
+        expect(agent).to have_attributes(expected_attrs)
+        expect(current_agent_id).to eq(agent.id)
+        expect(session["agent_connect_id_token"]).to be_present
+        expect(response).to redirect_to("/agents/edit")
+      end
 
-      expect(agent.reload).to have_attributes(
-        connected_with_agent_connect: true,
-        first_name: "Francis",
-        last_name: "Factice",
-        last_sign_in_at: be_within(10.seconds).of(Time.zone.now)
-      )
-      expect(session["agent_connect_id_token"]).to be_present
+      context "when agent does not exist for email nor sub" do
+        it "displays an error if the domain does not allow self-onboarding" do
+          allow(Domain::RDV_MAIRIE).to receive(:allow_self_onboarding).and_return(false)
+          expect do
+            get :callback, params: { state:, code: }
+          end.not_to change(Agent, :count)
+          expect(flash[:error]).to include("Il n'y a pas de compte agent pour l'adresse mail francis.factice@exemple.gouv.fr")
+          expect(current_agent_id).to be_nil
+        end
 
-      expect(response).to redirect_to("/agents/edit")
+        it "creates the agent if the domain allows it" do
+          allow(Domain::RDV_MAIRIE).to receive(:allow_self_onboarding).and_return(true)
+          expect do
+            get :callback, params: { state:, code: }
+          end.to change(Agent, :count).by(1)
+          agent = Agent.last
+          expect_agent_to_be_updated_and_logged_in(agent)
+        end
+      end
+
+      context "when an agent exists with the given email address and no sub" do
+        it "updates the existing agent's sub" do
+          agent = create(:agent, email: "francis.factice@exemple.gouv.fr")
+          expect do
+            get :callback, params: { state:, code: }
+          end.to change { agent.reload.pro_connect_openid_sub }.to(user_info["sub"])
+          expect_agent_to_be_updated_and_logged_in(agent)
+        end
+      end
+
+      context "when an agent exists with the given sub and another email address" do
+        it "replaces the agents email address with the one from ProConnect" do
+          agent = create(:agent, pro_connect_openid_sub: user_info["sub"], email: "ancienne@exemple.fr")
+          expect do
+            get :callback, params: { state:, code: }
+          end.to change { agent.reload.email }.from("ancienne@exemple.fr").to(user_info["email"])
+          expect_agent_to_be_updated_and_logged_in(agent)
+        end
+      end
+
+      context "when an agent exists with the given email but with another sub" do
+        it "raises an error" do
+          create(:agent, pro_connect_openid_sub: "another_sub", email: user_info["email"])
+          expect do
+            get :callback, params: { state:, code: }
+          end.not_to change { Agent.maximum(:updated_at) }
+          expect(flash[:error]).to include("Ce compte ProConnect est lié à l'adresse e-mail #{user_info["email"]}.")
+          expect(current_agent_id).to be_nil
+        end
+      end
     end
 
     context "when logging in a user" do
