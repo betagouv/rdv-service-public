@@ -13,14 +13,14 @@ class ZammadApiClient
   end
 
   # cf https://docs.zammad.org/en/latest/api/ticket/index.html#create
-  def self.create_ticket(sender_role:, subject:, email:, body:, tags: [])
-    group = { usager: "Users", agent: "Agents" }[sender_role]
+  def self.create_ticket(sender_role:, customer_id:, subject:, body:, tags: [])
+    group = { usager: "Users", agent: "Agents" }.with_indifferent_access[sender_role]
     raise Error, "Les seuls sender_role valables sont :usager et :agent" if group.nil?
 
     params = {
       group:,
       title: subject,
-      customer_id: "guess:#{email}",
+      customer_id:,
       article: { subject:, body:, type: "web", sender: "Customer" },
     }
     response_data = connection.post("api/v1/tickets", params).body
@@ -34,6 +34,26 @@ class ZammadApiClient
     ticket
   rescue Faraday::Error => e
     Rails.logger.error "Erreur lors de l’appel API pour créer un ticket Zammad : statut HTTP #{e.response[:status]} - #{e.response[:body]}"
+    raise e
+  end
+
+  def self.upsert_user(email:, sender_role:, first_name:, last_name:, phone_number:)
+    role = { usager: "Customer", agent: "Usager Agent" }.with_indifferent_access[sender_role]
+    raise Error, "Les seuls sender_role valables sont :usager et :agent" if role.nil?
+
+    base_attributes = { firstname: first_name, lastname: last_name, phone: phone_number }
+    existing_user = connection.get("api/v1/users/search", condition: { "user.email": { operator: "is", value: email } }).body.first
+    if existing_user
+      return existing_user if existing_user.symbolize_keys.slice(*base_attributes.keys) == base_attributes
+
+      connection.put("api/v1/users/#{existing_user['id']}", base_attributes).body
+    else
+      role = { user: "Customer", agent: "Usager Agent" }.fetch(sender_role.to_sym)
+      params = base_attributes.merge(email:, roles: [role])
+      connection.post("api/v1/users", params).body
+    end
+  rescue Faraday::Error => e
+    Rails.logger.error "Erreur lors d’un appel API à Zammad : statut HTTP #{e.response[:status]} - #{e.response[:body]}"
     raise e
   end
 
