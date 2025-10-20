@@ -1,4 +1,5 @@
 class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
+  include DomainDetection
   before_action :set_organisation, only: %i[show update]
 
   def index
@@ -22,7 +23,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
       if doorkeeper_token&.application&.name == "RDV Aide Numérique"
         # Pour garder le même fonctionnement que sur le territoire historique des cnfs, on active ce champs dans la config
         @organisation.territory.update!(enable_context_field: true)
-        @organisation.verticale = "rdv_mairie"
+        @organisation.verticale = current_domain.verticale
       end
       @organisation.save!
 
