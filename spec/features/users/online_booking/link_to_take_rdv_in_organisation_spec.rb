@@ -87,7 +87,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("Motif C")
 
       # retour au choix de motif
-      click_on("modifier")
+      click_on("Modifier")
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
     end
 
@@ -102,7 +102,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       click_on("08:00")
 
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
-      click_on "modifier", match: :first
+      click_on "Modifier", match: :first
 
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
     end
