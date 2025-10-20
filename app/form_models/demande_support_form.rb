@@ -27,6 +27,9 @@ class DemandeSupportForm
     CreateZammadTicketJob.perform_later(
       sender_role: role,
       email:,
+      first_name:,
+      last_name:,
+      phone_number:,
       subject: sujet,
       body: ticket_body,
       tags: [current_domain.to_s, "Formulaire Demande Support"]
