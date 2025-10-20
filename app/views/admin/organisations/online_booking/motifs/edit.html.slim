@@ -1,0 +1,29 @@
+- content_for :fil_ariane do
+  - titles_and_paths = [["Accueil", root_path], ["Configuration", admin_organisation_configuration_path(current_organisation)], ["Réservation en ligne", admin_organisation_online_booking_path(current_organisation)], [@motif.name, admin_organisation_online_booking_motif_path(current_organisation, @motif)]]
+  = render "common/fil_ariane", titles_and_paths: titles_and_paths, current_page_title: "Options de réservation en ligne"
+
+- content_for :title do
+  | Options de réservation en ligne pour #{@motif.name}
+
+- content_for(:menu_item) { "menu-settings" }
+
+.fr-grid-row
+  .fr-col-12.fr-col-lg-10
+    .card
+      .card-body
+        = simple_form_for @motif, url: admin_organisation_online_booking_motif_path(current_organisation, @motif) do |f|
+          = render "model_errors", model: @motif, f: f
+
+          h2.fr-h6= Motif.human_attribute_name("booking_delay")
+          p= Motif.human_attribute_name("booking_delay_hint")
+
+          .fr-grid-row.fr-grid-row--gutters
+            .fr-col-md-6= f.input :min_public_booking_delay, label: "Délai minimum avant le RDV", collection: min_max_delay_options
+            .fr-col-md-6= f.input :max_public_booking_delay, label: "Délai maximum avant le RDV", collection: min_max_delay_options
+
+          h2.fr-h6.fr-mt-3w Déplacement des rendez-vous par les usagers
+          = f.input :rdvs_editable_by_user, label: "Autoriser les usagers à déplacer les rendez-vous jusqu'à 48 heures avant leur début"
+
+          .d-flex.rdv-justify-content-space-between
+            = link_to("Annuler", admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn fr-btn--tertiary-no-outline")
+            = f.submit "Enregistrer", class: "fr-btn"

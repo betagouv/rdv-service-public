@@ -16,6 +16,13 @@
       = link_to t(".calendar_view"), calendar_admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary fr-icon-calendar-fill mb-0"
       = link_to t(".create_plage_ouverture"),  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary mb-0"
 
+- if flash[:onboarding] == "online_booking_ready"
+  - content_for :onboarding_banner do
+    .fr-callout.fr-pb-2w
+      h2.fr-h6 Vous avez terminé !
+      p La réservation en ligne est maintenant disponible grâce à cette plage d'ouverture !
+      = link_to("Voir la réservation en ligne", admin_organisation_online_booking_path(current_organisation), class: "fr-btn")
+
 .card
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
@@ -24,7 +31,8 @@
       li.nav-item
         = active_link_to t(".past"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id, current_tab: "expired", search: params[:search]), class: "nav-link", active: { current_tab: "expired" }
 
-  - if @plage_ouvertures_before_text_search.any?
+  - enough_records_to_need_search = @plage_ouvertures_before_text_search.limit(5).pluck(:id).count == 5 # On espere que le pluck et le limit coute moins cher en perf qu'un count
+  - if enough_records_to_need_search
     .m-2.d-flex.justify-content-end
       div= link_to t("helpers.reset"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
       = simple_form_for "", url: admin_organisation_planning_plage_ouvertures_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|

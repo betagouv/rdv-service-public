@@ -1,6 +1,8 @@
 - content_for(:menu_item) { "menu-agendas" }
 - content_for(:menu_agent_select_path_helper_name) { "admin_organisation_planning_agenda_path" }
 
+= render "admin/onboarding/banner", in_agenda: true
+
 - content_for :title do
   - if current_agent == @agent
     | Votre agenda
@@ -16,7 +18,7 @@ ruby:
     admin_api_agenda_absences_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
     admin_api_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json),
   ]
-  event_sources.push(OffDays.to_full_calendar_array) unless current_territory.visioplainte?
+  event_sources.push(OffDays.to_full_calendar_array) unless current_territory.work_on_sunday?
 
 #calendar[
   data-default-date-json="#{@date&.to_json}"
@@ -24,7 +26,7 @@ ruby:
   data-selected-event-id="#{@selected_event_id}"
   data-organisation-id="#{@organisation.id}"
   data-display-saturdays="#{current_agent.display_saturdays}"
-  data-display-sundays="#{current_territory.visioplainte?}"
+  data-display-sundays="#{current_territory.work_on_sunday?}"
   data-event-sources-json="#{event_sources.to_json}"
   data-sign-in-path="#{new_agent_session_path}"
 ]

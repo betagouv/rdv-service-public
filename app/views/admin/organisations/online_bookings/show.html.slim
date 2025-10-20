@@ -4,6 +4,32 @@
 - content_for :title do
   | Réservation en ligne
 
+- content_for :onboarding_banner do
+  - if @banner.availabilities_needed? && session["OnlineBookingMotifsForm:completed"]
+    .fr-callout.fr-pb-2w
+      h2.fr-h6 🎉 Vous y êtes presque !
+
+      - if @banner.motifs_with_missing_availabilities.count == 1
+        p Le motif <b>#{@banner.motifs_with_missing_availabilities.first.name}</b> est ouvert à la réservation en ligne.
+      - else
+        - bold_motif_names = @banner.motifs_with_missing_availabilities.pluck(:name).map { |name| tag.b(name) }
+        p Les motifs #{sanitize(bold_motif_names.to_sentence)} sont ouverts pour la réservation en ligne.
+
+      - if @banner.motifs_with_missing_availabilities.any?(&:individuel?)
+        p Vous devez maintenant ouvrir une plage d'ouverture pour que la réservation en ligne soit possible.
+
+      - if @banner.motifs_with_missing_availabilities.any?(&:collectif?)
+        p Pour les motifs de rendez-vous collectifs, vous devez planifier des prochains rendez-vous.
+
+      - if @banner.motifs_with_missing_availabilities.all?(&:individuel?)
+        = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
+      - elsif @banner.motifs_with_missing_availabilities.all?(&:collectif?)
+        = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
+      - else
+        .fr-btns-group.fr-btns-group--inline
+          = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn fr-btn--secondary"
+          = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn fr-btn--secondary"
+
 .card
   .card-body
     h2.fr-h4 Lien de réservation
@@ -31,47 +57,21 @@
     - elsif @organisation.online_booking_for_professionnels
       p La réservation en ligne est ouverte pour les <b>professionnels</b>. Il pourront se connecter avec #{dsfr_link_to("ProConnect", "https://www.proconnect.gouv.fr/", target: :_blank)}.
 
-ul.list-group.my-1
-  - if @motifs.none?
-    = render "admin/motifs/creation_needed_callout", motivation_text: "Pour ouvrir la réservation en ligne, vous devez d'abord créer un motif de rendez-vous."
-  - @motifs.each do |motif|
-    li.card
-      .card-header.d-flex.align-items-center
-        - slots_count = available_slots_count(motif)
-        h3.mr-2
-          - if motif.bookable_by_everyone_or_bookable_by_invited_users? && slots_count > 0
-            i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-          - else
-            i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-          = motif.name
-        .mr-1 = motif.human_attribute_value(:location_type)
-        .mr-1 = "#{motif.default_duration_in_min} min."
-      .card-body
-        .row.mb-1
-          .col-12.d-flex.align-items-center
-            - if motif.bookable_by_everyone_or_bookable_by_invited_users?
-              i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-              .mr-2 Réservable en ligne
-            - else
-              i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-              .mr-2 Ce motif n'est pas réservable en ligne
-            = link_to "modifier", edit_admin_organisation_motif_path(motif.organisation, motif, anchor: "tab_resa_en_ligne")
+.card
+  .card-body
+    .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+      h3.fr-h4 Motifs ouverts à la réservation en ligne
+      = link_to "Modifier", edit_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
+    ul.list-group.my-1
+      - @open_motifs.each do |motif|
+        = render "motif_card", motif:
 
-        .row
-          .col-12.d-flex.align-items-center
-            - if motif.collectif?
-              - if slots_count > 0
-                i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-                .mr-2 #{slots_count} rendez-vous avec des places disponibles
-              - else
-                i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-                .mr-2 Aucun rendez-vous avec des places disponibles
-              = link_to "ajouter", new_admin_organisation_rdvs_collectif_path(current_organisation, current_agent, motif_id: motif.id)
-            - else
-              - if slots_count > 0
-                i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-                .mr-2 #{pluralize(slots_count, "plage", plural: "plages")} d'ouverture
-              - else
-                i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
-                .mr-2 Pas de plages d'ouverture
-              = link_to "ajouter",  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: current_agent, motif_ids: [motif.id])
+- if @closed_motifs.present?
+  .card
+    .card-body
+      .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
+        h3.fr-h4 Motifs fermés à la réservation en ligne
+        = link_to "Modifier", edit_admin_organisation_online_booking_path(@organisation), class: "fr-btn fr-btn--secondary"
+      ul.list-group.my-1
+        - @closed_motifs.each do |motif|
+          = render "motif_card", motif:

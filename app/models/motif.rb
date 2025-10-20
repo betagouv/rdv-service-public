@@ -262,6 +262,14 @@ class Motif < ApplicationRecord
     Motif.find_by(id: duplicated_from_motif_id) if duplicated_from_motif_id
   end
 
+  def upcoming_availabilities
+    if collectif?
+      rdvs.collectif_and_available_for_reservation
+    else
+      plage_ouvertures.in_range(Time.zone.now..)
+    end
+  end
+
   private
 
   def booking_delay_validation

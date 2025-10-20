@@ -35,6 +35,9 @@ class Agent::MotifPolicy < ApplicationPolicy
   alias destroy? agent_can_manage_motif?
   alias versions? agent_can_manage_motif?
 
+  alias open? agent_can_manage_motif?
+  alias close? agent_can_manage_motif?
+
   alias current_agent pundit_user
 
   def bookable?

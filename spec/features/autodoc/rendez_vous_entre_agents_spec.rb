@@ -21,7 +21,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
       }, current_domain: Domain::RDV_MAIRIE
     ).save!
 
-    create(:motif, organisation: Organisation.last, location_type: :visio, name: "Suivi de dossier")
+    create(:motif, organisation: Organisation.last, location_type: :visio, name: "Suivi de dossier", bookable_by: :agents)
   end
 
   specify do
@@ -86,35 +86,19 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
     expect(page).to have_content "Plage d'ouverture créée"
     click_on "Configuration"
 
-    doc.add_screenshot(page, text: "J'ouvre le menu de configuration", wait_for: "Réservation en ligne")
+    doc.add_screenshot(page, text: "J'ouvre le menu de configuration et je clique sur la Réservation en ligne", wait_for: "Réservation en ligne")
 
     click_on "Réservation en ligne"
 
-    doc.add_screenshot(page, text: "J'ouvre le menu de réservation en ligne", wait_for: "Ce lien permet de prendre rendez-vous avec votre organisation sur les plages d'ouverture disponibles.")
+    doc.add_screenshot(page, text: "Je sélectionne mon motif et je valide", wait_for: "Vous gardez le contrôle")
 
-    click_on "modifier"
-
-    doc.add_screenshot(page,
-                       text: "Je clique sur modifier à côté du nom du motif pour l'ouvrir à la réservation en ligne",
-                       wait_for: "Définissez quel utilisateur peut prendre rendez-vous pour ce motif :")
-
-    find(:label, text: "Agents de l’organisation, prescripteurs et usagers").click
-
-    doc.add_screenshot(page,
-                       text: "Je sélectionne la bonne option, et je confirme",
-                       wait_for: "Définissez quel utilisateur peut prendre rendez-vous pour ce motif :")
+    find("label", text: "Suivi de dossier").click
 
     click_on "Enregistrer"
 
-    expect(page).to have_content("Le motif Suivi de dossier a été modifié.")
+    doc.add_screenshot(page, text: "Je clique sur Modifier dans la carte de Profil des usagers", wait_for: "Lien de réservation")
 
-    visit admin_organisation_online_booking_url(Organisation.last, host: "http://www.rdv-mairie-test.localhost")
-
-    doc.add_screenshot(page,
-                       text: "Je retourne sur la page de configuration de la prise de rendez-vous en ligne",
-                       wait_for: "Ce lien permet de prendre rendez-vous avec votre organisation sur les plages d'ouverture disponibles.")
-
-    click_on "Modifier"
+    click_on "Modifier", match: :first
 
     find(:label, text: "des particuliers").click
     find(:label, text: "des professionnels").click

@@ -113,6 +113,6 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
 
     click_on "Enregistrer"
 
-    doc.add_screenshot(page, text: "Je peux maintenant proposer des rendez-vous à ce lieu.", wait_for: "Le lieu a été créé.")
+    doc.add_screenshot(page, text: "Je peux maintenant proposer des rendez-vous à ce lieu.", wait_for: "Le lieu a été ajouté.")
   end
 end

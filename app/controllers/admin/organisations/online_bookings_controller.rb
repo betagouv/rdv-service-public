@@ -4,6 +4,39 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   def show
     authorize(@organisation, policy_class: Agent::OrganisationPolicy)
     set_motifs
+
+    if @motifs.bookable_by_everyone.none?
+      @online_booking_motifs_form = Admin::OnlineBookingMotifsForm.new(current_organisation)
+
+      @cancel_path = admin_organisation_configuration_path(current_organisation)
+      render :form
+    else
+      @open_motifs = @motifs.bookable_by_everyone
+      @closed_motifs = @motifs.where.not(bookable_by: :everyone)
+
+      @banner = OnlineBookingOnboardingBanner.new(current_organisation)
+    end
+  end
+
+  def edit
+    authorize(@organisation, :edit?, policy_class: Agent::OrganisationPolicy)
+    set_motifs
+
+    @online_booking_motifs_form = Admin::OnlineBookingMotifsForm.new(current_organisation)
+
+    @cancel_path = admin_organisation_online_booking_path(current_organisation)
+    render :form
+  end
+
+  def update
+    authorize(@organisation, :edit?, policy_class: Agent::OrganisationPolicy)
+    set_motifs
+
+    form = Admin::OnlineBookingMotifsForm.new(current_organisation)
+
+    form.submit(params.dig(:admin_online_booking_motifs_form, :motif_ids), flash, session)
+
+    redirect_to admin_organisation_online_booking_path(current_organisation)
   end
 
   def edit_user_type
@@ -18,8 +51,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
       redirect_to admin_organisation_online_booking_path(@organisation)
     else
       flash[:error] = @organisation.errors.full_messages.to_sentence
-      set_motifs
-      render :show
+      render :edit_user_type
     end
   end
 

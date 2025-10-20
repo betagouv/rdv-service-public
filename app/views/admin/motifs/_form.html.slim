@@ -24,4 +24,4 @@ ul#motif_tabs.nav.nav-tabs.mt-3
         .col.text-left
           = link_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(motif.organisation, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: t("admin.motifs.actions.destroy_confirm") }
       .col.text-right
-        = f.button :submit, motif.new_record? ? "Créer le motif" : "Enregistrer"
+        = f.submit((motif.new_record? ? "Créer le motif" : "Enregistrer"), class: "fr-btn")

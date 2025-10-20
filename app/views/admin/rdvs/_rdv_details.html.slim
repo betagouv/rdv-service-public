@@ -1,30 +1,29 @@
 - if rdv.created_by_user?
-  p.card-text
+  p
     i.fa.fa-fw.fa-at.text-primary-blue>
     | RDV pris sur Internet
 
-.d-flex.card-text.mb-1
-  div.mr-1
-    i.fa.fa-fw.fa-info-circle.text-primary-blue>
+.d-flex.fr-mb-1w
+  = motif_icon(class: "text-primary-blue fr-mr-1w")
   div
     = motif_name_with_status(rdv.motif)
     = motif_badges(rdv.motif)
-    - if current_organisation.territory.enable_context_field
-      div
-        - if rdv.context.blank?
-          .text-muted = t(".empty_context")
-        - else
-          .text-muted Contexte&nbsp;:
-          .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
+  - if current_organisation.territory.enable_context_field
+    div
+      - if rdv.context.blank?
+        .text-muted = t(".empty_context")
+      - else
+        .text-muted Contexte&nbsp;:
+        .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
 
 - if rdv.phone?
   p.card-text
-    i.fa.fa-fw.fa-phone.text-primary-blue>
+    = phone_icon(class: "text-primary-blue fr-mr-1w")
     | RDV téléphonique
 - elsif rdv.motif.visio?
   p.card-text.mb-0
     - should_display_link = current_agent.in?(rdv.agents) || current_agent.secretaire?
-    i.fa.fa-video-camera.text-primary-blue>
+    = visio_icon(class: "text-primary-blue fr-mr-1w")
     |> Par visioconférence
     - if should_display_link
       = link_to("démarrer la visioconférence ", rdv.visio_url, target: :_blank)
@@ -33,18 +32,15 @@
       small.text-muted = "Le lien de visioconférence s'affiche uniquement pour l'agent qui assure le RDV et les secrétaires."
 
 - else
-  .d-flex.card-text.mb-1
-    div.mr-1
-      i.fa.fa-fw.fa-map-marker.text-primary-blue>
-    p.card-text
-      - if rdv.home?
-        | RDV à domicile&nbsp;:
-        = human_location(rdv)
-      - elsif rdv.public_office?
-        = human_location(rdv)
+  .d-flex.mb-1
+    = location_type_icon(rdv.motif.location_type, class: "text-primary-blue fr-mr-1w")
+    - if rdv.home?
+      |> RDV à domicile&nbsp;:
+      = human_location(rdv)
+    - elsif rdv.public_office?
+      = human_location(rdv)
 .d-flex.card-text
-  div.mr-1
-    i.fa.fa-fw.fa-user.text-primary-blue>
+  = user_icon(class: "text-primary-blue fr-mr-1w")
   div
     strong
       => "Agent".pluralize(rdv.agents.size)
