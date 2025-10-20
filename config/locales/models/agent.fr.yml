@@ -30,9 +30,6 @@ fr:
       agent/display_cancelled_rdvs:
         true: "Afficher les RDV annulés"
         false: "Ne pas afficher les RDV annulés"
-      agent/display_saturdays:
-        true: "Afficher les samedis"
-        false: "Ne pas afficher les samedis"
     errors:
       models:
         agent:
