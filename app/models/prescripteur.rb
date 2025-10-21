@@ -9,4 +9,8 @@ class Prescripteur < ApplicationRecord
   has_one :user, through: :participation
 
   validates :first_name, :last_name, :email, presence: true
+
+  def name_for_paper_trail
+    "[Prescripteur] #{full_name}"
+  end
 end
