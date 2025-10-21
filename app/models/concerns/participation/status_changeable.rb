@@ -28,7 +28,7 @@ module Participation::StatusChangeable
     end
 
     if rdv_status_reloaded_from_cancelled?
-      @notifier = Notifiers::RdvCreated.new(rdv, author, user_to_notify)
+      @notifier = Notifiers::ParticipationCreated.new(participation: self, author:)
     end
 
     @notifier&.perform

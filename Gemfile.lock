@@ -177,7 +177,7 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
-    capybara-playwright-driver (0.5.6)
+    capybara-playwright-driver (0.5.7)
       addressable
       capybara
       playwright-ruby-client (>= 1.16.0)
@@ -374,7 +374,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0722)
+    mime-types-data (3.2025.0924)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
     minitest (5.25.5)
@@ -398,7 +398,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
-    nokogiri (1.18.9)
+    nokogiri (1.18.10)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     notion-ruby-client (1.2.2)
@@ -458,7 +458,7 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     phonelib (0.7.7)
-    playwright-ruby-client (1.54.0)
+    playwright-ruby-client (1.55.0)
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
     premailer (1.18.0)
@@ -561,7 +561,7 @@ GEM
       connection_pool
     redis-namespace (1.11.0)
       redis (>= 4)
-    regexp_parser (2.10.0)
+    regexp_parser (2.11.3)
     reline (0.5.10)
       io-console (~> 0.5)
     request_store (1.7.0)
@@ -718,7 +718,7 @@ GEM
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
     uniform_notifier (1.16.0)
-    uri (1.0.3)
+    uri (1.0.4)
     useragent (0.16.11)
     validate_email (0.1.6)
       activemodel (>= 3.0)
@@ -857,7 +857,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 3.4.6p54
+   ruby 3.4.7p58
 
 BUNDLED WITH
    2.7.2

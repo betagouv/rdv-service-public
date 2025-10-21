@@ -6,7 +6,7 @@ module Participation::Creatable
       empty_rdv_from_relatives
       save!
       user.add_organisation(organisation)
-      notify_create!(author)
+      Notifiers::ParticipationCreated.perform_with(participation: self, author:)
     end
   end
 
@@ -16,13 +16,5 @@ module Participation::Creatable
     # Empty self_and_relatives participations (at the moment, only one member by family), no callbacks, no notifications
     rdv.participations.where(user: user.self_and_relatives_and_responsible).delete_all
     rdv.participations.where(user: user.responsible&.self_and_relatives_and_responsible).delete_all
-  end
-
-  def notify_create!(author)
-    # We pass an empty array if notifications are disabled to avoid notifying other users
-    user_to_notify = send_lifecycle_notifications? ? [user] : []
-
-    @notifier = Notifiers::RdvCreated.new(rdv, author, user_to_notify)
-    @notifier.perform
   end
 end

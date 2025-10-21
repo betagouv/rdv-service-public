@@ -139,11 +139,18 @@ Rails.application.routes.draw do
           get :rdv
         end
       end
+
       resources :users, only: [] do
         collection do
           get "search"
         end
       end
+      resources :agents, only: [] do
+        collection do
+          get "search"
+        end
+      end
+
       resources :territories, only: %i[new create]
       resources :territory_creation_requests, only: %i[new create]
       resources :instance_exports, only: %i[index]

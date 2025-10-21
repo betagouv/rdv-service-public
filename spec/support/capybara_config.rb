@@ -2,7 +2,6 @@ WebMock.disable_net_connect!(allow: [
                                "127.0.0.1",
                                "localhost",
                                "www.rdv-solidarites-test.localhost",
-                               "chromedriver.storage.googleapis.com", # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
                              ])
 
 def new_capybara_driver(app, **)

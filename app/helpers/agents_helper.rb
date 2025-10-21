@@ -76,7 +76,7 @@ module AgentsHelper
       data: {
         "select2-config": {
           ajax: {
-            url: admin_organisation_agents_path(current_organisation),
+            url: search_agents_agents_path(organisation_id: current_organisation),
             dataType: "json",
             delay: 250,
           },
