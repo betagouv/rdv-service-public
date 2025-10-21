@@ -1,4 +1,8 @@
-WebMock.disable_net_connect!(allow: ["www.rdv-solidarites-test.localhost"])
+WebMock.disable_net_connect!(allow: [
+                               "127.0.0.1",
+                               "localhost",
+                               "www.rdv-solidarites-test.localhost",
+                             ])
 
 def new_capybara_driver(app, **)
   Capybara::Playwright::Driver.new(
