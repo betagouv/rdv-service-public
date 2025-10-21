@@ -23,6 +23,8 @@ class Aide::DemandesSupportController < ApplicationController
   def create
     @form = DemandeSupportForm.new(
       current_domain:,
+      agent_id: current_agent&.id,
+      user_id: current_user&.id,
       **params
         .require(:demande_support_form)
         .permit(:role, :sujet, :email, :first_name, :last_name, :phone_number, :message)

@@ -13,14 +13,14 @@ class ZammadApiClient
   end
 
   # cf https://docs.zammad.org/en/latest/api/ticket/index.html#create
-  def self.create_ticket(sender_role:, subject:, email:, body:, tags: [])
-    group = { usager: "Users", agent: "Agents" }[sender_role]
+  def self.create_ticket(sender_role:, customer_id:, subject:, body:, tags: [])
+    group = { usager: "Users", agent: "Agents" }.with_indifferent_access[sender_role]
     raise Error, "Les seuls sender_role valables sont :usager et :agent" if group.nil?
 
     params = {
       group:,
       title: subject,
-      customer_id: "guess:#{email}",
+      customer_id:,
       article: { subject:, body:, type: "web", sender: "Customer" },
     }
     response_data = connection.post("api/v1/tickets", params).body
@@ -35,6 +35,44 @@ class ZammadApiClient
   rescue Faraday::Error => e
     Rails.logger.error "Erreur lors de l’appel API pour créer un ticket Zammad : statut HTTP #{e.response[:status]} - #{e.response[:body]}"
     raise e
+  end
+
+  def self.upsert_user(email:, sender_role:, first_name:, last_name:, phone_number:, user_id: nil, agent_id: nil)
+    attributes = upsert_user_attributes(sender_role:, first_name:, last_name:, phone_number:, user_id:, agent_id:)
+    condition = { "user.email": { operator: "is", value: email.downcase } } # strict match and zammad downcases emails when saving
+    existing_user = connection.get("api/v1/users/search", condition:).body.first
+    if existing_user
+      return existing_user if existing_user.symbolize_keys.slice(*attributes.keys) == attributes
+
+      connection.put("api/v1/users/#{existing_user['id']}", attributes).body
+    else
+      params = attributes.merge(email:, roles: ["Customer"])
+      connection.post("api/v1/users", params).body
+    end
+  rescue Faraday::Error => e
+    Rails.logger.error "Erreur lors d’un appel API à Zammad : statut HTTP #{e.response[:status]} - #{e.response[:body]}"
+    raise e
+  end
+
+  def self.upsert_user_attributes(sender_role:, first_name:, last_name:, phone_number:, user_id: nil, agent_id: nil)
+    raise Error, "Les seuls sender_role valables sont usager et agent" if %w[usager agent].exclude?(sender_role.to_s)
+
+    domain = Domain.default_domain_for_current_instance
+    super_admin_url =
+      if user_id
+        Rails.application.routes.url_helpers.super_admins_user_url(id: user_id, host: domain.host_name)
+      elsif agent_id
+        Rails.application.routes.url_helpers.super_admins_agent_url(id: agent_id, host: domain.host_name)
+      end
+
+    {
+      firstname: first_name,
+      lastname: last_name,
+      phone: phone_number,
+      rdvsp_role: sender_role,
+      instance: domain.id,
+      super_admin_url:,
+    }.compact
   end
 
   def self.search_tickets(condition:, query: nil)

@@ -21,7 +21,7 @@ RSpec.describe ZammadApiClient, type: :service do
         result = described_class.create_ticket(
           sender_role: :usager,
           subject: "J’ai besoin d’aide",
-          email: "jean@jacques.fr",
+          customer_id: "445",
           body: "Je ne sais plus comment annuler mon RDV\nmerci!"
         )
         expect(result).to be_a ZammadApiClient::Ticket
@@ -43,7 +43,7 @@ RSpec.describe ZammadApiClient, type: :service do
           described_class.create_ticket(
             sender_role: :usager,
             subject: "J’ai besoin d’aide",
-            email: "jean@jacques.fr",
+            customer_id: "445",
             body: "Je ne sais plus comment annuler mon RDV\nmerci!"
           )
         end.to raise_error Faraday::Error
