@@ -132,7 +132,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       name: "France Service de Montreuil",
       phone_number: "01 22 33 44 55",
       website: "www.montreuil.fr/france-service",
-      email: "contact@exemple.montreuil.fr"
+      email: "contact@exemple.montreuil.fr",
+      verticale: "rdv_mairie"
     )
 
     expect(created_organisation.users.last.notification_email).to be_present
