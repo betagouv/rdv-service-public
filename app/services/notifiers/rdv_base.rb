@@ -1,6 +1,8 @@
 class Notifiers::RdvBase < BaseService
   include DateHelper
-  attr_reader :participations_tokens_by_user_id
+  include Notifiers::AgentsConcern
+
+  attr_reader :participations_tokens_by_user_id, :author, :rdv
 
   # Base class for Rdv notifiers.
   # Subclasses implement the notify_* methods:
@@ -55,11 +57,7 @@ class Notifiers::RdvBase < BaseService
     @rdv.participations.each do |participation|
       participant = participation.user
       user_to_notify = participant.user_to_notify
-      # TODO: Supprimer ce if une fois que toutes les participations ont des restricted_auth_token
-      if participation.restricted_auth_token.nil?
-        participation.set_restricted_authentication_token
-        participation.save
-      end
+      participation.set_restricted_authentication_token_if_missing_and_save
       @participations_tokens_by_user_id[user_to_notify.id] = participation.restricted_auth_token
     end
 
@@ -80,29 +78,5 @@ class Notifiers::RdvBase < BaseService
 
   def users_to_notify
     @users.map(&:user_to_notify).uniq
-  end
-
-  ## Agents notifications
-  #
-
-  def notify_agents
-    return unless methods.include?(:notify_agent)
-
-    agents_to_notify.each { notify_agent(_1) }
-  end
-
-  def agents_to_notify
-    @rdv.agents
-      .select { should_notify_agent(_1) }
-  end
-
-  def should_notify_agent(agent)
-    level = agent.rdv_notifications_level
-    return true if level == "all"
-    return false if level == "none"
-    return false if @author == agent
-    return false if level == "soon" && !soon_date?(@rdv.starts_at) && !soon_date?(@rdv.attribute_before_last_save(:starts_at))
-
-    true
   end
 end

@@ -14,20 +14,11 @@ RSpec.describe Admin::AgentsController, type: :controller do
   after { Devise.mailer.deliveries.clear }
 
   describe "GET #index" do
-    context "quand un des agents n'a pas encore accepté son invitation" do
-      let!(:unconfirmed_agent) { create(:agent, :not_confirmed, admin_role_in_organisations: [organisation]) }
-
-      it "renvoie son adresse mail" do
-        get :index, params: { organisation_id: organisation.id }, format: :json
-        expect(response.body).to include unconfirmed_agent.email
-      end
-    end
-
     describe "JSON version" do
-      it "returns agents as JSON" do
-        francis = create(:agent, first_name: "Francis", last_name: "Factice", organisations: [organisation])
+      it "redirects" do
+        create(:agent, first_name: "Francis", last_name: "Factice", organisations: [organisation])
         get :index, params: { term: "fra", organisation_id: organisation.id, format: :json }
-        expect(response.parsed_body["results"]).to include({ "id" => francis.id, "text" => "FACTICE Francis" })
+        expect(response).to redirect_to(search_agents_agents_path(organisation_id: organisation.id, term: "fra"))
       end
     end
   end
