@@ -1,26 +1,15 @@
 module ZammadCustomer
   module Matchers
-    module MatcherConcern
-      # Les Matchers cherchent un User ou un Agent dans notre db sur base de l’email et/ou du numéro de tél
+    class AgentMatcher
+      attr_reader :customer_attributes, :record, :details
 
-      extend ActiveSupport::Concern
-
-      included do
-        attr_reader :customer_attributes, :record, :details
-
-        delegate :email, :phone, to: :customer_attributes
-        alias_method :phone_number, :phone
-      end
+      delegate :email, to: :customer_attributes
 
       def initialize(customer_attributes)
         @customer_attributes = customer_attributes
       end
 
-      def matched? = record.present? || details.present? # ça arrive lorsqu’il y a plusieurs matches ambigus
-    end
-
-    class AgentMatcher
-      include MatcherConcern
+      def matched? = record.present?
 
       def find_record
         return if customer_attributes.email.blank?
@@ -31,7 +20,16 @@ module ZammadCustomer
     end
 
     class UserMatcher
-      include MatcherConcern
+      attr_reader :customer_attributes, :record, :details
+
+      delegate :email, :phone, to: :customer_attributes
+      alias phone_number phone
+
+      def initialize(customer_attributes)
+        @customer_attributes = customer_attributes
+      end
+
+      def matched? = record.present? || details.present? # ça arrive lorsqu’il y a plusieurs matches ambigus
 
       def find_record
         match_by_email
