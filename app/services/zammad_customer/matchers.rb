@@ -9,13 +9,12 @@ module ZammadCustomer
         @customer_attributes = customer_attributes
       end
 
-      def matched? = agent.present?
-
       def find_agent
         return if customer_attributes.email.blank?
 
         @agent = Agent.find_by(email:)
         @details = "Agent trouvé avec l'email #{email}" if @agent.present?
+        @agent
       end
     end
 
@@ -32,6 +31,7 @@ module ZammadCustomer
       def find_user
         match_by_email
         match_by_phone_number if @user.nil?
+        @user
       end
 
       private
