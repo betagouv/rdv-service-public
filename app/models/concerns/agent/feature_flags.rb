@@ -30,6 +30,8 @@ module Agent::FeatureFlags
   end
 
   def validate_feature_names
+    return unless feature_flags_changed?
+
     invalid_features = feature_flags.keys - AVAILABLE_FEATURES
     invalid_features.each { errors.add(:feature_flags, "Invalid feature name: #{_1.inspect}") }
   end
