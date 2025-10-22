@@ -1,7 +1,7 @@
 module ZammadCustomer
   module Matchers
     class AgentMatcher
-      attr_reader :customer_attributes, :record, :details
+      attr_reader :customer_attributes, :agent, :details
 
       delegate :email, to: :customer_attributes
 
@@ -9,18 +9,18 @@ module ZammadCustomer
         @customer_attributes = customer_attributes
       end
 
-      def matched? = record.present?
+      def matched? = agent.present?
 
-      def find_record
+      def find_agent
         return if customer_attributes.email.blank?
 
-        @record = Agent.find_by(email:)
-        @details = "Agent trouvé avec l'email #{email}" if @record.present?
+        @agent = Agent.find_by(email:)
+        @details = "Agent trouvé avec l'email #{email}" if @agent.present?
       end
     end
 
     class UserMatcher
-      attr_reader :customer_attributes, :record, :details
+      attr_reader :customer_attributes, :user, :details
 
       delegate :email, :phone, to: :customer_attributes
       alias phone_number phone
@@ -29,11 +29,11 @@ module ZammadCustomer
         @customer_attributes = customer_attributes
       end
 
-      def matched? = record.present? || details.present? # ça arrive lorsqu’il y a plusieurs matches ambigus
+      def matched? = user.present? || details.present? # ça arrive lorsqu’il y a plusieurs matches ambigus
 
-      def find_record
+      def find_user
         match_by_email
-        match_by_phone_number if @record.nil?
+        match_by_phone_number if @user.nil?
       end
 
       private
@@ -41,8 +41,8 @@ module ZammadCustomer
       def match_by_email
         return nil if email.blank?
 
-        @record = User.find_by(email:)
-        @details = "Usager trouvé avec l'email #{email}" if @record.present?
+        @user = User.find_by(email:)
+        @details = "Usager trouvé avec l'email #{email}" if @user.present?
       end
 
       def match_by_phone_number
@@ -61,8 +61,8 @@ module ZammadCustomer
           @details = "Plusieurs usagers trouvés avec le numéro de téléphone formatté #{phone_number_formatted}"
           return
         end
-        @record = records.first
-        if @record.present?
+        @user = records.first
+        if @user.present?
           @details = "Usager trouvé avec le numéro de téléphone formatté #{phone_number_formatted}"
         end
       end
@@ -73,8 +73,8 @@ module ZammadCustomer
           @details = "Plusieurs usagers trouvés avec le numéro de téléphone #{phone_number}"
           return
         end
-        @record = records.first
-        if @record.present?
+        @user = records.first
+        if @user.present?
           @details = "Usager trouvé avec le numéro de téléphone #{phone_number}"
         end
       end
