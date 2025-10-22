@@ -100,7 +100,7 @@ RSpec.describe ZammadCustomer do
     end
   end
 
-  describe ZammadCustomer::AgentAugmenter do
+  describe ZammadCustomer::Augmenters::AgentAugmenter do
     subject do
       described_class.new(agent).augment(zammad_attributes)
       zammad_attributes
@@ -116,7 +116,7 @@ RSpec.describe ZammadCustomer do
     end
   end
 
-  describe ZammadCustomer::UserAugmenter do
+  describe ZammadCustomer::Augmenters::UserAugmenter do
     subject do
       described_class.new(user).augment(zammad_attributes)
       zammad_attributes
