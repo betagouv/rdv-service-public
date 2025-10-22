@@ -7,28 +7,27 @@ module Agent::FeatureFlags
   AVAILABLE_FEATURES = [CALDAV_SYNC, NEW_PLANNING].freeze
 
   def feature_enabled?(feature)
-    feature_flags && feature_flags[feature] == true
+    validate_feature_name(feature)
+    feature_flags[feature] == true
   end
 
-  def toggle_feature!(feature)
-    if feature_enabled?(feature)
-      disable_feature(feature)
-    else
-      enable_feature(feature)
-    end
-    update!(feature_flags: feature_flags)
+  def enable_feature!(feature)
+    set_feature!(feature, true)
+  end
+
+  def disable_feature!(feature)
+    set_feature!(feature, false)
   end
 
   private
 
-  def enable_feature(feature)
-    return unless AVAILABLE_FEATURES.include?(feature)
-
-    self.feature_flags ||= {}
-    self.feature_flags[feature] = true
+  def set_feature!(feature, set_to)
+    validate_feature_name(feature)
+    feature_flags[feature] = set_to
+    update!(feature_flags: feature_flags)
   end
 
-  def disable_feature(feature)
-    self.feature_flags&.delete(feature)
+  def validate_feature_name(feature)
+    Sentry.capture_message("Invalid feature: #{feature.inspect}") unless feature.in?(AVAILABLE_FEATURES)
   end
 end

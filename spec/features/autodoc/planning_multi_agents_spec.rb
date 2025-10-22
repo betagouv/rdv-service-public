@@ -55,7 +55,7 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     #
 
     doc.start_section("Quand l'agent active la feature (actuellement faisable depuis le super-admin)")
-    agent_basique.toggle_feature!("new_planning")
+    agent_basique.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
     visit admin_organisation_planning_agenda_path(organisation)
     expect(page).to have_content("Planning de")
     doc.add_screenshot(page, text: "Une nouvelle navigation est proposée, où le choix de l'agent et du sous-menu sont dans la page principale et non plus dans le menu",

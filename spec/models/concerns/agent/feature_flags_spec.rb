@@ -3,65 +3,62 @@ RSpec.describe Agent::FeatureFlags, type: :concern do
     let(:agent) { create(:agent, feature_flags: { new_planning: true }) }
 
     it "retourne true si la fonctionnalité est activée pour l’agent" do
-      expect(agent.feature_enabled?("new_planning")).to be true
+      expect(create(:agent, feature_flags: { new_planning: true }).feature_enabled?("new_planning")).to be true
     end
 
-    it "retourne false si la fonctionnalité n’est pas activée pour l’agent" do
+    it "retourne false si la fonctionnalité n'est pas activée pour l’agent" do
+      expect(create(:agent, feature_flags: {}).feature_enabled?("new_planning")).to be false
+    end
+
+    it "retourne false si la fonctionnalité est désactivée pour l’agent" do
+      expect(create(:agent, feature_flags: { new_planning: false }).feature_enabled?("new_planning")).to be false
+    end
+
+    it "retourne false et prévient Sentry si la fonctionnalité n’est pas déclarée dans les constantes" do
       expect(agent.feature_enabled?("non_existent_feature")).to be false
+      expect(sentry_events.last.message).to eq(%(Invalid feature: "non_existent_feature"))
     end
   end
 
-  describe "enable_feature" do
+  describe "enable_feature!" do
     let(:agent) { create(:agent) }
 
-    it "active la fonctionnalité" do
-      agent.send(:enable_feature, "new_planning")
+    it "active la fonctionnalité (idempotent)" do
+      expect(agent.feature_enabled?("new_planning")).to be false
+      agent.enable_feature!("new_planning")
+      expect(agent.feature_enabled?("new_planning")).to be true
+
+      # L'action est idempotente
+      agent.enable_feature!("new_planning")
       expect(agent.feature_enabled?("new_planning")).to be true
     end
 
-    it "ne fait rien si la fonctionnalité n’existe pas" do
-      agent.send(:enable_feature, "invalid_feature")
-      expect(agent.feature_enabled?("invalid_feature")).to be false
-    end
-
-    it "crée le hash si feature_flags est nil" do
-      agent.feature_flags = nil
-      agent.send(:enable_feature, "new_planning")
-      expect(agent.feature_flags).to eq({ "new_planning" => true })
+    it "ne fait rien et prévient Sentry si la fonctionnalité n’existe pas" do
+      expect(agent.feature_enabled?("new_planning")).to be false
+      agent.enable_feature!("non_existent_feature")
+      expect(agent.feature_enabled?("new_planning")).to be false
+      expect(sentry_events.last.message).to eq(%(Invalid feature: "non_existent_feature"))
     end
   end
 
-  describe "disable_feature" do
+  describe "disable_feature!" do
     let(:agent) { create(:agent, feature_flags: { new_planning: true }) }
 
-    it "désactive la fonctionnalité" do
-      agent.send(:disable_feature, "new_planning")
+    it "désactive la fonctionnalité (idempotent)" do
+      expect(agent.feature_enabled?("new_planning")).to be true
+      agent.disable_feature!("new_planning")
+      expect(agent.feature_enabled?("new_planning")).to be false
+
+      # L'action est idempotente
+      agent.disable_feature!("new_planning")
       expect(agent.feature_enabled?("new_planning")).to be false
     end
 
-    it "ne fait rien si on essaye de désactiver une fonctionnalité inexistante" do
-      expect { agent.send(:disable_feature, "non_existent_feature") }.not_to raise_error
-      expect(agent.feature_flags).to eq({ "new_planning" => true })
-    end
-  end
-
-  describe "toggle_feature!" do
-    let(:agent) { create(:agent, feature_flags: { new_planning: true }) }
-
-    it "désactive une fonctionnalité activée" do
-      agent.toggle_feature!("new_planning")
-      expect(agent.reload.feature_enabled?("new_planning")).to be false
-    end
-
-    it "active une fonctionnalité désactivée" do
-      agent.send(:disable_feature, "new_planning")
-      agent.toggle_feature!("new_planning")
-      expect(agent.reload.feature_enabled?("new_planning")).to be true
-    end
-
-    it "ne fait rien si la fonctionnalité n’existe pas" do
-      expect { agent.toggle_feature!("invalid_feature") }.not_to raise_error
-      expect(agent.reload.feature_flags).to eq({ "new_planning" => true })
+    it "ne fait rien et prévient Sentry si la fonctionnalité n’existe pas" do
+      expect(agent.feature_enabled?("new_planning")).to be true
+      agent.disable_feature!("non_existent_feature")
+      expect(agent.feature_enabled?("new_planning")).to be true
+      expect(sentry_events.last.message).to eq(%(Invalid feature: "non_existent_feature"))
     end
   end
 end
