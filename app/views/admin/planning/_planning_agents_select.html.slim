@@ -3,7 +3,7 @@
     .float-right.mt-2.rdv-display-flex.flex-gap-1em.rdv-align-items-center.js-new-planning-toggle
       = form_with url: admin_organisation_planning_toggle_new_planning_path(current_organisation), method: :put do |f|
         = f.hidden_field :enabled, value: "false"
-        = f.submit "Revenir à l'ancienne vue", class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+        = f.submit "Revenir à l'ancienne vue", class: "fr-btn fr-btn--sm fr-btn--tertiary"
 
       = link_to("Donnez votre avis", "https://tally.so/r/3jORDR", target: "_blank", class: "fr-link fr-link--sm")
 
