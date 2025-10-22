@@ -32,11 +32,10 @@ RSpec.describe Agent::FeatureFlags, type: :concern do
       expect(agent.feature_enabled?("new_planning")).to be true
     end
 
-    it "invalide le modèle si la fonctionnalité n’existe pas" do
-      expect(agent.feature_enabled?("new_planning")).to be false
-      agent.enable_feature!("non_existent_feature")
-      expect(agent.feature_enabled?("new_planning")).to be false
-      expect(agent.errors.sole).to have_attributes(message: %(Invalid feature name: "non_existent_feature"))
+    it "lève une erreur si la fonctionnalité n’existe pas" do
+      expect do
+        agent.enable_feature!("non_existent_feature")
+      end.to raise_error(%(Invalid feature name: "non_existent_feature"))
     end
   end
 
@@ -53,11 +52,10 @@ RSpec.describe Agent::FeatureFlags, type: :concern do
       expect(agent.feature_enabled?("new_planning")).to be false
     end
 
-    it "invalide le modèle si la fonctionnalité n’existe pas" do
-      expect(agent.feature_enabled?("new_planning")).to be true
-      agent.disable_feature!("non_existent_feature")
-      expect(agent.feature_enabled?("new_planning")).to be true
-      expect(agent.errors.sole).to have_attributes(message: %(Invalid feature name: "non_existent_feature"))
+    it "lève une erreur si la fonctionnalité n’existe pas" do
+      expect do
+        agent.disable_feature!("non_existent_feature")
+      end.to raise_error(%(Invalid feature name: "non_existent_feature"))
     end
   end
 end
