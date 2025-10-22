@@ -1,4 +1,12 @@
 #planning_agents_select.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
+  - unless @agents.size > 1 # Pas la place pour le toggle quand plusieurs agents sont sélectionnés
+    .float-right.mt-2.rdv-display-flex.flex-gap-1em.rdv-align-items-center
+      = form_with url: admin_organisation_planning_toggle_new_planning_path(current_organisation), method: :put do |f|
+        = f.hidden_field :enabled, value: "false"
+        = f.submit "Revenir à l'ancienne vue", class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+
+      = link_to("Donnez votre avis", "https://tally.so/r/3jORDR", target: "_blank", class: "fr-link fr-link--sm")
+
   h1.fr-h2.my-1.d-flex
     | Planning de
     .ml-2

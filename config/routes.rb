@@ -316,6 +316,7 @@ Rails.application.routes.draw do
         namespace :planning do
           get :agenda, to: "agendas#show"
           put :toggle_displays, to: "agendas#toggle_displays"
+          put :toggle_new_planning, to: "agendas#toggle_new_planning"
 
           resources :absences
           resources :plage_ouvertures do

@@ -15,13 +15,17 @@ html lang="fr"
       main#main.content-page[style="flex-grow: 1;" role="main"]
         .content
           - if @beta_planning_layout
+            = render "layouts/flash"
+            = content_for :onboarding_banner
             = render partial: "admin/planning/planning_agents_select"
             .p-3
+              = content_for(:fil_ariane)
               = yield
 
           - else
             = render "layouts/instance_migration_banner"
             = content_for :fil_ariane
+            = content_for :before_container
             .container-fluid
               = render "layouts/flash"
               = content_for :onboarding_banner
