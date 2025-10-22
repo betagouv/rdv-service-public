@@ -13,22 +13,23 @@ module ZammadCustomer
       augmenter.augment(self)
     end
 
+    # point d’entrée générique : on ne sait pas si c’est un ticket agent ou usager
     def find_user_or_agent_and_augment
-      # point d’entrée générique : on ne sait pas si c’est un ticket agent ou usager
-      match_details = nil
-      [
-        [Matchers::UserMatcher, Augmenters::UserAugmenter],
-        [Matchers::AgentMatcher, Augmenters::AgentAugmenter],
-      ].each do |matcher_class, augmenter_class|
-        matcher = matcher_class.new(self)
-        matcher.find_record
-        next unless matcher.matched?
-
-        augment_with(augmenter_class.new(matcher.record)) if matcher.record.present?
-        match_details = matcher.details
-        break
+      agent_matcher = Matchers::AgentMatcher.new(self)
+      agent_matcher.find_record
+      if agent_matcher.matched?
+        augment_with(Augmenters::AgentAugmenter.new(agent_matcher.record)) if agent_matcher.record.present?
+        self.note = agent_matcher.details
+        return
       end
-      self.note = match_details || "Aucun usager ni agent trouvé"
+      user_matcher = Matchers::UserMatcher.new(self)
+      user_matcher.find_record
+      if user_matcher.matched?
+        augment_with(Augmenters::UserAugmenter.new(user_matcher.record)) if user_matcher.record.present?
+        self.note = user_matcher.details
+      else
+        self.note = "Aucun usager ni agent trouvé"
+      end
     end
 
     def to_h = attributes
