@@ -11,6 +11,9 @@ module Rdv::UsingWaitingRoom
     Redis.with_connection do |redis|
       redis.sismember(REDIS_WAITING_ROOM_KEY, id)
     end
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    false
   end
 
   def set_user_in_waiting_room!
