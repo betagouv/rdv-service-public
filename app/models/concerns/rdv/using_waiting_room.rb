@@ -6,9 +6,14 @@ module Rdv::UsingWaitingRoom
   REDIS_WAITING_ROOM_KEY = "#{Rails.env}:users_in_waiting_room".freeze
 
   def user_in_waiting_room?
+    return false unless status == "unknown"
+
     Redis.with_connection do |redis|
-      status == "unknown" && redis.sismember(REDIS_WAITING_ROOM_KEY, id)
+      redis.sismember(REDIS_WAITING_ROOM_KEY, id)
     end
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+    false
   end
 
   def set_user_in_waiting_room!

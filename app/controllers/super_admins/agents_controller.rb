@@ -60,14 +60,13 @@ module SuperAdmins
       agent = Agent.find(params[:agent_id])
       feature = params[:feature]
 
-      agent.toggle_feature!(feature)
-
-      flash[:notice] =
-        if agent.feature_enabled?(feature)
-          "#{feature} activé pour #{agent.email}"
-        else
-          "#{feature} désactivé pour #{agent.email}"
-        end
+      if params[:set_to] == "true"
+        agent.enable_feature!(feature)
+        flash[:notice] = "#{feature} activé pour #{agent.email}"
+      else
+        agent.disable_feature!(feature)
+        flash[:notice] = "#{feature} désactivé pour #{agent.email}"
+      end
 
       redirect_to super_admins_agent_path(agent)
     end
