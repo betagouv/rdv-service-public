@@ -3,7 +3,7 @@ module Admin::Planning::SetAgentsConcern
 
   included do
     before_action do
-      @beta_planning_layout = current_agent.feature_enabled?("new_planning")
+      @beta_planning_layout = current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
     end
   end
 
@@ -19,7 +19,7 @@ module Admin::Planning::SetAgentsConcern
       @agent = scope.where(id: agents).first
       @agents = [@agent]
     else
-      if current_agent.feature_enabled?("new_planning")
+      if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
         @agents = scope.where(id: agents)
       else
         # Si l'agent courant n'a pas activé la feature on ne considère qu'il n'y
