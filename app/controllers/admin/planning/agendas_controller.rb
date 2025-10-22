@@ -23,9 +23,15 @@ class Admin::Planning::AgendasController < AgentAuthController
     redirect_back fallback_location: admin_organisation_planning_agenda_path(current_organisation)
   end
 
-  def toggle_new_planning
+  def enable_new_planning
     authorize(current_agent, :edit?, policy_class: Agent::AgentPolicy)
-    current_agent.toggle_feature!(Agent::FeatureFlags::NEW_PLANNING) # TODO: merge #5759
+    current_agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
+    redirect_back fallback_location: admin_organisation_planning_agenda_path(current_organisation)
+  end
+
+  def disable_new_planning
+    authorize(current_agent, :edit?, policy_class: Agent::AgentPolicy)
+    current_agent.disable_feature!(Agent::FeatureFlags::NEW_PLANNING)
     redirect_back fallback_location: admin_organisation_planning_agenda_path(current_organisation)
   end
 
