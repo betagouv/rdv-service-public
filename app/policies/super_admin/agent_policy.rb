@@ -8,5 +8,5 @@ class SuperAdmin::AgentPolicy < DefaultSuperAdminPolicy
   alias edit? team_member?
   alias update? team_member?
   alias destroy? team_member?
-  alias toggle_feature? team_member?
+  alias set_feature? team_member?
 end
