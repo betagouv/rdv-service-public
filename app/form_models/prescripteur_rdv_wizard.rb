@@ -14,12 +14,10 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     ActiveRecord::Base.transaction do
       find_or_create_user
 
-      PaperTrail.request(whodunnit: @prescripteur.name_for_paper_trail) do
-        if @rdv.collectif?
-          create_participation!
-        else
-          create_rdv!
-        end
+      if @rdv.collectif?
+        create_participation!
+      else
+        create_rdv!
       end
     end
 
