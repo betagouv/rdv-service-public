@@ -18,3 +18,5 @@ ruby:
   data-display-sundays="#{current_territory.work_on_sunday? && current_agent.display_saturdays}"
   data-organisation-id="#{current_organisation.id}"
 ]
+
+= render partial: "admin/planning/agendas/preferences_toggles"

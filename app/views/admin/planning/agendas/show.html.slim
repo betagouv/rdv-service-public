@@ -30,24 +30,8 @@ ruby:
   data-event-sources-json="#{event_sources.to_json}"
   data-sign-in-path="#{new_agent_session_path}"
 ]
-.mt-3.flex-grow-1.text-right
-  .m-2
-    = simple_form_for [:admin, current_agent], url: admin_organisation_planning_toggle_displays_path(params.permit(:selected_event_id, :date)), method: :put, html: {id: "edit_agent_#{current_agent.id}_cancelled_rdv_preferences"} do |f|
-      = f.hidden_field :display_cancelled_rdv, value: !current_agent.display_cancelled_rdv
-      = f.submit Agent.human_attribute_value(:display_cancelled_rdv, !current_agent.display_cancelled_rdv), class: "fr-btn fr-btn--tertiary"
-  .m-2
-    = simple_form_for [:admin, current_agent], url: admin_organisation_planning_toggle_displays_path(params.permit(:selected_event_id, :date)), method: :put, html: {id: "edit_agent_#{current_agent.id}_saturday_preferences"} do |f|
-      = f.hidden_field :display_saturdays, value: !current_agent.display_saturdays
-      - if current_territory.work_on_sunday?
-        - if current_agent.display_saturdays
-          = f.submit "Ne pas afficher les week-ends", class: "fr-btn fr-btn--tertiary"
-        - else
-          = f.submit "Afficher les week-ends", class: "fr-btn fr-btn--tertiary"
-      - else
-        - if current_agent.display_saturdays
-          = f.submit "Ne pas afficher les samedis", class: "fr-btn fr-btn--tertiary"
-        - else
-          = f.submit "Afficher les samedis", class: "fr-btn fr-btn--tertiary"
+
+= render partial: "admin/planning/agendas/preferences_toggles"
 
 .mt-2
   = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
