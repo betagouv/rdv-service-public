@@ -14,5 +14,7 @@ ruby:
 #agenda-multi-agent.mt-2[
   data-event-sources-json="#{event_sources.to_json}"
   data-resources-json="#{resources.to_json}"
+  data-display-saturdays="#{current_agent.display_saturdays}"
+  data-display-sundays="#{current_territory.work_on_sunday? && current_agent.display_saturdays}"
   data-organisation-id="#{current_organisation.id}"
 ]
