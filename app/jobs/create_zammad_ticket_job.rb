@@ -4,7 +4,7 @@ class CreateZammadTicketJob < ApplicationJob
   def perform(sender_role:, email:, phone_number:, first_name:, last_name:, subject:, body:, tags: [], user_id: nil, agent_id: nil)
     raise Error, "Les seuls sender_role valables sont usager et agent" if %w[usager agent].exclude?(sender_role.to_s)
 
-    customer_attributes = ZammadCustomer::Attributes.new(
+    customer_attributes = ZammadCustomer.new(
       email:, rdvsp_role: sender_role, phone: phone_number,
       firstname: first_name, lastname: last_name
     )

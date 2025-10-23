@@ -1,4 +1,4 @@
-module ZammadCustomer
+class ZammadCustomer
   class Augmenter
     # point d’entrée générique : on ne sait pas si c’est un ticket agent ou usager
     include Rails.application.routes.url_helpers
