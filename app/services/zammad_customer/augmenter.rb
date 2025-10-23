@@ -5,7 +5,7 @@ module ZammadCustomer
 
     attr_reader :zammad_customer
 
-    delegate :email, :phone, to: :zammad_customer
+    delegate :email, :phone, :phone_number_formatted, to: :zammad_customer
 
     def initialize(zammad_customer)
       @zammad_customer = zammad_customer
@@ -20,6 +20,8 @@ module ZammadCustomer
       elsif user = User.find_by(email:)
         augment_with_user(user)
         zammad_customer.note = "Usager trouvé avec l'email #{email}"
+      elsif multiple_matches_by_phone_number_formatted?
+        zammad_customer.note = "Plusieurs usagers trouvés avec le numéro de téléphone formatté #{phone_number_formatted}"
       elsif user_matcher.find_user
         augment_with_user(user_matcher.user)
         zammad_customer.note = user_matcher.details
@@ -41,6 +43,10 @@ module ZammadCustomer
     def augment_with_user(user)
       zammad_customer.super_admin_url = super_admins_user_url(id: user.id, host:)
       zammad_customer.rdvsp_role = "user"
+    end
+
+    def multiple_matches_by_phone_number_formatted?
+      phone_number_formatted.present? && User.where(phone_number_formatted:).count > 1
     end
   end
 end

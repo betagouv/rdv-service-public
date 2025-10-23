@@ -28,13 +28,7 @@ module ZammadCustomer
       end
 
       def match_by_phone_number_formatted
-        records = User.where(phone_number_formatted:)
-        if records.count > 1
-          @details = "Plusieurs usagers trouvés avec le numéro de téléphone formatté #{phone_number_formatted}"
-          @multiple_matches = true
-          return
-        end
-        @user = records.first
+        @user = User.where(phone_number_formatted:).sole
         if @user.present?
           @details = "Usager trouvé avec le numéro de téléphone formatté #{phone_number_formatted}"
         end

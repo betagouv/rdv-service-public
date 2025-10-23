@@ -10,5 +10,9 @@ module ZammadCustomer
     attribute :instance, :string, default: Domain.default_domain_for_current_instance.to_s
 
     def to_h = attributes
+
+    def phone_number_formatted
+      @phone_number_formatted ||= PhoneNumberValidation.parsed_number(phone)&.e164
+    end
   end
 end
