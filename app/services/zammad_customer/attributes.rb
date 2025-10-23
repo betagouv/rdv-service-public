@@ -1,7 +1,7 @@
 module ZammadCustomer
   class Attributes
-    include ActiveModel::Model
-    include ActiveModel::Attributes
+    include ActiveModel::Model # provides the convenient initializer
+    include ActiveModel::Attributes # lets us declare attributes easily
 
     %i[email firstname lastname phone super_admin_url note rdvsp_role].each do |att|
       attribute att, :string
