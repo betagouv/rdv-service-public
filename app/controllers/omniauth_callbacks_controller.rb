@@ -1,6 +1,4 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  before_action :log_params_to_sentry
-
   def microsoft_graph
     if current_agent.update(microsoft_graph_token: microsoft_graph_token, refresh_microsoft_graph_token: refresh_microsoft_graph_token)
       Outlook::MassCreateEventJob.perform_later(current_agent)
