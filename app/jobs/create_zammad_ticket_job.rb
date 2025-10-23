@@ -1,6 +1,4 @@
 class CreateZammadTicketJob < ApplicationJob
-  attr_reader :sender_role, :email, :phone_number, :first_name, :last_name, :user_id, :agent_id
-
   queue_as :latency_30s
 
   def perform(sender_role:, email:, phone_number:, first_name:, last_name:, subject:, body:, tags: [], user_id: nil, agent_id: nil)
