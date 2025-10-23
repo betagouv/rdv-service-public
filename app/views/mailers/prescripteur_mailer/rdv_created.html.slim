@@ -4,8 +4,12 @@ div
   p
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 
-  |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
-  = link_to("Contactez-nous", new_aide_demande_support_url(role: :agent, sujet: "Déplacer ou corriger un RDV pris via prescription (RDV ID: #{@rdv.id})"))
+  .btn-wrapper
+    = link_to "Annuler le rendez-vous", prescripteur_show_url(token: @prescripteur.token), class: "btn btn-primary"
+
+  p
+    |> Besoin de corriger un détail ?
+    = link_to("Contactez-nous", new_aide_demande_support_url(role: :agent, sujet: "Corriger un RDV pris via prescription (RDV ID: #{@rdv.id})"))
   br
   br
   = t("mailers.common.farewell_html", domain_name: domain.name)
