@@ -102,5 +102,9 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     click_on "Indisponibilités"
     expect(page).to have_content(["Justine ADMIN", "1 indisponibilité", "Loïc BASIQUE", "1 indisponibilité"].join("\n"))
     doc.add_screenshot(page, text: "La section des indisponibilités liste tous les agents sélectionnés.")
+
+    visit admin_organisation_planning_agenda_path(organisation)
+    click_on("Revenir à l'ancienne vue")
+    expect(page).to have_content("Votre agenda")
   end
 end
