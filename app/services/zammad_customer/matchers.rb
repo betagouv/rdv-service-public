@@ -20,18 +20,7 @@ module ZammadCustomer
       def match_by_phone_number
         return nil if phone_number.blank? || phone_number.length < 6
 
-        if phone_number_formatted.present?
-          match_by_phone_number_formatted
-        else
-          match_by_phone_number_raw
-        end
-      end
-
-      def match_by_phone_number_formatted
-        @user = User.where(phone_number_formatted:).sole
-        if @user.present?
-          @details = "Usager trouvé avec le numéro de téléphone formatté #{phone_number_formatted}"
-        end
+        match_by_phone_number_raw
       end
 
       def match_by_phone_number_raw
