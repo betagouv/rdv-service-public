@@ -21,7 +21,7 @@ module ZammadCustomer
         augment_with_agent(agent)
         self.note = "Agent trouvé avec l'email #{email}"
       elsif user_matcher.find_user
-        augment_with(Augmenters::UserAugmenter.new(user_matcher.user))
+        augment_with_user(user_matcher.user)
         self.note = user_matcher.details
       elsif user_matcher.multiple_matches
         self.note = user_matcher.details
@@ -34,6 +34,11 @@ module ZammadCustomer
     def augment_with_agent(agent)
       self.super_admin_url = super_admins_agent_url(id: agent.id, host: Domain.default_domain_for_current_instance.host_name)
       self.rdvsp_role = "agent"
+    end
+
+    def augment_with_user(user)
+      self.super_admin_url = super_admins_user_url(id: user.id, host: Domain.default_domain_for_current_instance.host_name)
+      self.rdvsp_role = "user"
     end
   end
 end

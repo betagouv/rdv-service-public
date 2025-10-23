@@ -112,21 +112,19 @@ RSpec.describe ZammadCustomer do
         expect(zammad_customer.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/agents/#{agent.id}"
       end
     end
-  end
 
-  describe ZammadCustomer::Augmenters::UserAugmenter do
-    subject do
-      described_class.new(user).augment(zammad_attributes)
-      zammad_attributes
-    end
+    describe "#augment_with_user" do
+      subject { zammad_customer.augment_with_user(user) }
 
-    let(:zammad_attributes) { ZammadCustomer::Attributes.new }
+      let(:zammad_customer) { described_class.new }
 
-    let!(:user) { create(:user, email: "agent@example.com") }
+      let!(:user) { create(:user, email: "user@example.com") }
 
-    specify do
-      expect(subject.note).to be_blank
-      expect(subject.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/users/#{user.id}"
+      specify do
+        subject
+        expect(zammad_customer.note).to be_blank
+        expect(zammad_customer.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/users/#{user.id}"
+      end
     end
   end
 end
