@@ -82,16 +82,20 @@ class PrescripteurRdvWizardController < ApplicationController
   end
 
   def confirmation
-    @prescripteur = Prescripteur.find(session[:prescripteur_id])
+    prescripteur = Prescripteur.find(session[:prescripteur_id])
+
+    render locals: { prescripteur: }
   end
 
   def show
     if params[:token].present?
-      @prescripteur = Prescripteur.find_by(token: params[:token])
-      session[:prescripteur_id] = @prescripteur.id
+      prescripteur = Prescripteur.find_by(token: params[:token])
+      session[:prescripteur_id] = prescripteur.id
     else
-      @prescripteur = Prescripteur.find(session[:prescripteur_id])
+      prescripteur = Prescripteur.find(session[:prescripteur_id])
     end
+
+    render locals: { prescripteur: }
   end
 
   private
