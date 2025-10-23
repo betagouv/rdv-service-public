@@ -5,7 +5,7 @@
 
 - content_for(:breadcrumb) do
   .mr-1
-    = link_to "Activer la nouvelle vue planning", admin_organisation_planning_enable_new_planning_path(current_organisation), method: :put, class: "fr-link fr-link--sm"
+    = link_to "Activer la nouvelle vue planning", admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "true"), method: :put, class: "fr-link fr-link--sm"
 
 - content_for :title do
   - if current_agent == @agent
