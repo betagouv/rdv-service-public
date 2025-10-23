@@ -2,11 +2,15 @@
 
 - agent = rdv_plan.rdv_agent || current_agent
 
+ruby:
+  full_calendar_config_from_server = {
+    hiddenDays: fc_hidden_days_for(current_agent),
+    eventSources: event_sources
+  }
+
 #rdvPlanCalendar[
+  data-full-calendar-config-from-server-json=full_calendar_config_from_server.to_json
   data-default-date-json="#{(rdv_plan.starts_at&.to_date || Time.zone.today).to_json}"
-  data-display-saturdays="#{agent.display_saturdays}"
-  data-display-sundays="false"
-  data-event-sources-json="#{event_sources.to_json}"
   data-slot-min-time="#{I18n.l(rdv_plan.starts_at - 2.hours, format: "%H:%M:%S") if single_day}"
   data-slot-max-time="#{I18n.l(rdv_plan.starts_at + 3.hours, format: "%H:%M:%S") if single_day}"
   data-single-day="#{single_day}"

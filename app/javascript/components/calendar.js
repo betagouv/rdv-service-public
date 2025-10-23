@@ -55,20 +55,14 @@ export class AgendaMonoAgent {
   }
 
   initFullCalendar = () => {
-    var hiddenDays = []
-    if (this.data.displaySaturdays !== "true") {
-      hiddenDays.push(6);
-    }
-    if (this.data.displaySundays !== "true") {
-      hiddenDays.push(0);
-    }
+    const fullCalendarConfigFromServer = JSON.parse(this.data.fullCalendarConfigFromServerJson);
+
     const options = {
+      ...fullCalendarConfigFromServer,
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-      eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
       initialDate: this.getDefaultDate(),
       initialView: this.getDefaultView(),
-      hiddenDays: hiddenDays,
       select: this.selectEvent,
       headerToolbar: {
         center: 'dayGridMonth,timeGridWeek,timeGridOneDay,listWeek'

@@ -11,8 +11,12 @@ ruby:
   event_sources.push(OffDays.to_full_calendar_array) unless current_territory.work_on_sunday?
   resources = @agents.map { { id: _1.id, title: _1.full_name_or_email } }
 
+  full_calendar_config_from_server = {
+    hiddenDays: fc_hidden_days_for(current_agent, current_territory),
+    eventSources: event_sources,
+    resources: resources,
+  }
 #agenda-multi-agent.mt-2[
-  data-event-sources-json="#{event_sources.to_json}"
-  data-resources-json="#{resources.to_json}"
+  data-full-calendar-config-from-server-json=full_calendar_config_from_server.to_json
   data-organisation-id="#{current_organisation.id}"
 ]
