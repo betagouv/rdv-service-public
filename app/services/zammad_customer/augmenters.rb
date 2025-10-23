@@ -21,6 +21,7 @@ module ZammadCustomer
       def augment(customer_attributes)
         customer_attributes.super_admin_url = super_admins_user_url(id: @user.id, host: Domain.default_domain_for_current_instance.host_name)
         customer_attributes.rdvsp_role = "user"
+        # TODO : rajouter des infos sur les RDV à venir et le dernier RDV
       end
     end
   end
