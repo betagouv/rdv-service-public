@@ -11,19 +11,11 @@ module ZammadCustomer
       end
 
       def find_user
-        match_by_email
         match_by_phone_number if @user.nil?
         @user
       end
 
       private
-
-      def match_by_email
-        return nil if email.blank?
-
-        @user = User.find_by(email:)
-        @details = "Usager trouvé avec l'email #{email}" if @user.present?
-      end
 
       def match_by_phone_number
         return nil if phone_number.blank? || phone_number.length < 6

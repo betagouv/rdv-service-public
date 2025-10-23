@@ -17,6 +17,9 @@ module ZammadCustomer
       if agent = Agent.find_by(email:)
         augment_with_agent(agent)
         zammad_customer.note = "Agent trouvé avec l'email #{email}"
+      elsif user = User.find_by(email:)
+        augment_with_user(user)
+        zammad_customer.note = "Usager trouvé avec l'email #{email}"
       elsif user_matcher.find_user
         augment_with_user(user_matcher.user)
         zammad_customer.note = user_matcher.details
