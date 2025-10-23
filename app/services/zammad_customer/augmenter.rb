@@ -1,6 +1,5 @@
 class ZammadCustomer
   class Augmenter
-    # point d’entrée générique : on ne sait pas si c’est un ticket agent ou usager
     include Rails.application.routes.url_helpers
 
     attr_reader :zammad_customer
@@ -35,8 +34,6 @@ class ZammadCustomer
     end
     # rubocop:enable Lint/AssignmentInCondition
 
-    def host = ::Domain.default_domain_for_current_instance.host_name
-
     def augment_with_agent(agent)
       zammad_customer.super_admin_url = super_admins_agent_url(id: agent.id, host:)
       zammad_customer.rdvsp_role = "agent"
@@ -58,5 +55,7 @@ class ZammadCustomer
     def matches_by_phone_number_raw
       phone.present? && phone.length > 6 ? User.where(phone_number: phone) : []
     end
+
+    def host = ::Domain.default_domain_for_current_instance.host_name
   end
 end

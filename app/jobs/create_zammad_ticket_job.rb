@@ -17,7 +17,7 @@ class CreateZammadTicketJob < ApplicationJob
       customer_attributes.find_user_or_agent_and_augment
     end
 
-    zammad_customer = ZammadApiClient.upsert_customer(email:, **customer_attributes.to_h)
+    zammad_customer = ZammadApiClient.upsert_customer(email:, **customer_attributes.attributes)
     ZammadApiClient.create_ticket(customer_id: zammad_customer["id"], sender_role:, subject:, body:, tags:)
   end
 end
