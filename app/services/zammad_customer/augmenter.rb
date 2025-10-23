@@ -11,9 +11,8 @@ module ZammadCustomer
       @zammad_customer = zammad_customer
     end
 
-    # rubocop:disable Lint/AssignmentInCondition, Metrics/PerceivedComplexity
+    # rubocop:disable Lint/AssignmentInCondition
     def run
-      user_matcher = Matchers::UserMatcher.new(zammad_customer)
       if agent = Agent.find_by(email:)
         augment_with_agent(agent)
         zammad_customer.note = "Agent trouvé avec l'email #{email}"
@@ -27,16 +26,14 @@ module ZammadCustomer
         zammad_customer.note = "Usager trouvé avec le numéro de téléphone formatté #{phone_number_formatted}"
       elsif matches_by_phone_number_raw.count > 1
         zammad_customer.note = "Plusieurs usagers trouvés avec le numéro de téléphone #{phone}"
-      elsif user_matcher.find_user
-        augment_with_user(user_matcher.user)
-        zammad_customer.note = user_matcher.details
-      elsif user_matcher.multiple_matches
-        zammad_customer.note = user_matcher.details
+      elsif user = matches_by_phone_number_raw.first
+        augment_with_user(user)
+        zammad_customer.note = "Usager trouvé avec le numéro de téléphone #{phone_number}"
       else
         zammad_customer.note = "Aucun usager ni agent trouvé"
       end
     end
-    # rubocop:enable Lint/AssignmentInCondition, Metrics/PerceivedComplexity
+    # rubocop:enable Lint/AssignmentInCondition
 
     def host = ::Domain.default_domain_for_current_instance.host_name
 
