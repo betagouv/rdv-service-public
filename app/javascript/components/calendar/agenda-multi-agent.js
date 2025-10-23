@@ -16,12 +16,11 @@ class AgendaMultiAgent {
     this.fullCalendarInstance.render();
   }
   initFullCalendar = () => {
-    const fullCalendarConfigFromServer = JSON.parse(this.data.fullCalendarConfigFromServerJson);
-
     const options = {
-      ...fullCalendarConfigFromServer,
       plugins: [resourceTimegridPlugin, interactionPlugin],
       schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
+      resources: JSON.parse(this.data.resourcesJson),
+      eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
       initialView: "resourceTimeGridDay",
       select: this.selectEvent,

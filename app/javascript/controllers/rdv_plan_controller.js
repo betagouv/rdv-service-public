@@ -48,13 +48,12 @@ export default class extends Controller {
   }
 
   calendarConfig = (dataset) => {
-    const fullCalendarConfigFromServer = JSON.parse(this.data.fullCalendarConfigFromServerJson);
-
     const options = {
-      ...fullCalendarConfigFromServer,
       plugins: [timeGridPlugin, interactionPlugin],
+      eventSources: JSON.parse(dataset.eventSourcesJson),
       initialDate: JSON.parse(dataset.defaultDateJson),
       initialView: dataset.singleDay === "true" ? 'timeGridDay' : 'timeGridWeek',
+      hiddenDays: [0],
       headerToolbar: { left:  '', center: '', right:  '' },
       select: this.selectEvent,
       slotMinTime: dataset.slotMinTime || '07:00:00',
@@ -62,6 +61,9 @@ export default class extends Controller {
       eventDidMount: eventRenderer(),
     }
 
+    if (dataset.displaySaturdays !== "true") {
+      options.hiddenDays.push(6);
+    }
     if (dataset.singleDay !== "true") {
       options.headerToolbar.right = 'prev,next';
     }
