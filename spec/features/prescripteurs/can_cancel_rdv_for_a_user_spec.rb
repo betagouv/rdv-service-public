@@ -40,6 +40,9 @@ RSpec.describe "un prescripteur peut annuler un rendez-vous qu’il a pris pour 
     click_link "Annuler le rendez-vous"
 
     expect(page).to have_content("Le rendez-vous a bien été annulé.")
+
+    expect(Rdv.last.status).to eq("excused")
+    expect(Rdv.last.versions.last.whodunnit).to eq("[Prescripteur] Alex PRESCRIPTEUR")
   end
 
   it "lorsqu’il revient plus tard via son lien de confirmation" do
@@ -51,5 +54,8 @@ RSpec.describe "un prescripteur peut annuler un rendez-vous qu’il a pris pour 
     click_link "Annuler le rendez-vous"
 
     expect(page).to have_content("Le rendez-vous a bien été annulé.")
+
+    expect(Rdv.last.status).to eq("excused")
+    expect(Rdv.last.versions.last.whodunnit).to eq(prescripteur.name_for_paper_trail)
   end
 end
