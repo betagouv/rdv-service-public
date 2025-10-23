@@ -10,7 +10,6 @@ module ZammadCustomer
 
     attribute :instance, :string, default: Domain.default_domain_for_current_instance.to_s
 
-    def augment_with(augmenter) = augmenter.augment(self)
     def to_h = attributes
 
     # point d’entrée générique : on ne sait pas si c’est un ticket agent ou usager
