@@ -141,12 +141,8 @@ On ne peut pas empêcher une PR spécifique d’être automatiquement détruite 
 En revanche, on peut en recréer une nouvelle sans problème.
 
 L’envoi d’email est désactivé par défaut sur les review apps.
-Pour l’activer vous pouvez utiliser cette commande :
+Pour l’activer vous pouvez utiliser cette commande : `make enable_emails_on_review_app`
 
-```sh
-    scalingo --region osc-secnum-fr1 --app rdv-service-public-review-app-pr4242 env-unset DISABLE_SENDING_EMAILS && \
-    scalingo --region osc-secnum-fr1 --app rdv-service-public-review-app-pr4242 restart
-```
 
 ## Search Contexts
 
