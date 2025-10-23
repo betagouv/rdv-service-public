@@ -5,13 +5,13 @@ module ZammadCustomer
 
     attr_reader :zammad_customer
 
-    delegate :email, :phone, :phone_number_formatted, to: :zammad_customer
+    delegate :email, :phone, to: :zammad_customer
 
     def initialize(zammad_customer)
       @zammad_customer = zammad_customer
     end
 
-    # rubocop:disable Lint/AssignmentInCondition
+    # rubocop:disable Lint/AssignmentInCondition, Metrics/PerceivedComplexity
     def run
       user_matcher = Matchers::UserMatcher.new(zammad_customer)
       if agent = Agent.find_by(email:)
@@ -25,6 +25,8 @@ module ZammadCustomer
       elsif user = matches_by_phone_number_formatted.first
         augment_with_user(user)
         zammad_customer.note = "Usager trouvé avec le numéro de téléphone formatté #{phone_number_formatted}"
+      elsif matches_by_phone_number_raw.count > 1
+        zammad_customer.note = "Plusieurs usagers trouvés avec le numéro de téléphone #{phone}"
       elsif user_matcher.find_user
         augment_with_user(user_matcher.user)
         zammad_customer.note = user_matcher.details
@@ -34,7 +36,7 @@ module ZammadCustomer
         zammad_customer.note = "Aucun usager ni agent trouvé"
       end
     end
-    # rubocop:enable Lint/AssignmentInCondition
+    # rubocop:enable Lint/AssignmentInCondition, Metrics/PerceivedComplexity
 
     def host = ::Domain.default_domain_for_current_instance.host_name
 
@@ -48,8 +50,16 @@ module ZammadCustomer
       zammad_customer.rdvsp_role = "user"
     end
 
+    def phone_number_formatted
+      @phone_number_formatted ||= PhoneNumberValidation.parsed_number(phone)&.e164
+    end
+
     def matches_by_phone_number_formatted
       phone_number_formatted.present? ? User.where(phone_number_formatted:) : []
+    end
+
+    def matches_by_phone_number_raw
+      phone.present? && phone.length > 6 ? User.where(phone_number: phone) : []
     end
   end
 end

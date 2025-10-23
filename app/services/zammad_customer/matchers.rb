@@ -25,11 +25,6 @@ module ZammadCustomer
 
       def match_by_phone_number_raw
         records = User.where(phone_number:)
-        if records.count > 1
-          @details = "Plusieurs usagers trouvés avec le numéro de téléphone #{phone_number}"
-          @multiple_matches = true
-          return
-        end
         @user = records.first
         if @user.present?
           @details = "Usager trouvé avec le numéro de téléphone #{phone_number}"
