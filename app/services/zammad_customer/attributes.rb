@@ -13,12 +13,12 @@ module ZammadCustomer
     def to_h = attributes
 
     # point d’entrée générique : on ne sait pas si c’est un ticket agent ou usager
+    # rubocop:disable Lint/AssignmentInCondition
     def find_user_or_agent_and_augment
-      agent_matcher = Matchers::AgentMatcher.new(self)
       user_matcher = Matchers::UserMatcher.new(self)
-      if agent_matcher.find_agent
-        augment_with(Augmenters::AgentAugmenter.new(agent_matcher.agent))
-        self.note = agent_matcher.details
+      if agent = Agent.find_by(email:)
+        augment_with(Augmenters::AgentAugmenter.new(agent))
+        self.note = "Agent trouvé avec l'email #{email}"
       elsif user_matcher.find_user
         augment_with(Augmenters::UserAugmenter.new(user_matcher.user))
         self.note = user_matcher.details
@@ -28,5 +28,6 @@ module ZammadCustomer
         self.note = "Aucun usager ni agent trouvé"
       end
     end
+    # rubocop:enable Lint/AssignmentInCondition
   end
 end

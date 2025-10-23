@@ -1,23 +1,5 @@
 module ZammadCustomer
   module Matchers
-    class AgentMatcher
-      attr_reader :customer_attributes, :agent, :details
-
-      delegate :email, to: :customer_attributes
-
-      def initialize(customer_attributes)
-        @customer_attributes = customer_attributes
-      end
-
-      def find_agent
-        return if customer_attributes.email.blank?
-
-        @agent = Agent.find_by(email:)
-        @details = "Agent trouvé avec l'email #{email}" if @agent.present?
-        @agent
-      end
-    end
-
     class UserMatcher
       attr_reader :customer_attributes, :user, :details, :multiple_matches
 
