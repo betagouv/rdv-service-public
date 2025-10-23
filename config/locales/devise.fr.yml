@@ -86,7 +86,7 @@ fr:
       update_needs_confirmation: "Votre compte a bien été mis à jour mais nous devons vérifier votre nouvelle adresse email. Merci de vérifier vos emails et de cliquer sur le lien de confirmation pour finaliser la validation de votre nouvelle adresse."
       updated: "Votre compte a été modifié avec succès."
     sessions:
-      signed_in: ""
+      signed_in: "Connexion réussie."
       signed_out: "Déconnexion réussie."
       already_signed_out: "Mode déconnecté."
     unlocks:

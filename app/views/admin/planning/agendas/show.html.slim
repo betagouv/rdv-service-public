@@ -3,8 +3,8 @@
 
 = render "admin/onboarding/banner", in_agenda: true
 
-- content_for(:before_container) do
-  .float-right.mt-2.mr-2
+- content_for(:breadcrumb) do
+  .mr-1
     = link_to "Activer la nouvelle vue planning", admin_organisation_planning_enable_new_planning_path(current_organisation), method: :put, class: "fr-link fr-link--sm"
 
 - content_for :title do
