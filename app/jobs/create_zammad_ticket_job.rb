@@ -12,7 +12,7 @@ class CreateZammadTicketJob < ApplicationJob
     if user_id.present?
       customer_attributes.augment_with(ZammadCustomer::UserAugmenter.new(record: User.find(user_id)))
     elsif agent_id.present?
-      customer_attributes.augment_with(ZammadCustomer::AgentAugmenter.new(record: Agent.find(agent_id)))
+      customer_attributes.augment_with_agent(Agent.find(agent_id))
     else
       customer_attributes.find_user_or_agent_and_augment
     end

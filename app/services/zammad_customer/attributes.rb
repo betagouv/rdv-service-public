@@ -1,5 +1,6 @@
 module ZammadCustomer
   class Attributes
+    include Rails.application.routes.url_helpers
     include ActiveModel::Model # provides the convenient initializer
     include ActiveModel::Attributes # lets us declare attributes easily
 
@@ -17,7 +18,7 @@ module ZammadCustomer
     def find_user_or_agent_and_augment
       user_matcher = Matchers::UserMatcher.new(self)
       if agent = Agent.find_by(email:)
-        augment_with(Augmenters::AgentAugmenter.new(agent))
+        augment_with_agent(agent)
         self.note = "Agent trouvé avec l'email #{email}"
       elsif user_matcher.find_user
         augment_with(Augmenters::UserAugmenter.new(user_matcher.user))
@@ -29,5 +30,10 @@ module ZammadCustomer
       end
     end
     # rubocop:enable Lint/AssignmentInCondition
+
+    def augment_with_agent(agent)
+      self.super_admin_url = super_admins_agent_url(id: agent.id, host: Domain.default_domain_for_current_instance.host_name)
+      self.rdvsp_role = "agent"
+    end
   end
 end
