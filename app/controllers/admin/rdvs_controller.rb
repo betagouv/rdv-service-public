@@ -3,7 +3,7 @@ class Admin::RdvsController < AgentAuthController
 
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner export participations_export]
+  before_action :set_rdv, :set_contextual_agents, except: %i[index a_renseigner export participations_export]
 
   PERMITTED_PER_PAGE = [10, 25, 50].freeze
 
@@ -147,8 +147,8 @@ class Admin::RdvsController < AgentAuthController
     raise Pundit::NotAuthorizedError unless @scoped_organisations.any?
   end
 
-  def set_optional_agent
-    @agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:agent_id]) if params[:agent_id].present?
+  def set_contextual_agents
+    @contextual_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).where(id: params[:contextual_agent_ids]).load
   end
 
   def parse_date_from_params(date_param)
