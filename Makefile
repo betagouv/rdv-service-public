@@ -47,7 +47,7 @@ review_app: ## Create Scalingo review app for the PR linked to the current branc
 	/bin/sh scripts/create_review_app.sh
 
 enable_emails_on_review_app:
-	/bin/sh scripts/create_review_app.sh
+	/bin/sh scripts/enable_emails_on_review_app.sh
 
 help: ## Display available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
