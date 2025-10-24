@@ -148,10 +148,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def set_optional_agent
-    agent_ids = Array(params[:agent_id]).compact_blank
-    if agent_ids.size == 1
-      @agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(agent_ids.sole)
-    end
+    @agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:agent_id]) if params[:agent_id].present?
   end
 
   def parse_date_from_params(date_param)
