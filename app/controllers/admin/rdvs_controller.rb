@@ -3,7 +3,8 @@ class Admin::RdvsController < AgentAuthController
 
   respond_to :html, :json
 
-  before_action :set_rdv, :set_contextual_agents, except: %i[index a_renseigner export participations_export]
+  before_action :set_rdv, except: %i[index a_renseigner export participations_export]
+  before_action(only: [:index]) { session[:planning_selected_agent_ids] = nil } # permet de revenir à l'index depuis les breadcrumbs
 
   PERMITTED_PER_PAGE = [10, 25, 50].freeze
 
@@ -145,10 +146,6 @@ class Admin::RdvsController < AgentAuthController
 
     # An empty scope means the agent tried to access a foreign organisation
     raise Pundit::NotAuthorizedError unless @scoped_organisations.any?
-  end
-
-  def set_contextual_agents
-    @contextual_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).where(id: params[:contextual_agent_ids]).load
   end
 
   def parse_date_from_params(date_param)

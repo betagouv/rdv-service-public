@@ -28,5 +28,7 @@ module Admin::Planning::SetAgentsConcern
         @agents = [@agent]
       end
     end
+
+    session[:planning_selected_agent_ids] = @agents.map(&:id)
   end
 end

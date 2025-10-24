@@ -35,14 +35,12 @@ FactoryBot.define do
     end
 
     transient do
-      basic_role_in_organisations { [] }
-    end
+      basic_role_in_organisations { basic_orgs.presence || [] }
+      basic_orgs { [] } # alias de basic_role_in_organisations
 
-    transient do
-      admin_role_in_organisations { [] }
-    end
+      admin_role_in_organisations { admin_orgs.presence || [] }
+      admin_orgs { [] } # alias de admin_role_in_organisations
 
-    transient do
       role_in_territories { [] }
     end
 
