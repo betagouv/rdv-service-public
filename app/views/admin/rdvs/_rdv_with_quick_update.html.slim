@@ -1,4 +1,4 @@
-/# locals: (rdv:, agent:, success_message: nil)
+/# locals: (rdv:, success_message: nil)
 
 turbo-frame.card[id= "rdv-#{rdv.id}" target="_top"]
   turbo-frame[id= "rdv-error-message-#{rdv.id}"]
@@ -32,7 +32,7 @@ turbo-frame.card[id= "rdv-#{rdv.id}" target="_top"]
   .card-footer.py-1.border-white
     - if rdv.users.any?
       .d-none.d-sm-block
-        = render "admin/rdvs/users_table", rdv:, agent:
+        = render "admin/rdvs/users_table", rdv:
     - else
       p Il n'y a pas encore de participant pour ce RDV
 

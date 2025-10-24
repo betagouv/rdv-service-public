@@ -3,24 +3,24 @@
   .dropdown-menu
     - case participation.temporal_status
     - when "unknown_future"
-      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "excused", remote: true
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, status: "excused", remote: true
 
     - when "unknown_today"
-      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "seen", remote: true
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, status: "seen", remote: true
       - if participation.rdv.in_the_past?
-        = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "noshow", remote: true
+        = render "admin/participations/participation_status_dropdown_item", participation: participation, status: "noshow", remote: true
       .dropdown-divider
-      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "excused", remote: true
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, status: "excused", remote: true
 
     - when "unknown_past"
-      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "seen", remote: true
-      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "noshow", remote: true
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, status: "seen", remote: true
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, status: "noshow", remote: true
       .dropdown-divider
-      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "excused", remote: true
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, status: "excused", remote: true
 
     - else
-      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "unknown", remote: true
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, status: "unknown", remote: true
 
     - if policy(participation.rdv, policy_class: Agent::RdvPolicy).destroy?
       .dropdown-divider
-      = participation_delete_dropdown_item(participation, agent)
+      = participation_delete_dropdown_item(participation)
