@@ -12,7 +12,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def index
     @multiple_agents_makes_sense = true
-    render :multi_agents_index and return if @agents.size > 1
+    multi_agents_index and return if @agents.size > 1
 
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
@@ -25,6 +25,11 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
     @plage_ouvertures = @plage_ouvertures.search_by_text(params[:search]) if params[:search].present?
     @display_tabs = all_plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
+  end
+
+  def multi_agents_index
+    @agents.each { authorize(_1, :show?, policy_class: Agent::AgentPolicy) }
+    render :multi_agents_index
   end
 
   def calendar

@@ -8,6 +8,7 @@ module Admin::Planning::SetAgentsConcern
   end
 
   def set_agents
+    # On évite d'utiliser policy_scope pour laisser cette responsabilité aux controllers
     agents = Agent::AgentPolicy::Scope.new(current_agent, Agent).resolve
       .where(id: Array(params[:agent_id]).compact_blank)
       .load

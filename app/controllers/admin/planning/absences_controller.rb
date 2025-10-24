@@ -8,7 +8,7 @@ class Admin::Planning::AbsencesController < AgentAuthController
 
   def index
     @multiple_agents_makes_sense = true
-    render :multi_agents_index and return if @agents.size > 1
+    multi_agents_index and return if @agents.size > 1
 
     absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
       .where(agent: @agent)
@@ -23,6 +23,11 @@ class Admin::Planning::AbsencesController < AgentAuthController
 
     @absences = params[:current_tab] == "expired" ? absences.expired : absences.not_expired
     @display_tabs = absences.expired.any? || params[:current_tab] == "expired"
+  end
+
+  def multi_agents_index
+    @agents.each { authorize(_1, :show?, policy_class: Agent::AgentPolicy) }
+    render :multi_agents_index
   end
 
   def new
