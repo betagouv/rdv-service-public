@@ -48,7 +48,16 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
     find("#submit_agents").click
     click_on "Usager DU RDV" # on clique sur le RDV dans l'agenda
 
-    expected_fil_ariane = "Accueil  Liste des RDV  RDV Usager DU RDV"
+    expected_fil_ariane = "Accueil  Agenda de Mon COLLEGUE, Agent COURANT  RDV Usager DU RDV"
     expect(page).to have_content(expected_fil_ariane)
+    click_on "Modifier"
+    expect(page).to have_content(expected_fil_ariane)
+    fill_in "rdv_duration_in_min", with: "240"
+    click_on "Enregistrer"
+    click_on "Confirmer en ignorant les avertissements" if page.body.include?("Confirmer en ignorant les avertissements") # modification d'un RDV dans le passé
+    expect(rdv_du_collegue.reload.duration_in_min).to eq(240)
+    expect(page).to have_content(expected_fil_ariane)
+    click_on "Agenda de Mon COLLEGUE"
+    expect(page).to have_content("Agenda de Mon COLLEGUE")
   end
 end

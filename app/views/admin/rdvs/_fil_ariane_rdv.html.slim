@@ -1,0 +1,24 @@
+/# locals: (rdv:, b:)
+
+ruby:
+  if @agent
+    contextual_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).where(id: @agent).order(last_name: :asc).load
+  else
+    contextual_agents = []
+  end
+
+= b.with_breadcrumb label: "Accueil", href: root_path
+- if contextual_agents.blank?
+  - if @rdv.collectif?
+    = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)
+  - else
+    = b.with_breadcrumb label: "Liste des RDV", href: admin_organisation_rdvs_path(current_organisation)
+- elsif contextual_agents.size == 1
+  - contextual_agent = contextual_agents.sole
+  - if contextual_agent != current_agent
+    = b.with_breadcrumb label: "Agenda de #{contextual_agent.full_name}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agent.id)
+  - else
+    = b.with_breadcrumb label: "Votre agenda", href: admin_organisation_planning_agenda_path(current_organisation)
+- else
+  = b.with_breadcrumb label: "Agenda de #{contextual_agents.map(&:full_name).join(', ')}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agents.map(&:id))
+= b.with_breadcrumb label: "RDV #{rdv_title_for_agent(rdv)}"
