@@ -8,24 +8,25 @@ module Admin::Planning::SetAgentsConcern
   end
 
   def set_agents
-    scope = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
-    agents = Agent.where(id: Array(params[:agent_id]).compact_blank)
+    agents = Agent::AgentPolicy::Scope.new(current_agent, Agent).resolve
+      .where(id: Array(params[:agent_id]).compact_blank)
+      .load
 
     case agents.size
     when 0
       @agent = current_agent
       @agents = [current_agent]
     when 1
-      @agent = scope.where(id: agents).first
-      @agents = [@agent]
+      @agent = agents.sole
+      @agents = [agents.sole]
     else
       if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-        @agents = scope.where(id: agents)
+        @agents = agents
       else
-        # Si l'agent courant n'a pas activé la feature on ne considère qu'il n'y
+        # Si l'agent courant n'a pas activé la feature, on ne considère qu'il n'y
         # a qu'un seul agent sélectionné, car le code sera en mode mono-agent.
         @agent = agents.first
-        @agents = [@agent]
+        @agents = [agents.first]
       end
     end
   end
