@@ -117,53 +117,76 @@ class AgentConnectController < ApplicationController
     redirect_to after_sign_in_path_for(user)
   end
 
+  # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
   def connect_agent(callback_client)
-    agent_by_sub = Agent.active.find_by(pro_connect_openid_sub: callback_client.openid_sub)
+    sub = callback_client.openid_sub
+    agent_by_sub = Agent.active.find_by(pro_connect_openid_sub: sub)
     agent_by_email = Agent.active.find_by(email: callback_client.user_email)
+    Sentry.set_user({ email: callback_client.user_email })
 
-    # Edge case : on trouve un agent par e-mail et cet agent porte un autre sub.
-    # Il faudrait inviter l'agent à se connecter par e-mail à cet autre compte et à unlink.
-    if agent_by_email&.pro_connect_openid_sub && agent_by_email.pro_connect_openid_sub != callback_client.openid_sub
-      flash[:error] = "Ce compte ProConnect est lié à l'adresse e-mail #{callback_client.user_email}.<br />" \
-                      "Or cette adresse est déjà liée à compte existant qui est connecté avec un autre compte ProConnect.<br />" \
-                      "Nous vous invitons à vous connecter par email + mot de passe avec cet e-mail.<br />" \
-                      "Vous pouvez contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a>."
-      Sentry.capture_message("L'email ProConnect est attribué à un agent qui porte un autre sub.", extra: { email_from_pro_connect: callback_client.user_email })
+    # On trouve un agent vie le sub, et un autre agent via l'e-mail
+    if agent_by_email && agent_by_sub && agent_by_email != agent_by_sub
+      error_message = <<~ERROR
+        Il existe deux comptes correspondant : #{agent_by_email.email} et #{agent_by_sub.email}.
+        Nous vous invitons à contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a>.
+      ERROR
+      Sentry.capture_message(error_message, extra: { user_info: callback_client.user_info })
+      flash[:error] = error_message
+      redirect_to new_agent_session_path and return
+    end
+
+    # On trouve un agent par e-mail et cet agent porte un autre sub.
+    if agent_by_email&.pro_connect_openid_sub && agent_by_email.pro_connect_openid_sub != sub
+      error_message = <<~ERROR
+        Ce compte ProConnect est lié à l'adresse e-mail #{callback_client.user_email}.<br />
+        Or cette adresse est déjà liée à compte existant qui est connecté avec un autre compte ProConnect.<br />
+        Nous vous invitons à contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a>.
+      ERROR
+      Sentry.capture_message(error_message, extra: { user_info: callback_client.user_info })
+      flash[:error] = error_message
       redirect_to new_agent_session_path and return
     end
 
     agent = agent_by_sub || agent_by_email
 
-    if current_domain.allow_self_onboarding
-      agent ||= Agent.new(email: callback_client.user_email, password: SecureRandom.base64(32))
+    if agent.nil?
+      if current_domain.allow_self_onboarding
+        agent ||= Agent.new(email: callback_client.user_email, password: SecureRandom.base64(32))
+      else
+        # On pourrait améliorer le cas d'erreur décrit dans https://github.com/betagouv/rdv-service-public/issues/4360
+        flash[:error] = <<~ERROR
+          Il n'y a pas de compte agent pour l'adresse mail #{callback_client.user_email}.<br />
+          Vous devez utiliser ProConnect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />
+          Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste.
+        ERROR
+        redirect_to new_agent_session_path and return
+      end
     end
 
-    if agent
-      agent.skip_confirmation!
-      agent.skip_reconfirmation!
-      agent.update!(
-        pro_connect_openid_sub: callback_client.openid_sub,
-        email: callback_client.user_email,
-        first_name: callback_client.user_first_name,
-        last_name: callback_client.user_last_name,
-        proconnect_siret: callback_client.user_siret,
-        invitation_token: nil, # Pour désactiver les anciens liens d'invitation
-        invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now,
-        confirmed_at: agent.confirmed_at || Time.zone.now,
-        last_sign_in_at: Time.zone.now
-      )
-
-      bypass_sign_in agent, scope: :agent
-      session[:agent_connect_id_token] = callback_client.id_token_for_logout
-      redirect_to after_sign_in_path_for(agent)
-    else
-      # On pourrait améliorer le cas d'erreur décrit dans https://github.com/betagouv/rdv-service-public/issues/4360
-      flash[:error] = "Il n'y a pas de compte agent pour l'adresse mail #{callback_client.user_email}.<br />" \
-                      "Vous devez utiliser ProConnect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />" \
-                      "Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste."
-      redirect_to new_agent_session_path
+    if agent.email != callback_client.user_email
+      flash[:info] = "Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : #{agent.email}, nouvelle adresse : #{callback_client.user_email}"
     end
+
+    agent.assign_attributes(
+      pro_connect_openid_sub: sub,
+      email: callback_client.user_email,
+      first_name: callback_client.user_first_name,
+      last_name: callback_client.user_last_name,
+      proconnect_siret: callback_client.user_siret,
+      invitation_token: nil, # Pour désactiver les anciens liens d'invitation
+      invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now,
+      confirmed_at: agent.confirmed_at || Time.zone.now,
+      last_sign_in_at: Time.zone.now
+    )
+    agent.skip_confirmation!
+    agent.skip_reconfirmation!
+    agent.save!
+
+    bypass_sign_in agent, scope: :agent
+    session[:agent_connect_id_token] = callback_client.id_token_for_logout
+    redirect_to after_sign_in_path_for(agent)
   end
+  # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
   def generic_error_message
     support_email = current_domain.support_email

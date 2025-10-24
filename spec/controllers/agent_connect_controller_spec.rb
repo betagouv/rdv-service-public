@@ -103,6 +103,7 @@ RSpec.describe AgentConnectController do
         "email" => "francis.factice@exemple.gouv.fr",
         "given_name" => "Francis Factice",
         "usual_name" => "Factice",
+        "siret" => "13002526500013",
         "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
         "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
       }
@@ -133,13 +134,13 @@ RSpec.describe AgentConnectController do
         expect(response).to redirect_to("/agents/edit")
       end
 
-      context "when agent does not exist for email nor sub" do
+      context "when no existing agent matches email nor sub" do
         it "displays an error if the domain does not allow self-onboarding" do
           allow(Domain::RDV_MAIRIE).to receive(:allow_self_onboarding).and_return(false)
           expect do
             get :callback, params: { state:, code: }
           end.not_to change(Agent, :count)
-          expect(flash[:error]).to include("Il n'y a pas de compte agent pour l'adresse mail francis.factice@exemple.gouv.fr")
+          expect(flash[:error]).to include("Il n'y a pas de compte agent pour l'adresse mail #{user_info['email']}")
           expect(current_agent_id).to be_nil
         end
 
@@ -155,7 +156,7 @@ RSpec.describe AgentConnectController do
 
       context "when an agent exists with the given email address and no sub" do
         it "updates the existing agent's sub" do
-          agent = create(:agent, email: "francis.factice@exemple.gouv.fr")
+          agent = create(:agent, email: user_info["email"])
           expect do
             get :callback, params: { state:, code: }
           end.to change { agent.reload.pro_connect_openid_sub }.to(user_info["sub"])
@@ -170,40 +171,53 @@ RSpec.describe AgentConnectController do
             get :callback, params: { state:, code: }
           end.to change { agent.reload.email }.from("autre@exemple.fr").to(user_info["email"])
           expect_agent_to_be_updated_and_logged_in(agent)
+          expect(flash[:info]).to include("Note : votre adresse e-mail a été mise à jour depuis ProConnect. Ancienne adresse : autre@exemple.fr, nouvelle adresse : #{user_info['email']}")
         end
       end
 
       context "when an agent exists with the given email but with another sub" do
-        it "raises an error" do
+        it "displays an error and warns Sentry" do
           create(:agent, pro_connect_openid_sub: "another_sub", email: user_info["email"])
           expect do
             get :callback, params: { state:, code: }
           end.not_to change { Agent.maximum(:updated_at) }
-          expect(flash[:error]).to include("cette adresse est déjà liée à compte existant")
-          expect(current_agent_id).to be_nil
-        end
-      end
-
-      context "when an agent exists with the given email but with another sub, and another agent exists with the given sub but another email" do
-        it "raises an error" do
-          create(:agent, pro_connect_openid_sub: "another_sub", email: user_info["email"])
-          create(:agent, pro_connect_openid_sub: user_info["sub"], email: "autre@exemple.fr")
-          expect do
-            get :callback, params: { state:, code: }
-          end.not_to change { Agent.maximum(:updated_at) }
-          expect(flash[:error]).to include("cette adresse est déjà liée à compte existant")
+          expected_error_message = "cette adresse est déjà liée à compte existant qui est connecté avec un autre compte ProConnect"
+          expect(flash[:error]).to include(expected_error_message)
+          expect(sentry_events.last.message).to include(expected_error_message)
+          expect(sentry_events.last.extra).to eq({ user_info: })
+          expect(sentry_events.last.user[:email]).to eq(user_info["email"])
           expect(current_agent_id).to be_nil
         end
       end
 
       context "when an agent exists with the given sub, and another agent exists with the given email" do
-        it "raises an error" do
-          create(:agent, pro_connect_openid_sub: user_info["sub"])
-          create(:agent, email: user_info["email"])
+        it "displays an error and warns Sentry" do
+          agent_by_sub = create(:agent, pro_connect_openid_sub: user_info["sub"])
+          agent_by_email = create(:agent, email: user_info["email"])
           expect do
             get :callback, params: { state:, code: }
           end.not_to change { Agent.maximum(:updated_at) }
-          expect(flash[:error]).to include("cette adresse est déjà liée à compte existant")
+          expected_error_message = "Il existe deux comptes correspondant : #{agent_by_email.email} et #{agent_by_sub.email}"
+          expect(flash[:error]).to include(expected_error_message)
+          expect(sentry_events.last.message).to include(expected_error_message)
+          expect(sentry_events.last.extra).to eq({ user_info: })
+          expect(sentry_events.last.user[:email]).to eq(user_info["email"])
+          expect(current_agent_id).to be_nil
+        end
+      end
+
+      context "when an agent exists with the given email but with another sub, and another agent exists with the given sub but another email" do
+        it "displays an error and warns Sentry" do
+          create(:agent, pro_connect_openid_sub: "another_sub", email: user_info["email"])
+          create(:agent, pro_connect_openid_sub: user_info["sub"], email: "autre@exemple.fr")
+          expect do
+            get :callback, params: { state:, code: }
+          end.not_to change { Agent.maximum(:updated_at) }
+          expected_error_message = "Il existe deux comptes correspondant : #{user_info['email']} et autre@exemple.fr"
+          expect(flash[:error]).to include(expected_error_message)
+          expect(sentry_events.last.message).to include(expected_error_message)
+          expect(sentry_events.last.extra).to eq({ user_info: })
+          expect(sentry_events.last.user[:email]).to eq(user_info["email"])
           expect(current_agent_id).to be_nil
         end
       end
@@ -286,7 +300,7 @@ RSpec.describe AgentConnectController do
         end
 
         context "when the super admin already exists" do
-          let!(:super_admin) { create(:super_admin, email: "francis.factice@exemple.gouv.fr") }
+          let!(:super_admin) { create(:super_admin, email: user_info["email"]) }
 
           it "redirects to the super admin agents page" do
             get :callback, params: { state: state, code: code }
@@ -308,7 +322,7 @@ RSpec.describe AgentConnectController do
 
             expect(SuperAdmin.count).to eq(1)
             expect(SuperAdmin.last).to have_attributes(
-              email: "francis.factice@exemple.gouv.fr"
+              email: user_info["email"]
             )
             expect(session["agent_connect_id_token"]).to be_present
             expect(response).to redirect_to("/super_admins/lieux?search=arques")

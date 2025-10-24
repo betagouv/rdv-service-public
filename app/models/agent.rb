@@ -12,7 +12,7 @@ class Agent < ApplicationRecord
     only: %w[
       email unconfirmed_email
       first_name last_name
-      proconnect_siret
+      pro_connect_openid_sub proconnect_siret
       invitation_sent_at invitation_accepted_at
     ]
   )

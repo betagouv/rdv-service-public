@@ -33,6 +33,7 @@ RSpec.describe Outlook::SyncEventJob do
 
         expect(agents_rdv.reload.outlook_id).to be_nil
         expect(sentry_events.last.exception.values.first.value).to eq("Outlook api error! (RuntimeError)")
+        expect(sentry_events.last.user).to eq({ email: agents_rdv.agent.email, id: agents_rdv.agent.id, role: "Agent" })
       end
     end
   end
