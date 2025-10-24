@@ -1,8 +1,8 @@
 RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cliqué sur un RDV pour le modifier" do
   let(:territory) { create(:territory, work_on_sunday: true) } # nécessaire pour lancer cette spec un dimanche
   let(:organisation) { create(:organisation) }
-  let!(:current_agent) { create(:agent, first_name: "Agent", last_name: "COURANT", admin_orgs: [organisation], display_saturdays: true) }
-  let!(:collegue) { create(:agent, first_name: "Mon", last_name: "COLLEGUE", admin_orgs: [organisation]) }
+  let!(:current_agent) { create(:agent, first_name: "Agent", last_name: "COURANT", admin_role_in_organisations: [organisation], display_saturdays: true) }
+  let!(:collegue) { create(:agent, first_name: "Mon", last_name: "COLLEGUE", admin_role_in_organisations: [organisation]) }
   let!(:usager_du_rdv) { create(:user, first_name: "Usager", last_name: "DU RDV") }
   let!(:rdv_du_collegue) do
     create(
