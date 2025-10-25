@@ -6,8 +6,8 @@
     = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)
   - else
     = b.with_breadcrumb label: "Liste des RDV", href: admin_organisation_rdvs_path(current_organisation)
-- elsif @contextual_agents.size == 1
-  - contextual_agent = @contextual_agents.sole
+- elsif @contextual_agents.size == 1 || !current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
+  - contextual_agent = @contextual_agents.first
   - if contextual_agent != current_agent
     = b.with_breadcrumb label: "Agenda de #{contextual_agent.full_name}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agent.id)
   - else
