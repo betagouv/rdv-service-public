@@ -13,7 +13,7 @@ class Admin::ParticipationsController < AgentAuthController
     else
       flash.now[:error] = @participation.errors.full_messages.to_sentence
     end
-    render "admin/rdvs/update", locals: { rdv: @rdv.reload, agent: current_agent, quick_update: params[:quick_update] }
+    render "admin/rdvs/update", locals: { rdv: @rdv.reload, contextual_agents: [current_agent], quick_update: params[:quick_update] }
   end
 
   def destroy

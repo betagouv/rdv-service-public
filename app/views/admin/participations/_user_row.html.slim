@@ -1,3 +1,5 @@
+/# locals: (participation:, contextual_agents:)
+
 tr
   td
     = render "admin/users/identity", user: participation.user
@@ -16,4 +18,4 @@ tr
     = render "admin/participations/notifications_lifecycle", participation: participation
   - if participation.rdv.collectif?
     td
-      = render "admin/participations/participation_status_dropdown", participation: participation, agent: agent
+      = render "admin/participations/participation_status_dropdown", participation:, contextual_agents:

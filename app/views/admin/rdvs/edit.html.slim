@@ -1,4 +1,4 @@
-- content_for(:menu_item) { @agent ? "menu-agendas" : "menu-rdvs-list" }
+- content_for(:menu_item) { @contextual_agents ? "menu-agendas" : "menu-rdvs-list" }
 
 - content_for :fil_ariane do
   = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
@@ -15,7 +15,8 @@
         = simple_form_for([:admin, @rdv_form.organisation, @rdv]) do |f|
           = render "model_errors", model: @rdv_form, f: f
           = collapsible_form_fields_for_warnings(@rdv_form) do
-            = hidden_field_tag :agent_id, @agent&.map(&:id)
+            - @contextual_agents.each do |contextual_agent|
+              = hidden_field_tag "contextual_agents[]", contextual_agent.id
             = f.association :motif, collection: [@rdv_form.motif], disabled: true
             - if @rdv_form.organisation.territory.enable_context_field
               = f.input :context, input_html: { rows: 3 }

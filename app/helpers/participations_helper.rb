@@ -6,8 +6,8 @@ module ParticipationsHelper
     end
   end
 
-  def participation_delete_dropdown_item(participation, agent)
-    link_to admin_organisation_rdv_participation_path(participation.rdv.organisation, participation.rdv, participation, agent_id: agent&.map(&:id)),
+  def participation_delete_dropdown_item(participation, contextual_agents)
+    link_to admin_organisation_rdv_participation_path(participation.rdv.organisation, participation.rdv, participation, contextual_agents: contextual_agents&.map(&:id)),
             class: "dropdown-item",
             data: { turbo_method: :delete, confirm: t("admin.participations.delete.confirm") } do
       tag.div(t("admin.participations.delete.title"), class: "text-danger") +
