@@ -1,7 +1,8 @@
+require "English"
 require "shellwords"
 
 pr_number = `gh pr view --json number --jq '.number'`.strip
-exit(1) if $?.exitstatus != 0 # On quitte si aucune PR n'est liée à la branche courante
+exit(1) if $CHILD_STATUS.exitstatus != 0 # On quitte si aucune PR n'est liée à la branche courante
 
 pr_body = `gh pr view --json body --jq '.body'`
 review_app_name = "rdv-service-public-review-app-pr#{pr_number}"
