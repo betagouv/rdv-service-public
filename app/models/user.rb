@@ -201,7 +201,8 @@ class User < ApplicationRecord
   end
 
   def name_for_paper_trail
-    "[User] #{full_name} (id=#{id})"
+    id_tag = " (id=#{id})" if id
+    "[User] #{full_name}#{id_tag}"
   end
 
   def minor?
