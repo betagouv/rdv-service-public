@@ -51,7 +51,7 @@ class WebhookEndpoint < ApplicationRecord
     return if self.class.where(target_url:).joins(:territory).where(territories: { id: territory.id }).where.not(id:).any?
 
     territory.admin_agents.each do |admin_agent|
-      Agents::SecurityMailer.new_webhook_url(webhook_endpoint_id: id, notified_agent_id: admin_agent.id).deliver_later
+      Agents::WebhookMailer.new_webhook_url(webhook_endpoint_id: id, notified_agent_id: admin_agent.id).deliver_later
     end
   end
 end

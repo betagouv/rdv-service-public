@@ -1,4 +1,4 @@
-RSpec.describe Agents::SecurityMailer, type: :mailer do
+RSpec.describe Agents::WebhookMailer, type: :mailer do
   describe "#new_webhook_url" do
     it "works" do
       webhook = create(:webhook_endpoint)

@@ -1,4 +1,4 @@
-class Agents::SecurityMailer < ApplicationMailer
+class Agents::WebhookMailer < ApplicationMailer
   def new_webhook_url(webhook_endpoint_id:, notified_agent_id:)
     @webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
     @notified_agent = Agent.find(notified_agent_id)
