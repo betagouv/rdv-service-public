@@ -1,0 +1,20 @@
+div
+  p = t("mailers.common.hello")
+
+  p
+    |> Une nouvelle URL de webhook vient d'être introduite
+    - if @author
+      | par #{@author.full_name_or_email}
+    | :
+
+  p
+    | "#{@webhook_endpoint.target_url}"
+
+  p
+    = link_to("Voir le webhook", edit_admin_territory_webhook_endpoint_url(@webhook_endpoint.territory, @webhook_endpoint))
+
+  p
+    - link_to_index = link_to("liste des webhooks", admin_territory_webhook_endpoints_url(@webhook_endpoint.territory))
+    | Si cette URL vous semble suspecte, vous vous invitons à la supprimer depuis la #{link_to_index}.
+
+  p = t("mailers.common.farewell_html", domain_name: domain.name)

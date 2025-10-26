@@ -11,6 +11,6 @@ class Prescripteur < ApplicationRecord
   validates :first_name, :last_name, :email, presence: true
 
   def name_for_paper_trail
-    "[Prescripteur] #{full_name}"
+    "[Prescripteur] #{full_name} (id=#{id})"
   end
 end
