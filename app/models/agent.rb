@@ -208,7 +208,7 @@ class Agent < ApplicationRecord
     return unless whodunnit&.starts_with?("[Agent]")
     return unless whodunnit.include?("(id=")
 
-    id = whodunnit.match(/id=(\d+)/)[1]
+    id = whodunnit.match(/\(id=(\d+)\)/)[1]
     Agent.find_by(id:)
   end
 
