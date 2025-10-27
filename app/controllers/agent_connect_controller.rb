@@ -93,7 +93,7 @@ class AgentConnectController < ApplicationController
       bypass_sign_in super_admin, scope: :super_admin
 
       session[:agent_connect_id_token] = callback_client.id_token_for_logout
-      redirect_to super_admins_agents_path
+      redirect_to session.delete(:super_admin_return_to) || super_admins_agents_path
     else
       flash[:error] = "Compte ProConnect non autorisé"
       redirect_to connexion_super_admins_path
