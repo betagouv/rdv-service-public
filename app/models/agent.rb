@@ -200,8 +200,7 @@ class Agent < ApplicationRecord
   end
 
   def name_for_paper_trail
-    id_tag = " (id=#{id})" if id
-    "[Agent] #{full_name}#{id_tag}"
+    "[Agent] #{full_name} (id=#{id})"
   end
 
   def self.agent_from_whodunnit(whodunnit)
