@@ -87,13 +87,15 @@ class AgentConnectController < ApplicationController
       SuperAdmin.create!(email: callback_client.user_email, first_name: callback_client.user_first_name, last_name: callback_client.user_last_name, role: :legacy_admin)
     end
 
+    super_admin_return_to = session.delete(:super_admin_return_to)
+
     super_admin = SuperAdmin.find_by(email: callback_client.user_email)
 
     if super_admin
       bypass_sign_in super_admin, scope: :super_admin
 
       session[:agent_connect_id_token] = callback_client.id_token_for_logout
-      redirect_to session.delete(:super_admin_return_to) || super_admins_agents_path
+      redirect_to super_admin_return_to || super_admins_agents_path
     else
       flash[:error] = "Compte ProConnect non autorisé"
       redirect_to connexion_super_admins_path
