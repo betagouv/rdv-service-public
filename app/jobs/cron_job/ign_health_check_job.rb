@@ -5,7 +5,7 @@ class CronJob::IGNHealthCheckJob < CronJob
   # Cette API étant utilisée uniquement en front pour l’auto-complétion des adresses, nous n’avions pas de remontée d’erreur
   # lorsqu’elle était en panne.
   # Si l’API est inaccessible, nous incrémentons un compteur dans Redis. Si ce compteur atteint 3, nous envoyons une alerte Sentry.
-  # Le job étant exécuté toutes les minutes, la détection de l’indisponibilité se fera 3 minutes après la première erreur.
+  # Le job étant exécuté toutes les minutes, la détection de l’indisponibilité se fera 2 à 3 minutes après la première erreur.
   def perform
     begin
       response = Typhoeus.get("https://data.geopf.fr/geocodage/search?q=1+place+de+la+republique+75011+paris&limit=1")
