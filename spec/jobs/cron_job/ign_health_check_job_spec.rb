@@ -7,7 +7,7 @@ RSpec.describe CronJob::IGNHealthCheckJob, type: :job do
   end
 
   it "ne déclenche pas de Sentry" do
-    expect(Faraday).to receive(:get).with("https://data.geopf.fr/geocodage/search?q=1+place+de+la+republique+75011+paris&limit=1")
+    expect(Typhoeus).to receive(:get).with("https://data.geopf.fr/geocodage/search?q=1+place+de+la+republique+75011+paris&limit=1")
     expect(Sentry).not_to receive(:capture_message)
     perform_now
   end
@@ -49,8 +49,8 @@ RSpec.describe CronJob::IGNHealthCheckJob, type: :job do
 
   context "quand l’API de l’IGN timeoute" do
     before do
-      stub_request(:get, "https://data.geopf.fr/geocodage/search?q=1+place+de+la+republique+75011+paris&limit=1")
-        .to_raise(Faraday::TimeoutError)
+      stub_request(:get, "https://data.geopf.fr/geocodage/search?q=1+place+de+la+republique+75011+paris&limit=1").to_timeout
+        .to_raise(Typhoeus::Errors::TimeoutError)
     end
 
     it "incrémente le compteur Redis" do
