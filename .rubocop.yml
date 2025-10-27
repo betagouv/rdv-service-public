@@ -2,6 +2,9 @@ plugins:
   - rubocop-rspec
   - rubocop-rails
 
+require:
+  - ./lib/rubocop/cop/lapin/use_preferred_http_client.rb
+
 AllCops:
   Exclude:
     - "vendor/bundle/**/*"
@@ -311,3 +314,6 @@ RSpec/PredicateMatcher:
 
 Rails/RedundantPresenceValidationOnBelongsTo:
   Enabled: false
+
+Lapin/UsePreferredHttpClient:
+  Enabled: true
