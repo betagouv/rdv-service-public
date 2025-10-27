@@ -29,13 +29,13 @@ class AnnuaireServicePublic
   end
 
   def parsed_response
-    @parsed_response ||= JSON.parse(response.body)
+    @parsed_response ||= JSON.parse(response.response_body)
   rescue StandardError => e
     Sentry.capture_exception(e)
     nil
   end
 
   def response
-    @response ||= Faraday.get("https://api-lannuaire.service-public.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=siret%3D%22#{@siret}%22")
+    @response ||= Typhoeus.get("https://api-lannuaire.service-public.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=siret%3D%22#{@siret}%22")
   end
 end

@@ -13,7 +13,7 @@ RSpec.describe AnnuaireServicePublic do
     it "n'appelle l'api qu'une fois" do
       client = described_class.new(siret)
       client.nom
-      expect(Faraday).not_to receive(:get)
+      expect(Typhoeus).not_to receive(:get)
       client.nom
     end
   end
@@ -43,12 +43,12 @@ RSpec.describe AnnuaireServicePublic do
 
   context "si l'api ne répond pas" do
     before do
-      allow(Faraday).to receive(:get).and_raise(Faraday::TimeoutError)
+      allow(Typhoeus).to receive(:get).and_raise(Typhoeus::Errors::TimeoutError)
     end
 
     it "renvoie nil et notifie Sentry" do
       expect(described_class.new("21600660100019").nom).to be_nil
-      expect(sentry_events.last.exception.values.first.value).to eq("timeout (Faraday::TimeoutError)")
+      expect(sentry_events.last.exception.values.first.value).to eq("Typhoeus::Errors::TimeoutError (Typhoeus::Errors::TimeoutError)")
     end
   end
 end
