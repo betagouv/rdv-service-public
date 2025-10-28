@@ -47,7 +47,7 @@ RSpec.describe "un prescripteur peut annuler un rendez-vous qu’il a pris pour 
 
   it "lorsqu’il revient plus tard via son lien de confirmation" do
     prescripteur = build(:prescripteur)
-    create(:rdv, created_by: prescripteur)
+    rdv = create(:rdv, created_by: prescripteur)
 
     visit prescripteur_show_path(token: prescripteur.token)
 
@@ -57,5 +57,6 @@ RSpec.describe "un prescripteur peut annuler un rendez-vous qu’il a pris pour 
 
     expect(Rdv.last.status).to eq("excused")
     expect(Rdv.last.versions.last.whodunnit).to eq(prescripteur.name_for_paper_trail)
+    expect_sms_enqueued(phone_number: rdv.users.first.phone_number_formatted, content: /a été annulé./)
   end
 end
