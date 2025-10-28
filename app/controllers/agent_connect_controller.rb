@@ -139,7 +139,7 @@ class AgentConnectController < ApplicationController
     if agent_by_email&.pro_connect_openid_sub && agent_by_email.pro_connect_openid_sub != sub
       error_message = <<~ERROR
         Votre compte ProConnect est lié à l'adresse e-mail #{callback_client.user_email}.<br />
-        Or cette adresse est déjà liée à compte existant qui est connecté avec un autre compte ProConnect.<br />
+        Un compte agent existe déjà sur #{current_domain.name} pour cette adresse email, cependant il est lié à un autre compte ProConnect.<br />
         Nous vous invitons à contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a>.
       ERROR
       Sentry.capture_message(error_message, extra: { user_info: callback_client.user_info })
