@@ -55,7 +55,7 @@ export class AgendaMonoAgent {
   }
 
   initFullCalendar = () => {
-    var hiddenDays = []
+    const hiddenDays = []
     if (this.data.displaySaturdays !== "true") {
       hiddenDays.push(6);
     }
