@@ -28,7 +28,7 @@ ruby:
             remove_path_params[:user_ids].delete(user.id)
             remove_user_path = new_admin_organisation_rdv_wizard_step_path(remove_path_params)
           div.ml-2= link_to remove_user_path, title: t("helpers.remove")
-            = icon("fr-icon-close-line", clss: "fr-icon--sm")
+            = icon("fr-icon-close-line")
           / la ligne suivante gère le cas d’un usager qui ne fait pas partie de l’orga courante mais d’une autre orga dans laquelle l’agent courant a les droits suffisants pour l’éditer
           - organisation_where_editable = current_agent.organisations.to_a.prepend(current_organisation).uniq.find { |org| Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, org), user).edit? }
           - if organisation_where_editable
