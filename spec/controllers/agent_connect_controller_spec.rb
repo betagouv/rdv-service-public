@@ -181,7 +181,7 @@ RSpec.describe AgentConnectController do
           expect do
             get :callback, params: { state:, code: }
           end.not_to change { Agent.maximum(:updated_at) }
-          expected_error_message = "cette adresse est déjà liée à compte existant qui est connecté avec un autre compte ProConnect"
+          expected_error_message = "Un compte agent existe déjà sur RDV Service Public pour cette adresse email"
           expect(flash[:error]).to include(expected_error_message)
           expect(sentry_events.last.message).to include(expected_error_message)
           expect(sentry_events.last.extra).to eq({ user_info: })
