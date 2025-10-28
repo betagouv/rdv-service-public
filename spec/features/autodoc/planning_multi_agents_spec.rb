@@ -55,8 +55,8 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     #
 
     doc.start_section("Quand l'agent active la feature (actuellement faisable depuis le super-admin)")
-    agent_basique.toggle_feature!("new_planning")
     visit admin_organisation_planning_agenda_path(organisation)
+    click_on("Activer la nouvelle vue planning")
     expect(page).to have_content("Planning de")
     doc.add_screenshot(page, text: "Une nouvelle navigation est proposée, où le choix de l'agent et du sous-menu sont dans la page principale et non plus dans le menu",
                              wait_for: "DELOIC") # On vérifie que le RDV de Loïc apparaît bien dans l'agenda
@@ -102,5 +102,9 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     click_on "Indisponibilités"
     expect(page).to have_content(["Justine ADMIN", "1 indisponibilité", "Loïc BASIQUE", "1 indisponibilité"].join("\n"))
     doc.add_screenshot(page, text: "La section des indisponibilités liste tous les agents sélectionnés.")
+
+    visit admin_organisation_planning_agenda_path(organisation)
+    click_on("Revenir à l'ancienne vue")
+    expect(page).to have_content("Votre agenda")
   end
 end

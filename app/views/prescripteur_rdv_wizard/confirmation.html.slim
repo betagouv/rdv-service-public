@@ -48,14 +48,4 @@
                 last_name: @prescripteur.last_name,
                 phone_number: @prescripteur.phone_number,
                 email: @prescripteur.phone_number)
-        li.list-group-item
-          |> Vous pouvez aussi
-          => link_to "nous écrire",
-            new_aide_demande_support_path(role: :agent,
-              sujet: "Avis sur la prise de RDV par prescription",
-              first_name: @prescripteur.first_name,
-              last_name: @prescripteur.last_name,
-              phone_number: @prescripteur.phone_number,
-              email: @prescripteur.phone_number)
-          | pour nous donner votre avis sur la prise de rendez-vous.
-      .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(rdv.territory.departement_number)
+      .fr-mt-6v.rdv-text-align-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(rdv.territory.departement_number)

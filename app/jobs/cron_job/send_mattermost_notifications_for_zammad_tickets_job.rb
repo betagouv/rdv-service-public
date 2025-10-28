@@ -19,7 +19,7 @@ class CronJob::SendMattermostNotificationsForZammadTicketsJob < CronJob
 
     Rails.logger.debug "Sending message to Mattermost channel"
     MattermostApiClient.send_message(
-      channel: "startup-rdv-dev-notifs",
+      channel: "allo-vigie", # le nom de chaine est paramétrisé, les emojis disparaissent
       text: message,
       username: "Zammad",
       icon_url: "https://raw.githubusercontent.com/zammad/zammad/refs/heads/develop/public/assets/images/logo.svg"

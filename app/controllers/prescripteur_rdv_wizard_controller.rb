@@ -5,6 +5,7 @@ class PrescripteurRdvWizardController < ApplicationController
   before_action :check_rdv_wizard_attributes, except: %i[start confirmation]
   before_action :set_rdv_wizard, only: %i[new_prescripteur new_beneficiaire create_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
+  before_action :set_paper_trail_whodunnit
 
   def start
     session[:rdv_wizard_attributes] = params.permit(
@@ -92,5 +93,9 @@ class PrescripteurRdvWizardController < ApplicationController
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en choisir un autre."
       redirect_to path_to_creneau_selection(@rdv_wizard.params_to_selections)
     end
+  end
+
+  def user_for_paper_trail
+    @rdv_wizard.prescripteur.name_for_paper_trail if @rdv_wizard&.prescripteur
   end
 end
