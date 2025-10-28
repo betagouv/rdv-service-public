@@ -35,7 +35,8 @@ RSpec.describe Agents::WebhookMailer, type: :mailer do
     it "specifies when the operation was done via API" do
       author = create(:agent, first_name: "Amine", last_name: "Despace")
       notified_agent = create(:agent)
-      PaperTrail.request.whodunnit = author.name_for_paper_trail + " (via API)"
+      PaperTrail.request.whodunnit = "#{author.name_for_paper_trail} (via API)"
+
       mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint).id, notified_agent_id: notified_agent.id)
 
       expect(mail.subject).to eq("Un webhook vient d'être ajouté par API")
