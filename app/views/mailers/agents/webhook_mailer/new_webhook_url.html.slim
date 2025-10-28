@@ -4,13 +4,16 @@ div
 
   p
     - if @author == @notified_agent
-      | Vous venez d'introduire une nouvelle URL de webhook :
+      | Vous venez d'introduire une nouvelle URL de webhook
     - else
       |> Une nouvelle URL de webhook vient d'être introduite
       - if @author
         | par #{@author.full_name_or_email}
-      | :
 
+    - if @via_api
+      |< (via API)
+
+    |< :
   p
     strong
       | "#{@webhook_endpoint.target_url}"
