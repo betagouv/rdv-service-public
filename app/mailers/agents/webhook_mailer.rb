@@ -4,10 +4,14 @@ class Agents::WebhookMailer < ApplicationMailer
     @notified_agent = Agent.find(notified_agent_id)
     @author = Agent.agent_from_whodunnit(@webhook_endpoint.versions.last.whodunnit)
 
-    mail(
-      to: @notified_agent.email,
-      subject: "Une nouvelle URL de webhook vient d'être ajoutée"
-    )
+    to = @notified_agent.email
+    subject = if @notified_agent == @author
+                "Vous venez d'ajouter une nouvelle URL de webhook"
+              else
+                "Une nouvelle URL de webhook vient d'être ajoutée"
+              end
+
+    mail(to:, subject:)
   end
 
   delegate :domain, to: :@notified_agent

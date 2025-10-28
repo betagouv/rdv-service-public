@@ -7,6 +7,7 @@ RSpec.describe Agents::WebhookMailer, type: :mailer do
 
       expect(mail[:from].to_s).to eq("RDV Service Public <secretariat-auto@rdv-service-public.fr>")
       expect(mail.to).to eq([notified_agent.email])
+      expect(mail.subject).to eq("Une nouvelle URL de webhook vient d'être ajoutée")
 
       expect(mail.body.encoded).to include("Une nouvelle URL de webhook vient d'être introduite")
       expect(mail.body.encoded).to include(%(href="http://www.rdv-mairie-test.localhost/admin/territories/#{webhook.territory.id}/webhook_endpoints"))
@@ -15,10 +16,20 @@ RSpec.describe Agents::WebhookMailer, type: :mailer do
 
     it "mentions the author when present" do
       author = create(:agent, first_name: "Amine", last_name: "Despace")
+      notified_agent = create(:agent)
       PaperTrail.request.whodunnit = author.name_for_paper_trail
-      mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint).id, notified_agent_id: create(:agent).id)
+      mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint).id, notified_agent_id: notified_agent.id)
 
       expect(mail.body.encoded).to include("par Amine DESPACE")
+    end
+
+    it "speaks to you at the second person" do
+      author = create(:agent, first_name: "Amine", last_name: "Despace")
+      PaperTrail.request.whodunnit = author.name_for_paper_trail
+      mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint).id, notified_agent_id: author.id)
+
+      expect(mail.subject).to eq("Vous venez d'ajouter une nouvelle URL de webhook")
+      expect(mail.body.encoded).to include("Vous venez d'introduire une nouvelle URL de webhook :")
     end
   end
 end

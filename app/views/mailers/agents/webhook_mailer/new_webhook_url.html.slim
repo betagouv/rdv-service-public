@@ -1,11 +1,15 @@
 div
   p = t("mailers.common.hello")
 
+
   p
-    |> Une nouvelle URL de webhook vient d'être introduite
-    - if @author
-      | par #{@author.full_name_or_email}
-    | :
+    - if @author == @notified_agent
+      | Vous venez d'introduire une nouvelle URL de webhook :
+    - else
+      |> Une nouvelle URL de webhook vient d'être introduite
+      - if @author
+        | par #{@author.full_name_or_email}
+      | :
 
   p
     strong
