@@ -3,14 +3,16 @@
 
 = render "admin/onboarding/banner", in_agenda: true
 
+- content_for(:right_of_page_title) do
+  .mr-1
+    - url = admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "true")
+    = link_to "Activer la nouvelle vue planning", url, method: :put, class: "fr-link fr-link--sm"
+
 - content_for :title do
   - if current_agent == @agent
     | Votre agenda
   - else
     | Agenda de #{@agent.full_name_and_service}
-
-- content_for :fil_ariane do
-    = render "common/fil_ariane", titles_and_paths: [], current_page_title: "Accueil"
 
 ruby:
   event_sources = [
