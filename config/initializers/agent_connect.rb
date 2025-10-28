@@ -7,8 +7,8 @@ if ENV["AGENT_CONNECT_BASE_URL"].present?
     # la méthode .discover! fait un appel à l'api d'Agent Connect
     Rails.configuration.x.agent_connect_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["AGENT_CONNECT_BASE_URL"])
     supported_algorithms = Rails.configuration.x.agent_connect_config.id_token_signing_alg_values_supported
-    if supported_algorithms.exclude?(AgentConnectOpenIdClient::ALGORITHM)
-      raise "L'algorithme #{AgentConnectOpenIdClient::ALGORITHM} n’est pas dans la liste des algorithmes supportés par ProConnect"
+    if supported_algorithms.exclude?(AgentConnectOpenIdClient::ES256_ALGORITHM)
+      raise "L'algorithme #{AgentConnectOpenIdClient::ES256_ALGORITHM} n’est pas dans la liste des algorithmes supportés par ProConnect"
     end
   rescue StandardError => e
     error_message = <<~MSG

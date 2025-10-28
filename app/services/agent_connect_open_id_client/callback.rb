@@ -1,6 +1,6 @@
 # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
 module AgentConnectOpenIdClient
-  ALGORITHM = "ES256".freeze
+  ES256_ALGORITHM = "ES256".freeze
 
   class Callback
     class OpenIdFlowError < StandardError; end
@@ -118,7 +118,7 @@ module AgentConnectOpenIdClient
 
       handle_response_error(response)
 
-      JWT.decode(response.body, nil, true, algorithms: ALGORITHM, jwks: agent_connect_config.jwks).first
+      JWT.decode(response.body, nil, true, algorithms: ES256_ALGORITHM, jwks: agent_connect_config.jwks).first
     end
 
     def handle_response_error(response)
