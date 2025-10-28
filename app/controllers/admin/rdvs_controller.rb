@@ -148,7 +148,10 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def set_contextual_agents
-    @contextual_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).where(id: params[:contextual_agents]).order(last_name: :asc).load
+    @contextual_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
+      .where(id: params[:contextual_agents])
+      .order(last_name: :asc)
+      .load
   end
 
   def parse_date_from_params(date_param)
