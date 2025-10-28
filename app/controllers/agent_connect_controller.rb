@@ -138,7 +138,7 @@ class AgentConnectController < ApplicationController
     # On trouve un agent par e-mail et cet agent porte un autre sub.
     if agent_by_email&.pro_connect_openid_sub && agent_by_email.pro_connect_openid_sub != sub
       error_message = <<~ERROR
-        Ce compte ProConnect est lié à l'adresse e-mail #{callback_client.user_email}.<br />
+        Votre compte ProConnect est lié à l'adresse e-mail #{callback_client.user_email}.<br />
         Or cette adresse est déjà liée à compte existant qui est connecté avec un autre compte ProConnect.<br />
         Nous vous invitons à contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a>.
       ERROR
