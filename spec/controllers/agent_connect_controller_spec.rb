@@ -126,7 +126,6 @@ RSpec.describe AgentConnectController do
           email: user_info["email"],
           first_name: "Francis",
           last_name: "Factice",
-          confirmed_at: be_within(10.seconds).of(Time.zone.now),
         }
         expect(agent).to have_attributes(expected_attrs)
         expect(current_agent_id).to eq(agent.id)

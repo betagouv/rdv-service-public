@@ -178,7 +178,6 @@ class AgentConnectController < ApplicationController
       confirmed_at: agent.confirmed_at || Time.zone.now,
       last_sign_in_at: Time.zone.now
     )
-    agent.skip_confirmation!
     agent.skip_reconfirmation!
     agent.save!
 
