@@ -19,7 +19,7 @@ ruby:
       .my-1
         .d-flex
           div
-            i.fa.fa-user
+            = user_icon(class: "fr-icon--sm")
             | &nbsp;
             = UsersHelper.reverse_full_name_and_notification_coordinates(user)
             = relative_tag(user)
@@ -28,7 +28,7 @@ ruby:
             remove_path_params[:user_ids].delete(user.id)
             remove_user_path = new_admin_organisation_rdv_wizard_step_path(remove_path_params)
           div.ml-2= link_to remove_user_path, title: t("helpers.remove")
-            i.fa.fa-minus-circle
+            = icon("fr-icon-close-line", clss: "fr-icon--sm")
           / la ligne suivante gère le cas d’un usager qui ne fait pas partie de l’orga courante mais d’une autre orga dans laquelle l’agent courant a les droits suffisants pour l’éditer
           - organisation_where_editable = current_agent.organisations.to_a.prepend(current_organisation).uniq.find { |org| Agent::UserPolicy.new(AgentOrganisationContext.new(current_agent, org), user).edit? }
           - if organisation_where_editable
@@ -41,9 +41,8 @@ ruby:
 
     - show_add_user = @rdv.users.empty?
     .collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "" : "show")
-      = link_to ".collapse-add-user-selection", data: { toggle: "collapse" }
-        i.fa.fa-plus-circle
-        span.ml-1= t("helpers.add")
+      /On met un margin-left négatif pour que l'icône du bouton soit alignée avec celle de l'usager au-dessus
+      = link_to t("helpers.add"), ".collapse-add-user-selection", style: "margin-left: -12px", class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-add-circle-fill", data: { toggle: "collapse" }
     .collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "show" : "")
       - if current_organisation.users.any?
         = label_tag :user_search, "Rechercher un usager", {class: "form-control-label string optional"}
@@ -76,10 +75,7 @@ ruby:
 
     .row.align-items-center.mt-3
       .col.text-left
-        = link_to(@rdv_wizard.previous_step_path) do
-          i.fa.fa-arrow-left
-          |< Revenir en arrière
-
+        = link_to("Revenir en arrière", @rdv_wizard.previous_step_path, dsfr_return_btn_options)
       - if (@rdv_wizard.validate || @rdv_wizard.errors[:users].empty?)
         .col.text-right
             = f.submit "Continuer", class: "fr-btn"

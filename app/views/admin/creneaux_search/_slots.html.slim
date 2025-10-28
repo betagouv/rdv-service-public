@@ -42,7 +42,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                 br
                 strong= l(next_availability.starts_at, format: :human)
               .ml-2
-                i.fa.fa-chevron-right
+                = icon("fr-icon-arrow-right-s-line")
 
       .col-auto.d-flex.align-items-center
         = link_to admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: form.date_range.end + 1.day)), class: "btn btn-primary" do
