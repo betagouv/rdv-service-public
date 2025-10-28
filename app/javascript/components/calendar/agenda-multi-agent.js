@@ -16,6 +16,13 @@ class AgendaMultiAgent {
     this.fullCalendarInstance.render();
   }
   initFullCalendar = () => {
+    const hiddenDays = []
+    if (this.data.displaySaturdays !== "true") {
+      hiddenDays.push(6);
+    }
+    if (this.data.displaySundays !== "true") {
+      hiddenDays.push(0);
+    }
     const options = {
       plugins: [resourceTimegridPlugin, interactionPlugin],
       schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
@@ -23,6 +30,7 @@ class AgendaMultiAgent {
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
       initialView: "resourceTimeGridDay",
+      hiddenDays: hiddenDays,
       select: this.selectEvent,
       eventDidMount: eventRenderer(),
       views: {
