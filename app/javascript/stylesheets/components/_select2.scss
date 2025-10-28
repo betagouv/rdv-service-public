@@ -38,13 +38,15 @@
   .select2-search--inline
   .select2-search__field {
   padding: 4px;
+  padding-bottom: 0;
+  margin-top: 4px;
 }
 
 .select2-container--bootstrap4
   .select2-selection--multiple
   .select2-selection__choice {
   padding: 4px;
-  margin: 2px;
+  margin: 6px 2px 6px 4px;
 }
 
 .select2-dropdown {
