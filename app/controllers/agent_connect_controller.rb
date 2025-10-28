@@ -128,7 +128,7 @@ class AgentConnectController < ApplicationController
     if agent_by_email && agent_by_sub && agent_by_email != agent_by_sub
       error_message = <<~ERROR
         Il existe deux comptes correspondant : #{agent_by_email.email} et #{agent_by_sub.email}.
-        Nous vous invitons à contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a>.
+        Nous vous invitons à #{link_to_demande_support('contacter le support', callback_client)}.
       ERROR
       Sentry.capture_message(error_message, extra: { user_info: callback_client.user_info })
       flash[:error] = error_message
@@ -140,7 +140,7 @@ class AgentConnectController < ApplicationController
       error_message = <<~ERROR
         Votre compte ProConnect est lié à l'adresse e-mail #{callback_client.user_email}.<br />
         Un compte agent existe déjà sur #{current_domain.name} pour cette adresse email, cependant il est lié à un autre compte ProConnect.<br />
-        Nous vous invitons à contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a>.
+        Nous vous invitons à #{link_to_demande_support('contacter le support', callback_client)}.
       ERROR
       Sentry.capture_message(error_message, extra: { user_info: callback_client.user_info })
       flash[:error] = error_message
@@ -157,7 +157,7 @@ class AgentConnectController < ApplicationController
         flash[:error] = <<~ERROR
           Il n'y a pas de compte agent pour l'adresse mail #{callback_client.user_email}.<br />
           Vous devez utiliser ProConnect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />
-          Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste.
+          Vous pouvez également #{link_to_demande_support('contacter le support', callback_client)} si le problème persiste.
         ERROR
         redirect_to new_agent_session_path and return
       end
@@ -189,7 +189,21 @@ class AgentConnectController < ApplicationController
   # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
   def generic_error_message
-    support_email = current_domain.support_email
-    %(Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse <a href="mailto:#{support_email}">#{support_email}</a> si le problème persiste.)
+    support_link = new_aide_demande_support_path(role: "agent", sujet: "Connexion ProConnect")
+    %(Nous n'avons pas pu vous authentifier. #{view_context.link_to('Contactez le support', support_link, class: "fr-link")} si le problème persiste.)
+  end
+
+  def link_to_demande_support(name, callback_client)
+    view_context.link_to(
+      name,
+      new_aide_demande_support_path(
+        role: "agent",
+        sujet: "Réconciliation ProConnect",
+        email: callback_client.user_email,
+        first_name: callback_client.user_first_name,
+        last_name: callback_client.user_last_name
+      ),
+      class: "fr-link"
+    )
   end
 end
