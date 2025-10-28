@@ -62,6 +62,13 @@ RSpec.describe "Agents can export their calendar to other tools, such as Outlook
         expect(page.body.gsub("\r\n", "\n")).to eq Rails.root.join("spec/support/calendar.ics").read
       end
 
+      it %(ne plante pas durant le passage à l'heure d'hiver, où "2h30" du mat' devient ambigu) do
+        travel_to(Time.zone.local(2025, 10, 26) + 2.hours + 30.minutes)
+        visit ics_calendar_path(agent.calendar_uid, format: :ics)
+        expect(page.body).to include("TZID:Europe/Paris")
+        expect(page.body).to include("DTSTART:20251026T020000")
+      end
+
       context "lorsque l’agent est dans une organisation ayant un fuseau horaire différent de celui de la métropole" do
         let(:organisation) { create(:organisation, time_zone: "America/Guadeloupe", id: 123_000) }
 

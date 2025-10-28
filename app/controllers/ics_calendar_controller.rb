@@ -65,7 +65,7 @@ class IcsCalendarController < ActionController::Base
     tzids = (@agent.organisations.pluck(:time_zone) + [Time.zone_default.tzinfo.identifier]).uniq
     tzids.each do |tzid|
       tz = TZInfo::Timezone.get(tzid)
-      ical_timezone = tz.ical_timezone(Time.zone.now)
+      ical_timezone = tz.ical_timezone(Time.zone.today.at_noon)
       cal.add_timezone(ical_timezone)
     end
   end
