@@ -190,7 +190,7 @@ class AgentConnectController < ApplicationController
 
   def generic_error_message
     support_link = new_aide_demande_support_path(role: "agent", sujet: "Connexion ProConnect")
-    %(Nous n'avons pas pu vous authentifier. #{view_context.link_to('Contactez le support', support_link, class: "fr-link")} si le problème persiste.)
+    %(Nous n'avons pas pu vous authentifier. #{view_context.link_to('Contactez le support', support_link, class: 'fr-link')} si le problème persiste.)
   end
 
   def link_to_demande_support(name, callback_client)
