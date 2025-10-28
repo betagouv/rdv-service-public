@@ -27,7 +27,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                   .text-left.m-1
                     span.strong.font-weight-bold= l(creneau.starts_at, format: "%H:%M")
                     br
-                    = user_icon(class: agent_color(agents.index(creneau.agent)) + " fr-icon--sm fr-mr-1w")
+                    = user_icon(class:  "fr-icon--sm fr-mr-1w #{agent_color(agents.index(creneau.agent))}")
                     small.text-dark= creneau.agent.short_name
 
     - if next_availability
