@@ -103,6 +103,8 @@ class Territory < ApplicationRecord
   LEGITIMATE_TOGGLES = OPTIONAL_FIELD_TOGGLES.slice(*legitimate_toggle_keys).freeze
   LEGACY_TOGGLES = OPTIONAL_FIELD_TOGGLES.except(*legitimate_toggle_keys).freeze
 
+  def to_s = name
+
   def mairies?
     name == MAIRIES_NAME
   end
