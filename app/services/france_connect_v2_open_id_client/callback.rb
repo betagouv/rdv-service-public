@@ -1,5 +1,7 @@
 # voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/technique_fca/endpoints.md
 module FranceConnectV2OpenIdClient
+  ALGORITHM = "ES256".freeze
+
   class Callback
     class OpenIdFlowError < StandardError; end
     class ApiRequestError < StandardError; end
@@ -88,7 +90,7 @@ module FranceConnectV2OpenIdClient
 
       handle_response_error(response)
 
-      JWT.decode(response.body, nil, true, algorithms: france_connect_v2_config.jwks.first["alg"], jwks: france_connect_v2_config.jwks).first
+      JWT.decode(response.body, nil, true, algorithms: ALGORITHM, jwks: france_connect_v2_config.jwks).first
     end
 
     def handle_response_error(response)
