@@ -37,8 +37,7 @@ class ZammadApiClient
     raise e
   end
 
-  def self.upsert_user(email:, sender_role:, first_name:, last_name:, phone_number:, user_id: nil, agent_id: nil)
-    attributes = upsert_user_attributes(sender_role:, first_name:, last_name:, phone_number:, user_id:, agent_id:)
+  def self.upsert_customer(email:, **attributes)
     condition = { "user.email": { operator: "is", value: email.downcase } } # strict match and zammad downcases emails when saving
     existing_user = connection.get("api/v1/users/search", condition:).body.first
     if existing_user
@@ -52,27 +51,6 @@ class ZammadApiClient
   rescue Faraday::Error => e
     Rails.logger.error "Erreur lors d’un appel API à Zammad : statut HTTP #{e.response[:status]} - #{e.response[:body]}"
     raise e
-  end
-
-  def self.upsert_user_attributes(sender_role:, first_name:, last_name:, phone_number:, user_id: nil, agent_id: nil)
-    raise Error, "Les seuls sender_role valables sont usager et agent" if %w[usager agent].exclude?(sender_role.to_s)
-
-    domain = Domain.default_domain_for_current_instance
-    super_admin_url =
-      if user_id
-        Rails.application.routes.url_helpers.super_admins_user_url(id: user_id, host: domain.host_name)
-      elsif agent_id
-        Rails.application.routes.url_helpers.super_admins_agent_url(id: agent_id, host: domain.host_name)
-      end
-
-    {
-      firstname: first_name,
-      lastname: last_name,
-      phone: phone_number,
-      rdvsp_role: sender_role,
-      instance: domain.id,
-      super_admin_url:,
-    }.compact
   end
 
   def self.search_tickets(condition:, query: nil)
