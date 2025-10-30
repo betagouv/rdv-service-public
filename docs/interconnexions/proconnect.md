@@ -25,7 +25,8 @@ URLs de redirections post-connexion :
 - https://www.rdv-mairie.localhost/agent_connect/callback
 
 URL de redirections post-déconnexion :
-- ?
+- http://www.rdv-mairie.localhost/ (slash final important)
+- https://www.rdv-mairie.localhost/ (slash final important)
 
 ⚠️ Important :
 
