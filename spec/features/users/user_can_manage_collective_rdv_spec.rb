@@ -219,6 +219,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         visit users_rdv_path(rdv, invitation_token: rdv.participation_token(user.id))
         fill_in(:letters, with: "INV")
+        click_on("Valider")
 
         expect(page).to have_content(/Annulé/i)
         create(:participation, rdv: rdv2, user: user, status: "revoked")
@@ -250,6 +251,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         visit users_rdv_path(rdv, invitation_token: rdv.participation_token(user.id))
         fill_in(:letters, with: "INV")
+        click_on "Valider"
 
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
         expect(rdv.reload.status).to eq("unknown")
@@ -272,6 +274,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         visit users_rdv_path(rdv, invitation_token: rdv.participation_token(user.id))
         fill_in(:letters, with: "INV")
+        click_on "Valider"
 
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
         expect(rdv.reload.status).to eq("unknown")

@@ -14,7 +14,7 @@ RSpec.describe "Les usagers peuvent voir les détails de leurs rendez-vous depui
     path_in_first_sms = link_in_first_sms.gsub(Domain::RDV_SOLIDARITES.host_name, "")
     visit path_in_first_sms
     fill_in(:letters, with: "FAC")
-    click_on("OK")
+    click_on "Valider"
 
     expect(page).to have_content "Votre RDV"
     expect(page).to have_content "CCAS de Montreuil"
@@ -28,7 +28,7 @@ RSpec.describe "Les usagers peuvent voir les détails de leurs rendez-vous depui
     path_in_second_sms = link_in_second_sms.gsub(Domain::RDV_SOLIDARITES.host_name, "")
     visit path_in_second_sms
     fill_in(:letters, with: "FAC")
-    click_on("OK")
+    click_on "Valider"
 
     expect(page).to have_content "Votre RDV"
     expect(page).to have_content "CCAS de Montreuil"

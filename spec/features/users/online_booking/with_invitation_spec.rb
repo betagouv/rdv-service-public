@@ -90,9 +90,11 @@ RSpec.describe "User can be invited" do
       # Identity verification
       expect(page).to have_content("3 premières lettres de votre nom")
       fill_in(:letters, with: "ABC")
+      click_on "Valider"
 
       expect(page).to have_content("Les 3 lettres ne correspondent pas au nom de famille.")
       fill_in(:letters, with: "DOE")
+      click_on "Valider"
 
       # RDV page
       expect(page).to have_content("Votre RDV")
