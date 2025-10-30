@@ -24,6 +24,9 @@ metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
 # Utilisés par swagger pour la documentation de l'api
 swagger_shas = ["'sha256-j4Lx1FqFgvYDBEjW7NQaEY7/HhCi8WVsLWkqC4+wJ3w='", "'sha256-JHKToH7KbGJj6TloPeWnKnbImDel00Whl1rRnBiTYuQ='"]
 
+# Utilisé par Axios pour les tests d'accessibilité
+test_shas = Rails.env.test? ? ["'sha256-3KU7bqhntlE+pVbLART2MZzvfoO4EpEvxbQQXz2vSqY='"] : []
+
 # Tant qu'on utilise les Turbolinks, c'est très difficile d'avoir des CSP différentes pour chaque pages,
 # puisque les CSP sont uniquement chargées lors de la première requête qui charle le premier document,
 # et pas lors des appels XHR fait par les turbolinks.
@@ -41,7 +44,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
 
-  policy.script_src :self, unpkg_cdn, *swagger_shas
+  policy.script_src :self, unpkg_cdn, *swagger_shas, *test_shas
 end
 
 # If you are using UJS then enable automatic nonce generation
