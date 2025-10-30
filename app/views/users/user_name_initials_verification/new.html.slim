@@ -4,7 +4,7 @@
   .card-header.rdv-text-align-center
     h4 Entrez les 3 premières lettres de votre nom de famille
   .card-body
-    = simple_form_for "", url: users_user_name_initials_verification_path, html: { class: "js-name-initials-form" } do |f|
+    = simple_form_for "", url: users_user_name_initials_verification_path do |f|
       .form-inline.py-2.justify-content-center
         - (0..2).each do |idx|
           = f.input :"letter#{idx}", pattern: "[A-Z]", label: false, maxlength: 1, required: false, input_html: { class: "mx-md-2 py-4 text-center" }
