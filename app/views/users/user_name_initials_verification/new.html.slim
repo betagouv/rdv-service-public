@@ -6,8 +6,7 @@
   .card-body
     = simple_form_for "", url: users_user_name_initials_verification_path do |f|
       .form-inline.py-2.justify-content-center
-        - (0..2).each do |idx|
-          = f.input :"letter#{idx}", pattern: "[A-Z]", label: false, maxlength: 1, required: false, input_html: { class: "mx-md-2 py-4 text-center" }
+        = f.input :letters, pattern: "[A-Z]", label: false, maxlength: 3, required: true, input_html: { class: "mx-md-2 py-4 text-center rdv-text-transform-uppercase rdv-letter-spacing-1rem" }
       .form-inline.py-2.justify-content-center
         = f.button :submit, "OK"
   .car-footer.rdv-text-align-center

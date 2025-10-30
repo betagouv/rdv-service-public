@@ -89,14 +89,10 @@ RSpec.describe "User can be invited" do
 
       # Identity verification
       expect(page).to have_content("Entrez les 3 premières lettres de votre nom de famille")
-      fill_in(:letter0, with: "A")
-      fill_in(:letter1, with: "B")
-      fill_in(:letter2, with: "C")
+      fill_in(:letters, with: "ABC")
 
       expect(page).to have_content("Les 3 lettres ne correspondent pas au nom de famille.")
-      fill_in(:letter0, with: "D")
-      fill_in(:letter1, with: "O")
-      fill_in(:letter2, with: "E")
+      fill_in(:letters, with: "DOE")
 
       # RDV page
       expect(page).to have_content("Votre RDV")

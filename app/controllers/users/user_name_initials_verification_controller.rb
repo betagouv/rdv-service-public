@@ -19,10 +19,6 @@ class Users::UserNameInitialsVerificationController < UserAuthController
 
   private
 
-  def letter_params
-    params.permit(:letter0, :letter1, :letter2)
-  end
-
   def after_success_redirect_path
     return session.delete(:return_to_after_verification) if session[:return_to_after_verification]
     return users_rdv_path(invitation.rdv) if invitation&.rdv
@@ -31,7 +27,7 @@ class Users::UserNameInitialsVerificationController < UserAuthController
   end
 
   def first_three_letters
-    letter_params.to_h.values.join.strip
+    params["letters"].strip
   end
 
   def first_three_letters_matching?
