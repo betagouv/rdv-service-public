@@ -1,4 +1,4 @@
-- content_for :title, "Statistiques globales"
+- content_for :title, "Statistiques"
 
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
@@ -12,12 +12,6 @@
   script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js" crossorigin='anonymous' integrity="sha384-bLkmUMwRt9nFp2+XvlPOzIkNUx/mnjvxxE7kI6bJWKMz/sfwiK5nra6w+60B9zyF"
 
   = javascript_include_tag "lieux_map"
-
-p
-  | Les statistiques présentées ici sont le cumul de RDV Service Public, RDV Solidarités, RDV Aide Numérique.
-
-.fr-mb-4w
-  = link_to "Parcourir les statistiques structure par structure", stats_territories_path, class: "fr-link fr-link--icon-right fr-icon-arrow-right-line"
 
 .fr-grid-row.fr-grid-row--gutters.rdv-flex-wrap-wrap-reverse.fr-mb-8w
   .fr-col-12.fr-col-md-4
@@ -67,3 +61,5 @@ iframe.rdv-width-100.fr-mb-8w.rdv-iframe-metabase.js-iframe-metabase[src="http:/
   frameborder="0"
   allowtransparency
 ]
+.fr-mb-4w
+  = link_to "Parcourir les statistiques structure par structure", stats_territories_path, class: "fr-link fr-link--icon-right fr-icon-arrow-right-line"
