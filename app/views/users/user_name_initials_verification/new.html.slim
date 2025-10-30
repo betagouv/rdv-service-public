@@ -1,16 +1,19 @@
-- content_for :title, "Vérification"
+- content_for :title, "Authentification"
 
-p.fr-mt-4w
-  |> Pour sécuriser l’accès à vos données, veuillez entrer les 3 premières lettres de votre
-  b> nom de famille.
-  | Par exemple : DUP pour Sophie Dupont, DEL pour Jean De La Fontaine ou XI pour Edwige Xi
+.fr-grid-row
+  .fr-col-12.fr-col-md-8
+    p.fr-mt-4w
+      |> Pour sécuriser l’accès à vos données, veuillez entrer les 3 premières lettres de votre
+      b> nom de famille.
+    p Par exemple : DUP pour Sophie Dupont, DEL pour Jean De La Fontaine ou XI pour Edwige Xi
 
-= form_for @form, url: users_user_name_initials_verification_path, builder: Dsfr::FormBuilder, as: "" do |f|
-  .fr-input-group
-    = f.dsfr_text_field :letters,
-      label: "3 premières lettres de votre nom",
-      maxlength: 3,
-      required: true,
-      class: "rdv-three-letters-input-group",
-      autocomplete: "off"
-  = f.submit "Valider", class: "fr-btn"
+    .fr-my-6w
+      = form_for @form, url: users_user_name_initials_verification_path, builder: Dsfr::FormBuilder, as: "" do |f|
+        .fr-input-group
+          = f.dsfr_text_field :letters,
+            label: "3 premières lettres de votre nom",
+            maxlength: 3,
+            required: true,
+            class: "rdv-three-letters-input-group",
+            autocomplete: "off"
+        = f.submit "Valider", class: "fr-btn"

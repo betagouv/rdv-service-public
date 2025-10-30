@@ -5,8 +5,6 @@ class Users::UserNameInitialsVerificationController < UserAuthController
     attribute :letters, :string
   end
 
-  layout "application_narrow"
-
   skip_after_action :verify_authorized
 
   include TokenInvitable
