@@ -181,7 +181,7 @@ RSpec.describe AgentConnectController do
           state:,
           connection_for: "super_admin",
         }
-        session[:super_admin_return_to] = "/super_admins/agents" # Pour simuler le retour vers la page demandée avant la connexion
+        session[:super_admin_return_to] = "/super_admins/lieux?search=arques" # Pour simuler le retour vers la page demandée avant la connexion
       end
 
       context "with a non 2FA account" do
@@ -216,7 +216,7 @@ RSpec.describe AgentConnectController do
             get :callback, params: { state: state, code: code }
 
             expect(session["agent_connect_id_token"]).to be_present
-            expect(response).to redirect_to("/super_admins/agents")
+            expect(response).to redirect_to("/super_admins/lieux?search=arques")
           end
         end
 
@@ -235,7 +235,7 @@ RSpec.describe AgentConnectController do
               email: "francis.factice@exemple.gouv.fr"
             )
             expect(session["agent_connect_id_token"]).to be_present
-            expect(response).to redirect_to("/super_admins/agents")
+            expect(response).to redirect_to("/super_admins/lieux?search=arques")
           end
         end
       end
