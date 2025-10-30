@@ -25,7 +25,7 @@ metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
 swagger_shas = ["'sha256-j4Lx1FqFgvYDBEjW7NQaEY7/HhCi8WVsLWkqC4+wJ3w='", "'sha256-JHKToH7KbGJj6TloPeWnKnbImDel00Whl1rRnBiTYuQ='"]
 
 # Utilisé par Axios pour les tests d'accessibilité
-test_shas = Rails.env.test? ? ["'sha256-3KU7bqhntlE+pVbLART2MZzvfoO4EpEvxbQQXz2vSqY='"] : []
+test_shas = Rails.env.test? ? ["'sha256-gAlHn5J0eShJ54K2OjJp0+VJbxgDdUPfEacCeTjV8YU='"] : []
 
 # Tant qu'on utilise les Turbolinks, c'est très difficile d'avoir des CSP différentes pour chaque pages,
 # puisque les CSP sont uniquement chargées lors de la première requête qui charle le premier document,
