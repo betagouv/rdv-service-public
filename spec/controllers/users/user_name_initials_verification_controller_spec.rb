@@ -7,7 +7,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
   describe "GET #new" do
     it "asks for the last name first three letters" do
       get :new
-      expect(response.body).to match(/Entrez les 3 premières lettres de votre nom de famille/)
+      expect(response.body).to match(/3 premières lettres de votre nom/)
     end
   end
 
@@ -98,7 +98,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         post :create, params: { letters: "DYO" }
 
         expect(response.body).to match(/Les 3 lettres ne correspondent pas au nom de famille./)
-        expect(response.body).to match(/Entrez les 3 premières lettres de votre nom de famille/)
+        expect(response.body).to match(/3 premières lettres de votre nom/)
       end
     end
   end

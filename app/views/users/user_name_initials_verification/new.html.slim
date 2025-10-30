@@ -1,16 +1,16 @@
 - content_for :title, "Vérification"
 
-.card
-  .card-header.rdv-text-align-center
-    h4 Entrez les 3 premières lettres de votre nom de famille
-  .card-body
-    = simple_form_for "", url: users_user_name_initials_verification_path do |f|
-      .form-inline.py-2.justify-content-center
-        = f.input :letters, pattern: "[A-Z]", label: false, maxlength: 3, required: true, input_html: { class: "mx-md-2 py-4 text-center rdv-text-transform-uppercase rdv-letter-spacing-1rem" }
-      .form-inline.py-2.justify-content-center
-        = f.button :submit, "OK"
-  .car-footer.rdv-text-align-center
-    p Par exemple&nbsp;:
-    p.fw-lighter.fs-6 Sophie Dupont : DUP
-    p.fw-lighter.fs-6 Jean De La Fontaine : DEL
-    p.fw-lighter.fs-6 Edwige Xi : XI
+p.fr-mt-4w
+  |> Pour sécuriser l’accès à vos données, veuillez entrer les 3 premières lettres de votre
+  b> nom de famille.
+  | Par exemple : DUP pour Sophie Dupont, DEL pour Jean De La Fontaine ou XI pour Edwige Xi
+
+= form_for @form, url: users_user_name_initials_verification_path, builder: Dsfr::FormBuilder, as: "" do |f|
+  .fr-input-group
+    = f.dsfr_text_field :letters,
+      label: "3 premières lettres de votre nom",
+      maxlength: 3,
+      required: true,
+      class: "rdv-three-letters-input-group",
+      autocomplete: "off"
+  = f.submit "Valider", class: "fr-btn"
