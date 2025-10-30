@@ -20,21 +20,16 @@ class Users::UserNameInitialsVerificationController < UserAuthController
   private
 
   def after_success_redirect_path
-    return session.delete(:return_to_after_verification) if session[:return_to_after_verification]
-    return users_rdv_path(invitation.rdv) if invitation&.rdv
-
-    root_path
-  end
-
-  def first_three_letters
-    params["letters"].strip
+    if session[:return_to_after_verification]
+      session.delete(:return_to_after_verification)
+    elsif invitation&.rdv
+      users_rdv_path(invitation.rdv)
+    else
+      root_path
+    end
   end
 
   def first_three_letters_matching?
-    user_name_initials.upcase == first_three_letters.upcase
-  end
-
-  def user_name_initials
-    current_user.last_name.gsub(/\s+/, "").first(3)
+    params["letters"].strip.upcase == current_user.last_name.gsub(/\s+/, "").first(3).upcase
   end
 end
