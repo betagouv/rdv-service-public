@@ -1,0 +1,17 @@
+header.main-content__header
+  h1.main-content__page-title
+    | Espaces à ajouter au CRM
+
+section.main-content__body.main-content__body--flush
+  div[style="margin-bottom: 12px"]
+    p Le champs "Catégorie" n'a pas été renseigné pour ces espaces, généralement parce qu'ils ont été crées via des intégrations sans intervention manuelle de notre équipe.
+    p Il faut donc renseigner ce champs pour chaque espace, et l'ajouter au CRM.
+  div[style="margin: 12px"]
+    - if @accounts_for_crm.empty?
+      p Il n'y a aucune demande avec ce statut
+    - @accounts_for_crm.each do |territory|
+      h3
+        = link_to(edit_super_admins_territory_path(territory.id))
+          = territory.name_in_stats
+      p
+        = "créé le #{l(territory.created_at, format: :human)} (il y a #{time_ago_in_words(territory.created_at)})"
