@@ -1,4 +1,4 @@
-RSpec.describe "users pages", driver: :playwright_bypass_csp, js: true do
+RSpec.describe "users pages", js: true do
   describe "users_rdvs_path page" do
     it "without RDV is accessible" do
       user = create(:user, email: "toto@example.com")
