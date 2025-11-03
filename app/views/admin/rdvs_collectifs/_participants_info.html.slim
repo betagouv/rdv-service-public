@@ -1,7 +1,6 @@
 .d-flex.card-text.mb-2
-    div.mr-1
-      i.fa.fa-fw.fa-users>
-    = I18n.t("rdvs.participants", count: rdv.users_count)
+  = icon("fr-icon-team-fill", class: "fr-mr-1w")
+  = I18n.t("rdvs.participants", count: rdv.users_count)
 
 .d-flex.card-text.mb-3
   - if rdv.remaining_seats? && rdv.not_cancelled?

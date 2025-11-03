@@ -18,12 +18,12 @@ RSpec.describe Agent::WebhookEndpointPolicy do
   end
 end
 
-RSpec.describe Agent::WebhookEndpointPolicy::ApiScope do
+RSpec.describe Agent::WebhookEndpointPolicy::Scope do
   describe "#resolve?" do
     let(:organisation) { create(:organisation) }
 
     context "with an admin agent" do
-      let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+      let(:agent) { create(:agent, role_in_territories: [organisation.territory]) }
 
       it "allow to see webhook from same territory" do
         webhook = create(:webhook_endpoint, organisation: organisation)

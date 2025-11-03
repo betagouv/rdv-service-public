@@ -5,8 +5,7 @@ div id="creneaux-lieu-#{lieu&.id}"
     - if form.date_range.begin > Time.zone.today
       - previous_from_date = form.date_range.begin - 7.days
       .col-auto.d-flex.align-items-center
-        = link_to admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: previous_from_date)), class: "btn btn-primary" do
-          i.fa.fa-arrow-left
+        = link_to "Créneaux précédents", admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: previous_from_date)), class: "fr-btn fr-icon-arrow-left-s-line"
     .col
       .row.no-gutters.creneaux-row.lieu-creneaux-card
         - form.date_range.each do |date|
@@ -28,7 +27,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                   .text-left.m-1
                     span.strong.font-weight-bold= l(creneau.starts_at, format: "%H:%M")
                     br
-                    i class= "mr-1 fa fa-user-alt #{agent_color(agents.index(creneau.agent))}"
+                    = user_icon(class:  "fr-icon--sm fr-mr-1w #{agent_color(agents.index(creneau.agent))}")
                     small.text-dark= creneau.agent.short_name
 
     - if next_availability
@@ -42,8 +41,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                 br
                 strong= l(next_availability.starts_at, format: :human)
               .ml-2
-                i.fa.fa-chevron-right
+                = icon("fr-icon-arrow-right-s-line")
 
       .col-auto.d-flex.align-items-center
-        = link_to admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: form.date_range.end + 1.day)), class: "btn btn-primary" do
-          i.fa.fa-arrow-right
+        = link_to "Créneaux suivants", admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: form.date_range.end + 1.day)), class: "fr-btn fr-icon-arrow-right-s-line"

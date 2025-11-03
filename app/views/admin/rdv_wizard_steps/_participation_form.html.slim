@@ -8,7 +8,7 @@ div id=element_id
   = form.hidden_field :user_id
   .d-flex.mt-2.mb-1
     div
-      i.fa.fa-user-alt.mr-1
+      = user_icon(class: "fr-icon--sm fr-mr-1w")
       - if user.relative?
         = "#{user} (responsable: #{user.responsible})"
       - else
