@@ -27,11 +27,11 @@ swagger_shas = ["'sha256-j4Lx1FqFgvYDBEjW7NQaEY7/HhCi8WVsLWkqC4+wJ3w='", "'sha25
 # Utilisé par Axios pour les tests d'accessibilité
 test_shas = []
 if Rails.env.test?
-  if ENV["CI"].present?
-    test_shas << "'sha256-FGXTYyJaeB4jfdFB1UEgIA517dMyyQE7JLnxRTrNdgo='"
-  else
-    test_shas << "'sha256-3KU7bqhntlE+pVbLART2MZzvfoO4EpEvxbQQXz2vSqY='"
-  end
+  test_shas << if ENV["CI"].present?
+                 "'sha256-4UywW1I9VFu7o60u4zSiU9FmUjIhiIv4N1FflQjVse0='"
+               else
+                 "'sha256-3KU7bqhntlE+pVbLART2MZzvfoO4EpEvxbQQXz2vSqY='"
+               end
 end
 
 # Tant qu'on utilise les Turbolinks, c'est très difficile d'avoir des CSP différentes pour chaque pages,
