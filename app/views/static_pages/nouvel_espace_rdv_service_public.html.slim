@@ -1,0 +1,21 @@
+- content_for :title do
+  | Créer votre espace
+
+.rdv-background-color-alt-blue-ecume
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12.fr-col-md-10.fr-col-lg-8
+      = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: "Créer votre espace"
+      .card.fr-my-4w
+        .card-body.fr-p-0
+          .fr-grid-row
+            .fr-col-4.d-flex.rdv-align-items-center.rdv-justify-content-center[style="background-color: #F9F9FE; border-right: 1px solid rgb(227, 234, 239)"]
+
+                = image_tag("logos/logo_calendrier.svg")
+            .fr-col-8.fr-p-9w
+              h1.fr-h2 Créer votre espace #{current_domain.name}
+
+              p.fr-text--lg #{current_domain.name} est une solution souveraine, réservée aux administrations publiques (collectivités, opérateurs, services de l’État).
+
+              p.fr-text--lg Pour créer votre espace, commencez par vous identifier avec ProConnect.
+
+              = render "common/proconnect_button_dsfr"
