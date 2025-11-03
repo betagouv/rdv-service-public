@@ -43,6 +43,7 @@ RSpec.describe "un prescripteur peut annuler un rendez-vous qu’il a pris pour 
 
     expect(Rdv.last.status).to eq("excused")
     expect(Rdv.last.versions.last.whodunnit).to eq("[Prescripteur] Alex PRESCRIPTEUR")
+    expect_sms_enqueued(phone_number: Rdv.last.users.first.phone_number_formatted, content: /a été annulé./)
   end
 
   it "lorsqu’il revient plus tard via son lien de confirmation" do
