@@ -19,7 +19,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
     click_on "Ouvrir un espace"
     doc.add_screenshot(page,
                        text: "Une page m'explique qu'il faut que je me ProConnecte.",
-                       wait_for: "Pour créer votre espace, commencez par vous identifier avec ProConnect.")
+                       wait_for: "Pour ouvrir votre espace, commencez par vous identifier avec ProConnect.")
 
     # ProConnect ne marche pas en tests, donc on triche en faisant un login par email et mot de passe
     visit new_agent_session_path
