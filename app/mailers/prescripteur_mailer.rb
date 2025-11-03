@@ -5,6 +5,7 @@ class PrescripteurMailer < ApplicationMailer
 
   def rdv_created(participation, domain_id)
     @domain = Domain.find(domain_id)
+    @prescripteur = participation.created_by
     @user = participation.user
     @rdv = participation.rdv
     mail(
