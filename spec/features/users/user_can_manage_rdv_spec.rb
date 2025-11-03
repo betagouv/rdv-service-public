@@ -91,4 +91,29 @@ RSpec.describe "User can manage their rdvs" do
       end
     end
   end
+
+  describe "l’usager suit un lien d’annulation envoyé par SMS ou mail", js: true do
+    let(:user) { create(:user, last_name: "Factice") }
+    let!(:organisation) { create(:organisation, name: "93 Social") }
+    let(:lieu) { create(:lieu, name: "CCAS de Montreuil", organisation:) }
+    let!(:rdv) { create(:rdv, organisation:, starts_at: 4.days.from_now, users: [user], lieu:) }
+
+    it "ne fait pas d’erreur si on rafraichit la page de vérification du nom" do # refresh does not seem to work without js: true 🤷
+      visit users_rdv_path(rdv.id, invitation_token: rdv.participations.first.restricted_auth_token)
+
+      fill_in(:letter0, with: "F")
+      fill_in(:letter1, with: "A")
+      fill_in(:letter2, with: "X") # voluntary error here
+      # pas besoin de soumettre avec l’auto-soumission
+
+      expect(page).to have_content(/Les 3 lettres ne correspondent pas/)
+      refresh
+      expect(page).to have_content(/Entrez les 3 premières lettres de votre nom de famille/)
+
+      fill_in(:letter0, with: "F")
+      fill_in(:letter1, with: "A")
+      fill_in(:letter2, with: "C")
+      expect(page).to have_content "Votre RDV"
+    end
+  end
 end
