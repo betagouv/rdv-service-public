@@ -84,7 +84,7 @@ class PrescripteurRdvWizardController < ApplicationController
 
   def show
     if params[:token].present?
-      prescripteur = Prescripteur.find_by(token: params[:token])
+      prescripteur = Prescripteur.find_by!(token: params[:token])
       session[:prescripteur_id] = prescripteur.id
     else
       prescripteur = Prescripteur.find(session[:prescripteur_id])
