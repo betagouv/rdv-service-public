@@ -638,6 +638,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_22_160200) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "token"
+    t.index ["token"], name: "index_prescripteurs_on_token", where: "(token IS NOT NULL)"
   end
 
   create_table "rdv_plans", force: :cascade do |t|
