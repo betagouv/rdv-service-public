@@ -26,7 +26,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
       response 200, "Retourne des WebhookEndpoints" do
         let!(:webhook_endpoints) { create_list(:webhook_endpoint, 5, organisation: organisation) }
-        let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+        let!(:agent) { create(:agent, role_in_territories: [organisation.territory]) }
 
         schema "$ref" => "#/components/schemas/webhook_endpoints"
 
@@ -52,7 +52,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
         let!(:unmatching) do
           create(:webhook_endpoint, organisation: organisation, target_url: "https://www.some-site.fr/webhooks")
         end
-        let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+        let!(:agent) { create(:agent, role_in_territories: [organisation.territory]) }
         let(:target_url) { "https://www.rdv-insertion.fr/webhooks" }
 
         run_test!
