@@ -102,6 +102,7 @@ tables:
       - microsoft_graph_token
       - refresh_microsoft_graph_token
       - remember_created_at
+      - pro_connect_openid_sub
     non_anonymized_column_names:
       - reset_password_sent_at
       - last_sign_in_at
