@@ -63,4 +63,9 @@ module DsfrHelper
       visio_icon(html_options)
     end
   end
+
+  def dsfr_return_btn_options
+    # On met un margin-left négatif pour conserver l'alignement quand on n'est pas en train de hover sur le bouton
+    { style: "margin-left: -16px", class: "fr-btn fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-arrow-left-line" }
+  end
 end

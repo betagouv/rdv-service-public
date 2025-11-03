@@ -60,7 +60,10 @@ module SuperAdmins
     end
 
     def authenticate_super_admin!
-      return redirect_to connexion_super_admins_path unless super_admin_signed_in?
+      unless super_admin_signed_in?
+        session[:super_admin_return_to] = request.fullpath
+        redirect_to connexion_super_admins_path and return
+      end
 
       super
     end

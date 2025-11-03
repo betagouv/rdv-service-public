@@ -2,8 +2,9 @@ class PrescripteurRdvWizardController < ApplicationController
   include SearchContextHelper
 
   before_action :log_session_to_sentry
-  before_action :check_rdv_wizard_attributes, except: %i[start confirmation]
+  before_action :check_rdv_wizard_attributes, except: %i[start confirmation cancel_rdv show]
   before_action :set_rdv_wizard, only: %i[new_prescripteur new_beneficiaire create_rdv]
+  before_action :set_prescripteur_from_session, only: %i[confirmation cancel_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
   before_action :set_paper_trail_whodunnit
 
@@ -66,8 +67,30 @@ class PrescripteurRdvWizardController < ApplicationController
     end
   end
 
+  def cancel_rdv
+    if @prescripteur.rdv.cancellable_by_user?
+      @prescripteur.rdv.update_and_notify(@prescripteur, status: "excused")
+      flash[:success] = "Le rendez-vous a bien été annulé."
+    else
+      flash[:error] = "Le rendez-vous ne peut plus être annulé."
+    end
+
+    redirect_to prescripteur_show_path
+  end
+
   def confirmation
-    @prescripteur = Prescripteur.find(session[:prescripteur_id])
+    render locals: { prescripteur: @prescripteur }
+  end
+
+  def show
+    if params[:token].present?
+      prescripteur = Prescripteur.find_by!(token: params[:token])
+      session[:prescripteur_id] = prescripteur.id
+    else
+      prescripteur = Prescripteur.find(session[:prescripteur_id])
+    end
+
+    render locals: { prescripteur: }
   end
 
   private
@@ -95,7 +118,15 @@ class PrescripteurRdvWizardController < ApplicationController
     end
   end
 
+  def set_prescripteur_from_session
+    @prescripteur = Prescripteur.find(session[:prescripteur_id])
+  end
+
   def user_for_paper_trail
-    @rdv_wizard.prescripteur.name_for_paper_trail if @rdv_wizard&.prescripteur
+    if @rdv_wizard&.prescripteur
+      @rdv_wizard.prescripteur.name_for_paper_trail
+    elsif @prescripteur
+      @prescripteur.name_for_paper_trail
+    end
   end
 end

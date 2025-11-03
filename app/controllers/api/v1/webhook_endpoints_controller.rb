@@ -3,7 +3,7 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
   before_action :set_organisation, only: %i[index create update]
 
   def index
-    webhook_endpoints = policy_scope(WebhookEndpoint, policy_scope_class: Agent::WebhookEndpointPolicy::ApiScope)
+    webhook_endpoints = policy_scope(WebhookEndpoint, policy_scope_class: Agent::WebhookEndpointPolicy::Scope)
       .where(organisation_id: params[:organisation_id])
     webhook_endpoints = webhook_endpoints.where(target_url: params[:target_url]) if params[:target_url].present?
     render_collection(webhook_endpoints)
@@ -30,7 +30,7 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
   end
 
   def set_webhook_endpoint
-    @webhook_endpoint = policy_scope(WebhookEndpoint, policy_scope_class: Agent::WebhookEndpointPolicy::ApiScope).find(params[:id])
+    @webhook_endpoint = policy_scope(WebhookEndpoint, policy_scope_class: Agent::WebhookEndpointPolicy::Scope).find(params[:id])
     authorize(@webhook_endpoint, policy_class: Agent::WebhookEndpointPolicy)
   end
 

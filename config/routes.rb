@@ -76,7 +76,11 @@ Rails.application.routes.draw do
         put :cancel
       end
     end
+
     resource :user_name_initials_verification, only: %i[new create], controller: "user_name_initials_verification"
+    # pour éviter les 404 lors d’un refresh après avoir entré des lettres qui ne marchent pas
+    get :user_name_initials_verification, to: redirect(path: "/users/user_name_initials_verification/new")
+
     post "file_attente", to: "file_attentes#create_or_delete"
   end
   namespace :stats, controller: "stats", module: nil do
@@ -354,7 +358,9 @@ Rails.application.routes.draw do
     post "store_prescripteur_in_session"
     get "new_beneficiaire"
     post "create_rdv"
+    delete "cancel_rdv"
     get "confirmation"
+    get "show"
   end
 
   %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
