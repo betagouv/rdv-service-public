@@ -3,10 +3,10 @@ header.main-content__header
     | Espaces à ajouter au CRM
 
 section.main-content__body.main-content__body--flush
-  div[style="margin-bottom: 12px"]
+  div[style="margin: 28px"]
     p Le champs "Catégorie" n'a pas été renseigné pour ces espaces, généralement parce qu'ils ont été crées via des intégrations sans intervention manuelle de notre équipe.
     p Il faut donc renseigner ce champs pour chaque espace, et l'ajouter au CRM.
-  div[style="margin: 12px"]
+  div[style="margin: 28px"]
     - if @accounts_for_crm.empty?
       p Il n'y a aucune demande avec ce statut
     - @accounts_for_crm.each do |territory|
