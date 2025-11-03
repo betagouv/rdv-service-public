@@ -13,10 +13,10 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
 
     visit "http://www.rdv-mairie-test.localhost/"
     doc.add_screenshot(page,
-                       text: "Je clique sur 'Créer un espace'",
-                       wait_for: "Créer un espace")
+                       text: "Je clique sur 'Ouvrir un espace'",
+                       wait_for: "Ouvrir un espace")
 
-    click_on "Créer un espace"
+    click_on "Ouvrir un espace"
     doc.add_screenshot(page,
                        text: "Une page m'explique qu'il faut que je me ProConnecte.",
                        wait_for: "Pour créer votre espace, commencez par vous identifier avec ProConnect.")
