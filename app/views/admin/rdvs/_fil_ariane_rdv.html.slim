@@ -13,5 +13,5 @@
   - else
     = b.with_breadcrumb label: "Votre agenda", href: admin_organisation_planning_agenda_path(current_organisation)
 - else
-  = b.with_breadcrumb label: "Agenda de #{@contextual_agents.map(&:full_name).join(', ').truncate(80)}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: @contextual_agents.map(&:id))
+  = b.with_breadcrumb label: "Agendas de #{@contextual_agents.map(&:short_name).join(', ').truncate(80)}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: @contextual_agents.map(&:id))
 = b.with_breadcrumb label: "RDV #{rdv_title_for_agent(rdv)}"
