@@ -374,7 +374,6 @@ Rails.application.routes.draw do
   get "health/jobs_queues" => "health#jobs_queues"
   get "health/jobs_scheduled" => "health#jobs_scheduled"
   get "health/raise_on_purpose" => "health#raise_on_purpose"
-  post "health/raise_on_purpose" => "health#raise_on_purpose"
 
   get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Service-Public", status: 302)
 
