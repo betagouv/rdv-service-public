@@ -358,7 +358,9 @@ Rails.application.routes.draw do
     post "store_prescripteur_in_session"
     get "new_beneficiaire"
     post "create_rdv"
+    delete "cancel_rdv"
     get "confirmation"
+    get "show"
   end
 
   %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
