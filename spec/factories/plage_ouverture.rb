@@ -5,7 +5,15 @@ FactoryBot.define do
     lieu { association(:lieu, organisation: organisation) }
 
     sequence(:title) { |n| random_value_in(["Plage #{n}", nil]) }
-    sequence(:first_day) { |n| Time.zone.today.next_week(:monday) + n.days } # ligne suspecte
+    sequence(:first_day) do |n|
+      # cet algo empêche de renvoyer un jour férié et évite de renvoyer le même jour pour 2 `n` consécutifs
+      day = Time.zone.today.next_week(:monday)
+      (0..n).each do
+        day += 1.day
+        day += 1.day if OffDays::JOURS_FERIES.include?(day) || day.saturday? || day.sunday?
+      end
+      day
+    end
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }
     no_recurrence
