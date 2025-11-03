@@ -5,7 +5,7 @@ FactoryBot.define do
     lieu { association(:lieu, organisation: organisation) }
 
     sequence(:title) { |n| random_value_in(["Plage #{n}", nil]) }
-    sequence(:first_day) { |n| Time.zone.today.next_week(:monday) + n.days }
+    sequence(:first_day) { |n| Time.zone.today.next_week(:monday) + n.days } # ligne suspecte
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }
     no_recurrence
