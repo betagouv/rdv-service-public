@@ -6,11 +6,6 @@ if ENV["FRANCECONNECT_V2_BASE_URL"].present?
   begin
     # la méthode .discover! fait un appel à l'api FranceConnect
     Rails.configuration.x.france_connect_v2_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["FRANCECONNECT_V2_BASE_URL"])
-
-    supported_algorithms = Rails.configuration.x.france_connect_v2_config.id_token_signing_alg_values_supported
-    if supported_algorithms.exclude?(FranceConnectV2OpenIdClient::ES256_ALGORITHM)
-      raise "L'algorithme #{FranceConnectV2OpenIdClient::ES256_ALGORITHM} n’est pas dans la liste des algorithmes supportés par FranceConnect"
-    end
   rescue StandardError => e
     error_message = <<~MSG
       France Connect V2 n'est pas joignable au démarrage de l'application.
