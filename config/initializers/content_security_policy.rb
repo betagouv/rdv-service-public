@@ -30,7 +30,7 @@ if Rails.env.test?
   test_shas << if ENV["CI"].present?
                  "'sha256-4UywW1I9VFu7o60u4zSiU9FmUjIhiIv4N1FflQjVse0='"
                else
-                 "'sha256-3KU7bqhntlE+pVbLART2MZzvfoO4EpEvxbQQXz2vSqY='"
+                 "'sha256-MW9ENekiBxLmssEGlk+IVYZiQXOqQCOggVxAMOB1ePc='"
                end
 end
 
