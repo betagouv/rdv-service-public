@@ -20,8 +20,10 @@ as defined by the routes in the `admin/` namespace
   <% end %>
   <hr />
   <%= link_to "Ouverture de compte", new_super_admins_compte_path, class: "navigation__link"%>
-  <%= link_to "Demandes d'ouverture d'espace", super_admins_territory_creation_requests_path, class: "navigation__link"%>
-  <%= link_to "Espaces à ajouter au CRM", super_admins_accounts_for_crm_index_path, class: "navigation__link"%>
+  <% if current_domain.allow_self_onboarding %>
+    <%= link_to "Demandes d'ouverture d'espace", super_admins_territory_creation_requests_path, class: "navigation__link"%>
+    <%= link_to "Espaces à ajouter au CRM", super_admins_accounts_for_crm_index_path, class: "navigation__link"%>
+  <% end %>
 
   <hr />
   <%= link_to "Good Job", super_admins_good_job_path, class: "navigation__link" if current_super_admin.legacy_admin_member?%>
