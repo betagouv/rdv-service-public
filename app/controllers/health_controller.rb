@@ -1,10 +1,21 @@
 class JobsNotScheduledCorrectly < StandardError; end
 class JobsCongestionError < StandardError; end
+class OnPurposeError < StandardError; end
 
 class HealthController < ApplicationController
+  # this HTACCESS should be set on production to avoid DDOS of our Sentry
+  basic_auth_name, basic_auth_password = ENV["HEALTH_CONTROLLER_BASIC_AUTH"]&.split(":")
+  if basic_auth_name && basic_auth_password
+    http_basic_authenticate_with name: basic_auth_name, password: basic_auth_password, only: :raise_on_purpose
+  end
+
   def db_connection
     Territory.count # cette ligne raisera en cas de problème de connexion
     render status: :ok, plain: "health OK"
+  end
+
+  def raise_on_purpose
+    raise OnPurposeError, "au 4ème top il sera #{Time.zone.now}"
   end
 
   def jobs_queues
