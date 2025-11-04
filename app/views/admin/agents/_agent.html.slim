@@ -10,12 +10,12 @@ tr id="agent_#{agent.id}"
         / les intervenants ne peuvent pas se connecter, il est inutile de les afficher comme "Inactif".
         - if agent.last_sign_in_at.nil? && agent.invitation_sent_at.present? && agent.invitation_accepted_at.nil?
           - if agent.invitation_due_at.past?
-            .badge.badge-warning Invitation expirée
+            .fr-badge.fr-badge--warning.fr-badge--sm Invitation expirée
           - else
-            .badge.badge-warning Invitation en attente
+            .fr-badge.fr-badge--info.fr-badge--sm Invitation en attente
         - elsif agent.last_sign_in_at.nil? || agent.last_sign_in_at <= 1.month.ago
           / le cas agent.last_sign_in_at.nil? est très rare et correspond probablement à des agents connectés avant qu’on ne commence à stocker le last_sign_in_at
-          .badge.badge-warning Pas connecté·e depuis plus d'un mois
+          .fr-badge.fr-badge--sm.badge Pas connecté·e depuis plus d'un mois
       end
     - else
       span.mr-2= agent.reverse_full_name
@@ -35,7 +35,7 @@ tr id="agent_#{agent.id}"
       - if agent_policy.create? && !agent.invitation_accepted? && !agent.is_an_intervenant?
         div.mr-3= link_to t("devise.invitations.reinvite"),
                 reinvite_admin_organisation_invitation_path(current_organisation, agent),
-                method: :post
+                method: :post, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
       - if agent_policy.edit?
         div.mr-3= link_to edit_admin_organisation_agent_path(current_organisation, agent), title: t("helpers.edit") do
           i.fa.fa-edit

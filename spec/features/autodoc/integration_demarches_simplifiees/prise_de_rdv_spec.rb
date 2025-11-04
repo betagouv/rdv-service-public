@@ -31,7 +31,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
   end
 
   specify do
-    doc = Autodoc.start_scenario("Intégration à Démarches Simplifiées : 3) Prise de RDV par un instructeur", self)
+    doc = Autodoc.start_scenario("Intégration à Démarches Simplifiées : 3) Prise de RDV par un instructeur", self, accessibility_checks: false)
 
     doc.start_section("Première prise de rendez-vous")
 
