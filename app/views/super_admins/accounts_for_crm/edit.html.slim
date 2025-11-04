@@ -19,7 +19,7 @@ section.main-content__body
     dt.attribute-label.attribute-label--normal-case Lieux
     dd.attribute-data = Lieu.joins(:organisation).where(organisations: { territory_id: @territory.id }).pluck(:name).to_sentence
 
-    - siret = @territory.admin_agents.order("created_at desc").first.proconnect_siret
+    - siret = @territory.admin_agents.where.not(proconnect_siret: nil).order("created_at desc").first&.proconnect_siret
     - if siret
       dt.attribute-label SIRET
       dd.attribute-data
@@ -29,3 +29,16 @@ section.main-content__body
         - if annuaire_client.mairie?
           p ✅ Cette structure est une mairie
 
+section.main-content__body
+  p Ajoutez cet espace au CRM, puis remplissez sa catégorie ici.
+  = simple_form_for([namespace, @territory], url: super_admins_accounts_for_crm_path(@territory), html: { class: "form" }) do |f|
+    - if @territory.errors.any?
+      #error_explanation
+        h2
+          = t("administrate.form.errors", pluralized_errors: pluralize(@territory.errors.count, t("administrate.form.error")),
+            resource_name: display_resource_name(page.resource_name, singular: true))
+        ul
+          - @territory.errors.full_messages.each do |message|
+            li.flash-error= message
+    div[style="margin-bottom: 24px"]= f.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie de l'espace"
+    = f.submit

@@ -11,5 +11,21 @@ module SuperAdmins
       @territory = Territory.find(params[:id])
       authorize(@territory, policy_class: SuperAdmin::TerritoryPolicy)
     end
+
+    def update
+      @territory = Territory.find(params[:id])
+      authorize(@territory, policy_class: SuperAdmin::TerritoryPolicy)
+
+      @territory.assign_attributes(params.require(:territory).permit(:category))
+
+      authorize(@territory, policy_class: SuperAdmin::TerritoryPolicy)
+
+      if @territory.save
+        flash[:success] = "Catégorie ajoutée à l'espace"
+        redirect_to super_admins_accounts_for_crm_index_path
+      else
+        render :edit
+      end
+    end
   end
 end
