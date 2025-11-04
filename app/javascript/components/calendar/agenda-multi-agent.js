@@ -29,12 +29,20 @@ class AgendaMultiAgent {
       resources: JSON.parse(this.data.resourcesJson),
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
-      initialView: "resourceTimeGridDay",
+      initialView: localStorage.getItem("chosenCalendarView") || "resourceTimeGridDay",
+      initialDate: localStorage.getItem("chosenCalendarDay"),
+      headerToolbar: {
+        center: 'resourceTimeGridDay,resourceTimeGridTwoDays,resourceTimeGridThreeDays,resourceTimeGridFourDays,resourceTimeGridFiveDays'
+      },
+      datesAboveResources: true,
+      datesSet: this.datesSet,
       hiddenDays: hiddenDays,
       select: this.selectEvent,
       eventDidMount: eventRenderer(),
       views: {
+
         resourceTimeGridDay: {
+          buttonText: "1 jour",
           titleFormat: {
             month: 'long',
             year: 'numeric',
@@ -42,6 +50,35 @@ class AgendaMultiAgent {
             weekday: 'long'
           },
         },
+      
+        resourceTimeGridTwoDays: {
+          type: "resourceTimeGrid",
+          dayCount: 2,
+          buttonText: "2 jours",
+          titleFormat: { weekday: "long", day: "numeric", month: "short", year: "numeric" }
+        },
+
+        resourceTimeGridThreeDays: {
+          type: "resourceTimeGrid",
+          dayCount: 3,
+          buttonText: "3 jours",
+          titleFormat: { weekday: "long", day: "numeric", month: "short", year: "numeric" }
+        },
+      
+        resourceTimeGridFourDays: {
+          type: "resourceTimeGrid",
+          dayCount: 4,
+          buttonText: "4 jours",
+          titleFormat: { weekday: "long", day: "numeric", month: "short", year: "numeric" }
+        },
+
+        resourceTimeGridFiveDays: {
+          type: "resourceTimeGrid",
+          dayCount: 5,
+          buttonText: "5 jours",
+          titleFormat: { weekday: "long", day: "numeric", month: "short", year: "numeric" }
+        },
+
       },
     };
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
@@ -53,6 +90,11 @@ class AgendaMultiAgent {
       "agent_ids[]": info.resource.id,
     });
     window.location = `/admin/organisations/${this.data.organisationId}/rdv_wizard_step/new?${urlSearchParams.toString()}`;
+  }
+ 
+  datesSet = (info) => {
+    localStorage.setItem("chosenCalendarView", info.view.type);
+    localStorage.setItem("chosenCalendarDay", info.startStr?.split("T")[0]);
   }
 }
 
