@@ -43,12 +43,7 @@ class AgendaMultiAgent {
 
         resourceTimeGridDay: {
           buttonText: "1 jour",
-          titleFormat: {
-            month: 'long',
-            year: 'numeric',
-            day: 'numeric',
-            weekday: 'long'
-          },
+          titleFormat: { weekday: "long", day: "numeric", month: "long", year: "numeric" }
         },
       
         resourceTimeGridTwoDays: {
