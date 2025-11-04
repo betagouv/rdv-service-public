@@ -200,7 +200,15 @@ class Agent < ApplicationRecord
   end
 
   def name_for_paper_trail
-    "[Agent] #{full_name}"
+    "[Agent] #{full_name} (id=#{id})"
+  end
+
+  def self.agent_from_whodunnit(whodunnit)
+    return unless whodunnit&.starts_with?("[Agent]")
+    return unless whodunnit.include?("(id=")
+
+    id = whodunnit.match(/\(id=(\d+)\)/)[1]
+    Agent.find_by(id:)
   end
 
   def role_in_organisation(organisation)
