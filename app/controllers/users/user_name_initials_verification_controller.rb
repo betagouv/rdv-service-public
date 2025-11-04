@@ -1,10 +1,4 @@
 class Users::UserNameInitialsVerificationController < UserAuthController
-  class Form
-    include ActiveModel::Model
-    include ActiveModel::Attributes # lets us declare attributes easily
-    attribute :letters, :string
-  end
-
   skip_after_action :verify_authorized
 
   include TokenInvitable
@@ -14,8 +8,8 @@ class Users::UserNameInitialsVerificationController < UserAuthController
   end
 
   def create
-    @form = Form.new(letters: params[:letters]&.strip&.upcase)
-    if @form.letters == current_user.last_name.gsub(/\s+/, "").first(3).upcase
+    @form = Form.new(letters: params[:letters]&.strip&.upcase, current_user:)
+    if @form.valid?
       set_user_name_initials_verified
       redirect_to after_success_redirect_path
     else
@@ -33,6 +27,29 @@ class Users::UserNameInitialsVerificationController < UserAuthController
       users_rdv_path(invitation.rdv)
     else
       root_path
+    end
+  end
+
+  class Form
+    include ActiveModel::Model
+    include ActiveModel::Attributes
+    attribute :letters, :string
+    attribute :current_user
+
+    validate :letters_match_last_name
+
+    def letters_match_last_name
+      return if letters == current_user.last_name.gsub(/\s+/, "").first(3).upcase
+
+      errors.add(:letters, "ne correspondent pas")
+    end
+
+    def self.human_attribute_name(attr, _options = {})
+      if attr.to_sym == :letters
+        "3 premières lettres"
+      else
+        attr
+      end
     end
   end
 end
