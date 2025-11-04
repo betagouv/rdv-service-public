@@ -1,4 +1,4 @@
-RSpec.describe "public pages", driver: :playwright_bypass_csp, js: true do
+RSpec.describe "public pages", js: true do
   it "accessibilite_path page is accessible" do
     expect_page_to_be_axe_clean(accessibilite_path)
   end

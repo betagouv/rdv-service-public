@@ -6,8 +6,8 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
   end
 
   def notify_user_by_sms(user)
-    # Only send sms for excused cancellations by an Agent (not for no-show, not for self-cancellation)
-    return unless @author.is_a? Agent
+    # On envoie des SMS de notification de RDV annulé uniquement si l'auteur de l'annulation est un Agent ou un Prescripteur et qu’il ne s’agit pas d’un no-show.
+    return unless @author.is_a?(Agent) || @author.is_a?(Prescripteur)
     return unless notify_cancellation?
 
     Users::RdvSms.rdv_cancelled(@rdv, user, @participations_tokens_by_user_id[user.id]).deliver_later

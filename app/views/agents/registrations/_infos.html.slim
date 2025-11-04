@@ -8,6 +8,6 @@
   = f.input :first_name, placeholder: "Prénom", disabled: true
   = f.input :last_name, placeholder: "Nom", disabled: true
   = f.association :services, collection: resource.services, disabled: true, input_html: { class: "select2-input" }
-  - if resource.connected_with_agent_connect?
+  - if resource.pro_connect_openid_sub
     .form-text.text-muted.mb-2
       | Les informations de votre compte proviennent de ProConnect.

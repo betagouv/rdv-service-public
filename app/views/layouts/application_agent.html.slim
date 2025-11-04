@@ -15,8 +15,10 @@ html lang="fr"
       main#main.content-page[style="flex-grow: 1;" role="main"]
         .content
           - if @beta_planning_layout
+            = content_for :onboarding_banner
             = render partial: "admin/planning/planning_agents_select"
             .p-3
+              = content_for(:fil_ariane)
               = yield
 
           - else
@@ -34,6 +36,9 @@ html lang="fr"
                   - if content_for :breadcrumb
                     .page-title-right
                       = yield :breadcrumb
+                  - if content_for :right_of_page_title
+                    .page-title-right
+                      = yield :right_of_page_title
               = yield
 
       = render "layouts/agent_footer"

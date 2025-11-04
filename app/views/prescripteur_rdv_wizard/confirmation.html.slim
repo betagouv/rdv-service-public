@@ -1,3 +1,5 @@
+/# locals: (prescripteur:)
+
 .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
   = dsfr_stepper(title: "Confirmation", value: 4, max: 4)
   .card
@@ -5,47 +7,4 @@
       h3
         span.fr-icon--lg.fr-icon-success-fill[aria-hidden="true"]
         |< Rendez-vous confirmé
-      - rdv = @prescripteur.rdv
-      ul.list-group.list-group-flush.fr-mt-0
-        li.list-group-item
-          span.fr-icon-calendar-fill.fr-mr-1w[aria-hidden="true"]
-          = rdv_title(rdv)
-          = rdv_tag(rdv)
-
-        - if rdv.public_office?
-          li.list-group-item
-            span.fr-icon-building-fill.fr-mr-1w[aria-hidden="true"]
-            = human_location(rdv)
-            - if rdv.lieu&.phone_number
-              br
-              span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-              = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
-
-        - elsif rdv.phone?
-          li.list-group-item
-            span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
-            | RDV Téléphonique
-
-        li.list-group-item
-          span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
-          = @prescripteur.user.full_name
-          = " (#{@prescripteur.user.phone_number})" if @prescripteur.user.phone_number.present?
-        li.list-group-item
-          span.fr-icon-draft-fill.fr-mr-1w[aria-hidden="true"]
-          = rdv.motif.name
-        - if rdv.motif.instruction_for_rdv.present?
-          li.list-group-item
-            span.fr-icon-warning-fill.fr-mr-1w[aria-hidden="true"]
-            strong Informations supplémentaires&nbsp;:
-            .pl-3.pt-1
-              = instruction_for_rdv_to_html(rdv.motif)
-        li.list-group-item
-          |> Besoin de déplacer le rendez-vous ou de corriger un détail ?
-          = link_to "Contactez-nous",
-              new_aide_demande_support_path(role: :agent,
-                sujet: "Déplacer ou corriger un RDV pris via prescription (RDV ID: #{rdv.id})",
-                first_name: @prescripteur.first_name,
-                last_name: @prescripteur.last_name,
-                phone_number: @prescripteur.phone_number,
-                email: @prescripteur.phone_number)
-      .fr-mt-6v.rdv-text-align-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(rdv.territory.departement_number)
+      = render partial: "rdv", locals: { prescripteur: }
