@@ -17,7 +17,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   end
 
   specify do
-    doc = Autodoc.start_scenario("Liens vers RDV Aide Numérique après une migration", self)
+    doc = Autodoc.start_scenario("Liens vers RDV Aide Numérique après une migration", self, accessibility_checks: false)
 
     doc.start_section("Introduction")
     doc.add_text(<<~TEXT

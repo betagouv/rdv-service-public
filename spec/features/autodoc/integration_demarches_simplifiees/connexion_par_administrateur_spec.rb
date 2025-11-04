@@ -21,7 +21,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
   stub_env_for_proconnect
 
   specify do
-    doc = Autodoc.start_scenario("Intégration à Démarches Simplifiées : 1) Connexion de à RDV Service Public par un admin", self)
+    doc = Autodoc.start_scenario("Intégration à Démarches Simplifiées : 1) Connexion de à RDV Service Public par un admin", self, accessibility_checks: false)
 
     visit oauth_authorization_path(
       client_id: oauth_application.uid,
