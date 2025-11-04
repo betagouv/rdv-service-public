@@ -1,7 +1,7 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns += %w[external_id]
+  self.ignored_columns += %w[connected_with_agent_connect]
   include Agent::CaldavConfiguration
   include Agent::FeatureFlags
 
@@ -12,7 +12,7 @@ class Agent < ApplicationRecord
     only: %w[
       email unconfirmed_email
       first_name last_name
-      proconnect_siret
+      pro_connect_openid_sub proconnect_siret
       invitation_sent_at invitation_accepted_at
     ]
   )

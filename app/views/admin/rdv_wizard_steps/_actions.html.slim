@@ -1,7 +1,5 @@
 .row.align-items-center.mt-3
   .col.text-left
-    = link_to(rdv_wizard_form.previous_step_path) do
-      i.fa.fa-arrow-left
-      |< Revenir en arrière
+    = link_to("Revenir en arrière", rdv_wizard_form.previous_step_path, dsfr_return_btn_options)
   .col.text-right
     = f.submit submit_value, class: "fr-btn"

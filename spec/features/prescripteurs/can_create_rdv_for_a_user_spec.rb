@@ -1,4 +1,4 @@
-RSpec.describe "prescripteur can create RDV for a user" do
+RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
   before do
     travel_to(Time.zone.parse("2022-11-07 15:00"))
   end
