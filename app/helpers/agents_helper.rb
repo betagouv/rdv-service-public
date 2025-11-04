@@ -24,7 +24,7 @@ module AgentsHelper
   end
 
   def me_tag(agent)
-    tag.span("Vous", class: "badge badge-info") if current_agent?(agent)
+    tag.span("Vous", class: "fr-badge fr-badge--info fr-badge--no-icon fr-badge--sm") if current_agent?(agent)
   end
 
   def build_link_to_rdv_wizard_params(creneau, form)
