@@ -66,6 +66,7 @@ class Autodoc
         Capybara.current_session.driver.visit "file://#{page_or_email.save_page}"
         Capybara.current_session.driver.save_screenshot(path)
       else
+        @example.expect(page_or_email).to @example.be_axe_clean
         page_or_email.driver.save_screenshot(path)
       end
 
