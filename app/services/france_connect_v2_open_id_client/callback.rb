@@ -88,7 +88,7 @@ module FranceConnectV2OpenIdClient
 
       handle_response_error(response)
 
-      JWT.decode(response.body, nil, true, algorithms: france_connect_v2_config.jwks.first["alg"], jwks: france_connect_v2_config.jwks).first
+      JWT.decode(response.body, nil, true, algorithms: "ES256", jwks: france_connect_v2_config.jwks).first
     end
 
     def handle_response_error(response)
