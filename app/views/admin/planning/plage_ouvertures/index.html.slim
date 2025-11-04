@@ -61,10 +61,10 @@
           = t(".no_results_for_your_search")
         - else
           - if current_agent == @agent
-            h3= t(".self.not_yet_created_plage_ouverture")
+            h2= t(".self.not_yet_created_plage_ouverture")
             p = t(".self.explanation_plage_ouverture")
           - else
-            h3= t(".other_agent.not_yet_created_plage_ouverture", full_name: @agent.full_name_or_email)
+            h2= t(".other_agent.not_yet_created_plage_ouverture", full_name: @agent.full_name_or_email)
             p = t(".other_agent.explanation_plage_ouverture")
 
           - if current_organisation.motifs.active.any?
