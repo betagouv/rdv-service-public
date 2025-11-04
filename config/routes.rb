@@ -45,7 +45,7 @@ Rails.application.routes.draw do
     resources :lieux
     resources :territories, except: %i[new create]
     resources :territory_creation_requests, only: %i[index edit update]
-    resources :accounts_for_crm, only: %i[index]
+    resources :accounts_for_crm, only: %i[index edit update]
     resources :users
     resources :comptes, only: %i[new create]
     resources :rdvs, only: %i[show]

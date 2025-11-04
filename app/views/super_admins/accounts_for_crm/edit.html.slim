@@ -1,0 +1,31 @@
+- content_for(:title) { "Espace à ajouter au CRM" }
+
+header.main-content__header
+  h1.main-content__page-title
+    = content_for(:title)
+
+section.main-content__body
+  dl
+    dt.attribute-label.attribute-label--normal-case Espace
+    dd.attribute-data = @territory.name_in_stats
+
+    dt.attribute-label.attribute-label--normal-case Administré par
+    dd.attribute-data
+      = @territory.admin_agents.map { |agent| "#{agent.full_name} (#{agent.email})" }.to_sentence
+
+    dt.attribute-label.attribute-label--normal-case Crée le
+    dd.attribute-data = "#{l(@territory.created_at, format: :human)} (il y a #{time_ago_in_words(@territory.created_at)})"
+
+    dt.attribute-label.attribute-label--normal-case Lieux
+    dd.attribute-data = Lieu.joins(:organisation).where(organisations: { territory_id: @territory.id }).pluck(:name).to_sentence
+
+    - siret = @territory.admin_agents.order("created_at desc").first.proconnect_siret
+    - if siret
+      dt.attribute-label SIRET
+      dd.attribute-data
+        = link_to(siret, "https://annuaire-entreprises.data.gouv.fr/etablissement/#{siret}", target: "_blank")
+        - annuaire_client = AnnuaireServicePublic.new(siret)
+        p= link_title = annuaire_client.nom
+        - if annuaire_client.mairie?
+          p ✅ Cette structure est une mairie
+

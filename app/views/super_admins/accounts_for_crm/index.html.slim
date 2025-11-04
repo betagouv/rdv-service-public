@@ -10,8 +10,6 @@ section.main-content__body.main-content__body--flush
     - if @accounts_for_crm.empty?
       p Il n'y a aucune demande avec ce statut
     - @accounts_for_crm.each do |territory|
-      h3
-        = link_to(edit_super_admins_territory_path(territory.id))
-          = territory.name_in_stats
-      p
-        = "créé le #{l(territory.created_at, format: :human)} (il y a #{time_ago_in_words(territory.created_at)})"
+      h2 = link_to(territory.name_in_stats, edit_super_admins_accounts_for_crm_path(territory.id))
+
+      p = "créé le #{l(territory.created_at, format: :human)} (il y a #{time_ago_in_words(territory.created_at)})"
