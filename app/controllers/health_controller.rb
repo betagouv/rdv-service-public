@@ -4,9 +4,9 @@ class OnPurposeError < StandardError; end
 
 class HealthController < ApplicationController
   # this HTACCESS should be set on production to avoid DDOS of our Sentry
-  htaccess_name, htaccess_password = ENV["HEALTH_CONTROLLER_HTACCESS"]&.split(":")
-  if htaccess_name && htaccess_password
-    http_basic_authenticate_with name: htaccess_name, password: htaccess_password, only: :raise_on_purpose
+  basic_auth_name, basic_auth_password = ENV["HEALTH_CONTROLLER_BASIC_AUTH"]&.split(":")
+  if basic_auth_name && basic_auth_password
+    http_basic_authenticate_with name: basic_auth_name, password: basic_auth_password, only: :raise_on_purpose
   end
 
   def db_connection
