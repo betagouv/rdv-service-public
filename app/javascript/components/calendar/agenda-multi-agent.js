@@ -34,7 +34,11 @@ class AgendaMultiAgent {
       headerToolbar: {
         center: 'resourceTimeGridDay,resourceTimeGridTwoDays,resourceTimeGridThreeDays,resourceTimeGridFourDays,resourceTimeGridFiveDays'
       },
-      datesAboveResources: true,
+      customButtons: this.customButtons(),
+      footerToolbar: {
+        end: "toggleGrouping"
+      },
+      datesAboveResources: this.getGroupByDate(),
       datesSet: this.datesSet,
       hiddenDays: hiddenDays,
       select: this.selectEvent,
@@ -90,6 +94,25 @@ class AgendaMultiAgent {
   datesSet = (info) => {
     localStorage.setItem("chosenCalendarView", info.view.type);
     localStorage.setItem("chosenCalendarDay", info.startStr?.split("T")[0]);
+  }
+
+  toggleGrouping = () => {
+    localStorage.setItem("groupByDate", this.getGroupByDate() ? "false" : "true");
+    this.fullCalendarInstance.setOption("datesAboveResources", this.getGroupByDate());
+    this.fullCalendarInstance.setOption("customButtons", this.customButtons());
+  }
+
+  getGroupByDate = () => {
+    return localStorage.getItem("groupByDate") === "true";
+  }
+
+  customButtons = () => {
+    return {
+      toggleGrouping: {
+        text: this.getGroupByDate() ? "Grouper par agent" : "Grouper par date",
+        click: this.toggleGrouping,
+      }
+    }
   }
 }
 
