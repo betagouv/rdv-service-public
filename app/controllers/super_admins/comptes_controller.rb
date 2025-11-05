@@ -17,6 +17,10 @@ module SuperAdmins
       authorize_resource(compte)
 
       if compte.save!
+        if params[:add_to_crm]
+          CreateCrmPageJob.perform_later(compte.territory.id)
+        end
+
         redirect_to(
           super_admins_agent_path(compte.agent),
           notice: "Le nouvel espace a été créé, et une invitation a été envoyée à #{compte.agent.email}"

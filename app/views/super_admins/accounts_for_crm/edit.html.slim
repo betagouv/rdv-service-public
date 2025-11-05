@@ -41,4 +41,7 @@ section.main-content__body
           - @territory.errors.full_messages.each do |message|
             li.flash-error= message
     div[style="margin-bottom: 24px"]= f.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie de l'espace"
+    div[style="margin-bottom: 16px"]
+      = label_tag "add_to_crm", "Créer la carte dans Notion"
+      = check_box_tag "add_to_crm", id: "add_to_crm", checked: true
     = f.submit
