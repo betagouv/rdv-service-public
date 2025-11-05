@@ -30,7 +30,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     login_as(agent, scope: :agent)
 
-    doc = Autodoc.start_scenario("Prise de rendez-vous entre agents", self, accessibility_checks: false, category: "Produit")
+    doc = Autodoc.start_scenario("Prise de rendez-vous entre agents", self, accessibility_checks: false, category: "3) Produit")
 
     doc.start_section("Côté agent")
     doc.add_text(<<~TEXT

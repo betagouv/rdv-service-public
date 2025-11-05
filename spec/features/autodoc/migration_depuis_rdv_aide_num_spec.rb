@@ -66,7 +66,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   )
 
   specify do
-    doc = Autodoc.start_scenario("Migration depuis RDV Aide Numérique vers RDV Service Public", self, category: "RDV Aide Numérique")
+    doc = Autodoc.start_scenario("Migration depuis RDV Aide Numérique vers RDV Service Public", self, category: "5) RDV Aide Numérique")
 
     doc.start_section("Migration")
     doc.add_text(<<~TEXT

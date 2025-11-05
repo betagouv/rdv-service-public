@@ -5,7 +5,7 @@
     p Cette page documente différentes fonctionnalités de RDV Service Public
     p Elle est mise à jour automatiquement dès que l'application change.
 
-    - @categories.each do |title, scenarios|
+    - @categories.sort.each do |title, scenarios|
       - if title
         h2 = title
       ul.fr-mb-4w
