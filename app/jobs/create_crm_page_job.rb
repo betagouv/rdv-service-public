@@ -20,7 +20,7 @@ class CreateCrmPageJob < ApplicationJob
           title: [
             {
               text: {
-                content: territory.name.presence || territory.organisations.first&.name,
+                content: territory.name_in_stats,
               },
             },
           ],
