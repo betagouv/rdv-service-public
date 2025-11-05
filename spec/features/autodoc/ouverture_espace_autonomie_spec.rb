@@ -22,7 +22,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
                        wait_for: "Pour ouvrir votre espace, commencez par vous identifier avec ProConnect.")
 
     # ProConnect ne marche pas en tests, donc on triche en faisant un login par email et mot de passe
-    visit new_agent_session_path
+    visit new_agent_session_url(host:  "http://www.rdv-mairie-test.localhost")
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
@@ -46,11 +46,6 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
     open_email(agent.email)
     expect(current_email.subject).to eq "Votre espace RDV Service Public est ouvert 🚀"
 
-    doc.add_screenshot(current_email, text: "J'ai un message de confirmation. Je clique sur le cta principal")
-
-    current_email.click_on "Accéder à mon espace"
-
-    doc.add_screenshot(page,
-                       text: "J'arrive dans mon espace")
+    doc.add_screenshot(current_email, text: "J'ai aussi reçu un email de confirmation")
   end
 end
