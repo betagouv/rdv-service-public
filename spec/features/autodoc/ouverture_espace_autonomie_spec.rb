@@ -29,7 +29,8 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
 
     fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
 
-    doc.add_screenshot(page, text: "Je remplis le formulaire puis je valide", wait_for: "Nom de")
+    doc.add_screenshot(page, text: "Il n'y a pas de doublon sur mon siret ni mon adresse mail donc je peux directement ouvrir mon compte. Je remplis le nom de l'orga et je valide.",
+                             wait_for: "Nom de")
 
     click_on "Enregistrer"
 
