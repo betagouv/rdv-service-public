@@ -5,9 +5,12 @@
     p Cette page documente différentes fonctionnalités de RDV Service Public
     p Elle est mise à jour automatiquement dès que l'application change.
 
-    ul
-    - @scenarios.sort_by(&:title).each do |scenario|
-      li
-        a[href='scenario_#{scenario.index}.html'] #{scenario.title}
+    - @categories.each do |title, scenarios|
+      - if title
+        h2 = title
+      ul.fr-mb-4w
+        - scenarios.sort_by(&:title).each do |scenario|
+          li
+            a[href='scenario_#{scenario.index}.html'] #{scenario.title}
 
     p Dernière mise à jour le #{I18n.l(Time.zone.now)}

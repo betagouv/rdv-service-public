@@ -10,7 +10,7 @@ RSpec.describe "Embarquement en autonomie pour les admins", js: true do
   before { login_as(agent, scope: :agent) }
 
   specify do
-    doc = Autodoc.start_scenario("Embarquement en autonomie (self-onboarding)", self, accessibility_checks: false)
+    doc = Autodoc.start_scenario("Embarquement guidé", self, accessibility_checks: false, category: "Embarquement")
 
     doc.start_section("Pour un admin")
 

@@ -6,7 +6,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
   around { |example| perform_enqueued_jobs { example.run } }
 
   specify do
-    doc = Autodoc.start_scenario("Ouverture d'un espace en complète autonomie", self, accessibility_checks: false)
+    doc = Autodoc.start_scenario("Ouverture d'un espace en complète autonomie", self, accessibility_checks: false, category: "Ouverture d'espace")
 
     doc.start_section("Côté agent")
     doc.add_text("Contexte: Je suis un agent qui n'a jamais utilisé RDV Service Public")
