@@ -19,8 +19,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
       it "permet de créer un territoire et une organisation, puis d'être ajouté au CRM par un super admin" do
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
 
-        click_on "Ouvrir un espace"
-
         fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
         click_on "Enregistrer"
 
