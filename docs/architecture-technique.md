@@ -81,7 +81,6 @@ Nos apps sont cependant toutes situées sur la zone `SecNumCloud` de Scalingo, q
 | App Rails                         | Brevo                  | SMTP          | 587  | Paris, France       | smtp-relay.sendinblue.com                             |
 | App Rails                         | API et Oauth Microsoft | HTTPS         | 443  | Paris, France       | graph.microsoft.com                                   |
 | App Rails                         | SMS Factor             | HTTPS         | 443  | France              | api.smsfactor.com                                     |
-| App Rails                         | SFR mail2SMS           | SMTP          | 587  | France              | @mailtosms.dmc.sfr-sh.fr                              |
 | App Rails                         | Clever Technologies    | HTTPS         | 443  | France              | webservicesmultimedias.clever-is.fr                   |
 | Navigateur redirigé par App Rails | API Microsoft          | HTTPS (OAuth) | 443  | Amsterdam, Pays-Bas | login.microsoftonline.com                             |
 | App Rails                         | API dédoublonnage ANTS | HTTPS         | 443  | Paris, France       | api-coordination.rendezvouspasseport.ants.gouv.fr/api |
@@ -209,7 +208,6 @@ C4Container
     System_Ext(brevo, "Brevo", "Emails transactionnels")
     System_Ext(api_microsoft, "API Microsoft", "Synchro Outlook")
     System_Ext(sms_factor, "SMS Factor", "Envoi SMS")
-    System_Ext(sfr_mail2sms, "SFR Mail2SMS", "Envoi SMS")
     System_Ext(clever_technologies, "Clever Technologies", "Envoi SMS")
 
     Rel(web_app, sentry, "HTTPS")
@@ -217,7 +215,6 @@ C4Container
     Rel(web_app, brevo, "SMTP")
     Rel(web_app, api_microsoft, "HTTPS")
     Rel(web_app, sms_factor, "HTTPS")
-    Rel(web_app, sfr_mail2sms, "SMTP")
     Rel(web_app, clever_technologies, "HTTPS")
 ```
 
