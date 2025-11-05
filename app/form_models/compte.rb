@@ -53,11 +53,13 @@ class Compte
         allow_to_invite_agents: true
       )
 
-      Agents::TerritoryCreationRequestMailer.accepted(
-        agent: agent,
-        organisation: organisation,
-        domain_id: @current_domain.id
-      ).deliver_later
+      if agent.invitation_created_at.nil? # On n'envoie pas ce mail si l'agent a déjà reçu un mail d'invitation
+        Agents::TerritoryCreationRequestMailer.accepted(
+          agent: agent,
+          organisation: organisation,
+          domain_id: @current_domain.id
+        ).deliver_later
+      end
       true
     end
   end

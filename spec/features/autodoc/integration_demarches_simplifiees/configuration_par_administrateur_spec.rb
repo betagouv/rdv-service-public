@@ -17,12 +17,6 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
 
     Capybara.page.current_window.resize_to(1280, 600)
 
-    doc.add_screenshot(page,
-                       text: "Une première page me demande s'il existe déjà un espace dans RDV Service Public pour ma structure. Si ce n'est pas le cas, je clique sur Ouvrir un espace",
-                       wait_for: "Bienvenue")
-
-    click_on "Ouvrir un espace"
-
     fill_in("Nom de votre organisation", with: "Préfecture de Police de Paris")
 
     doc.add_screenshot(page,
