@@ -21,6 +21,10 @@ module SuperAdmins
       authorize(@territory, policy_class: SuperAdmin::TerritoryPolicy)
 
       if @territory.save
+        if params[:add_to_crm]
+          CreateCrmPageJob.perform_later(@territory.id)
+        end
+
         flash[:success] = "Catégorie ajoutée à l'espace"
         redirect_to super_admins_accounts_for_crm_index_path
       else

@@ -47,5 +47,8 @@ section.main-content__body
         .form-text.text-muted[style="margin-bottom: 12px"]
           = "L'agent a indiqué travailler pour le service "
           b #{@territory_creation_request.service_name}
+      div[style="margin-bottom: 16px"]
+        = label_tag "add_to_crm", "Créer la carte dans Notion"
+        = check_box_tag "add_to_crm", id: "add_to_crm", checked: true
 
     = f.submit
