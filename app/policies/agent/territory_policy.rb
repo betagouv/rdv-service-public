@@ -15,7 +15,7 @@ class Agent::TerritoryPolicy
   def new?
     return false if @current_agent.agent_territorial_access_rights.any?
 
-    OauthApplication.agent_is_verified_by_an_application?(@current_agent)
+    OauthApplication.agent_is_verified_by_an_application?(@current_agent) || @current_agent.email.end_with?(".gouv.fr")
   end
   alias create? new?
 
