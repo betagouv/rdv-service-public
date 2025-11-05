@@ -37,14 +37,14 @@ class CreateCrmPageJob < ApplicationJob
         },
         ENTREE: {
           select: {
-            name: "Self-Onboarding", # TODO: gérer les ouvertures de compte par intégration
+            name: OauthApplication.agent_is_verified_by_an_application?(territory.admin_agents.first) ? "Intégration" : "Self-Onboarding",
           },
         },
         "COMPTE PROD": {
           url: "#{ENV['HOST']}/super_admins/territories/#{territory.id}",
         },
         CONTACT: {
-          email: territory.agent_territorial_access_rights.count == 1 ? territory.agent_territorial_access_rights.first.agent.email : nil,
+          email: territory.admin_agents.count == 1 ? territory.admin_agents.first.email : nil,
         },
       }
     )
