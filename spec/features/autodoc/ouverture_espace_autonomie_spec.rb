@@ -27,12 +27,6 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
-    doc.add_screenshot(page,
-                       text: "Je clique sur Demander à ouvrir un espace",
-                       wait_for: "Pour commencer, aidez-nous à en savoir plus")
-
-    click_on "Ouvrir un espace"
-
     fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
 
     doc.add_screenshot(page, text: "Je remplis le formulaire puis je valide", wait_for: "Nom de")
