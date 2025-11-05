@@ -37,12 +37,12 @@ section.main-content__body
       dd.attribute-data = @territory_creation_request.service_name
 
   section.main-content__body[style=""]
-    - if @territory_creation_request.possible_duplicate_organisations_by_email_domain.none?
+    - if @territory_creation_request.agent.possible_duplicate_organisations_by_email_domain.none?
       p ✅ Aucun espace existant n'a d'agents avec des adresses email similaires.
     - else
       p ⚠️ Attention, ces organisations ont des agents avec des adresses email similaires :
       ul
-        - @territory_creation_request.possible_duplicate_organisations_by_email_domain.each do |organisation|
+        - @territory_creation_request.agent.possible_duplicate_organisations_by_email_domain.each do |organisation|
           li
             = link_to organisation.name, super_admins_organisation_path(organisation)
 

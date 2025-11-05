@@ -7,8 +7,6 @@ class TerritoryCreationRequest < ApplicationRecord
   validates :agent_id, uniqueness: true
   validate :can_only_have_one_response
 
-  delegate :possible_duplicate_organisations_by_email_domain, :possible_duplicate_organisations_by_siret, to: :agent
-
   private
 
   def can_only_have_one_response
