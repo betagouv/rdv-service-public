@@ -13,7 +13,7 @@ class Agent < ApplicationRecord
       email unconfirmed_email
       first_name last_name
       pro_connect_openid_sub proconnect_siret
-      invitation_sent_at invitation_accepted_at
+      invitation_sent_at invitation_accepted_at deleted_at
     ]
   )
 
