@@ -6,7 +6,8 @@ module IcsPayloads
         starts_at: starts_at,
         ends_at: first_occurrence_ends_at,
         ical_uid: ical_uid,
-        summary: "#{IcalFormatters::Ics::ICS_UID_SUFFIX} #{title}",
+        summary: title,
+        description: "Voir sur #{domain.name} : #{Rails.application.routes.url_helpers.edit_admin_organisation_planning_absence_url(agent.organisations.first, id, host: domain.host_name)}",
         rrule: IcalFormatters::Rrule.from_recurrence(recurrence),
         domain: domain,
       }
