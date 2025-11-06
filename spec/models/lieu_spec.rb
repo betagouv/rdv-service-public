@@ -223,4 +223,17 @@ RSpec.describe Lieu, type: :model do
       expect(lieu.availability).to eq "disabled"
     end
   end
+
+  describe "code_postal" do
+    it "est extrait à la sauvegarde" do
+      lieu = build(:lieu, address: "7 rue de l'adresse, Ville, 12345")
+      expect { lieu.save! }.to change { lieu.code_postal }.from(nil).to("12345")
+
+      lieu.update!(address: "adresse sans code postal, Ville")
+      expect(lieu.code_postal).to be_nil
+
+      lieu.update!(address: "adresse avec nouveau code postal, Autreville, 99999")
+      expect(lieu.code_postal).to eq("99999")
+    end
+  end
 end
