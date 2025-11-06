@@ -25,6 +25,11 @@ class Agents::PagesController < AgentAuthController
       redirect_to admin_organisation_planning_agenda_path(accessible_organisations.first)
     elsif accessible_organisations.count > 1
       redirect_to admin_organisations_path
+    else
+      policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)
+      if current_agent.possible_duplicate_organisations.empty? && policy.new?
+        redirect_to new_agents_territory_path
+      end
     end
   end
 
