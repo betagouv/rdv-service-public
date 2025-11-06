@@ -2,7 +2,7 @@
 
 - content_for :fil_ariane do
   = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
-    = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b }
+    = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b, contextual_agents: @contextual_agents }
 
 - content_for :title do
   = "RDV #{rdv_title_for_agent(@rdv)}"
