@@ -96,7 +96,7 @@ class Admin::RdvsController < AgentAuthController
       end
       format.html do
         if @success
-          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, contextual_agents: @contextual_agents.map(&:id)), rdv_success_flash
+          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id)), rdv_success_flash
         else
           render :edit
         end
@@ -149,7 +149,7 @@ class Admin::RdvsController < AgentAuthController
 
   def set_contextual_agents
     @contextual_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
-      .where(id: params[:contextual_agents])
+      .where(id: params[:contextual_agent_ids])
       .order(last_name: :asc)
       .load
   end
