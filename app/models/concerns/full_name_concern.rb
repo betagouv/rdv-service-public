@@ -42,6 +42,10 @@ module FullNameConcern
     end
   end
 
+  def short_name_or_email
+    short_name.presence || email
+  end
+
   private
 
   def show_birth_name?

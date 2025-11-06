@@ -313,4 +313,19 @@ class Agent < ApplicationRecord
       throw :abort
     end
   end
+
+  def possible_duplicate_organisations
+    possible_duplicate_organisations_by_email_domain + possible_duplicate_organisations_by_siret
+  end
+
+  def possible_duplicate_organisations_by_email_domain
+    email_domain = email.split("@").last
+    Organisation.joins(:agents).where("agents.email ilike ?", "%@#{email_domain}").distinct
+  end
+
+  def possible_duplicate_organisations_by_siret
+    return Organisation.none if proconnect_siret.blank?
+
+    Organisation.joins(:agents).where(agents: { proconnect_siret: proconnect_siret }).distinct
+  end
 end

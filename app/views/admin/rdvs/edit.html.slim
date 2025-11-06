@@ -1,19 +1,8 @@
-- content_for(:menu_item) { @agent ? "menu-agendas" : "menu-rdvs-list" }
+- content_for(:menu_item) { @contextual_agents ? "menu-agendas" : "menu-rdvs-list" }
 
 - content_for :fil_ariane do
   = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
-    = b.with_breadcrumb label: "Accueil", href: root_path
-    - if @agent
-      - if @agent != current_agent
-        = b.with_breadcrumb label: "Agenda de #{@agent.full_name}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: @agent.id)
-      - else
-        = b.with_breadcrumb label: "Votre agenda", href: admin_organisation_planning_agenda_path(current_organisation)
-    - else
-      - if @rdv.collectif?
-        = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)
-      - else
-        = b.with_breadcrumb label: "Liste des RDV", href: admin_organisation_rdvs_path(current_organisation)
-    = b.with_breadcrumb label: "RDV #{rdv_title_for_agent(@rdv)}", href: admin_organisation_rdv_path(current_organisation, @rdv)
+    = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b, contextual_agents: @contextual_agents }
     = b.with_breadcrumb label: "Modifier le RDV"
 
 - content_for :title do
@@ -23,10 +12,9 @@
   .col-md-12.col-lg-8
     .card
       .card-body
-        = simple_form_for([:admin, @rdv_form.organisation, @rdv]) do |f|
+        = simple_form_for(@rdv, url: admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id))) do |f|
           = render "model_errors", model: @rdv_form, f: f
           = collapsible_form_fields_for_warnings(@rdv_form) do
-            = hidden_field_tag :agent_id, @agent&.id
             = f.association :motif, collection: [@rdv_form.motif], disabled: true
             - if @rdv_form.organisation.territory.enable_context_field
               = f.input :context, input_html: { rows: 3 }

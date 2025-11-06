@@ -3,7 +3,7 @@ class Admin::RdvsController < AgentAuthController
 
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index a_renseigner export participations_export]
+  before_action :set_rdv, :set_contextual_agents, except: %i[index a_renseigner export participations_export]
 
   PERMITTED_PER_PAGE = [10, 25, 50].freeze
 
@@ -92,11 +92,11 @@ class Admin::RdvsController < AgentAuthController
 
     respond_to do |format|
       format.turbo_stream do
-        render locals: { rdv: @rdv, agent: @agent, quick_update: params[:quick_update] }
+        render locals: { rdv: @rdv, contextual_agents: @contextual_agents, quick_update: params[:quick_update] }
       end
       format.html do
         if @success
-          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash
+          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id)), rdv_success_flash
         else
           render :edit
         end
@@ -147,11 +147,11 @@ class Admin::RdvsController < AgentAuthController
     raise Pundit::NotAuthorizedError unless @scoped_organisations.any?
   end
 
-  def set_optional_agent
-    agent_ids = Array(params[:agent_id]).compact_blank
-    if agent_ids.size == 1
-      @agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(agent_ids.sole)
-    end
+  def set_contextual_agents
+    @contextual_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
+      .where(id: params[:contextual_agent_ids])
+      .order(last_name: :asc)
+      .load
   end
 
   def parse_date_from_params(date_param)

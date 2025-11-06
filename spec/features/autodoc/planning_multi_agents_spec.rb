@@ -17,7 +17,7 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
 
   specify do
     login_as(agent_basique, scope: :agent)
-    doc = Autodoc.start_scenario("Nouveau planning / planning multi-agents", self, accessibility_checks: false)
+    doc = Autodoc.start_scenario("Nouveau planning / planning multi-agents", self, accessibility_checks: false, category: "3) Produit")
 
     #
     # FEATURE FLAG DÉSACTIVÉ : on fait un tour du planning
