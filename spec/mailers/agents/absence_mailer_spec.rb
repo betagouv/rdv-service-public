@@ -64,7 +64,8 @@ RSpec.describe Agents::AbsenceMailer, type: :mailer do
   end
 
   describe "#absence_destroyed" do
-    let(:absence) { create :absence }
+    let(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
+    let(:absence) { create :absence, agent: agent }
 
     it "have a STATUS:CANCELLED in ICS file joined" do
       mail = described_class.with(absence: absence).absence_destroyed
