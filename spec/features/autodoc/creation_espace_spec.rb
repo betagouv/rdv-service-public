@@ -9,7 +9,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
     doc = Autodoc.start_scenario("2) Ouverture d'un espace avec validation", self, accessibility_checks: false, category: "1) Ouverture d'espace")
 
     doc.start_section("Côté agent")
-    doc.add_text("Contexte: Je suis un agent qui n'a jamais utilisé RDV Service Public")
+    doc.add_text("Contexte : Je suis un agent qui n'a jamais utilisé RDV Service Public")
 
     visit "http://www.rdv-mairie-test.localhost/"
     doc.add_screenshot(page,

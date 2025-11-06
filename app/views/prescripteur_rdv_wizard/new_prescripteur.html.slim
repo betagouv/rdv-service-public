@@ -3,11 +3,11 @@
 
 .fr-container.fr-pt-3w
   .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
-    = dsfr_stepper(title: "Prescripteur", value: 2, max: 4, next_title: "Bénéficiaire")
+    = dsfr_stepper(title: "Prescripteur", value: 2, max: 4, next_title: "Bénéficiaire", header_level: 1)
     .card
       = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
       .card-body
-        h3 Vos coordonnées de prescripteur
+        h2 Vos coordonnées de prescripteur
         / Incitation à l'utilisation de la prescription interne
         - if @rdv_wizard.present? && show_agent_prescription_incitation?
           - territory = @rdv_wizard.motif.organisation.territory
