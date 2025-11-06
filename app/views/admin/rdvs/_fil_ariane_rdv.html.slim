@@ -9,9 +9,9 @@
 - elsif contextual_agents.size == 1 || !current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
   - contextual_agent = contextual_agents.first
   - if contextual_agent != current_agent
-    = b.with_breadcrumb label: "Agenda de #{contextual_agent.full_name}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agent.id)
+    = b.with_breadcrumb label: "Agenda de #{contextual_agent.full_name_or_email}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agent.id)
   - else
     = b.with_breadcrumb label: "Votre agenda", href: admin_organisation_planning_agenda_path(current_organisation)
 - else
-  = b.with_breadcrumb label: "Agendas de #{contextual_agents.map(&:short_name).join(', ').truncate(80)}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agents.map(&:id))
+  = b.with_breadcrumb label: "Agendas de #{contextual_agents.map(&:short_name_or_email).join(', ').truncate(80)}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agents.map(&:id))
 = b.with_breadcrumb label: "RDV #{rdv_title_for_agent(rdv)}"
