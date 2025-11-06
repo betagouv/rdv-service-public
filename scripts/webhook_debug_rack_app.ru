@@ -2,7 +2,7 @@
 # ngrok http 9292
 
 require "openssl"
-require "byebug"
+require "debug"
 
 class WebhookDebugRackApp
   def call(env)
@@ -13,7 +13,7 @@ class WebhookDebugRackApp
     received_signature = env["HTTP_X_LAPIN_SIGNATURE"]
     puts "computed_signature : #{computed_signature}"
     puts "received_signature : #{received_signature}"
-    [200, { "Content-Type" => "text/html" }, ["Hello World!"]]
+    [200, { "content-type" => "text/html" }, ["Hello World!"]]
   end
 end
 
