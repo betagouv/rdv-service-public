@@ -12,11 +12,9 @@
   .col-md-12.col-lg-8
     .card
       .card-body
-        = simple_form_for([:admin, @rdv_form.organisation, @rdv]) do |f|
+        = simple_form_for(@rdv, url: admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id))) do |f|
           = render "model_errors", model: @rdv_form, f: f
           = collapsible_form_fields_for_warnings(@rdv_form) do
-            - @contextual_agents.each do |contextual_agent|
-              = hidden_field_tag "contextual_agents[]", contextual_agent.id
             = f.association :motif, collection: [@rdv_form.motif], disabled: true
             - if @rdv_form.organisation.territory.enable_context_field
               = f.input :context, input_html: { rows: 3 }
