@@ -76,5 +76,11 @@ class VerifiedServicePublicDomainNames
     @cerema.fr
 
     .senat.fr
+
+    @sante.fr
+    .sante.fr
+
+    @justice.fr
+    .justice.fr
   ].freeze
 end
