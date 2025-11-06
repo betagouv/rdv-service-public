@@ -30,7 +30,7 @@ RSpec.describe "/api/v1/users" do
 
       it "saves whodunnit" do
         post "/api/v1/users", headers:, params:, as: :json
-        expect(User.last.versions.last.whodunnit).to eq("[Agent] #{myself.full_name} (via API)")
+        expect(User.last.versions.last.whodunnit).to eq("[Agent] #{myself.full_name} (id=#{myself.id}) (via API)")
       end
     end
 

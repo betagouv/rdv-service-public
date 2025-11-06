@@ -90,10 +90,19 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
     end
 
     context "when the agent only logged in from the homepage with ProConnect" do
-      let(:agent) { create(:agent) }
+      context "when the agent's email is not recognized" do
+        it "doesn't authorize the creation" do
+          expect(described_class.new(create(:agent, email: "bob@gmail.com"), territory).create?).to be_falsey
+          expect(described_class.new(create(:agent, email: "bob@fakegouv.fr"), territory).create?).to be_falsey
+          expect(described_class.new(create(:agent, email: "bob@bac-grenoble.fr"), territory).create?).to be_falsey
+        end
+      end
 
-      it "doesn't authorize the creation" do
-        expect(subject.create?).to be_falsey
+      context "when the agent's email is verified as a public service email" do
+        it "authorizes the creation" do
+          expect(described_class.new(create(:agent, email: "bob@beta.gouv.fr"), territory).create?).to be_truthy
+          expect(described_class.new(create(:agent, email: "bob@ac-grenoble.fr"), territory).create?).to be_truthy
+        end
       end
     end
   end

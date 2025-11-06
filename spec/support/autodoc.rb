@@ -1,19 +1,20 @@
 # Autodoc, la doc automatique !
 class Autodoc
-  @scenarios = []
+  @categories = {}
 
-  def self.start_scenario(title, example)
-    scenario = Scenario.new(title, example)
-    @scenarios << scenario
+  def self.start_scenario(title, example, accessibility_checks: true, category: nil)
+    scenario = Scenario.new(title, example, accessibility_checks)
+    @categories[category] ||= []
+    @categories[category] << scenario
     scenario
   end
 
   def self.render
-    return if @scenarios.empty?
+    return if @categories.empty?
 
     `mkdir -p tmp/capybara/autodoc`
 
-    @scenarios.each do |scenario|
+    @categories.values.flatten.each do |scenario|
       Rails.root.join("tmp/capybara/autodoc/scenario_#{scenario.index}.html").write(
         Slim::Template.new(Rails.root.join("spec/support/autodoc/layout.html.slim")).render(scenario) do
           Slim::Template.new(Rails.root.join("spec/support/autodoc/scenario.html.slim")).render(scenario).html_safe # rubocop:disable Rails/OutputSafety
@@ -27,16 +28,15 @@ class Autodoc
       end
     )
 
-    if @scenarios.any?
-      puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/index.html')}"
-    end
+    puts "La doc est accessible sur file://#{Rails.root.join('tmp/capybara/autodoc/index.html')}"
   end
 
   class Scenario
-    def initialize(title, example)
+    def initialize(title, example, accessibility_checks)
       @title = title
       @index = Digest::SHA1.hexdigest(title)[0..8]
       @example = example
+      @accessibility_checks = accessibility_checks
       @sections = []
       @current_section = nil
     end
@@ -66,6 +66,9 @@ class Autodoc
         Capybara.current_session.driver.visit "file://#{page_or_email.save_page}"
         Capybara.current_session.driver.save_screenshot(path)
       else
+        if @accessibility_checks
+          @example.expect(page_or_email).to @example.be_axe_clean
+        end
         page_or_email.driver.save_screenshot(path)
       end
 

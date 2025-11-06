@@ -14,11 +14,10 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
     context "et qu'il s'est connecté via une application externe" do
       let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
+      let(:super_admin) { create :super_admin }
 
-      it "permet de créer un territoire et une organisation" do
+      it "permet de créer un territoire et une organisation, puis d'être ajouté au CRM par un super admin" do
         visit "/admin/organisations/configuration" # Les pages de paramètres des applications externes mènent à cette url
-
-        click_on "Ouvrir un espace"
 
         fill_in("Nom de votre organisation", with: "CCAS de Montreuil")
         click_on "Enregistrer"
@@ -31,6 +30,18 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         )
         expect(agent.reload.organisations.last.name).to eq "CCAS de Montreuil"
         expect(agent.services).to be_empty
+
+        login_as(super_admin, scope: :super_admin)
+        visit super_admins_accounts_for_crm_index_path
+
+        expect(page).to have_content("Espaces à ajouter au CRM")
+        click_on("CCAS de Montreuil")
+
+        select("Commune", from: "Catégorie")
+        click_on "Enregistrer"
+
+        expect(page).to have_content("Catégorie ajoutée à l'espace")
+        expect(Territory.last.category).to eq "Commune"
       end
 
       context "et qu'il a un rdv plan qui a été créé par intégration" do

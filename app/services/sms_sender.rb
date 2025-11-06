@@ -30,8 +30,6 @@ class SmsSender < BaseService
       send_with_netsize
     when :clever_technologies
       send_with_clever_technologies
-    when :sfr_mail2sms
-      send_with_sfr_mail2sms
     when :debug_logger
       send_with_debug_logger
     else
@@ -152,21 +150,6 @@ class SmsSender < BaseService
     end
 
     request.run
-  end
-
-  # SFR with mail2SMS
-  # /!\ does not report errors at all
-  #
-  # Utilisé par
-  # - le département du Pas-de-Calais (62)
-  # - le département des Hautes-Seine (92)
-  #
-  def send_with_sfr_mail2sms
-    Admins::SfrMail2SmsMailer.send_sms(@api_key, @phone_number, @content).deliver_now
-
-    save_receipt(result: :processed)
-  rescue Net::SMTPServerBusy => e
-    handle_failure(error_message: e.message)
   end
 
   # Clever Technologies

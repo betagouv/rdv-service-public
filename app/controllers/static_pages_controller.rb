@@ -12,11 +12,7 @@ class StaticPagesController < ApplicationController
   def domaines; end
 
   def presentation_for_agents
-    if current_domain == Domain::RDV_MAIRIE
-      redirect_to root_path # La landing page pour RDV Service Public s'adresse aux agents
-    else
-      render current_domain.presentation_for_agents_template_name, layout: "application_base"
-    end
+    render current_domain.presentation_for_agents_template_name, layout: "application_base"
   end
 
   def microsoft_domain_verification

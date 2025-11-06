@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     resources :lieux
     resources :territories, except: %i[new create]
     resources :territory_creation_requests, only: %i[index edit update]
+    resources :accounts_for_crm, only: %i[index edit update]
     resources :users
     resources :comptes, only: %i[new create]
     resources :rdvs, only: %i[show]
@@ -363,7 +364,7 @@ Rails.application.routes.draw do
     get "show"
   end
 
-  %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
+  %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines nouvel_espace].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
 
@@ -379,6 +380,7 @@ Rails.application.routes.draw do
   get "health_check" => "health#db_connection"
   get "health/jobs_queues" => "health#jobs_queues"
   get "health/jobs_scheduled" => "health#jobs_scheduled"
+  get "health/raise_on_purpose" => "health#raise_on_purpose"
 
   get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Service-Public", status: 302)
 

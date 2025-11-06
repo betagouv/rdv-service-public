@@ -1,23 +1,32 @@
-- tutoriel_url = "https://scribehow.com/embed/Tutoriel__Configurer_son_Espace_RDV_Service_Public__WRoFB835RG-lulLQNrSTHQ?as=scrollable"
 p = t("mailers.common.hello")
 
 p
-  = "Nous avons le plaisir de vous confirmer l’ouverture de votre espace "
+  = "Bonne nouvelle ! Votre espace "
   b = domain.name
-  = ". Vous êtes l'"
-  b administrateur de votre espace
-  = ", à ce titre, vous pouvez dès maintenant :"
-  ul
-    li Paramétrer vos organisations, vos services, et inviter vos agents ;
-    li Configurer vos motifs de rendez-vous.
+  = " est désormais ouvert. 🎉"
 
-p Pour bien démarrer, #{link_to("consultez notre tutoriel", tutoriel_url)} pour configurer votre espace, et retrouvez toutes les ressources utiles dans notre #{link_to("centre d'aide", "https://aide.rdv-service-public.fr/")}.
+  br
+  | Vous pouvez dès maintenant commencer à configurer votre organisation :
+
+ul
+  li définir vos premiers motifs de rendez-vous,
+  li ouvrir vos plages de disponibilité,
+  li inviter vos collègues à rejoindre l’espace.
 
 .btn-wrapper
-  = link_to "Accéder à mon espace", configuration_admin_organisations_url(@organisation, @agent),  class: "btn btn-primary"
-.btn-wrapper
-  = link_to "Consulter le tutoriel", tutoriel_url,  class: "btn btn-secondary"
+  = link_to "Accéder à mon espace", configuration_admin_organisations_url,  class: "btn btn-primary"
 
-p Besoin d’aide ? Notre équipe est là pour vous accompagner, #{ link_to("planifiez un temps d'échange", "https://cal.com/team/rdv-service-public/accompagnement")}.
+hr
+br
+br
+
+p Pour aller plus loin dans la prise en main :
+
+.btn-wrapper
+  = link_to "Consulter les tutoriels", "https://aide.rdv-service-public.fr/", class: "btn btn-secondary", style: "padding-left: 86px; padding-right: 86px"
+.btn-wrapper
+  = link_to "Participer à un webinaire de présentation", "https://rdv.anct.gouv.fr/prendre_rdv?departement=SP&public_link_organisation_id=1628", class: "btn btn-primary"
+
+p Ces ressources vous aideront à prendre en main la solution pas à pas.
 
 = t("mailers.common.farewell_html", domain_name: domain.name)

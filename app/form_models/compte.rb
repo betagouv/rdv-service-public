@@ -53,7 +53,7 @@ class Compte
         allow_to_invite_agents: true
       )
 
-      if @territory_creation_request
+      if agent.invitation_created_at.nil? # On n'envoie pas ce mail si l'agent a déjà reçu un mail d'invitation
         Agents::TerritoryCreationRequestMailer.accepted(
           agent: agent,
           organisation: organisation,
