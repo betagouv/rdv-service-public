@@ -25,4 +25,19 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
 
     render_collection(rdvs)
   end
+
+  def update
+    @rdv = Rdv.find(params[:id])
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
+
+    @rdv.update(params.permit(:status))
+
+    render_record @rdv
+  end
+
+  private
+
+  def pundit_user
+    current_agent
+  end
 end
