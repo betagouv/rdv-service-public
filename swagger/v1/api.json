@@ -3622,6 +3622,110 @@
         }
       }
     },
+    "/api/v1/rdvs/{rdv_id}": {
+      "patch": {
+        "summary": "Mettre à jour le statut d'un rendez-vous",
+        "security": [
+          {
+            "content-type": [],
+            "autorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "Bearer 123456",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rdv_id",
+            "in": "path",
+            "description": "ID du rendez-vous",
+            "example": 123,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "RDV"
+        ],
+        "operationId": "updateRdv",
+        "description": "Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé.",
+        "responses": {
+          "200": {
+            "description": "Met à jour et renvoie un rendez-vous",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "status": "seen"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Renvoie 'unprocessable_entity' quand le statut envoyé n'est pas valide",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": {
+                        "status": [
+                          {
+                            "error": "blank"
+                          }
+                        ]
+                      },
+                      "error_messages": [
+                        "status doit être rempli(e)"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_unprocessable_entity"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "seen"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/referent_assignations": {
       "post": {
         "summary": "Créer une assignation à un référent",
