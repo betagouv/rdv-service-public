@@ -108,15 +108,9 @@ class Agents::RdvPlansController < AgentAuthController
   private
 
   def available_motifs(rdv_plan)
-    motif_scope = Agent::MotifPolicy::Scope.new(
-      current_agent,
-      Motif.individuel.active
-    ).resolve
-
-    motif_scope.where(
-      service: rdv_plan.rdv_agent.services + [nil],
-      organisation_id: rdv_plan.rdv_agent.roles.select(:organisation_id)
-    )
+    rdv_plan.rdv_agent.organisations.map do |organisation|
+      Motif.available_motifs_for_organisation_and_agent(organisation, rdv_plan.rdv_agent)
+    end.compact
   end
 
   def find_rdv_plan
