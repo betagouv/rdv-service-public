@@ -37,9 +37,10 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_modalites
-    @available_location_types = available_motifs(@rdv_plan).pluck(:location_type)
-
-    render locals: { event_sources: }
+    render locals: {
+      available_location_types: available_motifs(@rdv_plan).pluck(:location_type),
+      event_sources:,
+    }
   end
 
   def update_modalites

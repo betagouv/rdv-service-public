@@ -1,24 +1,46 @@
-/# locals: (event_sources:)
+/# locals: (event_sources:, available_location_types:)
 
 .fr-row
   .fr-col-12
     = render "agents/rdv_plans/header", rdv_plan: @rdv_plan, current_step: 1, step_title: "Créneau", next_step_title: "Motif"
 .fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
-  .fr-col-12.fr-col-md-4.fr-mt-4w
-    = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true
-    = link_to edit_starts_at_agents_rdv_plan_path(@rdv_plan) do
-      = back_icon(class: "fr-mr-1w")
-      = "retour"
+  - if available_location_types.none?
+    .fr-col-12.fr-mt-2w
+      / TODO: afficher un bandeau d'erreur
+      = dsfr_alert type: :error, size: :sm, close_button: false, html_attributes: { class: "fr-pb-1w fr-my-2w", role: "alert" } do
+        - if @rdv_plan.rdv_agent.organisations.count == 1
+          - organisation = @rdv_plan.rdv_agent.organisations.first
+          - if organisation.motifs.active.none?
+            p Vous devez d'abord créer un motif de rendez-vous pour l'organisation #{organisation.name}
+          - else
+            p #{@rdv_plan.rdv_agent.full_name_or_email} n'a accès à aucun des motifs de rendez-vous de #{organisation.name}. Vous devez soit créer un nouveau motif soit changer son niveau de permission.
+        - else
+          p Aucun motif de rendez-vous n'est disponible pour cet agent.
+          p Vous pouvez corriger cette erreur en ajoutant de nouveaux motifs de rendez-vous ou en donnant plus de permissions à cet agent.
+      - @rdv_plan.rdv_agent.organisations.each do |organisation|
+        = link_to("Voir les motifs de #{organisation.name}", admin_organisation_motifs_path(organisation), class: "fr-btn fr-btn--secondary", target: :_blank)
 
-  .fr-col-12.fr-col-md-8.fr-px-2w
-    = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
-    hr.fr-mt-2w.fr-mb-4w
+      .fr-mt-3w
+        = link_to edit_starts_at_agents_rdv_plan_path(@rdv_plan) do
+          = back_icon(class: "fr-mr-1w")
+          = "retour"
+  - else
+    .fr-col-12.fr-col-md-4.fr-mt-4w
+      = render "agents/rdv_plans/calendar", rdv_plan: @rdv_plan, event_sources:, single_day: true
+      = link_to edit_starts_at_agents_rdv_plan_path(@rdv_plan) do
+        = back_icon(class: "fr-mr-1w")
+        = "retour"
 
-    = simple_form_for @rdv_plan, url: update_modalites_agents_rdv_plan_path(@rdv_plan) do |f|
-      .fr-mb-4w
-        .input-group
-          = datetime_input(f, :starts_at, options: { label_html: { style: "flex-shrink: 0;", class: "fr-mr-2w" }, wrapper_html: { class: "d-flex", style: "align-items: baseline;" }})
+    .fr-col-12.fr-col-md-8.fr-px-2w
+      = render "agents/rdv_plans/summary/agent", rdv_plan: @rdv_plan
+      hr.fr-mt-2w.fr-mb-4w
 
-      = render "agents/rdv_plans/modalites_field", rdv_plan: @rdv_plan
+      = simple_form_for @rdv_plan, url: update_modalites_agents_rdv_plan_path(@rdv_plan) do |f|
+        .fr-mb-4w
+          .input-group
+            = datetime_input(f, :starts_at, options: { label_html: { style: "flex-shrink: 0;", class: "fr-mr-2w" }, wrapper_html: { class: "d-flex", style: "align-items: baseline;" }})
 
-      = f.submit "Continuer", class: "fr-btn float-right"
+        = render "agents/rdv_plans/modalites_field", { available_location_types:, rdv_plan: @rdv_plan }
+
+        = f.submit "Continuer", class: "fr-btn float-right"
+
