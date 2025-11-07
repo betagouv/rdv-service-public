@@ -14,8 +14,6 @@ tiles_etalab = "etalab-tiles.fr"
 unpkg_cdn = "unpkg.com"
 tiles_osm = "tile.openstreetmap.org"
 tiles_data_gouv = "openmaptiles.data.gouv.fr"
-# Bouton "Je donne mon avis sur cette démarche"
-voxusagers = "voxusagers.numerique.gouv.fr"
 # Utilisé sur nos pages statiques (404.html, 500.html)
 bootstrap_cdn = "*.bootstrapcdn.com"
 # Metabase permet d’embedder des rapports dans l’application
@@ -47,7 +45,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.worker_src :blob
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, metabase
-  policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
+  policy.img_src :self, :data, :blob, tiles_osm, unpkg_cdn, tiles_data_gouv
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
 
