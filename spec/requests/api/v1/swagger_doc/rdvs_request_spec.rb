@@ -203,4 +203,18 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
   end
+
+  path "/api/v1/rdvs/{rdv_id}" do
+    patch "Mettre à jour le statut d'un rendez-vous" do
+      with_oauth_token_authentication
+
+      tags "RDV"
+      produces "application/json"
+      consumes "application/json"
+      operationId "updateRdv"
+      description "Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé."
+
+
+
+  end
 end
