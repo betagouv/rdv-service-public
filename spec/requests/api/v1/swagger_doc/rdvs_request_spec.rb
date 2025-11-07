@@ -214,7 +214,15 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       produces "application/json"
       consumes "application/json"
       operationId "updateRdv"
-      description "Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé."
+
+      humanized_status_values = Rdv.statuses.keys.map do |status|
+        "#{status} (#{Rdv.human_attribute_value(:status, status)})"
+      end.to_sentence
+
+      description <<~TEXT
+        Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé.
+        Les valeurs autorisées pour le statut sont #{humanized_status_values}."
+      TEXT
 
       parameter name: :rdv_id, in: :path, type: :integer, description: "ID du rendez-vous", example: 123
       parameter(
