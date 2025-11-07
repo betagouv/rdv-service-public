@@ -208,13 +208,39 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
     patch "Mettre à jour le statut d'un rendez-vous" do
       with_oauth_token_authentication
 
+      let!(:agent) { create(:agent, admin_role_in_organisations: [rdv.organisation]) }
+      let(:oauth_token) { create(:access_token, resource_owner_id: agent.id) }
+      let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
+
       tags "RDV"
       produces "application/json"
       consumes "application/json"
       operationId "updateRdv"
       description "Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé."
 
+      parameter name: :rdv_id, in: :path, type: :integer, description: "ID du rendez-vous", example: 123
+      parameter(
+        name: :params, # ce nom n'est pas utilisé, car tous les paramètres sont dans le body de la requête
+        in: :body,
+        schema: {
+          type: :object,
+          properties: {
+            status: { type: :string, example: "seen" },
+          },
+          required: %w[status],
+        },
+        example: { status: "seen" }
+      )
 
+      let(:rdv) { create(:rdv, status: :unknown) }
+      let(:rdv_id) { rdv.id }
 
+      response 200, "Met à jour et renvoie un rendez-vous" do
+        run_test!
+        let(:params) do
+          { status: "seen" }
+        end
+      end
+    end
   end
 end
