@@ -208,9 +208,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
     patch "Mettre à jour le statut d'un rendez-vous" do
       with_oauth_token_authentication
 
-      let!(:agent) { create(:agent, admin_role_in_organisations: [rdv.organisation]) }
-      let(:oauth_token) { create(:access_token, resource_owner_id: agent.id) }
-      let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
+      let!(:agent) { create(:agent, :francis_factice, admin_role_in_organisations: [rdv.organisation]) }
 
       tags "RDV"
       produces "application/json"
