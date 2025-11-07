@@ -3663,7 +3663,7 @@
           "RDV"
         ],
         "operationId": "updateRdv",
-        "description": "Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé.",
+        "description": "Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé.\nLes valeurs autorisées pour le statut sont unknown (État indéterminé), seen (Rendez-vous honoré), excused (Annulé (excusé)), revoked (Annulé (par le service)) et noshow (Absence non excusée).\"\n",
         "responses": {
           "200": {
             "description": "Met à jour et renvoie un rendez-vous",
