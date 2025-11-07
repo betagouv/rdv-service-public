@@ -30,9 +30,14 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
     @rdv = Rdv.find(params[:id])
     authorize(@rdv, policy_class: Agent::RdvPolicy)
 
-    @rdv.update(params.permit(:status))
+    @rdv.update!(params.permit(:status))
 
-    render_record @rdv
+    # Le blueprint complet du rendez-vous renvoie énormément d'information, qui ne sont pas pertinentes ici.
+    # On va sans doute devoir restreindre la quantité de données renvoyées par ce blueprint pour rendre
+    # l'index de ce controller plus rapide.
+    # Pour éviter de devoir investiguer quels clients de l'api dépendent des attributs de ce
+    # blueprint pour cet endpoint d'update, on ne renvoie que le statut (ce qui répond à notre besoin).
+    render json: @rdv.attributes.symbolize_keys.slice(:status)
   end
 
   private

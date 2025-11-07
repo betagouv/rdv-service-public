@@ -237,8 +237,15 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       response 200, "Met à jour et renvoie un rendez-vous" do
         run_test!
+
         let(:params) do
           { status: "seen" }
+        end
+      end
+
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le statut envoyé n'est pas valide" do
+        let(:params) do
+          { status: nil }
         end
       end
     end

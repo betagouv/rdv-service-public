@@ -62,7 +62,7 @@ class Rdv < ApplicationRecord
            :service_name, :service_short_name, to: :motif
 
   # Validations
-  validates :starts_at, :ends_at, :agents, presence: true
+  validates :starts_at, :ends_at, :agents, :status, presence: true
   validate :lieu_is_not_disabled_if_needed
   validates :starts_at, realistic_date: true
   validate :duration_is_plausible
