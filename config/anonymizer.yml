@@ -500,3 +500,6 @@ tables:
       - good_job_batch_id
       - created_at
       - updated_at
+  - table_name: operators
+    anonymized_column_names:
+      - name
