@@ -204,7 +204,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
     end
   end
 
-  path "/api/v1/rdvs/{rdv_id}" do
+  path "/api/v1/rdvs/{rdv_id}/update_status" do
     patch "Mettre à jour le statut d'un rendez-vous" do
       with_oauth_token_authentication
 
@@ -213,7 +213,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       tags "RDV"
       produces "application/json"
       consumes "application/json"
-      operationId "updateRdv"
+      operationId "updateRdvStatus"
 
       humanized_status_values = Rdv.statuses.keys.map do |status|
         "#{status} (#{Rdv.human_attribute_value(:status, status)})"
