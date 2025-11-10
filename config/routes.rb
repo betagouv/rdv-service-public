@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     resources :user_profiles, only: %i[destroy]
     resources :super_admins, only: %i[index destroy]
     resources :organisations
+    resources :operators
     resources :services
     resources :motifs
     resources :lieux

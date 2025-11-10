@@ -32,6 +32,7 @@ class Territory < ApplicationRecord
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :territory_services, dependent: :destroy
   has_and_belongs_to_many :motif_categories
+  belongs_to :operator, optional: true
 
   # Through relations
   has_many :organisations_agents, -> { distinct }, through: :organisations, source: :agents
