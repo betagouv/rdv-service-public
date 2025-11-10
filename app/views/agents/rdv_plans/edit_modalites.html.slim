@@ -6,7 +6,6 @@
 .fr-grid-row.fr-mb-16w[data-controller="rdv-plan"]
   - if available_location_types.none?
     .fr-col-12.fr-mt-2w
-      / TODO: afficher un bandeau d'erreur
       = dsfr_alert type: :error, size: :sm, close_button: false, html_attributes: { class: "fr-pb-1w fr-my-2w", role: "alert" } do
         - if @rdv_plan.rdv_agent.organisations.count == 1
           - organisation = @rdv_plan.rdv_agent.organisations.first
