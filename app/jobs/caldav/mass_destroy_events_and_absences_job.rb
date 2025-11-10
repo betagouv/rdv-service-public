@@ -1,5 +1,5 @@
 module Caldav
-  class MassDestroyEventJob < ApplicationJob
+  class MassDestroyEventsAndAbsencesJob < ApplicationJob
     queue_as :latency_5m
     include ExtendedRetryStrategyConcern
 
@@ -8,6 +8,16 @@ module Caldav
 
       return unless agent.caldav_configured?
 
+      mass_destroy_events(agent)
+
+      Absence.where(agent:).where.not(caldav_url: nil).destroy_all
+
+      agent.update!(caldav_username: nil, caldav_password: nil, caldav_agenda_url: nil, caldav_disconnect_in_progress: false, caldav_sync_token: nil)
+    end
+
+    private
+
+    def mass_destroy_events(agent)
       agent.agents_rdvs.where.not(caldav_url: nil).each do |agents_rdv|
         begin
           agent.caldav_client.events.delete(agents_rdv.caldav_url)
@@ -19,8 +29,6 @@ module Caldav
         # On utilise #update_columns pour éviter de lancer les callbacks, dont notamment celui qui amène à l'exécution de ce job
         agents_rdv.update_columns(caldav_url: nil) # rubocop:disable Rails/SkipsModelValidations
       end
-
-      agent.update!(caldav_username: nil, caldav_password: nil, caldav_agenda_url: nil, caldav_disconnect_in_progress: false, caldav_sync_token: nil)
     end
   end
 end
