@@ -4,6 +4,7 @@
 = stylesheet_link_tag "application_agent", media: "all", "data-turbolinks-track": "reload"
 
 = javascript_include_tag "application_agent", "data-turbolinks-track": "reload"
+= javascript_include_tag "application_test" if Rails.env.test?
 = javascript_include_tag "#{dsfr_path}/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
 = javascript_include_tag "#{dsfr_path}/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
 
