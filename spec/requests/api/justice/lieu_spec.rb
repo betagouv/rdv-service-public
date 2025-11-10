@@ -29,4 +29,22 @@ RSpec.describe "Api pour Justice.fr" do
       }
     )
   end
+
+  describe "feature flag pour indiquer si la prise de rendez-vous doit être mise en avant sur l'application" do
+    context "sans la variable d'env pour le feature flag" do
+      it "n'indique pas d'activer la feature" do
+        get "/api/justice/lieux"
+        expect(parsed_response_body["display_feature"]).to be false
+      end
+    end
+
+    context "avec la variable d'env" do
+      stub_env_with(ENABLE_JUSTICE_FR_FEATURE_FLAG: "true")
+
+      it "indique d'activer la feature" do
+        get "/api/justice/lieux"
+        expect(parsed_response_body["display_feature"]).to be true
+      end
+    end
+  end
 end
