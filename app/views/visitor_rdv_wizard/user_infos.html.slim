@@ -1,0 +1,15 @@
+.fr-mb-12w
+  .card= render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
+
+  h2 Infos usager
+
+  = form_for @rdv_wizard,
+    url: visitor_rdv_wizard_save_user_infos_path(**@rdv_wizard.to_query),
+    builder: Dsfr::FormBuilder,
+    method: :post do |f|
+   = f.fields_for :user, @rdv_wizard.user do |ff|
+     = ff.dsfr_text_field :first_name, label: "Votre prénom"
+     = ff.dsfr_text_field :last_name, label: "Votre nom de famille"
+     = ff.dsfr_text_field :phone_number, label: "Votre numéro de téléphone"
+   = f.dsfr_check_box :pour_un_proche, label: "Je prends RDV pour quelqu’un d’autre", class: "fr-my-4w"
+   = f.submit "Valider", class: "fr-btn"

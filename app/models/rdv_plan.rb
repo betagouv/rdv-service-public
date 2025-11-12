@@ -3,7 +3,7 @@ class RdvPlan < ApplicationRecord
     only: %i[planning_agent_id rdv_id user_id rdv_agent_id motif_id lieu_id starts_at duration_in_minutes return_url location_type dossier_url]
   )
 
-  belongs_to :planning_agent, class_name: "Agent"
+  belongs_to :planning_agent, class_name: "Agent", optional: true
   belongs_to :user
 
   belongs_to :rdv_agent, class_name: "Agent", optional: true
@@ -51,6 +51,27 @@ class RdvPlan < ApplicationRecord
     if rdv.persisted?
       update(rdv: rdv)
       Notifiers::RdvCreated.perform_with(rdv, planning_agent)
+    end
+
+    rdv
+  end
+
+  def create_rdv_visitor
+    rdv = Rdv.create(
+      agents: [rdv_agent],
+      participations: [Participation.new(user_id: user.id, send_lifecycle_notifications: false, send_reminder_notification: false)],
+
+      motif:,
+      organisation:,
+      lieu:,
+      starts_at:,
+      created_by: user,
+      ends_at: starts_at + (duration_in_minutes || motif.default_duration_in_min).minutes
+    )
+
+    if rdv.persisted?
+      update(rdv: rdv)
+      # Notifiers::RdvCreated.perform_with(rdv, planning_agent)
     end
 
     rdv

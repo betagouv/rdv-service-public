@@ -429,6 +429,12 @@ Rails.application.routes.draw do
   root "search#home"
 
   get "/prendre_rdv", to: "search#search_rdv"
+  get "/prendre_rdv/infos_usager", to: "visitor_rdv_wizard#user_infos", as: :visitor_rdv_wizard_user_infos
+  post "/prendre_rdv/infos_usager", to: "visitor_rdv_wizard#save_user_infos", as: :visitor_rdv_wizard_save_user_infos
+  get "/prendre_rdv/confirmation", to: "visitor_rdv_wizard#show_confirm", as: :visitor_rdv_wizard_show_confirm
+  post "/prendre_rdv/send_sms", to: "visitor_rdv_wizard#send_sms", as: :visitor_rdv_wizard_send_sms
+  get "/prendre_rdv/confirmation_sms", to: "visitor_rdv_wizard#show_confirm_sms", as: :visitor_rdv_wizard_show_confirm_sms
+  post "/prendre_rdv/confirmation_sms", to: "visitor_rdv_wizard#confirm_sms", as: :visitor_rdv_wizard_confirm_sms
 
   # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")
