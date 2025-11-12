@@ -3,7 +3,7 @@
     ruby:
       visibility_types = %i[visible_and_notified visible_and_not_notified invisible].map do |value|
         { value:,
-          checked: @motif.visibility_type == value || (motif.new_record? && value == :visible_and_notified),
+          checked: @motif.visibility_type == value.to_s || (motif.new_record? && value == :visible_and_notified),
           label: sanitize(Motif.human_attribute_value(:visibility_type, value, context: :html)),
           hint: Motif.human_attribute_value(:visibility_type, value, context: rdvi_mode ? :hint_rdv_insertion : :hint), }
       end
