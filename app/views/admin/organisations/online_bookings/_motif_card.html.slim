@@ -1,7 +1,7 @@
 /# locals: (motif:)
 - availabilities_count = motif.upcoming_availabilities.count
 .fr-col-12
-  .card.fr-enlarge-link
+  .card
     .card-body.fr-pb-0
       .d-flex.rdv-justify-content-space-between.rdv-align-items-baseline
         .d-flex
@@ -11,5 +11,8 @@
             = motif.human_attribute_value(:location_type)
         div
           = render "admin/organisations/online_booking/motifs/availability_badge", motif:, availabilities_count:
+          .fr-btns-group.fr-btns-group--inline
+            = link_to "Afficher les créneaux", admin_organisation_online_booking_motif_path(@organisation, motif), class: "fr-btn fr-btn--secondary"
+            = link_to "Inviter un usager", admin_organisation_online_booking_motif_path(@organisation, motif), class: "fr-btn fr-btn--secondary"
 
 
