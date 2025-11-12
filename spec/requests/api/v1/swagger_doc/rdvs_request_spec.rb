@@ -203,4 +203,57 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
   end
+
+  path "/api/v1/rdvs/{rdv_id}/update_status" do
+    patch "Mettre à jour le statut d'un rendez-vous" do
+      with_oauth_token_authentication
+
+      let!(:agent) { create(:agent, :francis_factice, admin_role_in_organisations: [rdv.organisation]) }
+
+      tags "RDV"
+      produces "application/json"
+      consumes "application/json"
+      operationId "updateRdvStatus"
+
+      humanized_status_values = Rdv.statuses.keys.map do |status|
+        "#{status} (#{Rdv.human_attribute_value(:status, status)})"
+      end.to_sentence
+
+      description <<~TEXT
+        Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé.
+        Les valeurs autorisées pour le statut sont #{humanized_status_values}."
+      TEXT
+
+      parameter name: :rdv_id, in: :path, type: :integer, description: "ID du rendez-vous", example: 123
+      parameter(
+        name: :params, # ce nom n'est pas utilisé, car tous les paramètres sont dans le body de la requête
+        in: :body,
+        schema: {
+          type: :object,
+          properties: {
+            status: { type: :string, example: "seen" },
+          },
+          required: %w[status],
+        },
+        example: { status: "seen" }
+      )
+
+      let(:rdv) { create(:rdv, status: :unknown) }
+      let(:rdv_id) { rdv.id }
+
+      response 200, "Met à jour et renvoie un rendez-vous" do
+        run_test!
+
+        let(:params) do
+          { status: "seen" }
+        end
+      end
+
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le statut envoyé n'est pas valide" do
+        let(:params) do
+          { status: nil }
+        end
+      end
+    end
+  end
 end

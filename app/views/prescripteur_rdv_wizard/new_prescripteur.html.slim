@@ -1,38 +1,42 @@
-.fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
-  = dsfr_stepper(title: "Prescripteur", value: 2, max: 4, next_title: "Bénéficiaire")
-  .card
-    = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
-    .card-body
-      h3 Vos coordonnées de prescripteur
-      / Incitation à l'utilisation de la prescription interne
-      - if @rdv_wizard.present? && show_agent_prescription_incitation?
-        - territory = @rdv_wizard.motif.organisation.territory
-        .fr-alert.fr-alert--info.fr-mb-2w
-          | Nouvelle fonctionnalité&nbsp;: Pour ne pas avoir à remplir ce formulaire pour chaque nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent
-          / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
-          - if !territory.sectorized?
-            / Le lien de prescription interne redirige vers la premiére organisation de l'agent dans le même espace
-            = link_to user_selection_admin_organisation_prescription_path( \
-                current_agent.organisations.find_by(territory: territory), session[:rdv_wizard_attributes].merge(prescripteur: "interne") \
-              ) do
-              | &nbsp;en cliquant ici.
-          - else
-            | .
+- content_for :title do
+  | Vos coordonnées de prescripteur
 
-          p.mb-0
-          span> Pour en savoir plus consultez
-          = link_to "la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#la-prescription", target: "_blank"
+.fr-container.fr-pt-3w
+  .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
+    = dsfr_stepper(title: "Prescripteur", value: 2, max: 3, next_title: "Bénéficiaire", header_level: 1)
+    .card
+      = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
+      .card-body
+        h2 Vos coordonnées de prescripteur
+        / Incitation à l'utilisation de la prescription interne
+        - if @rdv_wizard.present? && show_agent_prescription_incitation?
+          - territory = @rdv_wizard.motif.organisation.territory
+          .fr-alert.fr-alert--info.fr-mb-2w
+            | Nouvelle fonctionnalité&nbsp;: Pour ne pas avoir à remplir ce formulaire pour chaque nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent
+            / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
+            - if !territory.sectorized?
+              / Le lien de prescription interne redirige vers la premiére organisation de l'agent dans le même espace
+              = link_to user_selection_admin_organisation_prescription_path( \
+                  current_agent.organisations.find_by(territory: territory), session[:rdv_wizard_attributes].merge(prescripteur: "interne") \
+                ) do
+                | &nbsp;en cliquant ici.
+            - else
+              | .
 
-      p
-        |> Ces informations permettront à l'agent qui assure le rendez-vous de savoir qui l'a planifié,
-        | et de vous contacter s'il y a une erreur sur le type de rendez-vous.
+            p.mb-0
+            span> Pour en savoir plus consultez
+            = link_to "la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#la-prescription", target: "_blank"
 
-      = form_for @prescripteur, url: prescripteur_store_prescripteur_in_session_path, builder: Dsfr::FormBuilder do |f|
-        .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
-          .fr-col-12.fr-col-md-6= f.dsfr_text_field :first_name, required: true, label: "Votre prénom"
-          .fr-col-12.fr-col-md-6= f.dsfr_text_field :last_name, required: true, label: "Votre nom"
-          .fr-col-12= f.dsfr_email_field :email, required: true, label: "Votre email professionnel", hint: "Format attendu : prenom.prescripteur@domaine.fr", autocomplete: "email"
-          .fr-col-12= f.dsfr_phone_field :phone_number, label: "Votre numéro de téléphone professionnel", hint: "Format attendu : 0122334455", autocomplete: "tel"
+        p
+          |> Ces informations permettront à l'agent qui assure le rendez-vous de savoir qui l'a planifié,
+          | et de vous contacter s'il y a une erreur sur le type de rendez-vous.
 
-        .rdv-text-align-right
-          = f.submit "Continuer", class: "fr-btn"
+        = form_for @prescripteur, url: prescripteur_store_prescripteur_in_session_path, builder: Dsfr::FormBuilder do |f|
+          .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
+            .fr-col-12.fr-col-md-6= f.dsfr_text_field :first_name, required: true, label: "Votre prénom"
+            .fr-col-12.fr-col-md-6= f.dsfr_text_field :last_name, required: true, label: "Votre nom"
+            .fr-col-12= f.dsfr_email_field :email, required: true, label: "Votre email professionnel", hint: "Format attendu : prenom.prescripteur@domaine.fr", autocomplete: "email"
+            .fr-col-12= f.dsfr_phone_field :phone_number, label: "Votre numéro de téléphone professionnel", hint: "Format attendu : 0122334455", autocomplete: "tel"
+
+          .rdv-text-align-right
+            = f.submit "Continuer", class: "fr-btn"
