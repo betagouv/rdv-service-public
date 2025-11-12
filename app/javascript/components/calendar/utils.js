@@ -138,4 +138,34 @@ function eventRenderer(selectedEventId) {
   }
 }
 
-export { defaultFullCalendarConfig, eventRenderer }
+
+const setupRefresh = (fullCalendarInstance) => {
+  const clearRefetchInterval = () => {
+    if (!fullCalendarInstance.refreshCalendarInterval) return
+    clearTimeout(fullCalendarInstance.refreshCalendarInterval)
+    fullCalendarInstance.refreshCalendarInterval = null
+  }
+
+  const setRefetchInterval = () => {
+    if (fullCalendarInstance.refreshCalendarInterval) return
+    fullCalendarInstance.refreshCalendarInterval = setInterval(() => fullCalendarInstance.refetchEvents(), 30000)
+  }
+
+  setRefetchInterval();
+
+  document.addEventListener('turbolinks:before-cache', () => { clearRefetchInterval(fullCalendarInstance) });
+  document.addEventListener('turbolinks:before-render', () => { clearRefetchInterval(fullCalendarInstance) });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      // when agent comes back to tab, refresh immediately
+      fullCalendarInstance.refetchEvents();
+
+      setRefetchInterval();
+    } else if (fullCalendarInstance.refreshCalendarInterval) {
+      clearRefetchInterval();
+    }
+  })
+};
+
+export { defaultFullCalendarConfig, eventRenderer, setupRefresh }

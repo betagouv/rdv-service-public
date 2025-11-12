@@ -3,7 +3,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import { defaultFullCalendarConfig, eventRenderer } from  './calendar/utils'
+import { defaultFullCalendarConfig, eventRenderer, setupRefresh } from  './calendar/utils'
 
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
@@ -18,19 +18,7 @@ export class AgendaMonoAgent {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-
-    document.addEventListener('turbolinks:before-cache', this.clearRefetchInterval);
-    document.addEventListener('turbolinks:before-render', this.clearRefetchInterval);
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        // when agent comes back to tab, refresh immediately
-        this.fullCalendarInstance.refetchEvents();
-
-        this.setRefetchInterval();
-      } else if (this.refreshCalendarInterval) {
-        this.clearRefetchInterval();
-      }
-    })
+    setupRefresh(this.fullCalendarInstance);
     document.addEventListener("turbolinks:before-cache", () => {
       // force calendar reload on turbolinks re-visit, otherwise event listeners
       // are not attached
@@ -40,18 +28,6 @@ export class AgendaMonoAgent {
       // fixes hanging tooltip on back
       $(".tooltip").removeClass("show")
     })
-    this.setRefetchInterval()
-  }
-
-  setRefetchInterval = () => {
-    if (this.refreshCalendarInterval) return
-    this.refreshCalendarInterval = setInterval(() => this.fullCalendarInstance.refetchEvents(), 60000)
-  }
-
-  clearRefetchInterval = () => {
-    if (!this.refreshCalendarInterval) return
-    clearTimeout(this.refreshCalendarInterval)
-    this.refreshCalendarInterval = null
   }
 
   initFullCalendar = () => {
