@@ -3,7 +3,7 @@
 - if motif.duplicated_from_motif && motif.new_record? && organisations_i_can_manage.count > 1
   .card
     .card-body
-      = f.association :organisation, label: "Créer le motif dans cette organisation", collection: organisations_i_can_manage, required: true, input_html: { class: "select2-input", data: { "auto-select-sole-option": true } }
+      = f.dsfr_select :organisation_id, organisations_i_can_manage.sort.collect { |organisation| [organisation.name, organisation.id] }, label: "Créer le motif dans cette organisation", required: true
 
 .card
   .card-body
@@ -14,7 +14,7 @@
             option= org_name
         / Nous voulons que l'autocomplete ne propose que les noms des motifs en base,
         / pas celles de l'historique de saisie du navigateur, d'où le autocomplete="off".
-        = f.dsfr_text_field :name, label: "Nom du motif", input_html: { list: "motif_names", autocomplete: "off" }, placeholder: "Saisissez le nom du motif", required: false
+        = f.dsfr_text_field :name, label: "Nom du motif", input_html: { list: "motif_names", autocomplete: "off" }, required: false
       - available_services = (current_territory.services.reject(&:secretariat?) + [motif.service].compact)
       - if available_services.any? || motif.service_id.present?
         .fr-col-md-12

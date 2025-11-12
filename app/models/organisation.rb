@@ -113,6 +113,10 @@ class Organisation < ApplicationRecord
     sector_attributions.any? && motifs.active.sectorized.any?
   end
 
+  def to_s
+    name
+  end
+
   private
 
   def validate_at_least_one_user_type
