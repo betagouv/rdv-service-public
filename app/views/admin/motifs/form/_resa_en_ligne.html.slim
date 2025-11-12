@@ -4,13 +4,18 @@
       bookable_by_options = [
         { value: :agents,
           label: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents")),
-          hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents")), },
+          hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents")),
+          checked: motif.bookable_by == "agents" || motif.new_record?,
+        },
         { value: :agents_and_prescripteurs,
           label: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs")),
-          hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"), scrubber: :prune), },
+          hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"), scrubber: :prune),
+          checked: motif.bookable_by == "agents_and_prescripteurs",
+        },
         { value: :everyone,
           label: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.everyone")),
           hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone")),
+          checked: motif.bookable_by == "everyone",
         },
       ]
       if rdvi_mode
@@ -19,6 +24,7 @@
                   value: :agents_and_prescripteurs_and_invited_users,
                   label: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs_and_invited_users")),
                   hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs_and_invited_users")),
+                  checked: motif.bookable_by == "agents_and_prescripteurs_and_invited_users",
           })
       end
     = f.dsfr_radio_buttons :bookable_by, bookable_by_options, hint: Motif.human_attribute_name("bookable_by_hint"), "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios"
