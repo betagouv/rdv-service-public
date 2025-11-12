@@ -6,6 +6,6 @@
 
 .row
   .col-md-12
-    = form_for @motif, url: admin_organisation_motifs_path, builder: Dsfr::FormBuilder do |f|
+    = form_for @motif, url: admin_organisation_motifs_path, builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
       = render "model_errors", model: @motif, f: f
       = render "admin/motifs/form", motif: @motif, f: f, rdvi_mode: current_organisation.rdv_insertion?
