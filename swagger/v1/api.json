@@ -3622,7 +3622,7 @@
         }
       }
     },
-    "/api/v1/rdvs/{rdv_id}": {
+    "/api/v1/rdvs/{rdv_id}/update_status": {
       "patch": {
         "summary": "Mettre à jour le statut d'un rendez-vous",
         "security": [
@@ -3662,7 +3662,7 @@
         "tags": [
           "RDV"
         ],
-        "operationId": "updateRdv",
+        "operationId": "updateRdvStatus",
         "description": "Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé.\nLes valeurs autorisées pour le statut sont unknown (État indéterminé), seen (Rendez-vous honoré), excused (Annulé (excusé)), revoked (Annulé (par le service)) et noshow (Absence non excusée).\"\n",
         "responses": {
           "200": {
