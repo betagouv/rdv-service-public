@@ -14,8 +14,4 @@ class MotifCategory < ApplicationRecord
   def requires_ants_predemande_number?
     name.in?(Api::Ants::EditorController::ANTS_MOTIF_CATEGORY_NAMES)
   end
-
-  def to_s
-    name
-  end
 end
