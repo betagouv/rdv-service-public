@@ -14,14 +14,14 @@
             option= org_name
         / Nous voulons que l'autocomplete ne propose que les noms des motifs en base,
         / pas celles de l'historique de saisie du navigateur, d'où le autocomplete="off".
-        = f.dsfr_text_field :name, label: "Nom du motif", input_html: { list: "motif_names", autocomplete: "off" }, required: false
+        = f.dsfr_text_field :name, label: "Nom du motif", list: "motif_names", autocomplete: "off", required: false
       - available_services = (current_territory.services.reject(&:secretariat?) + [motif.service].compact)
       - if available_services.any? || motif.service_id.present?
         .fr-col-md-12
-          = f.dsfr_select :service, available_services, label: "Service associé", include_blank: true, hint: "Optionnel"
-        .fr-col-md-6= f.dsfr_number_field :default_duration_in_min, label: "Durée du RDV (en minutes)"
-        // Le DSFR ne propose pas d’input color, on utilise donc le champ classique avec le style DSFR pour lequel on fixe la hauteur.
-        .fr-col-md-6= f.dsfr_input_field :color, :color_field, label: "Couleur associée", style: "height: 2.5rem"
+          = f.dsfr_select :service_id, available_services.collect { |service| [service.name, service.id] }, label: "Service associé", include_blank: "Aucun", hint: "Optionnel"
+      .fr-col-md-6= f.dsfr_number_field :default_duration_in_min, label: "Durée du RDV (en minutes)"
+      // Le DSFR ne propose pas d’input color, on utilise donc le champ classique avec le style DSFR pour lequel on fixe la hauteur.
+      .fr-col-md-6= f.dsfr_input_field :color, :color_field, label: "Couleur associée", style: "height: 2.5rem"
 
 .card
   .card-body

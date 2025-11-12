@@ -41,7 +41,7 @@
       .fr-fieldset__element
         = f.dsfr_select :max_public_booking_delay, min_max_delay_options, label: "Délai maximum avant le RDV"
       .fr-fieldset__element
-        = f.dsfr_check_box :rdvs_editable_by_user, input_html: { class: "js-check-on-section-enable js-uncheck-on-section-disable" }, wrapper_html: { class: "mb-1" }
+        = f.dsfr_check_box :rdvs_editable_by_user, class: "js-check-on-section-enable js-uncheck-on-section-disable"
         .text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
 
 .card
@@ -60,12 +60,12 @@
         = Motif.human_attribute_name("for_secretariat_short")
         span.fr-hint-text
           = Motif.human_attribute_name("for_secretariat_hint")
-      = f.dsfr_check_box :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), input_html: { class: "js-uncheck-on-section-disable" }
+      = f.dsfr_check_box :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), class: "js-uncheck-on-section-disable"
 
 - if current_territory.motif_categories.present?
   .card
     .card-body
-      = f.dsfr_select :motif_category, current_territory.motif_categories, label: MotifCategory.model_name.human, hint: MotifCategory.human_attribute_name("category_hint"), include_blank: "Aucune"
+      = f.dsfr_select :motif_category_id, current_territory.motif_categories.collect { |motif_categorie| [motif_categorie.name, motif_categorie.id] }, label: MotifCategory.model_name.human, hint: MotifCategory.human_attribute_name("category_hint"), include_blank: "Aucune"
 
 - unless current_domain.online_reservation_with_public_link
   .card.collapse [data-motif-form-target="sectoSection"]

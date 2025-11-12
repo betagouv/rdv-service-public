@@ -19,20 +19,17 @@
         = f.dsfr_text_area :restriction_for_rdv,
                 label: sanitize("Instructions à accepter <strong>avant</strong> la prise du RDV"),
                 placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
-                input_html: { rows: 5 },
-                wrapper_html: { class: "mb-1" },
+                rows: 5,
                 hint: link_to("Voir un exemple", image_path("motif_form/restriction_for_rdv.png"), target: "_blank")
       .fr-fieldset__element
         = f.dsfr_text_area :instruction_for_rdv,
                 label: sanitize("Instructions affichées <strong>après</strong> la prise du RDV"),
                 placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
-                input_html: { rows: 5 },
-                wrapper_html: { class: "mb-1" },
+                rows: 5,
                 hint: link_to("Voir un exemple", image_path("motif_form/instruction_for_rdv.png"), target: "_blank")
       .fr-fieldset__element
         = f.dsfr_text_area :custom_cancel_warning_message,
                 label: sanitize("Message d’avertissement </strong>en cas d’annulation</strong>"),
                 placeholder: "Laissez vide si vous ne souhaitez pas afficher de messager d’avertissement.",
-                  input_html: { rows: 5 },
-                  wrapper_html: { class: "mb-1" },
-                  hint: link_to("Voir un exemple", image_path("motif_form/custom_cancel_warning_message.png"), target: "_blank")
+                rows: 5,
+                hint: link_to("Voir un exemple", image_path("motif_form/custom_cancel_warning_message.png"), target: "_blank")
