@@ -34,7 +34,6 @@ class AxeRunner
     @raw_results ||= JSON.parse(
       page.driver.with_playwright_page do |playwright_page|
         playwright_page.expect_console_message(predicate: method(:console_message_contains_axe_results?)) do
-          playwright_page.add_script_tag(path: Rails.root.join("node_modules/axe-core/axe.min.js"))
           page.evaluate_script("axe.run().then(results => console.log(JSON.stringify(results)));")
         end
       end.text
