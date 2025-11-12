@@ -53,4 +53,8 @@ class Service < ApplicationRecord
   def related_to_social?
     service_social? || name.parameterize.include?("social")
   end
+
+  def to_s
+    name
+  end
 end

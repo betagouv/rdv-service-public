@@ -58,10 +58,6 @@ module ApplicationHelper
     )
   end
 
-  def fake_required_label(label)
-    sanitize("#{label} <abbr title=\"obligatoire\">*</abbr>")
-  end
-
   def link_logo
     link_to root_path do
       image_tag current_domain.dark_logo_path, height: 40, alt: current_domain.name, class: "d-inline logo"

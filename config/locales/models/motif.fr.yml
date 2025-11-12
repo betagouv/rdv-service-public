@@ -53,9 +53,9 @@ fr:
         true: Le rendez-vous est destiné à plusieurs usagers. Chaque participants est notifié individuellement.
         false: Le rendez-vous est réservé pour un usager en particulier. Cet usager peut être accompagné (parent, tuteur, traducteur, …) pour la consultation individuelle.
       motif/visibility_types/html:
-        visible_and_notified: RDV <strong>visible</strong> et <strong>notifié</strong>
-        visible_and_not_notified: RDV <strong>visible</strong> et <strong>non notifié</strong>
-        invisible: RDV <strong>non visible</strong>
+        visible_and_notified: RDV visible et notifié
+        visible_and_not_notified: RDV visible et non notifié
+        invisible: RDV non visible
       motif/visibility_types/hint:
         visible_and_notified: L’usager sera notifié de la création et modification du rendez-vous par SMS et/ou e-mail. Ce dernier sera visible dans son espace personnel.
         visible_and_not_notified: L’usager ne sera pas notifié du rendez-vous, mais il sera visible dans son espace personnel.

@@ -1,41 +1,27 @@
 .card#bookable_by_section
   .card-body
-    h5.card-title= Motif.human_attribute_name("bookable_by")
-    p= Motif.human_attribute_name("bookable_by_hint")
-
-    .form-row
-      .col-md-12
-        = label_tag do
-          = f.radio_button(:bookable_by, :agents, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
-          span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents"))
-          p.text-muted.font-14.mt-1
-            = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents"))
-
-      .form-row
-        .col-md-12
-          = label_tag do
-            = f.radio_button(:bookable_by, :agents_and_prescripteurs, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
-            span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs"))
-            p.text-muted.font-14.mt-1
-              / Le scrubber: :prune permet de conserver le target _blank sur un lien
-              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"), scrubber: :prune)
-
-    - if rdvi_mode
-      .form-row
-        .col-md-12
-          = label_tag do
-            = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_invited_users, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
-            span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs_and_invited_users"))
-            p.text-muted.font-14.mt-1
-              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs_and_invited_users"))
-
-    .form-row
-      .col-md-12
-        = label_tag do
-          = f.radio_button(:bookable_by, :everyone, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
-          span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.everyone"))
-          p.text-muted.font-14.mt-1
-            = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
+    ruby:
+      bookable_by_options = [
+        { value: :agents,
+          label: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents")),
+          hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents")), },
+        { value: :agents_and_prescripteurs,
+          label: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs")),
+          hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"), scrubber: :prune), },
+        { value: :everyone,
+          label: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.everyone")),
+          hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone")),
+        },
+      ]
+      if rdvi_mode
+        bookable_by_options.insert(2,
+          {
+                  value: :agents_and_prescripteurs_and_invited_users,
+                  label: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs_and_invited_users")),
+                  hint: sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs_and_invited_users")),
+          })
+      end
+    = f.dsfr_radio_buttons :bookable_by, bookable_by_options, hint: Motif.human_attribute_name("bookable_by_hint"), "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios"
 
 .card.collapse [data-motif-form-target="bookingDelaySection"]
   .card-body
@@ -43,24 +29,28 @@
     p= Motif.human_attribute_name("booking_delay_hint")
 
     .form-row.mt-4
-      .col-md-6= f.input :min_public_booking_delay, label: "Délai minimum avant le RDV", collection: min_max_delay_options
-      .col-md-6= f.input :max_public_booking_delay, label: "Délai maximum avant le RDV", collection: min_max_delay_options
+      .col-md-6= f.dsfr_select :min_public_booking_delay, min_max_delay_options, label: "Délai minimum avant le RDV"
+      .col-md-6= f.dsfr_select :max_public_booking_delay, min_max_delay_options, label: "Délai maximum avant le RDV"
 
     .mt-2
-      = f.input(:rdvs_editable_by_user, input_html: { class: "js-check-on-section-enable js-uncheck-on-section-disable" }, wrapper_html: { class: "mb-1" })
+      = f.dsfr_check_box :rdvs_editable_by_user, input_html: { class: "js-check-on-section-enable js-uncheck-on-section-disable" }, wrapper_html: { class: "mb-1" }
       .text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
 
 .card
   .card-body
-    h5.card-title= Motif.human_attribute_name("follow_up_short")
-    p.mb-3= Motif.human_attribute_name("follow_up_warning")
-    = f.input :follow_up, input_html: { "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "followUpCheckbox" }
+    fieldset.fr-fieldset
+      legend.fr-fieldset__legend--regular.fr_fieldset__legend
+        = Motif.human_attribute_name("follow_up_short")
+        span.fr-hint-text
+          = Motif.human_attribute_name("follow_up_warning")
+      .fr-fieldset__element
+        = f.dsfr_check_box :follow_up, input_html: { "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "followUpCheckbox" }
 
 .card.collapse [data-motif-form-target="secretariatSection"]
   .card-body
     h5.card-title= Motif.human_attribute_name("for_secretariat_short")
     p.mb-3= Motif.human_attribute_name("for_secretariat_hint")
-    = f.input :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), input_html: { class: "js-uncheck-on-section-disable" }
+    = f.dsfr_check_box :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), input_html: { class: "js-uncheck-on-section-disable" }
 
 - if current_territory.motif_categories.present?
   .card
