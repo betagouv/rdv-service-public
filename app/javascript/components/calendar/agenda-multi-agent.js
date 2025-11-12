@@ -1,8 +1,7 @@
 import { Calendar } from "@fullcalendar/core";
 import resourceTimegridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { defaultFullCalendarConfig, eventRenderer, setupRefresh } from "./utils";
-import { handleAjaxError } from "../calendar"
+import { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError } from "./utils";
 
 class AgendaMultiAgent {
   constructor() {

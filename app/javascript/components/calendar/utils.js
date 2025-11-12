@@ -138,7 +138,6 @@ function eventRenderer(selectedEventId) {
   }
 }
 
-
 const setupRefresh = (fullCalendarInstance) => {
   const clearRefetchInterval = () => {
     if (!fullCalendarInstance.refreshCalendarInterval) return
@@ -168,4 +167,26 @@ const setupRefresh = (fullCalendarInstance) => {
   })
 };
 
-export { defaultFullCalendarConfig, eventRenderer, setupRefresh }
+const handleAjaxError = (response) => {
+  if (window.ajaxErrorHandledAt) {
+    const secondsSinceLast = (Date.now() - window.ajaxErrorHandledAt) / 1000;
+    if (secondsSinceLast < 60) return
+  }
+  window.ajaxErrorHandledAt = Date.now()
+
+  switch (response.xhr.status) {
+    case 401:
+      window.location = this.calendarEl.attributes["data-sign-in-path"].value;
+      break;
+    case 500:
+      alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
+      break;
+    case 0:
+      alert(`Le chargement du calendrier a échoué, probablement car votre connexion internet a été coupée.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
+      break;
+    default:
+      alert(`Le chargement du calendrier a échoué avec une erreur ${response.xhr.status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
+  }
+};
+
+export { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError }
