@@ -7,7 +7,7 @@
     p.fr-badge.fr-badge--warning
       | Pas de disponibilités
 - elsif motif.bookable_by_invited_users?
-  p.fr-badge.fr-badge--info Réservable pour les usagers invités
+  p.fr-badge Réservable uniquement par les usagers invités
 - elsif motif.bookable_by_agents_and_prescripteurs?
   p.fr-badge Réservable uniquement par les prescripteurs
 - else

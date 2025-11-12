@@ -4,7 +4,7 @@ fr:
       index:
         agents: Agents
         teams: Équipes
-        search_for_slots_title: Trouver un RDV
+        search_for_slots_title: Prendre un RDV
         search_for_slots_subtitle: pour %{users_fullname}
         available_places_with_slots:
           zero: Aucun lieu ne propose de créneau

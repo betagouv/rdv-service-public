@@ -15,52 +15,9 @@
         - if @form.context.present?
           = hidden_field_tag :context, @form.context
         .row
-          - if @services.any?
-            .col-md-4
-              = f.input :service_id, \
-                collection: @services, \
-                input_html: { \
-                  class: "select2-input js-service-filter", \
-                  data: { \
-                    placeholder: "Sélectionnez un service pour filtrer les motifs", \
-                    "select2-config": { disableSearch: true, allowClear: true }, \
-                  }, \
-                }
-            .col-md-4
-              = f.input :motif_id, \
-                required: true, \
-                include_blank: true, \
-                collection: sort_motifs_by_service(@motifs.to_a.group_by(&:service)), \
-                as: :grouped_select, \
-                group_method: :last,
-                group_label_method: -> { _1.first&.name },
-                label_method: -> { motif_name_and_location_type(_1) }, \
-                input_html: { \
-                  data: { \
-                    placeholder: "Sélectionnez un motif",
-                    "select2-config": { disableSearch: @motifs.count <= 5  },
-                  }, \
-                  class: "js-filtered-motifs", \
-                }
-          - else
-            .col-md-4
-              = f.input :motif_id, \
-                required: true,
-                include_blank: true,
-                collection: @motifs,
-                label_method: -> { motif_name_and_location_type(_1) }, \
-                input_html: { \
-                  data: { \
-                    placeholder: "Sélectionnez un motif",
-                    "select2-config": { disableSearch: @motifs.count <= 5  },
-                  }, \
-                  class: "select2-input", \
-                }
-
           .col-md-4
             - input_html = { data: { "min-date": Time.zone.today.strftime("%d/%m/%Y") } } # prevent from selecting past dates
             = date_input(f, :from_date, "À partir du", input_html: input_html, required: true)
-        .row
           - if @teams.any?
             .col-md-4
               = f.input :team_ids, collection: @teams, label: t(".teams"), label_method: :name, input_html: { \
@@ -84,9 +41,11 @@
               }
 
           .col-md-4
-            = f.input :lieu_ids, collection: @lieux, label: "Lieu(x)", input_html: { multiple: true, class: "select2-input" }
-        .text-right
-          = f.submit "Afficher les créneaux", class: "fr-btn", data: { disable_with: "Récupération des créneaux…"}
+            = f.input :lieu_ids, collection: @lieux, label: "Lieux", input_html: { multiple: true, class: "select2-input" }
+
+      - @organisation = current_organisation
+      - @motifs.each do |motif|
+        = render "admin/organisations/online_bookings/motif_card", motif:
 
 #creneaux
   .rdv-text-align-center
