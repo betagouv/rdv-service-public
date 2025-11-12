@@ -15,7 +15,7 @@
         / Nous voulons que l'autocomplete ne propose que les noms des motifs en base,
         / pas celles de l'historique de saisie du navigateur, d'où le autocomplete="off".
         = f.dsfr_text_field :name, label: "Nom du motif", list: "motif_names", autocomplete: "off", required: false
-      - available_services = (current_territory.services.reject(&:secretariat?) + [motif.service].compact)
+      - available_services = (current_territory.services.reject(&:secretariat?) + [motif.service].compact).sort.uniq
       - if available_services.any? || motif.service_id.present?
         .fr-col-md-12
           = f.dsfr_select :service_id, available_services.collect { |service| [service.name, service.id] }, label: "Service associé", include_blank: "Aucun", hint: "Optionnel"
