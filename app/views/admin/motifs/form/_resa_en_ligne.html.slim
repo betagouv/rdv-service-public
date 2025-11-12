@@ -70,33 +70,41 @@
 - unless current_domain.online_reservation_with_public_link
   .card.collapse [data-motif-form-target="sectoSection"]
     .card-body
-      h5.card-title.mb-2= Motif.human_attribute_name("sectorisation_level_title")
-      .mb-3
-        span>= Motif.human_attribute_name("sectorisation_level_hint")
-        = link_to  "Voir la documentation concernant la sectorisation", "https://doc.rdv-solidarites.fr/guide-utilisation/pour-un-territoire/sectorisation-geographique/", target: "_blank"
-      .mb-2
-        = label_tag do
-          = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT)
-          span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT, context: :hint)
-        = label_tag do
-          = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION)
-          span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION, context: :hint)
-          - if motif.organisation
-            .text-muted.font-14.my-1
-              - sectors_attributed_to_orga = Sector.attributed_to_organisation(motif.organisation)
-              = t("motifs.form.sectorisation_level.sectors_attributed_to_orga", count: sectors_attributed_to_orga.count, sectors: sectors_attributed_to_orga.map(&:name).to_sentence.truncate(100), organisation: motif.organisation.name)
-        = label_tag do
-          = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT)
-          span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT, context: :hint)
-          - if motif.service && motif.organisation
-            - attributions_group = SectorAttribution.level_agent_grouped_by_service(motif.organisation).fetch(motif.service_id, {agents_count: 0, attributions: []})
-            .text-muted.font-14.my-1.ml-3
-              = t( \
-                "motifs.form.sectorisation_level.sectors_attributed_to_agents", \
-                count: attributions_group[:agents_count], \
-                service: motif.service.name, \
-                sectors_count_human: t("motifs.index.sectorisation_level_organisation", count: attributions_group[:sectors_count]), \
-                sectors: attributions_group[:attributions].map { "#{_1.agent.full_name_or_email} -> #{_1.sector.name}" }.to_sentence.truncate(100) \
-              )
+      ruby:
+        if motif.organisation
+          sectors_attributed_to_orga = Sector.attributed_to_organisation(motif.organisation)
+          level_organisation_hint = t("motifs.form.sectorisation_level.sectors_attributed_to_orga", count: sectors_attributed_to_orga.count, sectors: sectors_attributed_to_orga.map(&:name).to_sentence.truncate(100), organisation: motif.organisation.name)
+        end
+        if motif.service && motif.organisation
+          attributions_group = SectorAttribution.level_agent_grouped_by_service(motif.organisation).fetch(motif.service_id, {agents_count: 0, attributions: []})
+          level_agent_hint = t( \
+            "motifs.form.sectorisation_level.sectors_attributed_to_agents", \
+            count: attributions_group[:agents_count], \
+            service: motif.service.name, \
+            sectors_count_human: t("motifs.index.sectorisation_level_organisation", count: attributions_group[:sectors_count]), \
+            sectors: attributions_group[:attributions].map { "#{_1.agent.full_name_or_email} -> #{_1.sector.name}" }.to_sentence.truncate(100) \
+          )
+        end
+        sectorisation_level_options = [
+                {
+                        value: Motif::SECTORISATION_LEVEL_DEPARTEMENT,
+                        label: Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT, context: :hint),
+                        checked: motif.sectorisation_level == Motif::SECTORISATION_LEVEL_DEPARTEMENT || motif.new_record?,
+                },
+                {
+                        value: Motif::SECTORISATION_LEVEL_ORGANISATION,
+                        label: Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION, context: :hint),
+                        hint: level_organisation_hint,
+                        checked: motif.sectorisation_level == Motif::SECTORISATION_LEVEL_ORGANISATION,
+                },
+                {
+                        value: Motif::SECTORISATION_LEVEL_AGENT,
+                        label: Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT, context: :hint),
+                        hint: level_agent_hint,
+                        checked: motif.sectorisation_level == Motif::SECTORISATION_LEVEL_AGENT,
+                },
+        ]
+      = f.dsfr_radio_buttons :sectorisation_level, sectorisation_level_options, label: Motif.human_attribute_name("sectorisation_level_title"), hint: sanitize("#{Motif.human_attribute_name('sectorisation_level_hint')} #{link_to('Voir la documentation concernant la sectorisation', 'https://doc.rdv-solidarites.fr/guide-utilisation/pour-un-territoire/sectorisation-geographique/', target: '_blank')}")
+
       - if current_agent.territorial_admin_in?(current_territory)
-        = link_to "Configuration des secteurs", admin_territory_sectors_path(current_territory)
+        = link_to "Configuration des secteurs", admin_territory_sectors_path(current_territory), class: "fr-btn fr-btn--tertiary"
