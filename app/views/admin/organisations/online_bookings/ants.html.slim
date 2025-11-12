@@ -1,0 +1,33 @@
+= render "admin/organisations/configurations/fil_ariane", current_page_title: "Cartes d'identité et Passeports"
+- content_for(:menu_item) { "menu-settings" }
+
+- content_for :title do
+  | Cartes d'identité et Passeports
+
+.card
+  .card-body
+    h2.fr-h4
+      | Raccordement à France Titres
+    p.fr-badge.fr-badge--success
+      | Vous êtes raccordé au moteur de recherche national.
+
+    p Les usagers peuvent prendre rendez-vous pour leur carte d'identité et passeport directement depuis le moteur de recherche national.
+    p
+      |> Vous toucherez automatiquement la Dotations au Titres Sécurisés à la fin de l'année.
+      = link_to "En savoir plus", "#"
+    p
+      | Vous pouvez tester votre branchement sur le moteur de recherche de France Titres :
+    = link_to("Moteur de recherche de France Titres", "https://rendezvouspasseport.ants.gouv.fr", target: :_blank, class: "fr-btn fr-btn--secondary")
+
+.card
+  .card-body
+    h2.fr-h4 Motifs de rendez-vous
+    p Ces motifs permettent de faire un rendez-vous pour une carte d'identité et/ou un passeport.
+    - motifs = current_organisation.motifs.joins(:motif_category).merge(MotifCategory.requires_ants_predemande_number)
+
+    ul.list-group.my-1
+      - motifs.each do |motif|
+        = render "motif_card", motif:
+
+
+

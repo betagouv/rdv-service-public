@@ -287,6 +287,8 @@ Rails.application.routes.draw do
             member do
               get :edit_user_type
               patch :update_user_type
+
+              get :ants
             end
           end
 

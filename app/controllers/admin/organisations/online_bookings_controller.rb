@@ -55,6 +55,10 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
     end
   end
 
+  def ants
+    authorize(@organisation, :show?, policy_class: Agent::OrganisationPolicy)
+  end
+
   private
 
   def pundit_user
