@@ -59,7 +59,7 @@ class RdvPlan < ApplicationRecord
   def create_rdv_visitor
     rdv = Rdv.create(
       agents: [rdv_agent],
-      participations: [Participation.new(user_id: user.id, send_lifecycle_notifications: false, send_reminder_notification: false)],
+      participations: [Participation.new(user_id: user.id, send_lifecycle_notifications: true, send_reminder_notification: true)],
 
       motif:,
       organisation:,
@@ -71,7 +71,7 @@ class RdvPlan < ApplicationRecord
 
     if rdv.persisted?
       update(rdv: rdv)
-      # Notifiers::RdvCreated.perform_with(rdv, planning_agent)
+      Notifiers::RdvCreated.perform_with(rdv, rdv.users.first)
     end
 
     rdv

@@ -7,9 +7,11 @@ class VisitorConfirmForm
 
   validates :code, length: { minimum: 6, maximum: 6 }
 
-  validate :code_match?
+  validate :code_match
 
-  def code_match?
-    code == "123654"
+  def code_match
+    if code != "123456"
+      errors.add(:code, "ne correspond pas")
+    end
   end
 end

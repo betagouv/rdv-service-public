@@ -61,7 +61,8 @@ class VisitorRdvWizardController < ApplicationController
     if @form.valid?
       rdv = @rdv_plan.create_rdv_visitor
       if rdv
-        redirect_to root_path, flash: { success: "Le RDV #{@rdv_plan.rdv.id} a été créé" }
+        sign_in_user_restricted(rdv)
+        redirect_to users_rdv_path(rdv), flash: { success: "Votre RDV est confirmé" }
       else
         render :show_confirm_sms
       end
@@ -70,27 +71,7 @@ class VisitorRdvWizardController < ApplicationController
     end
   end
 
-  # def create
-  #   @rdv_wizard = rdv_wizard_for(current_user, rdv_params.merge(user_params))
-  #   @rdv = @rdv_wizard.rdv
-  #   skip_authorization
-  #   if @rdv_wizard.valid? && @rdv_wizard.user.benign_errors.blank? && @rdv_wizard.save
-  #     redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step[:number]))
-  #   else
-  #     render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
-  #   end
-  # end
-
   protected
-
-  def rdv_wizard_for(current_user, request_params)
-    klass = "UserRdvWizard::#{current_step[:name].camelize}".constantize
-    klass.new(current_user, request_params)
-  end
-
-  def rdv_params
-    params.require(:rdv).permit(*RDV_PERMITTED_PARAMS).merge(params.permit(*EXTRA_PERMITTED_PARAMS))
-  end
 
   def query_params
     params.permit(*RDV_PERMITTED_PARAMS, *EXTRA_PERMITTED_PARAMS)
@@ -116,5 +97,15 @@ class VisitorRdvWizardController < ApplicationController
                     :ignore_benign_errors,
                     { user_profiles_attributes: %i[logement id organisation_id] },
                   ])
+  end
+
+  include TokenInvitable
+
+  def sign_in_user_restricted(rdv)
+    participation = rdv.participations.first
+    user = participation.user
+    session[:invitation] = { invitation_token: participation[:restricted_auth_token], expires_at: 10.minutes.from_now }
+    sign_in_with_session_token
+    cookies.encrypted["user_name_initials_verified_#{user.id}"] = { value: true, expires: 10.minutes.from_now }
   end
 end

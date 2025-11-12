@@ -10,6 +10,10 @@
   p Veuillez renseigner le code à 6 chiffres reçu :
 
   = form_for @form, url: visitor_rdv_wizard_confirm_sms_path, method: :post, builder: Dsfr::FormBuilder do |f|
-    = f.dsfr_text_field :code
+    = f.dsfr_text_field :code,
+      hint: "aucun SMS n’est envoyé pour l’instant ! le code correct est toujours 123456",
+      class: "visitor-rdv-form-code-input-group",
+      maxlength: 6,
+      autocomplete: "off"
     = f.hidden_field :rdv_plan_id, value: @rdv_plan.id
-    = f.submit "C’est bien mon numéro", class: "fr-btn"
+    = f.submit "Valider", class: "fr-btn"

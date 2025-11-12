@@ -182,3 +182,12 @@ input:placeholder-shown {
   color: $blue;
   font-size: 1.5rem;
 }
+
+.visitor-rdv-form-code-input-group input {
+  text-transform: uppercase;
+  letter-spacing: 1rem;
+  font-size: 1.4rem;
+  max-height: 4rem;
+  height: 4rem;
+  font-family: monospace;
+}
