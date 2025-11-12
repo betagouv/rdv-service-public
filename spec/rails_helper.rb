@@ -63,7 +63,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = false
+  config.use_transactional_fixtures = true
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
@@ -86,24 +86,10 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
-
     Rack::Attack.enabled = false
 
     Faker::Config.locale = :fr
     Faker::Config.random = Random.new(config.seed)
-  end
-
-  config.around do |example|
-    DatabaseCleaner.strategy = if example.metadata[:js] || ENV["HEADLESS"] == "false"
-                                 :truncation
-                               else
-                                 :transaction
-                               end
-
-    DatabaseCleaner.cleaning do
-      example.run
-    end
   end
 
   config.after(:suite) { Autodoc.render }
