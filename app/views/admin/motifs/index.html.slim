@@ -38,12 +38,6 @@
             = label
             span.badge.badge-light.badge-pill.ml-1 = count
 
-    - if current_agent.admin_in_organisation?(current_organisation) && @current_tab == :archived
-      .row
-        .col-12
-          .alert.alert-info.d-flex.align-items-center.mt-2
-            = t("admin.motifs.archiving_explanation")
-
     table.table.table-centered
       - if current_organisation.motifs.any?
         thead
