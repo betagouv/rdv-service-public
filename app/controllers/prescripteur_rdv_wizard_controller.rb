@@ -8,6 +8,8 @@ class PrescripteurRdvWizardController < ApplicationController
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
   before_action :set_paper_trail_whodunnit
 
+  layout "application_base"
+
   def start
     session[:rdv_wizard_attributes] = params.permit(
       *Users::RdvWizardStepsController::RDV_PERMITTED_PARAMS,
