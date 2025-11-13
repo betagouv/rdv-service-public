@@ -82,7 +82,7 @@ class AgendaMultiAgent {
   }
 
   getGroupByDate = () => {
-    return localStorage.getItem("groupByDate") === "true";
+    return localStorage.getItem("groupByDate") !== "false";
   }
 
   customButtons = () => {
