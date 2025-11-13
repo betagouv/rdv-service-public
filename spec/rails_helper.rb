@@ -71,7 +71,7 @@ RSpec.configure do |config|
     ActiveRecord::Tasks::DatabaseTasks.truncate_all
   end
 
-  # CI 9
+  # CI 10
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
