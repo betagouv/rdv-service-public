@@ -3,7 +3,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import { defaultFullCalendarConfig, eventRenderer } from  './calendar/utils'
+import { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError } from  './calendar/utils'
 
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
@@ -18,19 +18,7 @@ export class AgendaMonoAgent {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-
-    document.addEventListener('turbolinks:before-cache', this.clearRefetchInterval);
-    document.addEventListener('turbolinks:before-render', this.clearRefetchInterval);
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        // when agent comes back to tab, refresh immediately
-        this.fullCalendarInstance.refetchEvents();
-
-        this.setRefetchInterval();
-      } else if (this.refreshCalendarInterval) {
-        this.clearRefetchInterval();
-      }
-    })
+    setupRefresh(this.fullCalendarInstance);
     document.addEventListener("turbolinks:before-cache", () => {
       // force calendar reload on turbolinks re-visit, otherwise event listeners
       // are not attached
@@ -40,18 +28,6 @@ export class AgendaMonoAgent {
       // fixes hanging tooltip on back
       $(".tooltip").removeClass("show")
     })
-    this.setRefetchInterval()
-  }
-
-  setRefetchInterval = () => {
-    if (this.refreshCalendarInterval) return
-    this.refreshCalendarInterval = setInterval(() => this.fullCalendarInstance.refetchEvents(), 60000)
-  }
-
-  clearRefetchInterval = () => {
-    if (!this.refreshCalendarInterval) return
-    clearTimeout(this.refreshCalendarInterval)
-    this.refreshCalendarInterval = null
   }
 
   initFullCalendar = () => {
@@ -155,25 +131,3 @@ export class AgendaMonoAgent {
     return now >= activeStart && now <= activeEnd;
   }
 }
-
-export const handleAjaxError = (response) => {
-  if (window.ajaxErrorHandledAt) {
-    const secondsSinceLast = (Date.now() - window.ajaxErrorHandledAt) / 1000;
-    if (secondsSinceLast < 60) return
-  }
-  window.ajaxErrorHandledAt = Date.now()
-
-  switch (response.xhr.status) {
-    case 401:
-      window.location = this.calendarEl.attributes["data-sign-in-path"].value;
-      break;
-    case 500:
-      alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
-      break;
-    case 0:
-      alert(`Le chargement du calendrier a échoué, probablement car votre connexion internet a été coupée.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
-      break;
-    default:
-      alert(`Le chargement du calendrier a échoué avec une erreur ${response.xhr.status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
-  }
-};

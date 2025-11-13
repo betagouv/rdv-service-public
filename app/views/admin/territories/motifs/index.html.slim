@@ -70,12 +70,6 @@
 
 .row
   .col-12
-    - if @current_tab == :archived
-      .row
-        .col-12
-          .alert.alert-info.d-flex.align-items-center
-            = t("admin.motifs.archiving_explanation")
-
     - if @motifs_page.any?
       = paginate @motifs_page, theme: "dsfr"
       = render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @motifs_page, display_actions: true, display_checkboxes: @current_tab != :archived }

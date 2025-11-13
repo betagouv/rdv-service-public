@@ -51,7 +51,10 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   }.freeze
 
   def self.lieux
-    Lieu.enabled.joins(:organisation).where(organisations: { ants_connectable: true })
+    motif_category_ids = MotifCategory.requires_ants_predemande_number.pluck(:id)
+    Lieu.enabled.joins(:organisation, plage_ouvertures: :motifs).where(organisations: { ants_connectable: true })
+      .merge(PlageOuverture.in_range(Time.zone.now..))
+      .where(motifs: { motif_category_id: motif_category_ids }).distinct
   end
 
   private

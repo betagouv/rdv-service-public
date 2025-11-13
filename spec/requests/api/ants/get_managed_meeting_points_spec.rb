@@ -16,6 +16,7 @@ RSpec.describe "ANTS API: getManagedMeetingPoints" do
              longitude: 3.0348016639327,
              latitude: 50.549140395451)
     end
+    let(:organisation) { create(:organisation, ants_connectable: true) }
     let!(:lieu2) do
       create(:lieu,
              organisation: organisation, name: "Mairie de Paris 7",
@@ -30,8 +31,17 @@ RSpec.describe "ANTS API: getManagedMeetingPoints" do
     let!(:disabled_lieu) do
       create(:lieu, organisation: organisation, availability: :disabled)
     end
+    let!(:lieu_without_po) do
+      create(:lieu, organisation: organisation)
+    end
 
-    let(:organisation) { create(:organisation, ants_connectable: true) }
+    let(:cni_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
+    let(:cni_motif) { create(:motif, organisation:, motif_category: cni_category) }
+
+    before do
+      create(:plage_ouverture, lieu: lieu1, motifs: [cni_motif])
+      create(:plage_ouverture, lieu: lieu2, motifs: [cni_motif])
+    end
 
     it "returns a list of enabled lieux" do
       get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "" }
