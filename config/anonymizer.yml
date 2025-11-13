@@ -234,6 +234,7 @@ tables:
       - longitude
       - old_enabled
       - availability
+      - code_postal
 
   - table_name: participations
     anonymized_column_names:

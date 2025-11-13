@@ -91,6 +91,20 @@ class Lieu < ApplicationRecord
     earth_radius * c
   end
 
+  # Nous souhaitons extraire le code postal afin de l'exploiter facilement,
+  # l'adresse précise étant anonymisée dans l'ETL.
+  def address=(value)
+    self.code_postal = self.class.code_postal_from_address(value)
+    super
+  end
+
+  def self.code_postal_from_address(address)
+    matches = address.to_s.scan(/\b\d{5}\b/)
+    if matches.size == 1
+      matches.first
+    end
+  end
+
   private
 
   def longitude_and_latitude_must_be_present
