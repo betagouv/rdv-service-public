@@ -129,4 +129,4 @@ RSpec.configure do |config|
   end
 end
 
-# CI avant 5
+# CI avant 6
