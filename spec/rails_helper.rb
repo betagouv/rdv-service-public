@@ -128,3 +128,5 @@ RSpec.configure do |config|
     WebMock.reset!
   end
 end
+
+# CI avant 1
