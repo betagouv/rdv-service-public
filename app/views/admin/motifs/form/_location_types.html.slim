@@ -1,5 +1,13 @@
 .d-flex.flex-column
-  - location_types = Motif.location_types.each_key.map { |value| { value:, checked: @motif.location_type == value, label: Motif.human_attribute_value(:location_type, value), hint: sanitize(Motif.human_attribute_value(:location_type, value, context: :hint), scrubber: :prune) } }
+  ruby:
+    location_types = Motif.location_types.each_key.map do |value|
+      {
+              value:,
+              checked: @motif.location_type == value,
+              label: Motif.human_attribute_value(:location_type, value),
+              hint: sanitize(Motif.human_attribute_value(:location_type, value, context: :hint), scrubber: :prune),
+      }
+    end
   = f.dsfr_radio_buttons :location_type, location_types, disabled:, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios", hint: "Choisissez le type du rendez-vous"
   - motif = f.object
   - if motif.persisted?
