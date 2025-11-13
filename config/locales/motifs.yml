@@ -12,6 +12,7 @@ fr:
       sectorisation_level_agent: "Sectorisé à l'agent"
       sectorisation_level_organisation: "Sectorisé à l'organisation"
       sectorisation_level_departement: "Sectorisé au département"
+      archived: "Archivé"
     follow_up_need_signed_user: "Le RDV '%{motif_name}' est disponible uniquement pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV."
     form:
       title:
