@@ -1,4 +1,4 @@
-RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", disable_transaction: true, js: true do
+RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", js: true do
   around { |example| perform_enqueued_jobs { example.run } }
 
   # Pour simplifier les test, on crée deux agents sur la même instance

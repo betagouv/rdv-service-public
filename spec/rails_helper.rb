@@ -65,10 +65,14 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
-  config.around(:each, disable_transaction: true) do |example|
-    self.use_transactional_tests = false
-    example.run
-    ActiveRecord::Tasks::DatabaseTasks.truncate_all
+  config.around do |example|
+    if example.metadata[:js] || ENV["HEADLESS"] == "false"
+      self.use_transactional_tests = false
+      example.run
+      ActiveRecord::Tasks::DatabaseTasks.truncate_all
+    else
+      example.run
+    end
   end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
