@@ -199,6 +199,12 @@ GEM
     css_parser (1.16.0)
       addressable
     csv (3.3.2)
+    database_cleaner (2.1.0)
+      database_cleaner-active_record (>= 2, < 3)
+    database_cleaner-active_record (2.2.0)
+      activerecord (>= 5.a)
+      database_cleaner-core (~> 2.0.0)
+    database_cleaner-core (2.0.1)
     date (3.5.0)
     debug_inspector (1.2.0)
     descendants_tracker (0.0.4)
@@ -786,6 +792,7 @@ DEPENDENCIES
   common_french_passwords
   connection_pool
   csv
+  database_cleaner
   devise!
   devise-async
   devise_invitable
