@@ -94,8 +94,15 @@ class Lieu < ApplicationRecord
   # Nous souhaitons extraire le code postal afin de l'exploiter facilement,
   # l'adresse précise étant anonymisée dans l'ETL.
   def address=(value)
-    self.code_postal = code_postal_from_address(value)
+    self.code_postal = self.class.code_postal_from_address(value)
     super
+  end
+
+  def self.code_postal_from_address(address)
+    matches = address.to_s.scan(/\b\d{5}\b/)
+    if matches.size == 1
+      matches.first
+    end
   end
 
   private
@@ -111,12 +118,5 @@ class Lieu < ApplicationRecord
     return unless changes[:availability]&.include?("single_use")
 
     errors.add(:availability, :cant_change_from_or_to_single_use)
-  end
-
-  def code_postal_from_address(address)
-    matches = address.to_s.scan(/\b\d{5}\b/)
-    if matches.size == 1
-      matches.first
-    end
   end
 end
