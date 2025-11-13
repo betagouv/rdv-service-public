@@ -29,10 +29,10 @@ class AgendaMultiAgent {
       resources: JSON.parse(this.data.resourcesJson),
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
-      initialView: localStorage.getItem("chosenCalendarView") || "resourceTimeGridDay",
+      initialView: localStorage.getItem("chosenCalendarView") || "resourceTimeGridWeek",
       initialDate: localStorage.getItem("chosenCalendarDay"),
       headerToolbar: {
-        center: 'resourceTimeGridDay,resourceTimeGridTwoDays,resourceTimeGridThreeDays,resourceTimeGridFourDays,resourceTimeGridFiveDays'
+        center: "resourceTimeGridDay,resourceTimeGridWeek"
       },
       customButtons: this.customButtons(),
       footerToolbar: {
@@ -46,35 +46,14 @@ class AgendaMultiAgent {
       views: {
 
         resourceTimeGridDay: {
-          buttonText: "1 jour",
+          buttonText: "jour",
           titleFormat: { weekday: "long", day: "numeric", month: "long", year: "numeric" }
         },
-      
-        resourceTimeGridTwoDays: {
-          type: "resourceTimeGrid",
-          dayCount: 2,
-          buttonText: "2 jours",
-          titleFormat: { weekday: "long", day: "numeric", month: "short", year: "numeric" }
-        },
 
-        resourceTimeGridThreeDays: {
+        resourceTimeGridWeek: {
           type: "resourceTimeGrid",
-          dayCount: 3,
-          buttonText: "3 jours",
-          titleFormat: { weekday: "long", day: "numeric", month: "short", year: "numeric" }
-        },
-      
-        resourceTimeGridFourDays: {
-          type: "resourceTimeGrid",
-          dayCount: 4,
-          buttonText: "4 jours",
-          titleFormat: { weekday: "long", day: "numeric", month: "short", year: "numeric" }
-        },
-
-        resourceTimeGridFiveDays: {
-          type: "resourceTimeGrid",
-          dayCount: 5,
-          buttonText: "5 jours",
+          duration: { week: 1 },
+          buttonText: "semaine",
           titleFormat: { weekday: "long", day: "numeric", month: "short", year: "numeric" }
         },
 
