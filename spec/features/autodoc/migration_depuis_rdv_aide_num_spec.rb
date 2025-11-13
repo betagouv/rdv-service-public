@@ -150,20 +150,21 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     created_motif = created_organisation.motifs.individuel.sole
     expect(created_motif).to have_attributes(name: motif.name)
 
-    created_user = created_organisation.users.last
+    created_organisation.users.last
 
     # On importe les anciens rendez-vous
     created_rdv = created_organisation.rdvs.last
     expect(created_rdv).to have_attributes(
-      users: [created_user],
       lieu: created_lieu,
       motif: created_motif,
       agents: created_organisation.agents.where(email: collegue.email)
     )
     expect(created_rdv.external_references.last).to have_attributes(
-      external_id: old_rdv.id
+      external_id: old_rdv.id.to_s,
       external_url: "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{old_rdv.id}"
     )
+
+    expect(created_rdv.users.first.full_name).to eq old_rdv.users.first.full_name
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
     absence_representing_rdv = collegue.absences.find_by(title: "RDV avec #{future_rdv.users.first.full_name} (sur RDV Aide Numérique)")

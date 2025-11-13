@@ -40,6 +40,7 @@ class Rdv < ApplicationRecord
   # https://github.com/rails/rails/issues/7618
   has_many :participations, validate: false, inverse_of: :rdv, dependent: :destroy, class_name: "Participation"
   has_many :receipts, dependent: :nullify
+  has_many :external_references, as: :item, dependent: :destroy
 
   accepts_nested_attributes_for :participations, allow_destroy: true
   accepts_nested_attributes_for :lieu
