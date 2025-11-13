@@ -238,7 +238,6 @@ RSpec.describe Lieu, type: :model do
 
       # En cas d'ambigüité, on reste prudent et on retourne nil
       expect(described_class.new(address: "67 AV JEAN JAURES, batiment 12345, 46000 CAHORS").code_postal).to be_nil
-
     end
   end
 end
