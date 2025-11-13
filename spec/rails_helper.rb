@@ -124,5 +124,3 @@ RSpec.configure do |config|
     WebMock.reset!
   end
 end
-
-# CI avec JS en truncation (coucou Antoine) 10
