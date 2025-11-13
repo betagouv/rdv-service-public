@@ -247,9 +247,6 @@ group :test do
   # Playwright is an alternative to Selenium
   gem "capybara-playwright-driver"
 
-  # Strategies for cleaning databases. Can be used to ensure a clean slate for testing.
-  gem "database_cleaner"
-
   # Factories
 
   # factory_bot provides a framework and DSL for defining and using model instance factories.
