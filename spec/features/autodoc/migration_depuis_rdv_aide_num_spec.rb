@@ -29,6 +29,9 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let!(:future_rdv_collectif) do
     create(:rdv, agents: [collegue], users: [], starts_at: 2.weeks.from_now, motif: motif_collectif, lieu:, organisation: organisation_rdv_aide_num)
   end
+  let!(:old_rdv) do
+    create(:rdv, agents: [collegue], users: [users.last], starts_at: 2.weeks.ago, motif:, lieu:, organisation: organisation_rdv_aide_num)
+  end
 
   let!(:absence) { create(:absence, :no_recurrence, agent: agent_rdv_aide_num) }
   let!(:recurrent_absence) { create(:absence, :weekly_on_monday, agent: agent_rdv_aide_num) }
@@ -146,6 +149,21 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
     created_motif = created_organisation.motifs.individuel.sole
     expect(created_motif).to have_attributes(name: motif.name)
+
+    created_user = created_organisation.users.last
+
+    # On importe les anciens rendez-vous
+    created_rdv = created_organisation.rdvs.last
+    expect(created_rdv).to have_attributes(
+      users: [created_user],
+      lieu: created_lieu,
+      motif: created_motif,
+      agents: created_organisation.agents.where(email: collegue.email)
+    )
+    expect(created_rdv.external_references.last).to have_attributes(
+      external_id: old_rdv.id
+      external_url: "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/rdvs/#{old_rdv.id}"
+    )
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
     absence_representing_rdv = collegue.absences.find_by(title: "RDV avec #{future_rdv.users.first.full_name} (sur RDV Aide Numérique)")
