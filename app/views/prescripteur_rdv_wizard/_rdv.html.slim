@@ -36,8 +36,8 @@ ul.list-group.list-group-flush.fr-mt-0
 .fr-mt-4v
   - if prescripteur.rdv.cancellable_by_user?
     - if prescripteur.user.phone_number.blank?
-      .fr-alert.fr-alert--warning.fr-mb-2w
-        | Si vous annulez ce rendez-vous, veuillez noter que le bénéficiaire ne recevra pas de notification par SMS en raison de l'absence de numéro de téléphone associé à son compte.
+      .fr-callout.fr-icon-alert-line.fr-callout--yellow-moutarde
+        | Vous n’avez pas renseigné de numéro de téléphone pour l’usager. En cas d’annulation, il ne recevra pas de notification automatique.
     ul.fr-btns-group.fr-btns-group--inline
       li
         = link_to "Annuler le rendez-vous", prescripteur_cancel_rdv_path, class: "fr-btn fr-btn--secondary", data: { confirm: prescripteur.user.phone_number.blank? ? "Attention ! L’usager ne recevera pas notification d’annulation. Êtes-vous sûr de vouloir annuler ce rendez-vous ?" : "Êtes-vous sûr de vouloir annuler ce rendez-vous ?", method: :delete }
