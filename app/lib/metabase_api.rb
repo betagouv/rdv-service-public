@@ -24,4 +24,6 @@ class MetabaseApi
       JSON.parse(res.body)
     end
   end
+
+  def self.authentication_present? = ENV["METABASE_API_KEY"].present?
 end

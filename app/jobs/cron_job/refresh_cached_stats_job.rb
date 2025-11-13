@@ -1,18 +1,57 @@
 class CronJob::RefreshCachedStatsJob < CronJob
   def perform
-    total_rdvs_count = MetabaseApi.sql_query("SELECT (SELECT COUNT(*) FROM rdvs.rdvs) + (SELECT COUNT(*) FROM rdvsp.rdvs) as rdvs_count;")[0]["rdvs_count"].gsub(",", "").to_i
-    Rails.logger.info "got #{total_rdvs_count} total RDV"
-    Rails.cache.write("stats.both_instances.2_years.rdvs_count", total_rdvs_count)
+    return unless MetabaseApi.authentication_present?
 
-    active_organisations_count = MetabaseApi.sql_query(
-      <<~SQL.squish
+    queries_by_key.each do |key, query|
+      Rails.logger.info "querying Metabase for #{key}…"
+      count = MetabaseApi.sql_query(query)[0]["c"].gsub(",", "").to_i
+      Rails.logger.info "got #{key} = #{count}. writing to cache…"
+      Rails.cache.write(key, count)
+      Rails.logger.info "✅ wrote to cache"
+    end
+    Rails.logger.info "🏁 done"
+  end
+
+  private
+
+  def queries_by_key
+    {
+      "stats.both_instances.2_years.rdvs_count" => <<~SQL.squish,
         SELECT
-          SUM(COUNT) AS "organisations_count"
+          SUM(c) AS c
         FROM
           (
             (
               SELECT
-                COUNT(DISTINCT "rdvsp"."organisations"."id") AS COUNT
+                COUNT("rdvsp".rdvs."id") AS c
+              FROM
+                "rdvsp"."rdvs"
+              WHERE
+                (
+                  "rdvsp"."rdvs"."starts_at" >= CAST((NOW() + INTERVAL '-730 day') AS date)
+                )
+            )
+            UNION ALL
+            (
+              SELECT
+                COUNT("rdvs"."rdvs"."id") AS c
+              FROM
+                "rdvs"."rdvs"
+              WHERE
+                (
+                  "rdvs"."rdvs"."starts_at" >= CAST((NOW() + INTERVAL '-730 day') AS date)
+                )
+            )
+          );
+      SQL
+      "stats.both_instances.2_years.active_organisations_count" => <<~SQL.squish,
+        SELECT
+          SUM(c) AS c
+        FROM
+          (
+            (
+              SELECT
+                COUNT(DISTINCT "rdvsp"."organisations"."id") AS c
               FROM
                 "rdvsp"."organisations"
                 INNER JOIN "rdvsp"."rdvs" ON "rdvsp"."rdvs"."organisation_id" = "rdvsp"."organisations"."id"
@@ -24,7 +63,7 @@ class CronJob::RefreshCachedStatsJob < CronJob
             UNION ALL
             (
               SELECT
-                COUNT(DISTINCT "rdvs"."organisations"."id") AS COUNT
+                COUNT(DISTINCT "rdvs"."organisations"."id") AS c
               FROM
                 "rdvs"."organisations"
                 INNER JOIN "rdvs"."rdvs" ON "rdvs"."rdvs"."organisation_id" = "rdvs"."organisations"."id"
@@ -35,8 +74,6 @@ class CronJob::RefreshCachedStatsJob < CronJob
             )
           );
       SQL
-    )[0]["organisations_count"].gsub(",", "").to_i
-    Rails.logger.info "got #{active_organisations_count} active_organisations_count"
-    Rails.cache.write("stats.both_instances.2_years.active_organisations_count", active_organisations_count)
+    }
   end
 end
