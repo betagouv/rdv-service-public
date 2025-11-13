@@ -59,3 +59,7 @@ footer {
     }
   }
 }
+
+legend[class*="fr-fieldset__legend--"] {
+  font-size: inherit;
+}
