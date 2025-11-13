@@ -225,15 +225,20 @@ RSpec.describe Lieu, type: :model do
   end
 
   describe "code_postal" do
-    it "est extrait à la sauvegarde" do
-      lieu = build(:lieu, address: "7 rue de l'adresse, Ville, 12345")
-      expect { lieu.save! }.to change { lieu.code_postal }.from(nil).to("12345")
+    it "est extrait de l'adresse lorsque celle-ci est définie" do
+      # Formats classiques trouvés en base
+      expect(described_class.new(address: "7 rue de l'adresse, Ville, 12345").code_postal).to eq("12345")
+      expect(described_class.new(address: "430 AV JEAN JAURES  46000 CAHORS").code_postal).to eq("46000")
 
-      lieu.update!(address: "adresse sans code postal, Ville")
-      expect(lieu.code_postal).to be_nil
+      # Pas de code postal présent (ça arrrive)
+      expect(described_class.new(address: "53 avenue de Fontainebleau").code_postal).to be_nil
 
-      lieu.update!(address: "adresse avec nouveau code postal, Autreville, 99999")
-      expect(lieu.code_postal).to eq("99999")
+      # Ne pas matcher les suites de plus de 5 chiffres
+      expect(described_class.new(address: "1234567 AV JEAN JAURES  46000 CAHORS CEDEX 1234567").code_postal).to eq("46000")
+
+      # En cas d'ambigüité, on reste prudent et on retourne nil
+      expect(described_class.new(address: "67 AV JEAN JAURES, batiment 12345, 46000 CAHORS").code_postal).to be_nil
+
     end
   end
 end

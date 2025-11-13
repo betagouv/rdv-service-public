@@ -32,12 +32,6 @@ class Lieu < ApplicationRecord
   validate :longitude_and_latitude_must_be_present
   validate :cant_change_availibility_single_use
 
-  # Hooks
-
-  # Nous souhaitons extraire le code postal afin de l'exploiter facilement,
-  # l'adresse précise étant anonymisée dans l'ETL.
-  before_save { self.code_postal = code_postal_from_address }
-
   # Scopes
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
@@ -97,6 +91,13 @@ class Lieu < ApplicationRecord
     earth_radius * c
   end
 
+  # Nous souhaitons extraire le code postal afin de l'exploiter facilement,
+  # l'adresse précise étant anonymisée dans l'ETL.
+  def address=(value)
+    self.code_postal = code_postal_from_address(value)
+    super
+  end
+
   private
 
   def longitude_and_latitude_must_be_present
@@ -112,8 +113,10 @@ class Lieu < ApplicationRecord
     errors.add(:availability, :cant_change_from_or_to_single_use)
   end
 
-  def code_postal_from_address
-    # Toutes nos adresses ont la forme : "7 rue de l'adresse, Ville, 12345".
-    address.to_s.match(/, (\d{5})\z/).to_a[1]
+  def code_postal_from_address(address)
+    matches = address.to_s.scan(/\b\d{5}\b/)
+    if matches.size == 1
+      matches.first
+    end
   end
 end
