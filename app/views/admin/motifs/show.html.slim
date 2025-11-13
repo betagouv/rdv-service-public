@@ -96,6 +96,18 @@
           @motif.custom_cancel_warning_message, \
           hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
 
+      hr
+        .row.fr-mb-4w
+          .col-md-4.text-right Plages d’ouvertures
+          .col-md-8
+            - po_count = @motif.plage_ouvertures.not_expired.count
+            - if po_count == 0
+              | Aucune plage d’ouverture active pour ce motif
+            - elsif po_count == 1
+              | Une plage d’ouverture propose des créneaux pour ce motif
+            - else
+              | #{po_count} plages d’ouvertures proposent des créneaux pour ce motif
+
       - if @motif_policy.edit? || @motif_policy.destroy?
         .card-footer
           .d-flex.justify-content-end.flex-gap-1em

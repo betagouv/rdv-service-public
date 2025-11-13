@@ -15,7 +15,7 @@ fr:
         edit: Modifier
         duplicate: Dupliquer
         archive: Archiver
-        archive_confirm: En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?
+        archive_confirm: En archivant ce motif, il ne sera plus possible de créer des RDV. Le motif sera retiré des plages d’ouvertures qui le proposent. Vous pouvez le réactiver à tout moment. Confirmer ?
         unarchive: Réactiver
         destroy: Supprimer
         destroy_confirm: Confirmez-vous la suppression de ce motif ?
