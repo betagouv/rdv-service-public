@@ -125,4 +125,4 @@ RSpec.configure do |config|
   end
 end
 
-# CI après 10
+# CI avec JS en truncation (coucou Antoine) 1
