@@ -36,6 +36,11 @@
   border: 1px solid $gray-900;
 }
 
+.badge-motif-archived {
+  background-color: $gray-600;
+  color: $white;
+}
+
 .motif-color-badge {
   display: inline-block;
   width: 20px;
