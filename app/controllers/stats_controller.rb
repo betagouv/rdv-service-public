@@ -5,7 +5,7 @@ class StatsController < ApplicationController
 
   def lieux_map_data
     query = Rails.root.join("app/lib/lieux_map_query.sql").read
-    res_body = Rails.cache.fetch("lieux_map_data", expires_in: 24.hours) { MetabaseApi.sql_query(query) }
+    res_body = Rails.cache.fetch("lieux_map_data", expires_in: 24.hours) { MetabaseApi.sql_query(query, raw_json: true) }
     json = JSON.parse(res_body)
     render(json:)
   rescue MetabaseApi::Error => e

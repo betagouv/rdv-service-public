@@ -4,7 +4,7 @@ class MetabaseApi
   HOST_URL = "https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io".freeze
   DATABASE_ID = 2 # l’ID de la base Prod ETL cf https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io/admin/databases
 
-  def self.sql_query(query)
+  def self.sql_query(query, raw_json: false)
     res = Typhoeus.post(
       "#{HOST_URL}/api/dataset/json",
       params: { query: { database: DATABASE_ID, native: { query: }, type: "native" }.to_json },
@@ -18,6 +18,10 @@ class MetabaseApi
       raise Error, "Statut #{res.code} retourné par l’API metabase dataset/json"
     end
 
-    res.body
+    if raw_json
+      res.body
+    else
+      JSON.parse(res.body)
+    end
   end
 end
