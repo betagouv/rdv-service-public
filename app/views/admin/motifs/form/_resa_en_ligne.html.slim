@@ -39,11 +39,11 @@
         = Motif.human_attribute_name("booking_delay")
         span.fr-hint-text
           = Motif.human_attribute_name("booking_delay_hint")
-      .fr-fieldset__element
+      .fr-fieldset__element.fr-mt-2w
         = f.dsfr_select :min_public_booking_delay, min_max_delay_options, label: "Délai minimum avant le RDV"
-      .fr-fieldset__element
+      .fr-fieldset__element.fr-mt-2w
         = f.dsfr_select :max_public_booking_delay, min_max_delay_options, label: "Délai maximum avant le RDV"
-      .fr-fieldset__element
+      .fr-fieldset__element.fr-mt-2w
         = f.dsfr_check_box :rdvs_editable_by_user, class: "js-check-on-section-enable js-uncheck-on-section-disable"
         .text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
 

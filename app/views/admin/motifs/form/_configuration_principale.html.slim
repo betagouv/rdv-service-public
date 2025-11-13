@@ -36,7 +36,7 @@
         { value: false, checked: !@motif.collectif, label: Motif.human_attribute_value(:collectif, false), hint: Motif.human_attribute_value(:collectif, false, context: :hint) },
         { value: true, checked: @motif.collectif, label: Motif.human_attribute_value(:collectif, true), hint: Motif.human_attribute_value(:collectif, true, context: :hint) },
       ]
-    = f.dsfr_radio_buttons :collectif, collectif_options, disabled: disabled, hint: "Choisissez le nombre de participants"
+    = f.dsfr_radio_buttons :collectif, collectif_options, disabled: disabled, rich: true
     - if disabled
       = dsfr_alert type: :warning, size: :sm, html_attributes: { class: "fr-mb-2v" } do
         | Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le nombre de participants

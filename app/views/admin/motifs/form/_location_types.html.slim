@@ -4,11 +4,11 @@
       {
               value:,
               checked: @motif.location_type == value,
-              label: Motif.human_attribute_value(:location_type, value),
+              label: content_tag(:span, location_type_icon(value, class: "fr-mr-1w") + Motif.human_attribute_value(:location_type, value)),
               hint: sanitize(Motif.human_attribute_value(:location_type, value, context: :hint), scrubber: :prune),
       }
     end
-  = f.dsfr_radio_buttons :location_type, location_types, disabled:, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios", hint: "Choisissez le type du rendez-vous"
+  = f.dsfr_radio_buttons :location_type, location_types, disabled:, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios", hint: "Choisissez le type du rendez-vous", rich: true
   - motif = f.object
   - if motif.persisted?
     p.text-muted.font-14
