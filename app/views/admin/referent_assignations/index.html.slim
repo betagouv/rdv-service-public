@@ -2,13 +2,8 @@
 
 - content_for(:title, "Modifier les référents de #{@user.full_name}")
 
-- content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to "Usagers", admin_organisation_users_path(current_organisation)
-    li.breadcrumb-item
-      = link_to @user.full_name, admin_organisation_user_path(current_organisation, @user)
-    li.breadcrumb-item.active Modifier les référents
+- content_for :fil_ariane do
+    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Usagers", admin_organisation_users_path(current_organisation)], [@user.full_name, admin_organisation_user_path(current_organisation, @user)]], current_page_title: yield(:title)
 
 - if @referents.any?
   .container-fluid.bg-white.rounded.col-lg-10.mb-3
