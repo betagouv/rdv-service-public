@@ -1,10 +1,5 @@
 - content_for :title, "Statistiques"
 
-- content_for :breadcrumbs do
-  = dsfr_breadcrumbs do |b|
-    = b.with_breadcrumb label: "Accueil", href: "/"
-    = b.with_breadcrumb label: yield(:title)
-
 - content_for :additional_stylesheets do
   link href="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css" rel="stylesheet"
 
