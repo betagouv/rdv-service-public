@@ -18,7 +18,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
           email: "francis.factice@demo-rdv-service-public.gouv.fr",
           service_ids: [service.id],
         },
-      }, current_domain: Domain::RDV_MAIRIE
+      }, current_domain: Domain::RDV_SERVICE_PUBLIC
     ).save!
 
     create(:motif, organisation: Organisation.last, location_type: :visio, name: "Suivi de dossier", bookable_by: :agents)

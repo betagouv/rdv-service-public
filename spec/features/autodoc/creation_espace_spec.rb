@@ -22,7 +22,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
                        wait_for: "Pour ouvrir votre espace, commencez par vous identifier avec ProConnect.")
 
     # ProConnect ne marche pas en tests, donc on triche en faisant un login par email et mot de passe
-    visit new_agent_session_path
+    visit new_agent_session_url(host: Domain::RDV_SERVICE_PUBLIC.host_name)
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"

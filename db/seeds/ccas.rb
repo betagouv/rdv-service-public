@@ -20,7 +20,7 @@ Compte.new(
       email: "cecile.astier@demo-rdv-service-public.fr",
       service_ids: [service.id],
     },
-  }, current_domain: Domain::RDV_MAIRIE
+  }, current_domain: Domain::RDV_SERVICE_PUBLIC
 ).save!
 
 agent = Agent.find_by(email: "cecile.astier@demo-rdv-service-public.fr")

@@ -20,7 +20,7 @@ RSpec.describe "Agents can try the user-facing online booking pages" do
     expect(page).to have_content("Sélectionnez un créneau")
   end
 
-  it "works on the RDV_MAIRIE domain" do
+  it "works on the RDV_SERVICE_PUBLIC domain" do
     login_as(agent, scope: :agent)
     visit "http://www.rdv-mairie-test.localhost/#{public_link_to_org_path(organisation_id: organisation.id)}"
     expect(page).to have_content("Sélectionnez le motif de votre RDV :")

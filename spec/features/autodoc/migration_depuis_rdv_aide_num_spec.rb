@@ -93,7 +93,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
                        wait_for: "Pour commencer")
 
     # On triche un peu pour simuler la connexion à RDV SP
-    visit "http://#{Domain::RDV_MAIRIE.host_name}/agents/sign_in"
+    visit "http://#{Domain::RDV_SERVICE_PUBLIC.host_name}/agents/sign_in"
 
     doc.add_screenshot(page,
                        text: "Je me connecte sur RDV Service Public",
