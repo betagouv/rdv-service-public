@@ -52,7 +52,7 @@ class Autodoc
       @current_section.steps << { text: description }
     end
 
-    def add_screenshot(page_or_email, text: nil, wait_for: nil)
+    def add_screenshot(page_or_email, text: nil, wait_for: nil, accessibility_checks: true)
       if wait_for
         @example.expect(page_or_email).to(@example.have_content(wait_for))
       end
@@ -66,7 +66,7 @@ class Autodoc
         Capybara.current_session.driver.visit "file://#{page_or_email.save_page}"
         Capybara.current_session.driver.save_screenshot(path)
       else
-        if @accessibility_checks
+        if @accessibility_checks && accessibility_checks # On peut désactiver ces checks au niveau de tout le scénario ou juste pour ce screenshot
           @example.expect(page_or_email).to @example.be_axe_clean
         end
         page_or_email.driver.save_screenshot(path)

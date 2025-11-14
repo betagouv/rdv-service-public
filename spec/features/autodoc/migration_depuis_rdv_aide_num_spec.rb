@@ -72,14 +72,15 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     doc = Autodoc.start_scenario("Migration depuis RDV Aide Numérique vers RDV Service Public", self, category: "5) RDV Aide Numérique")
 
     doc.start_section("Migration")
-    doc.add_text(<<~TEXT
-      Dans un premier temps, cette fonctionnalité n'est accessible que en ayant directement l'url.
-      On va la communiquer aux beta testeurs, et on pourra ensuite la rendre accessible depuis le menu des paramètres.
-    TEXT
-                )
 
     login_as(agent_rdv_aide_num, scope: :agent)
-    visit "http://www.rdv-aide-numerique-test.localhost/agents/instance_exports"
+    visit "http://www.rdv-aide-numerique-test.localhost/"
+
+    doc.add_screenshot(page,
+                       text: "Depuis toutes les pages de RDV Aide Numérique, j'ai un lien vers la migration dans le header. Je clique dessus.",
+                       wait_for: "Passer à RDV Service Public")
+
+    click_on "Passer à RDV Service Public"
 
     Capybara.page.current_window.resize_to(1280, 1200)
 
@@ -202,5 +203,15 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     doc.add_screenshot(page,
                        text: "En se connectant sur RDV Service Public, on constate que les agents ont bien été créés.",
                        wait_for: collegue.email)
+
+    click_on "Liste des RDV"
+
+    expect(page).to have_content("1 rendez-vous")
+    scroll_to(find("h4", text: "1 rendez-vous"))
+
+    doc.add_screenshot(page,
+                       text: "Je vois mon historique de rendez-vous",
+                       wait_for: "vous voyez les RDV de toute l'organisation",
+                       accessibility_checks: false)
   end
 end
