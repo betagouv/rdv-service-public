@@ -4,6 +4,7 @@ class PrescripteurRdvWizardController < ApplicationController
   before_action :log_session_to_sentry
   before_action :check_rdv_wizard_attributes, except: %i[start confirmation cancel_rdv show]
   before_action :set_rdv_wizard, only: %i[new_prescripteur new_beneficiaire create_rdv]
+  before_action :set_prescripteur_from_session, only: %i[confirmation cancel_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
   before_action :set_paper_trail_whodunnit
 
@@ -69,31 +70,27 @@ class PrescripteurRdvWizardController < ApplicationController
   end
 
   def cancel_rdv
-    if session[:prescripteur_id].blank?
-      flash.now[:error] = "Votre session a expiré. Si vous souhaitez annuler le rendez-vous d’un bénéficiaire, veuillez utiliser le bouton présent dans l’email de confirmation."
-      redirect_to root_path
-    else
-      prescripteur = Prescripteur.find(session[:prescripteur_id])
-
-      if prescripteur.rdv.cancellable_by_user?
-        prescripteur.rdv.update_and_notify(prescripteur, status: "excused")
+    if @prescripteur
+      if @prescripteur.rdv.cancellable_by_user?
+        @prescripteur.rdv.update_and_notify(@prescripteur, status: "excused")
         flash[:success] = "Le rendez-vous a bien été annulé."
       else
         flash[:error] = "Le rendez-vous ne peut plus être annulé."
       end
 
       redirect_to prescripteur_show_path
+    else
+      flash[:error] = "Votre session a expiré. Si vous souhaitez annuler le rendez-vous d’un bénéficiaire, veuillez utiliser le bouton présent dans l’email de confirmation."
+      redirect_to root_path
     end
   end
 
   def confirmation
-    if session[:prescripteur_id].blank?
+    if @prescripteur
+      render locals: { prescripteur: @prescripteur }
+    else
       flash[:error] = "Votre session a expiré. Si vous souhaitez consulter ou annuler le rendez-vous d’un bénéficiaire, veuillez regarder l’email de confirmation que nous vous avons fait parvenir."
       redirect_to root_path
-    else
-      prescripteur = Prescripteur.find(session[:prescripteur_id])
-
-      render locals: { prescripteur: }
     end
   end
 
@@ -131,6 +128,12 @@ class PrescripteurRdvWizardController < ApplicationController
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en choisir un autre."
       redirect_to path_to_creneau_selection(@rdv_wizard.params_to_selections)
     end
+  end
+
+  def set_prescripteur_from_session
+    return if session[:prescripteur_id].blank?
+
+    @prescripteur = Prescripteur.find(session[:prescripteur_id])
   end
 
   def user_for_paper_trail
