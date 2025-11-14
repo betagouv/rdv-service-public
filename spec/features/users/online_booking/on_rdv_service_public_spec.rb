@@ -17,14 +17,14 @@ RSpec.describe "User can search rdv on rdv service public" do
   end
 
   before do
-    default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
+    default_url_options[:host] = "http://www.rdv-service-public-test.localhost"
     travel_to(now)
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [demarches_simplifies_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9),
                                              end_time: Tod::TimeOfDay.new(10))
   end
 
   it "allows booking a rdv" do
-    visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
+    visit "http://www.rdv-service-public-test.localhost/org/#{organisation.id}"
     click_on("Clarification du dossier")
     click_on(lieu.name) # choix du lieu
 

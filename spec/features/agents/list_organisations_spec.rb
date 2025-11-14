@@ -14,7 +14,7 @@ RSpec.describe "Organisations" do
   before { login_as(agent, scope: :agent) }
 
   it "shows the list of organisations when an agent with multiple organisations logs in" do
-    visit "http://www.rdv-mairie-test.localhost/"
+    visit "http://www.rdv-service-public-test.localhost/"
     expect(page).to have_content("MDS de Paris Nord")
     expect(page).to have_content("MDS de Paris Sud")
   end

@@ -11,7 +11,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
     doc.start_section("Côté agent")
     doc.add_text("Contexte : Je suis un agent qui n'a jamais utilisé RDV Service Public")
 
-    visit "http://www.rdv-mairie-test.localhost/"
+    visit "http://www.rdv-service-public-test.localhost/"
     doc.add_screenshot(page,
                        text: "Je clique sur 'Ouvrir un espace'",
                        wait_for: "Ouvrir un espace")
@@ -54,7 +54,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
 
     login_as(super_admin, scope: :super_admin)
 
-    visit super_admins_territory_creation_requests_url(host: "http://www.rdv-mairie-test.localhost")
+    visit super_admins_territory_creation_requests_url(host: "http://www.rdv-service-public-test.localhost")
 
     doc.add_screenshot(page,
                        text: "Je consulte la liste des demandes d'ouverture d'espace",

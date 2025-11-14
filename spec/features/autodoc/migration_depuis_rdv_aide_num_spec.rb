@@ -178,7 +178,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(copied_absence).to be_present
 
     login_as(agent_rdv_sp, scope: :agent)
-    visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"
+    visit "http://www.rdv-service-public-test.localhost/admin/organisations/#{created_organisation.id}/agents"
 
     doc.add_screenshot(page,
                        text: "En se connectant sur RDV Service Public, on constate que les agents ont bien été créés.",

@@ -46,7 +46,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             appointment_date: "2020-04-20 08:00:00",
             meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id.to_s,
-            management_url: %r{http://www\.rdv-mairie-test\.localhost/users/rdvs/\d+} # on ne connaît pas encore l’ID du RDV
+            management_url: %r{http://www\.rdv-service-public-test\.localhost/users/rdvs/\d+} # on ne connaît pas encore l’ID du RDV
           ),
           headers:
         )
@@ -108,7 +108,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             status: "validated",
             appointments: [
               {
-                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                management_url: "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
                 meeting_point: "Mairie de Saumur",
                 appointment_date: "2020-04-20 08:00:00",
               },
@@ -157,7 +157,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             status: "validated",
             appointments: [
               {
-                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                management_url: "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
                 meeting_point: "Mairie de Saumur",
                 appointment_date: "2020-04-20 08:00:00",
               },
@@ -242,7 +242,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           query: {
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
-            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            management_url: "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
             meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id,
           },
@@ -282,7 +282,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           query: {
             application_id: "AABBCCDDEE",
             appointment_date: "2020-04-20 08:00:00",
-            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            management_url: "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
             meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id,
           },
@@ -321,7 +321,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           query: {
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
-            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            management_url: "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
             meeting_point: "Nouveau Lieu",
             meeting_point_id: rdv.lieu.id,
           },
@@ -360,7 +360,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           query: {
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
-            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            management_url: "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
             meeting_point: "Nouveau Lieu",
             meeting_point_id: rdv.lieu.id,
           },
@@ -397,7 +397,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             status: "validated",
             appointments: [
               {
-                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                management_url: "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
                 meeting_point: "Mairie de Saumur",
                 appointment_date: "2020-04-20 08:00:00",
               },

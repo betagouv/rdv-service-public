@@ -140,7 +140,7 @@ class Domain
       {
         RDV_SOLIDARITES => "www.rdv-solidarites-test.localhost",
         RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique-test.localhost",
-        RDV_SERVICE_PUBLIC => "www.rdv-mairie-test.localhost",
+        RDV_SERVICE_PUBLIC => "www.rdv-service-public-test.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"
@@ -180,7 +180,7 @@ class Domain
       {
         RDV_SOLIDARITES => "reply.rdv-solidarites-test.localhost",
         RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique-test.localhost",
-        RDV_SERVICE_PUBLIC => "reply.rdv-mairie-test.localhost",
+        RDV_SERVICE_PUBLIC => "reply.rdv-service-public-test.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"
