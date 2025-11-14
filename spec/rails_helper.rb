@@ -119,4 +119,11 @@ RSpec.configure do |config|
     Warden.test_reset!
     WebMock.reset!
   end
+
+  config.around do |example|
+    Timeout.timeout(10) do
+      example.run
+      ActiveRecord::Tasks::DatabaseTasks.truncate_all
+    end
+  end
 end
