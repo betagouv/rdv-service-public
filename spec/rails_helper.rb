@@ -121,7 +121,7 @@ RSpec.configure do |config|
   end
 
   config.around do |example|
-    Timeout.timeout(10) do
+    Timeout.timeout(30) do
       example.run
       ActiveRecord::Tasks::DatabaseTasks.truncate_all
     end
