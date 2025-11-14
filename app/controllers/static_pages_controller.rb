@@ -1,4 +1,5 @@
 class StaticPagesController < ApplicationController
+  before_action -> { @site_vitrine_page = true }
   def mds
     if current_domain == Domain::RDV_SOLIDARITES
       render layout: "application_base"

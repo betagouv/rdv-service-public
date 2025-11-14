@@ -29,6 +29,7 @@ class SearchController < ApplicationController
     # >> REMOVE AFTER 01/01/2026
 
     if current_domain == Domain::RDV_MAIRIE
+      @site_vitrine_page = true
       render "dsfr/rdv_mairie/homepage"
     else
       search_rdv
