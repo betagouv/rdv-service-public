@@ -3,7 +3,7 @@
 
 require "csv"
 require "optparse"
-require "pry"
+require "debug"
 
 options = Struct.new(:path).new
 OptionParser.new do |opts|
@@ -57,7 +57,7 @@ IGNORED_DOMAINS = %w[
 ].freeze
 
 rows = CSV.read(options.path, col_sep: ";", headers: true)
-# binding.pry
+# debugger
 rows
   .select { _1["Reason"].include?("hard bounce") }
   .map { _1["Contact"].split("@").last }

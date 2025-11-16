@@ -192,8 +192,6 @@ group :development do
 
   # help to kill N+1 queries and unused eager loading.
   gem "bullet"
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem "byebug"
   # Better error page for Rails and other Rack apps
   gem "better_errors"
   # Retrieve the binding of a method's caller, or further up the stack.
@@ -213,6 +211,10 @@ group :development do
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
   gem "rails-erd", require: false # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+end
+
+group :development, :test do
+  gem "debug", require: "debug/prelude"
 end
 
 group :test do
@@ -266,6 +268,4 @@ group :test do
   gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
 
   gem "sinatra"
-
-  gem "pry"
 end
