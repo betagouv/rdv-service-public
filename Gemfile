@@ -214,7 +214,7 @@ group :development do
 end
 
 group :development, :test do
-  gem "byebug" # CI 2
+  gem "pry" # CI 1
 end
 
 group :test do
