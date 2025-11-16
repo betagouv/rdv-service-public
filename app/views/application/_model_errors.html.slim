@@ -18,7 +18,7 @@
             onclick="document.querySelector('.js-ignore-benign-errors').setAttribute('disabled', 'disabled');"
           ] Annuler et modifier
         div= f.submit "Confirmer en ignorant les avertissements", class: "fr-btn fr-btn--tertiary"
-      hr
+      hr.fr-mt-4v
 
 - elsif model.errors.any?
   .fr-alert.fr-alert--error.fr-mb-1w
