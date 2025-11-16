@@ -87,7 +87,7 @@ RSpec.configure do |config|
     Faker::Config.random = Random.new(config.seed)
   end
 
-  # config.after(:suite) { Autodoc.render }
+  config.after(:suite) { Autodoc.render }
 
   config.around do |example|
     if example.metadata[:js] || ENV["HEADLESS"] == "false"

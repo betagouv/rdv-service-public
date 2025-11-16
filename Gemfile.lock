@@ -162,6 +162,7 @@ GEM
     bullet (8.0.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
+    byebug (12.0.0)
     calendav (0.5.0)
       http
       icalendar
@@ -198,9 +199,6 @@ GEM
       addressable
     csv (3.3.2)
     date (3.5.0)
-    debug (1.11.0)
-      irb (~> 1.10)
-      reline (>= 0.3.8)
     debug_inspector (1.2.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
@@ -377,7 +375,6 @@ GEM
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2025.0924)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (5.26.1)
     montrose (0.16.0)
       activesupport (>= 5.2, < 8)
@@ -399,8 +396,7 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
-    nokogiri (1.18.10)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.18.10-x86_64-linux-gnu)
       racc (~> 1.4)
     notion-ruby-client (1.2.2)
       faraday (>= 2.0)
@@ -757,7 +753,7 @@ GEM
     zeitwerk (2.7.3)
 
 PLATFORMS
-  ruby
+  x86_64-linux
 
 DEPENDENCIES
   active_link_to
@@ -773,6 +769,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   bullet
+  byebug
   calendav (~> 0.5)
   capybara
   capybara-email
@@ -783,7 +780,6 @@ DEPENDENCIES
   common_french_passwords
   connection_pool
   csv
-  debug
   devise!
   devise-async
   devise_invitable
