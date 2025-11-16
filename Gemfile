@@ -214,7 +214,7 @@ group :development do
 end
 
 group :development, :test do
-  gem "debug" # CI 2
+  gem "debug"
 end
 
 group :test do
