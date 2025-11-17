@@ -96,7 +96,6 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
       instance_export.api_client.post(
         "rdvs",
         {
-          user_external_ids: rdv.users.pluck(:id),
           agent_emails: rdv.agents.pluck(:email),
           lieu_external_id: rdv.lieu_id,
           motif_external_id: rdv.motif_id,
@@ -111,6 +110,13 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
 
           created_by_type: rdv.created_by_type,
           created_by_external_id: rdv.created_by_id,
+
+          participations: rdv.participations.map do |participation|
+            {
+              status: participation.status,
+              user_external_id: participation.user_id,
+            }
+          end,
 
           external_reference: {
             external_id: rdv_id,

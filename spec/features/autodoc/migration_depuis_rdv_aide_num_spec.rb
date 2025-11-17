@@ -8,6 +8,30 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
                           website: "www.montreuil.fr/france-service",
                           email: "contact@exemple.montreuil.fr")
   end
+  let!(:absence) { create(:absence, :no_recurrence, agent: agent_rdv_aide_num) }
+  let!(:recurrent_absence) { create(:absence, :weekly_on_monday, agent: agent_rdv_aide_num) }
+  let!(:recurrent_absence_with_end_date) { create(:absence, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num) }
+  let!(:plage_ouverture) do
+    create(:plage_ouverture, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num, organisation: organisation_rdv_aide_num, lieu: lieu, motifs: [motif])
+  end
+  let!(:absence_du_collegue) { create(:absence, :no_recurrence, agent: collegue) }
+  let!(:agent_rdv_sp) do
+    create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
+  end
+  let!(:oauth_application) do
+    application = OauthApplication.new(
+      name: "RDV Aide Numérique",
+      uid: "fake-app-id",
+      redirect_uri: "http://www.rdv-aide-numerique-test.localhost/omniauth/rdvservicepublic/callback",
+      logo_base64: "",
+      default_service: create(:service)
+    )
+
+    application.secret_strategy.store_secret(application, :secret, "fake-app-secret")
+    application.save!
+
+    application
+  end
   let!(:agent_rdv_aide_num) do
     create(:agent, first_name: "Camille", last_name: "Clavier", admin_role_in_organisations: [organisation_rdv_aide_num])
   end
@@ -32,33 +56,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let!(:old_rdv) do
     create(:rdv, agents: [collegue], users: [users.last], starts_at: 2.weeks.ago, motif:, lieu:, organisation: organisation_rdv_aide_num)
   end
-
-  let!(:absence) { create(:absence, :no_recurrence, agent: agent_rdv_aide_num) }
-  let!(:recurrent_absence) { create(:absence, :weekly_on_monday, agent: agent_rdv_aide_num) }
-  let!(:recurrent_absence_with_end_date) { create(:absence, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num) }
-  let!(:plage_ouverture) do
-    create(:plage_ouverture, :weekly_on_monday_until_next_month, agent: agent_rdv_aide_num, organisation: organisation_rdv_aide_num, lieu: lieu, motifs: [motif])
+  let!(:old_rdv_collectif) do
+    create(:rdv, :without_users, agents: [collegue], users: [], starts_at: 2.weeks.ago, motif: motif_collectif, lieu:, organisation: organisation_rdv_aide_num, status: :seen)
   end
 
-  let!(:absence_du_collegue) { create(:absence, :no_recurrence, agent: collegue) }
-
-  let!(:agent_rdv_sp) do
-    create(:agent, first_name: "Camille", last_name: "Clavier", password: "c0rrecThorse!", admin_role_in_organisations: [])
-  end
-
-  let!(:oauth_application) do
-    application = OauthApplication.new(
-      name: "RDV Aide Numérique",
-      uid: "fake-app-id",
-      redirect_uri: "http://www.rdv-aide-numerique-test.localhost/omniauth/rdvservicepublic/callback",
-      logo_base64: "",
-      default_service: create(:service)
-    )
-
-    application.secret_strategy.store_secret(application, :secret, "fake-app-secret")
-    application.save!
-
-    application
+  before do
+    create(:participation, rdv: old_rdv_collectif, status: :seen, user: users[0])
+    create(:participation, rdv: old_rdv_collectif, status: :noshow, user: users[1])
   end
 
   stub_env_for_proconnect
@@ -151,10 +155,12 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     created_motif = created_organisation.motifs.individuel.sole
     expect(created_motif).to have_attributes(name: motif.name)
 
-    created_organisation.users.last
+    # On ne crée que des rdvs dans le passé : les rendez-vous à venir sont matérialisés par des absences.
+    expect(created_organisation.rdvs.pluck(:starts_at).max < Time.zone.now).to be true
+    expect(created_organisation.rdvs.count).to eq 2
 
     # On importe les anciens rendez-vous
-    created_rdv = created_organisation.rdvs.last
+    created_rdv = created_organisation.rdvs.joins(:motif).merge(Motif.individuel).last
     expect(created_rdv).to have_attributes(
       lieu: created_lieu,
       motif: created_motif,
@@ -166,6 +172,10 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     )
 
     expect(created_rdv.users.first.full_name).to eq old_rdv.users.first.full_name
+
+    created_rdv_collectif = created_organisation.rdvs.collectif.last
+    expect(created_rdv_collectif.status).to eq "seen"
+    expect(created_rdv_collectif.participations.pluck(:status).sort).to eq(%w[noshow seen])
 
     # On crée des absences qui permettent de retrouver les rendez-vous sur l'ancienne instance
     absence_representing_rdv = collegue.absences.find_by(title: "RDV avec #{future_rdv.users.first.full_name} (sur RDV Aide Numérique)")
@@ -206,8 +216,8 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
     click_on "Liste des RDV"
 
-    expect(page).to have_content("1 rendez-vous")
-    scroll_to(find("h4", text: "1 rendez-vous"))
+    expect(page).to have_content("2 rendez-vous")
+    scroll_to(find("h4", text: "2 rendez-vous"))
 
     doc.add_screenshot(page,
                        text: "Je vois mon historique de rendez-vous",

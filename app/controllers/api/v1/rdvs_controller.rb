@@ -33,6 +33,10 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
       params.permit(%w[starts_at status cancelled_at context ends_at name max_participants_count])
     )
 
+    if rdv.starts_at > Time.zone.now
+      raise "Cet endpoint ne doit pas être utilisé pour créer des rendez-vous à venir"
+    end
+
     Rdv.transaction do
       oauth_application = doorkeeper_token&.application
 
@@ -40,7 +44,6 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
       rdv.motif_id = ExternalReference.find_by(item_type: "Motif", external_id: params[:motif_external_id], oauth_application:)&.item_id
       rdv.organisation_id = rdv.motif.organisation_id
 
-      rdv.user_ids = ExternalReference.where(item_type: "User", external_id: params[:user_external_ids], oauth_application:).map(&:item_id)
       rdv.agents = Agent.where(email: params[:agent_emails])
 
       rdv.created_by_type = params[:created_by_type]
@@ -56,7 +59,23 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
 
       authorize(rdv, :update?, policy_class: Agent::RdvPolicy)
 
-      rdv.save!
+      if rdv.collectif?
+        rdv.save!
+
+        params[:participations].each do |participation_params|
+          Participation.create(
+            rdv: rdv,
+            user_id: ExternalReference.find_by(item_type: "User", external_id: participation_params[:user_external_id], oauth_application:)&.item_id,
+            status: participation_params[:status],
+            created_by: rdv.created_by
+          )
+        end
+      else
+        user_external_ids = params[:participations].map { |p| p[:user_external_id] }
+        rdv.user_ids = ExternalReference.where(item_type: "User", external_id: user_external_ids, oauth_application:).map(&:item_id)
+        rdv.save!
+      end
+
       if params[:external_reference].present?
         ExternalReference.create!(
           params.require(:external_reference).permit(:external_id, :external_url).merge(
