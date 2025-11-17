@@ -121,7 +121,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Vue calendrier"
       expect(page).to have_content "Semaine" # necessary to make sure the calendar page has loaded
       expect(page).to have_content "Permanence"
-      first("a", text: "Permanence").click
+      first("a:not(.fc-event-today)", text: "Permanence").click
       expect_page_title("Permanence")
       click_link "Modifier"
 
