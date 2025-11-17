@@ -3,13 +3,13 @@ class CronJob::RefreshCachedStatsJob < CronJob
     return unless MetabaseApi.authentication_present?
 
     queries_by_key.each do |key, query|
-      Rails.logger.info "querying Metabase for #{key}…"
+      Rails.logger.debug { "querying Metabase for #{key}…" }
       count = MetabaseApi.sql_query(query)[0]["c"].gsub(",", "").to_i
       Rails.logger.info "got #{key} = #{count}. writing to cache…"
       Rails.cache.write(key, count)
-      Rails.logger.info "✅ wrote to cache"
+      Rails.logger.debug "✅ wrote to cache"
     end
-    Rails.logger.info "🏁 done"
+    Rails.logger.debug "🏁 done"
   end
 
   private
