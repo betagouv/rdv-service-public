@@ -5,7 +5,7 @@ tr
     = render "admin/users/identity", user: participation.user
     - if participation.user.birth_date
         .participation_birthdate.small
-          i.fas.fa-calendar-day.mr-1
+          = icon("fr-icon-calendar-line", class: "fr-icon--sm fr-mr-1v")
           = "Né(e) le #{I18n.l(participation.user.birth_date)}"
   - if participation.rdv.requires_ants_predemande_number?
     td
