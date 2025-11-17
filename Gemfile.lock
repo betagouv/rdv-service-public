@@ -445,7 +445,6 @@ GEM
     orm_adapter (0.5.0)
     ostruct (0.6.1)
     overmind (2.5.1)
-    overmind (2.5.1-arm64-darwin)
     paper_trail (15.2.0)
       activerecord (>= 6.1)
       request_store (~> 1.4)
