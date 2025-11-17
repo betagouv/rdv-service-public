@@ -101,6 +101,10 @@ Rails.application.configure do
       cron: "every day at 06:00 Europe/Paris",
       class: "CronJob::RefreshBlogPostsFromHeadwayJob",
     },
+    refresh_carto_anct_stats: {
+      cron: "every day at 06:30 Europe/Paris",
+      class: "CronJob::RefreshCartoAnctStatsJob",
+    },
     refresh_cached_stats: {
       cron: "every day at 08:00 Europe/Paris",
       class: "CronJob::RefreshCachedStats::EnqueueAllKeysJob",
