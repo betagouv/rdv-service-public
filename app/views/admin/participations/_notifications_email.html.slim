@@ -2,12 +2,12 @@
   - if participation.user.user_to_notify.notify_by_email?
     span.mr-1
       i.fa.fa-envelope.text-primary-blue.mr-2
-      strong.word-break-all = participation.user.user_to_notify.preferred_email
+      span.word-break-all = participation.user.user_to_notify.preferred_email
   - else
     span.mr-1
       i.fa.fa-times.text-primary-blue.mr-2
-      strong = t("admin.users.notifications_preferences.email_disabled")
+      span= t("admin.users.notifications_preferences.email_disabled")
 - else
   span.mr-1
     i.fa.fa-times-circle.text-primary-blue.mr-2
-    strong = t("admin.users.notifications_preferences.email_absent")
+    span= t("admin.users.notifications_preferences.email_absent")
