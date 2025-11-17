@@ -287,19 +287,18 @@ hr[aria-hidden="true"]
 
 / Redis cache store is fault tolerant, it will return nil if unavailable, and we'll simply skip this section
 / cf https://github.com/rails/rails/blob/main/activesupport/lib/active_support/cache/redis_cache_store.rb#L31-L32
-- rdvs_count = Rails.cache.fetch("stats.both_instances.2_years.rdvs_count")
-- active_orgs_count = Rails.cache.fetch("stats.both_instances.2_years.active_organisations_count")
-- if rdvs_count && active_orgs_count
+- cached_stats = Rails.cache.fetch_multi("stats.both_instances.2_years.rdvs_count", "stats.both_instances.2_years.active_organisations_count") { nil }.compact
+- if cached_stats
   .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
     .fr-container.fr-py-6w
       .fr-grid-row.fr-grid-row--gutters.rdv-align-items-center
         .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
-          = number_with_delimiter(rdvs_count, delimiter: " ")
+          = number_with_delimiter(cached_stats["stats.both_instances.2_years.rdvs_count"], delimiter: " ")
         .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
           .rdv-font-weight-bold
             | RENDEZ-VOUS PLANIFIÉS
           div
-            | DANS #{number_with_delimiter(active_orgs_count, delimiter: " ")} STRUCTURES
+            | DANS #{number_with_delimiter(cached_stats["stats.both_instances.2_years.active_organisations_count"], delimiter: " ")} STRUCTURES
             span[aria-hidden="true"]
               | *
 
