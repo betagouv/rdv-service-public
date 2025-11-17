@@ -1,9 +1,11 @@
 module Caldav
   class SyncAbsencesJob < ApplicationJob
+    before_enqueue do |job|
+      throw :abort if synced_during_last_minute?(job.arguments.first)
+    end
+
     # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def perform(agent_id)
-      return if synced_during_last_minute?(agent_id)
-
       @agent = Agent.find_by_id(agent_id)
       return unless @agent&.caldav_configured? || @agent&.caldav_disconnect_in_progress?
 

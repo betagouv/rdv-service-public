@@ -15,6 +15,11 @@ class Admin::RdvWizardStepsController < AgentAuthController
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
     authorize(@rdv_wizard.rdv, :new?, policy_class: Agent::RdvPolicy)
+
+    @rdv_wizard.rdv.agents.each do |agent|
+      Caldav::SyncAbsencesJob.perform_later(agent.id) if @agent.caldav_configured?
+    end
+
     render current_step
   end
 
