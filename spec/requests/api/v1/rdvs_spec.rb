@@ -10,16 +10,16 @@ RSpec.describe "RDV API" do
   end
   let(:application) { create(:oauth_application) }
 
+  let(:motif) { create(:motif, organisation: organisation, service: service) }
+  let(:service) { create(:service) }
+  let(:organisation) { create(:organisation) }
+
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+  let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+  let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
+
   describe "#index" do
-    let(:motif) { create(:motif, organisation: organisation, service: service) }
-    let(:service) { create(:service) }
-    let(:organisation) { create(:organisation) }
-
-    let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
-    let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
-    let(:user) { create(:user) }
-    let(:other_user) { create(:user) }
-
     let!(:rdv_with_user_and_agent) { create(:rdv, organisation: organisation, motif: motif, users: [user], agents: [agent]) }
     let!(:rdv_with_user_and_other_agent) { create(:rdv, organisation: organisation, motif: motif, users: [user], agents: [other_agent]) }
 
