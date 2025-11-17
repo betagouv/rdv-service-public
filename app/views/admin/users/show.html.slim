@@ -12,7 +12,7 @@ ruby:
 - content_for :fil_ariane do
   = render "common/fil_ariane", titles_and_paths:, current_page_title: @user.full_name
 
-- content_for :breadcrumb do
+- content_for :right_of_page_title do
   - @user.external_references.each do |reference|
     = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-btn fr-btn--secondary fr-mr-2w")
 

@@ -195,7 +195,7 @@ RSpec.describe Agent, type: :model do
 
       context "on the RDV Service Public instance" do
         stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
-        it { is_expected.to eq(Domain::RDV_MAIRIE) }
+        it { is_expected.to eq(Domain::RDV_SERVICE_PUBLIC) }
       end
     end
   end

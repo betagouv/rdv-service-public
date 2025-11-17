@@ -84,7 +84,7 @@ class Organisation < ApplicationRecord
     when :rdv_aide_numerique
       Domain::RDV_AIDE_NUMERIQUE
     when :rdv_mairie
-      Domain::RDV_MAIRIE
+      Domain::RDV_SERVICE_PUBLIC
     else
       Domain::RDV_SOLIDARITES
     end

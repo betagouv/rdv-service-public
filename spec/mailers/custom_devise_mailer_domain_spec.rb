@@ -21,7 +21,7 @@ RSpec.describe CustomDeviseMailer, "#domain" do
       stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
 
       it "uses RDV Service Public" do
-        expect_to_use_domain(Domain::RDV_MAIRIE)
+        expect_to_use_domain(Domain::RDV_SERVICE_PUBLIC)
       end
     end
   end
@@ -59,8 +59,8 @@ RSpec.describe CustomDeviseMailer, "#domain" do
     context "in a RDV Mairie organisation" do
       let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
 
-      it "uses RDV_MAIRIE" do
-        expect_to_use_domain(Domain::RDV_MAIRIE)
+      it "uses RDV_SERVICE_PUBLIC" do
+        expect_to_use_domain(Domain::RDV_SERVICE_PUBLIC)
       end
     end
   end
@@ -124,7 +124,7 @@ RSpec.describe CustomDeviseMailer, "#domain" do
 
     it "doesn't override the reply-to address" do
       perform_enqueued_jobs
-      expect(sent_email.from).to eq [Domain::RDV_MAIRIE.support_email]
+      expect(sent_email.from).to eq [Domain::RDV_SERVICE_PUBLIC.support_email]
       expect(sent_email.reply_to).to be_blank
     end
 

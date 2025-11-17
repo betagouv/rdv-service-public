@@ -10,7 +10,7 @@ RSpec.describe "Agent can create user" do
 
   before do
     login_as(agent, scope: :agent)
-    visit "http://www.rdv-mairie-test.localhost/"
+    visit "http://www.rdv-service-public-test.localhost/"
     click_link "Usagers"
     click_on "Ajouter un usager", match: :first
     expect_page_title("Nouvel usager")

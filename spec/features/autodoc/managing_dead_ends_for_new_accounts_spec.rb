@@ -29,7 +29,7 @@ RSpec.describe "Configuration initiale", js: true do
 
     doc.add_text("Voici ce qui s'affiche sur les différentes pages qui nécessitent un motif")
 
-    visit new_admin_organisation_rdv_wizard_step_url(organisation, host: "http://www.rdv-mairie-test.localhost", starts_at: Time.zone.now, agent_ids: [agent.id])
+    visit new_admin_organisation_rdv_wizard_step_url(organisation, host: "http://www.rdv-service-public-test.localhost", starts_at: Time.zone.now, agent_ids: [agent.id])
 
     doc.add_screenshot(page,
                        text: "Prise de rendez-vous depuis le calendrier",
@@ -38,7 +38,7 @@ RSpec.describe "Configuration initiale", js: true do
     expect(page).to have_content("Pour prendre un rendez-vous, vous devez d'abord créer un motif.")
     expect(page).not_to have_content("Vue calendrier")
 
-    visit admin_organisation_creneaux_search_url(organisation, host: "http://www.rdv-mairie-test.localhost")
+    visit admin_organisation_creneaux_search_url(organisation, host: "http://www.rdv-service-public-test.localhost")
 
     doc.add_screenshot(page,
                        text: "Recherche de créneaux",
@@ -46,13 +46,13 @@ RSpec.describe "Configuration initiale", js: true do
 
     expect(page).to have_content("Pour prendre un rendez-vous, vous devez d'abord créer un motif.")
 
-    visit admin_organisation_rdvs_collectifs_url(organisation, host: "http://www.rdv-mairie-test.localhost", agent_id: agent.id)
+    visit admin_organisation_rdvs_collectifs_url(organisation, host: "http://www.rdv-service-public-test.localhost", agent_id: agent.id)
 
     doc.add_screenshot(page,
                        text: "Liste des RDV collectifs",
                        wait_for: "Pour créer un RDV collectif")
 
-    visit admin_organisation_planning_plage_ouvertures_url(organisation, host: "http://www.rdv-mairie-test.localhost", agent_id: agent.id)
+    visit admin_organisation_planning_plage_ouvertures_url(organisation, host: "http://www.rdv-service-public-test.localhost", agent_id: agent.id)
 
     doc.add_screenshot(page,
                        text: "Liste des plages d'ouverture",
@@ -60,7 +60,7 @@ RSpec.describe "Configuration initiale", js: true do
 
     expect(page).to have_content("Pour créer une plage d'ouverture, vous devez d'abord créer un motif")
 
-    visit admin_organisation_online_booking_url(organisation, host: "http://www.rdv-mairie-test.localhost")
+    visit admin_organisation_online_booking_url(organisation, host: "http://www.rdv-service-public-test.localhost")
 
     scroll_to(find(".fr-callout"))
 

@@ -1,6 +1,6 @@
 - content_for :title, t("motifs.form.title.new")
 
-= territory_navigation(content_for(:title), [link_to("Liste des motifs", admin_territory_motifs_path(current_territory))])
+= territory_navigation(content_for(:title), [["Liste des motifs", admin_territory_motifs_path(current_territory)]])
 
 .row
   .col-md-12

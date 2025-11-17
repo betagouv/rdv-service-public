@@ -4,7 +4,7 @@
 - content_for(:title, "Agents de #{current_organisation.name}")
 
 - if current_agent_can_create_agent_in?(current_organisation)
-  - content_for :breadcrumb do
+  - content_for :right_of_page_title do
     = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class:"fr-btn fr-btn--secondary"
 
 = simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|

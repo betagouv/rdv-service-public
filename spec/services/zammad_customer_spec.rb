@@ -8,7 +8,7 @@ RSpec.describe ZammadCustomer do
           zammad_customer = ZammadCustomer.new(email: "soukalina@gmail.com", phone: nil)
           described_class.new(zammad_customer).run
           expect(zammad_customer.note).to eq "Usager trouvé avec l'email soukalina@gmail.com"
-          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/users/#{user.id}"
+          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-service-public-test.localhost/super_admins/users/#{user.id}"
         end
       end
 
@@ -20,7 +20,7 @@ RSpec.describe ZammadCustomer do
           zammad_customer = ZammadCustomer.new(email: "agent@example.com", phone: nil)
           described_class.new(zammad_customer).run
           expect(zammad_customer.note).to eq "Agent trouvé avec l'email agent@example.com"
-          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/agents/#{agent.id}"
+          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-service-public-test.localhost/super_admins/agents/#{agent.id}"
         end
       end
 
@@ -31,7 +31,7 @@ RSpec.describe ZammadCustomer do
           zammad_customer = ZammadCustomer.new(phone: "0612345678", email: nil)
           described_class.new(zammad_customer).run
           expect(zammad_customer.note).to eq "Usager trouvé avec le numéro de téléphone formatté +33612345678"
-          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/users/#{user.id}"
+          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-service-public-test.localhost/super_admins/users/#{user.id}"
         end
       end
 
@@ -52,8 +52,8 @@ RSpec.describe ZammadCustomer do
           zammad_customer = ZammadCustomer.new(email: "test@example.com", phone: "0612345678")
           described_class.new(zammad_customer).run
           expect(zammad_customer.note).to eq "Usager trouvé avec l'email test@example.com"
-          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/users/#{user_by_email.id}"
-          expect(zammad_customer.super_admin_url).not_to eq "http://www.rdv-mairie-test.localhost/super_admins/users/#{user_by_phone.id}"
+          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-service-public-test.localhost/super_admins/users/#{user_by_email.id}"
+          expect(zammad_customer.super_admin_url).not_to eq "http://www.rdv-service-public-test.localhost/super_admins/users/#{user_by_phone.id}"
         end
       end
 
@@ -64,7 +64,7 @@ RSpec.describe ZammadCustomer do
           zammad_customer = ZammadCustomer.new(phone: "06 12 34 56 78", email: nil)
           described_class.new(zammad_customer).run
           expect(zammad_customer.note).to eq "Usager trouvé avec le numéro de téléphone formatté +33612345678"
-          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/users/#{user.id}"
+          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-service-public-test.localhost/super_admins/users/#{user.id}"
         end
       end
 
@@ -111,7 +111,7 @@ RSpec.describe ZammadCustomer do
         zammad_customer = ZammadCustomer.new(phone: "123", email: nil)
         described_class.new(zammad_customer).augment_with_agent(agent)
         expect(zammad_customer.note).to be_blank
-        expect(zammad_customer.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/agents/#{agent.id}"
+        expect(zammad_customer.super_admin_url).to eq "http://www.rdv-service-public-test.localhost/super_admins/agents/#{agent.id}"
       end
     end
 
@@ -122,7 +122,7 @@ RSpec.describe ZammadCustomer do
         zammad_customer = ZammadCustomer.new(phone: "123", email: nil)
         described_class.new(zammad_customer).augment_with_user(user)
         expect(zammad_customer.note).to be_blank
-        expect(zammad_customer.super_admin_url).to eq "http://www.rdv-mairie-test.localhost/super_admins/users/#{user.id}"
+        expect(zammad_customer.super_admin_url).to eq "http://www.rdv-service-public-test.localhost/super_admins/users/#{user.id}"
       end
     end
   end

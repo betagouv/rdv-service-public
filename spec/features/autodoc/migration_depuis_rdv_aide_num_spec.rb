@@ -93,7 +93,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
                        wait_for: "Pour commencer")
 
     # On triche un peu pour simuler la connexion à RDV SP
-    visit "http://#{Domain::RDV_MAIRIE.host_name}/agents/sign_in"
+    visit "http://#{Domain::RDV_SERVICE_PUBLIC.host_name}/agents/sign_in"
 
     doc.add_screenshot(page,
                        text: "Je me connecte sur RDV Service Public",
@@ -178,7 +178,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(copied_absence).to be_present
 
     login_as(agent_rdv_sp, scope: :agent)
-    visit "http://www.rdv-mairie-test.localhost/admin/organisations/#{created_organisation.id}/agents"
+    visit "http://www.rdv-service-public-test.localhost/admin/organisations/#{created_organisation.id}/agents"
 
     doc.add_screenshot(page,
                        text: "En se connectant sur RDV Service Public, on constate que les agents ont bien été créés.",

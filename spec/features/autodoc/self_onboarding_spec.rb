@@ -24,7 +24,7 @@ RSpec.describe "Embarquement en autonomie pour les admins", js: true do
     TEXT
       .html_safe) # rubocop:disable Rails/OutputSafety
 
-    visit admin_organisation_configuration_url(organisation, host: "http://www.rdv-mairie-test.localhost")
+    visit admin_organisation_configuration_url(organisation, host: "http://www.rdv-service-public-test.localhost")
 
     doc.add_screenshot(page,
                        text: "On affiche une bannière qui indique que la première action à prendre est de créer un motif",

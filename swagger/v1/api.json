@@ -2849,7 +2849,7 @@
                         "created_at": "2025-10-06 13:36:33 +0200",
                         "rdv": null,
                         "updated_at": "2025-10-06 13:36:33 +0200",
-                        "url": "http://www.rdv-mairie-test.localhost/agents/rdv_plans/2",
+                        "url": "http://www.rdv-service-public-test.localhost/agents/rdv_plans/2",
                         "user_id": 8
                       }
                     }
@@ -2968,7 +2968,7 @@
                           "location_type": "public_office"
                         },
                         "updated_at": "2025-10-06 13:36:34 +0200",
-                        "url": "http://www.rdv-mairie-test.localhost/agents/rdv_plans/4",
+                        "url": "http://www.rdv-service-public-test.localhost/agents/rdv_plans/4",
                         "user_id": 12
                       }
                     }

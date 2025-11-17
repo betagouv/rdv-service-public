@@ -9,7 +9,7 @@
     = b.with_breadcrumb label: "RDV collectifs"
 
 - needs_collectif_motif = current_organisation.motifs.collectif.active.none?
-- content_for :breadcrumb do
+- content_for :right_of_page_title do
   - unless needs_collectif_motif
     .btn-group
       = link_to "Nouveau RDV collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"

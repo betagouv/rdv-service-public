@@ -301,7 +301,7 @@ class Agent < ApplicationRecord
     @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?
                   Domain::RDV_AIDE_NUMERIQUE
                 elsif organisations.where(verticale: :rdv_mairie).any?
-                  Domain::RDV_MAIRIE
+                  Domain::RDV_SERVICE_PUBLIC
                 else
                   Domain.default_domain_for_current_instance
                 end
