@@ -206,7 +206,7 @@ group :development do
   # Other
 
   # Manage Procfile-based applications
-  gem "foreman", require: false
+  gem "overmind", require: false
   # Gives letter_opener an interface for browsing sent emails
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
