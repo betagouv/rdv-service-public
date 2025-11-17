@@ -78,7 +78,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
         login_as(super_admin, scope: :super_admin)
 
-        visit super_admins_territory_creation_requests_url(host: "http://www.rdv-mairie-test.localhost")
+        visit super_admins_territory_creation_requests_url(host: "http://www.rdv-service-public-test.localhost")
         click_on "CCAS de Montreuil"
 
         expect(page).to have_content("Demande d'ouverture d'espace")
@@ -102,7 +102,7 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
         open_email(agent.email)
         expect(current_email.subject).to eq "Votre espace RDV Service Public est ouvert 🚀"
 
-        visit super_admins_territory_creation_requests_url(host: "http://www.rdv-mairie-test.localhost")
+        visit super_admins_territory_creation_requests_url(host: "http://www.rdv-service-public-test.localhost")
 
         expect(page).to have_content "Il n'y a aucune demande avec ce statut"
 

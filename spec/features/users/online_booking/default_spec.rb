@@ -41,7 +41,7 @@ RSpec.describe "User can search for rdvs" do
 
     describe "On RDV Service Public" do
       it "doesn't require an ANTS predemande number for a relative", js: true do
-        visit "http://www.rdv-mairie-test.localhost/#{path_for_creneau_choice}"
+        visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice}"
         choose_creneau
         sign_up
         click_button("Continuer")
