@@ -2,7 +2,7 @@
 
 - content_for(:title, "Invitations en cours pour #{current_organisation.name}")
 
-- content_for :breadcrumb do
+- content_for :right_of_page_title do
   = link_to "Retour à la liste des agents", admin_organisation_agents_path(current_organisation), class:"mr-2"
   - if current_agent_can_create_agent_in?(current_organisation)
     = link_to "Inviter un agent", new_admin_organisation_agent_path(current_organisation), class:"btn btn-outline-primary"

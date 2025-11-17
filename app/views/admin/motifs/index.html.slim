@@ -8,7 +8,7 @@
   = render "admin/onboarding/banner"
 
 - if agent_can_create_motif?
-  - content_for :breadcrumb do
+  - content_for :right_of_page_title do
     = link_to t("admin.motifs.actions.new"), new_admin_organisation_motif_path(current_organisation), class:"fr-btn fr-btn--secondary"
 
 = simple_form_for "", url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
