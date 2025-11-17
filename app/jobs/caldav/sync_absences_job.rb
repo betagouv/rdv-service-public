@@ -45,6 +45,7 @@ module Caldav
       # Sinon on ignore l’événement
       # Voir https://www.ietf.org/rfc/rfc2445.txt (4.8.2.7 Time Transparency).
       # On utilise la méthode privée `inner_event` car Calendav n’expose pas cette information directement
+      # On pourra changer ça quand cette PR sera mergée : https://github.com/pat/calendav/pull/14
       if event.send(:inner_event).transp == "TRANSPARENT"
         absence.destroy if absence.persisted?
         return
