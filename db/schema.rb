@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_13_162710) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_17_105536) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -770,6 +770,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_162710) do
     t.enum "role", default: "support", null: false, enum_type: "role"
   end
 
+  create_table "tags", comment: "Des tags pour catégoriser les espaces en fonctions des partenariats auxquels ils sont liés.", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "teams", force: :cascade do |t|
     t.bigint "territory_id", null: false
     t.string "name", null: false
@@ -827,6 +833,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_162710) do
     t.datetime "created_at", null: false
     t.index ["service_id"], name: "index_territory_services_on_service_id"
     t.index ["territory_id", "service_id"], name: "index_territory_services_on_territory_id_and_service_id", unique: true
+  end
+
+  create_table "territory_tags", force: :cascade do |t|
+    t.bigint "territory_id"
+    t.bigint "tag_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tag_id"], name: "index_territory_tags_on_tag_id"
+    t.index ["territory_id", "tag_id"], name: "index_territory_tags_on_territory_id_and_tag_id", unique: true
+    t.index ["territory_id"], name: "index_territory_tags_on_territory_id"
   end
 
   create_table "user_profiles", force: :cascade do |t|
@@ -1004,6 +1020,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_162710) do
   add_foreign_key "territory_creation_requests", "agents"
   add_foreign_key "territory_services", "services"
   add_foreign_key "territory_services", "territories"
+  add_foreign_key "territory_tags", "tags"
+  add_foreign_key "territory_tags", "territories"
   add_foreign_key "user_profiles", "organisations"
   add_foreign_key "user_profiles", "users"
   add_foreign_key "users", "users", column: "responsible_id"
