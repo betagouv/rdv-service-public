@@ -2,6 +2,8 @@ module Caldav
   class SyncAbsencesJob < ApplicationJob
     # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def perform(agent_id)
+      return if synced_during_last_minute?(agent_id)
+
       @agent = Agent.find_by_id(agent_id)
       return unless @agent&.caldav_configured? || @agent&.caldav_disconnect_in_progress?
 
@@ -46,6 +48,12 @@ module Caldav
         title: "Indisponibilité provenant de votre agenda externe"
       )
       absence.save! if absence.changed?
+    end
+
+    def synced_during_last_minute?(agent_id)
+      Redis.with_connection do |redis|
+        redis.set("caldav_sync_absences_job_lock_#{agent_id}", true, ex: 1.minute.to_i, nx: true) == false
+      end
     end
   end
 end
