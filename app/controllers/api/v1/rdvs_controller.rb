@@ -27,7 +27,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
   end
 
   # Cet endpoint est utilisé seulement pour la copie des données d'une instance à l'autre, il n'est donc pas documenté.
-  def create
+  def create # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     # On crée le rendez-vous via ActiveRecord sans lancer les Notifiers, ce qui évite de déclencher des callbacks de notifications pour les agents et les usager
     rdv = Rdv.new(
       params.permit(%w[starts_at status cancelled_at context ends_at name max_participants_count])
