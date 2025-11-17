@@ -1,17 +1,14 @@
-- if participation.user.user_to_notify.phone_number.present?
-  - if participation.user.user_to_notify.notifiable_by_sms?
-    span.mr-1.text-nowrap
+span.mr-1
+  - if participation.user.user_to_notify.phone_number.present?
+    - if participation.user.user_to_notify.notifiable_by_sms?
       i.fa.fa-mobile-alt.text-primary-blue.mr-2
-      span= participation.user.user_to_notify.phone_number
-  - elsif !participation.user.user_to_notify.phone_number_mobile?
-    span.mr-1
+      span.text-nowrap= participation.user.user_to_notify.phone_number
+    - elsif !participation.user.user_to_notify.phone_number_mobile?
       i.fa.fa-times.text-primary-blue.mr-2
       span= t("admin.users.notifications_preferences.sms_invalid")
-  - else
-    span.mr-1
+    - else
       i.fa.fa-times.text-primary-blue.mr-2
       span= t("admin.users.notifications_preferences.sms_disabled")
-- else
-  span.mr-1
+  - else
     i.fa.fa-times-circle.text-primary-blue.mr-2
     span= t("admin.users.notifications_preferences.sms_absent")
