@@ -49,3 +49,6 @@ workers ENV.fetch("WEB_CONCURRENCY", 3)
 plugin :tmp_restart
 
 supported_http_methods Puma::Const::IANA_HTTP_METHODS
+
+# Run the Solid Queue supervisor inside of Puma for single-server deployments
+plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
