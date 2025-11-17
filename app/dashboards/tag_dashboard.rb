@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class TerritoryDashboard < Administrate::BaseDashboard
+class TagDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -9,17 +9,9 @@ class TerritoryDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    departement_number: Field::String,
     name: Field::String,
-    category: Field::Select.with_options(collection: Compte::CATEGORIES),
-    organisations: Field::HasMany.with_options(sort_by: :name, direction: :asc),
-    operator: Field::BelongsTo,
-    admin_agents: Field::HasMany,
-    tags: Field::HasMany,
-    roles: Field::HasMany,
+    territories: Field::HasMany,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
-    work_on_sunday: Field::Boolean,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -29,10 +21,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
     id
-    departement_number
-    category
     name
-    tags
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -40,15 +29,8 @@ class TerritoryDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
-    departement_number
-    work_on_sunday
-    roles
-    organisations
-    category
-    tags
-    operator
+    territories
     created_at
-    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -56,15 +38,9 @@ class TerritoryDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     name
-    admin_agents
-    category
-    tags
-    operator
-    departement_number
-    work_on_sunday
   ].freeze
 
-  def display_resource(territory)
-    "Territory ##{territory.id} - #{territory.name} (#{territory.departement_number})"
+  def display_resource(tag)
+    tag.name
   end
 end

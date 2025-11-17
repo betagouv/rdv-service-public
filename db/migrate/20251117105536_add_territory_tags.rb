@@ -14,6 +14,7 @@ class AddTerritoryTags < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
+    add_index :tags, :name, unique: true
     add_index :territory_tags, %i[territory_id tag_id], unique: true
   end
 end
