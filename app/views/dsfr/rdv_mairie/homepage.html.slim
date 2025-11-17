@@ -285,25 +285,30 @@ hr[aria-hidden="true"]
             .fr-card__img
               = image_tag "rdv_mairie/billet-0-euros.png", alt: "", class: "fr-responsive-img"
 
-.rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
-  .fr-container.fr-py-6w
-    .fr-grid-row.fr-grid-row--gutters.rdv-align-items-center
-      .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
-        = number_with_delimiter(Rails.cache.fetch("stats.both_instances.2_years.rdvs_count"), delimiter: " ")
-      .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
-        .rdv-font-weight-bold
-          | RENDEZ-VOUS PLANIFIÉS
-        div
-          | DANS #{number_with_delimiter(Rails.cache.fetch("stats.both_instances.2_years.active_organisations_count"), delimiter: " ")} STRUCTURES
-          span[aria-hidden="true"]
-            | *
+/ Redis cache store is fault tolerant, it will return nil if unavailable, and we'll simply skip this section
+/ cf https://github.com/rails/rails/blob/main/activesupport/lib/active_support/cache/redis_cache_store.rb#L31-L32
+- rdvs_count = Rails.cache.fetch("stats.both_instances.2_years.rdvs_count")
+- active_orgs_count = Rails.cache.fetch("stats.both_instances.2_years.active_organisations_count")
+- if rdvs_count && active_orgs_count
+  .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
+    .fr-container.fr-py-6w
+      .fr-grid-row.fr-grid-row--gutters.rdv-align-items-center
+        .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
+          = number_with_delimiter(rdvs_count, delimiter: " ")
+        .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
+          .rdv-font-weight-bold
+            | RENDEZ-VOUS PLANIFIÉS
+          div
+            | DANS #{number_with_delimiter(active_orgs_count, delimiter: " ")} STRUCTURES
+            span[aria-hidden="true"]
+              | *
 
-.fr-container.fr-py-3w.rdv-text-align-center
-  span[aria-hidden="true"] *
-  |> Données concernant les 24 derniers mois.
-  |> Pour plus d’informations,
-  = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
-  | .
+  .fr-container.fr-py-3w.rdv-text-align-center
+    span[aria-hidden="true"] *
+    |> Données concernant les 24 derniers mois.
+    |> Pour plus d’informations,
+    = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
+    | .
 
 .rdv-background-color-alt-grey
   .fr-container.fr-py-8w
