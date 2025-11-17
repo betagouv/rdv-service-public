@@ -30,6 +30,10 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
           CopyRdvAsAbsenceJob.perform_later(instance_export.id, rdv_id, current_domain_id)
         end
 
+        source_organisation.rdvs.past.pluck(:id).each do |rdv_id|
+          CopyRdvJob.perform_later(instance_export.id, rdv_id, current_domain_id)
+        end
+
         organisation_absences = Absence.where(agent_id: source_organisation.agents.select(:agent_id)).not_expired
 
         organisation_absences.pluck(:id).each do |absence_id|
@@ -78,6 +82,48 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
         api_client = instance_export.api_client
         api_client.post("absences", params)
       end
+    end
+  end
+
+  class CopyRdvJob < ApplicationJob
+    queue_as :latency_5m
+
+    def perform(instance_export_id, rdv_id, domain_id)
+      domain = Domain.find(domain_id)
+      instance_export = InstanceExport.find(instance_export_id)
+      rdv = Rdv.find(rdv_id)
+
+      instance_export.api_client.post(
+        "rdvs",
+        {
+          agent_emails: rdv.agents.pluck(:email),
+          lieu_external_id: rdv.lieu_id,
+          motif_external_id: rdv.motif_id,
+
+          starts_at: rdv.starts_at,
+          status: rdv.status,
+          cancelled_at: rdv.cancelled_at,
+          context: rdv.context,
+          ends_at: rdv.ends_at,
+          name: rdv.name,
+          max_participants_count: rdv.max_participants_count,
+
+          created_by_type: rdv.created_by_type,
+          created_by_external_id: rdv.created_by_id,
+
+          participations: rdv.participations.map do |participation|
+            {
+              status: participation.status,
+              user_external_id: participation.user_id,
+            }
+          end,
+
+          external_reference: {
+            external_id: rdv_id,
+            external_url: Rails.application.routes.url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: domain.host_name),
+          },
+        }
+      )
     end
   end
 

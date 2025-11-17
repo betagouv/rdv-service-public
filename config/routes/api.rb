@@ -19,7 +19,7 @@ namespace :api do
       resources :rdvs, only: %i[index]
     end
     resources :motifs, only: %i[create]
-    resources :rdvs, only: %i[index] do
+    resources :rdvs, only: %i[index create] do
       patch :update_status
     end
     resources :participations, only: %i[update]

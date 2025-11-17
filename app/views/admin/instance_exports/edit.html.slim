@@ -19,7 +19,7 @@
 
             .fr-col-6
               h4.fr-h5 Planning
-              p #{source_org.rdvs.future.count} rendez-vous à venir
+              p #{source_org.rdvs.count} rendez-vous
               p #{source_org.plage_ouvertures.not_expired.count} plages d'ouverture
               p #{Absence.where(agent_id: source_org.agents.select(:id)).not_expired.count} absences
 
