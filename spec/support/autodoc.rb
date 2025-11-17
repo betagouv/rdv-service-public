@@ -36,7 +36,7 @@ class Autodoc
       @title = title
       @index = Digest::SHA1.hexdigest(title)[0..8]
       @example = example
-      @accessibility_checks = accessibility_checks
+      @scenario_accessibility_checks = accessibility_checks
       @sections = []
       @current_section = nil
     end
@@ -66,7 +66,7 @@ class Autodoc
         Capybara.current_session.driver.visit "file://#{page_or_email.save_page}"
         Capybara.current_session.driver.save_screenshot(path)
       else
-        if @accessibility_checks && accessibility_checks # On peut désactiver ces checks au niveau de tout le scénario ou juste pour ce screenshot
+        if @scenario_accessibility_checks && accessibility_checks # On peut désactiver ces checks au niveau de tout le scénario ou juste pour ce screenshot
           @example.expect(page_or_email).to @example.be_axe_clean
         end
         page_or_email.driver.save_screenshot(path)
