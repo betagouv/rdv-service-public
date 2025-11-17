@@ -35,7 +35,7 @@ RSpec.describe Ants::SyncAppointmentJob do
             "status" => "validated",
             "appointments" => [
               {
-                "management_url" => "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                "management_url" => "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
                 "meeting_point" => "Mairie de Saumur",
                 "appointment_date" => "2020-04-20 08:00:00",
               },
@@ -101,7 +101,7 @@ RSpec.describe Ants::SyncAppointmentJob do
           {
             "status" => "validated",
             "appointments" => [{
-              "management_url" => "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+              "management_url" => "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
               "meeting_point" => "Mairie de Saumur",
               "appointment_date" => "2020-04-20 08:00:00",
             }],
@@ -129,7 +129,7 @@ RSpec.describe Ants::SyncAppointmentJob do
           {
             "status" => "validated",
             "appointments" => [{
-              "management_url" => "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+              "management_url" => "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
               "meeting_point" => "Mairie de Saumur",
               "appointment_date" => "2020-04-20 08:00:00", # c’est différent de l’heure du RDV !
             }],
@@ -150,7 +150,7 @@ RSpec.describe Ants::SyncAppointmentJob do
           meeting_point: "Mairie de Saumur",
           meeting_point_id: lieu.id.to_s,
           appointment_date: "2020-04-20 12:00:00",
-          management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+          management_url: "http://www.rdv-service-public-test.localhost/users/rdvs/#{rdv.id}",
         }
       )
       described_class.perform_now(ants_pre_demande_number: "A123456789")

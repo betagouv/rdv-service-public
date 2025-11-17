@@ -31,7 +31,7 @@ html lang="fr"
         elsif current_agent
           header.with_tool_link title: "Espace Agent", path: root_path
           header.with_tool_link title: current_agent.full_name, path: edit_agent_registration_path
-        elsif current_domain == Domain::RDV_MAIRIE && request.path == "/"
+        elsif current_domain == Domain::RDV_SERVICE_PUBLIC && request.path == "/"
           header.with_tool_link title: "Centre d’aide", path: "https://aide.rdv-service-public.fr", html_attributes: { class: "fr-icon-questionnaire-line" }
           header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, html_attributes: { class: "fr-icon-admin-line" }
           header.with_tool_link title: "Connexion Usager", path: new_user_session_path, html_attributes: { class: "fr-icon-account-line" }
@@ -40,7 +40,7 @@ html lang="fr"
           header.with_tool_link title: "Se connecter", path: new_user_session_path,html_attributes: { class: "fr-fi-account-fill" }
         end
 
-        if current_domain == Domain::RDV_MAIRIE && @site_vitrine_page
+        if current_domain == Domain::RDV_SERVICE_PUBLIC  && @site_vitrine_page
           header.with_direct_link_simple title: "Accueil", path: root_path, html_attributes: current_page?(root_path) ? { "aria-current": "page" } : {}
           header.with_direct_link_simple title: "Statistiques", path: stats_path, html_attributes: current_page?(stats_path) ? { "aria-current": "page" } : {}
         end

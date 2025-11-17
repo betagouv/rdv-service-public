@@ -162,7 +162,6 @@ GEM
     bullet (8.0.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
-    byebug (12.0.0)
     calendav (0.5.0)
       http
       icalendar
@@ -189,7 +188,6 @@ GEM
       logger (~> 1.5)
     choice (0.2.0)
     climate_control (1.2.0)
-    coderay (1.1.3)
     common_french_passwords (0.0.1)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.4)
@@ -200,6 +198,9 @@ GEM
       addressable
     csv (3.3.2)
     date (3.5.0)
+    debug (1.11.0)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
     debug_inspector (1.2.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
@@ -448,7 +449,7 @@ GEM
       activerecord (>= 6.1)
       request_store (~> 1.4)
     parallel (1.26.3)
-    parallel_tests (4.8.0)
+    parallel_tests (5.5.0)
       parallel
     parser (3.3.7.3)
       ast (~> 2.4.1)
@@ -473,9 +474,6 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     prettyprint (0.2.0)
     prism (1.4.0)
-    pry (0.15.2)
-      coderay (~> 1.1)
-      method_source (~> 1.0)
     psych (5.2.6)
       date
       stringio
@@ -775,7 +773,6 @@ DEPENDENCIES
   bootsnap
   brakeman
   bullet
-  byebug
   calendav (~> 0.5)
   capybara
   capybara-email
@@ -786,6 +783,7 @@ DEPENDENCIES
   common_french_passwords
   connection_pool
   csv
+  debug
   devise!
   devise-async
   devise_invitable
@@ -823,7 +821,6 @@ DEPENDENCIES
   pg_search
   phonelib
   premailer-rails
-  pry
   puma
   pundit
   rack-attack

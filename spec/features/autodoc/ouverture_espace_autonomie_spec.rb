@@ -11,7 +11,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
     doc.start_section("Côté agent")
     doc.add_text("Contexte: Je suis un agent qui n'a jamais utilisé RDV Service Public")
 
-    visit "http://www.rdv-mairie-test.localhost/"
+    visit "http://www.rdv-service-public-test.localhost/"
     doc.add_screenshot(page,
                        text: "Je clique sur 'Ouvrir un espace'",
                        wait_for: "Ouvrir un espace")
@@ -22,7 +22,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
                        wait_for: "Pour ouvrir votre espace, commencez par vous identifier avec ProConnect.")
 
     # ProConnect ne marche pas en tests, donc on triche en faisant un login par email et mot de passe
-    visit new_agent_session_url(host:  "http://www.rdv-mairie-test.localhost")
+    visit new_agent_session_url(host:  "http://www.rdv-service-public-test.localhost")
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
@@ -47,7 +47,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
     super_admin = create :super_admin
     login_as(super_admin, scope: :super_admin)
 
-    visit super_admins_accounts_for_crm_index_url(host: "http://www.rdv-mairie-test.localhost")
+    visit super_admins_accounts_for_crm_index_url(host: "http://www.rdv-service-public-test.localhost")
 
     doc.add_screenshot(page,
                        text: "Le nouvel espace apparait dans la liste des comptes à ajouter au CRM.",

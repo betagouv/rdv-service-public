@@ -14,7 +14,7 @@ RSpec.describe Compte do
           lieu: { address: "1 rue de la république", latitude: 48.859, longitude: 2.347 },
           agent: { first_name: "Francis", last_name: "Factice", email: agent.email, service_ids: [service.id] },
         },
-        current_domain: Domain::RDV_MAIRIE
+        current_domain: Domain::RDV_SERVICE_PUBLIC
       ).save!
 
       expect(agent.reload.roles.last).to have_attributes(access_level: "admin")
@@ -34,7 +34,7 @@ RSpec.describe Compte do
             lieu: { address: "1 rue de la république", latitude: 48.859, longitude: 2.347 },
             agent: { first_name: "Francis", last_name: "Factice", email: agent.email, service_ids: [service.id] },
           },
-          current_domain: Domain::RDV_MAIRIE,
+          current_domain: Domain::RDV_SERVICE_PUBLIC,
           territory_creation_request:
         )
 

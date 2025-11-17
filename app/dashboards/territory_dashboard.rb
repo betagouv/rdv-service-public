@@ -13,6 +13,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     name: Field::String,
     category: Field::Select.with_options(collection: Compte::CATEGORIES),
     organisations: Field::HasMany.with_options(sort_by: :name, direction: :asc),
+    operator: Field::BelongsTo,
     admin_agents: Field::HasMany,
     roles: Field::HasMany,
     created_at: Field::DateTime,
@@ -42,6 +43,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     work_on_sunday
     roles
     organisations
+    operator
     created_at
     updated_at
   ].freeze
@@ -55,6 +57,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     departement_number
     category
     work_on_sunday
+    operator
   ].freeze
 
   def display_resource(territory)

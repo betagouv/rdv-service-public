@@ -15,7 +15,7 @@ RSpec.describe "Prendre RDV pour un usager en tant que prescripteur externe", js
     doc.start_section("Côté agent prescripteur")
     doc.add_text("Contexte : Je suis un agent prescripteur qui ne dispose pas de compte sur RDV Service Public et je veux prendre un RDV pour un usager")
 
-    visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}/"
+    visit "http://www.rdv-service-public-test.localhost/org/#{organisation.id}/"
     doc.add_screenshot(page,
                        text: "Je choisis le motif de rendez-vous",
                        wait_for: "Formation emails")

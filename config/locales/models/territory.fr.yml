@@ -6,5 +6,3 @@ fr:
       territory:
         base: "" # weird hack for nested base error
         departement_number: Département
-        sms_configuration: "Clef d’API / Mot de passe"
-        sms_provider: "Fournisseur pour l’envoi de SMS"

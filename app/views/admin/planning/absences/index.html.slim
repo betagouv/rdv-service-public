@@ -10,7 +10,7 @@
 - content_for :fil_ariane do
   = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
 
-- content_for :breadcrumb do
+- content_for :right_of_page_title do
   = link_to "Créer une indisponibilité",
           new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id),
           class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line"

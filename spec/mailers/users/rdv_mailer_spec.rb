@@ -228,10 +228,10 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
-          expect(mail[:from].to_s).to match(/RDV Service Public <rdv\+[a-z0-9\-]+@reply\.rdv-mairie-test\.localhost>/)
+          expect(mail[:from].to_s).to match(/RDV Service Public <rdv\+[a-z0-9\-]+@reply\.rdv-service-public-test\.localhost>/)
           # les guillemets autour de "RDV Service Public" disparaissent probablement ici car il n’y a que des caractères ASCII
           expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_service_public.png))
-          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-mairie-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-service-public-test.localhost))
           expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Service Public))
         end
       end

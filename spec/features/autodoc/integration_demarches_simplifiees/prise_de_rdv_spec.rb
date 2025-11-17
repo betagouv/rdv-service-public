@@ -25,7 +25,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
 
   around do |example|
     previous_host = Capybara.app_host
-    Capybara.app_host = "http://www.rdv-mairie-test.localhost:#{previous_host[/\d+/]}"
+    Capybara.app_host = "http://www.rdv-service-public-test.localhost:#{previous_host[/\d+/]}"
     example.run
     Capybara.app_host = previous_host
   end

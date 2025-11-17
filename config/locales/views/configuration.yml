@@ -42,12 +42,6 @@ fr:
         edit:
           webhook_title: Webhooks
           title: Modifier le webhook
-      sms_configurations:
-        show:
-          title: Fournisseur d'envoi de SMS
-        edit:
-          show_sms_configuration: Fournisseur d'envoi de SMS
-          title: Modifier la configuration SMS
       sectors:
         new:
           title: Nouveau secteur
