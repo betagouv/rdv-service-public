@@ -15,6 +15,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     organisations: Field::HasMany.with_options(sort_by: :name, direction: :asc),
     operator: Field::BelongsTo,
     admin_agents: Field::HasMany,
+    territory_tags: Field::HasMany,
     tags: Field::HasMany,
     roles: Field::HasMany,
     created_at: Field::DateTime,
@@ -32,7 +33,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     departement_number
     category
     name
-    tags
+    territory_tags
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -45,7 +46,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     roles
     organisations
     category
-    tags
+    territory_tags
     operator
     created_at
     updated_at

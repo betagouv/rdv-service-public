@@ -4,4 +4,6 @@ class TerritoryTag < ApplicationRecord
 
   belongs_to :territory
   belongs_to :tag
+
+  delegate :name, to: :tag
 end
