@@ -41,6 +41,15 @@ module Caldav
 
       absence = Absence.find_or_initialize_by(agent: @agent, caldav_url: event.url)
 
+      # Si l’événement existe et que l’agent s’est marqué comme disponible, on supprime l’absence
+      # Sinon on ignore l’événement
+      # Voir https://www.ietf.org/rfc/rfc2445.txt (4.8.2.7 Time Transparency).
+      # On utilise la méthode privée `inner_event` car Calendav n’expose pas cette information directement
+      if event.send(:inner_event).transp == "TRANSPARENT"
+        absence.destroy if absence.persisted?
+        return
+      end
+
       # TODO: gérer les événements récurrents
       absence.assign_attributes(
         first_day: event.dtstart.to_date,
