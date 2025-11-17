@@ -10,7 +10,7 @@ RSpec.describe Agents::WebhookMailer, type: :mailer do
       expect(mail.subject).to eq("Une nouvelle URL de webhook vient d'être ajoutée")
 
       expect(mail.body.encoded).to include("Une nouvelle URL de webhook vient d'être introduite")
-      expect(mail.body.encoded).to include(%(href="http://www.rdv-mairie-test.localhost/admin/territories/#{webhook.territory.id}/webhook_endpoints"))
+      expect(mail.body.encoded).to include(%(href="http://www.rdv-service-public-test.localhost/admin/territories/#{webhook.territory.id}/webhook_endpoints"))
       expect(mail.body.encoded).to include(webhook.target_url)
     end
 

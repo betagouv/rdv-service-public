@@ -23,7 +23,7 @@
       - content_for :subtitle, "Prendre un RDV"
       h6 Étapes pour prendre un RDV
       ol
-        - if current_domain == Domain::RDV_MAIRIE
+        - if current_domain == Domain::RDV_SERVICE_PUBLIC
           li Cliquez sur votre lien de prise de RDV : vous l’avez peut-être trouvé sur le site de l’organisation ou bien il vous a été communiqué par email.
         - else
           li Sur la page d’accueil, dans la barre de recherche, saisissez votre adresse et cliquez sur « Rechercher ».

@@ -53,9 +53,9 @@ fr:
         true: Le rendez-vous est destiné à plusieurs usagers. Chaque participants est notifié individuellement.
         false: Le rendez-vous est réservé pour un usager en particulier. Cet usager peut être accompagné (parent, tuteur, traducteur, …) pour la consultation individuelle.
       motif/visibility_types/html:
-        visible_and_notified: RDV <strong>visible</strong> et <strong>notifié</strong>
-        visible_and_not_notified: RDV <strong>visible</strong> et <strong>non notifié</strong>
-        invisible: RDV <strong>non visible</strong>
+        visible_and_notified: RDV visible et notifié
+        visible_and_not_notified: RDV visible et non notifié
+        invisible: RDV non visible
       motif/visibility_types/hint:
         visible_and_notified: L’usager sera notifié de la création et modification du rendez-vous par SMS et/ou e-mail. Ce dernier sera visible dans son espace personnel.
         visible_and_not_notified: L’usager ne sera pas notifié du rendez-vous, mais il sera visible dans son espace personnel.
@@ -84,7 +84,7 @@ fr:
         visio: Par visioconférence
       motif/location_types/hint:
         public_office: L'agent reçoit l'usager sur place, au lieu sélectionné (MDS…).
-        visio: L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV. L'agent se connecte au <a href="https://www.numerique.gouv.fr/outils-agents/webconference-etat/" target="_blank">service de webconférence de l'État</a> avec ProConnect pour démarrer la visioconférence.
+        visio: L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV. L'agent se connecte au service de webconférence de l'État avec ProConnect pour démarrer la visioconférence.
         phone: L’agent appelle le numéro indiqué sur la fiche de l'usager.
         home: L’agent se rend à l'adresse indiquée sur la fiche de l'usager.
       motif/bookable_by/radio_label_html:

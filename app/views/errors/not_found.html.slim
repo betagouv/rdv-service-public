@@ -11,9 +11,7 @@
     p Si vous avez tapé l’adresse web dans le navigateur, vérifiez qu’elle est correcte. La page n’est peut-être plus disponible.
 
     p
-      |> Vous pouvez retourner sur la page d’accueil, ou nous contacter pour que l’on puisse vous rediriger vers la bonne page, avec le bouton ci-dessous,
-      |>  ou en nous écrivant directement à l’adresse
-      = mail_to(current_domain.support_email, current_domain.support_email)
+      |> Vous pouvez retourner sur la page d’accueil, ou nous contacter pour que l’on puisse vous rediriger vers la bonne page.
 
     .fr-btns-group.fr-btns-group--inline
       = link_to "Contactez-nous", new_aide_demande_support_path(sujet: "Erreur 404", message: "\n\n--- votre message au-dessus ---\n\nErreur rencontrée sur la page : #{request.original_url}"), class: "fr-btn"

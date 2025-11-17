@@ -39,7 +39,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
         it "works" do
           expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_service_public.png))
           expect(mail.html_part.body.to_s).to include("Voir sur RDV Service Public")
-          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-mairie-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-service-public-test.localhost))
         end
       end
 

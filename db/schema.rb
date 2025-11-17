@@ -445,6 +445,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_162710) do
     t.string "phone_number_formatted"
     t.enum "availability", default: "enabled", null: false, comment: "Permet de savoir si le lieu est un lieu normal (enabled), un lieu ponctuel qui sera utilisé pour un seul rdv (single_use), ou un lieu supprimé par soft-delete (disabled). Dans la plupart des cas on s'intéresse uniquement aux lieux enabled\n", enum_type: "lieu_availability"
     t.string "address", null: false
+    t.string "code_postal"
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
@@ -552,6 +553,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_162710) do
     t.bigint "default_service_id", comment: "Indique le service qui sera ajouté au territoire par défaut si un agent qui utilise cette application ouvre un nouvel espace.\nCette colonne indique aussi que les agents qui utilisent cette application sont autorisés à ouvrir un nouvel espace.\n"
     t.index ["default_service_id"], name: "index_oauth_applications_on_default_service_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+  end
+
+  create_table "operators", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "organisations", force: :cascade do |t|
@@ -798,7 +805,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_162710) do
     t.string "category", comment: "La catégorie permet classifier les différents territoires principalement pour faire des statistiques dans metabase,\net pour avoir un suivi approprié de chaque territoire pour notre équipe déploiement et support. Par exemple, les besoins d'une commune\nne seront pas les mêmes que ceux d'un service de l'état.\n"
     t.boolean "enable_address_field", default: false
     t.boolean "work_on_sunday", default: false
+    t.bigint "operator_id"
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
+    t.index ["operator_id"], name: "index_territories_on_operator_id"
   end
 
   create_table "territory_creation_requests", force: :cascade do |t|

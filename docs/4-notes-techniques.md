@@ -186,7 +186,7 @@ scalingo --app rdv-service-public-metabase deploy https://github.com/Scalingo/me
 
 Une manière pratique et intéractive d’écrire ou de debugger des feature specs (end-to-end) est :
 
-- insérer un `binding.pry` dans la spec avant la ligne qui échoue
+- insérer un `debugger` dans la spec avant la ligne qui échoue
 - préfixer `HEADLESS=false` avant l’appel à `bundle exec rspec ...`
 - le test utilisera alors le driver capybara JS même si le flag `js: true` n’est pas présent
 - le navigateur Chrome orchestré par Capybara sera maintenant visible

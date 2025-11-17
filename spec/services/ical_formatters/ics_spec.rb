@@ -37,8 +37,8 @@ RSpec.describe IcalFormatters::Ics do
       end
     end
 
-    describe "fields for RDV_MAIRIE domain" do
-      let(:domain) { Domain::RDV_MAIRIE }
+    describe "fields for RDV_SERVICE_PUBLIC domain" do
+      let(:domain) { Domain::RDV_SERVICE_PUBLIC }
 
       it do
         expect(subject).to include("ORGANIZER:mailto:secretariat-auto@rdv-service-public.fr")

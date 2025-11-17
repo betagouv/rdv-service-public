@@ -1,4 +1,4 @@
-= territory_navigation(t(".title"), [link_to("Agents", admin_territory_agents_path(current_territory))])
+= territory_navigation(t(".title"), [["Agents", admin_territory_agents_path(current_territory)]])
 
 .container-fluid.bg-white.rounded.m-2.p-2
   = simple_form_for [:admin, @agent], as: :admin_agent, url: admin_territory_agents_path(current_territory), html: { method: :post } do |f|

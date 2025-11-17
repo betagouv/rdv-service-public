@@ -34,7 +34,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
   end
 
   before do
-    default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
+    default_url_options[:host] = "http://www.rdv-service-public-test.localhost"
     travel_to(now)
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end

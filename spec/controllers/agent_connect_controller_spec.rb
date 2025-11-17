@@ -135,7 +135,7 @@ RSpec.describe AgentConnectController do
 
       context "when no existing agent matches email nor sub" do
         it "displays an error if the domain does not allow self-onboarding" do
-          allow(Domain::RDV_MAIRIE).to receive(:allow_self_onboarding).and_return(false)
+          allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(false)
           expect do
             get :callback, params: { state:, code: }
           end.not_to change(Agent, :count)
@@ -144,7 +144,7 @@ RSpec.describe AgentConnectController do
         end
 
         it "creates the agent if the domain allows it" do
-          allow(Domain::RDV_MAIRIE).to receive(:allow_self_onboarding).and_return(true)
+          allow(Domain::RDV_SERVICE_PUBLIC).to receive(:allow_self_onboarding).and_return(true)
           expect do
             get :callback, params: { state:, code: }
           end.to change(Agent, :count).by(1)

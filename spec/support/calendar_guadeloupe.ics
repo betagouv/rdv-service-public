@@ -35,8 +35,8 @@ DTSTAMP:20220707T220000Z
 UID:e0a8dbac-d06c-4d18-98c6-a48f47fddd4c
 DTSTART;TZID=America/Guadeloupe:20220709T000000
 DTEND;TZID=America/Guadeloupe:20220709T004500
-DESCRIPTION:plus d'infos dans RDV Service Public: http://www.rdv-mairie-tes
- t.localhost/admin/organisations/123000/rdvs/456000
+DESCRIPTION:plus d'infos dans RDV Service Public: http://www.rdv-service-pu
+ blic-test.localhost/admin/organisations/123000/rdvs/456000
 LOCATION:Lieu n°1 (1 rue de l'adresse\, Ville\, 12345)
 STATUS:CONFIRMED
 SUMMARY:Accompagnement individuel

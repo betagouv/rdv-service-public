@@ -14,7 +14,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
   it "creates a new organisation" do
     login_as(super_admin, scope: :super_admin)
-    visit super_admins_root_url(host: "http://www.rdv-mairie-test.localhost")
+    visit super_admins_root_url(host: "http://www.rdv-service-public-test.localhost")
 
     click_link "Ouverture de compte"
 
@@ -81,7 +81,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
 
     it "crée un espace avec une organisation qui a les catégories de motif pour se brancher à l'ANTS" do
       login_as(super_admin, scope: :super_admin)
-      visit super_admins_root_url(host: "http://www.rdv-mairie-test.localhost")
+      visit super_admins_root_url(host: "http://www.rdv-service-public-test.localhost")
 
       click_link "Ouverture de compte"
 

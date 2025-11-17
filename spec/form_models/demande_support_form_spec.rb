@@ -4,7 +4,7 @@ RSpec.describe DemandeSupportForm do
   context "tous les attributs présents" do
     let(:attributes) do
       {
-        current_domain: Domain::RDV_MAIRIE,
+        current_domain: Domain::RDV_SERVICE_PUBLIC,
         role: "usager",
         sujet: "Je suis perdue",
         first_name: "Jeanne",
@@ -26,7 +26,7 @@ RSpec.describe DemandeSupportForm do
   context "un attribut manquant" do
     let(:attributes) do
       {
-        current_domain: Domain::RDV_MAIRIE,
+        current_domain: Domain::RDV_SERVICE_PUBLIC,
         role: "usager",
         sujet: "Je suis perdue",
         first_name: "Jeanne",
@@ -48,7 +48,7 @@ RSpec.describe DemandeSupportForm do
   context "le message est trop long" do
     let(:attributes) do
       {
-        current_domain: Domain::RDV_MAIRIE,
+        current_domain: Domain::RDV_SERVICE_PUBLIC,
         role: "usager",
         sujet: "Je suis perdue",
         first_name: "Jeanne",
@@ -71,7 +71,7 @@ RSpec.describe DemandeSupportForm do
   context "le mail n'est pas valide" do
     let(:attributes) do
       {
-        current_domain: Domain::RDV_MAIRIE,
+        current_domain: Domain::RDV_SERVICE_PUBLIC,
         role: "usager",
         sujet: "Je suis perdue",
         first_name: "Jeanne",
