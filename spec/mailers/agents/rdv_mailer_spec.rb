@@ -96,4 +96,22 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       expect(mail.html_part.body.to_s).to include(previous_details)
     end
   end
+
+  describe "#participation_cancelled" do
+    let(:now) { Time.zone.parse("2025-11-10 10:30") }
+    let!(:organisation) { create(:organisation) }
+    let!(:agent_author) { create(:agent, organisations: [organisation], first_name: "Paola", last_name: "NORI") }
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, :collectif, :without_users, organisation:, starts_at: now + 3.days) }
+    let!(:user) { create(:user, organisations: [organisation], first_name: "Marcia", last_name: "LOPEZ") }
+    let!(:participation) { create(:participation, user:, rdv:) }
+
+    before { travel_to(now) }
+
+    specify do
+      mail = described_class.with(agent:, participation:, author: agent_author).participation_cancelled
+      expect(mail.subject).to eq("Participation au RDV collectif annulée sur votre agenda RDV Service Public pour 13 nov.")
+      expect(mail.html_part.body.to_s).to include("La participation de Marcia LOPEZ au RDV collectif le jeudi 13/11 à 10h30 a été annulée par Paola NORI")
+    end
+  end
 end
