@@ -46,4 +46,20 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
       expect(page).to have_content("Créneaux disponibles pour Atelier participatif")
     end
   end
+
+  context "en partant de la fiche usager" do
+    let!(:user_jorja) { create(:user, first_name: "Jorja", last_name: "SMITH", organisations: [organisation]) }
+
+    it "retient l’usager sélectionné" do
+      visit admin_organisation_user_path(organisation, user_jorja)
+      click_on "Trouver un RDV pour l’usager"
+      select "Atelier participatif", from: "Motif"
+      click_button "Afficher les créneaux"
+      click_on("Ajouter Jorja SMITH")
+      expect(page).to have_content("Jorja SMITH")
+      click_on "Enregistrer"
+      expect(page).to have_content("Participants mis à jour")
+      expect(rdv.reload.users).to include(user_jorja)
+    end
+  end
 end
