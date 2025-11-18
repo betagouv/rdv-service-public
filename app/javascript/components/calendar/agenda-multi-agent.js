@@ -98,7 +98,7 @@ class AgendaMultiAgent {
       group[1].forEach(columnElement => {
         columnElement.style.backgroundColor = (index & 1) ? white : grey;
       });
-    })
+    });
   }
 
   getGroupByDate = () => {
