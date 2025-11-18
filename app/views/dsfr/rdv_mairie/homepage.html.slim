@@ -430,3 +430,45 @@ hr[aria-hidden="true"]
       | Votre agenda vous remerciera.
     .fr-my-4w= link_to "Demander une démo", contact_team_url, class: "fr-btn"
     = link_to "Revenir en haut de la page", "#header", class: "fr-link fr-icon-arrow-up-line fr-link--icon-left"
+
+section.fr-py-8w.rdv-text-align-center
+  .fr-container
+    .fr-grid-row.fr-grid-row--center
+      .fr-col.fr-col-md-8
+        .rdv-display-flex.rdv-align-items-center.rdv-justify-content-center.rdv-gap-1rem.fr-mb-3w
+          div= image_tag("logos/logo_dinum.svg", alt: "DINUM - Direction Interministérielle du Numérique", style: "height: 5.625rem")
+          div= image_tag("logos/logo_anct.png", alt: "ANCT - Agence Nationale de la Cohésion des Territoires", style: "height: 5.625rem")
+
+        h2.fr-h1.rdv-color-text-action-high-blue-france
+          | Qui sommes nous ?
+        p
+          |> Nous sommes l’équipe RDV Service Public, une solution numérique de l’État portée par
+          => link_to "l’Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noreferrer", title: "ANCT - Agence Nationale de la Cohésion des Territoires - nouvel onglet"
+          |> et
+          = link_to "la Direction Interministérielle du Numérique", "https://www.numerique.gouv.fr/dinum/", target: "_blank", rel: "noreferrer", title: "DINUM - Direction Interministérielle du Numérique - nouvel onglet"
+          |> .
+
+        p
+          |> Notre mission : permettre à tout agent, service ou administration de gérer simplement ses rendez-vous et de proposer ses disponibilités aux usagers, en présentiel ou à distance.
+
+        p
+          |> Conçu au sein de
+          = link_to "beta.gouv.fr", "https://beta.gouv.fr", target: "_blank", rel: "noreferrer", title: "Beta gouv - nouvel onglet"
+          |> , RDV Service Public incarne un numérique d’intérêt général, souverain, éthique, durable et centré sur les besoins des utilisateurs.
+
+.fr-py-8w.rdv-background-color-alt-blue-ecume.rdv-text-align-center
+  .fr-container
+    .fr-grid-row.fr-grid-row--center.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-6
+        h3.rdv-color-text-action-high-blue-france
+          | Participez au prochain webinaire
+        p
+          |> Vous souhaitez en savoir plus sur RDV Service Public ?
+          |> Nous organisons régulièrement des présentations de l’outil & des prochaines évolutions.
+        = link_to "S’incrire au prochain webinaire", "#", title: "Accéder à l'inscription au prochain webinaire - nouvel onglet", class: "fr-btn fr-btn--responsive-sm", rel: "noreferrer", target: "_blank"
+      .fr-col-12.fr-col-md-6.rdv-border-left-md-1px-solid-blue-france.fr-mt-6w.fr-mt-md-0
+        h3.rdv-color-text-action-high-blue-france
+          | Nous contacter
+        p
+          |> En cas de questions, de suggestions, de propositions ou de problème de sécurité détecté, n’hésitez pas à nous contacter :
+        = link_to "Formulaire de contact", aide_aiguillage_role_path, title: "Support - formulaire de contact", class: "fr-link fr-link--icon-left fr-icon-message-2-line"

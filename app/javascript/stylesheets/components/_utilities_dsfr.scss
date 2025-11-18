@@ -169,3 +169,9 @@
   height: 8px;
   display: inline-block;
 }
+
+.rdv-border-left-md-1px-solid-blue-france {
+  @include media-breakpoint-up(md) {
+    border-left: 1px solid var(--text-action-high-blue-france);
+  }
+}
