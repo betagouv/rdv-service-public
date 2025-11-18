@@ -17,7 +17,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     authorize(@rdv_wizard.rdv, :new?, policy_class: Agent::RdvPolicy)
 
     @rdv_wizard.rdv.agents.each do |agent|
-      Caldav::SyncAbsencesJob.perform_later(agent.id) if @agent.caldav_configured?
+      Caldav::ImportAbsencesFromCaldavJob.perform_later(agent.id) if agent.caldav_configured?
     end
 
     render current_step

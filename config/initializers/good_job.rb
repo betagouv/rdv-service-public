@@ -100,9 +100,9 @@ Rails.application.configure do
       cron: "every day at 08:00 Europe/Paris",
       class: "CronJob::RefreshCachedStatsJob",
     },
-    sync_caldav_absences: {
+    import_caldav_absences: {
       cron: "every 15 minutes",
-      class: "CronJob::SyncCaldavAbsences",
+      class: "CronJob::ImportCaldavAbsences",
     },
   }
 end

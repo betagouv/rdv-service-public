@@ -16,7 +16,7 @@ class Agents::CaldavSyncController < AgentAuthController
     )
     if caldav_config_ok?
       current_agent.save!
-      Caldav::MassCreateEventJob.perform_later(current_agent)
+      Caldav::MassExportEventToCaldavJob.perform_later(current_agent)
     else
       flash[:alert] = "La connexion au calendrier a échoué. Veuillez vérifier vos informations et réessayer."
     end

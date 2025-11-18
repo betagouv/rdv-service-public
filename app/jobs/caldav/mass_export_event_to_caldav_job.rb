@@ -1,5 +1,5 @@
 module Caldav
-  class MassCreateEventJob < ApplicationJob
+  class MassExportEventToCaldavJob < ApplicationJob
     include ExtendedRetryStrategyConcern
 
     def perform(agent)
@@ -8,7 +8,7 @@ module Caldav
       return unless agent.caldav_configured?
 
       agent.agents_rdvs.joins(:rdv).where(rdv: { starts_at: Time.zone.today.. }).find_each do |agents_rdv|
-        Caldav::SyncEventJob.perform_later(agents_rdv.id, agent.id)
+        Caldav::ExportEventToCaldavJob.perform_later(agents_rdv.id, agent.id)
       end
     end
   end
