@@ -10,7 +10,7 @@ const defaultFullCalendarConfig = () => ({
     // days of week. an array of zero-based day of week integers (0=Sunday)
     daysOfWeek: [1, 2, 3, 4, 5, 6, 0],
       startTime: '07:00',
-      endTime: '19:00',
+      endTime: '20:00',
   },
   slotMinTime: '07:00:00',
   slotMaxTime: '20:00:00',
