@@ -16,11 +16,7 @@ tr
 
   td
     .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.rdv-gap-05rem
-      - if absence.caldav_url
-        button.fr-btn.fr-btn--tertiary.fr-icon-edit-fill[disabled]
-        button.fr-btn.fr-btn--tertiary.fr-icon-clipboard-fill[disabled]
-        button.fr-btn.fr-btn--tertiary.fr-icon-delete-bin-fill[disabled]
-      - else
+      - unless absence.caldav_url
         = link_to "",  edit_admin_organisation_planning_absence_path(current_organisation, absence),
                 title: t("helpers.edit"),
                 class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"

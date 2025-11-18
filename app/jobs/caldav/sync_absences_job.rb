@@ -57,9 +57,9 @@ module Caldav
         end_day: event.dtend.to_date,
         start_time: event.dtstart,
         end_time: event.dtend,
-        title: "Indisponibilité provenant de votre agenda externe"
+        title: "Indisponibilité provenant d’un agenda externe"
       )
-      absence.save! if absence.changed?
+      absence.save!
     end
 
     def synced_during_last_minute?(agent_id)
