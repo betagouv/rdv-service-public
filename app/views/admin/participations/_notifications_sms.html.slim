@@ -1,7 +1,7 @@
 span.mr-1
   - if participation.user.user_to_notify.phone_number.present?
     - if participation.user.user_to_notify.notifiable_by_sms?
-      = icon("fr-icon-phone-fill", class: "fr-icon--sm")
+      = phone_icon(class: "fr-icon--sm")
       span.fr-ml-1v.text-nowrap= participation.user.user_to_notify.phone_number
     - elsif !participation.user.user_to_notify.phone_number_mobile?
       = icon("fr-icon-error-fill", class: "fr-icon--sm")
