@@ -84,21 +84,22 @@ class AgendaMultiAgent {
   }
 
   refreshColumnsVisualGrouping = () => {
-    if(this.fullCalendarInstance.view.type !== "resourceTimeGridWeek") {
-      return;
-    }
-
+    const columns = document.querySelectorAll(".fc-timegrid-col.fc-day");
     const white = "#FFF";
     const grey = "rgb(227, 234, 239, 0.5)";
-    const groupedByDate = this.getGroupByDate();
 
-    const columns = document.querySelectorAll(".fc-timegrid-col.fc-day");
-    const columnGroups = Object.groupBy(columns, column => groupedByDate ? column.dataset.date : column.dataset.resourceId);
-    Object.entries(columnGroups).forEach((group, index) => {
-      group[1].forEach(columnElement => {
-        columnElement.style.backgroundColor = (index & 1) ? white : grey;
+    if(this.fullCalendarInstance.view.type === "resourceTimeGridWeek") {
+      const groupedByDate = this.getGroupByDate();
+      const columnGroups = Object.groupBy(columns, column => groupedByDate ? column.dataset.date : column.dataset.resourceId);
+      Object.entries(columnGroups).forEach((group, index) => {
+        group[1].forEach(columnElement => {
+          columnElement.style.backgroundColor = (index & 1) ? white : grey;
+        });
       });
-    });
+    }
+    else { // Reset to white
+      columns.forEach(columnElement => columnElement.style.backgroundColor = white);
+    }
   }
 
   getGroupByDate = () => {
