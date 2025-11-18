@@ -47,7 +47,7 @@ RSpec.describe ApplicationMailerDeliveryJob do
 
     # It logs to Sentry
     expect(sentry_events.last.exception.values.last.type).to eq("ActiveJob::DeserializationError")
-    expect(sentry_events.last.exception.values.last.value).to eq("Error while trying to deserialize arguments: No connection pool for 'ActiveRecord::Base' found. (ActiveJob::DeserializationError)")
+    expect(sentry_events.last.exception.values.last.value).to eq("Error while trying to deserialize arguments: No database connection defined. (ActiveJob::DeserializationError)")
 
     # It re-enqueues the job
     expect(enqueued_jobs.last["job_class"]).to eq("ApplicationMailerDeliveryJob")
