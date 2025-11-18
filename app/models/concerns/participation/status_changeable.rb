@@ -20,16 +20,13 @@ module Participation::StatusChangeable
   private
 
   def notify_update!(author)
-    # We pass an empty array if notifications are disabled to avoid notifying other users
-    user_to_notify = send_lifecycle_notifications? ? [user] : []
-
     if participation_cancelled?
-      @notifier = Notifiers::RdvCancelled.new(rdv, author, user_to_notify)
+      # We pass an empty array if notifications are disabled to avoid notifying other users
+      users_to_notify = send_lifecycle_notifications? ? [user] : []
+      Notifiers::RdvCancelled.new(rdv, author, users_to_notify).perform
     elsif rdv_status_reloaded_from_cancelled?
-      @notifier = Notifiers::ParticipationCreated.new(participation: self, author:)
+      Notifiers::ParticipationCreated.new(participation: self, author:).perform
     end
-
-    @notifier&.perform
   end
 
   def participation_cancelled?
