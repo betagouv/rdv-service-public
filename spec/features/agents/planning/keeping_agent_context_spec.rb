@@ -24,7 +24,7 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
     expect(page).to have_content("Agenda de Mon COLLEGUE")
     click_on "Usager DU RDV" # on clique sur le RDV dans l'agenda
 
-    expected_fil_ariane = "Accueil  Agenda de Mon COLLEGUE  RDV Usager DU RDV"
+    expected_fil_ariane = "Agenda de Mon COLLEGUE  RDV Usager DU RDV"
     expect(page).to have_content(expected_fil_ariane)
     click_on "Modifier"
     expect(page).to have_content(expected_fil_ariane)
@@ -48,7 +48,7 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
     find("#submit_agents").click
     click_on "Usager DU RDV" # on clique sur le RDV dans l'agenda
 
-    expected_fil_ariane = "Accueil  Agendas de M. COLLEGUE, A. COURANT  RDV Usager DU RDV"
+    expected_fil_ariane = "Agendas de M. COLLEGUE, A. COURANT  RDV Usager DU RDV"
     expect(page).to have_content(expected_fil_ariane)
     click_on "Modifier"
     expect(page).to have_content(expected_fil_ariane)
