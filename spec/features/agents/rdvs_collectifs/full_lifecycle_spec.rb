@@ -60,6 +60,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     expect(Receipt.where(user_id: user1.id, channel: "sms", result: "delivered").count).to eq 1
     expect(Receipt.where(user_id: user1.id, channel: "mail", result: "processed").count).to eq 1
 
+    visit admin_organisation_rdvs_collectifs_path(organisation)
     expect(page).to have_content("2 places restantes")
 
     click_link("Ajouter un participant")
@@ -75,6 +76,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     expect(Receipt.where(user_id: user2.id, channel: "mail", result: "processed").count).to eq 1
     expect(Receipt.where(user_id: user3.id, channel: "sms", result: "delivered").count).to eq 1
 
+    visit admin_organisation_rdvs_collectifs_path(organisation)
     expect(page).to have_content("Complet")
     expect(page).not_to have_content("Ajouter un participant")
   end

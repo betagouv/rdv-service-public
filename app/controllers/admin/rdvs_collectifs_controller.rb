@@ -61,7 +61,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
     if success
       flash[:success] = "Participants mis à jour"
-      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
+      redirect_to edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv)
     else
       render :edit
     end
