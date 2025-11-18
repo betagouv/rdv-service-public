@@ -5,30 +5,32 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
   end
   let(:organisation) { create(:organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:rdv) do
-    create(:rdv, motif: motif, organisation: organisation, agents: [agent], max_participants_count: 5, lieu: lieu)
-  end
 
   before { login_as(agent, scope: :agent) }
 
-  specify do
-    visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-    click_link "Trouver un RDV", match: :first
+  context "1 participant" do
+    let!(:rdv) { create(:rdv, motif:, organisation:, agents: [agent], max_participants_count: 5, lieu:) }
 
-    select "Atelier participatif", from: "Motif"
-    click_button "Afficher les créneaux"
+    specify do
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      click_link "Trouver un RDV", match: :first
 
-    # The rdv collectif appears in the search results
-    expect(page).to have_content("Créneaux disponibles pour Atelier participatif")
-    expect(page).to have_content("1 participant")
-    expect(page).to have_content("4 places restantes")
+      select "Atelier participatif", from: "Motif"
+      click_button "Afficher les créneaux"
 
-    click_link "Ajouter un participant"
+      # The rdv collectif appears in the search results
+      expect(page).to have_content("Créneaux disponibles pour Atelier participatif")
+      expect(page).to have_content("1 participant")
+      expect(page).to have_content("4 places restantes")
 
-    expect(page).to have_current_path(edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv))
+      click_link "Ajouter un participant"
+
+      expect(page).to have_current_path(edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv))
+    end
   end
 
   context "when there are rdvs available in two different lieux" do
+    let!(:rdv) { create(:rdv, motif:, organisation:, agents: [agent], max_participants_count: 5, lieu:) }
     let!(:lieu2) { create(:lieu, organisation: organisation) }
     let!(:rdv2) do
       create(:rdv, motif: motif, organisation: organisation, agents: [agent], max_participants_count: 5, lieu: lieu2)
@@ -48,6 +50,7 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
   end
 
   context "en partant de la fiche usager" do
+    let!(:rdv) { create(:rdv, motif:, organisation:, agents: [agent], max_participants_count: 5, lieu:) }
     let!(:user_jorja) { create(:user, first_name: "Jorja", last_name: "SMITH", organisations: [organisation]) }
 
     it "retient l’usager sélectionné" do
@@ -60,6 +63,21 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
       click_on "Enregistrer"
       expect(page).to have_content("Participants mis à jour")
       expect(rdv.reload.users).to include(user_jorja)
+    end
+  end
+
+  context "en partant de la fiche usager mais l’usager pariticpate déjà au RDV collectif" do
+    let!(:user_jorja) { create(:user, first_name: "Jorja", last_name: "SMITH", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, users: [user_jorja], motif:, organisation:, agents: [agent], max_participants_count: 5, lieu:) }
+
+    it "ne propose pas de le ré-ajouter" do
+      visit admin_organisation_user_path(organisation, user_jorja)
+      click_on "Trouver un RDV pour l’usager"
+      select "Atelier participatif", from: "Motif"
+      click_button "Afficher les créneaux"
+      expect(page).to have_content("1 participant dont Jorja SMITH")
+      expect(page).not_to have_content("Ajouter Jorja SMITH")
+      expect(page).not_to have_content("Ajouter un participant")
     end
   end
 end
