@@ -84,6 +84,10 @@ class AgendaMultiAgent {
   }
 
   refreshColumnsVisualGrouping = () => {
+    if(this.fullCalendarInstance.view.type !== "resourceTimeGridWeek") {
+      return;
+    }
+
     const white = "#FFF";
     const grey = "rgb(227, 234, 239, 0.5)";
     const groupedByDate = this.getGroupByDate();
