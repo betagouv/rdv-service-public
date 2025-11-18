@@ -6,7 +6,7 @@ class CronJob::RefreshCachedStatsJob < CronJob
       Rails.logger.debug { "querying Metabase for #{key}…" }
       count = MetabaseApi.sql_query(query)[0]["c"].gsub(",", "").to_i
       Rails.logger.info "got #{key} = #{count}. writing to cache…"
-      Rails.cache.write(key, count)
+      Rails.cache.write(key, count, expires_at: 30.days.from_now)
       Rails.logger.debug "✅ wrote to cache"
     end
     Rails.logger.debug "🏁 done"
