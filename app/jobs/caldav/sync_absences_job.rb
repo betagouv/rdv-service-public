@@ -1,5 +1,10 @@
 module Caldav
   class SyncAbsencesJob < ApplicationJob
+    good_job_control_concurrency_with(
+      perform_limit: 1,
+      key: -> { "Caldav::SyncAbsencesJob-#{arguments.first}" }
+    )
+
     before_enqueue do |job|
       throw :abort if synced_during_last_minute?(job.arguments.first)
     end
