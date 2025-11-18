@@ -1,2 +1,2 @@
 - if message.present?
-  = dsfr_notice title: "Information", description: message, type: "warning"
+  = dsfr_notice title: "Information", description: sanitize(message), type: "warning"
