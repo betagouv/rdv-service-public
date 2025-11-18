@@ -7,10 +7,8 @@
       .participation_notes
         i.fa.fa-info-circle.text-primary-blue.mr-2
         = simple_format(annotation, {}, wrapper_tag: :span)
-    div
-      = render "admin/participations/notifications_email", participation: participation
-    div
-      = render "admin/participations/notifications_sms", participation: participation
+    = render "admin/participations/notifications_email", participation: participation
+    = render "admin/participations/notifications_sms", participation: participation
     div
     = render "admin/participations/notifications_lifecycle", participation: participation
     - if participation.rdv.collectif?

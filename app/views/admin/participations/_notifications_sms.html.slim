@@ -1,4 +1,4 @@
-span.mr-1
+.mr-1
   - if participation.user.user_to_notify.phone_number.present?
     - if participation.user.user_to_notify.notifiable_by_sms?
       = phone_icon(class: "fr-icon--sm")
