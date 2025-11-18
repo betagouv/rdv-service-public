@@ -73,12 +73,28 @@ class AgendaMultiAgent {
   datesSet = (info) => {
     localStorage.setItem("chosenCalendarView", info.view.type);
     localStorage.setItem("chosenCalendarDay", info.startStr?.split("T")[0]);
+    this.refreshColumnsVisualGrouping();
   }
 
   toggleGrouping = () => {
     localStorage.setItem("groupByDate", this.getGroupByDate() ? "false" : "true");
     this.fullCalendarInstance.setOption("datesAboveResources", this.getGroupByDate());
     this.fullCalendarInstance.setOption("customButtons", this.customButtons());
+    this.refreshColumnsVisualGrouping();
+  }
+
+  refreshColumnsVisualGrouping = () => {
+    const white = "#FFF";
+    const grey = "rgb(227, 234, 239, 0.5)";
+    const groupedByDate = this.getGroupByDate();
+
+    const columns = document.querySelectorAll(".fc-timegrid-col.fc-day");
+    const columnGroups = Object.groupBy(columns, column => groupedByDate ? column.dataset.date : column.dataset.resourceId);
+    Object.entries(columnGroups).forEach((group, index) => {
+      group[1].forEach(columnElement => {
+        columnElement.style.backgroundColor = (index & 1) ? white : grey;
+      });
+    })
   }
 
   getGroupByDate = () => {
