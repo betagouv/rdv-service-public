@@ -7,9 +7,6 @@
   - else
     = "Indisponibilités de #{@agent.full_name_and_service}"
 
-- content_for :fil_ariane do
-  = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
-
 - content_for :right_of_page_title do
   = link_to "Créer une indisponibilité",
           new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id),

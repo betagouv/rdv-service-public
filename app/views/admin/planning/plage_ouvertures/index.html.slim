@@ -7,9 +7,6 @@
   - else
     | Plages d’ouverture de #{@agent.full_name_and_service}
 
-- content_for :fil_ariane do
-  = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: yield(:title)
-
 - content_for :right_of_page_title do
   - if current_organisation.motifs.active.any?
     .fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left

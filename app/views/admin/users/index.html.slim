@@ -3,9 +3,6 @@
 - content_for :title do
   | Usagers
 
-- content_for :fil_ariane do
-    = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path]], current_page_title: "Usagers"
-
 - content_for :right_of_page_title do
   .btn-group
     = link_to "Fusionner deux usagers", new_admin_organisation_merge_users_path(current_organisation), class: "fr-btn fr-btn--secondary mr-1"

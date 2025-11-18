@@ -1,6 +1,5 @@
 /# locals: (rdv:, b:, contextual_agents:)
 
-= b.with_breadcrumb label: "Accueil", href: root_path
 - if contextual_agents.blank?
   - if rdv.collectif?
     = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)

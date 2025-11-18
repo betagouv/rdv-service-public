@@ -9,11 +9,11 @@
 - content_for :fil_ariane do
   - if @absence.agent == current_agent
     = render "common/fil_ariane",
-            titles_and_paths: [["Accueil", root_path], ["Vos indisponibilités", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
+            titles_and_paths: [["Vos indisponibilités", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
             current_page_title: yield(:title)
   - else
     = render "common/fil_ariane",
-            titles_and_paths: [["Accueil", root_path], ["Indisponibilités de #{@absence.agent.full_name_and_service}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
+            titles_and_paths: [["Indisponibilités de #{@absence.agent.full_name_and_service}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
             current_page_title: yield(:title)
 
 - content_for :right_of_page_title do

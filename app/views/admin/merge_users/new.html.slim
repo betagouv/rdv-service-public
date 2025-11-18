@@ -4,7 +4,7 @@
   | Fusionner deux usagers
 
 - content_for :fil_ariane do
-  - render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Usagers", admin_organisation_users_path(current_organisation)]], current_page_title: yield(:title)
+  - render "common/fil_ariane", titles_and_paths: [["Usagers", admin_organisation_users_path(current_organisation)]], current_page_title: yield(:title)
 
 = simple_form_for [:admin, @merge_users_form], url: admin_organisation_merge_users_path(current_organisation), method: "POST" do |f|
   = render "model_errors", model: @merge_users_form
