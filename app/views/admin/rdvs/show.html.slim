@@ -10,7 +10,7 @@
 .fr-grid-row
   .fr-col-12
     / @contextual_agents is only used for links in breadcrumb and redirecting if update
-    = render partial: "rdv", collection: [@rdv], locals: { contextual_agents: @contextual_agents }
+    = render partial: "rdv", collection: [@rdv], locals: { contextual_agents: @contextual_agents, link_in_header: false }
 
 .fr-grid-row
   .fr-col-12
