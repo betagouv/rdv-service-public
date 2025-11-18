@@ -85,19 +85,20 @@ class AgendaMultiAgent {
 
   refreshColumnsVisualGrouping = () => {
     const columns = document.querySelectorAll(".fc-timegrid-col.fc-day");
-    const white = "#FFF";
-    const grey = "rgb(227, 234, 239, 0.5)";
+    const WHITE = "#FFF";
+    const GREY = "rgb(227, 234, 239, 0.5)";
 
-    if(this.fullCalendarInstance.view.type === "resourceTimeGridWeek") {
-      const columnGroups = Object.groupBy(columns, column => this.getGroupByDate() ? column.dataset.date : column.dataset.resourceId);
-      Object.entries(columnGroups).forEach(([_, columns], index) => {
-        columns.forEach(columnElement => { columnElement.style.backgroundColor = (index & 1) ? white : grey; });
-      });
+    if (this.fullCalendarInstance.view.type !== "resourceTimeGridWeek") {
+      return columns.forEach(column => column.style.backgroundColor = WHITE); // Reset to white
     }
-    else { // Reset to white
-      columns.forEach(columnElement => columnElement.style.backgroundColor = white);
-    }
-  }
+
+    const keyFn = column => this.getGroupByDate() ? column.dataset.date : column.dataset.resourceId;
+
+    Object.values(Object.groupBy(columns, keyFn))
+      .forEach((group, i) =>
+        group.forEach(column => column.style.backgroundColor = i % 2 ? WHITE : GREY)
+      );
+  };
 
   getGroupByDate = () => {
     return localStorage.getItem("groupByDate") !== "false";
