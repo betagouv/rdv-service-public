@@ -209,6 +209,7 @@ jobs:
         with:
           files: |
             tests-results/**/rspec-*.xml
+          comment_mode: off
   test_features_autodoc:
     name: Feature Tests using Autodoc
     runs-on: ubuntu-latest
