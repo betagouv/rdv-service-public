@@ -84,10 +84,16 @@ $rdvs-fc-header-bg-color: $gray-200;
 
   }
 
+  // On fait en sorte que les boutons du footer ressemble précisément
+  // aux boutons DSFR (options de weekends, etc) situés juste en dessous.
   .fc-footer-toolbar {
     .fc-button {
       border-radius: 0;
       background-color: transparent;
+
+      &:hover {
+        background-color: rgb(246, 246, 246);
+      }
     }
   }
 }
