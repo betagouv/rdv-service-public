@@ -82,7 +82,10 @@ $rdvs-fc-header-bg-color: $gray-200;
       background-color: rgb(246, 246, 246);
     }
 
-    &.fc-toggleGrouping-button {
+  }
+
+  .fc-footer-toolbar {
+    .fc-button {
       border-radius: 0;
       background-color: transparent;
     }
