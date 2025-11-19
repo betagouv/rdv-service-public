@@ -38,6 +38,116 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_130457) do
   create_enum "user_invited_through", ["devise_email", "external"]
   create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie"]
 
+  create_enum :access_level, [
+    "admin",
+    "basic",
+    "intervenant",
+  ], force: :cascade
+
+  create_enum :agents_absence_notification_level, [
+    "all",
+    "none",
+  ], force: :cascade
+
+  create_enum :agents_plage_ouverture_notification_level, [
+    "all",
+    "none",
+  ], force: :cascade
+
+  create_enum :agents_rdv_notifications_level, [
+    "all",
+    "others",
+    "soon",
+    "none",
+  ], force: :cascade
+
+  create_enum :bookable_by, [
+    "agents",
+    "agents_and_prescripteurs",
+    "everyone",
+    "agents_and_prescripteurs_and_invited_users",
+  ], force: :cascade
+
+  create_enum :creation_status, [
+    "accepted",
+    "refused",
+  ], force: :cascade
+
+  create_enum :export_type, [
+    "rdv_export",
+    "participations_export",
+  ], force: :cascade
+
+  create_enum :lieu_availability, [
+    "enabled",
+    "disabled",
+    "single_use",
+  ], force: :cascade
+
+  create_enum :location_type, [
+    "public_office",
+    "home",
+    "phone",
+    "visio",
+  ], force: :cascade
+
+  create_enum :rdv_status, [
+    "unknown",
+    "seen",
+    "excused",
+    "revoked",
+    "noshow",
+  ], force: :cascade
+
+  create_enum :receipts_channel, [
+    "sms",
+    "mail",
+    "webhook",
+  ], force: :cascade
+
+  create_enum :receipts_result, [
+    "processed",
+    "sent",
+    "delivered",
+    "failure",
+  ], force: :cascade
+
+  create_enum :role, [
+    "legacy_admin",
+    "support",
+  ], force: :cascade
+
+  create_enum :sms_provider, [
+    "netsize",
+    "send_in_blue",
+    "contact_experience",
+    "sfr_mail2sms",
+    "clever_technologies",
+    "orange_contact_everyone",
+  ], force: :cascade
+
+  create_enum :user_created_through, [
+    "unknown",
+    "agent_creation",
+    "user_sign_up",
+    "franceconnect_sign_up",
+    "user_relative_creation",
+    "agent_creation_api",
+    "prescripteur",
+  ], force: :cascade
+
+  create_enum :user_invited_through, [
+    "devise_email",
+    "external",
+  ], force: :cascade
+
+  create_enum :verticale, [
+    "rdv_insertion",
+    "rdv_solidarites",
+    "rdv_aide_numerique",
+    "rdv_mairie",
+  ], force: :cascade
+
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.string "title", null: false
@@ -469,6 +579,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_130457) do
     t.bigint "default_service_id", comment: "Indique le service qui sera ajouté au territoire par défaut si un agent qui utilise cette application ouvre un nouvel espace.\nCette colonne indique aussi que les agents qui utilisent cette application sont autorisés à ouvrir un nouvel espace.\n"
     t.index ["default_service_id"], name: "index_oauth_applications_on_default_service_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+  end
+
+  create_table "operator_managers", force: :cascade do |t|
+    t.text "first_name"
+    t.text "last_name"
+    t.text "email"
+    t.text "pro_connect_openid_sub"
+    t.bigint "operator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_operator_managers_on_email", unique: true
+    t.index ["operator_id"], name: "index_operator_managers_on_operator_id"
   end
 
   create_table "operators", force: :cascade do |t|
@@ -908,6 +1030,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_130457) do
   add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_applications", "services", column: "default_service_id"
+  add_foreign_key "operator_managers", "operators"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"
