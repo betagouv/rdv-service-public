@@ -1,9 +1,9 @@
-.mt-3.flex-grow-1.text-right
-  .m-2
+.mt-2.flex-grow-1.text-right
+  .my-2
     = simple_form_for [:admin, current_agent], url: admin_organisation_planning_toggle_displays_path(current_organisation), method: :put do |f|
       = f.hidden_field :display_cancelled_rdv, value: !current_agent.display_cancelled_rdv
       = f.submit Agent.human_attribute_value(:display_cancelled_rdv, !current_agent.display_cancelled_rdv), class: "fr-btn fr-btn--tertiary"
-  .m-2
+  .my-2
     = simple_form_for [:admin, current_agent], url: admin_organisation_planning_toggle_displays_path(current_organisation), method: :put do |f|
       = f.hidden_field :display_saturdays, value: !current_agent.display_saturdays
       - if current_territory.work_on_sunday?
