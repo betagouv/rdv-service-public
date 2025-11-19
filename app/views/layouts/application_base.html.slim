@@ -110,8 +110,6 @@ html lang="fr"
             li.fr-footer__bottom-item
               = link_to "CGU - Agents", cgu_agent_path, class: "fr-footer__bottom-link", title: "Conditions générales d’utilisation des agents"
             li.fr-footer__bottom-item
-              = link_to "Code Source sur GitHub", "https://github.com/betagouv/rdv-service-public", class: "fr-footer__bottom-link", target: "_blank", rel: "noopener"
+              = external_link_to "Code source", "https://github.com/betagouv/rdv-service-public", class: "fr-footer__bottom-link", title: "Code source de #{current_domain.name} sur Github - nouvel onglet"
             li.fr-footer__bottom-item
-              = link_to ENV["RDV_SOLIDARITES_VERSION"], "https://github.com/betagouv/rdv-service-public/commit/#{ENV['CONTAINER_VERSION']}", class: "fr-footer__bottom-link", title: "#{ENV['RDV_SOLIDARITES_VERSION']} - Aller au code source de #{current_domain.name}", target: "_blank", rel: "noopener"
-            li.fr-footer__bottom-item
-              = link_to "Budget", budget_path, class: "fr-footer__bottom-link", target: "_blank", rel: "noopener"
+              = external_link_to "Budget", budget_path, class: "fr-footer__bottom-link"

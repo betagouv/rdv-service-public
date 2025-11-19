@@ -4,8 +4,7 @@ footer.footer#footer[role="contentinfo"]
       .col-md-12
         .d-none.d-md-flex.flex-wrap.flex-gap-1em.justify-content-end.mb-2
           = link_to "Accessibilité : partiellement conforme", accessibilite_path, class: "fr-link"
-          = link_to "https://github.com/betagouv/rdv-service-public/commit/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de #{current_domain.name}", target: "_blank", class: "fr-link" do
-            = ENV["RDV_SOLIDARITES_VERSION"]
+          = external_link_to "Code source", "https://github.com/betagouv/rdv-service-public", title: "Code source de #{current_domain.name} sur Github - nouvel onglet", class: "fr-link"
           = link_to mentions_legales_path, class: "fr-link" do
             | Mentions Légales
           = link_to cgu_agent_path, class: "fr-link", title: "Conditions générales d’utilisation" do

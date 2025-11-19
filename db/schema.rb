@@ -140,6 +140,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_17_105536) do
     t.time "end_time", null: false
     t.boolean "expired_cached", default: false, null: false
     t.datetime "recurrence_ends_at"
+    t.string "caldav_url"
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_absences_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_absences_on_agent_id"
     t.index ["end_day"], name: "index_absences_on_end_day"
@@ -241,6 +242,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_17_105536) do
     t.boolean "caldav_disconnect_in_progress", default: false, null: false
     t.datetime "blog_read_at"
     t.string "pro_connect_openid_sub"
+    t.string "caldav_sync_token"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -575,8 +577,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_17_105536) do
     t.boolean "ants_connectable", default: false, null: false, comment: "Autorise l'organisation à être branchée sur le moteur de recherche de l'ANTS sur https://rendezvouspasseport.ants.gouv.fr/. Pour éviter de brancher n'importe qui sur ce moteur de recherche, cette option n'est pas activable par les agents.\n"
     t.boolean "online_booking_for_particuliers", default: true, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des particuliers, et donc qu'on propose le bouton FranceConnect lors de la prise de rendez-vous en ligne.\n"
     t.boolean "online_booking_for_professionnels", default: false, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des professionnels, et donc qu'on propose le bouton ProConnect lors de la prise de rendez-vous en ligne.\n"
-    t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
     t.string "time_zone", default: "Europe/Paris", null: false
+    t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"

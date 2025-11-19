@@ -16,7 +16,7 @@ class Agents::CaldavSyncController < AgentAuthController
     )
     if caldav_config_ok?
       current_agent.save!
-      Caldav::MassCreateEventJob.perform_later(current_agent)
+      Caldav::MassExportEventToCaldavJob.perform_later(current_agent)
     else
       flash[:alert] = "La connexion au calendrier a échoué. Veuillez vérifier vos informations et réessayer."
     end
@@ -27,7 +27,7 @@ class Agents::CaldavSyncController < AgentAuthController
   def destroy
     skip_authorization
     current_agent.update!(caldav_disconnect_in_progress: true)
-    Caldav::MassDestroyEventJob.perform_later(current_agent)
+    Caldav::MassDestroyEventsAndAbsencesJob.perform_later(current_agent)
     redirect_to agents_calendar_sync_caldav_sync_path
   end
 
