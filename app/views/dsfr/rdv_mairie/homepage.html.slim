@@ -420,16 +420,7 @@ hr[aria-hidden="true"]
       .rdv-text-align-center.fr-mt-6w
         = link_to "Consulter le centre d’aide", "https://aide.rdv-service-public.fr/", class: "fr-btn fr-btn--secondary"
 
-.fr-py-8w.rdv-background-color-alt-blue-ecume.rdv-text-align-center
-  .fr-container
-    .fr-mb-4w
-      - 3.times do
-        = image_tag "rdv_mairie/carotte.png", alt: ""
-    h2 Plus de RDV, moins de lapins
-    p
-      | Votre agenda vous remerciera.
-    .fr-my-4w= link_to "Demander une démo", contact_team_url, class: "fr-btn"
-    = link_to "Revenir en haut de la page", "#header", class: "fr-link fr-icon-arrow-up-line fr-link--icon-left"
+hr[aria-hidden="true"]
 
 section.fr-py-8w.rdv-text-align-center
   .fr-container
@@ -472,3 +463,14 @@ section.fr-py-8w.rdv-text-align-center
         p
           |> En cas de questions, de suggestions, de propositions ou de problème de sécurité détecté, n’hésitez pas à nous contacter :
         = link_to "Formulaire de contact", aide_aiguillage_role_path, title: "Support - formulaire de contact", class: "fr-link fr-link--icon-left fr-icon-message-2-line"
+
+.fr-py-8w.rdv-text-align-center
+  .fr-container
+    .fr-mb-4w
+      - 3.times do
+        = image_tag "rdv_mairie/carotte.png", alt: ""
+    h2 Plus de RDV, moins de lapins
+    p
+      | Votre agenda vous remerciera.
+    .fr-my-4w= link_to "Demander une démo", contact_team_url, class: "fr-btn"
+    = link_to "Revenir en haut de la page", "#header", class: "fr-link fr-icon-arrow-up-line fr-link--icon-left"
