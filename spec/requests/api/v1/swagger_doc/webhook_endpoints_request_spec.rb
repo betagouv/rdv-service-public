@@ -25,7 +25,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       let(:organisation_id) { organisation.id }
 
       response 200, "Retourne des WebhookEndpoints" do
-        let!(:webhook_endpoints) { create_list(:webhook_endpoint, 5, organisation: organisation) }
+        let!(:webhook_endpoints) { create_list(:webhook_endpoint, 5, organisation: organisation).sort_by(&:id) }
         let!(:agent) { create(:agent, role_in_territories: [organisation.territory]) }
 
         schema "$ref" => "#/components/schemas/webhook_endpoints"
