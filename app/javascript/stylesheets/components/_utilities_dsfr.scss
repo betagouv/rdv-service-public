@@ -58,6 +58,12 @@
   display: flex;
 }
 
+.rdv-display-md-flex {
+  @include media-breakpoint-up(md) {
+    display: flex;
+  }
+}
+
 .rdv-flex-wrap-wrap {
   flex-wrap: wrap;
 }
@@ -170,8 +176,14 @@
   display: inline-block;
 }
 
-.rdv-border-left-md-1px-solid-blue-france {
-  @include media-breakpoint-up(md) {
-    border-left: 1px solid var(--text-action-high-blue-france);
-  }
+.rdv-border-bottom-1px-solid {
+  border-bottom: 1px solid;
+}
+
+.rdv-border-right-1px-solid {
+  border-right: 1px solid;
+}
+
+.rdv-border-color-blue-france {
+  border-color: var(--blue-france-main-525);
 }
