@@ -1,4 +1,3 @@
-# frozen_string_literal: true
-
-class OperatorsController
+class Operators::MainController < ApplicationController
+  def index; end
 end

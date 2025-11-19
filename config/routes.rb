@@ -455,6 +455,8 @@ Rails.application.routes.draw do
   # Évite de casser les anciennes routes vers l'agenda, les plages et les absences
   draw :legacy_planning_routes_redirects
 
+  draw :operators
+
   match "/404", to: "errors#not_found", via: :all
   match "/500", to: "errors#internal_server_error", via: :all
 
