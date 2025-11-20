@@ -47,7 +47,7 @@ $rdvs-fc-header-bg-color: $gray-200;
   }
 }
 
-.fc:not(#agenda-multi-agent) .fc-button {
+.fc .fc-button {
   border: none;
   text-transform: capitalize;
   box-shadow: none;
@@ -60,41 +60,6 @@ $rdvs-fc-header-bg-color: $gray-200;
   // .fc .fc-button-primary:not(:disabled).fc-button-active
   &.fc-button-active.fc-button-primary:not(:disabled) {
     color: var(--fc-button-active-color);
-  }
-}
-
-#agenda-multi-agent.fc {
-  .fc-button {
-    background-color: white;
-    font-size: 16px;
-    font-weight: 500;
-    color: rgb(0, 0, 145);
-
-    padding: 8px 16px;
-
-    border: none;
-    box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
-
-    // prend le dessus sur une règle très spécifique dans FullCalendar
-    // .fc .fc-button-primary:not(:disabled).fc-button-active
-    &.fc-button-active.fc-button-primary:not(:disabled) {
-      color: rgb(0, 0, 145);
-      background-color: rgb(246, 246, 246);
-    }
-
-  }
-
-  // On fait en sorte que les boutons du footer ressemble précisément
-  // aux boutons DSFR (options de weekends, etc) situés juste en dessous.
-  .fc-footer-toolbar {
-    .fc-button {
-      border-radius: 0;
-      background-color: transparent;
-
-      &:hover {
-        background-color: rgb(246, 246, 246);
-      }
-    }
   }
 }
 
