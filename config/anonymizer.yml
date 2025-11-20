@@ -503,3 +503,10 @@ tables:
   - table_name: operators
     anonymized_column_names:
       - name
+  - table_name: tags
+    non_anonymized_column_names:
+      - name
+      - created_at
+  - table_name: territory_tags
+    non_anonymized_column_names:
+      - created_at

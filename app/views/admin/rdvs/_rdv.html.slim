@@ -1,4 +1,4 @@
-/# locals: (rdv:, contextual_agents:, success_message: nil)
+/# locals: (rdv:, contextual_agents:, success_message: nil, link_in_header: true)
 
 turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
   div[id= "rdv-error-message-#{rdv.id}"]
@@ -10,8 +10,10 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
     .d-flex.flex-wrap.align-items-center.flex-gap-1em
       .flex-grow-1
         h5.header
-          span
+          - if link_in_header
             = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
+          - else
+            = rdv_title(rdv)
       = render "admin/rdvs/waiting_room", rdv: rdv
       - if rdv.collectif?
         = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv
