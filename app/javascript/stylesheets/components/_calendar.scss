@@ -47,19 +47,39 @@ $rdvs-fc-header-bg-color: $gray-200;
   }
 }
 
-.fc .fc-button {
-  border: none;
-  text-transform: capitalize;
-  box-shadow: none;
-  border-radius: 0px;
-  margin: 0 3px;
-  padding: 6px 12px;
-  height: auto;
+.fc {
+  .fc-button {
+    //border-radius: 0;
+    background-color: white;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--blue-france-sun-113-625);
 
-  // prend le dessus sur une règle très spécifique dans FullCalendar
-  // .fc .fc-button-primary:not(:disabled).fc-button-active
-  &.fc-button-active.fc-button-primary:not(:disabled) {
-    color: var(--fc-button-active-color);
+    padding: 8px 16px;
+
+    border: none;
+    box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
+
+    &:hover {
+      color: var(--blue-france-sun-113-625);
+      background-color: var(--grey-950-125);
+    }
+
+    // prend le dessus sur une règle très spécifique dans FullCalendar
+    // .fc .fc-button-primary:not(:disabled).fc-button-active
+    &.fc-button-active.fc-button-primary:not(:disabled) {
+      color: var(--blue-france-sun-113-625);
+      background-color: var(--blue-france-925-125-active);
+    }
+  }
+
+  // On fait en sorte que les boutons du footer ressemble précisément
+  // aux boutons DSFR (options de weekends, etc) situés juste en dessous.
+  .fc-footer-toolbar {
+    .fc-button {
+      border-radius: 0;
+      background-color: transparent;
+    }
   }
 }
 
