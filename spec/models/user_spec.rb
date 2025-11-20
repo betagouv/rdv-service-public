@@ -257,12 +257,4 @@ RSpec.describe User, type: :model do
       expect(user.errors[:notification_email]).to include("n'est pas valide")
     end
   end
-
-  describe "failing on purpose" do
-    specify do
-      create(:user, first_name: "Jean", last_name: "PATOCHE")
-      user2 = build(:user, first_name: "Marco", last_name: "POLO")
-      expect(described_class.all.to_a).to eq([user2])
-    end
-  end
 end
