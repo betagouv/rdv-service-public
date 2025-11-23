@@ -81,9 +81,11 @@ class Rdv < ApplicationRecord
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
 
+  before_destroy(prepend: true) { @agent_ids_before_change = agent_ids }
+  before_save { @agent_ids_before_change = agent_ids }
   after_commit do
-    agents.each do |agent|
-      AgendaChannel.broadcast_to(agent.id, model: "Rdv", starts_at:, ends_at:)
+    (agent_ids + (@agent_ids_before_change || [])).uniq.each do |agent_id|
+      AgendaChannel.broadcast_to(agent_id, model: "Rdv", starts_at:, ends_at:)
     end
   end
 

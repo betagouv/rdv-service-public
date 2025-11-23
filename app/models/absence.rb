@@ -31,7 +31,7 @@ class Absence < ApplicationRecord
   before_validation :set_end_day
   after_commit do
     [agent_id, agent_id_was].uniq.each do |agent_id|
-      AgendaChannel.broadcast_to(agent_id, model: "PlageOuverture")
+      AgendaChannel.broadcast_to(agent_id, model: "Absence")
     end
   end
 
