@@ -1,0 +1,14 @@
+development:
+  adapter: redis
+  url: "redis://localhost:6379"
+  channel_prefix: lapins_dev
+
+test:
+  adapter: redis
+  url: "redis://localhost:6379"
+  channel_prefix: lapins_test
+
+production:
+  adapter: redis
+  url: <%= ENV['REDIS_URL'] %>
+  channel_prefix: lapins_prod

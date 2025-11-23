@@ -81,6 +81,12 @@ class Rdv < ApplicationRecord
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
 
+  after_commit do
+    agents.each do |agent|
+      AgendaChannel.broadcast_to(agent.id, model: "Rdv", starts_at:, ends_at:)
+    end
+  end
+
   # Scopes
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }

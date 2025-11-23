@@ -18,7 +18,7 @@ export class AgendaMonoAgent {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-    setupRefresh(this.fullCalendarInstance);
+    setupRefresh(this.fullCalendarInstance, [this.data.agentId]);
     document.addEventListener("turbolinks:before-cache", () => {
       // force calendar reload on turbolinks re-visit, otherwise event listeners
       // are not attached

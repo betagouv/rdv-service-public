@@ -1,4 +1,5 @@
 import frLocale from '@fullcalendar/core/locales/fr';
+import { createAgendaChannel } from "../../cable/create_agenda_channel"
 
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
@@ -138,33 +139,29 @@ function eventRenderer(selectedEventId) {
   }
 }
 
-const setupRefresh = (fullCalendarInstance) => {
-  const clearRefetchInterval = () => {
-    if (!fullCalendarInstance.refreshCalendarInterval) return
-    clearTimeout(fullCalendarInstance.refreshCalendarInterval)
-    fullCalendarInstance.refreshCalendarInterval = null
-  }
+const setupRefresh = (fullCalendarInstance, agentIds) => {
+  agentIds.forEach(agentId => {
+    createAgendaChannel(agentId, (message) => {
 
-  const setRefetchInterval = () => {
-    if (fullCalendarInstance.refreshCalendarInterval) return
-    fullCalendarInstance.refreshCalendarInterval = setInterval(() => fullCalendarInstance.refetchEvents(), 30000)
-  }
+      // Pour les RDV, on ne re-fetch que si le RDV apparaît dans la view.
+      if (message.model === "Rdv") {
+        const beginningOfView = fullCalendarInstance.view.activeStart.toISOString();
+        const endOfView = fullCalendarInstance.view.activeEnd.toISOString();
 
-  setRefetchInterval();
+        const rdvWithinView = message.ends_at > beginningOfView && message.starts_at < endOfView;
+        if (rdvWithinView) {
+          fullCalendarInstance.refetchEvents();
+        }
+      }
 
-  document.addEventListener('turbolinks:before-cache', () => { clearRefetchInterval(fullCalendarInstance) });
-  document.addEventListener('turbolinks:before-render', () => { clearRefetchInterval(fullCalendarInstance) });
+      // Pour les plages et les indispos, pour l'instant on
+      // refetch tout pour ne pas avoir à gérer la récurrence
+      else {
+        fullCalendarInstance.refetchEvents();
+      }
 
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      // when agent comes back to tab, refresh immediately
-      fullCalendarInstance.refetchEvents();
-
-      setRefetchInterval();
-    } else if (fullCalendarInstance.refreshCalendarInterval) {
-      clearRefetchInterval();
-    }
-  })
+    });
+  });
 };
 
 const handleAjaxError = (response) => {
