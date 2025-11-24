@@ -86,6 +86,13 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
   end
 
   class CopyRdvJob < ApplicationJob
+    include GoodJob::ActiveJobExtensions::Concurrency
+    good_job_control_concurrency_with(
+      perform_limit: 3,
+      # Pour éviter de spammer notre API, on limite le nombre de jobs
+      key: -> { "CopyPlanningToNewInstanceJob::CopyRdvJob" }
+    )
+
     queue_as :latency_5m
 
     def perform(instance_export_id, rdv_id, domain_id)
