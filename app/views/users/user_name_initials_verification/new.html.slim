@@ -5,7 +5,7 @@ p.fr-mt-2w
   b> nom de famille.
 
 .fr-my-4w.rdv-three-letters-form
-   =form_for @form, url: users_user_name_initials_verification_path, builder: Dsfr::FormBuilder, as: "" do |f|
+   = form_for @form, url: users_user_name_initials_verification_path, builder: Dsfr::FormBuilder, as: "", display_required_tags: false do |f|
     .fr-input-group
       = f.dsfr_text_field :letters,
         label: "3 premières lettres de votre nom",
