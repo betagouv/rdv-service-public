@@ -60,7 +60,17 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  config.log_level = ENV.fetch("LOG_LEVEL", :info) # allows for individual config with ENV variable
+  # allows for individual config with ENV variable
+  # note: the Rails default is actually debug rather than info
+  config.log_level = ENV.fetch("LOG_LEVEL", :info)
+
+  # to see debug logs when running with foreman or overmind we need to log to STDOUT
+  logger = ActiveSupport::Logger.new($stdout)
+  logger.formatter = config.log_formatter
+  # TaggedLogging fixes an issue for asset requests but I think it is not required anymore
+  # cf https://github.com/rails/sprockets-rails/issues/376#issuecomment-287560399
+  tagged_logger = ActiveSupport::TaggedLogging.new(logger)
+  config.logger = tagged_logger
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
