@@ -148,7 +148,7 @@ module CreneauxSearch::Calculator
       # On calcule les occurrences des absences en premier pour laisser aux rdvs le temps de finir de charger
       busy_times += busy_times_from_absences
 
-      busy_times += @rdvs_starts_and_ends_at.value.map do |rdv_starts_and_ends_at|
+      busy_times += @rdvs_starts_and_ends_at.map do |rdv_starts_and_ends_at|
         BusyTime.new(rdv_starts_and_ends_at.first, rdv_starts_and_ends_at.last)
       end
 
@@ -165,7 +165,10 @@ module CreneauxSearch::Calculator
 
       @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
 
-      @rdvs_starts_and_ends_at = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).async_pluck(:starts_at, :ends_at)
+      @rdvs_starts_and_ends_at = AgentsRdv.where(agent_id: plage_ouverture.agent_id)
+                                          .where(readonly_rdv_status: Rdv::NOT_CANCELLED_STATUSES)
+                                   .where("tsrange(readonly_rdv_starts_at, readonly_rdv_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+                                   .pluck(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
     end
 
     def busy_times_from_absences
