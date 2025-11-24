@@ -33,6 +33,17 @@
       .fr-tile__body
         .fr-tile__content
           h3.fr-tile__title
+            = link_to "Feuille de route", "https://projets.suite.anct.gouv.fr/boards/1608721650465900252", target: "_blank"
+          p.fr-tile__desc
+            | Découvrez les nouvelles fonctionnalités et améliorations principales sur lesquelles nous sommes en train de travailler.
+      .fr-tile__header
+        .fr-tile__pictogram
+          = dsfr_svg "artwork/pictograms/digital/in-progress", class: "fr-responsive-img"
+  .fr-col.fr-col-md-6
+    .fr-tile.fr-enlarge-link.fr-tile--horizontal
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
             = link_to "État des serveurs", "https://rdv-service-public.instatus.com", target: "_blank"
           .fr-tile__desc
             = render "admin/static_pages/instatus_iframe"

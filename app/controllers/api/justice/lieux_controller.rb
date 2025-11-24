@@ -34,7 +34,7 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
       end
     end
 
-    render json: { lieux: }
+    render json: { lieux:, display_feature: ENV["ENABLE_JUSTICE_FR_FEATURE_FLAG"].present? }
   end
 
   private

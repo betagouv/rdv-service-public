@@ -13,7 +13,7 @@ class Agent < ApplicationRecord
       email unconfirmed_email
       first_name last_name
       pro_connect_openid_sub proconnect_siret
-      invitation_sent_at invitation_accepted_at
+      invitation_sent_at invitation_accepted_at deleted_at
     ]
   )
 
@@ -200,7 +200,15 @@ class Agent < ApplicationRecord
   end
 
   def name_for_paper_trail
-    "[Agent] #{full_name}"
+    "[Agent] #{full_name} (id=#{id})"
+  end
+
+  def self.agent_from_whodunnit(whodunnit)
+    return unless whodunnit&.starts_with?("[Agent]")
+    return unless whodunnit.include?("(id=")
+
+    id = whodunnit.match(/\(id=(\d+)\)/)[1]
+    Agent.find_by(id:)
   end
 
   def role_in_organisation(organisation)
@@ -293,7 +301,7 @@ class Agent < ApplicationRecord
     @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?
                   Domain::RDV_AIDE_NUMERIQUE
                 elsif organisations.where(verticale: :rdv_mairie).any?
-                  Domain::RDV_MAIRIE
+                  Domain::RDV_SERVICE_PUBLIC
                 else
                   Domain.default_domain_for_current_instance
                 end
@@ -304,5 +312,20 @@ class Agent < ApplicationRecord
       errors.add(:base, "Un agent ne peut pas être définitivement supprimé si il a des RDVs")
       throw :abort
     end
+  end
+
+  def possible_duplicate_organisations
+    possible_duplicate_organisations_by_email_domain + possible_duplicate_organisations_by_siret
+  end
+
+  def possible_duplicate_organisations_by_email_domain
+    email_domain = email.split("@").last
+    Organisation.joins(:agents).where("agents.email ilike ?", "%@#{email_domain}").distinct
+  end
+
+  def possible_duplicate_organisations_by_siret
+    return Organisation.none if proconnect_siret.blank?
+
+    Organisation.joins(:agents).where(agents: { proconnect_siret: proconnect_siret }).distinct
   end
 end

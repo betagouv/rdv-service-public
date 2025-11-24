@@ -1,6 +1,6 @@
 RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cliqué sur un RDV pour le modifier" do
   let(:territory) { create(:territory, work_on_sunday: true) } # nécessaire pour lancer cette spec un dimanche
-  let(:organisation) { create(:organisation) }
+  let(:organisation) { create(:organisation, territory:) }
   let!(:current_agent) { create(:agent, first_name: "Agent", last_name: "COURANT", admin_role_in_organisations: [organisation], display_saturdays: true) }
   let!(:collegue) { create(:agent, first_name: "Mon", last_name: "COLLEGUE", admin_role_in_organisations: [organisation]) }
   let!(:usager_du_rdv) { create(:user, first_name: "Usager", last_name: "DU RDV") }
@@ -48,7 +48,17 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
     find("#submit_agents").click
     click_on "Usager DU RDV" # on clique sur le RDV dans l'agenda
 
-    expected_fil_ariane = "Accueil  Liste des RDV  RDV Usager DU RDV"
+    expected_fil_ariane = "Accueil  Agendas de M. COLLEGUE, A. COURANT  RDV Usager DU RDV"
     expect(page).to have_content(expected_fil_ariane)
+    click_on "Modifier"
+    expect(page).to have_content(expected_fil_ariane)
+    fill_in "rdv_duration_in_min", with: "240"
+    click_on "Enregistrer"
+    click_on "Confirmer en ignorant les avertissements" if page.body.include?("Confirmer en ignorant les avertissements") # modification d'un RDV dans le passé
+    expect(rdv_du_collegue.reload.duration_in_min).to eq(240)
+    expect(page).to have_content(expected_fil_ariane)
+    click_on "Agendas de M. COLLEGUE, A. COURANT"
+    expect(page).to have_content("Revenir à mon agenda")
+    expect(page).to have_current_path(admin_organisation_planning_agenda_path(organisation, agent_id: [collegue, current_agent]))
   end
 end

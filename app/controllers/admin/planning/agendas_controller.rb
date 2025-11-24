@@ -6,6 +6,7 @@ class Admin::Planning::AgendasController < AgentAuthController
 
     @agents.each do |agent|
       authorize(AgentAgenda.new(agent:, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
+      Caldav::ImportAbsencesFromCaldavJob.perform_later(agent.id) if agent.caldav_configured?
     end
 
     @multiple_agents_makes_sense = true

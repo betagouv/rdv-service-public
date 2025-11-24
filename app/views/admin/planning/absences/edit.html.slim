@@ -16,7 +16,7 @@
             titles_and_paths: [["Accueil", root_path], ["Indisponibilités de #{@absence.agent.full_name_and_service}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
             current_page_title: yield(:title)
 
-- content_for :breadcrumb do
+- content_for :right_of_page_title do
   - @absence.external_references.each do |reference|
     = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-btn fr-btn--secondary fr-mr-2w")
 

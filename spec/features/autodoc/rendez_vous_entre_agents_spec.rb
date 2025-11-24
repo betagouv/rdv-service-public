@@ -18,7 +18,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
           email: "francis.factice@demo-rdv-service-public.gouv.fr",
           service_ids: [service.id],
         },
-      }, current_domain: Domain::RDV_MAIRIE
+      }, current_domain: Domain::RDV_SERVICE_PUBLIC
     ).save!
 
     create(:motif, organisation: Organisation.last, location_type: :visio, name: "Suivi de dossier", bookable_by: :agents)
@@ -30,7 +30,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     login_as(agent, scope: :agent)
 
-    doc = Autodoc.start_scenario("Prise de rendez-vous entre agents", self)
+    doc = Autodoc.start_scenario("Prise de rendez-vous entre agents", self, accessibility_checks: false, category: "3) Produit")
 
     doc.start_section("Côté agent")
     doc.add_text(<<~TEXT
@@ -58,7 +58,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
     TEXT
       .html_safe) # rubocop:disable Rails/OutputSafety
 
-    visit "http://www.rdv-mairie-test.localhost/agents/agenda"
+    visit "http://www.rdv-service-public-test.localhost/agents/agenda"
 
     doc.add_screenshot(page,
                        text: "J'ouvre mon espace RDV Service Public",
@@ -113,7 +113,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     doc.start_section("Côté usager")
 
-    visit public_link_to_org_url(organisation_id: Organisation.last.id, host: "http://www.rdv-mairie-test.localhost/")
+    visit public_link_to_org_url(organisation_id: Organisation.last.id, host: "http://www.rdv-service-public-test.localhost/")
 
     doc.add_screenshot(page,
                        text: "Je visite le lien de prise de rendez-vous que l'agent m'a transmis.",

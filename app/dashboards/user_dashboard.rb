@@ -16,6 +16,7 @@ class UserDashboard < Administrate::BaseDashboard
     last_name: Field::String,
     birth_name: Field::String,
     email: Field::String,
+    notification_email: Field::String,
     address: Field::String,
     phone_number: Field::String,
     responsible: Field::BelongsTo,

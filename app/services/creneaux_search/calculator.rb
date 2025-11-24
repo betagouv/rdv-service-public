@@ -4,6 +4,7 @@ module CreneauxSearch::Calculator
     def available_slots(motif:, lieu:, date_range:, agents: [], duration_in_min: nil)
       datetime_range = CreneauxSearch::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
+      import_absences_from_caldav(plage_ouvertures.map(&:agent).uniq)
       free_times_po = free_times_from(plage_ouvertures, datetime_range) # dépendances implicite à Rdv, Absence et OffDays
       slots_for(free_times_po, motif, duration_in_min:).select do |slot|
         slot.starts_at >= datetime_range.begin
@@ -119,6 +120,12 @@ module CreneauxSearch::Calculator
       end
 
       possible_slot_start
+    end
+
+    def import_absences_from_caldav(agents)
+      agents.each do |agent|
+        Caldav::ImportAbsencesFromCaldavJob.perform_later(agent.id) if agent.caldav_configured?
+      end
     end
   end
 

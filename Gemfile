@@ -7,7 +7,7 @@ ruby "3.4.7"
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Full-stack web application framework.
-gem "rails", "~> 7.2.0"
+gem "rails", "8.0.4"
 # Rack-based asset packaging system
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
@@ -51,8 +51,6 @@ gem "kaminari"
 gem "administrate"
 # Track changes to your models.
 gem "paper_trail"
-# Integrate PostgreSQL's enum data type into ActiveRecord's schema and migrations.
-gem "activerecord-postgres_enum"
 # A Ruby client library for Redis
 gem "redis"
 # Adds a Redis::Namespace class which can be used to namespace calls to Redis.
@@ -83,7 +81,7 @@ gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails
 gem "pundit"
 # Token based authentication for rails. Uses Devise + OmniAuth.
-gem "devise_token_auth", "1.2.4"
+gem "devise_token_auth", "1.2.5"
 # List of frequently used passwords
 gem "common_french_passwords"
 
@@ -192,8 +190,6 @@ group :development do
 
   # help to kill N+1 queries and unused eager loading.
   gem "bullet"
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem "byebug"
   # Better error page for Rails and other Rack apps
   gem "better_errors"
   # Retrieve the binding of a method's caller, or further up the stack.
@@ -213,6 +209,10 @@ group :development do
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
   gem "rails-erd", require: false # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+end
+
+group :development, :test do
+  gem "debug", require: "debug/prelude"
 end
 
 group :test do
@@ -247,9 +247,6 @@ group :test do
   # Playwright is an alternative to Selenium
   gem "capybara-playwright-driver"
 
-  # Strategies for cleaning databases. Can be used to ensure a clean slate for testing.
-  gem "database_cleaner"
-
   # Factories
 
   # factory_bot provides a framework and DSL for defining and using model instance factories.
@@ -269,6 +266,4 @@ group :test do
   gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
 
   gem "sinatra"
-
-  gem "pry"
 end

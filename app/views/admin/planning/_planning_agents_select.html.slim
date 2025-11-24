@@ -1,41 +1,44 @@
 #planning_agents_select.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
-  - unless @agents.size > 1 # Pas la place pour le toggle quand plusieurs agents sont sélectionnés
-    .float-right.mt-2.rdv-display-flex.flex-gap-1em.rdv-align-items-center.js-new-planning-toggle
-      = link_to "Revenir à l'ancienne vue", admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "false"), method: :put, class: "fr-link fr-link--sm"
-      = link_to("Donnez votre avis", "https://tally.so/r/3jORDR", target: "_blank", class: "fr-link fr-link--sm")
-
-  h1.fr-h2.my-1.d-flex
-    | Planning de
-    .ml-2
-      = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end") do |form|
-        div
-          ruby:
-            # Le select initial contient tous les agents sélectionnés, puis il sera alimenté en Ajax.
-            collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
-            data = {
-              "select2-config": {
-                ajax: {
-                  url: search_agents_agents_path(organisation_id: current_organisation),
-                  dataType: "json",
-                  delay: 250,
+  .rdv-display-flex.rdv-gap-05rem.rdv-align-items-center.rdv-flex-wrap-wrap.rdv-justify-content-space-between.fr-my-2w
+    div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
+      h1.fr-h2.fr-mb-0
+        | Planning de
+      div
+        = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end") do |form|
+          div
+            ruby:
+              # Le select initial contient tous les agents sélectionnés, puis il sera alimenté en Ajax.
+              collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
+              data = {
+                "select2-config": {
+                  ajax: {
+                    url: search_agents_agents_path(organisation_id: current_organisation),
+                    dataType: "json",
+                    delay: 250,
+                  },
                 },
-              },
-            }
+              }
 
-          = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input"], data: }
+            = form.label :agent_id, "Planning de", class: "fr-label sr-only", for: "agent_id"
+            = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input rdv-min-width-200px"], data: }
 
-        .ml-2.d-flex[style="gap: 0 0.5em"]
-          - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
-            button#multi_agent_enable.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
-          #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
-            = form.submit "Appliquer", {class: "fr-btn  "}
-          #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
-            = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: current_agent), class: "fr-btn fr-btn--tertiary"
+          .ml-2.d-flex[style="gap: 0 0.5em"]
+            - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
+              button#multi_agent_enable.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
+            #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
+              = form.submit "Appliquer", {class: "fr-btn  "}
+            #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
+              = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: current_agent), class: "fr-btn fr-btn--tertiary"
+
+    - unless @agents.size > 1 # Pas la place pour le toggle quand plusieurs agents sont sélectionnés
+      div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
+        div= link_to "Revenir à l'ancienne vue", admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "false"), method: :put, class: "fr-link fr-link--sm js-new-planning-toggle"
+        div= link_to("Donnez votre avis", "https://tally.so/r/3jORDR", target: "_blank", class: "fr-link fr-link--sm js-new-planning-toggle")
 
 .container-fluid.px-2.d-flex[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
   .flex-grow-1
     = render partial: "admin/planning/planning_tabs"
 
-  = content_for :breadcrumb
+  = content_for :right_of_page_title
 
 .fr-mx-2w= render "layouts/flash"

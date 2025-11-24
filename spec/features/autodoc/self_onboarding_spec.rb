@@ -10,7 +10,7 @@ RSpec.describe "Embarquement en autonomie pour les admins", js: true do
   before { login_as(agent, scope: :agent) }
 
   specify do
-    doc = Autodoc.start_scenario("Embarquement en autonomie (self-onboarding)", self)
+    doc = Autodoc.start_scenario("Embarquement guidé", self, accessibility_checks: false, category: "2) Embarquement")
 
     doc.start_section("Pour un admin")
 
@@ -24,7 +24,7 @@ RSpec.describe "Embarquement en autonomie pour les admins", js: true do
     TEXT
       .html_safe) # rubocop:disable Rails/OutputSafety
 
-    visit admin_organisation_configuration_url(organisation, host: "http://www.rdv-mairie-test.localhost")
+    visit admin_organisation_configuration_url(organisation, host: "http://www.rdv-service-public-test.localhost")
 
     doc.add_screenshot(page,
                        text: "On affiche une bannière qui indique que la première action à prendre est de créer un motif",

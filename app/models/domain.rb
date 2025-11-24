@@ -61,13 +61,13 @@ class Domain
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
     ),
 
-    RDV_MAIRIE = new(
-      id: "RDV_MAIRIE",
+    RDV_SERVICE_PUBLIC = new(
+      id: "RDV_SERVICE_PUBLIC",
       logo_path: "logos/logo_rdv_service_public.svg",
       public_logo_path: "/logo_rdv_service_public.png",
       dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
       name: "RDV Service Public",
-      presentation_for_agents_template_name: nil, # C'est la homepage qui joue ce rôle pour ce domaine
+      presentation_for_agents_template_name: "nouvel_espace_rdv_service_public",
       address_selection_template_name: nil,
       search_banner_template_name: "search/banners/rdv_service_public",
       online_reservation_with_public_link: true,
@@ -92,7 +92,7 @@ class Domain
     {
       RDV_SOLIDARITES => ENV["AGENT_CONNECT_RDVS_CLIENT_ID"],
       RDV_AIDE_NUMERIQUE => ENV["AGENT_CONNECT_RDVAN_CLIENT_ID"],
-      RDV_MAIRIE => ENV["AGENT_CONNECT_RDVSP_CLIENT_ID"],
+      RDV_SERVICE_PUBLIC => ENV["AGENT_CONNECT_RDVSP_CLIENT_ID"],
     }.fetch(self)
   end
 
@@ -100,7 +100,7 @@ class Domain
     {
       RDV_SOLIDARITES => ENV["AGENT_CONNECT_RDVS_CLIENT_SECRET"],
       RDV_AIDE_NUMERIQUE => ENV["AGENT_CONNECT_RDVAN_CLIENT_SECRET"],
-      RDV_MAIRIE => ENV["AGENT_CONNECT_RDVSP_CLIENT_SECRET"],
+      RDV_SERVICE_PUBLIC => ENV["AGENT_CONNECT_RDVSP_CLIENT_SECRET"],
     }.fetch(self)
   end
 
@@ -115,32 +115,32 @@ class Domain
         {
           RDV_SOLIDARITES => "staging.rdv-solidarites.fr", # sous-domaine pas configuré
           RDV_AIDE_NUMERIQUE => "staging.rdv-aide-numerique.fr", # sous-domaine pas configuré
-          RDV_MAIRIE => "staging.rdv-service-public.fr",
+          RDV_SERVICE_PUBLIC => "staging.rdv-service-public.fr",
         }.fetch(self)
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
         {
           RDV_SOLIDARITES => "demo.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "demo.rdv-aide-numerique.fr",
-          RDV_MAIRIE => "demo.rdv.anct.gouv.fr",
+          RDV_SERVICE_PUBLIC => "demo.rdv.anct.gouv.fr",
         }.fetch(self)
       else
         {
           RDV_SOLIDARITES => "www.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.fr",
-          RDV_MAIRIE => "rdv.anct.gouv.fr",
+          RDV_SERVICE_PUBLIC => "rdv.anct.gouv.fr",
         }.fetch(self)
       end
     when :development
       {
         RDV_SOLIDARITES => "www.rdv-solidarites.localhost",
         RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.localhost",
-        RDV_MAIRIE => "www.rdv-mairie.localhost",
+        RDV_SERVICE_PUBLIC => "www.rdv-mairie.localhost",
       }.fetch(self)
     when :test
       {
         RDV_SOLIDARITES => "www.rdv-solidarites-test.localhost",
         RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique-test.localhost",
-        RDV_MAIRIE => "www.rdv-mairie-test.localhost",
+        RDV_SERVICE_PUBLIC => "www.rdv-service-public-test.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"
@@ -154,33 +154,33 @@ class Domain
         nil
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
         {
-          RDV_MAIRIE => "reply.staging.rdv-service-public.fr",
+          RDV_SERVICE_PUBLIC => "reply.staging.rdv-service-public.fr",
           # c’est le seul staging réellement ouvert pour l’instant
         }.fetch(self, nil)
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
         {
           RDV_SOLIDARITES => "reply.demo.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "reply.demo.rdv-aide-numerique.fr",
-          RDV_MAIRIE => "reply.demo.rdv-service-public.fr",
+          RDV_SERVICE_PUBLIC => "reply.demo.rdv-service-public.fr",
         }.fetch(self)
       else
         {
           RDV_SOLIDARITES => "reply.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique.fr",
-          RDV_MAIRIE => "reply.rdv-service-public.fr", # TODO: remplacer par anct.gouv.fr une fois les DNS déployés
+          RDV_SERVICE_PUBLIC => "reply.rdv-service-public.fr", # TODO: remplacer par anct.gouv.fr une fois les DNS déployés
         }.fetch(self)
       end
     when :development
       {
         RDV_SOLIDARITES => "reply.rdv-solidarites.localhost",
         RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique.localhost",
-        RDV_MAIRIE => "reply.rdv-mairie.localhost",
+        RDV_SERVICE_PUBLIC => "reply.rdv-mairie.localhost",
       }.fetch(self)
     when :test
       {
         RDV_SOLIDARITES => "reply.rdv-solidarites-test.localhost",
         RDV_AIDE_NUMERIQUE => "reply.rdv-aide-numerique-test.localhost",
-        RDV_MAIRIE => "reply.rdv-mairie-test.localhost",
+        RDV_SERVICE_PUBLIC => "reply.rdv-service-public-test.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"
@@ -188,7 +188,7 @@ class Domain
   end
 
   def default?
-    self == RDV_MAIRIE
+    self == RDV_SERVICE_PUBLIC
   end
   alias default default?
 
@@ -197,7 +197,7 @@ class Domain
   def self.find_matching(domain_name)
     return review_app_domain if ENV["IS_REVIEW_APP"] == "true"
 
-    ALL_BY_HOST_NAME.fetch(domain_name) { RDV_MAIRIE }
+    ALL_BY_HOST_NAME.fetch(domain_name) { RDV_SERVICE_PUBLIC }
   end
 
   # Les review apps utilisent un host de Scalingo, elles ne permettent
@@ -214,7 +214,7 @@ class Domain
     if ENV["DEFAULT_DOMAIN_IS_RDV_SOLIDARITES"] == "true"
       RDV_SOLIDARITES
     else
-      RDV_MAIRIE
+      RDV_SERVICE_PUBLIC
     end
   end
 

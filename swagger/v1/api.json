@@ -2849,7 +2849,7 @@
                         "created_at": "2025-10-06 13:36:33 +0200",
                         "rdv": null,
                         "updated_at": "2025-10-06 13:36:33 +0200",
-                        "url": "http://www.rdv-mairie-test.localhost/agents/rdv_plans/2",
+                        "url": "http://www.rdv-service-public-test.localhost/agents/rdv_plans/2",
                         "user_id": 8
                       }
                     }
@@ -2968,7 +2968,7 @@
                           "location_type": "public_office"
                         },
                         "updated_at": "2025-10-06 13:36:34 +0200",
-                        "url": "http://www.rdv-mairie-test.localhost/agents/rdv_plans/4",
+                        "url": "http://www.rdv-service-public-test.localhost/agents/rdv_plans/4",
                         "user_id": 12
                       }
                     }
@@ -3616,6 +3616,110 @@
                 "schema": {
                   "$ref": "#/components/schemas/error_authentication"
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rdvs/{rdv_id}/update_status": {
+      "patch": {
+        "summary": "Mettre à jour le statut d'un rendez-vous",
+        "security": [
+          {
+            "content-type": [],
+            "autorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "Bearer 123456",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rdv_id",
+            "in": "path",
+            "description": "ID du rendez-vous",
+            "example": 123,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "RDV"
+        ],
+        "operationId": "updateRdvStatus",
+        "description": "Met à jour le statut d'un rendez-vous passé, pour indiquer s'il a bien eu lieu comme prévu ou s'il a été annulé.\nLes valeurs autorisées pour le statut sont unknown (État indéterminé), seen (Rendez-vous honoré), excused (Annulé (excusé)), revoked (Annulé (par le service)) et noshow (Absence non excusée).\"\n",
+        "responses": {
+          "200": {
+            "description": "Met à jour et renvoie un rendez-vous",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "status": "seen"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Renvoie 'unprocessable_entity' quand le statut envoyé n'est pas valide",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": {
+                        "status": [
+                          {
+                            "error": "blank"
+                          }
+                        ]
+                      },
+                      "error_messages": [
+                        "status doit être rempli(e)"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_unprocessable_entity"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "seen"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
               }
             }
           }

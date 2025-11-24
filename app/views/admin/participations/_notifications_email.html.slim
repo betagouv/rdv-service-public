@@ -1,13 +1,11 @@
-- if participation.user.user_to_notify.valid_email?
-  - if participation.user.user_to_notify.notify_by_email?
-    span.mr-1
-      i.fa.fa-envelope.text-primary-blue.mr-2
-      strong.word-break-all = participation.user.user_to_notify.preferred_email
+.mr-1
+  - if participation.user.user_to_notify.valid_email?
+    - if participation.user.user_to_notify.notify_by_email?
+      = icon("fr-icon-mail-line", class: "fr-icon--sm")
+      span.fr-ml-1v.word-break-all = participation.user.user_to_notify.preferred_email
+    - else
+      = icon("fr-icon-error-fill", class: "fr-icon--sm")
+      span.fr-ml-1v= t("admin.users.notifications_preferences.email_disabled")
   - else
-    span.mr-1
-      i.fa.fa-times.text-primary-blue.mr-2
-      strong = t("admin.users.notifications_preferences.email_disabled")
-- else
-  span.mr-1
-    i.fa.fa-times-circle.text-primary-blue.mr-2
-    strong = t("admin.users.notifications_preferences.email_absent")
+    = icon("fr-icon-error-line", class: "fr-icon--sm")
+    span.fr-ml-1v= t("admin.users.notifications_preferences.email_absent")

@@ -1,3 +1,5 @@
+/# locals: (rdv:, selected_users: [])
+
 .card
   .card-header.d-flex.justify-content-between.align-items-center
     .d-flex.flex-column
@@ -23,6 +25,11 @@
           = "#{rdv.duration_in_min} minutes"
 
       .col-md-6
-        = render "admin/rdvs_collectifs/participants_info", rdv: rdv
+        = render "admin/rdvs_collectifs/participants_info", rdv: rdv, selected_users:
         - if rdv.remaining_seats? && rdv.not_cancelled?
-          = link_to "Ajouter un participant", edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "fr-btn fr-btn--secondary fr-btn--sm fr-btn--icon-left fr-icon-user-add-fill"
+          - if selected_users.any?
+            - users_to_add = selected_users - rdv.users
+            - if users_to_add.any?
+              = link_to "Ajouter #{users_to_add.to_sentence}", edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv, add_user: users_to_add.map(&:id)), class: "fr-btn fr-btn--secondary fr-btn--sm fr-btn--icon-left fr-icon-user-add-fill"
+          - else
+            = link_to "Ajouter un participant", edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "fr-btn fr-btn--secondary fr-btn--sm fr-btn--icon-left fr-icon-user-add-fill"

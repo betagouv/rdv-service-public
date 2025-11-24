@@ -73,7 +73,7 @@ module RecurrenceHelper
   end
 
   def exceptionnelle_tag(recurrent_record)
-    tag.span("Exceptionnelle", class: "badge badge-info") if recurrent_record.exceptionnelle?
+    tag.span("Exceptionnelle", class: "fr-badge fr-badge--sm fr-badge--green-archipel") if recurrent_record.exceptionnelle?
   end
 
   def filter_plage_ouvertures_in_departement_scope(plage_ouvertures)

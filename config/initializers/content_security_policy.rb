@@ -14,8 +14,6 @@ tiles_etalab = "etalab-tiles.fr"
 unpkg_cdn = "unpkg.com"
 tiles_osm = "tile.openstreetmap.org"
 tiles_data_gouv = "openmaptiles.data.gouv.fr"
-# Bouton "Je donne mon avis sur cette démarche"
-voxusagers = "voxusagers.numerique.gouv.fr"
 # Utilisé sur nos pages statiques (404.html, 500.html)
 bootstrap_cdn = "*.bootstrapcdn.com"
 # Metabase permet d’embedder des rapports dans l’application
@@ -23,16 +21,6 @@ metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
 
 # Utilisés par swagger pour la documentation de l'api
 swagger_shas = ["'sha256-j4Lx1FqFgvYDBEjW7NQaEY7/HhCi8WVsLWkqC4+wJ3w='", "'sha256-JHKToH7KbGJj6TloPeWnKnbImDel00Whl1rRnBiTYuQ='"]
-
-# Utilisé par Axios pour les tests d'accessibilité
-test_shas = []
-if Rails.env.test?
-  test_shas << if ENV["CI"].present?
-                 "'sha256-4UywW1I9VFu7o60u4zSiU9FmUjIhiIv4N1FflQjVse0='"
-               else
-                 "'sha256-3KU7bqhntlE+pVbLART2MZzvfoO4EpEvxbQQXz2vSqY='"
-               end
-end
 
 # Tant qu'on utilise les Turbolinks, c'est très difficile d'avoir des CSP différentes pour chaque pages,
 # puisque les CSP sont uniquement chargées lors de la première requête qui charle le premier document,
@@ -47,11 +35,11 @@ Rails.application.config.content_security_policy do |policy|
   policy.worker_src :blob
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, metabase
-  policy.img_src :self, :data, :blob, voxusagers, tiles_osm, unpkg_cdn, tiles_data_gouv
+  policy.img_src :self, :data, :blob, tiles_osm, unpkg_cdn, tiles_data_gouv
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
 
-  policy.script_src :self, unpkg_cdn, *swagger_shas, *test_shas
+  policy.script_src :self, unpkg_cdn, *swagger_shas
 end
 
 # If you are using UJS then enable automatic nonce generation

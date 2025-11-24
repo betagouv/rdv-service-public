@@ -22,14 +22,9 @@
     | RDV téléphonique
 - elsif rdv.motif.visio?
   p.card-text.mb-0
-    - should_display_link = current_agent.in?(rdv.agents) || current_agent.secretaire?
     = visio_icon(class: "text-primary-blue fr-mr-1w")
     |> Par visioconférence
-    - if should_display_link
-      = link_to("démarrer la visioconférence ", rdv.visio_url, target: :_blank)
-    - else
-      br
-      small.text-muted = "Le lien de visioconférence s'affiche uniquement pour l'agent qui assure le RDV et les secrétaires."
+    = link_to("démarrer la visioconférence ", rdv.visio_url, target: :_blank)
 
 - else
   .d-flex.mb-1

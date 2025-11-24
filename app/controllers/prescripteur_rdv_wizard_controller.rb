@@ -8,6 +8,8 @@ class PrescripteurRdvWizardController < ApplicationController
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
   before_action :set_paper_trail_whodunnit
 
+  layout "application_base"
+
   def start
     session[:rdv_wizard_attributes] = params.permit(
       *Users::RdvWizardStepsController::RDV_PERMITTED_PARAMS,
@@ -68,18 +70,28 @@ class PrescripteurRdvWizardController < ApplicationController
   end
 
   def cancel_rdv
-    if @prescripteur.rdv.cancellable_by_user?
-      @prescripteur.rdv.update_and_notify(@prescripteur, status: "excused")
-      flash[:success] = "Le rendez-vous a bien été annulé."
-    else
-      flash[:error] = "Le rendez-vous ne peut plus être annulé."
-    end
+    if @prescripteur
+      if @prescripteur.rdv.cancellable_by_user?
+        @prescripteur.rdv.update_and_notify(@prescripteur, status: "excused")
+        flash[:success] = "Le rendez-vous a bien été annulé."
+      else
+        flash[:error] = "Le rendez-vous ne peut plus être annulé."
+      end
 
-    redirect_to prescripteur_show_path
+      redirect_to prescripteur_show_path
+    else
+      flash[:error] = "Votre session a expiré. Si vous souhaitez annuler le rendez-vous d’un bénéficiaire, veuillez utiliser le bouton présent dans l’email de confirmation."
+      redirect_to root_path
+    end
   end
 
   def confirmation
-    render locals: { prescripteur: @prescripteur }
+    if @prescripteur
+      render locals: { prescripteur: @prescripteur }
+    else
+      flash[:error] = "Votre session a expiré. Si vous souhaitez consulter ou annuler le rendez-vous d’un bénéficiaire, veuillez regarder l’email de confirmation que nous vous avons fait parvenir."
+      redirect_to root_path
+    end
   end
 
   def show
@@ -119,6 +131,8 @@ class PrescripteurRdvWizardController < ApplicationController
   end
 
   def set_prescripteur_from_session
+    return if session[:prescripteur_id].blank?
+
     @prescripteur = Prescripteur.find(session[:prescripteur_id])
   end
 

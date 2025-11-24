@@ -23,8 +23,11 @@ main .fr-btn:hover,  // Ce sélecteur vise tous les boutons du corps de page
 main .fr-btn.fr-btn--secondary:hover {
   color: var(--text-action-high-blue-france);
 }
-main .fr-btn.fr-btn--tertiary:hover {
+main .fr-btn.fr-btn--tertiary:not(:disabled):hover {
   color: var(--text-action-high-blue-france);
+}
+main .fr-btn.fr-btn--tertiary:disabled:hover {
+  color: var(--text-disabled-grey);
 }
 main .fr-btn.fr-btn--tertiary-no-outline:hover {
   color: var(--text-action-high-blue-france);
@@ -58,4 +61,8 @@ footer {
       border-color: #ccc;
     }
   }
+}
+
+legend[class*="fr-fieldset__legend--"] {
+  font-size: inherit;
 }

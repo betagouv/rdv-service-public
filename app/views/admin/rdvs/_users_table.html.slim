@@ -1,15 +1,16 @@
+/# locals: (rdv:, contextual_agents:)
+
 .table-responsive.users-table[style="overflow: inherit"]
   table.table.light-gray-table
     thead
       tr
         / Fixed width because of user profile annotation field that could messed up the table.
-        th style="max-width: 30%" Participant
+        th style="max-width: 30%" Participant·e
         - if rdv.requires_ants_predemande_number?
           th =t("activerecord.attributes.user.ants_pre_demande_number")
-        th Notifications
-        th
+        th colspan="2" Notifications
         - if rdv.collectif?
           th.text-right Participation
     tbody id="rdv-users-list"
       - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
-        = render "admin/participations/user_row", participation: participation, agent: agent
+        = render "admin/participations/user_row", participation:, contextual_agents:

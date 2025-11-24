@@ -4,27 +4,13 @@
 
   - content_for(:menu_item) { "menu-rdvs-list" }
 
-  - content_for :breadcrumb do
+  - content_for :fil_ariane do
     - if @breadcrumb_page == "agenda" && @form.agent.present?
-      ol.breadcrumb.m-0
-        li.breadcrumb-item
-          = link_to "Agenda de #{@form.agent.full_name}", admin_organisation_planning_agenda_path(current_organisation, agent_id: @form.agent.id, date: @form.start)
-        li.breadcrumb-item.active Liste des RDV
-
+      = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Agenda de #{@form.agent.full_name}", admin_organisation_planning_agenda_path(current_organisation, agent_id: @form.agent.id, date: @form.start)]], current_page_title: "Liste des RDV"
     - if @breadcrumb_page == "user" && @form.user.present?
-      ol.breadcrumb.m-0
-        li.breadcrumb-item
-          = link_to "Usagers", admin_organisation_users_path(current_organisation)
-        li.breadcrumb-item
-          = link_to @form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)
-        li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
-
+      = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Usagers", admin_organisation_users_path(current_organisation)], [@form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)]], current_page_title: "RDVs #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
     - if @breadcrumb_page == "organisation_stats"
-      ol.breadcrumb.m-0
-        li.breadcrumb-item
-          = link_to "Statistiques de l'organisation", admin_organisation_stats_path(current_organisation)
-        - if @form.status.present?
-          li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
+      = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Statistiques de l'organisation", admin_organisation_stats_path(current_organisation)]], current_page_title: "RDVs #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
 
   .card
     .card-body
@@ -68,7 +54,7 @@
     .fr-grid-row.fr-pb-3w
       .fr-col-12
         .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr", params: { per: params[:per] }.compact
-        = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
+        = render(partial: "rdv", collection: @rdvs_in_page, locals: { contextual_agents: nil })
         .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr", params: { per: params[:per] }.compact
 
     .fr-grid-row

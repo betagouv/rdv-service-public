@@ -6,22 +6,23 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
   around { |example| perform_enqueued_jobs { example.run } }
 
   specify do
-    doc = Autodoc.start_scenario("Ouverture d'un espace", self)
+    doc = Autodoc.start_scenario("2) Ouverture d'un espace avec validation", self, accessibility_checks: false, category: "1) Ouverture d'espace")
 
     doc.start_section("Côté agent")
-    doc.add_text("Contexte: Je suis un agent qui n'a jamais utilisé RDV Service Public")
+    doc.add_text("Contexte : Je suis un agent qui n'a jamais utilisé RDV Service Public")
 
-    visit "http://www.rdv-mairie-test.localhost/"
+    visit "http://www.rdv-service-public-test.localhost/"
     doc.add_screenshot(page,
-                       text: "Je clique sur 'Créer un espace'",
-                       wait_for: "Créer un espace")
+                       text: "Je clique sur 'Ouvrir un espace'",
+                       wait_for: "Ouvrir un espace")
 
-    click_on "Créer un espace"
+    click_on "Ouvrir un espace"
     doc.add_screenshot(page,
-                       text: "Je me ProConnecte.",
-                       wait_for: "Connexion agent à")
+                       text: "Une page m'explique qu'il faut que je me ProConnecte.",
+                       wait_for: "Pour ouvrir votre espace, commencez par vous identifier avec ProConnect.")
 
-    # ProConnect ne marche pas en tests, donc on utilise l'email et le mot de passe
+    # ProConnect ne marche pas en tests, donc on triche en faisant un login par email et mot de passe
+    visit new_agent_session_url(host: Domain::RDV_SERVICE_PUBLIC.host_name)
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
@@ -53,7 +54,7 @@ RSpec.describe "Ouverture d'un espace", ignore_js_errors: true, js: true do
 
     login_as(super_admin, scope: :super_admin)
 
-    visit super_admins_territory_creation_requests_url(host: "http://www.rdv-mairie-test.localhost")
+    visit super_admins_territory_creation_requests_url(host: "http://www.rdv-service-public-test.localhost")
 
     doc.add_screenshot(page,
                        text: "Je consulte la liste des demandes d'ouverture d'espace",

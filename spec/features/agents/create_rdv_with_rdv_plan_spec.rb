@@ -1,5 +1,5 @@
 RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'interface de rdv_plan" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { create(:organisation, name: "CCAS de Montreuil") }
   let(:application) do
     create(:oauth_application,
            name: "Démarches Simplifiées",
@@ -198,6 +198,18 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       expect(page).to have_content "Motif du rendez-vous"
 
       expect(page).not_to have_content(other_motif.name)
+    end
+  end
+
+  context "quand aucun motif n'est disponible pour l'agent choisi" do
+    before { motif.archive }
+
+    it "affiche un message qui explique le blocage" do
+      visit edit_modalites_agents_rdv_plan_path(rdv_plan.id)
+
+      expect(page).not_to have_content("Continuer")
+
+      expect(page).to have_content "Vous devez d'abord créer un motif de rendez-vous pour l'organisation CCAS de Montreuil"
     end
   end
 end

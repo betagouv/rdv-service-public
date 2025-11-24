@@ -13,7 +13,10 @@ class TerritoryDashboard < Administrate::BaseDashboard
     name: Field::String,
     category: Field::Select.with_options(collection: Compte::CATEGORIES),
     organisations: Field::HasMany.with_options(sort_by: :name, direction: :asc),
+    operator: Field::BelongsTo,
     admin_agents: Field::HasMany,
+    territory_tags: Field::HasMany,
+    tags: Field::HasMany,
     roles: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -30,6 +33,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
     departement_number
     category
     name
+    territory_tags
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -38,10 +42,12 @@ class TerritoryDashboard < Administrate::BaseDashboard
     id
     name
     departement_number
-    category
     work_on_sunday
     roles
     organisations
+    category
+    territory_tags
+    operator
     created_at
     updated_at
   ].freeze
@@ -52,8 +58,10 @@ class TerritoryDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     name
     admin_agents
-    departement_number
     category
+    tags
+    operator
+    departement_number
     work_on_sunday
   ].freeze
 

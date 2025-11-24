@@ -37,23 +37,23 @@ section.main-content__body
       dd.attribute-data = @territory_creation_request.service_name
 
   section.main-content__body[style=""]
-    - if @territory_creation_request.possible_duplicate_organisations_by_email_domain.none?
+    - if @territory_creation_request.agent.possible_duplicate_organisations_by_email_domain.none?
       p ✅ Aucun espace existant n'a d'agents avec des adresses email similaires.
     - else
       p ⚠️ Attention, ces organisations ont des agents avec des adresses email similaires :
       ul
-        - @territory_creation_request.possible_duplicate_organisations_by_email_domain.each do |organisation|
+        - @territory_creation_request.agent.possible_duplicate_organisations_by_email_domain.each do |organisation|
           li
             = link_to organisation.name, super_admins_organisation_path(organisation)
 
       p Si vous pensez que ce nouvel espace serait un doublon, vous pouvez contacter un admin d'organisation pour lui proposer d'inviter #{@territory_creation_request.agent.full_name}.
 
-    - if @territory_creation_request.possible_duplicate_organisations_by_siret.none?
+    - if @territory_creation_request.agent.possible_duplicate_organisations_by_siret.none?
       p ✅ Aucun espace existant n'a d'agents avec des SIRET similaires.
     - else
       p ⚠️ Attention, ces organisations ont des agents avec le même SIRET :
       ul
-        - @territory_creation_request.possible_duplicate_organisations_by_siret.each do |organisation|
+        - @territory_creation_request.agent.possible_duplicate_organisations_by_siret.each do |organisation|
           li
             = link_to organisation.name, super_admins_organisation_path(organisation)
 

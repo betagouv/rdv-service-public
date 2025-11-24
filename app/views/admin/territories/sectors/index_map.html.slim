@@ -4,7 +4,7 @@
   script src="https://unpkg.com/mapbox-gl@1.11.1/dist/mapbox-gl.js" crossorigin='anonymous' integrity="sha384-0Zom4D5ryhUWYPBjopSgMAhn3l450eTuFZQypqbSBUPQuS2m2bdUsqi0IYDVgyi6"
   link href="https://unpkg.com/mapbox-gl@1.11.1/dist/mapbox-gl.css" rel="stylesheet"
 
-= territory_navigation(t(".title"), [link_to("Sectorisation", admin_territory_sectorization_path(current_territory)), link_to("Secteurs", admin_territory_sectors_path(current_territory))])
+= territory_navigation(t(".title"), [["Sectorisation", admin_territory_sectorization_path(current_territory)], ["Secteurs", admin_territory_sectors_path(current_territory)]])
 
 .row
   .col-md-12

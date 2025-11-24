@@ -29,6 +29,8 @@ module ApiSpecMacros
     parameter name: "content-type", in: :header, type: :string
     parameter name: "authorization", in: :header, type: :string, description: "Token d'accès (authentification)", example: "Bearer 123456"
     let(:"content-type") { "application/json" }
+    let(:oauth_token) { create(:access_token, resource_owner_id: agent.id) }
+    let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
   end
 
   def with_visioplainte_authentication

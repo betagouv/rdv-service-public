@@ -1,10 +1,13 @@
 /# locals: (prescripteur:)
 
-.fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
-  = dsfr_stepper(title: "Confirmation", value: 4, max: 4)
-  .card
-    .card-body
-      h3
-        span.fr-icon--lg.fr-icon-success-fill[aria-hidden="true"]
-        |< Rendez-vous confirmé
-      = render partial: "rdv", locals: { prescripteur: }
+- content_for :title do
+  | Rendez-vous confirmé
+
+.fr-container.fr-pt-3w
+  .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
+    .card
+      .card-body
+        h1
+          span.fr-icon--lg.fr-icon-success-fill[aria-hidden="true"]
+          |< Rendez-vous confirmé
+        = render partial: "rdv", locals: { prescripteur: }

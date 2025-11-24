@@ -15,8 +15,6 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
 
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let(:oauth_token) { create(:access_token, resource_owner_id: agent.id) }
-      let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
 
       response 200, "Renvoie une liste des lieux" do
         schema "$ref" => "#/components/schemas/lieux"
@@ -49,8 +47,6 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
 
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let(:oauth_token) { create(:access_token, resource_owner_id: agent.id) }
-      let(:authorization) { "Bearer #{oauth_token.plaintext_token}" }
 
       response 200, "Crée et renvoie un lieu" do
         let(:organisation_id) { organisation.id }

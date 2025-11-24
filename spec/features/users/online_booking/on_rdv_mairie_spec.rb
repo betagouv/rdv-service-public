@@ -23,7 +23,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
   end
 
   before do
-    default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
+    default_url_options[:host] = "http://www.rdv-service-public-test.localhost"
     travel_to(now)
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end
@@ -456,7 +456,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "il n’y a pas de créneaux dispos" do
       it "incite à passer par le moteur de l’ANTS", js: true do
-        visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
+        visit "http://www.rdv-service-public-test.localhost/org/#{organisation.id}"
         click_on "Passeport"
         expect(page).to have_content("Nombre de pré-demandes ANTS")
         expect(find_field(find("label", text: /pré-demandes ANTS/)[:for])[:value]).to eq("1")
@@ -471,7 +471,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     it "permet de choisir le nombre de dossiers à déposer" do
-      visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
+      visit "http://www.rdv-service-public-test.localhost/org/#{organisation.id}"
       click_on "Passeport"
       expect(page).to have_content("Nombre de pré-demandes ANTS")
       fill_in(find("label", text: /pré-demandes ANTS/)[:for], with: "2", fill_options: { clear: :backspace }) # ici on fait sans JS en remplissant le champ directement
@@ -520,7 +520,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "l’usager tente de passer un nombre invalide à l’étape de séléction du nombre de pré-demandes" do
       specify do
-        visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
+        visit "http://www.rdv-service-public-test.localhost/org/#{organisation.id}"
         click_on "Passeport"
         expect(page).to have_content("Nombre de pré-demandes ANTS")
         fill_in(find("label", text: /pré-demandes ANTS/)[:for], with: "notanumber", fill_options: { clear: :backspace }) # ici on fait sans JS en remplissant le champ directement

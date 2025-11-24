@@ -3,22 +3,22 @@
 - if any_notifs
   - if !participation.send_lifecycle_notifications && !participation.send_reminder_notification
     span.mr-1
-      i.fa.fa-times-circle.text-danger.mr-2
-      strong = t("admin.participations.notifications_summary.none")
+      span= icon("fr-icon-error-fill", class: "fr-icon--sm fr-mr-1v fr-message--error")
+      span= t("admin.participations.notifications_summary.none")
     - if current_organisation.rdv_insertion?
       br
       span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
   - elsif !participation.send_lifecycle_notifications
     span.mr-1
-      i.fa.fa-times-circle.text-danger.mr-2
-      strong = t("admin.participations.notifications_summary.lifecycle_off")
+      span= icon("fr-icon-error-fill", class: "fr-icon--sm fr-mr-1v fr-message--error")
+      span= t("admin.participations.notifications_summary.lifecycle_off")
     - if current_organisation.rdv_insertion?
       br
       span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
   - elsif !participation.send_reminder_notification
     span.mr-1
-      i.fa.fa-times-circle.text-danger.mr-2
-      strong = t("admin.participations.notifications_summary.reminder_off")
+      span= icon("fr-icon-error-fill", class: "fr-icon--sm fr-mr-1v fr-message--error")
+      span= t("admin.participations.notifications_summary.reminder_off")
     - if current_organisation.rdv_insertion?
       br
       span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)

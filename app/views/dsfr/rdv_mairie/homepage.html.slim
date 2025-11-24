@@ -16,7 +16,7 @@
         .fr-text--lg
           | Éviter les rendez-vous non honorés, gagner du temps au quotidien et améliorer la relation entre les agents et les usagers
         = link_to "Demander une démo", contact_team_url, class: "fr-btn fr-btn--secondary fr-mb-0 fr-mr-2w"
-        = link_to "Créer un espace", "/agents/sign_in", class: "fr-btn fr-mb-0"
+        = link_to "Ouvrir un espace", presentation_agent_path, class: "fr-btn fr-mb-0"
 
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -285,25 +285,32 @@ hr[aria-hidden="true"]
             .fr-card__img
               = image_tag "rdv_mairie/billet-0-euros.png", alt: "", class: "fr-responsive-img"
 
-.rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
-  .fr-container.fr-py-6w
-    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
-      .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
-        | 2 892 616
-      .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
-        .rdv-font-weight-bold
-          | RENDEZ-VOUS PLANIFIÉS
-        div
-          | DANS 995 STRUCTURES
-          span[aria-hidden="true"]
-            | *
+/ Redis cache store is fault tolerant, it will return nil if unavailable, and we'll simply skip this section
+/ cf https://github.com/rails/rails/blob/main/activesupport/lib/active_support/cache/redis_cache_store.rb#L31-L32
+/ We have a long connect timeout set by default though, which may cause slowness, which is why we add this
+/ emergency manual env var to be set temporarily and skip this section altogether.
+- if ENV["CACHE_STORE_UNAVAILABLE"].blank?
+  - cached_stats = Rails.cache.fetch_multi("stats.both_instances.2_years.rdvs_count", "stats.both_instances.2_years.active_organisations_count") { nil }
+  - if cached_stats.values.all?
+    .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
+      .fr-container.fr-py-6w
+        .fr-grid-row.fr-grid-row--gutters.rdv-align-items-center
+          .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
+            = number_with_delimiter(cached_stats["stats.both_instances.2_years.rdvs_count"], delimiter: " ")
+          .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
+            .rdv-font-weight-bold
+              | RENDEZ-VOUS PLANIFIÉS
+            div
+              | DANS #{number_with_delimiter(cached_stats["stats.both_instances.2_years.active_organisations_count"], delimiter: " ")} STRUCTURES
+              span[aria-hidden="true"]
+                | *
 
-.fr-container.fr-py-3w.rdv-text-align-center
-  span[aria-hidden="true"] *
-  |> Données concernant les 24 derniers mois.
-  |> Pour plus d’informations,
-  = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
-  | .
+    .fr-container.fr-py-3w.rdv-text-align-center
+      span[aria-hidden="true"] *
+      |> Données concernant les 24 derniers mois.
+      |> Pour plus d’informations,
+      = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
+      | .
 
 .rdv-background-color-alt-grey
   .fr-container.fr-py-8w
@@ -413,7 +420,53 @@ hr[aria-hidden="true"]
       .rdv-text-align-center.fr-mt-6w
         = link_to "Consulter le centre d’aide", "https://aide.rdv-service-public.fr/", class: "fr-btn fr-btn--secondary"
 
-.fr-py-8w.rdv-background-color-alt-blue-ecume.rdv-text-align-center
+hr[aria-hidden="true"]
+
+section.fr-py-8w.rdv-text-align-center
+  .fr-container
+    .fr-grid-row.fr-grid-row--center
+      .fr-col.fr-col-md-8
+        .rdv-display-flex.rdv-align-items-center.rdv-justify-content-center.rdv-gap-1rem.rdv-flex-wrap-wrap.fr-mb-3w
+          div= image_tag("logos/logo_dinum.svg", alt: "DINUM - Direction Interministérielle du Numérique", style: "height: 5.625rem")
+          div= image_tag("logos/logo_anct.png", alt: "ANCT - Agence Nationale de la Cohésion des Territoires", style: "height: 5.625rem")
+
+        h2.fr-h1.rdv-color-text-action-high-blue-france
+          | Qui sommes nous ?
+        p
+          |> Nous sommes l’équipe RDV Service Public, une solution numérique de l’État portée par
+          => link_to "l’Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noreferrer", title: "ANCT - Agence Nationale de la Cohésion des Territoires - nouvel onglet"
+          |> et
+          = link_to "la Direction Interministérielle du Numérique", "https://www.numerique.gouv.fr/dinum/", target: "_blank", rel: "noreferrer", title: "DINUM - Direction Interministérielle du Numérique - nouvel onglet"
+          |> .
+
+        p
+          |> Notre mission : permettre à tout agent, service ou administration de gérer simplement ses rendez-vous et de proposer ses disponibilités aux usagers, en présentiel ou à distance.
+
+        p
+          |> Conçu au sein de
+          = link_to "beta.gouv.fr", "https://beta.gouv.fr", target: "_blank", rel: "noreferrer", title: "Beta gouv - nouvel onglet"
+          |> , RDV Service Public incarne un numérique d’intérêt général, souverain, éthique, durable et centré sur les besoins des utilisateurs.
+
+.fr-py-8w.rdv-background-color-alt-blue-ecume
+  .fr-container
+    .rdv-display-md-flex
+      .fr-col-12.fr-col-md-6
+        h3.rdv-color-text-action-high-blue-france
+          | Participez au prochain webinaire
+        p
+          |> Vous souhaitez en savoir plus sur RDV Service Public ?
+          |> Nous organisons régulièrement des présentations de l’outil & des prochaines évolutions.
+        = link_to "S’incrire au prochain webinaire", "https://rdv.anct.gouv.fr/prendre_rdv?departement=SP&public_link_organisation_id=1628", title: "Accéder à l'inscription au prochain webinaire - nouvel onglet", class: "fr-btn fr-btn--responsive-sm", rel: "noreferrer", target: "_blank"
+      .rdv-border-right-1px-solid.rdv-border-color-blue-france.fr-mx-md-10w
+      .rdv-border-bottom-1px-solid.rdv-border-color-blue-france.fr-my-6w.fr-hidden-md
+      div
+        h3.rdv-color-text-action-high-blue-france
+          | Nous contacter
+        p
+          |> En cas de questions, de suggestions, de propositions ou de problème de sécurité détecté, n’hésitez pas à nous contacter :
+        = link_to "Formulaire de contact", aide_aiguillage_role_path, title: "Support - formulaire de contact", class: "fr-link fr-link--icon-left fr-icon-message-2-line"
+
+.fr-py-8w.rdv-text-align-center
   .fr-container
     .fr-mb-4w
       - 3.times do

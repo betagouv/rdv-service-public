@@ -10,7 +10,7 @@ const defaultFullCalendarConfig = () => ({
     // days of week. an array of zero-based day of week integers (0=Sunday)
     daysOfWeek: [1, 2, 3, 4, 5, 6, 0],
       startTime: '07:00',
-      endTime: '19:00',
+      endTime: '20:00',
   },
   slotMinTime: '07:00:00',
   slotMaxTime: '20:00:00',
@@ -138,4 +138,55 @@ function eventRenderer(selectedEventId) {
   }
 }
 
-export { defaultFullCalendarConfig, eventRenderer }
+const setupRefresh = (fullCalendarInstance) => {
+  const clearRefetchInterval = () => {
+    if (!fullCalendarInstance.refreshCalendarInterval) return
+    clearTimeout(fullCalendarInstance.refreshCalendarInterval)
+    fullCalendarInstance.refreshCalendarInterval = null
+  }
+
+  const setRefetchInterval = () => {
+    if (fullCalendarInstance.refreshCalendarInterval) return
+    fullCalendarInstance.refreshCalendarInterval = setInterval(() => fullCalendarInstance.refetchEvents(), 30000)
+  }
+
+  setRefetchInterval();
+
+  document.addEventListener('turbolinks:before-cache', () => { clearRefetchInterval(fullCalendarInstance) });
+  document.addEventListener('turbolinks:before-render', () => { clearRefetchInterval(fullCalendarInstance) });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      // when agent comes back to tab, refresh immediately
+      fullCalendarInstance.refetchEvents();
+
+      setRefetchInterval();
+    } else if (fullCalendarInstance.refreshCalendarInterval) {
+      clearRefetchInterval();
+    }
+  })
+};
+
+const handleAjaxError = (response) => {
+  if (window.ajaxErrorHandledAt) {
+    const secondsSinceLast = (Date.now() - window.ajaxErrorHandledAt) / 1000;
+    if (secondsSinceLast < 60) return
+  }
+  window.ajaxErrorHandledAt = Date.now()
+
+  switch (response.xhr.status) {
+    case 401:
+      window.location = this.calendarEl.attributes["data-sign-in-path"].value;
+      break;
+    case 500:
+      alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
+      break;
+    case 0:
+      alert(`Le chargement du calendrier a échoué, probablement car votre connexion internet a été coupée.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
+      break;
+    default:
+      alert(`Le chargement du calendrier a échoué avec une erreur ${response.xhr.status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
+  }
+};
+
+export { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError }

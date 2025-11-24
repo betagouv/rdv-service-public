@@ -8,6 +8,7 @@ html lang="fr"
     = content_for(:additional_stylesheets)
 
     = javascript_include_tag "application", "data-turbolinks-track": "reload"
+    = javascript_include_tag "application_test" if Rails.env.test?
     = javascript_include_tag "#{dsfr_path}/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
     = javascript_include_tag "#{dsfr_path}/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
     = content_for(:additional_scripts)
@@ -30,7 +31,7 @@ html lang="fr"
         elsif current_agent
           header.with_tool_link title: "Espace Agent", path: root_path
           header.with_tool_link title: current_agent.full_name, path: edit_agent_registration_path
-        elsif current_domain == Domain::RDV_MAIRIE && request.path == "/"
+        elsif current_domain == Domain::RDV_SERVICE_PUBLIC && request.path == "/"
           header.with_tool_link title: "Centre d’aide", path: "https://aide.rdv-service-public.fr", html_attributes: { class: "fr-icon-questionnaire-line" }
           header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, html_attributes: { class: "fr-icon-admin-line" }
           header.with_tool_link title: "Connexion Usager", path: new_user_session_path, html_attributes: { class: "fr-icon-account-line" }
@@ -39,7 +40,7 @@ html lang="fr"
           header.with_tool_link title: "Se connecter", path: new_user_session_path,html_attributes: { class: "fr-fi-account-fill" }
         end
 
-        if current_domain == Domain::RDV_MAIRIE
+        if current_domain == Domain::RDV_SERVICE_PUBLIC  && @site_vitrine_page
           header.with_direct_link_simple title: "Accueil", path: root_path, html_attributes: current_page?(root_path) ? { "aria-current": "page" } : {}
           header.with_direct_link_simple title: "Statistiques", path: stats_path, html_attributes: current_page?(stats_path) ? { "aria-current": "page" } : {}
         end
@@ -109,8 +110,6 @@ html lang="fr"
             li.fr-footer__bottom-item
               = link_to "CGU - Agents", cgu_agent_path, class: "fr-footer__bottom-link", title: "Conditions générales d’utilisation des agents"
             li.fr-footer__bottom-item
-              = link_to "Code Source sur GitHub", "https://github.com/betagouv/rdv-service-public", class: "fr-footer__bottom-link", target: "_blank", rel: "noopener"
+              = external_link_to "Code source", "https://github.com/betagouv/rdv-service-public", class: "fr-footer__bottom-link", title: "Code source de #{current_domain.name} sur Github - nouvel onglet"
             li.fr-footer__bottom-item
-              = link_to ENV["RDV_SOLIDARITES_VERSION"], "https://github.com/betagouv/rdv-service-public/commit/#{ENV['CONTAINER_VERSION']}", class: "fr-footer__bottom-link", title: "#{ENV['RDV_SOLIDARITES_VERSION']} - Aller au code source de #{current_domain.name}", target: "_blank", rel: "noopener"
-            li.fr-footer__bottom-item
-              = link_to "Budget", budget_path, class: "fr-footer__bottom-link", target: "_blank", rel: "noopener"
+              = external_link_to "Budget", budget_path, class: "fr-footer__bottom-link"

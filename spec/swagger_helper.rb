@@ -14,12 +14,6 @@ RSpec.configure do |config|
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
   config.openapi_specs = {
 
-    "conseillers_numeriques/api.json" => {
-      openapi: "3.0.1",
-      info: {
-        title: "API de création de comptes agents pour conseillers numériques",
-      },
-    },
     "visioplainte/api.json" => {
       openapi: "3.0.1",
       info: {

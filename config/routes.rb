@@ -40,15 +40,18 @@ Rails.application.routes.draw do
     resources :user_profiles, only: %i[destroy]
     resources :super_admins, only: %i[index destroy]
     resources :organisations
+    resources :operators
     resources :services
     resources :motifs
     resources :lieux
     resources :territories, except: %i[new create]
     resources :territory_creation_requests, only: %i[index edit update]
+    resources :accounts_for_crm, only: %i[index edit update]
     resources :users
     resources :comptes, only: %i[new create]
     resources :rdvs, only: %i[show]
     resources :prescripteurs, only: %i[show]
+    resources :tags
     root to: "agents#index"
 
     authenticate :super_admin do
@@ -219,7 +222,6 @@ Rails.application.routes.draw do
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]
           resource :motif_categories, only: %i[update]
-          resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
           resource :services, only: %i[edit update]
@@ -363,7 +365,7 @@ Rails.application.routes.draw do
     get "show"
   end
 
-  %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines].each do |page_name|
+  %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines nouvel_espace].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
 
@@ -385,12 +387,6 @@ Rails.application.routes.draw do
 
   ## Shorten urls for SMS
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
-
-  # We keep this deprecated route because some users have received sms or emails with this kind of link
-  get "r/:id", to: (redirect do |path_params, req|
-    query_params = format_redirect_params(req.params)
-    "users/rdvs/#{path_params[:id]}#{query_params}"
-  end), as: "rdv_short_deprecated"
 
   # tkn est obligatoire pour s'assurer qu'il est possible de se connecter
   get "r/:id/:tkn", to: (redirect do |path_params, req|

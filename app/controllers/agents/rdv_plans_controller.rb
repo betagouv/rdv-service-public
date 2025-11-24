@@ -37,9 +37,10 @@ class Agents::RdvPlansController < AgentAuthController
   end
 
   def edit_modalites
-    @available_location_types = available_motifs(@rdv_plan).pluck(:location_type)
-
-    render locals: { event_sources: }
+    render locals: {
+      available_location_types: available_motifs(@rdv_plan).pluck(:location_type),
+      event_sources:,
+    }
   end
 
   def update_modalites
@@ -108,15 +109,11 @@ class Agents::RdvPlansController < AgentAuthController
   private
 
   def available_motifs(rdv_plan)
-    motif_scope = Agent::MotifPolicy::Scope.new(
-      current_agent,
-      Motif.individuel.active
-    ).resolve
-
-    motif_scope.where(
-      service: rdv_plan.rdv_agent.services + [nil],
-      organisation_id: rdv_plan.rdv_agent.roles.select(:organisation_id)
-    )
+    rdv_plan.rdv_agent.organisations.map do |organisation|
+      Motif.available_motifs_for_organisation_and_agent(organisation, rdv_plan.rdv_agent)
+    end.reduce do |motifs, additional_motifs|
+      motifs.or(additional_motifs)
+    end
   end
 
   def find_rdv_plan

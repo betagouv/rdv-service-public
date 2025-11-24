@@ -18,7 +18,7 @@ RSpec.describe "motifs for invitation only" do
       expect(page).not_to have_content("Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation")
 
       expect(page).to have_field("Délai minimum avant le RDV", visible: :hidden)
-      choose("Agents de l’organisation et prescripteurs")
+      choose("Agents de l’organisation et prescripteurs", allow_label_click: true)
       expect(page).to have_field("Délai minimum avant le RDV", visible: :visible)
 
       expect do
@@ -35,7 +35,7 @@ RSpec.describe "motifs for invitation only" do
       visit edit_admin_organisation_motif_path(organisation, motif)
       find("#tab_resa_en_ligne").click
 
-      choose("Agents de l’organisation, prescripteurs et usagers via une invitation")
+      choose("Agents de l’organisation, prescripteurs et usagers via une invitation", allow_label_click: true)
       expect(page).to have_content("Délai minimum avant le RDV")
 
       expect do

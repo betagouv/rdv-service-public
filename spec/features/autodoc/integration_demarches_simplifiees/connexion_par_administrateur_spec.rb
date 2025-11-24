@@ -9,7 +9,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
 
   around do |example|
     previous_host = Capybara.app_host
-    Capybara.app_host = "http://www.rdv-mairie-test.localhost:#{previous_host[/\d+/]}"
+    Capybara.app_host = "http://www.rdv-service-public-test.localhost:#{previous_host[/\d+/]}"
     example.run
     Capybara.app_host = previous_host
   end
@@ -21,7 +21,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
   stub_env_for_proconnect
 
   specify do
-    doc = Autodoc.start_scenario("Intégration à Démarches Simplifiées : 1) Connexion de à RDV Service Public par un admin", self)
+    doc = Autodoc.start_scenario("1) Connexion de à RDV Service Public par un admin", self, category: "4) Intégration à Démarches Simplifiées")
 
     visit oauth_authorization_path(
       client_id: oauth_application.uid,

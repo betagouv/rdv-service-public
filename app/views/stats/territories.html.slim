@@ -1,9 +1,10 @@
 - content_for :title, "Statistiques par structure"
 
-= dsfr_breadcrumbs do |b|
-  = b.with_breadcrumb label: "Accueil", href: "/"
-  = b.with_breadcrumb label: "Statistiques globales", href: stats_path
-  = b.with_breadcrumb label: yield(:title)
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Accueil", href: "/"
+    = b.with_breadcrumb label: "Statistiques globales", href: stats_path
+    = b.with_breadcrumb label: yield(:title)
 
 .fr-grid-row
   .fr-col-md-8

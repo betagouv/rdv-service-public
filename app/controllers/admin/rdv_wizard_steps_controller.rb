@@ -15,6 +15,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
     authorize(@rdv_wizard.rdv, :new?, policy_class: Agent::RdvPolicy)
+
     render current_step
   end
 

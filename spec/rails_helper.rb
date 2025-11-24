@@ -60,11 +60,6 @@ RSpec.configure do |config|
     Faker::Config.random = Random.new(ENV["FAKER_SEED"].to_i)
   end
 
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  config.use_transactional_fixtures = false
-
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
@@ -86,27 +81,24 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
-
     Rack::Attack.enabled = false
 
     Faker::Config.locale = :fr
     Faker::Config.random = Random.new(config.seed)
   end
 
-  config.around do |example|
-    DatabaseCleaner.strategy = if example.metadata[:js] || ENV["HEADLESS"] == "false"
-                                 :truncation
-                               else
-                                 :transaction
-                               end
+  config.after(:suite) { Autodoc.render }
 
-    DatabaseCleaner.cleaning do
+  config.around do |example|
+    if example.metadata[:js] || ENV["HEADLESS"] == "false"
+      self.use_transactional_tests = false
+      example.run
+      ActiveRecord::Tasks::DatabaseTasks.truncate_all
+    else
+      self.use_transactional_tests = true
       example.run
     end
   end
-
-  config.after(:suite) { Autodoc.render }
 
   config.before do
     setup_sentry_test

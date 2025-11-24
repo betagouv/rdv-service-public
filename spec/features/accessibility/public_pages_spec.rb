@@ -31,7 +31,7 @@ RSpec.describe "public pages", js: true do
   end
 
   it "home page for RDV Mairie is accessible" do
-    visit "http://www.rdv-mairie-test.localhost/"
+    visit "http://www.rdv-service-public-test.localhost/"
     expect(page).to have_current_path("/")
     expect(page).to be_axe_clean
   end

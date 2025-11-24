@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     administrate: "./app/javascript/administrate",
     application: "./app/javascript/application",
+    application_test: "./app/javascript/application_test",
     application_agent: "./app/javascript/application_agent",
     lieux_map: "./app/javascript/lieux_map",
     application_agent_config: "./app/javascript/application_agent_config",

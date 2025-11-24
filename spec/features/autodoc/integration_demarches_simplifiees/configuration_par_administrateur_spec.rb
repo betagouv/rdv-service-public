@@ -8,20 +8,14 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
   end
 
   specify do
-    doc = Autodoc.start_scenario("Intégration à Démarches Simplifiées : 2) Configuration de RDV Service Public par un admin", self)
+    doc = Autodoc.start_scenario("2) Configuration de RDV Service Public par un admin", self, accessibility_checks: false, category: "4) Intégration à Démarches Simplifiées")
 
     login_as(agent, scope: :agent)
-    visit configuration_admin_organisations_url(host: "http://www.rdv-mairie-test.localhost")
+    visit configuration_admin_organisations_url(host: "http://www.rdv-service-public-test.localhost")
 
     doc.start_section("Ouverture de l'espace")
 
     Capybara.page.current_window.resize_to(1280, 600)
-
-    doc.add_screenshot(page,
-                       text: "Une première page me demande s'il existe déjà un espace dans RDV Service Public pour ma structure. Si ce n'est pas le cas, je clique sur Ouvrir un espace",
-                       wait_for: "Bienvenue")
-
-    click_on "Ouvrir un espace"
 
     fill_in("Nom de votre organisation", with: "Préfecture de Police de Paris")
 
@@ -72,7 +66,7 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
 
     doc.start_section("Personaliser les motifs de rendez-vous (facultatif)")
 
-    visit configuration_admin_organisations_url(host: "http://www.rdv-mairie-test.localhost")
+    visit configuration_admin_organisations_url(host: "http://www.rdv-service-public-test.localhost")
 
     Capybara.page.current_window.resize_to(1280, 720)
     doc.add_screenshot(page,
@@ -94,7 +88,7 @@ RSpec.describe "Configuration de RDV Service Public par un administrateur de DS"
       A partir de la page de configuration, je clique sur la tuile "Lieux".
     TEXT
 
-    visit admin_organisation_lieux_url(Organisation.last, host: "http://www.rdv-mairie-test.localhost")
+    visit admin_organisation_lieux_url(Organisation.last, host: "http://www.rdv-service-public-test.localhost")
 
     doc.add_screenshot(page,
                        text: "Je clique sur le bouton Ajouter un lieu",

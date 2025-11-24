@@ -32,6 +32,8 @@ class Territory < ApplicationRecord
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :territory_services, dependent: :destroy
   has_and_belongs_to_many :motif_categories
+  has_many :territory_tags, dependent: :destroy
+  belongs_to :operator, optional: true
 
   # Through relations
   has_many :organisations_agents, -> { distinct }, through: :organisations, source: :agents
@@ -43,6 +45,7 @@ class Territory < ApplicationRecord
   has_many :user_profiles, through: :organisations
   has_many :users, -> { distinct }, through: :user_profiles
   has_many :services, through: :territory_services
+  has_many :tags, through: :territory_tags
 
   # Validations
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
