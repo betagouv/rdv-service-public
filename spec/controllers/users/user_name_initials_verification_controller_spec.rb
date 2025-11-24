@@ -7,7 +7,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
   describe "GET #new" do
     it "asks for the last name first three letters" do
       get :new
-      expect(response.body).to match(/Entrez les 3 premières lettres de votre nom de famille/)
+      expect(response.body).to match(/3 premières lettres de votre nom/)
     end
   end
 
@@ -18,14 +18,14 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
       before { request.session[:return_to_after_verification] = redirect_path }
 
       it "sets the user as verified" do
-        post :create, params: { letter0: "D", letter1: "Y", letter2: "L" }
+        post :create, params: { letters: "DYL" }
 
         jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
         expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be(true)
       end
 
       it "redirect to the path stored in session" do
-        post :create, params: { letter0: "D", letter1: "Y", letter2: "L" }
+        post :create, params: { letters: "DYL" }
 
         expect(response).to redirect_to(redirect_path)
       end
@@ -34,7 +34,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         let!(:user) { create(:user, last_name: "Bo") }
 
         it "works" do
-          post :create, params: { letter0: "B", letter1: "O", letter2: "" }
+          post :create, params: { letters: "BO" }
 
           jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
           expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be(true)
@@ -46,7 +46,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         let!(:user) { create(:user, last_name: "De la Fontaine") }
 
         it "works" do
-          post :create, params: { letter0: "D", letter1: "E", letter2: "L" }
+          post :create, params: { letters: "DEL" }
 
           jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
           expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be(true)
@@ -58,7 +58,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         before { request.session[:return_to_after_verification] = nil }
 
         it "redirects to root_path" do
-          post :create, params: { letter0: "D", letter1: "Y", letter2: "L" }
+          post :create, params: { letters: "DYL" }
 
           expect(response).to redirect_to(root_path)
         end
@@ -78,7 +78,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
           end
 
           it "redirects to the rdv path" do
-            post :create, params: { letter0: "D", letter1: "Y", letter2: "L" }
+            post :create, params: { letters: "DYL" }
 
             expect(response).to redirect_to(users_rdv_path(rdv))
           end
@@ -88,17 +88,17 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
 
     context "when the letters don't match" do
       it "does not set the user as verified" do
-        post :create, params: { letter0: "D", letter1: "Y", letter2: "O" }
+        post :create, params: { letters: "DYO" }
 
         jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
         expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be_nil
       end
 
       it "renders new with an error message" do
-        post :create, params: { letter0: "D", letter1: "Y", letter2: "O" }
+        post :create, params: { letters: "DYO" }
 
         expect(response.body).to match(/Les 3 lettres ne correspondent pas au nom de famille./)
-        expect(response.body).to match(/Entrez les 3 premières lettres de votre nom de famille/)
+        expect(response.body).to match(/3 premières lettres de votre nom/)
       end
     end
   end
