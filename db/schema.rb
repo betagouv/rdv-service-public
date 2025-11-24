@@ -195,6 +195,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_105536) do
     t.string "action_name", null: false
     t.bigint "agent_id", null: false
     t.string "authentication_type"
+    t.integer "duration_in_ms"
   end
 
   create_table "blog_posts", force: :cascade do |t|

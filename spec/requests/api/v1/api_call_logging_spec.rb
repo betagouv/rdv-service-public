@@ -9,5 +9,10 @@ RSpec.describe "On enregistre les appels à l'api pour mieux comprendre qui s'en
       get "/api/v1/absences", headers: oauth_client_headers(oauth_token), as: :json
       expect(ApiCall.last.authentication_type).to eq "OAuth"
     end
+
+    it "records the request's duration in ms" do
+      get "/api/v1/absences", headers: oauth_client_headers(oauth_token), as: :json
+      expect(ApiCall.last.duration_in_ms).to be_within(1000).of(50)
+    end
   end
 end

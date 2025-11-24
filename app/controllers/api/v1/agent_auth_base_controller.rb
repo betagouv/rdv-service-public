@@ -4,8 +4,8 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   skip_before_action :verify_authenticity_token
   before_action :authenticate_agent
-  before_action :log_api_call_in_database
   before_action :set_paper_trail_whodunnit
+  around_action :log_api_call_in_database
 
   def pundit_user
     AgentOrganisationContext.new(current_agent, current_organisation)
@@ -124,13 +124,19 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       host: request.host,
     }
 
-    ApiCall.create!(
+    api_call = ApiCall.create!(
       raw_http: raw_http,
       controller_name: controller_name,
       action_name: action_name,
       agent_id: current_agent.id,
       authentication_type: @authentication_type
     )
+
+    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    yield
+    end_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+    api_call.update_columns(duration_in_ms: (end_time - start_time).in_milliseconds) # rubocop:disable Rails/SkipsModelValidations
   rescue StandardError => e
     Sentry.capture_exception(e, extra: {
                                raw_http: raw_http,
