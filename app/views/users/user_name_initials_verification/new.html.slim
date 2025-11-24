@@ -1,12 +1,17 @@
-- content_for :title, "Vérification"
+- content_for :title, "Authentification"
 
-.card
-  .card-header.rdv-text-align-center
-    h4 = t(".title")
-  .card-body
-    = render "form", user: current_user
-  .car-footer.rdv-text-align-center
-    p Par exemple&nbsp;:
-    p.fw-lighter.fs-6 = t(".examples.first")
-    p.fw-lighter.fs-6 = t(".examples.second")
-    p.fw-lighter.fs-6 = t(".examples.third")
+p.fr-mt-2w
+  |> Pour sécuriser l’accès à vos données, veuillez entrer les 3 premières lettres de votre
+  b> nom de famille.
+
+.fr-my-4w.rdv-three-letters-form
+   = form_for @form, url: users_user_name_initials_verification_path, builder: Dsfr::FormBuilder, as: "", display_required_tags: false do |f|
+    .fr-input-group
+      = f.dsfr_text_field :letters,
+        label: "3 premières lettres de votre nom",
+        maxlength: 3,
+        required: true,
+        autocomplete: "off"
+    = f.submit "Valider", class: "fr-btn"
+
+p Par exemple : DUP pour Sophie Dupont, DEL pour Jean De La Fontaine ou XI pour Edwige Xi
