@@ -183,7 +183,7 @@ input:placeholder-shown {
   font-size: 1.5rem;
 }
 
-.rdv-three-letters-input-group input {
+.rdv-three-letters-form input[type="text"] {
   text-transform: uppercase;
   letter-spacing: 1rem;
   font-size: 1.4rem;
@@ -191,4 +191,18 @@ input:placeholder-shown {
   height: 4rem;
   font-family: monospace;
   max-width: 8rem;
+}
+@include media-breakpoint-down(md) {
+  .rdv-three-letters-form {
+    text-align: center;
+
+    input[type="submit"] {
+      width: 100%;
+    }
+    input[type="text"] {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 }
