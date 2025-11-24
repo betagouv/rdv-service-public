@@ -23,7 +23,7 @@ make install  ## appelle bin/setup
 
 Il ne reste (si tout s’est bien passé) qu’à lancer le serveur.
 ```bash
-make run      ## appelle foreman s -f Procfile.dev
+make run      ## appelle overmind start -f Procfile.dev
 ```
 
 ## Commandes
