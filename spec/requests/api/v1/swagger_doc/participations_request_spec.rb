@@ -1,15 +1,15 @@
 require "swagger_helper"
 
-RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
+RSpec.describe "Participations authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
-  path "api/v1/participations/{id}/" do
-    patch "Mettre à jour une participation" do
+  path "api/v1/participations/{id}" do
+    patch "Mettre à jour le statut d’une participation" do
       with_authentication
 
-      tags "RDV"
+      tags "Participation"
       produces "application/json"
-      operationId "putParticipations"
+      operationId "updateParticipation"
       description "Permet de modifier une participation à un rdv. Seul le champ `status` est modifiable."
 
       parameter name: :id, in: :path, type: :string, description: "Identifiant de la participation", example: "20"
@@ -32,7 +32,7 @@ RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
         required: %w[participation]
       )
 
-      response 200, "updates participation status", document: false do
+      response 200, "updates participation status" do
         let!(:organisation) { create(:organisation) }
         let!(:service) { create(:service) }
         let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }

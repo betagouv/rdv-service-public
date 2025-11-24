@@ -578,6 +578,10 @@ RSpec.configure do |config|
             Il contient des informations sur le rendez-vous lui-même, le ou les agent·es, le ou les usager·ères, le lieu, le motif, l'organisation.",
         },
         {
+          name: "Participation",
+          description: "Désigne une participation à un rendez-vous. C’est le lien entre un·e participant·e et un RDV.",
+        },
+        {
           name: "Motif",
           description:
             "Désigne le motif d'un rendez-vous.
