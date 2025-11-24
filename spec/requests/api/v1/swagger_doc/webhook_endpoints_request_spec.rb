@@ -25,7 +25,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       let(:organisation_id) { organisation.id }
 
       response 200, "Retourne des WebhookEndpoints" do
-        let!(:webhook_endpoints) { create_list(:webhook_endpoint, 5, organisation: organisation).sort_by(&:id) }
+        let!(:webhook_endpoints) { create_list(:webhook_endpoint, 5, organisation: organisation) }
         let!(:agent) { create(:agent, role_in_territories: [organisation.territory]) }
 
         schema "$ref" => "#/components/schemas/webhook_endpoints"
@@ -34,7 +34,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
         it { expect(response).to be_paginated(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
 
-        it { expect(parsed_response_body[:webhook_endpoints]).to match(WebhookEndpointBlueprint.render_as_hash(webhook_endpoints)) }
+        it { expect(parsed_response_body[:webhook_endpoints]).to match_array(WebhookEndpointBlueprint.render_as_hash(webhook_endpoints)) }
 
         it "logs the API call" do
           expect(ApiCall.first.attributes.symbolize_keys).to include(
