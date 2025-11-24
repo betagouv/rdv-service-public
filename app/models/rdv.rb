@@ -30,6 +30,16 @@ class Rdv < ApplicationRecord
   COLLECTIVE_RDV_STATUSES = %w[unknown seen revoked].freeze
   RDV_STATUSES_TO_NOTIFY = %w[unknown excused revoked].freeze
 
+  after_save do
+    agents_rdvs.each do |agents_rdv|
+      agents_rdv.update_columns(
+        readonly_rdv_starts_at: agents_rdv.rdv.starts_at,
+        readonly_rdv_ends_at: agents_rdv.rdv.ends_at,
+        readonly_rdv_status: agents_rdv.rdv.status
+      )
+    end
+  end
+
   # Relations
   belongs_to :organisation
   belongs_to :motif

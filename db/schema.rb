@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_17_105536) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_24_134240) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -173,6 +173,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_105536) do
     t.text "outlook_id"
     t.boolean "outlook_create_in_progress", default: false, null: false
     t.string "caldav_url"
+    t.datetime "readonly_rdv_starts_at", comment: "Colonne indexée et utilisée en lecture"
+    t.datetime "readonly_rdv_ends_at", comment: "Colonne indexée et utilisée en lecture"
+    t.enum "readonly_rdv_status", comment: "Colonne indexée et utilisée en lecture", enum_type: "rdv_status"
+    t.index "agent_id, tsrange(readonly_rdv_starts_at, readonly_rdv_ends_at, '[)'::text), readonly_rdv_status", name: "calculator_index"
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["caldav_url"], name: "index_agents_rdvs_on_caldav_url", where: "(caldav_url IS NOT NULL)"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
