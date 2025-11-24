@@ -10,123 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_17_105536) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_17_105536) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
-  enable_extension "plpgsql"
   enable_extension "unaccent"
   enable_extension "uuid-ossp"
 
-  create_enum :access_level, [
-    "admin",
-    "basic",
-    "intervenant",
-  ], force: :cascade
-
-  create_enum :agents_absence_notification_level, [
-    "all",
-    "none",
-  ], force: :cascade
-
-  create_enum :agents_plage_ouverture_notification_level, [
-    "all",
-    "none",
-  ], force: :cascade
-
-  create_enum :agents_rdv_notifications_level, [
-    "all",
-    "others",
-    "soon",
-    "none",
-  ], force: :cascade
-
-  create_enum :bookable_by, [
-    "agents",
-    "agents_and_prescripteurs",
-    "everyone",
-    "agents_and_prescripteurs_and_invited_users",
-  ], force: :cascade
-
-  create_enum :creation_status, [
-    "accepted",
-    "refused",
-  ], force: :cascade
-
-  create_enum :export_type, [
-    "rdv_export",
-    "participations_export",
-  ], force: :cascade
-
-  create_enum :lieu_availability, [
-    "enabled",
-    "disabled",
-    "single_use",
-  ], force: :cascade
-
-  create_enum :location_type, [
-    "public_office",
-    "home",
-    "phone",
-    "visio",
-  ], force: :cascade
-
-  create_enum :rdv_status, [
-    "unknown",
-    "seen",
-    "excused",
-    "revoked",
-    "noshow",
-  ], force: :cascade
-
-  create_enum :receipts_channel, [
-    "sms",
-    "mail",
-    "webhook",
-  ], force: :cascade
-
-  create_enum :receipts_result, [
-    "processed",
-    "sent",
-    "delivered",
-    "failure",
-  ], force: :cascade
-
-  create_enum :role, [
-    "legacy_admin",
-    "support",
-  ], force: :cascade
-
-  create_enum :sms_provider, [
-    "netsize",
-    "send_in_blue",
-    "contact_experience",
-    "sfr_mail2sms",
-    "clever_technologies",
-    "orange_contact_everyone",
-  ], force: :cascade
-
-  create_enum :user_created_through, [
-    "unknown",
-    "agent_creation",
-    "user_sign_up",
-    "franceconnect_sign_up",
-    "user_relative_creation",
-    "agent_creation_api",
-    "prescripteur",
-  ], force: :cascade
-
-  create_enum :user_invited_through, [
-    "devise_email",
-    "external",
-  ], force: :cascade
-
-  create_enum :verticale, [
-    "rdv_insertion",
-    "rdv_solidarites",
-    "rdv_aide_numerique",
-    "rdv_mairie",
-  ], force: :cascade
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "access_level", ["admin", "basic", "intervenant"]
+  create_enum "agents_absence_notification_level", ["all", "none"]
+  create_enum "agents_plage_ouverture_notification_level", ["all", "none"]
+  create_enum "agents_rdv_notifications_level", ["all", "others", "soon", "none"]
+  create_enum "bookable_by", ["agents", "agents_and_prescripteurs", "everyone", "agents_and_prescripteurs_and_invited_users"]
+  create_enum "creation_status", ["accepted", "refused"]
+  create_enum "export_type", ["rdv_export", "participations_export"]
+  create_enum "lieu_availability", ["enabled", "disabled", "single_use"]
+  create_enum "location_type", ["public_office", "home", "phone", "visio"]
+  create_enum "rdv_status", ["unknown", "seen", "excused", "revoked", "noshow"]
+  create_enum "receipts_channel", ["sms", "mail", "webhook"]
+  create_enum "receipts_result", ["processed", "sent", "delivered", "failure"]
+  create_enum "role", ["legacy_admin", "support"]
+  create_enum "sms_provider", ["netsize", "send_in_blue", "contact_experience", "sfr_mail2sms", "clever_technologies", "orange_contact_everyone"]
+  create_enum "user_created_through", ["unknown", "agent_creation", "user_sign_up", "franceconnect_sign_up", "user_relative_creation", "agent_creation_api", "prescripteur"]
+  create_enum "user_invited_through", ["devise_email", "external"]
+  create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie"]
 
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false

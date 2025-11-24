@@ -103,9 +103,6 @@ GEM
       activemodel (= 8.0.4)
       activesupport (= 8.0.4)
       timeout (>= 0.4.0)
-    activerecord-postgres_enum (2.0.1)
-      activerecord (>= 5.2)
-      pg
     activestorage (8.0.4)
       actionpack (= 8.0.4)
       activejob (= 8.0.4)
@@ -758,7 +755,6 @@ PLATFORMS
 DEPENDENCIES
   active_link_to
   active_record_doctor
-  activerecord-postgres_enum
   administrate
   anonymizer!
   auto_strip_attributes

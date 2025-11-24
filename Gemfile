@@ -51,8 +51,6 @@ gem "kaminari"
 gem "administrate"
 # Track changes to your models.
 gem "paper_trail"
-# Integrate PostgreSQL's enum data type into ActiveRecord's schema and migrations.
-gem "activerecord-postgres_enum"
 # A Ruby client library for Redis
 gem "redis"
 # Adds a Redis::Namespace class which can be used to namespace calls to Redis.
