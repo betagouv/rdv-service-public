@@ -9,7 +9,6 @@ Turbo.session.drive = false
 
 import { PlacesInputs } from './components/places-inputs.js'
 import { Modal } from './components/modal';
-import { NameInitialsForm } from './components/name-initials-form';
 import CounterField from './components/counter-field';
 import DsfrNewPassword from "./components/dsfr-new-password";
 import DsfrAlertClose from "./components/dsfr-alert-close";
@@ -24,7 +23,6 @@ new Modal();
 
 $(document).on('turbolinks:load', function() {
   new PlacesInputs();
-  new NameInitialsForm();
   CounterField();
   DsfrNewPassword();
   DsfrAlertClose();
