@@ -136,7 +136,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     yield
     end_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-    api_call.update_columns(duration_in_ms: (end_time - start_time).in_milliseconds) # rubocop:disable Rails/SkipsModelValidations
+    api_call.update!(duration_in_ms: (end_time - start_time).in_milliseconds)
   rescue StandardError => e
     Sentry.capture_exception(e, extra: {
                                raw_http: raw_http,
