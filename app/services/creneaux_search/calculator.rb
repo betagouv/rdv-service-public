@@ -148,7 +148,7 @@ module CreneauxSearch::Calculator
       # On calcule les occurrences des absences en premier pour laisser aux rdvs le temps de finir de charger
       busy_times += busy_times_from_absences
 
-      busy_times += @rdvs_starts_and_ends_at.values.map do |rdv_starts_and_ends_at|
+      busy_times += @rdvs_starts_and_ends_at.value.map do |rdv_starts_and_ends_at|
         BusyTime.new(rdv_starts_and_ends_at.first, rdv_starts_and_ends_at.last)
       end
 
