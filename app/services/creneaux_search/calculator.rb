@@ -169,7 +169,7 @@ module CreneauxSearch::Calculator
                                    AgentsRdv
                                      .where(agent_id: plage_ouverture.agent_id, readonly_busy_in_the_future: true)
                                      .where("readonly_rdv_starts_at <= ? AND readonly_rdv_ends_at >= ?", range.end, range.begin)
-                                     .pluck(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
+                                     .async_pluck(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
                                  else
                                    plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).async_pluck(:starts_at, :ends_at)
                                  end
