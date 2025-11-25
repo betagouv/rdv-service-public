@@ -92,7 +92,7 @@ class AgendaMultiAgent {
       return allColumns.forEach(column => column.style.backgroundColor = WHITE); // Reset to white
     }
 
-    const groupingCriteria = column => this.getGroupByDate() ? column.dataset.date : column.dataset.resourceId;
+    const groupingCriteria = (column) => (this.getGroupByDate() ? column.dataset.date : column.dataset.resourceId);
     Object.values(Object.groupBy(allColumns, groupingCriteria))
       .forEach((columnGroup, i) =>
         columnGroup.forEach(column => column.style.backgroundColor = i % 2 ? WHITE : GREY)
