@@ -169,7 +169,9 @@ module CreneauxSearch::Calculator
         .where(agent_id: plage_ouverture.agent_id)
         .where(readonly_rdv_status: Rdv::NOT_CANCELLED_STATUSES)
         .where("tsrange(readonly_rdv_starts_at, readonly_rdv_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
-        .pluck(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
+        .select(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
+
+      raise "coucou"
     end
 
     def busy_times_from_absences
