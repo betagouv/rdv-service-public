@@ -68,9 +68,11 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
       motif = create(:motif, organisation: organisation, name: "Atelier collectif")
       francis = create(:user, first_name: "Francis", last_name: "Factice")
-      rdv = create(:rdv, agents: [agent], motif:, organisation:, users: [francis], starts_at:)
 
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
+
+      rdv = create(:rdv, agents: [agent], motif:, organisation:, users: [francis], starts_at:)
       expect(page).to have_selector(".fc-event", text: "14:00 - 14:45\nFrancis FACTICE")
 
       rdv.update!(starts_at: rdv.starts_at + 1.hour)
@@ -101,6 +103,8 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       login_as(agent, scope: :agent)
 
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
+
       plage = create(:plage_ouverture, organisation:, agent:, title: "Ma plage", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event.fc-bg-event", text: "Ma plage")
 
@@ -117,15 +121,16 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       login_as(agent, scope: :agent)
 
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      # TODO
-      # absence = create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
-      # expect(page).to have_selector(".fc-event", text: "Mon indispo")
-      #
-      # absence.update!(title: "Ma SUPER indispo")
-      # expect(page).to have_selector(".fc-event", text: "Ma SUPER indispo")
-      #
-      # absence.destroy!
-      # expect(page).to have_no_content(".fc-event")
+      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
+
+      absence = create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
+      expect(page).to have_selector(".fc-event", text: "Mon indispo")
+
+      absence.update!(title: "Ma SUPER indispo")
+      expect(page).to have_selector(".fc-event", text: "Ma SUPER indispo")
+
+      absence.destroy!
+      expect(page).to have_no_content(".fc-event")
     end
   end
 end
