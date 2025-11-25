@@ -35,7 +35,7 @@ class Rdv < ApplicationRecord
       agents_rdv.update_columns(
         readonly_rdv_starts_at: agents_rdv.rdv.starts_at,
         readonly_rdv_ends_at: agents_rdv.rdv.ends_at,
-        readonly_rdv_status: agents_rdv.rdv.status
+        readonly_busy_in_the_future: agents_rdv.rdv.busy_in_the_future?
       )
     end
   end

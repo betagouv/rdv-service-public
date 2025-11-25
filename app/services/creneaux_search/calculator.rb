@@ -168,9 +168,7 @@ module CreneauxSearch::Calculator
       @rdvs_starts_and_ends_at = AgentsRdv
         .where(agent_id: plage_ouverture.agent_id, readonly_busy_in_the_future: true)
         .where("tsrange(readonly_rdv_starts_at, readonly_rdv_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
-        .select(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
-
-      raise "coucou"
+        .pluck(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
     end
 
     def busy_times_from_absences
