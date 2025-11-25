@@ -31,13 +31,11 @@ class Rdv < ApplicationRecord
   RDV_STATUSES_TO_NOTIFY = %w[unknown excused revoked].freeze
 
   after_save do
-    agents_rdvs.each do |agents_rdv|
-      agents_rdv.update_columns(
-        readonly_rdv_starts_at: agents_rdv.rdv.starts_at,
-        readonly_rdv_ends_at: agents_rdv.rdv.ends_at,
-        readonly_busy_in_the_future: agents_rdv.rdv.busy_in_the_future?
-      )
-    end
+    agents_rdvs.update_all(
+      readonly_rdv_starts_at: starts_at,
+      readonly_rdv_ends_at: ends_at,
+      readonly_busy_in_the_future: busy_in_the_future?
+    )
   end
 
   # Relations
