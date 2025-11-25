@@ -380,6 +380,10 @@ class Rdv < ApplicationRecord
     "https://webconf.numerique.gouv.fr/RdvServicePublic#{uuid}".gsub(/[-_]/, "")
   end
 
+  def busy_in_the_future?
+    in_the_future? && status.in?(Rdv::NOT_CANCELLED_STATUSES)
+  end
+
   private
 
   def update_collective_rdv_status

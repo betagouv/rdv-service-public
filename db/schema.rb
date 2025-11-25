@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_24_134240) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_13_162710) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -175,8 +175,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_134240) do
     t.string "caldav_url"
     t.datetime "readonly_rdv_starts_at", comment: "Colonne indexée et utilisée en lecture"
     t.datetime "readonly_rdv_ends_at", comment: "Colonne indexée et utilisée en lecture"
-    t.enum "readonly_rdv_status", comment: "Colonne indexée et utilisée en lecture", enum_type: "rdv_status"
-    t.index "agent_id, tsrange(readonly_rdv_starts_at, readonly_rdv_ends_at, '[)'::text), readonly_rdv_status", name: "calculator_index"
+    t.boolean "readonly_busy_in_the_future", comment: "Colonne indexée et utilisée en lecture"
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["caldav_url"], name: "index_agents_rdvs_on_caldav_url", where: "(caldav_url IS NOT NULL)"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
@@ -491,8 +490,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_134240) do
     t.boolean "ants_connectable", default: false, null: false, comment: "Autorise l'organisation à être branchée sur le moteur de recherche de l'ANTS sur https://rendezvouspasseport.ants.gouv.fr/. Pour éviter de brancher n'importe qui sur ce moteur de recherche, cette option n'est pas activable par les agents.\n"
     t.boolean "online_booking_for_particuliers", default: true, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des particuliers, et donc qu'on propose le bouton FranceConnect lors de la prise de rendez-vous en ligne.\n"
     t.boolean "online_booking_for_professionnels", default: false, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des professionnels, et donc qu'on propose le bouton ProConnect lors de la prise de rendez-vous en ligne.\n"
-    t.string "time_zone", default: "Europe/Paris", null: false
     t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
+    t.string "time_zone", default: "Europe/Paris", null: false
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
@@ -686,13 +685,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_134240) do
     t.enum "role", default: "support", null: false, enum_type: "role"
   end
 
-  create_table "tags", comment: "Des tags pour catégoriser les espaces en fonctions des partenariats auxquels ils sont liés.", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_tags_on_name", unique: true
-  end
-
   create_table "teams", force: :cascade do |t|
     t.bigint "territory_id", null: false
     t.string "name", null: false
@@ -750,16 +742,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_134240) do
     t.datetime "created_at", null: false
     t.index ["service_id"], name: "index_territory_services_on_service_id"
     t.index ["territory_id", "service_id"], name: "index_territory_services_on_territory_id_and_service_id", unique: true
-  end
-
-  create_table "territory_tags", force: :cascade do |t|
-    t.bigint "territory_id"
-    t.bigint "tag_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tag_id"], name: "index_territory_tags_on_tag_id"
-    t.index ["territory_id", "tag_id"], name: "index_territory_tags_on_territory_id_and_tag_id", unique: true
-    t.index ["territory_id"], name: "index_territory_tags_on_territory_id"
   end
 
   create_table "user_profiles", force: :cascade do |t|
@@ -937,8 +919,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_134240) do
   add_foreign_key "territory_creation_requests", "agents"
   add_foreign_key "territory_services", "services"
   add_foreign_key "territory_services", "territories"
-  add_foreign_key "territory_tags", "tags"
-  add_foreign_key "territory_tags", "territories"
   add_foreign_key "user_profiles", "organisations"
   add_foreign_key "user_profiles", "users"
   add_foreign_key "users", "users", column: "responsible_id"
