@@ -54,7 +54,7 @@ class CronJob < ApplicationJob
     def perform
       AgentsRdv.where(readonly_busy_in_the_future: true)
         .where("rdvs.ends_at < ?", Time.zone.now)
-        .update_all(readonly_busy_in_the_future: false)
+        .update_all(readonly_busy_in_the_future: false) # rubocop:disable Rails/SkipsModelValidations
     end
   end
 
