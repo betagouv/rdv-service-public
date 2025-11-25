@@ -380,7 +380,7 @@ class Rdv < ApplicationRecord
   end
 
   def busy_in_the_future?
-    in_the_future? && status.in?(Rdv::NOT_CANCELLED_STATUSES)
+    ends_at > Time.zone.now && status.in?(Rdv::NOT_CANCELLED_STATUSES)
   end
 
   private
