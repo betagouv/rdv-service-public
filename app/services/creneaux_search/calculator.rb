@@ -165,10 +165,14 @@ module CreneauxSearch::Calculator
 
       @absences = plage_ouverture.agent.absences.not_expired.in_range(range)
 
-      @rdvs_starts_and_ends_at = AgentsRdv
-        .where(agent_id: plage_ouverture.agent_id, readonly_busy_in_the_future: true)
-        .where("tsrange(readonly_rdv_starts_at, readonly_rdv_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
-        .pluck(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
+      @rdvs_starts_and_ends_at = if ENV["NEW_CRENEAU_SEARCH_LOGIC"]
+                                   AgentsRdv
+                                     .where(agent_id: plage_ouverture.agent_id, readonly_busy_in_the_future: true)
+                                     .where("readonly_rdv_starts_at <= ? AND readonly_rdv_ends_at >= ?", range.end, range.begin)
+                                     .select(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
+                                 else
+                                   plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).async_pluck(:starts_at, :ends_at)
+                                 end
     end
 
     def busy_times_from_absences
