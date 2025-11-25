@@ -12,6 +12,14 @@ RSpec.describe CronJob::RefreshCachedStatsJob do
     end
   end
 
+  context "chiffres formattés avec des virgules" do
+    specify do
+      expect(MetabaseApi).to receive(:sql_query).and_return([{ "c" => "3,706,950" }])
+      described_class.new.perform(keys: ["stats.both_instances.2_years.rdvs_count"])
+      expect(Rails.cache.fetch("stats.both_instances.2_years.rdvs_count")).to eq(3_706_950)
+    end
+  end
+
   context "chiffres similaires dans le cache avant" do
     it "met à jour le cache" do
       Rails.cache.write("stats.both_instances.2_years.rdvs_count", 3_500_000)
