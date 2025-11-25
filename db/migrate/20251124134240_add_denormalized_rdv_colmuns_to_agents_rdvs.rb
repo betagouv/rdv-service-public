@@ -18,7 +18,7 @@ class AddDenormalizedRdvColmunsToAgentsRdvs < ActiveRecord::Migration[8.0]
       end
     end
 
-    add_index :agents_rdvs, "agent_id, tsrange(readonly_rdv_starts_at, readonly_rdv_ends_at, '[)'::text)", name: "calculator_index", algorithm: :concurrently,
-                                                                                                           where: "readonly_busy_in_the_future"
+    add_index :agents_rdvs, "agent_id, readonly_rdv_starts_at, readonly_rdv_ends_at", name: "calculator_index", algorithm: :concurrently,
+                                                                                      where: "readonly_busy_in_the_future"
   end
 end
