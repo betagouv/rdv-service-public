@@ -1,11 +1,11 @@
-import { createChannel } from "./cable_utils";
+import consumer from "./consumer";
 
-export const createAgendaChannel = (agent_id, callback) => {
-  createChannel({ channel: "AgendaChannel", agent_id: agent_id, },
+export const createAgendaChannel = (agentId, callback) => {
+  consumer.subscriptions.create({ channel: "AgendaChannel", agent_id: agentId, },
     {
       received(message) {
         callback.call(null, message);
-      }
+      },
     }
   );
 };
