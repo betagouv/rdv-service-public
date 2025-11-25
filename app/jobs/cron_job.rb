@@ -50,6 +50,14 @@ class CronJob < ApplicationJob
     end
   end
 
+  class UpdateRdvCalculatorIndex < CronJob
+    def perform
+      AgentsRdv.where(readonly_busy_in_the_future: true)
+        .where("rdvs.ends_at < ?", Time.zone.now)
+        .update_all(readonly_busy_in_the_future: false)
+    end
+  end
+
   class DestroyOldRdvsAndInactiveAccountsJob < CronJob
     def perform
       two_years_ago = 2.years.ago
