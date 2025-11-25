@@ -21,6 +21,9 @@ module Lapin
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.2
 
+    # À supprimer quand on passera à load_defaults 8.0
+    config.active_support.to_time_preserves_timezone = :zone
+
     # À partir de Rails 7.2, YJIT est activé par défaut avec Ruby 3.3
     # Compte tenu de notre environnement mémoire contraint sur Scalingo, on le désactive pour l'instant.
     # Au besoin, nous pourrons le réactiver plus tard si nous avons + de mémoire ou en modifiant la mémoire allouée à YJIT.
