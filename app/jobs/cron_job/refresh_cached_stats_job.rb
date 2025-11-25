@@ -1,14 +1,31 @@
 class CronJob::RefreshCachedStatsJob < CronJob
-  def perform
+  class SuspiciousFigureError < StandardError; end
+
+  def perform(force: false)
     return unless MetabaseApi.authentication_present?
 
     queries_by_key.each do |key, query|
+      previous_value = Rails.cache.fetch(key)
+
       Rails.logger.debug { "querying Metabase for #{key}…" }
-      count = MetabaseApi.sql_query(query)[0]["c"].gsub(",", "").to_i
-      Rails.logger.info "got #{key} = #{count}. writing to cache…"
-      Rails.cache.write(key, count, expires_at: 30.days.from_now)
-      Rails.logger.debug "✅ wrote to cache"
+      new_value = MetabaseApi.sql_query(query)[0]["c"]
+        .gsub(/[, ]/, "") # Metabase sometimes splits thousands with spaces or commas 🤷
+        .to_i
+      Rails.logger.info "got #{key} = #{new_value}"
+
+      if previous_value.nil? ||
+         force ||
+         (new_value.to_f / previous_value).between?(0.1, 10) # des valeurs 10x plus hautes ou plus petites sont suspectes
+        Rails.cache.write(key, new_value, expires_at: 30.days.from_now)
+        Rails.logger.debug "✅ wrote to cache"
+      else
+        @suspicious_value = { key:, new_value:, previous_value: }
+      end
     end
+
+    # on lève l’exception hors de la boucle pour permettre de remplir les autres valeurs
+    raise SuspiciousFigureError, @suspicious_value.to_s if @suspicious_value
+
     Rails.logger.debug "🏁 done"
   end
 
