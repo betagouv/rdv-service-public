@@ -25,7 +25,8 @@ const initMap = (mapElt, lieux) => {
           "properties": lieu,
           "geometry": {
             "type": "Point",
-            "coordinates": [lieu.longitude, lieu.latitude]
+            "coordinates": [lieu.longitude.replace(",", "."), lieu.latitude.replace(",", ".")]
+            // selon la config de Metabase, les latitudes longitudes peuvent arriver avec des virgules
           }
         }))
       }
