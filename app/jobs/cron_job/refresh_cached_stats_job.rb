@@ -6,7 +6,7 @@ class CronJob::RefreshCachedStatsJob < CronJob
 
     return unless MetabaseApi.authentication_present?
 
-    (keys || queries_by_key.keys).each { refresh_stats_key(_1) }
+    (keys || all_keys).each { refresh_stats_key(_1) }
 
     # on lève l’exception hors de la boucle pour permettre de remplir les autres valeurs
     raise SuspiciousFigureError, @suspicious_value.to_s if @suspicious_value
@@ -17,7 +17,7 @@ class CronJob::RefreshCachedStatsJob < CronJob
   private
 
   def refresh_stats_key(key)
-    query = queries_by_key[key]
+    query = File.read(File.join(queries_dir_path, "#{key}.sql"))
     previous_value = Rails.cache.fetch(key)
 
     Rails.logger.debug { "querying Metabase for #{key}…" }
@@ -36,66 +36,13 @@ class CronJob::RefreshCachedStatsJob < CronJob
     end
   end
 
-  def queries_by_key
-    {
-      "stats.both_instances.2_years.rdvs_count" => <<~SQL.squish,
-        SELECT
-          SUM(c) AS c
-        FROM
-          (
-            (
-              SELECT
-                COUNT("rdvsp".rdvs."id") AS c
-              FROM
-                "rdvsp"."rdvs"
-              WHERE
-                (
-                  "rdvsp"."rdvs"."starts_at" >= CAST((NOW() + INTERVAL '-730 day') AS date)
-                )
-            )
-            UNION ALL
-            (
-              SELECT
-                COUNT("rdvs"."rdvs"."id") AS c
-              FROM
-                "rdvs"."rdvs"
-              WHERE
-                (
-                  "rdvs"."rdvs"."starts_at" >= CAST((NOW() + INTERVAL '-730 day') AS date)
-                )
-            )
-          );
-      SQL
-      "stats.both_instances.2_years.active_organisations_count" => <<~SQL.squish,
-        SELECT
-          SUM(c) AS c
-        FROM
-          (
-            (
-              SELECT
-                COUNT(DISTINCT "rdvsp"."organisations"."id") AS c
-              FROM
-                "rdvsp"."organisations"
-                INNER JOIN "rdvsp"."rdvs" ON "rdvsp"."rdvs"."organisation_id" = "rdvsp"."organisations"."id"
-              WHERE
-                (
-                  "rdvsp"."rdvs"."starts_at" >= CAST((NOW() + INTERVAL '-730 day') AS date)
-                )
-            )
-            UNION ALL
-            (
-              SELECT
-                COUNT(DISTINCT "rdvs"."organisations"."id") AS c
-              FROM
-                "rdvs"."organisations"
-                INNER JOIN "rdvs"."rdvs" ON "rdvs"."rdvs"."organisation_id" = "rdvs"."organisations"."id"
-              WHERE
-                (
-                  "rdvs"."rdvs"."starts_at" >= CAST((NOW() + INTERVAL '-730 day') AS date)
-                )
-            )
-          );
-      SQL
-    }
+  def all_keys
+    Dir.entries(queries_dir_path)
+      .select { _1.end_with?(".sql") }
+      .map { _1.gsub(/\.sql$/, "") }
+  end
+
+  def queries_dir_path
+    @queries_dir_path ||= File.expand_path("refresh_cached_stats_queries", __dir__)
   end
 end
