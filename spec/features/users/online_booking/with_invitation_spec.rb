@@ -88,15 +88,13 @@ RSpec.describe "User can be invited" do
       current_email.click_link("Annuler ou modifier le rendez-vous")
 
       # Identity verification
-      expect(page).to have_content("Entrez les 3 premières lettres de votre nom de famille")
-      fill_in(:letter0, with: "A")
-      fill_in(:letter1, with: "B")
-      fill_in(:letter2, with: "C")
+      expect(page).to have_content("3 premières lettres de votre nom")
+      fill_in(:letters, with: "ABC")
+      click_on "Valider"
 
       expect(page).to have_content("Les 3 lettres ne correspondent pas au nom de famille.")
-      fill_in(:letter0, with: "D")
-      fill_in(:letter1, with: "O")
-      fill_in(:letter2, with: "E")
+      fill_in(:letters, with: "DOE")
+      click_on "Valider"
 
       # RDV page
       expect(page).to have_content("Votre RDV")

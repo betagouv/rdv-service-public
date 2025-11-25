@@ -5,10 +5,13 @@ class Users::UserNameInitialsVerificationController < UserAuthController
 
   include TokenInvitable
 
-  def new; end
+  def new
+    @form = Form.new
+  end
 
   def create
-    if first_three_letters_matching?
+    @form = Form.new(letters: params[:letters]&.strip&.upcase, current_user:)
+    if @form.valid?
       set_user_name_initials_verified
       redirect_to after_success_redirect_path
     else
@@ -19,26 +22,36 @@ class Users::UserNameInitialsVerificationController < UserAuthController
 
   private
 
-  def letter_params
-    params.permit(:letter0, :letter1, :letter2)
-  end
-
   def after_success_redirect_path
-    return session.delete(:return_to_after_verification) if session[:return_to_after_verification]
-    return users_rdv_path(invitation.rdv) if invitation&.rdv
-
-    root_path
+    if session[:return_to_after_verification]
+      session.delete(:return_to_after_verification)
+    elsif invitation&.rdv
+      users_rdv_path(invitation.rdv)
+    else
+      root_path
+    end
   end
 
-  def first_three_letters
-    letter_params.to_h.values.join.strip
-  end
+  class Form
+    include ActiveModel::Model
+    include ActiveModel::Attributes
+    attribute :letters, :string
+    attribute :current_user
 
-  def first_three_letters_matching?
-    user_name_initials.upcase == first_three_letters.upcase
-  end
+    validate :letters_match_last_name
 
-  def user_name_initials
-    current_user.last_name.gsub(/\s+/, "").first(3)
+    def letters_match_last_name
+      return if letters == current_user.last_name.gsub(/\s+/, "").first(3).upcase
+
+      errors.add(:letters, "ne correspondent pas")
+    end
+
+    def self.human_attribute_name(attr, _options = {})
+      if attr.to_sym == :letters
+        "3 premières lettres"
+      else
+        attr
+      end
+    end
   end
 end
