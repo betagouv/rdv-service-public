@@ -1,10 +1,7 @@
 - content_for(:title) { "Nouveau RDV collectif" }
 
 - content_for :fil_ariane do
-  = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
-    = b.with_breadcrumb label: "Accueil", href: root_path
-    = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)
-    = b.with_breadcrumb label: "Choisir un motif"
+  = render "common/fil_ariane", titles_and_paths: [["RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation)]], current_page_title: "Choisir un motif"
 
 .row.justify-content-md-center
   .col-md-12.col-lg-8

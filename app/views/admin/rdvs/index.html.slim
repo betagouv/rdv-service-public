@@ -6,11 +6,11 @@
 
   - content_for :fil_ariane do
     - if @breadcrumb_page == "agenda" && @form.agent.present?
-      = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Agenda de #{@form.agent.full_name}", admin_organisation_planning_agenda_path(current_organisation, agent_id: @form.agent.id, date: @form.start)]], current_page_title: "Liste des RDV"
+      = render "common/fil_ariane", titles_and_paths: [["Agenda de #{@form.agent.full_name}", admin_organisation_planning_agenda_path(current_organisation, agent_id: @form.agent.id, date: @form.start)]], current_page_title: "Liste des RDV"
     - if @breadcrumb_page == "user" && @form.user.present?
-      = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Usagers", admin_organisation_users_path(current_organisation)], [@form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)]], current_page_title: "RDVs #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
+      = render "common/fil_ariane", titles_and_paths: [["Usagers", admin_organisation_users_path(current_organisation)], [@form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)]], current_page_title: "RDVs #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
     - if @breadcrumb_page == "organisation_stats"
-      = render "common/fil_ariane", titles_and_paths: [["Accueil", root_path], ["Statistiques de l'organisation", admin_organisation_stats_path(current_organisation)]], current_page_title: "RDVs #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
+      = render "common/fil_ariane", titles_and_paths: [["Statistiques de l'organisation", admin_organisation_stats_path(current_organisation)]], current_page_title: "RDVs #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
 
   .card
     .card-body

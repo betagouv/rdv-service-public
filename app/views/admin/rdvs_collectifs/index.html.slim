@@ -3,11 +3,6 @@
 
 - content_for(:menu_item) { "menu-rdvs-collectifs-list" }
 
-- content_for :fil_ariane do
-  = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
-    = b.with_breadcrumb label: "Accueil", href: root_path
-    = b.with_breadcrumb label: "RDV collectifs"
-
 - needs_collectif_motif = current_organisation.motifs.collectif.active.none?
 - content_for :right_of_page_title do
   - unless needs_collectif_motif

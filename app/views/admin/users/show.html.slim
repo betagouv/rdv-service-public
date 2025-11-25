@@ -4,7 +4,7 @@
   | #{@user.full_name}
 
 ruby:
-  titles_and_paths = [["Accueil", root_path], ["Usagers", admin_organisation_users_path(current_organisation)]]
+  titles_and_paths = [["Usagers", admin_organisation_users_path(current_organisation)]]
   if @user.relative?
     titles_and_paths << [@user.responsible.full_name, admin_organisation_user_path(current_organisation, @user.responsible)]
   end

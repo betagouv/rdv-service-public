@@ -1,6 +1,6 @@
 - content_for(:menu_item) { "menu-users" }
 
-- titles_and_paths = [["Accueil", root_path], ["Usagers", admin_organisation_users_path(current_organisation)]]
+- titles_and_paths = [["Usagers", admin_organisation_users_path(current_organisation)]]
 
 - if @user.relative?
   - content_for :title do
