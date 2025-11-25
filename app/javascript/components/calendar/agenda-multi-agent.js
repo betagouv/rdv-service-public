@@ -29,7 +29,7 @@ class AgendaMultiAgent {
       resources: JSON.parse(this.data.resourcesJson),
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
-      initialView: localStorage.getItem("chosenCalendarView") || "resourceTimeGridWeek",
+      initialView: this.getInitialView(),
       initialDate: localStorage.getItem("chosenCalendarDay"),
       headerToolbar: {
         center: "resourceTimeGridDay,resourceTimeGridWeek"
@@ -43,23 +43,33 @@ class AgendaMultiAgent {
       hiddenDays: hiddenDays,
       select: this.selectEvent,
       eventDidMount: eventRenderer(),
-      views: {
-
-        resourceTimeGridDay: {
-          buttonText: "Journée",
-          titleFormat: { weekday: "long", day: "numeric", month: "long", year: "numeric" }
-        },
-
-        resourceTimeGridWeek: {
-          type: "resourceTimeGrid",
-          duration: { week: 1 },
-          buttonText: "Semaine",
-          titleFormat: { weekday: "long", day: "numeric", month: "short", year: "numeric" }
-        },
-
-      },
+      views: this.views(),
     };
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
+  }
+
+  getInitialView = () => {
+    const storedValue = localStorage.getItem("chosenCalendarView");
+    if (Object.keys(this.views()).includes(storedValue)) {
+      return storedValue;
+    } else {
+      return "resourceTimeGridWeek"
+    }
+  }
+
+  views = () => {
+    return {
+      resourceTimeGridDay: {
+        buttonText: "Journée",
+        titleFormat: {weekday: "long", day: "numeric", month: "long", year: "numeric"}
+      },
+      resourceTimeGridWeek: {
+        type: "resourceTimeGrid",
+        duration: {week: 1},
+        buttonText: "Semaine",
+        titleFormat: {weekday: "long", day: "numeric", month: "short", year: "numeric"}
+      },
+    }
   }
 
   selectEvent = (info) => {
