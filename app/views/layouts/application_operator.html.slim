@@ -1,0 +1,17 @@
+doctype html
+html lang="fr"
+  head
+    = stylesheet_link_tag "#{dsfr_path}/dsfr.min.css", "data-turbo-track": "reload"
+    = stylesheet_link_tag "#{dsfr_path}/utility/icons/icons.min.css", "data-turbo-track": "reload"
+    = javascript_include_tag "#{dsfr_path}/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
+    = javascript_include_tag "#{dsfr_path}/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
+    = javascript_include_tag "application_operator"
+  body
+    = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: { id: "header" } do |header|
+      ruby:
+        header.with_operator_image title: "", src: asset_path(current_domain.dark_logo_path), alt: "Accueil - #{current_domain.name}"
+        if operator_manager_signed_in?
+          header.with_tool_link title: "Contacter RDV Service Public", path: new_aide_demande_support_path(role: "agent"), html_attributes: { class: "fr-icon-question-line" }
+          header.with_tool_link title: "Déconnexion", path: operators_sign_out_path, html_attributes: { method: "delete", class: "fr-icon-lock-fill" }
+        end
+    = yield
