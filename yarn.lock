@@ -102,9 +102,9 @@
     tslib "^2.1.0"
 
 "@gouvfr/dsfr@^1.13.0":
-  version "1.13.2"
-  resolved "https://registry.yarnpkg.com/@gouvfr/dsfr/-/dsfr-1.13.2.tgz#ef789c35dd73cc5e406253f31bf4892892c2c285"
-  integrity sha512-4Q9ggFFzwD/KFr37sJO1hFH9PcqlZ7F3jMiFJXnBLJfkH1+s28vnQp/oXoY8TosWsLMSjdhNCrxvrUdm5XzBlg==
+  version "1.14.2"
+  resolved "https://registry.yarnpkg.com/@gouvfr/dsfr/-/dsfr-1.14.2.tgz#cbd893eba6bb2151234ae484ac426f3c5ff16b19"
+  integrity sha512-EJ/ZZMLmSN4KISuuXp0X0lGf+gKVqYATyqgcM5IPhMQAkJ8s5pjzvthjv+Hu6zYk4jwf2NRVt+jQz7JRpw1yiA==
 
 "@hotwired/stimulus@^3.2.2":
   version "3.2.2"
