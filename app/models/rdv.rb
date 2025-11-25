@@ -30,14 +30,6 @@ class Rdv < ApplicationRecord
   COLLECTIVE_RDV_STATUSES = %w[unknown seen revoked].freeze
   RDV_STATUSES_TO_NOTIFY = %w[unknown excused revoked].freeze
 
-  after_save do
-    agents_rdvs.update_all(
-      readonly_rdv_starts_at: starts_at,
-      readonly_rdv_ends_at: ends_at,
-      readonly_busy_in_the_future: busy_in_the_future?
-    )
-  end
-
   # Relations
   belongs_to :organisation
   belongs_to :motif
@@ -88,6 +80,15 @@ class Rdv < ApplicationRecord
   before_create :set_created_by_for_participations
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
+
+  after_save do
+    # On fait un where plutôt que d'utiliser directement l'association pour éviter des effets de bords sur les objets AR.
+    AgentsRdv.where(rdv_id: id).update_all(
+      readonly_rdv_starts_at: starts_at,
+      readonly_rdv_ends_at: ends_at,
+      readonly_busy_in_the_future: busy_in_the_future?
+    )
+  end
 
   # Scopes
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
