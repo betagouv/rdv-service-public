@@ -1,5 +1,3 @@
-- content_for :title, "Statistiques"
-
 - content_for :additional_stylesheets do
   link href="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css" rel="stylesheet"
 
@@ -7,6 +5,25 @@
   script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js" crossorigin='anonymous' integrity="sha384-bLkmUMwRt9nFp2+XvlPOzIkNUx/mnjvxxE7kI6bJWKMz/sfwiK5nra6w+60B9zyF"
 
   = javascript_include_tag "lieux_map"
+
+.fr-grid-row.fr-grid-row--gutters.fr-mb-4w.rdv-align-items-center
+  .fr-col-12.fr-col-md-7
+    h1
+      | Rapprocher le service public des citoyens, rendez-vous après rendez-vous.
+    p
+      | Voici comment RDV Service Public facilite l’accès au service public et optimise le temps des agents partout en France.
+  .fr-col-12.fr-col-md-5
+    = dsfr_svg "artwork/pictograms/environment/human-cooperation", class: "fr-responsive-img"
+
+- if ENV["CACHE_STORE_UNAVAILABLE"].blank?
+  - stats_cached_rdvs_count = Rails.cache.fetch("stats.both_instances.1_year.rdvs_count")
+  - if stats_cached_rdvs_count.present?
+    .fr-grid-row.fr-grid-row--gutters.fr-mb-8w.fr-grid-row--center
+      .fr-col-12.fr-col-md-6.rdv-stats-hero-figure
+        p.fr-mb-2w
+          = number_with_delimiter(stats_cached_rdvs_count, delimiter: " ")
+        p
+          | C’est le nombre de rendez-vous planifiés ces 12 derniers mois
 
 .fr-grid-row.fr-grid-row--gutters.rdv-flex-wrap-wrap-reverse.fr-mb-8w
   .fr-col-12.fr-col-md-4

@@ -38,3 +38,17 @@ ul.rdv-stats-legend {
   justify-content: center;
   align-items: center;
 }
+
+.rdv-stats-hero-figure {
+  text-align: center;
+  font-weight: bold;
+  color: var(--text-action-high-blue-france);
+
+  p:first-child {
+    font-size: 6rem;
+    line-height: 6rem;
+  }
+  p:nth-child(2) {
+    font-size: 1.7rem;
+  }
+}
