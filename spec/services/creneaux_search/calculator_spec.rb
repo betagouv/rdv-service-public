@@ -7,6 +7,8 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     travel_to(friday)
   end
 
+  stub_env_with(NEW_CRENEAU_SEARCH_LOGIC: "true")
+
   describe "#available_slots" do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
     let(:first_day) { Date.new(2021, 5, 3) }
