@@ -6,7 +6,7 @@
   - if selected_users
     - selected_users_already_participating = selected_users.to_set.intersection(rdv.users)
     - if selected_users_already_participating.count > 0
-    =< "dont #{selected_users_already_participating.to_a.to_sentence}"
+      =< "dont #{selected_users_already_participating.to_a.to_sentence}"
 
 .d-flex.card-text.mb-3
   - if rdv.remaining_seats? && rdv.not_cancelled?
