@@ -166,8 +166,7 @@ module CreneauxSearch::Calculator
       @absences = plage_ouverture.agent.absences.not_expired.in_range(range)
 
       @rdvs_starts_and_ends_at = AgentsRdv
-        .where(agent_id: plage_ouverture.agent_id)
-        .where(readonly_rdv_status: Rdv::NOT_CANCELLED_STATUSES)
+        .where(agent_id: plage_ouverture.agent_id, readonly_busy_in_the_future: true)
         .where("tsrange(readonly_rdv_starts_at, readonly_rdv_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
         .select(:readonly_rdv_starts_at, :readonly_rdv_ends_at)
 
