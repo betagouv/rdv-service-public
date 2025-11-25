@@ -148,7 +148,7 @@ module CreneauxSearch::Calculator
       # On calcule les occurrences des absences en premier pour laisser aux rdvs le temps de finir de charger
       busy_times += busy_times_from_absences
 
-      busy_times += @rdvs_starts_and_ends_at.map do |rdv_starts_and_ends_at|
+      busy_times += @rdvs_starts_and_ends_at.values.map do |rdv_starts_and_ends_at|
         BusyTime.new(rdv_starts_and_ends_at.first, rdv_starts_and_ends_at.last)
       end
 
@@ -163,7 +163,7 @@ module CreneauxSearch::Calculator
       # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
       #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
 
-      @absences = plage_ouverture.agent.absences.not_expired.in_range(range)
+      @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
 
       @rdvs_starts_and_ends_at = if ENV["NEW_CRENEAU_SEARCH_LOGIC"]
                                    AgentsRdv
