@@ -3,7 +3,14 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError } from  './calendar/utils'
+import {
+  defaultFullCalendarConfig,
+  eventRenderer,
+  setupRefresh,
+  handleAjaxError,
+  classicHeaderToolbarLayout,
+  betaHeaderToolbarLayout,
+} from  './calendar/utils'
 
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
@@ -46,9 +53,7 @@ export class AgendaMonoAgent {
       initialView: this.getDefaultView(),
       hiddenDays: hiddenDays,
       select: this.selectEvent,
-      headerToolbar: {
-        center: 'dayGridMonth,timeGridWeek,timeGridOneDay,listWeek'
-      },
+      headerToolbar: this.data.betaPlanningLayout === "true" ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
       views: {
         timeGridOneDay: {
           type: 'timeGrid',

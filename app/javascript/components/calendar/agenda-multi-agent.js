@@ -32,7 +32,9 @@ class AgendaMultiAgent {
       initialView: this.getInitialView(),
       initialDate: localStorage.getItem("chosenCalendarDay"),
       headerToolbar: {
-        center: "resourceTimeGridDay,resourceTimeGridWeek"
+        left: "title,prev,next,today",
+        center: "resourceTimeGridDay,resourceTimeGridWeek",
+        right: "today",
       },
       customButtons: this.customButtons(),
       footerToolbar: {

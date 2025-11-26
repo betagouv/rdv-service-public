@@ -37,8 +37,17 @@ const defaultFullCalendarConfig = () => ({
   // There is one case for which this fix would fail: if the local time of the user and the agent is not the same (for example the agent is
   // in the métropole and the user is at la réunion), they will not see the same time
   // for the rdv. This seems unlikely for now.
-  timeZone: "Europe/Paris"
-})
+  timeZone: "Europe/Paris",
+});
+
+export const betaHeaderToolbarLayout = {
+  left: "title,prev,next,today",
+  center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek",
+  right: "",
+};
+export const classicHeaderToolbarLayout = {
+  center: 'dayGridMonth,timeGridWeek,timeGridOneDay,listWeek'
+};
 
 function eventClassNames(info) {
   let extendedProps = info.event.extendedProps;
