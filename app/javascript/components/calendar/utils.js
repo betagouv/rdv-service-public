@@ -143,19 +143,15 @@ const setupRefresh = (fullCalendarInstance, agentIds) => {
   agentIds.forEach(agentId => {
     createAgendaChannel(agentId, (message) => {
 
-      // Pour les RDV, on ne re-fetch que si le RDV apparaît dans la view.
-      if (message.model === "Rdv") {
+      if (Array.isArray(message.refresh_periods) && message.refresh_periods.length > 0) {
         const beginningOfView = fullCalendarInstance.view.activeStart.toISOString();
         const endOfView = fullCalendarInstance.view.activeEnd.toISOString();
-
-        const rdvWithinView = message.ends_at > beginningOfView && message.starts_at < endOfView;
-        if (rdvWithinView) {
+        const intersectsFunction = ([periodStart, periodEnd]) => (periodEnd > beginningOfView && periodStart < endOfView);
+        if (message.refresh_periods.some(intersectsFunction)) {
           fullCalendarInstance.refetchEvents();
         }
       }
 
-      // Pour les plages et les indispos, pour l'instant on
-      // refetch tout pour ne pas avoir à gérer la récurrence
       else {
         fullCalendarInstance.refetchEvents();
       }
