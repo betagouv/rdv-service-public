@@ -69,7 +69,7 @@ class AgendaMultiAgent {
         type: "resourceTimeGrid",
         duration: {week: 1},
         buttonText: "Semaine",
-        titleFormat: {weekday: "long", day: "numeric", month: "short", year: "numeric"}
+        titleFormat: {day: "numeric", month: "short", year: "numeric"}
       },
     }
   }
