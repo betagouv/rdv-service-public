@@ -17,12 +17,6 @@ $rdvs-fc-header-bg-color: $gray-200;
 }
 
 .fc {
-  // réduit la taille de la date
-  .fc-toolbar-title {
-    font-size: 1.25rem;
-    line-height: 1.875rem;
-  }
-
   // change l'apparence de l'en-tête du calendrier
   .fc-col-header-cell {
     background: $rdvs-fc-header-bg-color;
@@ -47,38 +41,78 @@ $rdvs-fc-header-bg-color: $gray-200;
   }
 }
 
-.fc {
-  .fc-button {
-    //border-radius: 0;
-    background-color: white;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--blue-france-sun-113-625);
+main[data-beta-planning-layout="true"] {
+  .fc {
+    .fc-button {
+      //border-radius: 0;
+      background-color: white;
+      font-size: 16px;
+      font-weight: 500;
+      color: #161616;
 
-    padding: 8px 16px;
+      padding: 8px 16px;
 
-    border: none;
-    box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
+      border: none;
+      box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
 
-    &:hover {
-      color: var(--blue-france-sun-113-625);
-      background-color: var(--grey-950-125);
+      &:hover {
+        color: #161616;
+        background-color: rgb(246, 246, 246);
+      }
+
+      // prend le dessus sur une règle très spécifique dans FullCalendar
+      // .fc .fc-button-primary:not(:disabled).fc-button-active
+      &.fc-button-active.fc-button-primary:not(:disabled), &.fc-button:active {
+        color: var(--blue-france-sun-113-625);
+        background-color: white;
+        border: 1px solid #000091;
+        border-radius: 4px;
+      }
     }
 
-    // prend le dessus sur une règle très spécifique dans FullCalendar
-    // .fc .fc-button-primary:not(:disabled).fc-button-active
-    &.fc-button-active.fc-button-primary:not(:disabled) {
-      color: var(--blue-france-sun-113-625);
-      background-color: var(--blue-france-925-125-active);
+    .fc-toolbar-chunk:first-of-type > div {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+
+      .fc-toolbar-title {
+        font-size: 16px;
+      }
+    }
+
+    // On fait en sorte que les boutons du footer ressemble précisément
+    // aux boutons DSFR (options de weekends, etc) situés juste en dessous.
+    .fc-footer-toolbar {
+      .fc-button {
+        border-radius: 0;
+        background-color: transparent;
+      }
     }
   }
+}
 
-  // On fait en sorte que les boutons du footer ressemble précisément
-  // aux boutons DSFR (options de weekends, etc) situés juste en dessous.
-  .fc-footer-toolbar {
+main[data-beta-planning-layout="false"] {
+  .fc {
     .fc-button {
-      border-radius: 0;
-      background-color: transparent;
+      border: none;
+      text-transform: capitalize;
+      box-shadow: none;
+      border-radius: 0px;
+      margin: 0 3px;
+      padding: 6px 12px;
+      height: auto;
+
+      // prend le dessus sur une règle très spécifique dans FullCalendar
+      // .fc .fc-button-primary:not(:disabled).fc-button-active
+      &.fc-button-active.fc-button-primary:not(:disabled) {
+        color: var(--fc-button-active-color);
+      }
+    }
+
+    // réduit la taille de la date
+    .fc-toolbar-title {
+      font-size: 1.25rem;
+      line-height: 1.875rem;
     }
   }
 }

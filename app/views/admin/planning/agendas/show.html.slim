@@ -32,6 +32,7 @@ ruby:
   data-display-sundays="#{current_territory.work_on_sunday? && current_agent.display_saturdays}"
   data-event-sources-json="#{event_sources.to_json}"
   data-sign-in-path="#{new_agent_session_path}"
+  data-beta-planning-layout=@beta_planning_layout.to_s
 ]
 
 .my-3
