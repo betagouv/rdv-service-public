@@ -55,7 +55,7 @@ class InstanceExport < ApplicationRecord
           CopyLieuJob.perform_later(id, lieu_id)
         end
 
-        source_organisation.motifs.active.pluck(:id).each do |motif_id|
+        source_organisation.motifs.pluck(:id).each do |motif_id|
           CopyMotifJob.perform_later(id, motif_id)
         end
       end
@@ -81,6 +81,7 @@ class InstanceExport < ApplicationRecord
     rdvs_editable_by_user
     rdvs_cancellable_by_user
     bookable_by
+    deleted_at
   ].freeze
 
   class CopyMotifJob < ApplicationJob
