@@ -50,7 +50,7 @@ class CronJob < ApplicationJob
     end
   end
 
-  class UpdateRdvCalculatorIndex < CronJob
+  class UpdateRdvCalculatorIndexJob < CronJob
     def perform
       AgentsRdv.where(readonly_busy_in_the_future: true)
         .where("readonly_rdv_ends_at < ?", Time.zone.now)

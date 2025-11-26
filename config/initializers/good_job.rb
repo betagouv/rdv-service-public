@@ -40,7 +40,7 @@ Rails.application.configure do
 
     update_rdv_calculator_index: {
       cron: "every day at 03:40 Europe/Paris",
-      class: "CronJob::UpdateRdvCalculatorIndex",
+      class: "CronJob::UpdateRdvCalculatorIndexJob",
     },
 
     # Reset de la liste d'usagers en salle d'attente, à vider chaque soir
