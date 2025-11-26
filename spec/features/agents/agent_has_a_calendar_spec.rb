@@ -132,5 +132,25 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       absence.destroy!
       expect(page).to have_no_content(".fc-event")
     end
+
+    it "fonctionne quand on change de page et qu'on revient", js: true do
+      organisation = create(:organisation)
+      agent = create(:agent, admin_role_in_organisations: [organisation])
+      agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
+      login_as(agent, scope: :agent)
+
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      expect(page).to have_content("Planning de")
+
+      click_on "Statistiques"
+      expect(page).to have_content("Statistiques de") # on vérifie que Turbolinks nous a bien changé la page
+
+      click_on "Planning"
+      expect(page).to have_content("Planning de") # on vérifie que Turbolinks nous a bien changé la page
+      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
+
+      create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
+      expect(page).to have_selector(".fc-event", text: "Mon indispo")
+    end
   end
 end
