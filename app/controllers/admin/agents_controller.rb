@@ -4,12 +4,6 @@ class Admin::AgentsController < AgentAuthController
   before_action :ensure_agent_is_admin, except: :index
 
   def index
-    # TODO: Supprimer ce redirect une semaine après la mise en prod
-    if request.format.json?
-      skip_policy_scope
-      redirect_to search_agents_agents_path(organisation_id: current_organisation, term: params[:term]) and return
-    end
-
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).active
 
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id })
