@@ -52,3 +52,19 @@ ul.rdv-stats-legend {
     font-size: 1.7rem;
   }
 }
+.rdv-stats-hero-card {
+  border-radius: 10px;
+  box-shadow: 6px 6px 15px 11px rgba(28, 42, 128, 0.11);
+  padding: 2.5rem;
+
+  & > p:first-child {
+    font-weight: bold;
+    font-size: 3rem;
+  }
+
+  .fr-btn--tooltip {
+    &:hover {
+      color: inherit;
+    }
+  }
+}
