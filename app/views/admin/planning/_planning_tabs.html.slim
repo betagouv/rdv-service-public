@@ -1,11 +1,11 @@
 nav#planning_tabs.fr-nav[role="navigation" aria-label="Menu du planning"]
   ul.fr-nav__list
     li.fr-nav__item
-      = active_link_to(admin_organisation_planning_agenda_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link") do
+      = active_link_to(admin_organisation_planning_agenda_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link", style: "font-size: 16px") do
         | Agenda
     li.fr-nav__item
-      = active_link_to(admin_organisation_planning_plage_ouvertures_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link") do
+      = active_link_to(admin_organisation_planning_plage_ouvertures_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link", style: "font-size: 16px") do
         | Plages d'ouverture
     li.fr-nav__item
-      = active_link_to(admin_organisation_planning_absences_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link") do
+      = active_link_to(admin_organisation_planning_absences_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link", style: "font-size: 16px") do
         | Indisponibilités
