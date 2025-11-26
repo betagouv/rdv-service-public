@@ -9,13 +9,12 @@ class AddDenormalizedRdvColmunsToAgentsRdvs < ActiveRecord::Migration[8.0]
     reversible do |direction|
       unless Rails.env.production? # En production la migration prend trop longtemps, donc on fera tourner manuellement scripts/initialize_calculator_index_values.rb
         direction.up do
-          AgentsRdv.update_all(<<~SQL.squish
+          AgentsRdv.update_all <<~SQL.squish
             readonly_rdv_starts_at = rdvs.starts_at,
             readonly_rdv_ends_at = rdvs.ends_at,
             readonly_busy_in_the_future = (rdvs.starts_at >= NOW() AND rdvs.status IN ('unknown', 'seen', 'noshow'))
             FROM rdvs WHERE rdvs.id = agents_rdvs.rdv_id
           SQL
-                              )
         end
       end
     end
