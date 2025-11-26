@@ -14,6 +14,13 @@ class AgentsRdv < ApplicationRecord
   # Hooks
   after_commit :update_unknown_past_rdv_count
   # voir Outlook::EventSerializerAndListener et Rdv::CaldavConcern pour d'autres callbacks
+  before_create do
+    assign_attributes(
+      readonly_rdv_starts_at: rdv.starts_at,
+      readonly_rdv_ends_at: rdv.ends_at,
+      readonly_busy_in_the_future: rdv.busy_in_the_future?
+    )
+  end
 
   # A DÉPLACER
 
