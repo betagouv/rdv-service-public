@@ -1,5 +1,6 @@
 import frLocale from '@fullcalendar/core/locales/fr';
 import { createAgendaChannel } from "../../cable/create_agenda_channel"
+import { destroyConsumer } from "../../cable/consumer";
 
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
@@ -140,6 +141,10 @@ function eventRenderer(selectedEventId) {
 }
 
 const setupRefresh = (fullCalendarInstance, agentIds) => {
+  // Cette ligne permet de déconnecter le consumer ActionCable
+  // lorsque l'on quitte la page de calendrier.
+  document.addEventListener("turbolinks:before-visit", destroyConsumer);
+
   agentIds.forEach(agentId => {
     createAgendaChannel(agentId, (message) => {
 
