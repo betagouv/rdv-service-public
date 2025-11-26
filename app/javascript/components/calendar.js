@@ -53,7 +53,7 @@ export class AgendaMonoAgent {
       initialView: this.getDefaultView(),
       hiddenDays: hiddenDays,
       select: this.selectEvent,
-      headerToolbar: this.data.betaPlanningLayout === "true" ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
+      headerToolbar: document.querySelector('main[data-beta-planning-layout="true"]') ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
       views: {
         timeGridOneDay: {
           type: 'timeGrid',
