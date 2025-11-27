@@ -173,11 +173,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_134240) do
     t.text "outlook_id"
     t.boolean "outlook_create_in_progress", default: false, null: false
     t.string "caldav_url"
-    t.datetime "readonly_rdv_starts_at", comment: "Colonne indexée et utilisée en lecture"
-    t.datetime "readonly_rdv_ends_at", comment: "Colonne indexée et utilisée en lecture"
-    t.boolean "readonly_busy_in_the_future", comment: "Colonne indexée et utilisée en lecture"
+    t.datetime "calculator_rdv_starts_at", comment: "Colonne indexée et utilisée en pour optimiser les performances du calculateur de créneaux"
+    t.datetime "calculator_rdv_ends_at", comment: "Colonne indexée et utilisée en pour optimiser les performances du calculateur de créneaux"
+    t.boolean "calculator_rdv_not_cancelled_and_in_the_future", comment: "Colonne indexée et utilisée en pour optimiser les performances du calculateur de créneaux"
+    t.index "agent_id, tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)'::text)", name: "calculator_index", where: "calculator_rdv_not_cancelled_and_in_the_future"
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
-    t.index ["agent_id", "readonly_rdv_starts_at", "readonly_rdv_ends_at"], name: "calculator_index", where: "readonly_busy_in_the_future"
     t.index ["caldav_url"], name: "index_agents_rdvs_on_caldav_url", where: "(caldav_url IS NOT NULL)"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
