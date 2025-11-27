@@ -84,9 +84,9 @@ class Rdv < ApplicationRecord
   after_save do
     # On fait un where plutôt que d'utiliser directement l'association pour éviter des effets de bords sur les objets AR.
     AgentsRdv.where(rdv_id: id).update_all(
-      readonly_rdv_starts_at: starts_at,
-      readonly_rdv_ends_at: ends_at,
-      readonly_busy_in_the_future: busy_in_the_future?
+      calculator_rdv_starts_at: starts_at,
+      calculator_rdv_ends_at: ends_at,
+      calculator_rdv_not_cancelled_and_in_the_future: not_cancelled_and_in_the_future?
     )
   end
 
@@ -379,7 +379,7 @@ class Rdv < ApplicationRecord
     "https://webconf.numerique.gouv.fr/RdvServicePublic#{uuid}".gsub(/[-_]/, "")
   end
 
-  def busy_in_the_future?
+  def not_cancelled_and_in_the_future?
     ends_at > Time.zone.now && status.in?(Rdv::NOT_CANCELLED_STATUSES)
   end
 

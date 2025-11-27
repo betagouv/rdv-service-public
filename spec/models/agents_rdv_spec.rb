@@ -5,9 +5,9 @@ RSpec.describe AgentsRdv do
       rdv.save!
       expect(rdv.agents_rdvs.first.reload).to have_attributes(
         {
-          readonly_rdv_starts_at: rdv.starts_at,
-          readonly_rdv_ends_at: rdv.ends_at,
-          readonly_busy_in_the_future: true,
+          calculator_rdv_starts_at: rdv.starts_at,
+          calculator_rdv_ends_at: rdv.ends_at,
+          calculator_rdv_not_cancelled_and_in_the_future: true,
         }
       )
     end
@@ -19,9 +19,9 @@ RSpec.describe AgentsRdv do
 
       expect(rdv.agents_rdvs.first.reload).to have_attributes(
         {
-          readonly_rdv_starts_at: rdv.starts_at,
-          readonly_rdv_ends_at: rdv.ends_at,
-          readonly_busy_in_the_future: false,
+          calculator_rdv_starts_at: rdv.starts_at,
+          calculator_rdv_ends_at: rdv.ends_at,
+          calculator_rdv_not_cancelled_and_in_the_future: false,
         }
       )
     end
@@ -32,9 +32,9 @@ RSpec.describe AgentsRdv do
       agent_rdv = described_class.create(rdv:, agent:)
       expect(agent_rdv.reload).to have_attributes(
         {
-          readonly_rdv_starts_at: rdv.starts_at,
-          readonly_rdv_ends_at: rdv.ends_at,
-          readonly_busy_in_the_future: true,
+          calculator_rdv_starts_at: rdv.starts_at,
+          calculator_rdv_ends_at: rdv.ends_at,
+          calculator_rdv_not_cancelled_and_in_the_future: true,
         }
       )
     end
