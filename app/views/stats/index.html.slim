@@ -6,31 +6,34 @@
 
   = javascript_include_tag "lieux_map"
 
-.fr-grid-row.fr-grid-row--gutters.fr-mb-4w.rdv-align-items-center
-  .fr-col-12.fr-col-md-7
+.fr-grid-row.fr-grid-row--gutters.fr-mb-4w.fr-mt-2w.rdv-align-items-center.rdv-flex-wrap-wrap-reverse
+  .fr-col-12.fr-col-md-6
     h1
       | Rapprocher le service public des citoyens, rendez-vous après rendez-vous.
-    p
+    p.fr-text--lead
       | Voici comment RDV Service Public facilite l’accès au service public et optimise le temps des agents partout en France.
-  .fr-col-12.fr-col-md-5
-    = dsfr_svg "artwork/pictograms/environment/human-cooperation", class: "fr-responsive-img"
+  .fr-col-12.fr-col-md-6
+    / = dsfr_svg "artwork/pictograms/environment/human-cooperation", class: "fr-responsive-img"
+    = image_tag "rdv_mairie/stats-hero.png", alt: "", class: "fr-responsive-img rdv-object-fit-contain"
 
 - if ENV["CACHE_STORE_UNAVAILABLE"].blank?
   - stats_cached_rdvs_count = Rails.cache.fetch("stats.both_instances.1_year.rdvs_count")
   - if stats_cached_rdvs_count.present?
-    .fr-grid-row.fr-grid-row--gutters.fr-mb-8w.fr-grid-row--center
+    .fr-grid-row.fr-grid-row--gutters.fr-mb-5w.fr-grid-row--center
       .fr-col-12.fr-col-md-6.rdv-stats-hero-figure
         p.fr-mb-2w
           = number_with_delimiter(stats_cached_rdvs_count, delimiter: " ")
-        p
-          | C’est le nombre de rendez-vous planifiés ces 12 derniers mois
+        p.fr-mb-0
+          |> C’est le nombre de rendez-vous planifiés
+          br.fr-hidden.fr-unhidden-md
+          | ces 12 derniers mois
 
   - stats_cached = Rails.cache.fetch_multi("stats.both_instances.1_month.active_agents_count", "stats.both_instances.1_month.active_organisations_count", "stats.both_instances.1_month.rdvs_count") { nil }
   - if stats_cached.values.all?
     .fr-grid-row.fr-grid-row--gutters.fr-mb-8w
       .fr-col-12.fr-col-md-4
         .rdv-stats-hero-card
-          p= number_with_delimiter(stats_cached["stats.both_instances.1_month.rdvs_count"], delimiter: " ")
+          .fr-mb-1w= number_with_delimiter(stats_cached["stats.both_instances.1_month.rdvs_count"], delimiter: " ")
           .rdv-display-flex.rdv-align-items-center
             p.fr-mb-0 Rendez-vous par mois
             button aria-describedby="rdv-tooltip-stats-rdvs" type="button" class="fr-btn--tooltip fr-btn"
@@ -39,7 +42,7 @@
               | Nombre de rendez-vous planifiés sur les 30 derniers jours
       .fr-col-12.fr-col-md-4
         .rdv-stats-hero-card
-          p= number_with_delimiter(stats_cached["stats.both_instances.1_month.active_agents_count"], delimiter: " ")
+          .fr-mb-1w= number_with_delimiter(stats_cached["stats.both_instances.1_month.active_agents_count"], delimiter: " ")
           .rdv-display-flex.rdv-align-items-center
             p.fr-mb-0 Agents actifs par mois
             button aria-describedby="rdv-tooltip-stats-agents" type="button" class="fr-btn--tooltip fr-btn"
@@ -48,7 +51,7 @@
               | Nombre d’agents qui se sont connectés à l’application dans les 30 derniers jours
       .fr-col-12.fr-col-md-4
         .rdv-stats-hero-card
-          p= number_with_delimiter(stats_cached["stats.both_instances.1_month.active_organisations_count"], delimiter: " ")
+          .fr-mb-1w= number_with_delimiter(stats_cached["stats.both_instances.1_month.active_organisations_count"], delimiter: " ")
           .rdv-display-flex.rdv-align-items-center
             p.fr-mb-0 Organisations actives par mois
             button aria-describedby="rdv-tooltip-stats-organisations" type="button" class="fr-btn--tooltip fr-btn"
