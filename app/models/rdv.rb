@@ -84,9 +84,10 @@ class Rdv < ApplicationRecord
   before_destroy(prepend: true) { @agent_ids_before_change = agent_ids }
   before_save { @agent_ids_before_change = agent_ids }
   after_commit do
+    refresh_periods = [[starts_at, ends_at]]
+    refresh_periods.push([starts_at_previously_was, ends_at_previously_was]) if starts_at_previously_changed? || ends_at_previously_changed?
+
     (agent_ids + (@agent_ids_before_change || [])).uniq.each do |agent_id|
-      refresh_periods = [[starts_at, ends_at]]
-      refresh_periods.push([starts_at_previously_was, ends_at_previously_was]) if starts_at_previously_changed? || ends_at_previously_changed?
       AgendaChannel.broadcast_to(agent_id, model: "Rdv", refresh_periods:)
     end
   end
