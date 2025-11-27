@@ -73,10 +73,13 @@ main[data-beta-planning-layout="true"] {
     .fc-toolbar-chunk:first-of-type > div {
       display: flex;
       align-items: center;
-      gap: 0.5em;
+      gap: 8px;
 
       .fc-toolbar-title {
-        font-size: 16px;
+        font-size: 18px;
+        font-weight: 800;
+        text-transform: capitalize;
+        margin-right: 8px;
       }
     }
 

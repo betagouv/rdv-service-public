@@ -10,7 +10,9 @@ import {
   handleAjaxError,
   classicHeaderToolbarLayout,
   betaHeaderToolbarLayout,
-} from  './calendar/utils'
+  betaWeekTitleFormat,
+  betaDayHeaderFormat,
+} from './calendar/utils'
 
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
@@ -45,6 +47,9 @@ export class AgendaMonoAgent {
     if (this.data.displaySundays !== "true") {
       hiddenDays.push(0);
     }
+
+    const betaPlanningEnabled = document.querySelector('main[data-beta-planning-layout="true"]');
+
     const options = {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       eventSources: JSON.parse(this.data.eventSourcesJson),
@@ -52,8 +57,10 @@ export class AgendaMonoAgent {
       initialDate: this.getDefaultDate(),
       initialView: this.getDefaultView(),
       hiddenDays: hiddenDays,
+      titleFormat: betaPlanningEnabled ? betaWeekTitleFormat : null,
+      dayHeaderFormat: betaPlanningEnabled ? betaDayHeaderFormat : null,
       select: this.selectEvent,
-      headerToolbar: document.querySelector('main[data-beta-planning-layout="true"]') ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
+      headerToolbar: betaPlanningEnabled ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
       views: {
         timeGridOneDay: {
           type: 'timeGrid',

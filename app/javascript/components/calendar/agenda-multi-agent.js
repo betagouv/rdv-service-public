@@ -1,7 +1,14 @@
 import { Calendar } from "@fullcalendar/core";
 import resourceTimegridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError } from "./utils";
+import {
+  defaultFullCalendarConfig,
+  eventRenderer,
+  setupRefresh,
+  handleAjaxError,
+  betaDayHeaderFormat,
+  betaWeekTitleFormat
+} from "./utils";
 
 class AgendaMultiAgent {
   constructor() {
@@ -63,13 +70,14 @@ class AgendaMultiAgent {
     return {
       resourceTimeGridDay: {
         buttonText: "Journée",
-        titleFormat: {weekday: "long", day: "numeric", month: "long", year: "numeric"}
+        titleFormat: {weekday: "long", day: "numeric", month: "long", year: "numeric"},
       },
       resourceTimeGridWeek: {
         type: "resourceTimeGrid",
         duration: {week: 1},
         buttonText: "Semaine",
-        titleFormat: {day: "numeric", month: "short", year: "numeric"}
+        titleFormat: betaWeekTitleFormat,
+        dayHeaderFormat: betaDayHeaderFormat,
       },
     }
   }
