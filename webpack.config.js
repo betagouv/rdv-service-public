@@ -9,7 +9,6 @@ module.exports = {
     application: "./app/javascript/application",
     application_test: "./app/javascript/application_test",
     application_agent: "./app/javascript/application_agent",
-    application_operator: "./app/javascript/application_operator",
     lieux_map: "./app/javascript/lieux_map",
     application_agent_config: "./app/javascript/application_agent_config",
     charts: "./app/javascript/charts",
