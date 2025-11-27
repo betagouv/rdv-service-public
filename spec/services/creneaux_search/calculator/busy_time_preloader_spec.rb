@@ -118,4 +118,17 @@ RSpec.describe CreneauxSearch::Calculator::BusyTimePreloader, type: :service do
       end
     end
   end
+
+  describe "request to fetch rdvs" do
+    before do
+      create(:rdv, starts_at: Time.zone.parse("20211027 9:00"), ends_at: Time.zone.parse("20211027 9:40"))
+      create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"), ends_at: Time.zone.parse("20211027 9:40"))
+    end
+
+    it "is optimized to use an index only scan" do
+      # Voir https://www.postgresql.org/docs/current/indexes-index-only-scans.html
+      request = described_class.new(range, plage_ouverture).send(:optimized_rdv_request)
+      expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).explain.inspect).to include "Index Only Scan using calculator_index"
+    end
+  end
 end
