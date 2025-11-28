@@ -14,7 +14,6 @@ json = {
     lieu: sanitize(rdv.public_office? && rdv.lieu&.name),
     past: rdv.past?,
     duration: rdv.duration_in_min,
-    leftColor: "red",
   },
 
   # https://fullcalendar.io/docs/resources-and-events
