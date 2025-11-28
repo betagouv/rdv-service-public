@@ -1,5 +1,9 @@
 import frLocale from '@fullcalendar/core/locales/fr';
 
+export const betaPlanningEnabled = () => {
+  return !!document.querySelector('main[data-beta-planning-layout="true"]');
+};
+
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
   allDaySlot: false,
@@ -99,6 +103,10 @@ function eventRenderer(selectedEventId) {
       return
     }
 
+    if (extendedProps.leftColor) {
+      info.el.style.borderLeft = `3px solid ${extendedProps.leftColor}`;
+    }
+
     const start = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.start);
     const end = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.end);
 
@@ -121,6 +129,10 @@ function eventRenderer(selectedEventId) {
       title += `<br><strong>${info.event.title}</strong>`;
       if (extendedProps.lieu) {
         title += `<br> <small>Lieu : ${extendedProps.lieu}</small>`;
+      }
+
+      if (extendedProps.plageColor) {
+        info.el.style.background = `linear-gradient(to right, ${extendedProps.plageColor} 0%, ${extendedProps.plageColor} 10px, transparent 10px, transparent 100%)`;
       }
     } else {
       if (extendedProps.duration) {

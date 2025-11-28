@@ -52,14 +52,9 @@ main[data-beta-planning-layout="true"] .fc {
     font-weight: normal;
   }
 
-  //.fc-timeGridWeek-view .fc-event:not(.fc-bg-event) {
-  //  margin-left: 0;
-  //}
-
   .fc-v-event {
     border: none;
-    border-left: 3px solid #111;
-    border-radius: 0.25rem;
+    border-radius: 6px;
     font-size: 12px;
     font-weight: 500;
 
@@ -70,6 +65,25 @@ main[data-beta-planning-layout="true"] .fc {
     .fc-event-time {
       opacity: 0.6;
     }
+  }
+
+  .fc-timeGridWeek-view {
+    .fc-event:not(.fc-bg-event) {
+      // Ce petit décalage des RDVs vers la droite permet de visualiser
+      // la plage affichée en background en dessous.
+      margin-left: 10px;
+    }
+  }
+
+  .fc-bg-event {
+    .fc-event-title {
+      margin: 0;
+      margin-left: 14px;
+    }
+  }
+
+  .fc-timegrid-event-harness-inset .fc-timegrid-event, .fc-timegrid-event.fc-event-mirror, .fc-timegrid-more-link {
+    box-shadow: none;
   }
 }
 
@@ -85,7 +99,7 @@ main[data-beta-planning-layout="true"] {
       padding: 8px 16px;
 
       border: none;
-      box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
+      //box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
 
       &:hover {
         color: #161616;

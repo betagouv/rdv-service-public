@@ -12,6 +12,7 @@ import {
   betaHeaderToolbarLayout,
   betaWeekTitleFormat,
   betaDayHeaderFormat,
+  betaPlanningEnabled,
 } from './calendar/utils'
 
 import Bowser from "bowser";
@@ -48,8 +49,6 @@ export class AgendaMonoAgent {
       hiddenDays.push(0);
     }
 
-    const betaPlanningEnabled = document.querySelector('main[data-beta-planning-layout="true"]');
-
     const options = {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       eventSources: JSON.parse(this.data.eventSourcesJson),
@@ -57,10 +56,10 @@ export class AgendaMonoAgent {
       initialDate: this.getDefaultDate(),
       initialView: this.getDefaultView(),
       hiddenDays: hiddenDays,
-      titleFormat: betaPlanningEnabled ? betaWeekTitleFormat : null,
-      dayHeaderFormat: betaPlanningEnabled ? betaDayHeaderFormat : null,
+      titleFormat: betaPlanningEnabled() ? betaWeekTitleFormat : null,
+      dayHeaderFormat: betaPlanningEnabled() ? betaDayHeaderFormat : null,
       select: this.selectEvent,
-      headerToolbar: betaPlanningEnabled ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
+      headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
       views: {
         timeGridOneDay: {
           type: 'timeGrid',
