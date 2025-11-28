@@ -16,7 +16,7 @@ $rdvs-fc-header-bg-color: $gray-200;
   --fc-bg-event-opacity: 1;
 }
 
-.fc {
+main[data-beta-planning-layout="false"] .fc {
   // change l'apparence de l'en-tête du calendrier
   .fc-col-header-cell {
     background: $rdvs-fc-header-bg-color;
@@ -38,6 +38,38 @@ $rdvs-fc-header-bg-color: $gray-200;
   // définit la couleur de fond de la petite case en haut à gauche
   .fc-timegrid-axis:not(.fc-timegrid-col) {
     background-color: $rdvs-fc-header-bg-color;
+  }
+}
+
+main[data-beta-planning-layout="true"] .fc {
+  // Les headers FullCalendar sont des <a> sans href et le DSFR les grise.
+  // Ici on override ce ce comportement pour garder le texte en noir (meilleur contraste).
+  a.fc-col-header-cell-cushion,
+  a.fc-list-day-text,
+  a.fc-list-day-side-text {
+    color: var(--background-action-high-grey);
+    font-size: 13px;
+    font-weight: normal;
+  }
+
+  //.fc-timeGridWeek-view .fc-event:not(.fc-bg-event) {
+  //  margin-left: 0;
+  //}
+
+  .fc-v-event {
+    border: none;
+    border-left: 3px solid #111;
+    border-radius: 0.25rem;
+    font-size: 12px;
+    font-weight: 500;
+
+    .fc-event-main-frame {
+      align-items: start;
+    }
+
+    .fc-event-time {
+      opacity: 0.6;
+    }
   }
 }
 
