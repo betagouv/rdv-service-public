@@ -1,6 +1,7 @@
 doctype html
 html lang="fr"
   head
+    = render "common/meta"
     = stylesheet_link_tag "#{dsfr_path}/dsfr.min.css", "data-turbo-track": "reload"
     = stylesheet_link_tag "#{dsfr_path}/utility/icons/icons.min.css", "data-turbo-track": "reload"
     = javascript_include_tag "#{dsfr_path}/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
@@ -28,6 +29,8 @@ html lang="fr"
                       li.fr-sidemenu__item
                         = link_to "Configuration", operators_configuration_index_path, class: "fr-sidemenu__link", aria: { current: current_page?(operators_configuration_index_path) }
             .fr-col-12.fr-col-md-8
+              - if content_for :title
+                h1= yield :title
               = yield
         - else
           = yield
