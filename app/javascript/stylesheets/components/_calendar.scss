@@ -42,13 +42,18 @@ main[data-beta-planning-layout="false"] .fc {
 }
 
 main[data-beta-planning-layout="true"] .fc {
+  // Change la couleur de l'en-tête en haut et les heures à gauche
+  .fc-col-header-cell, .fc-timegrid-axis {
+    background: #f4f4f4;
+  }
+
   // Les headers FullCalendar sont des <a> sans href et le DSFR les grise.
   // Ici on override ce ce comportement pour garder le texte en noir (meilleur contraste).
   a.fc-col-header-cell-cushion,
   a.fc-list-day-text,
   a.fc-list-day-side-text {
     color: var(--background-action-high-grey);
-    font-size: 13px;
+    font-size: 16px;
     font-weight: normal;
   }
 
