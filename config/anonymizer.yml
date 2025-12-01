@@ -503,6 +503,12 @@ tables:
   - table_name: operators
     anonymized_column_names:
       - name
+  - table_name: operator_managers
+    anonymized_column_names:
+      - first_name
+      - last_name
+      - email
+      - pro_connect_openid_sub
   - table_name: tags
     non_anonymized_column_names:
       - name
