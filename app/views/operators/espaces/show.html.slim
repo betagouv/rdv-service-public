@@ -1,4 +1,26 @@
 /# locals: (territory:)
 
-h1
-  = territory.name
+- content_for :title do
+  = territory.name_in_stats
+
+= dsfr_tabs do |tabs|
+  = tabs.with_tab title: "Informations générales", active: true do
+    p
+      | Nom de l’espace : #{territory.name}
+    p
+      | Catégorie : #{territory.category || "Non renseignée"}
+  = tabs.with_tab title: "Organisations" do
+    .fr-table.fr-table--no-scroll
+      .fr-table__wrapper
+        .fr-table__container
+          .fr-table__content
+            table
+              caption Liste des organisations de l’espace
+              thead
+                tr
+                  th Nom
+              tbody
+                - territory.organisations.each do |organisation|
+                  tr
+                    td
+                      = organisation.name
