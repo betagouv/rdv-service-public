@@ -41,8 +41,10 @@ class AgendaMultiAgent {
       headerToolbar: {
         left: "title,prev,next,today",
         center: "resourceTimeGridDay,resourceTimeGridWeek",
-        right: "today",
+        right: "",
       },
+      titleFormat: betaWeekTitleFormat,
+      dayHeaderFormat: betaDayHeaderFormat,
       customButtons: this.customButtons(),
       footerToolbar: {
         end: "toggleGrouping"
@@ -76,8 +78,6 @@ class AgendaMultiAgent {
         type: "resourceTimeGrid",
         duration: {week: 1},
         buttonText: "Semaine",
-        titleFormat: betaWeekTitleFormat,
-        dayHeaderFormat: betaDayHeaderFormat,
       },
     }
   }

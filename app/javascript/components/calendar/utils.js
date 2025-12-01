@@ -7,7 +7,8 @@ export const betaPlanningEnabled = () => {
 export const betaHeaderToolbarLayout = { left: "title,prev,next,today", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "" };
 export const classicHeaderToolbarLayout = { center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek" };
 
-export const betaWeekTitleFormat = {month: "long", year: "numeric"};
+export const betaWeekTitleFormat = { month: "long", year: "numeric" };
+
 export const betaDayHeaderFormat = { weekday: "short", day: "numeric", omitCommas: true };
 
 const defaultFullCalendarConfig = () => ({
