@@ -91,6 +91,7 @@ main[data-beta-planning-layout="true"] .fc {
     }
   }
 
+  // Ce sélecteur matche le segment "left" de la headerToolbar
   .fc-toolbar-chunk:first-of-type > div {
     display: flex;
     align-items: center;
@@ -113,14 +114,14 @@ main[data-beta-planning-layout="true"] .fc {
     }
   }
 
-  // Change la couleur de l'en-tête en haut et les heures à gauche
+  // Change la couleur de l'en-tête en haut et de "l'en-tête" des heures à gauche
   .fc-col-header-cell,
   .fc-timegrid-axis {
     background: #f4f4f4;
   }
 
   // Les headers FullCalendar sont des <a> sans href et le DSFR les grise.
-  // Ici on override ce ce comportement pour garder le texte en noir (meilleur contraste).
+  // Ici on override les propriétés pour reprendre le contrôle sur la couleur du texte.
   a.fc-col-header-cell-cushion,
   a.fc-list-day-text,
   a.fc-list-day-side-text {
