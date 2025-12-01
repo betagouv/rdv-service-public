@@ -4,6 +4,12 @@ export const betaPlanningEnabled = () => {
   return !!document.querySelector('main[data-beta-planning-layout="true"]');
 };
 
+export const betaHeaderToolbarLayout = { left: "title,prev,next,today", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "" };
+export const classicHeaderToolbarLayout = { center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek" };
+
+export const betaWeekTitleFormat = {month: "long", year: "numeric"};
+export const betaDayHeaderFormat = { weekday: "short", day: "numeric", omitCommas: true };
+
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
   allDaySlot: false,
@@ -43,19 +49,6 @@ const defaultFullCalendarConfig = () => ({
   // for the rdv. This seems unlikely for now.
   timeZone: "Europe/Paris",
 });
-
-export const betaHeaderToolbarLayout = {
-  left: "title,prev,next,today",
-  center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek",
-  right: "",
-};
-export const classicHeaderToolbarLayout = {
-  center: 'dayGridMonth,timeGridWeek,timeGridOneDay,listWeek'
-};
-
-export const betaWeekTitleFormat = {month: "long", year: "numeric"};
-
-export const betaDayHeaderFormat = { weekday: 'short', day: 'numeric', omitCommas: true };
 
 function eventClassNames(info) {
   let extendedProps = info.event.extendedProps;
