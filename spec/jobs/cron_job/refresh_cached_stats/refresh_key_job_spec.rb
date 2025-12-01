@@ -1,5 +1,5 @@
 # rubocop:disable RSpec/StubbedMock
-RSpec.describe CronJob::RefreshCachedStatsJob do
+RSpec.describe CronJob::RefreshCachedStats::RefreshKeyJob do
   before do
     allow(MetabaseApi).to receive(:authentication_present?).and_return(true)
   end
@@ -7,7 +7,7 @@ RSpec.describe CronJob::RefreshCachedStatsJob do
   context "chiffres reçus correctement" do
     specify do
       expect(MetabaseApi).to receive(:sql_query).and_return([{ "c" => "3 706 950" }])
-      described_class.new.perform(keys: ["stats.both_instances.2_years.rdvs_count"])
+      described_class.new.perform(key: "stats.both_instances.2_years.rdvs_count")
       expect(Rails.cache.fetch("stats.both_instances.2_years.rdvs_count")).to eq(3_706_950)
     end
   end
@@ -15,7 +15,7 @@ RSpec.describe CronJob::RefreshCachedStatsJob do
   context "chiffres formattés avec des virgules" do
     specify do
       expect(MetabaseApi).to receive(:sql_query).and_return([{ "c" => "3,706,950" }])
-      described_class.new.perform(keys: ["stats.both_instances.2_years.rdvs_count"])
+      described_class.new.perform(key: "stats.both_instances.2_years.rdvs_count")
       expect(Rails.cache.fetch("stats.both_instances.2_years.rdvs_count")).to eq(3_706_950)
     end
   end
@@ -24,7 +24,7 @@ RSpec.describe CronJob::RefreshCachedStatsJob do
     it "met à jour le cache" do
       Rails.cache.write("stats.both_instances.2_years.rdvs_count", 3_500_000)
       expect(MetabaseApi).to receive(:sql_query).and_return([{ "c" => "3 706 950" }])
-      described_class.new.perform(keys: ["stats.both_instances.2_years.rdvs_count"])
+      described_class.new.perform(key: "stats.both_instances.2_years.rdvs_count")
       expect(Rails.cache.fetch("stats.both_instances.2_years.rdvs_count")).to eq(3_706_950)
     end
   end
@@ -34,8 +34,8 @@ RSpec.describe CronJob::RefreshCachedStatsJob do
       Rails.cache.write("stats.both_instances.2_years.rdvs_count", 3_500_000)
       expect(MetabaseApi).to receive(:sql_query).and_return([{ "c" => "3000" }])
       expect do
-        described_class.new.perform(keys: ["stats.both_instances.2_years.rdvs_count"])
-      end.to raise_error(CronJob::RefreshCachedStatsJob::SuspiciousFigureError)
+        described_class.new.perform(key: "stats.both_instances.2_years.rdvs_count")
+      end.to raise_error(CronJob::RefreshCachedStats::SuspiciousFigureError)
       expect(Rails.cache.fetch("stats.both_instances.2_years.rdvs_count")).to eq(3_500_000)
     end
   end
@@ -45,7 +45,7 @@ RSpec.describe CronJob::RefreshCachedStatsJob do
       Rails.cache.write("stats.both_instances.2_years.rdvs_count", 3_500_000)
       expect(MetabaseApi).to receive(:sql_query).and_return([{ "c" => "3000" }])
       expect do
-        described_class.new.perform(keys: ["stats.both_instances.2_years.rdvs_count"], force: true)
+        described_class.new.perform(key: "stats.both_instances.2_years.rdvs_count", force: true)
       end.not_to raise_error
       expect(Rails.cache.fetch("stats.both_instances.2_years.rdvs_count")).to eq(3_000)
     end
