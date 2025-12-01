@@ -67,20 +67,28 @@ main[data-beta-planning-layout="true"] .fc {
       opacity: 0.8;
     }
 
-    // alignement vertical centré pour les événements courts
     &.fc-timegrid-event-short {
       .fc-event-main-frame {
+        // alignement vertical centré pour les événements courts
         align-items: center;
-        flex-direction: row-reverse;
         justify-content: start;
 
         .fc-event-title-container {
           flex-grow: 0;
         }
-        .fc-event-time:after {
-          content: none;
+        .fc-event-time {
+          order: 10; // affiche l'horaire à la fin de la description
+          margin-bottom: 0; // FullCalendar met 1px par défaut et ça décale le centrage vertical
+
+          &:after {
+            content: none; // Retire le séparateur "-" qui est ajouté par le CSS FullCalendar
+          }
         }
       }
+    }
+
+    &:not(.fc-timegrid-event-short) .fc-event-time {
+      order: 10; // affiche l'horaire à la fin de la description
     }
   }
 
