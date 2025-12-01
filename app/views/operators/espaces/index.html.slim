@@ -1,0 +1,24 @@
+/# locals: (territories:)
+
+h1 Espaces
+
+.fr-table.fr-table--no-scroll
+  .fr-table__wrapper
+    .fr-table__container
+      .fr-table__content
+        table
+          caption Liste des espaces
+          thead
+            tr
+              th Nom
+              th Nombre d’organisations
+              th Action
+            tbody
+              - territories.each do |territory|
+                tr
+                  td
+                    = territory.name_in_stats
+                  td
+                    = territory.organisations.count
+                  td
+                    = link_to "Gérer l’organisme", operators_espace_path(territory.id), class: "fr-link fr-icon-arrow-right-line fr-link--icon-right"

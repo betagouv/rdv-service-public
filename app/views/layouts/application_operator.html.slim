@@ -26,7 +26,7 @@ html lang="fr"
                       li.fr-sidemenu__item
                         = link_to "Accueil", operators_root_path, class: "fr-sidemenu__link", aria: { current: current_page?(operators_root_path) }
                       li.fr-sidemenu__item
-                        = link_to "Espaces", "#", class: "fr-sidemenu__link"
+                        = link_to "Espaces", operators_espaces_path, class: "fr-sidemenu__link", aria: { current: current_page?(operators_espaces_path) }
                       li.fr-sidemenu__item
                         = link_to "Configuration", operators_configuration_index_path, class: "fr-sidemenu__link", aria: { current: current_page?(operators_configuration_index_path) }
             .fr-col-12.fr-col-md-8

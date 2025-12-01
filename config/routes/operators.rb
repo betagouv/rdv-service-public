@@ -7,4 +7,5 @@ end
 namespace :operators do
   root to: "main#index"
   resources :configuration
+  resources :espaces
 end
