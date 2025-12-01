@@ -85,21 +85,36 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
       end
     end
 
-    context "RDV classique (non-collectif)" do
+    context "RDV classique (non-collectif) avec un seul usager" do
       # change_status_and_notify est appelé sur les RDV classiques depuis l’API
       let(:user1) { create(:user, organisations: [organisation]) }
       let(:rdv) { create :rdv, users: [user1], starts_at: Time.zone.tomorrow, agents: [agent], organisation: }
+      let(:other_agent) { create(:agent, organisations: [organisation], rdv_notifications_level: :others) }
 
-      context "c’est un autre agent qui annule la participation" do
-        let(:other_agent) { create(:agent, organisations: [organisation], rdv_notifications_level: :others) }
+      specify do
+        participation1 = rdv.participations.first
+        participation1.change_status_and_notify(other_agent, "excused")
+        expect(participation1.reload.status).to eq("excused")
+        expect(rdv.reload.status).to eq("excused") # le statut du RDV est modifié en conséquence
+        expect_notifications_sent_for(rdv, user1, :rdv_cancelled)
+        expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
+      end
+    end
 
-        specify do
-          participation1 = rdv.participations.first
-          participation1.change_status_and_notify(other_agent, "excused")
-          expect(participation1.reload.status).to eq("excused")
-          expect_notifications_sent_for(rdv, participation1.user, :rdv_cancelled)
-          expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
-        end
+    context "RDV classique (non-collectif) avec plusieurs usagers" do
+      # change_status_and_notify est appelé sur les RDV classiques depuis l’API
+      let(:user1) { create(:user, organisations: [organisation]) }
+      let(:user2) { create(:user, organisations: [organisation]) }
+      let(:rdv) { create :rdv, users: [user1, user2], starts_at: Time.zone.tomorrow, agents: [agent], organisation: }
+      let(:other_agent) { create(:agent, organisations: [organisation], rdv_notifications_level: :others) }
+
+      specify do
+        participation1 = rdv.participations.to_a.first { _1.user == user1 }
+        participation1.change_status_and_notify(other_agent, "excused")
+        expect(participation1.reload.status).to eq("excused")
+        expect(rdv.reload.status).to eq("unknown") # le statut du RDV n’est pas modifié
+        expect_no_email_sent_for(rdv, user1, :rdv_cancelled) # TODO : un email devrait être envoyé à l’usager dans ce cas
+        expect_notifications_sent_for(rdv, agent, :rdv_cancelled) # TODO: ce mail est incorrect dans ce cas, il ne devrait pas être envoyé
       end
     end
   end
