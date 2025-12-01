@@ -45,7 +45,7 @@ jobs:
         with:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn run prettier --check .
   brakeman:
     name: Security Checker
@@ -154,7 +154,7 @@ jobs:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
       - name: Install JS dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-scripts
       - name: Cache precompiled assets
         id: cache-precompiled-assets
         uses: actions/cache@v4
@@ -247,7 +247,7 @@ jobs:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
       - name: Install JS dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-scripts
       - uses: ./.github/actions/setup-playwright
       - name: Precompile assets
         run: yarn run build
@@ -303,7 +303,7 @@ jobs:
         with:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile --ignore-scripts
       - run: bin/test_boot
         env:
           HOST: http://www.rdv-test.fr
