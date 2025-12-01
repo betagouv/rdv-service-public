@@ -3,7 +3,13 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError } from  './calendar/utils'
+import {
+  defaultFullCalendarConfig,
+  eventRenderer,
+  setupPollingRefresh,
+  setupRealtimeRefresh,
+  handleAjaxError,
+} from './calendar/utils'
 
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
@@ -18,7 +24,11 @@ export class AgendaMonoAgent {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-    setupRefresh(this.fullCalendarInstance, [this.data.agentId]);
+    if(this.data.realtimeRefresh === "true") {
+      setupRealtimeRefresh(this.fullCalendarInstance, [this.data.agentId]);
+    } else {
+      setupPollingRefresh(this.fullCalendarInstance);
+    }
     document.addEventListener("turbolinks:before-cache", () => {
       // force calendar reload on turbolinks re-visit, otherwise event listeners
       // are not attached

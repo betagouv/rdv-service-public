@@ -58,11 +58,15 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
   end
 
   describe "realtime refreshes" do
-    it "refreshes RDVs", js: true do
-      organisation = create(:organisation)
-      agent = create(:agent, basic_role_in_organisations: [organisation])
-      login_as(agent, scope: :agent)
+    let!(:organisation) { create(:organisation) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
+    before do
+      allow_any_instance_of(Agent).to receive(:realtime_agenda_refresh?).and_return(true) # rubocop:disable RSpec/AnyInstance
+      login_as(agent, scope: :agent)
+    end
+
+    it "refreshes RDVs", js: true do
       # Create a RDV this week, monday at 14:00, so that it will show on the calendar
       starts_at = Time.zone.now.beginning_of_week.change({ hour: 14 })
 
@@ -98,10 +102,6 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "refreshes plages", js: true do
-      organisation = create(:organisation)
-      agent = create(:agent, basic_role_in_organisations: [organisation])
-      login_as(agent, scope: :agent)
-
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
@@ -116,10 +116,6 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "refreshes absence", js: true do
-      organisation = create(:organisation)
-      agent = create(:agent, basic_role_in_organisations: [organisation])
-      login_as(agent, scope: :agent)
-
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
@@ -134,10 +130,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "fonctionne quand on change de page et qu'on revient", js: true do
-      organisation = create(:organisation)
-      agent = create(:agent, admin_role_in_organisations: [organisation])
       agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
-      login_as(agent, scope: :agent)
 
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       expect(page).to have_content("Planning de")

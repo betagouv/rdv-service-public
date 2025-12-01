@@ -140,7 +140,36 @@ function eventRenderer(selectedEventId) {
   }
 }
 
-const setupRefresh = (fullCalendarInstance, agentIds) => {
+const setupPollingRefresh = (fullCalendarInstance) => {
+  const clearRefetchInterval = () => {
+    if (!fullCalendarInstance.refreshCalendarInterval) return
+    clearTimeout(fullCalendarInstance.refreshCalendarInterval)
+    fullCalendarInstance.refreshCalendarInterval = null
+  }
+
+  const setRefetchInterval = () => {
+    if (fullCalendarInstance.refreshCalendarInterval) return
+    fullCalendarInstance.refreshCalendarInterval = setInterval(() => fullCalendarInstance.refetchEvents(), 30000)
+  }
+
+  setRefetchInterval();
+
+  document.addEventListener('turbolinks:before-cache', () => { clearRefetchInterval(fullCalendarInstance) });
+  document.addEventListener('turbolinks:before-render', () => { clearRefetchInterval(fullCalendarInstance) });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      // when agent comes back to tab, refresh immediately
+      fullCalendarInstance.refetchEvents();
+
+      setRefetchInterval();
+    } else if (fullCalendarInstance.refreshCalendarInterval) {
+      clearRefetchInterval();
+    }
+  })
+};
+
+const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
   // Cette ligne permet de déconnecter le consumer ActionCable
   // lorsque l'on quitte la page de calendrier.
   document.addEventListener("turbolinks:before-visit", destroyConsumer);
@@ -187,4 +216,4 @@ const handleAjaxError = (response) => {
   }
 };
 
-export { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError }
+export { defaultFullCalendarConfig, eventRenderer, setupPollingRefresh, setupRealtimeRefresh, handleAjaxError }

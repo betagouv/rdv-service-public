@@ -1,7 +1,13 @@
 import { Calendar } from "@fullcalendar/core";
 import resourceTimegridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError } from "./utils";
+import {
+  defaultFullCalendarConfig,
+  eventRenderer,
+  setupPollingRefresh,
+  setupRealtimeRefresh,
+  handleAjaxError,
+} from "./utils";
 
 class AgendaMultiAgent {
   constructor() {
@@ -14,7 +20,11 @@ class AgendaMultiAgent {
     this.resources = JSON.parse(this.data.resourcesJson);
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-    setupRefresh(this.fullCalendarInstance, this.resources.map(resource => resource.id));
+    if(this.data.realtimeRefresh === "true") {
+      setupRealtimeRefresh(this.fullCalendarInstance, this.resources.map(resource => resource.id));
+    } else {
+      setupPollingRefresh(this.fullCalendarInstance);
+    }
   }
   initFullCalendar = () => {
     const hiddenDays = []
