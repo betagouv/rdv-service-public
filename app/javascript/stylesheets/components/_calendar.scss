@@ -43,7 +43,8 @@ main[data-beta-planning-layout="false"] .fc {
 
 main[data-beta-planning-layout="true"] .fc {
   // Change la couleur de l'en-tête en haut et les heures à gauche
-  .fc-col-header-cell, .fc-timegrid-axis {
+  .fc-col-header-cell,
+  .fc-timegrid-axis {
     background: #f4f4f4;
   }
 
@@ -92,8 +93,10 @@ main[data-beta-planning-layout="true"] .fc {
     }
   }
 
-   // On vire le contour blanc des événements
-  .fc-timegrid-event-harness-inset .fc-timegrid-event, .fc-timegrid-event.fc-event-mirror, .fc-timegrid-more-link {
+  // On vire le contour blanc des événements
+  .fc-timegrid-event-harness-inset .fc-timegrid-event,
+  .fc-timegrid-event.fc-event-mirror,
+  .fc-timegrid-more-link {
     box-shadow: none;
   }
 }
@@ -119,7 +122,8 @@ main[data-beta-planning-layout="true"] {
 
       // prend le dessus sur une règle très spécifique dans FullCalendar
       // .fc .fc-button-primary:not(:disabled).fc-button-active
-      &.fc-button-active.fc-button-primary:not(:disabled), &.fc-button:active {
+      &.fc-button-active.fc-button-primary:not(:disabled),
+      &.fc-button:active {
         color: var(--blue-france-sun-113-625);
         background-color: white;
         border: 1px solid #000091;
