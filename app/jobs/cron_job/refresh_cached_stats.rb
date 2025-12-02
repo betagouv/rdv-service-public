@@ -3,25 +3,25 @@ class CronJob::RefreshCachedStats
 
   QUERIES_DIR_PATH = File.expand_path("refresh_cached_stats_queries", __dir__).freeze
 
+  KEYS_TO_FILENAME = {
+    "stats.both_instances.2_years.active_organisations_count" => "both_instances_2_years_active_organisations_count.sql",
+    "stats.both_instances.2_years.rdvs_count" => "both_instances_2_years_rdvs_count.sql",
+  }.freeze
+
   class EnqueueAllKeysJob < CronJob
     def perform(keys: nil, force: false)
       return unless MetabaseApi.authentication_present?
 
-      (keys || all_keys).each { |key| RefreshKeyJob.perform_later(key:, force:) }
-    end
-
-    private
-
-    def all_keys
-      Dir.entries(QUERIES_DIR_PATH)
-        .select { _1.end_with?(".sql") }
-        .map { _1.gsub(/\.sql$/, "") }
+      (keys || KEYS_TO_FILENAME.keys).each { |key| RefreshKeyJob.perform_later(key:, force:) }
     end
   end
 
   class RefreshKeyJob < CronJob
     def perform(key:, force: false)
-      query = File.read(File.join(QUERIES_DIR_PATH, "#{key}.sql"))
+      filename = KEYS_TO_FILENAME[key]
+      raise ArgumentError, "#{key} is not a valid stat key" if filename.nil?
+
+      query = File.read(File.join(QUERIES_DIR_PATH, filename))
       previous_value = Rails.cache.fetch(key)
 
       Rails.logger.debug { "querying Metabase for #{key}…" }
