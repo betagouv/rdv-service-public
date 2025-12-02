@@ -1,8 +1,4 @@
 RSpec.describe CronJob::RefreshCachedStats::RefreshKeyJob do
-  before do
-    allow(MetabaseApi).to receive(:authentication_present?).and_return(true)
-  end
-
   context "chiffres reçus correctement" do
     specify do
       allow(MetabaseApi).to receive(:sql_query).and_return([{ "c" => "3 706 950" }])
