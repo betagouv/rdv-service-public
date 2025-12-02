@@ -91,17 +91,25 @@ main[data-beta-planning-layout="true"] .fc {
     }
   }
 
-  // Ce sélecteur matche le segment "left" de la headerToolbar
-  .fc-toolbar-chunk:first-of-type > div {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .fc-header-toolbar {
+    // Ce sélecteur matche le segment "left" de la headerToolbar
+    .fc-toolbar-chunk:first-of-type > div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
 
-    .fc-toolbar-title {
-      font-size: 18px;
-      font-weight: 800;
-      text-transform: capitalize;
-      margin-right: 8px;
+      .fc-toolbar-title {
+        font-size: 18px;
+        font-weight: 800;
+        text-transform: capitalize;
+        margin-right: 8px;
+      }
+    }
+
+    // Sur mobile on met les chunks les uns en dessous de autres
+    @media (max-width: 991px) {
+      flex-direction: column;
+      gap: 8px
     }
   }
 
