@@ -330,6 +330,6 @@ class Agent < ApplicationRecord
   end
 
   def realtime_agenda_refresh?
-    id.to_s.ends_with?("7")
+    id.even?
   end
 end
