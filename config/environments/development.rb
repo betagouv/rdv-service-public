@@ -28,8 +28,6 @@ Rails.application.configure do
     }
   else
     config.action_controller.perform_caching = false
-
-    config.cache_store = :null_store
   end
 
   config.hosts << ".ngrok.io"
