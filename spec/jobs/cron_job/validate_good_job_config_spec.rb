@@ -1,6 +1,6 @@
 # rubocop:disable RSpec/DescribeClass
 RSpec.describe "Good Job CRON keys" do
-  specify do
+  it "only contains classes that have the interface of a job" do
     job_classes = Rails.configuration.good_job.cron.values.map { _1[:class] }
     job_classes.each do |job_class|
       job = nil
