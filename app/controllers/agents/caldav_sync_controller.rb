@@ -1,10 +1,9 @@
 class Agents::CaldavSyncController < AgentAuthController
   layout "application_agent_config"
 
-  before_action :feature_flag_verification!
-
   def show
     skip_authorization
+    current_agent.enable_feature!(Agent::FeatureFlags::CALDAV_SYNC)
   end
 
   def update
@@ -44,11 +43,5 @@ class Agents::CaldavSyncController < AgentAuthController
 
   def pundit_user
     AgentContext.new(current_agent)
-  end
-
-  def feature_flag_verification!
-    return if current_agent.feature_enabled?(Agent::FeatureFlags::CALDAV_SYNC)
-
-    redirect_to agents_calendar_sync_path, alert: "Vous n’avez pas accès à cette fonctionnalité. Si vous pensez que c’est une erreur, contactez un administrateur."
   end
 end
