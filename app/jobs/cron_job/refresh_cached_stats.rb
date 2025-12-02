@@ -26,7 +26,7 @@ class CronJob::RefreshCachedStats
 
       Rails.logger.debug { "querying Metabase for #{key}…" }
       new_value = MetabaseApi.sql_query(query)[0]["c"]
-        .gsub(/[, ]/, "") # Metabase sometimes splits thousands with spaces or commas 🤷
+        .gsub(/[, ]/, "") # Metabase can split thousands with spaces or commas depending on its configurations, which can be changed in its web ui
         .to_i
       Rails.logger.info "got #{key} = #{new_value}"
 
