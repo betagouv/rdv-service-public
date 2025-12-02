@@ -41,7 +41,7 @@ ruby:
     = f.dsfr_text_field :address, value: address_value, required: rdv_wizard&.motif&.home?, data: { "address-autocomplete": "on" }, autocomplete: "street-address", dir: "ltr"
 
   - if territories.map(&:enable_address_details).any?
-    = f.dsfr_text_field :address_details
+    = f.dsfr_text_field :address_details, data: { "address-autocomplete": "on" }, autocomplete: "street-address", dir: "ltr"
 
   = f.hidden_field :city_code
   = f.hidden_field :post_code
