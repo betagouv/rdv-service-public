@@ -121,8 +121,11 @@ RSpec.describe CreneauxSearch::Calculator::BusyTimePreloader, type: :service do
 
   describe "request to fetch rdvs" do
     before do
-      create(:rdv, starts_at: Time.zone.parse("20211027 9:00"), ends_at: Time.zone.parse("20211027 9:40"))
-      create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"), ends_at: Time.zone.parse("20211027 9:40"))
+      # Il faut créer un minimum de données pour que l'index soit utilisé (le query planner prend des décisions en fonction de la taille des tables et des indexes)
+      10.times do |i|
+        create(:rdv, starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
+        create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
+      end
     end
 
     it "is optimized to use an index only scan" do

@@ -24,7 +24,6 @@ class AddDenormalizedRdvColumnsToAgentsRdvs < ActiveRecord::Migration[8.0]
       "agent_id, tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)'::text)", # Le "::text" semble nécessaire pour faire marcher la requête
       where: "calculator_rdv_not_cancelled_and_in_the_future",
       include: %w[calculator_rdv_starts_at calculator_rdv_ends_at],
-      using: :gist,
       name: "calculator_index",
       algorithm: :concurrently
     )
