@@ -106,7 +106,7 @@ class AgendaMultiAgent {
   refreshColumnsVisualGrouping = () => {
     const allColumns = document.querySelectorAll(".fc-timegrid-col.fc-day");
     const WHITE = "#FFF";
-    const GREY = "rgb(227, 234, 239, 0.5)";
+    const GREY = "#f3f6fe";
 
     if (this.fullCalendarInstance.view.type !== "resourceTimeGridWeek") {
       return allColumns.forEach(column => column.style.backgroundColor = WHITE); // Reset to white
