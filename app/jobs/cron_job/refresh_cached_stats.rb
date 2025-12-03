@@ -4,8 +4,11 @@ class CronJob::RefreshCachedStats
   QUERIES_DIR_PATH = File.expand_path("refresh_cached_stats_queries", __dir__).freeze
 
   KEYS_TO_FILENAME = {
-    "stats.both_instances.2_years.active_organisations_count" => "both_instances_2_years_active_organisations_count.sql",
-    "stats.both_instances.2_years.rdvs_count" => "both_instances_2_years_rdvs_count.sql",
+    "stats.both_instances.1_year.rdvs_count" => "both_instances_1_year_rdvs_count.sql",
+    "stats.both_instances.1_month.active_agents_count" => "both_instances_1_month_active_agents_count.sql",
+    "stats.both_instances.1_month.active_organisations_count" => "both_instances_1_month_active_organisations_count.sql",
+    "stats.both_instances.1_month.rdvs_count" => "both_instances_1_month_rdvs_count.sql",
+
   }.freeze
 
   class EnqueueAllKeysJob < CronJob
