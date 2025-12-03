@@ -62,7 +62,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     before do
-      allow(Admin::Api::Agenda).to receive(:realtime_agenda_refresh?).and_return(true) # rubocop:disable RSpec/AnyInstance
+      allow(Admin::Api::Agenda).to receive(:realtime_refresh?).and_return(true)
       login_as(agent, scope: :agent)
     end
 
