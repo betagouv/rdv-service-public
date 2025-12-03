@@ -1,5 +1,5 @@
 class RedirectController < ApplicationController
-  def rdv_short_without_id
+  def rdv_short_from_token
     @participation = Participation.find_by!(restricted_auth_token: params[:tkn])
 
     redirect_to users_rdv_path(@participation.rdv, invitation_token: params[:tkn])

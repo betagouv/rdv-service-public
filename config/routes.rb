@@ -389,7 +389,7 @@ Rails.application.routes.draw do
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
 
   # tkn est obligatoire pour s'assurer qu'il est possible de se connecter
-  get "r/:tkn" => "redirect#rdv_short_without_id", as: "rdv_short_no_id"
+  get "r/:tkn" => "redirect#rdv_short_from_token", as: "rdv_short_from_token"
 
   # On préserve la route courte avec id pour la rétrocompatibilité des anciens SMS
   get "r/:id/:tkn" => "redirect#rdv_short", as: "rdv_short"
