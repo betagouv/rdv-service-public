@@ -11,6 +11,7 @@ RSpec.describe "Les usagers peuvent accéder à leur RDV via des liens court" do
     end
   end
 
+  # << REMOVE AFTER 01/01/2027
   context "lorsqu’ils utilisent le lien court avec l’id et le token" do
     it "ils sont redirigés vers la page d’authentification avec le nom de famille puis vers la page du rendez-vous" do
       visit rdv_short_path(rdv.id, tkn: rdv.participations.first.restricted_auth_token)
@@ -20,4 +21,5 @@ RSpec.describe "Les usagers peuvent accéder à leur RDV via des liens court" do
       expect(page).to have_current_path(users_rdv_path(rdv))
     end
   end
+  # >> REMOVE AFTER 01/01/2027
 end
