@@ -16,6 +16,7 @@ html lang="fr"
         end
     main#content[role="main"]
       .fr-container
+        = render "layouts/flash"
         - if operator_manager_signed_in?
           .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
             .fr-col-12.fr-col-md-4
