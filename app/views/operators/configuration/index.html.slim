@@ -1,0 +1,32 @@
+/# locals: (operator:)
+
+- content_for :title do
+  | Configuration
+
+h2 Vos agents managers
+
+p
+  |> Vous voyez ici la liste des agents managers pour le compte de votre opérateur.
+  |> Ces agents doivent avoir un compte ProConnect avec la double authentification pour pouvoir se connecter à l’espace opérateur.
+  |> Tous les agents managers peuvent accéder à l’ensemble des fonctionnalités de l’espace opérateur.
+
+.fr-table.fr-table--no-scroll
+  .fr-table__wrapper
+    .fr-table__container
+      .fr-table__content
+        table
+          caption Liste des agents managers
+          thead
+            tr
+              th Nom
+              th Prénom
+              th Adresse e-mail
+          tbody
+            - operator.operator_managers.each do |manager|
+              tr
+                td
+                  = manager.last_name
+                td
+                  = manager.first_name
+                td
+                  = manager.email

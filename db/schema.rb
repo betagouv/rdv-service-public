@@ -471,6 +471,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_130457) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
+  create_table "operator_managers", force: :cascade do |t|
+    t.text "first_name"
+    t.text "last_name"
+    t.text "email"
+    t.text "pro_connect_openid_sub"
+    t.bigint "operator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_operator_managers_on_email", unique: true
+    t.index ["operator_id"], name: "index_operator_managers_on_operator_id"
+  end
+
   create_table "operators", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -908,6 +920,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_130457) do
   add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_applications", "services", column: "default_service_id"
+  add_foreign_key "operator_managers", "operators"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"
