@@ -123,8 +123,13 @@ RSpec.describe CreneauxSearch::Calculator::BusyTimePreloader, type: :service do
     it "est optimisée pour utiliser l'index 'calculator_index'. Décommentez le test suivant si celui-ci échoue." do
       # Voir https://www.postgresql.org/docs/current/indexes-index-only-scans.html
       request = described_class.new(range, plage_ouverture).send(:optimized_rdv_request)
-      expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).to_sql).to eq <<~SQL.squish
-        SELECT "agents_rdvs"."calculator_rdv_starts_at", "agents_rdvs"."calculator_rdv_ends_at" FROM..._starts_at, calculator_rdv_ends_at, '[)') && tsrange('2021-10-26 06:00:00', '2021-10-29 10:00:00'))
+      expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).to_sql.squish).to eq <<~SQL.squish
+        SELECT "agents_rdvs"."calculator_rdv_starts_at",
+               "agents_rdvs"."calculator_rdv_ends_at"
+        FROM "agents_rdvs"
+        WHERE "agents_rdvs"."agent_id" = #{plage_ouverture.agent_id}
+          AND "agents_rdvs"."calculator_rdv_not_cancelled_and_in_the_future" = TRUE
+          AND (tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsrange('2021-10-26 06:00:00', '2021-10-29 10:00:00'))
       SQL
     end
 
