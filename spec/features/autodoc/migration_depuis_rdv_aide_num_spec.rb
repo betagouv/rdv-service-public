@@ -43,6 +43,9 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let!(:disabled_lieu) { create(:lieu, :disabled, organisation: organisation_rdv_aide_num) }
   let!(:motif) { create(:motif, organisation: organisation_rdv_aide_num) }
   let!(:motif_collectif) { create(:motif, :collectif, organisation: organisation_rdv_aide_num) }
+  let!(:archived_motif) do
+    create(:motif, organisation: organisation_rdv_aide_num, name: "Motif archivé", deleted_at: 3.days.ago)
+  end
 
   let!(:users) do
     create_list(:user, 3, organisations: [organisation_rdv_aide_num])
@@ -157,8 +160,12 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     expect(created_disabled_lieu).to have_attributes(name: disabled_lieu.name)
     expect(created_disabled_lieu.external_references.last).to have_attributes(external_id: disabled_lieu.id.to_s)
 
-    created_motif = created_organisation.motifs.individuel.sole
+    created_motif = created_organisation.motifs.individuel.active.sole
     expect(created_motif).to have_attributes(name: motif.name)
+
+    created_archived_motif = created_organisation.motifs.archived.sole
+    expect(created_archived_motif.name).to eq archived_motif.name
+    expect(created_archived_motif.deleted_at).to be_within(1.second).of(archived_motif.deleted_at)
 
     # On ne crée que des rdvs dans le passé : les rendez-vous à venir sont matérialisés par des absences.
     expect(created_organisation.rdvs.pluck(:starts_at).max < Time.zone.now).to be true
