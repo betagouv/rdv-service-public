@@ -177,6 +177,7 @@ module CreneauxSearch::Calculator
       AgentsRdv
         .where(agent_id: plage_ouverture.agent_id, calculator_rdv_not_cancelled_and_in_the_future: true)
         .where("tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+        .select(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
     end
 
     def busy_times_from_absences
