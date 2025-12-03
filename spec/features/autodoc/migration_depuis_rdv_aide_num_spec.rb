@@ -40,6 +40,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
     create(:agent, first_name: "Francis", last_name: "Factice", basic_role_in_organisations: [organisation_rdv_aide_num])
   end
   let!(:lieu) { create(:lieu, organisation: organisation_rdv_aide_num) }
+  let!(:disabled_lieu) { create(:lieu, :disabled, organisation: organisation_rdv_aide_num) }
   let!(:motif) { create(:motif, organisation: organisation_rdv_aide_num) }
   let!(:motif_collectif) { create(:motif, :collectif, organisation: organisation_rdv_aide_num) }
   let!(:archived_motif) do
@@ -151,9 +152,13 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
     expect(created_organisation.agents.count).to eq 2
 
-    created_lieu = created_organisation.lieux.sole
+    created_lieu = created_organisation.lieux.enabled.sole
     expect(created_lieu).to have_attributes(name: lieu.name)
     expect(created_lieu.external_references.last).to have_attributes(external_id: lieu.id.to_s)
+
+    created_disabled_lieu = created_organisation.lieux.disabled.sole
+    expect(created_disabled_lieu).to have_attributes(name: disabled_lieu.name)
+    expect(created_disabled_lieu.external_references.last).to have_attributes(external_id: disabled_lieu.id.to_s)
 
     created_motif = created_organisation.motifs.individuel.active.sole
     expect(created_motif).to have_attributes(name: motif.name)

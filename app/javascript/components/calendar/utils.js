@@ -1,5 +1,16 @@
 import frLocale from '@fullcalendar/core/locales/fr';
 
+export const betaPlanningEnabled = () => {
+  return !!document.querySelector('main[data-beta-planning-layout="true"]');
+};
+
+export const betaHeaderToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "" };
+export const classicHeaderToolbarLayout = { center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek" };
+
+export const betaWeekTitleFormat = { month: "long", year: "numeric" };
+
+export const betaDayHeaderFormat = { weekday: "short", day: "numeric", omitCommas: true };
+
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
   allDaySlot: false,
@@ -37,8 +48,8 @@ const defaultFullCalendarConfig = () => ({
   // There is one case for which this fix would fail: if the local time of the user and the agent is not the same (for example the agent is
   // in the métropole and the user is at la réunion), they will not see the same time
   // for the rdv. This seems unlikely for now.
-  timeZone: "Europe/Paris"
-})
+  timeZone: "Europe/Paris",
+});
 
 function eventClassNames(info) {
   let extendedProps = info.event.extendedProps;
