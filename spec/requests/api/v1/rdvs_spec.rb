@@ -58,5 +58,20 @@ RSpec.describe "RDV API" do
       expect(parsed_response_body["rdvs"].count).to eq 1
       expect(parsed_response_body["rdvs"].first["id"]).to eq cancelled_rdv.id
     end
+
+    describe "selecting which associations are loaded" do
+      it "makes the api response smaller" do
+        get "/api/v1/rdvs", headers: headers, params: { include: %i[lieu motif agents] }, as: :json
+        rdv = parsed_response_body["rdvs"].first
+
+        expect(rdv["agents"]).to be_present
+        expect(rdv["lieu"]).to be_present
+        expect(rdv["motif"]).to be_present
+
+        expect(rdv).not_to have_key("organisation")
+        expect(rdv).not_to have_key("users")
+        expect(rdv).not_to have_key("participations")
+      end
+    end
   end
 end
