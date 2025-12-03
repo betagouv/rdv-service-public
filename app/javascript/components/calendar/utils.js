@@ -1,4 +1,5 @@
 import frLocale from '@fullcalendar/core/locales/fr';
+import { getConsumer, destroyConsumer } from "../../cable/consumer";
 
 export const betaPlanningEnabled = () => {
   return !!document.querySelector('main[data-beta-planning-layout="true"]');
@@ -149,7 +150,7 @@ function eventRenderer(selectedEventId) {
   }
 }
 
-const setupRefresh = (fullCalendarInstance) => {
+const setupPollingRefresh = (fullCalendarInstance) => {
   const clearRefetchInterval = () => {
     if (!fullCalendarInstance.refreshCalendarInterval) return
     clearTimeout(fullCalendarInstance.refreshCalendarInterval)
@@ -178,6 +179,29 @@ const setupRefresh = (fullCalendarInstance) => {
   })
 };
 
+const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
+  // Cette ligne permet de déconnecter le consumer ActionCable
+  // lorsque l'on quitte la page de calendrier.
+  document.addEventListener("turbolinks:before-visit", destroyConsumer);
+
+  const messageReceivedCallback = (message) => {
+    if (Array.isArray(message.refresh_periods) && message.refresh_periods.length > 0) {
+      const beginningOfView = fullCalendarInstance.view.activeStart.toISOString();
+      const endOfView = fullCalendarInstance.view.activeEnd.toISOString();
+      const intersectsFunction = ([periodStart, periodEnd]) => (periodEnd > beginningOfView && periodStart < endOfView);
+      if (message.refresh_periods.some(intersectsFunction)) {
+        fullCalendarInstance.refetchEvents();
+      }
+    } else {
+      fullCalendarInstance.refetchEvents();
+    }
+  };
+
+  agentIds.forEach(agentId => {
+    getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, { received: messageReceivedCallback });
+  });
+};
+
 const handleAjaxError = (response) => {
   if (window.ajaxErrorHandledAt) {
     const secondsSinceLast = (Date.now() - window.ajaxErrorHandledAt) / 1000;
@@ -200,4 +224,4 @@ const handleAjaxError = (response) => {
   }
 };
 
-export { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError }
+export { defaultFullCalendarConfig, eventRenderer, setupPollingRefresh, setupRealtimeRefresh, handleAjaxError }

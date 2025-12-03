@@ -4,7 +4,8 @@ import interactionPlugin from "@fullcalendar/interaction";
 import {
   defaultFullCalendarConfig,
   eventRenderer,
-  setupRefresh,
+  setupPollingRefresh,
+  setupRealtimeRefresh,
   handleAjaxError,
   betaDayHeaderFormat,
   betaWeekTitleFormat
@@ -18,9 +19,14 @@ class AgendaMultiAgent {
     }
 
     this.data = this.calendarEl.dataset
+    this.resources = JSON.parse(this.data.resourcesJson);
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-    setupRefresh(this.fullCalendarInstance);
+    if(this.data.realtimeRefresh === "true") {
+      setupRealtimeRefresh(this.fullCalendarInstance, this.resources.map(resource => resource.id));
+    } else {
+      setupPollingRefresh(this.fullCalendarInstance);
+    }
   }
   initFullCalendar = () => {
     const hiddenDays = []
@@ -33,7 +39,7 @@ class AgendaMultiAgent {
     const options = {
       plugins: [resourceTimegridPlugin, interactionPlugin],
       schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
-      resources: JSON.parse(this.data.resourcesJson),
+      resources: this.resources,
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
       initialView: this.getInitialView(),
