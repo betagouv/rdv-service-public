@@ -328,8 +328,4 @@ class Agent < ApplicationRecord
 
     Organisation.joins(:agents).where(agents: { proconnect_siret: proconnect_siret }).distinct
   end
-
-  def realtime_agenda_refresh?
-    id.even?
-  end
 end
