@@ -7,6 +7,8 @@ import {
   setupPollingRefresh,
   setupRealtimeRefresh,
   handleAjaxError,
+  betaDayHeaderFormat,
+  betaWeekTitleFormat
 } from "./utils";
 
 class AgendaMultiAgent {
@@ -43,8 +45,12 @@ class AgendaMultiAgent {
       initialView: this.getInitialView(),
       initialDate: localStorage.getItem("chosenCalendarDay"),
       headerToolbar: {
-        center: "resourceTimeGridDay,resourceTimeGridWeek"
+        left: "today,prev,next,title",
+        center: "resourceTimeGridDay,resourceTimeGridWeek",
+        right: "",
       },
+      titleFormat: betaWeekTitleFormat,
+      dayHeaderFormat: betaDayHeaderFormat,
       customButtons: this.customButtons(),
       footerToolbar: {
         end: "toggleGrouping"
@@ -72,13 +78,12 @@ class AgendaMultiAgent {
     return {
       resourceTimeGridDay: {
         buttonText: "Journée",
-        titleFormat: {weekday: "long", day: "numeric", month: "long", year: "numeric"}
+        titleFormat: {weekday: "long", day: "numeric", month: "long", year: "numeric"},
       },
       resourceTimeGridWeek: {
         type: "resourceTimeGrid",
         duration: {week: 1},
         buttonText: "Semaine",
-        titleFormat: {weekday: "long", day: "numeric", month: "short", year: "numeric"}
       },
     }
   }
@@ -107,7 +112,7 @@ class AgendaMultiAgent {
   refreshColumnsVisualGrouping = () => {
     const allColumns = document.querySelectorAll(".fc-timegrid-col.fc-day");
     const WHITE = "#FFF";
-    const GREY = "rgb(227, 234, 239, 0.5)";
+    const GREY = "#f3f6fe";
 
     if (this.fullCalendarInstance.view.type !== "resourceTimeGridWeek") {
       return allColumns.forEach(column => column.style.backgroundColor = WHITE); // Reset to white

@@ -81,6 +81,15 @@ class Rdv < ApplicationRecord
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
 
+  after_save do
+    # On fait un where plutôt que d'utiliser directement l'association pour éviter des effets de bords sur les objets AR.
+    AgentsRdv.where(rdv_id: id).update_all(
+      calculator_rdv_starts_at: starts_at,
+      calculator_rdv_ends_at: ends_at,
+      calculator_rdv_not_cancelled_and_in_the_future: not_cancelled_and_in_the_future?
+    )
+  end
+
   before_destroy(prepend: true) { @agent_ids_before_change = agent_ids }
   before_save { @agent_ids_before_change = agent_ids }
   after_commit do
@@ -379,6 +388,10 @@ class Rdv < ApplicationRecord
 
     # Jitsi n'autorise pas les - et _ dans les liens de visio
     "https://webconf.numerique.gouv.fr/RdvServicePublic#{uuid}".gsub(/[-_]/, "")
+  end
+
+  def not_cancelled_and_in_the_future?
+    ends_at > Time.zone.now && status.in?(Rdv::NOT_CANCELLED_STATUSES)
   end
 
   private
