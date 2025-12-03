@@ -118,4 +118,35 @@ RSpec.describe CreneauxSearch::Calculator::BusyTimePreloader, type: :service do
       end
     end
   end
+
+  describe "request to fetch rdvs" do
+    it "est optimisée pour utiliser l'index 'calculator_index'. Décommentez le test suivant si celui-ci échoue." do
+      # Voir https://www.postgresql.org/docs/current/indexes-index-only-scans.html
+      request = described_class.new(range, plage_ouverture).send(:optimized_rdv_request)
+      expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).to_sql.squish).to eq <<~SQL.squish
+        SELECT "agents_rdvs"."calculator_rdv_starts_at",
+               "agents_rdvs"."calculator_rdv_ends_at"
+        FROM "agents_rdvs"
+        WHERE "agents_rdvs"."agent_id" = #{plage_ouverture.agent_id}
+          AND "agents_rdvs"."calculator_rdv_not_cancelled_and_in_the_future" = TRUE
+          AND (tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsrange('2021-10-26 06:00:00', '2021-10-29 10:00:00'))
+      SQL
+    end
+
+    # Décommentez ces tests si vous changez la requête pour vérifier qu'elle reste rapide.
+    # Ce test est trop long pour être ajouté à la CI pour chaque build (il faut créer beaucoup de données), mais il est utile si l'index ou la requête change
+    # before do
+    #   # Il faut créer un minimum de données pour que l'index soit utilisé (le query planner prend des décisions en fonction de la taille des tables et des indexes)
+    #   100.times do |i|
+    #     create(:rdv, starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
+    #     create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
+    #   end
+    # end
+    #
+    # it "is optimized to use an index only scan" do
+    #   # Voir https://www.postgresql.org/docs/current/indexes-index-only-scans.html
+    #   request = described_class.new(range, plage_ouverture).send(:optimized_rdv_request)
+    #   expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).explain.inspect).to include "Index Only Scan using calculator_index"
+    # end
+  end
 end

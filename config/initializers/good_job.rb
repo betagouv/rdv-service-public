@@ -38,6 +38,11 @@ Rails.application.configure do
       class: "CronJob::UpdateExpirationsJob",
     },
 
+    update_rdv_calculator_index: {
+      cron: "every day at 03:40 Europe/Paris",
+      class: "CronJob::UpdateRdvCalculatorIndexJob",
+    },
+
     # Reset de la liste d'usagers en salle d'attente, à vider chaque soir
     destroy_redis_waiting_room_keys: {
       cron: "every day at 21:30 Europe/Paris",
