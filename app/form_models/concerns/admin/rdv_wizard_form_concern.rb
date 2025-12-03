@@ -16,7 +16,7 @@ module Admin::RdvWizardFormConcern
     delegate :errors, to: :rdv
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
 
-    def initialize(agent_author, organisation, attributes)
+    def initialize(agent_author, organisation, attributes, session)
       rdv_attributes = attributes.to_h.symbolize_keys.except(:service_id)
       rdv_defaults = {
         agent_ids: [agent_author.id],
@@ -24,6 +24,7 @@ module Admin::RdvWizardFormConcern
         starts_at: Time.zone.now,
         created_by: agent_author,
       }
+      @session = session
       @organisation = organisation
       @agent_author = agent_author
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))

@@ -10,7 +10,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
   ].freeze
 
   def new
-    @rdv_wizard = rdv_wizard_for(query_params)
+    @rdv_wizard = rdv_wizard_for(query_params, session)
 
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
@@ -20,7 +20,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
   end
 
   def create
-    @rdv_wizard = rdv_wizard_for(rdv_params)
+    @rdv_wizard = rdv_wizard_for(rdv_params, session)
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
     authorize(@rdv_wizard.rdv, :create?, policy_class: Agent::RdvPolicy)
@@ -54,7 +54,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     step
   end
 
-  def rdv_wizard_for(request_params)
+  def rdv_wizard_for(request_params, session)
     wizard_class = {
       step1: Admin::RdvWizardForm::Step1,
       step2: Admin::RdvWizardForm::Step2,
@@ -62,7 +62,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
       step4: Admin::RdvWizardForm::Step4,
     }.fetch(current_step.to_sym)
 
-    wizard_class.new(current_agent, current_organisation, request_params)
+    wizard_class.new(current_agent, current_organisation, request_params, session)
   end
 
   def set_services_and_motifs

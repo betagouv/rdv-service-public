@@ -9,9 +9,10 @@ class Admin::RdvWizardForm::Step4
   end
 
   def success_path
+    agent_to_redirect_to = agents.include?(@agent_author) ? @agent_author : agents.first
     admin_organisation_planning_agenda_path(
       rdv.organisation,
-      agent_id: agents.include?(@agent_author) ? @agent_author.id : agents.first.id,
+      selected_agent_ids: (Array(@session["last_selected_agent_ids"]) + [agent_to_redirect_to.id]).uniq,
       selected_event_id: rdv.id,
       date: starts_at.to_date
     )
