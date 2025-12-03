@@ -39,9 +39,9 @@ RSpec.describe "un opérateur peut gérer ses espaces" do
         other_operator = create(:operator)
         other_territory = create(:territory, operator: other_operator)
 
-        expect do
-          visit operators_espace_path(other_territory)
-        end.to raise_error(Pundit::NotAuthorizedError)
+        visit operators_espace_path(other_territory)
+        expect(page).to have_current_path(operators_espaces_path)
+        expect(page).to have_content("Vous n'êtes pas autorisé à effectuer cette action.")
       end
     end
   end
