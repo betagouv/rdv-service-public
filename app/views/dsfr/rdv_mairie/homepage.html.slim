@@ -290,24 +290,18 @@ hr[aria-hidden="true"]
 / We have a long connect timeout set by default though, which may cause slowness, which is why we add this
 / emergency manual env var to be set temporarily and skip this section altogether.
 - if ENV["CACHE_STORE_UNAVAILABLE"].blank?
-  - cached_stats = Rails.cache.fetch_multi("stats.both_instances.2_years.rdvs_count", "stats.both_instances.2_years.active_organisations_count") { nil }
-  - if cached_stats.values.all?
+  - stats_cached_rdvs_count = Rails.cache.fetch("stats.both_instances.1_year.rdvs_count")
+  - if stats_cached_rdvs_count.present?
     .rdv-background-color-blue-ecume-925-125.rdv-color-blue-ecume-sun-247-moon-675-hover.rdv-text-align-center.rdv-text-align-md-left
       .fr-container.fr-py-6w
         .fr-grid-row.fr-grid-row--gutters.rdv-align-items-center
           .fr-col-12.fr-col-md-6.rdv-text-align-md-right.fr-display--lg.fr-mb-0
-            = number_with_delimiter(cached_stats["stats.both_instances.2_years.rdvs_count"], delimiter: " ")
+            = number_with_delimiter(stats_cached_rdvs_count, delimiter: " ")
           .fr-col-12.fr-col-md-6.rdv-text-align-left.rdv-font-size-1-6rem
             .rdv-font-weight-bold
-              | RENDEZ-VOUS PLANIFIÉS
-            div
-              | DANS #{number_with_delimiter(cached_stats["stats.both_instances.2_years.active_organisations_count"], delimiter: " ")} STRUCTURES
-              span[aria-hidden="true"]
-                | *
+              | RENDEZ-VOUS PLANIFIÉS PAR AN
 
     .fr-container.fr-py-3w.rdv-text-align-center
-      span[aria-hidden="true"] *
-      |> Données concernant les 24 derniers mois.
       |> Pour plus d’informations,
       = link_to "consulter nos statistiques ici", stats_path, class: "rdv-white-space-nowrap"
       | .
