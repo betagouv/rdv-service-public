@@ -6,7 +6,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import {
   defaultFullCalendarConfig,
   eventRenderer,
-  setupRefresh,
+  setupPollingRefresh,
+  setupRealtimeRefresh,
   handleAjaxError,
   classicHeaderToolbarLayout,
   betaHeaderToolbarLayout,
@@ -28,7 +29,11 @@ export class AgendaMonoAgent {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-    setupRefresh(this.fullCalendarInstance);
+    if(this.data.realtimeRefresh === "true") {
+      setupRealtimeRefresh(this.fullCalendarInstance, [this.data.agentId]);
+    } else {
+      setupPollingRefresh(this.fullCalendarInstance);
+    }
     document.addEventListener("turbolinks:before-cache", () => {
       // force calendar reload on turbolinks re-visit, otherwise event listeners
       // are not attached

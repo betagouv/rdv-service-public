@@ -55,7 +55,7 @@
   = f.input :city_name, as: :hidden, **input_opts
 
 - if current_territory.enable_address_details
-  = f.input :address_details, **(input_opts.deep_merge(input_html: { data: { "address-autocomplete": "on" }, dir: "ltr" }))
+  = f.input :address_details, **input_opts
 
 - if current_territory.enable_case_number
   = f.input :case_number, **input_opts

@@ -46,6 +46,13 @@ class PlageOuverture < ApplicationRecord
   validates :first_day, realistic_date: true
   validates :recurrence_ends_at, realistic_date: true
 
+  # Hooks
+  after_commit do
+    [agent_id, agent_id_was].uniq.each do |agent_id|
+      AgendaChannel.broadcast_to(agent_id, model: "PlageOuverture")
+    end
+  end
+
   # Scopes
   scope :in_range, lambda { |range|
     return all if range.nil?
