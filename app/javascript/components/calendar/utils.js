@@ -1,6 +1,5 @@
 import frLocale from '@fullcalendar/core/locales/fr';
-import { createAgendaChannel } from "../../cable/create_agenda_channel"
-import { destroyConsumer } from "../../cable/consumer";
+import { getConsumer, destroyConsumer } from "../../cable/consumer";
 
 export const betaPlanningEnabled = () => {
   return !!document.querySelector('main[data-beta-planning-layout="true"]');
@@ -185,23 +184,21 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
   // lorsque l'on quitte la page de calendrier.
   document.addEventListener("turbolinks:before-visit", destroyConsumer);
 
-  agentIds.forEach(agentId => {
-    createAgendaChannel(agentId, (message) => {
-
-      if (Array.isArray(message.refresh_periods) && message.refresh_periods.length > 0) {
-        const beginningOfView = fullCalendarInstance.view.activeStart.toISOString();
-        const endOfView = fullCalendarInstance.view.activeEnd.toISOString();
-        const intersectsFunction = ([periodStart, periodEnd]) => (periodEnd > beginningOfView && periodStart < endOfView);
-        if (message.refresh_periods.some(intersectsFunction)) {
-          fullCalendarInstance.refetchEvents();
-        }
-      }
-
-      else {
+  const messageReceivedCallback = (message) => {
+    if (Array.isArray(message.refresh_periods) && message.refresh_periods.length > 0) {
+      const beginningOfView = fullCalendarInstance.view.activeStart.toISOString();
+      const endOfView = fullCalendarInstance.view.activeEnd.toISOString();
+      const intersectsFunction = ([periodStart, periodEnd]) => (periodEnd > beginningOfView && periodStart < endOfView);
+      if (message.refresh_periods.some(intersectsFunction)) {
         fullCalendarInstance.refetchEvents();
       }
+    } else {
+      fullCalendarInstance.refetchEvents();
+    }
+  };
 
-    });
+  agentIds.forEach(agentId => {
+    getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, { received: messageReceivedCallback });
   });
 };
 
