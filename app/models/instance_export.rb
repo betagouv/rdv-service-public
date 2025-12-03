@@ -51,7 +51,7 @@ class InstanceExport < ApplicationRecord
           CopyAgentJob.perform_later(id, agent_id)
         end
 
-        source_organisation.lieux.enabled.pluck(:id).each do |lieu_id|
+        source_organisation.lieux.pluck(:id).each do |lieu_id|
           CopyLieuJob.perform_later(id, lieu_id)
         end
 
@@ -104,7 +104,7 @@ class InstanceExport < ApplicationRecord
     def perform(instance_export_id, lieu_id)
       instance_export = InstanceExport.find(instance_export_id)
       lieu = Lieu.find(lieu_id)
-      attributes = lieu.attributes.slice(*%w[name address latitude longitude phone_number])
+      attributes = lieu.attributes.slice(*%w[name address latitude longitude phone_number availability])
 
       attributes[:external_reference] = { external_id: lieu.id }
       attributes[:organisation_id] = instance_export.destination_organisation_id
