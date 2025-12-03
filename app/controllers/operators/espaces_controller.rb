@@ -8,7 +8,6 @@ class Operators::EspacesController < OperatorController
   end
 
   def show
-    # TODO: Add policy!
     territory = Territory.find(params[:id])
     authorize(territory, policy_class: OperatorManager::TerritoryPolicy)
 
