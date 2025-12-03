@@ -1,4 +1,6 @@
-import { createConsumer } from "@rails/actioncable"
+import { createConsumer, logger } from "@rails/actioncable"
+
+logger.enabled = true;
 
 let consumer = null;
 
