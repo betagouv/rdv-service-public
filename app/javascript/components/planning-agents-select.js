@@ -4,7 +4,7 @@ export const planningAgentsSelect = () => {
   if(!document.querySelector("#planning_agents_select")) {
     return;
   }
-  const agentSelect = document.querySelector("#agent_id");
+  const agentSelect = document.querySelector("#selected_agent_ids");
   const multiAgentEnableButton = document.querySelector("#multi_agent_enable");
 
   if(!agentSelect.multiple) {

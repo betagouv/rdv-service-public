@@ -19,8 +19,8 @@
                 },
               }
 
-            = form.label :agent_id, "Planning de", class: "fr-label sr-only", for: "agent_id"
-            = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input rdv-min-width-200px"], data: }
+            = form.label :selected_agent_ids, "Planning de", class: "fr-label sr-only", for: "agent_id"
+            = form.select :selected_agent_ids, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "selected_agent_ids[]", class: ["select2-input rdv-min-width-200px"], data: }
 
           .ml-2.d-flex[style="gap: 0 0.5em"]
             - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
@@ -28,7 +28,7 @@
             #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
               = form.submit "Appliquer", {class: "fr-btn  "}
             #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
-              = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, agent_id: current_agent), class: "fr-btn fr-btn--tertiary"
+              = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, selected_agent_ids: [current_agent.id]), class: "fr-btn fr-btn--tertiary"
 
     - unless @agents.size > 1 # Pas la place pour le toggle quand plusieurs agents sont sélectionnés
       div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
