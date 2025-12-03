@@ -51,9 +51,7 @@ module Caldav
       # Si l’événement existe et que l’agent s’est marqué comme disponible, on supprime l’absence
       # Sinon on ignore l’événement
       # Voir https://www.ietf.org/rfc/rfc2445.txt (4.8.2.7 Time Transparency).
-      # On utilise la méthode privée `inner_event` car Calendav n’expose pas cette information directement
-      # On pourra changer ça quand cette diff sera embarquée dans calendav (probablement en 0.6) : https://github.com/pat/calendav/pull/14
-      if event.send(:inner_event).transp == "TRANSPARENT"
+      if event.transp == "TRANSPARENT"
         absence.destroy if absence.persisted?
         return
       end

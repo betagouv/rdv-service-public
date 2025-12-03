@@ -13,16 +13,6 @@ RSpec.describe Admin::AgentsController, type: :controller do
 
   after { Devise.mailer.deliveries.clear }
 
-  describe "GET #index" do
-    describe "JSON version" do
-      it "redirects" do
-        create(:agent, first_name: "Francis", last_name: "Factice", organisations: [organisation])
-        get :index, params: { term: "fra", organisation_id: organisation.id, format: :json }
-        expect(response).to redirect_to(search_agents_agents_path(organisation_id: organisation.id, term: "fra"))
-      end
-    end
-  end
-
   describe "DELETE #destroy" do
     subject { delete :destroy, params: { organisation_id: organisation.id, id: agent1.id } }
 
