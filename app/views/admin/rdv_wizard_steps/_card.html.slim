@@ -1,8 +1,8 @@
-.row.justify-content-md-center
-  .col-md-12.col-lg-8
+.fr-grid-row.justify-content-md-center
+  .fr-col-md-12.fr-col-lg-8
     = render "common/stepper", step_count: 4, current_step: current_step, step_title: step_title, next_step_title: local_assigns[:next_step_title]
     .card
       - if local_assigns[:previous_steps]
         = render "admin/rdv_wizard_steps/stepper", rdv_wizard_form: rdv_wizard_form, steps: previous_steps
-      .card-body.px-3
+      .card-body.fr-p-2w
         = yield
