@@ -74,7 +74,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       francis = create(:user, first_name: "Francis", last_name: "Factice")
 
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      sleep 0.2 # on attend 200ms que la connexion Websocket se fasse
+      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
       rdv = create(:rdv, agents: [agent], motif:, organisation:, users: [francis], starts_at:)
       expect(page).to have_selector(".fc-event", text: "14:00 - 14:45\nFrancis FACTICE")
@@ -103,7 +103,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
     it "refreshes plages", js: true do
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      sleep 0.2 # on attend 200ms que la connexion Websocket se fasse
+      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
       plage = create(:plage_ouverture, organisation:, agent:, title: "Ma plage", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event.fc-bg-event", text: "Ma plage")
@@ -117,7 +117,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
     it "refreshes absence", js: true do
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
-      sleep 0.2 # on attend 200ms que la connexion Websocket se fasse
+      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
       absence = create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event", text: "Mon indispo")
@@ -140,7 +140,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
       click_on "Planning"
       expect(page).to have_content("Planning de") # on vérifie que Turbolinks nous a bien changé la page
-      sleep 0.2 # on attend 200ms que la connexion Websocket se fasse
+      sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
       create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
       expect(page).to have_selector(".fc-event", text: "Mon indispo")
