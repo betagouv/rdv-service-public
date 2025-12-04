@@ -1,70 +1,120 @@
 RSpec.describe Participation::StatusChangeable, type: :concern do
   before { stub_netsize_ok }
 
-  describe "Participation change status" do
-    let(:agent) { create(:agent, rdv_notifications_level: :others) }
-    let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent] }
-    let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: rdv.organisation, subscriptions: ["rdv"]) }
-    let(:participation1) { create(:participation, rdv: rdv) }
-    let(:participation_with_excused_status) { create(:participation, rdv: rdv) }
-    let(:participation_with_lifecycle_disabled) { create(:participation, rdv: rdv, send_lifecycle_notifications: false) }
+  describe "#change_status_and_notify" do
+    let(:organisation) { create(:organisation) }
+    let(:agent) { create(:agent, organisations: [organisation], rdv_notifications_level: :others) }
 
-    describe "when participation is revoked or excused" do
-      Participation::CANCELLED_STATUSES.each do |status|
-        it "send notifications and change participation object status to #{status}" do
-          participation1.change_status_and_notify(agent, status)
-          expect(participation1.reload.status).to eq(status)
-          expect_notifications_sent_for(rdv, participation1.user, :rdv_cancelled)
+    context "RDV collectif" do
+      let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent], organisation: }
+      let(:participation1) { create(:participation, rdv: rdv) }
+      let(:participation_with_excused_status) { create(:participation, rdv: rdv) }
+      let(:participation_with_lifecycle_disabled) { create(:participation, rdv: rdv, send_lifecycle_notifications: false) }
+
+      describe "when participation is revoked or excused" do
+        Participation::CANCELLED_STATUSES.each do |status|
+          it "send notifications and change participation object status to #{status}" do
+            participation1.change_status_and_notify(agent, status)
+            expect(participation1.reload.status).to eq(status)
+            expect_notifications_sent_for(rdv, participation1.user, :rdv_cancelled)
+            expect_no_email_sent_for(rdv, agent, :rdv_cancelled)
+          end
+        end
+
+        it "do not send notification when already excused or lifecycle off" do
+          participation_with_excused_status.update!(status: "excused")
+          participation_with_excused_status.change_status_and_notify(agent, "revoked")
+          participation_with_lifecycle_disabled.change_status_and_notify(agent, "revoked")
+          expect(participation_with_excused_status.reload.status).to eq("revoked")
+          expect(participation_with_lifecycle_disabled.reload.status).to eq("revoked")
+          expect_no_notifications
         end
       end
 
-      it "do not send notification when already excused or lifecycle off" do
-        participation_with_excused_status.update!(status: "excused")
-        participation_with_excused_status.change_status_and_notify(agent, "revoked")
-        participation_with_lifecycle_disabled.change_status_and_notify(agent, "revoked")
-        expect(participation_with_excused_status.reload.status).to eq("revoked")
-        expect(participation_with_lifecycle_disabled.reload.status).to eq("revoked")
-        expect_no_notifications
+      context "c’est un autre agent qui annule la participation" do
+        let(:other_agent) { create(:agent, organisations: [organisation], rdv_notifications_level: :others) }
+
+        specify do
+          participation1.change_status_and_notify(other_agent, "excused")
+          expect(participation1.reload.status).to eq("excused")
+          expect_notifications_sent_for(rdv, participation1.user, :rdv_cancelled)
+          expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
+        end
+      end
+
+      describe "when participation is seen (no notifications)" do
+        it "doesnt send notifications and change participation object status" do
+          participation1.change_status_and_notify(agent, "seen")
+          expect(participation1.reload.status).to eq("seen")
+          expect_no_notifications_for_user(participation1.user)
+        end
+      end
+
+      describe "when participation is noshow (no notifications)" do
+        it "doesnt send notifications and change participation object status" do
+          participation1.change_status_and_notify(agent, "noshow")
+          expect(participation1.reload.status).to eq("noshow")
+          expect_no_notifications_for_user(participation1.user)
+        end
+      end
+
+      describe "when participation is reloaded from cancelled (excused or revoked)" do
+        it "send notifications creation and change participation object status" do
+          participation1.update(status: "excused")
+          participation1.change_status_and_notify(agent, "unknown")
+          expect(participation1.reload.status).to eq("unknown")
+          expect_notifications_sent_for(rdv, participation1.user, :rdv_created)
+        end
+
+        it "do not send notification creation when lifecycle off and change participation object status" do
+          participation_with_lifecycle_disabled.change_status_and_notify(agent, "excused")
+          participation_with_lifecycle_disabled.change_status_and_notify(agent, "unknown")
+          expect(participation_with_lifecycle_disabled.reload.status).to eq("unknown")
+          expect_no_notifications_for_user(participation1.user)
+        end
+      end
+
+      describe "triggers webhook" do
+        let!(:webhook_endpoint) { create(:webhook_endpoint, organisation:, subscriptions: ["rdv"]) }
+
+        it "sends a webhook" do
+          rdv.reload
+          expect(WebhookJob).to receive(:perform_later).at_least(1)
+          participation1.change_status_and_notify(agent, "noshow")
+        end
       end
     end
 
-    describe "when participation is seen (no notifications)" do
-      it "doesnt send notifications and change participation object status" do
-        participation1.change_status_and_notify(agent, "seen")
-        expect(participation1.reload.status).to eq("seen")
-        expect_no_notifications_for_user(participation1.user)
+    context "RDV classique (non-collectif) avec un seul usager" do
+      # change_status_and_notify est appelé sur les RDV classiques depuis l’API
+      let(:user1) { create(:user, organisations: [organisation]) }
+      let(:rdv) { create :rdv, users: [user1], starts_at: Time.zone.tomorrow, agents: [agent], organisation: }
+      let(:other_agent) { create(:agent, organisations: [organisation], rdv_notifications_level: :others) }
+
+      specify do
+        participation1 = rdv.participations.first
+        participation1.change_status_and_notify(other_agent, "excused")
+        expect(participation1.reload.status).to eq("excused")
+        expect(rdv.reload.status).to eq("excused") # le statut du RDV est modifié en conséquence
+        expect_notifications_sent_for(rdv, user1, :rdv_cancelled)
+        expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
       end
     end
 
-    describe "when participation is noshow (no notifications)" do
-      it "doesnt send notifications and change participation object status" do
-        participation1.change_status_and_notify(agent, "noshow")
-        expect(participation1.reload.status).to eq("noshow")
-        expect_no_notifications_for_user(participation1.user)
-      end
-    end
+    context "RDV classique (non-collectif) avec plusieurs usagers" do
+      # change_status_and_notify est appelé sur les RDV classiques depuis l’API
+      let(:user1) { create(:user, organisations: [organisation]) }
+      let(:user2) { create(:user, organisations: [organisation]) }
+      let(:rdv) { create :rdv, users: [user1, user2], starts_at: Time.zone.tomorrow, agents: [agent], organisation: }
+      let(:other_agent) { create(:agent, organisations: [organisation], rdv_notifications_level: :others) }
 
-    describe "when participation is reloaded from cancelled (excused or revoked)" do
-      it "send notifications creation and change participation object status" do
-        participation1.update(status: "excused")
-        participation1.change_status_and_notify(agent, "unknown")
-        expect(participation1.reload.status).to eq("unknown")
-        expect_notifications_sent_for(rdv, participation1.user, :rdv_created)
-      end
-
-      it "do not send notification creation when lifecycle off and change participation object status" do
-        participation_with_lifecycle_disabled.change_status_and_notify(agent, "excused")
-        participation_with_lifecycle_disabled.change_status_and_notify(agent, "unknown")
-        expect(participation_with_lifecycle_disabled.reload.status).to eq("unknown")
-        expect_no_notifications_for_user(participation1.user)
-      end
-    end
-
-    describe "triggers webhook" do
-      it "sends a webhook" do
-        rdv.reload
-        expect(WebhookJob).to receive(:perform_later).at_least(1)
-        participation1.change_status_and_notify(agent, "noshow")
+      specify do
+        participation1 = rdv.participations.to_a.first { _1.user == user1 }
+        participation1.change_status_and_notify(other_agent, "excused")
+        expect(participation1.reload.status).to eq("excused")
+        expect(rdv.reload.status).to eq("unknown") # le statut du RDV n’est pas modifié
+        expect_no_email_sent_for(rdv, user1, :rdv_cancelled) # TODO : un email devrait être envoyé à l’usager dans ce cas
+        expect_notifications_sent_for(rdv, agent, :rdv_cancelled) # TODO: ce mail est incorrect dans ce cas, il ne devrait pas être envoyé
       end
     end
   end
