@@ -9,13 +9,16 @@ module ApplicationCable
 
     private
 
+    # rubocop:disable Metrics/PerceivedComplexity
     def find_verified_agent
       session = cookies.encrypted[Rails.application.config.session_options[:key]]
-      agent_id_from_session = session["warden.user.agent.key"]&.first&.first if session
+      reject_unauthorized_connection and return unless session
+
+      agent_id_from_session = session["warden.user.agent.key"]&.first&.first
 
       # Débugging temporaire
-      if session && !agent_id_from_session
-        Sentry.capture_message("Warn: Cookie de session trouvé mais sans ID", extra: { session: })
+      unless agent_id_from_session
+        Rails.logger.debug { "Warn: Cookie de session trouvé mais sans ID. Session: #{session.inspect}" }
       end
 
       if agent_id_from_session
@@ -26,5 +29,6 @@ module ApplicationCable
         reject_unauthorized_connection
       end
     end
+    # rubocop:enable Metrics/PerceivedComplexity
   end
 end
