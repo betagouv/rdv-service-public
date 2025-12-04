@@ -1,5 +1,5 @@
 RSpec.describe "Un agent peut retirer des usagers d’un RDV Collectif", js: true do
-  # on a besoin de js:true ici pour faire fonctionner qqch?
+  let(:now) { Time.zone.parse("2025-11-26 10:00") }
 
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
@@ -7,11 +7,12 @@ RSpec.describe "Un agent peut retirer des usagers d’un RDV Collectif", js: tru
   let!(:agent_bouba) { create(:agent, first_name: "Bouba", email: "bouba@service.fr", service:, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, :collectif, service:, organisation:, name: "Atelier Collectif") }
   let!(:lieu) { create(:lieu, organisation:) }
-  let(:starts_at) { Time.zone.today.next_occurring(:wednesday).at(Tod::TimeOfDay.parse("09:00")) }
+  let(:starts_at) { now.to_date.next_occurring(:wednesday).at(Tod::TimeOfDay.parse("09:00")) }
   let!(:user_amine) { create(:user, first_name: "Amine", last_name: "BENCHEIK", email: "amine@bencheik.com", organisations: [organisation]) }
   let!(:user_lea) { create(:user, first_name: "Léa", last_name: "O", organisations: [organisation]) }
   let!(:rdv) { create(:rdv, users: [user_amine, user_lea], motif:, organisation:, agents: [agent_bouba], lieu:, starts_at:) }
 
+  before { travel_to(now) }
   before { stub_netsize_ok }
 
   specify do
