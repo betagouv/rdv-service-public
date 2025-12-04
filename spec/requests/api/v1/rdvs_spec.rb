@@ -61,7 +61,7 @@ RSpec.describe "RDV API" do
 
     describe "selecting which associations are loaded" do
       it "makes the api response smaller" do
-        get "/api/v1/rdvs", headers: headers, params: { include: %i[lieu motif agents] }, as: :json
+        get "/api/v1/rdvs", headers: headers, params: { include: { "0" => "lieu", "1" => "motif", "2" => "agents" } }, as: :json
         rdv = parsed_response_body["rdvs"].first
 
         expect(rdv["agents"]).to be_present

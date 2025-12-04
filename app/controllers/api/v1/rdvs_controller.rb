@@ -5,7 +5,11 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
     rdvs = rdvs.starts_after(Time.zone.parse(params[:starts_after])) if params[:starts_after].present?
     rdvs = rdvs.starts_before(Time.zone.parse(params[:starts_before])) if params[:starts_before].present?
 
-    rdvs = rdvs.includes(:organisation, :motif, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
+    rdvs = if params[:include].blank?
+             rdvs.includes(:organisation, :motif, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
+           else
+             rdvs.includes(:lieu, :agents, motif: [:motif_category]) # TODO: ces includes sont spécifiques à MSS, il faudrait plutôt les déterminer en fonction des params
+           end
 
     if params[:id].present?
       rdvs = rdvs.where(id: params[:id])

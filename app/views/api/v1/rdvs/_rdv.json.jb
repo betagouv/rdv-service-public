@@ -24,7 +24,7 @@ if params[:include].blank? || params[:include].values.include?("motif")
 end
 
 # DEPRECATED : Nous laissons l'association `:users` le temps que le 92, 26, 62, 64, et data-insertion mettent à jours leur système.
-if params[:include].blank? || params[:include].values.include?("users")
+if params[:include].blank?
   json[:users] = UserBlueprint.render_as_hash(rdv.users)
 end
 
