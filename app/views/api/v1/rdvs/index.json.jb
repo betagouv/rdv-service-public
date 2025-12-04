@@ -1,0 +1,14 @@
+page_number = params[:page].presence&.to_i || 1
+
+@rdvs = @rdvs.page(page_number).per(Api::V1::BaseController::PAGINATE_PER)
+
+{
+  rdvs: @rdvs.map { |rdv| render(rdv) },
+  meta: {
+    current_page: @rdvs.current_page,
+    next_page: @rdvs.next_page,
+    prev_page: @rdvs.prev_page,
+    total_pages: @rdvs.total_pages,
+    total_count: @rdvs.total_count,
+  },
+}

@@ -1,0 +1,43 @@
+json = {}
+
+([:id] + RdvBlueprint::FIELDS).each do |field_name|
+  json[field_name] = rdv.public_send(field_name)
+end
+
+created_by_type_map = {
+  "Agent" => "agent",
+  "User" => "user",
+  "Prescripteur" => "prescripteur",
+  "FileAttente" => "file_attente",
+}
+
+json[:created_by] = created_by_type_map[rdv.created_by_type]
+
+json[:url_for_agent] = Rails.application.routes.url_helpers.agents_rdv_url(rdv, host: rdv.domain.host_name)
+
+if params[:include].blank? || params[:include].include?("organisation")
+  json[:organisation] = OrganisationBlueprint.render_as_hash(rdv.organisation)
+end
+
+if params[:include].blank? || params[:include].include?("motif")
+  json[:motif] = MotifBlueprint.render_as_hash(rdv.motif)
+end
+
+# DEPRECATED : Nous laissons l'association `:users` le temps que le 92, 26, 62, 64, et data-insertion mettent à jours leur système.
+if params[:include].blank? || params[:include].include?("users")
+  json[:users] = UserBlueprint.render_as_hash(rdv.users)
+end
+
+if params[:include].blank? || params[:include].include?("participations")
+  json[:participations] = ParticipationBlueprint.render_as_hash(rdv.participations)
+end
+
+if params[:include].blank? || params[:include].include?("agents")
+  json[:agents] = AgentBlueprint.render_as_hash(rdv.agents)
+end
+
+if params[:include].blank? || params[:include].include?("lieu")
+  json[:lieu] = LieuBlueprint.render_as_hash(rdv.lieu)
+end
+
+json

@@ -23,7 +23,9 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
       rdvs = rdvs.where(status: params[:status])
     end
 
-    render_collection(rdvs)
+    # render_collection(rdvs)
+    # Sur cet endpoint on render app/views/api/v1/rdvs/index.json.jb pour pouvoir faire de l'affichage conditionnel des associations
+    @rdvs = rdvs
   end
 
   # Cet endpoint est utilisé seulement pour la copie des données d'une instance à l'autre, il n'est donc pas documenté.
