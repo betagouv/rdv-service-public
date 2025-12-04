@@ -197,8 +197,27 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
     }
   };
 
+  const disconnectCallback = () => {
+    clearTimeout(fullCalendarInstance.timeoutId);
+    fullCalendarInstance.timeoutId = setTimeout(() => {
+      document.querySelector("#agenda_disconnecter_warning")?.classList?.remove("hidden");
+    }, 2000);
+  };
+
+  const connectCallback = ({reconnected}) => {
+    if (reconnected) {
+      clearTimeout(fullCalendarInstance.timeoutId);
+      document.querySelector("#agenda_disconnecter_warning")?.classList?.add("hidden");
+      fullCalendarInstance.refetchEvents();
+    }
+  };
+
   agentIds.forEach(agentId => {
-    getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, { received: messageReceivedCallback });
+    getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, {
+      received: messageReceivedCallback,
+      connected: connectCallback,
+      disconnected: disconnectCallback,
+    });
   });
 };
 
