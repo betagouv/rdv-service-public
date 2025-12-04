@@ -24,7 +24,6 @@ class MonSuiviSocial < Sinatra::Base
     status 200
     if session[:email]
 
-      # Votre email est #{session[:email]}, votre token est #{session[:access_token]}, et votre refresh_token est #{session[:refresh_token]}
       <<-HTML
         <h1>Mon Suivi Social (test)</h1>
         Vous êtes connecté.
@@ -32,6 +31,8 @@ class MonSuiviSocial < Sinatra::Base
         <a href="http://www.rdv-mairie.localhost:3000/admin/organisations/configuration">Vérifier ma Configuration sur RDV Service Public</a>
         <br />
         <form method="post" action="/prendre_rdv"><button>Prendre RDV avec Françis Factice</button></form>
+
+        <p>Votre email est #{session[:email]}, votre token est #{session[:access_token]}, et votre refresh_token est #{session[:refresh_token]}</p>
 
         <a href="/logout">Déconnexion</a>
       HTML
