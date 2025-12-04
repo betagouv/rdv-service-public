@@ -47,15 +47,8 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
       rdv.agents = Agent.where(email: params[:agent_emails])
 
       rdv.created_by_type = params[:created_by_type]
-      # Il faut un created_by sur le rendez-vous pour initialiser les created_by des participations
-      # Mais le champs n'est pas utilisé à part pour envoyer des notifications (ce qu'on ne fait pas ici)
-      # ou identifier un prescripteur, ce qui n'est pas très utile pour les rendez-vous passés.
-      # On peut donc se permettre de faire l'approximation que c'est l'usager ou l'agent du rendez-vous qui l'a créé.
-      rdv.created_by_id = if rdv.created_by_type == "User"
-                            rdv.user_ids.first
-                          else
-                            rdv.agent_ids.first
-                          end
+
+      rdv.created_by_id = ExternalReference.find_by(item_type: params[:created_by_type], external_id: params[:created_by_external_id], oauth_application:)&.item_id
 
       authorize(rdv, :update?, policy_class: Agent::RdvPolicy)
 
