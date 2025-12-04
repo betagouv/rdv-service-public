@@ -16,8 +16,8 @@ module ApplicationCable
         agent_id_from_session = session["warden.user.agent.key"].first.first
         Agent.find_by(id: agent_id_from_session) || reject_unauthorized_connection
       else
-        # On est dans ce cas lorsqu'un agent laisse son navigateur ouvert
-        # toute la nuit et que le cookie a expiré le lendemain.
+        # On est par exemple dans ce cas lorsqu'un agent laisse son navigateur
+        # ouvert toute la nuit et que le cookie a expiré le lendemain.
         reject_unauthorized_connection
       end
     end

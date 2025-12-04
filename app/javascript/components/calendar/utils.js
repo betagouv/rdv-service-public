@@ -204,7 +204,10 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
     }, 5000);
   };
 
-  const connectCallback = ({reconnected}) => {
+  const connectCallback = ({ reconnected }) => {
+    // `reconnected` nous indique que cette connexion fait suite à une
+    // préalable déconnexion. C'est bien ce qui nous intéresse puisque
+    // nous voulons cacher l'avertissement affiché lors de la perte de connexion.
     if (reconnected) {
       clearTimeout(fullCalendarInstance.timeoutId);
       document.querySelector("#agenda_disconnecter_warning")?.classList?.add("hidden");
