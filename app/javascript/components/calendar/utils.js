@@ -201,7 +201,7 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
     clearTimeout(fullCalendarInstance.timeoutId);
     fullCalendarInstance.timeoutId = setTimeout(() => {
       document.querySelector("#agenda_disconnecter_warning")?.classList?.remove("hidden");
-    }, 2000);
+    }, 5000);
   };
 
   const connectCallback = ({reconnected}) => {
