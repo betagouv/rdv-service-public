@@ -23,11 +23,6 @@ if params[:include].blank? || params[:include].values.include?("motif")
   json[:motif] = MotifBlueprint.render_as_hash(rdv.motif)
 end
 
-# DEPRECATED : Nous laissons l'association `:users` le temps que le 92, 26, 62, 64, et data-insertion mettent à jours leur système.
-if params[:include].blank?
-  json[:users] = UserBlueprint.render_as_hash(rdv.users)
-end
-
 if params[:include].blank? || params[:include].values.include?("participations")
   json[:participations] = ParticipationBlueprint.render_as_hash(rdv.participations)
 end
@@ -38,6 +33,11 @@ end
 
 if params[:include].blank? || params[:include].values.include?("lieu")
   json[:lieu] = LieuBlueprint.render_as_hash(rdv.lieu)
+end
+
+# DEPRECATED : Nous laissons l'association `:users` le temps que le 92, 26, 62, 64, et data-insertion mettent à jours leur système.
+if params[:include].blank?
+  json[:users] = UserBlueprint.render_as_hash(rdv.users)
 end
 
 json
