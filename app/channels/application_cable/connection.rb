@@ -13,6 +13,11 @@ module ApplicationCable
       session = cookies.encrypted[Rails.application.config.session_options[:key]]
       agent_id_from_session = session["warden.user.agent.key"]&.first&.first if session
 
+      # Débugging temporaire
+      if session && !agent_id_from_session
+        Sentry.capture_message("Warn: Cookie de session trouvé mais sans ID", extra: { session: })
+      end
+
       if agent_id_from_session
         Agent.find_by(id: agent_id_from_session) || reject_unauthorized_connection
       else
