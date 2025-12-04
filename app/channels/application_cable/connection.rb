@@ -16,9 +16,11 @@ module ApplicationCable
 
       agent_id_from_session = session["warden.user.agent.key"]&.first&.first
 
-      # Débugging temporaire
+      # Débugging temporaire : on a un cookie de session, mais pas d'agent_id
       unless agent_id_from_session
-        Rails.logger.debug { "Warn: Cookie de session trouvé mais sans ID. Session: #{session.inspect}" }
+        Redis.with_connection do |redis|
+          redis.lpush("actioncable_connection_debug", session.to_json)
+        end
       end
 
       if agent_id_from_session
