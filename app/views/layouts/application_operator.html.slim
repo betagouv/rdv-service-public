@@ -1,0 +1,37 @@
+doctype html
+html lang="fr"
+  head
+    = render "common/meta"
+    = stylesheet_link_tag "#{dsfr_path}/dsfr.min.css", "data-turbo-track": "reload"
+    = stylesheet_link_tag "#{dsfr_path}/utility/icons/icons.min.css", "data-turbo-track": "reload"
+    = javascript_include_tag "#{dsfr_path}/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
+    = javascript_include_tag "#{dsfr_path}/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
+  body
+    = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: { id: "header" } do |header|
+      ruby:
+        header.with_operator_image title: "", src: asset_path(current_domain.dark_logo_path), alt: "Accueil - #{current_domain.name}"
+        if operator_manager_signed_in?
+          header.with_tool_link title: "Contacter RDV Service Public", path: new_aide_demande_support_path(role: "agent"), html_attributes: { class: "fr-icon-question-line" }
+          header.with_tool_link title: "Déconnexion", path: operator_sign_out_path, html_attributes: { class: "fr-icon-lock-fill" }
+        end
+    main#content[role="main"]
+      .fr-container
+        = render "layouts/flash"
+        - if operator_manager_signed_in?
+          .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+            .fr-col-12.fr-col-md-4
+              nav.fr-sidemenu.fr-sidemenu--sticky-full-height[role="navigation"]
+                .fr-sidemenu__inner
+                  button.fr-sidemenu__btn[aria-expanded="false" aria-controls="sidemenu"]
+                  .fr-collapse#sidemenu
+                    ul.fr-sidemenu__list
+                      li.fr-sidemenu__item
+                        = link_to "Espaces", operators_espaces_path, class: "fr-sidemenu__link", aria: { current: current_page?(operators_espaces_path) }
+                      li.fr-sidemenu__item
+                        = link_to "Configuration", operators_configuration_index_path, class: "fr-sidemenu__link", aria: { current: current_page?(operators_configuration_index_path) }
+            .fr-col-12.fr-col-md-8
+              - if content_for :title
+                h1= yield :title
+              = yield
+        - else
+          = yield

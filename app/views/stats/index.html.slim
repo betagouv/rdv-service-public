@@ -1,5 +1,3 @@
-- content_for :title, "Statistiques"
-
 - content_for :additional_stylesheets do
   link href="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css" rel="stylesheet"
 
@@ -7,6 +5,58 @@
   script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js" crossorigin='anonymous' integrity="sha384-bLkmUMwRt9nFp2+XvlPOzIkNUx/mnjvxxE7kI6bJWKMz/sfwiK5nra6w+60B9zyF"
 
   = javascript_include_tag "lieux_map"
+
+.fr-grid-row.fr-grid-row--gutters.fr-mb-4w.fr-mt-2w.rdv-align-items-center.rdv-flex-wrap-wrap-reverse
+  .fr-col-12.fr-col-md-6
+    h1
+      | Rapprocher le service public des citoyens, rendez-vous après rendez-vous.
+    p.fr-text--lead
+      | Voici comment RDV Service Public facilite l’accès au service public et optimise le temps des agents partout en France.
+  .fr-col-12.fr-col-md-6
+    = image_tag "rdv_mairie/stats-hero.png", alt: "", class: "fr-responsive-img rdv-object-fit-contain"
+
+- if ENV["CACHE_STORE_UNAVAILABLE"].blank?
+  - stats_cached_rdvs_count = Rails.cache.fetch("stats.both_instances.1_year.rdvs_count")
+  - if stats_cached_rdvs_count.present?
+    .fr-grid-row.fr-grid-row--gutters.fr-mb-5w.fr-grid-row--center
+      .fr-col-12.fr-col-md-6.rdv-text-align-center
+        .fr-mb-2w.fr-display--xl.rdv-color-text-action-high-blue-france
+          = number_with_delimiter(stats_cached_rdvs_count, delimiter: " ")
+        .fr-h5.rdv-color-text-action-high-blue-france.fr-mb-0
+          |> C’est le nombre de rendez-vous planifiés
+          br.fr-hidden.fr-unhidden-md
+          | ces 12 derniers mois
+
+  - stats_cached = Rails.cache.fetch_multi("stats.both_instances.1_month.active_agents_count", "stats.both_instances.1_month.active_organisations_count", "stats.both_instances.1_month.rdvs_count") { nil }
+  - if stats_cached.values.all?
+    .fr-grid-row.fr-grid-row--gutters.fr-mb-8w
+      .fr-col-12.fr-col-md-4
+        .rdv-stats-hero-card
+          .fr-mb-1w.fr-display--xs= number_with_delimiter(stats_cached["stats.both_instances.1_month.rdvs_count"], delimiter: " ")
+          .rdv-display-flex.rdv-align-items-center
+            p.fr-mb-0 Rendez-vous par mois
+            button aria-describedby="rdv-tooltip-stats-rdvs" type="button" class="fr-btn--tooltip fr-btn"
+              | infobulle
+            span.fr-tooltip.fr-placement#rdv-tooltip-stats-rdvs role="tooltip"
+              | Nombre de rendez-vous planifiés sur les 30 derniers jours
+      .fr-col-12.fr-col-md-4
+        .rdv-stats-hero-card
+          .fr-mb-1w.fr-display--xs= number_with_delimiter(stats_cached["stats.both_instances.1_month.active_agents_count"], delimiter: " ")
+          .rdv-display-flex.rdv-align-items-center
+            p.fr-mb-0 Agents actifs par mois
+            button aria-describedby="rdv-tooltip-stats-agents" type="button" class="fr-btn--tooltip fr-btn"
+              | infobulle
+            span.fr-tooltip.fr-placement#rdv-tooltip-stats-agents role="tooltip"
+              | Nombre d’agents qui se sont connectés à l’application dans les 30 derniers jours
+      .fr-col-12.fr-col-md-4
+        .rdv-stats-hero-card
+          .fr-mb-1w.fr-display--xs= number_with_delimiter(stats_cached["stats.both_instances.1_month.active_organisations_count"], delimiter: " ")
+          .rdv-display-flex.rdv-align-items-center
+            p.fr-mb-0 Organisations actives par mois
+            button aria-describedby="rdv-tooltip-stats-organisations" type="button" class="fr-btn--tooltip fr-btn"
+              | infobulle
+            span.fr-tooltip.fr-placement#rdv-tooltip-stats-organisations role="tooltip"
+              | Nombre d’organisations qui ont au moins un rendez-vous planifié dans les 30 derniers jours
 
 .fr-grid-row.fr-grid-row--gutters.rdv-flex-wrap-wrap-reverse.fr-mb-8w
   .fr-col-12.fr-col-md-4

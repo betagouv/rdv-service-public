@@ -5,6 +5,7 @@ class OperatorDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     territories: Field::HasMany,
+    operator_managers: Field::HasMany,
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[
@@ -16,6 +17,7 @@ class OperatorDashboard < Administrate::BaseDashboard
     id
     name
     territories
+    operator_managers
   ].freeze
 
   FORM_ATTRIBUTES = %i[

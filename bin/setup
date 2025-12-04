@@ -16,7 +16,7 @@ FileUtils.chdir APP_ROOT do
   puts "== Installing dependencies =="
   system! "gem install bundler --conservative"
   system("bundle check") || system!("bundle install")
-  system! "yarn install"
+  system! "yarn install --frozen-lockfile"
   system! "yarn run playwright install chromium --with-deps"
 
   # puts "\n== Copying sample files =="

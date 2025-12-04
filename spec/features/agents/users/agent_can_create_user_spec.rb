@@ -64,4 +64,15 @@ RSpec.describe "Agent can create user" do
     expect(find("span", text: /Accepte les notifications par email/).ancestor("li")).to have_content("Désactivées")
     expect(find("span", text: /Accepte les notifications par SMS/).ancestor("li")).to have_content("Désactivées")
   end
+
+  context "champ complément d’adresse activé sur le territoire", js: true do
+    let!(:territory) { create(:territory, enable_address_field: true, enable_address_details: true) }
+
+    it "permet de créer un usager avec juste nom-prénom" do
+      fill_in :user_first_name, with: "Marco"
+      fill_in :user_last_name, with: "Lebreton"
+      click_on "Enregistrer"
+      expect_page_title("Marco LEBRETON")
+    end
+  end
 end

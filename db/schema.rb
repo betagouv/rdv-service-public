@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_17_105536) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_130457) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -173,6 +173,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_105536) do
     t.text "outlook_id"
     t.boolean "outlook_create_in_progress", default: false, null: false
     t.string "caldav_url"
+    t.datetime "calculator_rdv_starts_at", comment: "Colonne indexée et utilisée en pour optimiser les performances du calculateur de créneaux"
+    t.datetime "calculator_rdv_ends_at", comment: "Colonne indexée et utilisée en pour optimiser les performances du calculateur de créneaux"
+    t.boolean "calculator_rdv_not_cancelled_and_in_the_future", comment: "Colonne indexée et utilisée en pour optimiser les performances du calculateur de créneaux"
+    t.index "agent_id, tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)'::text)", name: "calculator_index", where: "calculator_rdv_not_cancelled_and_in_the_future", include: ["calculator_rdv_starts_at", "calculator_rdv_ends_at"]
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["caldav_url"], name: "index_agents_rdvs_on_caldav_url", where: "(caldav_url IS NOT NULL)"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
@@ -465,6 +469,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_105536) do
     t.bigint "default_service_id", comment: "Indique le service qui sera ajouté au territoire par défaut si un agent qui utilise cette application ouvre un nouvel espace.\nCette colonne indique aussi que les agents qui utilisent cette application sont autorisés à ouvrir un nouvel espace.\n"
     t.index ["default_service_id"], name: "index_oauth_applications_on_default_service_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+  end
+
+  create_table "operator_managers", force: :cascade do |t|
+    t.text "first_name"
+    t.text "last_name"
+    t.text "email"
+    t.text "pro_connect_openid_sub"
+    t.bigint "operator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_operator_managers_on_email", unique: true
+    t.index ["operator_id"], name: "index_operator_managers_on_operator_id"
   end
 
   create_table "operators", force: :cascade do |t|
@@ -904,6 +920,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_105536) do
   add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_applications", "services", column: "default_service_id"
+  add_foreign_key "operator_managers", "operators"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"

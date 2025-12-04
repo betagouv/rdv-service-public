@@ -50,6 +50,14 @@ class CronJob < ApplicationJob
     end
   end
 
+  class UpdateRdvCalculatorIndexJob < CronJob
+    def perform
+      AgentsRdv.where(calculator_rdv_not_cancelled_and_in_the_future: true)
+        .where("calculator_rdv_ends_at < ?", Time.zone.now)
+        .update_all(calculator_rdv_not_cancelled_and_in_the_future: false) # rubocop:disable Rails/SkipsModelValidations
+    end
+  end
+
   class DestroyOldRdvsAndInactiveAccountsJob < CronJob
     def perform
       two_years_ago = 2.years.ago
