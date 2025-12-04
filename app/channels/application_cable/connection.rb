@@ -11,9 +11,9 @@ module ApplicationCable
 
     def find_verified_agent
       session = cookies.encrypted[Rails.application.config.session_options[:key]]
+      agent_id_from_session = session["warden.user.agent.key"]&.first&.first if session
 
-      if session
-        agent_id_from_session = session["warden.user.agent.key"].first.first
+      if agent_id_from_session
         Agent.find_by(id: agent_id_from_session) || reject_unauthorized_connection
       else
         # On est par exemple dans ce cas lorsqu'un agent laisse son navigateur
