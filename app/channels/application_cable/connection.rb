@@ -15,7 +15,7 @@ module ApplicationCable
 
       # NOTE : Le cookie de session peut être manquant ici, notamment si l'agent laisse son
       # navigateur ouvert toute la nuit et que le cookie de session a expiré le lendemain.
-      agent_id_from_session = session["warden.user.agent.key"]&.first&.first.presence
+      agent_id_from_session = session["warden.user.agent.key"]&.first&.first.presence if session
 
       if session && agent_id_from_session.nil?
         # Débugging temporaire : on a un cookie de session, mais pas d'agent_id, on veut en savoir plus !
