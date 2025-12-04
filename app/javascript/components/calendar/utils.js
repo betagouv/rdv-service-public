@@ -1,4 +1,16 @@
 import frLocale from '@fullcalendar/core/locales/fr';
+import { getConsumer, destroyConsumer } from "../../cable/consumer";
+
+export const betaPlanningEnabled = () => {
+  return !!document.querySelector('main[data-beta-planning-layout="true"]');
+};
+
+export const betaHeaderToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "" };
+export const classicHeaderToolbarLayout = { center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek" };
+
+export const betaWeekTitleFormat = { month: "long", year: "numeric" };
+
+export const betaDayHeaderFormat = { weekday: "short", day: "numeric", omitCommas: true };
 
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
@@ -37,8 +49,8 @@ const defaultFullCalendarConfig = () => ({
   // There is one case for which this fix would fail: if the local time of the user and the agent is not the same (for example the agent is
   // in the métropole and the user is at la réunion), they will not see the same time
   // for the rdv. This seems unlikely for now.
-  timeZone: "Europe/Paris"
-})
+  timeZone: "Europe/Paris",
+});
 
 function eventClassNames(info) {
   let extendedProps = info.event.extendedProps;
@@ -138,7 +150,7 @@ function eventRenderer(selectedEventId) {
   }
 }
 
-const setupRefresh = (fullCalendarInstance) => {
+const setupPollingRefresh = (fullCalendarInstance) => {
   const clearRefetchInterval = () => {
     if (!fullCalendarInstance.refreshCalendarInterval) return
     clearTimeout(fullCalendarInstance.refreshCalendarInterval)
@@ -167,6 +179,29 @@ const setupRefresh = (fullCalendarInstance) => {
   })
 };
 
+const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
+  // Cette ligne permet de déconnecter le consumer ActionCable
+  // lorsque l'on quitte la page de calendrier.
+  document.addEventListener("turbolinks:before-visit", destroyConsumer);
+
+  const messageReceivedCallback = (message) => {
+    if (Array.isArray(message.refresh_periods) && message.refresh_periods.length > 0) {
+      const beginningOfView = fullCalendarInstance.view.activeStart.toISOString();
+      const endOfView = fullCalendarInstance.view.activeEnd.toISOString();
+      const intersectsFunction = ([periodStart, periodEnd]) => (periodEnd > beginningOfView && periodStart < endOfView);
+      if (message.refresh_periods.some(intersectsFunction)) {
+        fullCalendarInstance.refetchEvents();
+      }
+    } else {
+      fullCalendarInstance.refetchEvents();
+    }
+  };
+
+  agentIds.forEach(agentId => {
+    getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, { received: messageReceivedCallback });
+  });
+};
+
 const handleAjaxError = (response) => {
   if (window.ajaxErrorHandledAt) {
     const secondsSinceLast = (Date.now() - window.ajaxErrorHandledAt) / 1000;
@@ -189,4 +224,4 @@ const handleAjaxError = (response) => {
   }
 };
 
-export { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError }
+export { defaultFullCalendarConfig, eventRenderer, setupPollingRefresh, setupRealtimeRefresh, handleAjaxError }

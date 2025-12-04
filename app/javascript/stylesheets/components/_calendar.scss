@@ -16,7 +16,7 @@ $rdvs-fc-header-bg-color: $gray-200;
   --fc-bg-event-opacity: 1;
 }
 
-.fc {
+main[data-beta-planning-layout="false"] .fc {
   // réduit la taille de la date
   .fc-toolbar-title {
     font-size: 1.25rem;
@@ -45,21 +45,147 @@ $rdvs-fc-header-bg-color: $gray-200;
   .fc-timegrid-axis:not(.fc-timegrid-col) {
     background-color: $rdvs-fc-header-bg-color;
   }
+
+  .fc-button {
+    border: none;
+    text-transform: capitalize;
+    box-shadow: none;
+    border-radius: 0px;
+    margin: 0 3px;
+    padding: 6px 12px;
+    height: auto;
+
+    // prend le dessus sur une règle très spécifique dans FullCalendar
+    // .fc .fc-button-primary:not(:disabled).fc-button-active
+    &.fc-button-active.fc-button-primary:not(:disabled) {
+      color: var(--fc-button-active-color);
+    }
+  }
 }
 
-.fc .fc-button {
-  border: none;
-  text-transform: capitalize;
-  box-shadow: none;
-  border-radius: 0px;
-  margin: 0 3px;
-  padding: 6px 12px;
-  height: auto;
+main[data-beta-planning-layout="true"] .fc {
+  .fc-button {
+    background-color: white;
+    font-size: 16px;
+    font-weight: 500;
+    color: #161616;
 
-  // prend le dessus sur une règle très spécifique dans FullCalendar
-  // .fc .fc-button-primary:not(:disabled).fc-button-active
-  &.fc-button-active.fc-button-primary:not(:disabled) {
-    color: var(--fc-button-active-color);
+    padding: 8px 16px;
+
+    border: none;
+    box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
+
+    &:hover {
+      color: #161616;
+      background-color: rgb(246, 246, 246);
+    }
+
+    // prend le dessus sur une règle très spécifique dans FullCalendar
+    // .fc .fc-button-primary:not(:disabled).fc-button-active
+    &.fc-button-active.fc-button-primary:not(:disabled),
+    &.fc-button:active {
+      color: var(--blue-france-sun-113-625);
+      background-color: white;
+      border: 1px solid #000091;
+      border-radius: 4px;
+    }
+  }
+
+  .fc-header-toolbar {
+    // Ce sélecteur matche le segment "left" de la headerToolbar
+    .fc-toolbar-chunk:first-of-type > div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .fc-toolbar-title {
+        font-size: 18px;
+        font-weight: 800;
+        text-transform: capitalize;
+        margin-right: 8px;
+      }
+    }
+
+    // Sur mobile on met les chunks les uns en dessous de autres
+    @media (max-width: 991px) {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    // sur desktop, aligner à gauche le premier chunk et à droite suivants
+    @media (min-width: 768px) {
+      justify-content: flex-start;
+      .fc-toolbar-chunk:nth-child(2) {
+        margin-left: auto;
+      }
+    }
+  }
+
+  // On fait en sorte que les boutons du footer ressemble précisément
+  // aux boutons DSFR (options de weekends, etc) situés juste en dessous.
+  .fc-footer-toolbar {
+    .fc-button {
+      border-radius: 0;
+      background-color: transparent;
+    }
+  }
+
+  // Change la couleur de l'en-tête en haut et de "l'en-tête" des heures à gauche
+  .fc-col-header-cell,
+  .fc-timegrid-axis {
+    background: #f4f4f4;
+  }
+
+  // Les headers FullCalendar sont des <a> sans href et le DSFR les grise.
+  // Ici on override les propriétés pour reprendre le contrôle sur la couleur du texte.
+  a.fc-col-header-cell-cushion,
+  a.fc-list-day-text,
+  a.fc-list-day-side-text {
+    color: var(--background-action-high-grey);
+    font-size: 16px;
+    font-weight: normal;
+  }
+
+  .fc-v-event {
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+
+    .fc-event-time {
+      opacity: 0.8;
+    }
+
+    &.fc-timegrid-event-short {
+      .fc-event-main-frame {
+        // alignement vertical centré pour les événements courts
+        align-items: center;
+        justify-content: start;
+
+        .fc-event-title-container {
+          flex-grow: 0;
+        }
+        .fc-event-time {
+          order: 10; // affiche l'horaire à la fin de la description
+          margin-bottom: 0; // FullCalendar met 1px par défaut et ça décale le centrage vertical
+
+          &:after {
+            content: none; // Retire le séparateur "-" qui est ajouté par le CSS FullCalendar
+          }
+        }
+      }
+    }
+
+    &:not(.fc-timegrid-event-short) .fc-event-time {
+      order: 10; // affiche l'horaire à la fin de la description
+    }
+  }
+
+  // On vire le contour blanc des événements
+  .fc-timegrid-event-harness-inset .fc-timegrid-event,
+  .fc-timegrid-event.fc-event-mirror,
+  .fc-timegrid-more-link {
+    box-shadow: none;
   }
 }
 

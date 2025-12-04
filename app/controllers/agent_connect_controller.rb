@@ -11,6 +11,8 @@ class AgentConnectController < ApplicationController
                        "user"
                      elsif params[:for_super_admin]
                        "super_admin"
+                     elsif params[:for_operator_manager]
+                       "operator_manager"
                      else
                        "agent"
                      end
@@ -21,11 +23,12 @@ class AgentConnectController < ApplicationController
       connection_for:,
     }
 
-    force_2fa = connection_for == "super_admin"
+    force_2fa = %w[super_admin operator_manager].include?(connection_for)
 
     redirect_to auth_client.redirect_url(agent_connect_callback_url, force_2fa:), allow_other_host: true
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def callback
     pro_connect_session = session.delete(:pro_connect)
 
@@ -58,6 +61,13 @@ class AgentConnectController < ApplicationController
           flash[:error] = "Vous devez activer la double authentification sur votre compte ProConnect pour vous connecter en tant que super administrateur."
           redirect_to connexion_super_admins_path
         end
+      when "operator_manager"
+        if callback_client.went_through_2fa?
+          connect_operator_manager(callback_client)
+        else
+          flash[:error] = "Vous devez activer la double authentification sur votre compte ProConnect pour vous connecter en tant que gestionnaire d'opérateurs."
+          redirect_to operators_root_path
+        end
       when "agent"
         connect_agent(callback_client)
       else
@@ -68,6 +78,7 @@ class AgentConnectController < ApplicationController
       redirect_to(new_agent_session_path)
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   private
 
@@ -98,6 +109,22 @@ class AgentConnectController < ApplicationController
       flash[:error] = "Compte ProConnect non autorisé"
       redirect_to connexion_super_admins_path
     end
+  end
+
+  def connect_operator_manager(callback_client)
+    operator_manager = OperatorManager.find_by(email: callback_client.user_email)
+
+    if operator_manager
+      bypass_sign_in operator_manager, scope: :operator_manager
+
+      session[:agent_connect_id_token] = callback_client.id_token_for_logout
+
+      operator_manager.update(pro_connect_openid_sub: callback_client.openid_sub)
+    else
+      flash[:error] = "Compte ProConnect non autorisé"
+    end
+
+    redirect_to operators_root_path
   end
 
   def connect_user(callback_client)

@@ -3,7 +3,18 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import { defaultFullCalendarConfig, eventRenderer, setupRefresh, handleAjaxError } from  './calendar/utils'
+import {
+  defaultFullCalendarConfig,
+  eventRenderer,
+  setupPollingRefresh,
+  setupRealtimeRefresh,
+  handleAjaxError,
+  classicHeaderToolbarLayout,
+  betaHeaderToolbarLayout,
+  betaWeekTitleFormat,
+  betaDayHeaderFormat,
+  betaPlanningEnabled,
+} from './calendar/utils'
 
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
@@ -18,7 +29,11 @@ export class AgendaMonoAgent {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-    setupRefresh(this.fullCalendarInstance);
+    if(this.data.realtimeRefresh === "true") {
+      setupRealtimeRefresh(this.fullCalendarInstance, [this.data.agentId]);
+    } else {
+      setupPollingRefresh(this.fullCalendarInstance);
+    }
     document.addEventListener("turbolinks:before-cache", () => {
       // force calendar reload on turbolinks re-visit, otherwise event listeners
       // are not attached
@@ -38,6 +53,7 @@ export class AgendaMonoAgent {
     if (this.data.displaySundays !== "true") {
       hiddenDays.push(0);
     }
+
     const options = {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       eventSources: JSON.parse(this.data.eventSourcesJson),
@@ -45,10 +61,10 @@ export class AgendaMonoAgent {
       initialDate: this.getDefaultDate(),
       initialView: this.getDefaultView(),
       hiddenDays: hiddenDays,
+      titleFormat: betaPlanningEnabled() ? betaWeekTitleFormat : null,
+      dayHeaderFormat: betaPlanningEnabled() ? betaDayHeaderFormat : null,
       select: this.selectEvent,
-      headerToolbar: {
-        center: 'dayGridMonth,timeGridWeek,timeGridOneDay,listWeek'
-      },
+      headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
       views: {
         timeGridOneDay: {
           type: 'timeGrid',

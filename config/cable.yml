@@ -1,0 +1,14 @@
+development:
+  adapter: redis
+  url: "redis://localhost:6379"
+  channel_prefix: action_cable_dev
+
+test:
+  adapter: redis
+  url: "redis://localhost:6379"
+  channel_prefix: action_cable_test
+
+production:
+  adapter: redis
+  url: <%= ENV['REDIS_URL'] %>
+  channel_prefix: action_cable_prod

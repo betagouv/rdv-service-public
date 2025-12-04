@@ -29,6 +29,11 @@ class Absence < ApplicationRecord
 
   # Hooks
   before_validation :set_end_day
+  after_commit do
+    [agent_id, agent_id_was].uniq.each do |agent_id|
+      AgendaChannel.broadcast_to(agent_id, model: "Absence")
+    end
+  end
 
   # Scopes
   scope :by_starts_at, ->(direction = :desc) { order(first_day: direction, start_time: direction) }

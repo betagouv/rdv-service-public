@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     resources :super_admins, only: %i[index destroy]
     resources :organisations
     resources :operators
+    resources :operator_managers
     resources :services
     resources :motifs
     resources :lieux
@@ -389,10 +390,12 @@ Rails.application.routes.draw do
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
 
   # tkn est obligatoire pour s'assurer qu'il est possible de se connecter
-  get "r/:id/:tkn", to: (redirect do |path_params, req|
-    query_params = format_redirect_params(req.params)
-    "users/rdvs/#{path_params[:id]}#{query_params}"
-  end), as: "rdv_short"
+  get "r/:tkn" => "redirect#rdv_short_from_token", as: "rdv_short_from_token"
+
+  # << REMOVE AFTER 01/01/2027
+  # On préserve la route courte avec id pour la rétrocompatibilité des anciens SMS
+  get "r/:id/:tkn" => "redirect#rdv_short", as: "rdv_short"
+  # >> REMOVE AFTER 01/01/2027
 
   get "prdv", to: (redirect do |_path_params, req|
     query_params = format_redirect_params(req.params)
@@ -451,6 +454,8 @@ Rails.application.routes.draw do
 
   # Évite de casser les anciennes routes vers l'agenda, les plages et les absences
   draw :legacy_planning_routes_redirects
+
+  draw :operators
 
   match "/404", to: "errors#not_found", via: :all
   match "/500", to: "errors#internal_server_error", via: :all
