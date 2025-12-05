@@ -23,6 +23,8 @@ ruby:
   ]
   event_sources.push(OffDays.to_full_calendar_array) unless current_territory.work_on_sunday?
 
+= render partial: "admin/planning/agendas/disconnected_warning"
+
 #calendar[
   data-default-date-json="#{@date&.to_json}"
   data-agent-id="#{@agent.id}"
