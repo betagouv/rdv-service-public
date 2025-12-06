@@ -1,3 +1,5 @@
+# Le guide pour configurer ProConnect en local : docs/interconnexions/proconnect.md
+
 require_relative "sentry"
 
 Rails.configuration.x.pro_connect_unreachable_at_boot_time = false

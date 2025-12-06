@@ -1,3 +1,5 @@
+# Le guide pour configurer ProConnect en local : docs/interconnexions/proconnect.md
+
 class ProConnectController < ApplicationController
   def auth
     auth_client = ProConnectOpenIdClient::Auth.new(
