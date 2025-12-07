@@ -149,18 +149,13 @@ RSpec.describe "agents can prescribe rdvs" do
 
   describe "creating a user along the way" do
     it "leaves the user both in local and distant organisation", js: true do
-      if Date.new(2024, 12, 19).future?
-        pending # rubocop:disable RSpec/Pending
-        raise "cette flaky spec a été désactivée le temps de travailler dessus"
-      end
-
       go_to_prescription_page
       # Select Service
-      find("h3", text: motif_mds.service.name).ancestor("a").click
+      click_on motif_mds.service.name
       # Select Motif
-      find("h3", text: motif_insertion.name).ancestor("a").click
+      click_on motif_insertion.name
       # Select Lieu
-      find(".card-title", text: /#{mission_locale_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+      click_on mission_locale_paris_nord.name
       # Select créneau
       first(:link, "11:00").click
       # Display User selection
@@ -241,7 +236,7 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
     end
 
-    describe "with sectorization", js: true do
+    describe "with sectorization" do
       let!(:sector) { create(:sector, territory: territory) }
       let!(:sector_attribution) { create(:sector_attribution, sector: sector, organisation: org_mds) }
       let!(:zone) do
@@ -260,13 +255,13 @@ RSpec.describe "agents can prescribe rdvs" do
         motif_mds.update(sectorisation_level: "organisation")
         motif_insertion.update(sectorisation_level: "organisation")
         motif_autre_service.update(sectorisation_level: "organisation")
+      end
 
+      it "when sectorization is enabled on the user street level only it show the street leveled motif only", js: true do
         login_as(current_agent, scope: :agent)
         visit admin_organisation_creneaux_search_path(org_mds, user_ids: [user.id])
         click_link "Élargir la recherche"
-      end
 
-      it "when sectorization is enabled on the user street level only it show the street leveled motif only" do
         expect(page).not_to have_content(motif_insertion.name)
         expect(page).not_to have_content(motif_autre_service.name)
         expect(page).to have_content(motif_mds.name)
@@ -279,33 +274,33 @@ RSpec.describe "agents can prescribe rdvs" do
         end.to change(Rdv, :count).by(1)
       end
 
-      context "when sectorization is enabled on the street level and on city level on 2 differents sectors" do
+      context "when sectorization is enabled on the street level and on city level on 2 different sectors" do
         before do
+          stub_request(:get, "https://data.geopf.fr/geocodage/search/?q=#{user.address.gsub(' ', '%20')}")
+            .to_return(body: file_fixture("geocode_result.json").read)
+        end
+
+        it "show both services and motifs", js: true do
           # on crée un zone de niveau "city" liée au à l'orga org_insertion
           # afin de vérifier que les motifs de cette orga sont bien affichés
           sector_of_city_zone = create(:sector, territory: territory)
           create(:sector_attribution, sector: sector_of_city_zone, organisation: org_insertion)
           create(:zone, sector: sector_of_city_zone, level: "city", city_name: "Paris", city_code: "75119")
-        end
 
-        it "show both services and motifs" do
-          if Date.new(2024, 12, 19).future?
-            pending # rubocop:disable RSpec/Pending
-            raise "cette flaky spec a été désactivée le temps de travailler dessus"
-          end
+          login_as(current_agent, scope: :agent)
+          visit admin_organisation_creneaux_search_path(org_mds, user_ids: [user.id])
+          click_on "Élargir la recherche"
 
           expect(page).to have_content(motif_mds.service.name)
           expect(page).to have_content(motif_insertion.service.name)
           click_on motif_mds.service.name
           expect(page).to have_content(motif_mds.name)
           click_on motif_mds.name
+          expect(page).to have_content("Motif : #{motif_mds.name}")
           # Back to service selection
           page.go_back
-          page.go_back
-          click_on motif_insertion.service.name
-          expect(page).to have_content(motif_insertion.name)
           click_on motif_insertion.name
-          find(".card-title", text: /#{mission_locale_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+          click_on mission_locale_paris_nord.name
           first(:link, "11:00").click
           expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
         end
