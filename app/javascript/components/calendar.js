@@ -34,15 +34,6 @@ export class AgendaMonoAgent {
     } else {
       setupPollingRefresh(this.fullCalendarInstance);
     }
-    document.addEventListener("turbolinks:before-cache", () => {
-      // force calendar reload on turbolinks re-visit, otherwise event listeners
-      // are not attached
-      this.calendarEl.innerHTML = ""
-      this.currentViewType = null
-      this.currentTodayVisible = null
-      // fixes hanging tooltip on back
-      $(".tooltip").removeClass("show")
-    })
   }
 
   initFullCalendar = () => {

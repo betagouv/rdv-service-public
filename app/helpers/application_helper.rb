@@ -121,7 +121,7 @@ module ApplicationHelper
   end
 
   def self_anchor(identifier, &block)
-    tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
+    tag.a(id: identifier, href: "##{identifier}", &block)
   end
 
   def display_agent_connect_button?

@@ -30,7 +30,6 @@ div id="creneaux-lieu-#{lieu&.id}"
                   a.fr-col-12.fr-btn.fr-btn--tertiary.fr-mb-1w.rdv-justify-content-center(
                     class=(show_instructions ? "js-prevent-default-onclick" : "")
                     href=confirm_path
-                    data-turbolinks="false"
                     aria-controls=(show_instructions ? modal_id : "")
                     data-fr-opened=(show_instructions ? "false" : "")
                     aria-label=%(Choisir le créneau du #{l(creneau.starts_at, format: '%A %-d %b')} à #{l(creneau.starts_at, format: '%H:%M')})
