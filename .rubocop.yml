@@ -10,6 +10,7 @@ AllCops:
     - "db/schema.rb"
     - "db/migrate/*good_job*.rb"
     - "scripts/screenshots/**/*"
+    - "config/initializers/route_detect_format.rb"
   NewCops: enable
   TargetRubyVersion: 3.4.3
   SuggestExtensions: false
