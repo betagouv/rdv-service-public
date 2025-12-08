@@ -136,10 +136,10 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       expect(page).to have_content("Planning de")
 
       click_on "Statistiques"
-      expect(page).to have_content("Statistiques de") # on vérifie que Turbolinks nous a bien changé la page
+      expect(page).to have_content("Statistiques de")
 
       click_on "Planning"
-      expect(page).to have_content("Planning de") # on vérifie que Turbolinks nous a bien changé la page
+      expect(page).to have_content("Planning de")
       sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
       create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)

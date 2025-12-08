@@ -164,9 +164,6 @@ const setupPollingRefresh = (fullCalendarInstance) => {
 
   setRefetchInterval();
 
-  document.addEventListener('turbolinks:before-cache', () => { clearRefetchInterval(fullCalendarInstance) });
-  document.addEventListener('turbolinks:before-render', () => { clearRefetchInterval(fullCalendarInstance) });
-
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       // when agent comes back to tab, refresh immediately
@@ -180,9 +177,6 @@ const setupPollingRefresh = (fullCalendarInstance) => {
 };
 
 const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
-  // Cette ligne permet de déconnecter le consumer ActionCable
-  // lorsque l'on quitte la page de calendrier.
-  document.addEventListener("turbolinks:before-visit", destroyConsumer);
 
   const messageReceivedCallback = (message) => {
     if (Array.isArray(message.refresh_periods) && message.refresh_periods.length > 0) {

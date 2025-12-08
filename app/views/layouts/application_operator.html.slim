@@ -8,7 +8,7 @@ html lang="fr"
     = javascript_include_tag "#{dsfr_path}/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
   body
     - links = [dsfr_link_to("Contenu", "#content"), dsfr_link_to("Menu", "#sidemenu"), dsfr_link_to("Pied de page", "#footer")]
-    = dsfr_skiplink label: "Accès rapide", links: links, html_attributes: { "data-turbolinks": "false" }
+    = dsfr_skiplink label: "Accès rapide", links: links
 
     = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: { id: "header" } do |header|
       ruby:
