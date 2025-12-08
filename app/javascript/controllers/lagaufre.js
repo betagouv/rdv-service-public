@@ -11,7 +11,7 @@ export default class extends Controller {
       background: 'linear-gradient(180deg, #eceffd 0%, #FFFFFF 20%)',
       buttonElement: button,
       position: 'fixed',
-      top: 80,
+      top: 60,
       right: 10
     }]);
   }
