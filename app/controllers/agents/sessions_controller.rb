@@ -49,7 +49,7 @@ class Agents::SessionsController < Devise::SessionsController
       @oauth_client_app_post_logout_redirect_url = oauth_app.post_logout_redirect_uri
     end
 
-    pro_connect_id_token = session.delete(:pro_connect_id_token)
+    pro_connect_id_token = session.delete(:pro_connect_id_token) || session.delete(:agent_connect_id_token)
 
     sign_out(:agent)
 

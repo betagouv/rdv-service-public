@@ -1,7 +1,7 @@
 module SuperAdmins
   class SessionsController < ApplicationController
     def destroy
-      pro_connect_id_token = session.delete(:pro_connect_id_token)
+      pro_connect_id_token = session.delete(:pro_connect_id_token) || session.delete(:agent_connect_id_token)
       skip_authorization
       sign_out_all_scopes if super_admin_signed_in?
 
