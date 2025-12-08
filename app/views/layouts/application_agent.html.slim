@@ -5,7 +5,7 @@ html lang="fr"
     = render "common/head_agent"
   body
     - links = [dsfr_link_to("Contenu", "#main"), link_to("Pied de page", "#footer")]
-    = dsfr_skiplink label: "Accès rapide", links: links, html_attributes: { "data-turbolinks": "false" }
+    = dsfr_skiplink label: "Accès rapide", links: links
 
     = render "layouts/agent_header"
     / doit être dans <body> et pas dans <head>
