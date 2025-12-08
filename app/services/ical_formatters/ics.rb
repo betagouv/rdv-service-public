@@ -56,8 +56,10 @@ module IcalFormatters
                                                 "tzid" => tzid)
         event.dtend = dtend
       end
-      if payload[:attendees].present?
-        payload[:attendees].each { |attendee| event.append_attendee("PARTSTAT=ACCEPTED;mailto:#{attendee}") }
+      if payload[:attendees].present? # TODO: remove this, attendee is a required attribute
+        event.attendee = payload[:attendees].map do |attendee_email|
+          Icalendar::Values::CalAddress.new("mailto:#{attendee_email}", { "PARTSTAT" => "ACCEPTED" })
+        end
       end
       event.summary = payload[:summary]
       event.location = payload[:location]
