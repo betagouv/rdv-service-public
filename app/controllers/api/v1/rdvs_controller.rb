@@ -16,7 +16,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
     end
 
     if params[:user_id].present?
-      rdvs = rdvs.where(participations: { user_id: params[:user_id] })
+      rdvs = rdvs.includes(:participations).where(participations: { user_id: params[:user_id] })
     end
 
     if params[:agent_id].present?
