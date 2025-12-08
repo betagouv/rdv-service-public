@@ -28,9 +28,9 @@ nav.left-side-menu-wrapper
           = render "layouts/left_menu/organisation_switcher"
 
         li.fr-pb-0
-          - # Dette technique due au feature flag du nouveau planning :
-          - # - @agent est l'agent sélectionné dans le planning, utilisé par les vues de planning
-          - # - @contextual_agents.first est l'agent gardé en contexte pour l'afficher dans le fil d'ariane d'un RDV#show
+          / Dette technique due au feature flag du nouveau planning :
+          / - @agent est l'agent sélectionné dans le planning, utilisé par les vues de planning
+          / - @contextual_agents.first est l'agent gardé en contexte pour l'afficher dans le fil d'ariane d'un RDV#show
           - selected_agent = @agent || @contextual_agents&.first
 
           - if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
