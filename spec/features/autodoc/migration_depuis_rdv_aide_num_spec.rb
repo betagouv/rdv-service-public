@@ -63,9 +63,6 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let!(:old_rdv_collectif) do
     create(:rdv, :without_users, agents: [collegue], users: [], starts_at: 2.weeks.ago, motif: motif_collectif, lieu:, organisation: organisation_rdv_aide_num, status: :seen)
   end
-  # let!(:old_rdv_taken_by_user) do
-  #   create(:rdv, agents: [collegue], users: [users.last], starts_at: 2.weeks.ago, motif:, lieu:, organisation: organisation_rdv_aide_num, created_by: users.last)
-  # end
 
   before do
     create(:participation, rdv: old_rdv_collectif, status: :seen, user: users[0])
