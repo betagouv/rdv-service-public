@@ -56,7 +56,7 @@ module IcalFormatters
                                                 "tzid" => tzid)
         event.dtend = dtend
       end
-      if payload[:attendees].present? # TODO: remove this, attendee is a required attribute
+      if payload[:attendees].present? # for Outlook we do not send attendees 🤷
         event.attendee = payload[:attendees].map do |attendee_email|
           Icalendar::Values::CalAddress.new("mailto:#{attendee_email}", { "PARTSTAT" => "ACCEPTED" })
         end
