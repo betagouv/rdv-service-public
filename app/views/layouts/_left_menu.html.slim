@@ -28,8 +28,14 @@ nav.left-side-menu-wrapper
           = render "layouts/left_menu/organisation_switcher"
 
         li.fr-pb-0
+          - # Dette technique due au feature flag du nouveau planning :
+          - # - @agent est l'agent sélectionné dans le planning, utilisé par les vues de planning
+          - # - @contextual_agents.first est l'agent gardé en contexte pour l'afficher dans le fil d'ariane d'un RDV#show
+          - selected_agent = @agent || @contextual_agents&.first
+
           - if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-            = active_link_to(admin_organisation_planning_agenda_path(current_organisation), active: @beta_planning_layout, class: "side-menu__item")
+            - query_params = selected_agent ? { agent_id: selected_agent } : {}
+            = active_link_to(admin_organisation_planning_agenda_path(current_organisation, **query_params), active: @beta_planning_layout, class: "side-menu__item")
               span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
               | Planning
           - else
@@ -47,7 +53,7 @@ nav.left-side-menu-wrapper
             ul.list-unstyled.ml-4.pr-2.left-submenu-planning.collapse[
               class=("show" if menu_top_level_item == "planning")
             ]
-              - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
+              - agent_for_left_menu = selected_agent&.persisted? ? selected_agent : current_agent
               - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_planning_agenda_path
               li.fr-pb-0
                 form.fr-my-3v
