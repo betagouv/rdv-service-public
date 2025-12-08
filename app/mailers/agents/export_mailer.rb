@@ -1,5 +1,3 @@
-require "zip"
-
 class Agents::ExportMailer < ApplicationMailer
   def rdv_export(export_id)
     @export = Export.find(export_id)

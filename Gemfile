@@ -138,7 +138,6 @@ gem "premailer-rails" # Mail formatting
 gem "spreadsheet" # Excel export
 # If string, numeric, symbol and nil values wanna be a boolean value, they can with the new #to_b method (and more).
 gem "wannabe_bool" # imports to_b method
-gem "rubyzip" # zip export files
 
 ## Time Management
 
