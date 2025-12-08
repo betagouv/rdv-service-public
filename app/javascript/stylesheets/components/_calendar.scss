@@ -161,6 +161,7 @@ main[data-beta-planning-layout="true"] .fc {
         // alignement vertical centré pour les événements courts
         align-items: center;
         justify-content: start;
+        gap: 4px;
 
         .fc-event-title-container {
           flex-grow: 0;
