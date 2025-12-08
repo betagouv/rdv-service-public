@@ -30,7 +30,7 @@ RSpec.describe AgentConnectController do
 
     describe "with the for_user param" do
       it "saves the information that we want to log in a user rather than an agent in the session" do
-        get :auth, params: { login_hint: "francis.factice@exemple.gouv.fr", for_user: true }
+        get :auth, params: { login_hint: "francis.factice@exemple.gouv.fr", user_type: "user" }
 
         expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
 
@@ -61,7 +61,7 @@ RSpec.describe AgentConnectController do
 
   describe "with the for_super_admin param" do
     it "adds the force_2fa param to the request" do
-      get :auth, params: { for_super_admin: true }
+      get :auth, params: { user_type: "super_admin" }
       expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
 
       redirect_url = response.headers["Location"]

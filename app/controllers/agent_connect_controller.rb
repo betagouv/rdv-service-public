@@ -7,15 +7,7 @@ class AgentConnectController < ApplicationController
       client_secret: current_domain.agent_connect_client_secret
     )
 
-    connection_for = if params[:for_user]
-                       "user"
-                     elsif params[:for_super_admin]
-                       "super_admin"
-                     elsif params[:for_operator_manager]
-                       "operator_manager"
-                     else
-                       "agent"
-                     end
+    connection_for = params[:user_type]
 
     session[:pro_connect] = {
       state: auth_client.state,

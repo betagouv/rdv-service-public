@@ -11,6 +11,8 @@ ruby:
   event_sources.push(OffDays.to_full_calendar_array) unless current_territory.work_on_sunday?
   resources = @agents.map { { id: _1.id, title: _1.full_name_or_email } }
 
+= render partial: "admin/planning/agendas/disconnected_warning"
+
 #agenda-multi-agent.mt-2[
   data-event-sources-json="#{event_sources.to_json}"
   data-resources-json="#{resources.to_json}"
