@@ -8,6 +8,11 @@ RSpec.describe CopyPlanningToNewInstanceJob do
       let(:instance_export) { create(:instance_export) }
 
       it "sends all the information to the new instance" do
+        request_params = nil
+        allow_any_instance_of(RdvServicePublicApiClient).to receive(:post) do |_object, _path, params|
+          request_params = params
+        end
+
         described_class.new.perform(instance_export.id, rdv.id, Domain::RDV_AIDE_NUMERIQUE.id)
       end
     end
