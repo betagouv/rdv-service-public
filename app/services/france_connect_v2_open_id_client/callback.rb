@@ -1,4 +1,4 @@
-# voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/technique_fca/endpoints.md
+# voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
 module FranceConnectV2OpenIdClient
   class Callback
     class OpenIdFlowError < StandardError; end

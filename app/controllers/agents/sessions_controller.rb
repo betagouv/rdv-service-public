@@ -39,7 +39,7 @@ class Agents::SessionsController < Devise::SessionsController
     # oauth_client_app_id est le paramètre passé par une application OAuth cliente depuis laquelle
     # l'agent vient de se déconnecter.
     # Si ce paramètre est présent, on veut déconnecter l'agent de notre application
-    # (parfois en faisant aussi une déconnexion à ProConnect/AgentConnect) puis le rediriger vers
+    # (parfois en faisant aussi une déconnexion à ProConnect) puis le rediriger vers
     # l'application cliente, depuis laquelle il a commencé la déconnexion.
     #
     # Dans le cas où on le déconnecte d'abord de ProConnect, on est obligés de faire la redirection
