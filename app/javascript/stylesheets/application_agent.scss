@@ -128,3 +128,13 @@ li.nav-item {
   margin: var(--text-spacing);
 }
 // >> A SUPPRIMER À LA SUPPRESSION DE BOOTSTRAP REBOOT
+
+// DSFR custom icons
+// Voir : https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/icone
+
+// Depuis Remix Icon
+.fr-icon-ri-history-line::before,
+.fr-icon-ri-history-line::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/ri-history-line.svg");
+  mask-image: url("../../assets/images/custom-icons/ri-history-line.svg");
+}
