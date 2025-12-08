@@ -367,7 +367,7 @@ Rails.application.routes.draw do
     get "show"
   end
 
-  %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite domaines nouvel_espace].each do |page_name|
+  %w[mds accessibilite mentions_legales cgu cgu_agent politique_de_confidentialite nouvel_espace].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
 
