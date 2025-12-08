@@ -299,6 +299,7 @@ RSpec.describe "agents can prescribe rdvs" do
           expect(page).to have_content("Motif : #{motif_mds.name}")
           # Back to service selection
           page.go_back
+          click_on motif_insertion.service.name
           click_on motif_insertion.name
           click_on mission_locale_paris_nord.name
           first(:link, "11:00").click
