@@ -20,6 +20,12 @@ class CronJob::RefreshCachedStats
   end
 
   class RefreshKeyJob < CronJob
+    def capture_sentry_warning_for_retry?(_exception)
+      # on ne souhaite pas être avertis avec un warning dès le premier retry,
+      # un seul avertissement au 4è retry (arbitraire) suffit
+      executions == 4
+    end
+
     def perform(key:, force: false)
       filename = KEYS_TO_FILENAME[key]
       raise ArgumentError, "#{key} is not a valid stat key" if filename.nil?
