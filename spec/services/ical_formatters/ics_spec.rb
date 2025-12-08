@@ -15,6 +15,7 @@ RSpec.describe IcalFormatters::Ics do
         ical_uid: "rdv_15@RDV Solidarités",
         rrule: "FREQ=WEEKLY;",
         domain: domain,
+        attendees: ["patricia@gmail.com"],
       }
     end
 
@@ -34,6 +35,7 @@ RSpec.describe IcalFormatters::Ics do
         expect(subject).to include("RRULE:FREQ=WEEKLY")
         expect(subject).to include("ORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr")
         expect(subject).to include("END:VEVENT")
+        expect(subject).to include("ATTENDEE;PARTSTAT=ACCEPTED:mailto:patricia@gmail.com")
       end
     end
 
