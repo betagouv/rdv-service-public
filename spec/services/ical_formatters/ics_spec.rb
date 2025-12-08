@@ -35,7 +35,7 @@ RSpec.describe IcalFormatters::Ics do
         expect(subject).to include("RRULE:FREQ=WEEKLY")
         expect(subject).to include("ORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr")
         expect(subject).to include("END:VEVENT")
-        expect(subject).to include("ATTENDEE:PARTSTAT=ACCEPTED;mailto:patricia@gmail.com")
+        expect(subject).to include("ATTENDEE;PARTSTAT=ACCEPTED:mailto:patricia@gmail.com")
       end
     end
 
