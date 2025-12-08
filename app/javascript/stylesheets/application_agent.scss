@@ -138,3 +138,15 @@ li.nav-item {
   -webkit-mask-image: url("../../assets/images/custom-icons/ri-history-line.svg");
   mask-image: url("../../assets/images/custom-icons/ri-history-line.svg");
 }
+
+.fr-icon-ri-user-follow-fill::before,
+.fr-icon-ri-user-follow-fill::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/ri-user-follow-fill.svg");
+  mask-image: url("../../assets/images/custom-icons/ri-user-follow-fill.svg");
+}
+
+.fr-icon-ri-user-unfollow-fill::before,
+.fr-icon-ri-user-unfollow-fill::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
+  mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
+}
