@@ -1,10 +1,11 @@
-# Pour la doc d'Agent Connect: voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs.md#32-je-veux-savoir-comment-fonctionne-agentconnect-et-comment-identifierauthentifier-les-agents
-class AgentConnectController < ApplicationController
+# Le guide pour configurer ProConnect en local : docs/interconnexions/proconnect.md
+
+class ProConnectController < ApplicationController
   def auth
-    auth_client = AgentConnectOpenIdClient::Auth.new(
+    auth_client = ProConnectOpenIdClient::Auth.new(
       login_hint: params[:login_hint],
-      client_id: current_domain.agent_connect_client_id,
-      client_secret: current_domain.agent_connect_client_secret
+      client_id: current_domain.pro_connect_client_id,
+      client_secret: current_domain.pro_connect_client_secret
     )
 
     connection_for = params[:user_type]
@@ -17,7 +18,7 @@ class AgentConnectController < ApplicationController
 
     force_2fa = %w[super_admin operator_manager].include?(connection_for)
 
-    redirect_to auth_client.redirect_url(agent_connect_callback_url, force_2fa:), allow_other_host: true
+    redirect_to auth_client.redirect_url(pro_connect_callback_url, force_2fa:), allow_other_host: true
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -32,13 +33,13 @@ class AgentConnectController < ApplicationController
 
     pro_connect_session.symbolize_keys!
 
-    callback_client = AgentConnectOpenIdClient::Callback.new(
+    callback_client = ProConnectOpenIdClient::Callback.new(
       session_state: pro_connect_session[:state],
       params_state: params[:state],
-      callback_url: agent_connect_callback_url,
+      callback_url: pro_connect_callback_url,
       nonce: pro_connect_session[:nonce],
-      client_id: current_domain.agent_connect_client_id,
-      client_secret: current_domain.agent_connect_client_secret
+      client_id: current_domain.pro_connect_client_id,
+      client_secret: current_domain.pro_connect_client_secret
     )
 
     if callback_client.fetch_user_info_from_code!(params[:code])
@@ -95,7 +96,7 @@ class AgentConnectController < ApplicationController
     if super_admin
       bypass_sign_in super_admin, scope: :super_admin
 
-      session[:agent_connect_id_token] = callback_client.id_token_for_logout
+      session[:pro_connect_id_token] = callback_client.id_token_for_logout
       redirect_to super_admin_return_to || super_admins_agents_path
     else
       flash[:error] = "Compte ProConnect non autorisé"
@@ -109,7 +110,7 @@ class AgentConnectController < ApplicationController
     if operator_manager
       bypass_sign_in operator_manager, scope: :operator_manager
 
-      session[:agent_connect_id_token] = callback_client.id_token_for_logout
+      session[:pro_connect_id_token] = callback_client.id_token_for_logout
 
       operator_manager.update(pro_connect_openid_sub: callback_client.openid_sub)
     else
@@ -130,7 +131,7 @@ class AgentConnectController < ApplicationController
     )
 
     bypass_sign_in(user, scope: :user)
-    session[:agent_connect_id_token] = callback_client.id_token_for_logout
+    session[:pro_connect_id_token] = callback_client.id_token_for_logout
     redirect_to after_sign_in_path_for(user)
   end
 
@@ -199,7 +200,7 @@ class AgentConnectController < ApplicationController
     agent.save!
 
     bypass_sign_in agent, scope: :agent
-    session[:agent_connect_id_token] = callback_client.id_token_for_logout
+    session[:pro_connect_id_token] = callback_client.id_token_for_logout
     redirect_to after_sign_in_path_for(agent)
   end
   # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
