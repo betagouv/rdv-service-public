@@ -190,25 +190,6 @@ jobs:
             tmp/capybara
             tmp/rspec-*
           if-no-files-found: ignore
-  publish_test_results:
-    name: "Publish Test Results to GitHub"
-    needs: tests
-    runs-on: ubuntu-latest
-    if: (!cancelled())
-    permissions:
-      checks: write
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: tests-results-*
-          path: tests-results
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          files: |
-            tests-results/**/rspec-*.xml
-          comment_mode: off
   test_features_autodoc:
     name: Feature Tests using Autodoc
     runs-on: ubuntu-latest
