@@ -63,7 +63,7 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         let(:user_id) { user.id }
       end
 
-      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur ou l'organisation est inconnu(e) ou ce profil existe déjà", true do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur ou l'organisation est inconnu·e ou ce profil existe déjà", true do
         let(:organisation_id) { organisation.id }
         let(:user_id) { "inconnu" }
       end

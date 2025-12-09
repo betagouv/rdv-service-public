@@ -42,7 +42,7 @@ puts <<~INFO
   - sectors : les secteurs existants ne sont pas déplacés, il faudra les recréer si besoin
   - organisation : déplacée vers le territoire cible
 
-  Êtes-vous sûr(e) de vouloir continuer ? (oui/non)
+  Êtes-vous sûr·e de vouloir continuer ? (oui/non)
 INFO
 
 response = $stdin.gets.strip.downcase
