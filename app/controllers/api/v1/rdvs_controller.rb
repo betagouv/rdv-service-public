@@ -46,9 +46,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
 
       rdv.agents = Agent.where(email: params[:agent_emails])
 
-      rdv.created_by_type = params[:created_by_type]
-
-      rdv.created_by_id = ExternalReference.find_by(item_type: params[:created_by_type], external_id: params[:created_by_external_id], oauth_application:)&.item_id
+      rdv.created_by = ExternalReference.find_by(item_type: params[:created_by_type], external_id: params[:created_by_external_id], oauth_application:)&.item
 
       authorize(rdv, :update?, policy_class: Agent::RdvPolicy)
 

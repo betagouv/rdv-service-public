@@ -100,6 +100,8 @@ RSpec.describe "RDV API" do
         expect do
           post "/api/v1/rdvs", headers:, params: request_params, as: :json
         end.to change(Rdv, :count).by(1)
+
+        expect(Rdv.last.created_by).to eq user_on_new_instance
       end
     end
   end
