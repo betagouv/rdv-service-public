@@ -65,15 +65,16 @@
 
             div.form-row.grid-align-center.pb-4
               .flex-grow-1.pr-4
+                - select2_url = search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id))
                 = select_tag :user_to_add,
-                        options_for_select([]),
-                        include_blank: "Ajouter un usager",
-                        required: false,
-                        class: "select2-input js-rdv-user-select",
-                        data: { \
-                  width: "auto", \
-                  "scroll-to-bottom": params[:add_user].present?, \
-                  "select2-config": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
+                  options_for_select([]),
+                  include_blank: "Ajouter un usager",
+                  required: false,
+                  class: "select2-input js-rdv-user-select",
+                  data: { \
+                    "width": "auto", \
+                    "scroll-to-bottom": params[:add_user].present?, \
+                    "select2-config": { ajax: { url: select2_url, dataType: "json", delay: 250 } }, \
                  }
               = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: request.url, role: default_service_selection_from(@rdv.motif.service))
 
