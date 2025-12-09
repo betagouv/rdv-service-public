@@ -10,8 +10,6 @@ class StaticPagesController < ApplicationController
 
   def accessibilite; end
 
-  def domaines; end
-
   def presentation_for_agents
     render current_domain.presentation_for_agents_template_name, layout: "application_base"
   end
