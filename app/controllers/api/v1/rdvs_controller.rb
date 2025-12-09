@@ -5,14 +5,35 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
     rdvs = rdvs.starts_after(Time.zone.parse(params[:starts_after])) if params[:starts_after].present?
     rdvs = rdvs.starts_before(Time.zone.parse(params[:starts_before])) if params[:starts_before].present?
 
-    rdvs = rdvs.includes(:organisation, :motif, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
+    if params[:include].nil?
+      rdvs = rdvs.includes(:organisation, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
+    else
+      if params[:include].is_a?(Array) && "organisation".in?(params[:include])
+        rdvs.includes(:organisation)
+      end
+      if params[:include].is_a?(Array) && "lieu".in?(params[:include])
+        rdvs.includes(:lieu)
+      end
+      if params[:include].is_a?(Array) && "agents".in?(params[:include])
+        rdvs.includes(:agents)
+      end
+      if params[:include].is_a?(Array) && "users".in?(params[:include])
+        rdvs.includes(:users)
+      end
+      if params[:include].is_a?(Array) && "participations".in?(params[:include])
+        rdvs.includes(participations: [:user])
+      end
+      if params[:include].is_a?(Array) && "motif".in?(params[:include])
+        rdvs.includes(motif: [:motif_category])
+      end
+    end
 
     if params[:id].present?
       rdvs = rdvs.where(id: params[:id])
     end
 
     if params[:user_id].present?
-      rdvs = rdvs.where(participations: { user_id: params[:user_id] })
+      rdvs = rdvs.includes(participations: [:user]).where(participations: { user_id: params[:user_id] })
     end
 
     if params[:agent_id].present?
