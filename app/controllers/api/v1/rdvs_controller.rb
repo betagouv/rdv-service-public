@@ -23,7 +23,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
       rdvs = rdvs.where(status: params[:status])
     end
 
-    render_collection(rdvs)
+    render_collection(rdvs, options: params.permit(include: []))
   end
 
   # Cet endpoint est utilisé seulement pour la copie des données d'une instance à l'autre, il n'est donc pas documenté.
