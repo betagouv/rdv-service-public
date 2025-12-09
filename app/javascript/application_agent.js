@@ -38,6 +38,7 @@ import { CheckAll, UnCheckAll } from './components/check-all'
 import './components/motifs_table'
 import './components/browser-detection'
 import './components/clear-field-on-focus.js'
+import './components/lagaufre.js'
 
 import { Application } from "@hotwired/stimulus"
 import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
