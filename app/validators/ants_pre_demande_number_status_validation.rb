@@ -6,6 +6,8 @@
 # cf /docs/interconnexions/ants.md
 
 class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
+  include ActionView::Helpers::SanitizeHelper
+
   def validate(record)
     raise "You need to include BenignErrors to use #{self.class}" unless record.respond_to?(:add_benign_error)
 
@@ -53,11 +55,14 @@ class AntsPreDemandeNumberStatusValidation < ActiveModel::Validator
     return true if appointments.empty? || record.ignore_benign_errors
 
     record.add_benign_error(
-      I18n.t(
-        "activerecord.warnings.models.user.ants_pre_demande_number_already_used_html",
-        management_url: appointments.first["management_url"],
-        meeting_point: appointments.first["meeting_point"]
-      ).html_safe
+      sanitize(
+        I18n.t(
+          "activerecord.warnings.models.user.ants_pre_demande_number_already_used_html",
+          management_url: appointments.first["management_url"],
+          meeting_point: appointments.first["meeting_point"]
+        ),
+        attributes: %w[href target]
+      )
     )
     false
   end
