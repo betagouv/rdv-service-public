@@ -95,6 +95,7 @@ RSpec.describe "RDV API" do
         end
 
         # On démarre le test depuis le job qui fait la synchronisation pour vérifier que la sérialisation marche bien avec le controller
+        # On exécute le job afin que sa requête API soit enregistrée dans request_params par le block ci-dessus.
         CopyPlanningToNewInstanceJob::CopyRdvJob.new.perform(instance_export.id, rdv_on_old_instance.id, Domain::RDV_AIDE_NUMERIQUE.id)
 
         expect do
