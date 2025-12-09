@@ -17,16 +17,16 @@ fr:
         allow_to_manage_access_rights: Autorisé à gérer les droits d'accès et les services des agents
         allow_to_invite_agents: Autorisé à inviter et affecter des agents sur des organisations
       agent/rdv_notifications_levels:
-        all: Je veux être notifié(e) systématiquement
+        all: Je veux être notifié·e systématiquement
         others: Seulement quand la modification est initiée par quelqu'un d'autre que moi
         soon: Seulement quand la modification est initiée par quelqu'un d'autre que moi, dans les 24h avant le rendez-vous
-        none: Non, je n'ai pas besoin d'être notifié(e)
+        none: Non, je n'ai pas besoin d'être notifié·e
       agent/plage_ouverture_notification_levels:
-        all: Je veux être notifié(e) systématiquement
-        none: Non, je n'ai pas besoin d'être notifié(e)
+        all: Je veux être notifié·e systématiquement
+        none: Non, je n'ai pas besoin d'être notifié·e
       agent/absence_notification_levels:
-        all: Je veux être notifié(e) systématiquement
-        none: Non, je n'ai pas besoin d'être notifié(e)
+        all: Je veux être notifié·e systématiquement
+        none: Non, je n'ai pas besoin d'être notifié·e
       agent/display_cancelled_rdvs:
         true: "Afficher les RDV annulés"
         false: "Ne pas afficher les RDV annulés"

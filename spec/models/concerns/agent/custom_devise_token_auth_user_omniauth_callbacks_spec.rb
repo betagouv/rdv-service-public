@@ -42,7 +42,7 @@ RSpec.describe Agent::CustomDeviseTokenAuthUserOmniauthCallbacks, type: :concern
 
       it "validates presence of email" do
         agent.valid?
-        expect(agent.errors[:email]).to include("doit être rempli(e)")
+        expect(agent.errors[:email]).to include("doit être rempli·e")
       end
 
       it "validates uniqueness of email" do
@@ -59,7 +59,7 @@ RSpec.describe Agent::CustomDeviseTokenAuthUserOmniauthCallbacks, type: :concern
 
       it "validates presence of email" do
         agent.valid?
-        expect(agent.errors[:email]).to include("doit être rempli(e)")
+        expect(agent.errors[:email]).to include("doit être rempli·e")
       end
 
       it "validates uniqueness of email" do

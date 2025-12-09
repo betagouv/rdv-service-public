@@ -43,7 +43,7 @@
           p En revanche, il faudra réinviter les agents et re-créer leurs plages d’ouvertures éventuelles.
 
           = form_with url: close_admin_territory_organisation_path(current_territory, @organisation), method: :patch, builder: Dsfr::FormBuilder do |f|
-            = f.submit "Fermer #{@organisation.name}", class: "fr-btn fr-btn--secondary fr-mt-2w", data: { confirm: "Êtes vous sûr(e) de vouloir fermer l’organisation ?"}
+            = f.submit "Fermer #{@organisation.name}", class: "fr-btn fr-btn--secondary fr-mt-2w", data: { confirm: "Êtes vous sûr·e de vouloir fermer l’organisation ?"}
         - else
           p Vous ne pouvez pas fermer cette organisation car elle a des rendez-vous à venir. Si vous voulez éviter de que nouveaux rendez-vous soient pris, vous pouvez archiver ses motifs.
 
