@@ -58,8 +58,8 @@ class SearchController < ApplicationController
     end
   end
 
-  def public_link_with_internal_organisation_id
-    organisation = Organisation.find(params[:organisation_id])
+  def public_link_with_organisation_public_link_id
+    organisation = Organisation.find_by_public_id(params[:public_link_id])
     redirect_to_organisation_search(organisation)
   end
 
