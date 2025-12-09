@@ -18,3 +18,6 @@ application.register("print", PrintController)
 
 import RdvPlanController from "./rdv_plan_controller"
 application.register("rdv-plan", RdvPlanController)
+
+import LagaufreController from "./lagaufre"
+application.register("lagaufre", LagaufreController)
