@@ -21,6 +21,7 @@ RSpec.describe "Un agent peut ajouter des usagers à un RDV Collectif", js: true
       expect(page).to have_title("Ajouter un participant")
       expect(find("input[type=submit]")).to be_disabled
       add_user(user_celeste)
+      expect(page).to have_content("Céleste KHO")
       expect(find("input[type=submit]")).not_to be_disabled
       click_on "Enregistrer"
 
