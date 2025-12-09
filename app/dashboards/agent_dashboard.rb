@@ -21,6 +21,7 @@ class AgentDashboard < Administrate::BaseDashboard
     agent_services: Field::HasMany,
     rdvs: Field::HasMany.with_options(sort_by: :starts_at, direction: :desc),
     invitation_sent_at: Field::DateTime,
+    pro_connect_openid_sub: Field::String,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -51,6 +52,7 @@ class AgentDashboard < Administrate::BaseDashboard
     agent_territorial_access_rights
     rdvs
     invitation_sent_at
+    pro_connect_openid_sub
     created_at
     deleted_at
     updated_at
@@ -66,6 +68,7 @@ class AgentDashboard < Administrate::BaseDashboard
     organisations
     services
     territories
+    pro_connect_openid_sub
     deleted_at
   ].freeze
 
