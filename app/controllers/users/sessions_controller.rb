@@ -18,20 +18,33 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def create
-    if auth_options[:scope] == :user && (self.resource = Agent.find_by(email: params[:user]["email"])) && resource.valid_password?(params[:user]["password"])
-      return if reset_current_agent_password_if_weak!(params[:user][:password])
-
-      set_flash_message!(:notice, :signed_in)
-      sign_in(:agent, resource)
-
-      yield resource if block_given?
-      respond_with resource, location: after_sign_in_path_for(resource)
-    else
-      super
+    found_user = User.find_by(email: params[:user]["email"])
+    if found_user&.valid_password?(params[:user]["password"])
+      super and return
     end
+
+    found_agent = Agent.find_by(email: params[:user]["email"])
+    if found_agent&.valid_password?(params[:user]["password"])
+      login_agent!(found_agent) and return
+    end
+
+    # Nous n'avons trouvé ni usager ni agent, on laisse devise gérer l'échec.
+    super
   end
 
   def destroy
     logout_and_redirect_user(flash_message_key: :signed_out)
+  end
+
+  private
+
+  def login_agent!(agent)
+    self.resource = agent # Nécessaire car le code Devise va se baser sur #resource
+
+    return if reset_current_agent_password_if_weak!(params[:user][:password])
+
+    set_flash_message!(:notice, :signed_in)
+    sign_in(:agent, agent)
+    respond_with agent, location: after_sign_in_path_for(agent)
   end
 end
