@@ -71,16 +71,22 @@ RSpec.describe CronJob::RefreshCachedStats::RefreshKeyJob do
   end
 
   context "pour la carte des lieux, avec un nombre de lignes reçus suspicieusement bas" do
-    specify do
-      row = {
+    let(:row) do
+      {
         "organisation_name" => "Inclusion Numérique Allier",
         "type_organisation" => "RDV Solidarités",
         "latitude" => "46,29",
         "longitude" => "2,74",
       }
+    end
 
-      allow(MetabaseApi).to receive(:sql_query).and_return([row])
+    before do
+      # On simule que les données précédentes étaient beaucoup plus complètes, 12 lignes
       Rails.cache.write("stats.both_instances.lieux_map_data", [row] * 12)
+    end
+
+    specify do
+      allow(MetabaseApi).to receive(:sql_query).and_return([row])
       expect do
         described_class.new.perform(key: "stats.both_instances.lieux_map_data")
       end.to raise_error(CronJob::RefreshCachedStats::SuspiciousFigureError)
