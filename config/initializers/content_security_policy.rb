@@ -18,6 +18,8 @@ tiles_data_gouv = "openmaptiles.data.gouv.fr"
 bootstrap_cdn = "*.bootstrapcdn.com"
 # Metabase permet d’embedder des rapports dans l’application
 metabase = "rdv-service-public-metabase.osc-secnum-fr1.scalingo.io"
+# La suite (pour afficher les services dans la gaufre)
+lasuite = "lasuite.numerique.gouv.fr"
 
 # Utilisés par swagger pour la documentation de l'api
 swagger_shas = ["'sha256-j4Lx1FqFgvYDBEjW7NQaEY7/HhCi8WVsLWkqC4+wJ3w='", "'sha256-JHKToH7KbGJj6TloPeWnKnbImDel00Whl1rRnBiTYuQ='"]
@@ -35,9 +37,9 @@ Rails.application.config.content_security_policy do |policy|
   policy.worker_src :blob
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, metabase
-  policy.img_src :self, :data, :blob, tiles_osm, unpkg_cdn, tiles_data_gouv
+  policy.img_src :self, :data, :blob, tiles_osm, unpkg_cdn, tiles_data_gouv, lasuite
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, unpkg_cdn
-  policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv
+  policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv, lasuite
 
   policy.script_src :self, unpkg_cdn, *swagger_shas
 end

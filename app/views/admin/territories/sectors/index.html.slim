@@ -31,11 +31,11 @@
                   - if sector.zones.cities.any?
                     li
                       = sector.zones.cities.count
-                      = "&nbsp;communes".html_safe
+                      = sanitize("&nbsp;communes")
                   - if sector.zones.streets.any?
                     li
                       = sector.zones.streets.count
-                      = "&nbsp;rues".html_safe
+                      = sanitize("&nbsp;rues")
               td
                 - if sector.attributions.any?
                   ul.pl-2.mb-0

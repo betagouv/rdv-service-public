@@ -1,4 +1,6 @@
 RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
+  include ActionView::Helpers::SanitizeHelper
+
   let(:oauth_application) do
     create(:oauth_application, name: "Démarches Simplifiées",
                                logo_base64: file_fixture("logo_demarches_simplifiees_base_64.txt").read)
@@ -35,7 +37,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
 
     doc.start_section("Première prise de rendez-vous")
 
-    doc.add_text <<~TEXT.html_safe # rubocop:disable Rails/OutputSafety
+    text = <<~TEXT
       <p>
         Je suis un instructeur qui utilise Démarches Simplifiées.
       </p>
@@ -47,6 +49,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
         Je suis en train d'instruire un dossier, et je vois que j'ai la possibilité de prendre un rendez-vous. Je clique dessus depuis Démarches Simplifiées, et j'arrive sur ces écrans de RDV Service Public.
       </p>
     TEXT
+    doc.add_text(sanitize(text))
 
     visit oauth_authorization_path(
       client_id: oauth_application.uid,

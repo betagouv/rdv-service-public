@@ -9,7 +9,7 @@
   = f.input_field :level, \
     label: false, \
     collection: Zone::LEVELS, \
-    label_method: -> { "&nbsp;&nbsp;".html_safe + Zone.human_attribute_value(:level, _1) }, \
+    label_method: -> { sanitize("&nbsp;&nbsp;") + Zone.human_attribute_value(:level, _1) }, \
     as: :radio_buttons, \
     wrapper: :vertical_collection_inline
   .d-flex.align-items-center.mb-3.mt-1.text-muted
@@ -43,7 +43,7 @@
     .col-6
       = f.input :city_name, input_html: { readonly: true }, required: true
     .col-6
-      = f.input :city_code, input_html: { readonly: true }, required: true, hint: "code postal ≠ <a href='https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune' target='_blank'>code commune INSEE</a>".html_safe
+      = f.input :city_code, input_html: { readonly: true }, required: true, hint: sanitize("code postal ≠ <a href='https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune' target='_blank'>code commune INSEE</a>", attributes: %w[href target])
 
   - if zone.level_street?
     .row

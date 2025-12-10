@@ -10,7 +10,6 @@ RSpec.describe "/robots.txt" do
       Allow: /mentions_legales
       Allow: /cgu
       Allow: /politique_de_confidentialite
-      Allow: /domaines
       Allow: /aide
     ROBOTS
   end

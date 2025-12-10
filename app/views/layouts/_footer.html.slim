@@ -15,9 +15,6 @@ footer.fr-footer.main-footer.fr-pb-12w#footer[role="contentinfo"]
           |> et
           = link_to "l’Agence Nationale de la Cohésion des Territoires (ANCT)", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noopener"
           '
-        - if current_domain == Domain::RDV_AIDE_NUMERIQUE
-          p.fr-footer__content-desc
-            = link_to "En savoir plus concernant #{Domain::RDV_AIDE_NUMERIQUE.name} et #{Domain::RDV_SOLIDARITES.name}…", domaines_path
         ul.fr-footer__content-list
           li.fr-footer__content-item
             = link_to "info.gouv.fr", "https://info.gouv.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener external", title: "info.gouv.fr - nouvelle fenêtre"

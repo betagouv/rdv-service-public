@@ -204,7 +204,7 @@ RSpec.describe Lieu, type: :model do
 
       it "ne détruit pas le lieu" do
         expect(lieu.reload.destroy).to be false # reload is necessary here for some reason
-        expect(lieu.errors.full_messages).to include("Vous ne pouvez pas supprimer l'enregistrement parce que des rdvs dépendant(e)s existent")
+        expect(lieu.errors.full_messages).to include("Vous ne pouvez pas supprimer l'enregistrement parce que des rdvs dépendant·e·s existent")
         expect(lieu.rdvs.count).to eq 1
       end
     end
