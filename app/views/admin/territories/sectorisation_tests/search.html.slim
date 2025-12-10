@@ -22,7 +22,7 @@ do |f|
         .col-lg-2= f.input :street_ban_id, readonly: true, label: "Code rue BAN"
         .col-lg-2= f.input :latitude, readonly: true, label: "Latitude"
         .col-lg-2= f.input :longitude, readonly: true, label: "Longitude"
-      = f.submit class: "btn btn-primary", value: "Tester la sectorisation de cette adresse"
+      = f.submit class: "fr-btn", value: "Tester la sectorisation de cette adresse"
 
   - if @sectorisation_test_form.valid?
     .card
@@ -70,10 +70,7 @@ do |f|
                   - motifs.each do |motif|
                     li= motif_name_and_location_type(motif)
 
-        .alert.alert-info.d-flex.align-items-center
-          .mr-3
-            .fa.fa-info
-          div
-            span> Ici,
-            b> motif disponible
-            span> désigne un motif disponible à la réservation en ligne par les usagers. Seuls les motifs ayant une plage d'ouverture active sont considérés disponibles.
+        .fr-alert.fr-alert--info
+          span> Ici,
+          b> motif disponible
+          span> désigne un motif disponible à la réservation en ligne par les usagers. Seuls les motifs ayant une plage d'ouverture active sont considérés disponibles.

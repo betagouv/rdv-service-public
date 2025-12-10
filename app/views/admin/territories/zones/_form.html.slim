@@ -13,7 +13,7 @@
     as: :radio_buttons, \
     wrapper: :vertical_collection_inline
   .d-flex.align-items-center.mb-3.mt-1.text-muted
-    i.fa.fa-info
+    = icon("fr-icon-information-fill")
     div.pl-2
     - if zone.level_city?
       | L'ensemble de cette commune sera couvert par le secteur
@@ -50,7 +50,7 @@
       .col-6= f.input :street_name, input_html: { readonly: true }, required: true
       .col-6= f.input :street_ban_id, input_html: { readonly: true }, required: true
 
-  = f.submit class: "btn btn-primary"
+  = f.submit class: "fr-btn"
   - if zone.new_record?
     div ou
-    div = f.submit class: "btn btn-light", value: "Enregistrer puis créer une autre #{zone.level_street? ? 'rue' : 'commune'}"
+    div = f.submit class: "fr-btn fr-btn--secondary", value: "Enregistrer puis créer une autre #{zone.level_street? ? 'rue' : 'commune'}"
