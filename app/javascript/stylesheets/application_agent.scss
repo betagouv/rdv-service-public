@@ -118,6 +118,11 @@ li.nav-item {
   margin-bottom: 0;
 }
 
+table,
+.fr-btns-group {
+  flex-wrap: nowrap;
+}
+
 // << A SUPPRIMER À LA SUPPRESSION DE BOOTSTRAP REBOOT
 // Suppression d’une marge introduite par Bootstrap Reboot
 .fr-notice p {
@@ -149,4 +154,11 @@ li.nav-item {
 .fr-icon-ri-user-unfollow-fill::after {
   -webkit-mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
   mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
+}
+
+// Disponible dans le DSFR 1.14
+.fr-icon-circle-fill::before,
+.fr-icon-circle-fill::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/dsfr-circle-fill.svg");
+  mask-image: url("../../assets/images/custom-icons/dsfr-circle-fill.svg");
 }

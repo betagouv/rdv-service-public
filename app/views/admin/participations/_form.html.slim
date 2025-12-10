@@ -5,13 +5,12 @@
 div data-controller="destroyable"
   = form.hidden_field :user_id
   h6
-    i.fa.fa-user-alt.mr-1
+    => icon("fr-icon-user-fill", class: "fr-icon--sm")
     = render "admin/users/identity", user: participation.user
     - if participation.rdv.persisted?
       = form.hidden_field :_destroy, "data-target": "destroyable.destroyInput"
-      button.btn.btn-sm.btn-link type="button" data-action="destroyable#destroyItem"
-        i.fa.fa-minus-circle.mr-1
-        = t("helpers.delete")
+      button.fr-btn.fr-btn--tertiary.fr-btn--sm.fr-btn--icon-left.fr-icon-delete-fill type="button" data-action="destroyable#destroyItem"
+        = "Supprimer"
 
   .ml-3
     = render "admin/users/notifications_preferences", user: participation.user.user_to_notify

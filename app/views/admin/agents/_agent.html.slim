@@ -33,9 +33,11 @@ tr id="agent_#{agent.id}"
   td
     .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
       - if agent_policy.create? && !agent.invitation_accepted? && !agent.is_an_intervenant?
-        = link_to t("devise.invitations.reinvite"),
+        = link_to "",
                 reinvite_admin_organisation_invitation_path(current_organisation, agent),
-                method: :post, class: "fr-btn fr-btn--tertiary"
+                method: :post,
+                class: "fr-btn fr-btn--tertiary fr-icon-send-plane-fill",
+                title: "Renvoyer l’invitation"
       - if agent_policy.edit?
         = link_to "", edit_admin_organisation_agent_path(current_organisation, agent),
                 title: t("helpers.edit"),

@@ -24,15 +24,15 @@
             td = link_to team.name, edit_admin_territory_team_path(current_territory, team)
             td = team.agents.count
             td
-              .d-flex
-                div.mr-3= link_to edit_admin_territory_team_path(current_territory, team),
-                        title: t("helpers.edit") do
-                  i.fa.fa-edit
-                div.mr-3= link_to( admin_territory_team_path(current_territory, team),
+              .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
+                = link_to "", edit_admin_territory_team_path(current_territory, team),
+                        title: "Modifier",
+                        class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
+                = link_to "", admin_territory_team_path(current_territory, team),
                         method: :delete,
                         title: t("helpers.delete"),
-                        data: { confirm: "Confirmez-vous la suppression de cette équipe ?"} ) do
-                  i.fa.fa-trash-alt
+                        data: { confirm: "Confirmez-vous la suppression de cette équipe ?"},
+                        class: "fr-btn fr-btn--tertiary fr-icon-delete-fill"
     .d-flex.justify-content-center
       = paginate @teams, theme: "dsfr"
 
