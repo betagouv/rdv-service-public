@@ -18,10 +18,15 @@
     h2 Se connecter par e-mail
 
     = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
+      = render "devise/shared/error_messages", resource: resource
       = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse e-mail", autocomplete: "email"
-
       .rdv-text-align-center
         = f.submit "Se connecter", class: "fr-mt-2v fr-btn"
+
+    hr.fr-my-2w
+    h2 Vous n'avez pas de compte ?
+    .rdv-text-align-center
+      = link_to "Créer un compte", new_user_registration_path, class: "fr-btn fr-btn--secondary"
 
     - if @rdv_wizard
       hr.fr-my-2w

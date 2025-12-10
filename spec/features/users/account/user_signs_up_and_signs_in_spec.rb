@@ -68,47 +68,6 @@ RSpec.describe "User signs up and signs in" do
     end
   end
 
-  context "if agent tries to sign in through the user signin form" do
-    let!(:agent) { create(:agent, password: "c0rRecthorse!", basic_role_in_organisations: [create(:organisation)]) }
-
-    it ".sign_in as user and be signed in as agent" do
-      visit "http://www.rdv-solidarites-test.localhost/"
-      click_link "Se connecter"
-      within("form") do
-        fill_in :user_email, with: agent.email
-        fill_in :user_password, with: agent.password
-        click_on "Se connecter"
-      end
-      expect(page).to have_current_path(admin_organisation_planning_agenda_path(agent.organisations.first))
-    end
-
-    context "when the agent's password is too weak" do
-      let(:agent) do
-        build(:agent, password: "tropfaible").tap do |a|
-          a.save(validate: false)
-        end
-      end
-
-      it "expire le mot de passe et redirige vers la page pour en définir un nouveau" do
-        previous_encrypted_password = agent.reload.encrypted_password
-        visit new_user_session_path
-        fill_in "Adresse email", with: agent.email
-        fill_in "Mot de passe", with: "tropfaible"
-        within("main") { click_on "Se connecter" }
-        expect(page).to have_content("nous vous demandons de changer votre mot de passe")
-        expect(agent.reload.encrypted_password).not_to eq(previous_encrypted_password) # vérifie que le mot de passe a été modifié
-        fill_in "Mot de passe", with: "tropfaible2"
-        click_on "Enregistrer"
-        # expect(page.status_code).to eq 422 # je ne sais pas trop pourquoi devise renvoie une 422 ici
-        expect(page).to have_content("Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères")
-        fill_in "Mot de passe", with: "Rdvservicepublictest1!"
-        click_on "Enregistrer"
-        expect(page).to have_content("Votre mot de passe a été édité avec succès, votre connexion est désormais active")
-        expect(page).to have_content("Bienvenue !")
-      end
-    end
-  end
-
   def expect_flash_info(message)
     expect(page).to have_selector(".fr-alert.fr-alert--info", text: message)
   end
