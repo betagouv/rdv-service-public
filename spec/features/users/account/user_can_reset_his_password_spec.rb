@@ -5,7 +5,7 @@ RSpec.describe "User resets his password spec" do
 
   it "works by sending a reset email" do
     visit new_user_password_path
-    expect(page).to have_content("Mot de passe oublié ?")
+    expect(page).to have_content("Mot de passe oublié ou première connexion ?")
     expect(page).to have_link("Se connecter")
 
     fill_in "user_email", with: user.email
