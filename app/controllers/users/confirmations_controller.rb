@@ -6,18 +6,13 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
 
     if resource.errors.empty?
       set_flash_message!(:notice, :confirmed)
+
+      sign_in(:user, resource)
       respond_with_navigational(resource) do
-        redirect_to after_confirmation_path_for(resource_name, resource)
+        redirect_to after_sign_in_path_for(resource_name)
       end
     else
       redirect_to new_user_session_path, flash: { error: resource.errors.full_messages.join(", ") }
     end
-  end
-
-  protected
-
-  def after_confirmation_path_for(_resource_name, resource)
-    token = resource.send(:set_reset_password_token)
-    edit_password_path(resource, reset_password_token: token, from_confirmation: true)
   end
 end

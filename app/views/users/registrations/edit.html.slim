@@ -19,6 +19,15 @@
         .rdv-text-align-right= f.submit "Modifier", class: "fr-btn"
       .mt-5
         hr
+    - else
+      p.rdv-font-weight-bold Mot de passe
+      p
+        |> Le mot de passe vous permet de vous reconnecter à votre compte pour une future prise de RDV. Vous n’avez pas défini de mot de passe.
+        |> Ce n’est pas obligatoire. Vous pourrez le faire plus tard.
+        |> Si vous souhaitez le faire maintenant, suivez ce lien :
+        = link_to "définir un mot de passe", new_user_password_path
+      .mt-5
+        hr
     p Vous souhaitez supprimer votre compte ?
     - if resource.can_be_soft_deleted?
       = link_to "Supprimer",
