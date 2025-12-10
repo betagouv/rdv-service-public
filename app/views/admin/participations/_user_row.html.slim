@@ -6,7 +6,7 @@ tr
     - if participation.user.birth_date
         .participation_birthdate.small
           = icon("fr-icon-calendar-line", class: "fr-icon--sm fr-mr-1v")
-          = "Né(e) le #{I18n.l(participation.user.birth_date)}"
+          = "Né·e le #{I18n.l(participation.user.birth_date)}"
   - if participation.rdv.requires_ants_predemande_number?
     td
       = participation.user.ants_pre_demande_number

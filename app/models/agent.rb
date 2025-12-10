@@ -328,4 +328,8 @@ class Agent < ApplicationRecord
 
     Organisation.joins(:agents).where(agents: { proconnect_siret: proconnect_siret }).distinct
   end
+
+  def lagaufre_access?
+    email.include?(".gouv.fr")
+  end
 end

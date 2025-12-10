@@ -18,7 +18,7 @@ RSpec.describe Admin::CreateMotifs do
     it "is invalid, provides unique errors and prevents from saving" do
       form = described_class.new(motif_params: invalid_motif.attributes, organisations:)
       expect(form).to be_invalid
-      expect(form.errors.to_a).to eq(["Default duration in min doit être rempli(e)"])
+      expect(form.errors.to_a).to eq(["Default duration in min doit être rempli·e"])
       expect(form.save).to be_falsey
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe Admin::CreateMotifs do
       form = described_class.new(motif_params: invalid_motif.attributes, organisations:)
       expect(form).to be_invalid
       expected_errors = [
-        "Default duration in min doit être rempli(e)",
+        "Default duration in min doit être rempli·e",
         "Il existe déjà dans Ma première orga un motif Sur place nommé \"#{valid_motif.name}\" pour le service #{valid_motif.service.name}",
         "Il existe déjà dans Ma seconde orga un motif Sur place nommé \"#{valid_motif.name}\" pour le service #{valid_motif.service.name}",
       ]

@@ -58,7 +58,7 @@ RSpec.describe "Visioplainte Rdvs" do
       it "renders a 422 with validation erorrs" do
         response_hash = create_rdv
         expect(response.status).to eq 422
-        expect(response_hash[:errors]).to eq(["Lieu doit être rempli(e)"])
+        expect(response_hash[:errors]).to eq(["Lieu doit être rempli·e"])
       end
     end
   end

@@ -45,4 +45,53 @@ RSpec.describe CronJob::RefreshCachedStats::RefreshKeyJob do
       expect(Rails.cache.fetch("stats.both_instances.1_year.rdvs_count")).to eq(3_000)
     end
   end
+
+  context "pour la carte des lieux, sans valeur précédente" do
+    specify do
+      allow(MetabaseApi).to receive(:sql_query).and_return(
+        [
+          {
+            "organisation_name" => "Inclusion Numérique Allier",
+            "type_organisation" => "RDV Solidarités",
+            "latitude" => "46,29",
+            "longitude" => "2,74",
+          },
+          {
+            "organisation_name" => "SDSEI Est Béarn - site de NAY",
+            "type_organisation" => "RDV Solidarités",
+            "latitude" => "43,19",
+            "longitude" => "-0,11",
+          },
+        ]
+      )
+      expect { described_class.new.perform(key: "stats.both_instances.lieux_map_data") }.not_to raise_error
+      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data").count).to eq(2)
+      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data")[0]["organisation_name"]).to eq("Inclusion Numérique Allier")
+    end
+  end
+
+  context "pour la carte des lieux, avec un nombre de lignes reçus suspicieusement bas" do
+    let(:row) do
+      {
+        "organisation_name" => "Inclusion Numérique Allier",
+        "type_organisation" => "RDV Solidarités",
+        "latitude" => "46,29",
+        "longitude" => "2,74",
+      }
+    end
+
+    before do
+      # On simule que les données précédentes étaient beaucoup plus complètes, 12 lignes
+      Rails.cache.write("stats.both_instances.lieux_map_data", [row] * 12)
+    end
+
+    specify do
+      allow(MetabaseApi).to receive(:sql_query).and_return([row])
+      expect do
+        described_class.new.perform(key: "stats.both_instances.lieux_map_data")
+      end.to raise_error(CronJob::RefreshCachedStats::SuspiciousFigureError)
+      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data").count).to eq(12)
+      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data")[0]["organisation_name"]).to eq("Inclusion Numérique Allier")
+    end
+  end
 end

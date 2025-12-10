@@ -24,7 +24,7 @@ RSpec.describe BeneficiaireForm do
 
     it do
       expect(form).to be_invalid
-      expect(form.errors.first.full_message).to eq("Prénom doit être rempli(e)")
+      expect(form.errors.first.full_message).to eq("Prénom doit être rempli·e")
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe BeneficiaireForm do
 
     it do
       expect(form).to be_invalid
-      expect(form.errors.first.full_message).to eq("Nom d’usage doit être rempli(e)")
+      expect(form.errors.first.full_message).to eq("Nom d’usage doit être rempli·e")
     end
   end
 
@@ -162,7 +162,7 @@ RSpec.describe BeneficiaireForm do
         expect(form.errors.first.message).to eq(
           <<-TXT.squish
             Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Montrouge.
-            Veuillez <a href='http://rdvsympa.fr/123' target="_blank">annuler ce RDV<a> avant d'en prendre un nouveau.
+            Veuillez <a href="http://rdvsympa.fr/123" target="_blank">annuler ce RDV</a> avant d'en prendre un nouveau.
           TXT
         )
       end
