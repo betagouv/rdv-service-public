@@ -7,6 +7,18 @@ class Rack::Attack
     end
   end
 
+  throttle("demande de code de connexion usager - throttling par IP", limit: 60, period: 10.minutes) do |request|
+    if request.path.match(%r{users/login_codes}) && request.post?
+      request.ip
+    end
+  end
+
+  throttle("saisie de code de connexion usager - throttling par IP", limit: 60, period: 10.minutes) do |request|
+    if request.path.match(%r{users/sessions_by_code}) && request.post?
+      request.ip
+    end
+  end
+
   Rack::Attack.throttled_responder = lambda do |request|
     exception = ThrottleError.new(request.env["rack.attack.matched"])
     Sentry.set_context("rack_attack_match_data", request.env["rack.attack.match_data"])

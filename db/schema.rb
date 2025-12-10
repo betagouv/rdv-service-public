@@ -368,6 +368,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end
 
+  create_table "login_codes", force: :cascade do |t|
+    t.string "email", null: false
+    t.string "code", null: false
+    t.string "domain_id", null: false
+    t.datetime "used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email", "created_at"], name: "index_login_codes_on_email_and_created_at"
+  end
+
   create_table "motif_categories", force: :cascade do |t|
     t.string "name", null: false
     t.string "short_name", null: false, comment: "Le nom \"technique\" de la catégorie de motif, qui permet de l'identifier dans les paramètres de formulaires\"\n"

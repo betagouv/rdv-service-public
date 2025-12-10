@@ -113,5 +113,9 @@ Rails.application.configure do
       cron: "every 15 minutes",
       class: "CronJob::ImportCaldavAbsences",
     },
+    destroy_login_codes: {
+      cron: "every day at 05:00 Europe/Paris",
+      class: "CronJob::DestroyLoginAttemptsJob",
+    },
   }
 end
