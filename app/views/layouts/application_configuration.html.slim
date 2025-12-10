@@ -6,12 +6,10 @@ html lang="fr"
   body
     = render "layouts/agent_header"
 
-    main.container-fluid.mt-4.mb-5
-
-      .container.px-4#icon-grid
-        = content_for(:breadcrumbs)
-        = render "layouts/flash"
-        = yield
+    main.fr-container.fr-mt-4v
+      = content_for(:breadcrumbs)
+      = render "layouts/flash"
+      = yield
 
     #modal-holder
     = render "layouts/agent_footer"
