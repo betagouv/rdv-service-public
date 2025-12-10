@@ -19,6 +19,7 @@ class Users::LoginByCodeController < ApplicationController
         redirect_to users_code_form_path(email:)
       when 1
         user = users.first
+        user.confirm
         sign_in(:user, user)
         flash[:success] = "Connexion réussie"
         redirect_to after_sign_in_path_for(user)
