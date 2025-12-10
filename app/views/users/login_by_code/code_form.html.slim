@@ -1,0 +1,10 @@
+- content_for :title, "Connexion pour #{@email}"
+
+.card
+  .card-body
+    p Veuillez saisir le code à 6 chiffre envoyé à #{@email}
+
+    = form_with url: "/users/submit_login_code", method: :post, builder: Dsfr::FormBuilder, model: User.new, scope: "" do |form|
+      = form.hidden_field :email, value: @email
+      = form.dsfr_text_field :login_code, label: "Code à 6 chiffres"
+      = form.submit "Valider", class: "fr-btn"

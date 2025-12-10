@@ -113,6 +113,10 @@ class User < ApplicationRecord
     super(sanitize_email(email))
   end
 
+  def email_or_notification_email
+    email || notification_email
+  end
+
   def add_organisation(organisation)
     self_and_relatives_and_responsible.each do |u|
       u.organisations << organisation if u.organisation_ids.exclude?(organisation.id)

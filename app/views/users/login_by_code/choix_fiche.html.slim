@@ -1,0 +1,10 @@
+- content_for :title, "Choix de la fiche usager pour #{@email}"
+
+.card
+  .card-body
+    p Veuillez choisir sur quelle fiche usager vous connecter :
+
+    ul
+    - @fiches_usagers.each do |user|
+      li
+        = link_to "#{user.full_name} (id=#{user.id})", users_submit_choix_fiche_path(user_id: user.id)

@@ -27,7 +27,10 @@ class Users::SessionsController < Devise::SessionsController
       yield resource if block_given?
       respond_with resource, location: after_sign_in_path_for(resource)
     else
-      super
+      email = params[:user]["email"]
+      UserLoginCode.store_code_for(email)
+      Users::LoginCodeMailer.send_login_code(email:, domain_id: current_domain.id).deliver_later
+      redirect_to users_code_form_path(email:) and return
     end
   end
 

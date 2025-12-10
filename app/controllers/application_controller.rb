@@ -82,4 +82,12 @@ class ApplicationController < ActionController::Base
   def page_number
     params[:page].presence&.to_i || 1
   end
+
+  def current_user_email
+    session[:current_user_email].presence
+  end
+
+  def current_user_email=(email)
+    session[:current_user_email] = email
+  end
 end

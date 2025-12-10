@@ -71,6 +71,11 @@ Rails.application.routes.draw do
   devise_for :users,
              controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations", invitations: "users/invitations" }
 
+  get "users/code_form" => "users/login_by_code#code_form"
+  post "users/submit_login_code" => "users/login_by_code#submit_login_code"
+  get "users/choix_fiche" => "users/login_by_code#choix_fiche"
+  get "users/submit_choix_fiche" => "users/login_by_code#submit_choix_fiche"
+
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
     resources :rdvs, only: %i[index create show edit update] do
@@ -101,6 +106,7 @@ Rails.application.routes.draw do
     patch "users/informations", to: "users/users#update"
     resources :relatives, except: %i[index show], controller: "users/relatives"
   end
+
   authenticated :user do
     get "/users/rdvs", to: "users/rdvs#index"
   end
