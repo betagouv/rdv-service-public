@@ -90,4 +90,8 @@ class ApplicationController < ActionController::Base
   def current_user_email=(email)
     session[:current_user_email] = email
   end
+
+  def logout_current_user_email
+    session.delete(:current_user_email)
+  end
 end

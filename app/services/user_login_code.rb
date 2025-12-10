@@ -5,7 +5,7 @@ class UserLoginCode
     Redis.with_connection { |redis| redis.get(cache_key_for(email)) }
   end
 
-  def self.store_code_for(email)
+  def self.store_new_code_for(email)
     code = SecureRandom.random_number(100_000..999_999).to_s
     Redis.with_connection { |redis| redis.set(cache_key_for(email), code, ex: EXPIRES_IN) }
     code

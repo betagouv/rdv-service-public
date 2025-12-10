@@ -1,7 +1,4 @@
 class Users::LoginByCodeController < ApplicationController
-  include Devise::Controllers::Helpers
-
-  respond_to :html
   layout "application_narrow"
 
   def code_form
@@ -11,8 +8,8 @@ class Users::LoginByCodeController < ApplicationController
 
   def submit_login_code
     email = params.require(:email)
-
     submitted_login_code = params[:login_code]
+
     if submitted_login_code == UserLoginCode.code_for(email)
       self.current_user_email = email
       users = User.where(email:).or(User.where(notification_email: email)).to_a
@@ -24,7 +21,7 @@ class Users::LoginByCodeController < ApplicationController
         user = users.first
         sign_in(:user, user)
         flash[:success] = "Connexion réussie"
-        redirect_to users_rdvs_path
+        redirect_to after_sign_in_path_for(user)
       else
         redirect_to users_choix_fiche_path
       end
@@ -48,10 +45,16 @@ class Users::LoginByCodeController < ApplicationController
     if user.email_or_notification_email == current_user_email
       user.confirm
       sign_in(:user, user)
-      redirect_to users_rdvs_path
+      redirect_to after_sign_in_path_for(user)
     else
       flash[:error] = "Impossible de se connecter avec cette fiche : elle ne porte pas votre e-mail"
       redirect_to users_choix_fiche_path
     end
+  end
+
+  private
+
+  def storable_location?
+    false
   end
 end
