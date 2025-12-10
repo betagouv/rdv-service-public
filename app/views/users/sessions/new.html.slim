@@ -20,7 +20,7 @@
     = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
       = render "devise/shared/error_messages", resource: resource
       = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse email", autocomplete: "email"
-      = render "common/form/current_password_input", f:, forgotten_password_link: true, forgotten_password_link_label: "Mot de passe oublié ou première connexion ?"
+      = render "common/form/current_password_input", f:, forgotten_password_link: true, forgotten_password_link_label: @rdv_wizard.present? ? "Mot de passe oublié ?" : "Mot de passe oublié ou première connexion ?"
 
       .rdv-text-align-center
         = f.submit "Se connecter", class: "fr-mt-2v fr-btn"
