@@ -28,13 +28,13 @@ class Agent::RdvPolicy < ApplicationPolicy
 
   def self.explain(organisation, agent)
     explainations = if agent.admin_in_organisation?(organisation)
-                      "En tant qu'administrateur de l'organisation, vous voyez les RDV de toute l'organisation #{organisation.name}."
+                      "En tant qu'administrateur de l'organisation, vous voyez les rendez-vous de toute l'organisation #{organisation.name}."
                     elsif agent.secretaire?
-                      "En tant que membre du service secrétariat, vous voyez les RDV de toute l'organisation #{organisation.name}."
+                      "En tant que membre du service secrétariat, vous voyez les rendez-vous de toute l'organisation #{organisation.name}."
                     else
-                      "En tant qu'agent, vous voyez uniquement les RDV de vos services ayant lieu dans l'organisation #{organisation.name}."
+                      "En tant qu'agent, vous voyez uniquement les rendez-vous de vos services ayant lieu dans l'organisation #{organisation.name}."
                     end
-    explainations += " Vous voyez également les RDV auxquels vous êtes associé"
+    explainations += " Vous voyez également les rendez-vous auxquels vous êtes associé."
     explainations
   end
 
