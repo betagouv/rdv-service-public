@@ -1,15 +1,15 @@
 - content_for(:menu_item) { "menu-agendas" }
 
-- content_for :title, "Agenda (#{@agents.count} #{'agent'.pluralize(@agents.count)} sélectionnés)"
+- content_for :title, "Agenda (#{my_agents.count} #{'agent'.pluralize(my_agents.count)} sélectionnés)"
 
 ruby:
   event_sources = [
-    admin_api_agenda_rdvs_path(agent_id: @agents.map(&:id), organisation_id: current_organisation.id, format: :json),
-    admin_api_agenda_absences_path(agent_id: @agents.map(&:id), organisation_id: current_organisation.id, format: :json),
-    admin_api_agenda_plage_ouvertures_path(agent_id: @agents.map(&:id), organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json),
+    admin_api_agenda_rdvs_path(agent_id: my_agents.map(&:id), organisation_id: current_organisation.id, format: :json),
+    admin_api_agenda_absences_path(agent_id: my_agents.map(&:id), organisation_id: current_organisation.id, format: :json),
+    admin_api_agenda_plage_ouvertures_path(agent_id: my_agents.map(&:id), organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json),
   ]
   event_sources.push(OffDays.to_full_calendar_array) unless current_territory.work_on_sunday?
-  resources = @agents.map { { id: _1.id, title: _1.full_name_or_email } }
+  resources = my_agents.map { { id: _1.id, title: _1.full_name_or_email } }
 
 = render partial: "admin/planning/agendas/disconnected_warning"
 

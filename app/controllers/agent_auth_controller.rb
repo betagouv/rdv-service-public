@@ -4,6 +4,7 @@ class AgentAuthController < ApplicationController
   layout "application_agent"
 
   before_action :authorize_organisation, if: -> { params[:organisation_id].present? }
+  before_action :set_selected_agents_in_agenda
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
@@ -35,5 +36,30 @@ class AgentAuthController < ApplicationController
   def authorize_organisation
     # on n’utilise pas le helper authorize directement pour obliger à faire un autre appel à authorize avec la ressource qui sera réellement utilisée par l'action (par exemple le motif ou le rdv)
     Pundit.authorize(current_agent, current_organisation, :show?, policy_class: Agent::OrganisationPolicy)
+  end
+
+  attr_writer :my_agent_ids
+
+  helper_method :my_sole_agent
+  def my_sole_agent
+    my_agents.first
+  end
+
+  helper_method :my_agents
+  def my_agents
+    return @my_agents if defined? @my_agents
+
+    @my_agents = if @my_agent_ids
+                   Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve
+                     .where(id: @my_agent_ids)
+                     .order(last_name: :asc)
+                     .load
+                 else
+                   [current_agent.id]
+                 end
+  end
+
+  def set_selected_agents_in_agenda
+    self.my_agent_ids = session[:selected_agent_ids_in_agenda].presence
   end
 end

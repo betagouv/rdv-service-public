@@ -4,7 +4,7 @@ json = {
 
   id: rdv.id,
   title: sanitize(rdv_title_in_agenda(rdv)),
-  url: admin_organisation_rdv_path(rdv.organisation, rdv, contextual_agent_ids: params[:agent_id]),
+  url: admin_organisation_rdv_path(rdv.organisation, rdv),
 
   extendedProps: {
     organisationName: sanitize(rdv.organisation.name),
