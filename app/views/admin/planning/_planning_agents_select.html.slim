@@ -1,10 +1,14 @@
 #planning_agents_select.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
   .rdv-display-flex.rdv-gap-05rem.rdv-align-items-center.rdv-flex-wrap-wrap.rdv-justify-content-space-between.fr-my-2w
     div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
-      h1.fr-h2.fr-mb-0
-        | Planning de
-      div
-        = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end") do |form|
+      - if @agent && session["last_selected_agent_ids"].presence&.size > 1
+        h1.fr-h2.fr-mb-0.d-flex.flex-gap-1em
+          span Plages et indispos de #{@agent.full_name}
+          = link_to("Retour à l'agenda", admin_organisation_planning_agenda_path, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-left-line")
+      - else
+        h1.fr-h2.fr-mb-0
+          | Planning de
+        div = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end") do |form|
           div
             ruby:
               # Le select initial contient tous les agents sélectionnés, puis il sera alimenté en Ajax.
@@ -27,7 +31,7 @@
               button#multi_agent_enable.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
             #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
               = form.submit "Appliquer", {class: "fr-btn  "}
-            #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
+            div[class=(@agents != [current_agent] ? "" : "hidden")]
               = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, selected_agent_ids: [current_agent.id]), class: "fr-btn fr-btn--tertiary"
 
     - unless @agents.size > 1 # Pas la place pour le toggle quand plusieurs agents sont sélectionnés

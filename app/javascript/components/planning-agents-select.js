@@ -1,7 +1,7 @@
 import { initInput } from "./select2-inputs"
 
 export const planningAgentsSelect = () => {
-  if(!document.querySelector("#planning_agents_select")) {
+  if(!document.querySelector("#selected_agent_ids")) {
     return;
   }
   const agentSelect = document.querySelector("#selected_agent_ids");
