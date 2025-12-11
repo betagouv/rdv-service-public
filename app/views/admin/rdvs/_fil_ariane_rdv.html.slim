@@ -1,16 +1,16 @@
-/# locals: (rdv:, b:, contextual_agents:)
+/# locals: (rdv:, b:)
 
-- if contextual_agents.blank?
+- if Current.selected_agents_in_agenda.blank?
   - if rdv.collectif?
     = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)
   - else
     = b.with_breadcrumb label: "Liste des RDV", href: admin_organisation_rdvs_path(current_organisation)
-- elsif contextual_agents.size == 1 || !current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-  - contextual_agent = contextual_agents.first
-  - if contextual_agent != current_agent
-    = b.with_breadcrumb label: "Agenda de #{contextual_agent.full_name_or_email}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agent.id)
+- elsif Current.selected_agents_in_agenda.size == 1 || !current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
+  - selected_agent = Current.selected_agents_in_agenda.first
+  - if selected_agent != current_agent
+    = b.with_breadcrumb label: "Agenda de #{selected_agent.full_name_or_email}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: selected_agent.id)
   - else
     = b.with_breadcrumb label: "Votre agenda", href: admin_organisation_planning_agenda_path(current_organisation)
 - else
-  = b.with_breadcrumb label: "Agendas de #{contextual_agents.map(&:short_name_or_email).join(', ').truncate(80)}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agents.map(&:id))
+  = b.with_breadcrumb label: "Agendas de #{Current.selected_agents_in_agenda.map(&:short_name_or_email).join(', ').truncate(80)}", href: admin_organisation_planning_agenda_path(current_organisation, agent_id: Current.selected_agents_in_agenda.map(&:id))
 = b.with_breadcrumb label: "RDV #{rdv_title_for_agent(rdv)}"

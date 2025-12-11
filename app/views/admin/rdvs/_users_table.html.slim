@@ -1,4 +1,4 @@
-/# locals: (rdv:, contextual_agents:)
+/# locals: (rdv:)
 
 .table-responsive.users-table[style="overflow: inherit"]
   table.table.light-gray-table
@@ -13,4 +13,4 @@
           th.text-right Participation
     tbody id="rdv-users-list"
       - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
-        = render "admin/participations/user_row", participation:, contextual_agents:
+        = render "admin/participations/user_row", participation:

@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
   before_action :set_sentry_context
+  before_action :set_selected_agents_in_agenda
 
   def after_sign_in_path_for(resource)
     home_page_when_logged = resource.is_a?(Agent) ? authenticated_agent_root_path : users_rdvs_path
@@ -81,5 +82,14 @@ class ApplicationController < ActionController::Base
 
   def page_number
     params[:page].presence&.to_i || 1
+  end
+
+  def set_selected_agents_in_agenda
+    if session[:selected_agent_ids_in_agenda].present?
+      Current.selected_agents_in_agenda = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
+        .where(id: session[:selected_agent_ids_in_agenda])
+        .order(last_name: :asc)
+        .load
+    end
   end
 end

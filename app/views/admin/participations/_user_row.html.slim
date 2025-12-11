@@ -1,4 +1,4 @@
-/# locals: (participation:, contextual_agents:)
+/# locals: (participation:)
 
 tr
   td
@@ -17,4 +17,4 @@ tr
     = render "admin/participations/notifications_lifecycle", participation: participation
   - if participation.rdv.collectif?
     td
-      = render "admin/participations/participation_status_dropdown", participation:, contextual_agents:
+      = render "admin/participations/participation_status_dropdown", participation:
