@@ -10,16 +10,16 @@
       = link_to "Activer la nouvelle vue planning", url, method: :put, class: "fr-link fr-link--sm"
 
 - content_for :title do
-  - if current_agent == my_sole_agent
+  - if current_agent == @agent
     | Votre agenda
   - else
-    | Agenda de #{my_sole_agent.full_name_and_service}
+    | Agenda de #{@agent.full_name_and_service}
 
 ruby:
   event_sources = [
-    admin_api_agenda_rdvs_path(agent_id: my_sole_agent, organisation_id: current_organisation.id, format: :json),
-    admin_api_agenda_absences_path(agent_id: my_sole_agent, organisation_id: current_organisation.id, format: :json),
-    admin_api_agenda_plage_ouvertures_path(agent_id: my_sole_agent, organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json),
+    admin_api_agenda_rdvs_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
+    admin_api_agenda_absences_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
+    admin_api_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json),
   ]
   event_sources.push(OffDays.to_full_calendar_array) unless current_territory.work_on_sunday?
 
@@ -27,7 +27,7 @@ ruby:
 
 #calendar[
   data-default-date-json="#{@date&.to_json}"
-  data-agent-id="#{my_sole_agent.id}"
+  data-agent-id="#{@agent.id}"
   data-selected-event-id="#{@selected_event_id}"
   data-organisation-id="#{@organisation.id}"
   data-display-saturdays="#{current_agent.display_saturdays}"
@@ -41,15 +41,15 @@ ruby:
   = render partial: "admin/planning/agendas/preferences_toggles"
 
 .mt-2
-  = link_to admin_organisation_rdvs_path(current_organisation, agent_id: my_sole_agent.id, start: @date, end: @date, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
-    - if current_agent == my_sole_agent
+  = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
+    - if current_agent == @agent
       |> 🖨 Liste détaillée des RDVs du
       span.js-date
       / date is filled from JS
     - else
       |> 🖨 Liste détaillée des RDVs du
       span.js-date>
-      | pour #{my_sole_agent.full_name_or_email}
+      | pour #{@agent.full_name_or_email}
 
 .fr-mb-2v
   = render "admin/rdvs/rdv_visibility"

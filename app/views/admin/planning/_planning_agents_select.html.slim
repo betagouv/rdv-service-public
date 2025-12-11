@@ -1,18 +1,14 @@
 #planning_agents_select.container-fluid.py-1.px-3[style="background-color: white; border-bottom: 1px solid #EEE;"]
   .rdv-display-flex.rdv-gap-05rem.rdv-align-items-center.rdv-flex-wrap-wrap.rdv-justify-content-space-between.fr-my-2w
     div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
-      - if @agent
-        h1.fr-h2.fr-mb-0.d-flex.flex-gap-1em
-          span Plages et indispos de #{@agent.full_name}
-          = link_to("Retour à l'agenda", admin_organisation_planning_agenda_path, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-left-line")
-      - else
-        h1.fr-h2.fr-mb-0
-          | Planning de
-        div = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end") do |form|
+      h1.fr-h2.fr-mb-0
+        | Planning de
+      div
+        = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end") do |form|
           div
             ruby:
               # Le select initial contient tous les agents sélectionnés, puis il sera alimenté en Ajax.
-              collection = my_agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
+              collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
               data = {
                 "select2-config": {
                   ajax: {
@@ -24,17 +20,17 @@
               }
 
             = form.label :selected_agent_ids, "Planning de", class: "fr-label sr-only", for: "agent_id"
-            = form.select :selected_agent_ids, collection, { selected: my_agents.map(&:id), multiple: my_agents.size > 1 }, { name: "selected_agent_ids[]", class: ["select2-input rdv-min-width-200px"], data: }
+            = form.select :selected_agent_ids, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "selected_agent_ids[]", class: ["select2-input rdv-min-width-200px"], data: }
 
           .ml-2.d-flex[style="gap: 0 0.5em"]
-            - if my_agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
+            - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
               button#multi_agent_enable.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
-            #submit_agents[class=(my_agents.size > 1 ? "" : "hidden")]
+            #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
               = form.submit "Appliquer", {class: "fr-btn  "}
-            div[class=(my_agents != [current_agent] ? "" : "hidden")]
+            #reset_agents[class=(@agents.size > 1 ? "" : "hidden")]
               = link_to "Revenir à mon agenda", admin_organisation_planning_agenda_path(current_organisation, selected_agent_ids: [current_agent.id]), class: "fr-btn fr-btn--tertiary"
 
-    - unless my_agents.size > 1 # Pas la place pour le toggle quand plusieurs agents sont sélectionnés
+    - unless @agents.size > 1 # Pas la place pour le toggle quand plusieurs agents sont sélectionnés
       div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
         div= link_to "Revenir à l'ancienne vue", admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "false"), method: :put, class: "fr-link fr-link--sm js-new-planning-toggle"
         div= link_to("Donnez votre avis", "https://tally.so/r/3jORDR", target: "_blank", class: "fr-link fr-link--sm js-new-planning-toggle")

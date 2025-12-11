@@ -7,14 +7,6 @@ module Admin::Planning::SetAgentsConcern
     end
   end
 
-  def set_agents_in_session
-    selected_agent_ids = Array(params[:selected_agent_ids]).compact_blank.presence
-    if selected_agent_ids
-      session[:selected_agent_ids_in_agenda] = selected_agent_ids
-      self.my_agent_ids = selected_agent_ids
-    end
-  end
-
   def set_agents
     scope = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
     selected_agent_ids = Array(params[:selected_agent_ids]).compact_blank.presence
