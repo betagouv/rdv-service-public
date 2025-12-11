@@ -10,22 +10,20 @@ class Users::LoginByCodeController < ApplicationController
     email = params.require(:email)
     submitted_login_code = params[:login_code]
 
-    if submitted_login_code == UserLoginCode.code_for(email)
+    if submitted_login_code.present? && submitted_login_code == UserLoginCode.code_for(email)
       self.current_user_email = email
-      users = User.where(email:).or(User.where(notification_email: email)).to_a
-      case users.size
+
+      users_matching_email = User.where(email:).or(User.where(notification_email: email)).to_a
+      case users_matching_email.size
       when 0
         flash[:error] = "Il n'existe aucune fiche usager avec l'email #{email}"
         redirect_to users_code_form_path(email:)
       when 1
-        user = users.first
-        user.confirm
-        sign_in(:user, user)
-        flash[:success] = "Connexion réussie"
-        redirect_to after_sign_in_path_for(user)
+        login_user_and_redirect(users_matching_email.sole)
       else
         redirect_to users_choix_fiche_path
       end
+
     else
       flash[:error] = "Code invalide"
       redirect_to users_code_form_path(email:)
@@ -44,9 +42,7 @@ class Users::LoginByCodeController < ApplicationController
 
     user = User.find(params[:user_id])
     if user.email_or_notification_email == current_user_email
-      user.confirm
-      sign_in(:user, user)
-      redirect_to after_sign_in_path_for(user)
+      login_user_and_redirect(user)
     else
       flash[:error] = "Impossible de se connecter avec cette fiche : elle ne porte pas votre e-mail"
       redirect_to users_choix_fiche_path
@@ -54,6 +50,13 @@ class Users::LoginByCodeController < ApplicationController
   end
 
   private
+
+  def login_user_and_redirect(user)
+    user.confirm
+    sign_in(:user, user)
+    flash[:success] = "Connexion réussie"
+    redirect_to after_sign_in_path_for(user)
+  end
 
   def storable_location?
     false
