@@ -2,15 +2,15 @@ class Admin::Planning::AgendasController < AgentAuthController
   include Admin::Planning::SetAgentsConcern
 
   def show
-    set_agents
+    set_agents_in_session
 
-    @agents.each do |agent|
+    my_agents.each do |agent|
       authorize(AgentAgenda.new(agent:, organisation: current_organisation), policy_class: Agent::AgentAgendaPolicy)
       Caldav::ImportAbsencesFromCaldavJob.perform_later(agent.id) if agent.caldav_configured?
     end
 
     @multiple_agents_makes_sense = true
-    render :multi_agents_agenda and return if @agents.size > 1
+    render :multi_agents_agenda and return if my_agents.size > 1
 
     @status = params[:status]
     @organisation = current_organisation
