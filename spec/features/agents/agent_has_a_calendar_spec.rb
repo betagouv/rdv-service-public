@@ -20,7 +20,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       starts_at: starts_at
     )
 
-    visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: agent.id)
+    visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
     expect(page).to have_content("Atelier collectif : Traitement de texte (2/3)")
   end
 
@@ -39,7 +39,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       end_time: "12:00",
       title: "Ceci est le libellé de la plage"
     )
-    visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: agent.id)
+    visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
     expect(page).to have_content("Ceci est le libellé de la plage")
 
     click_button "Mois"
@@ -66,11 +66,10 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
     it "quand l'agent courant n'a pas activé le nouveau planning", js: true do
       login_as(me, scope: :agent)
-      visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: colleague.id)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: colleague.id)
 
       click_on rdv.users.first.full_name # on clique sur le RDV dans l'agenda
-      expect(page).to have_content("Agent #{colleague.full_name}")
-      expect(page).to have_current_path("/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}")
+      expect(page).to have_current_path("/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}?contextual_agent_ids=#{colleague.id}")
 
       # On vérifie qu'un clic sur Agenda nous ramène bien sur l'agenda du collègue
       click_on "Agenda"
@@ -81,11 +80,10 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     it "quand l'agent courant a activé le nouveau planning", js: true do
       me.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
       login_as(me, scope: :agent)
-      visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: colleague.id)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: colleague.id)
 
       click_on rdv.users.first.full_name # on clique sur le RDV dans l'agenda
-      expect(page).to have_content("Agent #{colleague.full_name}")
-      expect(page).to have_current_path("/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}")
+      expect(page).to have_current_path("/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}?contextual_agent_ids=#{colleague.id}")
 
       # On vérifie qu'un clic sur Agenda nous ramène bien sur l'agenda du collègue
       click_on "Planning"
@@ -109,7 +107,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       motif = create(:motif, organisation: organisation, name: "Atelier collectif")
       francis = create(:user, first_name: "Francis", last_name: "Factice")
 
-      visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: agent.id)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
       rdv = create(:rdv, agents: [agent], motif:, organisation:, users: [francis], starts_at:)
@@ -131,14 +129,14 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       expect(page).to have_no_content(".fc-event")
 
       # On va voir l'agenda de l'autre agent et on vérifie que le RDV disparaît bien au destroy.
-      visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: other_agent.id)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: other_agent.id)
       expect(page).to have_selector(".fc-event", text: "15:00 - 15:45\nGaston BIDON")
       rdv.destroy!
       expect(page).to have_no_content(".fc-event")
     end
 
     it "refreshes plages", js: true do
-      visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: agent.id)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
       plage = create(:plage_ouverture, organisation:, agent:, title: "Ma plage", first_day: Time.zone.now.beginning_of_week.to_date)
@@ -152,7 +150,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "refreshes absence", js: true do
-      visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: agent.id)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
       absence = create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)
@@ -168,7 +166,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     it "fonctionne quand on change de page et qu'on revient", js: true do
       agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
 
-      visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: agent.id)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       expect(page).to have_content("Planning de")
 
       click_on "Statistiques"

@@ -1,5 +1,3 @@
-/# locals: (absence:)
-
 = simple_form_for [:admin, current_organisation, :planning, absence] do |f|
   = render "model_errors", model: absence
   = f.hidden_field :agent_id

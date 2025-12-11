@@ -4,13 +4,11 @@ class Admin::Planning::AbsencesController < AgentAuthController
 
   before_action :set_absence, only: %i[edit update destroy]
   before_action :build_absence, only: [:create]
-  before_action :set_agents_in_session
   before_action :set_agents
 
   def index
     @multiple_agents_makes_sense = true
-    skip_policy_scope
-    render :multi_agents_index and return unless params[:agent_id]
+    render :multi_agents_index and return if @agents.size > 1
 
     absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
       .where(agent: @agent)
@@ -94,7 +92,12 @@ class Admin::Planning::AbsencesController < AgentAuthController
   end
 
   def set_agents
-    @agent_for_absence = @absence&.agent || Agent::AgentPolicy::Scope.new(current_agent, Agent.all).resolve.find_by(id: params[:agent_id])
+    if @absence&.agent
+      @agent = @absence.agent
+      @agents = [@agent]
+    else
+      super
+    end
   end
 
   def absence_params

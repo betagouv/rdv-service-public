@@ -9,7 +9,6 @@ header.header.bg-white
       i.fa.fa-bars.text-primary-blue
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
-        li.list-inline-item.fr-mr-2w Agents sélectionnés : #{my_agents.map(&:full_name).to_sentence}
         = render "layouts/rdv_a_renseigner", organisation: defined?(current_organisation) && current_organisation
         li.list-inline-item
           - if current_domain != Domain::RDV_AIDE_NUMERIQUE
