@@ -14,7 +14,7 @@ p Merci d'indiquer si ces rendez-vous se sont bien passés comme prévu.
       - @rdvs.group_by { |r| r.starts_at.to_date }.each do |date, rdvs|
         h2.h3 = "Le #{l(date, format: :human)}"
         - rdvs.sort_by(&:starts_at).each do |rdv|
-          = render "rdv_with_quick_update", rdv: rdv
+          = render "rdv_with_quick_update", rdv: rdv, contextual_agents: [current_agent]
         hr.mb-4
       .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
 - else

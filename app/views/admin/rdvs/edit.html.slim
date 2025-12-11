@@ -1,8 +1,8 @@
-- content_for(:menu_item) { "menu-rdvs-list" }
+- content_for(:menu_item) { @contextual_agents ? "menu-agendas" : "menu-rdvs-list" }
 
 - content_for :fil_ariane do
   = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
-    = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b }
+    = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b, contextual_agents: @contextual_agents }
     = b.with_breadcrumb label: "Modifier le RDV"
 
 - content_for :title do
@@ -12,7 +12,7 @@
   .col-md-12.col-lg-8
     .card
       .card-body
-        = simple_form_for(@rdv, url: admin_organisation_rdv_path(current_organisation, @rdv)) do |f|
+        = simple_form_for(@rdv, url: admin_organisation_rdv_path(current_organisation, @rdv, contextual_agent_ids: @contextual_agents.map(&:id))) do |f|
           = render "model_errors", model: @rdv_form, f: f
           = collapsible_form_fields_for_warnings(@rdv_form) do
             = f.association :motif, collection: [@rdv_form.motif], disabled: true

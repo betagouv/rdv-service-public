@@ -1,4 +1,4 @@
-/# locals: (rdv:, quick_update:)
+/# locals: (rdv:, contextual_agents:, quick_update:)
 
 - if rdv.errors.any?
   = turbo_stream.replace "rdv-error-message-#{rdv.id}" do
@@ -6,4 +6,4 @@
 - else
     = turbo_stream.replace "rdv-#{rdv.id}" do
       - template = quick_update.to_bool ? "admin/rdvs/rdv_with_quick_update" : "admin/rdvs/rdv"
-      = render template, rdv:, success_message: "Rendez-vous mis à jour"
+      = render template, rdv:, contextual_agents:, success_message: "Rendez-vous mis à jour"

@@ -11,11 +11,11 @@ module Admin::Planning::SetAgentsConcern
     scope = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
     selected_agent_ids = Array(params[:selected_agent_ids]).compact_blank.presence
     if selected_agent_ids
-      session[:selected_agent_ids_in_agenda] = selected_agent_ids
+      session["last_selected_agent_ids"] = selected_agent_ids
     end
     agent_ids = Array(params[:agent_id]).compact_blank.presence
 
-    selected_agent_ids = agent_ids || session[:selected_agent_ids_in_agenda].presence || [current_agent.id]
+    selected_agent_ids = agent_ids || session["last_selected_agent_ids"].presence || [current_agent.id]
     agents = Agent.where(id: selected_agent_ids)
 
     case agents.size

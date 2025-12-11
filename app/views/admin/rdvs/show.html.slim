@@ -1,15 +1,16 @@
-- content_for(:menu_item) { "menu-rdvs-list" }
+- content_for(:menu_item) { @contextual_agents.present? ? "menu-agendas" : "menu-rdvs-list" }
 
 - content_for :fil_ariane do
   = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
-    = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b }
+    = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b, contextual_agents: @contextual_agents }
 
 - content_for :title do
   = "RDV #{rdv_title_for_agent(@rdv)}"
 
 .fr-grid-row
   .fr-col-12
-    = render partial: "rdv", collection: [@rdv], locals: { link_in_header: false }
+    / @contextual_agents is only used for links in breadcrumb and redirecting if update
+    = render partial: "rdv", collection: [@rdv], locals: { contextual_agents: @contextual_agents, link_in_header: false }
 
 .fr-grid-row
   .fr-col-12
