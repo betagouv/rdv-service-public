@@ -29,12 +29,16 @@ class Agents::RdvMailer < ApplicationMailer
   def rdv_cancelled(old_starts_at: nil)
     date = relative_date(old_starts_at || @rdv.starts_at)
     self.ics_payload = @rdv.payload(:destroy, @agent)
-    subject =
-      if @rdv.collectif?
-        "Participation au RDV collectif annulée #{date}"
-      else
-        "RDV annulé #{date}"
-      end
+    subject = "RDV annulé #{date}"
+    mail(subject: subject)
+  end
+
+  def participation_cancelled
+    @participation = params[:participation]
+    @user = @participation.user
+    @rdv = @participation.rdv
+    self.ics_payload = @rdv.payload(:create, @agent)
+    subject = "Participation au RDV collectif annulée sur votre agenda #{domain.name} pour #{relative_date(@rdv.starts_at)}"
     mail(subject: subject)
   end
 
