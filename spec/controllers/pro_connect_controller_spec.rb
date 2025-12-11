@@ -1,8 +1,8 @@
-RSpec.describe AgentConnectController do
+RSpec.describe ProConnectController do
   stub_env_for_proconnect
 
   describe "#auth" do
-    it "redirects to AgentConnect" do
+    it "redirects to ProConnect" do
       get :auth, params: { login_hint: "francis.factice@exemple.gouv.fr" }
       expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
 
@@ -30,7 +30,7 @@ RSpec.describe AgentConnectController do
 
     describe "with the for_user param" do
       it "saves the information that we want to log in a user rather than an agent in the session" do
-        get :auth, params: { login_hint: "francis.factice@exemple.gouv.fr", for_user: true }
+        get :auth, params: { login_hint: "francis.factice@exemple.gouv.fr", user_type: "user" }
 
         expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
 
@@ -61,7 +61,7 @@ RSpec.describe AgentConnectController do
 
   describe "with the for_super_admin param" do
     it "adds the force_2fa param to the request" do
-      get :auth, params: { for_super_admin: true }
+      get :auth, params: { user_type: "super_admin" }
       expect(response).to redirect_to(start_with("https://fca.integ01.dev-agentconnect.fr/api/v2/authorize?"))
 
       redirect_url = response.headers["Location"]
@@ -90,7 +90,7 @@ RSpec.describe AgentConnectController do
   describe "#callback" do
     let(:state) { auth_client.state }
     let(:auth_client) do
-      AgentConnectOpenIdClient::Auth.new(
+      ProConnectOpenIdClient::Auth.new(
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         client_secret: "un faux secret de test"
       )
@@ -114,7 +114,7 @@ RSpec.describe AgentConnectController do
         state: state,
         connection_for: "agent",
       }
-      AgentConnectStubs.stub_callback_requests(code, user_info)
+      ProConnectStubs.stub_callback_requests(code, user_info)
 
       session[:agent_return_to] = "/agents/edit" # Pour simuler le retour vers la page demandée avant la connexion
     end
@@ -129,7 +129,7 @@ RSpec.describe AgentConnectController do
         }
         expect(agent).to have_attributes(expected_attrs)
         expect(current_agent_id).to eq(agent.id)
-        expect(session["agent_connect_id_token"]).to be_present
+        expect(session["pro_connect_id_token"]).to be_present
         expect(response).to redirect_to("/agents/edit")
       end
 
@@ -242,7 +242,7 @@ RSpec.describe AgentConnectController do
           last_name: "Factice",
           confirmed_at: be_within(10.seconds).of(Time.zone.now)
         )
-        expect(session["agent_connect_id_token"]).to be_present
+        expect(session["pro_connect_id_token"]).to be_present
 
         expect(response).to redirect_to("/users/informations")
       end
@@ -257,7 +257,7 @@ RSpec.describe AgentConnectController do
             first_name: "Francis",
             last_name: "Factice"
           )
-          expect(session["agent_connect_id_token"]).to be_present
+          expect(session["pro_connect_id_token"]).to be_present
 
           expect(response).to redirect_to("/users/informations")
         end
@@ -277,7 +277,7 @@ RSpec.describe AgentConnectController do
         it "redirects to the super admin sign in page if the super admin does not activate 2FA" do
           get :callback, params: { state: state, code: code }
 
-          expect(session["agent_connect_id_token"]).to be_nil
+          expect(session["pro_connect_id_token"]).to be_nil
           expect(response).to redirect_to("/connexion_super_admins")
           expect(flash[:error]).to eq("Vous devez activer la double authentification sur votre compte ProConnect pour vous connecter en tant que super administrateur.")
         end
@@ -285,14 +285,14 @@ RSpec.describe AgentConnectController do
 
       context "with a 2FA account" do
         before do
-          AgentConnectStubs.stub_callback_requests(code, user_info, with_2fa: true)
+          ProConnectStubs.stub_callback_requests(code, user_info, with_2fa: true)
         end
 
         context "when the super admin does not exist" do
           it "redirects to the super admin sign in page" do
             get :callback, params: { state: state, code: code }
 
-            expect(session["agent_connect_id_token"]).to be_nil
+            expect(session["pro_connect_id_token"]).to be_nil
             expect(response).to redirect_to("/connexion_super_admins")
             expect(flash[:error]).to eq("Compte ProConnect non autorisé")
           end
@@ -304,7 +304,7 @@ RSpec.describe AgentConnectController do
           it "redirects to the super admin agents page" do
             get :callback, params: { state: state, code: code }
 
-            expect(session["agent_connect_id_token"]).to be_present
+            expect(session["pro_connect_id_token"]).to be_present
             expect(response).to redirect_to("/super_admins/lieux?search=arques")
           end
         end
@@ -323,7 +323,7 @@ RSpec.describe AgentConnectController do
             expect(SuperAdmin.last).to have_attributes(
               email: user_info["email"]
             )
-            expect(session["agent_connect_id_token"]).to be_present
+            expect(session["pro_connect_id_token"]).to be_present
             expect(response).to redirect_to("/super_admins/lieux?search=arques")
           end
         end

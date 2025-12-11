@@ -1,11 +1,8 @@
 require("@rails/ujs").start()
 
-// Nous souhaitons passer de Turbolinks à Turbo
-// Dans un premier temps, nous ajoutons Turbo à l'application sans supprimer Turbolinks et nous désactivons le drive de Turbo.
-// Cela nous permet d’utiliser les Turbo Streams et les Turbo Frames pour pouvoir supprimer l’usage des js.erb.
-// Dans un second temps, nous supprimerons Turbolinks et nous activerons le drive de Turbo.
-require("turbolinks").start()
 import "@hotwired/turbo-rails"
+
+// Nous ne souhaitons pas utiliser Turbo Drive (voir #4790 et #5917)
 Turbo.session.drive = false
 
 import 'bootstrap'
@@ -41,6 +38,7 @@ import { CheckAll, UnCheckAll } from './components/check-all'
 import './components/motifs_table'
 import './components/browser-detection'
 import './components/clear-field-on-focus.js'
+import './components/lagaufre.js'
 
 import { Application } from "@hotwired/stimulus"
 import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
@@ -79,7 +77,7 @@ $(document).on('show.bs.modal', '.modal', function(e) {
   new PlacesInputs()
 })
 
-$(document).on('turbolinks:load', function() {
+document.addEventListener("DOMContentLoaded", function() {
   let menu = new Menu()
 
   menu.init()

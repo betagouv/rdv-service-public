@@ -14,8 +14,6 @@ gem "sprockets-rails"
 gem "puma"
 # Bundle and transpile JavaScript in Rails with esbuild, rollup.js, or Webpack.
 gem "jsbundling-rails"
-# Turbolinks makes navigating your web application faster
-gem "turbolinks", "~> 5"
 # Boot large ruby/rails apps faster
 gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb
 # Middleware for enabling Cross-Origin Resource Sharing in Rack apps
@@ -140,7 +138,6 @@ gem "premailer-rails" # Mail formatting
 gem "spreadsheet" # Excel export
 # If string, numeric, symbol and nil values wanna be a boolean value, they can with the new #to_b method (and more).
 gem "wannabe_bool" # imports to_b method
-gem "rubyzip" # zip export files
 
 ## Time Management
 

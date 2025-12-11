@@ -1,4 +1,6 @@
 RSpec.describe "Configuration initiale", js: true do
+  include ActionView::Helpers::SanitizeHelper
+
   let(:service) { create(:service, name: "Dinum", short_name: "Dinum") }
   let(:agent) do
     create(:agent, services: [service], admin_role_in_organisations: [organisation],
@@ -18,12 +20,12 @@ RSpec.describe "Configuration initiale", js: true do
 
     doc.start_section("Contexte")
 
-    doc.add_text(<<~TEXT
+    text = <<~TEXT
       <p>
         Quand une nouvelle organisation est créée, elle n'a pas encore de motifs. On veut permettre à l'agent d'explorer les différentes pages, mais l'inciter à créer un premier motif.
       </p>
     TEXT
-      .html_safe) # rubocop:disable Rails/OutputSafety
+    doc.add_text(sanitize(text))
 
     doc.start_section("Redirections vers la création de motif")
 

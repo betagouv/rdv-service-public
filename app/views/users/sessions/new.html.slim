@@ -8,11 +8,11 @@
       = render "common/franceconnect_button"
 
     / Contrairement à FranceConnect, on n'affiche pas le bouton ProConnect en dehors de la prise de rendez-vous
-    - if display_agent_connect_button? && @rdv_wizard&.display_pro_connect?
+    - if display_pro_connect_button? && @rdv_wizard&.display_pro_connect?
       h2 Se connecter avec ProConnect
 
       .rdv-text-align-center
-        = render "common/proconnect_button_dsfr", login_hint: resource.email, for_user: true
+        = render "common/proconnect_button_dsfr", login_hint: resource.email, user_type: "user"
 
       p.fr-hr-or ou
     h2 Se connecter avec son compte

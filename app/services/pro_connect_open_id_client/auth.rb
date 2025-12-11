@@ -1,5 +1,5 @@
 # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
-module AgentConnectOpenIdClient
+module ProConnectOpenIdClient
   class Auth
     SCOPES = "openid email given_name usual_name siret".freeze
     ACR_FOR_2FA = %w[eidas2 eidas3 https://proconnect.gouv.fr/assurance/consistency-checked-2fa https://proconnect.gouv.fr/assurance/self-asserted-2fa].freeze
@@ -7,8 +7,8 @@ module AgentConnectOpenIdClient
     def initialize(client_id:, client_secret:, login_hint: nil, force_login: false)
       @login_hint = login_hint
       @force_login = force_login
-      @state = "agent_connect_state_#{SecureRandom.base58(32)}"
-      @nonce = "agent_connect_nonce_#{SecureRandom.base58(32)}"
+      @state = "pro_connect_state_#{SecureRandom.base58(32)}"
+      @nonce = "pro_connect_nonce_#{SecureRandom.base58(32)}"
       @client_id = client_id
       @client_secret = client_secret
     end
@@ -28,7 +28,7 @@ module AgentConnectOpenIdClient
         claims: claims(force_2fa:).to_json,
       }.compact_blank
 
-      "#{ENV['AGENT_CONNECT_BASE_URL']}/authorize?#{query_params.to_query}"
+      "#{ENV['PRO_CONNECT_BASE_URL']}/authorize?#{query_params.to_query}"
     end
 
     private

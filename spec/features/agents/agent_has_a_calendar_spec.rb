@@ -57,6 +57,40 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     expect(page).to have_content("Ceci est le libellé de la plage")
   end
 
+  describe "revient à l'agenda du collègue après avoir consulté / modifié son RDV" do
+    let!(:organisation) { create(:organisation) }
+    let!(:me) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:colleague) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:motif) { create(:motif, organisation: organisation, name: "Atelier collectif") }
+    let!(:rdv) { create(:rdv, agents: [colleague], motif:, organisation:, starts_at: Time.zone.now.beginning_of_week.change({ hour: 14 })) }
+
+    it "quand l'agent courant n'a pas activé le nouveau planning", js: true do
+      login_as(me, scope: :agent)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: colleague.id)
+
+      click_on rdv.users.first.full_name # on clique sur le RDV dans l'agenda
+      expect(page).to have_current_path("/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}?contextual_agent_ids=#{colleague.id}")
+
+      # On vérifie qu'un clic sur Agenda nous ramène bien sur l'agenda du collègue
+      click_on "Agenda"
+      expect(page).to have_content("Agenda de #{colleague.full_name}")
+      expect(page).to have_current_path("/admin/organisations/#{organisation.id}/planning/agenda?agent_id=#{colleague.id}")
+    end
+
+    it "quand l'agent courant a activé le nouveau planning", js: true do
+      me.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
+      login_as(me, scope: :agent)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: colleague.id)
+
+      click_on rdv.users.first.full_name # on clique sur le RDV dans l'agenda
+      expect(page).to have_current_path("/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}?contextual_agent_ids=#{colleague.id}")
+
+      # On vérifie qu'un clic sur Agenda nous ramène bien sur l'agenda du collègue
+      click_on "Planning"
+      expect(page).to have_current_path("/admin/organisations/#{organisation.id}/planning/agenda?agent_id=#{colleague.id}")
+    end
+  end
+
   describe "realtime refreshes" do
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
@@ -136,10 +170,10 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       expect(page).to have_content("Planning de")
 
       click_on "Statistiques"
-      expect(page).to have_content("Statistiques de") # on vérifie que Turbolinks nous a bien changé la page
+      expect(page).to have_content("Statistiques de")
 
       click_on "Planning"
-      expect(page).to have_content("Planning de") # on vérifie que Turbolinks nous a bien changé la page
+      expect(page).to have_content("Planning de")
       sleep 0.1 # on attend 100ms que la connexion Websocket se fasse
 
       create(:absence, agent:, title: "Mon indispo", first_day: Time.zone.now.beginning_of_week.to_date)

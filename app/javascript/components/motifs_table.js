@@ -1,4 +1,4 @@
-document.addEventListener("turbolinks:load", function () {
+document.addEventListener("DOMContentLoaded", function () {
   batchEditCheckboxes().forEach(e => e.addEventListener("change", refreshButtonState))
 
   const trigger = triggerCheckbox()

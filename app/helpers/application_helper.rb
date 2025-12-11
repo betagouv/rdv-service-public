@@ -121,18 +121,18 @@ module ApplicationHelper
   end
 
   def self_anchor(identifier, &block)
-    tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
+    tag.a(id: identifier, href: "##{identifier}", &block)
   end
 
-  def display_agent_connect_button?
-    return false unless current_domain.agent_connect_client_id
+  def display_pro_connect_button?
+    return false unless current_domain.pro_connect_client_id
 
-    return true if params[:force_agent_connect].present? # Permet de tester manuellement Agent Connect avant de désactiver la variable d'env AGENT_CONNECT_DISABLED
+    return true if params[:force_pro_connect].present? # Permet de tester manuellement ProConnect avant de désactiver la variable d'env PRO_CONNECT_DISABLED
 
-    return false if ENV["AGENT_CONNECT_DISABLED"]
-    return false if Rails.configuration.x.agent_connect_unreachable_at_boot_time
+    return false if ENV["PRO_CONNECT_DISABLED"]
+    return false if Rails.configuration.x.pro_connect_unreachable_at_boot_time
 
-    ENV["AGENT_CONNECT_BASE_URL"].present?
+    ENV["PRO_CONNECT_BASE_URL"].present?
   end
 
   def display_france_connect_v2_button?

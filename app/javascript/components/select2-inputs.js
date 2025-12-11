@@ -1,8 +1,7 @@
 export const initializeSelect2 = () => {
   initInputs()
-  $(document).on("turbolinks:load", initInputs)
+  document.addEventListener("DOMContentLoaded", initInputs)
   $(document).on("shown.bs.modal", ".modal", initInputs)
-  $(document).on("turbolinks:before-cache", destroyInputs)
   $(document).on("select2:open", focusSearchInput)
 };
 

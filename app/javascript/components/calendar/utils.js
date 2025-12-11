@@ -164,9 +164,6 @@ const setupPollingRefresh = (fullCalendarInstance) => {
 
   setRefetchInterval();
 
-  document.addEventListener('turbolinks:before-cache', () => { clearRefetchInterval(fullCalendarInstance) });
-  document.addEventListener('turbolinks:before-render', () => { clearRefetchInterval(fullCalendarInstance) });
-
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       // when agent comes back to tab, refresh immediately
@@ -180,9 +177,6 @@ const setupPollingRefresh = (fullCalendarInstance) => {
 };
 
 const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
-  // Cette ligne permet de déconnecter le consumer ActionCable
-  // lorsque l'on quitte la page de calendrier.
-  document.addEventListener("turbolinks:before-visit", destroyConsumer);
 
   const messageReceivedCallback = (message) => {
     if (Array.isArray(message.refresh_periods) && message.refresh_periods.length > 0) {
@@ -197,8 +191,30 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
     }
   };
 
+  const disconnectCallback = () => {
+    clearTimeout(window.disconnectWarningTimeoutId);
+    window.disconnectWarningTimeoutId = setTimeout(() => {
+      document.querySelector("#js-agenda-disconnected-warning")?.classList?.remove("hidden");
+    }, 5000);
+  };
+
+  const connectCallback = ({ reconnected }) => {
+    // `reconnected` nous indique que cette connexion fait suite à une
+    // préalable déconnexion. C'est bien ce qui nous intéresse puisque
+    // nous voulons cacher l'avertissement affiché lors de la perte de connexion.
+    if (reconnected) {
+      clearTimeout(window.disconnectWarningTimeoutId);
+      document.querySelector("#js-agenda-disconnected-warning")?.classList?.add("hidden");
+      fullCalendarInstance.refetchEvents();
+    }
+  };
+
   agentIds.forEach(agentId => {
-    getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, { received: messageReceivedCallback });
+    getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, {
+      received: messageReceivedCallback,
+      connected: connectCallback,
+      disconnected: disconnectCallback,
+    });
   });
 };
 

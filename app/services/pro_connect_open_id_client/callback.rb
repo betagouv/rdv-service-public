@@ -1,5 +1,5 @@
 # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/implementation_technique
-module AgentConnectOpenIdClient
+module ProConnectOpenIdClient
   class Callback
     class OpenIdFlowError < StandardError; end
     class ApiRequestError < StandardError; end
@@ -31,7 +31,7 @@ module AgentConnectOpenIdClient
     end
 
     def user_first_name
-      # Agent Connect renvoie aussi le nom de famille après un espace
+      # ProConnect renvoie aussi le nom de famille après un espace
       @user_info["given_name"].gsub(/ #{@user_info['usual_name']}$/i, "")
     end
 
@@ -49,7 +49,7 @@ module AgentConnectOpenIdClient
 
     # voir https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/double_authentification
     def went_through_2fa?
-      @acr.in?(AgentConnectOpenIdClient::Auth::ACR_FOR_2FA)
+      @acr.in?(ProConnectOpenIdClient::Auth::ACR_FOR_2FA)
     end
 
     private
@@ -61,7 +61,7 @@ module AgentConnectOpenIdClient
 
       unless ActiveSupport::SecurityUtils.secure_compare(@session_state, @params_state)
         Sentry.add_breadcrumb(Sentry::Breadcrumb.new(
-                                message: "Agent Connect states",
+                                message: "ProConnect states",
                                 data: {
                                   params: @params_state,
                                   session: @session_state,
@@ -72,17 +72,17 @@ module AgentConnectOpenIdClient
       end
     end
 
-    def fetch_token(code, agent_connect_callback_url)
+    def fetch_token(code, pro_connect_callback_url)
       data = {
         client_id: @client_id,
         client_secret: @client_secret,
         code: code,
         grant_type: "authorization_code",
-        redirect_uri: agent_connect_callback_url,
+        redirect_uri: pro_connect_callback_url,
       }
 
       response = Typhoeus.post(
-        URI("#{ENV['AGENT_CONNECT_BASE_URL']}/token"),
+        URI("#{ENV['PRO_CONNECT_BASE_URL']}/token"),
         body: data,
         headers: { "Content-Type" => "application/x-www-form-urlencoded" }
       )
@@ -98,10 +98,10 @@ module AgentConnectOpenIdClient
     end
 
     def validate_nonce!(encoded_id_token)
-      decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, agent_connect_config.jwks)
+      decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, pro_connect_config.jwks)
 
       decoded_id_token.verify!(
-        issuer: agent_connect_config.issuer,
+        issuer: pro_connect_config.issuer,
         client_id: @client_id,
         nonce: @nonce
       )
@@ -109,14 +109,14 @@ module AgentConnectOpenIdClient
     end
 
     def fetch_user_info(token)
-      uri = URI("#{ENV['AGENT_CONNECT_BASE_URL']}/userinfo")
+      uri = URI("#{ENV['PRO_CONNECT_BASE_URL']}/userinfo")
       uri.query = URI.encode_www_form({ schema: "openid" })
 
       response = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })
 
       handle_response_error(response)
 
-      JWT.decode(response.body, nil, true, algorithms: agent_connect_config.jwks.first["alg"], jwks: agent_connect_config.jwks).first
+      JWT.decode(response.body, nil, true, algorithms: pro_connect_config.jwks.first["alg"], jwks: pro_connect_config.jwks).first
     end
 
     def handle_response_error(response)
@@ -125,8 +125,8 @@ module AgentConnectOpenIdClient
       end
     end
 
-    def agent_connect_config
-      Rails.configuration.x.agent_connect_config
+    def pro_connect_config
+      Rails.configuration.x.pro_connect_config
     end
   end
 end

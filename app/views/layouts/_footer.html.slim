@@ -1,0 +1,54 @@
+footer.fr-footer.main-footer.fr-pb-12w#footer[role="contentinfo"]
+  .fr-container
+    .fr-footer__body
+      .fr-footer__brand.fr-enlarge-link
+        p.fr-logo
+          | République
+          br
+          | Française
+        = link_to root_path, title: "aller à l'accueil #{current_domain.name}", class: "fr-footer__brand-link" do
+          = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "fr-footer__logo", width: "150"
+      .fr-footer__content
+        p.fr-footer__content-desc
+          |> #{current_domain.name} est un service porté par la
+          => link_to "Direction Interministérielle du Numérique (DINUM)", "https://www.numerique.gouv.fr/dinum/", target: "_blank", rel: "noopener"
+          |> et
+          = link_to "l’Agence Nationale de la Cohésion des Territoires (ANCT)", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noopener"
+          '
+        ul.fr-footer__content-list
+          li.fr-footer__content-item
+            = link_to "info.gouv.fr", "https://info.gouv.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener external", title: "info.gouv.fr - nouvelle fenêtre"
+          li.fr-footer__content-item
+            = link_to "service-public.fr", "https://service-public.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener external", title: "service-public.fr - nouvelle fenêtre"
+          li.fr-footer__content-item
+            = link_to "legifrance.gouv.fr", "https://legifrance.gouv.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener external", title: "legifrance.gouv.fr - nouvelle fenêtre"
+          li.fr-footer__content-item
+            = link_to "data.gouv.fr", "https://data.gouv.fr", class: "fr-footer__content-link", target: "_blank", rel: "noopener external", title: "data.gouv.fr - nouvelle fenêtre"
+
+    .fr-footer__partners
+      h2.fr-footer__partners-title Nos partenaires
+      .fr-footer__partners-logos
+        .fr-footer__partners-sub
+          = link_to(image_tag("logos/logo_dinum.svg", alt: "DINUM - Direction Interministérielle du Numérique", style: "height: 5.625rem"), "https://www.numerique.gouv.fr/dinum/", class: "fr-footer__partners-link" )
+          = link_to(image_tag("logos/logo_anct.png", alt: "ANCT - Agence Nationale de la Cohésion des Territoires", style: "height: 5.625rem"), "https://agence-cohesion-territoires.gouv.fr/", class: "fr-footer__partners-link" )
+
+    .fr-footer__bottom
+      ul.fr-footer__bottom-list
+        li.fr-footer__bottom-item
+          = link_to "Contact", contact_path, class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "Statistiques", stats_path, class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "Accessibilité : partiellement conforme", accessibilite_path, class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "Mentions Légales", mentions_legales_path, class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "Politique de confidentialité", politique_de_confidentialite_path, class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "CGU - Usagers", cgu_path, class: "fr-footer__bottom-link", title: "Conditions générales d’utilisation des usagers"
+        li.fr-footer__bottom-item
+          = link_to "CGU - Agents", cgu_agent_path, class: "fr-footer__bottom-link", title: "Conditions générales d’utilisation des agents"
+        li.fr-footer__bottom-item
+          = external_link_to "Code source", "https://github.com/betagouv/rdv-service-public", class: "fr-footer__bottom-link", title: "Code source de #{current_domain.name} sur Github - nouvel onglet"
+        li.fr-footer__bottom-item
+          = external_link_to "Budget", budget_path, class: "fr-footer__bottom-link"
