@@ -528,11 +528,8 @@ RSpec.describe "User can search for rdvs" do
     expect(current_email).to have_content("Merci pour votre inscription")
     current_email.click_link("Confirmer mon compte")
 
-    # Password reset page after confirmation
     expect(page).to have_content("Votre compte a été validé")
-    expect(page).to have_content("Définir mon mot de passe")
-    fill_in("Mot de passe", with: "Rdvservicepublictest1€")
-    click_button("Enregistrer")
+    expect(page).to have_content("Étape 1 sur 3")
   end
 
   def continue_to_rdv(motif, address: nil)

@@ -10,6 +10,7 @@ module Users::DeviseOrSsoLogout
     pro_connect_id_token = session.delete(:pro_connect_id_token) || session.delete(:agent_connect_id_token)
 
     session.delete(:invitation) # créé par TokenInvitable
+    current_user_before = current_user
     sign_out(:user)
     set_flash_message!(:notice, flash_message_key)
 
@@ -23,6 +24,8 @@ module Users::DeviseOrSsoLogout
       session[:france_connect_v2_logout_state] = fc_client.state
       redirect_to fc_client.pro_connect_logout_url(franceconnect_v2_post_logout_url), allow_other_host: true
 
+    elsif params[:redirect_to_reset_password]
+      redirect_to new_user_password_path(email: current_user_before.email)
     else
       redirect_to after_sign_out_path_for(:user)
     end
