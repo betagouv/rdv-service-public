@@ -70,7 +70,7 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     doc.add_screenshot(page, text: "L'agent peut voir ses indisponibilité",
                              wait_for: "Indispo de Loïc")
 
-    find("#select2-agent_id-container").click
+    find("#select2-selected_agent_ids-container").click
     find(%(.select2-results__option), text: "ADMIN Justine").click
     doc.add_screenshot(page, text: "Il est possible de changer l'agent sélectionné",
                              wait_for: "Indispo de Justine")
@@ -104,7 +104,7 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     expect(page).to have_content(["Justine ADMIN", "1 indisponibilité", "Loïc BASIQUE", "1 indisponibilité"].join("\n"))
     doc.add_screenshot(page, text: "La section des indisponibilités liste tous les agents sélectionnés.")
 
-    visit admin_organisation_planning_agenda_path(organisation)
+    visit admin_organisation_planning_agenda_path(organisation, selected_agent_ids: [agent_basique.id])
     click_on("Revenir à l'ancienne vue")
     expect(page).to have_content("Votre agenda")
   end
