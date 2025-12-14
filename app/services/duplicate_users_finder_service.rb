@@ -20,7 +20,7 @@ class DuplicateUsersFinderService < BaseService
         .where(email: user.email)
       return unless duplicates.exists?
 
-      OpenStruct.new(severity: :error, attributes: [:email], user: most_relevant_user(duplicates))
+      OpenStruct.new(attributes: [:email], user: most_relevant_user(duplicates))
     end
 
     def find_duplicate_based_on_identity(user, base_scope)
@@ -31,7 +31,7 @@ class DuplicateUsersFinderService < BaseService
         .merge(match_on_names(user.first_name, user.last_name))
       return unless duplicates.exists?
 
-      OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
+      OpenStruct.new(attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
     end
 
     def find_duplicate_based_on_names_and_phone(user, base_scope)
@@ -52,7 +52,7 @@ class DuplicateUsersFinderService < BaseService
         .where(phone_number_formatted: user.phone_number_formatted)
       return unless duplicates.exists?
 
-      OpenStruct.new(severity: :warning, attributes: [:phone_number], user: most_relevant_user(duplicates))
+      OpenStruct.new(attributes: [:phone_number], user: most_relevant_user(duplicates))
     end
 
     private

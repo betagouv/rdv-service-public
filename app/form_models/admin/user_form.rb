@@ -3,8 +3,6 @@ class Admin::UserForm
 
   attr_reader :user
 
-  validate :validate_duplicates
-
   delegate :ants_pre_demande_number, :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :user
   validate :warn_duplicates
 
@@ -39,18 +37,10 @@ class Admin::UserForm
     @duplicate_results ||= DuplicateUsersFinderService.perform_with(user, users_of_territory)
   end
 
-  def validate_duplicates
-    duplicate_results
-      .select { _1.severity == :error }
-      .select { _1.attributes.any? { |att| user.send("#{att}_changed?") } }
-      .each { user.errors.add(:base, render_message(_1)) }
-  end
-
   def warn_duplicates
     return if ignore_benign_errors
 
     duplicate_results
-      .select { _1.severity == :warning }
       .select { _1.attributes.any? { |att| user.send("#{att}_changed?") } }
       .each { add_benign_error(render_message(_1)) }
   end

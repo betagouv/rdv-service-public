@@ -40,7 +40,7 @@ RSpec.describe Admin::UserForm, type: :form do
   context "duplication error based on email" do
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", email: "jean@jacques.fr") }
     let!(:existing_user) { create(:user, first_name: "Jeannot", email: "jean@jacques.fr") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :error, attributes: [:email], user: existing_user)] }
+    let(:duplicate_users_mock) { [OpenStruct.new(attributes: [:email], user: existing_user)] }
 
     it "is not valid" do
       expect(subject.valid?).to be false
@@ -59,7 +59,7 @@ RSpec.describe Admin::UserForm, type: :form do
   context "duplication warning based on phone_number" do
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
     let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
+    let(:duplicate_users_mock) { [OpenStruct.new(attributes: [:phone_number], user: existing_user)] }
 
     it "is not valid" do
       expect(subject.valid?).to be false
@@ -79,7 +79,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
     let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
+    let(:duplicate_users_mock) { [OpenStruct.new(attributes: [:phone_number], user: existing_user)] }
 
     it "is valid" do
       expect(subject.valid?).to be true
@@ -98,7 +98,7 @@ RSpec.describe Admin::UserForm, type: :form do
       u
     end
     let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
+    let(:duplicate_users_mock) { [OpenStruct.new(attributes: [:phone_number], user: existing_user)] }
 
     it "is not valid" do
       expect(subject.valid?).to be false
@@ -121,7 +121,7 @@ RSpec.describe Admin::UserForm, type: :form do
       u
     end
     let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
+    let(:duplicate_users_mock) { [OpenStruct.new(attributes: [:phone_number], user: existing_user)] }
 
     it "is valid" do
       expect(subject.valid?).to be true
