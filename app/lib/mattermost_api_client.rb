@@ -9,6 +9,7 @@ class MattermostApiClient
       builder.request :json
       builder.response :json
       builder.response :raise_error # raise an error on 4xx and 5xx responses
+      builder.use :sentry_breadcrumbs
     end
   end
 
