@@ -20,20 +20,24 @@ class Users::SessionsController < Devise::SessionsController
   def create
     found_agent = Agent.find_by(email: params[:user]["email"])
     if found_agent&.valid_password?(params[:user]["password"])
-      self.resource = found_agent
-      return if reset_current_agent_password_if_weak!(params[:user][:password])
-
-      set_flash_message!(:notice, :signed_in)
-      sign_in(:agent, resource)
-
-      yield resource if block_given?
-      respond_with resource, location: after_sign_in_path_for(resource)
-    else
-      super
+      sign_in_agent(found_agent) and return
     end
+
+    super
   end
 
   def destroy
     logout_and_redirect_user(flash_message_key: :signed_out)
+  end
+
+  private
+
+  def sign_in_agent(agent)
+    self.resource = agent
+    return if reset_current_agent_password_if_weak!(params[:user][:password])
+
+    set_flash_message!(:notice, :signed_in)
+    sign_in(:agent, agent)
+    respond_with agent, location: after_sign_in_path_for(agent)
   end
 end
