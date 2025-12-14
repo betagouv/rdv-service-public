@@ -4,7 +4,7 @@ RSpec.describe Admin::UserForm, type: :form do
   let!(:organisation) { create(:organisation) }
 
   before do
-    allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return(duplicate_users_mock)
+    allow(DuplicateUsersFinderService).to receive(:perform_with).with(user, anything).and_return(duplicate_users_mock)
   end
 
   context "no errors whatsoever" do
@@ -45,9 +45,8 @@ RSpec.describe Admin::UserForm, type: :form do
     it "is not valid" do
       expect(subject.valid?).to be false
       expect(subject.errors).to be_present
-      expect(subject.errors[:base]).to be_present
-      expect(subject.errors[:base][0]).to include("Jeannot")
-      expect(subject.errors[:base][0]).to include("Un usager avec le même email a déjà un compte")
+      expect(subject.benign_errors[0]).to include("Jeannot")
+      expect(subject.benign_errors[0]).to include("Un usager avec le même email a déjà un compte")
     end
 
     it "does not save the user" do
