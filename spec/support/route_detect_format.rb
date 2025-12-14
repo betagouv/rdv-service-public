@@ -1,3 +1,8 @@
+#
+# Ce monkey-patch permet de détecter les usages des url helpers qui passent accidentellement
+# une valeur excédentaire qui est interprétée comme le format, ce qui génère des URLs du genre :
+# "/admin/organisations/4/planning/absences/new.2?duplicate_absence_id=1"
+#
 if Rails.env.test?
   # Il faut copier la méthode `handle_positional_args` depuis `action_dispatch/routing/route_set.rb:292`
   # puis ajouter le `raise` dans le block `args.each_with_index` comme ci-dessous.
