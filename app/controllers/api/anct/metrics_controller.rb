@@ -1,7 +1,10 @@
 #
 # Cette API est appelée par la cartographie du déploiement de la suite territoriale.
 # Voir docs/interconnexions/carto_anct.md
+#
 class Api::Anct::MetricsController < ActionController::Base # rubocop:disable Rails/ApplicationController
+  before_action :authorize_via_shared_secret
+
   def index
     all_metrics = CartoAnct.cached_metrics
 
@@ -14,5 +17,13 @@ class Api::Anct::MetricsController < ActionController::Base # rubocop:disable Ra
     }
 
     render json: output
+  end
+
+  private
+
+  def authorize_via_shared_secret
+    if ENV["CARTO_ANCT_SHARED_SECRET"].blank? || headers["Authorization"] != "Bearer #{ENV["CARTO_ANCT_SHARED_SECRET"]}"
+      head :unauthorized
+    end
   end
 end
