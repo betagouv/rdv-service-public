@@ -57,7 +57,7 @@ RSpec.describe "/api/anct/metrics" do
       it "return a 401 with no body" do
         get "/api/anct/metrics", headers: { "Authorization" => "Bearer coucou" }
         expect(response).to have_http_status(:unauthorized)
-        expect(response.body).to eq("")
+        expect(response.body).to eq("{\"error\":\"Authentification invalide\"}")
       end
     end
 
@@ -65,7 +65,7 @@ RSpec.describe "/api/anct/metrics" do
       it "return a 401 with no body" do
         get "/api/anct/metrics"
         expect(response).to have_http_status(:unauthorized)
-        expect(response.body).to eq("")
+        expect(response.body).to eq("{\"error\":\"Authentification invalide\"}")
       end
     end
   end
