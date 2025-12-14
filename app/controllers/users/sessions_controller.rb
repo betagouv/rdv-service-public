@@ -18,7 +18,9 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def create
-    if auth_options[:scope] == :user && (self.resource = Agent.find_by(email: params[:user]["email"])) && resource.valid_password?(params[:user]["password"])
+    found_agent = Agent.find_by(email: params[:user]["email"])
+    if found_agent&.valid_password?(params[:user]["password"])
+      self.resource = found_agent
       return if reset_current_agent_password_if_weak!(params[:user][:password])
 
       set_flash_message!(:notice, :signed_in)
