@@ -123,7 +123,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
   end
 
   describe ".find_duplicate_based_on_names_and_phone" do
-    subject { described_class.find_duplicate_based_on_names_and_phone(user) }
+    subject { described_class.find_duplicate_based_on_names_and_phone(user, User.all) }
 
     context "there is no other user" do
       it { is_expected.to be_nil }

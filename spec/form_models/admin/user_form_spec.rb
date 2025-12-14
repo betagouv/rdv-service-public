@@ -1,5 +1,5 @@
 RSpec.describe Admin::UserForm, type: :form do
-  subject { described_class.new(user, view_locals: { current_organisation: organisation }) }
+  subject { described_class.new(user, view_locals: { current_organisation: organisation }, current_territory: organisation.territory) }
 
   let!(:organisation) { create(:organisation) }
 
@@ -17,7 +17,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "saves the user" do
       expect(user).to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save(annotation_content: "")
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save(annotation_content: "")
     end
   end
 
@@ -52,7 +52,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save(annotation_content: "")
     end
   end
 
@@ -70,12 +70,12 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save(annotation_content: "")
     end
   end
 
   context "duplication warning bypassed" do
-    subject { described_class.new(user, ignore_benign_errors: true, view_locals: { current_organisation: organisation }) }
+    subject { described_class.new(user, ignore_benign_errors: true, view_locals: { current_organisation: organisation }, current_territory: organisation.territory) }
 
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
     let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
@@ -87,7 +87,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "saves the user" do
       expect(user).to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save(annotation_content: "")
     end
   end
 
@@ -110,7 +110,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "does not save the user" do
       expect(user).not_to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save(annotation_content: "")
     end
   end
 
@@ -130,7 +130,7 @@ RSpec.describe Admin::UserForm, type: :form do
 
     it "saves the user" do
       expect(user).to receive(:save)
-      subject.save(annotation_content: "", current_territory: organisation.territory)
+      subject.save(annotation_content: "")
     end
   end
 

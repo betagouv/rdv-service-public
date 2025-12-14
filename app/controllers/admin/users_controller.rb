@@ -56,7 +56,7 @@ class Admin::UsersController < AgentAuthController
     prepare_create
     authorize(@user, policy_class: Agent::UserPolicy)
     @user.skip_confirmation_notification!
-    user_persisted = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
+    user_persisted = @user_form.save(annotation_content: params.dig(:user, :annotation_content))
 
     if invite_user?(@user, params)
       @user.invite!(domain: current_domain)
@@ -88,7 +88,7 @@ class Admin::UsersController < AgentAuthController
     @user.assign_attributes(user_params)
     @user_form = user_form_object
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
-    user_updated = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
+    user_updated = @user_form.save(annotation_content: params.dig(:user, :annotation_content))
     if from_modal?
       respond_modal_with @user_form, location: modal_return_location
     elsif user_updated
@@ -182,7 +182,8 @@ class Admin::UsersController < AgentAuthController
         current_organisation: current_organisation,
         from_modal: from_modal?,
         return_location: params[:return_location],
-      }
+      },
+      current_territory:
     )
   end
 

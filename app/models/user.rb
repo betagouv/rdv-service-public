@@ -15,7 +15,7 @@ class User < ApplicationRecord
   )
 
   devise :invitable, :database_authenticatable, :registerable, :timeoutable,
-         :recoverable, :validatable, :confirmable, :async
+         :recoverable, :confirmable, :async
 
   def timeout_in = 30.minutes # Used by Devise's :timeoutable
 

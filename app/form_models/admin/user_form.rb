@@ -10,22 +10,23 @@ class Admin::UserForm
 
   delegate :errors, to: :user
 
-  def initialize(user, ignore_benign_errors: false, view_locals: {})
+  def initialize(user, ignore_benign_errors: false, view_locals: {}, current_territory:)
     @user = user
     self.ignore_benign_errors = ignore_benign_errors
     @view_locals = view_locals
+    @current_territory = current_territory
   end
 
   def valid?
     super && user.valid? # order is important here
   end
 
-  def save(annotation_content:, current_territory:)
+  def save(annotation_content:)
     return false unless valid?
 
     user.transaction do
       if user.save
-        user.annotate!(annotation_content, territory: current_territory)
+        user.annotate!(annotation_content, territory: @current_territory)
         true
       end
     end
@@ -34,7 +35,8 @@ class Admin::UserForm
   private
 
   def duplicate_results
-    @duplicate_results ||= DuplicateUsersFinderService.perform_with(user)
+    users_of_territory = User.joins(user_profiles: :organisation).where(organisations: @current_territory.organisations)
+    @duplicate_results ||= DuplicateUsersFinderService.perform_with(user, users_of_territory)
   end
 
   def validate_duplicates
