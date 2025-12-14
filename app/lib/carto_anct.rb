@@ -28,35 +28,35 @@ module CartoAnct
   end
 
   def self.nombre_agents_par_siret(db_name:)
-    query = <<~SQL.squish.gsub(%("rdvsp"), %("#{db_name}"))
+    query = <<~SQL.squish.gsub("$db_name", db_name)
       SELECT
-        "rdvsp"."agents"."proconnect_siret" AS "siret",
-        COUNT(DISTINCT "rdvsp"."agents"."id") AS tu
+        "$db_name"."agents"."proconnect_siret" AS "siret",
+        COUNT(DISTINCT "$db_name"."agents"."id") AS tu
       FROM
-        "rdvsp"."agents"
+        "$db_name"."agents"
       JOIN
-        "rdvsp"."agents_rdvs" ON "rdvsp"."agents_rdvs"."agent_id" = "rdvsp"."agents"."id"
+        "$db_name"."agents_rdvs" ON "$db_name"."agents_rdvs"."agent_id" = "$db_name"."agents"."id"
       JOIN
-        "rdvsp"."rdvs" ON "rdvsp"."rdvs"."id" = "rdvsp"."agents_rdvs"."rdv_id"
+        "$db_name"."rdvs" ON "$db_name"."rdvs"."id" = "$db_name"."agents_rdvs"."rdv_id"
       WHERE
-        "rdvsp"."agents"."proconnect_siret" IS NOT NULL
+        "$db_name"."agents"."proconnect_siret" IS NOT NULL
       GROUP BY
-        "rdvsp"."agents"."proconnect_siret";
+        "$db_name"."agents"."proconnect_siret";
     SQL
     MetabaseApi.sql_query(query, timeout: 60)
   end
 
   def self.nombre_agents_par_code_insee(db_name:)
-    query = <<~SQL.squish.gsub(%("rdvsp"), %("#{db_name}"))
+    query = <<~SQL.squish.gsub("$db_name", db_name)
       SELECT
         "Correspondance Code Insee Code Postal - Code Postal"."code_insee" AS "insee",
-        COUNT(DISTINCT "rdvsp"."agents"."id") AS "tu"
+        COUNT(DISTINCT "$db_name"."agents"."id") AS "tu"
       FROM
-        "rdvsp"."agents"
+        "$db_name"."agents"
 
-      JOIN "rdvsp"."agents_rdvs" AS "Agents Rdvs" ON "rdvsp"."agents"."id" = "Agents Rdvs"."agent_id"
-        JOIN "rdvsp"."rdvs" AS "Rdvs" ON "Agents Rdvs"."rdv_id" = "Rdvs"."id"
-        JOIN "rdvsp"."lieux" AS "Lieux - Lieu" ON "Rdvs"."lieu_id" = "Lieux - Lieu"."id"
+      JOIN "$db_name"."agents_rdvs" AS "Agents Rdvs" ON "$db_name"."agents"."id" = "Agents Rdvs"."agent_id"
+        JOIN "$db_name"."rdvs" AS "Rdvs" ON "Agents Rdvs"."rdv_id" = "Rdvs"."id"
+        JOIN "$db_name"."lieux" AS "Lieux - Lieu" ON "Rdvs"."lieu_id" = "Lieux - Lieu"."id"
         JOIN (
           SELECT
             "csv_uploads"."correspondance_code_insee_code_postal_20251105084418"."code_insee" AS "code_insee",
