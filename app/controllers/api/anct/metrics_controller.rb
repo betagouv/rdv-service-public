@@ -5,6 +5,8 @@
 class Api::Anct::MetricsController < ActionController::Base # rubocop:disable Rails/ApplicationController
   before_action :authorize_via_shared_secret
 
+  rescue_from StandardError, with: :render_json_error
+
   def index
     all_metrics = CartoAnct.cached_metrics
 
@@ -22,8 +24,14 @@ class Api::Anct::MetricsController < ActionController::Base # rubocop:disable Ra
   private
 
   def authorize_via_shared_secret
-    if ENV["CARTO_ANCT_SHARED_SECRET"].blank? || headers["Authorization"] != "Bearer #{ENV["CARTO_ANCT_SHARED_SECRET"]}"
+    valid_secret_key = ENV["CARTO_ANCT_SHARED_SECRET"].presence
+    if !valid_secret_key || request.headers["Authorization"] != "Bearer #{valid_secret_key}"
       head :unauthorized
     end
+  end
+
+  def render_json_error(exception)
+    Sentry.capture_exception(exception)
+    render status: :internal_server_error, json: { error: "Erreur interne du serveur" }
   end
 end
