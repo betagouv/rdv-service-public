@@ -185,7 +185,7 @@ RSpec.describe ProConnectController do
 
           sentry_warning_message = "Réconciliation ProConnect via e-mail, sub existant écrasé"
           expect(sentry_events.last.message).to include(sentry_warning_message)
-          expect(sentry_events.last.extra).to eq({ user_info: })
+          expect(sentry_events.last.extra).to eq({ user_info:, old_sub: "another_sub" })
           expect(sentry_events.last.user[:email]).to eq(user_info["email"])
         end
       end

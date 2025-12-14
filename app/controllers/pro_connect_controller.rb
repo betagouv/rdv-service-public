@@ -155,7 +155,8 @@ class ProConnectController < ApplicationController
 
     # On ne trouve un agent que par e-mail et cet agent porte un autre sub.
     if !agent_by_sub && agent_by_email&.pro_connect_openid_sub && agent_by_email.pro_connect_openid_sub != sub
-      Sentry.capture_message("Réconciliation ProConnect via e-mail, sub existant écrasé", extra: { user_info: callback_client.user_info })
+      extra = { user_info: callback_client.user_info, old_sub: agent_by_email.pro_connect_openid_sub }
+      Sentry.capture_message("Réconciliation ProConnect via e-mail, sub existant écrasé", extra:)
     end
 
     agent = agent_by_sub || agent_by_email
