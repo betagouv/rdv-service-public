@@ -5,7 +5,7 @@ class StatsController < ApplicationController
   def index; end
 
   def lieux_map_data
-    render(json: Rails.cache.fetch("stats.both_instances.lieux_map_data") || [])
+    render(json: Rails.cache.fetch("stats.both_instances.lieux_map_data.v2") || [])
   rescue MetabaseApi::Error => e
     render(json: { error: e.message }, status: :internal_server_error)
   end

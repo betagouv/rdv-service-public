@@ -67,29 +67,45 @@
           .fr-mb-2w Légende
           ul.rdv-stats-legend
             li.fr-mb-2w
-              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="Mairie"]
+              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="Médico-Social"]
               div
                 div
-                  |> Mairies avec dispositif de recueil
-                  span[data-target="map-counter" data-group="Mairie"] &nbsp;
+                  |> Médico-Social
+                  span[data-target="map-counter" data-group="Médico-Social"] &nbsp;
                 .fr-text--sm.rdv-color-text-mention-grey.fr-mb-0
-                  | RDV Service Public
+                  | TODO
             li.fr-mb-2w
-              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="RDV Service Public"]
+              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="Insertion"]
               div
                 div
-                  |> Services de l’État, Opérateurs publics, Collectivités
-                  span[data-target="map-counter" data-group="RDV Service Public"] &nbsp;
+                  |> Insertion
+                  span[data-target="map-counter" data-group="Insertion"] &nbsp;
                 .fr-text--sm.rdv-color-text-mention-grey.fr-mb-0
-                  | RDV Service Public
+                  | TODO
             li.fr-mb-2w
-              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="RDV Solidarités"]
+              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="Médiation Numérique"]
               div
                 div
-                  |> Maison des solidarités, Points justice, Médiation numérique
-                  span[data-target="map-counter" data-group="RDV Solidarités"] &nbsp;
+                  |> Médiation Numérique
+                  span[data-target="map-counter" data-group="Médiation Numérique"] &nbsp;
                 .fr-text--sm.rdv-color-text-mention-grey.fr-mb-0
-                  | RDV Solidarités, RDV Aide Numérique
+                  | Todo
+            li.fr-mb-2w
+              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="CDAD"]
+              div
+                div
+                  |> CDAD
+                  span[data-target="map-counter" data-group="CDAD"] &nbsp;
+                .fr-text--sm.rdv-color-text-mention-grey.fr-mb-0
+                  | Todo
+            li.fr-mb-2w
+              span.rdv-stats-legend-circle[data-target="map-legend-circle" data-group="Autre"]
+              div
+                div
+                  |> Autre
+                  span[data-target="map-counter" data-group="Autre"] &nbsp;
+                .fr-text--sm.rdv-color-text-mention-grey.fr-mb-0
+                  | Todo
 
   .fr-col-12.fr-col-md-8
     .stats-map[data-controller="stats-map" data-url=stats_lieux_map_data_path]

@@ -1,7 +1,8 @@
 const MAP_COLORS = {
-  'RDV Solidarités': '#f983f1',
-  'RDV Service Public': '#5fe0eb',
-  'Mairie': '#2e4177',
+  'Médico-Social': '#f983f1',
+  'Insertion': '#5fe0eb',
+  'Médiation Numérique': '#2e4177',
+  'CDAD': '#c4de66',
   'Autre': '#e55e5e',
 }
 
@@ -39,10 +40,11 @@ const initMap = (mapElt, lieux) => {
       paint: {
         'circle-color': [
           'match',
-          ['get', 'type_organisation'],
-          'RDV Solidarités', MAP_COLORS['RDV Solidarités'],
-          'RDV Service Public', MAP_COLORS['RDV Service Public'],
-          'Mairie', MAP_COLORS['Mairie'],
+          ['get', 'territory_tag_name'],
+          'Médico-Social', MAP_COLORS['Médico-Social'],
+          'Insertion', MAP_COLORS['Insertion'],
+          'Médiation Numérique', MAP_COLORS['Médiation Numérique'],
+          'CDAD', MAP_COLORS['CDAD'],
           MAP_COLORS['Autre']
         ],
         'circle-radius': 4,
@@ -53,10 +55,10 @@ const initMap = (mapElt, lieux) => {
 
     map.on('click', 'lieux-markers', (e) => {
       const coordinates = e.features[0].geometry.coordinates.slice();
-      const { organisation_name, type_organisation } = e.features[0].properties;
+      const { organisation_name, territory_tag_name } = e.features[0].properties;
       new maplibregl.Popup()
         .setLngLat(coordinates)
-        .setHTML(`${organisation_name} - ${type_organisation}`)
+        .setHTML(`${organisation_name} - ${territory_tag_name}`)
         .addTo(map);
     });
 
@@ -73,8 +75,8 @@ const initMap = (mapElt, lieux) => {
 }
 
 const setCounters = (lieux) => {
-  const counts = lieux.reduce((acc, { type_organisation }) => {
-    acc[type_organisation] = (acc[type_organisation] || 0) + 1;
+  const counts = lieux.reduce((acc, { territory_tag_name }) => {
+    acc[territory_tag_name] = (acc[territory_tag_name] || 0) + 1;
     return acc;
   }, {});
 
@@ -120,6 +122,7 @@ window.addEventListener("load", () => {
       throw new Error(`HTTP status ${response.status}`);
     })
     .then(lieux => {
+      lieux = lieux.map(l => ( { ...l, territory_tag_name: l.territory_tag_name || "Autre" }))
       const map = initMap(mapElt, lieux)
       displayLegendCircles()
       setCounters(lieux)

@@ -8,7 +8,7 @@ class CronJob::RefreshCachedStats
     "stats.both_instances.1_month.active_agents_count" => "both_instances_1_month_active_agents_count.sql",
     "stats.both_instances.1_month.active_organisations_count" => "both_instances_1_month_active_organisations_count.sql",
     "stats.both_instances.1_month.rdvs_count" => "both_instances_1_month_rdvs_count.sql",
-    "stats.both_instances.lieux_map_data" => "both_instances.lieux_map_data.sql",
+    "stats.both_instances.lieux_map_data.v2" => "both_instances.lieux_map_data.v2.sql",
   }.freeze
 
   class EnqueueAllKeysJob < CronJob

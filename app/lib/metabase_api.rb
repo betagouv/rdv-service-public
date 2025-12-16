@@ -7,15 +7,15 @@ class MetabaseApi
   def self.sql_query(query, raw_json: false)
     res = Typhoeus.post(
       "#{HOST_URL}/api/dataset/json",
-      params: { query: { database: DATABASE_ID, native: { query: }, type: "native" }.to_json },
+      body: { query: { database: DATABASE_ID, native: { query: }, type: "native" }.to_json },
       headers: {
         "x-api-key" => ENV["METABASE_API_KEY"],
-        "Content-Type" => "application/json",
+        "Content-Type" => "application/x-www-form-urlencoded",
         "Accept" => "application/json",
       }
     )
-    if res.code != 200
-      raise Error, "Statut #{res.code} retourné par l’API metabase dataset/json"
+    if [200, 202].exclude?(res.code)
+      raise Error, "Statut #{res.code} retourné par l’API metabase dataset/json : #{res.body}"
     end
 
     if raw_json
