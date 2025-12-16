@@ -64,9 +64,9 @@ RSpec.describe CronJob::RefreshCachedStats::RefreshKeyJob do
           },
         ]
       )
-      expect { described_class.new.perform(key: "stats.both_instances.lieux_map_data") }.not_to raise_error
-      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data").count).to eq(2)
-      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data")[0]["organisation_name"]).to eq("Inclusion Numérique Allier")
+      expect { described_class.new.perform(key: "stats.both_instances.lieux_map_data.v2") }.not_to raise_error
+      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data.v2").count).to eq(2)
+      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data.v2")[0]["organisation_name"]).to eq("Inclusion Numérique Allier")
     end
   end
 
@@ -82,16 +82,16 @@ RSpec.describe CronJob::RefreshCachedStats::RefreshKeyJob do
 
     before do
       # On simule que les données précédentes étaient beaucoup plus complètes, 12 lignes
-      Rails.cache.write("stats.both_instances.lieux_map_data", [row] * 12)
+      Rails.cache.write("stats.both_instances.lieux_map_data.v2", [row] * 12)
     end
 
     specify do
       allow(MetabaseApi).to receive(:sql_query).and_return([row])
       expect do
-        described_class.new.perform(key: "stats.both_instances.lieux_map_data")
+        described_class.new.perform(key: "stats.both_instances.lieux_map_data.v2")
       end.to raise_error(CronJob::RefreshCachedStats::SuspiciousFigureError)
-      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data").count).to eq(12)
-      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data")[0]["organisation_name"]).to eq("Inclusion Numérique Allier")
+      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data.v2").count).to eq(12)
+      expect(Rails.cache.fetch("stats.both_instances.lieux_map_data.v2")[0]["organisation_name"]).to eq("Inclusion Numérique Allier")
     end
   end
 end
