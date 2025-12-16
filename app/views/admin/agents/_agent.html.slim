@@ -5,7 +5,7 @@ tr id="agent_#{agent.id}"
   td
     - if agent_policy.edit?
       - if agent.full_name.present?
-        span= link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "mr-2"
+        span= link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "fr-link mr-2"
       - unless agent.is_an_intervenant?
         / les intervenants ne peuvent pas se connecter, il est inutile de les afficher comme "Inactif".
         - if agent.last_sign_in_at.nil? && agent.invitation_sent_at.present? && agent.invitation_accepted_at.nil?
