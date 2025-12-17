@@ -12,10 +12,8 @@
               #   - l'agent actuellement sélectionné + les agents précédemment sélectionnés
               #     afin de les proposer au clic sur "Sélectionner plusieurs agents"
               # À noter que dès que le select est cliqué, ses nouvelles options sont récupérées via appel Ajax.
-              agents = @agents.to_a + Array(@previously_selected_agents)
-              collection = agents.uniq.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
+              collection = @agents.to_a.uniq.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
               data = {
-                "latest-selected-agent-ids": @previously_selected_agents&.map(&:id),
                 "select2-config": {
                   ajax: {
                     url: search_agents_agents_path(organisation_id: current_organisation),
@@ -29,6 +27,7 @@
             = form.select :agent_id, collection, { selected: @agents.map(&:id), multiple: @agents.size > 1 }, { name: "agent_id[]", class: ["select2-input rdv-min-width-200px"], data: }
 
           .ml-2.d-flex[style="gap: 0 0.5em"]
+            button#latest_agent_selections_toggle.fr-btn.fr-btn--tertiary.fr-icon-time-line.fr-btn--icon-left[type="button"] Historique
             - if @agents.size == 1 && @multiple_agents_makes_sense && current_organisation.agents.count > 1
               button#multi_agent_enable.fr-btn.fr-btn--tertiary Sélectionner plusieurs agents
             #submit_agents[class=(@agents.size > 1 ? "" : "hidden")]
@@ -40,6 +39,13 @@
       div.rdv-display-flex.rdv-gap-05rem.rdv-flex-wrap-wrap
         div= link_to "Revenir à l'ancienne vue", admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "false"), method: :put, class: "fr-link fr-link--sm js-new-planning-toggle"
         div= link_to("Donnez votre avis", "https://tally.so/r/3jORDR", target: "_blank", class: "fr-link fr-link--sm js-new-planning-toggle")
+
+  - if @previously_selected_agents.present?
+    #latest_agent_selections
+      ul.mt-2
+        - @previously_selected_agents.each do |agent_group|
+          - label_method = agent_group.size > 5 ? :short_name_or_email : :full_name_or_email
+          li = link_to(agent_group.map(&label_method).to_sentence.truncate(120), url_for(agent_id: agent_group.map(&:id)))
 
 .container-fluid.px-2.d-flex[style="background-color: white; border-bottom: 1px solid #EEE;align-items: center;"]
   .flex-grow-1

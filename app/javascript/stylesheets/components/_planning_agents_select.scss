@@ -6,3 +6,13 @@
     }
   }
 }
+
+// Animation de l'ouverture de l'historique
+#latest_agent_selections {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 200ms ease;
+}
+#latest_agent_selections.open {
+  max-height: 800px; /* assez grand pour contenir la liste */
+}

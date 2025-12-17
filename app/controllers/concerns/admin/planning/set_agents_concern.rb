@@ -31,20 +31,18 @@ module Admin::Planning::SetAgentsConcern
       end
     end
 
-    if @agents.size > 1
-      store_selected_agents(@agents)
-    else
-      @previously_selected_agents = previously_selected_agents
-    end
+    store_selected_agents(@agents) unless @agents == [current_agent]
+    @previously_selected_agents = previously_selected_agents
   end
 
   def store_selected_agents(agents)
-    Redis.with_connection { _1.set(selected_agents_cache_key, agents.map(&:id).join(","), ex: 10.days) }
+    current_agent.append_agent_selection!(agents.map(&:id))
   end
 
   def previously_selected_agents
-    stored_ids = Redis.with_connection { _1.get(selected_agents_cache_key) }&.split(",").presence
-    Agent::AgentPolicy::Scope.apply(current_agent, Agent.all).where(id: stored_ids) if stored_ids
+    current_agent.latest_agent_selections.map do |agent_ids|
+      Agent::AgentPolicy::Scope.apply(current_agent, Agent.all).where(id: agent_ids)
+    end
   end
 
   def selected_agents_cache_key
