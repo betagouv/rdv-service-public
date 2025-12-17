@@ -64,7 +64,9 @@ class ProConnectController < ApplicationController
       when "agent"
         connect_agent(callback_client)
       else
-        raise "Unknown connection_for #{pro_connect_session[:connection_for]}"
+        Sentry.capture_message("Unknown connection_for: #{pro_connect_session[:connection_for].inspect}", extra: { session: session.to_h })
+        flash[:error] = generic_error_message
+        redirect_to(new_agent_session_path)
       end
     else
       flash[:error] = generic_error_message
