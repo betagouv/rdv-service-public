@@ -9,17 +9,17 @@ RSpec.describe "RDV API" do
     }
   end
   let(:application) { create(:oauth_application) }
-
-  let(:motif) { create(:motif, organisation: organisation, service: service) }
-  let(:service) { create(:service) }
-  let(:organisation) { create(:organisation) }
-
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
-  let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
-  let(:user) { create(:user) }
-  let(:other_user) { create(:user) }
+  let(:organisation) { create(:organisation) }
+  let(:service) { create(:service) }
 
   describe "#index" do
+    let(:motif) { create(:motif, organisation: organisation, service: service) }
+
+    let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user) }
+
     let!(:rdv_with_user_and_agent) { create(:rdv, organisation: organisation, motif: motif, users: [user], agents: [agent]) }
     let!(:rdv_with_user_and_other_agent) { create(:rdv, organisation: organisation, motif: motif, users: [user], agents: [other_agent]) }
 
@@ -57,6 +57,53 @@ RSpec.describe "RDV API" do
 
       expect(parsed_response_body["rdvs"].count).to eq 1
       expect(parsed_response_body["rdvs"].first["id"]).to eq cancelled_rdv.id
+    end
+  end
+
+  describe "#create" do
+    context "pour une migration inter-instance d'un rendez-vous pris par un usager" do
+      let(:user_on_old_instance) { create(:user, organisations: [organisation_on_old_instance]) }
+      let(:rdv_on_old_instance) do
+        create(:rdv, agents: [agent_on_old_instance], motif: motif_on_old_instance,
+                     users: [user_on_old_instance], starts_at: 2.weeks.ago, created_by: user_on_old_instance,
+                     lieu: lieu_on_old_instance, organisation: instance_export.source_organisation)
+      end
+
+      let(:motif_on_old_instance) { create(:motif, organisation: organisation_on_old_instance) }
+
+      let(:lieu_on_old_instance) { create(:lieu, organisation: organisation_on_old_instance) }
+
+      let(:agent_on_old_instance) { agent } # La contrainte d'unicité sur agents.email et le fait que l'email soit utilisé des les params de la requête nous oblige à réutiliser le même agent ici
+
+      let(:organisation_on_old_instance) { create(:organisation) }
+      let(:instance_export) { create(:instance_export, source_organisation: organisation_on_old_instance, agent: agent_on_old_instance) }
+
+      # On crée les données qui auraient été créées par les premiers jobs
+      let(:motif_on_new_instance) { create(:motif, organisation:, service: service) }
+      let!(:motif_external_reference) { create(:external_reference, item: motif_on_new_instance, external_id: motif_on_old_instance.id, oauth_application: application) }
+
+      let(:lieu_on_new_instance) { create(:lieu, organisation:) }
+      let!(:lieu_external_reference) { create(:external_reference, item: lieu_on_new_instance, external_id: lieu_on_old_instance.id, oauth_application: application) }
+
+      let(:user_on_new_instance) { create(:user, organisations: [organisation]) }
+      let!(:user_external_reference) { create(:external_reference, item: user_on_new_instance, external_id: user_on_old_instance.id, oauth_application: application) }
+
+      it "sends all the information to the new instance" do
+        request_params = nil
+        allow_any_instance_of(RdvServicePublicApiClient).to receive(:post) do |_object, _path, params| # rubocop:disable RSpec/AnyInstance
+          request_params = params
+        end
+
+        # On démarre le test depuis le job qui fait la synchronisation pour vérifier que la sérialisation marche bien avec le controller
+        # On exécute le job afin que sa requête API soit enregistrée dans request_params par le block ci-dessus.
+        CopyPlanningToNewInstanceJob::CopyRdvJob.new.perform(instance_export.id, rdv_on_old_instance.id, Domain::RDV_AIDE_NUMERIQUE.id)
+
+        expect do
+          post "/api/v1/rdvs", headers:, params: request_params, as: :json
+        end.to change(Rdv, :count).by(1)
+
+        expect(Rdv.last.created_by).to eq user_on_new_instance
+      end
     end
   end
 end

@@ -269,14 +269,14 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     describe "#free_times_from" do
       it "return an empty hash without plage_ouvertures" do
         range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-        expect(described_class.free_times_from([], range)).to eq({})
+        expect(described_class.free_times_from([], range, work_on_off_days: false)).to eq({})
       end
 
       it "calls calculate_free_times for given plage_ouvertures" do
         plage_ouverture = build(:plage_ouverture)
         range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-        expect(described_class).to receive(:calculate_free_times).with(plage_ouverture, range)
-        described_class.free_times_from([plage_ouverture], range)
+        expect(described_class).to receive(:calculate_free_times).with(plage_ouverture, range, work_on_off_days: false)
+        described_class.free_times_from([plage_ouverture], range, work_on_off_days: false)
       end
     end
 
@@ -287,7 +287,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       it "return one free time from plage ouverture date range" do
         plage_ouverture = build(:plage_ouverture, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
         range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq([Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")])
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq([Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")])
       end
 
       it "return plage ouverture slot minus rdv duration" do
@@ -298,7 +298,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
         expected_ranges = [rdv.ends_at..ends_at]
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "return plage ouverture slot minus RDV duration that overlap po when RDV starts before PO" do
@@ -309,7 +309,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
         expected_ranges = [rdv.ends_at..ends_at]
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "return plage ouverture slots minus 2 RDV duration that overlap po" do
@@ -321,7 +321,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
         expected_ranges = [rdv.ends_at..other_rdv.starts_at, other_rdv.ends_at..ends_at]
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "return plage ouverture slots minus 2 Absences duration that overlap po" do
@@ -339,7 +339,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
 
         expected_ranges = [e9h30..s9h45, e10h45..ends_at]
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "returns plage ouverture's 3 occurrences of range" do
@@ -353,7 +353,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
           (Time.zone.parse("2021-10-28 9:00")..Time.zone.parse("2021-10-28 11:00")),
           (Time.zone.parse("2021-10-29 9:00")..Time.zone.parse("2021-10-29 11:00")),
         ]
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "don't returns past time" do
@@ -365,7 +365,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
 
         expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "don't look at cancelled RDV" do
@@ -378,7 +378,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
 
         expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "return range without only range of multi RDV on same range with same duration" do
@@ -391,7 +391,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
         expected_ranges = [prev_rdv.ends_at..rdv.starts_at, rdv.ends_at..ends_at]
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "return range without only range of longer overlapped RDV on same range with same duration" do
@@ -404,20 +404,20 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
         expected_ranges = [prev_rdv.ends_at..rdv.starts_at, rdv.ends_at..ends_at]
-        expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
+        expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "truncates off days (jours féries) from the ranges" do
         xmas_week = Date.new(2024, 12, 23)..Date.new(2024, 12, 27)
         plage_ouverture = create(:plage_ouverture, :weekdays, first_day: Date.new(2024, 12, 23), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-        computed_dates = proc { described_class.calculate_free_times(plage_ouverture, xmas_week).map(&:begin).map(&:to_date) }
 
         # Par défaut les jours fériés ne sont pas travaillés
-        expect(computed_dates.call).to eq(xmas_week.to_a - [Date.new(2024, 12, 25)])
+        computed_dates = described_class.calculate_free_times(plage_ouverture, xmas_week, work_on_off_days: false).map(&:begin).map(&:to_date)
+        expect(computed_dates).to eq(xmas_week.to_a - [Date.new(2024, 12, 25)])
 
-        # Les agents de visioplainte travaillent les jours fériés
-        plage_ouverture.organisation.territory.update_columns(work_on_sunday: true) # rubocop:disable Rails/SkipsModelValidations
-        expect(computed_dates.call).to eq(xmas_week.to_a)
+        # Mais ils peuvent être activés avec un flag
+        computed_dates = described_class.calculate_free_times(plage_ouverture, xmas_week, work_on_off_days: true).map(&:begin).map(&:to_date)
+        expect(computed_dates).to eq(xmas_week.to_a)
       end
     end
 

@@ -175,17 +175,18 @@ RSpec.describe ProConnectController do
       end
 
       context "when an agent exists with the given email but with another sub" do
-        it "displays an error and warns Sentry" do
-          create(:agent, pro_connect_openid_sub: "another_sub", email: user_info["email"])
+        it "replaces the existing sub and warns Sentry" do
+          agent = create(:agent, pro_connect_openid_sub: "another_sub", email: user_info["email"])
           expect do
             get :callback, params: { state:, code: }
-          end.not_to change { Agent.maximum(:updated_at) }
-          expected_error_message = "Un compte agent existe déjà sur RDV Service Public pour cette adresse email"
-          expect(flash[:error]).to include(expected_error_message)
-          expect(sentry_events.last.message).to include(expected_error_message)
-          expect(sentry_events.last.extra).to eq({ user_info: })
+          end.to change { Agent.find(agent.id).pro_connect_openid_sub }.from("another_sub").to(user_info["sub"])
+
+          expect_agent_to_be_updated_and_logged_in(agent.reload)
+
+          sentry_warning_message = "Réconciliation ProConnect via e-mail, sub existant écrasé"
+          expect(sentry_events.last.message).to include(sentry_warning_message)
+          expect(sentry_events.last.extra).to eq({ user_info:, old_sub: "another_sub" })
           expect(sentry_events.last.user[:email]).to eq(user_info["email"])
-          expect(current_agent_id).to be_nil
         end
       end
 

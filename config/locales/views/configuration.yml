@@ -35,7 +35,6 @@ fr:
             organisation: Organisation
             url: URL cible
             actions: Actions
-          confirm_destroy: Voulez-vous vraiment supprimer ce endpoint ?
         new:
           webhook_title: Webhooks
           title: Ajouter un webhook

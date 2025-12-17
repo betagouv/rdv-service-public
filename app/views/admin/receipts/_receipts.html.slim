@@ -2,7 +2,7 @@
   .card-header
     button.btn.btn-link data-toggle="collapse" data-target="#receipts-collapse"
       h5.header
-        i.fa.fa-comment-dots.mr-1
+        => icon("fr-icon-message-2-line")
         = Receipt.model_name.human(count: 2)
   .collapse.hide#receipts-collapse
     .card-body
