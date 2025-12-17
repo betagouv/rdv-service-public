@@ -21,13 +21,17 @@ class CronJob::SynchronizeCrm < CronJob
     client.database_query(database_id: NOTION_DATABASE_ID, filter:) do |page|
       page.results.each do |notion_page|
         ids = organisations_ids(notion_page)
-        rdv_count = ids.blank? ? nil : Rdv.where(organisation: ids).count
+        next if ids.blank?
+
+        territory = Organisation.find(ids.first).territory
         last_rdv = Rdv.where(organisation: ids).order(created_at: :desc).first
-        if last_rdv
-          client.update_page(page_id: notion_page.id, properties: { "NOMBRE DE RDV" => rdv_count, "DATE CREATION DERNIER RDV" => { start: last_rdv.created_at&.strftime("%Y-%m-%d") } })
-        else
-          client.update_page(page_id: notion_page.id, properties: { "NOMBRE DE RDV" => rdv_count, "DATE CREATION DERNIER RDV" => nil })
-        end
+        properties = {
+          "NOMBRE DE RDV": Rdv.where(organisation: ids).count,
+          "DATE CREATION DERNIER RDV": last_rdv ? { start: last_rdv.created_at.strftime("%Y-%m-%d") } : nil,
+          "DATE CREATION ESPACE": { start: territory.created_at.strftime("%Y-%m-%d") },
+          "NOMBRE AGENTS ACTIFS": territory.organisations_agents.where("last_sign_in_at >= ?", 30.days.ago).count,
+        }
+        client.update_page(page_id: notion_page.id, properties:)
       end
     end
   end
