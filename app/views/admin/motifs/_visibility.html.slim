@@ -1,7 +1,7 @@
 - unless motif.visible_and_notified?
   h6.mb-2
-    i.fa.fa-clipboard-check.mr-1
-    span.mr-1= t(".default_html", motif: link_to(motif.name, admin_organisation_motif_path(current_organisation, motif), target: "_blank"))
+    => icon("fr-icon-todo-fill")
+    = t(".default_html", motif: link_to(motif.name, admin_organisation_motif_path(current_organisation, motif), target: "_blank"))
   .ml-3
     = boolean_tag(motif.visible_and_notified?) do
       = sanitize(motif.human_attribute_value(:visibility_type, context: :html))

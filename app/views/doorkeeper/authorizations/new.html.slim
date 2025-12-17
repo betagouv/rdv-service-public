@@ -10,7 +10,7 @@ h1.fr-h2.rdv-text-align-center.mt-0.font-weight-bold.mb-4 Validation de permissi
       = image_tag("logos/logo-rdv-sombre.svg", width: 120, alt: "Le logo de #{current_domain.name}")
 
     p
-      i.fa-solid.fa-circle-check.color-scheme-green.mr-1
+      => icon("fr-icon-checkbox-circle-fill", class: "fr-icon--sm")
       | #{@pre_auth.client.name} est une application partenaire de #{current_domain.name}.
 
     p

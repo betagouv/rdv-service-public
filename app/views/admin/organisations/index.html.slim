@@ -14,7 +14,7 @@
           li.list-group-item
             span>= link_to organisation.name, admin_organisation_planning_agenda_path(organisation)
             - if current_agent.admin_in_organisation?(organisation)
-              i.fa.fa-user-cog.text-muted[title="Vous administrez cette organisation"]
+              = icon("fr-icon-user-setting-fill", class: "fr-icon--sm text-muted", title: "Vous administrez cette organisation")
       - if policy(Organisation.new(territory: territory), policy_class: Agent::OrganisationPolicy).new?
         .fr-mt-4w.fr-ml-2w
           = link_to "Gérer les organisations", admin_territory_organisations_path(territory), class: "fr-btn fr-btn--secondary"

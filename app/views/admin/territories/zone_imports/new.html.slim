@@ -63,12 +63,10 @@
     .rdv-text-align-center
       .mb-1.w-75.m-auto.text-muted 3 premières lignes: communes entières, 2 dernières lignes: 2 rues spécifiques
       ul.list-inline
-        li.list-inline-item= link_to "/zones_example.xls", class: "btn btn-link", download: "zones_example.xls" do
-          i.fa.fa-download>
-          span> Fichier d'exemple au format XLS
-        li.list-inline-item= link_to "/zones_example.csv", class: "btn btn-link", download: "zones_example.csv" do
-          i.fa.fa-download>
-          span> Fichier d'exemple au format CSV
+        li.list-inline-item= link_to "/zones_example.xls", class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line", download: "zones_example.xls" do
+          | Fichier d'exemple au format XLS
+        li.list-inline-item= link_to "/zones_example.csv", class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line", download: "zones_example.csv" do
+          | Fichier d'exemple au format CSV
 
     ul
       li
