@@ -26,10 +26,10 @@ class CronJob::SynchronizeCrm < CronJob
         territory = Organisation.find(ids.first).territory
         last_rdv = Rdv.where(organisation: ids).order(created_at: :desc).first
         properties = {
-          "NOMBRE DE RDV": Rdv.where(organisation: ids).count,
-          "DATE CREATION DERNIER RDV": last_rdv ? { start: last_rdv.created_at.strftime("%Y-%m-%d") } : nil,
-          "DATE CREATION ESPACE": { start: territory.created_at.strftime("%Y-%m-%d") },
-          "NOMBRE AGENTS ACTIFS": territory.organisations_agents.where("last_sign_in_at >= ?", 30.days.ago).count,
+          "NOMBRE DE RDV" => Rdv.where(organisation: ids).count,
+          "DATE CREATION DERNIER RDV" => last_rdv ? { start: last_rdv.created_at.strftime("%Y-%m-%d") } : nil,
+          "DATE CREATION ESPACE" => { start: territory.created_at.strftime("%Y-%m-%d") },
+          "NOMBRE AGENTS ACTIFS" => territory.organisations_agents.where("last_sign_in_at >= ?", 30.days.ago).count,
         }
         client.update_page(page_id: notion_page.id, properties:)
       end
