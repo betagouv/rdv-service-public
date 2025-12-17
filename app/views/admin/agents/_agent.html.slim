@@ -22,8 +22,8 @@ tr id="agent_#{agent.id}"
     = me_tag(agent)
   td.word-break-all
     = agent.email
-  td
-    - if @display_services
+  - if @display_services
+    td
       - agent.services.each do |service|
         .badge.badge-primary= service.short_name
   td.text-nowrap
