@@ -1,6 +1,6 @@
 class Operators::SessionsController < Devise::SessionsController
   def destroy
-    pro_connect_id_token = session.delete(:pro_connect_id_token) || session.delete(:agent_connect_id_token)
+    pro_connect_id_token = session.delete(:pro_connect_id_token)
 
     sign_out(:operator_manager)
 
