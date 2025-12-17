@@ -8,7 +8,11 @@ module DsfrHelper
   end
 
   def icon(icon_name, html_options = {})
-    tag.span("", class: "#{icon_name} #{html_options.delete(:class)}", "aria-hidden": "true", **html_options)
+    if html_options[:title]
+      tag.span("", class: "#{icon_name} #{html_options.delete(:class)}", **html_options)
+    else
+      tag.span("", class: "#{icon_name} #{html_options.delete(:class)}", "aria-hidden": "true", **html_options)
+    end
   end
 
   def motif_icon(html_options = {})

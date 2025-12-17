@@ -36,7 +36,6 @@ fr:
       edit:
         header: "Choisir son mot de passe"
         submit_button: "Enregistrer"
-      reinvite: "Renvoyer l’invitation"
       invitation:
         open_app_mail: "Ouvrir l'app Mail"
         title: "Inscription"

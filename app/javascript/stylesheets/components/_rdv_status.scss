@@ -22,7 +22,7 @@ $status_colors: (
     background-color: $color;
     color: #000;
   }
-  i.fa.rdv-status-#{$status} {
+  span.fr-icon-circle-fill.rdv-status-#{$status} {
     color: $color;
   }
 }

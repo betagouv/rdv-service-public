@@ -81,6 +81,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.before(:suite) do
+    ActiveRecord::Tasks::DatabaseTasks.truncate_all
     Rack::Attack.enabled = false
 
     Faker::Config.locale = :fr

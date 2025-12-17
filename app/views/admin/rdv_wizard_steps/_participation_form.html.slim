@@ -17,8 +17,8 @@ div id=element_id
       = link_to edit_admin_organisation_user_path( \
           current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
         ), \
-        data: { modal: "true" }, title: t("helpers.edit")
-        i.fa.fa-edit
+        data: { modal: "true" }, title: t("helpers.edit") do
+        = icon("fr-icon-edit-line", class: "fr-icon--sm")
   .ml-3
     = render "admin/users/notifications_preferences", user: user.user_to_notify
     - if participation.user.user_to_notify.valid_email? || participation.user.user_to_notify.phone_number.present?

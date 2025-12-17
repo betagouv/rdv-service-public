@@ -5,7 +5,14 @@ module CreneauxSearch::Calculator
       datetime_range = CreneauxSearch::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
       import_absences_from_caldav(plage_ouvertures.map(&:agent).uniq)
-      free_times_po = free_times_from(plage_ouvertures, datetime_range) # dépendances implicite à Rdv, Absence et OffDays
+
+      # Cette méthode découpe les plages d'ouverture en fonction des absences, rdvs, et jours fériés
+      free_times_po = free_times_from(
+        plage_ouvertures,
+        datetime_range,
+        work_on_off_days: motif.organisation.territory.work_on_sunday? # La colonne `work_on_sunday` indique aussi que les agents travaillent les jours fériés
+      )
+
       slots_for(free_times_po, motif, duration_in_min:).select do |slot|
         slot.starts_at >= datetime_range.begin
       end
@@ -17,26 +24,26 @@ module CreneauxSearch::Calculator
         .in_range(datetime_range)
         .includes(:agent)
         .where(agent: Agent.excluding_pending_invitation)
-      scope = scope.includes(:organisation, organisation: :territory) if motif.organisation.territory.work_on_sunday?
+
       scope = scope.where(agent: agents) if agents&.any?
       scope = scope.where(lieu: lieu) if lieu.present?
       scope
     end
 
-    def free_times_from(plage_ouvertures, datetime_range)
+    def free_times_from(plage_ouvertures, datetime_range, work_on_off_days:)
       free_times = {}
       plage_ouvertures.each do |plage_ouverture|
-        free_times[plage_ouverture] = calculate_free_times(plage_ouverture, datetime_range)
+        free_times[plage_ouverture] = calculate_free_times(plage_ouverture, datetime_range, work_on_off_days:)
       end
       free_times.select { |_, v| v&.any? }
     end
 
-    def calculate_free_times(plage_ouverture, datetime_range)
+    def calculate_free_times(plage_ouverture, datetime_range, work_on_off_days:)
       ranges = ranges_for(plage_ouverture, datetime_range)
       return [] if ranges.empty?
 
       ranges.map do |range|
-        [range, BusyTimePreloader.start_loading_busy_times_for(range, plage_ouverture)]
+        [range, BusyTimePreloader.start_loading_busy_times_for(range, plage_ouverture, work_on_off_days:)]
       end.flat_map do |range, busy_times_preloader|
         busy_times = busy_times_preloader.busy_times
         split_range_recursively(range, busy_times)
@@ -130,20 +137,21 @@ module CreneauxSearch::Calculator
   end
 
   class BusyTimePreloader
-    def initialize(range, plage_ouverture)
+    def initialize(range, plage_ouverture, work_on_off_days)
       @range = range
       @plage_ouverture = plage_ouverture
+      @work_on_off_days = work_on_off_days
       start_loading!
     end
 
     attr_reader :range, :plage_ouverture
 
-    def self.start_loading_busy_times_for(range, plage_ouverture)
-      new(range, plage_ouverture)
+    def self.start_loading_busy_times_for(range, plage_ouverture, work_on_off_days:)
+      new(range, plage_ouverture, work_on_off_days)
     end
 
     def busy_times
-      busy_times = busy_times_from_off_days
+      busy_times = @work_on_off_days ? [] : busy_times_from_off_days
 
       # On calcule les occurrences des absences en premier pour laisser aux rdvs le temps de finir de charger
       busy_times += busy_times_from_absences
@@ -197,8 +205,6 @@ module CreneauxSearch::Calculator
     end
 
     def busy_times_from_off_days
-      return [] if @plage_ouverture.organisation.territory.work_on_sunday?
-
       OffDays.all_in_date_range(range).map do |off_day|
         BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
       end

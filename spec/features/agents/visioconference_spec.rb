@@ -28,7 +28,7 @@ RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
 
     click_button("Continuer")
     expect(page).to have_content "Vous devez indiquer un numéro de téléphone mobile ou une adresse email pour que l'usager puisse recevoir le lien de visioconférence."
-    find(".fa-edit").click
+    find(".fr-icon-edit-line").click
     fill_in "Email", with: "francis@factice.org"
     click_button "Enregistrer"
 

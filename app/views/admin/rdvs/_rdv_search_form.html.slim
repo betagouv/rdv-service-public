@@ -76,8 +76,8 @@
               input_html: { class: "select2-input" }
       = date_input(f, :start, label = "Période - Début", wrapper: "horizontal_form")
       = date_input(f, :end, label = "Période - Fin", wrapper: "horizontal_form")
-  .d-flex.justify-content-end
-    = link_to "Afficher les RDVs du jour", admin_organisation_rdvs_path(current_organisation, start: Time.zone.today, end: Time.zone.today), class: "btn btn-link"
-    = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "btn btn-link"
+  .fr-btns-group.fr-btns-group--inline.fr-btns-group--right.fr-btns-group--icon-left.fr-mb-n4v
+    = link_to "Afficher les RDV du jour", admin_organisation_rdvs_path(current_organisation, start: Time.zone.today, end: Time.zone.today), class: "fr-btn fr-btn--tertiary-no-outline"
+    = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "fr-btn fr-btn--tertiary-no-outline"
     = f.hidden_field :per
-    input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
+    input.fr-btn type="submit" value="Rafraîchir la liste"

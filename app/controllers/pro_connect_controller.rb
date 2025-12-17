@@ -155,16 +155,10 @@ class ProConnectController < ApplicationController
       redirect_to new_agent_session_path and return
     end
 
-    # On trouve un agent par e-mail et cet agent porte un autre sub.
-    if agent_by_email&.pro_connect_openid_sub && agent_by_email.pro_connect_openid_sub != sub
-      error_message = <<~ERROR
-        Votre compte ProConnect est lié à l'adresse e-mail #{callback_client.user_email}.<br />
-        Un compte agent existe déjà sur #{current_domain.name} pour cette adresse email, cependant il est lié à un autre compte ProConnect.<br />
-        Nous vous invitons à #{link_to_demande_support('contacter le support', callback_client)}.
-      ERROR
-      Sentry.capture_message(error_message, extra: { user_info: callback_client.user_info })
-      flash[:error] = error_message
-      redirect_to new_agent_session_path and return
+    # On ne trouve un agent que par e-mail et cet agent porte un autre sub.
+    if !agent_by_sub && agent_by_email&.pro_connect_openid_sub && agent_by_email.pro_connect_openid_sub != sub
+      extra = { user_info: callback_client.user_info, old_sub: agent_by_email.pro_connect_openid_sub }
+      Sentry.capture_message("Réconciliation ProConnect via e-mail, sub existant écrasé", extra:)
     end
 
     agent = agent_by_sub || agent_by_email
