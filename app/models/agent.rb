@@ -1,9 +1,10 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns += %w[connected_with_agent_connect]
+  self.ignored_columns += %w[connected_with_agent_connect display_saturdays display_cancelled_rdv]
   include Agent::CaldavConfiguration
   include Agent::FeatureFlags
+  include Agent::HasPreferences
 
   encrypts :caldav_password, deterministic: true
 

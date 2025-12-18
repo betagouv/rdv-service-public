@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_130457) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_17_221244) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -153,6 +153,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_130457) do
     t.datetime "blog_read_at"
     t.string "pro_connect_openid_sub"
     t.string "caldav_sync_token"
+    t.jsonb "preferences", default: {}, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
