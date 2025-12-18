@@ -93,15 +93,12 @@ module ApplicationHelper
     tag.span(sector.human_id, class: "badge badge-light text-monospace")
   end
 
-  def aligned_flex_row(fa_icon_name, &block)
-    tag.div(class: "flex-row-aligned") do
-      tag.i(class: class_names("fa", fa_icon_name)) + tag.div(&block)
-    end
-  end
-
   def boolean_tag(value, &block)
-    fa_icon_name = value ? "fa-check" : "fa-exclamation-triangle text-warning"
-    aligned_flex_row(fa_icon_name, &block)
+    icon_classes = value ? "fr-icon-checkbox-fill" : "fr-icon-warning-fill text-warning"
+
+    tag.div(class: "flex-row-aligned") do
+      tag.span(class: icon_classes) + tag.div(&block)
+    end
   end
 
   def boolean_attribute_tag(object, attribute_name)
