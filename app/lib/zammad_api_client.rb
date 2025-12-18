@@ -9,6 +9,7 @@ class ZammadApiClient
       builder.request :json
       builder.response :json
       builder.response :raise_error # raise an error on 4xx and 5xx responses
+      builder.use :sentry_breadcrumbs, scrub_request_body: true
     end
   end
 
