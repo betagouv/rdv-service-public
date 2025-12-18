@@ -233,7 +233,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
 
     doc.add_screenshot(page,
                        text: "Je vois mon historique de rendez-vous",
-                       wait_for: "vous voyez les RDV de toute l'organisation",
+                       wait_for: "vous voyez les rendez-vous de toute l'organisation",
                        accessibility_checks: false)
   end
 end

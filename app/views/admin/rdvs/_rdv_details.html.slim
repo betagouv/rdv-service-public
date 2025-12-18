@@ -1,6 +1,6 @@
 - if rdv.created_by_user?
   p
-    i.fa.fa-fw.fa-at.text-primary-blue>
+    = icon("fr-icon-global-line", class: "text-primary-blue fr-mr-1w")
     | RDV pris sur Internet
 
 .d-flex.fr-mb-1w
@@ -44,8 +44,7 @@
 - rdv.participations.select(&:prescription?).each do |participation|
   - author = participation.created_by
   .d-flex.card-text.mt-1
-    div.mr-1
-      i.fa-solid.fa-user-plus.text-primary-blue
+    = icon("fr-icon-user-add-fill", class: "text-primary-blue fr-mr-1w")
     div
       |> Rendez-vous pris par
       a href="#prescripteur-explanation#{participation.id}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"

@@ -40,7 +40,12 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
 
         expect(notion_client).to have_received(:update_page).with(
           page_id: "page_id",
-          properties: { "NOMBRE DE RDV" => 2, "DATE CREATION DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") } }
+          properties: {
+            "NOMBRE DE RDV" => 2,
+            "DATE CREATION DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") },
+            "DATE CREATION ESPACE" => { start: territory.created_at.strftime("%Y-%m-%d") },
+            "NOMBRE AGENTS ACTIFS" => 0,
+          }
         )
       end
     end
@@ -53,7 +58,12 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
 
         expect(notion_client).to have_received(:update_page).with(
           page_id: "page_id",
-          properties: { "NOMBRE DE RDV" => 1, "DATE CREATION DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") } }
+          properties: {
+            "NOMBRE DE RDV" => 1,
+            "DATE CREATION DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") },
+            "DATE CREATION ESPACE" => { start: territory.created_at.strftime("%Y-%m-%d") },
+            "NOMBRE AGENTS ACTIFS" => 0,
+          }
         )
       end
 
@@ -63,7 +73,15 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
         it "le nombre de RDV est mis à jour dans la page Notion avec 0 et la date du dernier RDV est nulle" do
           described_class.new.perform
 
-          expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => 0, "DATE CREATION DERNIER RDV" => nil })
+          expect(notion_client).to have_received(:update_page).with(
+            page_id: "page_id",
+            properties: {
+              "NOMBRE DE RDV" => 0,
+              "DATE CREATION DERNIER RDV" => nil,
+              "DATE CREATION ESPACE" => { start: territory.created_at.strftime("%Y-%m-%d") },
+              "NOMBRE AGENTS ACTIFS" => 0,
+            }
+          )
         end
       end
     end
@@ -71,10 +89,10 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
     context "quand la variable COMPTE PROD de la page Notion est une organisation inconnue" do
       let(:compte_prod_url) { "https://demo.rdv-solidarites.fr/organisations/26739" }
 
-      it "retourne un compte nul et une date nulle" do
+      it "ne fait rien" do
         described_class.new.perform
 
-        expect(notion_client).to have_received(:update_page).with(page_id: "page_id", properties: { "NOMBRE DE RDV" => nil, "DATE CREATION DERNIER RDV" => nil })
+        expect(notion_client).not_to have_received(:update_page)
       end
     end
   end

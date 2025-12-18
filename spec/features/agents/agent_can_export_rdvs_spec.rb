@@ -48,7 +48,7 @@ RSpec.describe "agent can export RDVs" do
   it "exports by participation" do
     visit admin_organisation_rdvs_url(organisation)
     perform_enqueued_jobs do
-      click_on "Exporter les RDVs par usager en XLS"
+      click_on "Exporter les RDV par usager en XLS"
     end
 
     open_email(agent.email)

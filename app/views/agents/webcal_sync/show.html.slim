@@ -1,5 +1,10 @@
 - content_for :title, t(".title")
 
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Synchronisation d'agenda", href: agents_calendar_sync_path
+    = b.with_breadcrumb label: "Lien de synchronisation"
+
 p.mb-1 Allez dans votre agenda externe et ajoutez un nouveau calendrier avec cette URL&nbsp;:
 
 - calendar_url = ics_calendar_url(current_agent.calendar_uid, protocol: request.protocol, format: :ics)
@@ -18,7 +23,3 @@ p Si jamais votre lien de synchronisation a été partagé par erreur et qu’il
 div.rdv-text-align-center
   = simple_form_for(current_agent, url: agents_calendar_sync_webcal_sync_path) do |f|
     = f.submit "Réinitialiser mon lien de synchronisation", class: "btn btn-secondary", data: { confirm: "Attention, si vous réinitialisez votre lien de synchronisation, vous devrez entrer le nouveau lien dans votre agenda externe" }
-
-= link_to agents_calendar_sync_path, class: "mt-5" do
-  i.fa.fa-arrow-left
-  |< Retour à la synchronisation d'agenda

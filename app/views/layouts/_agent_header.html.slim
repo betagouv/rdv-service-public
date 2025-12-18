@@ -6,7 +6,7 @@ header.header.bg-white
     = link_to root_path, class: "header-brand ml-4" do
       = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr logo-dsfr--compactable"
     button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
-      i.fa.fa-bars.text-primary-blue
+      i.fr-icon-menu-fill.text-primary-blue
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
         = render "layouts/rdv_a_renseigner", organisation: defined?(current_organisation) && current_organisation

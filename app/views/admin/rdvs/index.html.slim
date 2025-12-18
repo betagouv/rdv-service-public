@@ -8,9 +8,9 @@
     - if @breadcrumb_page == "agenda" && @form.agent.present?
       = render "common/fil_ariane", titles_and_paths: [["Agenda de #{@form.agent.full_name}", admin_organisation_planning_agenda_path(current_organisation, agent_id: @form.agent.id, date: @form.start)]], current_page_title: "Liste des RDV"
     - if @breadcrumb_page == "user" && @form.user.present?
-      = render "common/fil_ariane", titles_and_paths: [["Usagers", admin_organisation_users_path(current_organisation)], [@form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)]], current_page_title: "RDVs #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
+      = render "common/fil_ariane", titles_and_paths: [["Usagers", admin_organisation_users_path(current_organisation)], [@form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)]], current_page_title: "RDV #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
     - if @breadcrumb_page == "organisation_stats"
-      = render "common/fil_ariane", titles_and_paths: [["Statistiques de l'organisation", admin_organisation_stats_path(current_organisation)]], current_page_title: "RDVs #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
+      = render "common/fil_ariane", titles_and_paths: [["Statistiques de l'organisation", admin_organisation_stats_path(current_organisation)]], current_page_title: "RDV #{Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase}"
 
   .card
     .card-body
@@ -18,22 +18,17 @@
 
     - if @rdvs.total_count > 0
       .card-footer
-        div.d-flex.justify-content-end.align-items-center
-          = button_to participations_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "Veuillez patienter…" do
-            span> Exporter les RDVs par usager en XLS
-            i.fa.fa-download>
-          = button_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "Veuillez patienter…" do
-            span
-              - if @rdvs.total_count == 1
-                |> Exporter le RDV en XLS
-              - else
-                |> Exporter les #{@rdvs.total_count} RDV en XLS
+        .fr-btns-group.fr-btns-group--inline.fr-btns-group--sm.fr-btns-group--right.fr-btns-group--icon-left.d-print-none
+          = button_to participations_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "fr-btn fr-btn--tertiary fr-icon-download-line", disable_with: "Veuillez patienter…" do
+            | Exporter les RDV par usager en XLS
+          = button_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "fr-btn fr-btn--tertiary fr-icon-download-line", disable_with: "Veuillez patienter…" do
+            - if @rdvs.total_count == 1
+              | Exporter le RDV en XLS
+            - else
+              | Exporter les #{@rdvs.total_count} RDV en XLS
 
-            i.fa.fa-download>
-
-          .btn.btn-sm.btn-link.d-print-none role="button" data-controller="print" data-action="click->print#print"
-            span> Imprimer
-            i.fa.fa-print>
+          .fr-btn.fr-btn--tertiary.fr-icon-printer-line role="button" data-controller="print" data-action="click->print#print"
+            | Imprimer
 
   = render "admin/rdvs/rdv_visibility"
   - if CopyPlanningToNewInstanceJob.agent_might_have_rdvs_on_old_instance?(current_agent, @form.start || Time.zone.today)
@@ -77,10 +72,7 @@
             .fr-grid-row.justify-content-center
               .fr-col-6.rdv-text-align-center.fr-mt-2w.fr-mb-5w
                 p.mb-2.lead
-                  | Aucun RDV
-                span.fa-stack.fa-4x
-                  i.fa.fa-circle.fa-stack-2x.text-primary
-                  i.far.fa-calendar.fa-stack-1x.text-white
+                  | Aucun rendez-vous
 
 .print-content.px-20
   h1 Liste de RDV de l’organisation #{current_organisation.name}
