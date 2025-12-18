@@ -3,27 +3,25 @@ ruby:
   content_for(:title) { t(".page_title", starts_at: l(@rdv.starts_at, format: :dense)) }
 
 = render "card", rdv_wizard_form: @rdv_wizard, previous_steps: [ { step: 1, value: motif_name_and_location_type(@rdv.motif) }, { step: 2, value: users_inline_list_for_agents(@rdv.users) } ], step_title: t(".step_title"), current_step: 3, next_step_title: t("admin.rdv_wizard_steps.step4.step_title") do
-  = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
+  = form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get, builder: Dsfr::FormBuilder) do |f|
     = render "model_errors", model: @rdv_wizard, f: f
     = collapsible_form_fields_for_warnings(@rdv_wizard) do
       = render "hidden_fields", f: f, step: 3, fields: %i[motif_id context], user_ids: @rdv.user_ids
-      .form-row
-        .col-md-6 data={ "controller": "past-date-alert" }
-          = datetime_input(f, :starts_at, input_html: { data: { "past-date-alert-target": "date-input" } })
-        .col-md-6= f.input :duration_in_min, as: :integer
+      .fr-grid-row.fr-grid-row--gutters
+        .fr-col-md-6 data={ "controller": "past-date-alert" }
+          = dsfr_datetime_input(f, :starts_at, label: Rdv.human_attribute_name(:starts_at), data: { "past-date-alert-target": "date-input" })
+        .fr-col-md-6= f.dsfr_number_field :duration_in_min, label: Rdv.human_attribute_name(:duration_in_min)
       - if @rdv.public_office?
         - new_lieu_record = @rdv.lieu&.new_record?
         - controller_data = { "controller": "rdv-lieu",
                 "initial-state": (new_lieu_record ? "single_use" : "existing"),
                 "select-placeholder-single-use-lieu": t(".select_placeholder_single_use_lieu"),
                 "select-placeholder-existing-lieu": t(".select_placeholder_existing_lieu"), }
-        .form-group data=controller_data
-          = f.label :lieu, required: true
+        .fr-input-group data=controller_data
+          = f.label :lieu, class: "fr-label required"
           fieldset
             - lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name
-            = f.association :lieu, collection: lieux, label_method: :full_name,
-              label: false,  include_blank: true,  required: false,
-              input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true, "select2-config": { disableSearch: lieux.count <= 5  } } }
+            = f.select :lieu_id, lieux.collect { |l| [l.full_name, l.id] }, { include_blank: true }, class: "select2-input fr-select", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true, "select2-config": { disableSearch: lieux.count <= 5 } }
             small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
               = t(".single_use_lieu_hint_html")
           fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
@@ -33,8 +31,10 @@ ruby:
             small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
               = t(".existing_lieu_hint_html")
       - elsif @rdv.home?
-        = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}", input_html: { data: { "address-autocomplete": "on" }, dir: "ltr" }
+        = f.dsfr_text_field :address, label: "Lieu (RDV à domicile)", disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}", data: { "address-autocomplete": "on" }, dir: "ltr"
       - elsif @rdv.phone?
-        = f.input :address, label: "Lieu (RDV téléphonique)",  disabled: true, hint: "Il n'y a pas d'adresse car le RDV est téléphonique", input_html: { data: { "address-autocomplete": "on", dir: "ltr" } }
-      = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input", data: { "auto-select-sole-option": true } }
+        = f.dsfr_text_field :address, label: "Lieu (RDV téléphonique)", disabled: true, hint: "Il n'y a pas d'adresse car le RDV est téléphonique", data: { "address-autocomplete": "on" }, dir: "ltr"
+      .fr-input-group
+        = f.label :agents, class: "fr-label"
+        = f.select :agent_ids, @rdv.motif.authorized_agents.collect { |a| [a.reverse_full_name_and_service, a.id] }, {}, multiple: true, class: "select2-input fr-select", data: { "auto-select-sole-option": true }
       = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

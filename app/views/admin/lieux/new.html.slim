@@ -8,7 +8,8 @@
   .col-md-12.col-lg-8
     .card
       .card-body
-        = simple_form_for [:admin, @lieu.organisation, @lieu] do |f|
+        = form_for [:admin, @lieu.organisation, @lieu], builder: Dsfr::FormBuilder do |f|
+          = render "model_errors", model: @lieu, f: f
           = render "lieu_fields", f: f
 
           .col.text-right.fr-p-0

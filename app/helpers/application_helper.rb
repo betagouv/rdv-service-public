@@ -43,6 +43,15 @@ module ApplicationHelper
     )
   end
 
+  def dsfr_datetime_input(form, field, data: {}, **options)
+    value = form.object.send(field)&.strftime("%d/%m/%Y %H:%M")
+    merged_data = { behaviour: "datetimepicker" }.merge(data)
+    label = options.delete(:label)
+    label ||= form.object.class.human_attribute_name(field) if form.object.class.respond_to?(:human_attribute_name)
+    label ||= field.to_s.humanize
+    form.dsfr_text_field(field, value: value, data: merged_data, autocomplete: "off", label: label, **options)
+  end
+
   def date_input(form, field, label = nil, input_html: {}, **kwargs)
     form.input(
       field,

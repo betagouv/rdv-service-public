@@ -16,9 +16,9 @@ div data-controller="destroyable"
     = render "admin/users/notifications_preferences", user: participation.user.user_to_notify
     - if participation.user.user_to_notify.valid_email? || participation.user.user_to_notify.phone_number.present?
       h6= t("admin.participations.notifications_overrides")
-      = form.input :send_lifecycle_notifications, wrapper: false
+      = form.dsfr_check_box :send_lifecycle_notifications
       - if current_organisation.rdv_insertion?
         span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
-      = form.input :send_reminder_notification, wrapper: false
+      = form.dsfr_check_box :send_reminder_notification
       - if current_organisation.rdv_insertion?
         span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)

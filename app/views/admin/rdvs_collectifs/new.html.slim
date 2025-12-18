@@ -5,23 +5,25 @@
 
 .row.justify-content-md-center
   .col-md-12.col-lg-8
-    = simple_form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :post) do |f|
+    = form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :post, builder: Dsfr::FormBuilder) do |f|
       .card
         .card-header
           h3.rdv-text-align-center #{motif_name_and_service(@rdv.motif)}
         .card-body.px-3
           = render "model_errors", model: @rdv, f: f
 
-          .form-row
-            .col-md-6 data={ "controller": "past-date-alert" }
-              = datetime_input(f, :starts_at, input_html: { data: { "past-date-alert-target": "date-input" } })
-            .col-md-6= f.input :duration_in_min, as: :integer
-          = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input", data: { "auto-select-sole-option": true } }
-          = f.input :name, wrapper_html: { class: "mb-1" }
+          .fr-grid-row.fr-grid-row--gutters
+            .fr-col-md-6 data={ "controller": "past-date-alert" }
+              = dsfr_datetime_input(f, :starts_at, label: Rdv.human_attribute_name(:starts_at), data: { "past-date-alert-target": "date-input" })
+            .fr-col-md-6= f.dsfr_number_field :duration_in_min, label: Rdv.human_attribute_name(:duration_in_min)
+          .fr-input-group
+            = f.label :agents, class: "fr-label"
+            = f.select :agent_ids, @rdv.motif.authorized_agents.collect { |a| [a.reverse_full_name_and_service, a.id] }, {}, multiple: true, class: "select2-input fr-select", data: { "auto-select-sole-option": true }
+          = f.dsfr_text_field :name, label: Rdv.human_attribute_name(:name), class: "fr-mb-1w"
           p
             span.font-14.font-weight-bold= "Avertissement : "
             span.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
-          = f.input :context
+          = f.dsfr_text_field :context, label: Rdv.human_attribute_name(:context)
           = f.hidden_field :motif_id, value: @rdv.motif_id
 
           = render "admin/rdvs_collectifs/form_visio_fields", rdv_form: @rdv_form
@@ -32,12 +34,11 @@
                     "initial-state": (new_lieu_record ? "single_use" : "existing"),
                     "select-placeholder-single-use-lieu": t(".select_placeholder_single_use_lieu"),
                     "select-placeholder-existing-lieu": t(".select_placeholder_existing_lieu"), }
-            .form-group data=controller_data
-              = f.label :lieu, required: true
+            .fr-input-group data=controller_data
+              = f.label :lieu, class: "fr-label required"
               fieldset
-                = f.association :lieu, collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name, label_method: :full_name,
-                  label: false,  include_blank: true,  required: false,
-                  input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true } }
+                - lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name
+              = f.select :lieu_id, lieux.collect { |l| [l.full_name, l.id] }, { include_blank: true }, class: "select2-input fr-select", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true }
                 small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
                   = t(".single_use_lieu_hint_html")
               fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
@@ -47,8 +48,8 @@
                 small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
                   = t(".existing_lieu_hint_html")
 
-          = f.input :max_participants_count, input_html: { min: 1 }
+          = f.dsfr_number_field :max_participants_count, label: Rdv.human_attribute_name(:max_participants_count), min: 1
 
           .d-flex.justify-content-end
             .btn-group
-              = f.button :submit, t("helpers.submit.submit")
+              = f.submit t("helpers.submit.submit"), class: "fr-btn"
