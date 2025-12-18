@@ -1,0 +1,41 @@
+/# locals: (rdv_form:)rdvvisiohtm
+- if rdv_form.visio?
+
+  / on instancie un form builder DSFR ici tant que les forms edit et new RDV collectif ne sont pas encore au DSFR
+  - dsfr_f = Dsfr::FormBuilder.new(:rdv, rdv_form, self, {})
+
+  fieldset.fr-fieldset[data-controller="dependent-input"]
+    legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-mt-1w
+      | URL de visioconférence
+
+    = dsfr_f.dsfr_radio_option :visio_url_type,
+      value: "default",
+      label_text: "Outil de visioconférence par défaut",
+      hint: "Une URL unique sera créée via webconf.numerique.gouv.fr",
+      checked: rdv_form.visio_url_type == "default",
+      "data-action": "change->dependent-input#toggle"
+
+    - custom_label = capture do
+      div
+        | URL de visioconférence personnalisée
+        button.fr-btn--tooltip.fr-btn.fr-ml-1w.rdv-display-inline-block[
+          type="button"
+          aria-describedby="tooltip-visio-custom"
+        ]
+        span.fr-tooltip.fr-placement#tooltip-visio-custom[role="tooltip"]
+          | Nous vous recommandons d’utiliser webinaire.numerique.gouv.fr
+
+    = dsfr_f.dsfr_radio_option :visio_url_type,
+      value: "custom",
+      label_text: custom_label,
+      hint: nil,
+      checked: rdv_form.visio_url_type == "custom",
+      "data-dependent-input-target": "controllingInput",
+      "data-action": "change->dependent-input#toggle"
+
+    .fr-fieldset__element.fr-collapse.fr-collapse--expanded.fr-mx-4w.fr-mt-n2w[
+      data-dependent-input-target="dependentInputWrapper"
+    ]
+      = dsfr_f.dsfr_text_field :visio_url_custom,
+        label: "URL de visioconférence",
+        "data-dependent-input-target": "dependentInput"
