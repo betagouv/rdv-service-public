@@ -20,7 +20,8 @@ module Caldav
 
       if @agent.caldav_sync_token.present?
         collection = @agent.caldav_client.calendars.sync(@agent.caldav_agenda_url, @agent.caldav_sync_token)
-        collection.changes.each do |event|
+        events = collection.changes
+        events.each do |event|
           if event.calendar_data.nil?
             Absence.where(agent: @agent, caldav_url: event.url).destroy_all
           else
@@ -46,25 +47,27 @@ module Caldav
       return if AgentsRdv.exists?(caldav_url: event.url) # On ne fait rien si il s’agit d’un événement provenant de chez nous
       return if event.dtstart < (Time.now.in_time_zone - 1.week).beginning_of_week # On ne gère pas les absences passées
 
-      absence = Absence.find_or_initialize_by(agent: @agent, caldav_url: event.url)
+      Absence.transaction do
+        Absence.where(agent: @agent, caldav_url: event.url).delete_all
 
-      # Si l’événement existe et que l’agent s’est marqué comme disponible, on supprime l’absence
-      # Sinon on ignore l’événement
-      # Voir https://www.ietf.org/rfc/rfc2445.txt (4.8.2.7 Time Transparency).
-      if event.transp == "TRANSPARENT"
-        absence.destroy if absence.persisted?
-        return
+        from = 1.month.ago
+        to = 1.month.from_now
+        absence_hashes = Caldav::RruleExpander.call(ical_calendar: event.calendar_data, from:, to:).map do |recurrence|
+          {
+            agent_id: @agent.id,
+            caldav_url: event.url,
+
+            first_day: recurrence.starts_at.to_date,
+            start_time: recurrence.starts_at,
+
+            end_day: recurrence.ends_at.to_date,
+            end_time: recurrence.ends_at,
+
+            title: "Indisponibilité provenant d’un agenda externe",
+          }
+        end
+        Absence.insert_all!(absence_hashes) # rubocop:disable Rails/SkipsModelValidations
       end
-
-      # TODO: gérer les événements récurrents
-      absence.assign_attributes(
-        first_day: event.dtstart.to_date,
-        end_day: event.dtend.to_date,
-        start_time: event.dtstart,
-        end_time: event.dtend,
-        title: "Indisponibilité provenant d’un agenda externe"
-      )
-      absence.save!
     end
 
     def synced_during_last_minute?(agent_id)
