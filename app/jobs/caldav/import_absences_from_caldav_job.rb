@@ -21,22 +21,26 @@ module Caldav
       if @agent.caldav_sync_token.present?
         collection = @agent.caldav_client.calendars.sync(@agent.caldav_agenda_url, @agent.caldav_sync_token)
         events = collection.changes
-        events.each do |event|
-          if event.calendar_data.nil?
-            Absence.where(agent: @agent, caldav_url: event.url).destroy_all
-          else
-            upsert_absence(event)
+        Absence.transaction do
+          events.each do |event|
+            if event.calendar_data.nil?
+              Absence.where(agent: @agent, caldav_url: event.url).destroy_all
+            else
+              upsert_absence(event)
+            end
           end
+          @agent.update!(caldav_sync_token: collection.sync_token)
         end
-        @agent.update!(caldav_sync_token: collection.sync_token)
       else
         sync_token = @agent.caldav_client.calendars.find(@agent.caldav_agenda_url, sync: true).sync_token
         events = @agent.caldav_client.events.list(@agent.caldav_agenda_url)
 
-        events.each do |event|
-          upsert_absence(event)
+        Absence.transaction do
+          events.each do |event|
+            upsert_absence(event)
+          end
+          @agent.update!(caldav_sync_token: sync_token)
         end
-        @agent.update!(caldav_sync_token: sync_token)
       end
     end
     # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
