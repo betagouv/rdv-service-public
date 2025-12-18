@@ -231,4 +231,67 @@ RSpec.describe Caldav::RruleExpander do
       expect(actual_reccurrences).to match(expected_recurrences)
     end
   end
+
+  describe "change to a recurring event" do
+    # Le payload iCal ci-dessous a été reçu lorsque j'ai déplacé une récurrence
+    # d'un événement "Daily" à 11:15.
+    let(:every_day_with_exceptions) do
+      <<~ICALENDAR
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Open-Xchange//8.43.61//EN
+        BEGIN:VTIMEZONE
+        TZID:Europe/Paris
+        LAST-MODIFIED:20250410T142247Z
+        TZURL:https://www.tzurl.org/zoneinfo-outlook/Europe/Paris
+        X-LIC-LOCATION:Europe/Paris
+        BEGIN:DAYLIGHT
+        TZNAME:CEST
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0200
+        DTSTART:19700329T020000
+        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+        END:DAYLIGHT
+        BEGIN:STANDARD
+        TZNAME:CET
+        TZOFFSETFROM:+0200
+        TZOFFSETTO:+0100
+        DTSTART:19701025T030000
+        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+        END:STANDARD
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        DTSTAMP:20251218T162713Z
+        CLASS:PUBLIC
+        CREATED:20251218T160912Z
+        DTEND;TZID=Europe/Paris:20251215T113000
+        DTSTART;TZID=Europe/Paris:20251215T111500
+        LAST-MODIFIED:20251218T162713Z
+        PRIORITY:0
+        RECURRENCE-ID;TZID=Europe/Paris:20251215T101500
+        RELATED-TO;RELTYPE=X-CALENDARSERVER-RECURRENCE-SET:4bb41a97-1397-417d-a8a8-
+         ec29643bae12
+        SEQUENCE:6
+        SUMMARY:Daily
+        TRANSP:OPAQUE
+        UID:244ba0d4-6b21-4801-9a52-83f3dc6b4e7f
+        X-OX-SPLIT-FROM:20c37ba2-34a4-47ea-8461-9876914904c6
+        END:VEVENT
+        END:VCALENDAR
+      ICALENDAR
+    end
+
+    it "returns all occurrences" do
+      from =  Time.zone.parse("2025-12-15 00:00")
+      to =    Time.zone.parse("2025-12-22 23:59")
+      expected_recurrences = [
+        Recurrence::Occurrence.new(
+          starts_at: Time.zone.parse("2025-12-15 11:15 +0100"),
+          ends_at: Time.zone.parse("2025-12-15 11:30 +0100")
+        ),
+      ]
+      actual_reccurrences = described_class.call(ical_calendar: every_day_with_exceptions, from:, to:)
+      expect(actual_reccurrences).to match(expected_recurrences)
+    end
+  end
 end
