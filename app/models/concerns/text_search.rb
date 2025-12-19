@@ -33,8 +33,9 @@ module TextSearch
   end
 
   class_methods do
-    def search_by_text(term)
+    def search_by_text(term, organisation_ids: nil)
       return none if term.blank?
+      raise "organisation_ids is only for users" if organisation_ids.present? && self != User
 
       term = clean_search_term(term)
 
@@ -44,7 +45,9 @@ module TextSearch
           where("\"#{table_name}\".\"#{email_column}\" LIKE ?", "#{term}%")
         end.reduce(:or)
       else
-        full_text_search(term)
+        scope = all
+        scope = scope.where("denormalized_organisation_ids && ARRAY[#{organisation_ids.join(', ')}]::bigint[]") if organisation_ids.present?
+        scope.full_text_search(term)
       end
     end
 

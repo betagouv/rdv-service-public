@@ -33,6 +33,9 @@ class Participation < ApplicationRecord
   before_create :set_restricted_authentication_token
   after_save :update_counter_cache
   after_destroy :update_counter_cache
+  after_save do
+    user.update_columns(denormalized_organisation_ids: user.organisation_ids)
+  end
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
 
   # Scopes

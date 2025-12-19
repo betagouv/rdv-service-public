@@ -86,6 +86,9 @@ class User < ApplicationRecord
   # Hooks
   before_save :set_email_to_null_if_blank
   before_save :clear_notification_email_if_email_present
+  after_save do
+    update_columns(denormalized_organisation_ids: organisation_ids)
+  end
   normalizes :email, with: ->(email) { email.downcase }
 
   # Scopes

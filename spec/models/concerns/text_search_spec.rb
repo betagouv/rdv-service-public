@@ -52,6 +52,24 @@ RSpec.describe TextSearch, type: :concern do
       match_in_email = create(:user, first_name: "Frédéric", last_name: "Petit", email: "nicolas@example.com")
       expect(described_class.search_by_text("nicolas")).to eq([match_in_last_name, match_in_first_name, match_in_email])
     end
+
+    it "allows scoping by organisation" do
+      org_1 = create(:organisation)
+      org_2 = create(:organisation)
+
+      patricia_org_1 = create(:user, first_name: "patricia", organisations: [org_1])
+      martinus_org_2 = create(:user, first_name: "martinus", organisations: [org_2])
+
+      expect(described_class.search_by_text("patri")).to eq([patricia_org_1])
+      expect(described_class.search_by_text("patri", organisation_ids: [org_1.id])).to eq([patricia_org_1])
+      expect(described_class.search_by_text("patri", organisation_ids: [org_2.id])).to eq([])
+      expect(described_class.search_by_text("patri", organisation_ids: [org_1.id, org_2.id])).to eq([patricia_org_1])
+
+      expect(described_class.search_by_text("marti")).to eq([martinus_org_2])
+      expect(described_class.search_by_text("marti", organisation_ids: [org_1.id])).to eq([])
+      expect(described_class.search_by_text("marti", organisation_ids: [org_2.id])).to eq([martinus_org_2])
+      expect(described_class.search_by_text("marti", organisation_ids: [org_1.id, org_2.id])).to eq([martinus_org_2])
+    end
   end
 
   describe(Agent) do
