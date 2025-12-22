@@ -7,9 +7,9 @@
 / All forms
 = f.dsfr_text_field :name, label: Lieu.human_attribute_name(:name), required: true
 
-= f.dsfr_text_field :address, label: Lieu.human_attribute_name(:address), data: { "address-autocomplete": "on" }
+= f.dsfr_text_field :address, label: Lieu.human_attribute_name(:address), data: { "address-autocomplete": "on" }, required: true
 = f.hidden_field :latitude
 = f.hidden_field :longitude
 
 - unless is_nested_form
-  = f.dsfr_text_field :phone_number, label: Lieu.human_attribute_name(:phone_number), hint: I18n.t("simple_form.hints.lieu.phone_number", app_name: current_domain.name)
+  = f.dsfr_text_field :phone_number, label: Lieu.human_attribute_name(:phone_number), hint: "Facultatif. Ce numéro permet aux usagers de vous contacter. Faites en sorte que les personnes qui répondent au téléphone puissent avoir accès à #{current_domain.name}."

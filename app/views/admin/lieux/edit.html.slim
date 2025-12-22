@@ -8,8 +8,9 @@
   .col-md-12.col-lg-8
     .card
       .card-body
-        = form_for [:admin, @lieu.organisation, @lieu], builder: Dsfr::FormBuilder do |f|
+        = form_for [:admin, @lieu.organisation, @lieu], builder: Dsfr::FormBuilder, display_required_tags: false do |f|
           = render "model_errors", model: @lieu, f: f
+          p.fr-hint-text Sauf mention contraire, tous les champs sont obligatoires.
           = render "lieu_fields", f: f
           .col.text-right.fr-p-0
             = link_to t("helpers.cancel"), admin_organisation_lieux_path(@lieu.organisation), class: "fr-btn fr-btn--tertiary-no-outline fr-mr-1w"

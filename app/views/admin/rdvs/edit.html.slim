@@ -25,7 +25,7 @@
             = f.dsfr_select :motif_id, [[@rdv_form.motif.name, @rdv_form.motif.id]], label: Rdv.human_attribute_name(:motif), disabled: true
             - if @rdv_form.organisation.territory.enable_context_field
               = f.dsfr_text_area :context, label: Rdv.human_attribute_name(:context), rows: 3
-            .fr-grid-row.fr-grid-row--gutters
+            .fr-grid-row.fr-grid-row--gutters.fr-mb-4v
               .fr-col-md-6 data={ "controller": "past-date-alert" }
                 = dsfr_datetime_input(f, :starts_at, label: Rdv.human_attribute_name(:starts_at), data: { "past-date-alert-target": "date-input" })
               .fr-col-md-6= f.dsfr_number_field :duration_in_min, label: Rdv.human_attribute_name(:duration_in_min)
