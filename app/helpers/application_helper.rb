@@ -43,6 +43,8 @@ module ApplicationHelper
     )
   end
 
+  # Le DSFR n'a pas de composant datetimepicker
+  # On crée donc un input personnalisé ici qui utilise notre datetimepicker habituel
   def dsfr_datetime_input(form, field, data: {}, **options)
     value = form.object.send(field)&.strftime("%d/%m/%Y %H:%M")
     merged_data = { behaviour: "datetimepicker" }.merge(data)
