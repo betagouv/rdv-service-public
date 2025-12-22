@@ -9,6 +9,6 @@ class Admin::Territories::MotifCategoriesController < Admin::Territories::BaseCo
   private
 
   def motif_categories_params
-    params.require(:territory).permit(motif_category_ids: [])
+    params.fetch(:territory, { motif_category_ids: [] }).permit(motif_category_ids: [])
   end
 end
