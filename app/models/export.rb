@@ -56,7 +56,6 @@ class Export < ApplicationRecord
   def set_expires_at
     # En expirant les exports à minuit, on empêche qu'ils soient inclus dans le
     # backup Scalingo lancé tous les matins à 2h en été / 1h en hiver (0:00 UTC).
-    midnight = Time.zone.tomorrow.change(hour: 0, minute: 0)
-    self.expires_at = midnight
+    self.expires_at = Time.zone.today.end_of_day
   end
 end
