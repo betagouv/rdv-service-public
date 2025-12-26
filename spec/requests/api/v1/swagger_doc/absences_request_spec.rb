@@ -64,7 +64,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let(:client) { auth_headers["client"].to_s }
 
       response 200, "Crée et renvoie une absence" do
-        let(:agent_id) { 12 }
+        let(:agent_id) { agent.id }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
         let(:start_time) { "08:00" }
