@@ -57,7 +57,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       parameter name: "end_time", in: :query, type: :string, description: "Heure de fin de l'absence", example: "15:00"
 
       let(:organisation) { create(:organisation) }
-      let!(:agent) { create(:agent, id: 12, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
+      let!(:agent) { create(:agent, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
       let(:uid) { auth_headers["uid"].to_s }
