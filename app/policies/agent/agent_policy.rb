@@ -13,7 +13,7 @@ class Agent::AgentPolicy < ApplicationPolicy
   def admin_in_record_organisation?
     (
       record.roles.map(&:organisation_id) &
-        current_agent.roles.access_level_admin.pluck(:organisation_id)
+        current_agent.admin_roles.map(&:organisation_id)
     ).any?
   end
 

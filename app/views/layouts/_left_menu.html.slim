@@ -22,7 +22,7 @@ nav.left-side-menu-wrapper
                   = current_organisation.name
                   - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
                     span= current_agent.services_short_names
-              - if current_agent.organisations.count > 1
+              - if current_agent.organisations_count > 1
                 div.d-flex.align-items-center
                   = icon("fr-icon-arrow-down-s-line", class: "menu-arrow")
           = render "layouts/left_menu/organisation_switcher"

@@ -1,6 +1,6 @@
 class Agent::OrganisationPolicy < ApplicationPolicy
   def in_organisation?
-    current_agent.organisation_ids.include?(@record.id)
+    current_agent.admin_in_organisation?(record)
   end
 
   def admin_in_organisation?

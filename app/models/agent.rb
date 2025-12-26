@@ -233,9 +233,26 @@ class Agent < ApplicationRecord
 
   def access_level_in(organisation)
     if roles.loaded?
-      roles.find { _1.organisation == organisation }&.access_level
+      roles.find { _1.organisation_id == organisation.id }&.access_level
     else
-      roles.where(organisation: organisation).pick(:access_level)
+      roles.where(organisation_id: organisation.id).pick(:access_level)
+    end
+  end
+
+  def admin_roles
+    roles.to_a.select { _1.access_level == AgentRole::ACCESS_LEVEL_ADMIN }
+  end
+
+  def organisations_count
+    # roles est préchargé
+    roles.size
+  end
+
+  def organisation_ids
+    if roles.loaded?
+      roles.map(&:organisation_id)
+    else
+      super
     end
   end
 
