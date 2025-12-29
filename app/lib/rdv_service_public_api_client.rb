@@ -4,38 +4,38 @@ class RdvServicePublicApiClient
   end
 
   def post(path, params)
-    response = Typhoeus.post(
-      "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/#{path}",
-      body: params.to_json,
-      headers: request_headers
-    )
-    if response.failure?
-      Sentry.capture_message("Erreur lors de l'appel à l'api de RDV Service Public")
-    end
-
-    JSON.parse(response.body)
+    connection.post("/api/v1/#{path}", params).body
   end
 
   def get(path, params = {})
-    response = Typhoeus.get(
-      "#{ENV['RDV_SERVICE_PUBLIC_OAUTH_BASE_URL']}/api/v1/#{path}",
-      params:,
-      headers: request_headers
-    )
-
-    if response.failure?
-      Sentry.capture_message("Erreur lors de l'appel à l'api de RDV Service Public")
-    end
-
-    JSON.parse(response.body)
+    connection.get("/api/v1/#{path}", params).body
   end
 
   private
+
+  def base_url
+    ENV.fetch("RDV_SERVICE_PUBLIC_OAUTH_BASE_URL")
+  end
 
   def request_headers
     {
       "Authorization" => "Bearer #{@api_token}",
       "Content-Type" => "application/json",
     }
+  end
+
+  def connection
+    url = ENV.fetch("RDV_SERVICE_PUBLIC_OAUTH_BASE_URL")
+    headers = {
+      "Authorization" => "Bearer #{@api_token}",
+      "Content-Type" => "application/json",
+    }
+
+    @connection ||= Faraday.new(url:, headers:) do |builder|
+      builder.request :json
+      builder.response :json
+      builder.response :raise_error # raise an error on 4xx and 5xx responses
+      builder.use :sentry_breadcrumbs
+    end
   end
 end

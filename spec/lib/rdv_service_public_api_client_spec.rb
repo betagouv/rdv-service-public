@@ -11,12 +11,16 @@ RSpec.describe RdvServicePublicApiClient do
         )
     end
 
-    it "envoie un message dans Sentry avec des breadcrumbs qui indiquent les valeurs de l'appel HTTP" do
+    it "ajoute la requête et la réponse HTTP en breadcrumb Sentry et lève une exception" do
       client = described_class.new("123456")
-      client.post("plage_ouvertures", { lieu_external_ids: "asdf" })
-
-      expect(sentry_events.last.message).to eq("Erreur lors de l'appel à l'api de RDV Service Public")
-      expect(sentry_events.last.breadcrumbs.first.data[:body]).to include("lieu_external_id")
+      expect do
+        client.post("plage_ouvertures", { lieu_external_ids: "asdf" })
+      end.to raise_error(Faraday::ResourceNotFound) do |e|
+        Sentry.capture_exception(e)
+        request_breadcrumb, response_breadcrumb = sentry_events.last.breadcrumbs.compact
+        expect(request_breadcrumb.data[:body]).to eq({ lieu_external_ids: "asdf" }.to_json)
+        expect(response_breadcrumb.data[:body]).to eq({ error_message: ["Aucun lieu trouvé pour le lieu_external_id 123456"] }.to_json)
+      end
     end
   end
 end
