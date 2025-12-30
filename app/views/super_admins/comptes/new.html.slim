@@ -17,6 +17,9 @@ section.main-content__body
     = f.simple_fields_for :territory do |ff|
       = ff.input :name, label: "Nom de l'espace (facultatif)", input_html: { value: @territory_creation_request&.territory_name }, required: false
       = ff.input :category, as: :select, collection: Compte::CATEGORIES, label: "Catégorie de l'espace"
+      .form-group.field-unit--has-many[style="width: 100%"]
+        = ff.label :tag_ids, "Tags", class: "form-control-label"
+        = ff.select :tag_ids, Tag.order(:name).pluck(:name, :id), {}, { multiple: true, class: "form-control", style: "width: 100%" }
 
     = f.simple_fields_for :organisation do |ff|
       div[style="margin: 8px 0"]
