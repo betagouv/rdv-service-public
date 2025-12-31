@@ -17,7 +17,7 @@ class Users::RdvsController < UserAuthController
     @rdvs = if params[:past].present?
               @rdvs.past.order(starts_at: :desc).page(page_number)
             else
-              @rdvs.future.order(:starts_at).page(page_number)
+              @rdvs.future.order(starts_at: :asc).page(page_number)
             end
   end
 
