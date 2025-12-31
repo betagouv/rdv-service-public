@@ -1,5 +1,7 @@
 RSpec.describe "Creating a new account for a new project, which can be a mairie", js: true do
   let(:super_admin) { create(:super_admin, :support) }
+  let!(:tag_france_services) { create(:tag, name: "France Services") }
+  let!(:tag_france_titres) { create(:tag, name: "France Titres") }
 
   let(:autocomplete_response) do
     <<~JSON
@@ -50,6 +52,7 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     new_territory.admin_agents.first
 
     expect(new_territory.services).to be_empty
+    expect(new_territory.tags).to be_empty
 
     new_organisation = new_territory.organisations.first
     expect(new_organisation).to have_attributes(
@@ -72,6 +75,41 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
       subject: "Vous avez été invité sur RDV Service Public",
       from: ["support@rdv-service-public.fr"]
     )
+  end
+
+  it "creates a new organisation with tags" do
+    login_as(super_admin, scope: :super_admin)
+    visit super_admins_root_url(host: "http://www.rdv-service-public-test.localhost")
+
+    click_link "Ouverture de compte"
+
+    fill_in("Nom de l'espace", with: "Mairie de Romainville")
+    select("Commune", from: "Catégorie de l'espace")
+
+    # Sélectionner les tags via select2
+    find(".field-unit--has-many .select2-selection").click
+    find(".select2-results__option", text: "France Services").click
+    find(".field-unit--has-many .select2-selection").click
+    find(".select2-results__option", text: "France Titres").click
+
+    fill_in("Nom de la première organisation", with: "France Services de Romainville")
+    fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
+
+    # Fake autocomplete
+    page.execute_script("document.querySelector('#compte_lieu_latitude').value = '48.880505'")
+    page.execute_script("document.querySelector('#compte_lieu_longitude').value = '2.429639'")
+
+    fill_in("Numéro du département", with: "93")
+
+    fill_in("Prénom", with: "Francis")
+    fill_in(:compte_agent_last_name, with: "Factice")
+    fill_in("Adresse mail", with: "francis@factice.org")
+
+    click_button("Enregistrer")
+    expect(page).to have_content("Le nouvel espace a été créé, et une invitation a été envoyée à francis@factice.org")
+
+    new_territory = Territory.last
+    expect(new_territory.tags).to contain_exactly(tag_france_services, tag_france_titres)
   end
 
   describe "ouverture de compte pour une mairie" do
