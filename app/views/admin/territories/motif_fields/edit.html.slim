@@ -4,15 +4,17 @@
   .col-md-6
     .card
       .card-body
-        h5.card-title= t(".card_title")
-        p.text-muted.font-14= t(".hint_1")
-
-        = simple_form_for current_territory, url: admin_territory_motif_categories_path(current_territory) do |f|
+        = form_for current_territory, url: admin_territory_motif_categories_path(current_territory), builder: Dsfr::FormBuilder do |f|
           = render "model_errors", model: current_territory
+
+          h1.card-title= t(".card_title")
+          p.text-muted.font-14= t(".hint_1")
 
           h6= t("admin.territories.motif_categories.edit.title")
           p.text-muted.font-14= t("admin.territories.motif_categories.edit.hint_1")
-          = f.association :motif_categories, collection: MotifCategory.all, label: "", as: :check_boxes
+
+          - MotifCategory.all.each do |motif_category|
+            = f.dsfr_check_box "motif_category_ids_#{motif_category.id}", { label: motif_category.name, checked: current_territory.motif_category_ids.include?(motif_category.id), name: "territory[motif_category_ids][]" }, motif_category.id, nil
 
           .text-right
-            = f.button :submit
+            = f.submit "Enregistrer", class: "fr-btn"
