@@ -256,7 +256,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
-    good_job (3.27.4)
+    good_job (3.99.1)
       activejob (>= 6.0.0)
       activerecord (>= 6.0.0)
       concurrent-ruby (>= 1.0.2)
@@ -792,7 +792,7 @@ DEPENDENCIES
   dsfr-view-components (~> 4.1)
   factory_bot
   faker
-  good_job (= 3.27.4)
+  good_job (= 3.99.1)
   groupdate (~> 6.1)
   hirb
   hotwire-rails
@@ -943,7 +943,7 @@ CHECKSUMS
   ffi-compiler (1.3.2) sha256=a94f3d81d12caf5c5d4ecf13980a70d0aeaa72268f3b9cc13358bcc6509184a0
   fugit (1.11.1) sha256=e89485e7be22226d8e9c6da411664d0660284b4b1c08cacb540f505907869868
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
-  good_job (3.27.4) sha256=a6e442db28f25bbd43c83fa8e6cbeb1cd53a1a93cecb1d4b5d698470efed6a21
+  good_job (3.99.1) sha256=7d3869d8a8ee8ef7048fee5d746f41c21987b7822c20038a2f773036bef0830a
   groupdate (6.7.0) sha256=beaa8d5bf3856814681914a1d4a20e77436a2214b85d0017dc2ea5c355fb6777
   hashdiff (1.0.1) sha256=2cd4d04f5080314ecc8403c4e2e00dbaa282dff395e2d031bc16c8d501bdd6db
   hashie (5.0.0) sha256=9d6c4e51f2a36d4616cbc8a322d619a162d8f42815a792596039fc95595603da
