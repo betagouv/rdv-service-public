@@ -187,6 +187,7 @@ class ProConnectController < ApplicationController
       first_name: callback_client.user_first_name,
       last_name: callback_client.user_last_name,
       proconnect_siret: callback_client.user_siret,
+      pro_connect_2fa_active: callback_client.went_through_2fa?,
       invitation_token: nil, # Pour désactiver les anciens liens d'invitation
       invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now,
       confirmed_at: agent.confirmed_at || Time.zone.now,

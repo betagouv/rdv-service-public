@@ -103,6 +103,7 @@ tables:
       - refresh_microsoft_graph_token
       - remember_created_at
       - pro_connect_openid_sub
+      - pro_connect_2fa_active
     non_anonymized_column_names:
       - reset_password_sent_at
       - last_sign_in_at
