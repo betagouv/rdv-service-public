@@ -115,7 +115,7 @@ Rails.application.configure do
     },
     destroy_login_codes: {
       cron: "every day at 05:00 Europe/Paris",
-      class: "CronJob::DestroyLoginAttemptsJob",
+      class: "CronJob::DestroyLoginCodesJob",
     },
   }
 end
