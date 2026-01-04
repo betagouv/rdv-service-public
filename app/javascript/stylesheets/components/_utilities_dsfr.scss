@@ -186,3 +186,8 @@
 .rdv-border-color-blue-france {
   border-color: var(--blue-france-main-525);
 }
+
+.rdv-list-unstyled {
+  list-style: none;
+  padding-left: 0 !important;
+}
