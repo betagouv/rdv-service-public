@@ -9,13 +9,12 @@ class Users::SessionsByCodeController < ApplicationController
     @email = params[:email]
     return redirect_to(new_user_session_path) if @email.blank?
 
-    user = User.find_by(email:)
-    agent = Agent.find_by(email:)
-    redirect_to new_agent_session_path(agent: { email: }) if !user && agent
+    return redirect_to(new_user_session_path, flash: { error: "Veuillez recommencer votre connexion" }) unless User.exists?(email:)
 
     @existing_login_code = LoginCode.most_recent_usable_for(email:)&.tap(&:safe_to_display!)
   end
 
+  # rubocop:disable Metrics/PerceivedComplexity
   def create
     @email = params[:login_code][:email]
     submitted_login_code = params[:login_code][:code]
@@ -26,23 +25,24 @@ class Users::SessionsByCodeController < ApplicationController
       user.confirm
       sign_in(:user, user)
       matching_login_code.update!(used_at: Time.zone.now)
-      flash[:success] = "Connexion réussie"
-      redirect_to after_sign_in_path_for(user)
+      redirect_to after_sign_in_path_for(user), flash: { success: "Connexion réussie" }
     elsif LoginCode.where(email:).usable.any?
-      flash[:error] = "Veuillez renseigner le dernier code qui vous a été envoyé par email, ou attendre quelques instants de le recevoir"
       @existing_login_code = LoginCode.most_recent_usable_for(email:)&.tap(&:safe_to_display!)
+      @existing_login_code.errors.add(:base, "Veuillez renseigner le dernier code qui vous a été envoyé par email, ou attendre quelques instants de le recevoir")
       render :new
-    elsif matching_login_code&.used?
-      flash[:error] = "Code déjà utilisé, veuillez en demander un nouveau"
-      redirect_to new_users_sessions_by_code_path(email:)
-    elsif matching_login_code&.expired?
-      flash[:error] = "Code expiré, veuillez en demander un nouveau"
-      redirect_to new_users_sessions_by_code_path(email:)
     else
-      flash[:error] = "Code invalide"
+      flash[:error] =
+        if matching_login_code&.used?
+          "Code déjà utilisé, veuillez en demander un nouveau"
+        elsif matching_login_code&.expired?
+          "Code expiré, veuillez en demander un nouveau"
+        else
+          "Code invalide"
+        end
       redirect_to new_users_sessions_by_code_path(email:)
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity
 
   private
 

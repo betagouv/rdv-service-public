@@ -3,6 +3,8 @@ p Votre code de connexion est :
 p{style="font-family: monospace; letter-spacing: .5rem; font-size: 1.4rem; max-height: 4rem; height: 4rem;"}
   = @login_code.code
 
+p Ce code est valable 30 minutes (jusqu’à #{I18n.l(@login_code.created_at + 30.minutes, format: :time_only)})
+
 hr{style="margin: 1rem 0;"}
 p
   | Si vous n’avez pas demandé de code de connexion, vous pouvez ignorer cet email.

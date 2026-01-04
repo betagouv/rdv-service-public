@@ -27,7 +27,7 @@
     - else
       = form_for [:users, @login_code], method: :post, builder: Dsfr::FormBuilder do |f|
         = render "model_errors", model: @login_code, form: f
-        = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse email", autocomplete: "email"
+        = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", required: true, label: "Adresse email", autocomplete: "email"
         .rdv-text-align-center
           = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn"
           .fr-mt-4w.fr-mb-2w.fr-text--sm
