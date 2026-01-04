@@ -8,6 +8,16 @@
       = render "model_errors", model: @existing_login_code
       p ✅ Un code à 6 chiffres a été envoyé à #{@existing_login_code.email} à #{l(@existing_login_code.created_at, format: :time_only)}
 
+      - if Rails.env.development?
+        / # on doit recharger le code ici car on l’avait nettoyé pour l’affichage via safe_to_display?
+        - code = LoginCode.find(@existing_login_code.id).code
+        .fr-mb-4w
+          = button_tag class: "fr-btn fr-btn--tertiary fr-btn--sm fr-mr-1w js-copy-to-clipboard", data: { "clipboard-content": code }
+            = icon("fr-icon-survey-line fr-icon--sm", class: "fr-mr-1w")
+            | copier le code #{code}
+          span.fr-text--sm
+            | (visible uniquement en env de dev)
+
     .rdv-legible-code-form
       = form_for LoginCode.new(email: @email), url: users_sessions_by_code_path, method: :post, builder: Dsfr::FormBuilder do |form|
         = form.hidden_field :email
