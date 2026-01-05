@@ -21,27 +21,22 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
   end
 
   def create
-    if params[:external_reference].present?
-      @external_reference = ExternalReference.find_or_initialize_by(
-        params.require(:external_reference).permit(:external_id, :external_url).merge(
-          oauth_application: doorkeeper_token&.application,
-          item_type: "Motif",
-          territory_id: Organisation.find(params[:organisation_id]).territory_id
-        )
-      )
-
-      if @external_reference
-        render(json: { object: MotifBlueprint.render_as_hash(@external_reference.item), warning: "Un objet existe déjà pour cet external_id." }) and return
-      end
-    end
-
     motif = Motif.new(params.permit(*motif_attribute_names))
 
     authorize(motif, policy_class: Agent::MotifPolicy)
 
     motif.transaction do
       motif.save!
-      @external_reference&.update!(item: motif)
+
+      if params[:external_reference].present?
+        ExternalReference.create!(
+          params.require(:external_reference).permit(:external_id, :external_url).merge(
+            item: motif,
+            oauth_application: doorkeeper_token&.application,
+            territory_id: motif.organisation.territory_id
+          )
+        )
+      end
     end
 
     if motif.persisted?
