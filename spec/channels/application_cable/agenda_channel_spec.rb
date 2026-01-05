@@ -24,7 +24,7 @@ RSpec.describe AgendaChannel do
     expect(subscription).to be_rejected
   end
 
-  it "rejects subscription and warsn Sentry on unexpected error" do
+  it "rejects subscription and warns Sentry on unexpected error" do
     allow(Agent::AgentPolicy::Scope).to receive(:new).and_raise("woops")
     subscribe
     expect(subscription).to be_rejected
