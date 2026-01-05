@@ -24,7 +24,10 @@ RSpec.describe "agent can export RDVs" do
   end
 
   it "exports by RDV" do
-    rdvs = create_list(:rdv, 4, organisation: organisation)
+    rdvs = 4.times.map do |i|
+      create(:rdv, organisation: organisation, starts_at: 3.days.from_now + i.hours)
+    end
+
     visit admin_organisation_rdvs_url(organisation)
     perform_enqueued_jobs do
       click_on "Exporter les 4 RDV en XLS"
@@ -45,14 +48,11 @@ RSpec.describe "agent can export RDVs" do
     expect(book.worksheets[0].rows.size).to eq(5)
     expect(book.worksheets[0].row(0)[11]).to eq("professionnel.le(s)")
 
+    rdvs = rdvs.sort_by(&:starts_at).reverse # les exports sont ordonnés par `starts_at DESC`
     4.times do |i|
       expect(book.worksheets[0].row(i + 1)[7]).to eq(rdvs[i].motif.name)
       expect(book.worksheets[0].row(i + 1)[11]).to eq(rdvs[i].agents.first.full_name)
     end
-
-    expect(book.worksheets[0].row(0)[7]).to eq("motif")
-    motif_names = 4.times.map { book.worksheets[0].row(_1 + 1)[7] }
-    expect(motif_names).to match_array(rdvs.map(&:motif).map(&:name))
   end
 
   it "exports by participation" do
