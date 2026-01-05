@@ -56,8 +56,9 @@ RSpec.describe "Motifs API" do
       it "doesn't create the motif and returns an error message" do
         expect { post "/api/v1/motifs", headers:, params:, as: :json }.not_to change(Motif, :count)
 
-        expect(response.status).to eq 422
-        expect(parsed_response_body["error_messages"]).to eq ["external_id est déjà utilisé"]
+        expect(response.status).to eq 200
+        expect(parsed_response_body["warning"]).to eq "Un objet existe déjà pour cet external_id."
+        expect(parsed_response_body["object"]["id"]).to eq existing_motif.id
       end
     end
   end
