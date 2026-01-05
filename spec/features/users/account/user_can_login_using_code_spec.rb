@@ -1,10 +1,12 @@
 RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
+  include_context "enable rack-attack" # en l’activant ici on teste que le cas normal fonctionne aussi
+
   before { create(:user, email: "marco@lolmail.fr", first_name: "Marco") }
 
   specify do
     visit new_user_session_path
     fill_in "Adresse email", with: "marco@lolmail.fr"
-    within("main") { click_on "Recevoir un code de connexion" }
+    click_on "Recevoir un code de connexion"
     expect(page).to have_content("code à 6 chiffres")
     expect(page).to have_content("marco@lolmail.fr")
 
@@ -25,7 +27,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
     specify do
       visit new_user_session_path
       fill_in "Adresse email", with: "nina@personne.fr"
-      within("main") { click_on "Recevoir un code de connexion" }
+      click_on "Recevoir un code de connexion"
       expect(page).to have_content("Aucun compte usager n’existe pour cet email")
       expect(page).not_to have_content("code à 6 chiffres")
     end
@@ -123,6 +125,42 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
       expect(page).to have_content("Connexion réussie")
+    end
+  end
+
+  context "tentatives d’innondations sur la page de demande de code" do
+    it "lève une erreur Rack Attack" do
+      2.times do
+        visit new_user_session_path
+        fill_in "Adresse email", with: "marco@lolmail.fr"
+        click_on "Recevoir un code de connexion"
+      end
+      visit new_user_session_path
+      fill_in "Adresse email", with: "marco@lolmail.fr"
+      click_on "Recevoir un code de connexion"
+      expect(page).not_to have_content("Connexion réussie")
+      expect(page).to have_content("erreur")
+      expect(sentry_events.last.level).to eq(:warning)
+      expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
+    end
+  end
+
+  context "tentatives d’innondations sur la page de saisie de code" do
+    before { create(:login_code, email: "marco@lolmail.fr", code: "123456", created_at: 1.minute.ago) }
+
+    it "lève une erreur Rack Attack" do
+      2.times do
+        visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+        fill_in("Code à 6 chiffres", with: "123456")
+        click_on "Valider"
+      end
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      expect(page).not_to have_content("Connexion réussie")
+      expect(page).to have_content("erreur")
+      expect(sentry_events.last.level).to eq(:warning)
+      expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
     end
   end
 end
