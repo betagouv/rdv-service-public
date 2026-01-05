@@ -173,11 +173,7 @@ module CreneauxSearch::Calculator
 
       @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
 
-      @rdvs_starts_and_ends_at = if ENV["NEW_CRENEAU_SEARCH_LOGIC"]
-                                   optimized_rdv_request.async_pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
-                                 else
-                                   plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).async_pluck(:starts_at, :ends_at)
-                                 end
+      @rdvs_starts_and_ends_at = optimized_rdv_request.async_pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
     end
 
     def optimized_rdv_request
