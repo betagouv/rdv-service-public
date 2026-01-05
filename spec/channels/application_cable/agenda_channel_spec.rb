@@ -1,4 +1,4 @@
-RSpec.describe AgendaChannel, action_cable: :test do
+RSpec.describe AgendaChannel do
   let!(:current_agent) { create(:agent) }
 
   before do
