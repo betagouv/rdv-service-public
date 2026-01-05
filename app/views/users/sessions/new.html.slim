@@ -15,7 +15,7 @@
         = render "common/proconnect_button_dsfr", login_hint: resource.email, user_type: "user"
 
       p.fr-hr-or ou
-    h2#with-email Se connecter par e-mail
+    h2 Se connecter par e-mail
 
     - if params[:with_password].present? || params[:user].present?
       = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
