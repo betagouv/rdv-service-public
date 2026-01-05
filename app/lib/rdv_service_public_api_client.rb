@@ -1,10 +1,28 @@
 class RdvServicePublicApiClient
+  class RequestError < StandardError; end
+
   def initialize(api_token)
     @api_token = api_token
   end
 
   def post(path, params)
-    connection.post("/api/v1/#{path}", params).body
+    response = connection.post("/api/v1/#{path}", params)
+
+    return response.body if response.success?
+
+    if response.status == 422
+      external_id_errors = response.body.dig("errors", "external_id")
+      external_id_taken = external_id_errors&.find do |error_hash|
+        error_hash["error"] == "taken"
+      end
+
+      if external_id_taken # L'appel a échoué parce que la ressource a déjà été créée sur le serveur distant
+        # On ne considère pas que c'est une erreur, parce que ça nous permet de faire des créations idempotentes
+        return response.body
+      end
+    end
+
+    raise(RequestError, "échec de la requête sur #{path} (status #{response.status}). Voir les breadcrumbs Sentry pour plus d'infos")
   end
 
   def get(path, params = {})
@@ -23,7 +41,6 @@ class RdvServicePublicApiClient
     @connection ||= Faraday.new(url:, headers:) do |builder|
       builder.request :json
       builder.response :json
-      builder.response :raise_error # raise an error on 4xx and 5xx responses
       builder.use :sentry_breadcrumbs
     end
   end

@@ -14,7 +14,7 @@ RSpec.describe RdvServicePublicApiClient do
     it "ajoute la requête et la réponse HTTP en breadcrumb Sentry et lève une exception" do
       expect do
         described_class.new("123456").post("plage_ouvertures", { lieu_external_ids: "asdf" })
-      end.to raise_error(Faraday::ResourceNotFound) do |e|
+      end.to raise_error(RdvServicePublicApiClient::RequestError) do |e|
         Sentry.capture_exception(e)
         request_breadcrumb, response_breadcrumb = sentry_events.last.breadcrumbs.compact
         expect(request_breadcrumb.data[:body]).to eq({ lieu_external_ids: "asdf" }.to_json)
@@ -36,7 +36,7 @@ RSpec.describe RdvServicePublicApiClient do
     it "ajoute la requête et la réponse HTTP en breadcrumb Sentry et lève une exception" do
       expect do
         described_class.new("123456").post("motifs", {}) # Les paramètres ne sont pas utilisés pas le stub, donc on ne les précise pas
-      end.to raise_error(Faraday::UnprocessableEntityError) do |e|
+      end.to raise_error(RdvServicePublicApiClient::RequestError) do |e|
         Sentry.capture_exception(e)
         request_breadcrumb, response_breadcrumb = sentry_events.last.breadcrumbs.compact
         expect(request_breadcrumb.data[:body]).to be_present
