@@ -1,4 +1,11 @@
 class RdvsExportSendEmailJob < ExportJob
+  include GoodJob::ActiveJobExtensions::Concurrency
+
+  good_job_control_concurrency_with(
+    perform_limit: 1,
+    key: -> { "high_ram_usage_export" }
+  )
+
   def perform(batch, _params)
     export = Export.find(batch.properties[:export_id])
     redis_key = redis_key(export.id)
