@@ -30,4 +30,62 @@ RSpec.describe AgendaChannel do
     expect(subscription).to be_rejected
     expect(sentry_events.last.exception.values.first.value).to eq("woops (RuntimeError)")
   end
+
+  describe "broadcasts" do
+    it "fires on Rdv creation, update and deletion" do
+      rdv_agent = create(:agent)
+      rdv = nil
+      expect do
+        rdv = create(:rdv, agents: [rdv_agent])
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class)
+
+      expect do
+        rdv.update!(starts_at: 4.days.from_now)
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class)
+
+      expect do
+        rdv.destroy!
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class)
+    end
+
+    it "fires when adding, updating or removing a participation" do
+      rdv_agent = create(:agent)
+      rdv = create(:rdv, agents: [rdv_agent])
+
+      expect do
+        create(:participation, rdv:)
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class)
+
+      expect do
+        rdv.participations.last.update!(status: "seen")
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class)
+
+      expect do
+        rdv.participations.last.destroy!
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class)
+    end
+
+    it "fires when adding, updating or removing an AgentsRdv" do
+      org = create(:organisation)
+      rdv_agent = create(:agent, organisations: [org])
+      colleague = create(:agent, organisations: [org])
+      rdv = create(:rdv, agents: [rdv_agent])
+
+      expect do
+        create(:agents_rdv, rdv:, agent: colleague)
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class).and(
+        have_broadcasted_to(colleague.id).from_channel(described_class)
+      )
+
+      expect do
+        rdv.agents_rdvs.last.update!(agent_id: current_agent.id)
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class).and(
+        have_broadcasted_to(colleague.id).from_channel(described_class)
+      )
+
+      expect do
+        rdv.agents_rdvs.last.destroy!
+      end.to have_broadcasted_to(rdv_agent.id).from_channel(described_class)
+    end
+  end
 end
