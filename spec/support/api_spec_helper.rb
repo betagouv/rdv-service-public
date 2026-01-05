@@ -41,9 +41,9 @@ module ApiSpecHelper
     }
   end
 
-  def self.invalid_motif_response(organisation_id = 1)
+  def self.invalid_motif_response(organisation_name = "Mon Organisation")
     {
-      "error_messages" => ["base Il existe déjà dans Organisation n°#{organisation_id} un motif Sur place nommé \"Suivi de dossier\" ouvert à tous les agents"],
+      "error_messages" => ["base Il existe déjà dans #{organisation_name} un motif Sur place nommé \"Suivi de dossier\" ouvert à tous les agents"],
       "errors" => { "base" => [{ "error" => "duplicate_detected" }] },
     }
   end

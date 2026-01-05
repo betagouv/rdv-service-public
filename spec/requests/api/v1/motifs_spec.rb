@@ -84,7 +84,7 @@ RSpec.describe "Motifs API" do
         expect { post "/api/v1/motifs", headers:, params:, as: :json }.not_to change(Motif, :count)
 
         expect(response.status).to eq 422
-        expect(parsed_response_body).to eq ApiSpecHelper.invalid_motif_response(orgnisation.id)
+        expect(parsed_response_body).to eq ApiSpecHelper.invalid_motif_response(organisation.name)
       end
     end
   end
