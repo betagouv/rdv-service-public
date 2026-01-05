@@ -13,17 +13,6 @@ class RdvServicePublicApiClient
 
   private
 
-  def base_url
-    ENV.fetch("RDV_SERVICE_PUBLIC_OAUTH_BASE_URL")
-  end
-
-  def request_headers
-    {
-      "Authorization" => "Bearer #{@api_token}",
-      "Content-Type" => "application/json",
-    }
-  end
-
   def connection
     url = ENV.fetch("RDV_SERVICE_PUBLIC_OAUTH_BASE_URL")
     headers = {
