@@ -3,21 +3,21 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "5e49c97564dd5bd05b5bc9a38faaf23c0c404cc707b798d4632845745720d0a4",
+      "fingerprint": "ceb24ff5fe91c83981f6f59fcdd75d599917cd60bdb5f6c3367305bb3c0bb4cb",
       "check_name": "SQL",
       "message": "Possible SQL injection",
-      "file": "scripts/clean_crisp_tickets.rb",
-      "line": 42,
+      "file": "app/controllers/api/v1/motifs_controller.rb",
+      "line": 30,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "connection.delete(\"/v1/website/#{WEBSITE_ID}/conversation/#{conversation[\"session_id\"]}\")",
+      "code": "ExternalReference.where(params.require(:external_reference).permit(:external_id, :external_url).merge(:oauth_application => doorkeeper_token.application, :territory_id => Motif.new(params.permit(*motif_attribute_names)).organisation.territory_id))",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Cleaner",
-        "method": "fetch_conversations_and_delete"
+        "class": "Api::V1::MotifsController",
+        "method": "create"
       },
-      "user_input": "conversation[\"session_id\"]",
-      "confidence": "Medium",
+      "user_input": "params.require(:external_reference).permit(:external_id, :external_url).merge(:oauth_application => doorkeeper_token.application, :territory_id => Motif.new(params.permit(*motif_attribute_names)).organisation.territory_id)",
+      "confidence": "High",
       "cwe_id": [
         89
       ],
@@ -30,7 +30,7 @@
       "check_name": "LinkToHref",
       "message": "Potentially unsafe model attribute in `link_to` href",
       "file": "app/views/agents/rdv_plans/rdv.html.slim",
-      "line": 33,
+      "line": 39,
       "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
       "code": "link_to(\"Retour sur #{RdvPlan.find(params[:id]).oauth_application.name}\", RdvPlan.find(params[:id]).return_url, :class => \"float-right fr-btn\")",
       "render_path": [
@@ -38,7 +38,7 @@
           "type": "controller",
           "class": "Agents::RdvPlansController",
           "method": "rdv",
-          "line": 86,
+          "line": 107,
           "file": "app/controllers/agents/rdv_plans_controller.rb",
           "rendered": {
             "name": "agents/rdv_plans/rdv",
@@ -64,7 +64,7 @@
       "check_name": "LinkToHref",
       "message": "Potentially unsafe model attribute in `link_to` href",
       "file": "app/views/agents/rdv_plans/edit_starts_at.html.slim",
-      "line": 9,
+      "line": 21,
       "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
       "code": "link_to(RdvPlan.find(params[:id]).return_url)",
       "render_path": [
@@ -72,7 +72,7 @@
           "type": "controller",
           "class": "Agents::RdvPlansController",
           "method": "edit_starts_at",
-          "line": 16,
+          "line": 31,
           "file": "app/controllers/agents/rdv_plans_controller.rb",
           "rendered": {
             "name": "agents/rdv_plans/edit_starts_at",
