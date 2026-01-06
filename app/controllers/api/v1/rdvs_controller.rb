@@ -1,4 +1,6 @@
 class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
+  before_action :normalize_array_params, only: %i[index]
+
   def index # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).where(params.permit(:organisation_id))
 
@@ -121,6 +123,14 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
   end
 
   private
+
+  def normalize_array_params
+    %i[id status include].each do |param_name|
+      if params[param_name].is_a?(String)
+        params[param_name] = params[param_name].split(",")
+      end
+    end
+  end
 
   def pundit_user
     current_agent

@@ -32,7 +32,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
           <li>participations</li>
         </ul>
 
-        Par exemple, vous pouvez passer `include[]=agents&include[]=users` en query params.
+        Par exemple, vous pouvez passer `include[]=agents&include[]=users` ou `include=agents,users` en query params.
       DESCRIPTION
 
       parameter name: :organisation_id, in: :query, type: :string, description: "Identifiant de l'organisation", example: "20", required: false
@@ -48,17 +48,18 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
                   Filtre les rendez-vous par statut.
                   Vous pouvez passer soit une seule chaine de caractères, soit un tableau de chaines de caractères.
                   Les différentes valeurs possibles sont #{Rdv.statuses.keys}.
-                  Si vous passez un tableau, le format attendu est status[]=excused&status[]=revoked
+                  Si vous passez un tableau, vous pouvez utiliser le format `status[]=excused&status[]=revoked` ou `status=excused,revoked`.
                 DOC
-                example: "seen ou status[]=excused&status[]=revoked", required: false
+                example: "seen ou status[]=excused&status[]=revoked ou status=excused,revoked", required: false
 
       parameter name: :id, in: :query,
                 description: <<~DOC,
                   Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste.
                   Vous pouvez passer soit un tableau d'entier pour obtenir plusieurs rdvs, soit un seul entier pour obtenir un seul rdv.
-                  Si vous passez un tableau d'entier, le format attendu est id[]=1234&id[]=5678
+                  Si vous passez un tableau d'entier, le format attendu est
+                  Si vous passez un tableau, vous pouvez utiliser le format id[]=1234&id[]=5678 ou id=1234,5678.
                 DOC
-                example: "789 ou id[]=1234&id[]=5678", required: false
+                example: "789 ou id[]=1234&id[]=5678 id=1234,5678", required: false
 
       parameter name: :starts_after, in: :query, type: :string,
                 description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time (iso8601).",
