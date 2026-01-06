@@ -10,9 +10,32 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       tags "RDV"
       produces "application/json"
       operationId "getRdvs"
-      description "Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres facultatifs passés en paramètre"
 
-      parameter name: :organisation_id, in: :query, type: :string, description: "Identifiant de l'organisation", example: "20", required: false
+      # L'usage du paramètre `include` est expliqué dans la description plutôt qu'en tant qu'un paramètre séparé, parce que la
+      # meta-programmation utilisée par le matcher rspec et rswag-spec entrent en conflit.
+      # En décommentant la ligne suivant on a cette erreur : ArgumentError: include() is not supported, please supply an argument
+      # parameter name: :include, in: :query, description: "Indique quelles associations charger dans la réponse", example: "include[]=&status[]=revoked", required: false
+
+      description <<~DESCRIPTION.squish
+        Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres facultatifs passés en paramètre.
+        <br />
+        Par défaut, toutes les associations disponibles sont renvoyées (participants, agents, motif, etc...), ce qui peut
+        considérablement ralentir le temps de réponse.
+        Vous pouvez passer le paramètre `include` pour choisir quelles associations inclure dans la réponse.
+        Il prend un tableau de chaines de caractères, et les valeurs possibles sont :
+        <ul>
+          <li>organisation</li>
+          <li>lieu</li>
+          <li>motifs</li>
+          <li>agents</li>
+          <li>users</li>
+          <li>participations</li>
+        </ul>
+
+        Par exemple, vous pouvez passer `include[]=agents&include[]=users` en query params.
+      DESCRIPTION
+
+      parameter name: :organisation_id, in: :query, type: :string, description: "neIdentifiant de l'organisation", example: "20", required: false
 
       parameter name: :user_id, in: :query, type: :integer,
                 description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id",
