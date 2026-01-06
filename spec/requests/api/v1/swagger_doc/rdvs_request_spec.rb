@@ -10,30 +10,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       tags "RDV"
       produces "application/json"
       operationId "getRdvs"
-
-      # L'usage du paramètre `include` est expliqué dans la description plutôt qu'en tant qu'un paramètre séparé, parce que la
-      # meta-programmation utilisée par le matcher rspec et rswag-spec entrent en conflit.
-      # En décommentant la ligne suivant on a cette erreur : ArgumentError: include() is not supported, please supply an argument
-      # parameter name: :include, in: :query, description: "Indique quelles associations charger dans la réponse", example: "include[]=&status[]=revoked", required: false
-
-      description <<~DESCRIPTION.squish
-        Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres facultatifs passés en paramètre.
-        <br />
-        Par défaut, toutes les associations disponibles sont renvoyées (participants, agents, motif, etc...), ce qui peut
-        considérablement ralentir le temps de réponse.
-        Vous pouvez passer le paramètre `include` pour choisir quelles associations inclure dans la réponse.
-        Il prend un tableau de chaines de caractères, et les valeurs possibles sont :
-        <ul>
-          <li>organisation</li>
-          <li>lieu</li>
-          <li>motifs</li>
-          <li>agents</li>
-          <li>users</li>
-          <li>participations</li>
-        </ul>
-
-        Par exemple, vous pouvez passer `include[]=agents&include[]=users` ou `include=agents,users` en query params.
-      DESCRIPTION
+      description "Renvoie les RDVs visibles pour l'agent authentifié, en appliquant les filtres facultatifs passés en paramètre"
 
       parameter name: :organisation_id, in: :query, type: :string, description: "Identifiant de l'organisation", example: "20", required: false
 
@@ -48,18 +25,17 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
                   Filtre les rendez-vous par statut.
                   Vous pouvez passer soit une seule chaine de caractères, soit un tableau de chaines de caractères.
                   Les différentes valeurs possibles sont #{Rdv.statuses.keys}.
-                  Si vous passez un tableau, vous pouvez utiliser le format `status[]=excused&status[]=revoked` ou `status=excused,revoked`.
+                  Si vous passez un tableau, le format attendu est status[]=excused&status[]=revoked
                 DOC
-                example: "seen ou status[]=excused&status[]=revoked ou status=excused,revoked", required: false
+                example: "seen ou status[]=excused&status[]=revoked", required: false
 
       parameter name: :id, in: :query,
                 description: <<~DOC,
                   Filtre pour obtenir uniquement les rendez-vous dont l'id est dans cette liste.
                   Vous pouvez passer soit un tableau d'entier pour obtenir plusieurs rdvs, soit un seul entier pour obtenir un seul rdv.
-                  Si vous passez un tableau d'entier, le format attendu est
-                  Si vous passez un tableau, vous pouvez utiliser le format id[]=1234&id[]=5678 ou id=1234,5678.
+                  Si vous passez un tableau d'entier, le format attendu est id[]=1234&id[]=5678
                 DOC
-                example: "789 ou id[]=1234&id[]=5678 id=1234,5678", required: false
+                example: "789 ou id[]=1234&id[]=5678", required: false
 
       parameter name: :starts_after, in: :query, type: :string,
                 description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time (iso8601).",

@@ -21,7 +21,7 @@ class Api::V1::BaseController < ActionController::Base
     render json: blueprint_klass.render(record, root: root, **options)
   end
 
-  def render_collection(objects, root: nil, blueprint_klass: nil, options: nil)
+  def render_collection(objects, root: nil, blueprint_klass: nil)
     objects = objects.page(page_number).per(PAGINATE_PER)
     meta = {
       current_page: objects.current_page,
@@ -34,7 +34,7 @@ class Api::V1::BaseController < ActionController::Base
     objects_klass = objects.klass
     blueprint_klass = "#{objects_klass.name}Blueprint".constantize if blueprint_klass.blank?
     root = objects_klass.model_name.collection if root.blank?
-    render json: blueprint_klass.render(objects, root: root, meta: meta, **options)
+    render json: blueprint_klass.render(objects, root: root, meta: meta)
   end
 
   def page_number
