@@ -1,11 +1,12 @@
 RSpec.describe RdvExporter, type: :service do
-  describe "#xls_string_from_rdvs_rows" do
+  describe "#write_xls_to_io" do
     it "return export with header" do
       rdv = create(:rdv, created_at: Time.zone.parse("2023-01-01"), agents: [create(:agent, email: "agent@mail.com")])
       rdv_row = described_class.row_array_from(rdv)
-      xls_string = described_class.xls_string_from_rdvs_rows([rdv_row])
+      io = StringIO.new
+      described_class.write_xls_to_io(io, [rdv_row])
 
-      header_row, first_data_row = Spreadsheet.open(StringIO.new(xls_string)).worksheets.first.rows
+      header_row, first_data_row = Spreadsheet.open(io).worksheets.first.rows
 
       # Les lettres sont les noms de colonnes Excel.
       # Il est important de toujours ajouter les nouvelles colonnes

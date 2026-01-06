@@ -45,7 +45,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       consumes "application/json"
 
       let(:organisation) { create(:organisation) }
-      let!(:agent) { create(:agent, id: 12, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
+      let!(:agent) { create(:agent, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
       let(:uid) { auth_headers["uid"].to_s }
@@ -102,7 +102,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       parameter name: :rdv_plan_id, in: :path, type: :integer, example: 123
 
       let(:organisation) { create(:organisation) }
-      let!(:agent) { create(:agent, id: 12, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
+      let!(:agent) { create(:agent, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
       let(:uid) { auth_headers["uid"].to_s }
