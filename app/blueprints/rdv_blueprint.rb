@@ -20,11 +20,19 @@ class RdvBlueprint < Blueprinter::Base
     Rails.application.routes.url_helpers.agents_rdv_url(rdv, host: rdv.domain.host_name)
   end
 
-  association :organisation, blueprint: OrganisationBlueprint
-  association :motif, blueprint: MotifBlueprint
+  # On permet des associations optionnelles, mais on les charge toutes si le paramètre `include` n'est pas utilisé
+  def self.conditional_association(association_name, blueprint_class)
+    field(association_name, if: ->(_field_name, _rdv, options) { !options["include"].is_a?(Array) || association_name.to_s.in?(options["include"]) }) do |rdv, _options|
+      blueprint_class.render_as_hash(rdv.public_send(association_name))
+    end
+  end
+
+  conditional_association(:organisation, OrganisationBlueprint)
+  conditional_association(:motif, MotifBlueprint)
+
   # DEPRECATED : Nous laissons l'association `:users` le temps que le 92, 26, 62, 64, et data-insertion mettent à jours leur système.
-  association :users, blueprint: UserBlueprint
-  association :participations, blueprint: ParticipationBlueprint
-  association :agents, blueprint: AgentBlueprint
-  association :lieu, blueprint: LieuBlueprint
+  conditional_association(:users, UserBlueprint)
+  conditional_association(:participations, ParticipationBlueprint)
+  conditional_association(:agents, AgentBlueprint)
+  conditional_association(:lieu, LieuBlueprint)
 end
