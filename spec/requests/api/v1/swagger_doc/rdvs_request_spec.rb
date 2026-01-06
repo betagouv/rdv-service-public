@@ -35,7 +35,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
         Par exemple, vous pouvez passer `include[]=agents&include[]=users` en query params.
       DESCRIPTION
 
-      parameter name: :organisation_id, in: :query, type: :string, description: "neIdentifiant de l'organisation", example: "20", required: false
+      parameter name: :organisation_id, in: :query, type: :string, description: "Identifiant de l'organisation", example: "20", required: false
 
       parameter name: :user_id, in: :query, type: :integer,
                 description: "Filtre pour obtenir uniquement les rendez-vous de l'usager qui a cet id",
