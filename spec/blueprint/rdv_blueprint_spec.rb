@@ -55,4 +55,13 @@ RSpec.describe RdvBlueprint do
       expect(json.dig("rdv", "url_for_agents")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdvs/#{rdv.id}"
     end
   end
+
+  context "for a rdv that doesn't have a lieu" do
+    let(:motif) { create(:motif, :phone) }
+    let(:rdv) { create(:rdv, organisation: motif.organisation, motif:, lieu: nil) }
+
+    it "doesn't raise any errors even if the lieu is nil" do
+      expect(json.dig("rdv", "lieu")).to be_nil
+    end
+  end
 end
