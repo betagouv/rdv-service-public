@@ -25,14 +25,14 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
 
     authorize(motif, policy_class: Agent::MotifPolicy)
 
-    external_reference_scope = ExternalReference.where(
-      params.require(:external_reference).permit(:external_id, :external_url).merge(
-        oauth_application: doorkeeper_token&.application,
-        territory_id: motif.organisation.territory_id
-      )
-    )
-
     if params[:external_reference].present?
+      external_reference_scope = ExternalReference.where(
+        params.require(:external_reference).permit(:external_id, :external_url).merge(
+          oauth_application: doorkeeper_token&.application,
+          territory_id: motif.organisation.territory_id
+        )
+      )
+
       existing_external_reference = external_reference_scope.find_by({})
 
       if existing_external_reference
