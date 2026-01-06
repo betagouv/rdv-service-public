@@ -25,17 +25,31 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
 
     authorize(motif, policy_class: Agent::MotifPolicy)
 
+    external_reference_scope = ExternalReference.where(
+      params.require(:external_reference).permit(:external_id, :external_url).merge(
+        oauth_application: doorkeeper_token&.application,
+        territory_id: motif.organisation.territory_id
+      )
+    )
+
+    if params[:external_reference].present?
+      existing_external_reference = external_reference_scope.find_by({})
+
+      if existing_external_reference
+        error_response = {
+          error_messages: ["external_id est déjà utilisé"],
+          errors: { external_id: [{ error: :taken, value: params.dig(:external_reference, :external_id) }] },
+        }
+
+        render(status: :unprocessable_entity, json: error_response) and return
+      end
+    end
+
     motif.transaction do
       motif.save!
 
       if params[:external_reference].present?
-        ExternalReference.create!(
-          params.require(:external_reference).permit(:external_id, :external_url).merge(
-            item: motif,
-            oauth_application: doorkeeper_token&.application,
-            territory_id: motif.organisation.territory_id
-          )
-        )
+        external_reference_scope.create!(item: motif)
       end
     end
 
