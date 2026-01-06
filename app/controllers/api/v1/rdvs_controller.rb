@@ -1,5 +1,5 @@
 class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
-  def index
+  def index # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).where(params.permit(:organisation_id))
 
     rdvs = rdvs.starts_after(Time.zone.parse(params[:starts_after])) if params[:starts_after].present?
@@ -7,25 +7,18 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
 
     if params[:include].nil?
       rdvs = rdvs.includes(:organisation, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
-    else
-      if params[:include].is_a?(Array) && "organisation".in?(params[:include])
-        rdvs.includes(:organisation)
-      end
-      if params[:include].is_a?(Array) && "lieu".in?(params[:include])
-        rdvs.includes(:lieu)
-      end
-      if params[:include].is_a?(Array) && "agents".in?(params[:include])
-        rdvs.includes(:agents)
-      end
-      if params[:include].is_a?(Array) && "users".in?(params[:include])
-        rdvs.includes(:users)
-      end
-      if params[:include].is_a?(Array) && "participations".in?(params[:include])
-        rdvs.includes(participations: [:user])
-      end
-      if params[:include].is_a?(Array) && "motif".in?(params[:include])
-        rdvs.includes(motif: [:motif_category])
-      end
+    elsif params[:include].is_a?(Array)
+      rdvs.includes(:organisation) if "organisation".in?(params[:include])
+
+      rdvs.includes(:lieu) if "lieu".in?(params[:include])
+
+      rdvs.includes(:agents) if "agents".in?(params[:include])
+
+      rdvs.includes(:users) if "users".in?(params[:include])
+
+      rdvs.includes(participations: [:user]) if "participations".in?(params[:include])
+
+      rdvs.includes(motif: [:motif_category]) if "motif".in?(params[:include])
     end
 
     if params[:id].present?
