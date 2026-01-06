@@ -1,10 +1,10 @@
 RSpec.describe Agents::AgentsController, "#search" do
   let!(:territory) { create(:territory) }
   let!(:organisation) { create(:organisation, territory: territory) }
-  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+  let!(:current_agent) { create(:agent, first_name: "Martine", last_name: "Validay", admin_role_in_organisations: [organisation]) }
 
   before do
-    sign_in agent
+    sign_in current_agent
   end
 
   it "works" do
@@ -28,7 +28,7 @@ RSpec.describe Agents::AgentsController, "#search" do
   context "quand un agent est présent dans plusieurs de mes orgas" do
     let!(:orga_1) { create(:organisation) }
     let!(:orga_2) { create(:organisation) }
-    let!(:agent) { create(:agent, admin_role_in_organisations: [orga_1, orga_2]) }
+    let!(:current_agent) { create(:agent, first_name: "Martine", last_name: "Validay", admin_role_in_organisations: [orga_1, orga_2]) }
     let!(:francis) { create(:agent, first_name: "Francis", last_name: "Factice", basic_role_in_organisations: [orga_1, orga_2]) }
 
     it "ne s'affiche qu'une seule fois dans la liste" do

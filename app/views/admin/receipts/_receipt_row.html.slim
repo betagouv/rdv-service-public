@@ -18,8 +18,8 @@ tr
     blockquote.border-left.border-light.pl-1= receipt.content
   td
     span.text-nowrap[title= receipt.human_attribute_value(:result, context: :explanation)]
-      span.text-bold= receipt.human_attribute_value(:result)
-      i.m-1.fa.fa-question-circle.small
+      span.text-bold=> receipt.human_attribute_value(:result)
+      = icon("fr-icon-question-line", class: "fr-icon--sm")
     - if (receipt.sent? || receipt.delivered?) && !receipt.sms_count.nil?
       p.small= "#{Receipt.human_attribute_name(:sms_count)}: #{receipt.sms_count}"
     - elsif receipt.error_message.present?

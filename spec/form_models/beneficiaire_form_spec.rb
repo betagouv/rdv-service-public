@@ -24,7 +24,7 @@ RSpec.describe BeneficiaireForm do
 
     it do
       expect(form).to be_invalid
-      expect(form.errors.first.full_message).to eq("Prénom doit être rempli(e)")
+      expect(form.errors.first.full_message).to eq("Prénom doit être rempli·e")
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe BeneficiaireForm do
 
     it do
       expect(form).to be_invalid
-      expect(form.errors.first.full_message).to eq("Nom d’usage doit être rempli(e)")
+      expect(form.errors.first.full_message).to eq("Nom d’usage doit être rempli·e")
     end
   end
 

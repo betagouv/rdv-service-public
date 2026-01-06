@@ -19,8 +19,7 @@
             b= human_id(@sector)
         - policy = Agent::SectorPolicy.new(current_agent, @sector)
         - if policy.edit?
-          div= link_to edit_admin_territory_sector_path(current_territory, @sector), class: "btn btn-primary w-100" do
-            i.fa.fa-edit>
+          = link_to edit_admin_territory_sector_path(current_territory, @sector), class: "fr-btn fr-btn--icon-left fr-icon-edit-line" do
             | Modifier
     .card
       - if @zones.empty?
@@ -33,15 +32,13 @@
             div
               .mb-1 Aucune commune ni rue associée
               div Ce secteur ne peut pas être recherché par les usagers
-          div= link_to new_admin_territory_sector_zone_path(current_territory, @sector), class: "btn btn-primary w-100" do
-            i.fa.fa-plus>
-            span> Ajouter une commune ou une rue
+          = link_to new_admin_territory_sector_zone_path(current_territory, @sector), class: "fr-btn fr-btn--icon-left fr-icon-add-line" do
+            | Ajouter une commune ou une rue
       - else
         .p-2.d-flex.align-items-center
           div.flex-grow-1.rdv-text-align-center= page_entries_info @zones
-          div= link_to new_admin_territory_sector_zone_path(current_territory, @sector), class: "btn btn-primary" do
-            i.fa.fa-plus>
-            span> Ajouter une commune ou une rue
+          = link_to new_admin_territory_sector_zone_path(current_territory, @sector), class: "fr-btn fr-btn--icon-left fr-icon-add-line" do
+            | Ajouter une commune ou une rue
         table.table
           thead
             tr
@@ -75,9 +72,8 @@
               data: { confirm: "Voulez-vous vraiment retirer ces #{@zones.total_count} communes et rues ?" }, \
               class: "btn btn-danger" \
             )
-          .mb-2= link_to admin_territory_sector_zones_path(current_territory, @sector, format: "xls"), class: "btn btn-light" do
-            i.fa.fa-download>
-            span> Télécharger un export XLS des communes et rues
+          = link_to admin_territory_sector_zones_path(current_territory, @sector, format: "xls"), class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line" do
+            | Télécharger un export XLS des communes et rues
 
   .col-md-6
     .card
@@ -136,8 +132,7 @@
             div
               .mb-1 Aucune organisation ni agent attribués
               div Ce secteur ne renvoie pas de disponibilités
-        = link_to new_admin_territory_sector_attribution_path(current_territory, @sector, level: "organisation"), class: "btn btn-primary w-100" do
-          i.fa.fa-plus>
+        = link_to new_admin_territory_sector_attribution_path(current_territory, @sector, level: "organisation"), class: "fr-btn fr-btn--icon-left fr-icon-add-line" do
           | Attribuer une organisation ou un agent
       .card-footer
         .text-muted Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des organisations ou des agents attribués lui seront proposées

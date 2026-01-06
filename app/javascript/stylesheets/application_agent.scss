@@ -2,7 +2,6 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "./_variables";
-@import "./fontawesome_imports";
 
 // import bootstrap file by file so we can remove unwanted rules component by component
 // cf https://github.com/twbs/bootstrap/blob/v4.3.1/scss/bootstrap.scss
@@ -118,6 +117,11 @@ li.nav-item {
   margin-bottom: 0;
 }
 
+table,
+.fr-btns-group {
+  flex-wrap: nowrap;
+}
+
 // << A SUPPRIMER À LA SUPPRESSION DE BOOTSTRAP REBOOT
 // Suppression d’une marge introduite par Bootstrap Reboot
 .fr-notice p {
@@ -128,3 +132,32 @@ li.nav-item {
   margin: var(--text-spacing);
 }
 // >> A SUPPRIMER À LA SUPPRESSION DE BOOTSTRAP REBOOT
+
+// DSFR custom icons
+// Voir : https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/icone
+
+// Depuis Remix Icon
+.fr-icon-ri-history-line::before,
+.fr-icon-ri-history-line::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/ri-history-line.svg");
+  mask-image: url("../../assets/images/custom-icons/ri-history-line.svg");
+}
+
+.fr-icon-ri-user-follow-fill::before,
+.fr-icon-ri-user-follow-fill::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/ri-user-follow-fill.svg");
+  mask-image: url("../../assets/images/custom-icons/ri-user-follow-fill.svg");
+}
+
+.fr-icon-ri-user-unfollow-fill::before,
+.fr-icon-ri-user-unfollow-fill::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
+  mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
+}
+
+// Disponible dans le DSFR 1.14
+.fr-icon-circle-fill::before,
+.fr-icon-circle-fill::after {
+  -webkit-mask-image: url("../../assets/images/custom-icons/dsfr-circle-fill.svg");
+  mask-image: url("../../assets/images/custom-icons/dsfr-circle-fill.svg");
+}

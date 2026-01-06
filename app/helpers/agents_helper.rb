@@ -65,7 +65,7 @@ module AgentsHelper
       agent.reverse_full_name_or_email,
       agent.id,
       {
-        "data-url": send(path_helper_name, current_organisation, agent),
+        "data-url": send(path_helper_name, current_organisation, agent_id: agent.id),
       },
     ]
     select_tag(

@@ -35,7 +35,6 @@ fr:
             organisation: Organisation
             url: URL cible
             actions: Actions
-          confirm_destroy: Voulez-vous vraiment supprimer ce endpoint ?
         new:
           webhook_title: Webhooks
           title: Ajouter un webhook
@@ -99,8 +98,6 @@ fr:
           actions: Actions
           edit_agents: Modification des équipes de l'agent
       motifs:
-        index:
-          title: Motifs
         batch_edit:
           title: Modifier les motifs
       motif_fields:

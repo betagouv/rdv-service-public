@@ -224,7 +224,7 @@ Devise.setup do |config|
   # Email regex used to validate email formats.
   config.email_regexp = /\A
     [A-Za-z0-9_%+-]     # the first letter cannot be a dot
-    [A-Za-z0-9._%+-]+   # the rest can include dots
+    [A-Za-z0-9._%+-]*   # the rest can include dots
     @
     [A-Za-z0-9-]+
     (\.[A-Za-z0-9-]+)*  # subdomains

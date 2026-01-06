@@ -21,7 +21,7 @@ RSpec.describe "Managing teams" do
       name: "Désecto Valence"
     )
 
-    find(".fa.fa-edit").click
+    find(".fr-icon-edit-fill").click
     click_on "Enregistrer"
   end
 

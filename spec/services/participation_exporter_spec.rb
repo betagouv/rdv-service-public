@@ -17,9 +17,10 @@ RSpec.describe ParticipationExporter, type: :service do
         users: [create(:user, first_name: "Gaston", last_name: "Bidon", birth_date: Date.new(2000, 1, 1), address: nil)]
       )
       participation_row = described_class.row_array_from(rdv.participations.first)
-      xls_string = described_class.xls_string_from_participations_rows([participation_row])
+      io = StringIO.new
+      described_class.write_xls_to_io(io, [participation_row])
 
-      header_row, first_data_row = Spreadsheet.open(StringIO.new(xls_string)).worksheets.first.rows
+      header_row, first_data_row = Spreadsheet.open(io).worksheets.first.rows
 
       # Les lettres sont les noms de colonnes Excel.
       # Il est important de toujours ajouter les nouvelles colonnes

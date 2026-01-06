@@ -54,3 +54,19 @@ cf https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/identifiants-
 
 Je ne sais pas 🤷
 Ça serait pratique, notamment sur le domaine https://fca.integ01.dev-agentconnect.fr/
+
+## Erreur __NSCFConstantString
+
+Si vous rencontrez l’erreur suivante sur votre serveur Rails local lors du callback depuis ProConnect :
+
+```
+[__NSCFConstantString initialize] may have been in progress in another thread when fork() was called
+```
+
+Vous pouvez démarrer votre serveur rails avec la var d’env suivante :
+
+```
+OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES rails s
+```
+
+cf https://github.com/rails/rails/issues/38560

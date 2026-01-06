@@ -29,7 +29,7 @@ RSpec.describe Admin::AgentIntervenantsController, type: :controller do
     it "renders edit on failure" do
       put :update, params: { organisation_id: organisation.id, id: agent_intervenant.id, agent: { last_name: "" } }
       expect(response).to redirect_to(edit_admin_organisation_agent_path(organisation, agent_intervenant))
-      expect(flash[:error]).to eq("Nom d’usage doit être rempli(e)")
+      expect(flash[:error]).to eq("Nom d’usage doit être rempli·e")
     end
   end
 end

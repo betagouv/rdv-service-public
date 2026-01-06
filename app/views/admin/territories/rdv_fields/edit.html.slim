@@ -3,27 +3,28 @@
 .row.justify-content-center
   .col-md-6
     .card
-      .card-header
-          h3= t(".card_title")
+      .card-body
+        = form_for current_territory, url: admin_territory_rdv_fields_path(current_territory), builder: Dsfr::FormBuilder do |f|
+          = render "model_errors", model: current_territory
+
+          h1.card-title= t(".card_title")
           p.text-muted.font-14= t(".hint_1")
           p.text-muted.font-14= t(".hint_2")
-      .card-body
-        = simple_form_for current_territory, url: admin_territory_rdv_fields_path(current_territory) do |f|
-          = render "model_errors", model: current_territory
 
           - Territory::OPTIONAL_RDV_FIELD_TOGGLES.each do |toggle, field_name|
-            = f.input toggle, label: Rdv.human_attribute_name(field_name)
+            = f.dsfr_check_box toggle, label: Rdv.human_attribute_name(field_name)
           .text-right
-            = f.button :submit
+            = f.submit t("helpers.submit.update"), class: "fr-btn"
 
     .card
-      .card-header
-          h3= t(".waiting_room_title")
-          p.text-muted.font-14= t(".waiting_room_config_hint")
       .card-body
-        = simple_form_for current_territory, url: admin_territory_rdv_fields_path(current_territory) do |f|
+        = form_for current_territory, url: admin_territory_rdv_fields_path(current_territory), builder: Dsfr::FormBuilder do |f|
           = render "model_errors", model: current_territory
+
+          h1.card-title= t(".waiting_room_title")
+          p.text-muted.font-14= t(".waiting_room_config_hint")
+
           - Territory::OPTIONAL_RDV_WAITING_ROOM_FIELD_TOGGLES.each do |toggle, field_name|
-            = f.input toggle, label: Rdv.human_attribute_name(field_name)
+            = f.dsfr_check_box toggle, label: Rdv.human_attribute_name(field_name)
           .text-right
-            = f.button :submit
+            = f.submit t("helpers.submit.update"), class: "fr-btn"

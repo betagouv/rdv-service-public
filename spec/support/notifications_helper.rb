@@ -82,11 +82,9 @@ module NotificationsHelper
     when :rdv_created
       "Nouveau RDV ajouté sur votre agenda #{person.domain.name} pour #{relative_date(rdv.starts_at)}"
     when :rdv_cancelled
-      if rdv.collectif?
-        "Participation au RDV collectif annulée #{relative_date(rdv.starts_at)}"
-      else
-        "RDV annulé #{relative_date(rdv.starts_at)}"
-      end
+      "RDV annulé #{relative_date(rdv.starts_at)}"
+    when :participation_cancelled
+      "Participation au RDV collectif annulée sur votre agenda #{person.domain.name} pour #{relative_date(rdv.starts_at)}"
     when :rdv_updated
       # Maybe not enough precision here (because specific design choice), the date used for agents rdv update is the previsous date of the rdv
       "modifié"

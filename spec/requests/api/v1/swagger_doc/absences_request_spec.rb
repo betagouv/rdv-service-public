@@ -57,14 +57,14 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
       parameter name: "end_time", in: :query, type: :string, description: "Heure de fin de l'absence", example: "15:00"
 
       let(:organisation) { create(:organisation) }
-      let!(:agent) { create(:agent, id: 12, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
+      let!(:agent) { create(:agent, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
       response 200, "Crée et renvoie une absence" do
-        let(:agent_id) { 12 }
+        let(:agent_id) { agent.id }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
         let(:start_time) { "08:00" }

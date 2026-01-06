@@ -69,4 +69,4 @@
           .fr-grid-row.fr-grid-row--gutters
             .fr-col.rdv-justify-content-space-between.d-flex
               = link_to t("helpers.back"), admin_organisation_rdvs_collectifs_path(current_organisation), class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
-              = f.submit t("helpers.submit.submit"), class: "fr-btn"
+              = f.submit t("helpers.submit.submit"), class: "fr-btn", disabled: @participations_to_add.empty?

@@ -1,0 +1,7 @@
+{
+  "jobs": [
+    {
+      "command": "0 6 * * * [[ -n \"${RESTARTER_BOT_API_TOKEN:-}\" ]] && install-scalingo-cli && scalingo login --api-token $RESTARTER_BOT_API_TOKEN && scalingo --region osc-secnum-fr1 --app $APP restart"
+    }
+  ]
+}

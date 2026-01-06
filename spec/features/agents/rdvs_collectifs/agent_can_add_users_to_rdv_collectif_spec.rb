@@ -19,7 +19,10 @@ RSpec.describe "Un agent peut ajouter des usagers à un RDV Collectif", js: true
       expect(page).to have_content("Atelier Collectif")
       click_on "Ajouter un participant"
       expect(page).to have_title("Ajouter un participant")
+      expect(find("input[type=submit]")).to be_disabled
       add_user(user_celeste)
+      expect(page).to have_content("Céleste KHO")
+      expect(find("input[type=submit]")).not_to be_disabled
       click_on "Enregistrer"
 
       # aucun email n’est envoyé en cas de modification des usagers car on ne partage pas l’info sur les usagers

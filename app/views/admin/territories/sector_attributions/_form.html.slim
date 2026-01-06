@@ -11,7 +11,7 @@ do |f|
     as: :radio_buttons, \
     wrapper: :vertical_collection_inline
   .d-flex.align-items-center.mb-3.mt-1.text-muted
-    i.fa.fa-info
+    = icon("fr-icon-information-fill")
     div.pl-2
     - if sector_attribution.level_organisation?
       | Toutes les disponibilités de l'organisation seront proposées aux usagers dans ce ce secteur
@@ -42,7 +42,7 @@ do |f|
 
   = f.submit \
     value: "Ajouter", \
-    class: "btn btn-primary w-100", \
+    class: "fr-btn w-100", \
     disabled: available_organisations.blank? || (sector_attribution.level_agent? && available_agents.blank?)
 
   - if available_organisations.blank?

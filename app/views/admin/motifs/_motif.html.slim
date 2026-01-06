@@ -26,27 +26,35 @@ tr
   td= motif.human_attribute_value(:location_type)
   td= "#{motif.default_duration_in_min} min."
   td.p-0
-    .d-flex
+    .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
       - if @current_tab != :archived
         - if motif_policy.edit?
-          = link_to edit_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", title: t("admin.motifs.actions.edit") do
-            i.fa.fa-edit
+          = link_to "", edit_admin_organisation_motif_path(current_organisation, motif),
+                  class: "fr-btn fr-btn--tertiary fr-icon-edit-fill",
+                  title: t("admin.motifs.actions.edit")
         - if motif_policy.duplicate?
-          = link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), class: "btn btn-link", title: t("admin.motifs.actions.duplicate") do
-            i.fa.fa-copy
+          = link_to "", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id),
+                  class: "fr-btn fr-btn--tertiary fr-icon-clipboard-fill",
+                  title: t("admin.motifs.actions.duplicate")
 
       - if motif.archived?
         - if motif_policy.unarchive?
-          = link_to unarchive_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.unarchive") do
-            i.fa.fa-arrow-up-from-bracket
+          = link_to "", unarchive_admin_organisation_motif_path(current_organisation, motif),
+                  class: "fr-btn fr-btn--tertiary fr-icon-upload-fill",
+                  method: :post,
+                  title: t("admin.motifs.actions.unarchive")
         - if motif_policy.destroy?
           - if motif.destroyable?
-            = link_to admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :delete, title: t("admin.motifs.actions.destroy"), data: { confirm: t("admin.motifs.actions.destroy_confirm") } do
-              i.fa.fa-trash-alt
+            = link_to "", admin_organisation_motif_path(current_organisation, motif),
+                    class: "fr-btn fr-btn--tertiary fr-icon-delete-fill",
+                    method: :delete,
+                    title: t("admin.motifs.actions.destroy"), data: { confirm: t("admin.motifs.actions.destroy_confirm") }
           - else
-            button.btn.btn-link [disabled="disabled" title=t("admin.motifs.actions.not_destroyable_explanation")]
-              i.fa.fa-trash-alt
+            button.fr-btn.fr-btn--tertiary.fr-icon-delete-fill [disabled="disabled" title=t("admin.motifs.actions.not_destroyable_explanation")]
       - else
         - if motif_policy.archive?
-          = link_to archive_admin_organisation_motif_path(current_organisation, motif), class: "btn btn-link", method: :post, title: t("admin.motifs.actions.archive"), data: { confirm: t("admin.motifs.actions.archive_confirm") } do
-            i.fa.fa-box-archive
+          = link_to "", archive_admin_organisation_motif_path(current_organisation, motif),
+                  class: "fr-btn fr-btn--tertiary fr-icon-archive-fill",
+                  method: :post,
+                  title: t("admin.motifs.actions.archive"),
+                  data: { confirm: t("admin.motifs.actions.archive_confirm") }

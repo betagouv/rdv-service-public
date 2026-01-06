@@ -37,6 +37,10 @@ namespace :api do
     get "lieux", to: "lieux#index"
   end
 
+  namespace :anct do
+    get "metrics", to: "metrics#index"
+  end
+
   namespace :rdvinsertion do
     resources :invitations, only: [] do
       get "creneau_availability", to: "invitations#creneau_availability", on: :collection

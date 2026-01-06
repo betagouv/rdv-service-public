@@ -120,12 +120,13 @@ RSpec.describe ProConnectController do
     end
 
     describe "agent login" do
-      def expect_agent_to_be_updated_and_logged_in(agent)
+      def expect_agent_to_be_updated_and_logged_in(agent, with_2fa: false)
         expected_attrs = {
           pro_connect_openid_sub: user_info["sub"],
           email: user_info["email"],
           first_name: "Francis",
           last_name: "Factice",
+          pro_connect_2fa_active: with_2fa,
         }
         expect(agent).to have_attributes(expected_attrs)
         expect(current_agent_id).to eq(agent.id)
@@ -175,17 +176,18 @@ RSpec.describe ProConnectController do
       end
 
       context "when an agent exists with the given email but with another sub" do
-        it "displays an error and warns Sentry" do
-          create(:agent, pro_connect_openid_sub: "another_sub", email: user_info["email"])
+        it "replaces the existing sub and warns Sentry" do
+          agent = create(:agent, pro_connect_openid_sub: "another_sub", email: user_info["email"])
           expect do
             get :callback, params: { state:, code: }
-          end.not_to change { Agent.maximum(:updated_at) }
-          expected_error_message = "Un compte agent existe déjà sur RDV Service Public pour cette adresse email"
-          expect(flash[:error]).to include(expected_error_message)
-          expect(sentry_events.last.message).to include(expected_error_message)
-          expect(sentry_events.last.extra).to eq({ user_info: })
+          end.to change { Agent.find(agent.id).pro_connect_openid_sub }.from("another_sub").to(user_info["sub"])
+
+          expect_agent_to_be_updated_and_logged_in(agent.reload)
+
+          sentry_warning_message = "Réconciliation ProConnect via e-mail, sub existant écrasé"
+          expect(sentry_events.last.message).to include(sentry_warning_message)
+          expect(sentry_events.last.extra).to eq({ user_info:, old_sub: "another_sub" })
           expect(sentry_events.last.user[:email]).to eq(user_info["email"])
-          expect(current_agent_id).to be_nil
         end
       end
 
@@ -218,6 +220,18 @@ RSpec.describe ProConnectController do
           expect(sentry_events.last.extra).to eq({ user_info: })
           expect(sentry_events.last.user[:email]).to eq(user_info["email"])
           expect(current_agent_id).to be_nil
+        end
+      end
+
+      context "when logging in with 2FA enabled" do
+        before do
+          ProConnectStubs.stub_callback_requests(code, user_info, with_2fa: true)
+        end
+
+        it "sets pro_connect_2fa_active to true" do
+          agent = create(:agent, email: user_info["email"])
+          get :callback, params: { state:, code: }
+          expect_agent_to_be_updated_and_logged_in(agent.reload, with_2fa: true)
         end
       end
     end
