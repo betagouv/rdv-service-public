@@ -23,7 +23,10 @@ class RdvBlueprint < Blueprinter::Base
   # On permet des associations optionnelles, mais on les charge toutes si le paramètre `include` n'est pas utilisé
   def self.conditional_association(association_name, blueprint_class)
     field(association_name, if: ->(_field_name, _rdv, options) { !options["include"].is_a?(Array) || association_name.to_s.in?(options["include"]) }) do |rdv, _options|
-      blueprint_class.render_as_hash(rdv.public_send(association_name))
+      associated_object = rdv.public_send(association_name)
+      if associated_object
+        blueprint_class.render_as_hash(associated_object)
+      end
     end
   end
 
