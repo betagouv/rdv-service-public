@@ -1,10 +1,12 @@
 - if model.respond_to?(:errors_are_all_benign?) && model.errors_are_all_benign?
   / warnings only appear if there are no other errors
   .fr-alert.fr-alert--warning.fr-mb-2w
-    ul.fr-mb-0[class="#{"list-unstyled" if model.benign_errors&.count == 1}"]
-      - model.benign_errors.each do |msg|
-        li
-          = msg
+    - if model.benign_errors&.count == 1
+      = model.benign_errors.first
+    - else
+      ul.fr-mb-0
+        - model.benign_errors.each do |msg|
+          li= msg
 
   - if local_assigns[:f]
     .collapse.show.js-collapse-warning-confirmation
@@ -23,6 +25,9 @@
 - elsif model.errors.any?
   .fr-alert.fr-alert--error.fr-mb-1w
     - error_messages = errors_full_messages(model).uniq
-    ul.fr-m-0.fr-pl-2w[class="#{"list-unstyled" if error_messages.count == 1}"]
-      - error_messages.each do |msg|
-        li= msg
+    - if error_messages.count == 1
+      = error_messages.first
+    - else
+      ul.fr-m-0.fr-pl-2w
+        - error_messages.each do |msg|
+          li= msg

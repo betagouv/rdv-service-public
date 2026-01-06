@@ -58,7 +58,7 @@
           span.mr-2.fr-pt-1v Nombre de RDV par page :
           .fr-pagination__list.rdv-per-page-list
             - Admin::RdvsController::PERMITTED_PER_PAGE.each do |per|
-              - path = admin_organisation_rdvs_path(current_organisation, @form.to_query.merge(per:, page: params[:page]))
+              - path = admin_organisation_rdvs_path(@form.to_query.merge(per:, page: params[:page], organisation_id: current_organisation.id))
               - if per == params.fetch(:per, 10).to_i
                 = link_to per, path, class: "fr-pagination__link fr-pagination__link--current", "aria-current": "page"
               - else
@@ -72,10 +72,7 @@
             .fr-grid-row.justify-content-center
               .fr-col-6.rdv-text-align-center.fr-mt-2w.fr-mb-5w
                 p.mb-2.lead
-                  | Aucun RDV
-                span.fa-stack.fa-4x
-                  i.fa.fa-circle.fa-stack-2x.text-primary
-                  i.far.fa-calendar.fa-stack-1x.text-white
+                  | Aucun rendez-vous
 
 .print-content.px-20
   h1 Liste de RDV de l’organisation #{current_organisation.name}

@@ -26,15 +26,15 @@ tr
         span ⚠️ Certains motifs débordent sur la durée de la plage
         =< link_to("(voir détails)", admin_organisation_planning_plage_ouverture_path(organisation_id: organisation.id, id: plage_ouverture.id))
   td
-    .d-flex
-      div.mr-3= link_to  edit_admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture),
-              title: t("helpers.edit") do
-        i.fa.fa-edit
-      div.mr-3= link_to  new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: plage_ouverture.agent, duplicate_plage_ouverture_id: plage_ouverture),
-                title: t("helpers.clone") do
-        i.fa.fa-clone
-      div.mr-3= link_to( admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture),
+    .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
+      = link_to "", edit_admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture),
+              title: "Modifier",
+              class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
+      = link_to "", new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: plage_ouverture.agent, duplicate_plage_ouverture_id: plage_ouverture),
+              title: "Dupliquer",
+              class: "fr-btn fr-btn--tertiary fr-icon-clipboard-fill"
+      = link_to "", admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture),
               method: :delete,
-              title: t("helpers.delete"),
-              data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"} ) do
-        i.fa.fa-trash-alt
+              title: "Supprimer",
+              class: "fr-btn fr-btn--tertiary fr-icon-delete-fill",
+              data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?" }

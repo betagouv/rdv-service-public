@@ -22,6 +22,7 @@ class AgentDashboard < Administrate::BaseDashboard
     rdvs: Field::HasMany.with_options(sort_by: :starts_at, direction: :desc),
     invitation_sent_at: Field::DateTime,
     pro_connect_openid_sub: Field::String,
+    pro_connect_2fa_active: Field::Boolean,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -53,6 +54,7 @@ class AgentDashboard < Administrate::BaseDashboard
     rdvs
     invitation_sent_at
     pro_connect_openid_sub
+    pro_connect_2fa_active
     created_at
     deleted_at
     updated_at

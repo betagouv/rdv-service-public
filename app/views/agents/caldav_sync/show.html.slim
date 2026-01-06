@@ -1,4 +1,10 @@
-h1 Configuration de la synchronisation Caldav
+- content_for :title do
+  | Configuration de la synchronisation Caldav
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Synchronisation d'agenda", href: agents_calendar_sync_path
+    = b.with_breadcrumb label: "Connexion à votre compte Microsoft 365"
 
 p.fr-badge.fr-badge--pink-tuile Beta
 

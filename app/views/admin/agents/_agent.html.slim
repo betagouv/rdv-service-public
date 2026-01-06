@@ -5,7 +5,7 @@ tr id="agent_#{agent.id}"
   td
     - if agent_policy.edit?
       - if agent.full_name.present?
-        span= link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "mr-2"
+        span= link_to agent.reverse_full_name, edit_admin_organisation_agent_path(current_organisation, agent), class: "fr-link mr-2"
       - unless agent.is_an_intervenant?
         / les intervenants ne peuvent pas se connecter, il est inutile de les afficher comme "Inactif".
         - if agent.last_sign_in_at.nil? && agent.invitation_sent_at.present? && agent.invitation_accepted_at.nil?
@@ -29,21 +29,24 @@ tr id="agent_#{agent.id}"
   td.text-nowrap
     span>= agent_role.human_attribute_value(:access_level)
     - if agent_role.admin?
-      i.fa.fa-user-cog
+      = icon("fr-icon-user-setting-fill")
   td
-    .d-flex
+    .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
       - if agent_policy.create? && !agent.invitation_accepted? && !agent.is_an_intervenant?
-        div.mr-3= link_to t("devise.invitations.reinvite"),
+        = link_to "",
                 reinvite_admin_organisation_invitation_path(current_organisation, agent),
-                method: :post, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+                method: :post,
+                class: "fr-btn fr-btn--tertiary fr-icon-send-plane-fill",
+                title: "Renvoyer l’invitation"
       - if agent_policy.edit?
-        div.mr-3= link_to edit_admin_organisation_agent_path(current_organisation, agent), title: t("helpers.edit") do
-          i.fa.fa-edit
+        = link_to "", edit_admin_organisation_agent_path(current_organisation, agent),
+                title: t("helpers.edit"),
+                class: "fr-btn fr-btn--tertiary fr-icon-edit-fill"
       - if agent_policy.destroy?
         - agent_removal_presenter = AgentRemovalPresenter.new(agent, current_organisation)
         - path = admin_organisation_agent_path(current_organisation, agent)
-        = link_to path,
+        = link_to "", path,
                 method: :delete,
                 title: agent_removal_presenter.button_value,
-                data: { confirm: agent_removal_presenter.confirm_message } do
-          i.fa.fa-trash-alt
+                data: { confirm: agent_removal_presenter.confirm_message },
+                class: "fr-btn fr-btn--tertiary fr-icon-delete-bin-fill"

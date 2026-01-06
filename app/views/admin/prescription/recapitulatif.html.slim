@@ -14,7 +14,7 @@ main.container
             li.list-group-item
               .row
                 .col
-                  i.fa.fa-check.fa-fw.mr-1.text-success
+                  = icon("fr-icon-check-line", class: "fr-mr-1w rdv-color-text-default-success")
                   | Usager :&nbsp;
                   = UsersHelper.reverse_full_name_and_notification_coordinates(@rdv_wizard.participation.user)
                 .col-auto
@@ -23,7 +23,7 @@ main.container
               li.list-group-item
                 .row
                   .col
-                    i.fa.fa-check.fa-fw.mr-1.text-success
+                    = icon("fr-icon-check-line", class: "fr-mr-1w rdv-color-text-default-success")
                     |> Contexte :
                     = @rdv_wizard.context&.strip&.truncate_words(6)&.presence || "N/A"
                   .col-auto

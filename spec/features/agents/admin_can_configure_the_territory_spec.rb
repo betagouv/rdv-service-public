@@ -6,7 +6,7 @@ RSpec.describe "Admin can configure the territory" do
       agent = create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [territory])
       login_as(agent, scope: :agent)
 
-      visit edit_admin_territory_path(territory, agent)
+      visit edit_admin_territory_path(territory)
       fill_in("Nom", with: "Commune de Montreuil")
       click_on "Enregistrer"
       expect(territory.reload.name).to eq("Commune de Montreuil")
@@ -19,7 +19,7 @@ RSpec.describe "Admin can configure the territory" do
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [])
       login_as(agent, scope: :agent)
-      visit edit_admin_territory_path(territory, agent)
+      visit edit_admin_territory_path(territory)
       expect(page).to have_content("Vous n’avez pas les droits suffisants")
     end
   end

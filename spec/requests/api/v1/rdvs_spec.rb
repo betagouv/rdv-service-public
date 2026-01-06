@@ -105,5 +105,13 @@ RSpec.describe "RDV API" do
         expect(Rdv.last.created_by).to eq user_on_new_instance
       end
     end
+
+    it "returns a JSON response and warns sentry in case of unexpected error" do
+      allow(Rdv).to receive(:new).and_raise("boom")
+      post "/api/v1/rdvs", headers:, params: {}, as: :json
+
+      expect(response.parsed_body["errors"]).to include("Unexpected internal error")
+      expect(sentry_events.last.exception.values.first.value).to eq("boom (RuntimeError)")
+    end
   end
 end

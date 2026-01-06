@@ -1,8 +1,11 @@
 - content_for(:menu_item) { @contextual_agents.present? ? "menu-agendas" : "menu-rdvs-list" }
 
 - content_for :fil_ariane do
-  = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
-    = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b, contextual_agents: @contextual_agents }
+  - if @contextual_agents.present?
+    = render partial: "admin/rdvs/bouton_retour_agenda", locals: { rdv: @rdv, contextual_agents: @contextual_agents }
+  - else
+    = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
+      = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b }
 
 - content_for :title do
   = "RDV #{rdv_title_for_agent(@rdv)}"

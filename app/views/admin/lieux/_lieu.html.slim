@@ -13,6 +13,6 @@ tr id="lieu_#{lieu.id}"
   td= link_to nb_rdv > 0 ? nb_rdv : "aucun", admin_organisation_rdvs_path(current_organisation, lieu_id: lieu.id, start: Time.zone.now.beginning_of_day, end: Time.zone.now.end_of_day )
   td
     - if @lieux_policy.edit?
-      div.mr-3= link_to edit_admin_organisation_lieu_path(current_organisation, lieu),
-              title: t("helpers.edit") do
-        i.fa.fa-edit
+      div.mr-3= link_to "", edit_admin_organisation_lieu_path(current_organisation, lieu),
+              title: t("helpers.edit"),
+              class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-edit-fill"

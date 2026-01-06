@@ -64,7 +64,9 @@ class ProConnectController < ApplicationController
       when "agent"
         connect_agent(callback_client)
       else
-        raise "Unknown connection_for #{pro_connect_session[:connection_for]}"
+        Sentry.capture_message("Unknown connection_for: #{pro_connect_session[:connection_for].inspect}", extra: { session: session.to_h, pro_connect_session: })
+        flash[:error] = generic_error_message
+        redirect_to(new_agent_session_path)
       end
     else
       flash[:error] = generic_error_message
@@ -185,6 +187,7 @@ class ProConnectController < ApplicationController
       first_name: callback_client.user_first_name,
       last_name: callback_client.user_last_name,
       proconnect_siret: callback_client.user_siret,
+      pro_connect_2fa_active: callback_client.went_through_2fa?,
       invitation_token: nil, # Pour désactiver les anciens liens d'invitation
       invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now,
       confirmed_at: agent.confirmed_at || Time.zone.now,

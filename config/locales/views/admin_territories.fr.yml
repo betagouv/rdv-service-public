@@ -8,7 +8,6 @@ fr:
             organisation: Organisation
             url: URL cible
             actions: Actions
-          confirm_destroy: Voulez-vous vraiment supprimer ce endpoint ?
         new:
           title: Ajouter un webhook
           card-title: Ajouter le webhook

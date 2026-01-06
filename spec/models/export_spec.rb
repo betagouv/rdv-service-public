@@ -8,9 +8,11 @@ RSpec.describe Export do
   end
 
   describe "#expires_at" do
-    it "is set upon build" do
-      export = build(:export)
-      expect(export.expires_at).to be_within(1.second).of(6.hours.from_now)
+    it "is set upon build to tomorrow at 00:00 (aka today at midnight)" do
+      travel_to(Time.zone.parse("2025-10-22 20:30")) do
+        export = build(:export)
+        expect(export.expires_at).to be_within(1.second).of(Time.zone.parse("2025-10-23 00:00"))
+      end
     end
   end
 
