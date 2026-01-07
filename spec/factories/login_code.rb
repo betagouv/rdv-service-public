@@ -6,7 +6,5 @@ FactoryBot.define do
     code { SecureRandom.random_number(100_000..999_999).to_s }
     used_at { nil }
     domain_id { "RDV_SERVICE_PUBLIC" }
-
-    after(:build) { create(:user, email: _1.email) unless User.exists?(email: _1.email) } # necessary to pass validations
   end
 end

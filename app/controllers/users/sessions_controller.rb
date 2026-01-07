@@ -14,7 +14,7 @@ class Users::SessionsController < Devise::SessionsController
       flash[:alert] = nil
     end
 
-    @login_code = LoginCode.new(email: params.dig(:login_code, :email))
+    @demande_login_code_form = Users::DemandeLoginCodeForm.new(LoginCode.new(email: params.dig(:login_code, :email)))
 
     super
   end
