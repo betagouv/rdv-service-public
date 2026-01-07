@@ -60,7 +60,7 @@ class SearchController < ApplicationController
 
   def public_link_with_internal_organisation_id
     organisation = Organisation.find(params[:organisation_id])
-    redirect_to_organisation_search(organisation)
+    redirect_to_organisation_search(organisation, params[:motif_id])
   end
 
   def public_link_with_external_organisation_id
@@ -118,11 +118,12 @@ class SearchController < ApplicationController
     public_link_to_org_url(organisation_id: export.destination_organisation_id, org_slug: organisation.slug, host: ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"])
   end
 
-  def redirect_to_organisation_search(organisation)
+  def redirect_to_organisation_search(organisation, motif_id = nil)
     if organisation
-      redirect_to prendre_rdv_path(
-        public_link_organisation_id: organisation.id, departement: organisation.territory.departement_number
-      )
+      redirect_to prendre_rdv_path({
+        public_link_organisation_id: organisation.id, departement: organisation.territory.departement_number,
+        motif_id:,
+      }.compact)
     else
       flash[:alert] = "Organisation non trouvée"
       redirect_to root_path
