@@ -6,7 +6,10 @@
   .card-body.fr-pt-4w
     - if @existing_login_code
       = render "model_errors", model: @existing_login_code
-      p ✅ Un code à 6 chiffres a été envoyé à #{@existing_login_code.email} à #{l(@existing_login_code.created_at, format: :time_only)}
+      p
+        |> ✅ Un code à 6 chiffres a été envoyé à
+        b> #{@existing_login_code.email}
+        | à #{l(@existing_login_code.created_at, format: :time_only)}
 
       - if Rails.env.development?
         .fr-mb-4w

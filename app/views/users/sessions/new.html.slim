@@ -29,7 +29,7 @@
         = render "model_errors", model: @login_code_form_request, form: f
         = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", required: true, label: "Adresse email", autocomplete: "email"
         .rdv-text-align-center
-          = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn"
+          = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn rdv-width-100 rdv-width-md-auto"
           .fr-mt-4w.fr-mb-2w.fr-text--sm
             |> Vous pouvez aussi vous
             = link_to "connecter par mot de passe", new_user_session_path(with_password: true)
