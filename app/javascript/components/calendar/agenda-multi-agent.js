@@ -47,14 +47,11 @@ class AgendaMultiAgent {
       headerToolbar: {
         left: "today,prev,next,title",
         center: "resourceTimeGridDay,resourceTimeGridWeek",
-        right: "",
+        right: "agendaOptions",
       },
       titleFormat: betaWeekTitleFormat,
       dayHeaderFormat: betaDayHeaderFormat,
       customButtons: this.customButtons(),
-      footerToolbar: {
-        end: "toggleGrouping"
-      },
       datesAboveResources: this.getGroupByDate(),
       datesSet: this.datesSet,
       hiddenDays: hiddenDays,
@@ -131,6 +128,10 @@ class AgendaMultiAgent {
 
   customButtons = () => {
     return {
+      agendaOptions: {
+        text: "Préférences d’affichage",
+        click: () => { window.dsfr(document.getElementById("agenda-preferences-modal")).modal.disclose(); },
+      },
       toggleGrouping: {
         text: this.getGroupByDate() ? "Grouper par agent" : "Grouper par date",
         click: this.toggleGrouping,
