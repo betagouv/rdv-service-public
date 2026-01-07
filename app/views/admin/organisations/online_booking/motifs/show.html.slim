@@ -33,7 +33,7 @@
     - if @motif.bookable_by_everyone? && !current_organisation.sectorized?
       .card
         .card-body
-          h2.fr-h4 Lien de réservation
+          h2.fr-h4 Lien de réservation direct
           - motif_booking_link = public_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug, motif_id: @motif.id)
           = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: motif_booking_link }
 
