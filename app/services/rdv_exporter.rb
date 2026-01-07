@@ -26,24 +26,26 @@ module RdvExporter
     "rdv collectif",
   ].freeze
 
-  def self.xls_string_from_rdvs_rows(rdvs_rows)
+  def self.write_xls_to_io(io, rows_enum)
     workbook = Spreadsheet::Workbook.new
     sheet = workbook.create_worksheet
     sheet.row(0).concat(HEADER)
 
-    rdvs_rows.each.with_index(1) do |row_content, row_index|
-      row = sheet.row(row_index)
-      row.set_format 1, DateFormat
-      row.set_format 2, HourFormat
-      row.set_format 4, DateFormat
-      row.set_format 5, HourFormat
+    row_index = 1
 
-      row.concat(row_content)
+    rows_enum.each do |row|
+      sheet_row = sheet.row(row_index)
+      # Apply formatting
+      sheet_row.set_format 3, DateFormat
+      sheet_row.set_format 4, HourFormat
+      sheet_row.set_format 6, DateFormat
+      sheet_row.set_format 7, HourFormat
+
+      sheet_row.concat(row)
+      row_index += 1
     end
 
-    file = StringIO.new
-    workbook.write(file)
-    file.string
+    workbook.write(io)
   end
 
   def self.rows_from_rdvs(rdvs)

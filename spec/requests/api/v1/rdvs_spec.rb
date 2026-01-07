@@ -58,6 +58,42 @@ RSpec.describe "RDV API" do
       expect(parsed_response_body["rdvs"].count).to eq 1
       expect(parsed_response_body["rdvs"].first["id"]).to eq cancelled_rdv.id
     end
+
+    describe "selecting which associations are loaded" do
+      it "makes the api response smaller" do
+        get "/api/v1/rdvs", headers: headers, params: { include: %w[lieu motif agents] }
+        rdv = parsed_response_body["rdvs"].first
+
+        expect(rdv["agents"]).to be_present
+        expect(rdv["lieu"]).to be_present
+        expect(rdv["motif"]).to be_present
+
+        expect(rdv).not_to have_key("organisation")
+        expect(rdv).not_to have_key("users")
+        expect(rdv).not_to have_key("participations")
+      end
+
+      it "supports a comma separated string syntax" do
+        get "/api/v1/rdvs", headers: headers, params: { include: "lieu,motif,agents" }
+        rdv = parsed_response_body["rdvs"].first
+
+        expect(rdv["agents"]).to be_present
+        expect(rdv["lieu"]).to be_present
+        expect(rdv["motif"]).to be_present
+
+        expect(rdv).not_to have_key("organisation")
+        expect(rdv).not_to have_key("users")
+        expect(rdv).not_to have_key("participations")
+      end
+
+      it "also works when filtering by user_id" do
+        get "/api/v1/rdvs", headers: headers, params: { include: %w[lieu motif agents], user_id: user.id }
+
+        rdv = parsed_response_body["rdvs"].first
+        expect(rdv["agents"]).to be_present
+        expect(rdv).not_to have_key("organisation")
+      end
+    end
   end
 
   describe "#create" do
@@ -104,6 +140,14 @@ RSpec.describe "RDV API" do
 
         expect(Rdv.last.created_by).to eq user_on_new_instance
       end
+    end
+
+    it "returns a JSON response and warns sentry in case of unexpected error" do
+      allow(Rdv).to receive(:new).and_raise("boom")
+      post "/api/v1/rdvs", headers:, params: {}, as: :json
+
+      expect(response.parsed_body["errors"]).to include("Unexpected internal error")
+      expect(sentry_events.last.exception.values.first.value).to eq("boom (RuntimeError)")
     end
   end
 end

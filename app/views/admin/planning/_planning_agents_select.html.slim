@@ -7,9 +7,15 @@
         = form_with(url: url_for({}), method: :get, class: "d-flex rdv-align-items-end") do |form|
           div
             ruby:
-              # Le select initial contient tous les agents sélectionnés, puis il sera alimenté en Ajax.
-              collection = @agents.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
+              # Les options à avoir dans le select sont soit :
+              #   - tous les agents actuellement sélectionnés
+              #   - l'agent actuellement sélectionné + les agents précédemment sélectionnés
+              #     afin de les proposer au clic sur "Sélectionner plusieurs agents"
+              # À noter que dès que le select est cliqué, ses nouvelles options sont récupérées via appel Ajax.
+              agents = @agents.to_a + Array(@previously_selected_agents)
+              collection = agents.uniq.map { |agent| [agent.reverse_full_name_or_email, agent.id] }
               data = {
+                "latest-selected-agent-ids": @previously_selected_agents&.map(&:id),
                 "select2-config": {
                   ajax: {
                     url: search_agents_agents_path(organisation_id: current_organisation),

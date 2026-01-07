@@ -1,26 +1,33 @@
 class ParticipationsExportSendEmailJob < ExportJob
+  include GoodJob::ActiveJobExtensions::Concurrency
+
+  good_job_control_concurrency_with(
+    perform_limit: 1,
+    key: -> { "high_ram_usage_export" }
+  )
+
   def perform(batch, _params)
     export = Export.find(batch.properties[:export_id])
-
     redis_key = redis_key(export.id)
 
-    pages = Redis.with_connection { |redis| redis.hgetall(redis_key) }
+    page_numbers = Redis.with_connection { |redis| redis.hkeys(redis_key).map(&:to_i).sort }
 
-    page_numbers = pages.keys.map(&:to_i).sort
+    rows_enum = Enumerator.new do |yielder|
+      page_numbers.each do |page_number|
+        json = Redis.with_connection { |redis| redis.hget(redis_key, page_number) }
 
-    rdvs_rows = []
-    page_numbers.each do |page_number|
-      page = JSON.parse(pages[page_number.to_s])
-
-      rdvs_rows += page
+        JSON.parse(json).each do |row|
+          yielder << row
+        end
+      end
     end
 
-    xls_string = ParticipationExporter.xls_string_from_participations_rows(rdvs_rows)
-
-    export.store_file(xls_string)
+    Tempfile.create do |file|
+      ParticipationExporter.write_xls_to_io(file, rows_enum)
+      file.rewind
+      export.store_file(file.read)
+    end
 
     Agents::ExportMailer.participations_export(export.id).deliver_later
-
-    Redis.with_connection { |redis| redis.del(redis_key) }
   end
 end
