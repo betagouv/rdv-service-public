@@ -15,10 +15,6 @@ module AgentsHelper
     current_organisation.agents.active.limit(10).count == 10
   end
 
-  def meet_the_team_url
-    "https://cal.com/team/rdv-service-public/temps-d-echanges"
-  end
-
   def current_agent?(agent)
     agent.id == current_agent.id
   end
