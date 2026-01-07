@@ -7,33 +7,33 @@
             .fr-modal__header
               button#button-5.fr-btn--close.fr-btn[aria-controls="agenda-preferences-modal" title="Fermer" type="button"]
                 | Fermer
-            .fr-modal__content.fr-mb-4v
+            .fr-modal__content
               h2#agenda-preferences-modal-title.fr-modal__title
                 | Préférences d’affichage
 
-              fieldset#agenda-options.fr-fieldset[aria-labelledby="agenda-options-legend"]
-                legend#agenda-options-legend.fr-fieldset__legend.fr-fieldset__legend--regular
-                  | Personnalisez la vue de votre agenda
-                .fr-fieldset__element
-                  = form_with url: admin_organisation_planning_toggle_displays_path(current_organisation), method: :put do |f|
-                    .rdv-display-flex.rdv-flex-direction-column
-                      ul.fr-toggle__list
-                        li
-                          .fr-toggle
-                            = f.check_box :display_cancelled_rdv, class: "fr-toggle__input", checked: current_agent.display_cancelled_rdv
-                            = f.label :display_cancelled_rdv, "Afficher les RDV annulés", class: "fr-toggle__label"
+              = form_with url: admin_organisation_planning_toggle_displays_path(current_organisation), method: :put do |f|
+                fieldset#agenda-options.fr-fieldset[aria-labelledby="agenda-options-legend"]
+                  legend#agenda-options-legend.fr-fieldset__legend.fr-fieldset__legend--regular
+                    | Personnalisez la vue de votre agenda
 
-                        li
-                          .fr-toggle
-                            = f.check_box :display_saturdays, class: "fr-toggle__input", checked: current_agent.display_saturdays
-                            = f.label :display_saturdays, current_territory.work_on_sunday? ? "Afficher les week-ends" : "Afficher les samedis", class: "fr-toggle__label"
+                  .fr-fieldset__element
+                    .fr-checkbox-group
+                      = f.check_box :display_cancelled_rdv, checked: current_agent.display_cancelled_rdv
+                      = f.label :display_cancelled_rdv, "Afficher les RDV annulés", class: "fr-label"
 
-                        li
-                          .fr-toggle
-                            = f.check_box :group_by_agent, class: "fr-toggle__input", checked: current_agent.display_saturdays
-                            = f.label :group_by_agent, "Grouper par agent", class: "fr-toggle__label"
+                  .fr-fieldset__element
+                    .fr-checkbox-group
+                      = f.check_box :display_saturdays, checked: current_agent.display_saturdays
+                      = f.label :display_saturdays, current_territory.work_on_sunday? ? "Afficher les week-ends" : "Afficher les samedis", class: "fr-label"
 
-                      = f.submit "Enregistrer", class: "fr-btn"
+                  - if @agents.size > 1
+                    .fr-fieldset__element
+                      .fr-checkbox-group
+                        = f.check_box :group_by_agent, checked: current_agent.group_by_agent
+                        = f.label :group_by_agent, "Grouper par agent", class: "fr-label"
+
+                / .mt-2
+                = f.submit "Enregistrer", class: "fr-btn"
 
 - else
   .mt-2.flex-grow-1.text-right

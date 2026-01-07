@@ -52,7 +52,7 @@ class AgendaMultiAgent {
       titleFormat: betaWeekTitleFormat,
       dayHeaderFormat: betaDayHeaderFormat,
       customButtons: this.customButtons(),
-      datesAboveResources: this.getGroupByDate(),
+      datesAboveResources: this.data.groupByAgent !== "true",
       datesSet: this.datesSet,
       hiddenDays: hiddenDays,
       select: this.selectEvent,
@@ -99,13 +99,6 @@ class AgendaMultiAgent {
     this.refreshColumnsVisualGrouping();
   }
 
-  toggleGrouping = () => {
-    localStorage.setItem("groupByDate", this.getGroupByDate() ? "false" : "true");
-    this.fullCalendarInstance.setOption("datesAboveResources", this.getGroupByDate());
-    this.fullCalendarInstance.setOption("customButtons", this.customButtons());
-    this.refreshColumnsVisualGrouping();
-  }
-
   refreshColumnsVisualGrouping = () => {
     const allColumns = document.querySelectorAll(".fc-timegrid-col.fc-day");
     const WHITE = "#FFF";
@@ -115,16 +108,12 @@ class AgendaMultiAgent {
       return allColumns.forEach(column => column.style.backgroundColor = WHITE); // Reset to white
     }
 
-    const groupingCriteria = (column) => (this.getGroupByDate() ? column.dataset.date : column.dataset.resourceId);
+    const groupingCriteria = (column) => (this.data.groupByAgent === "true" ? column.dataset.resourceId : column.dataset.date);
     Object.values(Object.groupBy(allColumns, groupingCriteria))
       .forEach((columnGroup, i) =>
         columnGroup.forEach(column => column.style.backgroundColor = i % 2 ? WHITE : GREY)
       );
   };
-
-  getGroupByDate = () => {
-    return localStorage.getItem("groupByDate") !== "false";
-  }
 
   customButtons = () => {
     return {
@@ -132,10 +121,6 @@ class AgendaMultiAgent {
         text: "Préférences d’affichage",
         click: () => { window.dsfr(document.getElementById("agenda-preferences-modal")).modal.disclose(); },
       },
-      toggleGrouping: {
-        text: this.getGroupByDate() ? "Grouper par agent" : "Grouper par date",
-        click: this.toggleGrouping,
-      }
     }
   }
 }
