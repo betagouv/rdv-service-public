@@ -31,7 +31,7 @@ RSpec.describe "Motifs API" do
       end
     end
 
-    context "when a motif already exists for the given external reference" do
+    context "when calling the endpoint twice with the same external reference" do
       let(:params) do
         {
           name: "Suivi de dossier",
@@ -46,14 +46,9 @@ RSpec.describe "Motifs API" do
         }
       end
 
-      let!(:existing_motif) do
-        create(:motif, organisation_id: organisation.id)
-      end
-      let!(:external_reference) do
-        create(:external_reference, oauth_application: application, item: existing_motif, territory_id: organisation.territory_id, external_id: "123ABC")
-      end
+      it "creates only one motif and returns an error message on the second call" do
+        expect { post "/api/v1/motifs", headers:, params:, as: :json }.to change(Motif, :count)
 
-      it "doesn't create the motif and returns an error message" do
         expect { post "/api/v1/motifs", headers:, params:, as: :json }.not_to change(Motif, :count)
 
         expect(response.status).to eq 422
