@@ -24,6 +24,9 @@
         = render "common/form/current_password_input", f:, forgotten_password_link: true, forgotten_password_link_label: @rdv_wizard.present? ? "Mot de passe oublié ?" : "Mot de passe oublié ou première connexion ?"
         .rdv-text-align-center
           = f.submit "Se connecter", class: "fr-mt-2v fr-btn"
+          .fr-mt-4w.fr-mb-2w.fr-text--sm
+            |> Vous pouvez aussi vous
+            = link_to "connecter via code à 6 chiffres", new_user_session_path
     - else
       = form_for @login_code_form_request, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_form_request do |f|
         = render "model_errors", model: @login_code_form_request, form: f
