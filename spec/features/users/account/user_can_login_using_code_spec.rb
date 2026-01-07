@@ -40,9 +40,8 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       click_on "Recevoir un code de connexion"
       expect(page).to have_content("Saisie du code")
       click_on "page de connexion"
-      click_on "Recevoir un code de connexion"
+      expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
       expect(page).to have_content("Un code a été envoyé à marco@lolmail.fr il y a moins de deux minutes")
-      expect(LoginCode.where(email: "marco@lolmail.fr").count).to eq(1)
     end
   end
 

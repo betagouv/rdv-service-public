@@ -5,11 +5,6 @@ class Users::LoginCodesController < ApplicationController
 
   def create
     email = params[:demande_login_code_form][:email]
-    if email && LoginCode.most_recent_usable_for(email:)&.very_recent?
-      return redirect_to new_users_sessions_by_code_path(email:), flash: { notice: <<~NOTICE }
-        Un code a été envoyé à #{email} il y a moins de deux minutes. Vous devriez recevoir ce code d’ici peu de temps.
-      NOTICE
-    end
 
     @demande_login_code_form = Users::DemandeLoginCodeForm.new(LoginCode.new(email:, domain_id: current_domain.id))
 
