@@ -33,7 +33,7 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
         )
       )
 
-      existing_external_reference = external_reference_scope.find_by({})
+      existing_external_reference = external_reference_scope.first
 
       if existing_external_reference
         error_response = {
