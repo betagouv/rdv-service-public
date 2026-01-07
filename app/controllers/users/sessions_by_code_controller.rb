@@ -9,8 +9,6 @@ class Users::SessionsByCodeController < ApplicationController
     @email = params[:email]
     return redirect_to(new_user_session_path) if @email.blank?
 
-    return redirect_to(new_user_session_path, flash: { error: "Veuillez recommencer votre connexion" }) unless User.exists?(email:)
-
     @existing_login_code = LoginCode.most_recent_usable_for(email:)
   end
 
