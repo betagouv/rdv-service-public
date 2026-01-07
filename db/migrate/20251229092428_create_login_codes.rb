@@ -5,8 +5,7 @@ class CreateLoginCodes < ActiveRecord::Migration[8.0]
       t.string :code, null: false
       t.string :domain_id, null: false
       t.datetime :used_at
-
-      t.timestamps
+      t.datetime :created_at, null: false, comment: "pas de updated_at car les login_codes sont quasiment immutables"
 
       t.index %i[email created_at]
     end

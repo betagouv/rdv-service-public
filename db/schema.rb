@@ -373,8 +373,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.string "code", null: false
     t.string "domain_id", null: false
     t.datetime "used_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", null: false, comment: "pas de updated_at car les login_codes sont quasiment immutables"
     t.index ["email", "created_at"], name: "index_login_codes_on_email_and_created_at"
   end
 
