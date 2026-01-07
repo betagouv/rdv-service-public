@@ -47,7 +47,7 @@ class AgendaMultiAgent {
       headerToolbar: {
         left: "today,prev,next,title",
         center: "resourceTimeGridDay,resourceTimeGridWeek",
-        right: "agendaOptions",
+        right: "preferencesModalToggle",
       },
       titleFormat: betaWeekTitleFormat,
       dayHeaderFormat: betaDayHeaderFormat,
@@ -117,7 +117,7 @@ class AgendaMultiAgent {
 
   customButtons = () => {
     return {
-      agendaOptions: {
+      preferencesModalToggle: {
         text: "Préférences d’affichage",
         click: () => { window.dsfr(document.getElementById("agenda-preferences-modal")).modal.disclose(); },
       },

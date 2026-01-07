@@ -57,7 +57,7 @@ export class AgendaMonoAgent {
       select: this.selectEvent,
       headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
       customButtons: {
-        agendaOptions: {
+        preferencesModalToggle: {
           text: "Préférences d’affichage",
           click: () => { window.dsfr(document.getElementById("agenda-preferences-modal")).modal.disclose(); },
         }
