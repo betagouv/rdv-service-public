@@ -18,11 +18,6 @@ class LoginCode < ApplicationRecord
     self.code ||= SecureRandom.random_number(100_000..999_999).to_s
   end
 
-  def safe_to_display!
-    readonly!
-    self.code = nil
-  end
-
   def expired? = created_at < EXPIRE_AFTER.ago
   def used? = used_at.present?
   def usable? = !expired? && !used?

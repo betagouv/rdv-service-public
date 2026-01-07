@@ -11,10 +11,9 @@ class Users::SessionsByCodeController < ApplicationController
 
     return redirect_to(new_user_session_path, flash: { error: "Veuillez recommencer votre connexion" }) unless User.exists?(email:)
 
-    @existing_login_code = LoginCode.most_recent_usable_for(email:)&.tap(&:safe_to_display!)
+    @existing_login_code = LoginCode.most_recent_usable_for(email:)
   end
 
-  # rubocop:disable Metrics/PerceivedComplexity
   def create
     @email = params[:login_code][:email]
     submitted_login_code = params[:login_code][:code]
@@ -27,7 +26,7 @@ class Users::SessionsByCodeController < ApplicationController
       matching_login_code.update!(used_at: Time.zone.now)
       redirect_to after_sign_in_path_for(user), flash: { success: "Connexion réussie" }
     elsif LoginCode.where(email:).usable.any?
-      @existing_login_code = LoginCode.most_recent_usable_for(email:)&.tap(&:safe_to_display!)
+      @existing_login_code = LoginCode.most_recent_usable_for(email:)
       @existing_login_code.errors.add(:base, "Veuillez renseigner le dernier code qui vous a été envoyé par email, ou attendre quelques instants de le recevoir")
       render :new
     else
@@ -42,7 +41,6 @@ class Users::SessionsByCodeController < ApplicationController
       redirect_to new_users_sessions_by_code_path(email:)
     end
   end
-  # rubocop:enable Metrics/PerceivedComplexity
 
   private
 
