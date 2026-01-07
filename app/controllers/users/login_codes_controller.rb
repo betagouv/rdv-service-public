@@ -16,8 +16,6 @@ class Users::LoginCodesController < ApplicationController
     if @login_code.save
       Users::LoginCodeMailer.with(login_code: @login_code).login_code.deliver_later
       redirect_to new_users_sessions_by_code_path(email:)
-    elsif Agent.exists?(email:)
-      redirect_to new_agent_session_path(agent: { email: })
     else
       render "users/sessions/new"
     end

@@ -75,8 +75,7 @@ RSpec.describe "User signs up and signs in" do
         fill_in "Adresse email", with: "dulce@agent.fr"
         click_on "Recevoir un code de connexion"
       end
-      expect(page).to have_content("Connexion agent")
-      expect(page.find("input", id: "agent_email").value).to eq("dulce@agent.fr")
+      expect(page).to have_content(/Si vous souhaitez vous connecter en tant qu’agent/)
     end
   end
 
