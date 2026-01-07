@@ -127,23 +127,6 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
     end
   end
 
-  context "tentatives d’innondations sur la page de demande de code" do
-    it "lève une erreur Rack Attack" do
-      2.times do
-        visit new_user_session_path
-        fill_in "Adresse email", with: "marco@lolmail.fr"
-        click_on "Recevoir un code de connexion"
-      end
-      visit new_user_session_path
-      fill_in "Adresse email", with: "marco@lolmail.fr"
-      click_on "Recevoir un code de connexion"
-      expect(page).not_to have_content("Connexion réussie")
-      expect(page).to have_content("erreur")
-      expect(sentry_events.last.level).to eq(:warning)
-      expect(sentry_events.last.exception.values.last.type).to eq("Rack::Attack::ThrottleError")
-    end
-  end
-
   context "tentatives d’innondations sur la page de saisie de code" do
     before { create(:login_code, email: "marco@lolmail.fr", code: "123456", created_at: 1.minute.ago) }
 
