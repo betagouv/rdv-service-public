@@ -23,12 +23,15 @@ class ProConnectController < ApplicationController
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def callback
-    pro_connect_session = session.delete(:pro_connect)
+    if params[:error] == "server_error"
+      flash[:error] = "L'authentification a échoué en raison d'une erreur côté ProConnect. Nous vous invitons à contacter leur support."
+      redirect_to root_path and return
+    end
 
+    pro_connect_session = session.delete(:pro_connect)
     unless pro_connect_session
       flash[:error] = generic_error_message
-      redirect_to root_path
-      return
+      redirect_to root_path and return
     end
 
     pro_connect_session.symbolize_keys!
