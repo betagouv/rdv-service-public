@@ -1,4 +1,4 @@
-RSpec.describe Users::DemandeLoginCodeForm, type: :form_model do
+RSpec.describe Users::LoginCodeRequestForm, type: :form_model do
   context "l’usager existe et tout est correct" do
     let!(:user) { create(:user, email: "us@ger.fr") }
 

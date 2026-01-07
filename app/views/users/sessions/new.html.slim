@@ -25,8 +25,8 @@
         .rdv-text-align-center
           = f.submit "Se connecter", class: "fr-mt-2v fr-btn"
     - else
-      = form_for @demande_login_code_form, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :demande_login_code_form do |f|
-        = render "model_errors", model: @demande_login_code_form, form: f
+      = form_for @login_code_form_request, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_form_request do |f|
+        = render "model_errors", model: @login_code_form_request, form: f
         = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", required: true, label: "Adresse email", autocomplete: "email"
         .rdv-text-align-center
           = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn"

@@ -4,12 +4,12 @@ class Users::LoginCodesController < ApplicationController
   include CanHaveRdvWizardContext
 
   def create
-    email = params[:demande_login_code_form][:email]
+    email = params[:login_code_form_request][:email]
 
-    @demande_login_code_form = Users::DemandeLoginCodeForm.new(LoginCode.new(email:, domain_id: current_domain.id))
+    @login_code_form_request = Users::LoginCodeRequestForm.new(LoginCode.new(email:, domain_id: current_domain.id))
 
-    if @demande_login_code_form.save
-      Users::LoginCodeMailer.with(login_code: @demande_login_code_form.login_code).login_code.deliver_later
+    if @login_code_form_request.save
+      Users::LoginCodeMailer.with(login_code: @login_code_form_request.login_code).login_code.deliver_later
       redirect_to new_users_sessions_by_code_path(email:)
     else
       render "users/sessions/new"

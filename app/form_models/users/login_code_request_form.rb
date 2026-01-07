@@ -1,5 +1,5 @@
 module Users
-  class DemandeLoginCodeForm
+  class LoginCodeRequestForm
     include ActiveModel::Model
 
     attr_reader :login_code
