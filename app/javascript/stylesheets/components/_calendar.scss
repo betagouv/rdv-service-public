@@ -72,7 +72,7 @@ main[data-beta-planning-layout="true"] .fc {
 
     padding: 8px 16px;
 
-    border: 1px solid transparent;
+    border: none;
     box-shadow: rgb(221, 221, 221) 0 0 0 1px inset;
 
     &:hover {
@@ -87,6 +87,7 @@ main[data-beta-planning-layout="true"] .fc {
       color: var(--blue-france-sun-113-625);
       background-color: white;
       border: 1px solid #000091;
+      margin: -1px; // Pour compenser le changement de taille causé par le border
       border-radius: 4px;
     }
   }
