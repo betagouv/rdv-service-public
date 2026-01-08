@@ -74,8 +74,9 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   private
 
   def authenticate_agent
-    if request.headers.include?("X-Agent-Auth-Signature") && ENV["AUTHORIZE_DEPRECATED_API_AUTH"].present?
-      # Ce mode d'authentification est déprécié, et n'est autorisé que sur l'instance historique
+    if request.headers.include?("X-Agent-Auth-Signature")
+      # Ce mode d'authentification n'est utilisé que par RDV Insertion et ne fonctionne que sur l'instance historique,
+      # puisqu'il dépend de la variable d'env SHARED_SECRET_FOR_AGENTS_AUTH
       authenticate_agent_with_shared_secret
     elsif request.headers["HTTP_ACCESS_TOKEN"] && ENV["AUTHORIZE_DEPRECATED_API_AUTH"].present?
       # Ce mode d'authentification est déprécié, et n'est autorisé que sur l'instance historique
