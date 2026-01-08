@@ -5,7 +5,7 @@ export const betaPlanningEnabled = () => {
   return !!document.querySelector('main[data-beta-planning-layout="true"]');
 };
 
-export const betaHeaderToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "" };
+export const betaHeaderToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "preferencesModalToggle" };
 export const classicHeaderToolbarLayout = { center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek" };
 
 export const betaWeekTitleFormat = { month: "long", year: "numeric" };

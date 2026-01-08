@@ -30,9 +30,9 @@ RSpec.describe "Migrating an agent from one organisation to another" do
     expect(rdv3.reload.organisation).to eq(new_organisation)
 
     # Motifs a copied to new org
-    expect(rdv1.motif).to have_attributes(motif1.attributes.except("id", "organisation_id", "created_at", "updated_at"))
-    expect(rdv2.motif).to have_attributes(motif1.attributes.except("id", "organisation_id", "created_at", "updated_at"))
-    expect(rdv3.motif).to have_attributes(motif2.attributes.except("id", "organisation_id", "created_at", "updated_at"))
+    expect(rdv1.motif).to have_attributes(motif1.attributes.except("id", "organisation_id", "created_at", "updated_at", "public_link_id"))
+    expect(rdv2.motif).to have_attributes(motif1.attributes.except("id", "organisation_id", "created_at", "updated_at", "public_link_id"))
+    expect(rdv3.motif).to have_attributes(motif2.attributes.except("id", "organisation_id", "created_at", "updated_at", "public_link_id"))
     expect([rdv1.motif, rdv3.reload.motif]).to match_array(new_organisation.motifs)
 
     # RVS users are present in the new org
