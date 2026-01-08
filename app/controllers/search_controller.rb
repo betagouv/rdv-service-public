@@ -132,7 +132,7 @@ class SearchController < ApplicationController
       redirect_to prendre_rdv_path({
         public_link_organisation_id: organisation.id,
         departement: organisation.territory.departement_number,
-        motif_id: motif.id,
+        motif_id: motif&.id,
       }.compact)
     else
       flash[:alert] = "Organisation non trouvée"

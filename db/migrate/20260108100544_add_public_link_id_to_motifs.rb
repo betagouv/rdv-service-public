@@ -4,12 +4,12 @@ class AddPublicLinkIdToMotifs < ActiveRecord::Migration[8.0]
 
     up_only do
       Motif.find_each do |motif|
-        motif.update_columns(public_link_id: SecureRandom.base58(8)) # rubocop:disable Rails/SkipsModelValidations
+        motif.update_columns(public_link_id: SecureRandom.base58(8))
       end
 
       # On fait une seconde passe au cas où de nouveaux motifs seraient ajoutés pendant la première boucle.
       Motif.where(public_link_id: nil).find_each do |motif|
-        motif.update_columns(public_link_id: SecureRandom.base58(8)) # rubocop:disable Rails/SkipsModelValidations
+        motif.update_columns(public_link_id: SecureRandom.base58(8))
       end
     end
 
