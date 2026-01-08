@@ -237,6 +237,7 @@ RSpec.describe "Agent can CRUD motifs" do
       before do
         duplicate = motif.dup
         duplicate.deleted_at = nil
+        duplicate.public_link_id = SecureRandom.base58(8)
         duplicate.save!
       end
 

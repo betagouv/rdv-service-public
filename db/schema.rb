@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_101447) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -407,6 +407,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.boolean "rdvs_cancellable_by_user", default: true, comment: "Option invisible dans l’interface agents, utilisée par RDV Insertion pour des motifs de convocations"
     t.bigint "motif_category_id"
     t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
+    t.string "public_link_id", null: false
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
@@ -415,6 +416,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
+    t.index ["public_link_id"], name: "index_motifs_on_public_link_id", unique: true
     t.index ["service_id"], name: "index_motifs_on_service_id"
     t.index ["visibility_type"], name: "index_motifs_on_visibility_type"
   end
