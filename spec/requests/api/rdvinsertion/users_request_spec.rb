@@ -16,10 +16,9 @@ RSpec.describe "rdv-insertion API: users" do
   let(:other_organisation_rdv_insertion) { create(:organisation, verticale: "rdv_insertion") }
   let(:organisation_rdv_solidarites) { create(:organisation, verticale: "rdv_solidarites") }
 
-  stub_env_with(
-    SHARED_SECRET_FOR_AGENTS_AUTH: "S3cr3T",
-    AUTHORIZE_DEPRECATED_API_AUTH: "true"
-  )
+  before do
+    allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
+  end
 
   it "returns the user along with the rdv_insertion related user_profiles" do
     get api_rdvinsertion_user_path(user.id), headers: auth_headers

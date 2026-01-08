@@ -16,7 +16,7 @@ module ApiSpecMacros
   end
 
   def with_authentication
-    security [{ access_token: [], uid: [], client: [] }]
+    stub_env_with(AUTHORIZE_DEPRECATED_API_AUTH: "true")
 
     parameter name: "access-token", in: :header, type: :string, description: "Token d'accès (authentification)", example: "SFYBngO55ImjD1HOcv-ivQ"
     parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
@@ -45,8 +45,6 @@ module ApiSpecMacros
   end
 
   def with_shared_secret_authentication
-    stub_env_with(AUTHORIZE_DEPRECATED_API_AUTH: "true")
-
     security [{ uid: [], "X-Agent-Auth-Signature": [] }]
 
     parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
