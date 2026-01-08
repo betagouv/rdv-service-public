@@ -213,7 +213,7 @@ motifs_attributes = 1000.times.map do |i|
     service_id: service_pmi.id,
     bookable_by: :everyone,
     location_type: :public_office,
-    public_link_id: SecureRandom.base58(8)
+    public_link_id: SecureRandom.base58(8),
   }
 end
 Motif.insert_all!(motifs_attributes) # rubocop:disable Rails/SkipsModelValidations
