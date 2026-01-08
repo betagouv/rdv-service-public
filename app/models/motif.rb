@@ -135,6 +135,10 @@ class Motif < ApplicationRecord
     name
   end
 
+  def slug
+    name.parameterize[..60]
+  end
+
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end

@@ -34,7 +34,7 @@
       .card
         .card-body
           h2.fr-h4 Lien de réservation direct
-          - motif_booking_link = public_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug, motif_id: @motif.id)
+          - motif_booking_link = public_link_to_motif_url(public_link_id: @motif.public_link_id, motif_slug: @motif.slug)
           = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: motif_booking_link }
 
           p.fr-mt-2w Ce lien permet de prendre rendez-vous pour ce motif.
