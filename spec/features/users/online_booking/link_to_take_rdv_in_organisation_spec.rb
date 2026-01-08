@@ -120,6 +120,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
     it "still works for links that have been copied before" do
       visit "/org/#{motif.organisation_id}/mds-paris-nord?motif_id=#{motif.id}"
+      expect(page).to have_content "Motif : #{motif.name}"
       expect(page).to have_content "Sélectionnez un lieu de RDV"
     end
   end
