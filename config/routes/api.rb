@@ -26,6 +26,7 @@ namespace :api do
   end
 
   # API utilisées uniquement sur l'instance RDV Solidarités
+  # Pour limiter les risques de sécurité, on n'ouvre pas ces routes sur la nouvelle instance.
   if ENV["PRO_CONNECT_RDVS_CLIENT_ID"].present?
     namespace :v1 do
       mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
