@@ -45,6 +45,7 @@ module SuperAdmins
         Motif.joins(rdvs: :agents_rdvs).where(agents_rdvs: { agent_id: agent.id }).distinct.find_each do |old_motif|
           new_motif = old_motif.dup
           new_motif.organisation = new_organisation
+          new_motif.public_link_id = SecureRandom.base58(8)
           new_motif.save!
 
           MotifsPlageOuverture.where(motif_id: old_motif, plage_ouverture_id: plage_ouvertures_for_organisation).update_all(motif_id: new_motif.id)
