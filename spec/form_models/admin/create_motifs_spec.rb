@@ -26,8 +26,8 @@ RSpec.describe Admin::CreateMotifs do
   context "when the motif already exists in one of the orgs" do
     let!(:organisations) do
       [
-        create(:organisation, name: "Ma première orga").tap { |org| valid_motif.dup.tap { |motif| motif.assign_attributes(organisation: org) }.save! },
-        create(:organisation, name: "Ma seconde orga").tap { |org| valid_motif.dup.tap { |motif| motif.assign_attributes(organisation: org) }.save! },
+        create(:organisation, name: "Ma première orga").tap { Motif.create!(valid_motif.attributes.merge(organisation: _1, public_link_id: SecureRandom.base58(8))) },
+        create(:organisation, name: "Ma seconde orga").tap { Motif.create!(valid_motif.attributes.merge(organisation: _1, public_link_id: SecureRandom.base58(8))) },
         create(:organisation, name: "Ma troisième orga"),
       ]
     end

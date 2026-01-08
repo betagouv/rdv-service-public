@@ -18,7 +18,7 @@ class Admin::CreateMotifs
   end
 
   def motifs
-    @motifs ||= @organisations.map { |org| Motif.new(@motif_params.merge(organisation: org)) }
+    @motifs ||= @organisations.map { |org| Motif.new(@motif_params.merge(organisation: org, public_link_id: SecureRandom.base58(8))) }
   end
 
   def motif_for_form
