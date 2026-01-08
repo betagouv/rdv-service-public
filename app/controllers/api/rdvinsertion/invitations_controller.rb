@@ -1,4 +1,4 @@
-class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseController
+class Api::Rdvinsertion::InvitationsController < Api::Rdvinsertion::AgentAuthBaseController
   def creneau_availability
     payload = if params[:total_count] == "true"
                 { creneau_availability_count:, limit_reached: relevant_limit_reached?(creneau_availability_count) }
