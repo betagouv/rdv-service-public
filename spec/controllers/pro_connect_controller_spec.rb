@@ -393,5 +393,20 @@ RSpec.describe ProConnectController do
         )
       end
     end
+
+    context "when the authentication process is aborted" do
+      it "displays an error message" do
+        # Nous avons observé des callbacks avec ces paramètres, il faut donc gérer ce cas d'erreur.
+        callback_query_params = {
+          error: "server_error",
+          error_description: "authentication aborted due to a technical error on the authorization server",
+          state:,
+          iss: "https://fca.integ01.dev-agentconnect.fr/api/v2",
+        }
+        get :callback, params: callback_query_params
+        expect(flash[:error]).to include("L'authentification a échoué en raison d'une erreur côté ProConnect. Nous vous invitons à contacter leur support.")
+        expect(response).to redirect_to("/")
+      end
+    end
   end
 end
