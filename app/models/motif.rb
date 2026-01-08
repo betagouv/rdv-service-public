@@ -71,6 +71,10 @@ class Motif < ApplicationRecord
   validate :cant_be_for_secretariat_and_follow_up
   validate :unique_in_org
 
+  # Hooks
+
+  after_initialize { self.public_link_id ||= SecureRandom.base58(8) }
+
   # Scopes
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
