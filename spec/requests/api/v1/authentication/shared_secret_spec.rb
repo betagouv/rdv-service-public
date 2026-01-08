@@ -12,9 +12,7 @@ RSpec.describe "API authentication with shared secrets for RDV Insertion" do
     }
   end
 
-  before do
-    allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return("S3cr3T")
-  end
+  stub_env_with(SHARED_SECRET_FOR_AGENTS_AUTH: "S3cr3T")
 
   it "log sentry and return error when shared secret is invalid" do
     get(
@@ -57,5 +55,22 @@ RSpec.describe "API authentication with shared secrets for RDV Insertion" do
     )
     expect(response.status).to eq(200)
     expect(parsed_response_body["absences"].count).to eq(1)
+  end
+
+  context "when the instance variable is not set" do
+    stub_env_with(SHARED_SECRET_FOR_AGENTS_AUTH: nil)
+
+    it "doesn't allow any requests" do
+      encrypted_payload = OpenSSL::HMAC.hexdigest("SHA256", "", payload.to_json)
+      get(
+        api_v1_absences_path,
+        headers: {
+          uid: agent.email,
+          "X-Agent-Auth-Signature": encrypted_payload,
+        }
+      )
+
+      expect(response.status).to eq(500)
+    end
   end
 end
