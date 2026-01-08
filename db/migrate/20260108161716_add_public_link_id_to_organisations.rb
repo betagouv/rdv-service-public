@@ -4,7 +4,7 @@ class AddPublicLinkIdToOrganisations < ActiveRecord::Migration[8.0]
 
     up_only do
       Organisation.find_each do |org|
-        org.update_columns(public_link_id: SecureRandom.base58(8))
+        org.update_columns(public_link_id: SecureRandom.base58(6))
       end
     end
 
