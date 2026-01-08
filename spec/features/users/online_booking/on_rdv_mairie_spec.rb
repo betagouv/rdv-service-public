@@ -138,7 +138,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     it "displays the organisation name for a public link" do
-      visit public_link_to_org_url(organisation_id: organisation.id)
+      visit public_link_to_org_url(organisation_id: organisation.public_link_id)
       expect(page).to have_content "Prenez rendez-vous avec Mairie de Wavignies"
     end
   end

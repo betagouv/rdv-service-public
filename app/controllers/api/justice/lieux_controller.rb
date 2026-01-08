@@ -48,7 +48,7 @@ class Api::Justice::LieuxController < ActionController::Base # rubocop:disable R
 
   def url(lieu)
     Rails.application.routes.url_helpers.public_link_to_org_url(
-      organisation_id: lieu.organisation_id,
+      organisation_id: lieu.organisation.public_link_id,
       org_slug: lieu.organisation.slug,
       host: "rdv.anct.gouv.fr"
     )

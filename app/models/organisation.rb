@@ -50,6 +50,10 @@ class Organisation < ApplicationRecord
               in: TZInfo::Timezone.all_identifiers, # on utilise all_identifiers car nous souhaitons afficher les timezones et leurs alias
             }
 
+  # Hooks
+
+  after_initialize { self.public_link_id ||= SecureRandom.base58(8) }
+
   # Scopes
   scope :attributed_to_sectors, lambda { |sectors:, most_relevant: false|
     attributions = SectorAttribution
