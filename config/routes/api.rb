@@ -1,6 +1,5 @@
 namespace :api do
   namespace :v1 do
-    # voir Api::V1::AgentAuthBaseController pour l'authentification à cette api
     resources :absences, except: %i[new edit]
     resources :plage_ouvertures, only: %i[create]
     resources :agents, only: %i[index create]
@@ -26,61 +25,64 @@ namespace :api do
     resources :teams, only: %i[index]
   end
 
-  # API utilisées uniquement sur RDV Solidarités
-  namespace :v1 do
-    mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
-  end
-
-  namespace :rdvinsertion do
-    resources :invitations, only: [] do
-      get "creneau_availability", to: "invitations#creneau_availability", on: :collection
+  # API utilisées uniquement sur l'instance RDV Solidarités
+  if ENV["PRO_CONNECT_RDVS_CLIENT_ID"].present?
+    namespace :v1 do
+      mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
     end
-    resource :user_profiles, only: [] do
-      post :create_many, on: :collection
-    end
-    resource :referent_assignations, only: [] do
-      post :create_many, on: :collection
-    end
-    resources :users, only: %i[show] do
-      resources :referent_assignations, only: %i[index]
-    end
-    resources :motif_categories, only: %i[create]
-    resources :motif_category_territories, only: %i[create]
-  end
 
-  # API qui ne sont pas utilisées sur RDV Solidarités
-
-  namespace :ants do
-    get "getManagedMeetingPoints", to: "editor#get_managed_meeting_points"
-    get "availableTimeSlots", to: "editor#available_time_slots"
-    get "searchApplicationIds", to: "editor#search_application_ids"
-  end
-
-  namespace :justice do
-    get "lieux", to: "lieux#index"
-  end
-
-  namespace :anct do
-    get "metrics", to: "metrics#index"
-  end
-
-  namespace :visioplainte do
-    resources :guichets, only: %i[index]
-    resources :plages_ouverture, only: %i[index]
-    resources :creneaux, only: %i[index] do
-      collection do
-        get :prochain
+    namespace :rdvinsertion do
+      resources :invitations, only: [] do
+        get "creneau_availability", to: "invitations#creneau_availability", on: :collection
       end
-    end
-    resources :rdvs, only: %i[create destroy index] do
-      member do
-        put :cancel
+      resource :user_profiles, only: [] do
+        post :create_many, on: :collection
       end
+      resource :referent_assignations, only: [] do
+        post :create_many, on: :collection
+      end
+      resources :users, only: %i[show] do
+        resources :referent_assignations, only: %i[index]
+      end
+      resources :motif_categories, only: %i[create]
+      resources :motif_category_territories, only: %i[create]
+    end
+  end
+
+  # API utilisées uniquement sur l'instance RDV Service Public
+  if ENV["PRO_CONNECT_RDVSP_CLIENT_ID"].present?
+    namespace :ants do
+      get "getManagedMeetingPoints", to: "editor#get_managed_meeting_points"
+      get "availableTimeSlots", to: "editor#available_time_slots"
+      get "searchApplicationIds", to: "editor#search_application_ids"
     end
 
-    # Une route pour réinitialiser les données en staging
-    if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
-      post :reset, to: "base#reset"
+    namespace :justice do
+      get "lieux", to: "lieux#index"
+    end
+
+    namespace :anct do
+      get "metrics", to: "metrics#index"
+    end
+
+    namespace :visioplainte do
+      resources :guichets, only: %i[index]
+      resources :plages_ouverture, only: %i[index]
+      resources :creneaux, only: %i[index] do
+        collection do
+          get :prochain
+        end
+      end
+      resources :rdvs, only: %i[create destroy index] do
+        member do
+          put :cancel
+        end
+      end
+
+      # Une route pour réinitialiser les données en staging
+      if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
+        post :reset, to: "base#reset"
+      end
     end
   end
 end

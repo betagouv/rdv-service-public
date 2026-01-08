@@ -74,10 +74,11 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   private
 
   def authenticate_agent
-    if request.headers.include?("X-Agent-Auth-Signature")
-      # Bypass DeviseTokenAuth for rdv-insertion
+    if request.headers.include?("X-Agent-Auth-Signature") && ENV["PRO_CONNECT_RDVS_CLIENT_ID"].present?
+      # Ce mode d'authentification est déprécié, et n'est autorisé que sur l'instance historique
       authenticate_agent_with_shared_secret
-    elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"]
+    elsif request.headers["HTTP_ACCESS_TOKEN"] && request.headers["HTTP_UID"] && ENV["PRO_CONNECT_RDVS_CLIENT_ID"].present?
+      # Ce mode d'authentification est déprécié, et n'est autorisé que sur l'instance historique
       authenticate_api_v1_agent_with_token_auth!
       @authentication_type = "DeviseTokenAuth"
     else
