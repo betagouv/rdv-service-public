@@ -77,6 +77,4 @@ namespace :api do
       post :reset, to: "base#reset"
     end
   end
-
-  post "/coop-mediation-numerique/accounts", to: "coop_mediation_numerique/accounts#create"
 end
