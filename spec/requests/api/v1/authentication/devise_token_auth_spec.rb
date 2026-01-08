@@ -5,6 +5,8 @@ RSpec.describe "API authentication" do
   let!(:agent) { create(:agent, password: "Correcth0rse!", admin_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent) }
 
+  stub_env_with(AUTHORIZE_DEPRECATED_API_AUTH: "true")
+
   context "login with wrong password" do
     it "returns error" do
       post(
@@ -81,6 +83,27 @@ RSpec.describe "API authentication" do
       subject
       expect(response.status).to eq(200)
       expect(parsed_response_body["data"]["email"]).to eq("amine.dhobb@beta.gouv.fr")
+    end
+  end
+
+  context "when this type of authentication is not allowed (like on RDV Service Public)" do
+    stub_env_with(AUTHORIZE_DEPRECATED_API_AUTH: nil)
+    it "returns a 401 when trying to use the token" do
+      post(
+        api_v1_agent_with_token_auth_session_path,
+        params: { email: agent.email, password: "Correcth0rse!" }.to_json,
+        headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
+      )
+
+      get(
+        api_v1_absences_path,
+        headers: {
+          "access-token": response.headers["access-token"],
+          client: response.headers["client"],
+          uid: response.headers["uid"],
+        }
+      )
+      expect(response.status).to eq(401)
     end
   end
 end
