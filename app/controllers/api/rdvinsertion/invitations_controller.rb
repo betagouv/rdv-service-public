@@ -7,8 +7,6 @@ class Api::Rdvinsertion::InvitationsController < Api::Rdvinsertion::AgentAuthBas
               end
 
     render json: payload
-  rescue StandardError => e
-    render json: { error: e.message }, status: :internal_server_error
   end
 
   private
