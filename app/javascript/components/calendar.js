@@ -56,6 +56,12 @@ export class AgendaMonoAgent {
       dayHeaderFormat: betaPlanningEnabled() ? betaDayHeaderFormat : null,
       select: this.selectEvent,
       headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
+      customButtons: {
+        preferencesModalToggle: {
+          text: "Préférences d’affichage",
+          click: () => { window.dsfr(document.getElementById("agenda-preferences-modal")).modal.disclose(); },
+        }
+      },
       views: {
         timeGridOneDay: {
           type: 'timeGrid',

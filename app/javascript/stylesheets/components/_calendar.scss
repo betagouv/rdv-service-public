@@ -112,23 +112,6 @@ main[data-beta-planning-layout="true"] .fc {
       flex-direction: column;
       gap: 8px;
     }
-
-    // sur desktop, aligner à gauche le premier chunk et à droite suivants
-    @media (min-width: 768px) {
-      justify-content: flex-start;
-      .fc-toolbar-chunk:nth-child(2) {
-        margin-left: auto;
-      }
-    }
-  }
-
-  // On fait en sorte que les boutons du footer ressemble précisément
-  // aux boutons DSFR (options de weekends, etc) situés juste en dessous.
-  .fc-footer-toolbar {
-    .fc-button {
-      border-radius: 0;
-      background-color: transparent;
-    }
   }
 
   // Change la couleur de l'en-tête en haut et de "l'en-tête" des heures à gauche
