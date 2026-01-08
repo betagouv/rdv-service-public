@@ -18,7 +18,7 @@ RSpec.describe "rdv-insertion API: users" do
 
   stub_env_with(
     SHARED_SECRET_FOR_AGENTS_AUTH: "S3cr3T",
-    PRO_CONNECT_RDVS_CLIENT_ID: "true"
+    AUTHORIZE_DEPRECATED_API_AUTH: "true"
   )
 
   it "returns the user along with the rdv_insertion related user_profiles" do

@@ -5,6 +5,6 @@ class Api::Rdvinsertion::AgentAuthBaseController < Api::V1::AgentAuthBaseControl
   # dans la variable d'environnement `SHARED_SECRET_FOR_AGENTS_AUTH`.
   # Ainsi nous sommes sûrs ici que les appels authentifiés sont émis par l'application rdv-insertion.
   def authenticate_agent
-    authenticate_agent_with_shared_secret
+    authenticate_agent_with_shared_secret if ENV["AUTHORIZE_DEPRECATED_API_AUTH"].present?
   end
 end

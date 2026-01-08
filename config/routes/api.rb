@@ -26,28 +26,25 @@ namespace :api do
   end
 
   # API utilisées uniquement sur l'instance RDV Solidarités
-  # Pour limiter les risques de sécurité, on n'ouvre pas ces routes sur la nouvelle instance.
-  if ENV["PRO_CONNECT_RDVS_CLIENT_ID"].present?
-    namespace :v1 do
-      mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
-    end
+  namespace :v1 do
+    mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
+  end
 
-    namespace :rdvinsertion do
-      resources :invitations, only: [] do
-        get "creneau_availability", to: "invitations#creneau_availability", on: :collection
-      end
-      resource :user_profiles, only: [] do
-        post :create_many, on: :collection
-      end
-      resource :referent_assignations, only: [] do
-        post :create_many, on: :collection
-      end
-      resources :users, only: %i[show] do
-        resources :referent_assignations, only: %i[index]
-      end
-      resources :motif_categories, only: %i[create]
-      resources :motif_category_territories, only: %i[create]
+  namespace :rdvinsertion do
+    resources :invitations, only: [] do
+      get "creneau_availability", to: "invitations#creneau_availability", on: :collection
     end
+    resource :user_profiles, only: [] do
+      post :create_many, on: :collection
+    end
+    resource :referent_assignations, only: [] do
+      post :create_many, on: :collection
+    end
+    resources :users, only: %i[show] do
+      resources :referent_assignations, only: %i[index]
+    end
+    resources :motif_categories, only: %i[create]
+    resources :motif_category_territories, only: %i[create]
   end
 
   # API utilisées uniquement sur l'instance RDV Service Public

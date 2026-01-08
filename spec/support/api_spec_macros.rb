@@ -45,6 +45,8 @@ module ApiSpecMacros
   end
 
   def with_shared_secret_authentication
+    stub_env_with(AUTHORIZE_DEPRECATED_API_AUTH: "true")
+
     security [{ uid: [], "X-Agent-Auth-Signature": [] }]
 
     parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
