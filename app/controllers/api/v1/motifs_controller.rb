@@ -29,7 +29,8 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
       external_reference_scope = ExternalReference.where(
         params.require(:external_reference).permit(:external_id, :external_url).merge(
           oauth_application: doorkeeper_token&.application,
-          territory_id: motif.organisation.territory_id
+          territory_id: motif.organisation.territory_id,
+          item_type: "Motif"
         )
       )
 
