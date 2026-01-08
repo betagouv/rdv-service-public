@@ -50,39 +50,37 @@ namespace :api do
   end
 
   # API utilisées uniquement sur l'instance RDV Service Public
-  if ENV["PRO_CONNECT_RDVSP_CLIENT_ID"].present?
-    namespace :ants do
-      get "getManagedMeetingPoints", to: "editor#get_managed_meeting_points"
-      get "availableTimeSlots", to: "editor#available_time_slots"
-      get "searchApplicationIds", to: "editor#search_application_ids"
+  namespace :ants do
+    get "getManagedMeetingPoints", to: "editor#get_managed_meeting_points"
+    get "availableTimeSlots", to: "editor#available_time_slots"
+    get "searchApplicationIds", to: "editor#search_application_ids"
+  end
+
+  namespace :justice do
+    get "lieux", to: "lieux#index"
+  end
+
+  namespace :anct do
+    get "metrics", to: "metrics#index"
+  end
+
+  namespace :visioplainte do
+    resources :guichets, only: %i[index]
+    resources :plages_ouverture, only: %i[index]
+    resources :creneaux, only: %i[index] do
+      collection do
+        get :prochain
+      end
+    end
+    resources :rdvs, only: %i[create destroy index] do
+      member do
+        put :cancel
+      end
     end
 
-    namespace :justice do
-      get "lieux", to: "lieux#index"
-    end
-
-    namespace :anct do
-      get "metrics", to: "metrics#index"
-    end
-
-    namespace :visioplainte do
-      resources :guichets, only: %i[index]
-      resources :plages_ouverture, only: %i[index]
-      resources :creneaux, only: %i[index] do
-        collection do
-          get :prochain
-        end
-      end
-      resources :rdvs, only: %i[create destroy index] do
-        member do
-          put :cancel
-        end
-      end
-
-      # Une route pour réinitialiser les données en staging
-      if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
-        post :reset, to: "base#reset"
-      end
+    # Une route pour réinitialiser les données en staging
+    if ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
+      post :reset, to: "base#reset"
     end
   end
 end
