@@ -69,7 +69,15 @@ class Autodoc
         if @scenario_accessibility_checks && accessibility_checks # On peut désactiver ces checks au niveau de tout le scénario ou juste pour ce screenshot
           @example.expect(page_or_email).to @example.be_axe_clean
         end
+
+        current_size = Capybara.page.current_window.size
+        Capybara.page.current_window.resize_to(current_size[0] * 2, current_size[1] * 2)
+        page_or_email.execute_script("document.body.style.zoom=2.0")
+
         page_or_email.driver.save_screenshot(path)
+
+        page_or_email.execute_script("document.body.style.zoom=1.0")
+        Capybara.page.current_window.resize_to(current_size[0], current_size[1])
       end
 
       img_src = ENV["UPLOAD_TO_GH_PAGES"] ? "/rdv-service-public/#{filename}" : path
