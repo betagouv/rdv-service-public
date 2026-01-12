@@ -87,6 +87,10 @@ Rails.application.routes.draw do
     get :user_name_initials_verification, to: redirect(path: "/users/user_name_initials_verification/new")
 
     post "file_attente", to: "file_attentes#create_or_delete"
+
+    resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code"
+    resources :login_codes, only: %i[create]
+    get "login_codes", to: redirect(path: "/users/sign_in")
   end
   namespace :stats, controller: "stats", module: nil do
     get "/", action: "index"
@@ -101,6 +105,7 @@ Rails.application.routes.draw do
     patch "users/informations", to: "users/users#update"
     resources :relatives, except: %i[index show], controller: "users/relatives"
   end
+
   authenticated :user do
     get "/users/rdvs", to: "users/rdvs#index"
   end

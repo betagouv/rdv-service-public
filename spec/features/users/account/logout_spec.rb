@@ -12,9 +12,7 @@ RSpec.describe "Déconnexion" do
     click_on lieu.name
     first(:link, "11:00").click
 
-    fill_in("Adresse email", with: user.email)
-    fill_in("Mot de passe", with: user.password)
-    find("input[value='Se connecter']").click
+    login_via_6_digit_code(user.email)
 
     click_button("Continuer")
     click_button("Continuer")

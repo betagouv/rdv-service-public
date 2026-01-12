@@ -9,14 +9,12 @@ RSpec.describe "User session expiration" do
 
   def expect_to_be_logged_out
     visit users_informations_path
-    expect(page).to have_content("Se connecter avec son compte")
+    expect(page).to have_content("Se connecter par e-mail")
   end
 
   it "is done 30 minutes after last visit" do
     visit new_user_session_path
-    fill_in "Adresse email", with: user.email
-    fill_in "user_password", with: password
-    within("main") { click_on "Se connecter" }
+    login_via_6_digit_code(user.email)
     expect_to_be_logged_in
 
     travel_to(28.minutes.from_now)

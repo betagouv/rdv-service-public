@@ -369,6 +369,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end
 
+  create_table "login_codes", force: :cascade do |t|
+    t.string "email", null: false
+    t.string "code", null: false
+    t.string "domain_id", null: false
+    t.datetime "used_at"
+    t.datetime "created_at", null: false, comment: "pas de updated_at car les login_codes sont quasiment immutables"
+    t.index ["email", "created_at"], name: "index_login_codes_on_email_and_created_at"
+  end
+
   create_table "motif_categories", force: :cascade do |t|
     t.string "name", null: false
     t.string "short_name", null: false, comment: "Le nom \"technique\" de la catégorie de motif, qui permet de l'identifier dans les paramètres de formulaires\"\n"
@@ -837,6 +846,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
     t.string "notification_email", comment: "Used for notifications only, multiple users can share the same email notification address"
     t.virtual "text_search_terms_with_notification_email", type: :tsvector, as: "((((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(notification_email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
     t.string "pro_connect_openid_sub"
+    t.index ["ants_pre_demande_number"], name: "index_users_on_ants_pre_demande_number", where: "(ants_pre_demande_number IS NOT NULL)"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
