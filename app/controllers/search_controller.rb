@@ -124,7 +124,7 @@ class SearchController < ApplicationController
 
     export = InstanceExport.finished_exports_for_organisation(organisation.id).first
 
-    public_link_to_org_url(organisation_id: export.destination_organisation.public_link_id, org_slug: organisation.slug, host: ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"])
+    public_link_to_org_url(organisation_id: export.destination_organisation_id, org_slug: organisation.slug, host: ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"])
   end
 
   def redirect_to_organisation_search(organisation, motif: nil)
