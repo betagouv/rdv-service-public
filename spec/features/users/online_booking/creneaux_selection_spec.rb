@@ -71,7 +71,7 @@ RSpec.describe "User can select a creneau" do
     let!(:plage_ouverture2) { create(:plage_ouverture, first_day: Time.zone.tomorrow, motifs: [motif], lieu: lieu, organisation: organisation) }
 
     it "does not show duplicate creneaux" do
-      visit public_link_to_org_path(organisation_id: organisation.id)
+      visit public_link_to_org_path(organisation_id: organisation.public_link_id)
 
       click_on("RSA Orientation") # choix du motif
       click_on(lieu.name) # choix du lieu

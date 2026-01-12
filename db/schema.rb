@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_101447) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -518,8 +518,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_101447) do
     t.boolean "online_booking_for_professionnels", default: false, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des professionnels, et donc qu'on propose le bouton ProConnect lors de la prise de rendez-vous en ligne.\n"
     t.string "time_zone", default: "Europe/Paris", null: false
     t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
+    t.string "public_link_id", null: false
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
+    t.index ["public_link_id"], name: "index_organisations_on_public_link_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
 

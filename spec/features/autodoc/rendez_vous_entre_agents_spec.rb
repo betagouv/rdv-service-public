@@ -116,7 +116,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     doc.start_section("Côté usager")
 
-    visit public_link_to_org_url(organisation_id: Organisation.last.id, host: "http://www.rdv-service-public-test.localhost/")
+    visit public_link_to_org_url(organisation_id: Organisation.last.public_link_id, host: "http://www.rdv-service-public-test.localhost/")
 
     doc.add_screenshot(page,
                        text: "Je visite le lien de prise de rendez-vous que l'agent m'a transmis.",
