@@ -22,10 +22,19 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   # Rescuable exceptions
 
+  rescue_from StandardError, with: :unexpected_error
   rescue_from Pundit::NotAuthorizedError, with: :not_authorized
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
+
+  def unexpected_error(exception)
+    Sentry.capture_exception(exception)
+    render(
+      status: :internal_server_error,
+      json: { errors: ["Unexpected internal error"] }
+    )
+  end
 
   def not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore

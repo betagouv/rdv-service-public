@@ -24,6 +24,12 @@ export const planningAgentsSelect = () => {
   multiAgentEnableButton.addEventListener("click", (e) => {
     e.preventDefault();
     agentSelect.multiple = true;
+    if (agentSelect.dataset.latestSelectedAgentIds) {
+      const latestSelectedAgentIds = JSON.parse(agentSelect.dataset.latestSelectedAgentIds)
+      Array.from(agentSelect.options).forEach((option) => {
+        option.selected = latestSelectedAgentIds.includes(parseInt(option.value));
+      });
+    }
     initInput(agentSelect);
     multiAgentEnableButton.classList.add("hidden");
     document.querySelector("#submit_agents").classList.remove("hidden");

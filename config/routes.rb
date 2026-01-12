@@ -423,6 +423,7 @@ Rails.application.routes.draw do
   # short public link
   get "org/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
   get "org/ext/:territory/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
+  get "motif/:public_link_id(/:motif_slug)" => "search#public_link_with_public_motif_id", as: :public_link_to_motif
   get "/creneaux", to: "search#public_link_to_creneaux"
 
   # resin public link

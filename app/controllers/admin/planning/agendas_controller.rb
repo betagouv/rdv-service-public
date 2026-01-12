@@ -37,6 +37,6 @@ class Admin::Planning::AgendasController < AgentAuthController
   private
 
   def permitted_agent_params
-    params.require(:agent).permit(:display_saturdays, :display_cancelled_rdv)
+    params.require(:agent).permit(:display_saturdays, :display_cancelled_rdv, :group_by_agent)
   end
 end
