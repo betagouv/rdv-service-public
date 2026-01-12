@@ -33,7 +33,7 @@ default: &default
   # Pour savoir combien de connexions on utilise, on peut vérifier sur Scalingo via la page "Running queries" du dashboard postgres
   # par exemple https://dashboard.scalingo.com/apps/osc-secnum-fr1/production-rdv-solidarites/db/postgresql/running-queries
   #
-  # On pourrait même mieux utiliser le mécanisme de connection pool, et avoir moins de connexions que de threads.
+  # Sur l'instance RDV Service Public, on ajoute quelques connexions supplémentaire parce qu'on a de la marge côté DB.
   #
   # For GoodJob container, we need connections for :
   # - the max number of threads (5 by default, cf https://github.com/bensheldon/good_job/blob/main/lib/good_job/configuration.rb#L126-L134)
@@ -42,7 +42,7 @@ default: &default
   #
   # cf docs/4-notes-techniques.md pour une vue d’ensemble du nombre de threads et de connexions à
   # la base de données
-  pool: <%= $PROGRAM_NAME.include?("good_job") ? GoodJob.configuration.max_threads + 2 + 1 : (ENV.fetch("RAILS_MAX_THREADS", 4).to_i) %>
+pool: <%= $PROGRAM_NAME.include?("good_job") ? GoodJob.configuration.max_threads + 2 + 1 : ((ENV.fetch("RAILS_MAX_THREADS", 4).to_i) + (ENV.fetch("RAILS_EXTRA_DB_CONNECTIONS", 0).to_i)) %>
 
 development:
   <<: *default
