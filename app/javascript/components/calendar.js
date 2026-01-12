@@ -12,7 +12,7 @@ import {
   classicHeaderToolbarLayout,
   betaHeaderToolbarLayout,
   betaWeekTitleFormat,
-  betaDayHeaderFormat,
+  dayHeaderContent,
   betaPlanningEnabled,
 } from './calendar/utils'
 
@@ -53,7 +53,7 @@ export class AgendaMonoAgent {
       initialView: this.getDefaultView(),
       hiddenDays: hiddenDays,
       titleFormat: betaPlanningEnabled() ? betaWeekTitleFormat : null,
-      dayHeaderFormat: betaPlanningEnabled() ? betaDayHeaderFormat : null,
+      dayHeaderContent: dayHeaderContent,
       select: this.selectEvent,
       headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
       customButtons: {

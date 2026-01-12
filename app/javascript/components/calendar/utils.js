@@ -10,7 +10,21 @@ export const classicHeaderToolbarLayout = { center: "dayGridMonth,timeGridWeek,t
 
 export const betaWeekTitleFormat = { month: "long", year: "numeric" };
 
-export const betaDayHeaderFormat = { weekday: "short", day: "numeric", omitCommas: true };
+
+const CUSTOM_HEADER_FORMATS = {
+  timeGridWeek: { weekday: "short", day: "numeric" },
+  timeGridOneDay: { weekday: "short", day: "numeric" },
+  dayGridMonth: { weekday: "long" },
+  resourceTimeGridWeek: { weekday: "short", day: "numeric" },
+};
+export const dayHeaderContent = ({ date, view }) => {
+  if(betaPlanningEnabled()) {
+    if (CUSTOM_HEADER_FORMATS[view.type]) {
+      return new Intl.DateTimeFormat('fr-FR', CUSTOM_HEADER_FORMATS[view.type]).format(date);
+    }
+  }
+  // else : on retourne null et FullCalendar utilise le formateur par défaut
+};
 
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
