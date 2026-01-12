@@ -7,7 +7,7 @@ import {
   hiddenDays,
 } from './calendar/utils'
 
-export class AgendaPlages {
+export class AgendaPlageOuverture {
   constructor() {
     this.calendarEl = document.getElementById('agenda_plages');
     if (!this.calendarEl) {
