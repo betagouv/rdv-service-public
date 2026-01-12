@@ -51,6 +51,7 @@ const defaultFullCalendarConfig = () => ({
   },
   slotMinTime: '07:00:00',
   slotMaxTime: '20:00:00',
+  selectAllow: (selectInfo) => selectInfo.endStr.slice(0, 10) === selectInfo.startStr.slice(0, 10), // Une sélection ne peut psa s'étendre sur plusieurs jours
   eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
 
