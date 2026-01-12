@@ -7,7 +7,7 @@ import {
   setupPollingRefresh,
   setupRealtimeRefresh,
   handleAjaxError,
-  betaDayHeaderFormat,
+  dayHeaderContent,
   betaWeekTitleFormat
 } from "./utils";
 
@@ -50,7 +50,7 @@ class AgendaMultiAgent {
         right: "preferencesModalToggle",
       },
       titleFormat: betaWeekTitleFormat,
-      dayHeaderFormat: betaDayHeaderFormat,
+      dayHeaderContent: dayHeaderContent,
       customButtons: this.customButtons(),
       datesAboveResources: this.data.groupByAgent !== "true",
       datesSet: this.datesSet,
