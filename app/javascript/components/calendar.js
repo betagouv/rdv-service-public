@@ -14,6 +14,7 @@ import {
   betaWeekTitleFormat,
   dayHeaderContent,
   betaPlanningEnabled,
+  hiddenDays,
 } from './calendar/utils'
 
 import Bowser from "bowser";
@@ -37,21 +38,13 @@ export class AgendaMonoAgent {
   }
 
   initFullCalendar = () => {
-    const hiddenDays = []
-    if (this.data.displaySaturdays !== "true") {
-      hiddenDays.push(6);
-    }
-    if (this.data.displaySundays !== "true") {
-      hiddenDays.push(0);
-    }
-
     const options = {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
       initialDate: this.getDefaultDate(),
       initialView: this.getDefaultView(),
-      hiddenDays: hiddenDays,
+      hiddenDays: hiddenDays(this.data),
       titleFormat: betaPlanningEnabled() ? betaWeekTitleFormat : null,
       dayHeaderContent: dayHeaderContent,
       select: this.selectEvent,

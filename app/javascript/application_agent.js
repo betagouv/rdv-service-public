@@ -31,6 +31,7 @@ import { PlanningAgentSelect } from './components/planning-agent-select'
 import { planningAgentsSelect } from './components/planning-agents-select'
 import { AgendaMonoAgent } from './components/calendar'
 import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
+import { AgendaPlages} from './components/agenda_plages'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { Tooltips } from './components/tooltips'
 import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
@@ -119,6 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   new AgendaMonoAgent()
   new AgendaMultiAgent()
+  new AgendaPlages()
 
   new ParticipationSelect()
 

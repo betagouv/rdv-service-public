@@ -12,7 +12,7 @@
     = link_to t("admin.planning.plage_ouvertures.index.list_view"), admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id, search: params[:search], current_tab: params[:current_tab]), class: "fr-btn fr-btn--secondary fr-icon-list-unordered"
     = link_to t("admin.planning.plage_ouvertures.index.create_plage_ouverture"),  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary"
 
-#calendar [
+#agenda_plages [
   data-agent-id="#{@agent.id}"
   data-organisation-id="#{@current_organisation.id}"
   data-display-saturdays="#{current_agent.display_saturdays}"

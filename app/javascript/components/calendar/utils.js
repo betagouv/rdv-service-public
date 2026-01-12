@@ -26,6 +26,17 @@ export const dayHeaderContent = ({ date, view }) => {
   // else : on retourne null et FullCalendar utilise le formateur par défaut
 };
 
+export const hiddenDays = ({ displaySaturdays, displaySundays }) => {
+  const hiddenDays = []
+  if (displaySaturdays !== "true") {
+    hiddenDays.push(6);
+  }
+  if (displaySundays !== "true") {
+    hiddenDays.push(0);
+  }
+  return hiddenDays;
+};
+
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
   allDaySlot: false,

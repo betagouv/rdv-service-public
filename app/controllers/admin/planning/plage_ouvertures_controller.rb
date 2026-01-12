@@ -33,24 +33,18 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   end
 
   def new
+    @plage_ouverture = PlageOuverture.new
     if params[:duplicate_plage_ouverture_id].present?
       original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
-      defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :recurrence)
+      @plage_ouverture.assign_attributes(original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :recurrence))
     else
-      defaults = {
-        first_day: Time.zone.now,
-        start_time: Tod::TimeOfDay.new(9),
-        end_time: Tod::TimeOfDay.new(12),
-        secondary_start_time: nil,
-        secondary_end_time: nil,
-      }
+      @plage_ouverture.assign_attributes(params.permit(:first_day, :start_time, :end_time, :motif_ids))
+      @plage_ouverture.first_day ||= Time.zone.today
+      @plage_ouverture.start_time ||= Tod::TimeOfDay.new(9)
+      @plage_ouverture.end_time ||= Tod::TimeOfDay.new(12)
     end
-    @plage_ouverture = PlageOuverture.new(
-      organisation: current_organisation,
-      motif_ids: params[:motif_ids],
-      agent: @agent,
-      **defaults
-    )
+    @plage_ouverture.organisation = current_organisation
+    @plage_ouverture.agent = @agent
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
