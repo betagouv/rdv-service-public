@@ -128,10 +128,9 @@ RSpec.describe "Adding a user to a collective RDV" do
       click_link("S'inscrire")
 
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer.")
-      fill_in("user_email", with: logged_user.email)
-      fill_in("user_password", with: logged_user.password)
 
-      click_button("Se connecter")
+      login_via_6_digit_code(logged_user.email)
+
       click_button("Continuer")
       expect(page).to have_content("Choix de l’usager")
       click_button("Continuer")
