@@ -64,8 +64,8 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
     click_on "Se connecter"
 
     doc.add_screenshot(page,
-                       text: "On me demande de confirmer que j'accepte de connecter les deux applications. \
-    (Il se peut que cette capture d'écran ne s'affiche pas dans l'autodoc, vous pouvez la récupérer depuis le parcours de connexion des admins.)")
+                       text: "On me demande de confirmer que j'accepte de connecter les deux applications.",
+                       wait_for: "Validation de permissions")
 
     rdv_plan = create(:rdv_plan,
                       user: user,
