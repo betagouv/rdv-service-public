@@ -52,7 +52,10 @@ class Autodoc
       @current_section.steps << { text: description }
     end
 
-    def add_screenshot(page_or_email, text: nil, wait_for: nil, accessibility_checks: true)
+    # On zoome artificiellement pour avoir des captures d'écran en haute résolution, mais cela peut fausser l'affichage
+    # des pages qui utilisent un layout centré verticalement.
+    # Dans ce cas, il faut passer l'option `disable_high_res_zoom: true` pour avoir un affichage correct (mais une capture d'écran en basse définition)
+    def add_screenshot(page_or_email, text: nil, wait_for: nil, accessibility_checks: true, disable_high_res_zoom: false)
       if wait_for
         @example.expect(page_or_email).to(@example.have_content(wait_for))
       end
@@ -70,14 +73,18 @@ class Autodoc
           @example.expect(page_or_email).to @example.be_axe_clean
         end
 
-        current_size = page_or_email.current_window.size
-        page_or_email.current_window.resize_to(current_size[0] * 2, current_size[1] * 2)
-        page_or_email.execute_script("document.body.style.zoom=2.0")
+        unless disable_high_res_zoom
+          current_size = page_or_email.current_window.size
+          page_or_email.current_window.resize_to(current_size[0] * 2, current_size[1] * 2)
+          page_or_email.execute_script("document.body.style.zoom=2.0")
+        end
 
         page_or_email.driver.save_screenshot(path)
 
-        page_or_email.execute_script("document.body.style.zoom=1.0")
-        page_or_email.current_window.resize_to(current_size[0], current_size[1])
+        unless disable_high_res_zoom
+          page_or_email.execute_script("document.body.style.zoom=1.0")
+          page_or_email.current_window.resize_to(current_size[0], current_size[1])
+        end
       end
 
       img_src = ENV["UPLOAD_TO_GH_PAGES"] ? "/rdv-service-public/#{filename}" : path
