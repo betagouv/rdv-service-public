@@ -52,7 +52,7 @@ class Organisation < ApplicationRecord
 
   # Hooks
 
-  after_initialize { self.public_link_id ||= SecureRandom.base58(6) }
+  before_save { self.public_link_id ||= SecureRandom.base58(6) }
 
   # Scopes
   scope :attributed_to_sectors, lambda { |sectors:, most_relevant: false|
