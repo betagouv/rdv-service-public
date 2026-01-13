@@ -16,6 +16,11 @@ $rdvs-fc-header-bg-color: $gray-200;
   --fc-bg-event-opacity: 1;
 }
 
+.fc .fc-col-header-cell-cushion {
+    display: inline;
+}
+
+
 main[data-beta-planning-layout="false"] .fc {
   // réduit la taille de la date
   .fc-toolbar-title {
@@ -128,6 +133,7 @@ main[data-beta-planning-layout="true"] .fc {
     color: var(--background-action-high-grey);
     font-size: 16px;
     font-weight: normal;
+    overflow: hidden;
   }
 
   .fc-v-event {
