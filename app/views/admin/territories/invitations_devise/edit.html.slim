@@ -5,6 +5,11 @@
 .fr-container
   .fr-grid-row.fr-grid-row--center
     .fr-col-xs-12.fr-col-md-10.fr-py-5w
+      - if resource.invited_by.present? && resource.organisations.one?
+        p.rdv-text-align-center
+          => resource.invited_by.full_name
+          | vous invite à rejoindre l'organisation « #{resource.organisations.first.name} ».
+
       - if display_pro_connect_button?
         p.rdv-text-align-center Pour créer votre compte, connectez-vous avec ProConnect.
         .rdv-text-align-center
