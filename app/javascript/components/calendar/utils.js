@@ -26,6 +26,25 @@ export const dayHeaderContent = ({ date, view }) => {
   // else : on retourne null et FullCalendar utilise le formateur par défaut
 };
 
+// On empêche de sélectionner plusieurs jours car ce n'est pas actuellement
+// pertinent ni pour les RDV ni pour les plages d'ouverture.
+const canSelectOnlyOneDay = (selectInfo) => {
+
+  // vue mensuelle (dayGridMonth)
+  if (selectInfo.allDay) {
+    // Quand on clique sur un seul jour, FullCalendar nous fournit un interval d'exactement 24h.
+    return selectInfo.end - selectInfo.start === 24 * 60 * 60 * 1000;
+  }
+
+  // vue hebdo / quotidienne (timeGrid___)
+  else {
+    const startDate = selectInfo.startStr.slice(0, 10);
+    const endDate = selectInfo.endStr.slice(0, 10);
+    return startDate === endDate;
+  }
+
+};
+
 export const hiddenDays = ({ displaySaturdays, displaySundays }) => {
   const hiddenDays = []
   if (displaySaturdays !== "true") {
@@ -51,7 +70,7 @@ const defaultFullCalendarConfig = () => ({
   },
   slotMinTime: '07:00:00',
   slotMaxTime: '20:00:00',
-  selectAllow: (selectInfo) => selectInfo.allDay || selectInfo.endStr.slice(0, 10) === selectInfo.startStr.slice(0, 10), // Une sélection ne peut psa s'étendre sur plusieurs jours
+  selectAllow: canSelectOnlyOneDay,
   eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
 
