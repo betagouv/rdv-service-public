@@ -1,5 +1,4 @@
 class Caldav::RruleExpander
-  CACHE_FILE = "calendar_cache.json".freeze
   def self.call(ical_calendar:, from:, to:) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     all_occurrences = []
     calendars = Icalendar::Calendar.parse(ical_calendar)
