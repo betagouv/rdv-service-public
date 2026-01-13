@@ -39,7 +39,7 @@ ruby:
 
 .my-3
   - if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-    = render partial: "admin/planning/agendas/preferences_modal", locals: { display_only: [:display_cancelled_rdv, :display_saturdays] }
+    = render partial: "admin/planning/agendas/preferences_modal", locals: { display_only: %i[display_cancelled_rdv display_saturdays] }
   - else
     = render partial: "admin/planning/agendas/preferences_buttons"
 
