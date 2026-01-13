@@ -64,9 +64,9 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     it_behaves_like "can crud own plage ouvertures"
 
     it "can access a calendar view in the index" do
-      expect(page).not_to have_css("#agenda_plages")
+      expect(page).not_to have_css("#agenda_plage_ouverture")
       click_link("Vue calendrier")
-      expect(page).to have_css("#agenda_plages")
+      expect(page).to have_css("#agenda_plage_ouverture")
     end
 
     context "when the motif doesn't require a lieu" do

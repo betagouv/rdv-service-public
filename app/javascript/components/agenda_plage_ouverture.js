@@ -9,7 +9,7 @@ import {
 
 export class AgendaPlageOuverture {
   constructor() {
-    this.calendarEl = document.getElementById('agenda_plages');
+    this.calendarEl = document.getElementById('agenda_plage_ouverture');
     if (!this.calendarEl) {
       return;
     }
