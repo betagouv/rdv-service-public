@@ -63,10 +63,33 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
   context "for an agent" do
     it_behaves_like "can crud own plage ouvertures"
 
-    it "can access a calendar view in the index" do
-      expect(page).not_to have_css("#agenda_plage_ouverture")
-      click_link("Vue calendrier")
-      expect(page).to have_css("#agenda_plage_ouverture")
+    describe "agenda des plages d'ouverture" do
+      it "allows creation via range selection", js: true do
+        click_link("Vue calendrier")
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.drag_and_drop('.fc-timegrid-slot-lane[data-time="08:30:00"]', '.fc-timegrid-slot-lane[data-time="11:30:00"]')
+        end
+
+        expect(page).to have_content("Nouvelle plage d'ouverture")
+        check motif.name
+        fill_in "Libellé", with: "Ma petite plage de 8h30 à 12h"
+        expect { click_on "Créer la plage d'ouverture" }.to change(PlageOuverture, :count).by(1)
+        expected_attrs = {
+          title: "Ma petite plage de 8h30 à 12h",
+          start_time: Tod::TimeOfDay.new(8, 30),
+          end_time: Tod::TimeOfDay.new(12, 0),
+          motifs: [motif],
+        }
+        expect(PlageOuverture.last).to have_attributes(expected_attrs)
+      end
+
+      it "offers preferences", js: true do
+        click_link("Vue calendrier")
+        click_on("Préférences d’affichage")
+        check "Afficher les samedis", allow_label_click: true
+        expect { click_on "Enregistrer" }.to change { agent.reload.display_saturdays }.from(false).to(true)
+        expect(current_path).to eq(calendar_admin_organisation_planning_plage_ouvertures_path(organisation))
+      end
     end
 
     context "when the motif doesn't require a lieu" do

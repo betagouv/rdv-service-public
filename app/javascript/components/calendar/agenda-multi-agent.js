@@ -9,6 +9,7 @@ import {
   handleAjaxError,
   dayHeaderContent,
   betaWeekTitleFormat,
+  preferencesModalToggle,
   hiddenDays,
 } from "./utils";
 
@@ -45,7 +46,7 @@ class AgendaMultiAgent {
       },
       titleFormat: betaWeekTitleFormat,
       dayHeaderContent: dayHeaderContent,
-      customButtons: this.customButtons(),
+      customButtons: { preferencesModalToggle },
       datesAboveResources: this.data.groupByAgent !== "true",
       datesSet: this.datesSet,
       hiddenDays: hiddenDays(this.data),
@@ -108,15 +109,6 @@ class AgendaMultiAgent {
         columnGroup.forEach(column => column.style.backgroundColor = i % 2 ? WHITE : GREY)
       );
   };
-
-  customButtons = () => {
-    return {
-      preferencesModalToggle: {
-        text: "Préférences d’affichage",
-        click: () => { window.dsfr(document.getElementById("agenda-preferences-modal")).modal.disclose(); },
-      },
-    }
-  }
 }
 
 export { AgendaMultiAgent }
