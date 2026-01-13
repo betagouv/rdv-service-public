@@ -135,8 +135,8 @@ RSpec.describe Caldav::RruleExpander do
     # - tous les mardis à 11h
     # - commençant le mardi 13 janvier 2026
     # - décalé à 16h exceptionnellement le mardi 20 janvier 2026
-    # - supprimé le 3 mars
-    # - fin de récurrence le 10 avril
+    # - supprimé le 3 février
+    # - fin de récurrence le 10 mars
     let(:every_week_with_exception) do
       <<~ICALENDAR
         BEGIN:VCALENDAR
@@ -163,15 +163,16 @@ RSpec.describe Caldav::RruleExpander do
         END:STANDARD
         END:VTIMEZONE
         BEGIN:VEVENT
-        DTSTAMP:20260113T142328Z
+        DTSTAMP:20260113T143923Z
         CLASS:PUBLIC
         CREATED:20260113T132954Z
         DTEND;TZID=Europe/Paris:20260113T123000
         DTSTART;TZID=Europe/Paris:20260113T110000
-        LAST-MODIFIED:20260113T142328Z
+        EXDATE;TZID=Europe/Paris:20260203T110000
+        LAST-MODIFIED:20260113T143923Z
         PRIORITY:0
-        RRULE:FREQ=WEEKLY;BYDAY=TU
-        SEQUENCE:0
+        RRULE:FREQ=WEEKLY;UNTIL=20260310T095959Z;BYDAY=TU
+        SEQUENCE:2
         SUMMARY:Weekly avec la team
         TRANSP:OPAQUE
         UID:aa3e11cb-fb43-4e42-b4ed-954ea11ea3fe
@@ -196,24 +197,43 @@ RSpec.describe Caldav::RruleExpander do
 
     it "returns all occurrences including exceptions" do
       from =  Time.zone.parse("2026-01-13 00:00")
-      to =    Time.zone.parse("2026-02-03 23:59")
+      to =    Time.zone.parse("2026-06-29 23:59")
       expected_recurrences = [
         [
           "2026-01-13 11:00",
           "2026-01-13 12:30",
         ],
+        # Exception : ce weekly du mardi aura lieu à 16h au lieu de 11h
         [
-          "2026-01-20 16:00", # Exception : ce weekly du mardi aura lieu à 16h au lieu de 11h
+          "2026-01-20 16:00",
           "2026-01-20 17:30",
         ],
         [
           "2026-01-27 11:00",
           "2026-01-27 12:30",
         ],
+        # Supprimée le 3 février
+        # [
+        #   "2026-02-03 11:00",
+        #   "2026-02-03 12:30",
+        # ],
         [
-          "2026-02-03 11:00",
-          "2026-02-03 12:30",
+          "2026-02-10 11:00",
+          "2026-02-10 12:30",
         ],
+        [
+          "2026-02-17 11:00",
+          "2026-02-17 12:30",
+        ],
+        [
+          "2026-02-24 11:00",
+          "2026-02-24 12:30",
+        ],
+        [
+          "2026-03-03 11:00",
+          "2026-03-03 12:30",
+        ],
+        # plus rien après le 3 mars puisque récurrence supprimée le 10 mars pour toujours
       ]
       actual_recurrences = described_class.call(ical_calendar: every_week_with_exception, from:, to:)
       expect(actual_recurrences.map(&:to_a)).to match(expected_recurrences.map { _1.map { |str| Time.zone.parse(str) } })
