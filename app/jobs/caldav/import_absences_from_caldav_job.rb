@@ -24,12 +24,12 @@ module Caldav
         Absence.transaction do
           events.each do |event|
             if event.calendar_data.nil?
-              Absence.where(agent: @agent, caldav_url: event.url).destroy_all
+              Absence.where(agent: @agent, caldav_url: event.url).delete_all
             else
               upsert_absence(event)
             end
           end
-          @agent.update!(caldav_sync_token: collection.sync_token)
+          @agent.update_columns(caldav_sync_token: collection.sync_token) # rubocop:disable Rails/SkipsModelValidations
         end
       else
         sync_token = @agent.caldav_client.calendars.find(@agent.caldav_agenda_url, sync: true).sync_token
@@ -39,7 +39,7 @@ module Caldav
           events.each do |event|
             upsert_absence(event)
           end
-          @agent.update!(caldav_sync_token: sync_token)
+          @agent.update_columns(caldav_sync_token: sync_token) # rubocop:disable Rails/SkipsModelValidations
         end
       end
     end
