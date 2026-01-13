@@ -16,14 +16,11 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
   let!(:lieu) { create(:lieu, address: "8 Rue Froissart, 75003 Paris", name: "DDPP de Paris", organisation:) }
   let(:organisation) { create(:organisation, name: "Préfecture de Police de Paris") }
 
-  let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application: oauth_application) }
   let!(:agent) do
     create(:agent, first_name: "Alex", last_name: "Emple",
                    email: "alex.emple@exemple.gouv.fr", password: "RdvServicePublicTest1!",
                    basic_role_in_organisations: [organisation])
   end
-
-  stub_env_for_proconnect
 
   around do |example|
     previous_host = Capybara.app_host
@@ -31,6 +28,8 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
     example.run
     Capybara.app_host = previous_host
   end
+
+  stub_env_for_proconnect
 
   specify do
     doc = Autodoc.start_scenario("3) Prise de RDV par un instructeur", self, accessibility_checks: false, category: "4) Intégration à Démarches Simplifiées")
@@ -57,15 +56,15 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
       response_type: :code, scope: :write, state: "fakestate"
     )
 
-    doc.add_screenshot(page, text: "Je me ProConnecte", wait_for: "Vous devez vous connecter pour continuer")
+    doc.add_screenshot(page, text: "Je me ProConnecte", wait_for: "Vous devez vous connecter pour continuer", disable_high_res_zoom: true)
 
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password
     click_on "Se connecter"
 
     doc.add_screenshot(page,
-                       text: "On me demande de confirmer que j'accepte de connecter les deux applications. \
-    (Il se peut que cette capture d'écran ne s'affiche pas dans l'autodoc, vous pouvez la récupérer depuis le parcours de connexion des admins.)")
+                       text: "On me demande de confirmer que j'accepte de connecter les deux applications.",
+                       wait_for: "vous allez permettre à Démarches Simplifiées")
 
     rdv_plan = create(:rdv_plan,
                       user: user,

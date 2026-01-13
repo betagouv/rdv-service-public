@@ -8,7 +8,8 @@ import {
   setupRealtimeRefresh,
   handleAjaxError,
   dayHeaderContent,
-  betaWeekTitleFormat
+  betaWeekTitleFormat,
+  hiddenDays,
 } from "./utils";
 
 class AgendaMultiAgent {
@@ -29,13 +30,6 @@ class AgendaMultiAgent {
     }
   }
   initFullCalendar = () => {
-    const hiddenDays = []
-    if (this.data.displaySaturdays !== "true") {
-      hiddenDays.push(6);
-    }
-    if (this.data.displaySundays !== "true") {
-      hiddenDays.push(0);
-    }
     const options = {
       plugins: [resourceTimegridPlugin, interactionPlugin],
       schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
@@ -54,7 +48,7 @@ class AgendaMultiAgent {
       customButtons: this.customButtons(),
       datesAboveResources: this.data.groupByAgent !== "true",
       datesSet: this.datesSet,
-      hiddenDays: hiddenDays,
+      hiddenDays: hiddenDays(this.data),
       select: this.selectEvent,
       eventDidMount: eventRenderer(),
       views: this.views(),

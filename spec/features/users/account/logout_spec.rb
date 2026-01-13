@@ -7,7 +7,7 @@ RSpec.describe "Déconnexion" do
   let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: 1.month.from_now, motifs: [motif], lieu: lieu, organisation: organisation) }
 
   it "fonctionne après une prise de rdv" do
-    visit public_link_to_org_path(organisation_id: organisation.id, org_slug: organisation.slug)
+    visit public_link_to_org_path(organisation_id: organisation.public_link_id, org_slug: organisation.slug)
     click_on motif.name
     click_on lieu.name
     first(:link, "11:00").click
@@ -21,7 +21,7 @@ RSpec.describe "Déconnexion" do
 
     click_on "Déconnexion"
 
-    visit public_link_to_org_path(organisation_id: organisation.id, org_slug: organisation.slug)
+    visit public_link_to_org_path(organisation_id: organisation.public_link_id, org_slug: organisation.slug)
     click_on motif.name
     click_on lieu.name
     first(:link, "11:00").click

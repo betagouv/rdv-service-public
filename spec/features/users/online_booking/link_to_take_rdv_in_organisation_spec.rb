@@ -25,6 +25,15 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
         expect(page).to have_content("Motif A")
         expect(page).not_to have_content("Motif B")
       end
+
+      it "supports both internal ID and public ID" do
+        visit "/org/#{organisation_a.public_link_id}"
+        expect(page).to have_content("Motif A")
+        url_de_prise_de_rdv = current_url
+
+        visit "/org/#{organisation_a.id}"
+        expect(current_url).to eq(url_de_prise_de_rdv)
+      end
     end
 
     context "when providing the external organisation id + territory slug" do
