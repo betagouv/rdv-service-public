@@ -27,10 +27,6 @@ class InstanceExport < ApplicationRecord
     super || agent.organisations.first
   end
 
-  def destination_organisation
-    @destination_organisation ||= Organisation.new(new_instance_organisations.first).tap(&:readonly!)
-  end
-
   def api_client
     @api_client ||= RdvServicePublicApiClient.new(api_token)
   end

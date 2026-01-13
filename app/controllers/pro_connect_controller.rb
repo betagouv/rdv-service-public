@@ -23,12 +23,15 @@ class ProConnectController < ApplicationController
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def callback
-    pro_connect_session = session.delete(:pro_connect)
+    if params[:error] == "server_error"
+      flash[:error] = "L'authentification a échoué en raison d'une erreur côté ProConnect. Nous vous invitons à contacter leur support."
+      redirect_to root_path and return
+    end
 
+    pro_connect_session = session.delete(:pro_connect)
     unless pro_connect_session
       flash[:error] = generic_error_message
-      redirect_to root_path
-      return
+      redirect_to root_path and return
     end
 
     pro_connect_session.symbolize_keys!
@@ -187,6 +190,7 @@ class ProConnectController < ApplicationController
       first_name: callback_client.user_first_name,
       last_name: callback_client.user_last_name,
       proconnect_siret: callback_client.user_siret,
+      pro_connect_2fa_active: callback_client.went_through_2fa?,
       invitation_token: nil, # Pour désactiver les anciens liens d'invitation
       invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now,
       confirmed_at: agent.confirmed_at || Time.zone.now,

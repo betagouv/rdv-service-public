@@ -261,8 +261,5 @@ group :test do
   # Modify your ENV
   gem "climate_control"
 
-  # Dépendence indirecte de axe-core-api
-  gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
-
   gem "sinatra"
 end

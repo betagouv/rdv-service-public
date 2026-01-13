@@ -79,9 +79,10 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     find(:label, text: "Mercredi").click
     find(:label, text: "Jeudi").click
+    find(:label, text: "Vendredi").click
 
     doc.add_screenshot(page,
-                       text: "J'ouvre des créneaux aux horaires qui m'arrangent, par exemple les mercredi et jeudi matin.")
+                       text: "J'ouvre des créneaux aux horaires qui m'arrangent, par exemple les mercredis, jeudis et vendredis matin.")
 
     click_on "Créer la plage d'ouverture"
 
@@ -115,7 +116,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     doc.start_section("Côté usager")
 
-    visit public_link_to_org_url(organisation_id: Organisation.last.id, host: "http://www.rdv-service-public-test.localhost/")
+    visit public_link_to_org_url(organisation_id: Organisation.last.public_link_id, host: "http://www.rdv-service-public-test.localhost/")
 
     doc.add_screenshot(page,
                        text: "Je visite le lien de prise de rendez-vous que l'agent m'a transmis.",

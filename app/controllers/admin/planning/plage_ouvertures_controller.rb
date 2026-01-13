@@ -43,7 +43,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
         end_time: Tod::TimeOfDay.new(12),
         secondary_start_time: nil,
         secondary_end_time: nil,
-      }
+      }.merge(params.permit(:first_day, :start_time, :end_time, :motif_ids))
     end
     @plage_ouverture = PlageOuverture.new(
       organisation: current_organisation,

@@ -40,7 +40,6 @@ RSpec.describe Agents::WebhookMailer, type: :mailer do
       mail = described_class.new_webhook_url(webhook_endpoint_id: create(:webhook_endpoint).id, notified_agent_id: notified_agent.id)
 
       expect(mail.subject).to eq("Un webhook vient d'être ajouté par API")
-      puts mail.body.encoded
       expect(mail.body.encoded).to include("Une nouvelle URL de webhook vient d'être introduite par Amine DESPACE (via API) :")
     end
   end

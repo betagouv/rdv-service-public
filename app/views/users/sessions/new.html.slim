@@ -12,18 +12,30 @@
       h2 Se connecter avec ProConnect
 
       .rdv-text-align-center
-        = render "common/proconnect_button_dsfr", login_hint: resource.email, user_type: "user"
+        = render "common/proconnect_button_dsfr", user_type: "user"
 
       p.fr-hr-or ou
-    h2 Se connecter avec son compte
+    h2 Se connecter par e-mail
 
-    = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
-      = render "devise/shared/error_messages", resource: resource
-      = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse email", autocomplete: "email"
-      = render "common/form/current_password_input", f:, forgotten_password_link: true, forgotten_password_link_label: @rdv_wizard.present? ? "Mot de passe oublié ?" : "Mot de passe oublié ou première connexion ?"
-
-      .rdv-text-align-center
-        = f.submit "Se connecter", class: "fr-mt-2v fr-btn"
+    - if params[:with_password].present? || params[:user].present?
+      = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
+        = render "devise/shared/error_messages", resource: resource
+        = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse email", autocomplete: "email"
+        = render "common/form/current_password_input", f:, forgotten_password_link: true, forgotten_password_link_label: @rdv_wizard.present? ? "Mot de passe oublié ?" : "Mot de passe oublié ou première connexion ?"
+        .rdv-text-align-center
+          = f.submit "Se connecter", class: "fr-mt-2v fr-btn"
+          .fr-mt-4w.fr-mb-2w.fr-text--sm
+            |> Vous pouvez aussi vous
+            = link_to "connecter via code à 6 chiffres", new_user_session_path
+    - else
+      = form_for @login_code_form_request, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_form_request do |f|
+        = render "model_errors", model: @login_code_form_request, form: f
+        = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", required: true, label: "Adresse email", autocomplete: "email"
+        .rdv-text-align-center
+          = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn rdv-width-100 rdv-width-md-auto"
+          .fr-mt-4w.fr-mb-2w.fr-text--sm
+            |> Vous pouvez aussi vous
+            = link_to "connecter par mot de passe", new_user_session_path(with_password: true)
 
     hr.fr-my-2w
     h2 Vous n'avez pas de compte ?

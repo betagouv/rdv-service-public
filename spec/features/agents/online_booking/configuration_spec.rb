@@ -155,7 +155,7 @@ RSpec.describe "Agents can configure online booking" do
     context "when organisation is not sectorized" do
       it "points to the public booking home page" do
         visit admin_organisation_online_booking_path(organisation)
-        expect(page).to have_content("http://www.rdv-solidarites-test.localhost:#{Capybara.server_port}/org/#{organisation.id}/#{organisation.slug}")
+        expect(page).to have_content("http://www.rdv-solidarites-test.localhost:#{Capybara.server_port}/org/#{organisation.public_link_id}/#{organisation.slug}")
       end
     end
   end

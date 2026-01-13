@@ -87,6 +87,10 @@ Rails.application.routes.draw do
     get :user_name_initials_verification, to: redirect(path: "/users/user_name_initials_verification/new")
 
     post "file_attente", to: "file_attentes#create_or_delete"
+
+    resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code"
+    resources :login_codes, only: %i[create]
+    get "login_codes", to: redirect(path: "/users/sign_in")
   end
   namespace :stats, controller: "stats", module: nil do
     get "/", action: "index"
@@ -101,6 +105,7 @@ Rails.application.routes.draw do
     patch "users/informations", to: "users/users#update"
     resources :relatives, except: %i[index show], controller: "users/relatives"
   end
+
   authenticated :user do
     get "/users/rdvs", to: "users/rdvs#index"
   end
@@ -418,6 +423,7 @@ Rails.application.routes.draw do
   # short public link
   get "org/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
   get "org/ext/:territory/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
+  get "motif/:public_link_id(/:motif_slug)" => "search#public_link_with_public_motif_id", as: :public_link_to_motif
   get "/creneaux", to: "search#public_link_to_creneaux"
 
   # resin public link

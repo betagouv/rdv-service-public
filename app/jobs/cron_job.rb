@@ -165,6 +165,13 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyLoginCodesJob < CronJob
+    def perform
+      LoginCode.where("created_at < ?", 7.days.ago)
+      # on garde les codes quelques jours pour investiguer certaines situations et avoir une idée des volumes
+    end
+  end
+
   class WarnAboutExpiringAzureAppSecrets < CronJob
     def perform
       return if ENV["AZURE_APPLICATION_CLIENT_ID"].blank?

@@ -113,9 +113,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         ants_pre_demandes_count: "2"
       ))
 
-      fill_in("user_email", with: user.email)
-      fill_in("user_password", with: user.password)
-      click_button("Se connecter")
+      login_via_6_digit_code(user.email)
 
       expect(page).to have_field("Numéro de pré-demande ANTS")
       fill_in("user_ants_pre_demande_number", with: "1122334455")
@@ -138,7 +136,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     it "displays the organisation name for a public link" do
-      visit public_link_to_org_url(organisation_id: organisation.id)
+      visit public_link_to_org_url(organisation_id: organisation.public_link_id)
       expect(page).to have_content "Prenez rendez-vous avec Mairie de Wavignies"
     end
   end
@@ -180,9 +178,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         ants_pre_demandes_count: "2"
       )
 
-      fill_in "user_email", with: user.email
-      fill_in "user_password", with: user.password
-      click_button "Se connecter"
+      login_via_6_digit_code(user.email)
 
       fill_in "user_ants_pre_demande_number", with: "1122334455"
       click_button "Continuer"
@@ -249,9 +245,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         ants_pre_demandes_count: "2"
       )
 
-      fill_in "user_email", with: user.email
-      fill_in "user_password", with: user.password
-      click_button "Se connecter"
+      login_via_6_digit_code(user.email)
 
       fill_in "user_ants_pre_demande_number", with: "1122334455"
       click_button "Continuer"
@@ -291,9 +285,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         ants_pre_demandes_count: "2"
       )
 
-      fill_in("user_email", with: user.email)
-      fill_in("user_password", with: user.password)
-      click_button("Se connecter")
+      login_via_6_digit_code(user.email)
 
       fill_in("user_ants_pre_demande_number", with: "1234ABC")
       click_button("Continuer")
@@ -314,9 +306,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           ants_pre_demandes_count: "2"
         )
 
-        fill_in("user_email", with: user.email)
-        fill_in("user_password", with: user.password)
-        click_button("Se connecter")
+        login_via_6_digit_code(user.email)
 
         fill_in("user_ants_pre_demande_number", with: "abcd1234ef")
         click_button("Continuer")
@@ -338,9 +328,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           ants_pre_demandes_count: "2"
         )
 
-        fill_in("user_email", with: user.email)
-        fill_in("user_password", with: user.password)
-        click_button("Se connecter")
+        login_via_6_digit_code(user.email)
 
         fill_in("user_ants_pre_demande_number", with: "  ")
         click_button("Continuer")
@@ -364,9 +352,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           ants_pre_demandes_count: "2"
         )
 
-        fill_in("user_email", with: user.email)
-        fill_in("user_password", with: user.password)
-        click_button("Se connecter")
+        login_via_6_digit_code(user.email)
 
         fill_in("user_ants_pre_demande_number", with: "5544332211")
         click_button("Continuer")
@@ -389,9 +375,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         )
         expect(page).to have_content("Motif : Passeport")
 
-        fill_in("user_email", with: user.email)
-        fill_in("user_password", with: user.password)
-        click_button("Se connecter")
+        login_via_6_digit_code(user.email)
 
         expect(page).to have_field("Numéro de pré-demande ANTS")
       end
@@ -417,9 +401,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         )
         expect(page).to have_content("Motif : Retrait")
 
-        fill_in("user_email", with: user.email)
-        fill_in("user_password", with: user.password)
-        click_button("Se connecter")
+        login_via_6_digit_code(user.email)
 
         expect(page).not_to have_field("Numéro de pré-demande ANTS")
       end
@@ -441,9 +423,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
           )
           expect(page).to have_content("Motif : Retrait")
 
-          fill_in("user_email", with: user.email)
-          fill_in("user_password", with: user.password)
-          click_button("Se connecter")
+          login_via_6_digit_code(user.email)
 
           expect(page).not_to have_field("Numéro de pré-demande ANTS")
         end

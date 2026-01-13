@@ -25,6 +25,15 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
         expect(page).to have_content("Motif A")
         expect(page).not_to have_content("Motif B")
       end
+
+      it "supports both internal ID and public ID" do
+        visit "/org/#{organisation_a.public_link_id}"
+        expect(page).to have_content("Motif A")
+        url_de_prise_de_rdv = current_url
+
+        visit "/org/#{organisation_a.id}"
+        expect(current_url).to eq(url_de_prise_de_rdv)
+      end
     end
 
     context "when providing the external organisation id + territory slug" do
@@ -104,6 +113,24 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       click_on "Modifier", match: :first
 
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
+    end
+  end
+
+  describe "links to a specific motif" do
+    # On a actuellement des liens qui peuvent être sur les sites des organisations.
+    #
+    # Cette spec échouera si on change les routes d'une manière qui n'est pas rétro-compatible avec les
+    # liens de réservation qui sont actuellement proposés.
+    let!(:motif) { create(:motif, name: "Suivi de dossier") }
+    let(:lieu) { create(:lieu, organisation: motif.organisation) }
+    let(:agent) { create(:agent, admin_role_in_organisations: [motif.organisation]) }
+
+    before { create(:plage_ouverture, motifs: [motif], lieu:) }
+
+    it "still works for links that have been copied before" do
+      visit "/motif/#{motif.public_link_id}/any-slug"
+      expect(page).to have_content "Motif : #{motif.name}"
+      expect(page).to have_content "Sélectionnez un lieu de RDV"
     end
   end
 end

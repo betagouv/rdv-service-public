@@ -120,12 +120,13 @@ RSpec.describe ProConnectController do
     end
 
     describe "agent login" do
-      def expect_agent_to_be_updated_and_logged_in(agent)
+      def expect_agent_to_be_updated_and_logged_in(agent, with_2fa: false)
         expected_attrs = {
           pro_connect_openid_sub: user_info["sub"],
           email: user_info["email"],
           first_name: "Francis",
           last_name: "Factice",
+          pro_connect_2fa_active: with_2fa,
         }
         expect(agent).to have_attributes(expected_attrs)
         expect(current_agent_id).to eq(agent.id)
@@ -219,6 +220,18 @@ RSpec.describe ProConnectController do
           expect(sentry_events.last.extra).to eq({ user_info: })
           expect(sentry_events.last.user[:email]).to eq(user_info["email"])
           expect(current_agent_id).to be_nil
+        end
+      end
+
+      context "when logging in with 2FA enabled" do
+        before do
+          ProConnectStubs.stub_callback_requests(code, user_info, with_2fa: true)
+        end
+
+        it "sets pro_connect_2fa_active to true" do
+          agent = create(:agent, email: user_info["email"])
+          get :callback, params: { state:, code: }
+          expect_agent_to_be_updated_and_logged_in(agent.reload, with_2fa: true)
         end
       end
     end
@@ -378,6 +391,21 @@ RSpec.describe ProConnectController do
           last_name: "Factice",
           proconnect_siret: "11006801200050"
         )
+      end
+    end
+
+    context "when the authentication process is aborted" do
+      it "displays an error message" do
+        # Nous avons observé des callbacks avec ces paramètres, il faut donc gérer ce cas d'erreur.
+        callback_query_params = {
+          error: "server_error",
+          error_description: "authentication aborted due to a technical error on the authorization server",
+          state:,
+          iss: "https://fca.integ01.dev-agentconnect.fr/api/v2",
+        }
+        get :callback, params: callback_query_params
+        expect(flash[:error]).to include("L'authentification a échoué en raison d'une erreur côté ProConnect. Nous vous invitons à contacter leur support.")
+        expect(response).to redirect_to("/")
       end
     end
   end

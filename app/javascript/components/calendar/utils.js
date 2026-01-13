@@ -5,12 +5,37 @@ export const betaPlanningEnabled = () => {
   return !!document.querySelector('main[data-beta-planning-layout="true"]');
 };
 
-export const betaHeaderToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "" };
+export const betaHeaderToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "preferencesModalToggle" };
 export const classicHeaderToolbarLayout = { center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek" };
 
 export const betaWeekTitleFormat = { month: "long", year: "numeric" };
 
-export const betaDayHeaderFormat = { weekday: "short", day: "numeric", omitCommas: true };
+
+const CUSTOM_HEADER_FORMATS = {
+  timeGridWeek: { weekday: "short", day: "numeric" },
+  timeGridOneDay: { weekday: "short", day: "numeric" },
+  dayGridMonth: { weekday: "long" },
+  resourceTimeGridWeek: { weekday: "short", day: "numeric" },
+};
+export const dayHeaderContent = ({ date, view }) => {
+  if(betaPlanningEnabled()) {
+    if (CUSTOM_HEADER_FORMATS[view.type]) {
+      return new Intl.DateTimeFormat('fr-FR', CUSTOM_HEADER_FORMATS[view.type]).format(date);
+    }
+  }
+  // else : on retourne null et FullCalendar utilise le formateur par défaut
+};
+
+export const hiddenDays = ({ displaySaturdays, displaySundays }) => {
+  const hiddenDays = []
+  if (displaySaturdays !== "true") {
+    hiddenDays.push(6);
+  }
+  if (displaySundays !== "true") {
+    hiddenDays.push(0);
+  }
+  return hiddenDays;
+};
 
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
@@ -26,6 +51,7 @@ const defaultFullCalendarConfig = () => ({
   },
   slotMinTime: '07:00:00',
   slotMaxTime: '20:00:00',
+  selectAllow: (selectInfo) => selectInfo.endStr.slice(0, 10) === selectInfo.startStr.slice(0, 10), // Une sélection ne peut psa s'étendre sur plusieurs jours
   eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
 

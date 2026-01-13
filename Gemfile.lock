@@ -8,17 +8,6 @@ GIT
       launchy
 
 GIT
-  remote: https://github.com/rdv-solidarites/axiom-types.git
-  revision: b9b204cebda7af20feea40c6c3e2dadb5766480f
-  ref: b9b204c
-  specs:
-    axiom-types (0.1.1)
-      bigdecimal (>= 1.2.7)
-      descendants_tracker (~> 0.0, >= 0.0.4)
-      ice_nine (~> 0.11, >= 0.11.0)
-      thread_safe (~> 0.3, >= 0.3.1)
-
-GIT
   remote: https://github.com/victormours/devise
   revision: 0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6
   ref: 0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6
@@ -196,8 +185,6 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     debug_inspector (1.2.0)
-    descendants_tracker (0.0.4)
-      thread_safe (~> 0.3, >= 0.3.1)
     devise-async (1.0.0)
       activejob (>= 5.0)
       devise (>= 4.0)
@@ -301,7 +288,6 @@ GEM
       ice_cube (~> 0.16)
       tzinfo (~> 2.0)
     ice_cube (0.17.0)
-    ice_nine (0.11.2)
     io-console (0.8.1)
     irb (1.15.3)
       pp (>= 0.6.0)
@@ -712,7 +698,6 @@ GEM
       httpclient (>= 2.4)
     temple (0.10.3)
     thor (1.4.0)
-    thread_safe (0.3.6)
     tilt (2.6.1)
     timeout (0.4.4)
     tod (3.1.2)
@@ -772,7 +757,6 @@ DEPENDENCIES
   administrate
   anonymizer!
   auto_strip_attributes
-  axiom-types!
   better_errors
   binding_of_caller
   blueprinter
@@ -888,7 +872,6 @@ CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   attr_required (1.0.1) sha256=024e10393bd30901e1adf6769bd756b873a5ef7da60f86f8f11066116b5742bc
   auto_strip_attributes (2.6.0) sha256=a7e2e0cf744de2bcd947fd68014220702bcc88c81274c1cd9ce6f7316aae39b0
-  axiom-types (0.1.1)
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt (3.1.20) sha256=8410f8c7b3ed54a3c00cd2456bf13917d695117f033218e2483b2e40b0784099
   benchmark (0.5.0) sha256=465df122341aedcb81a2a24b4d3bd19b6c67c1530713fd533f3ff034e419236c
@@ -920,7 +903,6 @@ CHECKSUMS
   date (3.5.0) sha256=5e74fd6c04b0e65d97ad4f3bb5cb2d8efb37f386cc848f46310b4593ffc46ee5
   debug (1.11.0) sha256=1425db64cfa0130c952684e3dc974985be201dd62899bf4bbe3f8b5d6cf1aef2
   debug_inspector (1.2.0) sha256=9bdfa02eebc3da163833e6a89b154084232f5766087e59573b70521c77ea68a2
-  descendants_tracker (0.0.4) sha256=e9c41dd4cfbb85829a9301ea7e7c48c2a03b26f09319db230e6479ccdc780897
   devise (4.9.4)
   devise-async (1.0.0) sha256=a4d8c1871b02e53427fcd211dabd0af7d182cd419b0a4777bd922aa94e2553cf
   devise_invitable (2.0.9) sha256=d726c724ecc3481211f73752ed5020088e080c7fe9ef0b3899ece5b15056902e
@@ -968,7 +950,6 @@ CHECKSUMS
   icalendar (2.12.1) sha256=ecff56c550aed551f29ad1faad0da54bf62362dfaf22a428bd7ad782938fe764
   icalendar-recurrence (1.2.1) sha256=c739971314a9a172993c84a0df82b3c7c77e2714f848c1b3fa303dff5ae4bc22
   ice_cube (0.17.0) sha256=32deb45dda4b4acc53505c2f581f6d32b5afc04d29b9004769944a0df5a5fcbe
-  ice_nine (0.11.2) sha256=5d506a7d2723d5592dc121b9928e4931742730131f22a1a37649df1c1e2e63db
   io-console (0.8.1) sha256=1e15440a6b2f67b6ea496df7c474ed62c860ad11237f29b3bd187f054b925fcb
   irb (1.15.3) sha256=4349edff1efa7ff7bfd34cb9df74a133a588ba88c2718098b3b4468b81184aaa
   jb (0.8.2) sha256=542e551c14f34ceba199b8379abf093863182c76a909879b874a20e4cb47bde3
@@ -1123,7 +1104,6 @@ CHECKSUMS
   swd (1.3.0) sha256=bc382a19e1d36a95529b25152976db61b80376c3d486b21c8dd60ac2b5c06389
   temple (0.10.3) sha256=df3145fe6577af1e25387eb7f7122d32ed51bdb6f2e7bb0f4fbf07b66151913b
   thor (1.4.0) sha256=8763e822ccb0f1d7bee88cde131b19a65606657b847cc7b7b4b82e772bcd8a3d
-  thread_safe (0.3.6) sha256=9ed7072821b51c57e8d6b7011a8e282e25aeea3a4065eab326e43f66f063b05a
   tilt (2.6.1) sha256=35a99bba2adf7c1e362f5b48f9b581cce4edfba98117e34696dde6d308d84770
   timeout (0.4.4) sha256=f0f6f970104b82427cd990680f539b6bbb8b1e55efa913a55c6492935e4e0edb
   tod (3.1.2) sha256=e67bf57dc67c8ec806edf0b61e6e499b27eea4e1eb23da1907ec77d45226fb08

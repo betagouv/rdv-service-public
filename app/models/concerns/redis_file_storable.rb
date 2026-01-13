@@ -22,4 +22,10 @@ module RedisFileStorable
       end
     end
   end
+
+  private
+
+  def redis_file_key
+    "Export#redis_file_key-#{id}"
+  end
 end

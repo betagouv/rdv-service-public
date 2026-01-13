@@ -59,8 +59,17 @@ class SearchController < ApplicationController
   end
 
   def public_link_with_internal_organisation_id
-    organisation = Organisation.find(params[:organisation_id])
+    organisation = Organisation.find_by(public_link_id: params[:organisation_id]) || Organisation.find(params[:organisation_id])
     redirect_to_organisation_search(organisation)
+  end
+
+  def public_link_with_public_motif_id
+    motif = Motif.find_by(public_link_id: params[:public_link_id])
+    if motif
+      redirect_to_organisation_search(motif.organisation, motif:)
+    else
+      redirect_to root_path, flash: { error: "Motif introuvable" }
+    end
   end
 
   def public_link_with_external_organisation_id
@@ -118,11 +127,13 @@ class SearchController < ApplicationController
     public_link_to_org_url(organisation_id: export.destination_organisation_id, org_slug: organisation.slug, host: ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"])
   end
 
-  def redirect_to_organisation_search(organisation)
+  def redirect_to_organisation_search(organisation, motif: nil)
     if organisation
-      redirect_to prendre_rdv_path(
-        public_link_organisation_id: organisation.id, departement: organisation.territory.departement_number
-      )
+      redirect_to prendre_rdv_path({
+        public_link_organisation_id: organisation.id,
+        departement: organisation.territory.departement_number,
+        motif_id: motif&.id,
+      }.compact)
     else
       flash[:alert] = "Organisation non trouvée"
       redirect_to root_path

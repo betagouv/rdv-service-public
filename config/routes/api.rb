@@ -1,7 +1,5 @@
 namespace :api do
   namespace :v1 do
-    # Need agent authentication to
-    mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
     resources :absences, except: %i[new edit]
     resources :plage_ouvertures, only: %i[create]
     resources :agents, only: %i[index create]
@@ -27,18 +25,9 @@ namespace :api do
     resources :teams, only: %i[index]
   end
 
-  namespace :ants do
-    get "getManagedMeetingPoints", to: "editor#get_managed_meeting_points"
-    get "availableTimeSlots", to: "editor#available_time_slots"
-    get "searchApplicationIds", to: "editor#search_application_ids"
-  end
-
-  namespace :justice do
-    get "lieux", to: "lieux#index"
-  end
-
-  namespace :anct do
-    get "metrics", to: "metrics#index"
+  # API utilisées uniquement sur l'instance RDV Solidarités
+  namespace :v1 do
+    mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
   end
 
   namespace :rdvinsertion do
@@ -56,6 +45,21 @@ namespace :api do
     end
     resources :motif_categories, only: %i[create]
     resources :motif_category_territories, only: %i[create]
+  end
+
+  # API utilisées uniquement sur l'instance RDV Service Public
+  namespace :ants do
+    get "getManagedMeetingPoints", to: "editor#get_managed_meeting_points"
+    get "availableTimeSlots", to: "editor#available_time_slots"
+    get "searchApplicationIds", to: "editor#search_application_ids"
+  end
+
+  namespace :justice do
+    get "lieux", to: "lieux#index"
+  end
+
+  namespace :anct do
+    get "metrics", to: "metrics#index"
   end
 
   namespace :visioplainte do
@@ -77,6 +81,4 @@ namespace :api do
       post :reset, to: "base#reset"
     end
   end
-
-  post "/coop-mediation-numerique/accounts", to: "coop_mediation_numerique/accounts#create"
 end

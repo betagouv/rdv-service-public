@@ -33,4 +33,18 @@ module ApiSpecHelper
     AgentRole.set_callback(:validate, :organisation_have_at_least_one_admin)
     agent.save!
   end
+
+  def self.external_id_error_response
+    {
+      "errors" => { "external_id" => [{ "error" => "taken", "value" => "123ABC" }] },
+      "error_messages" => ["external_id est déjà utilisé"],
+    }
+  end
+
+  def self.invalid_motif_response(organisation_name = "Mon Organisation")
+    {
+      "error_messages" => ["base Il existe déjà dans #{organisation_name} un motif Sur place nommé \"Suivi de dossier\" ouvert à tous les agents"],
+      "errors" => { "base" => [{ "error" => "duplicate_detected" }] },
+    }
+  end
 end
