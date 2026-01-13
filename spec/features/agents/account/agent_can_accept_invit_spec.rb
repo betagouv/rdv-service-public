@@ -24,6 +24,22 @@ RSpec.describe "Agent can accept invitation" do
 
       expect(redirect_url_query_params["login_hint"]).to eq agent.email
     end
+
+    it "hides the password form behind a collapse and reveals it on click", js: true do
+      agent.deliver_invitation
+      visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
+
+      # Le formulaire de mot de passe est caché initialement
+      expect(page).to have_content "Vous ne parvenez pas à utiliser ProConnect ?"
+      expect(page).to have_no_field "Prénom"
+
+      # Au clic sur le bouton, le formulaire apparaît
+      click_button "Créer un compte avec un mot de passe"
+      expect(page).to have_field "Prénom"
+
+      # Le texte et bouton d'invitation au collapse disparaissent
+      expect(page).to have_no_content "Vous ne parvenez pas à utiliser ProConnect ?"
+    end
   end
 
   context "when password is secure" do
