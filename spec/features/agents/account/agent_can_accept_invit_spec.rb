@@ -11,7 +11,7 @@ RSpec.describe "Agent can accept invitation" do
     it "sets the login_hint to make sure the agent uses ProConnect with the right email and avoids getting stuck" do
       agent.deliver_invitation
       visit accept_agent_invitation_path(invitation_token: agent.raw_invitation_token)
-      expect(page).to have_content "Continuer avec ProConnect"
+      expect(page).to have_content "connectez-vous avec ProConnect"
       find(".fr-connect__brand").click
       begin
         click_button("S’identifier avec ProConnect")
