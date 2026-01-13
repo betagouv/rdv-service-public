@@ -51,8 +51,8 @@ RSpec.describe Caldav::RruleExpander do
           ends_at: Time.zone.parse("2025-12-18 15:00 +0100")
         ),
       ]
-      actual_reccurrences = described_class.call(ical_calendar: ponctuel, from:, to:)
-      expect(actual_reccurrences).to match(expected_recurrences)
+      actual_recurrences = described_class.call(ical_calendar: ponctuel, from:, to:)
+      expect(actual_recurrences).to match(expected_recurrences)
     end
   end
 
@@ -125,13 +125,19 @@ RSpec.describe Caldav::RruleExpander do
         ),
 
       ]
-      actual_reccurrences = described_class.call(ical_calendar: every_day, from:, to:)
-      expect(actual_reccurrences).to match(expected_recurrences)
+      actual_recurrences = described_class.call(ical_calendar: every_day, from:, to:)
+      expect(actual_recurrences).to match(expected_recurrences)
     end
   end
 
-  describe "daily event with exceptions" do
-    let(:every_day_with_exceptions) do
+  describe "weekly event with exceptions" do
+    # Événement récurrent :
+    # - tous les mardis à 11h
+    # - commençant le mardi 13 janvier 2026
+    # - décalé à 16h exceptionnellement le mardi 20 janvier 2026
+    # - supprimé le 3 mars
+    # - fin de récurrence le 10 avril
+    let(:every_week_with_exception) do
       <<~ICALENDAR
         BEGIN:VCALENDAR
         VERSION:2.0
@@ -157,78 +163,60 @@ RSpec.describe Caldav::RruleExpander do
         END:STANDARD
         END:VTIMEZONE
         BEGIN:VEVENT
-        DTSTAMP:20251218T155533Z
+        DTSTAMP:20260113T142328Z
         CLASS:PUBLIC
-        CREATED:20251217T121045Z
-        DTEND;TZID=Europe/Paris:20251215T100000
-        DTSTART;TZID=Europe/Paris:20251215T094500
-        LAST-MODIFIED:20251218T155533Z
+        CREATED:20260113T132954Z
+        DTEND;TZID=Europe/Paris:20260113T123000
+        DTSTART;TZID=Europe/Paris:20260113T110000
+        LAST-MODIFIED:20260113T142328Z
         PRIORITY:0
-        RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR
+        RRULE:FREQ=WEEKLY;BYDAY=TU
         SEQUENCE:0
-        SUMMARY:Daily
+        SUMMARY:Weekly avec la team
         TRANSP:OPAQUE
-        UID:20c37ba2-34a4-47ea-8461-9876914904c6
+        UID:aa3e11cb-fb43-4e42-b4ed-954ea11ea3fe
         END:VEVENT
         BEGIN:VEVENT
-        DTSTAMP:20251218T152543Z
+        DTSTAMP:20260113T142328Z
         CLASS:PUBLIC
-        CREATED:20251218T152543Z
-        DTEND;TZID=Europe/Paris:20251217T134500
-        DTSTART;TZID=Europe/Paris:20251217T133000
-        LAST-MODIFIED:20251218T152543Z
+        CREATED:20260113T142328Z
+        DTEND;TZID=Europe/Paris:20260120T173000
+        DTSTART;TZID=Europe/Paris:20260120T160000
+        LAST-MODIFIED:20260113T142328Z
         PRIORITY:0
-        RECURRENCE-ID;TZID=Europe/Paris:20251217T094500
+        RECURRENCE-ID;TZID=Europe/Paris:20260120T110000
         SEQUENCE:1
-        SUMMARY:Daily
+        SUMMARY:Weekly avec la team
         TRANSP:OPAQUE
-        UID:20c37ba2-34a4-47ea-8461-9876914904c6
-        END:VEVENT
-        BEGIN:VEVENT
-        DTSTAMP:20251218T155533Z
-        CLASS:PUBLIC
-        CREATED:20251218T155533Z
-        DTEND;TZID=Europe/Paris:20251218T100000
-        DTSTART;TZID=Europe/Paris:20251218T094500
-        LAST-MODIFIED:20251218T155533Z
-        PRIORITY:0
-        RECURRENCE-ID;TZID=Europe/Paris:20251218T094500
-        SEQUENCE:0
-        SUMMARY:Daily
-        TRANSP:OPAQUE
-        UID:20c37ba2-34a4-47ea-8461-9876914904c6
+        UID:aa3e11cb-fb43-4e42-b4ed-954ea11ea3fe
         END:VEVENT
         END:VCALENDAR
       ICALENDAR
     end
 
-    it "returns all occurrences" do
-      from =  Time.zone.parse("2025-12-18 00:00")
-      to =    Time.zone.parse("2025-12-22 23:59")
+    it "returns all occurrences including exceptions" do
+      from =  Time.zone.parse("2026-01-13 00:00")
+      to =    Time.zone.parse("2026-02-03 23:59")
       expected_recurrences = [
-
-        Recurrence::Occurrence.new(
-          starts_at: Time.zone.parse("2025-12-18 09:45 +0100"),
-          ends_at: Time.zone.parse("2025-12-18 10:00 +0100")
-        ),
-
-        Recurrence::Occurrence.new(
-          starts_at: Time.zone.parse("2025-12-19 09:45 +0100"),
-          ends_at: Time.zone.parse("2025-12-19 10:00 +0100")
-        ),
-
-        # Samedi 20, pas de daily
-
-        # Dimanche 21, pas de daily
-
-        Recurrence::Occurrence.new(
-          starts_at: Time.zone.parse("2025-12-22 09:45 +0100"),
-          ends_at: Time.zone.parse("2025-12-22 10:00 +0100")
-        ),
-
+        [
+          "2026-01-13 11:00",
+          "2026-01-13 12:30",
+        ],
+        [
+          "2026-01-20 16:00", # Exception : ce weekly du mardi aura lieu à 16h au lieu de 11h
+          "2026-01-20 17:30",
+        ],
+        [
+          "2026-01-27 11:00",
+          "2026-01-27 12:30",
+        ],
+        [
+          "2026-02-03 11:00",
+          "2026-02-03 12:30",
+        ],
       ]
-      actual_reccurrences = described_class.call(ical_calendar: every_day_with_exceptions, from:, to:)
-      expect(actual_reccurrences).to match(expected_recurrences)
+      actual_recurrences = described_class.call(ical_calendar: every_week_with_exception, from:, to:)
+      expect(actual_recurrences.map(&:to_a)).to match(expected_recurrences.map { _1.map { |str| Time.zone.parse(str) } })
     end
   end
 
@@ -290,8 +278,8 @@ RSpec.describe Caldav::RruleExpander do
           ends_at: Time.zone.parse("2025-12-15 11:30 +0100")
         ),
       ]
-      actual_reccurrences = described_class.call(ical_calendar: every_day_with_exceptions, from:, to:)
-      expect(actual_reccurrences).to match(expected_recurrences)
+      actual_recurrences = described_class.call(ical_calendar: every_day_with_exceptions, from:, to:)
+      expect(actual_recurrences).to match(expected_recurrences)
     end
   end
 end

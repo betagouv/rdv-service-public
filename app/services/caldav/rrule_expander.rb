@@ -24,7 +24,7 @@ class Caldav::RruleExpander
           start_time = ical_event.dtstart.to_time
           next unless start_time >= from && start_time < to
 
-          all_occurrences << Recurrence::Occurrence.new(starts_at: ical_event.dtstart, ends_at: ical_event.dtend)
+          all_occurrences << Recurrence::Occurrence.new(starts_at: ical_event.dtstart.to_time, ends_at: ical_event.dtend.to_time)
         end
       end
     end
