@@ -39,7 +39,7 @@ module Rdv::VisioConcern
   # visio_url_type est un attribut PORO non persisté qui permet d’afficher les radio buttons
   # on pourra le déplacer vers les objets RdvForm lorsque ceux-ci seront correctement utilisés 😅
   def visio_url_type
-    if defined?(@visio_url_type)
+    if @visio_url_type
       @visio_url_type
     elsif visio_url_custom.present?
       "custom"
