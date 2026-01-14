@@ -22,23 +22,22 @@ RSpec.describe "Un agent peut créer et éditer un RDV collectif en visio en pas
     select("DIALO Alain", from: "rdv_agent_ids")
 
     # au chargement de la page, le JS devrait cacher et disabler le champ texte URL personnalisée
-    fieldset = find("legend", text: "URL de visioconférence").ancestor("fieldset")
-    invisible_input = fieldset.find('input[type="text"]', visible: false)
-    expect(invisible_input["disabled"]).to be true
+    expect(page).to have_selector(:element, "label", text: "URL de visioconférence", visible: false)
+    expect(page).to have_selector(:field, "URL de visioconférence", visible: false, disabled: true)
 
     # on clique ensuite sur URL personnalisée et le champ apparait
-    find("label", text: "URL de visioconférence personnalisée").click
-    visible_input = fieldset.find('input[type="text"]', visible: true)
-    expect(visible_input["disabled"]).to be_nil
+    find("label", text: "Outil de votre choix").click
+    expect(page).to have_selector(:element, "label", text: "URL de visioconférence", visible: true)
+    expect(page).to have_selector(:element, "input", name: "rdv[visio_url_custom]", visible: true, disabled: false)
 
     # on rentre volontairement une URL invalide
-    visible_input.fill_in with: "https://test.fr/123"
+    fill_in "URL de visioconférence", with: "https://test.fr/123"
     click_on "Enregistrer"
     expect(page).to have_content("L’URL doit provenir d’un des domaines suivants")
 
     # on vérifie que c’est le bon radio qui est coché et que le champ URL personnalisée est visible
-    expect(find(:radio_button, "URL de visioconférence personnalisée", visible: false)).to be_checked
-    expect(find(:radio_button, "Outil de visioconférence par défaut", visible: false)).not_to be_checked
+    expect(find(:radio_button, "Outil de votre choix", visible: false)).to be_checked
+    expect(find(:radio_button, "Par défaut : Webconf", visible: false)).not_to be_checked
     expect(page).to have_selector(:field, "URL de visioconférence", visible: true)
 
     # on rentre une URL valide
@@ -54,13 +53,13 @@ RSpec.describe "Un agent peut créer et éditer un RDV collectif en visio en pas
     click_on "Modifier"
 
     # on vérifie que c’est le bon radio qui est coché et que le champ URL personnalisée est visible
-    expect(find(:radio_button, "URL de visioconférence personnalisée", visible: false)).to be_checked
-    expect(find(:radio_button, "Outil de visioconférence par défaut", visible: false)).not_to be_checked
+    expect(page).to have_selector(:radio_button, "Outil de votre choix", visible: false, checked: true)
+    expect(page).to have_selector(:radio_button, "Par défaut : Webconf", visible: false, checked: false)
     expect(page).to have_selector(:field, "URL de visioconférence", visible: true)
 
     # on modifie pour utiliser l’outil par défaut
     # l’enjeu ici est que le radio button vide bien le champ visio_url_custom
-    find("label", text: "Outil de visioconférence par défaut").click
+    find("label", text: "Par défaut : Webconf").click
     click_on "Enregistrer"
 
     # on se retrouve sur le rdvs#show, on vérifie que le lien a été modifié

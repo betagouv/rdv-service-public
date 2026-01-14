@@ -6,18 +6,18 @@
 
   fieldset.fr-fieldset[data-controller="dependent-input"]
     legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-mt-1w
-      | URL de visioconférence
+      | Outil de visioconférence
 
     = dsfr_f.dsfr_radio_option :visio_url_type,
       value: "default",
-      label_text: "Outil de visioconférence par défaut",
+      label_text: "Par défaut : Webconf",
       hint: "Une URL unique sera créée via webconf.numerique.gouv.fr",
       checked: rdv_form.visio_url_type == "default",
       "data-action": "change->dependent-input#toggle"
 
     - custom_label = capture do
       div
-        | URL de visioconférence personnalisée
+        | Outil de votre choix
         button.fr-btn--tooltip.fr-btn.fr-ml-1w.rdv-display-inline-block[
           type="button"
           aria-describedby="tooltip-visio-custom"
