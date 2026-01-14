@@ -4,7 +4,8 @@ module Rdv::VisioConcern
   VALID_DOMAINS = %w[
     webinaire.numerique.gouv.fr
     webconf.numerique.gouv.fr
-    teams.microsoft.com
+    visio.numerique.gouv.fr
+    teams.live.com
     meet.google.com
     zoom.us
     meet.jit.si
@@ -30,7 +31,7 @@ module Rdv::VisioConcern
     res = URI::DEFAULT_PARSER.make_regexp(%w[http https]).match(visio_url_custom)
     if !res
       errors.add :visio_url_custom, "n'est pas une URL valide"
-    elsif VALID_DOMAINS.exclude?(res[4])
+    elsif VALID_DOMAINS.none? { |domain| res[4].end_with?(domain) }
       errors.add :visio_url_custom, "doit provenir d’un des domaines suivants : #{VALID_DOMAINS.to_sentence}"
     end
   end
