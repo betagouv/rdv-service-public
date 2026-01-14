@@ -58,9 +58,8 @@ RSpec.describe "Un agent peut créer et éditer un RDV collectif en visio en pas
     expect(page).to have_selector(:field, "URL de visioconférence", visible: true)
 
     # on modifie pour utiliser l’outil par défaut
-    # l’enjeu ici est que le radio button vide bien le champ visio_url_custom
     find("label", text: "Par défaut : Webconf").click
-    click_on "Enregistrer"
+    expect { click_on "Enregistrer" }.to change { Rdv.collectif.last.visio_url_custom }.to(nil)
 
     # on se retrouve sur le rdvs#show, on vérifie que le lien a été modifié
     expect(page).to have_content("Le rendez-vous a été modifié")
