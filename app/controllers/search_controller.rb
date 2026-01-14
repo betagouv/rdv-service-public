@@ -15,19 +15,6 @@ class SearchController < ApplicationController
       return
     end
 
-    # << REMOVE AFTER 01/01/2026
-    # Bien que nous n’utilisions plus Crisp pour les nouveaux tickets, nous avons encore quelques tickets ouverts
-    # On laisse cette redirection pour les personnes qui cliquent sur « Répondre via le chat »
-    #
-    # Crisp propose aux utilisateurs de répondre aux mails soit par réponse de mail soit par le chat
-    # Comme nous ne pouvons pas retirer la mention du chat et que nous ne souhaitons pas le proposer comme moyen de
-    # contact, nous redirigeons les utilisateurs vers le chat Crisp si ils cliquent sur le lien dans le footer du mail
-    if params[:crisp_sid]
-      redirect_to_crisp_chat(params[:crisp_sid])
-      return
-    end
-    # >> REMOVE AFTER 01/01/2026
-
     if current_domain == Domain::RDV_SERVICE_PUBLIC
       @site_vitrine_page = true
       render "dsfr/rdv_mairie/homepage"
@@ -152,10 +139,4 @@ class SearchController < ApplicationController
   def agent_search_params
     params.permit(AgentPrescriptionSearchContext::STRONG_PARAMS_LIST)
   end
-
-  # << REMOVE AFTER 01/01/2026
-  def redirect_to_crisp_chat(crisp_sid)
-    redirect_to "https://go.crisp.chat/chat/embed/?website_id=#{ENV['CRISP_WEBSITE_ID']}&crisp_sid=#{crisp_sid}", allow_other_host: true
-  end
-  # >> REMOVE AFTER 01/01/2026
 end
