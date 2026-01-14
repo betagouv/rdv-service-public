@@ -1,7 +1,10 @@
 RSpec.describe "user can use a link that points to RDV search scoped to an organisation" do
+  before { travel_to(Time.zone.parse("2022-09-12 15:00:00")) }
+
   let!(:territory) do
     create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER, enable_birth_date_field: true)
   end
+
   let!(:organisation_a) { create(:organisation, territory: territory, external_id: "123", created_at: Date.new(2022, 1, 1)) }
   let!(:organisation_b) { create(:organisation, territory: territory, external_id: "456", created_at: Date.new(2022, 1, 1)) }
   let!(:organisation_c) { create(:organisation, territory: territory, external_id: "789", created_at: Date.new(2027, 1, 1)) }
@@ -30,10 +33,10 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
     context "en utilisant le public_link_id de l’orga C créée en 2027" do
       it "propose les motifs de l’orga C mais pas des autres organisations" do
-        visit "/org/#{organisation_a.public_link_id}"
+        visit "/org/#{organisation_c.public_link_id}"
         expect(page).to have_content("Motif C")
         expect(page).not_to have_content("Motif A")
-        expect(page).not_to have_content("Motif C")
+        expect(page).not_to have_content("Motif B")
       end
     end
 
@@ -71,7 +74,6 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
   end
 
   describe "the complete process of taking a RDV from a public link" do
-    before { travel_to(Time.zone.parse("2022-09-12 15:00:00")) }
     around { |example| perform_enqueued_jobs { example.run } }
 
     it "works" do
