@@ -14,7 +14,7 @@ RSpec.describe LoginCode, type: :model do
   end
 
   describe "#set_random_code before_save callback" do
-    let(:login_code) { described_class.new(email: "test@usager.fr", domain_id: "RDV_SERVICE_PUBLIC") }
+    let(:login_code) { described_class.new(email: "test@usager.fr", first_name: "Jean", last_name: "Dupont", domain_id: "RDV_SERVICE_PUBLIC") }
 
     specify do
       login_code.save

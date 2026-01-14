@@ -464,16 +464,14 @@ RSpec.describe "User can search rdv on rdv mairie" do
       click_on "09:00"
       expect(page).to have_content("Connexion")
       expect(page).to have_content("(50 minutes)")
-      # Inscription
-      click_on "Créer un compte"
+      # Inscription via code
       fill_in "Prénom", with: "Eloïse"
       fill_in "Nom", with: "Vanna"
       fill_in "Adresse email", with: "elo@ise.fr"
-      click_on "Je m’inscris"
-      expect(page).to have_content("Un message contenant un lien de confirmation a été envoyé à votre adresse email")
-      perform_enqueued_jobs
-      open_email("elo@ise.fr")
-      current_email.click_link "Confirmer mon compte"
+      click_button "Recevoir un code de connexion"
+      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "elo@ise.fr").code
+      click_on "Valider"
+      expect(page).to have_content("Connexion réussie")
       # Parcours post-connexion
       expect(page).to have_content("Étape 1 sur 3")
       expect(page).to have_content("Vos informations")

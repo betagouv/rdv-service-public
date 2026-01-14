@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_14_162911) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -34,7 +34,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
   create_enum "receipts_result", ["processed", "sent", "delivered", "failure"]
   create_enum "role", ["legacy_admin", "support"]
   create_enum "sms_provider", ["netsize", "send_in_blue", "contact_experience", "sfr_mail2sms", "clever_technologies", "orange_contact_everyone"]
-  create_enum "user_created_through", ["unknown", "agent_creation", "user_sign_up", "franceconnect_sign_up", "user_relative_creation", "agent_creation_api", "prescripteur"]
+  create_enum "user_created_through", ["unknown", "agent_creation", "user_sign_up", "franceconnect_sign_up", "user_relative_creation", "agent_creation_api", "prescripteur", "auto_through_login"]
   create_enum "user_invited_through", ["devise_email", "external"]
   create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie"]
 
@@ -375,6 +375,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
     t.string "domain_id", null: false
     t.datetime "used_at"
     t.datetime "created_at", null: false, comment: "pas de updated_at car les login_codes sont quasiment immutables"
+    t.string "first_name"
+    t.string "last_name"
     t.index ["email", "created_at"], name: "index_login_codes_on_email_and_created_at"
   end
 

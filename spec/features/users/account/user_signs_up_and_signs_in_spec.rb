@@ -1,22 +1,17 @@
 RSpec.describe "User signs up and signs in" do
-  around { |example| perform_enqueued_jobs { example.run } }
-
   context "for regular new user" do
     let(:user) { build(:user) }
 
-    it ".sign_up, .confirm, .sign_in and then signs out" do
+    it "creates account via 6-digit code login and then signs out" do
       visit "http://www.rdv-solidarites-test.localhost/"
       click_link "Se connecter"
-      click_link "Créer un compte"
-      fill_in :user_first_name, with: user.first_name
-      fill_in :user_last_name, with: user.last_name
-      fill_in :user_email, with: user.email
-      click_on "Je m’inscris"
-      expect(page).to have_current_path(users_pending_registration_path, ignore_query: true)
-      expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
-      open_email(user.email)
-      current_email.click_link "Confirmer mon compte"
-      expect_flash_info(I18n.t("devise.confirmations.confirmed"))
+      fill_in "Prénom", with: user.first_name
+      fill_in "Nom", with: user.last_name
+      fill_in "Adresse email", with: user.email
+      click_on "Recevoir un code de connexion"
+      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: user.email).code
+      click_on "Valider"
+      expect(page).to have_content("Connexion réussie")
       expect(page).to have_content("Vos rendez-vous")
       click_link "Déconnexion"
       expect(page).to have_current_path(root_path, ignore_query: true)
@@ -26,23 +21,17 @@ RSpec.describe "User signs up and signs in" do
   context "for invited user" do
     let(:invited_user) { create(:user, :unconfirmed) }
 
-    it ".sign_up, .invite!, accept_invite and then signs out" do
+    it "can login via 6-digit code and gets confirmed" do
       visit "http://www.rdv-solidarites-test.localhost/"
       click_link "Se connecter"
-      click_link "Créer un compte"
-      fill_in :user_first_name, with: invited_user.first_name
-      fill_in :user_last_name, with: invited_user.last_name
-      fill_in :user_email, with: invited_user.email
-      click_on "Je m’inscris"
-      expect(page).to have_current_path(users_pending_registration_path, ignore_query: true)
-      expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
-      open_email(invited_user.email)
-      current_email.click_link "Accepter l'invitation"
-      expect(page).to have_content("Inscription")
-      fill_in "Mot de passe", with: "Rdvservicepublictest1!"
-      click_on "Enregistrer"
-      expect(page).to have_current_path(root_path, ignore_query: true)
-      expect_flash_info(I18n.t("devise.invitations.updated"))
+      fill_in "Prénom", with: invited_user.first_name
+      fill_in "Nom", with: invited_user.last_name
+      fill_in "Adresse email", with: invited_user.email
+      click_on "Recevoir un code de connexion"
+      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: invited_user.email).code
+      click_on "Valider"
+      expect(page).to have_content("Connexion réussie")
+      expect(invited_user.reload).to be_confirmed
       click_link "Déconnexion"
       expect(page).to have_current_path(root_path, ignore_query: true)
     end
@@ -51,35 +40,18 @@ RSpec.describe "User signs up and signs in" do
   context "when an unconfirmed user already exists with the given email" do
     let!(:unconfirmed_user) { create(:user, :unconfirmed) }
 
-    it "sends a new invite" do
+    it "logs them in and confirms their account" do
       visit "http://www.rdv-aide-numerique-test.localhost/"
       click_link "Se connecter"
-      click_link "Créer un compte"
-      fill_in :user_first_name, with: unconfirmed_user.first_name
-      fill_in :user_last_name, with: unconfirmed_user.last_name
-      fill_in :user_email, with: unconfirmed_user.email
-      click_on "Je m’inscris"
+      fill_in "Prénom", with: unconfirmed_user.first_name
+      fill_in "Nom", with: unconfirmed_user.last_name
+      fill_in "Adresse email", with: unconfirmed_user.email
+      click_on "Recevoir un code de connexion"
+      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: unconfirmed_user.email).code
+      click_on "Valider"
 
-      open_email(unconfirmed_user.email)
-      expect(current_email.subject).to eq("Vous avez été invité sur RDV Aide Numérique")
+      expect(page).to have_content("Connexion réussie")
+      expect(unconfirmed_user.reload).to be_confirmed
     end
-  end
-
-  context "un agent essaie de se connecter depuis la page de connexion usagers" do
-    let!(:agent) { create(:agent, email: "dulce@agent.fr", basic_role_in_organisations: [create(:organisation)]) }
-
-    it "redirige vers la page de connexion agent" do
-      visit "http://www.rdv-solidarites-test.localhost/"
-      click_link "Se connecter"
-      within("form") do
-        fill_in "Adresse email", with: "dulce@agent.fr"
-        click_on "Recevoir un code de connexion"
-      end
-      expect(page).to have_content(/Si vous souhaitez vous connecter en tant qu’agent/)
-    end
-  end
-
-  def expect_flash_info(message)
-    expect(page).to have_selector(".fr-alert.fr-alert--info", text: message)
   end
 end

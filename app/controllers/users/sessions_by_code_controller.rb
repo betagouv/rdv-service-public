@@ -33,4 +33,28 @@ class Users::SessionsByCodeController < ApplicationController
   private
 
   def storable_location? = false
+
+  def upsert_user(login_code)
+    find_and_update_user(login_code) || create_user(login_code)
+  end
+
+  def find_and_update_user(login_code)
+    user = User.find_by(email: login_code.email)
+    return if user.blank?
+
+    if user.first_name != login_code.first_name || user.last_name != login_code.last_name
+      user.update!(first_name: login_code.first_name, last_name: login_code.last_name)
+    end
+    user
+  end
+
+  def create_user(login_code)
+    user = User.new(
+      **login_code.slice(:email, :first_name, :last_name),
+      created_through: "auto_through_login"
+    )
+    user.skip_confirmation_notification!
+    user.save!
+    user
+  end
 end

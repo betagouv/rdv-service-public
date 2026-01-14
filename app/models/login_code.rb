@@ -6,6 +6,7 @@ class LoginCode < ApplicationRecord
   scope :usable, -> { not_expired.not_used }
 
   validates :email, presence: true
+  validates :first_name, :last_name, presence: true
 
   before_create :set_random_code
 
