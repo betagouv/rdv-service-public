@@ -102,7 +102,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
       current_email.click_link("Accepter l'invitation")
 
       begin
-        click_on "S’identifier avecProConnect"
+        click_on "S’identifier avec ProConnect"
       rescue ActionController::RoutingError
         # Capybara essaye de suivre une redirection vers "https://fca.integ01.dev-agentconnect.fr/
         # ce qui n'est pas possible dans l'env de test (il ignore le host et il cherche /authorize dans nos routes).
