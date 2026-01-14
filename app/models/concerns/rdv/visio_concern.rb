@@ -11,7 +11,10 @@ module Rdv::VisioConcern
     meet.jit.si
   ].freeze
 
+  VISIO_URL_TYPES = %w[default custom].freeze
+
   included do
+    validates :visio_url_type, inclusion: { in: VISIO_URL_TYPES }
     validates :visio_url_custom, presence: true, if: -> { visio_url_type == "custom" }
     validate :validate_visio_url_custom, if: -> { visio_url_custom.present? }
   end
