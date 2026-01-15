@@ -8,6 +8,7 @@ class Rdv < ApplicationRecord
   include WebhookDeliverable
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern
+  include Rdv::VisioConcern
   include Rdv::Updatable
   include Rdv::UsingWaitingRoom
   include Rdv::HardcodedAttributeNamesConcern
@@ -381,13 +382,6 @@ class Rdv < ApplicationRecord
 
   def revoked!
     update!(cancelled_at: Time.zone.now, status: "revoked")
-  end
-
-  def visio_url
-    return nil unless motif.visio?
-
-    # Jitsi n'autorise pas les - et _ dans les liens de visio
-    "https://webconf.numerique.gouv.fr/RdvServicePublic#{uuid}".gsub(/[-_]/, "")
   end
 
   def not_cancelled_and_in_the_future?

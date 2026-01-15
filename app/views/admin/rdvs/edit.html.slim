@@ -60,6 +60,8 @@
                 span.font-14.font-weight-bold= "Avertissement : "
                 span.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
 
+              = render "admin/rdvs_collectifs/form_visio_fields", rdv_form: @rdv_form
+
               = f.input :max_participants_count, input_html: { min: 1 }
             .form-group
               = "#{User.model_name.human.pluralize} :"
