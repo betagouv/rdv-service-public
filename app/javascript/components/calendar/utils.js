@@ -10,6 +10,10 @@ export const classicHeaderToolbarLayout = { center: "dayGridMonth,timeGridWeek,t
 
 export const betaWeekTitleFormat = { month: "long", year: "numeric" };
 
+export const preferencesModalToggle = {
+  text: "Préférences d’affichage",
+  click: () => { window.dsfr(document.getElementById("agenda-preferences-modal")).modal.disclose(); },
+};
 
 const CUSTOM_HEADER_FORMATS = {
   timeGridWeek: { weekday: "short", day: "numeric" },

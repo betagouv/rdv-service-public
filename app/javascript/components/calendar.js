@@ -14,6 +14,7 @@ import {
   betaWeekTitleFormat,
   dayHeaderContent,
   betaPlanningEnabled,
+  preferencesModalToggle,
   hiddenDays,
 } from './calendar/utils'
 
@@ -49,12 +50,7 @@ export class AgendaMonoAgent {
       dayHeaderContent: dayHeaderContent,
       select: this.selectEvent,
       headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
-      customButtons: {
-        preferencesModalToggle: {
-          text: "Préférences d’affichage",
-          click: () => { window.dsfr(document.getElementById("agenda-preferences-modal")).modal.disclose(); },
-        }
-      },
+      customButtons: { preferencesModalToggle },
       views: {
         timeGridOneDay: {
           type: 'timeGrid',
