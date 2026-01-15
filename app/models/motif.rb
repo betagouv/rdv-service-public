@@ -66,7 +66,7 @@ class Motif < ApplicationRecord
   validate :booking_delay_validation
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
-  validate :not_at_home_if_collectif
+  validate  :validate_location_type_for_rdv_collectif
   validate :cant_change_once_rdvs_exist
   validate :cant_be_for_secretariat_and_follow_up
   validate :unique_in_org
@@ -292,10 +292,10 @@ class Motif < ApplicationRecord
     errors.add(:service_id, "ne peut être le secrétariat") if service.secretariat?
   end
 
-  def not_at_home_if_collectif
-    return unless collectif? && !public_office?
+  def validate_location_type_for_rdv_collectif
+    return if !collectif? || public_office? || visio?
 
-    errors.add(:base, :not_at_home_if_collectif)
+    errors.add(:base, "Les RDV collectifs ne peuvent pas être faits par téléphone ou à domicile")
   end
 
   def cant_change_once_rdvs_exist

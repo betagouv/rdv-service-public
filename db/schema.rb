@@ -632,6 +632,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.integer "created_by_id"
     t.string "created_by_type", null: false
+    t.string "visio_url_custom"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by_type", "created_by_id"], name: "index_rdvs_on_created_by_type_and_created_by_id"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"

@@ -65,6 +65,41 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(mail.html_part.body.encoded).to match("<span>en appelant au <a href=\"tel:0601010101\">0601010101</a> ou</span> en cliquant sur le lien ci-dessous")
       expect(mail.html_part.body.encoded).to match("Annuler ou modifier le rendez-vous</a>")
     end
+
+    context "motif collectif sur place" do
+      let(:organisation) { create(:organisation) }
+      let(:lieu) { create(:lieu, organisation:, name: "Mairie centrale") }
+      let(:motif) { create(:motif, :collectif, organisation:, location_type: :public_office) }
+      let(:rdv) { create(:rdv, motif:, organisation:, lieu:) }
+
+      it "contient le nom du lieu" do
+        mail = described_class.with(rdv:, user:, token:).rdv_created
+        expect(mail.html_part.body.encoded).to include(/Mairie centrale/)
+      end
+    end
+
+    context "motif collectif en visio, pas de visio_url_custom" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, :collectif, organisation:, location_type: :visio) }
+      let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: nil) }
+
+      it "contient un lien vers la visio" do
+        mail = described_class.with(rdv:, user:, token:).rdv_created
+        expect(mail.html_part.body.encoded).to include(%r{https://webconf.numerique.gouv.fr/RdvServicePublic})
+      end
+    end
+
+    context "motif collectif en visio, visio_url_custom présente" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, :collectif, organisation:, location_type: :visio) }
+      let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: "https://webinaire.numerique.gouv.fr/test123") }
+
+      it "contient un lien vers la visio" do
+        mail = described_class.with(rdv:, user:, token:).rdv_created
+        expect(mail.html_part.body.encoded).not_to include(%r{https://webconf.numerique.gouv.fr/})
+        expect(mail.html_part.body.encoded).to include(%r{https://webinaire.numerique.gouv.fr/test123})
+      end
+    end
   end
 
   describe "#rdv_updated" do

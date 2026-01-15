@@ -179,7 +179,7 @@ GEM
     crass (1.0.6)
     css_parser (1.16.0)
       addressable
-    csv (3.3.2)
+    csv (3.3.5)
     date (3.5.0)
     debug (1.11.0)
       irb (~> 1.10)
@@ -211,8 +211,8 @@ GEM
       actionview (>= 6.1, < 9.0)
       activemodel (>= 6.1, < 9.0)
       activesupport (>= 6.1, < 9.0)
-    dsfr-view-components (4.0)
-      dsfr-assets (~> 1.13.2)
+    dsfr-view-components (4.1)
+      dsfr-assets (>= 1.13.2, < 1.15)
       html-attributes-utils (~> 1)
       view_component (~> 3)
     erb (5.1.3)
@@ -629,7 +629,7 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
     ruby-graphviz (1.2.5)
       rexml
-    ruby-ole (1.2.12.2)
+    ruby-ole (1.2.13.1)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     sassc (2.4.0)
@@ -670,7 +670,9 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
-    spreadsheet (1.3.0)
+    spreadsheet (1.3.4)
+      bigdecimal
+      logger
       ruby-ole
     spring (4.2.1)
     spring-commands-rspec (1.0.4)
@@ -894,7 +896,7 @@ CHECKSUMS
   crack (0.4.5) sha256=798416fb29b8c9f655d139d5559169b39c4a0a3b8f8f39b7f670eec1af9b21b3
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   css_parser (1.16.0) sha256=f70fb492254418522ea77c01d57bf64452d6c7465001926c3620d0b50289b1a2
-  csv (3.3.2) sha256=6ff0c135e65e485d1864dde6c1703b60d34cc9e19bed8452834a0b28a519bd4e
+  csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   date (3.5.0) sha256=5e74fd6c04b0e65d97ad4f3bb5cb2d8efb37f386cc848f46310b4593ffc46ee5
   debug (1.11.0) sha256=1425db64cfa0130c952684e3dc974985be201dd62899bf4bbe3f8b5d6cf1aef2
   debug_inspector (1.2.0) sha256=9bdfa02eebc3da163833e6a89b154084232f5766087e59573b70521c77ea68a2
@@ -911,7 +913,7 @@ CHECKSUMS
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dsfr-assets (1.13.2) sha256=3395e15fa783a894e927889600ee9a1bbf45f3f3960590d76c0b4d92504e1c76
   dsfr-form_builder (0.0.7) sha256=16165ee281de4645617fdb79c4fc03384f9125cbbdf6a149daa1ef2bb367ffde
-  dsfr-view-components (4.0) sha256=a1f237df3c9ec6bd79493f17656084c9e2ae5d0aea51d7467a931885f5fd67ab
+  dsfr-view-components (4.1) sha256=9633c1f289b622cea2dc8624c27a49d7e94d8e1420727e81afe484ba2d6db352
   erb (5.1.3) sha256=566e53057b6ba48699f824b578473b391fa8aef100aa14afad1c46725fae0e67
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
@@ -1071,7 +1073,7 @@ CHECKSUMS
   rubocop-rails (2.30.3) sha256=fc5a6506daa916d15e282cc806943afa64a020bf592b93a94025d89a2a78a715
   rubocop-rspec (3.5.0) sha256=710c942fe1af884ba8eea75cbb8bdbb051929a2208880a6fc2e2dce1eed5304c
   ruby-graphviz (1.2.5) sha256=1c2bb44e3f6da9e2b829f5e7fd8d75a521485fb6b4d1fc66ff0f93f906121504
-  ruby-ole (1.2.12.2) sha256=7d67f050498aedc4e9b32cacdde10e1a6853e4c0962932b87c3636cd8cc10a7e
+  ruby-ole (1.2.13.1) sha256=578d10dd2a797a2b35a1286c6fb2c9525f67c24791346fc8015d39f0ffa3cb72
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
   sassc (2.4.0) sha256=4c60a2b0a3b36685c83b80d5789401c2f678c1652e3288315a1551d811d9f83e
@@ -1086,7 +1088,7 @@ CHECKSUMS
   slim (5.2.1) sha256=72351dff7e2ff20e2d5c393cfc385bb9142cef5db059141628fd7163ac3c13e7
   slim_lint (0.31.1) sha256=9258d00fa9d355c3ad79dba46190225b8b019f354d6ea45accb3011a9f393e9c
   snaky_hash (2.0.1) sha256=1ac87ec157fcfe7a460e821e0cd48ae1e6f5e3e082ab520f03f31a9259dbdc31
-  spreadsheet (1.3.0) sha256=e93cd797106422205465868017c43a751cfc9f4f9c21159df3194c9ecc7590b6
+  spreadsheet (1.3.4) sha256=0aefd6f3dfdc8b43528109f7fbd54db54f85ce5920429413d48305906bc59253
   spring (4.2.1) sha256=8517a24d7ac966c8e051b63a67c68cbfc026c74cc0742e19f0fba472ebe0a5ae
   spring-commands-rspec (1.0.4) sha256=6202e54fa4767452e3641461a83347645af478bf45dddcca9737b43af0dd1a2c
   sprockets (4.2.1) sha256=951b13dd2f2fcae840a7184722689a803e0ff9d2702d902bd844b196da773f97
