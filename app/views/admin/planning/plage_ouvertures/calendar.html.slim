@@ -20,4 +20,4 @@
   data-event-sources-json="#{[admin_api_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id), OffDays.to_full_calendar_array].to_json}"
 ]
 
-= render partial: "admin/planning/agendas/preferences_modal", locals: { display_only: [:display_saturdays] }
+= render partial: "admin/planning/agendas/preferences_modal", locals: { display_saturdays: true }
