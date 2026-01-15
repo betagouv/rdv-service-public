@@ -1,14 +1,4 @@
 GIT
-  remote: https://github.com/betagouv/dsfr-view-components.git
-  revision: 74592f9c7496209bc46a66c85861d9732552074c
-  branch: main
-  specs:
-    dsfr-view-components (4.0)
-      dsfr-assets (>= 1.13.2, < 1.15)
-      html-attributes-utils (~> 1)
-      view_component (~> 3)
-
-GIT
   remote: https://github.com/mattheworiordan/capybara-screenshot.git
   revision: 23a27be5392c7dbc706651d7adc124d8e7c920a0
   ref: 23a27be
@@ -791,7 +781,7 @@ DEPENDENCIES
   dotenv-rails
   dsfr-assets (~> 1.14.2)
   dsfr-form_builder (= 0.0.7)
-  dsfr-view-components!
+  dsfr-view-components (~> 4.0)
   factory_bot
   faker
   good_job (= 3.27.4)
