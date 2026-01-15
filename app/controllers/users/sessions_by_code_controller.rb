@@ -13,30 +13,17 @@ class Users::SessionsByCodeController < ApplicationController
   end
 
   def create
-    @email = params[:login_code][:email]
-    submitted_login_code = params[:login_code][:code]
-    matching_login_code = LoginCode.where(email:, code: submitted_login_code).where("created_at > ?", 24.hours.ago).first
+    permitted_params = params.require(:login_code).permit(:email, :code)
+    login_service = Users::LoginService.new(**permitted_params.to_h.symbolize_keys, controller: self)
 
-    if matching_login_code&.usable?
-      user = User.find_by!(email:)
-      user.confirm
-      sign_in(:user, user)
-      matching_login_code.update!(used_at: Time.zone.now)
-      redirect_to after_sign_in_path_for(user), flash: { success: "Connexion réussie" }
-    elsif LoginCode.where(email:).usable.any?
-      @existing_login_code = LoginCode.most_recent_usable_for(email:)
-      @existing_login_code.errors.add(:base, "Veuillez renseigner le dernier code qui vous a été envoyé par email, ou attendre quelques instants de le recevoir")
+    if login_service.perform
+      redirect_to after_sign_in_path_for(login_service.user), flash: { success: "Connexion réussie" }
+    elsif login_service.there_is_an_existing_and_usable_login_code?
+      @existing_login_code = LoginCode.most_recent_usable_for(email: login_service.email)
+      @existing_login_code.errors.add(:base, login_service.error)
       render :new
     else
-      flash[:error] =
-        if matching_login_code&.used?
-          "Code déjà utilisé, veuillez en demander un nouveau"
-        elsif matching_login_code&.expired?
-          "Code expiré, veuillez en demander un nouveau"
-        else
-          "Code invalide"
-        end
-      redirect_to new_users_sessions_by_code_path(email:)
+      redirect_to new_users_sessions_by_code_path(email:), flash: { error: login_service.error }
     end
   end
 
