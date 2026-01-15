@@ -45,8 +45,16 @@ class SearchController < ApplicationController
     end
   end
 
+  # Les organisations créées avant cette date restent accessibles via /org/:id
+  LEGACY_INCREMENTAL_ID_CUTOFF_DATE = Date.new(2026, 1, 20).freeze
+
   def public_link_with_internal_organisation_id
-    organisation = Organisation.find_by(public_link_id: params[:organisation_id]) || Organisation.find(params[:organisation_id])
+    organisation =
+      Organisation.find_by(public_link_id: params[:organisation_id]) ||
+      Organisation.where("created_at < ?", LEGACY_INCREMENTAL_ID_CUTOFF_DATE).find_by(id: params[:organisation_id])
+
+    raise ActiveRecord::RecordNotFound if organisation.nil?
+
     redirect_to_organisation_search(organisation)
   end
 
