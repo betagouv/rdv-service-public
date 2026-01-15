@@ -26,7 +26,7 @@
           = f.dsfr_text_field :context, label: Rdv.human_attribute_name(:context)
           = f.hidden_field :motif_id, value: @rdv.motif_id
 
-          = render "admin/rdvs_collectifs/form_visio_fields", rdv_form: @rdv_form
+          = render "admin/rdvs_collectifs/form_visio_fields", rdv: @rdv, f:
 
           - if @rdv.public_office?
             - new_lieu_record = @rdv.lieu&.new_record?
