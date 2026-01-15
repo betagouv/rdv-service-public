@@ -38,7 +38,7 @@
               = f.label :lieu, class: "fr-label required"
               fieldset
                 - lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name
-              = f.select :lieu_id, lieux.collect { |l| [l.full_name, l.id] }, { include_blank: true }, class: "select2-input fr-select", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true }
+                = f.select :lieu_id, lieux.collect { |l| [l.full_name, l.id] }, { include_blank: true }, class: "select2-input fr-select", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "auto-select-sole-option": true }
                 small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
                   = t(".single_use_lieu_hint_html")
               fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
