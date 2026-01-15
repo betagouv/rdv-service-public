@@ -31,8 +31,12 @@
 
             .col-md-6
               .d-flex.card-text.mb-2
+              - if @rdv.public_office?
                 = lieu_icon(class: "fr-mr-1w")
                 = @rdv.lieu.name
+              - elsif @rdv.visio?
+                = visio_icon(class: "fr-mr-1w")
+                = link_to("Visioconférence", @rdv.visio_url, target: :_blank)
 
               .d-flex.card-text.mb-2
                 = user_icon(class: "fr-mr-1w")

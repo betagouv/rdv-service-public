@@ -90,6 +90,40 @@
         79
       ],
       "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "fd3d0da78475714fd8f20075072ba463b0a697f3662db636d19bff117b424659",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "app/views/admin/rdvs_collectifs/edit.html.slim",
+      "line": 39,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to(\"Visioconf\\u00E9rence\", Rdv.find(params[:id]).visio_url, :target => :_blank)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::RdvsCollectifsController",
+          "method": "edit",
+          "line": 52,
+          "file": "app/controllers/admin/rdvs_collectifs_controller.rb",
+          "rendered": {
+            "name": "admin/rdvs_collectifs/edit",
+            "file": "app/views/admin/rdvs_collectifs/edit.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/rdvs_collectifs/edit"
+      },
+      "user_input": "Rdv.find(params[:id]).visio_url",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "l'attribute visio_url_custom est validée lors de la sauvegarde, les domaines sont filtrés"
     }
   ],
   "brakeman_version": "7.0.0"

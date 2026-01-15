@@ -34,7 +34,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
     authorize(@rdv, :new?, policy_class: Agent::RdvPolicy)
     if @rdv_form.save
       Notifiers::RdvCreated.perform_with(@rdv, current_agent)
-      flash[:success] = I18n.t("admin.rdvs.message.success.create")
+      flash[:success] = "Le rendez-vous a été créé : <a href='#{admin_organisation_rdv_path(@rdv.organisation, @rdv)}'>voir les détails du rendez-vous</a>"
       redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else
       render :new
@@ -70,7 +70,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   private
 
   def create_attribute_names
-    %i[starts_at duration_in_min lieu_id name max_participants_count context motif_id ignore_benign_errors]
+    %i[starts_at duration_in_min lieu_id name max_participants_count context motif_id ignore_benign_errors visio_url_custom visio_url_type]
   end
 
   def create_attributes_rdvs
@@ -79,7 +79,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
   def create_params
     allowed_params = params.require(:rdv).permit(*create_attribute_names, *create_attributes_rdvs)
-    return allowed_params if params[:rdv][:lieu_id].present?
+    return allowed_params if params[:rdv][:lieu_id].present? || Motif.find_by(id: params[:rdv][:motif_id]).visio?
 
     allowed_params.to_h.deep_merge(lieu_attributes: { organisation: current_organisation, availability: :single_use })
   end

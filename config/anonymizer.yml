@@ -135,6 +135,7 @@ tables:
     anonymized_column_names:
       - context
       - name
+      - visio_url_custom
     non_anonymized_column_names:
       - starts_at
       - organisation_id

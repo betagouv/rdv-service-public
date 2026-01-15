@@ -7,6 +7,7 @@ module Admin::RdvFormConcern
     attr_accessor :rdv
 
     delegate(*::Rdv.hardcoded_attribute_names, to: :rdv)
+    delegate :visio_url_type, :visio?, to: :rdv
     delegate :motif, :organisation, :agents, :users, to: :rdv
     delegate :overlapping_plages_ouvertures, :overlapping_plages_ouvertures?, to: :rdv
     delegate :overlapping_absences, :overlapping_absences?, to: :rdv
