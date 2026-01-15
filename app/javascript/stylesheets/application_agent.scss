@@ -154,10 +154,3 @@ table,
   -webkit-mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
   mask-image: url("../../assets/images/custom-icons/ri-user-unfollow-fill.svg");
 }
-
-// Disponible dans le DSFR 1.14
-.fr-icon-circle-fill::before,
-.fr-icon-circle-fill::after {
-  -webkit-mask-image: url("../../assets/images/custom-icons/dsfr-circle-fill.svg");
-  mask-image: url("../../assets/images/custom-icons/dsfr-circle-fill.svg");
-}
