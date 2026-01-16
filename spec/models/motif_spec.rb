@@ -229,13 +229,21 @@ RSpec.describe Motif, type: :model do
   end
 
   describe "motif de rdv collectif" do
-    subject(:motif) { build(:motif, collectif: true, location_type: :home) }
+    context "à domicile" do
+      let(:motif) { build(:motif, collectif: true, location_type: :home) }
 
-    it "validates that a rdv collectif can't be at the user's home" do
-      expect(motif).not_to be_valid
-      expect(subject.errors.full_messages).to eq [
-        "Les RDV collectifs doivent avoir lieu sur place.",
-      ]
+      it "n’est pas valide" do
+        expect(motif).not_to be_valid
+        expect(motif.errors.full_messages).to eq ["Les RDV collectifs ne peuvent pas être faits par téléphone ou à domicile"]
+      end
+    end
+
+    context "en visio" do
+      let(:motif) { build(:motif, collectif: true, location_type: :visio) }
+
+      it "is valid" do
+        expect(motif).to be_valid
+      end
     end
   end
 
