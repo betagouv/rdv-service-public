@@ -256,6 +256,8 @@ group :test do
 
   # Library for stubbing HTTP requests in Ruby.
   gem "webmock"
+  # Record your test suite's HTTP interactions and replay them during future test runs for fast, deterministic, accurate tests.
+  gem "vcr"
 
   # Modify your ENV
   gem "climate_control"
