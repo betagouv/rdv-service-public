@@ -113,6 +113,12 @@
   width: 100%;
 }
 
+.rdv-width-md-auto {
+  @include media-breakpoint-up(md) {
+    width: auto;
+  }
+}
+
 .rdv-max-width-100 {
   max-width: 100%;
 }
@@ -189,4 +195,8 @@
 
 .rdv-border-color-blue-france {
   border-color: var(--blue-france-main-525);
+}
+
+.rdv-display-inline-block {
+  display: inline-block;
 }

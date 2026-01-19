@@ -1,6 +1,8 @@
-Rails.application.config.after_initialize do
-  next if !Rails.env.development? || !defined?(LetterOpenerWeb)
+return unless Rails.env.development?
 
+# On utilise to_prepare (et non after_initialize) car ce hook est réexécuté après chaque rechargement de code en
+# développement, ce qui garantit que le monkey-patch reste appliqué même après modification de fichiers.
+Rails.application.config.to_prepare do
   LetterOpenerWeb::Letter.class_eval do
     alias_method :original_adjust_link_targets, :adjust_link_targets
     def adjust_link_targets(contents)

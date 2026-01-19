@@ -175,17 +175,17 @@ input:placeholder-shown {
   font-size: 1.5rem;
 }
 
-.rdv-three-letters-form input[type="text"] {
+.rdv-legible-code-form input[type="text"] {
   text-transform: uppercase;
   letter-spacing: 1rem;
   font-size: 1.4rem;
   max-height: 4rem;
   height: 4rem;
   font-family: monospace;
-  max-width: 8rem;
 }
+
 @include media-breakpoint-down(md) {
-  .rdv-three-letters-form {
+  .rdv-legible-code-form {
     text-align: center;
 
     input[type="submit"] {
@@ -197,4 +197,8 @@ input:placeholder-shown {
       margin-right: auto;
     }
   }
+}
+
+.rdv-three-letters-form input[type="text"] {
+  max-width: 8rem;
 }

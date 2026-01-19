@@ -22,6 +22,7 @@ module Rdv::HardcodedAttributeNamesConcern
     status
     created_by_id
     created_by_type
+    visio_url_custom
   ].freeze
 
   class_methods do

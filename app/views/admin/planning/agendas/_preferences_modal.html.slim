@@ -1,0 +1,30 @@
+/# locals: (display_cancelled_rdv: false, display_saturdays: false, group_by_agent: false)
+
+dialog#agenda-preferences-modal.fr-modal[aria-labelledby="agenda-preferences-modal-title" data-fr-concealing-backdrop="true"]
+  .fr-container.fr-container--fluid.fr-container-md
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-12.fr-col-md-8.fr-col-lg-6
+        .fr-modal__body
+          .fr-modal__header
+            button#button-5.fr-btn--close.fr-btn[aria-controls="agenda-preferences-modal" title="Fermer" type="button"]
+              | Fermer
+          .fr-modal__content
+            h2#agenda-preferences-modal-title.fr-modal__title
+              | Préférences d’affichage
+
+            = form_with model: current_agent, url: admin_organisation_planning_toggle_displays_path(current_organisation), method: :put, builder: Dsfr::FormBuilder do |f|
+              fieldset#agenda-options.fr-fieldset[aria-labelledby="agenda-options-legend"]
+                legend#agenda-options-legend.fr-fieldset__legend.fr-fieldset__legend--regular
+                  | Vous pouvez personnaliser la vue de votre agenda avec les options ci-dessous :
+
+                - if display_cancelled_rdv
+                  = f.dsfr_check_box :display_cancelled_rdv, label: "Afficher les RDV annulés"
+
+                - if display_saturdays
+                  = f.dsfr_check_box :display_saturdays, label: current_territory.work_on_sunday? ? "Afficher les week-ends" : "Afficher les samedis"
+
+                - if group_by_agent
+                  = f.dsfr_check_box :group_by_agent, label: "Grouper par agent"
+
+              / .mt-2
+              = f.submit "Enregistrer", class: "fr-btn"

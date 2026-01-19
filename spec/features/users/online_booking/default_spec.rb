@@ -451,7 +451,7 @@ RSpec.describe "User can search for rdvs" do
     let(:organisation) { create(:organisation) }
 
     it "permet de prendre rendez-vous" do
-      visit public_link_to_org_path(organisation_id: organisation.id)
+      visit public_link_to_org_path(organisation_id: organisation.public_link_id)
       click_on "Vaccination"
       click_on "Prochaine disponibilité"
       first(:link, "08:00").click

@@ -30,6 +30,15 @@
           p Ce motif n'est pas ouvert à la réservation en ligne
           = button_to "Ouvrir à la réservation en ligne", open_admin_organisation_online_booking_motif_path(current_organisation, @motif), class: "fr-btn", method: :post
 
+    - if @motif.bookable_by_everyone? && !current_organisation.sectorized?
+      .card
+        .card-body
+          h2.fr-h4 Lien de réservation direct
+          - motif_booking_link = public_link_to_motif_url(public_link_id: @motif.public_link_id, motif_slug: @motif.slug)
+          = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: motif_booking_link }
+
+          p.fr-mt-2w Ce lien permet de prendre rendez-vous pour ce motif.
+
     - if @motif.bookable_outside_of_organisation?
       .card
         .card-body

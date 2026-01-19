@@ -1,18 +1,34 @@
 class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
-  def index
+  before_action :normalize_array_params, only: %i[index]
+
+  def index # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).where(params.permit(:organisation_id))
 
     rdvs = rdvs.starts_after(Time.zone.parse(params[:starts_after])) if params[:starts_after].present?
     rdvs = rdvs.starts_before(Time.zone.parse(params[:starts_before])) if params[:starts_before].present?
 
-    rdvs = rdvs.includes(:organisation, :motif, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
+    if params[:include].nil?
+      rdvs = rdvs.includes(:organisation, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
+    elsif params[:include].is_a?(Array)
+      rdvs.includes(:organisation) if "organisation".in?(params[:include])
+
+      rdvs.includes(:lieu) if "lieu".in?(params[:include])
+
+      rdvs.includes(:agents) if "agents".in?(params[:include])
+
+      rdvs.includes(:users) if "users".in?(params[:include])
+
+      rdvs.includes(participations: [:user]) if "participations".in?(params[:include])
+
+      rdvs.includes(motif: [:motif_category]) if "motif".in?(params[:include])
+    end
 
     if params[:id].present?
       rdvs = rdvs.where(id: params[:id])
     end
 
     if params[:user_id].present?
-      rdvs = rdvs.where(participations: { user_id: params[:user_id] })
+      rdvs = rdvs.includes(participations: [:user]).where(participations: { user_id: params[:user_id] })
     end
 
     if params[:agent_id].present?
@@ -23,7 +39,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
       rdvs = rdvs.where(status: params[:status])
     end
 
-    render_collection(rdvs)
+    render_collection(rdvs, options: params.permit(include: []))
   end
 
   # Cet endpoint est utilisé seulement pour la copie des données d'une instance à l'autre, il n'est donc pas documenté.
@@ -107,6 +123,14 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
   end
 
   private
+
+  def normalize_array_params
+    %i[id status include].each do |param_name|
+      if params[param_name].is_a?(String)
+        params[param_name] = params[param_name].split(",")
+      end
+    end
+  end
 
   def pundit_user
     current_agent

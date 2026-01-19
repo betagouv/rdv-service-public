@@ -8,6 +8,7 @@ class Rdv < ApplicationRecord
   include WebhookDeliverable
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern
+  include Rdv::VisioConcern
   include Rdv::Updatable
   include Rdv::UsingWaitingRoom
   include Rdv::HardcodedAttributeNamesConcern
@@ -96,7 +97,7 @@ class Rdv < ApplicationRecord
     refresh_periods = [[starts_at, ends_at]]
     refresh_periods.push([starts_at_previously_was, ends_at_previously_was]) if starts_at_previously_changed? || ends_at_previously_changed?
 
-    (agent_ids + (@agent_ids_before_change || [])).uniq.each do |agent_id|
+    (agent_ids_from_db + (@agent_ids_before_change || [])).uniq.each do |agent_id|
       AgendaChannel.broadcast_to(agent_id, model: "Rdv", refresh_periods:)
     end
   end
@@ -383,18 +384,15 @@ class Rdv < ApplicationRecord
     update!(cancelled_at: Time.zone.now, status: "revoked")
   end
 
-  def visio_url
-    return nil unless motif.visio?
-
-    # Jitsi n'autorise pas les - et _ dans les liens de visio
-    "https://webconf.numerique.gouv.fr/RdvServicePublic#{uuid}".gsub(/[-_]/, "")
-  end
-
   def not_cancelled_and_in_the_future?
     ends_at > Time.zone.now && status.in?(Rdv::NOT_CANCELLED_STATUSES)
   end
 
   private
+
+  def agent_ids_from_db
+    AgentsRdv.where(rdv_id: id).pluck(:agent_id).uniq
+  end
 
   def update_collective_rdv_status
     revoked! if participations.none?(&:unknown?) && in_the_past?
@@ -430,8 +428,8 @@ class Rdv < ApplicationRecord
 
   def virtual_attributes_for_paper_trail
     {
-      user_ids: users.ids,
-      agent_ids: agents.ids,
+      user_ids: participations.load.map(&:user_id),
+      agent_ids: agent_ids,
       participations: participations.map do |participation|
         participation.slice(
           :user_id,

@@ -105,7 +105,7 @@ plusieurs tables dans la base de données de RDV Insertion.
 
 | Source     | Destination      | Protocole     | Port | Localisation        | Interne/URL Externe            |
 |------------|------------------|---------------|------|---------------------|--------------------------------|
-| Navigateur | FranceConnect    | HTTPS (OAuth) | 443  | Paris, France       | smtp-relay.sendinblue.com      |
+| Navigateur | FranceConnect    | HTTPS (OAuth) | 443  | Paris, France       | oidc.franceconnect.gouv.fr     |
 | Navigateur | ProConnect       | HTTPS (OAuth) | 443  | France              | auth.agentconnect.gouv.fr      |
 
 ### Inventaire des dépendances
@@ -124,7 +124,7 @@ La liste des librairies Ruby est disponible dans :
 La liste des librairies JS utilisée est disponible dans :
 
 - [package.json](/package.json) pour la liste des dépendances directes
-- [package.json](/yarn.lock) pour la liste complète des librairies JS utilisées directement et indirectement (
+- [yarn.lock](/yarn.lock) pour la liste complète des librairies JS utilisées directement et indirectement (
   dépendances indirectes), et leurs versions précises
 
 ### Schéma de l’architecture

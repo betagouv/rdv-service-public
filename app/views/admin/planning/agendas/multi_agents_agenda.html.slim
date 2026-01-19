@@ -18,8 +18,12 @@ ruby:
   data-resources-json="#{resources.to_json}"
   data-display-saturdays="#{current_agent.display_saturdays}"
   data-display-sundays="#{current_territory.work_on_sunday? && current_agent.display_saturdays}"
+  data-group-by-agent="#{current_agent.group_by_agent}"
   data-organisation-id="#{current_organisation.id}"
   data-realtime-refresh=Admin::Api::Agenda.realtime_refresh?(current_agent).to_s
 ]
 
-= render partial: "admin/planning/agendas/preferences_toggles"
+- if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
+  = render partial: "admin/planning/agendas/preferences_modal", locals: { display_cancelled_rdv: true, display_saturdays: true, group_by_agent: true }
+- else
+  = render partial: "admin/planning/agendas/preferences_buttons"

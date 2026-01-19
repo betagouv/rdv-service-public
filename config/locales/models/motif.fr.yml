@@ -84,7 +84,7 @@ fr:
         visio: Par visioconférence
       motif/location_types/hint:
         public_office: L'agent reçoit l'usager sur place, au lieu sélectionné (MDS…).
-        visio: L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV. L'agent se connecte au service de webconférence de l'État avec ProConnect pour démarrer la visioconférence.
+        visio: L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV. Pour les RDV individuels, l'agent se connecte au service de webconférence de l'État avec ProConnect pour démarrer la visioconférence.
         phone: L’agent appelle le numéro indiqué sur la fiche de l'usager.
         home: L’agent se rend à l'adresse indiquée sur la fiche de l'usager.
       motif/bookable_by/radio_label_html:
@@ -112,8 +112,6 @@ fr:
         motif:
           cant_change_because_already_used: ne peut être modifié car le motif est utilisé pour un RDV
           attributes:
-            base:
-              not_at_home_if_collectif: Les RDV collectifs doivent avoir lieu sur place.
             name:
               taken: "est déjà utilisé : un motif du même type et du même service porte déjà ce nom dans cette organisation."
             for_secretariat:

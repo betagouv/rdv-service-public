@@ -38,7 +38,8 @@ RSpec.describe "agent can duplicate motif" do
       id: be_a(Integer),
       created_at: be_within(1.second).of(Time.zone.now),
       updated_at: be_within(1.second).of(Time.zone.now),
-      location_type: "home"
+      location_type: "home",
+      public_link_id: be_present
     )
     expect(Motif.last).to have_attributes(expected_attributes)
   end
@@ -73,7 +74,8 @@ RSpec.describe "agent can duplicate motif" do
         created_at: be_within(1.second).of(Time.zone.now),
         updated_at: be_within(1.second).of(Time.zone.now),
         name: "Suivi de dossier",
-        organisation_id: other_organisation.id
+        organisation_id: other_organisation.id,
+        public_link_id: be_present
       )
       expect(Motif.last).to have_attributes(expected_attributes)
 

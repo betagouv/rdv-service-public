@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -154,6 +154,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.string "pro_connect_openid_sub"
     t.string "caldav_sync_token"
     t.boolean "pro_connect_2fa_active"
+    t.boolean "group_by_agent", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -368,6 +369,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end
 
+  create_table "login_codes", force: :cascade do |t|
+    t.string "email", null: false
+    t.string "code", null: false
+    t.string "domain_id", null: false
+    t.datetime "used_at"
+    t.datetime "created_at", null: false, comment: "pas de updated_at car les login_codes sont quasiment immutables"
+    t.index ["email", "created_at"], name: "index_login_codes_on_email_and_created_at"
+  end
+
   create_table "motif_categories", force: :cascade do |t|
     t.string "name", null: false
     t.string "short_name", null: false, comment: "Le nom \"technique\" de la catégorie de motif, qui permet de l'identifier dans les paramètres de formulaires\"\n"
@@ -407,6 +417,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.boolean "rdvs_cancellable_by_user", default: true, comment: "Option invisible dans l’interface agents, utilisée par RDV Insertion pour des motifs de convocations"
     t.bigint "motif_category_id"
     t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
+    t.string "public_link_id", null: false
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
@@ -415,6 +426,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
+    t.index ["public_link_id"], name: "index_motifs_on_public_link_id", unique: true
     t.index ["service_id"], name: "index_motifs_on_service_id"
     t.index ["visibility_type"], name: "index_motifs_on_visibility_type"
   end
@@ -506,8 +518,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.boolean "online_booking_for_professionnels", default: false, null: false, comment: "Indique que l'organisation gère des rendez-vous avec des professionnels, et donc qu'on propose le bouton ProConnect lors de la prise de rendez-vous en ligne.\n"
     t.string "time_zone", default: "Europe/Paris", null: false
     t.datetime "disabled_at", comment: "Date de fermeture de l'organisation"
+    t.string "public_link_id", null: false
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
+    t.index ["public_link_id"], name: "index_organisations_on_public_link_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
 
@@ -618,6 +632,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.integer "created_by_id"
     t.string "created_by_type", null: false
+    t.string "visio_url_custom"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by_type", "created_by_id"], name: "index_rdvs_on_created_by_type_and_created_by_id"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
@@ -832,6 +847,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_134819) do
     t.string "notification_email", comment: "Used for notifications only, multiple users can share the same email notification address"
     t.virtual "text_search_terms_with_notification_email", type: :tsvector, as: "((((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(notification_email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
     t.string "pro_connect_openid_sub"
+    t.index ["ants_pre_demande_number"], name: "index_users_on_ants_pre_demande_number", where: "(ants_pre_demande_number IS NOT NULL)"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"

@@ -10,7 +10,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
 
   path "/api/rdvinsertion/invitations/creneau_availability" do
     get "Renvoi true si au moins un créneau est disponible pour une invitation" do
-      with_authentication
+      with_shared_secret_authentication
 
       tags "CreneauxCount"
       produces "application/json"
@@ -30,9 +30,20 @@ RSpec.describe "Available Creneaux Count for Invitation" do
       parameter name: "referent_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "Les IDs des référents de recherche", example: %w[1 2 3], required: false
       parameter name: "total_count", in: :query, type: :string, description: "Est-ce que l'endpoint doit renvoyer le total ou un booléen", example: "true", required: false
 
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation1]) }
+      let!(:shared_secret) { "S3cr3T" }
+      let!(:auth_headers) { api_auth_headers_with_shared_secret(agent, shared_secret) }
+      let!(:uid) { auth_headers["uid"].to_s }
+      let!(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
+
+      before do
+        allow(Agent).to receive(:find_by).and_return(agent)
+        allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
+        allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
+      end
+
       let!(:user) { create(:user, organisations: [organisation1], rdv_invitation_token: "user_token") }
       let!(:user_with_referent) { create(:user, referent_agents: [agent], organisations: [organisation1], rdv_invitation_token: "user_with_referent_token") }
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation1]) }
       let!(:territory33) { create(:territory, departement_number: "33") }
       let!(:territory92) { create(:territory, departement_number: "92") }
 
@@ -137,7 +148,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
             action_name: "creneau_availability",
             agent_id: agent.id,
             received_at: now,
-            authentication_type: "DeviseTokenAuth"
+            authentication_type: "SharedSecret"
           )
           expect(api_call.raw_http["method"]).to eq("GET")
           expect(api_call.raw_http["headers"]).to be_blank
@@ -148,7 +159,7 @@ RSpec.describe "Available Creneaux Count for Invitation" do
 
           it do
             expect(parsed_response_body["creneau_availability"]).to be_falsey
-            expect(parsed_response_body["error"]).to eq("Couldn't find Lieu with 'id'=\"666\"")
+            expect(parsed_response_body["errors"]).to eq(["Couldn't find Lieu with 'id'=\"666\""])
           end
         end
 

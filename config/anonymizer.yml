@@ -135,6 +135,7 @@ tables:
     anonymized_column_names:
       - context
       - name
+      - visio_url_custom
     non_anonymized_column_names:
       - starts_at
       - organisation_id
@@ -517,3 +518,9 @@ tables:
   - table_name: territory_tags
     non_anonymized_column_names:
       - created_at
+  - table_name: login_codes
+    anonymized_column_names:
+      - email
+      - code
+    non_anonymized_column_names:
+      - used_at

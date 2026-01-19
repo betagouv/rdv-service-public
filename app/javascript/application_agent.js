@@ -31,6 +31,7 @@ import { PlanningAgentSelect } from './components/planning-agent-select'
 import { planningAgentsSelect } from './components/planning-agents-select'
 import { AgendaMonoAgent } from './components/calendar'
 import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
+import { AgendaPlageOuverture} from './components/agenda_plage_ouverture'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { Tooltips } from './components/tooltips'
 import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
@@ -44,12 +45,14 @@ import { Application } from "@hotwired/stimulus"
 import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
 import MotifFormController from './controllers/motif_form_controller'
 import DestroyableController from './controllers/destroyable_controller'
+import DependentInputController from './controllers/dependent_input_controller'
 import './controllers'
 
 window.Stimulus = Application.start()
 Stimulus.register('checkbox-select-all', CheckboxSelectAll)
 Stimulus.register('motif-form', MotifFormController)
 Stimulus.register('destroyable', DestroyableController)
+Stimulus.register('dependent-input', DependentInputController)
 
 import './stylesheets/print'
 import './stylesheets/application_agent'
@@ -119,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   new AgendaMonoAgent()
   new AgendaMultiAgent()
+  new AgendaPlageOuverture()
 
   new ParticipationSelect()
 

@@ -10,6 +10,7 @@ import CounterField from './components/counter-field';
 import DsfrNewPassword from "./components/dsfr-new-password";
 import DsfrAlertClose from "./components/dsfr-alert-close";
 import PreventDefault from "./components/prevent-default";
+import setupCopyToClipBoardButtons from './components/copy_to_clipboard_button.js'
 import './components/browser-detection';
 import 'bootstrap';
 
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
   DsfrNewPassword();
   DsfrAlertClose();
   PreventDefault();
+  setupCopyToClipBoardButtons()
 
   const whereInput = document.querySelector('#search_where');
   const submitButton = document.querySelector('#search_submit');
