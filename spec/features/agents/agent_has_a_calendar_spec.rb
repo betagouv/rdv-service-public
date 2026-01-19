@@ -208,9 +208,11 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
 
     it "fonctionne depuis la vue jour", js: true do
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      find(".fc-next-button").click
       click_button "Journée"
       find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click
-      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(Time.zone.today, format: '%d/%m/%Y')} à 08:30")
+      monday_next_week = Time.zone.today.beginning_of_week + 1.week
+      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday_next_week, format: '%d/%m/%Y')} à 08:30")
     end
   end
 end
