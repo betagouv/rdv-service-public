@@ -3,17 +3,19 @@ class Users::LoginService
   # - `usable` : moins de 30 minutes et pas utilisé, peut servir à se connecter
   # - `matching` : celui qui correspond au code saisi par l’usager et a moins de 24h
 
-  attr_reader :email, :code, :controller
+  attr_reader :email, :code, :sign_in_user_lambda
 
-  def initialize(email:, code:, controller:)
+  def initialize(email:, code:, sign_in_user_lambda:)
     @email = email
     @code = code
-    @controller = controller
+    @sign_in_user_lambda = sign_in_user_lambda
   end
 
   def perform
     if matching_login_code&.usable?
-      sign_in_user
+      user.confirm
+      sign_in_user_lambda.call(user)
+      matching_login_code.update!(used_at: Time.zone.now)
       true
     else
       false
@@ -52,11 +54,5 @@ class Users::LoginService
       .where(email:, code: code)
       .where("created_at > ?", 24.hours.ago)
       .first
-  end
-
-  def sign_in_user
-    user.confirm
-    controller.sign_in(:user, user)
-    matching_login_code.update!(used_at: Time.zone.now)
   end
 end

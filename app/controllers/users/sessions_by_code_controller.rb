@@ -14,7 +14,10 @@ class Users::SessionsByCodeController < ApplicationController
 
   def create
     email, code = params.require(:login_code).expect(:email, :code)
-    login_service = Users::LoginService.new(email:, code:, controller: self)
+    login_service = Users::LoginService.new(
+      email:, code:,
+      sign_in_user_lambda: ->(user) { sign_in(:user, user) }
+    )
 
     if login_service.perform
       redirect_to after_sign_in_path_for(login_service.user), flash: { success: "Connexion réussie" }
