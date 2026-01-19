@@ -13,8 +13,8 @@ class Users::SessionsByCodeController < ApplicationController
   end
 
   def create
-    permitted_params = params.require(:login_code).permit(:email, :code)
-    login_service = Users::LoginService.new(**permitted_params.to_h.symbolize_keys, controller: self)
+    email, code = params.require(:login_code).expect(:email, :code)
+    login_service = Users::LoginService.new(email:, code:, controller: self)
 
     if login_service.perform
       redirect_to after_sign_in_path_for(login_service.user), flash: { success: "Connexion réussie" }
