@@ -4,13 +4,25 @@
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
     = b.with_breadcrumb label: "Synchronisation d'agenda", href: agents_calendar_sync_path
-    = b.with_breadcrumb label: "Connexion à votre compte Microsoft 365"
+    = b.with_breadcrumb label: "Configuration de la synchronisation Caldav"
 
 p.fr-badge.fr-badge--pink-tuile Beta
 
 p
-  |> Vous pouvez ajouter automatiquement à votre calendrier professionnel vos RDV pris via RDV Service Public.
-  | Pour cela, vous devez disposer d’un agenda compatible Caldav (comme celui de la Suite numérique).
+  |> Vous pouvez ajouter automatiquement à votre calendrier professionnel vos rendez-vous pris via RDV Service Public, et vous
+  |> indiquer automatiquement indisponible lorsque vous avez un événement dans votre calendrier professionnel).
+  |> Pour cela, vous devez disposer d’un agenda compatible Caldav (comme celui de
+  = link_to "LaSuite", "https://lasuite.numerique.gouv.fr/"
+  | ).
+
+p
+  |> Pour en savoir plus sur la synchronisation Caldav, consultez notre
+  = external_link_to "documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
+  | .
+
+= dsfr_callout(icon_name: :none, accent: "orange-terre-battue") do
+  |> Pour le moment, cette fonctionnalité est en version bêta. La synchronisation des événements de votre calendrier professionnel vers RDV Service Public
+  | ne fonctionne que pour les événements non récurrents.
 
 - if current_agent.caldav_disconnect_in_progress
     p
