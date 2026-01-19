@@ -10,11 +10,7 @@ class UserAuthController < ApplicationController
   private
 
   def user_for_paper_trail
-    if current_super_admin.present?
-      current_super_admin.name_for_paper_trail(impersonated: current_user)
-    else
-      current_user.name_for_paper_trail
-    end
+    current_user.name_for_paper_trail
   end
 
   def user_not_authorized(exception)
