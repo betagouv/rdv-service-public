@@ -22,4 +22,11 @@ class SuperAdmin < ApplicationRecord
 
     "[Admin] #{full_name} pour #{impersonated.full_name}"
   end
+
+  # This method is called when calling #current_super_admin on a controller action that is automatically generated
+  # by the devise_token_auth gem. It can happen since these actions inherits from ApplicationController (see PR #1933).
+  # We monkey-patch it for it not to raise.
+  def self.dta_find_by(_attrs = {})
+    nil
+  end
 end
