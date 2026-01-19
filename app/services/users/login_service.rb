@@ -16,15 +16,17 @@ class Users::LoginService
     end
   end
 
-  def there_is_an_existing_and_usable_login_code?
-    return @there_is_an_existing_and_usable_login_code if defined?(@there_is_an_existing_and_usable_login_code)
+  def usable_login_code_exists?
+    return @usable_login_code_exists if defined?(@usable_login_code_exists)
 
-    @there_is_an_existing_and_usable_login_code = LoginCode.where(email:).usable.any?
+    @usable_login_code_exists = LoginCode.where(email:).usable.any?
   end
+
+  def should_redirect_to_code_request? = !usable_login_code_exists?
 
   def error
     @error ||=
-      if there_is_an_existing_and_usable_login_code?
+      if usable_login_code_exists?
         "Veuillez renseigner le dernier code qui vous a été envoyé par email, ou attendre quelques instants de le recevoir"
       elsif matching_login_code&.used?
         "Code déjà utilisé, veuillez en demander un nouveau"

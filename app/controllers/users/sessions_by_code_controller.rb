@@ -18,12 +18,12 @@ class Users::SessionsByCodeController < ApplicationController
 
     if login_service.perform
       redirect_to after_sign_in_path_for(login_service.user), flash: { success: "Connexion réussie" }
-    elsif login_service.there_is_an_existing_and_usable_login_code?
+    elsif login_service.should_redirect_to_code_request?
+      redirect_to new_users_sessions_by_code_path(email:), flash: { error: login_service.error }
+    else
       @existing_login_code = LoginCode.most_recent_usable_for(email: login_service.email)
       @existing_login_code.errors.add(:base, login_service.error)
       render :new
-    else
-      redirect_to new_users_sessions_by_code_path(email:), flash: { error: login_service.error }
     end
   end
 
