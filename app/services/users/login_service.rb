@@ -1,4 +1,8 @@
 class Users::LoginService
+  # dans ce service on distingue 2 LoginCodes :
+  # - `usable` : moins de 30 minutes et pas utilisé, peut servir à se connecter
+  # - `matching` : celui qui correspond au code saisi par l’usager et a moins de 24h
+
   attr_reader :email, :code, :controller
 
   def initialize(email:, code:, controller:)
@@ -16,14 +20,6 @@ class Users::LoginService
     end
   end
 
-  def usable_login_code_exists?
-    return @usable_login_code_exists if defined?(@usable_login_code_exists)
-
-    @usable_login_code_exists = LoginCode.where(email:).usable.any?
-  end
-
-  def should_redirect_to_code_request? = !usable_login_code_exists?
-
   def error
     @error ||=
       if usable_login_code_exists?
@@ -37,18 +33,26 @@ class Users::LoginService
       end
   end
 
-  def matching_login_code
-    @matching_login_code ||= LoginCode
-      .where(email:, code: code)
-      .where("created_at > ?", 24.hours.ago)
-      .first
+  def usable_login_code_exists?
+    return @usable_login_code_exists if defined?(@usable_login_code_exists)
+
+    @usable_login_code_exists = LoginCode.where(email:).usable.any?
   end
+
+  def should_redirect_to_code_request? = !usable_login_code_exists?
 
   def user
     @user ||= User.find_by!(email:)
   end
 
   private
+
+  def matching_login_code
+    @matching_login_code ||= LoginCode
+      .where(email:, code: code)
+      .where("created_at > ?", 24.hours.ago)
+      .first
+  end
 
   def sign_in_user
     user.confirm
