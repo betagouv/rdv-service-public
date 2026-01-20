@@ -1,4 +1,23 @@
-<link rel="apple-touch-icon" sizes="180x180" href="<%= asset_path "favicon/apple-touch-icon.png" %>">
-<link rel="icon" type="image/png" sizes="32x32" href="<%= asset_path "favicon/favicon-32x32.png" %>">
-<link rel="icon" type="image/png" sizes="16x16" href="<%= asset_path "favicon/favicon-16x16.png" %>">
-<link rel="shortcut icon" href="<%= asset_path "favicon/favicon.ico" %>">
+<%
+  # cf scripts/create_favicons.rb
+  specific_favicon_path = if ENV["FORCE_PRODUCTION_FAVICON"] == "true"
+    nil
+  elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
+    "/favicon-demo-64x64.png"
+  elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "STAGING"
+    "/favicon-staging-64x64.png"
+  elsif ENV["IS_REVIEW_APP"] == "true"
+    "/favicon-pr-64x64.png"
+  elsif Rails.env.development?
+    "/favicon-dev-64x64.png"
+  end
+%>
+
+<% if specific_favicon_path %>
+  <link rel="icon" type="image/png" sizes="64x64" href="<%= specific_favicon_path %>">
+<% else %>
+  <link rel="apple-touch-icon" sizes="180x180" href="<%= asset_path "favicon/apple-touch-icon.png" %>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<%= asset_path "favicon/favicon-32x32.png" %>">
+  <link rel="icon" type="image/png" sizes="16x16" href="<%= asset_path "favicon/favicon-16x16.png" %>">
+  <link rel="shortcut icon" href="<%= asset_path "favicon/favicon.ico" %>">
+<% end %>

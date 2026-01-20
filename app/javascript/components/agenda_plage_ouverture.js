@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import {
   defaultFullCalendarConfig,
+  preferencesModalToggle,
   hiddenDays,
 } from './calendar/utils'
 
@@ -26,7 +27,8 @@ export class AgendaPlageOuverture {
       hiddenDays: hiddenDays(this.data),
       select: this.selectEvent,
       initialView: "timeGridWeek",
-      headerToolbar: { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek", right: "" },
+      headerToolbar: { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek", right: "preferencesModalToggle" },
+      customButtons: { preferencesModalToggle },
     }
     return new Calendar(this.calendarEl, { ...defaultFullCalendarConfig(), ...options });
   }

@@ -1,16 +1,18 @@
+- agent = page.resource
+
 - content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) }
 header.main-content__header role="banner"
   h1.main-content__page-title
     = content_for(:title)
   div
-    - if page.resource.invitation_accepted_at.nil? && page.resource.password.nil?
-      => link_to "Inviter", invite_super_admins_agent_path(page.resource), method: :post, class: "button", data: { disable_with: "Veuillez patienter…"} if accessible_action?(page.resource, :invite)
-    - if sign_in_as_allowed?
-      => link_to "Se logger en tant que", sign_in_as_super_admins_agent_path(page.resource), class: "button" if accessible_action?(page.resource, :sign_in_as)
-    => link_to("Modifier", [:edit, namespace, page.resource], class: "button") if accessible_action?(page.resource, :edit)
-    => link_to("Migrer", new_super_admins_agent_migration_path(agent_id: page.resource.id), class: "button")
-    - if page.resource.roles.none?
-      = link_to("Ouvrir un compte", new_super_admins_compte_path(agent_id: page.resource.id), class: "button")
+    - if agent.invitation_accepted_at.nil? && agent.password.nil?
+      => link_to "Inviter", invite_super_admins_agent_path(agent), method: :post, class: "button", data: { disable_with: "Veuillez patienter…"} if accessible_action?(agent, :invite)
+    - if sign_in_as_allowed? && !agent.is_an_intervenant?
+      => link_to "Se logger en tant que", sign_in_as_super_admins_agent_path(agent), class: "button" if accessible_action?(agent, :sign_in_as)
+    => link_to("Modifier", [:edit, namespace, agent], class: "button") if accessible_action?(agent, :edit)
+    => link_to("Migrer", new_super_admins_agent_migration_path(agent_id: agent.id), class: "button")
+    - if agent.roles.none?
+      = link_to("Ouvrir un compte", new_super_admins_compte_path(agent_id: agent.id), class: "button")
 
 section.main-content__body
   dl
@@ -18,7 +20,7 @@ section.main-content__body
       dt.attribute-label id="#{attribute.name}"
         = t( "helpers.label.#{resource_name}.#{attribute.name}", default: attribute.name.titleize)
       dd class=("attribute-data attribute-data--#{attribute.html_class}") = render_field attribute,page: page
-  = render partial: "super_admins/history", locals: {resource: page.resource}
+  = render partial: "super_admins/history", locals: {resource: agent}
 
   header.main-content__header style="width: 100%;"
     h2.main-content__page-title
@@ -32,13 +34,13 @@ section.main-content__body
           th Action
       tbody
         - Agent::AVAILABLE_FEATURES.each do |feature|
-          - if page.resource.feature_enabled?(feature)
+          - if agent.feature_enabled?(feature)
             tr
               td= feature
               td Activée
-              td= link_to "Désactiver", toggle_feature_super_admins_agent_path(agent_id: page.resource.id, feature: feature, set_to: "false"), method: :post, class: "button"
+              td= link_to "Désactiver", toggle_feature_super_admins_agent_path(agent_id: agent.id, feature: feature, set_to: "false"), method: :post, class: "button"
           - else
             tr
               td= feature
               td Désactivée
-              td= link_to "Activer", toggle_feature_super_admins_agent_path(agent_id: page.resource.id, feature: feature, set_to: "true"), method: :post, class: "button"
+              td= link_to "Activer", toggle_feature_super_admins_agent_path(agent_id: agent.id, feature: feature, set_to: "true"), method: :post, class: "button"

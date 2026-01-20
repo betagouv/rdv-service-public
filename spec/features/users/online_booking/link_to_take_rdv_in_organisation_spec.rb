@@ -1,34 +1,55 @@
 RSpec.describe "user can use a link that points to RDV search scoped to an organisation" do
   before { travel_to(Time.zone.parse("2022-09-12 15:00:00")) }
 
-  around { |example| perform_enqueued_jobs { example.run } }
-
   let!(:territory) do
     create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER, enable_birth_date_field: true)
   end
-  let!(:organisation_a) { create(:organisation, territory: territory, external_id: "123") }
-  let!(:organisation_b) { create(:organisation, territory: territory, external_id: "456") }
+
+  let!(:organisation_a) { create(:organisation, territory: territory, external_id: "123", created_at: Date.new(2022, 1, 1)) }
+  let!(:organisation_b) { create(:organisation, territory: territory, external_id: "456", created_at: Date.new(2022, 1, 1)) }
+  let!(:organisation_c) { create(:organisation, territory: territory, external_id: "789", created_at: Date.new(2027, 1, 1)) }
 
   let!(:motif_a) { create(:motif, :sectorisation_level_departement, organisation: organisation_a, name: "Motif A") }
   let!(:motif_b) { create(:motif, :sectorisation_level_departement, organisation: organisation_b, name: "Motif B") }
+  let!(:motif_c) { create(:motif, :sectorisation_level_departement, organisation: organisation_c, name: "Motif C") }
 
   let!(:lieu_a) { create(:lieu, organisation: organisation_a) }
   let!(:lieu_b) { create(:lieu, organisation: organisation_b) }
+  let!(:lieu_c) { create(:lieu, organisation: organisation_c) }
 
   let!(:plage_ouverture_a) { create(:plage_ouverture, motifs: [motif_a], lieu: lieu_a) }
   let!(:plage_ouverture_b) { create(:plage_ouverture, motifs: [motif_b], lieu: lieu_b) }
+  let!(:plage_ouverture_c) { create(:plage_ouverture, motifs: [motif_c], lieu: lieu_c) }
 
-  describe "scoping the results to the provided organisation" do
-    context "when providing the internal organisation id" do
-      it "scopes the motifs to the organisation" do
+  describe "accès à la réservation publique via les différentes routes publiques" do
+    context "en utilisant le public_link_id de l’orga A créée en 2022" do
+      it "propose les motifs de l’orga A mais pas des autres organisations" do
+        visit "/org/#{organisation_a.public_link_id}"
+        expect(page).to have_content("Motif A")
+        expect(page).not_to have_content("Motif B")
+        expect(page).not_to have_content("Motif C")
+      end
+    end
+
+    context "en utilisant le public_link_id de l’orga C créée en 2027" do
+      it "propose les motifs de l’orga C mais pas des autres organisations" do
+        visit "/org/#{organisation_c.public_link_id}"
+        expect(page).to have_content("Motif C")
+        expect(page).not_to have_content("Motif A")
+        expect(page).not_to have_content("Motif B")
+      end
+    end
+
+    context "en utilisant l’ID incrémental stocké en base de l’orga A créée en 2022" do
+      it "autorise l’accès et propose les bons motifs" do
         visit "/org/#{organisation_a.id}"
         expect(page).to have_content("Motif A")
         expect(page).not_to have_content("Motif B")
+        expect(page).not_to have_content("Motif C")
       end
 
-      it "supports both internal ID and public ID" do
+      it "redirige vers l’URL avec public_link_id" do
         visit "/org/#{organisation_a.public_link_id}"
-        expect(page).to have_content("Motif A")
         url_de_prise_de_rdv = current_url
 
         visit "/org/#{organisation_a.id}"
@@ -36,16 +57,25 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       end
     end
 
-    context "when providing the external organisation id + territory slug" do
-      it "scopes the motifs to the organisation" do
+    context "en utilisant l’ID incrémental stocké en base de l’orga C créée en 2027" do
+      it "refuse l’accès avec une 404" do
+        expect { visit "/org/#{organisation_c.id}" }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "en utilisant l’ID externe et le territory slug de l’orga A" do
+      it "propose les motifs de l’orga A uniquement" do
         visit "/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
         expect(page).to have_content("Motif A")
         expect(page).not_to have_content("Motif B")
+        expect(page).not_to have_content("Motif C")
       end
     end
   end
 
   describe "the complete process of taking a RDV from a public link" do
+    around { |example| perform_enqueued_jobs { example.run } }
+
     it "works" do
       # On teste le domaine qui utilise les liens publics
       visit "http://www.rdv-aide-numerique-test.localhost/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
@@ -90,7 +120,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
                        organisation: organisation_a, name: "Motif C", service: motif_a.service, restriction_for_rdv: nil)
       create(:plage_ouverture, motifs: [motif_c], lieu: lieu_a)
 
-      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}"
+      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.public_link_id}"
       click_on("Motif C")
       expect(page).to have_content("Motif C")
 
@@ -100,7 +130,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
     end
 
     it "allows navigating back from sign in to motif selection" do
-      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}"
+      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.public_link_id}"
       click_on("Motif A") # choix du motif
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
