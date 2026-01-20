@@ -3,7 +3,7 @@ class Users::LoginService
   # - `usable` : moins de 30 minutes et pas utilisé, peut servir à se connecter
   # - `matching` : celui qui correspond au code saisi par l’usager et a moins de 24h
 
-  attr_reader :email, :code, :sign_in_user_lambda
+  attr_reader :email, :code, :sign_in_user_lambda, :user
 
   delegate :first_name, :last_name, to: :matching_login_code
 
