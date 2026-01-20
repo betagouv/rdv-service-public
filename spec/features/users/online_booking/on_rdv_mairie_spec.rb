@@ -461,7 +461,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("Sélectionnez un créneau")
       expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
       click_on "09:00"
-      expect(page).to have_content("Connexion")
+      expect(page).to have_content("Votre identité")
       expect(page).to have_content("(50 minutes)")
       # Inscription via code
       fill_in "Prénom", with: "Eloïse"
