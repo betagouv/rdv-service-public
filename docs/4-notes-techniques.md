@@ -101,16 +101,6 @@ Pas de politique très clairement décidée mais la pratique est d’essayer de 
 Une politique de mise à jour prudente a été décidée
 cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)
 
-### Version du DSFR
-
-1. `yarn upgrade @gouvfr/dsfr`. Notez le nouveau numéro de version, par exemple 1.13.0
-2. Mettez à jour le lien symbolique vers les fichiers
-   précompilés : `rm public/dsfr-v* && ln -s ../node_modules/@gouvfr/dsfr/dist/ public/dsfr-v1.13.0`
-3. Mettez à jour la version dans `ApplicationHelper#dsfr_path`
-
-Cette manière de faire permet d’éviter de passer par des compilations d’assets inutiles via webpacker ou sprockets.
-Le numéro de version dans les chemins sert de fingerprint pour le cache bump des navigateurs.
-
 ### Version de Playwright
 
 Playwright est notre système d’instrumentalisation du navigateur pour les tests E2E.

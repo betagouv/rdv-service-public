@@ -11,7 +11,6 @@
     "@fullcalendar/list": "^5.11.5",
     "@fullcalendar/resource-timegrid": "^5.11.5",
     "@fullcalendar/timegrid": "^5.11.5",
-    "@gouvfr/dsfr": "^1.13.0",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.16",
     "@rails/actioncable": ">=7.0",

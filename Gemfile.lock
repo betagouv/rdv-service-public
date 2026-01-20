@@ -206,7 +206,7 @@ GEM
       dotenv (= 2.8.1)
       railties (>= 3.2)
     drb (2.2.3)
-    dsfr-assets (1.13.2)
+    dsfr-assets (1.14.3)
     dsfr-form_builder (0.0.7)
       actionview (>= 6.1, < 9.0)
       activemodel (>= 6.1, < 9.0)
@@ -779,6 +779,7 @@ DEPENDENCIES
   doorkeeper
   doorkeeper-i18n
   dotenv-rails
+  dsfr-assets (~> 1.14.2)
   dsfr-form_builder (= 0.0.7)
   dsfr-view-components (~> 4.0)
   factory_bot
@@ -911,7 +912,7 @@ CHECKSUMS
   dotenv (2.8.1) sha256=c5944793349ae03c432e1780a2ca929d60b88c7d14d52d630db0508c3a8a17d8
   dotenv-rails (2.8.1) sha256=b05b81b7f4e51d1359e218d92279db1d84b12440f7118c9df19b5dfffb620f6c
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
-  dsfr-assets (1.13.2) sha256=3395e15fa783a894e927889600ee9a1bbf45f3f3960590d76c0b4d92504e1c76
+  dsfr-assets (1.14.3) sha256=132dae8bbe8ddbcc2cf90f598c0112f3956453cd3c40bcd58442427b4215d9f1
   dsfr-form_builder (0.0.7) sha256=16165ee281de4645617fdb79c4fc03384f9125cbbdf6a149daa1ef2bb367ffde
   dsfr-view-components (4.1) sha256=9633c1f289b622cea2dc8624c27a49d7e94d8e1420727e81afe484ba2d6db352
   erb (5.1.3) sha256=566e53057b6ba48699f824b578473b391fa8aef100aa14afad1c46725fae0e67
