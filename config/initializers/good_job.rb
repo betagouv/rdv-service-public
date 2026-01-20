@@ -106,6 +106,10 @@ Rails.application.configure do
       cron: "every day at 06:00 Europe/Paris",
       class: "CronJob::RefreshBlogPostsFromDocsJob",
     },
+    refresh_pro_connect_open_id_discovery: {
+      cron: "every day at 03:00 Europe/Paris",
+      class: "CronJob::RefreshProConnectDiscoveryCache",
+    },
     refresh_carto_anct_stats: {
       cron: "every day at 06:30 Europe/Paris",
       class: "CronJob::RefreshCartoANCTStatsJob",

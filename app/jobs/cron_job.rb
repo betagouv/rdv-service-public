@@ -211,4 +211,12 @@ class CronJob < ApplicationJob
       end
     end
   end
+
+  class RefreshProConnectDiscoveryCache < CronJob
+    def perform
+      if ProConnect.base_url
+        Rails.cache.write(ProConnect::DISCOVERY_CACHE_KEY, ProConnect.open_id_config_discover!, expires_in: 2.weeks)
+      end
+    end
+  end
 end
