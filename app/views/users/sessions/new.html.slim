@@ -1,5 +1,5 @@
+- content_for :title, "Votre identité"
 .card
-  h1 Votre identité
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
