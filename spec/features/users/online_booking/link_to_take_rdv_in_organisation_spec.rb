@@ -87,7 +87,6 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("Sélectionnez un créneau")
       click_on("08:00")
 
-      expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
       fill_in "Prénom", with: "David"
       fill_in "Nom", with: "Nchicode"
       fill_in "Adresse email", with: "davidnchicode@crotonmail.com"
@@ -138,7 +137,6 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("Sélectionnez un créneau")
       click_on("08:00")
 
-      expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
       click_on "Modifier", match: :first
 
       expect(page).to have_content("Sélectionnez le motif de votre RDV")

@@ -6,13 +6,8 @@ class Users::SessionsController < Devise::SessionsController
   include Users::DeviseOrSsoLogout
 
   def new
-    # Le flash d'erreur est trop aggressif pour le cas d'un usager non connecté.
-    # Un flash de style info est plus adapté.
-    if flash[:alert] == I18n.t("devise.failure.unauthenticated")
-      # Il faut utiliser un flash.now pour éviter de réafficher le flash après la connexion si on utilise ProConnect
-      flash.now[:notice] = flash[:alert]
-      flash[:alert] = nil
-    end
+    # on supprime le flash « vous devez vous connecter ou vous inscrire pour vous connecter »
+    flash[:alert] = nil if flash[:alert] == I18n.t("devise.failure.unauthenticated")
 
     form_params = params[:login_code_form_request] || {}
     @login_code_form_request = Users::LoginCodeRequestForm.new(

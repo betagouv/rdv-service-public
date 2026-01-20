@@ -77,7 +77,6 @@ RSpec.describe "User can search rdv on rdv mairie" do
       visit creneaux_url
 
       expect(page).to have_current_path("/users/sign_in")
-      expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
       expect(page).to have_content("Motif : Passeport")
       expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
       expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
