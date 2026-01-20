@@ -1,7 +1,7 @@
 class CreateExternalCalendarEvents < ActiveRecord::Migration[8.0]
   def up
     create_table :external_calendar_events do |t| # rubocop:disable Rails/CreateTableWithTimestamps
-      t.references :agent, null: false, index: true, foreign_key: true
+      t.references :agent, null: false, index: false, foreign_key: true
       t.datetime :starts_at, null: false
       t.datetime :ends_at, null: false
       t.string :url, null: false
@@ -17,6 +17,8 @@ class CreateExternalCalendarEvents < ActiveRecord::Migration[8.0]
       )
     end
     caldav_absences.delete_all
+
+    add_index :external_calendar_events, %i[agent_id starts_at]
   end
 
   def down

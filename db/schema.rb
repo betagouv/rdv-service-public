@@ -230,7 +230,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_13_172545) do
     t.datetime "starts_at", null: false
     t.datetime "ends_at", null: false
     t.string "url", null: false
-    t.index ["agent_id"], name: "index_external_calendar_events_on_agent_id"
+    t.index ["agent_id", "starts_at"], name: "index_external_calendar_events_on_agent_id_and_starts_at"
   end
 
   create_table "external_references", force: :cascade do |t|
