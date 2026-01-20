@@ -1,5 +1,5 @@
 class SynchronizeCrmPageJob < ApplicationJob
-  queue_as :default
+  queue_as :latency_whenever
 
   def perform(notion_page_id:, account_url:, notion_page_url:, notion_page_title:)
     return unless ENV["NOTION_API_SECRET"]
