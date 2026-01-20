@@ -19,7 +19,8 @@ puts "Updated docs_numerique_changelog_children.json"
 # Fetch content for each document
 children["results"].each do |doc|
   content = connection.get("documents/#{doc['id']}/content/", content_format: "html").body
-  filename = "docs_numerique_changelog_content_#{doc['id'][0, 8]}.json"
+  safe_id = doc['id'].to_s[0, 8].gsub(/[^0-9A-Za-z_-]/, "")
+  filename = "docs_numerique_changelog_content_#{safe_id}.json"
   File.write("#{FIXTURES_DIR}/#{filename}", JSON.pretty_generate(content))
   puts "Updated #{filename}"
 end
