@@ -197,8 +197,6 @@ class CronJob < ApplicationJob
       posts = DocsNumeriqueChangelog.fetch_and_parse_blog_posts
       if posts.any?
         Rails.logger.info "destroying #{BlogPost.count} existing blog posts to insert #{posts.count} freshly fetched and parsed"
-        # Rails.logger.debug "displaying the 3 first for debug…"
-        # posts.first(3).map { Rails.logger.debug [_1.published_at, _1.title, _1.categories, _1.description.truncate(20)].join(" · ") }
         BlogPost.refresh_from_posts(posts)
       else
         raise "no posts found on docs.numerique.gouv.fr"

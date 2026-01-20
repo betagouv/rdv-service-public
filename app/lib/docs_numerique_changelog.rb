@@ -3,15 +3,14 @@ module DocsNumeriqueChangelog
   PARENT_DOCUMENT_ID = "b0e65135-967f-4816-a4a9-4757d588fa99".freeze
 
   def self.fetch_and_parse_blog_posts
-    Client.instance.fetch_children.map(&:to_blog_post)
+    Client.instance.fetch_and_parse_children_documents(PARENT_DOCUMENT_ID).map(&:to_blog_post)
   end
 
   class Client
     include Singleton
 
-    def fetch_children
-      response = connection.get("documents/#{PARENT_DOCUMENT_ID}/children/")
-      Rails.logger.info { "#{response.body['count']} changelog docs to fetch and parse…" }
+    def fetch_and_parse_children_documents(parent_document_id)
+      response = connection.get("documents/#{parent_document_id}/children/")
       response.body["results"].map do |child_data|
         content = fetch_content(child_data["id"])
         ChildDoc.new(
