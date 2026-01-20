@@ -1,4 +1,4 @@
-/# locals: (display_title: true, display_or: true)
+/# locals: (display_title: true)
 
 - if display_france_connect_v2_button?
   - if display_title
@@ -13,5 +13,4 @@
     p
       = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "fr-link", title: "Qu’est-ce que FranceConnect ? - Nouvelle fenêtre"
 
-  - if display_or
-    p.fr-hr-or ou
+  p.fr-hr-or ou

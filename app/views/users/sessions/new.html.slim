@@ -3,6 +3,15 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
+    - if @rdv_wizard.nil? || @rdv_wizard.display_france_connect?
+      = render "common/franceconnect_button", display_title: false
+
+    / Contrairement à FranceConnect, on n'affiche pas le bouton ProConnect en dehors de la prise de rendez-vous
+    - if display_pro_connect_button? && @rdv_wizard&.display_pro_connect?
+      p.fr-hr-or ou
+      .rdv-text-align-center
+        = render "common/proconnect_button_dsfr", user_type: "user"
+
     - if params[:with_password].present? || params[:user].present?
       = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
         = render "devise/shared/error_messages", resource: resource
@@ -27,16 +36,6 @@
           .fr-mt-4w.fr-mb-2w.fr-text--sm
             |> Vous pouvez aussi vous
             = link_to "connecter par mot de passe", new_user_session_path(with_password: true)
-
-    - if @rdv_wizard.nil? || @rdv_wizard.display_france_connect?
-      p.fr-hr-or.fr-mt-8w ou
-      = render "common/franceconnect_button", display_title: false, display_or: false
-
-    / Contrairement à FranceConnect, on n'affiche pas le bouton ProConnect en dehors de la prise de rendez-vous
-    - if display_pro_connect_button? && @rdv_wizard&.display_pro_connect?
-      p.fr-hr-or ou
-      .rdv-text-align-center
-        = render "common/proconnect_button_dsfr", user_type: "user"
 
     - if @rdv_wizard
       p.fr-hr-or.fr-mt-16w ou
