@@ -10,7 +10,7 @@ RSpec.describe DocsNumeriqueChangelog do
           "results" => [
             { "id" => "doc-1", "title" => " Première fonctionnalité - 05/05/2025 - Nouveauté" },
             { "id" => "doc-2", "title" => "Incroyable amélioration - 01/05/2025 - Amélioration" },
-            { "id" => "doc-3", "title" => " Une nouvelle page de réservation en ligne, pensée pour plus de clarté et d'autonomie - 17/10/2025 - Nouveauté" },
+            { "id" => "doc-3", "title" => " Une nouvelle page de réservation en ligne, pensée pour plus de clarté et d'autonomie - 17/04/2025 - Nouveauté" },
           ],
         }.to_json,
         headers: { "Content-Type" => "application/json" }
@@ -68,7 +68,7 @@ RSpec.describe DocsNumeriqueChangelog do
         categories: ["Nouveauté"],
         description: "Description de la nouvelle page.",
         external_url: "https://docs.numerique.gouv.fr/docs/doc-3",
-        published_at: Time.zone.local(2025, 10, 17)
+        published_at: Time.zone.local(2025, 4, 17)
       )
     end
   end
