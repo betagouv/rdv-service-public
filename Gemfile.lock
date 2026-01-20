@@ -172,7 +172,7 @@ GEM
     choice (0.2.0)
     climate_control (1.2.0)
     common_french_passwords (0.0.1)
-    concurrent-ruby (1.3.5)
+    concurrent-ruby (1.3.6)
     connection_pool (2.5.4)
     crack (0.4.5)
       rexml
@@ -451,7 +451,7 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     phonelib (0.7.7)
-    playwright-ruby-client (1.55.0)
+    playwright-ruby-client (1.56.0)
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
     pp (0.6.3)
@@ -891,7 +891,7 @@ CHECKSUMS
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   climate_control (1.2.0) sha256=36b21896193fa8c8536fa1cd843a07cf8ddbd03aaba43665e26c53ec1bd70aa5
   common_french_passwords (0.0.1) sha256=d8a8fa258ea9289f57fc818b4cb7b3b39178025a1cd8d8cb362f402a520d1981
-  concurrent-ruby (1.3.5) sha256=813b3e37aca6df2a21a3b9f1d497f8cbab24a2b94cab325bffe65ee0f6cbebc6
+  concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab
   connection_pool (2.5.4) sha256=e9e1922327416091f3f6542f5f4446c2a20745276b9aa796dd0bb2fd0ea1e70a
   crack (0.4.5) sha256=798416fb29b8c9f655d139d5559169b39c4a0a3b8f8f39b7f670eec1af9b21b3
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
@@ -1015,7 +1015,7 @@ CHECKSUMS
   pg (1.6.2-x86_64-linux) sha256=525f438137f2d1411a1ebcc4208ec35cb526b5a3b285a629355c73208506a8ea
   pg_search (2.3.6) sha256=682f2a1272d81906463069e214f1026e1e105de54ec0a70c5a9847c378be00a3
   phonelib (0.7.7) sha256=d83adc9069aca9bd2603fb3714366fc6f03323504778b1bc054b7463d0eaa64f
-  playwright-ruby-client (1.55.0) sha256=60510791dbfbdda6d3ed6ce27ad1353961f77016c04cacbb2ade1d4da9633b0a
+  playwright-ruby-client (1.56.0) sha256=f7a772fabda46f0d04a2b20d86a8e7d2897e6c9b05d1fe49555626d499e9b104
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
   premailer (1.18.0) sha256=b930beb10a7d8b5e60dbff0d0b35b4ab3f0b10d8263ea6482aab7ecab9b3d335
   premailer-rails (1.12.0) sha256=c13815d161b9bc7f7d3d81396b0bb0a61a90fa9bd89931548bf4e537c7710400
