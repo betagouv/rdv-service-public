@@ -1,21 +1,23 @@
 RSpec.describe CronJob::SynchronizeCrm, type: :job do
   let(:compte_prod_url) { "https://demo.rdv-solidarites.fr/territories/1" }
-  let(:notion_page) { Notion::Messages::Message.new(id: "page_id", properties: { "COMPTE PROD": { url: compte_prod_url } }) }
+  let(:notion_page) do
+    Notion::Messages::Message.new(
+      id: "page_id",
+      url: "https://notion.so/page",
+      properties: {
+        "COMPTE PROD": { url: compte_prod_url },
+        "Project name": { "title" => [{ "plain_text" => "Mon projet" }] },
+      }
+    )
+  end
   let(:notion_client) { instance_double(Notion::Client) }
-  let(:territory) { create(:territory) }
-  let(:organisation_a) { create(:organisation, territory: territory) }
-  let(:organisation_b) { create(:organisation, territory: territory) }
-  let(:organisation_c) { create(:organisation, territory: territory) }
-  let!(:rdv_a) { create(:rdv, organisation: organisation_a) }
-  let!(:rdv_b) { create(:rdv, organisation: organisation_b, created_at: Date.yesterday) }
 
   before do
     allow(Notion::Client).to receive(:new).and_return(notion_client)
     allow(notion_client).to receive(:database_query).and_yield(Notion::Messages::Message.new(results: [notion_page]))
-    allow(notion_client).to receive(:update_page)
   end
 
-  context "quand la clef NOTION_API_SECRET n’est pas définie" do
+  context "quand la clef NOTION_API_SECRET n'est pas définie" do
     before do
       ENV["NOTION_API_SECRET"] = nil
     end
@@ -32,68 +34,13 @@ RSpec.describe CronJob::SynchronizeCrm, type: :job do
       ENV["NOTION_API_SECRET"] = "secret"
     end
 
-    context "quand la variable COMPTE PROD de la page Notion est un territory" do
-      let(:compte_prod_url) { "https://demo.rdv-solidarites.fr/territories/#{territory.id}" }
-
-      it "le nombre de RDV et la date du dernier RDV sont mis à jour dans la page Notion avec la somme des RDV de l'espace" do
-        described_class.new.perform
-
-        expect(notion_client).to have_received(:update_page).with(
-          page_id: "page_id",
-          properties: {
-            "NOMBRE DE RDV" => 2,
-            "DATE CREATION DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") },
-            "DATE CREATION ESPACE" => { start: territory.created_at.strftime("%Y-%m-%d") },
-            "NOMBRE AGENTS ACTIFS" => 0,
-          }
-        )
-      end
-    end
-
-    context "quand la variable COMPTE PROD de la page Notion est une organisation" do
-      let(:compte_prod_url) { "https://demo.rdv-solidarites.fr/organisations/#{organisation_a.id}" }
-
-      it "le nombre de RDV et la date du dernier RDV sont mis à jour dans la page Notion avec la somme des RDV de l’organisation" do
-        described_class.new.perform
-
-        expect(notion_client).to have_received(:update_page).with(
-          page_id: "page_id",
-          properties: {
-            "NOMBRE DE RDV" => 1,
-            "DATE CREATION DERNIER RDV" => { start: rdv_a.created_at.strftime("%Y-%m-%d") },
-            "DATE CREATION ESPACE" => { start: territory.created_at.strftime("%Y-%m-%d") },
-            "NOMBRE AGENTS ACTIFS" => 0,
-          }
-        )
-      end
-
-      context "quand l’organisation n’a pas encore de RDV" do
-        let(:compte_prod_url) { "https://demo.rdv-solidarites.fr/organisations/#{organisation_c.id}" }
-
-        it "le nombre de RDV est mis à jour dans la page Notion avec 0 et la date du dernier RDV est nulle" do
-          described_class.new.perform
-
-          expect(notion_client).to have_received(:update_page).with(
-            page_id: "page_id",
-            properties: {
-              "NOMBRE DE RDV" => 0,
-              "DATE CREATION DERNIER RDV" => nil,
-              "DATE CREATION ESPACE" => { start: territory.created_at.strftime("%Y-%m-%d") },
-              "NOMBRE AGENTS ACTIFS" => 0,
-            }
-          )
-        end
-      end
-    end
-
-    context "quand la variable COMPTE PROD de la page Notion est une organisation inconnue" do
-      let(:compte_prod_url) { "https://demo.rdv-solidarites.fr/organisations/26739" }
-
-      it "ne fait rien" do
-        described_class.new.perform
-
-        expect(notion_client).not_to have_received(:update_page)
-      end
+    it "enqueue un job SynchronizeCrmPageJob pour chaque page Notion" do
+      expect { described_class.new.perform }.to have_enqueued_job(SynchronizeCrmPageJob).with(
+        notion_page_id: "page_id",
+        account_url: compte_prod_url,
+        notion_page_url: "https://notion.so/page",
+        notion_page_title: "Mon projet"
+      )
     end
   end
 end
