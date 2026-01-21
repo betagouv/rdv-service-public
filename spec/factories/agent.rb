@@ -109,9 +109,9 @@ FactoryBot.define do
     end
 
     trait :with_caldav_config do
-      caldav_agenda_url { "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/abcdef_this_is_calendar_id" }
-      caldav_username { "francis.factice.ext@beta.gouv.fr" }
-      caldav_password { "1234" }
+      caldav_agenda_url { "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234" }
+      caldav_username { "francis.factice@beta.gouv.fr" }
+      caldav_password { "mot_de_passe_factice" }
     end
   end
 end
