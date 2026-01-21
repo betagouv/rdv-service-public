@@ -12,9 +12,7 @@ module Caldav
     end
 
     def self.synced_during_last_minute?(agent_id)
-      Redis.with_connection do |redis|
-        redis.get("caldav_sync_absences_job_debounce_#{agent_id}")
-      end
+      Redis.with_connection { |redis| redis.get("caldav_sync_absences_job_debounce_#{agent_id}") }
     end
 
     # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
@@ -24,8 +22,10 @@ module Caldav
 
       Sentry.set_user({ id: @agent.id, role: "Agent", email: @agent.email })
 
+      any_changes = false
       if @agent.caldav_sync_token.present?
         collection = @agent.caldav_client.calendars.sync(@agent.caldav_agenda_url, @agent.caldav_sync_token)
+        any_changes = collection.changes.any?
         events = collection.changes
         ExternalCalendarEvent.transaction do
           events.each do |event|
@@ -40,6 +40,7 @@ module Caldav
       else
         sync_token = @agent.caldav_client.calendars.find(@agent.caldav_agenda_url, sync: true).sync_token
         events = @agent.caldav_client.events.list(@agent.caldav_agenda_url)
+        any_changes = events.any?
 
         ExternalCalendarEvent.transaction do
           events.each do |event|
@@ -49,11 +50,9 @@ module Caldav
         end
       end
 
-      Redis.with_connection do |redis|
-        redis.set("caldav_sync_absences_job_debounce_#{agent_id}", true, expires_in: 1.minute)
-      end
-
-      AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent")
+      # Import successful
+      Redis.with_connection { |redis| redis.set("caldav_sync_absences_job_debounce_#{agent_id}", true, expires_in: 1.minute) }
+      AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent") if any_changes
     end
     # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
