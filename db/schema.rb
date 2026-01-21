@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_21_064312) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -155,6 +155,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
     t.string "caldav_sync_token"
     t.boolean "pro_connect_2fa_active"
     t.boolean "group_by_agent", default: false, null: false
+    t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
