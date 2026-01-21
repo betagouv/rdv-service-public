@@ -8,7 +8,8 @@
         th style="max-width: 30%" Participant·e
         - if rdv.requires_ants_predemande_number?
           th =t("activerecord.attributes.user.ants_pre_demande_number")
-        th colspan="2" Notifications
+        th Préférences de communication de l’usager
+        th Notifications pour ce RDV
         - if rdv.collectif?
           th.text-right Participation
     tbody id="rdv-users-list"

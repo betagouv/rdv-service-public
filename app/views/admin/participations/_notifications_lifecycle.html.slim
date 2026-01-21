@@ -1,6 +1,28 @@
+/# locals: (participation:, editable: nil)
+
+ruby:
+  editable = (
+    participation.rdv.collectif? &&
+    request.path == Rails.application.routes.url_helpers.admin_organisation_rdv_path(current_organisation, participation.rdv)
+  ) if editable.nil?
+
+
 - user_to_notify = participation.user.user_to_notify
 - any_notifs = (user_to_notify.notifiable_by_email? || user_to_notify.notifiable_by_sms?)
-- if any_notifs
+- if editable
+  = form_for participation, url: admin_organisation_rdv_participation_path(current_organisation, participation.rdv, participation), builder: Dsfr::FormBuilder, namespace: "participation_#{participation.id}" do |form|
+    fieldset.fr-fieldset
+      .fr-checkbox-group--sm.fr-fieldset__element--inline
+        = form.dsfr_check_box :send_lifecycle_notifications, disabled: !any_notifs, label: "Modifications"
+        - if current_organisation.rdv_insertion?
+          span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
+      .fr-checkbox-group--sm.fr-fieldset__element--inline
+        = form.dsfr_check_box :send_reminder_notification, disabled: !any_notifs, label: "Rappel"
+        - if current_organisation.rdv_insertion? || true
+          span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
+      .fr-fieldset__element--inline
+        = form.submit "Enregistrer", class: "fr-btn fr-btn--tertiary fr-btn--sm", disabled: !any_notifs
+- elsif any_notifs
   - if !participation.send_lifecycle_notifications && !participation.send_reminder_notification
     span.mr-1
       span= icon("fr-icon-error-fill", class: "fr-icon--sm fr-mr-1v fr-message--error")
