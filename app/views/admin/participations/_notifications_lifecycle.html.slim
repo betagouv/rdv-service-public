@@ -1,11 +1,12 @@
 /# locals: (participation:, editable: nil)
 
 ruby:
-  editable = (
-    participation.rdv.collectif? &&
-    request.path == Rails.application.routes.url_helpers.admin_organisation_rdv_path(current_organisation, participation.rdv)
-  ) if editable.nil?
-
+  if editable.nil?
+    editable = (
+      participation.rdv.collectif? &&
+      request.path == Rails.application.routes.url_helpers.admin_organisation_rdv_path(current_organisation, participation.rdv)
+    )
+  end
 
 - user_to_notify = participation.user.user_to_notify
 - any_notifs = (user_to_notify.notifiable_by_email? || user_to_notify.notifiable_by_sms?)
