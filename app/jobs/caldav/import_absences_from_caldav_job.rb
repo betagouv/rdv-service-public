@@ -14,7 +14,7 @@ module Caldav
     def self.synced_during_last_minute?(agent_id)
       Redis.with_connection do |redis|
         latest_run = redis.get("caldav_sync_absences_job_debounce_#{agent_id}")
-        latest_run && latest_run < 1.minunte.ago
+        latest_run && latest_run < 1.minute.ago
       end
     end
 
