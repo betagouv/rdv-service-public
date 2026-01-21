@@ -13,8 +13,7 @@ module Caldav
 
     def self.synced_during_last_minute?(agent_id)
       Redis.with_connection do |redis|
-        latest_run = redis.get("caldav_sync_absences_job_debounce_#{agent_id}")
-        latest_run && latest_run > 1.second.ago
+        redis.get("caldav_sync_absences_job_debounce_#{agent_id}")
       end
     end
 
@@ -51,7 +50,7 @@ module Caldav
       end
 
       Redis.with_connection do |redis|
-        redis.set("caldav_sync_absences_job_debounce_#{agent_id}", Time.zone.now)
+        redis.set("caldav_sync_absences_job_debounce_#{agent_id}", true, expires_in: 1.minute)
       end
 
       AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent")
