@@ -143,15 +143,11 @@ module ApplicationHelper
     ENV["FRANCECONNECT_V2_BASE_URL"].present?
   end
 
-  def dsfr_path
-    "/dsfr-v1.13.2"
-  end
-
   def dsfr_svg(path, custom: false, **kwargs)
     # cf https://www.systeme-de-design.gouv.fr/fondamentaux/pictogramme
     classes = ["fr-artwork"]
     classes += [kwargs.fetch(:class, nil)]
-    path = "#{dsfr_path}/#{path}.svg" unless custom
+    path = "/assets/#{path}.svg" unless custom
     tag.svg(class: classes.compact_blank.join(" "), "aria-hidden": "true", viewBox: "0 0 80 80", width: "80px", height: "80px") do
       tag.use(class: "fr-artwork-decorative", "xlink:href": "#{path}#artwork-decorative") +
         tag.use(class: "fr-artwork-minor", "xlink:href": "#{path}#artwork-minor") +

@@ -172,7 +172,7 @@ GEM
     choice (0.2.0)
     climate_control (1.2.0)
     common_french_passwords (0.0.1)
-    concurrent-ruby (1.3.5)
+    concurrent-ruby (1.3.6)
     connection_pool (2.5.4)
     crack (0.4.5)
       rexml
@@ -206,7 +206,7 @@ GEM
       dotenv (= 2.8.1)
       railties (>= 3.2)
     drb (2.2.3)
-    dsfr-assets (1.13.2)
+    dsfr-assets (1.14.3)
     dsfr-form_builder (0.0.7)
       actionview (>= 6.1, < 9.0)
       activemodel (>= 6.1, < 9.0)
@@ -365,7 +365,6 @@ GEM
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2025.0924)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (5.26.2)
     montrose (0.18.0)
       activesupport (>= 5.2, < 9)
@@ -387,9 +386,6 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
-    nokogiri (1.18.10)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.18.10-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-gnu)
@@ -455,7 +451,7 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     phonelib (0.7.7)
-    playwright-ruby-client (1.55.0)
+    playwright-ruby-client (1.56.0)
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
     pp (0.6.3)
@@ -725,6 +721,7 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
+    vcr (6.4.0)
     version_gem (1.1.3)
     view_component (3.23.2)
       activesupport (>= 5.2.0, < 8.1)
@@ -750,7 +747,6 @@ GEM
 
 PLATFORMS
   arm64-darwin
-  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -783,6 +779,7 @@ DEPENDENCIES
   doorkeeper
   doorkeeper-i18n
   dotenv-rails
+  dsfr-assets (~> 1.14.2)
   dsfr-form_builder (= 0.0.7)
   dsfr-view-components (~> 4.0)
   factory_bot
@@ -850,6 +847,7 @@ DEPENDENCIES
   tod
   typhoeus
   tzinfo-data
+  vcr
   wannabe_bool
   webmock
 
@@ -896,7 +894,7 @@ CHECKSUMS
   choice (0.2.0) sha256=a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974
   climate_control (1.2.0) sha256=36b21896193fa8c8536fa1cd843a07cf8ddbd03aaba43665e26c53ec1bd70aa5
   common_french_passwords (0.0.1) sha256=d8a8fa258ea9289f57fc818b4cb7b3b39178025a1cd8d8cb362f402a520d1981
-  concurrent-ruby (1.3.5) sha256=813b3e37aca6df2a21a3b9f1d497f8cbab24a2b94cab325bffe65ee0f6cbebc6
+  concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab
   connection_pool (2.5.4) sha256=e9e1922327416091f3f6542f5f4446c2a20745276b9aa796dd0bb2fd0ea1e70a
   crack (0.4.5) sha256=798416fb29b8c9f655d139d5559169b39c4a0a3b8f8f39b7f670eec1af9b21b3
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
@@ -916,7 +914,7 @@ CHECKSUMS
   dotenv (2.8.1) sha256=c5944793349ae03c432e1780a2ca929d60b88c7d14d52d630db0508c3a8a17d8
   dotenv-rails (2.8.1) sha256=b05b81b7f4e51d1359e218d92279db1d84b12440f7118c9df19b5dfffb620f6c
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
-  dsfr-assets (1.13.2) sha256=3395e15fa783a894e927889600ee9a1bbf45f3f3960590d76c0b4d92504e1c76
+  dsfr-assets (1.14.3) sha256=132dae8bbe8ddbcc2cf90f598c0112f3956453cd3c40bcd58442427b4215d9f1
   dsfr-form_builder (0.0.7) sha256=16165ee281de4645617fdb79c4fc03384f9125cbbdf6a149daa1ef2bb367ffde
   dsfr-view-components (4.1) sha256=9633c1f289b622cea2dc8624c27a49d7e94d8e1420727e81afe484ba2d6db352
   erb (5.1.3) sha256=566e53057b6ba48699f824b578473b391fa8aef100aa14afad1c46725fae0e67
@@ -982,7 +980,6 @@ CHECKSUMS
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
   mime-types-data (3.2025.0924) sha256=f276bca15e59f35767cbcf2bc10e023e9200b30bd6a572c1daf7f4cc24994728
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
-  mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
   minitest (5.26.2) sha256=f021118a6185b9ba9f5af71f2ba103ad770c75afde9f2ab8da512677c550cde3
   montrose (0.18.0) sha256=bf5568c70497c4d4ffe0eeeb77515cf89e068c9256ee2f994cd612e2f3dd32f9
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
@@ -996,7 +993,6 @@ CHECKSUMS
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
   net-smtp (0.5.1) sha256=ed96a0af63c524fceb4b29b0d352195c30d82dd916a42f03c62a3a70e5b70736
   nio4r (2.7.5) sha256=6c90168e48fb5f8e768419c93abb94ba2b892a1d0602cb06eef16d8b7df1dca1
-  nokogiri (1.18.10) sha256=d5cc0731008aa3b3a87b361203ea3d19b2069628cb55e46ac7d84a0445e69cc1
   nokogiri (1.18.10-arm64-darwin) sha256=c2b0de30770f50b92c9323fa34a4e1cf5a0af322afcacd239cd66ee1c1b22c85
   nokogiri (1.18.10-x86_64-linux-gnu) sha256=ff5ba26ba2dbce5c04b9ea200777fd225061d7a3930548806f31db907e500f72
   notion-ruby-client (1.2.2) sha256=eac2f506653877de51ad959cbd3da67578005b6a80e3471d7681d8a1c8e72d75
@@ -1021,7 +1017,7 @@ CHECKSUMS
   pg (1.6.2-x86_64-linux) sha256=525f438137f2d1411a1ebcc4208ec35cb526b5a3b285a629355c73208506a8ea
   pg_search (2.3.6) sha256=682f2a1272d81906463069e214f1026e1e105de54ec0a70c5a9847c378be00a3
   phonelib (0.7.7) sha256=d83adc9069aca9bd2603fb3714366fc6f03323504778b1bc054b7463d0eaa64f
-  playwright-ruby-client (1.55.0) sha256=60510791dbfbdda6d3ed6ce27ad1353961f77016c04cacbb2ade1d4da9633b0a
+  playwright-ruby-client (1.56.0) sha256=f7a772fabda46f0d04a2b20d86a8e7d2897e6c9b05d1fe49555626d499e9b104
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
   premailer (1.18.0) sha256=b930beb10a7d8b5e60dbff0d0b35b4ab3f0b10d8263ea6482aab7ecab9b3d335
   premailer-rails (1.12.0) sha256=c13815d161b9bc7f7d3d81396b0bb0a61a90fa9bd89931548bf4e537c7710400
@@ -1121,6 +1117,7 @@ CHECKSUMS
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
   validate_email (0.1.6) sha256=9dfe9016d527b17a8d3a6e95e4dc50a125400eef899d13d4cc2a254393f82ee4
   validate_url (1.0.15) sha256=72fe164c0713d63a9970bd6700bea948babbfbdcec392f2342b6704042f57451
+  vcr (6.4.0) sha256=077ac92cc16efc5904eb90492a18153b5e6ca5398046d8a249a7c96a9ea24ae6
   version_gem (1.1.3) sha256=07ba4b679abc44198950d191a994d5a504f8f6aad470178e491467f638d0df60
   view_component (3.23.2) sha256=3c2fed4b9e38bf074fa3d42ca55eedbb2cc070e0f3c31d7c13a50b0db530892b
   wannabe_bool (0.7.1) sha256=838ef671066868424de888fb22eeae57c7012709aabd5d17141ea6fea964c61f
@@ -1133,7 +1130,7 @@ CHECKSUMS
   zeitwerk (2.7.3) sha256=b2e86b4a9b57d26ba68a15230dcc7fe6f040f06831ce64417b0621ad96ba3e85
 
 RUBY VERSION
-   ruby 3.4.7p58
+   ruby 3.4.8p72
 
 BUNDLED WITH
    2.7.2

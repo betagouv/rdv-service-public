@@ -50,6 +50,14 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def create
     all_params = params.require(:admin_agent).permit(:email, service_ids: [], organisation_ids: [])
     new_agent = Agent.new(all_params)
+
+    if new_agent.organisations.none?
+      @agent = new_agent
+      skip_authorization
+      flash.now[:error] = "Veuillez sélectionner au moins une organisation pour continuer."
+      render :new and return
+    end
+
     authorize(new_agent, policy_class: ::Configuration::AgentPolicy)
 
     create_agent = AdminCreatesAgent.new(

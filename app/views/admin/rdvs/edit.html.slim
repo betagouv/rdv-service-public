@@ -5,7 +5,11 @@
     = render partial: "admin/rdvs/bouton_retour_agenda", locals: { rdv: @rdv, contextual_agents: @contextual_agents }
   - else
     = dsfr_breadcrumbs(html_attributes: { class: "fr-mb-0 fr-ml-2w" }) do |b|
-      = render partial: "admin/rdvs/fil_ariane_rdv", locals: { rdv: @rdv, b: b }
+      - if @rdv.collectif?
+        = b.with_breadcrumb label: "RDV collectifs", href: admin_organisation_rdvs_collectifs_path(current_organisation)
+      - else
+        = b.with_breadcrumb label: "Liste des RDV", href: admin_organisation_rdvs_path(current_organisation)
+      = b.with_breadcrumb label: "RDV #{rdv_title_for_agent(@rdv)}", href: admin_organisation_rdv_path(current_organisation, @rdv)
       = b.with_breadcrumb label: "Modifier le RDV"
 
 - content_for :title do
@@ -63,24 +67,28 @@
               = render "admin/rdvs_collectifs/form_visio_fields", rdv_form: @rdv_form
 
               = f.input :max_participants_count, input_html: { min: 1 }
-            .form-group
-              = "#{User.model_name.human.pluralize} :"
-              = f.fields_for :participations, @rdv.participations do |participation_form|
-                = render "admin/participations/form", form: participation_form
 
-            div.form-row.grid-align-center.pb-4
-              .flex-grow-1.pr-4
-                = select_tag :status,
-                        options_for_select([]),
-                        include_blank: "Ajouter un usager",
-                        required: false,
-                        class: "select2-input js-rdv-user-select",
-                        data: { \
-                  width: "auto", \
-                  "scroll-to-bottom": params[:add_user].present?, \
-                  "select2-config": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
-                 }
-              = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: request.url, role: default_service_selection_from(@rdv.motif.service))
+            .fr-mt-4w= "#{User.model_name.human.pluralize} :"
+            .fr-pl-2w.rdv-border-left-1px-solid
+              .form-group
+                = f.fields_for :participations, @rdv.participations do |participation_form|
+                  = render "admin/participations/form", form: participation_form
+
+              .fr-mt-4w.fr-mb-1w Ajouter un usager
+              div.form-row.grid-align-center.pb-4
+                .flex-grow-1.pr-4
+                  - select2_url = search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id))
+                  = select_tag :user_to_add,
+                    options_for_select([]),
+                    include_blank: "Rechercher un usager",
+                    required: false,
+                    class: "select2-input js-rdv-user-select",
+                    data: { \
+                      "width": "auto", \
+                      "scroll-to-bottom": params[:add_user].present?, \
+                      "select2-config": { ajax: { url: select2_url, dataType: "json", delay: 250 } }, \
+                   }
+                = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: request.url, role: default_service_selection_from(@rdv.motif.service))
 
             .text-right
               = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"

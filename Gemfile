@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.7"
+ruby "3.4.8"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -129,6 +129,7 @@ gem "groupdate", "~> 6.1"
 gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
+gem "dsfr-assets", "~> 1.14.2"
 gem "dsfr-view-components", "~> 4.0"
 gem "dsfr-form_builder", "= 0.0.7" # On fixe la version tant qu’on est pas en 1.0
 
@@ -257,6 +258,8 @@ group :test do
 
   # Library for stubbing HTTP requests in Ruby.
   gem "webmock"
+  # Record your test suite's HTTP interactions and replay them during future test runs for fast, deterministic, accurate tests.
+  gem "vcr"
 
   # Modify your ENV
   gem "climate_control"

@@ -96,28 +96,23 @@
     "@fullcalendar/daygrid" "~5.11.5"
     tslib "^2.1.0"
 
-"@gouvfr/dsfr@^1.13.0":
-  version "1.13.2"
-  resolved "https://registry.yarnpkg.com/@gouvfr/dsfr/-/dsfr-1.13.2.tgz#ef789c35dd73cc5e406253f31bf4892892c2c285"
-  integrity sha512-4Q9ggFFzwD/KFr37sJO1hFH9PcqlZ7F3jMiFJXnBLJfkH1+s28vnQp/oXoY8TosWsLMSjdhNCrxvrUdm5XzBlg==
-
 "@hotwired/stimulus@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@hotwired/stimulus/-/stimulus-3.2.2.tgz#071aab59c600fed95b97939e605ff261a4251608"
   integrity sha512-eGeIqNOQpXoPAIP7tC1+1Yc1yl1xnwYqg+3mzqxyrbE5pg5YFBZcA6YoTiByJB6DKAEsiWtl6tjTJS4IYtbB7A==
 
-"@hotwired/turbo-rails@^8.0.16":
-  version "8.0.16"
-  resolved "https://registry.yarnpkg.com/@hotwired/turbo-rails/-/turbo-rails-8.0.16.tgz#096f3bec8c3c04d4aac4dd0f75305c67b3db3501"
-  integrity sha512-Yxiy2x+N3eOIEDokvLzSrd08aI5RDKnFYDQFl2J/LuMEWTtPdY7oNP0F/gv/sSe5AV23Lwz4FitG/uNFXNM5tA==
+"@hotwired/turbo-rails@^8.0.21":
+  version "8.0.21"
+  resolved "https://registry.yarnpkg.com/@hotwired/turbo-rails/-/turbo-rails-8.0.21.tgz#403bfb2b1b92a921d854471772a7aa906f75ab04"
+  integrity sha512-RUnqt7tOVlQT539eVqFaAp4/32y7sLxvt3G7OIMROVlIMWvM8CXJk08xvIro2ueQViYRB6jwRjruNx7drIJPXg==
   dependencies:
-    "@hotwired/turbo" "^8.0.13"
+    "@hotwired/turbo" "^8.0.21"
     "@rails/actioncable" ">=7.0"
 
-"@hotwired/turbo@^8.0.13":
-  version "8.0.13"
-  resolved "https://registry.yarnpkg.com/@hotwired/turbo/-/turbo-8.0.13.tgz#ab35fda9d358432c8a872a833844b38cccb8c25b"
-  integrity sha512-M7qXUqcGab6G5PKOiwhgbByTtrPgKPFCTMNQ52QhzUEXEqmp0/ApEguUesh/FPiUjrmFec+3lq98KsWnYY2C7g==
+"@hotwired/turbo@^8.0.21":
+  version "8.0.21"
+  resolved "https://registry.yarnpkg.com/@hotwired/turbo/-/turbo-8.0.21.tgz#a3e80c01d70048200f64bbe3582b84f9bfac034e"
+  integrity sha512-fJTv3JnzFHeDxBb23esZSOhT4r142xf5o3lKMFMvzPC6AllkqbBKk5Yb31UZhtIsKQCwmO/pUQrtTUlYl5CHAQ==
 
 "@jridgewell/gen-mapping@^0.3.5":
   version "0.3.5"
@@ -1079,17 +1074,17 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-playwright-core@1.55.0:
-  version "1.55.0"
-  resolved "https://registry.npmjs.org/playwright-core/-/playwright-core-1.55.0.tgz#ec8a9f8ef118afb3e86e0f46f1393e3bea32adf4"
-  integrity sha512-GvZs4vU3U5ro2nZpeiwyb0zuFaqb9sUiAJuyrWpcGouD8y9/HLgGbNRjIph7zU9D3hnPaisMl9zG9CgFi/biIg==
+playwright-core@1.56.1:
+  version "1.56.1"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.56.1.tgz#24a66481e5cd33a045632230aa2c4f0cb6b1db3d"
+  integrity sha512-hutraynyn31F+Bifme+Ps9Vq59hKuUCz7H1kDOcBs+2oGguKkWTU50bBWrtz34OUWmIwpBTWDxaRPXrIXkgvmQ==
 
-playwright@1.55.0:
-  version "1.55.0"
-  resolved "https://registry.npmjs.org/playwright/-/playwright-1.55.0.tgz#7aca7ac3ffd9e083a8ad8b2514d6f9ba401cc78b"
-  integrity sha512-sdCWStblvV1YU909Xqx0DhOjPZE4/5lJsIS84IfN9dAZfcl/CIZ5O8l3o0j7hPMjDvqoTF8ZUcc+i/GL5erstA==
+playwright@1.56.1:
+  version "1.56.1"
+  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.56.1.tgz#62e3b99ddebed0d475e5936a152c88e68be55fbf"
+  integrity sha512-aFi5B0WovBHTEvpM3DzXTUaeN6eN0qWnTkKx4NQaH4Wvcmc153PdaY2UBdSYKaGYw+UyWXSVyxDUg5DoPEttjw==
   dependencies:
-    playwright-core "1.55.0"
+    playwright-core "1.56.1"
   optionalDependencies:
     fsevents "2.3.2"
 

@@ -131,7 +131,9 @@ module CreneauxSearch::Calculator
 
     def import_absences_from_caldav(agents)
       agents.each do |agent|
-        Caldav::ImportAbsencesFromCaldavJob.perform_later(agent.id) if agent.caldav_configured?
+        if agent.caldav_configured? && !Caldav::ImportAbsencesFromCaldavJob.synced_during_last_minute?(agent.id)
+          Caldav::ImportAbsencesFromCaldavJob.perform_later(agent.id)
+        end
       end
     end
   end
@@ -155,6 +157,7 @@ module CreneauxSearch::Calculator
 
       # On calcule les occurrences des absences en premier pour laisser aux rdvs le temps de finir de charger
       busy_times += busy_times_from_absences
+      busy_times += busy_times_from_external_calendar
 
       busy_times += @rdvs_starts_and_ends_at.value.map do |rdv_starts_and_ends_at|
         BusyTime.new(rdv_starts_and_ends_at.first, rdv_starts_and_ends_at.last)
@@ -202,6 +205,15 @@ module CreneauxSearch::Calculator
 
     def absence_out_of_range?(absence)
       absence.ends_at < range.begin || range.end < absence.starts_at
+    end
+
+    def busy_times_from_external_calendar
+      agent = plage_ouverture.agent
+      return [] unless agent.caldav_configured?
+
+      ExternalCalendarEvent.where(agent:).within_range(range).pluck(:starts_at, :ends_at).map do |starts_at, ends_at|
+        BusyTime.new(starts_at, ends_at)
+      end
     end
 
     def busy_times_from_off_days

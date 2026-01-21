@@ -31,6 +31,7 @@ class ApplicationController < ActionController::Base
       id: current_person&.id,
       role: current_person&.class&.name || "Guest",
       email: current_person&.email,
+      current_super_admin: current_super_admin&.email,
     }.compact
   end
 
