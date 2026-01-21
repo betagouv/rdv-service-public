@@ -11,15 +11,9 @@ module Caldav
       throw :abort if job.class.synced_during_last_minute?(job.arguments.first)
     end
 
-    after_perform do
-      Redis.with_connection do |redis|
-        redis.set("caldav_sync_absences_job_lock_#{agent_id}", Time.zone.now)
-      end
-    end
-
     def self.synced_during_last_minute?(agent_id)
       Redis.with_connection do |redis|
-        latest_run = redis.get("caldav_sync_absences_job_lock_#{agent_id}")
+        latest_run = redis.get("caldav_sync_absences_job_debounce_#{agent_id}")
         latest_run && latest_run < 1.minunte.ago
       end
     end
@@ -54,6 +48,10 @@ module Caldav
           end
           @agent.update_columns(caldav_sync_token: sync_token) # rubocop:disable Rails/SkipsModelValidations
         end
+      end
+
+      Redis.with_connection do |redis|
+        redis.set("caldav_sync_absences_job_debounce_#{agent_id}", Time.zone.now)
       end
     end
     # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
