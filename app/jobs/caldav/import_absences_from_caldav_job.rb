@@ -11,9 +11,16 @@ module Caldav
       throw :abort if job.class.synced_during_last_minute?(job.arguments.first)
     end
 
+    after_perform do
+      Redis.with_connection do |redis|
+        redis.set("caldav_sync_absences_job_lock_#{agent_id}", Time.zone.now)
+      end
+    end
+
     def self.synced_during_last_minute?(agent_id)
       Redis.with_connection do |redis|
-        redis.set("caldav_sync_absences_job_lock_#{agent_id}", true, ex: 1.minute.to_i, nx: true) == false
+        latest_run = redis.get("caldav_sync_absences_job_lock_#{agent_id}")
+        latest_run && latest_run < 1.minunte.ago
       end
     end
 
@@ -55,23 +62,16 @@ module Caldav
 
     def upsert_event(event)
       return if AgentsRdv.exists?(caldav_url: event.url) # On ne fait rien si il s’agit d’un événement provenant de chez nous
-      return if event.dtstart < (Time.now.in_time_zone - 1.week).beginning_of_week # On ne gère pas les absences passées
 
-      ExternalCalendarEvent.transaction do
-        ExternalCalendarEvent.where(agent: @agent, url: event.url).delete_all
+      recurring = event.send(:inner_event).rrule.first.valid?
 
-        from = 1.month.ago
-        to = 1.month.from_now
-        hashes = Caldav::RruleExpander.call(ical_calendar: event.calendar_data, from:, to:).map do |occurrence|
-          {
-            agent_id: @agent.id,
-            url: event.url,
-            starts_at: occurrence.starts_at,
-            ends_at: occurrence.ends_at,
-          }
-        end
-        ExternalCalendarEvent.insert_all!(hashes) # rubocop:disable Rails/SkipsModelValidations
-      end
+      e = ExternalCalendarEvent.find_or_initialize_by(agent: @agent, url: event.url)
+      e.assign_attributes(
+        starts_at: event.dtstart,
+        ends_at: event.dtend,
+        raw_ical: recurring ? event.calendar_data : nil
+      )
+      e.save!
     end
   end
 end

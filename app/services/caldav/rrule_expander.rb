@@ -1,7 +1,11 @@
 class Caldav::RruleExpander
-  def self.call(ical_calendar:, from:, to:) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def initialize(raw_ical)
+    @raw_ical = raw_ical
+  end
+
+  def all_occurrences_within(time_range) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     all_occurrences = []
-    calendars = Icalendar::Calendar.parse(ical_calendar)
+    calendars = Icalendar::Calendar.parse(@raw_ical)
     calendars.each do |calendar|
       events_by_uid = calendar.events.group_by { |e| e.uid.to_s }
 
@@ -11,7 +15,7 @@ class Caldav::RruleExpander
         modified_dates = modified.map { |e| e.recurrence_id.to_time.to_date }
 
         parent = parent.first
-        parent&.occurrences_between(from, to)&.each do |occurrence|
+        parent&.occurrences_between(time_range.min, time_range.max)&.each do |occurrence|
           next if modified_dates.include?(occurrence.start_time.to_date)
 
           starts_at = occurrence.start_time.localtime
@@ -21,7 +25,7 @@ class Caldav::RruleExpander
 
         modified.each do |ical_event|
           start_time = ical_event.dtstart.to_time
-          next unless start_time >= from && start_time < to
+          next unless start_time >= time_range.min && start_time < time_range.max
 
           all_occurrences << Recurrence::Occurrence.new(starts_at: ical_event.dtstart.to_time, ends_at: ical_event.dtend.to_time)
         end
