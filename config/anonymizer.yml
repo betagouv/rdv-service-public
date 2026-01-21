@@ -494,6 +494,13 @@ tables:
     non_anonymized_column_names:
       - item_type
       - item_id
+  - table_name: external_calendar_events
+    anonymized_column_names:
+      - url
+    non_anonymized_column_names:
+      - agent_id
+      - starts_at
+      - ends_at
   - table_name: instance_exports
     anonymized_column_names:
       - api_token

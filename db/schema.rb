@@ -226,6 +226,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_21_064312) do
     t.index ["expires_at"], name: "index_exports_on_expires_at"
   end
 
+  create_table "external_calendar_events", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.string "url", null: false
+    t.index ["agent_id", "starts_at"], name: "index_external_calendar_events_on_agent_id_and_starts_at"
+  end
+
   create_table "external_references", force: :cascade do |t|
     t.string "item_type", null: false
     t.bigint "item_id", null: false
@@ -919,6 +927,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_21_064312) do
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
   add_foreign_key "exports", "agents"
+  add_foreign_key "external_calendar_events", "agents"
   add_foreign_key "external_references", "oauth_applications"
   add_foreign_key "external_references", "territories"
   add_foreign_key "file_attentes", "rdvs"
