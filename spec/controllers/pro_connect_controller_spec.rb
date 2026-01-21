@@ -14,7 +14,7 @@ RSpec.describe ProConnectController do
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         redirect_uri: "http://test.host/agent_connect/callback",
         response_type: "code",
-        scope: "openid email given_name usual_name siret",
+        scope: "openid email given_name usual_name siret idp_id",
         state: be_a(String),
         nonce: be_a(String),
         claims: {
@@ -42,7 +42,7 @@ RSpec.describe ProConnectController do
           client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
           redirect_uri: "http://test.host/agent_connect/callback",
           response_type: "code",
-          scope: "openid email given_name usual_name siret",
+          scope: "openid email given_name usual_name siret idp_id",
           state: be_a(String),
           nonce: be_a(String),
           claims: {
@@ -71,7 +71,7 @@ RSpec.describe ProConnectController do
         client_id: "ec41582-1d60-4f11-a63b-d8abaece16aa",
         redirect_uri: "http://test.host/agent_connect/callback",
         response_type: "code",
-        scope: "openid email given_name usual_name siret",
+        scope: "openid email given_name usual_name siret idp_id",
         state: be_a(String),
         nonce: be_a(String),
         claims: {
@@ -104,6 +104,7 @@ RSpec.describe ProConnectController do
         "given_name" => "Francis Factice",
         "usual_name" => "Factice",
         "siret" => "13002526500013",
+        "idp_id" => "fia1",
         "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
         "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
       }
@@ -126,6 +127,7 @@ RSpec.describe ProConnectController do
           email: user_info["email"],
           first_name: "Francis",
           last_name: "Factice",
+          pro_connect_idp_id: user_info["idp_id"],
           pro_connect_2fa_active: with_2fa,
         }
         expect(agent).to have_attributes(expected_attrs)
@@ -352,6 +354,7 @@ RSpec.describe ProConnectController do
           "given_name" => "Jean Michel Factice",
           "usual_name" => "Factice",
           "siret" => "11006801200050",
+          "idp_id" => "fia1",
           "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
           "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
         }
@@ -377,6 +380,7 @@ RSpec.describe ProConnectController do
           "given_name" => "Jean Michel Factice",
           "usual_name" => "Factice",
           "siret" => "11006801200050",
+          "idp_id" => "fia1",
           "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
           "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
         }
