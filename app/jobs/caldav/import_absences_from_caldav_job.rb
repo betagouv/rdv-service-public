@@ -30,7 +30,7 @@ module Caldav
           if event.calendar_data.nil?
             ExternalCalendarEvent.where(agent: @agent, url: event.url).delete_all
           else
-            upsert_absence(event)
+            upsert_event(event)
           end
         end
         @agent.update!(caldav_sync_token: collection.sync_token)
@@ -39,7 +39,7 @@ module Caldav
         events = @agent.caldav_client.events.list(@agent.caldav_agenda_url)
 
         events.each do |event|
-          upsert_absence(event)
+          upsert_event(event)
         end
         @agent.update!(caldav_sync_token: sync_token)
       end
@@ -48,7 +48,7 @@ module Caldav
 
     private
 
-    def upsert_absence(event)
+    def upsert_event(event)
       return if AgentsRdv.exists?(caldav_url: event.url) # On ne fait rien si il s’agit d’un événement provenant de chez nous
       return if event.dtstart < (Time.now.in_time_zone - 1.week).beginning_of_week # On ne gère pas les absences passées
 
