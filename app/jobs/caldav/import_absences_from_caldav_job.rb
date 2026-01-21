@@ -14,7 +14,7 @@ module Caldav
     def self.synced_during_last_minute?(agent_id)
       Redis.with_connection do |redis|
         latest_run = redis.get("caldav_sync_absences_job_debounce_#{agent_id}")
-        latest_run && latest_run < 1.minute.ago
+        latest_run && latest_run > 1.second.ago
       end
     end
 
@@ -53,6 +53,8 @@ module Caldav
       Redis.with_connection do |redis|
         redis.set("caldav_sync_absences_job_debounce_#{agent_id}", Time.zone.now)
       end
+
+      AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent")
     end
     # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
@@ -61,7 +63,7 @@ module Caldav
     def upsert_event(event)
       return if AgentsRdv.exists?(caldav_url: event.url) # On ne fait rien si il s’agit d’un événement provenant de chez nous
 
-      recurring = event.send(:inner_event).rrule.first.valid?
+      recurring = event.send(:inner_event).rrule&.first&.valid?
 
       e = ExternalCalendarEvent.find_or_initialize_by(agent: @agent, url: event.url)
       e.assign_attributes(
