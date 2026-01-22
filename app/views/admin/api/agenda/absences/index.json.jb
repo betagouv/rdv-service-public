@@ -1,4 +1,4 @@
-absences_hashes = @absence_occurrences.map do |absence, occurrence|
+@absence_occurrences.map do |absence, occurrence|
   {
     title: sanitize(absence.title),
     start: occurrence.starts_at.as_json,
@@ -10,5 +10,3 @@ absences_hashes = @absence_occurrences.map do |absence, occurrence|
     resourceIds: [absence.agent_id],
   }
 end
-
-absences_hashes + @external_calendar_occurrences
