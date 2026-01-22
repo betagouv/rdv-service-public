@@ -51,7 +51,7 @@ module Caldav
       end
 
       # Import successful
-      Redis.with_connection { |redis| redis.set("caldav_sync_absences_job_debounce_#{agent_id}", true, expires_in: 1.minute) }
+      Redis.with_connection { |redis| redis.set("caldav_sync_absences_job_debounce_#{agent_id}", true, ex: 1.minute) }
       AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent") if any_changes
     end
     # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity

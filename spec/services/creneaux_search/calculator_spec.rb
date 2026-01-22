@@ -353,8 +353,8 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         e9h30 = Time.zone.parse("2021-10-27 09:30")
         s9h45 = Time.zone.parse("2021-10-27 09:45")
         e10h45 = Time.zone.parse("2021-10-27 10:45")
-        ExternalCalendarEvent.create!(agent:, starts_at: s8h30, ends_at: e9h30, url: "abcde")
-        ExternalCalendarEvent.create!(agent:, starts_at: s9h45, ends_at: e10h45, url: "abcde")
+        ExternalCalendarEvent.create!(agent:, starts_at: s8h30, ends_at: e9h30, url: "abcde1")
+        ExternalCalendarEvent.create!(agent:, starts_at: s9h45, ends_at: e10h45, url: "abcde2")
 
         range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
 
