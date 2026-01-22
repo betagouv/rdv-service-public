@@ -240,29 +240,32 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
     }
   };
 
-  const disconnectCallback = () => {
-    clearTimeout(window.disconnectWarningTimeoutId);
-    window.disconnectWarningTimeoutId = setTimeout(() => {
-      document.querySelector("#js-agenda-disconnected-warning")?.classList?.remove("hidden");
-    }, 5000);
-  };
-
   const connectCallback = ({ reconnected }) => {
-    // `reconnected` nous indique que cette connexion fait suite à une
-    // préalable déconnexion. C'est bien ce qui nous intéresse puisque
-    // nous voulons cacher l'avertissement affiché lors de la perte de connexion.
+    console.log(reconnected)
+    // `reconnected` est à `false` lors de la connexion initiale et à `true` si la connexion fait suite à une déconnexion.
     if (reconnected) {
-      clearTimeout(window.disconnectWarningTimeoutId);
-      document.querySelector("#js-agenda-disconnected-warning")?.classList?.add("hidden");
+      refreshWarningDisplay();
       fullCalendarInstance.refetchEvents();
     }
   };
+
+  const refreshWarningDisplay = () => {
+    if(getConsumer().connection.monitor.connectionIsStale()) {
+      document.querySelector("#js-agenda-disconnected-warning")?.classList?.remove("hidden");
+    }
+    else {
+      document.querySelector("#js-agenda-disconnected-warning")?.classList?.add("hidden");
+    }
+  };
+  // On peut refresh souvent sans craindre que le warning ne clignote trop souvent
+  // car connectionIsStale() ne renvoie true que lorsque le dernier ping date de
+  // plus de 6 secondes (valeur de `ConnectionMonitor.staleThreshold`).
+  setInterval(refreshWarningDisplay, 500);
 
   agentIds.forEach(agentId => {
     getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, {
       received: messageReceivedCallback,
       connected: connectCallback,
-      disconnected: disconnectCallback,
     });
   });
 };
