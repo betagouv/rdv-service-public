@@ -30,6 +30,7 @@ module Caldav
         ExternalCalendarEvent.transaction do
           events.each do |event|
             if event.calendar_data.nil?
+              # Le serveur Caldav de la Suite Numérique signale une suppression à travers un calendar_data vide.
               ExternalCalendarEvent.where(agent: @agent, url: event.url).delete_all
             else
               upsert_event(event)
