@@ -131,7 +131,7 @@ gem "rails_autolink"
 gem "active_link_to"
 gem "dsfr-assets", "~> 1.14.2"
 gem "dsfr-view-components", "~> 4.0"
-gem "dsfr-form_builder", "= 0.0.7" # On fixe la version tant qu’on est pas en 1.0
+gem "dsfr-form_builder", "= 0.0.9" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
