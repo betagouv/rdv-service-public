@@ -20,7 +20,6 @@ ruby:
   data-display-sundays="#{current_territory.work_on_sunday? && current_agent.display_saturdays}"
   data-group-by-agent="#{current_agent.group_by_agent}"
   data-organisation-id="#{current_organisation.id}"
-  data-realtime-refresh=Admin::Api::Agenda.realtime_refresh?(current_agent).to_s
 ]
 
 - if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)

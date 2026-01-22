@@ -199,32 +199,6 @@ function eventRenderer(selectedEventId) {
   }
 }
 
-const setupPollingRefresh = (fullCalendarInstance) => {
-  const clearRefetchInterval = () => {
-    if (!fullCalendarInstance.refreshCalendarInterval) return
-    clearTimeout(fullCalendarInstance.refreshCalendarInterval)
-    fullCalendarInstance.refreshCalendarInterval = null
-  }
-
-  const setRefetchInterval = () => {
-    if (fullCalendarInstance.refreshCalendarInterval) return
-    fullCalendarInstance.refreshCalendarInterval = setInterval(() => fullCalendarInstance.refetchEvents(), 30000)
-  }
-
-  setRefetchInterval();
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      // when agent comes back to tab, refresh immediately
-      fullCalendarInstance.refetchEvents();
-
-      setRefetchInterval();
-    } else if (fullCalendarInstance.refreshCalendarInterval) {
-      clearRefetchInterval();
-    }
-  })
-};
-
 const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
 
   const messageReceivedCallback = (message) => {
@@ -289,4 +263,4 @@ const handleAjaxError = (response) => {
   }
 };
 
-export { defaultFullCalendarConfig, eventRenderer, setupPollingRefresh, setupRealtimeRefresh, handleAjaxError }
+export { defaultFullCalendarConfig, eventRenderer, setupRealtimeRefresh, handleAjaxError }
