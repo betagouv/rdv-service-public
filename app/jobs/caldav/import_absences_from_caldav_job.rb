@@ -52,6 +52,10 @@ module Caldav
     private
 
     def update_local_data(updated_events:, deleted_events:, new_sync_token:)
+      # On exclut le traitement des événements provenant d'un RDV de chez nous
+      urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url)
+      updated_events = updated_events.reject { _1.url == urls_of_rdvs }
+
       ExternalCalendarEvent.transaction do
         updated_events.each { |event| upsert_event(event) }
 
@@ -70,8 +74,6 @@ module Caldav
     end
 
     def upsert_event(event)
-      return if AgentsRdv.exists?(caldav_url: event.url) # On ne fait rien si il s’agit d’un événement provenant de chez nous
-
       recurring = event.send(:inner_event).rrule&.first&.valid?
 
       e = ExternalCalendarEvent.find_or_initialize_by(agent: @agent, url: event.url)
