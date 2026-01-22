@@ -15,6 +15,9 @@ module Caldav
       Redis.with_connection { |redis| redis.get("caldav_sync_absences_job_debounce_#{agent_id}") }
     end
 
+    # Pour comprendre l'usage de la gem Calendav, voir la doc très claire :
+    # https://github.com/pat/calendav?tab=readme-ov-file#synchronising
+    #
     # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def perform(agent_id)
       @agent = Agent.find_by_id(agent_id)
@@ -22,42 +25,49 @@ module Caldav
 
       Sentry.set_user({ id: @agent.id, role: "Agent", email: @agent.email })
 
-      any_changes = false
-      if @agent.caldav_sync_token.present?
+      if @agent.caldav_sync_token
         collection = @agent.caldav_client.calendars.sync(@agent.caldav_agenda_url, @agent.caldav_sync_token)
-        any_changes = collection.changes.any?
-        events = collection.changes
-        ExternalCalendarEvent.transaction do
-          events.each do |event|
-            if event.calendar_data.nil?
-              # Le serveur Caldav de la Suite Numérique signale une suppression à travers un calendar_data vide.
-              ExternalCalendarEvent.where(agent: @agent, url: event.url).delete_all
-            else
-              upsert_event(event)
-            end
-          end
-          @agent.update_columns(caldav_sync_token: collection.sync_token) # rubocop:disable Rails/SkipsModelValidations
-        end
-      else
-        sync_token = @agent.caldav_client.calendars.find(@agent.caldav_agenda_url, sync: true).sync_token
-        events = @agent.caldav_client.events.list(@agent.caldav_agenda_url)
-        any_changes = events.any?
 
-        ExternalCalendarEvent.transaction do
-          events.each do |event|
-            upsert_event(event)
-          end
-          @agent.update_columns(caldav_sync_token: sync_token) # rubocop:disable Rails/SkipsModelValidations
-        end
+        # Le serveur Caldav de la Suite Numérique signale une suppression à travers un calendar_data vide.
+        updated_events = collection.changes.select(&:calendar_data)
+        deleted_events = collection.changes.reject(&:calendar_data).map(&:url)
+
+        # D'autres serveurs Caldav peuvent utiliser le tableau `deletions` pour signaler une suppression
+        deleted_events += collection.deletions
+
+        update_local_data(updated_events:, deleted_events:, new_sync_token: collection.sync_token)
+      else
+        new_sync_token = @agent.caldav_client.calendars.find(@agent.caldav_agenda_url, sync: true).sync_token
+        updated_events = @agent.caldav_client.events.list(@agent.caldav_agenda_url)
+        deleted_events = []
+        update_local_data(updated_events:, deleted_events:, new_sync_token:)
       end
 
       # Import successful
-      Redis.with_connection { |redis| redis.set("caldav_sync_absences_job_debounce_#{agent_id}", true, ex: 1.minute) }
-      AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent") if any_changes
+      set_debounce
+      live_update_calendar if updated_events.any? || deleted_events.any?
     end
     # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
     private
+
+    def update_local_data(updated_events:, deleted_events:, new_sync_token:)
+      ExternalCalendarEvent.transaction do
+        updated_events.each { |event| upsert_event(event) }
+
+        ExternalCalendarEvent.where(agent: @agent, url: deleted_events).delete_all if deleted_events.any?
+
+        @agent.update_columns(caldav_sync_token: new_sync_token) # rubocop:disable Rails/SkipsModelValidations
+      end
+    end
+
+    def set_debounce
+      Redis.with_connection { |redis| redis.set("caldav_sync_absences_job_debounce_#{@agent.id}", true, ex: 1.minute) }
+    end
+
+    def live_update_calendar
+      AgendaChannel.broadcast_to(@agent.id, model: "ExternalCalendarEvent")
+    end
 
     def upsert_event(event)
       return if AgentsRdv.exists?(caldav_url: event.url) # On ne fait rien si il s’agit d’un événement provenant de chez nous
