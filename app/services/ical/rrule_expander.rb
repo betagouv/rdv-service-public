@@ -1,4 +1,4 @@
-class Caldav::RruleExpander
+class Ical::RruleExpander
   def initialize(raw_ical)
     @raw_ical = raw_ical
   end

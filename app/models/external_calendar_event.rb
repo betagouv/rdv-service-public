@@ -15,11 +15,16 @@ class ExternalCalendarEvent < ApplicationRecord
 
   def all_occurrences_within(range)
     if recurring?
-      Caldav::RruleExpander.new(raw_ical).all_occurrences_within(range)
+      Ical::RruleExpander.new(raw_ical).all_occurrences_within(range)
     elsif within?(range)
       [Recurrence::Occurrence.new(starts_at:, ends_at:)]
     else
       []
     end
+  end
+
+  # On retire les champs pouvant contenir des données sensibles
+  def raw_ical=(str)
+    super(Ical::Scrubber.new(str).scrubbed)
   end
 end

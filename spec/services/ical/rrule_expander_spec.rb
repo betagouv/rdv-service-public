@@ -1,4 +1,4 @@
-RSpec.describe Caldav::RruleExpander do
+RSpec.describe Ical::RruleExpander do
   describe "one time event" do
     let(:ponctuel) do
       <<~ICALENDAR
