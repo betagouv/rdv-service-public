@@ -5,11 +5,6 @@ module WebhookDeliverable
   extend ActiveSupport::Concern
 
   def generate_webhook_payload(action)
-    # Reload attributes and associations from DB to ensure they are up to date.
-    # We dont use #reload on self because some other parts
-    # of the code rely on the state of the current object.
-    record = self.class.unscoped.find(id)
-
     meta = {
       model: self.class.name,
       event: action,
@@ -17,12 +12,12 @@ module WebhookDeliverable
       timestamp: Time.zone.now,
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
-    blueprint_class.render(record, root: :data, meta: meta)
+    blueprint_class.render(self, root: :data, meta: meta)
   end
 
   def generate_payload_and_send_webhook(action)
     subscribed_webhook_endpoints.each do |endpoint|
-      WebhookJob.perform_later(generate_webhook_payload(action), endpoint.id)
+      WebhookBuildJob.perform_later(record: self, action:, webhook_endpoint_id: endpoint.id)
     end
   end
 
@@ -34,7 +29,7 @@ module WebhookDeliverable
     # Execute la suppression, après avoir construit les données à envoyer
     yield if block_given?
     payloads.each do |endpoint, payload|
-      WebhookJob.perform_later(payload, endpoint.id)
+      WebhookSendJob.perform_later(payload, endpoint.id)
     end
   end
 

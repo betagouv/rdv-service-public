@@ -22,20 +22,20 @@ RSpec.describe WebhookDeliverable, type: :concern do
         it "notifies the creation" do
           expect do
             rdv.save
-          end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "created"), webhook_endpoint.id)
+          end.to have_enqueued_job(WebhookBuildJob).with(record: rdv, action: :created, webhook_endpoint_id: webhook_endpoint.id)
         end
       end
 
       it "notifies on update" do
         expect do
           rdv.update(status: :excused)
-        end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "updated"), webhook_endpoint.id)
+        end.to have_enqueued_job(WebhookBuildJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
       end
 
       it "notifies on deletion" do
         expect do
           rdv.destroy
-        end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "destroyed"), webhook_endpoint.id)
+        end.to have_enqueued_job(WebhookSendJob).with(json_payload_with_meta("event", "destroyed"), webhook_endpoint.id)
       end
     end
 
@@ -107,8 +107,8 @@ RSpec.describe WebhookDeliverable, type: :concern do
           service = AgentRemoval.new(agent.reload, organisation)
           expect(service).to be_valid
           service.remove!
-        end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "destroyed"), webhook_endpoint.id)
-          .and have_enqueued_job(WebhookJob).with(json_payload_with_meta("model", "AgentRole"), webhook_endpoint.id)
+        end.to have_enqueued_job(WebhookSendJob).with(json_payload_with_meta("event", "destroyed"), webhook_endpoint.id)
+          .and have_enqueued_job(WebhookSendJob).with(json_payload_with_meta("model", "AgentRole"), webhook_endpoint.id)
       end
 
       it "Agent removal service does not send webhook for agent model" do
@@ -117,14 +117,14 @@ RSpec.describe WebhookDeliverable, type: :concern do
           service = AgentRemoval.new(agent.reload, organisation)
           expect(service).to be_valid
           service.remove!
-        end.not_to have_enqueued_job(WebhookJob).with(json_payload_with_meta("model", "Agent"), webhook_endpoint.id)
+        end.not_to have_enqueued_job(WebhookSendJob).with(json_payload_with_meta("model", "Agent"), webhook_endpoint.id)
       end
 
       it "notifies on user_profile deletion" do
         expect do
           user.soft_delete!(organisation)
-        end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "destroyed"), webhook_endpoint.id)
-          .and have_enqueued_job(WebhookJob).with(json_payload_with_meta("model", "UserProfile"), webhook_endpoint.id)
+        end.to have_enqueued_job(WebhookSendJob).with(json_payload_with_meta("event", "destroyed"), webhook_endpoint.id)
+          .and have_enqueued_job(WebhookSendJob).with(json_payload_with_meta("model", "UserProfile"), webhook_endpoint.id)
       end
 
       it "User soft delete does not send webhook for user model" do
@@ -132,7 +132,7 @@ RSpec.describe WebhookDeliverable, type: :concern do
         expect do
           user.soft_delete!(organisation)
           expect(user.first_name).to eq("Usager supprimé")
-        end.not_to have_enqueued_job(WebhookJob).with(json_payload_with_meta("model", "User"), webhook_endpoint.id)
+        end.not_to have_enqueued_job(WebhookSendJob).with(json_payload_with_meta("model", "User"), webhook_endpoint.id)
       end
     end
   end
