@@ -7,12 +7,12 @@ module Caldav
       key: -> { "Caldav::ImportAbsencesFromCaldavJob-#{arguments.first}" }
     )
 
-    before_enqueue do |job|
-      throw :abort if job.class.synced_during_last_minute?(job.arguments.first)
-    end
+    before_enqueue { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
+    before_perform { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
 
-    def self.synced_during_last_minute?(agent_id)
-      Redis.with_connection { |redis| redis.get("caldav_sync_absences_job_debounce_#{agent_id}") }
+    def self.synced_during_last_minute?(agent_id:)
+      latest_run = Redis.with_connection { |redis| redis.get("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}") }
+      latest_run && latest_run.to_time > 1.minute.ago
     end
 
     # Pour comprendre l'usage de la gem Calendav, voir la doc très claire :
@@ -32,7 +32,7 @@ module Caldav
       update_local_events_of(agent:, updated_events:, deleted_events:, new_sync_token:)
 
       # Import successful: set job debounce and update realtime calendars
-      Redis.with_connection { |redis| redis.set("caldav_sync_absences_job_debounce_#{agent_id}", true, ex: 1.minute) }
+      Redis.with_connection { |redis| redis.set("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}", Time.zone.now, ex: 1.minute) }
       AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent")
     end
 

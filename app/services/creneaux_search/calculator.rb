@@ -131,7 +131,7 @@ module CreneauxSearch::Calculator
 
     def import_absences_from_caldav(agents)
       agents.each do |agent|
-        if agent.caldav_configured? && !Caldav::ImportAbsencesFromCaldavJob.synced_during_last_minute?(agent.id)
+        if agent.caldav_configured?
           Caldav::ImportAbsencesFromCaldavJob.perform_later(agent.id)
         end
       end
