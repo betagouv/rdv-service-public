@@ -16,6 +16,7 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
         url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/fa75d9fe-2063-465e-a323-dd8ae7589746.ics"
       ).sole
       expect(daily_event).to be_recurring
+      expect(daily_event.agent_id).to eq(agent.id)
       expect(daily_event.raw_ical).to include("RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH")
       expect(daily_event.raw_ical).not_to include("SUMMARY:Daily") # scrubbed with Ical::Scrubber
 
@@ -23,9 +24,22 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
         url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/6a54e0b7-93cf-43e4-a854-afd8e3d3f2c4.ics"
       ).sole
       expect(weekly_event).to be_recurring
+      expect(daily_event.agent_id).to eq(agent.id)
       expect(weekly_event.raw_ical).to include("RRULE:FREQ=WEEKLY;BYDAY=TU")
       expect(daily_event.raw_ical).not_to include("SUMMARY:Weekly") # scrubbed with Ical::Scrubber
     end
+  end
+
+  it "does not create events if the external URL corresponds to a local Rdv" do
+    url_of_local_event = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/fa75d9fe-2063-465e-a323-dd8ae7589746.ics"
+    url_of_legit_event = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/6a54e0b7-93cf-43e4-a854-afd8e3d3f2c4.ics"
+    create(:agents_rdv, agent:, caldav_url: url_of_local_event)
+
+    VCR.use_cassette("caldav/initial_get_token_and_event_list") do
+      expect { described_class.perform_now(agent.id) }.to change(ExternalCalendarEvent, :count).by(1)
+    end
+
+    expect(ExternalCalendarEvent.pluck(:url)).to eq([url_of_legit_event])
   end
 
   it "prevents from enqueuing the same job if it ran less than a minute ago" do

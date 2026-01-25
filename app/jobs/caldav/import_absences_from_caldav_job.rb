@@ -61,8 +61,8 @@ module Caldav
 
     def update_local_events_of(agent:, updated_events:, deleted_events:, new_sync_token:)
       # On exclut le traitement des événements provenant d'un RDV de chez nous
-      urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url)
-      updated_events = updated_events.reject { _1.url == urls_of_rdvs }
+      urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
+      updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
 
       ExternalCalendarEvent.transaction do
         hashes_to_upsert = updated_events.map do |event|
