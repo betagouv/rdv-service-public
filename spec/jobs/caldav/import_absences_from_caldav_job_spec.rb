@@ -28,6 +28,12 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       expect(weekly_event.raw_ical).to include("RRULE:FREQ=WEEKLY;BYDAY=TU")
       expect(daily_event.raw_ical).not_to include("SUMMARY:Weekly") # scrubbed with Ical::Scrubber
     end
+
+    it 'ignores an event if it is marked as "I am available"' do
+      VCR.use_cassette("caldav/transparent_event") do
+        expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
+      end
+    end
   end
 
   it "does not create events if the external URL corresponds to a local Rdv" do

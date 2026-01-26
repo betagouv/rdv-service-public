@@ -64,6 +64,9 @@ module Caldav
       urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
       updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
 
+      # TRANSP : This property defines whether an event is transparent or not to busy time searches.
+      updated_events = updated_events.reject { _1.transp == "TRANSPARENT" }
+
       ExternalCalendarEvent.transaction do
         hashes_to_upsert = updated_events.map do |event|
           recurring = event.send(:inner_event).rrule&.first&.valid?
