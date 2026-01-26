@@ -3,7 +3,7 @@ class Ical::RruleExpander
     @raw_ical = raw_ical
   end
 
-  def all_occurrences_within(time_range) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def compute_occurrences_within(time_range) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     all_occurrences = []
     calendars = Icalendar::Calendar.parse(@raw_ical)
     calendars.each do |calendar|

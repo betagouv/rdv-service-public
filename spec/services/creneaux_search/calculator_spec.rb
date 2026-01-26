@@ -362,6 +362,24 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
+      it "handles recurring external calendar events" do
+        agent = create(:agent, :with_caldav_config, organisations: [organisation])
+
+        # Plage le mercredi 27 oct 2021 de 9h à 11h
+        plage_ouverture = create(:plage_ouverture, first_day: Date.parse("2021-10-27"), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent:, organisation:)
+
+        # Recurs every week day from 9h45 to 10h00, so in the middle of the plâââge
+        create(:external_calendar_event, :recurring_on_weekdays, agent:)
+
+        at_9h00 = Time.zone.parse("2021-10-27 09:00")
+        at_9h45 = Time.zone.parse("2021-10-27 09:45")
+        at_10h00 = Time.zone.parse("2021-10-27 10:00")
+
+        expected_ranges = [at_9h00..at_9h45, at_10h00..plage_ouverture.ends_at]
+        within_range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
+        expect(described_class.calculate_free_times(plage_ouverture, within_range, work_on_off_days: false)).to eq(expected_ranges)
+      end
+
       it "returns plage ouverture's 3 occurrences of range" do
         starts_at = Time.zone.parse("20211026 9:00")
         plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,

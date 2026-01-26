@@ -9,14 +9,10 @@ class ExternalCalendarEvent < ApplicationRecord
     !!raw_ical
   end
 
-  def within?(range)
-    range.overlaps?(starts_at..ends_at)
-  end
-
   def all_occurrences_within(range)
     if recurring?
-      Ical::RruleExpander.new(raw_ical).all_occurrences_within(range)
-    elsif within?(range)
+      Ical::RruleExpander.new(raw_ical).compute_occurrences_within(range)
+    elsif range.overlaps?(starts_at..ends_at)
       [Recurrence::Occurrence.new(starts_at:, ends_at:)]
     else
       []

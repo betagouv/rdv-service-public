@@ -51,7 +51,7 @@ RSpec.describe Ical::RruleExpander do
           ends_at: Time.zone.parse("2025-12-18 15:00 +0100")
         ),
       ]
-      actual_recurrences = described_class.new(ponctuel).all_occurrences_within(from..to)
+      actual_recurrences = described_class.new(ponctuel).compute_occurrences_within(from..to)
       expect(actual_recurrences).to match(expected_recurrences)
     end
   end
@@ -125,7 +125,7 @@ RSpec.describe Ical::RruleExpander do
         ),
 
       ]
-      actual_recurrences = described_class.new(every_day).all_occurrences_within(from..to)
+      actual_recurrences = described_class.new(every_day).compute_occurrences_within(from..to)
       expect(actual_recurrences).to match(expected_recurrences)
     end
   end
@@ -235,7 +235,7 @@ RSpec.describe Ical::RruleExpander do
         ],
         # plus rien après le 3 mars puisque récurrence supprimée le 10 mars pour toujours
       ]
-      actual_recurrences = described_class.new(every_week_with_exception).all_occurrences_within(from..to)
+      actual_recurrences = described_class.new(every_week_with_exception).compute_occurrences_within(from..to)
       expect(actual_recurrences.map(&:to_a)).to match(expected_recurrences.map { _1.map { |str| Time.zone.parse(str) } })
     end
   end
@@ -298,7 +298,7 @@ RSpec.describe Ical::RruleExpander do
           ends_at: Time.zone.parse("2025-12-15 11:30 +0100")
         ),
       ]
-      actual_recurrences = described_class.new(every_day_with_exceptions).all_occurrences_within(from..to)
+      actual_recurrences = described_class.new(every_day_with_exceptions).compute_occurrences_within(from..to)
       expect(actual_recurrences).to match(expected_recurrences)
     end
   end
@@ -373,7 +373,7 @@ RSpec.describe Ical::RruleExpander do
           ends_at: Time.zone.parse("2026-01-28 15:30 +0100")
         ),
       ]
-      actual_recurrences = described_class.new(every_day_with_exceptions).all_occurrences_within(from..to)
+      actual_recurrences = described_class.new(every_day_with_exceptions).compute_occurrences_within(from..to)
       expect(actual_recurrences).to match(expected_recurrences)
     end
   end
