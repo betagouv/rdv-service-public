@@ -14,7 +14,7 @@ class Ical::RruleExpander
       Sentry.capture_message("DEBUG: Plusieurs UIDs détectés") if events_by_uid.size > 1
 
       events_by_uid.each_value do |ical_events|
-        parent = ical_events.reject(&:recurrence_id).sole
+        parent = ical_events.reject(&:recurrence_id).first
         exceptions = ical_events.select(&:recurrence_id)
 
         exception_dates = exceptions.map { |e| e.recurrence_id.to_time.to_date }
