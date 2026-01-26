@@ -14,13 +14,14 @@ class Ical::RruleExpander
       Sentry.capture_message("DEBUG: Plusieurs UIDs détectés") if events_by_uid.size > 1
 
       events_by_uid.each_value do |ical_events|
-        modified, parents = ical_events.partition { _1.recurrence_id.present? }
-        modified_dates = modified.map { |e| e.recurrence_id.to_time.to_date }
+        parent = ical_events.reject(&:recurrence_id).sole
+        exceptions = ical_events.select(&:recurrence_id)
 
-        parent = parents.first
+        exception_dates = exceptions.map { |e| e.recurrence_id.to_time.to_date }
+
         if parent && parent.transp != "TRANSPARENT"
           parent.occurrences_between(time_range.min, time_range.max).each do |occurrence|
-            next if modified_dates.include?(occurrence.start_time.to_date)
+            next if exception_dates.include?(occurrence.start_time.to_date)
 
             starts_at = occurrence.start_time.localtime
             ends_at = occurrence.end_time.localtime
@@ -28,12 +29,12 @@ class Ical::RruleExpander
           end
         end
 
-        modified.each do |ical_event|
-          start_time = ical_event.dtstart.to_time
+        exceptions.each do |exception_ical_event|
+          start_time = exception_ical_event.dtstart.to_time
+          next if exception_ical_event.transp == "TRANSPARENT"
           next unless start_time >= time_range.min && start_time < time_range.max
-          next if ical_event.transp == "TRANSPARENT"
 
-          all_occurrences << Recurrence::Occurrence.new(starts_at: ical_event.dtstart.to_time, ends_at: ical_event.dtend.to_time)
+          all_occurrences << Recurrence::Occurrence.new(starts_at: exception_ical_event.dtstart.to_time, ends_at: exception_ical_event.dtend.to_time)
         end
       end
     end
