@@ -6,7 +6,6 @@ import interactionPlugin from '@fullcalendar/interaction';
 import {
   defaultFullCalendarConfig,
   eventRenderer,
-  setupPollingRefresh,
   setupRealtimeRefresh,
   handleAjaxError,
   classicHeaderToolbarLayout,
@@ -31,11 +30,7 @@ export class AgendaMonoAgent {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-    if(this.data.realtimeRefresh === "true") {
-      setupRealtimeRefresh(this.fullCalendarInstance, [this.data.agentId]);
-    } else {
-      setupPollingRefresh(this.fullCalendarInstance);
-    }
+    setupRealtimeRefresh(this.fullCalendarInstance, [this.data.agentId]);
   }
 
   initFullCalendar = () => {
