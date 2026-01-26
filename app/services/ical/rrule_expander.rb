@@ -10,22 +10,24 @@ class Ical::RruleExpander
       events_by_uid = calendar.events.group_by { |e| e.uid.to_s }
 
       events_by_uid.each_value do |ical_events|
-        modified, parent = ical_events.partition { _1.recurrence_id.present? }
-
+        modified, parents = ical_events.partition { _1.recurrence_id.present? }
         modified_dates = modified.map { |e| e.recurrence_id.to_time.to_date }
 
-        parent = parent.first
-        parent&.occurrences_between(time_range.min, time_range.max)&.each do |occurrence|
-          next if modified_dates.include?(occurrence.start_time.to_date)
+        parent = parents.first
+        if parent && parent.transp != "TRANSPARENT"
+          parent.occurrences_between(time_range.min, time_range.max).each do |occurrence|
+            next if modified_dates.include?(occurrence.start_time.to_date)
 
-          starts_at = occurrence.start_time.localtime
-          ends_at = occurrence.end_time.localtime
-          all_occurrences << Recurrence::Occurrence.new(starts_at:, ends_at:)
+            starts_at = occurrence.start_time.localtime
+            ends_at = occurrence.end_time.localtime
+            all_occurrences << Recurrence::Occurrence.new(starts_at:, ends_at:)
+          end
         end
 
         modified.each do |ical_event|
           start_time = ical_event.dtstart.to_time
           next unless start_time >= time_range.min && start_time < time_range.max
+          next if ical_event.transp == "TRANSPARENT"
 
           all_occurrences << Recurrence::Occurrence.new(starts_at: ical_event.dtstart.to_time, ends_at: ical_event.dtend.to_time)
         end

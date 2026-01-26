@@ -302,4 +302,79 @@ RSpec.describe Ical::RruleExpander do
       expect(actual_recurrences).to match(expected_recurrences)
     end
   end
+
+  describe "transparent recurring event with one opaque exception" do
+    # Un événement récurrent tous les mercredis à partir du 21 janvier.
+    # Il a une exception : il est OPAQUE le 28 janvier.
+    let(:every_day_with_exceptions) do
+      <<~ICALENDAR
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Open-Xchange//8.43.61//EN
+        BEGIN:VTIMEZONE
+        TZID:Europe/Paris
+        LAST-MODIFIED:20250410T142247Z
+        TZURL:https://www.tzurl.org/zoneinfo-outlook/Europe/Paris
+        X-LIC-LOCATION:Europe/Paris
+        BEGIN:DAYLIGHT
+        TZNAME:CEST
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0200
+        DTSTART:19700329T020000
+        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+        END:DAYLIGHT
+        BEGIN:STANDARD
+        TZNAME:CET
+        TZOFFSETFROM:+0200
+        TZOFFSETTO:+0100
+        DTSTART:19701025T030000
+        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+        END:STANDARD
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        DTSTAMP:20260126T100012Z
+        CLASS:PUBLIC
+        CREATED:20260126T100002Z
+        DTEND;TZID=Europe/Paris:20260121T153000
+        DTSTART;TZID=Europe/Paris:20260121T150000
+        LAST-MODIFIED:20260126T100012Z
+        PRIORITY:0
+        RRULE:FREQ=WEEKLY;BYDAY=WE
+        SEQUENCE:0
+        SUMMARY:recur trans
+        TRANSP:TRANSPARENT
+        UID:aa1330f6-7925-4125-bec4-99126dec84c7
+        END:VEVENT
+        BEGIN:VEVENT
+        DTSTAMP:20260126T100012Z
+        CLASS:PUBLIC
+        CREATED:20260126T100012Z
+        DTEND;TZID=Europe/Paris:20260128T153000
+        DTSTART;TZID=Europe/Paris:20260128T150000
+        LAST-MODIFIED:20260126T100012Z
+        PRIORITY:0
+        RECURRENCE-ID;TZID=Europe/Paris:20260128T150000
+        SEQUENCE:1
+        SUMMARY:recur trans
+        TRANSP:OPAQUE
+        UID:aa1330f6-7925-4125-bec4-99126dec84c7
+        END:VEVENT
+        END:VCALENDAR
+      ICALENDAR
+    end
+
+    it "returns all occurrences" do
+      from =  Time.zone.parse("2026-01-01 00:00")
+      to =    Time.zone.parse("2026-02-31 23:59")
+      expected_recurrences = [
+        # On ne liste que l'occurrence qui est OPAQUE
+        Recurrence::Occurrence.new(
+          starts_at: Time.zone.parse("2026-01-28 15:00 +0100"),
+          ends_at: Time.zone.parse("2026-01-28 15:30 +0100")
+        ),
+      ]
+      actual_recurrences = described_class.new(every_day_with_exceptions).all_occurrences_within(from..to)
+      expect(actual_recurrences).to match(expected_recurrences)
+    end
+  end
 end
