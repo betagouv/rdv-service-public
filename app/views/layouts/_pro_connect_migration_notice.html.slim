@@ -1,0 +1,6 @@
+- if current_agent&.pro_connect_openid_sub.present? && session[:pro_connect_id_token].blank?
+  = dsfr_notice title: "Information",
+          description: "Vous vous êtes connecté avec votre mot de passe, mais votre compte est également lié à ProConnect. Pour des raisons de sécurité, la connexion par mot de passe sera désactivée pour les comptes liés à ProConnect à partir du 16 février 2026.",
+          type: "info",
+          link_label: "En savoir plus",
+          link_href: "https://aide.rdv-service-public.fr/toutes-les-notions/connexion-via-proconnect"
