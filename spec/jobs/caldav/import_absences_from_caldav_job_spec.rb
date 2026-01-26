@@ -42,14 +42,14 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       end
 
       it "ignores an event if it is recurring and marked as TRANSP:TRANSPARENT" do
-        VCR.use_cassette("caldav/recur_transparent_event") do
+        VCR.use_cassette("caldav/transparent_recur_event") do
           expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
         end
       end
 
       # Un événement récurrent
       it "stores an event if it is recurring and marked as TRANSP:TRANSPARENT but has at least one opaque exception" do
-        VCR.use_cassette("caldav/recur_transparent_event_with_one_opaque_exception") do
+        VCR.use_cassette("caldav/transparent_recur_event_with_one_opaque_exception") do
           expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(1)
         end
       end
