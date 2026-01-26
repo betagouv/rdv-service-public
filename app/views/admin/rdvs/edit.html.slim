@@ -75,7 +75,7 @@
                 - select2_url = search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id))
                 = select_tag :user_to_add,
                         options_for_select([]),
-                        include_blank: "Ajouter un usager",
+                        include_blank: "Rechercher un usager",
                         required: false,
                         class: "select2-input js-rdv-user-select fr-select",
                         data: { \
