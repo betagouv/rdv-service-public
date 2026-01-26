@@ -1,22 +1,22 @@
 - content_for :title do
-  | Configuration de la synchronisation Caldav
+  | Configuration de la synchronisation CalDAV
 
 - content_for :breadcrumbs do
   = dsfr_breadcrumbs do |b|
     = b.with_breadcrumb label: "Synchronisation d'agenda", href: agents_calendar_sync_path
-    = b.with_breadcrumb label: "Configuration de la synchronisation Caldav"
+    = b.with_breadcrumb label: "Configuration de la synchronisation CalDAV"
 
 p.fr-badge.fr-badge--pink-tuile Beta
 
 p
   |> Vous pouvez ajouter automatiquement à votre calendrier professionnel vos rendez-vous pris via RDV Service Public, et vous
   |> indiquer automatiquement indisponible lorsque vous avez un événement dans votre calendrier professionnel).
-  |> Pour cela, vous devez disposer d’un agenda compatible Caldav (comme celui de
+  |> Pour cela, vous devez disposer d’un agenda compatible CalDAV (comme celui de
   = link_to "LaSuite", "https://lasuite.numerique.gouv.fr/"
   | ).
 
 p
-  |> Pour en savoir plus sur la synchronisation Caldav, consultez notre
+  |> Pour en savoir plus sur la synchronisation CalDAV, consultez notre
   = external_link_to "documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
   | .
 
@@ -27,11 +27,11 @@ p
 - if current_agent.caldav_disconnect_in_progress
     p
       |> Les événements qui avaient été importés dans votre agenda sont en cours de suppression. Cela peut prendre quelques minutes.
-      | Vous pouvez revenir sur cette page plus tard pour reconfigurer vos identifiants Caldav.
+      | Vous pouvez revenir sur cette page plus tard pour reconfigurer vos identifiants CalDAV.
 - elsif current_agent.caldav_configured?
-  p Vos identifiants Caldav sont déjà configurés.
+  p Vos identifiants CalDAV sont déjà configurés.
   = form_tag agents_calendar_sync_caldav_sync_path, method: :delete do
-    = submit_tag "Supprimer la configuration Caldav", class: "fr-btn fr-btn--secondary", data: { confirm: "Êtes-vous sûr de vouloir supprimer vos identifiants Caldav ?" }
+    = submit_tag "Supprimer la configuration CalDAV", class: "fr-btn fr-btn--secondary", data: { confirm: "Êtes-vous sûr de vouloir supprimer vos identifiants CalDAV ?" }
 - else
   = form_tag agents_calendar_sync_caldav_sync_path, method: :put do
     .fr-input-group
@@ -41,6 +41,6 @@ p
       label.fr-label for="caldav_password" Mot de passe
       input#caldav_password.fr-input type="password" name="caldav_password"
     .fr-input-group
-      label.fr-label for="caldav_agenda_url" URL de l’agenda Caldav
+      label.fr-label for="caldav_agenda_url" URL de l’agenda CalDAV
       input#caldav_agenda_url.fr-input type="text" name="caldav_agenda_url"
     = submit_tag "Enregistrer", class: "fr-btn"
