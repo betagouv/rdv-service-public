@@ -23,7 +23,7 @@
           p
             span.font-14.font-weight-bold= "Avertissement : "
             span.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
-          = f.dsfr_text_field :context, label: Rdv.human_attribute_name(:context)
+          = f.dsfr_text_area :context, label: Rdv.human_attribute_name(:context)
           = f.hidden_field :motif_id, value: @rdv.motif_id
 
           = render "admin/rdvs_collectifs/form_visio_fields", rdv: @rdv, f:
