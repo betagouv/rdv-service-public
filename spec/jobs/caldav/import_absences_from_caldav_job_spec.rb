@@ -34,9 +34,24 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
       expect(daily_event.raw_ical).not_to include("SUMMARY:Weekly") # scrubbed with Ical::Scrubber
     end
 
-    it 'ignores an event if it is marked as "I am available"' do
-      VCR.use_cassette("caldav/transparent_event") do
-        expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
+    describe "handling TRANSP" do
+      it "ignores an event if it is non-recurring and marked as TRANSP:TRANSPARENT" do
+        VCR.use_cassette("caldav/transparent_event") do
+          expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
+        end
+      end
+
+      it "ignores an event if it is recurring and marked as TRANSP:TRANSPARENT" do
+        VCR.use_cassette("caldav/recur_transparent_event") do
+          expect { described_class.new.perform(agent.id) }.not_to change(ExternalCalendarEvent, :count)
+        end
+      end
+
+      # Un événement récurrent
+      it "stores an event if it is recurring and marked as TRANSP:TRANSPARENT but has at least one opaque exception" do
+        VCR.use_cassette("caldav/recur_transparent_event_with_one_opaque_exception") do
+          expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(1)
+        end
       end
     end
 

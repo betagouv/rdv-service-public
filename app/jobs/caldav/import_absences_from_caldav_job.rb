@@ -64,13 +64,11 @@ module Caldav
       urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
       updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
 
-      # TRANSP : This property defines whether an event is transparent or not to busy time searches.
-      updated_events = updated_events.reject { _1.transp == "TRANSPARENT" }
+      updated_events = updated_events.select { consider_busy?(_1) }
 
       ExternalCalendarEvent.transaction do
         hashes_to_upsert = updated_events.map do |event|
-          recurring = event.send(:inner_event).rrule&.first&.valid?
-          raw_ical = recurring ? Ical::Scrubber.new(event.calendar_data).scrubbed : nil
+          raw_ical = recurring?(event) ? Ical::Scrubber.new(event.calendar_data).scrubbed : nil
           {
             agent_id: agent.id,
             url: event.url,
@@ -85,6 +83,22 @@ module Caldav
         ExternalCalendarEvent.where(agent: agent, url: deleted_events).delete_all if deleted_events.any?
 
         agent.update_columns(caldav_sync_token: new_sync_token) # rubocop:disable Rails/SkipsModelValidations
+      end
+    end
+
+    def recurring?(event)
+      event.send(:inner_event).rrule&.first&.valid?
+    end
+
+    # Voici comment est définit l'attribut TRANSP dans la spec iCal :
+    # > TRANSP : This property defines whether an event is transparent or not to busy time searches.
+    def consider_busy?(event)
+      if recurring?(event)
+        # Les événements récurrents peuvent être initialement TRANSPARENT
+        # mais avoir des occurrences exceptionnellement OPAQUE
+        event.calendar_data.include?("TRANSP:OPAQUE")
+      else
+        event.transp != "TRANSPARENT"
       end
     end
   end

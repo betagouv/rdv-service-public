@@ -1,0 +1,119 @@
+---
+http_interactions:
+- request:
+    method: report
+    uri: https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <caldav:calendar-query xmlns:dav="DAV:" xmlns:caldav="urn:ietf:params:xml:ns:caldav" xmlns:cs="http://calendarserver.org/ns/" xmlns:apple="http://apple.com/ns/ical/">
+          <dav:prop>
+            <dav:getetag/>
+            <caldav:calendar-data/>
+          </dav:prop>
+          <caldav:filter>
+            <caldav:comp-filter name="VCALENDAR">
+              <caldav:comp-filter name="VEVENT"/>
+            </caldav:comp-filter>
+          </caldav:filter>
+        </caldav:calendar-query>
+    headers:
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+      Depth:
+      - '1'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Connection:
+      - close
+      Host:
+      - ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr
+      User-Agent:
+      - http.rb/5.3.1
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 26 Jan 2026 10:00:25 GMT
+      Content-Type:
+      - text/xml; charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+      X-Robots-Tag:
+      - none
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <D:multistatus xmlns:D="DAV:" xmlns:APPLE="http://apple.com/ns/ical/" xmlns:CAL="urn:ietf:params:xml:ns:caldav" xmlns:CS="http://calendarserver.org/ns/">
+          <D:response>
+            <D:href>/dav/caldav/1234_calendar_id/aa1330f6-7925-4125-bec4-99126dec84c7.ics</D:href>
+            <D:propstat>
+              <D:prop>
+                <D:getetag>2-193751-1769421612968</D:getetag>
+                <calendar-data xmlns="urn:ietf:params:xml:ns:caldav">BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Open-Xchange//8.43.61//EN
+        BEGIN:VTIMEZONE
+        TZID:Europe/Paris
+        LAST-MODIFIED:20250410T142247Z
+        TZURL:https://www.tzurl.org/zoneinfo-outlook/Europe/Paris
+        X-LIC-LOCATION:Europe/Paris
+        BEGIN:DAYLIGHT
+        TZNAME:CEST
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0200
+        DTSTART:19700329T020000
+        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+        END:DAYLIGHT
+        BEGIN:STANDARD
+        TZNAME:CET
+        TZOFFSETFROM:+0200
+        TZOFFSETTO:+0100
+        DTSTART:19701025T030000
+        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+        END:STANDARD
+        END:VTIMEZONE
+        BEGIN:VEVENT
+        DTSTAMP:20260126T100012Z
+        CLASS:PUBLIC
+        CREATED:20260126T100002Z
+        DTEND;TZID=Europe/Paris:20260121T153000
+        DTSTART;TZID=Europe/Paris:20260121T150000
+        LAST-MODIFIED:20260126T100012Z
+        PRIORITY:0
+        RRULE:FREQ=WEEKLY;BYDAY=WE
+        SEQUENCE:0
+        SUMMARY:recur trans
+        TRANSP:TRANSPARENT
+        UID:aa1330f6-7925-4125-bec4-99126dec84c7
+        END:VEVENT
+        BEGIN:VEVENT
+        DTSTAMP:20260126T100012Z
+        CLASS:PUBLIC
+        CREATED:20260126T100012Z
+        DTEND;TZID=Europe/Paris:20260128T153000
+        DTSTART;TZID=Europe/Paris:20260128T150000
+        LAST-MODIFIED:20260126T100012Z
+        PRIORITY:0
+        RECURRENCE-ID;TZID=Europe/Paris:20260128T150000
+        SEQUENCE:1
+        SUMMARY:recur trans
+        TRANSP:OPAQUE
+        UID:aa1330f6-7925-4125-bec4-99126dec84c7
+        END:VEVENT
+        END:VCALENDAR</calendar-data>
+              </D:prop>
+              <D:status>HTTP/1.1 200 OK</D:status>
+            </D:propstat>
+          </D:response>
+        </D:multistatus>
+  recorded_at: Mon, 26 Jan 2026 10:00:25 GMT
+recorded_with: VCR 6.4.0
