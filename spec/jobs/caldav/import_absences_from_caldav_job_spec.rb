@@ -1,5 +1,7 @@
 RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
   it "works (creates local ExternalCalendarEvent rows for each event)" do
+    travel_to Time.zone.parse("2026-01-14 10:00:00")
+
     agent = create(
       :agent,
       caldav_agenda_url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/Y2FsOi8vMC8xMzk2Ng",
