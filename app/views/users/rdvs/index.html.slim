@@ -7,17 +7,18 @@
       .rdv-button-group-before-card.mb-3
         - if params[:past].present?
           = link_to "Voir vos prochains RDV", users_rdvs_path, class: "fr-btn fr-btn--secondary"
-        - else
+        - elsif @rdvs.past.exists?
           = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "fr-btn fr-btn--secondary"
         - if current_domain.provides_address_selection?
           = render "prendre_rdv_button"
 
-      - if @rdvs.any?
-            - @rdvs.each do |rdv|
-              .card
-                .card-body
-                  = render "rdv", rdv: rdv
-            .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
+      - rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
+      - if rdvs.any?
+        - rdvs.each do |rdv|
+          .card
+            .card-body
+              = render "rdv", rdv: rdv
+        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
 
       - else
         .card
