@@ -17,7 +17,7 @@ RSpec.describe "User signs up and signs in" do
       open_email(user.email)
       current_email.click_link "Confirmer mon compte"
       expect_flash_info(I18n.t("devise.confirmations.confirmed"))
-      expect(page).to have_content("Vos rendez-vous")
+      expect(page).to have_content("Vos rendez-vous à venir")
       click_link "Déconnexion"
       expect(page).to have_current_path(root_path, ignore_query: true)
     end
