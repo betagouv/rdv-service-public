@@ -9,6 +9,10 @@ class Ical::RruleExpander
     calendars.each do |calendar|
       events_by_uid = calendar.events.group_by { |e| e.uid.to_s }
 
+      # On suppose que ça n'arrivera jamais, mais on commence par débugger.
+      # TODO: Supprimer ou adapter un mois après déploiement en prod.
+      Sentry.capture_message("DEBUG: Plusieurs UIDs détectés") if events_by_uid.size > 1
+
       events_by_uid.each_value do |ical_events|
         modified, parents = ical_events.partition { _1.recurrence_id.present? }
         modified_dates = modified.map { |e| e.recurrence_id.to_time.to_date }
