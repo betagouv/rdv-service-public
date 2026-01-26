@@ -9,9 +9,9 @@
 p.fr-badge.fr-badge--pink-tuile Beta
 
 p
-  |> Vous pouvez ajouter automatiquement à votre calendrier professionnel vos rendez-vous pris via RDV Service Public, et vous
-  |> indiquer automatiquement indisponible lorsque vous avez un événement dans votre calendrier professionnel).
-  |> Pour cela, vous devez disposer d’un agenda compatible CalDAV (comme celui de
+  |> Vos rendez-vous pris via RDV Service Public s’ajoutent automatiquement à votre agenda professionnel.
+  |> À l’inverse, vos événements existants rendent automatiquement les créneaux correspondants indisponibles dans RDV Service Public.
+  |> Pour utiliser cette fonctionnalité, vous devez disposer d’un agenda compatible CalDAV (comme celui de
   = link_to "LaSuite", "https://lasuite.numerique.gouv.fr/"
   | ).
 
@@ -35,10 +35,16 @@ p
 - else
   = form_tag agents_calendar_sync_caldav_sync_path, method: :put do
     .fr-input-group
-      label.fr-label for="caldav_username" Nom d'utilisateur
+      label.fr-label for="caldav_username"
+        | Identifiant de l’agenda CalDAV
+        span.fr-hint-text
+          = external_link_to "voir la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
       input#caldav_username.fr-input type="text" name="caldav_username"
     .fr-input-group
-      label.fr-label for="caldav_password" Mot de passe
+      label.fr-label for="caldav_password"
+        | Mot de passe de l’agenda CalDAV
+        span.fr-hint-text
+          = external_link_to "voir la documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
       input#caldav_password.fr-input type="password" name="caldav_password"
     .fr-input-group
       label.fr-label for="caldav_agenda_url" URL de l’agenda CalDAV
