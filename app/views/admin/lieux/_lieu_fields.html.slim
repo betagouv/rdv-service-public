@@ -2,20 +2,14 @@
   TODO: We might want to allow admins to create a new Lieu for a Rdv, and immediately save it in the organisation lieu.
   In this scenario, having this common partial (instead of a separate partial for the nested form) will be useful.
 
-- is_new_form = f.object_name == "lieu" && f.object.new_record?
-- is_edit_form = f.object_name == "lieu" && f.object.persisted?
 - is_nested_form = f.object_name != "lieu"
 
-/ New and Edit
-- if is_new_form || is_edit_form
-  = render "model_errors", model: f.object
-
 / All forms
-= f.input :name, required: true
+= f.dsfr_text_field :name, label: Lieu.human_attribute_name(:name), required: true, hint: "Le nom apparaît dans les notifications par email et SMS aux usagers."
 
-= f.input :address, input_html: { data: { "address-autocomplete": "on" } }
+= f.dsfr_text_field :address, label: Lieu.human_attribute_name(:address), data: { "address-autocomplete": "on" }, required: true, hint: "L'adresse apparaît dans les notifications par email et SMS aux usagers."
 = f.hidden_field :latitude
 = f.hidden_field :longitude
 
 - unless is_nested_form
-  = f.input :phone_number, hint: I18n.t("simple_form.hints.lieu.phone_number", app_name: current_domain.name)
+  = f.dsfr_text_field :phone_number, label: Lieu.human_attribute_name(:phone_number), hint: "Facultatif. Ce numéro permet aux usagers de vous contacter. Faites en sorte que les personnes qui répondent au téléphone puissent avoir accès à #{current_domain.name}."
