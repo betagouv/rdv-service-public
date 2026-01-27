@@ -1,4 +1,4 @@
-- content_for :title, "Votre identité"
+- content_for(:title, @rdv_wizard.present? ? "Votre identité" : "Connexion")
 .card
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
@@ -25,11 +25,13 @@
     - else
       = form_for @login_code_request_form, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_request_form do |f|
         = render "model_errors", model: @login_code_request_form, form: f
-        .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
-          .fr-col-12.fr-col-md-6
-            = f.dsfr_text_field :first_name, required: true, label: "Prénom", autocomplete: "given-name"
-          .fr-col-12.fr-col-md-6
-            = f.dsfr_text_field :last_name, required: true, label: "Nom", autocomplete: "family-name"
+        - if @rdv_wizard
+          = hidden_field_tag :behaviour, "upsert_user"
+          .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
+            .fr-col-12.fr-col-md-6
+              = f.dsfr_text_field :first_name, required: true, label: "Prénom", autocomplete: "given-name"
+            .fr-col-12.fr-col-md-6
+              = f.dsfr_text_field :last_name, required: true, label: "Nom", autocomplete: "family-name"
         = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", required: true, label: "Adresse email", autocomplete: "email"
         .rdv-text-align-center
           = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn rdv-width-100 rdv-width-md-auto"

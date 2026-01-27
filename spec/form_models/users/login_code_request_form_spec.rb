@@ -9,9 +9,17 @@ RSpec.describe Users::LoginCodeRequestForm, type: :form_model do
     end
   end
 
-  context "l'usager n'existe pas" do
+  context "l'usager n'existe pas, avec behaviour par défaut (find_existing_user)" do
     it "le form est valide et la sauvegarde créé le login_code" do
       form = described_class.new(LoginCode.new(email: "new@user.fr", first_name: "Nina", last_name: "Personne", domain_id: "RDV_SERVICE_PUBLIC"))
+      expect(form).to be_invalid
+      expect(form.errors[:base]).to include("Aucun compte usager n’existe pour cet email")
+    end
+  end
+
+  context "l'usager n'existe pas, avec behaviour :upsert_user" do
+    it "le form est valide et la sauvegarde créé le login_code" do
+      form = described_class.new(LoginCode.new(email: "new@user.fr", first_name: "Nina", last_name: "Personne", domain_id: "RDV_SERVICE_PUBLIC"), behaviour: "upsert_user")
       expect(form).to be_valid
       expect { form.save }.to change(LoginCode, :count).by(1)
     end
@@ -25,17 +33,17 @@ RSpec.describe Users::LoginCodeRequestForm, type: :form_model do
     end
   end
 
-  context "login_code est invalide (prénom manquant)" do
+  context "behaviour :upsert_user, login_code est invalide (prénom manquant)" do
     specify "le form est invalide" do
-      form = described_class.new(LoginCode.new(email: "us@ger.fr", first_name: "", last_name: "Dupont", domain_id: "RDV_SERVICE_PUBLIC"))
+      form = described_class.new(LoginCode.new(email: "us@ger.fr", first_name: "", last_name: "Dupont", domain_id: "RDV_SERVICE_PUBLIC"), behaviour: "upsert_user")
       expect(form).not_to be_valid
       expect(form.errors[:first_name]).to be_present
     end
   end
 
-  context "login_code est invalide (nom manquant)" do
+  context "behaviour :upsert_user, login_code est invalide (nom manquant)" do
     specify "le form est invalide" do
-      form = described_class.new(LoginCode.new(email: "us@ger.fr", first_name: "Jean", last_name: "", domain_id: "RDV_SERVICE_PUBLIC"))
+      form = described_class.new(LoginCode.new(email: "us@ger.fr", first_name: "Jean", last_name: "", domain_id: "RDV_SERVICE_PUBLIC"), behaviour: "upsert_user")
       expect(form).not_to be_valid
       expect(form.errors[:last_name]).to be_present
     end

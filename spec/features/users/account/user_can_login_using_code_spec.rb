@@ -5,8 +5,6 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
 
   specify do
     visit new_user_session_path
-    fill_in "Prénom", with: "Marco"
-    fill_in "Nom", with: "Polo"
     fill_in "Adresse email", with: "marco@lolmail.fr"
     click_on "Recevoir un code de connexion"
     expect(page).to have_content("code à 6 chiffres")
@@ -28,38 +26,19 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
   context "l'usager rentre une adresse email pour laquelle il n'existe pas de compte usager" do
     specify do
       visit new_user_session_path
-      fill_in "Prénom", with: "Nina"
-      fill_in "Nom", with: "Personne"
       fill_in "Adresse email", with: "nina@personne.fr"
-      expect { click_on "Recevoir un code de connexion" }.to change(LoginCode, :count).by(1)
-      expect(page).to have_content("code à 6 chiffres")
-
-      perform_enqueued_jobs
-      open_email("nina@personne.fr")
-      code = current_email.subject.match(/Votre code de connexion est (\d{6})/)[1]
-      fill_in("Code à 6 chiffres", with: code)
-
-      expect { click_on "Valider" }.to change(User, :count).by(1)
-      expect(page).to have_content("Connexion réussie")
-
-      new_user = User.find_by(email: "nina@personne.fr")
-      expect(new_user.first_name).to eq("Nina")
-      expect(new_user.last_name).to eq("Personne")
-      expect(new_user.created_through).to eq("auto_through_login")
+      expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
+      expect(page).not_to have_content("code à 6 chiffres")
     end
   end
 
   context "l'usager demande deux codes en moins de deux minutes" do
     specify do
       visit new_user_session_path
-      fill_in "Prénom", with: "Marco"
-      fill_in "Nom", with: "Polo"
       fill_in "Adresse email", with: "marco@lolmail.fr"
       click_on "Recevoir un code de connexion"
       expect(page).to have_content("Saisie du code")
       click_on "page de connexion"
-      fill_in "Prénom", with: "Marco"
-      fill_in "Nom", with: "Polo"
       fill_in "Adresse email", with: "marco@lolmail.fr"
       expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
       expect(page).to have_content("Un code a été envoyé à marco@lolmail.fr il y a moins de deux minutes")

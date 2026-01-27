@@ -9,7 +9,7 @@ RSpec.describe "User session expiration" do
 
   def expect_to_be_logged_out
     visit users_informations_path
-    expect(page).to have_content("Votre identité")
+    expect(page).to have_content("Connexion")
   end
 
   it "is done 30 minutes after last visit" do

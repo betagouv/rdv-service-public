@@ -58,7 +58,7 @@ class Users::LoginService
   def upsert_user
     user = User.find_by(email: email)
     if user
-      update_user(user)
+      update_user(user) if first_name.present? && last_name.present?
     else
       user = create_user
     end
