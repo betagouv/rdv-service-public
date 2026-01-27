@@ -6,8 +6,8 @@ RSpec.describe Ical::Scrubber do
       BEGIN:VEVENT
       DTSTAMP:20260123T084137Z
       ATTENDEE;CN=francois;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT;CUTYPE=INDI
-       VIDUAL;EMAIL=francois@ferrandis.cool;X-CALENDARSERVER-DTSTAMP=20260123T084
-       137Z:mailto:francois@ferrandis.cool
+       VIDUAL;EMAIL=francis@factice.cool;X-CALENDARSERVER-DTSTAMP=20260123T084
+       137Z:mailto:francis@factice.cool
       ATTENDEE;CN="François, Ferrandis";PARTSTAT=ACCEPTED;ROLE=REQ-PARTICIPANT;CU
        TYPE=INDIVIDUAL;EMAIL=francois.ferrandis.ext@beta.gouv.fr;X-CALENDARSERVER
        -DTSTAMP=20260123T084052Z:mailto:francois.ferrandis.ext@beta.gouv.fr
