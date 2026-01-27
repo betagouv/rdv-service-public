@@ -10,17 +10,18 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
     if params[:include].nil?
       rdvs = rdvs.includes(:organisation, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
     elsif params[:include].is_a?(Array)
-      rdvs.includes(:organisation) if "organisation".in?(params[:include])
 
-      rdvs.includes(:lieu) if "lieu".in?(params[:include])
+      rdvs.includes!(:organisation) if "organisation".in?(params[:include])
 
-      rdvs.includes(:agents) if "agents".in?(params[:include])
+      rdvs.includes!(:lieu) if "lieu".in?(params[:include])
 
-      rdvs.includes(:users) if "users".in?(params[:include])
+      rdvs.includes!(:agents) if "agents".in?(params[:include])
 
-      rdvs.includes(participations: [:user]) if "participations".in?(params[:include])
+      rdvs.includes!(:users) if "users".in?(params[:include])
 
-      rdvs.includes(motif: [:motif_category]) if "motif".in?(params[:include])
+      rdvs.includes!(participations: [:user]) if "participations".in?(params[:include])
+
+      rdvs.includes!(motif: [:motif_category]) if "motif".in?(params[:include])
     end
 
     if params[:id].present?
@@ -32,7 +33,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
     end
 
     if params[:agent_id].present?
-      rdvs = rdvs.where(agents: { id: params[:agent_id] })
+      rdvs = rdvs.includes(:agents).where(agents: { id: params[:agent_id] })
     end
 
     if params[:status].present?
