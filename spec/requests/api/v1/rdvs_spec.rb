@@ -34,6 +34,16 @@ RSpec.describe "RDV API" do
       expect(parsed_response_body["rdvs"].first["id"]).to eq rdv_with_user_and_agent.id
     end
 
+    it "allows filtering by agent and restricting the included fields" do
+      get "/api/v1/rdvs", headers: headers, params: { agent_id: agent.id, include: [:agents] }, as: :json
+      expect(parsed_response_body["rdvs"].count).to eq 3
+    end
+
+    it "allows filtering by agent even if they are not in the included fields" do
+      get "/api/v1/rdvs", headers: headers, params: { agent_id: agent.id, include: [:motif] }, as: :json
+      expect(parsed_response_body["rdvs"].count).to eq 3
+    end
+
     it "filters by id when passing an array" do
       get "/api/v1/rdvs", headers: headers, params: { id: [rdv_with_user_and_other_agent.id, rdv_with_other_user_and_agent.id] }, as: :json
       expect(parsed_response_body["rdvs"].count).to eq 2
