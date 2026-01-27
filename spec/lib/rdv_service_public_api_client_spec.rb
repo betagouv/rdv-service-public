@@ -50,7 +50,9 @@ RSpec.describe RdvServicePublicApiClient do
         )
     end
 
-    it "ne lève pas d'exception, mais renvoie la réponse pour que laisser le code client traiter l'erreur métier" do
+    it "ne lève pas d'exception, mais renvoie la réponse pour que laisser le code client traiter l'erreur métier et notifie Sentry pour qu'on ai de la visilité" do
+      expect(Sentry).to receive(:capture_message)
+
       response = described_class.new("123456").post("motifs", {}) # Les paramètres ne sont pas utilisés pas le stub, donc on ne les précise pas
       expect(response).to eq({
                                "error_messages" => ['base Il existe déjà dans Mon Organisation un motif Sur place nommé "Suivi de dossier" ouvert à tous les agents'],
@@ -70,6 +72,7 @@ RSpec.describe RdvServicePublicApiClient do
     end
 
     it "n'échoue pas, parce qu'on veut permettre de faire plusieurs fois des copies de données inter-instances sans doublons et sans lever d'erreur" do
+      expect(Sentry).not_to receive(:capture_message)
       response = described_class.new("123456").post("motifs", {}) # Les paramètres ne sont pas utilisés pas le stub, donc on ne les précise pas
       expect(response).to eq(
         { "error_messages" => ["external_id est déjà utilisé"], "errors" => { "external_id" => [{ "error" => "taken", "value" => "123ABC" }] } }
