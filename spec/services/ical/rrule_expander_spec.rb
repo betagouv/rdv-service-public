@@ -45,14 +45,12 @@ RSpec.describe Ical::RruleExpander do
     it "return the only occurrence" do
       from =  Time.zone.parse("2025-12-18 00:00")
       to =    Time.zone.parse("2025-12-28 23:59")
-      expected_recurrences = [
-        Recurrence::Occurrence.new(
-          starts_at: Time.zone.parse("2025-12-18 14:00 +0100"),
-          ends_at: Time.zone.parse("2025-12-18 15:00 +0100")
-        ),
+      expected_recurrence = [
+        Time.zone.parse("2025-12-18 14:00 +0100"),
+        Time.zone.parse("2025-12-18 15:00 +0100"),
       ]
       actual_recurrences = described_class.new(ponctuel).compute_occurrences_within(from..to)
-      expect(actual_recurrences).to match(expected_recurrences)
+      expect(actual_recurrences.sole.to_a).to match(expected_recurrence)
     end
   end
 
@@ -104,29 +102,27 @@ RSpec.describe Ical::RruleExpander do
       from =  Time.zone.parse("2025-12-18 00:00")
       to =    Time.zone.parse("2025-12-22 23:59")
       expected_recurrences = [
+        [
+          Time.zone.parse("2025-12-18 09:45 +0100"),
+          Time.zone.parse("2025-12-18 10:00 +0100"),
+        ],
 
-        Recurrence::Occurrence.new(
-          starts_at: Time.zone.parse("2025-12-18 09:45 +0100"),
-          ends_at: Time.zone.parse("2025-12-18 10:00 +0100")
-        ),
-
-        Recurrence::Occurrence.new(
-          starts_at: Time.zone.parse("2025-12-19 09:45 +0100"),
-          ends_at: Time.zone.parse("2025-12-19 10:00 +0100")
-        ),
+        [
+          Time.zone.parse("2025-12-19 09:45 +0100"),
+          Time.zone.parse("2025-12-19 10:00 +0100"),
+        ],
 
         # Samedi 20, pas de daily
 
         # Dimanche 21, pas de daily
 
-        Recurrence::Occurrence.new(
-          starts_at: Time.zone.parse("2025-12-22 09:45 +0100"),
-          ends_at: Time.zone.parse("2025-12-22 10:00 +0100")
-        ),
-
+        [
+          Time.zone.parse("2025-12-22 09:45 +0100"),
+          Time.zone.parse("2025-12-22 10:00 +0100"),
+        ],
       ]
       actual_recurrences = described_class.new(every_day).compute_occurrences_within(from..to)
-      expect(actual_recurrences).to match(expected_recurrences)
+      expect(actual_recurrences.map(&:to_a)).to match(expected_recurrences)
     end
   end
 
@@ -292,14 +288,12 @@ RSpec.describe Ical::RruleExpander do
     it "returns all occurrences" do
       from =  Time.zone.parse("2025-12-15 00:00")
       to =    Time.zone.parse("2025-12-22 23:59")
-      expected_recurrences = [
-        Recurrence::Occurrence.new(
-          starts_at: Time.zone.parse("2025-12-15 11:15 +0100"),
-          ends_at: Time.zone.parse("2025-12-15 11:30 +0100")
-        ),
+      expected_recurrence = [
+        Time.zone.parse("2025-12-15 11:15 +0100"),
+        Time.zone.parse("2025-12-15 11:30 +0100"),
       ]
       actual_recurrences = described_class.new(every_day_with_exceptions).compute_occurrences_within(from..to)
-      expect(actual_recurrences).to match(expected_recurrences)
+      expect(actual_recurrences.sole.to_a).to match(expected_recurrence)
     end
   end
 
@@ -366,15 +360,13 @@ RSpec.describe Ical::RruleExpander do
     it "returns all occurrences" do
       from =  Time.zone.parse("2026-01-01 00:00")
       to =    Time.zone.parse("2026-02-31 23:59")
-      expected_recurrences = [
+      expected_recurrence = [
         # On ne liste que l'occurrence qui est OPAQUE
-        Recurrence::Occurrence.new(
-          starts_at: Time.zone.parse("2026-01-28 15:00 +0100"),
-          ends_at: Time.zone.parse("2026-01-28 15:30 +0100")
-        ),
+        Time.zone.parse("2026-01-28 15:00 +0100"),
+        Time.zone.parse("2026-01-28 15:30 +0100"),
       ]
       actual_recurrences = described_class.new(every_day_with_exceptions).compute_occurrences_within(from..to)
-      expect(actual_recurrences).to match(expected_recurrences)
+      expect(actual_recurrences.sole.to_a).to match(expected_recurrence)
     end
   end
 end
