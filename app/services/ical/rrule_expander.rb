@@ -6,6 +6,11 @@ class Ical::RruleExpander
   def compute_occurrences_within(time_range) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     all_occurrences = []
     calendars = Icalendar::Calendar.parse(@raw_ical)
+
+    # On suppose que ça n'arrivera jamais, mais on commence par débugger.
+    # TODO: Supprimer ou adapter un mois après déploiement en prod.
+    Sentry.capture_message("DEBUG : Plusieurs calendars détectés") if calendars.size > 1
+
     calendars.each do |calendar|
       events_by_uid = calendar.events.group_by { |e| e.uid.to_s }
 
