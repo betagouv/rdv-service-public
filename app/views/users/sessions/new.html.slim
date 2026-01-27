@@ -23,8 +23,8 @@
             |> Vous pouvez aussi vous
             = link_to "connecter via code à 6 chiffres", new_user_session_path
     - else
-      = form_for @login_code_form_request, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_form_request do |f|
-        = render "model_errors", model: @login_code_form_request, form: f
+      = form_for @login_code_request_form, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_request_form do |f|
+        = render "model_errors", model: @login_code_request_form, form: f
         .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
           .fr-col-12.fr-col-md-6
             = f.dsfr_text_field :first_name, required: true, label: "Prénom", autocomplete: "given-name"
