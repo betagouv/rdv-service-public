@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/ice-cube-ruby/ice_cube.git
+  revision: 32ff145baf152ae4aa130376d66041eba174b085
+  ref: 32ff145
+  specs:
+    ice_cube (0.17.0)
+
+GIT
   remote: https://github.com/mattheworiordan/capybara-screenshot.git
   revision: 23a27be5392c7dbc706651d7adc124d8e7c920a0
   ref: 23a27be
@@ -287,7 +294,6 @@ GEM
       icalendar (~> 2.0)
       ice_cube (~> 0.16)
       tzinfo (~> 2.0)
-    ice_cube (0.17.0)
     io-console (0.8.1)
     irb (1.15.3)
       pp (>= 0.6.0)
@@ -790,6 +796,7 @@ DEPENDENCIES
   hotwire-rails
   icalendar (~> 2.5)
   icalendar-recurrence
+  ice_cube!
   jb
   jsbundling-rails
   kaminari
@@ -949,7 +956,7 @@ CHECKSUMS
   i18n (1.14.7) sha256=ceba573f8138ff2c0915427f1fc5bdf4aa3ab8ae88c8ce255eb3ecf0a11a5d0f
   icalendar (2.12.1) sha256=ecff56c550aed551f29ad1faad0da54bf62362dfaf22a428bd7ad782938fe764
   icalendar-recurrence (1.2.1) sha256=c739971314a9a172993c84a0df82b3c7c77e2714f848c1b3fa303dff5ae4bc22
-  ice_cube (0.17.0) sha256=32deb45dda4b4acc53505c2f581f6d32b5afc04d29b9004769944a0df5a5fcbe
+  ice_cube (0.17.0)
   io-console (0.8.1) sha256=1e15440a6b2f67b6ea496df7c474ed62c860ad11237f29b3bd187f054b925fcb
   irb (1.15.3) sha256=4349edff1efa7ff7bfd34cb9df74a133a588ba88c2718098b3b4468b81184aaa
   jb (0.8.2) sha256=542e551c14f34ceba199b8379abf093863182c76a909879b874a20e4cb47bde3

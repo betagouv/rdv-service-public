@@ -369,4 +369,55 @@ RSpec.describe Ical::RruleExpander do
       expect(actual_recurrences.sole.to_a).to match(expected_recurrence)
     end
   end
+
+  describe "tous les 4èmes mardis du mois" do
+    let(:tous_les_quatriemes_mardis_du_mois) do
+      <<~ICALENDAR
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        BEGIN:VEVENT
+        DTSTAMP:20260127T105742Z
+        CLASS:PUBLIC
+        CREATED:20260127T105742Z
+        DTEND;TZID=Europe/Paris:20260127T173000
+        DTSTART;TZID=Europe/Paris:20260127T170000
+        LAST-MODIFIED:20260127T105742Z
+        RRULE:FREQ=MONTHLY;BYDAY=TU;BYSETPOS=4
+        SUMMARY:tous les 4eme mardis du mois
+        TRANSP:OPAQUE
+        UID:355fc612-61f9-4d29-914b-d43ab51a4cc9
+        END:VEVENT
+        END:VCALENDAR
+      ICALENDAR
+    end
+
+    it "returns all occurrences" do
+      from =  Time.zone.parse("2026-01-01 00:00")
+      to =    Time.zone.parse("2026-04-31 23:59")
+      expected_recurrence = [
+        # 4ème mardi de janvier
+        [
+          Time.zone.parse("2026-01-27 17:00"),
+          Time.zone.parse("2026-01-27 17:30"),
+        ],
+        # 4ème mardi de février
+        [
+          Time.zone.parse("2026-02-24 17:00"),
+          Time.zone.parse("2026-02-24 17:30"),
+        ],
+        # 4ème mardi de mars
+        [
+          Time.zone.parse("2026-03-24 17:00"),
+          Time.zone.parse("2026-03-24 17:30"),
+        ],
+        # 4ème mardi d'avril
+        [
+          Time.zone.parse("2026-04-28 17:00"),
+          Time.zone.parse("2026-04-28 17:30"),
+        ],
+      ]
+      actual_recurrences = described_class.new(tous_les_quatriemes_mardis_du_mois).compute_occurrences_within(from..to)
+      expect(actual_recurrences.map(&:to_a)).to match(expected_recurrence)
+    end
+  end
 end

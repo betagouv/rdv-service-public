@@ -150,6 +150,10 @@ gem "tod"
 gem "icalendar", "~> 2.5"
 # Easy recurrence expansion for iCalendar
 gem "icalendar-recurrence"
+# ice_cube est utilisée par icalendar-recurrence pour calculer les occurrences des événements externes (Caldav)
+# TODO: faire pointer vers rubygems quand ceci est released : https://github.com/ice-cube-ruby/ice_cube/pull/449
+# Ruby Date Recurrence Library - Allows easy creation of recurrence rules and fast querying
+gem "ice_cube", git: "https://github.com/ice-cube-ruby/ice_cube.git", ref: "32ff145"
 # Caldav client library
 gem "calendav", "~> 0.5"
 # Base de données des fuseaux horaires
