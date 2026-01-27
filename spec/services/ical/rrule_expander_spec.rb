@@ -306,6 +306,12 @@ RSpec.describe Ical::RruleExpander do
       ]
       actual_recurrences = described_class.new(tous_les_quatriemes_mardis_du_mois).compute_occurrences_within(from..to)
       expect(actual_recurrences.map(&:to_a)).to match(expected_recurrence)
+
+      # On vérifie qu'on a bien la timezone
+      expect(actual_recurrences[0].starts_at.to_json).to eq('"2026-01-27T17:00:00.000+01:00"')
+      expect(actual_recurrences[1].starts_at.to_json).to eq('"2026-02-24T17:00:00.000+01:00"')
+      expect(actual_recurrences[2].starts_at.to_json).to eq('"2026-03-24T17:00:00.000+01:00"')
+      expect(actual_recurrences[3].starts_at.to_json).to eq('"2026-04-28T17:00:00.000+02:00"')
     end
   end
 end
