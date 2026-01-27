@@ -159,12 +159,14 @@ jobs:
         id: cache-precompiled-assets
         uses: actions/cache@v4
         with:
-          key: assets-${{ hashFiles('yarn.lock', 'app/javascript/**') }}
-          path: app/assets/builds
+          key: assets-invalid-${{ hashFiles('yarn.lock', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
+          path: |
+            app/assets/builds
+            public/assets
       - uses: ./.github/actions/setup-playwright
       - name: Precompile assets
         if: steps.cache-precompiled-assets.outputs.cache-hit != 'true' # Skip if cache was restored
-        run: yarn run build
+        run: RAILS_ENV=test bundle exec rails assets:precompile
       - name: Prepare runtime log cache key
         run: "ls spec/${{ matrix.dirname }}/**/*.rb > tmp/spec_${{ matrix.name }}_files.txt"
       - name: Cache parallel test feature spec runtime log
@@ -229,9 +231,18 @@ jobs:
           path: node_modules
       - name: Install JS dependencies
         run: yarn install --frozen-lockfile --ignore-scripts
+      - name: Cache precompiled assets
+        id: cache-precompiled-assets
+        uses: actions/cache@v4
+        with:
+          key: assets-invalid-${{ hashFiles('yarn.lock', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
+          path: |
+            app/assets/builds
+            public/assets
       - uses: ./.github/actions/setup-playwright
       - name: Precompile assets
-        run: yarn run build
+        if: steps.cache-precompiled-assets.outputs.cache-hit != 'true'
+        run: RAILS_ENV=test bundle exec rails assets:precompile
       - name: Setup DB and run autodoc feature specs
         run: RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load; bundle exec rspec spec/features/autodoc
         env:

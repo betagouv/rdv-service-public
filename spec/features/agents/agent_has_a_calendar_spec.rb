@@ -96,7 +96,6 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     before do
-      allow(Admin::Api::Agenda).to receive(:realtime_refresh?).and_return(true)
       login_as(agent, scope: :agent)
     end
 
@@ -194,7 +193,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       click_button "Mois"
       monday = Time.zone.now.beginning_of_week.to_date
       find(%(.fc-daygrid-day[data-date="#{monday}"])).click
-      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday, format: '%d/%m/%Y')} à 00:00")
+      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday, format: '%-d/%m/%Y')} à 00:00")
     end
 
     it "fonctionne depuis la vue semaine", js: true do
@@ -203,7 +202,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       # Je ne sais pas comment faire cliquer la spec sur la colonne du lundi, elle clique au milieu de l'élément donc sur le mercredi.
       wednesday = Time.zone.now.beginning_of_week.to_date + 2
       find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click
-      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(wednesday, format: '%d/%m/%Y')} à 08:30")
+      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(wednesday, format: '%-d/%m/%Y')} à 08:30")
     end
 
     it "fonctionne depuis la vue jour", js: true do
@@ -212,7 +211,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       click_button "Journée"
       find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click
       monday_next_week = Time.zone.today.beginning_of_week + 1.week
-      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday_next_week, format: '%d/%m/%Y')} à 08:30")
+      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday_next_week, format: '%-d/%m/%Y')} à 08:30")
     end
   end
 end

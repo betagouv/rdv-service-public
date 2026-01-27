@@ -4,7 +4,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import {
   defaultFullCalendarConfig,
   eventRenderer,
-  setupPollingRefresh,
   setupRealtimeRefresh,
   handleAjaxError,
   dayHeaderContent,
@@ -24,11 +23,7 @@ class AgendaMultiAgent {
     this.resources = JSON.parse(this.data.resourcesJson);
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-    if(this.data.realtimeRefresh === "true") {
-      setupRealtimeRefresh(this.fullCalendarInstance, this.resources.map(resource => resource.id));
-    } else {
-      setupPollingRefresh(this.fullCalendarInstance);
-    }
+    setupRealtimeRefresh(this.fullCalendarInstance, this.resources.map(resource => resource.id));
   }
   initFullCalendar = () => {
     const options = {

@@ -8,7 +8,13 @@ module Caldav
     )
 
     before_enqueue do |job|
-      throw :abort if synced_during_last_minute?(job.arguments.first)
+      throw :abort if job.class.synced_during_last_minute?(job.arguments.first)
+    end
+
+    def self.synced_during_last_minute?(agent_id)
+      Redis.with_connection do |redis|
+        redis.set("caldav_sync_absences_job_lock_#{agent_id}", true, ex: 1.minute.to_i, nx: true) == false
+      end
     end
 
     # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
@@ -22,9 +28,9 @@ module Caldav
         collection = @agent.caldav_client.calendars.sync(@agent.caldav_agenda_url, @agent.caldav_sync_token)
         collection.changes.each do |event|
           if event.calendar_data.nil?
-            Absence.where(agent: @agent, caldav_url: event.url).destroy_all
+            ExternalCalendarEvent.where(agent: @agent, url: event.url).delete_all
           else
-            upsert_absence(event)
+            upsert_event(event)
           end
         end
         @agent.update!(caldav_sync_token: collection.sync_token)
@@ -33,7 +39,7 @@ module Caldav
         events = @agent.caldav_client.events.list(@agent.caldav_agenda_url)
 
         events.each do |event|
-          upsert_absence(event)
+          upsert_event(event)
         end
         @agent.update!(caldav_sync_token: sync_token)
       end
@@ -42,35 +48,26 @@ module Caldav
 
     private
 
-    def upsert_absence(event)
+    def upsert_event(event)
       return if AgentsRdv.exists?(caldav_url: event.url) # On ne fait rien si il s’agit d’un événement provenant de chez nous
       return if event.dtstart < (Time.now.in_time_zone - 1.week).beginning_of_week # On ne gère pas les absences passées
 
-      absence = Absence.find_or_initialize_by(agent: @agent, caldav_url: event.url)
+      calendar_event = ExternalCalendarEvent.find_or_initialize_by(agent: @agent, url: event.url)
 
       # Si l’événement existe et que l’agent s’est marqué comme disponible, on supprime l’absence
       # Sinon on ignore l’événement
       # Voir https://www.ietf.org/rfc/rfc2445.txt (4.8.2.7 Time Transparency).
       if event.transp == "TRANSPARENT"
-        absence.destroy if absence.persisted?
+        calendar_event.destroy if calendar_event.persisted?
         return
       end
 
       # TODO: gérer les événements récurrents
-      absence.assign_attributes(
-        first_day: event.dtstart.to_date,
-        end_day: event.dtend.to_date,
-        start_time: event.dtstart,
-        end_time: event.dtend,
-        title: "Indisponibilité provenant d’un agenda externe"
+      calendar_event.assign_attributes(
+        starts_at: event.dtstart.to_time,
+        ends_at: event.dtend.to_time
       )
-      absence.save!
-    end
-
-    def synced_during_last_minute?(agent_id)
-      Redis.with_connection do |redis|
-        redis.set("caldav_sync_absences_job_lock_#{agent_id}", true, ex: 1.minute.to_i, nx: true) == false
-      end
+      calendar_event.save!
     end
   end
 end

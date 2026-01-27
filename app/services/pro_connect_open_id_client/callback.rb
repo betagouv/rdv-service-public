@@ -43,6 +43,10 @@ module ProConnectOpenIdClient
       @user_info["siret"]
     end
 
+    def user_idp_id
+      @user_info["idp_id"]
+    end
+
     def openid_sub
       @user_info["sub"]
     end

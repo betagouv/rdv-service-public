@@ -10,7 +10,7 @@ module Caldav
 
       mass_destroy_events(agent)
 
-      Absence.where(agent:).where.not(caldav_url: nil).destroy_all
+      ExternalCalendarEvent.where(agent:).delete_all
 
       agent.update!(caldav_username: nil, caldav_password: nil, caldav_agenda_url: nil, caldav_disconnect_in_progress: false, caldav_sync_token: nil)
     end

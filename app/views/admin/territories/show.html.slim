@@ -89,7 +89,7 @@ h2.rdv-text-align-center.fr-pt-4w.fr-pb-2w Paramètres avancés
                 | Construire des équipes pour grouper des agents
           .fr-tile__header
             .fr-tile__pictogram
-              = dsfr_svg image_path("custom-artworks/ecosystem.svg"), custom: true
+              = dsfr_svg "artwork/pictograms/digital/ecosystem"
     - if Agent::WebhookEndpointPolicy.allowed_to_manage_webhooks_in?(current_territory, current_agent)
       .fr-col-12.fr-col-md-6.fr-col-lg-4.fr-mb-2w
         .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
@@ -102,7 +102,7 @@ h2.rdv-text-align-center.fr-pt-4w.fr-pb-2w Paramètres avancés
                 | Interconnecter #{current_domain.name} avec vos systèmes.
           .fr-tile__header
             .fr-tile__pictogram
-              = dsfr_svg image_path("custom-artworks/flow-list.svg"), custom: true
+              = dsfr_svg "artwork/pictograms/system/flow-list"
     - if Agent::SectorPolicy.allowed_to_manage_sectors_in?(current_territory, current_agent)
       .fr-col-12.fr-col-md-6.fr-col-lg-4.fr-mb-2w
         .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
@@ -115,7 +115,7 @@ h2.rdv-text-align-center.fr-pt-4w.fr-pb-2w Paramètres avancés
                 | Créer, importer, affecter vos secteurs géographiques.
           .fr-tile__header
             .fr-tile__pictogram
-              = dsfr_svg image_path("custom-artworks/location-overseas-france.svg"), custom: true
+              = dsfr_svg "artwork/pictograms/map/location-overseas-france"
     - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
       .fr-col-12.fr-col-md-6.fr-col-lg-4.fr-mb-2w
         .fr-tile.fr-tile--horizontal.fr-enlarge-link.fr-tile--md
