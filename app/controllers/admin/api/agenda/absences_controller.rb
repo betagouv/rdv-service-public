@@ -8,6 +8,5 @@ class Admin::Api::Agenda::AbsencesController < Admin::Api::BaseController
     agents = Agent::AgentPolicy::Scope.new(pundit_user, Agent.all).resolve.where(id: params[:agent_id]).load
 
     @absence_occurrences = Absence.where(agent: agents).all_occurrences_for(date_range_params)
-    @external_calendar_events = ExternalCalendarEvent.within_range(time_range_params).where(agent: agents.select(&:caldav_configured?))
   end
 end
