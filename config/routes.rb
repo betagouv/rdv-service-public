@@ -188,6 +188,7 @@ Rails.application.routes.draw do
           resources :plage_ouvertures, only: [:index]
           resources :rdvs, only: [:index]
           resources :absences, only: [:index]
+          resources :external_calendar_events, only: [:index]
         end
       end
       resources :territories, only: %i[edit update show] do
