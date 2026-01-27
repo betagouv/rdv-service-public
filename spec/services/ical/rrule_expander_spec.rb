@@ -4,27 +4,6 @@ RSpec.describe Ical::RruleExpander do
       <<~ICALENDAR
         BEGIN:VCALENDAR
         VERSION:2.0
-        PRODID:-//Open-Xchange//8.43.61//EN
-        BEGIN:VTIMEZONE
-        TZID:Europe/Paris
-        LAST-MODIFIED:20250410T142247Z
-        TZURL:https://www.tzurl.org/zoneinfo-outlook/Europe/Paris
-        X-LIC-LOCATION:Europe/Paris
-        BEGIN:DAYLIGHT
-        TZNAME:CEST
-        TZOFFSETFROM:+0100
-        TZOFFSETTO:+0200
-        DTSTART:19700329T020000
-        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
-        END:DAYLIGHT
-        BEGIN:STANDARD
-        TZNAME:CET
-        TZOFFSETFROM:+0200
-        TZOFFSETTO:+0100
-        DTSTART:19701025T030000
-        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
-        END:STANDARD
-        END:VTIMEZONE
         BEGIN:VEVENT
         DTSTAMP:20251218T130629Z
         CLASS:PUBLIC
@@ -32,7 +11,6 @@ RSpec.describe Ical::RruleExpander do
         DTEND;TZID=Europe/Paris:20251218T150000
         DTSTART;TZID=Europe/Paris:20251218T140000
         LAST-MODIFIED:20251218T130629Z
-        PRIORITY:0
         SEQUENCE:4
         SUMMARY:Un truc ponctuel
         TRANSP:OPAQUE
@@ -46,8 +24,8 @@ RSpec.describe Ical::RruleExpander do
       from =  Time.zone.parse("2025-12-18 00:00")
       to =    Time.zone.parse("2025-12-28 23:59")
       expected_recurrence = [
-        Time.zone.parse("2025-12-18 14:00 +0100"),
-        Time.zone.parse("2025-12-18 15:00 +0100"),
+        Time.zone.parse("2025-12-18 14:00"),
+        Time.zone.parse("2025-12-18 15:00"),
       ]
       actual_recurrences = described_class.new(ponctuel).compute_occurrences_within(from..to)
       expect(actual_recurrences.sole.to_a).to match(expected_recurrence)
@@ -59,27 +37,6 @@ RSpec.describe Ical::RruleExpander do
       <<~ICALENDAR
         BEGIN:VCALENDAR
         VERSION:2.0
-        PRODID:-//Open-Xchange//8.43.61//EN
-        BEGIN:VTIMEZONE
-        TZID:Europe/Paris
-        LAST-MODIFIED:20250410T142247Z
-        TZURL:https://www.tzurl.org/zoneinfo-outlook/Europe/Paris
-        X-LIC-LOCATION:Europe/Paris
-        BEGIN:DAYLIGHT
-        TZNAME:CEST
-        TZOFFSETFROM:+0100
-        TZOFFSETTO:+0200
-        DTSTART:19700329T020000
-        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
-        END:DAYLIGHT
-        BEGIN:STANDARD
-        TZNAME:CET
-        TZOFFSETFROM:+0200
-        TZOFFSETTO:+0100
-        DTSTART:19701025T030000
-        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
-        END:STANDARD
-        END:VTIMEZONE
         BEGIN:VEVENT
         DTSTAMP:20251217T121045Z
         CLASS:PUBLIC
@@ -87,7 +44,6 @@ RSpec.describe Ical::RruleExpander do
         DTEND;TZID=Europe/Paris:20251215T100000
         DTSTART;TZID=Europe/Paris:20251215T094500
         LAST-MODIFIED:20251217T121045Z
-        PRIORITY:0
         RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR
         SEQUENCE:0
         SUMMARY:Daily
@@ -103,13 +59,13 @@ RSpec.describe Ical::RruleExpander do
       to =    Time.zone.parse("2025-12-22 23:59")
       expected_recurrences = [
         [
-          Time.zone.parse("2025-12-18 09:45 +0100"),
-          Time.zone.parse("2025-12-18 10:00 +0100"),
+          Time.zone.parse("2025-12-18 09:45"),
+          Time.zone.parse("2025-12-18 10:00"),
         ],
 
         [
-          Time.zone.parse("2025-12-19 09:45 +0100"),
-          Time.zone.parse("2025-12-19 10:00 +0100"),
+          Time.zone.parse("2025-12-19 09:45"),
+          Time.zone.parse("2025-12-19 10:00"),
         ],
 
         # Samedi 20, pas de daily
@@ -117,8 +73,8 @@ RSpec.describe Ical::RruleExpander do
         # Dimanche 21, pas de daily
 
         [
-          Time.zone.parse("2025-12-22 09:45 +0100"),
-          Time.zone.parse("2025-12-22 10:00 +0100"),
+          Time.zone.parse("2025-12-22 09:45"),
+          Time.zone.parse("2025-12-22 10:00"),
         ],
       ]
       actual_recurrences = described_class.new(every_day).compute_occurrences_within(from..to)
@@ -137,27 +93,6 @@ RSpec.describe Ical::RruleExpander do
       <<~ICALENDAR
         BEGIN:VCALENDAR
         VERSION:2.0
-        PRODID:-//Open-Xchange//8.43.61//EN
-        BEGIN:VTIMEZONE
-        TZID:Europe/Paris
-        LAST-MODIFIED:20250410T142247Z
-        TZURL:https://www.tzurl.org/zoneinfo-outlook/Europe/Paris
-        X-LIC-LOCATION:Europe/Paris
-        BEGIN:DAYLIGHT
-        TZNAME:CEST
-        TZOFFSETFROM:+0100
-        TZOFFSETTO:+0200
-        DTSTART:19700329T020000
-        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
-        END:DAYLIGHT
-        BEGIN:STANDARD
-        TZNAME:CET
-        TZOFFSETFROM:+0200
-        TZOFFSETTO:+0100
-        DTSTART:19701025T030000
-        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
-        END:STANDARD
-        END:VTIMEZONE
         BEGIN:VEVENT
         DTSTAMP:20260113T143923Z
         CLASS:PUBLIC
@@ -166,7 +101,6 @@ RSpec.describe Ical::RruleExpander do
         DTSTART;TZID=Europe/Paris:20260113T110000
         EXDATE;TZID=Europe/Paris:20260203T110000
         LAST-MODIFIED:20260113T143923Z
-        PRIORITY:0
         RRULE:FREQ=WEEKLY;UNTIL=20260310T095959Z;BYDAY=TU
         SEQUENCE:2
         SUMMARY:Weekly avec la team
@@ -180,7 +114,6 @@ RSpec.describe Ical::RruleExpander do
         DTEND;TZID=Europe/Paris:20260120T173000
         DTSTART;TZID=Europe/Paris:20260120T160000
         LAST-MODIFIED:20260113T142328Z
-        PRIORITY:0
         RECURRENCE-ID;TZID=Europe/Paris:20260120T110000
         SEQUENCE:1
         SUMMARY:Weekly avec la team
@@ -243,27 +176,6 @@ RSpec.describe Ical::RruleExpander do
       <<~ICALENDAR
         BEGIN:VCALENDAR
         VERSION:2.0
-        PRODID:-//Open-Xchange//8.43.61//EN
-        BEGIN:VTIMEZONE
-        TZID:Europe/Paris
-        LAST-MODIFIED:20250410T142247Z
-        TZURL:https://www.tzurl.org/zoneinfo-outlook/Europe/Paris
-        X-LIC-LOCATION:Europe/Paris
-        BEGIN:DAYLIGHT
-        TZNAME:CEST
-        TZOFFSETFROM:+0100
-        TZOFFSETTO:+0200
-        DTSTART:19700329T020000
-        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
-        END:DAYLIGHT
-        BEGIN:STANDARD
-        TZNAME:CET
-        TZOFFSETFROM:+0200
-        TZOFFSETTO:+0100
-        DTSTART:19701025T030000
-        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
-        END:STANDARD
-        END:VTIMEZONE
         BEGIN:VEVENT
         DTSTAMP:20251218T162713Z
         CLASS:PUBLIC
@@ -271,7 +183,6 @@ RSpec.describe Ical::RruleExpander do
         DTEND;TZID=Europe/Paris:20251215T113000
         DTSTART;TZID=Europe/Paris:20251215T111500
         LAST-MODIFIED:20251218T162713Z
-        PRIORITY:0
         RECURRENCE-ID;TZID=Europe/Paris:20251215T101500
         RELATED-TO;RELTYPE=X-CALENDARSERVER-RECURRENCE-SET:4bb41a97-1397-417d-a8a8-
          ec29643bae12
@@ -289,8 +200,8 @@ RSpec.describe Ical::RruleExpander do
       from =  Time.zone.parse("2025-12-15 00:00")
       to =    Time.zone.parse("2025-12-22 23:59")
       expected_recurrence = [
-        Time.zone.parse("2025-12-15 11:15 +0100"),
-        Time.zone.parse("2025-12-15 11:30 +0100"),
+        Time.zone.parse("2025-12-15 11:15"),
+        Time.zone.parse("2025-12-15 11:30"),
       ]
       actual_recurrences = described_class.new(every_day_with_exceptions).compute_occurrences_within(from..to)
       expect(actual_recurrences.sole.to_a).to match(expected_recurrence)
@@ -304,27 +215,6 @@ RSpec.describe Ical::RruleExpander do
       <<~ICALENDAR
         BEGIN:VCALENDAR
         VERSION:2.0
-        PRODID:-//Open-Xchange//8.43.61//EN
-        BEGIN:VTIMEZONE
-        TZID:Europe/Paris
-        LAST-MODIFIED:20250410T142247Z
-        TZURL:https://www.tzurl.org/zoneinfo-outlook/Europe/Paris
-        X-LIC-LOCATION:Europe/Paris
-        BEGIN:DAYLIGHT
-        TZNAME:CEST
-        TZOFFSETFROM:+0100
-        TZOFFSETTO:+0200
-        DTSTART:19700329T020000
-        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
-        END:DAYLIGHT
-        BEGIN:STANDARD
-        TZNAME:CET
-        TZOFFSETFROM:+0200
-        TZOFFSETTO:+0100
-        DTSTART:19701025T030000
-        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
-        END:STANDARD
-        END:VTIMEZONE
         BEGIN:VEVENT
         DTSTAMP:20260126T100012Z
         CLASS:PUBLIC
@@ -332,7 +222,6 @@ RSpec.describe Ical::RruleExpander do
         DTEND;TZID=Europe/Paris:20260121T153000
         DTSTART;TZID=Europe/Paris:20260121T150000
         LAST-MODIFIED:20260126T100012Z
-        PRIORITY:0
         RRULE:FREQ=WEEKLY;BYDAY=WE
         SEQUENCE:0
         SUMMARY:recur trans
@@ -346,7 +235,6 @@ RSpec.describe Ical::RruleExpander do
         DTEND;TZID=Europe/Paris:20260128T153000
         DTSTART;TZID=Europe/Paris:20260128T150000
         LAST-MODIFIED:20260126T100012Z
-        PRIORITY:0
         RECURRENCE-ID;TZID=Europe/Paris:20260128T150000
         SEQUENCE:1
         SUMMARY:recur trans
@@ -362,8 +250,8 @@ RSpec.describe Ical::RruleExpander do
       to =    Time.zone.parse("2026-02-31 23:59")
       expected_recurrence = [
         # On ne liste que l'occurrence qui est OPAQUE
-        Time.zone.parse("2026-01-28 15:00 +0100"),
-        Time.zone.parse("2026-01-28 15:30 +0100"),
+        Time.zone.parse("2026-01-28 15:00"),
+        Time.zone.parse("2026-01-28 15:30"),
       ]
       actual_recurrences = described_class.new(every_day_with_exceptions).compute_occurrences_within(from..to)
       expect(actual_recurrences.sole.to_a).to match(expected_recurrence)
