@@ -136,7 +136,7 @@ class Territory < ApplicationRecord
     if name.present?
       [name, departement_number.presence].compact.join(" - ")
     else
-      organisations.first.name
+      organisations.first&.name || "Espace archivé"
     end
   end
 
