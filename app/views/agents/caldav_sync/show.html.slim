@@ -20,9 +20,10 @@ p
   = external_link_to "documentation", "https://aide.rdv-service-public.fr/documentation-utilisateur/faq#synchronisation-avec-la-suite-numerique-caldav"
   | .
 
-= dsfr_callout(icon_name: :none, accent: "orange-terre-battue") do
-  |> Pour le moment, cette fonctionnalité est en version bêta. La synchronisation des événements de votre calendrier professionnel vers RDV Service Public
-  | ne fonctionne que pour les événements non récurrents.
+= dsfr_callout(icon_name: :none) do
+  |> Pour le moment, cette fonctionnalité est en version bêta. Pour toute question ou remontée de bug, merci de
+  = external_link_to("contacter le support", new_aide_demande_support_path(role: "agent", sujet: "Synchronisation CalDAV"))
+  | .
 
 - if current_agent.caldav_disconnect_in_progress
     p
