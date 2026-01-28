@@ -23,7 +23,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
     expect(page).to have_field("user_first_name", with: "Marco")
   end
 
-  context "l'usager rentre une adresse email pour laquelle il n'existe pas de compte usager" do
+  context "l’usager rentre une adresse email pour laquelle il n’existe pas de compte usager" do
     specify do
       visit new_user_session_path
       fill_in "Adresse email", with: "nina@personne.fr"
@@ -32,7 +32,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
     end
   end
 
-  context "l'usager demande deux codes en moins de deux minutes" do
+  context "l’usager demande deux codes en moins de deux minutes" do
     specify do
       visit new_user_session_path
       fill_in "Adresse email", with: "marco@lolmail.fr"
