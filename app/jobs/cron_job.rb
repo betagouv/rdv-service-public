@@ -34,6 +34,8 @@ class CronJob < ApplicationJob
   end
 
   class ReminderJob < CronJob
+    include MonitorConcern
+
     def perform
       Rdv.not_cancelled.day_after_tomorrow.find_each do |rdv|
         run_at = rdv.starts_at - 48.hours

@@ -54,6 +54,12 @@ RSpec.describe Territory, type: :model do
       territory = build(:territory, departement_number: nil, name: "Seine Saint-Denis")
       expect(territory.name_in_stats).to eq("Seine Saint-Denis")
     end
+
+    it "returns a default value for a territory without any organisations" do
+      territory = build(:territory, departement_number: nil, name: nil)
+      territory.organisations.delete_all
+      expect(territory.name_in_stats).to eq("Espace archivé")
+    end
   end
 
   describe "#waiting_room_enabled?" do

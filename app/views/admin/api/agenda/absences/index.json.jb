@@ -1,4 +1,4 @@
-absences_hashes = @absence_occurrences.map do |absence, occurrence|
+@absence_occurrences.map do |absence, occurrence|
   {
     title: sanitize(absence.title),
     start: occurrence.starts_at.as_json,
@@ -10,17 +10,3 @@ absences_hashes = @absence_occurrences.map do |absence, occurrence|
     resourceIds: [absence.agent_id],
   }
 end
-
-external_calendar_events_hashes = @external_calendar_events.map do |external_calendar_event|
-  {
-    title: "Indisponibilité provenant d’un agenda externe",
-    start: external_calendar_event.starts_at.as_json,
-    end: external_calendar_event.ends_at.as_json,
-    backgroundColor: AbsencesHelper::CALENDAR_BACKGROUND_COLOR,
-
-    # https://fullcalendar.io/docs/resources-and-events
-    resourceIds: [external_calendar_event.agent_id],
-  }
-end
-
-absences_hashes + external_calendar_events_hashes
