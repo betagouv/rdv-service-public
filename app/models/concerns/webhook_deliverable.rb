@@ -16,21 +16,19 @@ module WebhookDeliverable
   end
 
   def generate_payload_and_send_webhook(action)
-    subscribed_webhook_endpoints.each do |endpoint|
-      WebhookBuildJob.perform_later(record: self, action:, webhook_endpoint_id: endpoint.id)
+    jobs = subscribed_webhook_endpoints.map do |endpoint|
+      WebhookBuildJob.new(record: self, action:, webhook_endpoint_id: endpoint.id)
     end
+    ActiveJob.perform_all_later(jobs)
   end
 
   def generate_payload_and_send_webhook_for_destroy
     # Prépare les données à envoyer, avant de supprimer l'objet
-    payloads = subscribed_webhook_endpoints.index_with do |_endpoint|
-      generate_webhook_payload(:destroyed)
-    end
+    payload = generate_webhook_payload(:destroyed)
     # Execute la suppression, après avoir construit les données à envoyer
     yield if block_given?
-    payloads.each do |endpoint, payload|
-      WebhookSendJob.perform_later(payload, endpoint.id)
-    end
+    jobs = subscribed_webhook_endpoints.map { |endpoint| WebhookSendJob.new(payload, endpoint.id) }
+    ActiveJob.perform_all_later(jobs)
   end
 
   def subscribed_webhook_endpoints
