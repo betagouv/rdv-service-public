@@ -3,7 +3,6 @@ class Agents::CaldavSyncController < AgentAuthController
 
   def show
     skip_authorization
-    current_agent.enable_feature!(Agent::FeatureFlags::CALDAV_SYNC)
   end
 
   def update

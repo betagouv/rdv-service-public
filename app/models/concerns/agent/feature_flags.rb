@@ -1,10 +1,9 @@
 module Agent::FeatureFlags
   extend ActiveSupport::Concern
 
-  CALDAV_SYNC = "caldav_sync".freeze
   NEW_PLANNING = "new_planning".freeze
 
-  AVAILABLE_FEATURES = [CALDAV_SYNC, NEW_PLANNING].freeze
+  AVAILABLE_FEATURES = [NEW_PLANNING].freeze
 
   def feature_enabled?(feature)
     feature_flags[feature] == true
