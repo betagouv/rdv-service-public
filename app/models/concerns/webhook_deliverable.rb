@@ -23,10 +23,15 @@ module WebhookDeliverable
   end
 
   def generate_payload_and_send_webhook_for_destroy
-    # Prépare les données à envoyer, avant de supprimer l'objet
+    if subscribed_webhook_endpoints.none?
+      yield and return
+    end
+
+    # Prépare le payload, avant de supprimer l'objet
     payload = generate_webhook_payload(:destroyed)
-    # Execute la suppression, après avoir construit les données à envoyer
-    yield if block_given?
+    # Execute la suppression
+    yield
+    # Envoi le payload via jobs asynchrones
     jobs = subscribed_webhook_endpoints.map { |endpoint| WebhookSendJob.new(payload, endpoint.id) }
     ActiveJob.perform_all_later(jobs)
   end
