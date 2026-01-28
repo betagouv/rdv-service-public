@@ -44,4 +44,18 @@ RSpec.describe "User signs up and signs in" do
       expect(unconfirmed_user.reload).to be_confirmed
     end
   end
+
+  context "un agent essaie de se connecter depuis la page de connexion usagers" do
+    let!(:agent) { create(:agent, email: "dulce@agent.fr", basic_role_in_organisations: [create(:organisation)]) }
+
+    it "redirige vers la page de connexion agent" do
+      visit "http://www.rdv-solidarites-test.localhost/"
+      click_link "Se connecter"
+      within("form") do
+        fill_in "Adresse email", with: "dulce@agent.fr"
+        click_on "Recevoir un code de connexion"
+      end
+      expect(page).to have_content(/Si vous souhaitez vous connecter en tant qu’agent/)
+    end
+  end
 end
