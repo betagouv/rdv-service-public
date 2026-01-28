@@ -4,6 +4,7 @@ class Agent < ApplicationRecord
   self.ignored_columns += %w[connected_with_agent_connect]
   include Agent::CaldavConfiguration
   include Agent::FeatureFlags
+  include Agent::SensitiveAccountConcern
 
   encrypts :caldav_password, deterministic: true
 

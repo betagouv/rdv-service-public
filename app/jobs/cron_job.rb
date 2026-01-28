@@ -205,4 +205,10 @@ class CronJob < ApplicationJob
       end
     end
   end
+
+  class RefreshAgentsSensitiveAccountJob < CronJob
+    def perform
+      Agent.find_each(&:refresh_sensitive_account!)
+    end
+  end
 end
