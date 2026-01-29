@@ -57,6 +57,21 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
     end
   end
 
+  context "l’usager entre un mauvais code puis le bon" do
+    before { create(:login_code, email: "marco@lolmail.fr", code: "123456", created_at: 1.minute.ago) }
+
+    specify do
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "999999")
+      click_on "Valider"
+      expect(page).not_to have_content("Connexion réussie")
+      expect(page).to have_content("Veuillez renseigner le dernier code qui vous a été envoyé par email")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      expect(page).to have_content("Connexion réussie")
+    end
+  end
+
   context "l’usager attend trop longtemps, le code est expiré" do
     before { create(:login_code, email: "marco@lolmail.fr", code: "123456", created_at: 1.hour.ago) }
 
