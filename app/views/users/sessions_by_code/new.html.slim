@@ -1,6 +1,6 @@
 - content_for :title, "Saisie du code de connexion"
 
-- if @existing_login_code.errors.any?
+- if @existing_login_code&.errors&.any?
   .fr-mb-2w= render "model_errors", model: @existing_login_code
 
 .card
