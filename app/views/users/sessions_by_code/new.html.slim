@@ -1,6 +1,7 @@
 - content_for :title, "Saisie du code de connexion"
 
-= render "model_errors", model: @existing_login_code
+- if @existing_login_code.errors.any?
+  .fr-mb-2w= render "model_errors", model: @existing_login_code
 
 .card
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
