@@ -7,7 +7,7 @@ RSpec.describe "Agent can search plage ouverture" do
   let!(:expired_perm_scolaire) { create(:plage_ouverture, :expired, title: "Permanence Scolaire passée", agent: agent, organisation: organisation) }
 
   let!(:additional_po_to_show_search) do
-    # Pour s'assurer que le champs de recherche s'affiche (avec plusieurs motifs partagés pour tester le bug du JOIN)
+    # Pour s'assurer que le champs de recherche s'affiche (y compris si les plages d’ouverture ont plusieurs motifs)
     motifs = create_list(:motif, 3, organisation: organisation)
     6.times.map { create(:plage_ouverture, title: "Permanence", agent:, organisation:, motifs:) }
   end
