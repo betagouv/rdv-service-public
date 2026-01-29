@@ -215,7 +215,9 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
   };
 
   const connectCallback = ({ reconnected }) => {
-    // `reconnected` est à `false` uniquement lors de la connexion initiale.
+    // `reconnected` nous indique que cette connexion fait suite à une
+    // préalable déconnexion. C'est bien ce qui nous intéresse puisque
+    // nous ne voulons pas recharger les events lors de la connexion initiale.
     if (reconnected) {
       fullCalendarInstance.refetchEvents();
     }
