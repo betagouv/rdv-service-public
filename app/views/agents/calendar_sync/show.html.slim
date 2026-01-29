@@ -21,12 +21,14 @@ div.d-flex.justify-content-center.align-items-center.flex-wrap
       div.rdv-text-align-center
         = link_to "Connecter mon compte Outlook (Microsoft 365)", agents_calendar_sync_outlook_sync_path, class: "fr-btn"
 
-  div.card.w-100
-    div.card-body
-      h5.card-title Lien Webcal
-      p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Vos rendez-vous seront visibles sur votre agenda externe, mais parfois avec quelques heures de retard.
-      div.rdv-text-align-center
-        = link_to "Synchronisation par lien Webcal", agents_calendar_sync_webcal_sync_path, class: "fr-btn"
+  - if current_agent.calendar_uid.present?
+    div.card.w-100
+      div.card-body
+        h5.card-title Lien Webcal
+        p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Vos rendez-vous seront visibles sur votre agenda externe, mais parfois avec quelques heures de retard.
+        p Nous recommandons d'utiliser la synchronisation CalDAV à la place.
+        div.rdv-text-align-center
+          = link_to "Synchronisation par lien Webcal", agents_calendar_sync_webcal_sync_path, class: "fr-btn fr-btn--secondary"
 
   h2.fr-h6 Notifications par email
   p.fr-col-12 Vous pouvez aussi recevoir un email avec une invitation ics pour chaque rendez-vous, absence et plage d'ouverture.
