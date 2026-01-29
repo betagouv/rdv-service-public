@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_27_114925) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -155,6 +155,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
     t.string "caldav_sync_token"
     t.boolean "pro_connect_2fa_active"
     t.boolean "group_by_agent", default: false, null: false
+    t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -223,6 +224,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
     t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_exports_on_agent_id"
     t.index ["expires_at"], name: "index_exports_on_expires_at"
+  end
+
+  create_table "external_calendar_events", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.string "url", null: false
+    t.text "raw_ical"
+    t.index ["agent_id", "starts_at"], name: "index_external_calendar_events_on_agent_id_and_starts_at"
+    t.index ["agent_id", "url"], name: "index_external_calendar_events_on_agent_id_and_url", unique: true
   end
 
   create_table "external_references", force: :cascade do |t|
@@ -918,6 +929,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_161928) do
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
   add_foreign_key "exports", "agents"
+  add_foreign_key "external_calendar_events", "agents"
   add_foreign_key "external_references", "oauth_applications"
   add_foreign_key "external_references", "territories"
   add_foreign_key "file_attentes", "rdvs"

@@ -260,12 +260,12 @@
             "type": "string",
             "nullable": true
           },
-          "bith_date": {
+          "birth_date": {
             "type": "string",
             "format": "date",
             "nullable": true
           },
-          "bith_name": {
+          "birth_name": {
             "type": "string",
             "nullable": true
           },

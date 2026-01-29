@@ -7,6 +7,6 @@
     url: edit_admin_organisation_planning_absence_path(@organisation, absence),
 
     # https://fullcalendar.io/docs/resources-and-events
-    resourceIds: [absence.agent.id],
+    resourceIds: [absence.agent_id],
   }
 end
