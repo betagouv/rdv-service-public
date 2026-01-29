@@ -19,7 +19,8 @@ fr:
       unauthenticated: "Vous devez vous connecter ou vous inscrire pour continuer."
       unconfirmed: "Vous devez valider votre compte pour continuer."
       agent:
-        invalid: "Email ou mot de passe incorrect. Vous pouvez <a href='/agents/password/new'>réinitialiser votre mot de passe ici</a>."
+        not_found_in_database: "Email ou mot de passe incorrect. Si vous avez oublié votre mot de passe, vous pouvez <a href='/agents/password/new'>réinitialiser votre mot de passe ici</a>."
+        invalid: "Email ou mot de passe incorrect. Si vous avez oublié votre mot de passe, vous pouvez <a href='/agents/password/new'>réinitialiser votre mot de passe ici</a>."
     invitations:
       send_instructions: "L'utilisateur %{email} a été invité"
       invitation_token_invalid: "Votre invitation n'est pas valide."
