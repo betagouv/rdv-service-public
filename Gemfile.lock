@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/ice-cube-ruby/ice_cube.git
+  revision: 32ff145baf152ae4aa130376d66041eba174b085
+  ref: 32ff145
+  specs:
+    ice_cube (0.17.0)
+
+GIT
   remote: https://github.com/mattheworiordan/capybara-screenshot.git
   revision: 23a27be5392c7dbc706651d7adc124d8e7c920a0
   ref: 23a27be
@@ -211,7 +218,7 @@ GEM
       actionview (>= 6.1, < 9.0)
       activemodel (>= 6.1, < 9.0)
       activesupport (>= 6.1, < 9.0)
-    dsfr-view-components (4.1)
+    dsfr-view-components (4.1.1)
       dsfr-assets (>= 1.13.2, < 1.15)
       html-attributes-utils (~> 1)
       view_component (~> 3)
@@ -283,7 +290,10 @@ GEM
       ice_cube (~> 0.16)
       logger
       ostruct
-    ice_cube (0.17.0)
+    icalendar-recurrence (1.2.1)
+      icalendar (~> 2.0)
+      ice_cube (~> 0.16)
+      tzinfo (~> 2.0)
     io-console (0.8.1)
     irb (1.15.3)
       pp (>= 0.6.0)
@@ -777,7 +787,7 @@ DEPENDENCIES
   dotenv-rails
   dsfr-assets (~> 1.14.2)
   dsfr-form_builder (= 0.0.7)
-  dsfr-view-components (~> 4.0)
+  dsfr-view-components (~> 4.1)
   factory_bot
   faker
   good_job (= 3.27.4)
@@ -785,6 +795,8 @@ DEPENDENCIES
   hirb
   hotwire-rails
   icalendar (~> 2.5)
+  icalendar-recurrence
+  ice_cube!
   jb
   jsbundling-rails
   kaminari
@@ -911,7 +923,7 @@ CHECKSUMS
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dsfr-assets (1.14.3) sha256=132dae8bbe8ddbcc2cf90f598c0112f3956453cd3c40bcd58442427b4215d9f1
   dsfr-form_builder (0.0.7) sha256=16165ee281de4645617fdb79c4fc03384f9125cbbdf6a149daa1ef2bb367ffde
-  dsfr-view-components (4.1) sha256=9633c1f289b622cea2dc8624c27a49d7e94d8e1420727e81afe484ba2d6db352
+  dsfr-view-components (4.1.1) sha256=b9e3c502222fc270b1567f10d7fa1ddd6a0a002ed2bf193be7e573f68db39830
   erb (5.1.3) sha256=566e53057b6ba48699f824b578473b391fa8aef100aa14afad1c46725fae0e67
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
@@ -943,7 +955,8 @@ CHECKSUMS
   httpclient (2.9.0) sha256=4b645958e494b2f86c2f8a2f304c959baa273a310e77a2931ddb986d83e498c8
   i18n (1.14.7) sha256=ceba573f8138ff2c0915427f1fc5bdf4aa3ab8ae88c8ce255eb3ecf0a11a5d0f
   icalendar (2.12.1) sha256=ecff56c550aed551f29ad1faad0da54bf62362dfaf22a428bd7ad782938fe764
-  ice_cube (0.17.0) sha256=32deb45dda4b4acc53505c2f581f6d32b5afc04d29b9004769944a0df5a5fcbe
+  icalendar-recurrence (1.2.1) sha256=c739971314a9a172993c84a0df82b3c7c77e2714f848c1b3fa303dff5ae4bc22
+  ice_cube (0.17.0)
   io-console (0.8.1) sha256=1e15440a6b2f67b6ea496df7c474ed62c860ad11237f29b3bd187f054b925fcb
   irb (1.15.3) sha256=4349edff1efa7ff7bfd34cb9df74a133a588ba88c2718098b3b4468b81184aaa
   jb (0.8.2) sha256=542e551c14f34ceba199b8379abf093863182c76a909879b874a20e4cb47bde3

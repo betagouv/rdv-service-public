@@ -7,67 +7,99 @@ module Caldav
       key: -> { "Caldav::ImportAbsencesFromCaldavJob-#{arguments.first}" }
     )
 
-    before_enqueue do |job|
-      throw :abort if job.class.synced_during_last_minute?(job.arguments.first)
+    before_enqueue { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
+    before_perform { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
+
+    def self.synced_during_last_minute?(agent_id:)
+      latest_run = Redis.with_connection { |redis| redis.get("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}") }
+      latest_run && latest_run.to_time > 1.minute.ago
     end
 
-    def self.synced_during_last_minute?(agent_id)
-      Redis.with_connection do |redis|
-        redis.set("caldav_sync_absences_job_lock_#{agent_id}", true, ex: 1.minute.to_i, nx: true) == false
-      end
-    end
-
-    # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    # Pour comprendre l'usage de la gem Calendav, voir la doc très claire :
+    # https://github.com/pat/calendav?tab=readme-ov-file#synchronising
+    #
     def perform(agent_id)
-      @agent = Agent.find_by_id(agent_id)
-      return unless @agent&.caldav_configured? || @agent&.caldav_disconnect_in_progress?
+      agent = Agent.find(agent_id)
+      Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
+      return unless agent.caldav_configured? || agent.caldav_disconnect_in_progress?
 
-      Sentry.set_user({ id: @agent.id, role: "Agent", email: @agent.email })
-
-      if @agent.caldav_sync_token.present?
-        collection = @agent.caldav_client.calendars.sync(@agent.caldav_agenda_url, @agent.caldav_sync_token)
-        collection.changes.each do |event|
-          if event.calendar_data.nil?
-            ExternalCalendarEvent.where(agent: @agent, url: event.url).delete_all
-          else
-            upsert_event(event)
-          end
-        end
-        @agent.update!(caldav_sync_token: collection.sync_token)
+      if agent.caldav_sync_token
+        updated_events, deleted_events, new_sync_token = changes_since_last_sync_of(agent:)
       else
-        sync_token = @agent.caldav_client.calendars.find(@agent.caldav_agenda_url, sync: true).sync_token
-        events = @agent.caldav_client.events.list(@agent.caldav_agenda_url)
-
-        events.each do |event|
-          upsert_event(event)
-        end
-        @agent.update!(caldav_sync_token: sync_token)
+        updated_events, deleted_events, new_sync_token = all_events_for(agent:)
       end
+
+      update_local_events_of(agent:, updated_events:, deleted_events:, new_sync_token:)
+
+      # Import successful: set job debounce and update realtime calendars
+      Redis.with_connection { |redis| redis.set("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}", Time.zone.now, ex: 1.minute) }
+      AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent")
     end
-    # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
     private
 
-    def upsert_event(event)
-      return if AgentsRdv.exists?(caldav_url: event.url) # On ne fait rien si il s’agit d’un événement provenant de chez nous
-      return if event.dtstart < (Time.now.in_time_zone - 1.week).beginning_of_week # On ne gère pas les absences passées
+    def changes_since_last_sync_of(agent:)
+      collection = agent.caldav_client.calendars.sync(agent.caldav_agenda_url, agent.caldav_sync_token)
+      new_sync_token = collection.sync_token
 
-      calendar_event = ExternalCalendarEvent.find_or_initialize_by(agent: @agent, url: event.url)
+      # Le serveur Caldav de la Suite Numérique signale une suppression à travers un calendar_data vide.
+      updated_events = collection.changes.select(&:calendar_data)
+      deleted_events = collection.changes.reject(&:calendar_data).map(&:url)
 
-      # Si l’événement existe et que l’agent s’est marqué comme disponible, on supprime l’absence
-      # Sinon on ignore l’événement
-      # Voir https://www.ietf.org/rfc/rfc2445.txt (4.8.2.7 Time Transparency).
-      if event.transp == "TRANSPARENT"
-        calendar_event.destroy if calendar_event.persisted?
-        return
+      # D'autres serveurs Caldav peuvent utiliser le tableau `deletions` pour signaler une suppression
+      deleted_events += collection.deletions
+
+      [updated_events, deleted_events, new_sync_token]
+    end
+
+    def all_events_for(agent:)
+      new_sync_token = agent.caldav_client.calendars.find(agent.caldav_agenda_url, sync: true).sync_token
+      updated_events = agent.caldav_client.events.list(agent.caldav_agenda_url)
+      deleted_events = []
+      [updated_events, deleted_events, new_sync_token]
+    end
+
+    def update_local_events_of(agent:, updated_events:, deleted_events:, new_sync_token:)
+      # On exclut le traitement des événements provenant d'un RDV de chez nous
+      urls_of_rdvs = AgentsRdv.where(caldav_url: updated_events.map(&:url)).pluck(:caldav_url).to_set
+      updated_events = updated_events.reject { _1.url.in?(urls_of_rdvs) }
+
+      updated_events = updated_events.select { consider_busy?(_1) }
+
+      ExternalCalendarEvent.transaction do
+        hashes_to_upsert = updated_events.map do |event|
+          raw_ical = recurring?(event) ? Ical::Scrubber.new(event.calendar_data).scrubbed : nil
+          {
+            agent_id: agent.id,
+            url: event.url,
+            starts_at: event.dtstart,
+            ends_at: event.dtend,
+            raw_ical:,
+          }
+        end
+
+        ExternalCalendarEvent.upsert_all(hashes_to_upsert, unique_by: :index_external_calendar_events_on_agent_id_and_url) # rubocop:disable Rails/SkipsModelValidations
+
+        ExternalCalendarEvent.where(agent: agent, url: deleted_events).delete_all if deleted_events.any?
+
+        agent.update_columns(caldav_sync_token: new_sync_token) # rubocop:disable Rails/SkipsModelValidations
       end
+    end
 
-      # TODO: gérer les événements récurrents
-      calendar_event.assign_attributes(
-        starts_at: event.dtstart.to_time,
-        ends_at: event.dtend.to_time
-      )
-      calendar_event.save!
+    def recurring?(event)
+      event.send(:inner_event).rrule&.first&.valid?
+    end
+
+    # Voici comment est définit l'attribut TRANSP dans la spec iCal :
+    # > TRANSP : This property defines whether an event is transparent or not to busy time searches.
+    def consider_busy?(event)
+      if recurring?(event)
+        # Les événements récurrents peuvent être initialement TRANSPARENT
+        # mais avoir des occurrences exceptionnellement OPAQUE
+        event.calendar_data.include?("TRANSP:OPAQUE")
+      else
+        event.transp != "TRANSPARENT"
+      end
     end
   end
 end

@@ -188,6 +188,7 @@ Rails.application.routes.draw do
           resources :plage_ouvertures, only: [:index]
           resources :rdvs, only: [:index]
           resources :absences, only: [:index]
+          resources :external_calendar_events, only: [:index]
         end
       end
       resources :territories, only: %i[edit update show] do
@@ -464,6 +465,7 @@ Rails.application.routes.draw do
 
   draw :operators
 
+  match "/400", to: "errors#bad_request", via: :all
   match "/404", to: "errors#not_found", via: :all
   match "/500", to: "errors#internal_server_error", via: :all
 

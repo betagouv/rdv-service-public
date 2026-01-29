@@ -72,4 +72,23 @@ module DsfrHelper
     # On met un margin-left négatif pour conserver l'alignement quand on n'est pas en train de hover sur le bouton
     { style: "margin-left: -16px", class: "fr-btn fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-arrow-left-line" }
   end
+
+  # Le DSFR n'a pas de composant datetimepicker
+  # On crée donc un input personnalisé ici qui utilise notre datetimepicker habituel
+  def dsfr_datetime_input(form, field, data: {}, **options)
+    value = form.object.send(field)&.strftime("%d/%m/%Y %H:%M")
+    merged_data = { behaviour: "datetimepicker" }.merge(data)
+    label_text = options.delete(:label)
+    label_text ||= form.object.class.human_attribute_name(field) if form.object.class.respond_to?(:human_attribute_name)
+    label_text ||= field.to_s.humanize
+
+    content_tag(:div, class: "fr-input-group") do
+      safe_join(
+        [
+          form.label(field, label_text, class: "fr-label"),
+          form.text_field(field, value: value, data: merged_data, autocomplete: "off", class: "fr-input"),
+        ]
+      )
+    end
+  end
 end

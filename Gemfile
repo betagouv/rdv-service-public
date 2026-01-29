@@ -130,7 +130,7 @@ gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
 gem "dsfr-assets", "~> 1.14.2"
-gem "dsfr-view-components", "~> 4.0"
+gem "dsfr-view-components", "~> 4.1"
 gem "dsfr-form_builder", "= 0.0.7" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
@@ -148,6 +148,12 @@ gem "montrose"
 gem "tod"
 # A ruby implementation of the iCalendar specification (RFC-5545).
 gem "icalendar", "~> 2.5"
+# Easy recurrence expansion for iCalendar
+gem "icalendar-recurrence"
+# ice_cube est utilisée par icalendar-recurrence pour calculer les occurrences des événements externes (Caldav)
+# TODO: faire pointer vers rubygems quand ceci est released : https://github.com/ice-cube-ruby/ice_cube/pull/449
+# Ruby Date Recurrence Library - Allows easy creation of recurrence rules and fast querying
+gem "ice_cube", git: "https://github.com/ice-cube-ruby/ice_cube.git", ref: "32ff145"
 # Caldav client library
 gem "calendav", "~> 0.5"
 # Base de données des fuseaux horaires

@@ -353,13 +353,31 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         e9h30 = Time.zone.parse("2021-10-27 09:30")
         s9h45 = Time.zone.parse("2021-10-27 09:45")
         e10h45 = Time.zone.parse("2021-10-27 10:45")
-        ExternalCalendarEvent.create!(agent:, starts_at: s8h30, ends_at: e9h30, url: "abcde")
-        ExternalCalendarEvent.create!(agent:, starts_at: s9h45, ends_at: e10h45, url: "abcde")
+        ExternalCalendarEvent.create!(agent:, starts_at: s8h30, ends_at: e9h30, url: "abcde1")
+        ExternalCalendarEvent.create!(agent:, starts_at: s9h45, ends_at: e10h45, url: "abcde2")
 
         range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
 
         expected_ranges = [e9h30..s9h45, e10h45..plage_ouverture.ends_at]
         expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq(expected_ranges)
+      end
+
+      it "handles recurring external calendar events" do
+        agent = create(:agent, :with_caldav_config, organisations: [organisation])
+
+        # Plage le mercredi 27 oct 2021 de 9h à 11h
+        plage_ouverture = create(:plage_ouverture, first_day: Date.parse("2021-10-27"), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent:, organisation:)
+
+        # Recurs every week day from 9h45 to 10h00, so in the middle of the plâââge
+        create(:external_calendar_event, :recurring_on_weekdays, agent:)
+
+        at_9h00 = Time.zone.parse("2021-10-27 09:00")
+        at_9h45 = Time.zone.parse("2021-10-27 09:45")
+        at_10h00 = Time.zone.parse("2021-10-27 10:00")
+
+        expected_ranges = [at_9h00..at_9h45, at_10h00..plage_ouverture.ends_at]
+        within_range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
+        expect(described_class.calculate_free_times(plage_ouverture, within_range, work_on_off_days: false)).to eq(expected_ranges)
       end
 
       it "returns plage ouverture's 3 occurrences of range" do
