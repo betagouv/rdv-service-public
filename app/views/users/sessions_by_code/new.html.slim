@@ -1,11 +1,12 @@
 - content_for :title, "Saisie du code de connexion"
 
+= render "model_errors", model: @existing_login_code
+
 .card
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body.fr-pt-4w
     - if @existing_login_code
-      = render "model_errors", model: @existing_login_code
       p
         |> ✅ Un code à 6 chiffres a été envoyé à
         b> #{@existing_login_code.email}
