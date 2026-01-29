@@ -1,9 +1,9 @@
-RSpec.describe "Agent resets his password spec" do
+RSpec.describe "Un agent peut réinitialiser son mot de passe" do
   let!(:agent) { create(:agent) }
 
   around { |example| perform_enqueued_jobs { example.run } }
 
-  it "works by sending a reset email" do
+  it "envoie un email de réinitialisation" do
     visit new_agent_password_path
     expect(page).to have_content("Mot de passe oublié ?")
     expect(page).to have_link("Se connecter")
@@ -24,7 +24,7 @@ RSpec.describe "Agent resets his password spec" do
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
   end
 
-  it "works when using the user's password reset form" do
+  it "fonctionne via le formulaire de réinitialisation utilisateur" do
     visit new_user_password_path
     expect(page).to have_content("Mot de passe oublié ou première connexion ?")
     expect(page).to have_link("Se connecter")
@@ -38,5 +38,27 @@ RSpec.describe "Agent resets his password spec" do
     fill_in "Mot de passe", with: "correct H0rse battery! staple"
     expect { click_on "Enregistrer" }.to change { agent.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
+  end
+
+  context "quand l'email n'existe pas" do
+    it "affiche un message générique sans révéler que le compte n'existe pas" do
+      visit new_agent_password_path
+      fill_in "agent_email", with: "unknown@example.com"
+
+      expect { click_on "Envoyer" }.not_to change { ActionMailer::Base.deliveries.size }
+      expect(page).to have_content("Si votre e-mail existe dans notre base de données")
+    end
+  end
+
+  context "quand l'agent n'a pas encore accepté son invitation" do
+    let!(:agent_not_accepted) { create(:agent, :invitation_not_accepted) }
+
+    it "affiche un message générique et renvoie l'invitation" do
+      visit new_agent_password_path
+      fill_in "agent_email", with: agent_not_accepted.email
+
+      expect { click_on "Envoyer" }.to change { emails_sent_to(agent_not_accepted.email).size }.by(1)
+      expect(page).to have_content("Si votre e-mail existe dans notre base de données")
+    end
   end
 end
