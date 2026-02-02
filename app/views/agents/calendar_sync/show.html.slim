@@ -1,8 +1,19 @@
 - content_for :title, t(".title")
 
-p Vous pouvez voir vos rendez-vous de #{current_domain.name} dans votre agenda externe, comme Outlook ou Google Calendar.
+p
+  |> Vous pouvez voir vos rendez-vous de #{current_domain.name} dans votre agenda externe, comme celui de LaSuite, d’Outlook ou Google Calendar.
 
 div.d-flex.justify-content-center.align-items-center.flex-wrap
+  div.card.w-100
+    div.card-body
+      h5.card-title CalDAV
+      p.fr-badge.fr-badge--pink-tuile Beta
+      p
+        |> Vos rendez-vous RDV Service Public s’ajoutent automatiquement à votre agenda externe.
+        |> Les événements de votre agenda externe sont utilisés pour vérifier les conflits et éviter toute double réservation.
+      div.rdv-text-align-center
+        = link_to "Synchronisation CalDAV", agents_calendar_sync_caldav_sync_path, class: "fr-btn"
+
   div.card.w-100
     div.card-body
       h5.card-title Connexion Outlook (Microsoft 365)
@@ -10,23 +21,16 @@ div.d-flex.justify-content-center.align-items-center.flex-wrap
       div.rdv-text-align-center
         = link_to "Connecter mon compte Outlook (Microsoft 365)", agents_calendar_sync_outlook_sync_path, class: "fr-btn"
 
-  div.card.w-100
-    div.card-body
-      h5.card-title Lien Webcal
-      p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Vos rendez-vous seront visibles sur votre agenda externe, mais parfois avec quelques heures de retard.
-      div.rdv-text-align-center
-        = link_to "Synchronisation par lien Webcal", agents_calendar_sync_webcal_sync_path, class: "fr-btn"
-
-  - if current_agent.feature_enabled?(Agent::FeatureFlags::CALDAV_SYNC)
+  - if current_agent.calendar_uid.present?
     div.card.w-100
       div.card-body
-        h5.card-title Caldav
-        p.fr-badge.fr-badge--pink-tuile Beta
-        p Vous pouvez ajouter automatiquement à votre calendrier professionnel vos RDV pris via RDV Service Public.
+        h5.card-title Lien Webcal
+        p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Vos rendez-vous seront visibles sur votre agenda externe, mais parfois avec quelques heures de retard.
+        p Nous recommandons d'utiliser la synchronisation CalDAV à la place.
         div.rdv-text-align-center
-          = link_to "Synchronisation Caldav", agents_calendar_sync_caldav_sync_path, class: "fr-btn"
+          = link_to "Synchronisation par lien Webcal", agents_calendar_sync_webcal_sync_path, class: "fr-btn fr-btn--secondary"
 
-  p.lead.font-weight-bold.mt-4 Notifications par email
-  p Vous pouvez aussi recevoir un email avec une invitation ics pour chaque rendez-vous, absence et plage d'ouverture.
+  h2.fr-h6 Notifications par email
+  p.fr-col-12 Vous pouvez aussi recevoir un email avec une invitation ics pour chaque rendez-vous, absence et plage d'ouverture.
   div.rdv-text-align-center
     = link_to t("agents.preferences.show.title"), agents_preferences_path, class: "fr-btn fr-btn--secondary"
