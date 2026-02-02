@@ -511,24 +511,14 @@ RSpec.describe "User can search for rdvs" do
   end
 
   def sign_up
-    # Login page
-    click_link("Créer un compte")
-
-    # Sign up page
-    expect(page).to have_content("Inscription")
-    fill_in(:user_first_name, with: "Michel")
-    fill_in(:user_last_name, with: "Lapin")
+    fill_in("Prénom", with: "Michel")
+    fill_in("Nom", with: "Lapin")
     fill_in("Adresse email", with: "michel@lapin.fr")
-    fill_in("Numéro de téléphone", with: "0612345678")
-    click_button("Je m’inscris")
-    expect(page).to have_content("Un message contenant un lien de confirmation a été envoyé à votre adresse email. Ouvrez ce lien pour activer votre compte.")
+    click_button("Recevoir un code de connexion")
+    fill_in("Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "michel@lapin.fr").code)
+    click_on("Valider")
 
-    # Confirmation email
-    open_email("michel@lapin.fr")
-    expect(current_email).to have_content("Merci pour votre inscription")
-    current_email.click_link("Confirmer mon compte")
-
-    expect(page).to have_content("Votre compte a été validé")
+    expect(page).to have_content("Connexion réussie")
     expect(page).to have_content("Étape 1 sur 3")
   end
 
@@ -537,6 +527,7 @@ RSpec.describe "User can search for rdvs" do
     find_field("Date de naissance").send_keys(Time.zone.yesterday.strftime("%d/%m/%Y"))
     # using fill_in with this french date throws Error: Malformed value with playwright
     fill_in("Nom de naissance", with: "Lapinou")
+    fill_in("Téléphone", with: "0612345678") if page.has_field?("Téléphone")
     fill_in("Adresse", with: address) if address
     click_button("Continuer")
 
