@@ -64,7 +64,7 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
   private
 
   def motif_attribute_names
-    InstanceExports::CopyConfiguration::MOTIF_ATTRIBUTE_NAMES + [:organisation_id]
+    InstanceExports::CopyConfiguration::CopyMotifJob::MOTIF_ATTRIBUTE_NAMES + [:organisation_id]
   end
 
   def pundit_user
