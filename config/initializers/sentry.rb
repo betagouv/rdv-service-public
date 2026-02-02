@@ -102,7 +102,7 @@ class HttpGemSentryFeature < HTTP::Feature
     response
   end
 
-  # Cette méthode est appelée
+  # Cette méthode est appelée en cas d'erreur de réseau (timeout ou autre), mais pas pour des erreurs HTTP 400-500.
   def on_error(request, error)
     error_breadcrumb = {
       type: "http",
@@ -111,7 +111,6 @@ class HttpGemSentryFeature < HTTP::Feature
       data: {
         method: request.verb,
         url: request.uri.to_s,
-        error: error.inspect,
       },
     }
     Sentry.add_breadcrumb(Sentry::Breadcrumb.new(**error_breadcrumb))
