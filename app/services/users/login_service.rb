@@ -66,7 +66,8 @@ class Users::LoginService
   end
 
   def update_user(user)
-    if user.first_name != first_name || user.last_name != last_name
+    if (user.first_name != first_name || user.last_name != last_name) &&
+       !user.logged_once_with_franceconnect? # les users FranceConnectés ne peuvent pas modifier leur identité
       user.update!(first_name: first_name, last_name: last_name)
     end
   end
