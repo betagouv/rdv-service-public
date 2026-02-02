@@ -132,7 +132,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     doc.add_screenshot(page,
                        text: "L'appli me propose de me connecter avec ProConnect",
-                       wait_for: "Vous devez vous connecter ou vous inscrire pour continuer.")
+                       wait_for: "S’identifier avec\nProConnect")
 
     expect(page).not_to have_content("FranceConnect")
 

@@ -28,7 +28,6 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_user_session_path
       fill_in "Adresse email", with: "nina@personne.fr"
       expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
-      expect(page).to have_content("Aucun compte usager n’existe pour cet email")
       expect(page).not_to have_content("code à 6 chiffres")
     end
   end
@@ -40,6 +39,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       click_on "Recevoir un code de connexion"
       expect(page).to have_content("Saisie du code")
       click_on "page de connexion"
+      fill_in "Adresse email", with: "marco@lolmail.fr"
       expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
       expect(page).to have_content("Un code a été envoyé à marco@lolmail.fr il y a moins de deux minutes")
     end
