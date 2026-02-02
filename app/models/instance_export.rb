@@ -10,7 +10,7 @@ class InstanceExport < ApplicationRecord
     where(source_organisation_id: source_organisation_id, status: "motifs_archived")
   }
 
-  validates :status, in: %w[oauth_connected copying_configuration copying_planning motifs_archived]
+  validates :status, inclusion: { in: %w[oauth_connected copying_configuration copying_planning motifs_archived] }
 
   def new_instance_organisations
     @new_instance_organisations ||= api_client.get("organisations")["organisations"]
