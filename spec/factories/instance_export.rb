@@ -5,5 +5,7 @@ FactoryBot.define do
 
     api_token { "fake-api-token" }
     refresh_token { "fake-refresh-token" }
+
+    status { "copying_planning" }
   end
 end
