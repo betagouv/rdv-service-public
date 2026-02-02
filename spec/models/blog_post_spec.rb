@@ -43,8 +43,8 @@ RSpec.describe BlogPost do
     context "when no post in db" do
       it "creates all passed posts" do
         new_posts = [
-          attributes_for(:blog_post, title: "Première nouvelle"),
-          attributes_for(:blog_post, title: "Seconde nouvelle"),
+          build(:blog_post, title: "Première nouvelle"),
+          build(:blog_post, title: "Seconde nouvelle"),
         ]
         expect { described_class.refresh_from_posts(new_posts) }.to change(described_class, :count).from(0).to(2)
         expect(described_class.pluck(:title)).to contain_exactly("Première nouvelle", "Seconde nouvelle")
@@ -56,8 +56,8 @@ RSpec.describe BlogPost do
 
       it "replaces it with new posts" do
         new_posts = [
-          attributes_for(:blog_post, title: "Première nouvelle"),
-          attributes_for(:blog_post, title: "Seconde nouvelle"),
+          build(:blog_post, title: "Première nouvelle"),
+          build(:blog_post, title: "Seconde nouvelle"),
         ]
         expect { described_class.refresh_from_posts(new_posts) }.to change(described_class, :count).from(1).to(2)
         expect(described_class.pluck(:title)).to contain_exactly("Première nouvelle", "Seconde nouvelle")

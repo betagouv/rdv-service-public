@@ -5,6 +5,6 @@
     .m-2
       = render partial: "agents/blog/posts/post", locals: { post: post }
   .m-2
-    = dsfr_link_to("Voir toutes les nouveautés", BlogPost::HEADWAY_URL, target: "_blank")
+    = dsfr_link_to("Voir toutes les nouveautés", BlogPost::DOCS_URL, target: "_blank")
 - else
   .m-2 Aucune nouveauté
