@@ -56,7 +56,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public" do
     stub_env_with(RDV_SERVICE_PUBLIC_OAUTH_BASE_URL: "http://rdv.gouv.localhost:1234")
 
     before do
-      allow_any_instance_of(RdvServicePublicApiClient).to receive(:get).with("organisations").and_return({ "organisations" => [] })
+      allow_any_instance_of(RdvServicePublicApiClient).to receive(:get).with("organisations").and_return({ "organisations" => [] }) # rubocop:disable RSpec/AnyInstance
     end
 
     it "lui permet de reprendre la migration depuis l'index" do
