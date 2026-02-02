@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_28_172200) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_02_144719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -938,7 +938,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_172200) do
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "instance_exports", "agents"
-  add_foreign_key "instance_exports", "good_job_batches"
   add_foreign_key "lieux", "organisations"
   add_foreign_key "motif_categories_territories", "motif_categories"
   add_foreign_key "motif_categories_territories", "territories"
