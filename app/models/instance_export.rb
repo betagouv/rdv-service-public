@@ -37,7 +37,7 @@ class InstanceExport < ApplicationRecord
     batch = GoodJob::Batch.new(instance_export_id: id)
 
     batch.properties = { instance_export_id: id, current_domain_id: current_domain.id }
-    batch.on_success = "CopyPlanningToNewInstanceJob"
+    batch.on_success = "InstanceExports::CopyPlanningJob"
 
     transaction do
       batch.enqueue do
