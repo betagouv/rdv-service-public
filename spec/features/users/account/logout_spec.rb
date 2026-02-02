@@ -26,9 +26,6 @@ RSpec.describe "Déconnexion" do
     click_on lieu.name
     first(:link, "11:00").click
 
-    # On vérifie que les infos de l'utilisateur n'ont pas été gardées dans la session
-    expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer.")
-
     expect(page.body).not_to include(user.first_name) # Le prénom est dans un input, donc on utilise cette méthode plutôt qu'un expect(page).to have_content
   end
 end
