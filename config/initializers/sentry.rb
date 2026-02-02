@@ -56,3 +56,67 @@ Sentry.init do |config|
 end
 
 # # cf /config/initializers/sentry_job_retries_subscriber.rb for the log subscriber that sends warnings to Sentry
+
+class HttpGemSentryFeature < HTTP::Feature
+  def wrap_request(request)
+    @start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+    headers = request.headers.to_h
+    headers["Authorization"] = "[FILTERED]" if headers["Authorization"]
+
+    request_breadcrumb = {
+      type: "http",
+      category: "http_gem",
+      message: "HTTP request",
+      data: {
+        method: request.verb,
+        url: request.uri.to_s,
+        headers:,
+      },
+    }
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(**request_breadcrumb))
+
+    request
+  end
+
+  def wrap_response(response)
+    @end_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    duration_ms = ((@end_time - @start_time) * 1000).round
+
+    headers = response.headers.to_h
+    headers["Set-Cookie"] = "[FILTERED]" if headers["Set-Cookie"]
+
+    response_breadcrumb = {
+      type: "http",
+      category: "http_gem",
+      message: "HTTP response",
+      data: {
+        status_code: response.status,
+        duration_ms:,
+        headers:,
+        body: response.body.to_s,
+      },
+    }
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(**response_breadcrumb))
+
+    response
+  end
+
+  # Cette méthode est appelée
+  def on_error(request, error)
+    error_breadcrumb = {
+      type: "http",
+      category: "http_gem",
+      message: error.detailed_message,
+      data: {
+        method: request.verb,
+        url: request.uri.to_s,
+        error: error.inspect,
+      },
+    }
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(**error_breadcrumb))
+  end
+end
+
+HTTP::Options.register_feature(:sentry, HttpGemSentryFeature)
+HTTP.default_options = { features: [:sentry] }
