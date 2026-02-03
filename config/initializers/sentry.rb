@@ -45,7 +45,7 @@ Sentry.init do |config|
 
     event
   rescue StandardError
-    event.set_tags(error_in_before_send_callback: true)
+    event.tags[:error_in_before_send_callback] = true
     event
   end
 
