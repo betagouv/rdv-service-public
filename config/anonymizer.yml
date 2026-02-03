@@ -105,6 +105,11 @@ tables:
       - remember_created_at
       - pro_connect_openid_sub
       - pro_connect_2fa_active
+      - pro_connect_idp_id
+      - caldav_agenda_url
+      - caldav_username
+      - caldav_password
+      - caldav_sync_token
       - sensitive_account
     non_anonymized_column_names:
       - reset_password_sent_at
@@ -132,6 +137,10 @@ tables:
       - updated_at
       - connected_with_agent_connect
       - proconnect_siret
+      - feature_flags
+      - caldav_disconnect_in_progress
+      - blog_read_at
+      - group_by_agent
 
   - table_name: rdvs
     anonymized_column_names:
@@ -178,6 +187,7 @@ tables:
       - email
       - phone_number
       - phone_number_formatted
+      - token
 
     non_anonymized_column_names:
       - created_at
@@ -209,10 +219,16 @@ tables:
       - external_id
       - verticale
       - ants_connectable
+      - public_link_id
+      - time_zone
+      - disabled_at
+      - online_booking_for_particuliers
+      - online_booking_for_professionnels
 
   - table_name: absences
     anonymized_column_names:
       - title
+      - caldav_url
     non_anonymized_column_names:
       - created_at
       - updated_at
@@ -299,6 +315,7 @@ tables:
       - sms_provider
       - has_own_sms_provider
       - enable_notes_field
+      - enable_address_field
       - enable_caisse_affiliation_field
       - enable_affiliation_number_field
       - enable_family_situation_field
@@ -312,6 +329,8 @@ tables:
       - enable_waiting_room_color_field
       - visible_users_throughout_the_territory
       - category
+      - work_on_sunday
+      - operator_id
 
   # Tables sans données personnelles
   - table_name: agent_territorial_roles
@@ -323,9 +342,14 @@ tables:
     non_anonymized_column_names:
       - access_level
   - table_name: agents_rdvs
+    anonymized_column_names:
+      - caldav_url
     non_anonymized_column_names:
       - outlook_id
       - outlook_create_in_progress
+      - calculator_rdv_not_cancelled_and_in_the_future
+      - calculator_rdv_starts_at
+      - calculator_rdv_ends_at
   - table_name: agent_territorial_access_rights
     non_anonymized_column_names:
       - allow_to_manage_teams
@@ -364,6 +388,7 @@ tables:
       - location_type
       - rdvs_editable_by_user
       - rdvs_cancellable_by_user
+      - public_link_id
 
   - table_name: services
     non_anonymized_column_names:
@@ -482,6 +507,7 @@ tables:
   - table_name: rdv_plans
     anonymized_column_names:
       - return_url
+      - dossier_url
     non_anonymized_column_names:
       - duration_in_minutes
       - starts_at
@@ -495,9 +521,12 @@ tables:
     non_anonymized_column_names:
       - item_type
       - item_id
+      - created_at
+      - updated_at
   - table_name: external_calendar_events
     anonymized_column_names:
       - url
+      - raw_ical
     non_anonymized_column_names:
       - agent_id
       - starts_at
@@ -511,25 +540,40 @@ tables:
       - good_job_batch_id
       - created_at
       - updated_at
+      - source_organisation_id
+      - status
   - table_name: operators
     anonymized_column_names:
       - name
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
   - table_name: operator_managers
     anonymized_column_names:
       - first_name
       - last_name
       - email
       - pro_connect_openid_sub
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
   - table_name: tags
     non_anonymized_column_names:
       - name
       - created_at
+      - updated_at
   - table_name: territory_tags
     non_anonymized_column_names:
       - created_at
+      - updated_at
   - table_name: login_codes
     anonymized_column_names:
       - email
       - code
+      - first_name
+      - last_name
     non_anonymized_column_names:
       - used_at
+      - created_at
+      - updated_at
+      - domain_id
