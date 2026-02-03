@@ -42,9 +42,14 @@ module Caldav
       collection = agent.caldav_client.calendars.sync(agent.caldav_agenda_url, agent.caldav_sync_token)
       new_sync_token = collection.sync_token
 
+      # On met à jour les événements modifiés qui sont « OPAQUE » (considérés comme occupés)
+      updated_events = collection.changes.select(&:calendar_data).select { |event| consider_busy?(event) }
+
+      # On supprime les événements modifiés qui sont « TRANSPARENT » (considérés comme libres)
+      deleted_events = collection.changes.select(&:calendar_data).reject { |event| consider_busy?(event) }.map(&:url)
+
       # Le serveur Caldav de la Suite Numérique signale une suppression à travers un calendar_data vide.
-      updated_events = collection.changes.select(&:calendar_data)
-      deleted_events = collection.changes.reject(&:calendar_data).map(&:url)
+      deleted_events += collection.changes.reject(&:calendar_data).map(&:url)
 
       # D'autres serveurs Caldav peuvent utiliser le tableau `deletions` pour signaler une suppression
       deleted_events += collection.deletions
