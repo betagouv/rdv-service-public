@@ -68,7 +68,32 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
     end
   end
 
-  it "logs the response to Sentry if token fetch returns an unexpected body" do
+  context "quand l’agent a un token et des événements en BDD" do
+    around do |example|
+      # TODO: on utilise pour le moment la cassette de création mais il faudrait faire une cassette dédiée
+      VCR.use_cassette("caldav/token_via_propfind", allow_playback_repeats: true) do
+        example.run
+      end
+    end
+
+    let(:agent) { create(:agent, :with_caldav_config, caldav_sync_token: "rsuneaitren") }
+
+    it "supprime un événement s’il est déjà enregistré localement mais qu'il devient TRANSP:TRANSPARENT" do
+      ExternalCalendarEvent.create(
+        agent:,
+        url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/c766aa62-c76e-48eb-a6a1-c5a496ec740b.ics",
+        starts_at: Time.zone.tomorrow.change(hour: 9, min: 0),
+        ends_at: Time.zone.tomorrow.change(hour: 10, min: 0)
+      )
+
+      VCR.use_cassette("caldav/transparent_event") do
+        expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(-1)
+        expect(ExternalCalendarEvent.where(url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/c766aa62-c76e-48eb-a6a1-c5a496ec740b.ics")).to be_empty
+      end
+    end
+  end
+
+  it "enregistre la réponse dans Sentry si la récupération du token retourne un body inattendu" do
     cal_url = "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id"
     stub_request(:propfind, cal_url)
       .and_return({ status: 500, body: "ceci est mon corps", headers: { "Set-Cookie" => "secret" } })
