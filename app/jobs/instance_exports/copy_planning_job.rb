@@ -1,6 +1,6 @@
-class CopyPlanningToNewInstanceJob < ApplicationJob
+class InstanceExports::CopyPlanningJob < ApplicationJob
   def self.agent_might_have_rdvs_on_old_instance?(agent, start_date)
-    Rails.cache.fetch("CopyPlanningToNewInstanceJob:#{agent.id}:#{start_date.to_date}", expires_in: 24.hours) do
+    Rails.cache.fetch("InstanceExports::CopyPlanningJob:#{agent.id}:#{start_date.to_date}", expires_in: 24.hours) do
       agent.absences.joins(external_references: :oauth_application).where("first_day >= ?", start_date)
         .where("external_references.external_id ilike ?", "#{CopyRdvAsAbsenceJob::EXTERNAL_ID_PREFIX}%")
         .where(oauth_applications: { name: "RDV Aide Numérique" }).any?
@@ -90,7 +90,7 @@ class CopyPlanningToNewInstanceJob < ApplicationJob
     good_job_control_concurrency_with(
       perform_limit: 3,
       # Pour éviter de spammer notre API, on limite le nombre de jobs
-      key: -> { "CopyPlanningToNewInstanceJob::CopyRdvJob" }
+      key: -> { "InstanceExports::CopyPlanningJob::CopyRdvJob" }
     )
 
     queue_as :latency_5m

@@ -22,12 +22,7 @@ class Admin::InstanceExportsController < AgentAuthController
     authorize(instance_export, :create?, policy_class: Agent::InstanceExportPolicy)
 
     flash[:success] = "Connexion à RDV Service Public réussie"
-    redirect_to edit_admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
-  end
-
-  def edit
-    @hide_instance_export_banner = true
-    @instance_export = find_instance_export
+    redirect_to admin_organisation_instance_export_path(current_agent.organisations.first, instance_export.id)
   end
 
   def update
