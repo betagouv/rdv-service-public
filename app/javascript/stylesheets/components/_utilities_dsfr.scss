@@ -200,3 +200,9 @@
 .rdv-display-inline-block {
   display: inline-block;
 }
+
+.rdv-screenshot {
+  max-height: 326px;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px 0 rgba(221, 221, 221, 0.40);
+}
