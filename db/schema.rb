@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_02_144719) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_04_153958) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -494,6 +494,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_02_144719) do
     t.text "logo_base64"
     t.text "post_logout_redirect_uri"
     t.bigint "default_service_id", comment: "Indique le service qui sera ajouté au territoire par défaut si un agent qui utilise cette application ouvre un nouvel espace.\nCette colonne indique aussi que les agents qui utilisent cette application sont autorisés à ouvrir un nouvel espace.\n"
+    t.boolean "grants_autonomous_signup", default: false, null: false
     t.index ["default_service_id"], name: "index_oauth_applications_on_default_service_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
