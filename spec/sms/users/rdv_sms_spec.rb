@@ -48,21 +48,21 @@ RSpec.describe Users::RdvSms, type: :service do
       let(:token) { "12345" }
 
       it "contains rdv title" do
-        expect(subject).to include("RDV Action Sociale : Super Atelier, vendredi 10/12 13h10.")
+        expect(subject).to include("RDV Action Sociale : Super Atelier, vendredi 10/12 13h10")
       end
 
       context "with a blank name" do
         let(:rdv_name) { "    " }
 
         it "contains rdv title but not the blank name" do
-          expect(subject).to include("RDV Action Sociale vendredi 10/12 13h10.")
+          expect(subject).to include("RDV Action Sociale vendredi 10/12 13h10")
         end
 
         context "whent the motif doesn't have a service" do
           let(:motif) { build(:motif, service: nil) }
 
           it "doesn't have a specific title" do
-            expect(subject).to include("RDV  vendredi 10/12 13h10.")
+            expect(subject).to include("RDV  vendredi 10/12 13h10")
           end
         end
       end
@@ -71,7 +71,7 @@ RSpec.describe Users::RdvSms, type: :service do
         let(:rdv_name) { "Organiser ses fichiers et ses dossiers sur son ordinateur" }
 
         it "truncates it too avoid sending too many sms and costing too much money" do
-          expect(subject).to include("RDV #{rdv.service.short_name} : Organiser ses fichiers et ses dossiers sur son ord..., vendredi 10/12 13h10.")
+          expect(subject).to include("RDV #{rdv.service.short_name} : Organiser ses fichiers et ses dossiers sur son ord..., vendredi 10/12 13h10")
         end
       end
     end
