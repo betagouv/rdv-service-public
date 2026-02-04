@@ -95,14 +95,24 @@ class AgendaMultiAgent {
     const GREY = "#f3f6fe";
 
     if (this.fullCalendarInstance.view.type !== "resourceTimeGridWeek") {
-      return allColumns.forEach(column => column.style.backgroundColor = WHITE); // Reset to white
+      allColumns.forEach(column => column.style.backgroundColor = WHITE);
+      return;
     }
 
-    const groupingCriteria = (column) => (this.data.groupByAgent === "true" ? column.dataset.resourceId : column.dataset.date);
-    Object.values(Object.groupBy(allColumns, groupingCriteria))
-      .forEach((columnGroup, i) =>
-        columnGroup.forEach(column => column.style.backgroundColor = i % 2 ? WHITE : GREY)
-      );
+    const getGroupingKey = column => this.data.groupByAgent === "true" ? column.dataset.resourceId : column.dataset.date;
+
+    let currentGroupIndex = 0;
+    let previousGroupingKey = null;
+    allColumns.forEach(column => {
+      const groupingKey = getGroupingKey(column);
+
+      if (groupingKey !== previousGroupingKey) {
+        currentGroupIndex++;
+      }
+
+      column.style.backgroundColor = currentGroupIndex % 2 === 0 ? WHITE : GREY;
+      previousGroupingKey = groupingKey;
+    });
   };
 }
 
