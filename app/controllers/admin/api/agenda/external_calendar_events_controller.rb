@@ -23,7 +23,7 @@ class Admin::Api::Agenda::ExternalCalendarEventsController < Admin::Api::BaseCon
   private
 
   def agents
-    if params[:agent_id].to_i == current_agent.id
+    if Array(params[:agent_id]).compact_blank.map(&:to_i) == [current_agent.id]
       [current_agent]
     else
       # La scope de policy pour ExternalCalendarEvent délèguent à Agent::AgentPolicy::Scope.
