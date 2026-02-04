@@ -15,7 +15,7 @@ RSpec.describe Users::RdvSms, type: :service do
       it do
         expect(subject).to include("RDV PMI vendredi 10/12 13h10")
         expect(subject).to include("10 rue d'ici, Paris, 75016")
-        expect(subject).to include("Infos/annulation")
+        expect(subject).to include("Gérer mon RDV")
         expect(subject).to include("www.rdv-solidarites-test.localhost/r/12345")
         expect(subject).not_to include("Ne Doit pas s'afficher")
       end
@@ -107,7 +107,7 @@ RSpec.describe Users::RdvSms, type: :service do
     it do
       expect(subject).to include("RDV modifié: PMI vendredi 10/12 13h10")
       expect(subject).to include("10 rue d'ici, Paris, 75016")
-      expect(subject).to include("Infos/annulation")
+      expect(subject).to include("Gérer mon RDV")
       expect(subject).to include("www.rdv-solidarites-test.localhost/r/2345")
     end
 
@@ -200,7 +200,7 @@ RSpec.describe Users::RdvSms, type: :service do
       expect(subject).to include("RDV PMI vendredi 10/12 13h10")
       expect(subject).to include("MDS Centre")
       expect(subject).to include("10 rue d'ici, Paris, 75016")
-      expect(subject).to include("Infos/annulation")
+      expect(subject).to include("Gérer mon RDV")
       expect(subject).to include("www.rdv-solidarites-test.localhost/r/7777")
     end
   end

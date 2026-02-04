@@ -77,7 +77,7 @@ class Users::RdvSms < Users::BaseSms
     details += "\n\n"
 
     url = rdv_short_from_token_url(token, host: domain_host).sub(%r{https?://}, "")
-    links = "Infos/annulation: #{url}"
+    links = "Gérer mon RDV: #{url}"
 
     links += "\n#{rdv.phone_number}" if rdv.phone_number.present?
 
