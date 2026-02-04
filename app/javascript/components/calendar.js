@@ -30,6 +30,10 @@ export class AgendaMonoAgent {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
+    // Les icônes prev/next ont role="img" sans aria-label, ce qui pose un problème d'accessibilité.
+    // Ces icônes sont purement décoratives, on peut donc retirer le rôle d'image pour qu'elles soient ignorées par les lecteurs d'écran.
+    // On a placé des titles sur les boutons pour aider les personnes utilisant des lecteurs d’écrans. (voir buttonHints)
+    this.calendarEl.querySelectorAll('.fc-icon[role="img"]').forEach(el => el.removeAttribute('role'));
     setupRealtimeRefresh(this.fullCalendarInstance, [this.data.agentId]);
   }
 
@@ -46,6 +50,24 @@ export class AgendaMonoAgent {
       select: this.selectEvent,
       headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
       customButtons: { preferencesModalToggle },
+      buttonHints: {
+        prev: (navUnit) => {
+          const labels = {
+            Jour: "Jour précédent",
+            Semaine: "Semaine précédente",
+            Mois: "Mois précédent",
+          };
+          return labels[navUnit] || "Précédent";
+        },
+        next: (navUnit) => {
+          const labels = {
+            Jour: "Jour suivant",
+            Semaine: "Semaine suivante",
+            Mois: "Mois suivant",
+          };
+          return labels[navUnit] || "Suivant";
+        },
+      },
       views: {
         timeGridOneDay: {
           type: 'timeGrid',
