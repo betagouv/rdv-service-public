@@ -17,7 +17,7 @@ class Users::RdvSms < Users::BaseSms
                        :short
                      end
 
-    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token, address_format:)}"
+    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token, address_format:)}"
   end
 
   def rdv_updated(rdv, user, token)
