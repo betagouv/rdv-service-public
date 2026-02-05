@@ -3,11 +3,13 @@ class Users::UsersController < UserAuthController
 
   def edit
     @user = current_user
+    @user_form = Users::EditForm.new(user: @user, domain: current_domain)
     authorize(@user, policy_class: User::UserPolicy)
   end
 
   def update
     @user = current_user
+    @user_form = Users::EditForm.new(user: @user, domain: current_domain)
     authorize(@user, policy_class: User::UserPolicy)
     if @user.update(user_params)
       flash[:success] = "Vos informations ont été mises à jour."

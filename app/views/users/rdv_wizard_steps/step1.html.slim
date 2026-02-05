@@ -8,4 +8,84 @@
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
-        = render "users/users/form", user: current_user, rdv_wizard: @rdv_wizard, service: @rdv_wizard.service
+        = form_for @rdv_booking_form,
+              as: :user,
+              url: users_rdv_wizard_step_path(step: 1, **@rdv_booking_form.to_query.except(:rdv)),
+              method: :post,
+              builder: Dsfr::FormBuilder do |f|
+          - fo = f.object
+          = render "model_errors", model: fo, f: f
+
+          .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
+            .fr-col-12.fr-col-md-6
+              = f.dsfr_text_field :first_name, disabled: fo.first_name_frozen?, autocomplete: "given-name"
+            .fr-col-12.fr-col-md-6
+              = f.dsfr_text_field :last_name, disabled: fo.last_name_frozen?, autocomplete: "family-name"
+
+          .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
+            - if fo.show_birth_name_field?
+              .fr-col-12.fr-col-md-6
+                = f.dsfr_text_field :birth_name, placeholder: "Nom de naissance", disabled: fo.birth_name_frozen?
+            - if fo.show_birth_date_field?
+              .fr-col-12.fr-col-md-6
+                = f.dsfr_text_field :birth_date, type: "date", disabled: fo.birth_date_frozen?, autocomplete: "bday"
+
+          - if fo.show_ants_pre_demande_number_field?
+            = f.dsfr_text_field :ants_pre_demande_number,
+                required: true,
+                hint: t("simple_form.hints.user.ants_pre_demande_number_html"),
+                style: "text-transform: uppercase;"
+
+          - if fo.show_franceconnect_frozen_fields_warning?
+            .fr-alert.fr-alert--info.fr-mb-1w= I18n.t("users.franceconnect_frozen_fields")
+
+          - if fo.show_email_field?
+            = f.dsfr_email_field :email, disabled: fo.email_disabled?, required: true, autocomplete: "email"
+          - elsif fo.show_notification_email_field?
+            = f.dsfr_email_field :notification_email, required: fo.notification_email_required?, label: fo.notification_email_label
+
+          = f.dsfr_phone_field :phone_number, as: :tel, required: fo.phone_required?, autocomplete: "tel"
+          - if fo.show_landline_phone_number_warning?
+            .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
+
+          .mb-2 Préférences de notifications
+          div= f.dsfr_check_box :notify_by_email
+          div= f.dsfr_check_box :notify_by_sms
+
+          - if fo.show_address_field?
+            = f.dsfr_text_field :address,
+                value: fo.address_value,
+                required: fo.address_required?,
+                data: { "address-autocomplete": "on" },
+                autocomplete: "street-address",
+                dir: "ltr"
+
+          - if fo.show_address_details_field?
+            = f.dsfr_text_field :address_details
+
+          = f.hidden_field :city_code
+          = f.hidden_field :post_code
+          = f.hidden_field :city_name
+
+          - if fo.show_social_fields?
+            - if fo.show_caisse_affiliation_field? || fo.show_affiliation_number_field?
+              .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
+                - if fo.show_caisse_affiliation_field?
+                  .fr-col-12.fr-col-md-6
+                    = f.dsfr_select :caisse_affiliation, User.human_attribute_values(:caisse_affiliation), include_blank: true
+                - if fo.show_affiliation_number_field?
+                  .fr-col-12.fr-col-md-6
+                    = f.dsfr_text_field :affiliation_number
+
+            - if fo.show_logement_field?
+              = f.dsfr_select :logement, User.human_attribute_values(:logement), include_blank: true
+
+          - fo.to_query.each do |wizard_key, wizard_value|
+            = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
+
+          .fr-grid-row.fr-grid-row--gutters.fr-mt-3w
+            .fr-col.rdv-justify-content-space-between.d-flex.flex-row-aligned
+              = link_to "Revenir en arrière",
+                  prendre_rdv_path(fo.to_query),
+                  class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
+              = f.submit "Continuer", class: "fr-btn"

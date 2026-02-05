@@ -13,6 +13,7 @@ class Users::RdvWizardStepsController < UserAuthController
 
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain)
     @rdv = @rdv_wizard.rdv
     authorize(@rdv, policy_class: User::RdvPolicy)
     if @rdv_wizard.creneau.present?
@@ -25,6 +26,7 @@ class Users::RdvWizardStepsController < UserAuthController
 
   def create
     @rdv_wizard = rdv_wizard_for(current_user, rdv_params.merge(user_params))
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain)
     @rdv = @rdv_wizard.rdv
     skip_authorization
     if @rdv_wizard.valid? && @rdv_wizard.user.benign_errors.blank? && @rdv_wizard.save
