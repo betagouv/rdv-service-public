@@ -46,7 +46,7 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
       fill_in "agent_email", with: "unknown@example.com"
 
       expect { click_on "Envoyer" }.not_to change { ActionMailer::Base.deliveries.size }
-      expect(page).to have_content("Si votre e-mail existe dans notre base de données")
+      expect(page).to have_content("Si un compte agent existe pour unknown@example.com, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe")
     end
   end
 
@@ -58,7 +58,7 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
       fill_in "agent_email", with: agent_not_accepted.email
 
       expect { click_on "Envoyer" }.to change { emails_sent_to(agent_not_accepted.email).size }.by(1)
-      expect(page).to have_content("Si votre e-mail existe dans notre base de données")
+      expect(page).to have_content("Si un compte agent existe pour #{agent_not_accepted.email}, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe")
     end
   end
 end

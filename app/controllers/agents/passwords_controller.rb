@@ -12,7 +12,7 @@ class Agents::PasswordsController < Devise::PasswordsController
       end
     end
 
-    flash[:notice] = I18n.t("devise.passwords.send_paranoid_instructions")
+    flash[:notice] = I18n.t("devise.passwords.send_paranoid_instructions", email: resource_params[:email])
     redirect_to root_path
   end
 end
