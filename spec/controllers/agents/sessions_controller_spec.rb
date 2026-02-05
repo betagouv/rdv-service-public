@@ -3,10 +3,34 @@ RSpec.describe Agents::SessionsController do
 
   before do
     request.env["devise.mapping"] = Devise.mappings[:agent] # d'après la doc de Devise
-    sign_in agent
+  end
+
+  describe "#create" do
+    context "when the agent has a pro_connect_openid_sub" do
+      let(:agent) { create(:agent, password: "c0rrecThorse!", pro_connect_openid_sub: "some-sub") }
+
+      it "signs out the agent and redirects to the login page with pro_connect_required param" do
+        post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+
+        expect(response).to redirect_to(new_agent_session_path(pro_connect_required: agent.email))
+        expect(session["warden.agent.key"]).to be_nil
+      end
+    end
+
+    context "when the agent does not have a pro_connect_openid_sub" do
+      let(:agent) { create(:agent, password: "c0rrecThorse!") }
+
+      it "signs in the agent normally" do
+        post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
+
+        expect(controller.current_agent).to eq(agent)
+      end
+    end
   end
 
   describe "#destroy" do
+    before { sign_in agent }
+
     context "when the agent was logged in with ProConnect" do
       stub_env_with(PRO_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
 

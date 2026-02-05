@@ -24,6 +24,24 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
   end
 
+  context "quand l’agent à un sub ProConnect" do
+    let!(:pro_connect_agent) { create(:agent, pro_connect_openid_sub: "some-sub") }
+
+    it "n’envoie pas le mail de réinitialisation depuis le formulaire agent" do
+      visit new_agent_password_path
+      fill_in "agent_email", with: pro_connect_agent.email
+      expect { click_on "Envoyer" }.not_to change { emails_sent_to(pro_connect_agent.email).size }
+      expect(page).to have_content(I18n.t("devise.passwords.send_instructions"))
+    end
+
+    it "n’envoie pas le mail de réinitialisation depuis le formulaire usager" do
+      visit new_user_password_path
+      fill_in "user_email", with: pro_connect_agent.email
+      expect { click_on "Envoyer" }.not_to change { emails_sent_to(pro_connect_agent.email).size }
+      expect(page).to have_content(I18n.t("devise.passwords.send_instructions"))
+    end
+  end
+
   it "fonctionne via le formulaire de réinitialisation utilisateur" do
     visit new_user_password_path
     expect(page).to have_content("Mot de passe oublié ou première connexion ?")
