@@ -14,25 +14,25 @@ class Users::RdvWizardStepsController < UserAuthController
   include TokenInvitable
 
   def new
-    @rdv_wizard = UserRdvWizard.new(current_user, query_params)
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain) if current_step[:name] == "step1"
-    @rdv = @rdv_wizard.rdv
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, attributes: query_params, domain: current_domain)
+    @rdv_wizard = @rdv_booking_form # Alias pour les vues qui utilisent encore @rdv_wizard
+    @rdv = @rdv_booking_form.rdv
     authorize(@rdv, policy_class: User::RdvPolicy)
-    if @rdv_wizard.creneau.present?
+    if @rdv_booking_form.creneau.present?
       render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
     else
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to(prendre_rdv_path(@rdv_wizard.to_query))
+      redirect_to(prendre_rdv_path(@rdv_booking_form.to_query))
     end
   end
 
   def create
-    @rdv_wizard = UserRdvWizard.new(current_user, rdv_params.merge(user_params))
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain) if current_step[:name] == "step1"
-    @rdv = @rdv_wizard.rdv
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, attributes: rdv_params.merge(user_params), domain: current_domain)
+    @rdv_wizard = @rdv_booking_form # Alias pour les vues qui utilisent encore @rdv_wizard
+    @rdv = @rdv_booking_form.rdv
     skip_authorization
-    if @rdv_wizard.valid? && @rdv_wizard.user.benign_errors.blank? && @rdv_wizard.save
-      redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step[:number]))
+    if @rdv_booking_form.valid? && @rdv_booking_form.user.benign_errors.blank? && @rdv_booking_form.save
+      redirect_to new_users_rdv_wizard_step_path(@rdv_booking_form.to_query.merge(step: next_step[:number]))
     else
       render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
     end

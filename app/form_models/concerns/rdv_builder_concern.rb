@@ -1,36 +1,28 @@
-class UserRdvWizard
-  include ActiveModel::Model
+# Concern partagé pour la construction d'un RDV à partir de paramètres.
+# Utilisé par RdvBookingForm (pour les usagers) et PrescripteurRdvWizard (pour les prescripteurs).
+module RdvBuilderConcern
+  extend ActiveSupport::Concern
 
-  attr_accessor :rdv, :user
+  included do
+    attr_accessor :rdv
 
-  delegate :motif, :starts_at, :service, to: :rdv
-  delegate :errors, to: :user
+    delegate :motif, :starts_at, :service, to: :rdv
+  end
 
-  validate :phone_number_present_for_motif_by_phone
-
-  def initialize(user, attributes)
-    @user = user
+  # Construit l'objet @rdv à partir des attributs.
+  # Doit être appelé dans initialize de la classe incluante.
+  def build_rdv_from_attributes(attributes)
     @attributes = attributes.to_h.symbolize_keys
 
-    if attributes[:rdv_collectif_id].present?
-      @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(attributes[:rdv_collectif_id])
+    if @attributes[:rdv_collectif_id].present?
+      @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(@attributes[:rdv_collectif_id])
     else
       @rdv = Rdv.new({
-        user_ids: [user&.id],
+        user_ids: [@user&.id],
       }.merge(@attributes.slice(:starts_at, :user_ids, :motif_id)))
       @rdv.duration_in_min = duration_in_min
       @rdv.organisation_id = @rdv.motif.organisation_id
     end
-
-    @user&.assign_attributes(@attributes.fetch(:user, {}))
-  end
-
-  def params_to_selections
-    if @rdv.present?
-      return @attributes.merge(service: @rdv.motif.service_id, motif_name_with_location_type: @rdv.motif.name_with_location_type)
-    end
-
-    @attributes
   end
 
   def creneau
@@ -66,21 +58,12 @@ class UserRdvWizard
     )
   end
 
-  def save
-    # Les étapes 2 et 3 ne modifient pas les attributs de l'utilisateur
-    return true if @attributes[:user].blank?
-
-    # we make sure the email can be updated only if it is blank
-    @user.skip_reconfirmation! if @user.email_was.blank?
-
-    # dans la vue on appelle form_for(user) plutôt que form_for(user_rdv_wizard),
-    # il faut donc ajouter des validations (et des erreurs) sur l'objet user
-    if rdv.requires_ants_predemande_number?
-      @user.singleton_class.include(User::AntsPreDemandeNumberStatusValidationConcern)
-      @user.ants_meeting_point_id = lieu_id # used in AntsPreDemandeNumberStatusValidation
+  def params_to_selections
+    if @rdv.present?
+      return @attributes.merge(service: @rdv.motif.service_id, motif_name_with_location_type: @rdv.motif.name_with_location_type)
     end
 
-    valid? && @user.save
+    @attributes
   end
 
   def lieu_id = @attributes[:lieu_id]
@@ -106,21 +89,7 @@ class UserRdvWizard
     end
   end
 
-  def display_france_connect?
-    motif.organisation.online_booking_for_particuliers
-  end
-
-  def display_pro_connect?
-    motif.organisation.online_booking_for_professionnels
-  end
-
-  private
-
   def lieu
     @lieu ||= lieu_id.present? ? Lieu.find(lieu_id) : nil
-  end
-
-  def phone_number_present_for_motif_by_phone
-    errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
   end
 end
