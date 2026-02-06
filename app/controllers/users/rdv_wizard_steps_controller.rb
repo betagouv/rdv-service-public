@@ -31,7 +31,9 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_wizard = @rdv_booking_form # Alias pour les vues qui utilisent encore @rdv_wizard
     @rdv = @rdv_booking_form.rdv
     skip_authorization
-    if @rdv_booking_form.valid? && @rdv_booking_form.user.benign_errors.blank? && @rdv_booking_form.save
+    success = @rdv_booking_form.valid? && @rdv_booking_form.user.benign_errors.blank?
+    success &&= @rdv_booking_form.save if current_step[:name] == "step1"
+    if success
       redirect_to new_users_rdv_wizard_step_path(@rdv_booking_form.to_query.merge(step: next_step[:number]))
     else
       render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }

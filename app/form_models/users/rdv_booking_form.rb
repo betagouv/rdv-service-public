@@ -2,10 +2,12 @@ class Users::RdvBookingForm
   include Users::UserFormConcern
   include RdvBuilderConcern
 
-  delegate :ants_pre_demande_number, to: :user
+  delegate :ants_pre_demande_number, :add_benign_error, :ignore_benign_errors, to: :user
   delegate :territory, :requires_ants_predemande_number?, to: :rdv
 
   validate :phone_number_present_for_motif_by_phone
+  validates :ants_pre_demande_number, presence: true, if: :validate_ants?
+  validates_with AntsPreDemandeNumberStatusValidation, if: :validate_ants?
 
   def initialize(user:, attributes:, domain:)
     @user = user
@@ -22,21 +24,13 @@ class Users::RdvBookingForm
   end
 
   def save
-    # Les étapes 2 et 3 ne modifient pas les attributs de l'utilisateur
-    return true if @attributes[:user].blank?
-
     # we make sure the email can be updated only if it is blank
     @user.skip_reconfirmation! if @user.email_was.blank?
 
-    # dans la vue on appelle form_for(user) plutôt que form_for(user_rdv_wizard),
-    # il faut donc ajouter des validations (et des erreurs) sur l'objet user
-    if rdv.requires_ants_predemande_number?
-      @user.singleton_class.include(User::AntsPreDemandeNumberStatusValidationConcern)
-      @user.ants_meeting_point_id = lieu_id # used in AntsPreDemandeNumberStatusValidation
-    end
-
     valid? && @user.save
   end
+
+  def ants_meeting_point_id = lieu_id
 
   def display_france_connect? = motif.organisation.online_booking_for_particuliers
   def display_pro_connect? = motif.organisation.online_booking_for_professionnels
@@ -60,6 +54,10 @@ class Users::RdvBookingForm
   def show_logement_field? = current_organisation.territory.enable_logement_field
 
   private
+
+  def validate_ants?
+    requires_ants_predemande_number? && @attributes[:user].present?
+  end
 
   def phone_number_present_for_motif_by_phone
     errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
