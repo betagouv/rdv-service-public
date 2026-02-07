@@ -1,33 +1,36 @@
 - content_for :title, "Migration vers RDV Service Public"
 
-.fr-grid-row
-  .fr-col-8.fr-col-offset-2
-    .card
-      .card-body
-        - if @instance_export.good_job_batch && @instance_export.good_job_batch.jobs.where(finished_at: nil).none?
-          - if current_organisation.motifs.active.any?
-            p
-              = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w color-scheme-green")
-              | Vos données ont été copiées dans RDV Service Public.
-            p Pour éviter que de nouveaux rendez-vous soient pris par erreur sur #{current_domain.name}, nous pouvons archiver vos anciens motifs.
+- if @instance_export.status == "oauth_connected"
+  = render "oauth_connected"
+- else
+  .fr-grid-row
+    .fr-col-8.fr-col-offset-2
+      .card
+        .card-body
+          - if @instance_export.good_job_batch && @instance_export.good_job_batch.jobs.where(finished_at: nil).none?
+            - if current_organisation.motifs.active.any?
+              p
+                = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w color-scheme-green")
+                | Vos données ont été copiées dans RDV Service Public.
+              p Pour éviter que de nouveaux rendez-vous soient pris par erreur sur #{current_domain.name}, nous pouvons archiver vos anciens motifs.
 
-            ul.fr-btns-group.fr-btns-group--inline
-              li= button_to "Archiver les motifs", archive_motifs_admin_organisation_instance_export_path(current_organisation, @instance_export.id), method: :patch, class: "fr-btn", disable_with: "Veuillez patienter…"
-              li= link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], target: "_blank", class: "fr-btn fr-btn--secondary"
+              ul.fr-btns-group.fr-btns-group--inline
+                li= button_to "Archiver les motifs", archive_motifs_admin_organisation_instance_export_path(current_organisation, @instance_export.id), method: :patch, class: "fr-btn", disable_with: "Veuillez patienter…"
+                li= link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], target: "_blank", class: "fr-btn fr-btn--secondary"
+
+            - else
+              p
+                = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w color-scheme-green")
+                | Migration terminée ! Vous pouvez maintenant gérer vos rendez-vous depuis RDV Service Public
+              .rdv-text-align-center
+                = link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], class: "fr-btn"
 
           - else
-            p
-              = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w color-scheme-green")
-              | Migration terminée ! Vous pouvez maintenant gérer vos rendez-vous depuis RDV Service Public
             .rdv-text-align-center
-              = link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], class: "fr-btn"
-
-        - else
-          .rdv-text-align-center
-            - if @instance_export.status == "copying_configuration"
-              p Copie de votre configuration en cours. Rechargez cette page dans quelques instants.
-            - elsif @instance_export.status == "copying_planning"
-              p Votre configuration a été copiée sur RDV Service Public
-              p Votre planning est en cours de copie. Si vous avez beaucoup de rendez-vous à copier, cette étape peut prendre quelques minutes.
-              p Rechargez cette page dans quelques instants.
-            = link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], target: "_blank", class: "fr-btn fr-btn--secondary"
+              - if @instance_export.status == "copying_configuration"
+                p Copie de votre configuration en cours. Rechargez cette page dans quelques instants.
+              - elsif @instance_export.status == "copying_planning"
+                p Votre configuration a été copiée sur RDV Service Public
+                p Votre planning est en cours de copie. Si vous avez beaucoup de rendez-vous à copier, cette étape peut prendre quelques minutes.
+                p Rechargez cette page dans quelques instants.
+              = link_to  "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_OAUTH_BASE_URL"], target: "_blank", class: "fr-btn fr-btn--secondary"
