@@ -486,6 +486,7 @@ tables:
       - created_at
       - updated_at
       - logo_base64
+      - grants_autonomous_signup
   - table_name: oauth_access_tokens
     anonymized_column_names:
       - token

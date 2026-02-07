@@ -24,7 +24,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       uid: "fake-app-id",
       redirect_uri: "http://www.rdv-aide-numerique-test.localhost/omniauth/rdvservicepublic/callback",
       logo_base64: "",
-      default_service: create(:service)
+      grants_autonomous_signup: true
     )
 
     application.secret_strategy.store_secret(application, :secret, "fake-app-secret")
