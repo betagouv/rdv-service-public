@@ -125,7 +125,7 @@ class Admin::UsersController < AgentAuthController
     Pundit.authorize(current_agent, current_organisation, :show?, policy_class: Agent::OrganisationPolicy)
     skip_authorization
 
-    matching_user_id = Redis.with_connection { |redis| redis.get("link_to_organisation:secure_key:#{params[:secure_key]}") }
+    matching_user_id = Redis.with_connection { _1.get("link_to_organisation:secure_key:#{params[:secure_key]}") }
     unless matching_user_id == @user.id.to_s
       raise Pundit::NotAuthorizedError, "Can't import user: invalid secure key"
     end

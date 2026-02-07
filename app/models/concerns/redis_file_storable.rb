@@ -4,7 +4,7 @@ module RedisFileStorable
   class FileNotFoundError < StandardError; end
 
   def load_file
-    compressed_file = Redis.with_connection { |redis| redis.get(redis_file_key) }
+    compressed_file = Redis.with_connection { _1.get(redis_file_key) }
     raise FileNotFoundError, "Can't find file at key #{redis_file_key.inspect}" unless compressed_file
 
     Zlib.inflate(compressed_file)

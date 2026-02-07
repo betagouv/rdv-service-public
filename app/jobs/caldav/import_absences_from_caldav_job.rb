@@ -11,7 +11,7 @@ module Caldav
     before_perform { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
 
     def self.synced_during_last_minute?(agent_id:)
-      latest_run = Redis.with_connection { |redis| redis.get("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}") }
+      latest_run = Redis.with_connection { _1.get("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}") }
       latest_run && latest_run.to_time > 1.minute.ago
     end
 
@@ -32,7 +32,7 @@ module Caldav
       update_local_events_of(agent:, updated_events:, deleted_events:, new_sync_token:)
 
       # Import successful: set job debounce and update realtime calendars
-      Redis.with_connection { |redis| redis.set("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}", Time.zone.now, ex: 1.minute) }
+      Redis.with_connection { _1.set("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}", Time.zone.now, ex: 1.minute) }
       AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent")
     end
 
