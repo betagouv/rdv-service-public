@@ -5,7 +5,7 @@ class AddOauthApplicationsGrantsAutonomousSignup < ActiveRecord::Migration[8.0]
   end
 
   def down
-    OauthApplication.where(grants_autonomous_signup: true).update_all(default_service_id: Service.first.id)
+    OauthApplication.where(grants_autonomous_signup: true, default_service_id: nil).update_all(default_service_id: Service.first.id)
     remove_column :oauth_applications, :grants_autonomous_signup
   end
 end
