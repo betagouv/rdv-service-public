@@ -10,8 +10,8 @@ ruby:
     .fr-col-12.fr-col-md-6= f.dsfr_text_field :first_name, disabled: user.connected_with_sso?, autocomplete: "given-name"
     .fr-col-12.fr-col-md-6= f.dsfr_text_field :last_name, disabled: user.pro_connect_openid_sub, autocomplete: "family-name"
   .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
-    - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_SERVICE_PUBLIC || user.pro_connect_openid_sub
-      .fr-col-12.fr-col-md-6= f.dsfr_text_field :birth_name, placeholder: "Nom de naissance", disabled: user.connected_with_sso?
+    - if form_object.show_birth_name_field?
+      .fr-col-12.fr-col-md-6= f.dsfr_text_field :birth_name, placeholder: "Nom de naissance", disabled: form_object.birth_name_frozen?
     - if !current_user.signed_in_with_invitation_token? && rdv_wizard&.rdv&.territory&.enable_birth_date_field?
       .fr-col-12.fr-col-md-6= f.dsfr_text_field :birth_date, type: "date", disabled: user.logged_once_with_franceconnect?, autocomplete: "bday"
   - if rdv_wizard&.rdv&.requires_ants_predemande_number?

@@ -20,4 +20,10 @@ module Users::UserFormConcern
 
     def self.human_attribute_name(...) = User.human_attribute_name(...)
   end
+
+  def show_birth_name_field?
+    !signed_in_with_invitation_token? && domain != Domain::RDV_SERVICE_PUBLIC && !pro_connect_openid_sub
+  end
+
+  def birth_name_frozen? = connected_with_sso?
 end
