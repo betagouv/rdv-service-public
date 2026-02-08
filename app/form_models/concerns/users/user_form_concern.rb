@@ -26,4 +26,8 @@ module Users::UserFormConcern
   end
 
   def birth_name_frozen? = connected_with_sso?
+
+  def first_name_frozen? = connected_with_sso?
+
+  def last_name_frozen? = pro_connect_openid_sub.present?
 end

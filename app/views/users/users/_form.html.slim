@@ -7,8 +7,8 @@ ruby:
 = form_for form_object, as: :user, url: form_url, method: form_method, builder: Dsfr::FormBuilder do |f|
   = render "model_errors", model: form_object, f: f
   .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
-    .fr-col-12.fr-col-md-6= f.dsfr_text_field :first_name, disabled: user.connected_with_sso?, autocomplete: "given-name"
-    .fr-col-12.fr-col-md-6= f.dsfr_text_field :last_name, disabled: user.pro_connect_openid_sub, autocomplete: "family-name"
+    .fr-col-12.fr-col-md-6= f.dsfr_text_field :first_name, disabled: form_object.first_name_frozen?, autocomplete: "given-name"
+    .fr-col-12.fr-col-md-6= f.dsfr_text_field :last_name, disabled: form_object.last_name_frozen?, autocomplete: "family-name"
   .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
     - if form_object.show_birth_name_field?
       .fr-col-12.fr-col-md-6= f.dsfr_text_field :birth_name, placeholder: "Nom de naissance", disabled: form_object.birth_name_frozen?
