@@ -30,4 +30,8 @@ module Users::UserFormConcern
   def first_name_frozen? = connected_with_sso?
 
   def last_name_frozen? = pro_connect_openid_sub.present?
+
+  def birth_date_frozen? = logged_once_with_franceconnect?
+
+  def show_franceconnect_frozen_fields_warning? = logged_once_with_franceconnect?
 end
