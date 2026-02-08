@@ -77,6 +77,24 @@ RSpec.describe "User can update their information" do
     end
   end
 
+  describe "FranceConnect frozen fields warning" do
+    context "quand l'usager est connecté via FranceConnect" do
+      let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
+
+      it "affiche le warning FranceConnect" do
+        visit users_informations_path
+        expect(page).to have_content("Les champs d'état civil ne peuvent plus être modifiés suite à la connexion certifiée par FranceConnect")
+      end
+    end
+
+    context "quand l'usager n'est pas connecté via FranceConnect" do
+      it "n'affiche pas le warning FranceConnect" do
+        visit users_informations_path
+        expect(page).not_to have_content("Les champs d'état civil ne peuvent plus être modifiés")
+      end
+    end
+  end
+
   describe "updating notification_email" do
     context "when the user is connected with FranceConnect" do
       let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }

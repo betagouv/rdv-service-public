@@ -39,6 +39,23 @@ RSpec.describe "User can search for rdvs" do
       confirm_rdv(motif, lieu)
     end
 
+    describe "quand l'usager est connecté via FranceConnect" do
+      let!(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
+
+      before { login_as(user, scope: :user) }
+
+      it "affiche la date de naissance en lecture seule et le warning FranceConnect" do
+        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        expect(page).to have_content("Vos informations")
+        expect(page).to have_field("Date de naissance", disabled: true)
+        expect(page).to have_field("Nom de naissance", disabled: true)
+        expect(page).to have_field("Prénom", disabled: true)
+        # FranceConnect ne gèle pas le nom de famille (seul ProConnect le fait)
+        expect(page).to have_field("Nom", disabled: false)
+        expect(page).to have_content("Les champs d'état civil ne peuvent plus être modifiés suite à la connexion certifiée par FranceConnect")
+      end
+    end
+
     describe "On RDV Service Public" do
       it "doesn't require an ANTS predemande number for a relative", js: true do
         visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice}"
