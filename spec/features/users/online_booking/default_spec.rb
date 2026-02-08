@@ -59,6 +59,17 @@ RSpec.describe "User can search for rdvs" do
       end
     end
 
+    describe "warning numéro fixe" do
+      let!(:user) { create(:user, phone_number: "0130303030", organisations: [organisation]) }
+
+      before { login_as(user, scope: :user) }
+
+      it "affiche le warning numéro non-mobile" do
+        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        expect(page).to have_content("Vous ne recevrez pas de SMS avec ce numéro non-mobile")
+      end
+    end
+
     describe "On RDV Service Public" do
       it "doesn't require an ANTS predemande number for a relative", js: true do
         visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice}"

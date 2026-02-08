@@ -95,6 +95,26 @@ RSpec.describe "User can update their information" do
     end
   end
 
+  describe "landline phone number warning" do
+    context "quand l'usager a un numéro fixe" do
+      let(:user) { create(:user, phone_number: "0130303030", organisations: [organisation]) }
+
+      it "affiche le warning numéro non-mobile" do
+        visit users_informations_path
+        expect(page).to have_content("Vous ne recevrez pas de SMS avec ce numéro non-mobile")
+      end
+    end
+
+    context "quand l'usager a un numéro mobile" do
+      let(:user) { create(:user, phone_number: "0612345678", organisations: [organisation]) }
+
+      it "n'affiche pas le warning" do
+        visit users_informations_path
+        expect(page).not_to have_content("Vous ne recevrez pas de SMS avec ce numéro non-mobile")
+      end
+    end
+  end
+
   describe "updating notification_email" do
     context "when the user is connected with FranceConnect" do
       let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
