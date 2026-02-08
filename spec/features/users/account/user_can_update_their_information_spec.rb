@@ -115,6 +115,12 @@ RSpec.describe "User can update their information" do
     end
   end
 
+  it "n'affiche pas le champ date de naissance" do
+    # TODO: je ne sais pas si c'est un comportement volontaire ou une erreur?
+    visit users_informations_path
+    expect(page).not_to have_field("Date de naissance")
+  end
+
   describe "address_details field" do
     before { visit users_informations_path }
 
