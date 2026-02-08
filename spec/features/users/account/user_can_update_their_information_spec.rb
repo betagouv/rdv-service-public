@@ -53,6 +53,30 @@ RSpec.describe "User can update their information" do
     end
   end
 
+  describe "first_name and last_name fields" do
+    before do
+      visit users_informations_path
+    end
+
+    context "quand l'usager est connecté via FranceConnect" do
+      let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
+
+      it "affiche le prénom en lecture seule et le nom modifiable" do
+        expect(page).to have_field("Prénom", disabled: true)
+        expect(page).to have_field("Nom", disabled: false)
+      end
+    end
+
+    context "quand l'usager est connecté via ProConnect" do
+      let(:user) { create(:user, pro_connect_openid_sub: "fake_sub", organisations: [organisation]) }
+
+      it "affiche le prénom et le nom en lecture seule" do
+        expect(page).to have_field("Prénom", disabled: true)
+        expect(page).to have_field("Nom", disabled: true)
+      end
+    end
+  end
+
   describe "updating notification_email" do
     context "when the user is connected with FranceConnect" do
       let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
