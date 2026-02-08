@@ -44,7 +44,7 @@ RSpec.describe "User can search for rdvs" do
 
       before { login_as(user, scope: :user) }
 
-      it "affiche la date de naissance en lecture seule et le warning FranceConnect" do
+      it "affiche la date de naissance en lecture seule, le warning FranceConnect et le champ email de notification" do
         visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
         expect(page).to have_content("Vos informations")
         expect(page).to have_field("Date de naissance", disabled: true)
@@ -53,6 +53,9 @@ RSpec.describe "User can search for rdvs" do
         # FranceConnect ne gèle pas le nom de famille (seul ProConnect le fait)
         expect(page).to have_field("Nom", disabled: false)
         expect(page).to have_content("Les champs d'état civil ne peuvent plus être modifiés suite à la connexion certifiée par FranceConnect")
+        # Un usager FranceConnect n'a pas d'email mais un notification_email
+        expect(page).not_to have_css("[name='user[email]']")
+        expect(page).to have_field("Email de notification", with: user.notification_email)
       end
     end
 
