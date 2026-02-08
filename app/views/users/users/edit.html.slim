@@ -6,7 +6,7 @@
       .card
         .card-body
           h1.card-title = t(".my_informations")
-          = render "form", user: @user
+          = render "form", form_object: @user_form, user: @user
     .col-md-6
       .card
         .card-body

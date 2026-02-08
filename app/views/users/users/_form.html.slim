@@ -4,8 +4,8 @@ ruby:
   form_method = rdv_wizard.present? ? "post" : "patch"
   territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
 
-= form_for user, url: form_url, method: form_method, builder: Dsfr::FormBuilder do |f|
-  = render "model_errors", model: user, f: f
+= form_for form_object, as: :user, url: form_url, method: form_method, builder: Dsfr::FormBuilder do |f|
+  = render "model_errors", model: form_object, f: f
   .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
     .fr-col-12.fr-col-md-6= f.dsfr_text_field :first_name, disabled: user.connected_with_sso?, autocomplete: "given-name"
     .fr-col-12.fr-col-md-6= f.dsfr_text_field :last_name, disabled: user.pro_connect_openid_sub, autocomplete: "family-name"
