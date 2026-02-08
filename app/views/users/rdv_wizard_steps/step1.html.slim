@@ -10,7 +10,7 @@
       .card-body
         = form_for @rdv_booking_form,
               as: :user,
-              url: users_rdv_wizard_step_path(step: 1, **@rdv_booking_form.to_query.except(:rdv)),
+              url: users_rdv_wizard_step_path(**@rdv_booking_form.to_query),
               method: :post,
               builder: Dsfr::FormBuilder do |f|
           - fo = f.object

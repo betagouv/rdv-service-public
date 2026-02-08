@@ -1,4 +1,4 @@
-class PrescripteurRdvWizard < UserRdvWizard::Base
+class PrescripteurRdvWizard < UserRdvWizard
   attr_accessor :prescripteur
 
   def initialize(attributes, domain)

@@ -34,7 +34,7 @@ RSpec.describe UserRdvWizard do
         geo_search: mock_geo_search,
         duration_in_min: 30
       ).and_return(returned_creneau)
-      rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
+      rdv_wizard = described_class.new(user, attributes)
       expect(rdv_wizard.rdv.user_ids).to eq [user_for_rdv.id]
       expect(rdv_wizard.creneau).to eq returned_creneau
     end
@@ -52,7 +52,7 @@ RSpec.describe UserRdvWizard do
         geo_search: mock_geo_search,
         duration_in_min: 60
       ).and_return(returned_creneau)
-      rdv_wizard = UserRdvWizard::Step1.new(user, attributes.merge(duration: 60))
+      rdv_wizard = described_class.new(user, attributes.merge(duration: 60))
       expect(rdv_wizard.rdv.user_ids).to eq [user_for_rdv.id]
       expect(rdv_wizard.creneau).to eq returned_creneau
     end
@@ -77,7 +77,7 @@ RSpec.describe UserRdvWizard do
         }
       end
 
-      it { expect(UserRdvWizard::Step1.new(user, attributes).save).to be true }
+      it { expect(described_class.new(user, attributes).save).to be true }
     end
 
     context "pour un RDV de passeport ANTS Mairie" do
@@ -107,7 +107,7 @@ RSpec.describe UserRdvWizard do
           }
         end
 
-        it { expect(UserRdvWizard::Step1.new(user, attributes).save).to be true }
+        it { expect(described_class.new(user, attributes).save).to be true }
       end
 
       context "l’usager fournit un numéro de pré-demande vide" do
@@ -129,7 +129,7 @@ RSpec.describe UserRdvWizard do
         end
 
         it "empêche la création" do
-          form = UserRdvWizard::Step1.new(user, attributes)
+          form = described_class.new(user, attributes)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -160,7 +160,7 @@ RSpec.describe UserRdvWizard do
         end
 
         it "empêche la création" do
-          form = UserRdvWizard::Step1.new(user, attributes)
+          form = described_class.new(user, attributes)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -197,7 +197,7 @@ RSpec.describe UserRdvWizard do
         end
 
         it "empêche la création" do
-          form = UserRdvWizard::Step1.new(user, attributes)
+          form = described_class.new(user, attributes)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -240,7 +240,7 @@ RSpec.describe UserRdvWizard do
         end
 
         it "n’empêche pas la création" do
-          form = UserRdvWizard::Step1.new(user, attributes)
+          form = described_class.new(user, attributes)
           res = form.save
           expect(res).to be true
         end
@@ -267,7 +267,7 @@ RSpec.describe UserRdvWizard do
         end
 
         it "empêche la création" do
-          form = UserRdvWizard::Step1.new(user, attributes)
+          form = described_class.new(user, attributes)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -297,7 +297,7 @@ RSpec.describe UserRdvWizard do
           }
         end
 
-        it { expect(UserRdvWizard::Step1.new(user, attributes).save).to be true }
+        it { expect(described_class.new(user, attributes).save).to be true }
       end
 
       context "when the phone number is blank" do
@@ -317,10 +317,10 @@ RSpec.describe UserRdvWizard do
           }
         end
 
-        it { expect(UserRdvWizard::Step1.new(user, attributes).save).to be false }
+        it { expect(described_class.new(user, attributes).save).to be false }
 
         it "return false with a rdv by_phone and user without phone" do
-          rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
+          rdv_wizard = described_class.new(user, attributes)
           rdv_wizard.valid?
           expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
         end
@@ -334,7 +334,7 @@ RSpec.describe UserRdvWizard do
         let(:attributes) { { rdv_collectif_id: rdv.id } }
 
         it "finds the Rdv" do
-          expect(UserRdvWizard::Step1.new(user_for_rdv, attributes).rdv).to eq(rdv)
+          expect(described_class.new(user_for_rdv, attributes).rdv).to eq(rdv)
         end
       end
     end

@@ -7,7 +7,7 @@ RSpec.describe Users::RdvBookingForm, type: :form_model do
   let(:lieu) { create(:lieu, organisation:) }
   let(:user) { create(:user) }
   let(:domain) { Domain::RDV_SOLIDARITES }
-  let(:rdv_wizard) { UserRdvWizard::Step1.new(user, { motif_id: motif.id, lieu_id: lieu.id }) }
+  let(:rdv_wizard) { UserRdvWizard.new(user, { motif_id: motif.id, lieu_id: lieu.id }) }
 
   before { create(:user_profile, user:, organisation:) }
 
