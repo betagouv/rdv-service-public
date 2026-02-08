@@ -44,6 +44,9 @@ RSpec.describe "User can search for rdvs" do
         visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice}"
         choose_creneau
         sign_up
+
+        # Le champ nom de naissance n'est pas affiché sur le domaine RDV Service Public
+        expect(page).not_to have_field("Nom de naissance")
         click_button("Continuer")
 
         add_relative(birth_date: false)

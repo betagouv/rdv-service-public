@@ -27,6 +27,32 @@ RSpec.describe "User can update their information" do
     end
   end
 
+  describe "birth_name field" do
+    before { visit users_informations_path }
+
+    context "sur le domaine RDV Solidarités" do
+      it "affiche le champ nom de naissance" do
+        expect(page).to have_field("Nom de naissance")
+      end
+    end
+
+    context "quand l'usager est connecté via ProConnect" do
+      let(:user) { create(:user, pro_connect_openid_sub: "fake_sub", organisations: [organisation]) }
+
+      it "n'affiche pas le champ nom de naissance" do
+        expect(page).not_to have_field("Nom de naissance")
+      end
+    end
+
+    context "quand l'usager est connecté via FranceConnect" do
+      let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
+
+      it "affiche le champ nom de naissance en lecture seule" do
+        expect(page).to have_field("Nom de naissance", disabled: true)
+      end
+    end
+  end
+
   describe "updating notification_email" do
     context "when the user is connected with FranceConnect" do
       let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
