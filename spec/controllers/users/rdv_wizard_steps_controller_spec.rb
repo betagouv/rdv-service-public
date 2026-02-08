@@ -42,5 +42,38 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
         expect(response).to redirect_to(new_user_session_path)
       end
     end
+
+    context "usager connecté via une invitation" do
+      let(:mock_step1_wizard) { instance_double(UserRdvWizard::Step1, creneau: mock_creneau, rdv: mock_rdv) }
+
+      before do
+        sign_in user
+        user.signed_in_with_invitation_token!
+        allow(controller).to receive(:current_user).and_return(user)
+        allow(UserRdvWizard::Step1).to receive(:new).and_return(mock_step1_wizard)
+        allow(Users::RdvBookingForm).to receive(:new).and_return(instance_double(Users::RdvBookingForm))
+      end
+
+      it "le step 1 pointe vers le step 3 comme prochaine étape" do
+        get :new, params: { step: 1, motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at }
+        expect(controller.send(:next_step)[:number]).to eq(3)
+      end
+    end
+
+    context "usager connecté via ProConnect" do
+      let!(:user) { create(:user, pro_connect_openid_sub: "some-openid-sub") }
+      let(:mock_step1_wizard) { instance_double(UserRdvWizard::Step1, creneau: mock_creneau, rdv: mock_rdv) }
+
+      before do
+        sign_in user
+        allow(UserRdvWizard::Step1).to receive(:new).and_return(mock_step1_wizard)
+        allow(Users::RdvBookingForm).to receive(:new).and_return(instance_double(Users::RdvBookingForm))
+      end
+
+      it "le step 1 pointe vers le step 3 comme prochaine étape" do
+        get :new, params: { step: 1, motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at }
+        expect(controller.send(:next_step)[:number]).to eq(3)
+      end
+    end
   end
 end
