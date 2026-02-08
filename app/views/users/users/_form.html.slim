@@ -2,7 +2,6 @@ ruby:
   rdv_wizard = local_assigns[:rdv_wizard]
   form_url = rdv_wizard.present? ? users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv)) : users_informations_path
   form_method = rdv_wizard.present? ? "post" : "patch"
-  territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
 
 = form_for form_object, as: :user, url: form_url, method: form_method, builder: Dsfr::FormBuilder do |f|
   = render "model_errors", model: form_object, f: f
@@ -34,7 +33,7 @@ ruby:
     - address_value = rdv_wizard.present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
     = f.dsfr_text_field :address, value: address_value, required: rdv_wizard&.motif&.home?, data: { "address-autocomplete": "on" }, autocomplete: "street-address", dir: "ltr"
 
-  - if territories.map(&:enable_address_details).any?
+  - if form_object.show_address_details_field?
     = f.dsfr_text_field :address_details
 
   = f.hidden_field :city_code
@@ -42,11 +41,11 @@ ruby:
   = f.hidden_field :city_name
 
   - if local_assigns[:service].nil? || service.user_field_groups.include?(:social)
-    - if territories.map(&:enable_caisse_affiliation_field).any? || territories.map(&:enable_affiliation_number_field).any?
+    - if form_object.show_caisse_affiliation_field? || form_object.show_affiliation_number_field?
       .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
-        - if territories.map(&:enable_caisse_affiliation_field).any?
+        - if form_object.show_caisse_affiliation_field?
           .fr-col-12.fr-col-md-6= f.dsfr_select :caisse_affiliation, User.human_attribute_values(:caisse_affiliation), include_blank: true
-        - if territories.map(&:enable_affiliation_number_field).any?
+        - if form_object.show_affiliation_number_field?
           .fr-col-12.fr-col-md-6= f.dsfr_text_field :affiliation_number
 
     - if rdv_wizard
@@ -54,7 +53,7 @@ ruby:
         current_organisation = Motif.find(rdv_wizard.to_query[:motif_id]).organisation
       - if current_organisation.territory.enable_logement_field
         = f.dsfr_select :logement, User.human_attribute_values(:logement), include_blank: true
-    - elsif territories.map(&:enable_logement_field).any?
+    - elsif form_object.user_profiles_territories.any?(&:enable_logement_field)
       = f.dsfr_select :logement, User.human_attribute_values(:logement), include_blank: true
 
   - if rdv_wizard.present?

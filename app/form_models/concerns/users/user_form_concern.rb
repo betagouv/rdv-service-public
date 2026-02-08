@@ -51,4 +51,14 @@ module Users::UserFormConcern
   def notification_email_required? = signed_in_with_invitation_token? && notification_email.present?
 
   def show_landline_phone_number_warning? = phone_number.present? && !phone_number_mobile?
+
+  def user_profiles_territories
+    @user_profiles_territories ||= Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
+  end
+
+  def show_caisse_affiliation_field? = user_profiles_territories.any?(&:enable_caisse_affiliation_field)
+
+  def show_affiliation_number_field? = user_profiles_territories.any?(&:enable_affiliation_number_field)
+
+  def show_address_details_field? = user_profiles_territories.any?(&:enable_address_details)
 end
