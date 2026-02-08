@@ -49,4 +49,6 @@ module Users::UserFormConcern
   # Nous ne voulons pas perdre d'informations si l'utilisateur a déjà un email de notification, donc le champ est requis.
   # L'utilisateur peut définir un email de notification s'il n'en a pas encore, mais ce n'est pas obligatoire.
   def notification_email_required? = signed_in_with_invitation_token? && notification_email.present?
+
+  def show_landline_phone_number_warning? = phone_number.present? && !phone_number_mobile?
 end
