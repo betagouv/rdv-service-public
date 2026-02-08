@@ -99,7 +99,9 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def query_params
-    params.permit(*RDV_PERMITTED_PARAMS, *EXTRA_PERMITTED_PARAMS)
+    result = params.permit(*RDV_PERMITTED_PARAMS, *EXTRA_PERMITTED_PARAMS)
+    result[:user_ids] = [result[:created_user_id]] if result[:created_user_id].present?
+    result
   end
 
   def user_params
