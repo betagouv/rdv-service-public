@@ -19,16 +19,10 @@ ruby:
   - if form_object.show_franceconnect_frozen_fields_warning?
     .fr-alert.fr-alert--info.fr-mb-1w
       = I18n.t("users.franceconnect_frozen_fields")
-  - if current_user.signed_in_with_invitation_token?
-    - if user.email.present?
-      / Pour des raisons historiques on garde le champ email
-      = f.dsfr_email_field :email, disabled: user.email.present? && !user.email_changed?, required: true, autocomplete: "email"
-    - else
-      / Nous ne voulons pas perdre d'informations si l'utilisateur a déjà un email de notification, donc le champ est requis
-      / L'utilisateur peut définir un email de notification s'il n'en a pas encore, mais ce n'est pas obligatoire
-      = f.dsfr_email_field :notification_email, required: user.notification_email.present?
-  - elsif user.email.blank? && user.notification_email && user.connected_with_sso?
-    = f.dsfr_email_field :notification_email, label: "Email de notification"
+  - if form_object.show_email_field?
+    = f.dsfr_email_field :email, disabled: form_object.email_disabled?, required: true, autocomplete: "email"
+  - elsif form_object.show_notification_email_field?
+    = f.dsfr_email_field :notification_email, label: form_object.notification_email_label, required: form_object.notification_email_required?
 
   = f.dsfr_phone_field :phone_number, as: :tel, required: rdv_wizard&.motif&.phone?, autocomplete: "tel"
   - if user.phone_number.present? && !user.phone_number_mobile?

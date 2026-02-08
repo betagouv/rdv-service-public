@@ -34,4 +34,19 @@ module Users::UserFormConcern
   def birth_date_frozen? = logged_once_with_franceconnect?
 
   def show_franceconnect_frozen_fields_warning? = logged_once_with_franceconnect?
+
+  # Pour des raisons historiques on garde le champ email
+  def show_email_field? = signed_in_with_invitation_token? && email.present?
+
+  def email_disabled? = email.present? && !email_changed?
+
+  def show_notification_email_field?
+    email.blank? && (signed_in_with_invitation_token? || (notification_email && connected_with_sso?))
+  end
+
+  def notification_email_label = signed_in_with_invitation_token? ? "Email" : "Email de notification"
+
+  # Nous ne voulons pas perdre d'informations si l'utilisateur a déjà un email de notification, donc le champ est requis.
+  # L'utilisateur peut définir un email de notification s'il n'en a pas encore, mais ce n'est pas obligatoire.
+  def notification_email_required? = signed_in_with_invitation_token? && notification_email.present?
 end
