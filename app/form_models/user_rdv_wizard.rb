@@ -134,15 +134,7 @@ module UserRdvWizard
     end
   end
 
-  class Step2 < Base
-    def initialize(user, attributes)
-      if attributes[:created_user_id].present?
-        attributes[:user_ids] = [attributes[:created_user_id]]
-      end
-
-      super
-    end
-  end
+  class Step2 < Base; end
 
   class Step3 < Base; end
 end
