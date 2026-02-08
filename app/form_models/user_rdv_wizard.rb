@@ -98,19 +98,6 @@ module UserRdvWizard
       motif.organisation.online_booking_for_professionnels
     end
 
-    # On a parfois besoin de cette méthode avant d'avoir une instance de RdvWizard, donc on factorise l'implémentation
-    # avec cette méthode de classe
-    def self.skip_proches_step?(user)
-      # L'étape 2 propose de prendre rendez-vous pour un proche
-      # Dans le cas d'une invitation, c'est l'usager qui est invité, donc on saute cette étape
-      # Si l'usager est un professionnel connecté via ProConnect, on ne lui propose pas non plus de prendre rendez-vous pour un proche
-      user.signed_in_with_invitation_token? || user.pro_connect_openid_sub
-    end
-
-    def skip_proches_step?
-      self.class.skip_proches_step?(user)
-    end
-
     private
 
     def lieu

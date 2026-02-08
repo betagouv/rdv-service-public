@@ -57,7 +57,7 @@ ul.list-group.list-group-flush.fr-mt-0
           | Usager :&nbsp;
           = users_to_sentence(rdv_wizard.users)
         .col-auto
-          - step = @rdv_wizard.skip_proches_step? ? 1 : 2
+          - step = @skip_proches_step ? 1 : 2
           = dsfr_link_to "Modifier", new_users_rdv_wizard_step_path(step: , **@rdv_wizard.to_query), title: "Modifier les usagers"
     li.list-group-item
       .row

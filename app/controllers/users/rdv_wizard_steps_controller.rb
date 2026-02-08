@@ -9,6 +9,8 @@ class Users::RdvWizardStepsController < UserAuthController
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
 
+  before_action :set_skip_proches_step
+
   include TokenInvitable
 
   def new
@@ -38,13 +40,20 @@ class Users::RdvWizardStepsController < UserAuthController
 
   protected
 
+  # L'étape 2 propose de prendre rendez-vous pour un proche
+  # Dans le cas d'une invitation, c'est l'usager qui est invité, donc on saute cette étape
+  # Si l'usager est un professionnel connecté via ProConnect, on ne lui propose pas non plus de prendre rendez-vous pour un proche
+  def set_skip_proches_step
+    @skip_proches_step = current_user.signed_in_with_invitation_token? || current_user.pro_connect_openid_sub
+  end
+
   def steps
     steps = {
       step1: {
         name: "step1",
         number: 1,
         title: "Vos informations",
-        next_step: UserRdvWizard::Base.skip_proches_step?(current_user) ? :step3 : :step2,
+        next_step: @skip_proches_step ? :step3 : :step2,
         stepper_index: 1,
       },
       step2: {
@@ -58,11 +67,11 @@ class Users::RdvWizardStepsController < UserAuthController
         name: "step3",
         number: 3,
         title: "Confirmation",
-        stepper_index: UserRdvWizard::Base.skip_proches_step?(current_user) ? 2 : 3,
+        stepper_index: @skip_proches_step ? 2 : 3,
       },
     }
 
-    steps.delete(:step2) if UserRdvWizard::Base.skip_proches_step?(current_user)
+    steps.delete(:step2) if @skip_proches_step
 
     steps
   end
