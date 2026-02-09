@@ -11,7 +11,7 @@ module Admin::Planning::SetAgentsConcern
 
   def set_agents
     scope = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
-    agents = Agent.where(id: Array(params[:agent_id]).compact_blank)
+    agents = Agent.active.where(id: Array(params[:agent_id]).compact_blank)
 
     case agents.size
     when 0
