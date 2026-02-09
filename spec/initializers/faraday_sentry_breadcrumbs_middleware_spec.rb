@@ -18,7 +18,7 @@ RSpec.describe FaradaySentryBreadcrumbsMiddleware do
 
     expect(request_breadcrumb.message).to eq("HTTP request")
     expect(request_breadcrumb.data[:body]).to eq({ title: "Mon article de blog" }.to_json)
-    expect(request_breadcrumb.data[:headers]).to eq({ "Authorization" => "Token token=abcd1234efgh", "User-Agent" => "Faraday v2.9.0" })
+    expect(request_breadcrumb.data[:headers]).to eq({ "Authorization" => "Token token=abcd1234efgh", "User-Agent" => "Faraday v2.14.1" })
     expect(request_breadcrumb.data[:method]).to eq(:post)
     expect(request_breadcrumb.data[:url].to_s).to eq("https://example.com/posts")
 
