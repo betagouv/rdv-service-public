@@ -5,7 +5,22 @@ class CreateRdvInNewInstance
     @oauth_application = oauth_application
   end
 
-  def create! # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def create!
+    rdv = build_rdv
+
+    controller.send(:authorize, rdv, :update?, policy_class: Agent::RdvPolicy)
+
+    Rdv.transaction do
+      save_rdv_and_participations!(rdv)
+      create_external_reference!(rdv)
+    end
+
+    rdv
+  end
+
+  private
+
+  def build_rdv
     # On crée le rendez-vous via ActiveRecord sans lancer les Notifiers, ce qui évite de déclencher des callbacks de notifications pour les agents et les usager
     rdv = Rdv.new(
       params.permit(%w[starts_at status cancelled_at context ends_at name max_participants_count])
@@ -35,40 +50,38 @@ class CreateRdvInNewInstance
                        rdv.agents.first
                      end
 
-    controller.send(:authorize, rdv, :update?, policy_class: Agent::RdvPolicy)
-
-    Rdv.transaction do
-      if rdv.collectif?
-        rdv.save!
-
-        params[:participations].each do |participation_params|
-          Participation.create(
-            rdv: rdv,
-            user_id: ExternalReference.find_by(item_type: "User", external_id: participation_params[:user_external_id], oauth_application:)&.item_id,
-            status: participation_params[:status],
-            created_by: rdv.created_by
-          )
-        end
-      else
-        user_external_ids = params[:participations].map { |p| p[:user_external_id] }
-        rdv.user_ids = ExternalReference.where(item_type: "User", external_id: user_external_ids, oauth_application:).map(&:item_id)
-        rdv.save!
-      end
-
-      if params[:external_reference].present?
-        ExternalReference.create!(
-          params.require(:external_reference).permit(:external_id, :external_url).merge(
-            item: rdv,
-            oauth_application:
-          )
-        )
-      end
-    end
-
     rdv
   end
 
-  private
+  def save_rdv_and_participations!(rdv)
+    if rdv.collectif?
+      rdv.save!
+
+      params[:participations].each do |participation_params|
+        Participation.create(
+          rdv: rdv,
+          user_id: ExternalReference.find_by(item_type: "User", external_id: participation_params[:user_external_id], oauth_application:)&.item_id,
+          status: participation_params[:status],
+          created_by: rdv.created_by
+        )
+      end
+    else
+      user_external_ids = params[:participations].pluck(:user_external_id)
+      rdv.user_ids = ExternalReference.where(item_type: "User", external_id: user_external_ids, oauth_application:).map(&:item_id)
+      rdv.save!
+    end
+  end
+
+  def create_external_reference!(rdv)
+    if params[:external_reference].present?
+      ExternalReference.create!(
+        params.require(:external_reference).permit(:external_id, :external_url).merge(
+          item: rdv,
+          oauth_application:
+        )
+      )
+    end
+  end
 
   attr_reader :params, :controller, :oauth_application
 end
