@@ -165,8 +165,8 @@ RSpec.describe "RDV API" do
 
         before { AgentRemoval.new(other_agent_on_old_instance, instance_export.source_organisation).remove! }
 
-        it "essaye de créer le rendez-vous" do
-          # On génère la requête, puis on supprime les données pour simuler le fait d'être sur une autre instance
+        it "crée le rendez-vous avec un agent supprimé" do
+          # On génère les params, puis on supprime les données pour simuler le fait d'être sur une autre instance
           params = request_params
 
           rdv_on_old_instance.destroy
