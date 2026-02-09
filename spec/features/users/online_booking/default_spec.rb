@@ -98,6 +98,31 @@ RSpec.describe "User can search for rdvs" do
       end
     end
 
+    describe "champ logement" do
+      let!(:user) { create(:user, organisations: [organisation]) }
+      let(:service) { create(:service, name: "Service social") }
+
+      before { login_as(user, scope: :user) }
+
+      context "quand le territoire active le champ logement" do
+        let!(:territory92) do
+          create(:territory, departement_number: "92", enable_birth_date_field: true, enable_logement_field: true)
+        end
+
+        it "affiche le champ logement" do
+          visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+          expect(page).to have_select("Logement")
+        end
+      end
+
+      context "quand le territoire n'active pas le champ logement" do
+        it "n'affiche pas le champ logement" do
+          visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+          expect(page).not_to have_select("Logement")
+        end
+      end
+    end
+
     describe "On RDV Service Public" do
       it "doesn't require an ANTS predemande number for a relative", js: true do
         visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice}"

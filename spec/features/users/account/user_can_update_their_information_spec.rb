@@ -121,6 +121,24 @@ RSpec.describe "User can update their information" do
     expect(page).not_to have_field("Date de naissance")
   end
 
+  describe "logement field" do
+    before { visit users_informations_path }
+
+    context "quand le territoire active le champ logement" do
+      let(:territory) { create(:territory, enable_logement_field: true) }
+
+      it "affiche le champ logement" do
+        expect(page).to have_select("Logement")
+      end
+    end
+
+    context "quand le territoire n'active pas le champ logement" do
+      it "n'affiche pas le champ logement" do
+        expect(page).not_to have_select("Logement")
+      end
+    end
+  end
+
   describe "address_details field" do
     before { visit users_informations_path }
 
