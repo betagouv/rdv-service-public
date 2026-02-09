@@ -103,7 +103,9 @@ class InstanceExports::CopyPlanningJob < ApplicationJob
       instance_export.api_client.post(
         "rdvs",
         {
-          agent_emails: rdv.agents.pluck(:email),
+          agents: rdv.agents.map do |agent|
+            agent.attributes.symbolize_keys.slice(:email, :first_name, :last_name, :deleted_at)
+          end,
           lieu_external_id: rdv.lieu_id,
           motif_external_id: rdv.motif_id,
 
