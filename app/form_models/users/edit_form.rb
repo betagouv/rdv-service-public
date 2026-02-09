@@ -17,4 +17,6 @@ class Users::EditForm
   def phone_required? = false
 
   def address_value = user.address
+
+  def show_social_fields? = true
 end

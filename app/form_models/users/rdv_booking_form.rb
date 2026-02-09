@@ -24,4 +24,6 @@ class Users::RdvBookingForm
   def phone_required? = motif.phone?
 
   def address_value = user.address.nil? ? to_query[:where] : user.address
+
+  def show_social_fields? = service.nil? || service.user_field_groups.include?(:social)
 end
