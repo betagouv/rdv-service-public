@@ -50,24 +50,6 @@ export class AgendaMonoAgent {
       select: this.selectEvent,
       headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
       customButtons: { preferencesModalToggle },
-      buttonHints: {
-        prev: (navUnit) => {
-          const labels = {
-            Jour: "Jour précédent",
-            Semaine: "Semaine précédente",
-            Mois: "Mois précédent",
-          };
-          return labels[navUnit] || "Précédent";
-        },
-        next: (navUnit) => {
-          const labels = {
-            Jour: "Jour suivant",
-            Semaine: "Semaine suivante",
-            Mois: "Mois suivant",
-          };
-          return labels[navUnit] || "Suivant";
-        },
-      },
       views: {
         timeGridOneDay: {
           type: 'timeGrid',

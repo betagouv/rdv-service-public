@@ -60,8 +60,28 @@ export const hiddenDays = ({ displaySaturdays, displaySundays }) => {
   return hiddenDays;
 };
 
+const buttonHints = {
+  prev: (navUnit) => {
+    const labels = {
+      Jour: "Jour précédent",
+      Semaine: "Semaine précédente",
+      Mois: "Mois précédent",
+    };
+    return labels[navUnit] || "Précédent";
+  },
+  next: (navUnit) => {
+    const labels = {
+      Jour: "Jour suivant",
+      Semaine: "Semaine suivante",
+      Mois: "Mois suivant",
+    };
+    return labels[navUnit] || "Suivant";
+  },
+};
+
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
+  buttonHints,
   allDaySlot: false,
   height: "auto",
   selectable: true,
