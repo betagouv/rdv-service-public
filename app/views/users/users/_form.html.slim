@@ -48,12 +48,7 @@ ruby:
         - if form_object.show_affiliation_number_field?
           .fr-col-12.fr-col-md-6= f.dsfr_text_field :affiliation_number
 
-    - if rdv_wizard
-      ruby:
-        current_organisation = Motif.find(rdv_wizard.to_query[:motif_id]).organisation
-      - if current_organisation.territory.enable_logement_field
-        = f.dsfr_select :logement, User.human_attribute_values(:logement), include_blank: true
-    - elsif form_object.user_profiles_territories.any?(&:enable_logement_field)
+    - if form_object.show_logement_field?
       = f.dsfr_select :logement, User.human_attribute_values(:logement), include_blank: true
 
   - if rdv_wizard.present?
