@@ -9,7 +9,7 @@ RSpec.describe Agents::SessionsController do
     context "when the agent has a pro_connect_openid_sub" do
       let(:agent) { create(:agent, password: "c0rrecThorse!", pro_connect_openid_sub: "some-sub") }
 
-      it "signs out the agent and redirects to the login page with pro_connect_required param" do
+      it "fails authentication and redirects to the login page with pro_connect_required param" do
         post :create, params: { agent: { email: agent.email, password: "c0rrecThorse!" } }
 
         expect(response).to redirect_to(new_agent_session_path(pro_connect_required: agent.email))
