@@ -109,7 +109,7 @@ RSpec.describe "RDV API" do
   describe "#create" do
     context "pour une migration inter-instance d'un rendez-vous pris par un usager" do
       let(:user_on_old_instance) { create(:user, organisations: [organisation_on_old_instance]) }
-      let(:rdv_on_old_instance) do
+      let!(:rdv_on_old_instance) do
         create(:rdv, agents: [agent_on_old_instance], motif: motif_on_old_instance,
                      users: [user_on_old_instance], starts_at: 2.weeks.ago, created_by: user_on_old_instance,
                      lieu: lieu_on_old_instance, organisation: instance_export.source_organisation)
@@ -134,7 +134,7 @@ RSpec.describe "RDV API" do
       let(:user_on_new_instance) { create(:user, organisations: [organisation]) }
       let!(:user_external_reference) { create(:external_reference, item: user_on_new_instance, external_id: user_on_old_instance.id, oauth_application: application) }
 
-      it "sends all the information to the new instance" do
+      let(:request_params) do
         request_params = nil
         allow_any_instance_of(RdvServicePublicApiClient).to receive(:post) do |_object, _path, params| # rubocop:disable RSpec/AnyInstance
           request_params = params
@@ -143,12 +143,41 @@ RSpec.describe "RDV API" do
         # On démarre le test depuis le job qui fait la synchronisation pour vérifier que la sérialisation marche bien avec le controller
         # On exécute le job afin que sa requête API soit enregistrée dans request_params par le block ci-dessus.
         InstanceExports::CopyPlanningJob::CopyRdvJob.new.perform(instance_export.id, rdv_on_old_instance.id, Domain::RDV_AIDE_NUMERIQUE.id)
+        request_params
+      end
 
+      it "sends all the information to the new instance" do
         expect do
           post "/api/v1/rdvs", headers:, params: request_params, as: :json
         end.to change(Rdv, :count).by(1)
 
         expect(Rdv.last.created_by).to eq user_on_new_instance
+      end
+
+      context "quand l'agent du rendez-vous a été supprimé" do
+        let(:other_agent_on_old_instance) { create(:agent, basic_role_in_organisations: [instance_export.source_organisation]) }
+
+        let!(:rdv_on_old_instance) do
+          create(:rdv, agents: [other_agent_on_old_instance], motif: motif_on_old_instance,
+                       users: [user_on_old_instance], starts_at: 2.weeks.ago, created_by: user_on_old_instance,
+                       lieu: lieu_on_old_instance, organisation: instance_export.source_organisation)
+        end
+
+        before do
+          AgentRemoval.new(other_agent_on_old_instance, instance_export.source_organisation).remove!
+        end
+
+        it "essaye de créer le rendez-vous" do
+          # On génère la requête, puis on supprime les données pour simuler le fait d'être sur une autre instance
+          params = request_params
+
+          rdv_on_old_instance.destroy
+          other_agent_on_old_instance.delete
+
+          expect { post("/api/v1/rdvs", headers:, params:, as: :json) }.to change(Rdv, :count).by(1)
+
+          expect(Rdv.last.created_by).to eq user_on_new_instance
+        end
       end
     end
 
