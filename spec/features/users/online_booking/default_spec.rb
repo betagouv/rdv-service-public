@@ -70,6 +70,34 @@ RSpec.describe "User can search for rdvs" do
       end
     end
 
+    describe "champ complément d'adresse" do
+      let!(:territory92) { create(:territory, departement_number: "92", enable_address_details: true) }
+      let!(:user) { create(:user, organisations: [organisation]) }
+
+      before { login_as(user, scope: :user) }
+
+      it "affiche le champ complément d'adresse" do
+        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        expect(page).to have_field("Complément d'adresse")
+      end
+    end
+
+    describe "champs caisse d'affiliation" do
+      let!(:territory92) do
+        create(:territory, departement_number: "92", enable_caisse_affiliation_field: true, enable_affiliation_number_field: true)
+      end
+      let!(:user) { create(:user, organisations: [organisation]) }
+      let(:service) { create(:service, name: "Service social") }
+
+      before { login_as(user, scope: :user) }
+
+      it "affiche les champs caisse d'affiliation et numéro d'allocataire" do
+        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        expect(page).to have_select("Caisse d'affiliation")
+        expect(page).to have_field("Numéro d'allocataire")
+      end
+    end
+
     describe "On RDV Service Public" do
       it "doesn't require an ANTS predemande number for a relative", js: true do
         visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice}"

@@ -115,6 +115,24 @@ RSpec.describe "User can update their information" do
     end
   end
 
+  describe "address_details field" do
+    before { visit users_informations_path }
+
+    context "quand le territoire active le champ complément d'adresse" do
+      let(:territory) { create(:territory, enable_address_details: true) }
+
+      it "affiche le champ complément d'adresse" do
+        expect(page).to have_field("Complément d'adresse")
+      end
+    end
+
+    context "quand le territoire n'active pas le champ complément d'adresse" do
+      it "n'affiche pas le champ complément d'adresse" do
+        expect(page).not_to have_field("Complément d'adresse")
+      end
+    end
+  end
+
   describe "updating notification_email" do
     context "when the user is connected with FranceConnect" do
       let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
