@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_04_153958) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_09_085958) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -50,7 +50,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_04_153958) do
     t.time "end_time", null: false
     t.boolean "expired_cached", default: false, null: false
     t.datetime "recurrence_ends_at"
-    t.string "caldav_url"
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_absences_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_absences_on_agent_id"
     t.index ["end_day"], name: "index_absences_on_end_day"
