@@ -1,5 +1,6 @@
 class PrescripteurMailer < ApplicationMailer
   include DateHelper
+  helper MotifsHelper
 
   attr_reader :domain
 

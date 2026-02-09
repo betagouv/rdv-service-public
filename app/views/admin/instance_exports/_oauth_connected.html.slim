@@ -1,5 +1,3 @@
-- content_for :title, "Migration vers RDV Service Public"
-
 = form_with url: admin_organisation_instance_export_path(current_organisation, @instance_export), method: :put, builder: Dsfr::FormBuilder do |form|
   .fr-grid-row.fr-pt-4w
     .fr-col-6
@@ -42,6 +40,6 @@
     .card
       .card-body
         p
-          |  Ces données vont être copiées automatiquement depuis  #{current_domain.name} vers RDV Service Public
+          |  Ces données vont être copiées automatiquement depuis #{current_domain.name} vers RDV Service Public
 
         = form.submit  "Copier les données", class: "fr-btn"

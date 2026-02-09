@@ -24,7 +24,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       uid: "fake-app-id",
       redirect_uri: "http://www.rdv-aide-numerique-test.localhost/omniauth/rdvservicepublic/callback",
       logo_base64: "",
-      default_service: create(:service)
+      grants_autonomous_signup: true
     )
 
     application.secret_strategy.store_secret(application, :secret, "fake-app-secret")
@@ -120,10 +120,11 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       agent: agent_rdv_aide_num,
       api_token: rdv_sp_token.plaintext_token,
       refresh_token: rdv_sp_token.refresh_token,
-      source_organisation_id: organisation_rdv_aide_num
+      source_organisation_id: organisation_rdv_aide_num,
+      status: "oauth_connected"
     )
 
-    visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}/edit"
+    visit "http://www.rdv-aide-numerique-test.localhost/admin/organisations/#{organisation_rdv_aide_num.id}/instance_exports/#{instance_export.id}"
 
     doc.add_screenshot(page,
                        text: "Je suis redirigé vers RDV Aide Numérique, je clique sur Copier les données",

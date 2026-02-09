@@ -31,7 +31,7 @@
             | Imprimer
 
   = render "admin/rdvs/rdv_visibility"
-  - if CopyPlanningToNewInstanceJob.agent_might_have_rdvs_on_old_instance?(current_agent, @form.start || Time.zone.today)
+  - if InstanceExports::CopyPlanningJob.agent_might_have_rdvs_on_old_instance?(current_agent, @form.start || Time.zone.today)
     .fr-notice.fr-notice--info.fr-mb-3w.fr-mt-2w
       .fr-notice__body
         p.fr-mb-0.fr-mx-2w

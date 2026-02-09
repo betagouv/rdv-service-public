@@ -10,11 +10,11 @@ class RdvsExportSendEmailJob < ExportJob
     export = Export.find(batch.properties[:export_id])
     redis_key = redis_key(export.id)
 
-    page_numbers = Redis.with_connection { |redis| redis.hkeys(redis_key).map(&:to_i).sort }
+    page_numbers = Redis.with_connection { _1.hkeys(redis_key) }.map(&:to_i).sort
 
     rows_enum = Enumerator.new do |yielder|
       page_numbers.each do |page_number|
-        json = Redis.with_connection { |redis| redis.hget(redis_key, page_number) }
+        json = Redis.with_connection { _1.hget(redis_key, page_number) }
 
         JSON.parse(json).each do |row|
           yielder << row

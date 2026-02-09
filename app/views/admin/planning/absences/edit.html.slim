@@ -20,7 +20,7 @@
   - @absence.external_references.each do |reference|
     = link_to("Voir sur #{reference.oauth_application.name}", reference.external_url, target: :_blank, class: "fr-btn fr-btn--secondary fr-mr-2w")
 
-- reference_to_rdv_on_old_instance = CopyPlanningToNewInstanceJob.external_reference_to_rdv_on_old_instance(@absence)
+- reference_to_rdv_on_old_instance = InstanceExports::CopyPlanningJob.external_reference_to_rdv_on_old_instance(@absence)
 - if reference_to_rdv_on_old_instance
   .fr-notice.fr-notice--info.fr-mb-3w.fr-mt-2w
     .fr-notice__body

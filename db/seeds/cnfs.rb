@@ -100,7 +100,7 @@ application = OauthApplication.new(
   uid: "VKRed68-gwSAeq-DGX5VigkEfSpElJM2KFYO2Z3yw9Y",
   redirect_uri: "http://www.rdv-aide-numerique.localhost:3000/omniauth/rdvservicepublic/callback",
   logo_base64: "",
-  default_service: service_cnfs
+  grants_autonomous_signup: true
 )
 
 test_secret = "development-6AJOgLXnZRkMfZQ6ICc6vvG84f7r8QD8GLqEp-TgnDg" # Pour le développement en local uniquement

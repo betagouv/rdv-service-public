@@ -1,6 +1,6 @@
 RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son compte soit par notre équipe soit via une appli OAuth" do
   let(:application) do
-    create(:oauth_application, name: "Mon Suivi Social", default_service: create(:service, name: "Action Sociale"))
+    create(:oauth_application, name: "Mon Suivi Social", grants_autonomous_signup: true)
   end
 
   context "quand l'agent a déjà été créé via une connexion ProConnect" do
@@ -62,8 +62,6 @@ RSpec.describe "Un agent peut créer un territoire, en faisant vérifier son com
 
     context "mais que son compte n'est pas vérifié par une application partenaire" do
       let(:super_admin) { create :super_admin }
-
-      let!(:service) { create(:service, name: "Service social") }
 
       around { |example| perform_enqueued_jobs { example.run } }
 

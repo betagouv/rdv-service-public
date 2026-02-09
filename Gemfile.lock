@@ -40,7 +40,7 @@ PATH
       omniauth-oauth2 (~> 1.8)
 
 GEM
-  remote: https://rubygems.org/
+  remote: https://beta.gem.coop/cooldown/
   specs:
     actioncable (8.0.4)
       actionpack (= 8.0.4)

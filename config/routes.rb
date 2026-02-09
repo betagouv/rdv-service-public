@@ -256,7 +256,7 @@ Rails.application.routes.draw do
         get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
         get "slots", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search/selection_creneaux")
 
-        resources :instance_exports, only: %i[index new edit update show] do
+        resources :instance_exports, only: %i[index new update show] do
           member do
             patch :archive_motifs
           end
@@ -465,6 +465,7 @@ Rails.application.routes.draw do
 
   draw :operators
 
+  match "/400", to: "errors#bad_request", via: :all
   match "/404", to: "errors#not_found", via: :all
   match "/500", to: "errors#internal_server_error", via: :all
 
