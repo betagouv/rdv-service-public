@@ -163,9 +163,7 @@ RSpec.describe "RDV API" do
                        lieu: lieu_on_old_instance, organisation: instance_export.source_organisation)
         end
 
-        before do
-          AgentRemoval.new(other_agent_on_old_instance, instance_export.source_organisation).remove!
-        end
+        before { AgentRemoval.new(other_agent_on_old_instance, instance_export.source_organisation).remove! }
 
         it "essaye de créer le rendez-vous" do
           # On génère la requête, puis on supprime les données pour simuler le fait d'être sur une autre instance
@@ -176,7 +174,9 @@ RSpec.describe "RDV API" do
 
           expect { post("/api/v1/rdvs", headers:, params:, as: :json) }.to change(Rdv, :count).by(1)
 
-          expect(Rdv.last.created_by).to eq user_on_new_instance
+          created_rdv = Rdv.last
+          expect(created_rdv.agents.first.deleted_at).to be_present
+          expect(created_rdv.created_by).to eq user_on_new_instance
         end
       end
     end

@@ -20,7 +20,7 @@ class CreateRdvInNewInstance
 
   private
 
-  def build_rdv
+  def build_rdv # rubocop:disable Metrics/PerceivedComplexity
     # On crée le rendez-vous via ActiveRecord sans lancer les Notifiers, ce qui évite de déclencher des callbacks de notifications pour les agents et les usager
     rdv = Rdv.new(
       params.permit(%w[starts_at status cancelled_at context ends_at name max_participants_count])
@@ -34,7 +34,13 @@ class CreateRdvInNewInstance
     rdv.motif_id = ExternalReference.find_by(item_type: "Motif", external_id: params[:motif_external_id], oauth_application:)&.item_id
     rdv.organisation_id = rdv.motif.organisation_id
 
-    rdv.agents = Agent.where(email: params[:agent_emails])
+    params[:agents].each do |agent_attributes|
+      rdv.agents << if agent_attributes[:deleted_at]
+                      find_or_build_deleted_agent(agent_attributes)
+                    else
+                      rdv.organisation.agents.find_by(email: agent_attributes[:email])
+                    end
+    end
 
     rdv.created_by = if params[:created_by_type] == "User"
                        # On peut uniquement utiliser cette logique pour les users parce qu'on n'a pas d'external_ids sur les agents ou les prescripteurs
@@ -81,6 +87,15 @@ class CreateRdvInNewInstance
         )
       )
     end
+  end
+
+  def find_or_build_deleted_agent(agent_attributes)
+    Agent.where.not(deleted_at: nil).find_by(email: agent_attributes[:email]) || build_deleted_agent(agent_attributes)
+  end
+
+  def build_deleted_agent(agent_attributes)
+    # On doit créer un faux mot de passe pour éviter une erreur de validation
+    Agent.new(agent_attributes.permit(%w[email first_name last_name deleted_at]).merge(password: SecureRandom.base64(32)))
   end
 
   attr_reader :params, :controller, :oauth_application
