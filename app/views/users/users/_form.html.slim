@@ -23,15 +23,14 @@ ruby:
   - elsif form_object.show_notification_email_field?
     = f.dsfr_email_field :notification_email, label: form_object.notification_email_label, required: form_object.notification_email_required?
 
-  = f.dsfr_phone_field :phone_number, as: :tel, required: rdv_wizard&.motif&.phone?, autocomplete: "tel"
+  = f.dsfr_phone_field :phone_number, as: :tel, required: form_object.phone_required?, autocomplete: "tel"
   - if form_object.show_landline_phone_number_warning?
     .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
   div.mb-2 Préférences de notifications
   div= f.dsfr_check_box :notify_by_email
   div= f.dsfr_check_box :notify_by_sms
-  - unless current_user.signed_in_with_invitation_token? || !rdv_wizard&.motif&.organisation&.territory&.enable_address_field?
-    - address_value = rdv_wizard.present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
-    = f.dsfr_text_field :address, value: address_value, required: rdv_wizard&.motif&.home?, data: { "address-autocomplete": "on" }, autocomplete: "street-address", dir: "ltr"
+  - if form_object.show_address_field?
+    = f.dsfr_text_field :address, value: form_object.address_value, required: form_object.address_required?, data: { "address-autocomplete": "on" }, autocomplete: "street-address", dir: "ltr"
 
   - if form_object.show_address_details_field?
     = f.dsfr_text_field :address_details

@@ -16,4 +16,12 @@ class Users::RdvBookingForm
   def show_ants_pre_demande_number_field? = rdv.requires_ants_predemande_number?
 
   def show_logement_field? = rdv.territory.enable_logement_field
+
+  def show_address_field? = !signed_in_with_invitation_token? && rdv.territory.enable_address_field?
+
+  def address_required? = motif.home?
+
+  def phone_required? = motif.phone?
+
+  def address_value = user.address.nil? ? to_query[:where] : user.address
 end

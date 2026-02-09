@@ -11,4 +11,10 @@ class Users::EditForm
   def show_ants_pre_demande_number_field? = false
 
   def show_logement_field? = user_profiles_territories.any?(&:enable_logement_field)
+
+  def show_address_field? = false
+
+  def phone_required? = false
+
+  def address_value = user.address
 end
