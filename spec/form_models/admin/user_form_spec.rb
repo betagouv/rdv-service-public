@@ -1,10 +1,10 @@
 RSpec.describe Admin::UserForm, type: :form do
-  subject { described_class.new(user, view_locals: { current_organisation: organisation }) }
+  subject { described_class.new(user, current_organisation: organisation) }
 
   let!(:organisation) { create(:organisation) }
 
   before do
-    allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return(duplicate_users_mock)
+    allow(DuplicateUsersFinderService).to receive(:perform_with).with(candidate_user: user, in_scope: organisation.territory.users).and_return(duplicate_users_mock)
   end
 
   context "no errors whatsoever" do
@@ -75,7 +75,7 @@ RSpec.describe Admin::UserForm, type: :form do
   end
 
   context "duplication warning bypassed" do
-    subject { described_class.new(user, ignore_benign_errors: true, view_locals: { current_organisation: organisation }) }
+    subject { described_class.new(user, current_organisation: organisation, ignore_benign_errors: true) }
 
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
     let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }

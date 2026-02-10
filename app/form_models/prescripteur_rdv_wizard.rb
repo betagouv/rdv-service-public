@@ -52,8 +52,9 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def find_or_create_user
+    organisation = Organisation.find(rdv.motif.organisation_id)
     user_from_params = User.new(@user_attributes)
-    duplicate = DuplicateUsersFinderService.find_duplicate_based_on_names_and_phone(user_from_params)
+    duplicate = DuplicateUsersFinderService.find_duplicate_based_on_names_and_phone(user: user_from_params, scope: organisation.territory.users)
 
     @user = duplicate || user_from_params
 
@@ -61,7 +62,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     @user.created_through = "prescripteur" if @user.new_record?
     User.transaction do
       @user.save!
-      @user.user_profiles.find_or_create_by!(organisation_id: rdv.motif.organisation_id)
+      @user.user_profiles.find_or_create_by!(organisation_id: organisation.id)
     end
   end
 end
