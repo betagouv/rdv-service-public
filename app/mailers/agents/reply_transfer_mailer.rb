@@ -13,8 +13,10 @@ class Agents::ReplyTransferMailer < ApplicationMailer
     @reply_body = reply_body
     @attachment_names = source_mail.attachments.map(&:filename).join(", ")
     @date = relative_date(@rdv.starts_at)
+    opts = {}
+    opts[:reply_to] = rfc5322_name_and_email(@author.full_name, @author.email) if @author.email.present?
 
-    mail(to: agents.map(&:email), subject: t(".title", date: @date))
+    mail(to: agents.map(&:email), subject: t(".title", date: @date), **opts)
   end
 
   # @param [Rdv] rdv
