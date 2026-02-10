@@ -1,34 +1,32 @@
 class DuplicateUsersFinderService < BaseService
-  def initialize(user:, within_territory:)
-    # TODO: Remove organisation from the parameters
-    #   It is never used in the app. It’s only used when find_duplicate_based_on_phone_number is called directly.
-    @user = user
-    @territory = within_territory
+  def initialize(candidate_user:, in_scope:)
+    @candidate_user = candidate_user
+    @scope = in_scope
   end
 
   def perform
     [
-      self.class.find_duplicate_based_on_email(@user, @territory),
-      self.class.find_duplicate_based_on_identity(@user, @territory),
-      self.class.find_duplicate_based_on_phone_number(@user, @territory),
+      self.class.find_duplicate_based_on_email(@candidate_user, @scope),
+      self.class.find_duplicate_based_on_identity(@candidate_user, @scope),
+      self.class.find_duplicate_based_on_phone_number(@candidate_user, @scope),
     ].compact
   end
 
   class << self
-    def find_duplicate_based_on_email(user, territory)
+    def find_duplicate_based_on_email(user, scope)
       return if user.email.blank?
 
-      duplicates = users_in_scope(user, territory)
+      duplicates = users_in_scope(user, scope)
         .where(email: user.email)
       return unless duplicates.exists?
 
       OpenStruct.new(severity: :error, attributes: [:email], user: most_relevant_user(duplicates))
     end
 
-    def find_duplicate_based_on_identity(user, territory)
+    def find_duplicate_based_on_identity(user, scope)
       return unless user.birth_date.present? && user.first_name.present? && user.last_name.present?
 
-      duplicates = users_in_scope(user, territory)
+      duplicates = users_in_scope(user, scope)
         .where(birth_date: user.birth_date)
         .merge(match_on_names(user.first_name, user.last_name))
       return unless duplicates.exists?
@@ -36,10 +34,10 @@ class DuplicateUsersFinderService < BaseService
       OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
     end
 
-    def find_duplicate_based_on_names_and_phone(user:, within_territory:)
+    def find_duplicate_based_on_names_and_phone(user:, scope:)
       return unless user.phone_number_formatted.present? && user.first_name.present? && user.last_name.present?
 
-      duplicates = users_in_scope(user, within_territory)
+      duplicates = users_in_scope(user, scope)
         .where(phone_number_formatted: user.phone_number_formatted)
         .merge(match_on_names(user.first_name, user.last_name))
       return unless duplicates.exists?
@@ -47,10 +45,10 @@ class DuplicateUsersFinderService < BaseService
       most_relevant_user(duplicates)
     end
 
-    def find_duplicate_based_on_phone_number(user, territory)
+    def find_duplicate_based_on_phone_number(user, scope)
       return nil if user.phone_number_formatted.blank?
 
-      duplicates = users_in_scope(user, territory)
+      duplicates = users_in_scope(user, scope)
         .where(phone_number_formatted: user.phone_number_formatted)
       return unless duplicates.exists?
 
@@ -67,16 +65,16 @@ class DuplicateUsersFinderService < BaseService
       )
     end
 
-    def users_in_scope(user, territory)
-      u = User.joins(:organisations).where(organisations: { territory_id: territory.id })
-      u = u.where.not(id: user.id) if user.persisted?
-      u
+    def users_in_scope(user, base_scope)
+      scope = base_scope
+      scope = base_scope.where.not(id: user.id) if user.persisted?
+      scope
     end
 
     def most_relevant_user(scope)
       # return the user with the most Rdvs.
       # Avoid doing it in users_in_scope because the join may be expensive.
-      scope.left_joins(:rdvs).group(:id).order("COUNT(rdvs.id) DESC").first
+      User.where(id: scope.ids).left_joins(:rdvs).group(:id).order("COUNT(rdvs.id) DESC").first
     end
   end
 end
