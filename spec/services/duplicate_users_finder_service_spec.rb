@@ -75,12 +75,6 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [org_of_existing_user]) }
 
         it { is_expected.to eq([OpenStruct.new(severity: :error, attributes: [:email], user: user_with_same_email)]) }
-
-        context "but soft deleted" do
-          before { user_with_same_email.soft_delete! }
-
-          it { is_expected.to be_empty }
-        end
       end
 
       context "when there is another user OUTSIDE the scope with the same email" do
@@ -90,12 +84,6 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         # TODO: Ce comportement est problématique et sera bientôt corrigé une fois qu'on aura retiré l'unicité sur `users.email`.
         it "ignores the scope :'(" do
           expect(results).to eq([OpenStruct.new(severity: :error, attributes: [:email], user: user_with_same_email)])
-        end
-
-        context "but soft deleted" do
-          before { user_with_same_email.soft_delete! }
-
-          it { is_expected.to be_empty }
         end
       end
     end
@@ -114,6 +102,18 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
           OpenStruct.new(severity: :error,   attributes: [:email],                            user: user_with_matching_email),
         ]
         expect(results).to match_array(expected_results)
+      end
+    end
+
+    describe "soft deletion" do
+      let!(:super_duplicate) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", phone_number: "0658032518", email: "candidat@exemple.fr") }
+      let(:candidate_user) { build(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", phone_number: "0658032518", email: "candidat@exemple.fr") }
+
+      it "ensures the duplicate is no longer a duplicate" do
+        service = described_class.new(candidate_user: candidate_user, within_territory: org_of_existing_user.territory)
+        expect do
+          super_duplicate.soft_delete!
+        end.to change { service.perform.present? }.from(true).to(false)
       end
     end
   end
