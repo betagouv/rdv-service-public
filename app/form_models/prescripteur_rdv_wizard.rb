@@ -54,7 +54,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   def find_or_create_user
     organisation = Organisation.find(rdv.motif.organisation_id)
     user_from_params = User.new(@user_attributes)
-    duplicate = DuplicateUsersFinderService.find_duplicate_based_on_names_and_phone(user: user_from_params, scope: organisation.territory.users)
+    duplicate = DuplicateUsersFinderService.find_duplicate_based_on_names_and_phone(candidate_user: user_from_params, scope: organisation.territory.users)
 
     @user = duplicate || user_from_params
 

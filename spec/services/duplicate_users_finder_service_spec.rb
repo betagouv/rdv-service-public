@@ -119,7 +119,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
   end
 
   describe ".find_duplicate_based_on_names_and_phone" do
-    subject { described_class.find_duplicate_based_on_names_and_phone(user: candidate_user, scope: org_of_existing_user.users) }
+    subject { described_class.find_duplicate_based_on_names_and_phone(candidate_user:, scope: org_of_existing_user.users) }
 
     let(:org_of_existing_user) { create(:organisation) }
     let(:candidate_user) { build(:user, first_name: "Mathieu", last_name: "Lapin", phone_number: "0658032518") }
