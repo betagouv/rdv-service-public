@@ -1,4 +1,4 @@
-class WebhookBuildJob < ApplicationJob
+class WebhookBuildAndSendJob < ApplicationJob
   queue_as :latency_30s
 
   def perform(record:, action:, webhook_endpoint_id:)

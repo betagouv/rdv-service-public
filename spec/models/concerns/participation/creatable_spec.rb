@@ -25,7 +25,7 @@ RSpec.describe Participation::Creatable, type: :concern do
         rdv.reload
         expect do
           participation1.create_and_notify!(user)
-        end.to have_enqueued_job(WebhookBuildJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
+        end.to have_enqueued_job(WebhookBuildAndSendJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
       end
     end
 

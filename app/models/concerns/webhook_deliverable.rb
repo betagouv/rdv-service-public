@@ -17,7 +17,7 @@ module WebhookDeliverable
 
   def generate_payload_and_send_webhook(action)
     jobs = subscribed_webhook_endpoints.map do |endpoint|
-      WebhookBuildJob.new(record: self, action:, webhook_endpoint_id: endpoint.id)
+      WebhookBuildAndSendJob.new(record: self, action:, webhook_endpoint_id: endpoint.id)
     end
     ActiveJob.perform_all_later(jobs)
   end
