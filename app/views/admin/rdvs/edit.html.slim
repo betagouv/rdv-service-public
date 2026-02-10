@@ -90,6 +90,8 @@
               = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "fr-btn fr-btn--tertiary-no-outline"
               = f.submit t("helpers.submit.submit"), class: "fr-btn"
 
+            / TODO: supprimer après le 10/03/2026
+            / Ce message temporaire aide à la transition les agents qui avaient l'habitude de gérer les usagers ici
             - if @rdv_form.motif.collectif?
               p.fr-mt-8w
                 |> Vous pouvez inscrire ou désinscrire des usagers depuis la page du RDV collectif.
