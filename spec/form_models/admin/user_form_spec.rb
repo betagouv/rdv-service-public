@@ -4,7 +4,7 @@ RSpec.describe Admin::UserForm, type: :form do
   let!(:organisation) { create(:organisation) }
 
   before do
-    allow(DuplicateUsersFinderService).to receive(:perform_with).with(candidate_user: user, in_scope: organisation.territory.users).and_return(duplicate_users_mock)
+    allow(DuplicateUsersFinderService).to receive(:perform_with).with(candidate_user: user, within_territory: organisation.territory).and_return(duplicate_users_mock)
   end
 
   context "no errors whatsoever" do

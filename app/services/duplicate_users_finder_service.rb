@@ -1,7 +1,7 @@
 class DuplicateUsersFinderService < BaseService
-  def initialize(candidate_user:, in_scope:)
+  def initialize(candidate_user:, within_territory:)
     @candidate_user = candidate_user
-    @scope = in_scope
+    @scope = within_territory.users
   end
 
   def perform

@@ -1,6 +1,6 @@
 RSpec.describe DuplicateUsersFinderService, type: :service do
   describe ".perform" do
-    subject(:results) { described_class.new(candidate_user: candidate_user, in_scope: org_of_existing_user.territory.users).perform }
+    subject(:results) { described_class.new(candidate_user: candidate_user, within_territory: org_of_existing_user.territory).perform }
 
     let(:org_of_existing_user) { create(:organisation) }
 
