@@ -94,6 +94,7 @@ class User < ApplicationRecord
 
   scope :responsible, -> { where(responsible_id: nil) }
   scope :relative, -> { where.not(responsible_id: nil) }
+  scope :in_orgs, ->(orgs) { joins(:user_profiles).where(user_profiles: { organisation_id: orgs }) }
 
   ## -
 
