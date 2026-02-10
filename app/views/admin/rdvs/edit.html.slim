@@ -91,7 +91,6 @@
               = f.submit t("helpers.submit.submit"), class: "fr-btn"
 
             - if @rdv_form.motif.collectif?
-              .fr-my-8w
-                p
-                  |> Vous pouvez inscrire ou désinscrire des usagers depuis la page du RDV collectif.
-                  = link_to "Voir comment faire", image_path("rdv_collectif/inscription-desinscription-participantes.png"), target: "_blank", class: "fr-link"
+              p.fr-mt-8w
+                |> Vous pouvez inscrire ou désinscrire des usagers depuis la page du RDV collectif.
+                = link_to "Voir comment faire", image_path("rdv_collectif/inscription-desinscription-participantes.png"), target: "_blank", class: "fr-link"
