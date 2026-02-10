@@ -79,8 +79,9 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
 
         it "sends a webhook" do
           rdv.reload
-          expect(WebhookJob).to receive(:perform_later).at_least(1)
-          participation1.change_status_and_notify(agent, "noshow")
+          expect do
+            participation1.change_status_and_notify(agent, "noshow")
+          end.to have_enqueued_job(WebhookBuildAndSendJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id).at_least(1).times
         end
       end
     end
