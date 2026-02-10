@@ -3,6 +3,8 @@ RSpec.describe BlogPost do
     subject(:new_content_for_agent?) { described_class.new_content_for_agent?(agent) }
 
     context "when no post in db" do
+      before { stub_const("BlogPost::LATEST_POST_AT", nil) }
+
       context "when agent has never read the blog posts" do
         let(:agent) { Agent.new(blog_read_at: nil) }
 
@@ -17,7 +19,7 @@ RSpec.describe BlogPost do
     end
 
     context "when there is a post in db" do
-      before { create(:blog_post, published_at: 5.hours.ago) }
+      before { stub_const("BlogPost::LATEST_POST_AT", 5.hours.ago) }
 
       context "when agent has never read the blog posts" do
         let(:agent) { Agent.new(blog_read_at: nil) }
