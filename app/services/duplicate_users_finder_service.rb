@@ -1,33 +1,34 @@
 class DuplicateUsersFinderService < BaseService
-  def initialize(user:, organisations:)
+  def initialize(user, organisation = nil)
+    # TODO: Remove organisation from the parameters
+    #   It is never used in the app. It’s only used when find_duplicate_based_on_phone_number is called directly.
     @user = user
-    @organisations = organisations
+    @organisation = organisation
   end
 
   def perform
     [
-      self.class.find_duplicate_based_on_email(user: @user),
-      self.class.find_duplicate_based_on_identity(user: @user, organisations: @organisations),
-      self.class.find_duplicate_based_on_phone_number(user: @user, organisations: @organisations),
+      self.class.find_duplicate_based_on_email(@user, @organisation),
+      self.class.find_duplicate_based_on_identity(@user, @organisation),
+      self.class.find_duplicate_based_on_phone_number(@user, @organisation),
     ].compact
   end
 
   class << self
-    def find_duplicate_based_on_email(user:)
+    def find_duplicate_based_on_email(user, organisation)
       return if user.email.blank?
 
-      duplicates = other_users(than: user)
+      duplicates = users_in_scope(user, organisation)
         .where(email: user.email)
       return unless duplicates.exists?
 
       OpenStruct.new(severity: :error, attributes: [:email], user: most_relevant_user(duplicates))
     end
 
-    def find_duplicate_based_on_identity(user:, organisations:)
+    def find_duplicate_based_on_identity(user, organisation)
       return unless user.birth_date.present? && user.first_name.present? && user.last_name.present?
 
-      duplicates = other_users(than: user)
-        .in_orgs(organisations)
+      duplicates = users_in_scope(user, organisation)
         .where(birth_date: user.birth_date)
         .merge(match_on_names(user.first_name, user.last_name))
       return unless duplicates.exists?
@@ -35,11 +36,10 @@ class DuplicateUsersFinderService < BaseService
       OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
     end
 
-    def find_duplicate_based_on_names_and_phone(user:, organisation:)
+    def find_duplicate_based_on_names_and_phone(user)
       return unless user.phone_number_formatted.present? && user.first_name.present? && user.last_name.present?
 
-      duplicates = other_users(than: user)
-        .in_orgs([organisation])
+      duplicates = users_in_scope(user, nil)
         .where(phone_number_formatted: user.phone_number_formatted)
         .merge(match_on_names(user.first_name, user.last_name))
       return unless duplicates.exists?
@@ -47,11 +47,10 @@ class DuplicateUsersFinderService < BaseService
       most_relevant_user(duplicates)
     end
 
-    def find_duplicate_based_on_phone_number(user:, organisations:)
+    def find_duplicate_based_on_phone_number(user, organisation)
       return nil if user.phone_number_formatted.blank?
 
-      duplicates = other_users(than: user)
-        .in_orgs(organisations)
+      duplicates = users_in_scope(user, organisation)
         .where(phone_number_formatted: user.phone_number_formatted)
       return unless duplicates.exists?
 
@@ -68,9 +67,10 @@ class DuplicateUsersFinderService < BaseService
       )
     end
 
-    def other_users(than:)
+    def users_in_scope(user, organisation)
       u = User.all
-      u = u.where.not(id: than.id) if than.persisted?
+      u = u.where.not(id: user.id) if user.persisted?
+      u = u.merge(organisation.users) if organisation.present?
       u
     end
 
