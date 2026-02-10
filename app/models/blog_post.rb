@@ -1,12 +1,15 @@
 class BlogPost < ApplicationRecord
   DOCS_URL = "https://docs.numerique.gouv.fr/docs/#{DocsNumeriqueChangelog::PARENT_DOCUMENT_ID}".freeze
-  LATEST_POST_AT = maximum(:published_at)
 
   def self.new_content_for_agent?(agent)
-    return false unless LATEST_POST_AT
+    return false unless latest_post_at
     return true if agent.blog_read_at.nil?
 
-    agent.blog_read_at < LATEST_POST_AT
+    agent.blog_read_at < latest_post_at
+  end
+
+  def self.latest_post_at
+    @latest_post_at ||= maximum(:published_at)
   end
 
   def self.refresh_from_posts(posts)
