@@ -6,17 +6,17 @@ class DuplicateUsersFinderService < BaseService
 
   def perform
     [
-      self.class.find_duplicate_based_on_email(@candidate_user, @scope),
+      self.class.find_duplicate_based_on_email(@candidate_user),
       self.class.find_duplicate_based_on_identity(@candidate_user, @scope),
       self.class.find_duplicate_based_on_phone_number(@candidate_user, @scope),
     ].compact
   end
 
   class << self
-    def find_duplicate_based_on_email(user, scope)
+    def find_duplicate_based_on_email(user)
       return if user.email.blank?
 
-      duplicates = users_in_scope(user, scope)
+      duplicates = users_in_scope(user, User.all)
         .where(email: user.email)
       return unless duplicates.exists?
 

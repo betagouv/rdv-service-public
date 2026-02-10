@@ -70,11 +70,27 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         it { is_expected.to be_empty }
       end
 
-      context "when there is another user within the orgs with the same email" do
+      context "when there is another user within the scope with the same email" do
         let(:candidate_user) { build(:user, email: "candidat@exemple.fr") }
         let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [org_of_existing_user]) }
 
         it { is_expected.to eq([OpenStruct.new(severity: :error, attributes: [:email], user: user_with_same_email)]) }
+
+        context "but soft deleted" do
+          before { user_with_same_email.soft_delete! }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context "when there is another user OUTSIDE the scope with the same email" do
+        let(:candidate_user) { build(:user, email: "candidat@exemple.fr") }
+        let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [create(:organisation, territory: create(:territory))]) }
+
+        # TODO: Ce comportement est problématique et sera bientôt corrigé une fois qu'on aura retiré l'unicité sur `users.email`.
+        it "ignores the scope :'(" do
+          expect(results).to eq([OpenStruct.new(severity: :error, attributes: [:email], user: user_with_same_email)])
+        end
 
         context "but soft deleted" do
           before { user_with_same_email.soft_delete! }
