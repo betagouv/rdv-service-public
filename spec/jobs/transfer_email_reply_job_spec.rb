@@ -81,6 +81,7 @@ RSpec.describe TransferEmailReplyJob do
         transferred_email = ActionMailer::Base.deliveries.last
         expect(transferred_email.to).to eq(["je_suis_un_agent@departement.fr"])
         expect(transferred_email[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
+        expect(transferred_email[:reply_to].to_s).to eq(%("Bénédicte FICIAIRE" <bene_ficiaire@lapin.fr>))
         expect(transferred_email.html_part.body.to_s).to include("Dans le cadre du RDV du 20 mai, l'usager⋅e Bénédicte FICIAIRE a envoyé")
         expect(transferred_email.html_part.body.to_s).to include("Je souhaite annuler mon RDV") # reply content
         expect(transferred_email.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{rdv.organisation_id}/rdvs/#{rdv.id}))
