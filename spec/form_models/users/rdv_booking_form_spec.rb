@@ -1,4 +1,4 @@
-RSpec.describe UserRdvWizard do
+RSpec.describe Users::RdvBookingForm do
   let!(:organisation) { create(:organisation) }
   let!(:user) { create(:user) }
   let!(:user_for_rdv) { create(:user) }
@@ -6,6 +6,7 @@ RSpec.describe UserRdvWizard do
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:creneau) { build(:creneau, :respects_booking_delays, motif: motif, starts_at: Time.zone.parse("2020-10-20 09h30")) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let(:domain) { Domain::RDV_SOLIDARITES }
 
   describe "#new" do
     let(:mock_geo_search) { instance_double(Users::GeoSearch) }
@@ -34,9 +35,9 @@ RSpec.describe UserRdvWizard do
         geo_search: mock_geo_search,
         duration_in_min: 30
       ).and_return(returned_creneau)
-      rdv_wizard = described_class.new(user, attributes)
-      expect(rdv_wizard.rdv.user_ids).to eq [user_for_rdv.id]
-      expect(rdv_wizard.creneau).to eq returned_creneau
+      rdv_booking_form = described_class.new(user:, attributes:, domain:)
+      expect(rdv_booking_form.rdv.user_ids).to eq [user_for_rdv.id]
+      expect(rdv_booking_form.creneau).to eq returned_creneau
     end
 
     it "avec un duration_in_min différent de celui du motif" do
@@ -52,13 +53,13 @@ RSpec.describe UserRdvWizard do
         geo_search: mock_geo_search,
         duration_in_min: 60
       ).and_return(returned_creneau)
-      rdv_wizard = described_class.new(user, attributes.merge(duration: 60))
-      expect(rdv_wizard.rdv.user_ids).to eq [user_for_rdv.id]
-      expect(rdv_wizard.creneau).to eq returned_creneau
+      rdv_booking_form = described_class.new(user:, attributes: attributes.merge(duration: 60), domain:)
+      expect(rdv_booking_form.rdv.user_ids).to eq [user_for_rdv.id]
+      expect(rdv_booking_form.creneau).to eq returned_creneau
     end
   end
 
-  describe "Step1#save" do
+  describe "#save" do
     context "when everything is ok" do
       let(:motif) { create(:motif, :at_public_office, organisation: organisation) }
       let(:attributes) do
@@ -77,7 +78,7 @@ RSpec.describe UserRdvWizard do
         }
       end
 
-      it { expect(described_class.new(user, attributes).save).to be true }
+      it { expect(described_class.new(user:, attributes:, domain:).save).to be true }
     end
 
     context "pour un RDV de passeport ANTS Mairie" do
@@ -87,7 +88,7 @@ RSpec.describe UserRdvWizard do
       let!(:motif_category) { create(:motif_category, :passeport) }
       let!(:motif) { create(:motif, organisation:, motif_category:) }
 
-      context "l’usager fournit un numéro de pré-demande valide" do
+      context "l'usager fournit un numéro de pré-demande valide" do
         before { stub_ants_status_ok("VALID12345", status: "validated", meeting_point_id: lieu.id, appointments: []) }
 
         let(:attributes) do
@@ -107,10 +108,10 @@ RSpec.describe UserRdvWizard do
           }
         end
 
-        it { expect(described_class.new(user, attributes).save).to be true }
+        it { expect(described_class.new(user:, attributes:, domain:).save).to be true }
       end
 
-      context "l’usager fournit un numéro de pré-demande vide" do
+      context "l'usager fournit un numéro de pré-demande vide" do
         let(:attributes) do
           {
             starts_at: creneau.starts_at,
@@ -129,7 +130,7 @@ RSpec.describe UserRdvWizard do
         end
 
         it "empêche la création" do
-          form = described_class.new(user, attributes)
+          form = described_class.new(user:, attributes:, domain:)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -139,7 +140,7 @@ RSpec.describe UserRdvWizard do
         end
       end
 
-      context "l’usager fournit un numéro de pré-demande ANTS non reconnu" do
+      context "l'usager fournit un numéro de pré-demande ANTS non reconnu" do
         before { stub_ants_status_ok("VALID12345", status: "unknown", meeting_point_id: lieu.id, appointments: []) }
 
         let(:attributes) do
@@ -160,7 +161,7 @@ RSpec.describe UserRdvWizard do
         end
 
         it "empêche la création" do
-          form = described_class.new(user, attributes)
+          form = described_class.new(user:, attributes:, domain:)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -169,7 +170,7 @@ RSpec.describe UserRdvWizard do
         end
       end
 
-      context "l’usager fournit un numéro de pré-demande ANTS qui a déjà un appointment" do
+      context "l'usager fournit un numéro de pré-demande ANTS qui a déjà un appointment" do
         before do
           stub_ants_status_ok(
             "VALID12345",
@@ -197,7 +198,7 @@ RSpec.describe UserRdvWizard do
         end
 
         it "empêche la création" do
-          form = described_class.new(user, attributes)
+          form = described_class.new(user:, attributes:, domain:)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -211,7 +212,7 @@ RSpec.describe UserRdvWizard do
         end
       end
 
-      context "l’usager fournit un numéro de pré-demande ANTS qui a déjà un appointment mais ignore les avertissements" do
+      context "l'usager fournit un numéro de pré-demande ANTS qui a déjà un appointment mais ignore les avertissements" do
         before do
           stub_ants_status_ok(
             "VALID12345",
@@ -239,14 +240,14 @@ RSpec.describe UserRdvWizard do
           }
         end
 
-        it "n’empêche pas la création" do
-          form = described_class.new(user, attributes)
+        it "n'empêche pas la création" do
+          form = described_class.new(user:, attributes:, domain:)
           res = form.save
           expect(res).to be true
         end
       end
 
-      context "l’usager fournit un numéro de pré-demande ANTS valide mais l’API ANTS timeout" do
+      context "l'usager fournit un numéro de pré-demande ANTS valide mais l'API ANTS timeout" do
         before { allow(AntsApi).to receive(:status).and_raise(Typhoeus::Errors::TimeoutError) }
 
         let(:attributes) do
@@ -267,7 +268,7 @@ RSpec.describe UserRdvWizard do
         end
 
         it "empêche la création" do
-          form = described_class.new(user, attributes)
+          form = described_class.new(user:, attributes:, domain:)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -297,7 +298,7 @@ RSpec.describe UserRdvWizard do
           }
         end
 
-        it { expect(described_class.new(user, attributes).save).to be true }
+        it { expect(described_class.new(user:, attributes:, domain:).save).to be true }
       end
 
       context "when the phone number is blank" do
@@ -317,12 +318,12 @@ RSpec.describe UserRdvWizard do
           }
         end
 
-        it { expect(described_class.new(user, attributes).save).to be false }
+        it { expect(described_class.new(user:, attributes:, domain:).save).to be false }
 
         it "return false with a rdv by_phone and user without phone" do
-          rdv_wizard = described_class.new(user, attributes)
-          rdv_wizard.valid?
-          expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
+          rdv_booking_form = described_class.new(user:, attributes:, domain:)
+          rdv_booking_form.valid?
+          expect(rdv_booking_form.errors.full_messages.join(", ")).to eq("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
         end
       end
     end
@@ -334,7 +335,7 @@ RSpec.describe UserRdvWizard do
         let(:attributes) { { rdv_collectif_id: rdv.id } }
 
         it "finds the Rdv" do
-          expect(described_class.new(user_for_rdv, attributes).rdv).to eq(rdv)
+          expect(described_class.new(user: user_for_rdv, attributes:, domain:).rdv).to eq(rdv)
         end
       end
     end
