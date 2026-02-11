@@ -57,8 +57,8 @@
       i= t(".empty_context")
     - else
       | Contexte&nbsp;:
-      = " "
-      = simple_format(rdv.context, {}, wrapper_tag: :span)
+      br
+      .fr-ml-4w.fr-pl-1w.text-muted.border-left= simple_format(rdv.context, {}, wrapper_tag: :span)
 
 
 - rdv.participations.select(&:prescription?).each do |participation|
