@@ -13,6 +13,7 @@ class DuplicateUsersFinderService < BaseService
   end
 
   class << self
+    # cette méthode n'est appelée que par le perform
     def find_duplicate_based_on_email(candidate_user)
       return if candidate_user.email.blank?
 
@@ -24,6 +25,7 @@ class DuplicateUsersFinderService < BaseService
       OpenStruct.new(severity: :error, attributes: [:email], user: most_relevant_user(duplicates))
     end
 
+    # cette méthode n'est appelée que par le perform
     def find_duplicate_based_on_identity(candidate_user, scope)
       return unless candidate_user.birth_date.present? && candidate_user.first_name.present? && candidate_user.last_name.present?
 
@@ -36,6 +38,7 @@ class DuplicateUsersFinderService < BaseService
       OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
     end
 
+    # cette méthode est appelée uniquement depuis PrescripteurRdvWizard#find_or_create_user
     def find_duplicate_based_on_names_and_phone(candidate_user:, scope:)
       return unless candidate_user.phone_number_formatted.present? && candidate_user.first_name.present? && candidate_user.last_name.present?
 
@@ -48,6 +51,7 @@ class DuplicateUsersFinderService < BaseService
       most_relevant_user(duplicates)
     end
 
+    # cette méthode est appelée par #perform et dans admin/users/_responsible_information.html.slim
     def find_duplicate_based_on_phone_number(candidate_user, scope)
       return nil if candidate_user.phone_number_formatted.blank?
 
