@@ -148,6 +148,7 @@ module CreneauxSearch::Calculator
 
     attr_reader :range, :plage_ouverture
 
+    # On charge les absences en asynchrone et les rdvs en synchrone
     def self.start_loading_busy_times_for(range, plage_ouverture, work_on_off_days:)
       new(range, plage_ouverture, work_on_off_days)
     end
@@ -155,13 +156,14 @@ module CreneauxSearch::Calculator
     def busy_times
       busy_times = @work_on_off_days ? [] : busy_times_from_off_days
 
-      # On calcule les occurrences des absences en premier pour laisser aux rdvs le temps de finir de charger
-      busy_times += busy_times_from_absences
       busy_times += busy_times_from_external_calendar
 
-      busy_times += @rdvs_starts_and_ends_at.value.map do |rdv_starts_and_ends_at|
+      busy_times += @rdvs_starts_and_ends_at.map do |rdv_starts_and_ends_at|
         BusyTime.new(rdv_starts_and_ends_at.first, rdv_starts_and_ends_at.last)
       end
+
+      # Les absences sont encore chargées de manière asynchrone, donc on leur laisse le temps de charger
+      busy_times += busy_times_from_absences
 
       # Le tri est nécessaire, surtout pour les surcharges.
       busy_times.sort_by(&:starts_at)
@@ -176,11 +178,7 @@ module CreneauxSearch::Calculator
 
       @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
 
-      @rdvs_starts_and_ends_at = if ENV["NEW_CRENEAU_SEARCH_LOGIC"]
-                                   optimized_rdv_request.async_pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
-                                 else
-                                   plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).async_pluck(:starts_at, :ends_at)
-                                 end
+      @rdvs_starts_and_ends_at = optimized_rdv_request.pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
     end
 
     def optimized_rdv_request
