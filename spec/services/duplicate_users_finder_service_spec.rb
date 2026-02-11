@@ -1,39 +1,41 @@
 RSpec.describe DuplicateUsersFinderService, type: :service do
   describe ".perform" do
-    subject(:results) { described_class.new(candidate_user: candidate_user, within_territory: org_of_existing_user.territory).perform }
+    subject(:results) { described_class.new(candidate_user:, within_territory:).perform }
 
     let(:org_of_existing_user) { create(:organisation) }
 
     context "when there is no existing user in db" do
       let(:candidate_user) { build(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
+      let(:within_territory) { create(:territory) }
 
       it { is_expected.to be_empty }
     end
 
     describe "when the candidate user is already persisted, it should not match itself" do
-      let(:candidate_user) { build(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", organisations: [org_of_existing_user]) }
-
-      before { candidate_user.save! }
+      let!(:candidate_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", organisations: [create(:organisation)]) }
+      let(:within_territory) { candidate_user.organisations.first.territory }
 
       it { is_expected.to be_empty }
     end
 
     describe "finding by identity (first name + last name + birth date)" do
-      context "when there is another user within the given orgs but with different names" do
+      context "when there is another user within the given territory but with different names" do
         let(:candidate_user) { build(:user, first_name: "Mathieu", last_name: "Lapin") }
-        let!(:user_with_different_name) { create(:user, first_name: "Mireille", last_name: "Chasseur", organisations: [org_of_existing_user]) }
+        let!(:user_with_different_name) { create(:user, first_name: "Mireille", last_name: "Chasseur", organisations: [create(:organisation)]) }
+        let(:within_territory) { user_with_different_name.organisations.first.territory }
 
         it { is_expected.to be_empty }
       end
 
-      context "when there is an homonym (names AND birth date)" do
+      context "when there is an identity match (names AND birth date)" do
         let(:candidate_user) { build(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
-        let!(:homonym_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", organisations: [org_of_existing_user]) }
+        let!(:homonym_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", organisations: [create(:organisation)]) }
+        let(:within_territory) { homonym_user.organisations.first.territory }
 
         it { is_expected.to eq([OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: homonym_user)]) }
 
-        context "but the user is outside the given orgs" do
-          before { homonym_user.update!(organisations: [create(:organisation, territory: create(:territory))]) }
+        context "but the user is outside the given territory" do
+          let(:within_territory) { create(:territory) }
 
           it { is_expected.to be_empty }
         end
@@ -41,21 +43,23 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
     end
 
     describe "finding by phone number" do
-      context "when there is another user within the orgs but with different phone number" do
+      context "when there is another user within the territory but with different phone number" do
         let(:candidate_user) { build(:user, phone_number: "0658032518") }
-        let!(:user_with_different_phone_number) { create(:user, phone_number: "0611111111", organisations: [org_of_existing_user]) }
+        let!(:user_with_different_phone_number) { create(:user, phone_number: "0611111111", organisations: [create(:organisation)]) }
+        let(:within_territory) { user_with_different_phone_number.organisations.first.territory }
 
         it { is_expected.to be_empty }
       end
 
       context "when there is a user with the same phone number" do
         let(:candidate_user) { build(:user, phone_number: "0658032518") }
-        let!(:user_with_same_phone_number) { create(:user, phone_number: "0658032518", organisations: [org_of_existing_user]) }
+        let!(:user_with_same_phone_number) { create(:user, phone_number: "0658032518", organisations: [create(:organisation)]) }
+        let(:within_territory) { user_with_same_phone_number.organisations.first.territory }
 
         it { is_expected.to eq([OpenStruct.new(severity: :warning, attributes: %i[phone_number], user: user_with_same_phone_number)]) }
 
-        context "but the user is outside the given orgs" do
-          before { user_with_same_phone_number.update!(organisations: [create(:organisation, territory: create(:territory))]) }
+        context "but the user is outside the given territory" do
+          let(:within_territory) { create(:territory) }
 
           it { is_expected.to be_empty }
         end
@@ -63,23 +67,26 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
     end
 
     describe "finding by email" do
-      context "when there is another user within the orgs with different email" do
+      context "when there is another user within the territory with different email" do
         let(:candidate_user) { build(:user, email: "candidat@exemple.fr") }
-        let!(:user_with_different_email) { create(:user, email: "autre@autre.com", organisations: [org_of_existing_user]) }
+        let!(:user_with_different_email) { create(:user, email: "autre@autre.com", organisations: [create(:organisation)]) }
+        let(:within_territory) { user_with_different_email.organisations.first.territory }
 
         it { is_expected.to be_empty }
       end
 
       context "when there is another user within the scope with the same email" do
         let(:candidate_user) { build(:user, email: "candidat@exemple.fr") }
-        let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [org_of_existing_user]) }
+        let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [create(:organisation)]) }
+        let(:within_territory) { user_with_same_email.organisations.first.territory }
 
         it { is_expected.to eq([OpenStruct.new(severity: :error, attributes: [:email], user: user_with_same_email)]) }
       end
 
-      context "when there is another user OUTSIDE the scope with the same email" do
+      context "when there is another user OUTSIDE the territory with the same email" do
         let(:candidate_user) { build(:user, email: "candidat@exemple.fr") }
-        let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [create(:organisation, territory: create(:territory))]) }
+        let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [create(:organisation)]) }
+        let(:within_territory) { create(:territory) }
 
         # TODO: Ce comportement est problématique et sera bientôt corrigé une fois qu'on aura retiré l'unicité sur `users.email`.
         it "ignores the scope :'(" do
@@ -89,11 +96,14 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
     end
 
     describe "finding multiple users with multiple methods" do
-      let!(:user_with_matching_identity) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", organisations: [org_of_existing_user]) }
-      let!(:user_with_matching_phone) { create(:user, phone_number: "0658032518", organisations: [org_of_existing_user]) }
-      let!(:user_with_matching_email) { create(:user, email: "candidat@exemple.fr", organisations: [org_of_existing_user]) }
+      let(:orga) { create(:organisation) }
+      let!(:user_with_matching_identity) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", organisations: [orga]) }
+      let!(:user_with_matching_phone) { create(:user, phone_number: "0658032518", organisations: [orga]) }
+      let!(:user_with_matching_email) { create(:user, email: "candidat@exemple.fr", organisations: [orga]) }
 
       let(:candidate_user) { build(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", phone_number: "0658032518", email: "candidat@exemple.fr") }
+
+      let(:within_territory) { orga.territory }
 
       it "works" do
         expected_results = [
@@ -106,14 +116,15 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
     end
 
     describe "soft deletion" do
-      let!(:super_duplicate) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", phone_number: "0658032518", email: "candidat@exemple.fr") }
-      let(:candidate_user) { build(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", phone_number: "0658032518", email: "candidat@exemple.fr") }
+      let!(:existing_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", organisations: [create(:organisation)]) }
+      let(:candidate_user) { build(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
+      let(:within_territory) { existing_user.organisations.first.territory }
 
       it "ensures the duplicate is no longer a duplicate" do
-        service = described_class.new(candidate_user: candidate_user, within_territory: org_of_existing_user.territory)
+        service = described_class.new(candidate_user:, within_territory:)
         expect do
-          super_duplicate.soft_delete!
-        end.to change { service.perform.present? }.from(true).to(false)
+          existing_user.soft_delete!
+        end.to change { service.perform.size }.from(1).to(0)
       end
     end
   end
