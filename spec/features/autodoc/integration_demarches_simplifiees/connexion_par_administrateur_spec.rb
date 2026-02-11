@@ -39,7 +39,7 @@ RSpec.describe "Connexion de Démarches Simplifiées à RDV Service Public par u
       Si j'ai déjà un compte, je peux aussi me connecter par email et mot de passe.
       Si je suis déjà connecté à RDV Service Public, cet écran ne s'affiche pas et je passe directement au suivant.
     TEXT
-    doc.add_screenshot(page, text: text, wait_for: "Vous devez vous connecter pour continuer", disable_high_res_zoom: true)
+    doc.add_screenshot(page, text: text, wait_for: "S’identifier avec\nProConnect", disable_high_res_zoom: true)
 
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password

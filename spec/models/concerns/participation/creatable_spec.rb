@@ -23,8 +23,9 @@ RSpec.describe Participation::Creatable, type: :concern do
 
       it "sends a webhook" do
         rdv.reload
-        expect(WebhookJob).to receive(:perform_later)
-        participation1.create_and_notify!(user)
+        expect do
+          participation1.create_and_notify!(user)
+        end.to have_enqueued_job(WebhookBuildAndSendJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
       end
     end
 

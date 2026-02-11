@@ -214,20 +214,11 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
     }
   };
 
-  const disconnectCallback = () => {
-    clearTimeout(window.disconnectWarningTimeoutId);
-    window.disconnectWarningTimeoutId = setTimeout(() => {
-      document.querySelector("#js-agenda-disconnected-warning")?.classList?.remove("hidden");
-    }, 5000);
-  };
-
   const connectCallback = ({ reconnected }) => {
     // `reconnected` nous indique que cette connexion fait suite à une
     // préalable déconnexion. C'est bien ce qui nous intéresse puisque
-    // nous voulons cacher l'avertissement affiché lors de la perte de connexion.
+    // nous ne voulons pas recharger les events lors de la connexion initiale.
     if (reconnected) {
-      clearTimeout(window.disconnectWarningTimeoutId);
-      document.querySelector("#js-agenda-disconnected-warning")?.classList?.add("hidden");
       fullCalendarInstance.refetchEvents();
     }
   };
@@ -236,9 +227,15 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
     getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, {
       received: messageReceivedCallback,
       connected: connectCallback,
-      disconnected: disconnectCallback,
     });
   });
+
+  const refreshDisconnectedWarning = () => {
+    const alertElement = document.querySelector("#js-agenda-disconnected-warning");
+    const connexionIsStale = getConsumer().connection.monitor.connectionIsStale();
+    alertElement.hidden = !connexionIsStale;
+  };
+  setInterval(refreshDisconnectedWarning, 500);
 };
 
 const handleAjaxError = (response) => {

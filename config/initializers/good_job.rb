@@ -97,9 +97,9 @@ Rails.application.configure do
       cron: "every weekday at 10:15 Europe/Paris",
       class: "CronJob::SendMattermostNotificationsForZammadTicketsJob",
     },
-    refresh_blog_posts_from_headway: {
+    refresh_blog_posts_from_docs: {
       cron: "every day at 06:00 Europe/Paris",
-      class: "CronJob::RefreshBlogPostsFromHeadwayJob",
+      class: "CronJob::RefreshBlogPostsFromDocsJob",
     },
     refresh_carto_anct_stats: {
       cron: "every day at 06:30 Europe/Paris",
@@ -116,6 +116,10 @@ Rails.application.configure do
     destroy_login_codes: {
       cron: "every day at 05:00 Europe/Paris",
       class: "CronJob::DestroyLoginCodesJob",
+    },
+    refresh_agents_sensitive_account: {
+      cron: "every day at 04:00 Europe/Paris",
+      class: "CronJob::RefreshAgentsSensitiveAccountJob",
     },
   }
 end

@@ -71,8 +71,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
     let(:agent) { create(:agent) }
 
     context "when the agent was connected from an authorized OAuth application" do
-      let(:application) { create(:oauth_application, default_service: service) }
-      let(:service) { create(:service) }
+      let(:application) { create(:oauth_application, grants_autonomous_signup: true) }
 
       let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
 

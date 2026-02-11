@@ -21,7 +21,7 @@ module User::DeviseInvitableWithDomain
   def sign_up_domain
     return if email.blank?
 
-    user_domain_id = Redis.with_connection { |redis| redis.get(redis_key_for_sign_up_domain) }
+    user_domain_id = Redis.with_connection { _1.get(redis_key_for_sign_up_domain) }
     Domain.find(user_domain_id) if user_domain_id
   end
 

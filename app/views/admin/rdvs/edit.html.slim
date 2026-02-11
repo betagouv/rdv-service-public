@@ -65,26 +65,34 @@
 
               = f.dsfr_number_field :max_participants_count, label: Rdv.human_attribute_name(:max_participants_count), min: 1
 
-            .fr-input-group
-              = "#{User.model_name.human.pluralize} :"
-              = f.fields_for :participations, @rdv.participations do |participation_form|
-                = render "admin/participations/form", form: participation_form
+            - if @rdv_form.motif.individuel?
+              .fr-input-group
+                = "#{User.model_name.human.pluralize} :"
+                = f.fields_for :participations, @rdv.participations do |participation_form|
+                  = render "admin/participations/form", form: participation_form
 
-            .fr-grid-row.fr-grid-row--middle.fr-pb-4w
-              .flex-grow-1.fr-pr-4w
-                - select2_url = search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id))
-                = select_tag :user_to_add,
-                        options_for_select([]),
-                        include_blank: "Rechercher un usager",
-                        required: false,
-                        class: "select2-input js-rdv-user-select fr-select",
-                        data: { \
-                  width: "auto", \
-                  "scroll-to-bottom": params[:add_user].present?, \
-                  "select2-config": { ajax: { url: select2_url, dataType: "json", delay: 250 } }, \
-                 }
-              = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: request.url, role: default_service_selection_from(@rdv.motif.service))
+              .fr-grid-row.fr-grid-row--middle.fr-pb-4w
+                .flex-grow-1.fr-pr-4w
+                  - select2_url = search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id))
+                  = select_tag :user_to_add,
+                          options_for_select([]),
+                          include_blank: "Rechercher un usager",
+                          required: false,
+                          class: "select2-input js-rdv-user-select fr-select",
+                          data: { \
+                    width: "auto", \
+                    "scroll-to-bottom": params[:add_user].present?, \
+                    "select2-config": { ajax: { url: select2_url, dataType: "json", delay: 250 } }, \
+                   }
+                = render "admin/users/create_user_cta", path: new_admin_organisation_user_path(current_organisation, modal: true, return_location: request.url, role: default_service_selection_from(@rdv.motif.service))
 
             .text-right
               = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "fr-btn fr-btn--tertiary-no-outline"
               = f.submit t("helpers.submit.submit"), class: "fr-btn"
+
+            / TODO: supprimer après le 10/03/2026
+            / Ce message temporaire aide à la transition les agents qui avaient l'habitude de gérer les usagers ici
+            - if @rdv_form.motif.collectif?
+              p.fr-mt-8w
+                |> Vous pouvez inscrire ou désinscrire des usagers depuis la page du RDV collectif.
+                = link_to "Voir comment faire", image_path("rdv_collectif/inscription-desinscription-participantes.png"), target: "_blank", class: "fr-link"

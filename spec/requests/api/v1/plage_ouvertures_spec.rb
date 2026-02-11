@@ -3,7 +3,7 @@ RSpec.describe "Plage ouvertures API" do
   let(:headers) do
     { "Content-Type": "application/json", Authorization: "Bearer #{oauth_token.plaintext_token}" }
   end
-  let(:application) { create(:oauth_application, default_service: create(:service)) }
+  let(:application) { create(:oauth_application, grants_autonomous_signup: true) }
 
   let!(:organisation) { create(:organisation) }
   let!(:motif) { create(:motif, organisation:) }

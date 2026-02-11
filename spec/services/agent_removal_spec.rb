@@ -77,7 +77,7 @@ RSpec.describe AgentRemoval, type: :service do
     end
   end
 
-  context "when the agent is the only admin of the org" do
+  context "l'agent est le seul admin de l'organisation mais il y a d'autres agents basiques" do
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -86,6 +86,51 @@ RSpec.describe AgentRemoval, type: :service do
       expect do
         described_class.new(agent, organisation).remove!
       end.to raise_error(ActiveRecord::RecordNotDestroyed)
+    end
+  end
+
+  context "l'agent est le seul admin de l'organisation et il n'y a aucun agent basique" do
+    let!(:organisation) { create(:organisation) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+    it "fonctionne et soft-delete l'agent" do
+      described_class.new(agent, organisation).remove!
+      expect(organisation.agents).not_to include(agent)
+      expect(agent.reload.deleted_at).not_to be_nil
+    end
+  end
+
+  context "l'agent est admin de l'orga et le seul admin de l'espace" do
+    let!(:territory) { create(:territory) }
+    let!(:organisation) { create(:organisation, territory:) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:territorial_role) { create(:agent_territorial_role, agent:, territory:) }
+
+    it "retire l'agent de l'orga mais ne soft-delete pas l'agent, iel conserve son rôle territorial" do
+      service = described_class.new(agent, organisation)
+      expect(service).to be_valid
+      service.remove!
+      expect(agent.organisations).not_to include(organisation)
+      expect(agent.reload.deleted_at).to be_nil
+      expect(agent.territories).to include(territory)
+    end
+  end
+
+  context "l'agent est admin de l'orga et aussi admin de l'espace (mais pas le seul)" do
+    let!(:territory) { create(:territory) }
+    let!(:organisation) { create(:organisation, territory:) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:agent1) { create(:agent) }
+    let!(:territorial_role) { create(:agent_territorial_role, agent: agent, territory:) }
+    let!(:territorial_role1) { create(:agent_territorial_role, agent: agent1, territory:) }
+
+    it "retire l'agent de l'orga mais ne soft-delete pas l'agent, iel conserve son rôle territorial" do
+      service = described_class.new(agent, organisation)
+      expect(service).to be_valid
+      service.remove!
+      expect(agent.organisations).not_to include(organisation)
+      expect(agent.reload.deleted_at).to be_nil
+      expect(agent.territories).to include(territory)
     end
   end
 
@@ -111,6 +156,17 @@ RSpec.describe AgentRemoval, type: :service do
       let(:agent) { build(:agent, organisations: [organisation1, organisation2]) }
 
       it { is_expected.to be false }
+    end
+
+    context "dernière orga de l'agent mais iel a un rôle territorial" do
+      let!(:territory) { create(:territory) }
+      let!(:organisation) { create(:organisation, territory:) }
+      let!(:agent) { create(:agent, organisations: [organisation]) }
+      let!(:territorial_role) { create(:agent_territorial_role, agent: agent, territory:) }
+
+      it "retourne false" do
+        expect(described_class.new(agent, organisation).should_soft_delete?).to be false
+      end
     end
   end
 end

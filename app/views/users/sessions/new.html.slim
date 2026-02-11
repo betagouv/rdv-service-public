@@ -1,21 +1,16 @@
-- content_for :title, "Connexion"
-
+- content_for(:title, @rdv_wizard.present? ? "Votre identité" : "Connexion")
 .card
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
     - if @rdv_wizard.nil? || @rdv_wizard.display_france_connect?
-      = render "common/franceconnect_button"
+      = render "common/franceconnect_button", display_title: false
 
     / Contrairement à FranceConnect, on n'affiche pas le bouton ProConnect en dehors de la prise de rendez-vous
     - if display_pro_connect_button? && @rdv_wizard&.display_pro_connect?
-      h2 Se connecter avec ProConnect
-
+      p.fr-hr-or ou
       .rdv-text-align-center
         = render "common/proconnect_button_dsfr", user_type: "user"
-
-      p.fr-hr-or ou
-    h2 Se connecter par e-mail
 
     - if params[:with_password].present? || params[:user].present?
       = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
@@ -28,8 +23,15 @@
             |> Vous pouvez aussi vous
             = link_to "connecter via code à 6 chiffres", new_user_session_path
     - else
-      = form_for @login_code_form_request, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_form_request do |f|
-        = render "model_errors", model: @login_code_form_request, form: f
+      = form_for @login_code_request_form, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_request_form do |f|
+        = render "model_errors", model: @login_code_request_form, form: f
+        - if @rdv_wizard
+          = hidden_field_tag :behaviour, "upsert_user"
+          .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
+            .fr-col-12.fr-col-md-6
+              = f.dsfr_text_field :first_name, required: true, label: "Prénom", autocomplete: "given-name"
+            .fr-col-12.fr-col-md-6
+              = f.dsfr_text_field :last_name, required: true, label: "Nom", autocomplete: "family-name"
         = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", required: true, label: "Adresse email", autocomplete: "email"
         .rdv-text-align-center
           = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn rdv-width-100 rdv-width-md-auto"
@@ -37,13 +39,8 @@
             |> Vous pouvez aussi vous
             = link_to "connecter par mot de passe", new_user_session_path(with_password: true)
 
-    hr.fr-my-2w
-    h2 Vous n'avez pas de compte ?
-    .rdv-text-align-center
-      = link_to "Créer un compte", new_user_registration_path, class: "fr-btn fr-btn--secondary"
-
     - if @rdv_wizard
-      hr.fr-my-2w
-        .rdv-text-align-center.rdv-color-text-mention-grey
-          = link_to prescripteur_start_path(@rdv_wizard.to_query) do
-            b Je suis un prescripteur qui oriente un bénéficiaire
+      p.fr-hr-or.fr-mt-16w ou
+      .rdv-text-align-center.rdv-color-text-mention-grey
+        = link_to prescripteur_start_path(@rdv_wizard.to_query) do
+          b Je suis un prescripteur qui oriente un bénéficiaire
