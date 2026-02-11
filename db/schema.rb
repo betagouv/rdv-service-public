@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_27_114925) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -34,7 +34,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_27_114925) do
   create_enum "receipts_result", ["processed", "sent", "delivered", "failure"]
   create_enum "role", ["legacy_admin", "support"]
   create_enum "sms_provider", ["netsize", "send_in_blue", "contact_experience", "sfr_mail2sms", "clever_technologies", "orange_contact_everyone"]
-  create_enum "user_created_through", ["unknown", "agent_creation", "user_sign_up", "franceconnect_sign_up", "user_relative_creation", "agent_creation_api", "prescripteur"]
+  create_enum "user_created_through", ["unknown", "agent_creation", "user_sign_up", "franceconnect_sign_up", "user_relative_creation", "agent_creation_api", "prescripteur", "auto_through_login"]
   create_enum "user_invited_through", ["devise_email", "external"]
   create_enum "verticale", ["rdv_insertion", "rdv_solidarites", "rdv_aide_numerique", "rdv_mairie"]
 
@@ -50,7 +50,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_27_114925) do
     t.time "end_time", null: false
     t.boolean "expired_cached", default: false, null: false
     t.datetime "recurrence_ends_at"
-    t.string "caldav_url"
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_absences_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_absences_on_agent_id"
     t.index ["end_day"], name: "index_absences_on_end_day"
@@ -143,7 +142,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_27_114925) do
     t.text "refresh_microsoft_graph_token"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
-    t.boolean "connected_with_agent_connect", default: false, null: false
     t.string "proconnect_siret"
     t.jsonb "feature_flags", default: {}
     t.string "caldav_agenda_url"
@@ -156,6 +154,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_27_114925) do
     t.boolean "pro_connect_2fa_active"
     t.boolean "group_by_agent", default: false, null: false
     t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
+    t.boolean "sensitive_account", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -386,6 +385,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_27_114925) do
     t.string "domain_id", null: false
     t.datetime "used_at"
     t.datetime "created_at", null: false, comment: "pas de updated_at car les login_codes sont quasiment immutables"
+    t.string "first_name"
+    t.string "last_name"
     t.index ["email", "created_at"], name: "index_login_codes_on_email_and_created_at"
   end
 
@@ -491,6 +492,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_27_114925) do
     t.text "logo_base64"
     t.text "post_logout_redirect_uri"
     t.bigint "default_service_id", comment: "Indique le service qui sera ajouté au territoire par défaut si un agent qui utilise cette application ouvre un nouvel espace.\nCette colonne indique aussi que les agents qui utilisent cette application sont autorisés à ouvrir un nouvel espace.\n"
+    t.boolean "grants_autonomous_signup", default: false, null: false
     t.index ["default_service_id"], name: "index_oauth_applications_on_default_service_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
@@ -935,7 +937,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_27_114925) do
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "instance_exports", "agents"
-  add_foreign_key "instance_exports", "good_job_batches"
   add_foreign_key "lieux", "organisations"
   add_foreign_key "motif_categories_territories", "motif_categories"
   add_foreign_key "motif_categories_territories", "territories"

@@ -32,7 +32,7 @@
             = f.submit "Filtrer", class: "fr-btn fr-btn--secondary"
 
   .card-body
-    - if CopyPlanningToNewInstanceJob.agent_might_have_rdvs_on_old_instance?(current_agent, @form.from_date)
+    - if InstanceExports::CopyPlanningJob.agent_might_have_rdvs_on_old_instance?(current_agent, @form.from_date)
       .fr-notice.fr-notice--info.fr-mb-3w
         .fr-notice__body
           p.fr-mb-0.fr-mx-2w

@@ -14,12 +14,13 @@ fr:
       invalid: "Email ou mot de passe incorrect."
       last_attempt: "Vous avez droit à une tentative avant que votre compte ne soit verrouillé."
       locked: "Votre compte est verrouillé."
-      not_found_in_database: "Email ou mot de passe invalide."
+      not_found_in_database: "Email ou mot de passe incorrect."
       timeout: "Votre session est expirée. Veuillez vous reconnecter pour continuer."
       unauthenticated: "Vous devez vous connecter ou vous inscrire pour continuer."
       unconfirmed: "Vous devez valider votre compte pour continuer."
       agent:
-        invalid: "Email ou mot de passe incorrect. Vous pouvez <a href='/agents/password/new'>réinitialiser votre mot de passe ici</a>."
+        not_found_in_database: "Email ou mot de passe incorrect. Si vous avez oublié votre mot de passe, vous pouvez <a href='/agents/password/new'>réinitialiser votre mot de passe ici</a>."
+        invalid: "Email ou mot de passe incorrect. Si vous avez oublié votre mot de passe, vous pouvez <a href='/agents/password/new'>réinitialiser votre mot de passe ici</a>."
     invitations:
       send_instructions: "L'utilisateur %{email} a été invité"
       invitation_token_invalid: "Votre invitation n'est pas valide."
@@ -73,7 +74,7 @@ fr:
     passwords:
       no_token: "Vous ne pouvez accéder à cette page sans passer par un e-mail de réinitialisation de mot de passe. Si vous avez utilisé un e-mail de ce type, assurez-vous d'utiliser l'URL complète."
       send_instructions: "Vous allez recevoir les instructions de réinitialisation du mot de passe dans quelques instants"
-      send_paranoid_instructions: "Si votre e-mail existe dans notre base de données, vous allez recevoir un lien de réinitialisation par e-mail"
+      send_paranoid_instructions: "Si un compte agent existe pour %{email}, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe"
       updated: "Votre mot de passe a été édité avec succès, votre connexion est désormais active"
       updated_not_active: "Votre mot de passe a été changé avec succès."
     registrations:

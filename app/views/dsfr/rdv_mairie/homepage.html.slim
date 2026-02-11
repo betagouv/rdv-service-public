@@ -3,20 +3,38 @@
 - content_for :title do
   | Accueil
 
-.fr-py-8w.rdv-background-color-alt-blue-ecume
+.fr-py-3w
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-12.fr-col-md-8.rdv-text-align-center
+
+        = image_tag "rdv_mairie/homepage_hero.svg", alt: "", class: "fr-responsive-img rdv-object-fit-contain fr-pb-2w", style: "max-width: 416px"
         h1
-          |> Faciliter
-          span.rdv-color-blue-ecume-sun-247-moon-675-hover
-            |> la gestion et la prise de rendez‑vous
-            / on utilise un non-breaking hyphen dans rendez-vous pour éviter le retour à la ligne
+          |> Facilitez la gestion et la prise de rendez‑vous
+          / on utilise un non-breaking hyphen dans rendez-vous pour éviter le retour à la ligne
           | dans votre administration
         .fr-text--lg
-          | Éviter les rendez-vous non honorés, gagner du temps au quotidien et améliorer la relation entre les agents et les usagers
-        = link_to "Demander une démo", contact_team_url, class: "fr-btn fr-btn--secondary fr-mb-0 fr-mr-2w"
-        = link_to "Ouvrir un espace", presentation_agent_path, class: "fr-btn fr-mb-0"
+          | Évitez les rendez-vous non honorés, gagnez du temps au quotidien et améliorez la relation entre les agents et les usagers
+        .fr-btns-group.fr-btns-group--inline-md.fr-btns-group--center
+          = link_to "Ouvrir mon espace", presentation_agent_path, class: "fr-btn"
+          = link_to "Participer au prochain webinaire", "https://rdv.anct.gouv.fr/motif/J87KGT9b/webinaire-rdv-service-public", title: "Accéder à l'inscription au prochain webinaire - nouvel onglet", class: "fr-btn fr-btn--secondary", rel: "noreferrer", target: "_blank"
+
+.fr-py-8w.rdv-background-color-alt-grey
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-12.fr-col-md-6
+        = image_tag "rdv_mairie/calendrier.png", alt: "", class: "fr-responsive-img rdv-screenshot"
+
+      .fr-col-12.fr-col-md-6
+        h2 Un agenda au cœur du service
+        p.fr-text--lg À chaque agent son agenda dédié à la prise de rendez-vous, pour une meilleure visibilité des disponibilités de chacun·e au sein de votre structure.
+        b
+          ul
+            li Posez des rendez-vous sur votre agenda
+            li Renseignez vos disponibilités, vos absences
+            li Consultez les plannings de vos collègues
+        .fr-btns-group.fr-btns-group--inline-md
+          = link_to "Demander une démo", contact_team_url, class: "fr-btn fr-btn--secondary fr-mt-3w"
 
 .fr-container.fr-py-8w
   .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -450,7 +468,7 @@ section.fr-py-8w.rdv-text-align-center
         p
           |> Vous souhaitez en savoir plus sur RDV Service Public ?
           |> Nous organisons régulièrement des présentations de l’outil & des prochaines évolutions.
-        = link_to "S’incrire au prochain webinaire", "https://rdv.anct.gouv.fr/prendre_rdv?departement=SP&public_link_organisation_id=1628", title: "Accéder à l'inscription au prochain webinaire - nouvel onglet", class: "fr-btn fr-btn--responsive-sm", rel: "noreferrer", target: "_blank"
+        = link_to "S’incrire au prochain webinaire", "https://rdv.anct.gouv.fr/motif/J87KGT9b/webinaire-rdv-service-public", title: "Accéder à l'inscription au prochain webinaire - nouvel onglet", class: "fr-btn fr-btn--responsive-sm", rel: "noreferrer", target: "_blank"
       .rdv-border-right-1px-solid.rdv-border-color-blue-france.fr-mx-md-10w
       .rdv-border-bottom-1px-solid.rdv-border-color-blue-france.fr-my-6w.fr-hidden-md
       div

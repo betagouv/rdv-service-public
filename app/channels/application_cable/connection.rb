@@ -19,7 +19,7 @@ module ApplicationCable
 
       if session && agent_id_from_session.nil?
         # Débugging temporaire : on a un cookie de session, mais pas d'agent_id, on veut en savoir plus !
-        Redis.with_connection { |redis| redis.lpush("action_cable_connection_debug", session.to_json) }
+        Redis.with_connection { _1.lpush("action_cable_connection_debug", session.to_json) }
       end
 
       if agent_id_from_session

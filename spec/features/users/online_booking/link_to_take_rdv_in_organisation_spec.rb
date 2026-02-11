@@ -87,16 +87,14 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("Sélectionnez un créneau")
       click_on("08:00")
 
-      expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
-      click_on("Créer un compte")
+      fill_in "Prénom", with: "David"
+      fill_in "Nom", with: "Nchicode"
+      fill_in "Adresse email", with: "davidnchicode@crotonmail.com"
+      click_button "Recevoir un code de connexion"
+      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "davidnchicode@crotonmail.com").code
+      click_on "Valider"
 
-      fill_in "user_first_name", with: "David"
-      fill_in "user_last_name", with: "Nchicode"
-      fill_in "user_email", with: "davidnchicode@crotonmail.com"
-      click_on("Je m’inscris")
-
-      open_email("davidnchicode@crotonmail.com")
-      current_email.click_link("Confirmer mon compte")
+      expect(page).to have_content("Connexion réussie")
 
       # Page de formulaire où l'on peut ajouter le nom de naissance, la date de naissance, le téléphone...
       expect(page).to have_content("Étape 1 sur 3")
@@ -139,7 +137,6 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("Sélectionnez un créneau")
       click_on("08:00")
 
-      expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
       click_on "Modifier", match: :first
 
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
