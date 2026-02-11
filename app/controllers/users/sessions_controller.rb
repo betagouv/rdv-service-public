@@ -1,7 +1,7 @@
 class Users::SessionsController < Devise::SessionsController
   layout "application_narrow"
 
-  include CanHaveRdvWizardContext
+  include CanHaveRdvBookingFormContext
   include Admin::WeakPasswordControllerConcern
   include Users::DeviseOrSsoLogout
 

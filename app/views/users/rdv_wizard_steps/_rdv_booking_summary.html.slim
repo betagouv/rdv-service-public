@@ -4,11 +4,11 @@ ul.list-group.list-group-flush.fr-mt-0
       .col
         span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
         | Motif :&nbsp;
-        = rdv_wizard.motif.name
+        = rdv_booking_form.motif.name
       .col-auto
-        = dsfr_link_to "Modifier", path_to_motif_selection(rdv_wizard.params_to_selections), title: "Modifier le motif"
+        = dsfr_link_to "Modifier", path_to_motif_selection(rdv_booking_form.params_to_selections), title: "Modifier le motif"
 
-  - case rdv_wizard.motif.location_type
+  - case rdv_booking_form.motif.location_type
   - when Motif.location_types[:phone]
     li.list-group-item
       span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
@@ -22,43 +22,43 @@ ul.list-group.list-group-flush.fr-mt-0
       span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
       | RDV par visioconférence
   - when Motif.location_types[:public_office]
-    - if rdv_wizard.ants_pre_demandes_count.present?
+    - if rdv_booking_form.ants_pre_demandes_count.present?
       li.list-group-item
         .row
           .col
             span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
-            | Nombre de pré-demandes ANTS à déposer : #{rdv_wizard.ants_pre_demandes_count}
+            | Nombre de pré-demandes ANTS à déposer : #{rdv_booking_form.ants_pre_demandes_count}
           .col-auto
-            = dsfr_link_to "Modifier", path_to_ants_pre_demandes_count_selection(rdv_wizard.params_to_selections), title: "Modifier le nombre de pré-demandes ANTS", class: "fr-btn fr-btn--tertiary-no-outline"
+            = dsfr_link_to "Modifier", path_to_ants_pre_demandes_count_selection(rdv_booking_form.params_to_selections), title: "Modifier le nombre de pré-demandes ANTS", class: "fr-btn fr-btn--tertiary-no-outline"
     li.list-group-item
       .row
         .col
           span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
           | Lieu :&nbsp;
-          = rdv_wizard.creneau.lieu.full_name
+          = rdv_booking_form.creneau.lieu.full_name
         .col-auto
-          = dsfr_link_to "Modifier", path_to_lieu_selection(rdv_wizard.params_to_selections), title: "Modifier le lieu"
+          = dsfr_link_to "Modifier", path_to_lieu_selection(rdv_booking_form.params_to_selections), title: "Modifier le lieu"
   - else
-    = raise "unrecognized location_type: #{rdv_wizard.motif.location_type.inspect}"
+    = raise "unrecognized location_type: #{rdv_booking_form.motif.location_type.inspect}"
 
   li.list-group-item
     .row
       .col
         span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
         | Date du rendez-vous :&nbsp;
-        = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
+        = rdv_starts_at_and_duration(rdv_booking_form.rdv, :human)
       .col-auto
-        = dsfr_link_to "Modifier", path_to_creneau_selection(rdv_wizard.params_to_selections), title: "Modifier la date du rendez-vous"
+        = dsfr_link_to "Modifier", path_to_creneau_selection(rdv_booking_form.params_to_selections), title: "Modifier la date du rendez-vous"
   - if local_assigns[:show_user_info]
     li.list-group-item
       .row
         .col
           span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
           | Usager :&nbsp;
-          = users_to_sentence(rdv_wizard.users)
+          = users_to_sentence(rdv_booking_form.users)
         .col-auto
           - step = @skip_proches_step ? 1 : 2
-          = dsfr_link_to "Modifier", new_users_rdv_wizard_step_path(step: , **@rdv_wizard.to_query), title: "Modifier les usagers"
+          = dsfr_link_to "Modifier", new_users_rdv_booking_form_step_path(step: , **rdv_booking_form.to_query), title: "Modifier les usagers"
     li.list-group-item
       .row
         .col
@@ -74,13 +74,13 @@ ul.list-group.list-group-flush.fr-mt-0
           span> 📞 Téléphone&nbsp;:
           = user_notifiable_by_sms_text(current_user)
         .col-auto
-          = dsfr_link_to "Modifier", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), title: "Modifier les informations de contact"
-  - if @rdv_wizard.respond_to?(:prescripteur) && @rdv_wizard.prescripteur.present?
+          = dsfr_link_to "Modifier", new_users_rdv_booking_form_step_path(step: 1, **rdv_booking_form.to_query), title: "Modifier les informations de contact"
+  - if rdv_booking_form.respond_to?(:prescripteur) && rdv_booking_form.prescripteur.present?
     li.list-group-item
       .row
         .col
           span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
           | Prescripteur :&nbsp;
-          = @rdv_wizard.prescripteur.full_name
+          = rdv_booking_form.prescripteur.full_name
         .col-auto
           = link_to "Modifier", prescripteur_new_prescripteur_path, title: "Modifier le prescripteur"

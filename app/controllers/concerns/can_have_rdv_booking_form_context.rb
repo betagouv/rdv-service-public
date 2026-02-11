@@ -1,11 +1,11 @@
-module CanHaveRdvWizardContext
+module CanHaveRdvBookingFormContext
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_rdv_wizard_from_devise_return_path
+    before_action :set_rdv_booking_form_from_devise_return_path
   end
 
-  def set_rdv_wizard_from_devise_return_path
+  def set_rdv_booking_form_from_devise_return_path
     return if session[:user_return_to].blank?
 
     parsed_uri = URI.parse(session[:user_return_to])
@@ -22,11 +22,11 @@ module CanHaveRdvWizardContext
       return
     end
 
-    @rdv_wizard = rdv_booking_form
+    @rdv_booking_form = rdv_booking_form
   rescue ArgumentError => e
-    # on a des erreurs sur la recherche de créneau et j’aimerais avoir plus de contexte pour comprendre ce qui se passe
+    # on a des erreurs sur la recherche de créneau et j'aimerais avoir plus de contexte pour comprendre ce qui se passe
     # https://sentry.incubateur.net/organizations/betagouv/issues/108784
-    Sentry.set_context(:rdv_wizard_context, { user_return_to: session[:user_return_to] })
+    Sentry.set_context(:rdv_booking_form_context, { user_return_to: session[:user_return_to] })
     Sentry.capture_exception(e)
   end
 end

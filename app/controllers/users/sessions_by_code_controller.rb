@@ -3,7 +3,7 @@ class Users::SessionsByCodeController < ApplicationController
 
   layout "application_narrow"
 
-  include CanHaveRdvWizardContext
+  include CanHaveRdvBookingFormContext
 
   def new
     @email = params[:email]

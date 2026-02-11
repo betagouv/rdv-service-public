@@ -6,9 +6,9 @@
   .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
     = dsfr_stepper(title: current_step[:title], value: current_step[:stepper_index], max: max_step, next_title: next_step[:title])
     .card
-      = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
+      = render "rdv_booking_summary", rdv_booking_form: @rdv_booking_form
       .card-body
-        = form_for @rdv, url: users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query.except(:rdv)), method: :post, builder: Dsfr::FormBuilder do |f|
+        = form_for @rdv, url: users_rdv_wizard_step_path(step: 2, **@rdv_booking_form.to_query.except(:rdv)), method: :post, builder: Dsfr::FormBuilder do |f|
 
           = f.hidden_field :motif_id
           = f.hidden_field :starts_at
@@ -17,14 +17,14 @@
           - if @rdv.requires_ants_predemande_number? # On autorise l'inscription de plusieurs usagers uniquement pour les rendez-vous de passeport et carte d'identité
             .fr-mt-2w
               - current_user.available_users_for_rdv.each do |user|
-                = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, checked: user.in?(@rdv_wizard.users), name: "rdv[user_ids][]" }, user.id, nil
+                = f.dsfr_check_box "user_ids_#{user.id}", { label: user.full_name, checked: user.in?(@rdv_booking_form.users), name: "rdv[user_ids][]" }, user.id, nil
           - else
-            - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, value: user.id, checked: user.in?(@rdv_wizard.users) } }
+            - users = current_user.available_users_for_rdv.map { |user| {label: user.full_name, value: user.id, checked: user.in?(@rdv_booking_form.users) } }
             = f.dsfr_radio_buttons :users, users, legend: "", required: true, name: "rdv[user_ids][]"
 
           .form-group
-            = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?, ants_meeting_point_id: @rdv_wizard.lieu_id), data: { modal: true }
+            = link_to "Ajouter un proche", new_relative_path(ants_pre_demande_number_required: @rdv.requires_ants_predemande_number?, ants_meeting_point_id: @rdv_booking_form.lieu_id), data: { modal: true }
           .fr-grid-row.fr-grid-row--gutters.fr-mt-3w
             .fr-col.rdv-justify-content-space-between.d-flex
-              = link_to "Revenir en arrière", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
+              = link_to "Revenir en arrière", new_users_rdv_wizard_step_path(step: 1, **@rdv_booking_form.to_query), class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
               = f.submit "Continuer", class: "fr-btn"

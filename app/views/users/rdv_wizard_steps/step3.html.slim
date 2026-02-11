@@ -6,9 +6,9 @@
   .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
     = dsfr_stepper(title: current_step[:title], value: current_step[:stepper_index], max: max_step)
     .card
-      = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard, show_user_info: true
+      = render "rdv_booking_summary", rdv_booking_form: @rdv_booking_form, show_user_info: true
       .card-body.rdv-text-align-right
-        - if @rdv_wizard.rdv.collectif?
-          = link_to "Confirmer ma participation", users_rdv_participations_path(@rdv_wizard.rdv, user_id: @rdv_wizard.users.first.id), method: :post, class: "fr-btn", data: { disable_with: "Veuillez patienter…"}
+        - if @rdv_booking_form.rdv.collectif?
+          = link_to "Confirmer ma participation", users_rdv_participations_path(@rdv_booking_form.rdv, user_id: @rdv_booking_form.users.first.id), method: :post, class: "fr-btn", data: { disable_with: "Veuillez patienter…"}
         - else
-          = link_to "Confirmer mon RDV", users_rdvs_path(@rdv_wizard.to_query), method: :post, class: "fr-btn", data: { disable_with: "Veuillez patienter…"}
+          = link_to "Confirmer mon RDV", users_rdvs_path(@rdv_booking_form.to_query), method: :post, class: "fr-btn", data: { disable_with: "Veuillez patienter…"}

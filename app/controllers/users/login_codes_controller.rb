@@ -1,7 +1,7 @@
 class Users::LoginCodesController < ApplicationController
   layout "application_narrow"
 
-  include CanHaveRdvWizardContext
+  include CanHaveRdvBookingFormContext
 
   def create
     login_code = LoginCode.new(**login_code_permitted_params, domain_id: current_domain.id)

@@ -11,7 +11,7 @@ class Users::InvitationsController < Devise::InvitationsController
     raise Pundit::NotAuthorizedError, "not authorized"
   end
 
-  include CanHaveRdvWizardContext
+  include CanHaveRdvBookingFormContext
 
   def invitation; end
 

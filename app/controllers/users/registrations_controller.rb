@@ -1,5 +1,5 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  include CanHaveRdvWizardContext
+  include CanHaveRdvBookingFormContext
   include Users::DeviseOrSsoLogout
 
   before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
