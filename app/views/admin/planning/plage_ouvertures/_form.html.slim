@@ -1,9 +1,32 @@
 - if plage_ouverture.available_motifs.any?
-  = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
+  = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], html: { class: "plage-ouverture-form", "data-controller": "plage-ouverture-form" } do |f|
     .row.justify-content-center
       .col-md-6
         = render("model_errors", model: plage_ouverture, f: f)
 
+        fieldset#plages-form.fr-fieldset[aria-labelledby="plages-form-legend plages-form-messages"]
+          legend#plages-form-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+            |  Type de disponibilité
+            span.fr-hint-text
+              | Ponctuelle ou récurrente ?
+          .fr-fieldset__element
+            .fr-radio-group.fr-radio-rich
+              input#non_reccurring[type="radio" name="reccuring" value="false" data-action="plage-ouverture-form#showMotifsSection"]
+              label.fr-label[for="non_reccurring"]
+                | Ponctuelle
+              .fr-radio-rich__pictogram
+                = dsfr_svg "artwork/pictograms/digital/calendar"
+          .fr-fieldset__element
+            .fr-radio-group.fr-radio-rich
+              input#reccurring[type="radio" name="reccuring" value="true" data-action="plage-ouverture-form#showMotifsSection"]
+              label.fr-label[for="reccurring"]
+                | Récurrente
+              .fr-radio-rich__pictogram
+                = dsfr_svg "artwork/pictograms/leisure/catalog"
+          #plages-form-messages.fr-messages-group[aria-live="polite"]
+
+    .row.justify-content-center [data-plage-ouverture-form-target="motifsSection" hidden=plage_ouverture.new_record?]
+      .col-md-6
         .card
           .card-body
             h2.card-title Motifs
@@ -27,7 +50,9 @@
                         | Motifs ouverts à tous les agents
                   - motifs.each do |motif|
                     .pl-4
-                      = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}", data: { checkbox_select_all_target: "checkbox" } }, motif.id, false
+                      - klasses = "form-check-input #{motif.location_type}"
+                      - data_attrs = { checkbox_select_all_target: "checkbox", action:"plage-ouverture-form#showAllSections " }
+                      = f.check_box :motif_ids, { multiple: true, class: klasses, data: data_attrs }, motif.id, false
                       = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
               .js-lieu-field[class="#{:collapse unless lieu_required}"]
                 = f.association :lieu,
@@ -43,19 +68,19 @@
                       }, \
                     }
 
-    .row.justify-content-center
+    .row.justify-content-center [data-plage-ouverture-form-target="dateAndTimeSection" hidden=plage_ouverture.new_record?]
       .col-md-6
         .card
           .card-body
             = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
 
-    .row.justify-content-center
+    .row.justify-content-center [data-plage-ouverture-form-target="labelSection" hidden=plage_ouverture.new_record?]
       .col-md-6
         .card
           .card-body
             = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
 
-    .row.justify-content-center
+    .row.justify-content-center [data-plage-ouverture-form-target="submitSection" hidden=plage_ouverture.new_record?]
       .col-md-6
         .row.mb-5
           - if plage_ouverture.persisted?
