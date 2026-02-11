@@ -7,18 +7,17 @@
       .mb-3.rdv-display-flex.rdv-justify-content-space-between
         - if params[:past].present?
           = link_to "Voir vos prochains RDV", users_rdvs_path, class: "fr-btn fr-btn--secondary"
-        - elsif @rdvs.past.exists?
+        - elsif @all_rdvs.past.exists?
           = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "fr-btn fr-btn--secondary"
         - if current_domain.provides_address_selection?
           = render "prendre_rdv_button"
 
-      - rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
-      - if rdvs.any?
-        - rdvs.each do |rdv|
+      - if @rdv_page.any?
+        - @rdv_page.each do |rdv|
           .card
             .card-body
               = render "rdv", rdv: rdv
-        .d-flex.justify-content-center= paginate @rdvs, theme: "dsfr"
+        .d-flex.justify-content-center= paginate @rdv_page, theme: "dsfr"
 
       - else
         .card
