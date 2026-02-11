@@ -3,23 +3,24 @@
     = icon("fr-icon-global-line", class: "text-primary-blue fr-mr-1w")
     | RDV pris sur Internet
 
-.d-flex.fr-mb-1w
-  = motif_icon(class: "text-primary-blue fr-mr-1w")
-  div
-    = motif_name_with_status(rdv.motif)
-    = motif_badges(rdv.motif)
-  - if current_organisation.territory.enable_context_field
-    div
-      - if rdv.context.blank?
-        .text-muted = t(".empty_context")
-      - else
-        .text-muted Contexte&nbsp;:
-        .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
-
 - if rdv.phone?
-  p.card-text
+  p.card-text.mb-1
     = phone_icon(class: "text-primary-blue fr-mr-1w")
-    | RDV téléphonique
+
+    span
+      | RDV téléphonique :
+    span.fr-ml-1v
+      | vous pouvez appeler #{rdv.users.first.full_name} au
+      = " "
+      = phone_to(rdv.users.map(&:humanized_phone_number).compact.first)
+      - if rdv.users.count > 1
+        = " ou #{rdv.users.last.full_name} au "
+        = phone_to(rdv.users.map(&:humanized_phone_number).compact.last)
+  /p.card-text.mb-1
+  /  = phone_icon(class: "text-primary-blue fr-mr-1w")
+  /  | RDV téléphonique : appelez le
+  /  = " "
+    = phone_to(rdv.users.map(&:phone_number_formatted).compact.first)
 - elsif rdv.motif.visio?
   p.card-text.mb-0
     = visio_icon(class: "text-primary-blue fr-mr-1w")
@@ -34,11 +35,28 @@
       = human_location(rdv)
     - elsif rdv.public_office?
       = human_location(rdv)
+
+.d-flex.fr-mb-1w.fr-mt-2w
+  = motif_icon(class: "text-primary-blue fr-mr-1w")
+  span.rdv-color-text-mention-grey
+    | Motif :
+  span.fr-ml-1v
+    = motif_name_with_status(rdv.motif)
+    = motif_badges(rdv.motif)
+  - if current_organisation.territory.enable_context_field
+    div
+      - if rdv.context.blank?
+        .text-muted = t(".empty_context")
+      - else
+        .text-muted Contexte&nbsp;:
+          .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
+
 .d-flex.card-text
   = user_icon(class: "text-primary-blue fr-mr-1w")
-  div
-    strong
-      => "Agent".pluralize(rdv.agents.size)
+  span.rdv-color-text-mention-grey
+    => "Agent".pluralize(rdv.agents.size) + " : "
+  span.fr-ml-1v
+    = " "
     = agents_to_sentence(rdv.agents)
 
 - rdv.participations.select(&:prescription?).each do |participation|
