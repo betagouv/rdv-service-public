@@ -36,28 +36,30 @@
     - elsif rdv.public_office?
       = human_location(rdv)
 
-.d-flex.fr-mb-1w.fr-mt-2w
+.d-flex.fr-mb-1w.fr-mt-3w
   = motif_icon(class: "text-primary-blue fr-mr-1w")
-  span.rdv-color-text-mention-grey
+  span
     | Motif :
   span.fr-ml-1v
     = motif_name_with_status(rdv.motif)
-    = motif_badges(rdv.motif)
-  - if current_organisation.territory.enable_context_field
-    div
-      - if rdv.context.blank?
-        .text-muted = t(".empty_context")
-      - else
-        .text-muted Contexte&nbsp;:
-          .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
-
 .d-flex.card-text
   = user_icon(class: "text-primary-blue fr-mr-1w")
-  span.rdv-color-text-mention-grey
+  span
     => "Agent".pluralize(rdv.agents.size) + " : "
   span.fr-ml-1v
     = " "
     = agents_to_sentence(rdv.agents)
+
+- if current_organisation.territory.enable_context_field
+  .fr-mt-3w
+    = icon("fr-icon-message-2-line", class: "text-primary-blue fr-mr-1w")
+    - if rdv.context.blank?
+      i= t(".empty_context")
+    - else
+      | Contexte&nbsp;:
+      = " "
+      = simple_format(rdv.context, {}, wrapper_tag: :span)
+
 
 - rdv.participations.select(&:prescription?).each do |participation|
   - author = participation.created_by
