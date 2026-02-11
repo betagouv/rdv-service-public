@@ -56,7 +56,7 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
       response_type: :code, scope: :write, state: "fakestate"
     )
 
-    doc.add_screenshot(page, text: "Je me ProConnecte", wait_for: "Vous devez vous connecter pour continuer", disable_high_res_zoom: true)
+    doc.add_screenshot(page, text: "Je me ProConnecte", wait_for: "S’identifier avec\nProConnect", disable_high_res_zoom: true)
 
     fill_in "Adresse email", with: agent.email
     fill_in "Mot de passe", with: agent.password

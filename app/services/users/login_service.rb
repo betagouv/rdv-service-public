@@ -3,7 +3,9 @@ class Users::LoginService
   # - `usable` : moins de 30 minutes et pas utilisé, peut servir à se connecter
   # - `matching` : celui qui correspond au code saisi par l’usager et a moins de 24h
 
-  attr_reader :email, :code, :sign_in_user_lambda
+  attr_reader :email, :code, :sign_in_user_lambda, :user
+
+  delegate :first_name, :last_name, to: :matching_login_code
 
   def initialize(email:, code:, sign_in_user_lambda:)
     @email = email
@@ -13,6 +15,7 @@ class Users::LoginService
 
   def perform
     if matching_login_code&.usable?
+      @user = upsert_user
       user.confirm
       sign_in_user_lambda.call(user)
       matching_login_code.update!(used_at: Time.zone.now)
@@ -43,10 +46,6 @@ class Users::LoginService
 
   def should_redirect_to_code_request? = !usable_login_code_exists?
 
-  def user
-    @user ||= User.find_by!(email:)
-  end
-
   private
 
   def matching_login_code
@@ -54,5 +53,29 @@ class Users::LoginService
       .where(email:, code: code)
       .where("created_at > ?", 24.hours.ago)
       .first
+  end
+
+  def upsert_user
+    user = User.find_by(email: email)
+    if user
+      update_user(user) if first_name.present? && last_name.present?
+    else
+      user = create_user
+    end
+    user
+  end
+
+  def update_user(user)
+    if (user.first_name != first_name || user.last_name != last_name) &&
+       !user.logged_once_with_franceconnect? # les users FranceConnectés ne peuvent pas modifier leur identité
+      user.update!(first_name: first_name, last_name: last_name)
+    end
+  end
+
+  def create_user
+    user = User.new(email:, first_name:, last_name:, created_through: "auto_through_login")
+    user.skip_confirmation_notification!
+    user.save!
+    user
   end
 end

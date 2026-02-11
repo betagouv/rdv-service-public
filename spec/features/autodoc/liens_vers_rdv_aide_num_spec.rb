@@ -12,7 +12,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
   let!(:absence_representing_rdv) { create(:absence, :no_recurrence, agent: agent) }
 
   before do
-    create(:external_reference, item: absence_representing_rdv, external_id: "#{CopyPlanningToNewInstanceJob::CopyRdvAsAbsenceJob::EXTERNAL_ID_PREFIX}1", oauth_application:)
+    create(:external_reference, item: absence_representing_rdv, external_id: "#{InstanceExports::CopyPlanningJob::CopyRdvAsAbsenceJob::EXTERNAL_ID_PREFIX}1", oauth_application:)
     create(:motif, :collectif, organisation:)
   end
 

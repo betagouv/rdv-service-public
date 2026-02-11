@@ -1,5 +1,5 @@
 RSpec.describe "Configuration de RDV Service Public par un administrateur de DS", js: true do
-  let(:application) { create(:oauth_application, name: "Démarches Simplifiées", default_service: create(:service)) }
+  let(:application) { create(:oauth_application, name: "Démarches Simplifiées", grants_autonomous_signup: true) }
   let!(:oauth_token) { create(:access_token, resource_owner_id: agent.id, application:) }
   let!(:agent) { create(:agent, :francis_factice) }
 

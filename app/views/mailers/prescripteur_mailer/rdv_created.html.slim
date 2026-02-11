@@ -2,7 +2,7 @@ div
   p Bonjour,
   p Nous vous confirmons le rendez-vous que vous avez réservé pour #{@user.full_name}
   p
-    = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
+    = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :user
 
   - if @prescripteur.is_a?(Prescripteur)
     .btn-wrapper

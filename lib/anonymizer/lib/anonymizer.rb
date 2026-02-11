@@ -38,7 +38,7 @@ module Anonymizer
       table_config = config.table_config_by_name(table_name)
 
       if table_config
-        errors + Anonymizer::Table
+        errors += Anonymizer::Table
           .new(table_config:)
           .unidentified_column_names
           .map { "missing rule for column #{table_config.table_name}.#{_1}" }

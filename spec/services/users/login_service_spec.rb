@@ -71,4 +71,30 @@ RSpec.describe Users::LoginService, type: :service do
       expect(service.error).to eq "Code invalide"
     end
   end
+
+  context "login code avec nom prénom différents pour un usager existant" do
+    let!(:user) { create(:user, email: "test@example.com", first_name: "Martyna", last_name: "Gorski") }
+    let!(:login_code) { create(:login_code, email: "test@example.com", code: "123456", created_at: 2.minutes.ago, first_name: "Joana", last_name: "Duri") }
+    let(:service) { described_class.new(email: "test@example.com", code: "123456", sign_in_user_lambda:) }
+
+    it "connecte l'usagere et modifie son nom prénom" do
+      expect(sign_in_user_lambda).to receive(:call).with(user)
+      expect(service.perform).to be true
+      expect(user.reload.first_name).to eq("Joana")
+      expect(user.reload.last_name).to eq("Duri")
+    end
+  end
+
+  context "login code avec nom prénom différents pour un usager existant déjà FranceConnecté" do
+    let!(:user) { create(:user, :using_france_connect, email: "test@example.com", first_name: "Martyna", last_name: "Gorski") }
+    let!(:login_code) { create(:login_code, email: "test@example.com", code: "123456", created_at: 2.minutes.ago, first_name: "Joana", last_name: "Duri") }
+    let(:service) { described_class.new(email: "test@example.com", code: "123456", sign_in_user_lambda:) }
+
+    it "connecte l'usagere mais ne modifie pas son nom prénom" do
+      expect(sign_in_user_lambda).to receive(:call).with(user)
+      expect(service.perform).to be true
+      expect(user.reload.first_name).to eq("Martyna")
+      expect(user.reload.last_name).to eq("Gorski")
+    end
+  end
 end

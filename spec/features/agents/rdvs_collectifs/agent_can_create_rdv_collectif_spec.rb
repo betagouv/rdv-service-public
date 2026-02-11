@@ -65,13 +65,13 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
 
     # Adding participants
     visit admin_organisation_rdv_path(organisation, rdv)
-    click_on("Modifier")
+    click_on("Ajouter un participant")
 
     add_user(user1)
     add_user(user2)
     add_user(user3)
     click_button("Enregistrer")
-    expect(page).to have_content("Le rendez-vous a été modifié.")
+    expect(page).to have_content("Participants mis à jour")
     expect(rdv.reload.users.count).to eq 3
   end
 end

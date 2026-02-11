@@ -24,7 +24,8 @@ class Users::SessionsByCodeController < ApplicationController
     elsif login_service.should_redirect_to_code_request?
       redirect_to new_users_sessions_by_code_path(email:), flash: { error: login_service.error }
     else
-      @existing_login_code = LoginCode.most_recent_usable_for(email: login_service.email)
+      @email = login_service.email
+      @existing_login_code = LoginCode.most_recent_usable_for(email:)
       @existing_login_code.errors.add(:base, login_service.error)
       render :new
     end
