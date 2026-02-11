@@ -1,4 +1,4 @@
-RSpec.describe PrescripteurRdvWizard do
+RSpec.describe PrescripteurRdvBookingForm do
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, organisation: organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }

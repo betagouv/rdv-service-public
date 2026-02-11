@@ -1,4 +1,4 @@
-class PrescripteurRdvWizard
+class PrescripteurRdvBookingForm
   include ActiveModel::Model
   include RdvBuilderConcern
 

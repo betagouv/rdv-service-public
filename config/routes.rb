@@ -362,7 +362,7 @@ Rails.application.routes.draw do
   end
   get "agents/agenda", to: "agents/agendas#show"
 
-  scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do
+  scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_booking_form" do
     get "start"
     get "new_prescripteur"
     post "store_prescripteur_in_session"

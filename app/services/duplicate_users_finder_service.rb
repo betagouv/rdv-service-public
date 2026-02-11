@@ -38,7 +38,7 @@ class DuplicateUsersFinderService < BaseService
       OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
     end
 
-    # cette méthode est appelée uniquement depuis PrescripteurRdvWizard#find_or_create_user
+    # cette méthode est appelée uniquement depuis PrescripteurRdvBookingForm#find_or_create_user
     def find_duplicate_based_on_names_and_phone(candidate_user:, scope:)
       return unless candidate_user.phone_number_formatted.present? && candidate_user.first_name.present? && candidate_user.last_name.present?
 

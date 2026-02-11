@@ -1,5 +1,5 @@
 # Concern partagé pour la construction d'un RDV à partir de paramètres.
-# Utilisé par RdvBookingForm (pour les usagers) et PrescripteurRdvWizard (pour les prescripteurs).
+# Utilisé par RdvBookingForm (pour les usagers) et PrescripteurRdvBookingForm (pour les prescripteurs).
 module RdvBuilderConcern
   extend ActiveSupport::Concern
 
