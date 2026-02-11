@@ -75,7 +75,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         it { is_expected.to be_empty }
       end
 
-      context "when there is another user within the scope with the same email" do
+      context "when there is another user within the territory with the same email" do
         let(:candidate_user) { build(:user, email: "candidat@exemple.fr") }
         let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [create(:organisation)]) }
         let(:within_territory) { user_with_same_email.organisations.first.territory }
@@ -150,7 +150,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         it { is_expected.to be_nil }
       end
 
-      context "but outside the given orgs" do
+      context "but outside the given territory" do
         before { duplicated_user.update!(organisations: [create(:organisation, territory: create(:territory))]) }
 
         it { is_expected.to be_nil }
