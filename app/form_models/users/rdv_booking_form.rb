@@ -19,9 +19,6 @@ class Users::RdvBookingForm
   end
 
   def save
-    # Les étapes 2 et 3 ne modifient pas les attributs de l'utilisateur
-    return true if @attributes[:user].blank?
-
     # we make sure the email can be updated only if it is blank
     @user.skip_reconfirmation! if @user.email_was.blank?
 
