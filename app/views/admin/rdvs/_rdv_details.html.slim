@@ -1,8 +1,3 @@
-- if rdv.created_by_user?
-  p
-    = icon("fr-icon-global-line", class: "text-primary-blue fr-mr-1w")
-    | RDV pris sur Internet
-
 - if rdv.phone?
   p.card-text.mb-1
     = phone_icon(class: "text-primary-blue fr-mr-1w")
@@ -36,30 +31,34 @@
     - elsif rdv.public_office?
       = human_location(rdv)
 
-.d-flex.fr-mb-1w.fr-mt-3w
-  = motif_icon(class: "text-primary-blue fr-mr-1w")
-  span
-    | Motif :
-  span.fr-ml-1v
-    = motif_name_with_status(rdv.motif)
-.d-flex.card-text
+.d-flex.card-text.fr-mt-3w.fr-mb-1w
   = user_icon(class: "text-primary-blue fr-mr-1w")
   span
     => "Agent".pluralize(rdv.agents.size) + " : "
   span.fr-ml-1v
     = " "
     = agents_to_sentence(rdv.agents)
+.d-flex.fr-mt-3w.fr-mb-1w
+  = motif_icon(class: "text-primary-blue fr-mr-1w")
+  span
+    | Motif :
+  span.fr-ml-1v
+    = motif_name_with_status(rdv.motif)
+
+- if rdv.created_by_user?
+  p
+    = icon("fr-icon-global-line", class: "text-primary-blue fr-mr-1w")
+    | RDV pris sur Internet
+
 
 - if current_organisation.territory.enable_context_field
-  .fr-mt-3w
-    = icon("fr-icon-message-2-line", class: "text-primary-blue fr-mr-1w")
-    - if rdv.context.blank?
-      i= t(".empty_context")
-    - else
-      | Contexte&nbsp;:
-      br
-      .fr-ml-4w.fr-pl-1w.text-muted.border-left= simple_format(rdv.context, {}, wrapper_tag: :span)
-
+  = icon("fr-icon-message-2-line", class: "text-primary-blue fr-mr-1w")
+  - if rdv.context.blank?
+    i= t(".empty_context")
+  - else
+    | Contexte&nbsp;:
+    br
+    .fr-ml-4w.fr-pl-1w.text-muted.border-left= simple_format(rdv.context, {}, wrapper_tag: :span)
 
 - rdv.participations.select(&:prescription?).each do |participation|
   - author = participation.created_by
