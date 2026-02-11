@@ -13,7 +13,7 @@ module CanHaveRdvWizardContext
 
     parsed_params = Rack::Utils.parse_nested_query(parsed_uri.query).to_h.symbolize_keys
     Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "parsed_params", data: { parsed_params:, ip: request.remote_ip }))
-    rdv_wizard = UserRdvWizard::Step1.new(nil, parsed_params)
+    rdv_wizard = UserRdvWizard.new(nil, parsed_params)
     # L'usager doit être connecté afin de voir les créneaux pour un motif de Follow Up
     return if rdv_wizard.motif&.follow_up?
 

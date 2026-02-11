@@ -1,4 +1,4 @@
-RSpec.describe UserRdvWizard::Step1 do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe UserRdvWizard do
   let!(:organisation) { create(:organisation) }
   let!(:user) { create(:user) }
   let!(:user_for_rdv) { create(:user) }
