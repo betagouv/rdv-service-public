@@ -26,7 +26,9 @@
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
 
   = simple_fields_for :recurrence do |n|
-    = n.input :has_recurrence, as: :boolean, label: "Répéter…", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" }, class: "js-recurrence-toggle js-recurrence-input" }
+    / Sur le formulaire de plages, le toggle prend la forme de radio buttons qui contrôlent le véritable toggle ci-dessous
+    div[hidden=model.is_a?(PlageOuverture)]
+      = n.input :has_recurrence, as: :boolean, label: "Répéter…", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence", "plage-ouverture-form-target": "recurrenceCheckbox" }, class: "js-recurrence-toggle js-recurrence-input" }
 
     .all-select
       .form-group

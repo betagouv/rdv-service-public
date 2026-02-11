@@ -11,14 +11,14 @@
               | Ponctuelle ou récurrente ?
           .fr-fieldset__element.fr-fieldset__element--inline
             .fr-radio-group.fr-radio-rich
-              input#non_reccurring[type="radio" name="reccuring" value="false" data-action="plage-ouverture-form#showMotifsSection"]
+              input#non_reccurring[type="radio" name="recurrence_radio" value="false" data-action="plage-ouverture-form#showMotifsSection plage-ouverture-form#disableRecurrence"]
               label.fr-label.fr-mb-0[for="non_reccurring"]
                 | Ponctuelle
               .fr-radio-rich__pictogram
                 = dsfr_svg "artwork/pictograms/digital/calendar"
           .fr-fieldset__element.fr-fieldset__element--inline
             .fr-radio-group.fr-radio-rich
-              input#reccurring[type="radio" name="reccuring" value="true" data-action="plage-ouverture-form#showMotifsSection"]
+              input#reccurring[type="radio" name="recurrence_radio" value="true" data-action="plage-ouverture-form#showMotifsSection plage-ouverture-form#enableRecurrence"]
               label.fr-label.fr-mb-0[for="reccurring"]
                 | Récurrente
               .fr-radio-rich__pictogram
