@@ -4,8 +4,8 @@
       .col-md-6
         = render("model_errors", model: plage_ouverture, f: f)
 
-        .card
-          .card-body
+        .card data-controller="expandable-card"
+          .card-body data-expandable-card-target="content"
             h2.card-title Motifs
             - if plage_ouverture.agent == current_agent
               p.mb-4 Pour quels motifs de rendez-vous êtes-vous disponible ?
@@ -42,6 +42,7 @@
                         "allow-clear": !lieu_required, \
                       }, \
                     }
+          button.fr-btn.fr-btn--tertiary-no-outline.fr-btn--sm.w-100.rdv-justify-content-center type="button" data-expandable-card-target="toggle" data-action="expandable-card#toggle" hidden=true Voir plus
 
     .row.justify-content-center
       .col-md-6
