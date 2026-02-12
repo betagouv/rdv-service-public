@@ -1,0 +1,1 @@
+bundle exec dotenv -f ".env.rdv_service_public,.env" $1

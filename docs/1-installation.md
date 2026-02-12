@@ -3,7 +3,7 @@
 ## Prérequis
 
 - Déploiement:
-  - Ruby 3.3.5 (nous conseillons l’utilisation de [rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
+  - Ruby (voir `.ruby-version`) (nous conseillons l’utilisation de [rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
   - PostgreSQL >= 12, l’utilisateur doit avoir les droits `superuser`. C'est nécessaire pour pouvoir activer les extensions utilisés.
 - Développement
   - [Yarn](https://yarnpkg.com/en/docs/install)
@@ -14,14 +14,13 @@
 
 ## Setup
 
-Commencer par copier `.env.sample` vers `.env` et définissez-y les variables POSTGRES_HOST, POSTGRES_USER et POSTGRES_PASSWORD pour la connexion à la db locale
-
 Puis exécuter ce script pour installer les gems et packages et créer la base de données :
 ```bash
 make install  ## appelle bin/setup
 ```
+Vous aurez ensuite probablement besoin de configurer certaines variables d'environnement. Parcourez les fichiers .env pour voir ce qui est nécessaire
 
-Il ne reste (si tout s’est bien passé) qu’à lancer le serveur.
+Vous pourrez ensuite démarrer les serveurs :
 ```bash
 make run      ## appelle overmind start -f Procfile.dev
 ```

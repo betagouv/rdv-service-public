@@ -31,13 +31,8 @@ FileUtils.chdir APP_ROOT do
   system! "yarn install --frozen-lockfile"
   system! "yarn run playwright install chromium --with-deps"
 
-  puts "\n== Copying sample files =="
-  unless File.exist?("config/database.yml")
-    FileUtils.cp "config/database.yml.sample", "config/database.yml"
-  end
-
-  puts "\n== Preparing database =="
-  system! "bin/rails db:prepare"
+  puts "\n== Preparing database for each instance =="
+  system! "./bin/run_on_both_local_instances 'bin/rails db:prepare'"
 
   puts "\n== Preparing parallel test databases =="
   system! "RAILS_ENV=test rake parallel:create"
