@@ -232,19 +232,17 @@ class Agent < ApplicationRecord
   end
 
   def access_level_in(organisation)
+    organisation_id = organisation.respond_to?(:id) ? organisation.id : organisation
+
     if roles.loaded?
-      roles.find { _1.organisation_id == organisation.id }&.access_level
+      roles.find { _1.organisation_id == organisation_id }&.access_level
     else
-      roles.where(organisation_id: organisation.id).pick(:access_level)
+      roles.where(organisation_id:).pick(:access_level)
     end
   end
 
-  def admin_roles
-    roles.to_a.select { _1.access_level == AgentRole::ACCESS_LEVEL_ADMIN }
-  end
-
   def organisations_count
-    # roles est préchargé
+    # Si `roles` est chargé, `size` va compter les objets, sinon elle va envoyer un COUNT en base
     roles.size
   end
 

@@ -9,15 +9,9 @@ class Agent::AgentPolicy < ApplicationPolicy
     record == current_agent
   end
 
-  # rubocop:disable Style/ArrayIntersect
   def admin_in_record_organisation?
-    (
-      record.roles.map(&:organisation_id) &
-        current_agent.admin_roles.map(&:organisation_id)
-    ).any?
+    record.organisation_ids.any? { current_agent.admin_in_organisation?(_1) }
   end
-
-  # rubocop:enable Style/ArrayIntersect
 
   alias show? current_agent_or_admin_in_record_organisation?
   alias new? current_agent_or_admin_in_record_organisation?
