@@ -1,12 +1,6 @@
 module AgentsHelper
   def may_need_onboarding_help?
-    return false if current_agent.territory_creation_request.blank?
-
-    if defined?(current_organisation)
-      # Pour éviter d'avoir des problèmes de perfs en faisant un COUNT(*) sur tous les rdvs de l'organisation,
-      # on limite à 5 puisque c'est le nombre qu'on considère comme un bon indicateur que l'organisation a réussi à configurer son compte
-      current_organisation.rdvs.limit(5).count < 5
-    elsif defined?(current_territory)
+    if defined?(current_territory)
       Rdv.joins(:organisation).where(organisation: { territory_id: current_territory.id }).limit(5).count < 5
     end
   end
