@@ -8,14 +8,6 @@
   div
     = motif_name_with_status(rdv.motif)
     = motif_badges(rdv.motif)
-  - if current_organisation.territory.enable_context_field
-    div
-      - if rdv.context.blank?
-        .text-muted = t(".empty_context")
-      - else
-        .text-muted Contexte&nbsp;:
-        .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
-
 - if rdv.phone?
   p.card-text
     = phone_icon(class: "text-primary-blue fr-mr-1w")
@@ -40,6 +32,15 @@
     strong
       => "Agent".pluralize(rdv.agents.size)
     = agents_to_sentence(rdv.agents)
+
+- if current_organisation.territory.enable_context_field
+  = icon("fr-icon-message-2-line", class: "text-primary-blue fr-mr-1w")
+  - if rdv.context.blank?
+    i= t(".empty_context")
+  - else
+    | Contexte&nbsp;:
+    br
+    .fr-ml-4w.fr-pl-1w.text-muted.border-left= simple_format(rdv.context, {}, wrapper_tag: :span)
 
 - rdv.participations.select(&:prescription?).each do |participation|
   - author = participation.created_by
