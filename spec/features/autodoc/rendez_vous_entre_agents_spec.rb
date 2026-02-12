@@ -75,7 +75,7 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     find(:label, text: "Répéter…").click
 
-    find(:label, text: "Suivi de dossier").click
+    expect(page.find("input#plage_ouverture_motif_ids_#{Motif.find_by(name: 'Suivi de dossier').id}")).to be_checked
 
     find(:label, text: "Mercredi").click
     find(:label, text: "Jeudi").click

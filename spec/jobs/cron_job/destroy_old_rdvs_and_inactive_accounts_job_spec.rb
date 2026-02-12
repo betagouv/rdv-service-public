@@ -69,6 +69,6 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
     travel_to(25.months.ago) { create(:rdv, organisation: organisation, starts_at: Time.zone.today.change(hour: 16)) }
     expect do
       described_class.new.perform
-    end.to have_enqueued_job(WebhookSendJob).with(json_payload_with_meta("webhook_reason", "rgpd"), webhook_endpoint.id)
+    end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("webhook_reason", "rgpd"), webhook_endpoint.id)
   end
 end
