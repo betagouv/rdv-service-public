@@ -8,7 +8,7 @@
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
-        = form_for @rdv_booking_form, as: :user, url: users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), method: "post", builder: Dsfr::FormBuilder do |f|
+        = form_for @rdv_wizard_form, as: :user, url: users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), method: "post", builder: Dsfr::FormBuilder do |f|
           = render "users/users/form_fields", f: f
           - @rdv_wizard.to_query.each do |wizard_key, wizard_value|
             = hidden_field_tag "rdv[#{wizard_key}]", wizard_value

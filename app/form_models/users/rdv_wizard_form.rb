@@ -1,4 +1,4 @@
-class Users::RdvBookingForm
+class Users::RdvWizardForm
   include Users::UserFormConcern
 
   attr_reader :rdv_wizard

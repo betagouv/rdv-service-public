@@ -49,7 +49,7 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
         user.signed_in_with_invitation_token!
         allow(controller).to receive(:current_user).and_return(user)
         allow(UserRdvWizard).to receive(:new).and_return(mock_user_rdv_wizard)
-        allow(Users::RdvBookingForm).to receive(:new).and_return(instance_double(Users::RdvBookingForm))
+        allow(Users::RdvWizardForm).to receive(:new).and_return(instance_double(Users::RdvWizardForm))
       end
 
       it "le step 1 pointe vers le step 3 comme prochaine étape" do
@@ -64,7 +64,7 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
       before do
         sign_in user
         allow(UserRdvWizard).to receive(:new).and_return(mock_user_rdv_wizard)
-        allow(Users::RdvBookingForm).to receive(:new).and_return(instance_double(Users::RdvBookingForm))
+        allow(Users::RdvWizardForm).to receive(:new).and_return(instance_double(Users::RdvWizardForm))
       end
 
       it "le step 1 pointe vers le step 3 comme prochaine étape" do

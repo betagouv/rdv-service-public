@@ -16,7 +16,7 @@ class Users::RdvWizardStepsController < UserAuthController
   def new
     @rdv_wizard = UserRdvWizard.new(current_user, query_params)
     @rdv = @rdv_wizard.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain)
+    @rdv_wizard_form = Users::RdvWizardForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain)
     authorize(@rdv, policy_class: User::RdvPolicy)
     if @rdv_wizard.creneau.present?
       render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
@@ -29,7 +29,7 @@ class Users::RdvWizardStepsController < UserAuthController
   def create
     @rdv_wizard = UserRdvWizard.new(current_user, rdv_params.merge(user_params))
     @rdv = @rdv_wizard.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain)
+    @rdv_wizard_form = Users::RdvWizardForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain)
     skip_authorization
     success = @rdv_wizard.valid? && @rdv_wizard.user.benign_errors.blank?
     success &&= @rdv_wizard.save if current_step[:name] == "step1"
