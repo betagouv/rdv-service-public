@@ -32,7 +32,7 @@ FileUtils.chdir APP_ROOT do
   system! "yarn run playwright install chromium --with-deps"
 
   puts "\n== Preparing database for each instance =="
-  system! "./bin/run_on_both_local_instances 'bin/rails db:prepare'"
+  system! "./bin/run_on_both_local_instances './bin/rails db:prepare'"
 
   puts "\n== Preparing parallel test databases =="
   system! "RAILS_ENV=test rake parallel:create"

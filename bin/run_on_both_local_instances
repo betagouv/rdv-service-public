@@ -1,2 +1,3 @@
-./bin/rdv_service_public_development_run  $1
-./bin/rdv_solidarites_development_run  $1
+set -e
+./bin/rdv_service_public_development_run "$@"
+./bin/rdv_solidarites_development_run "$@"
