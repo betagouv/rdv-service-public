@@ -31,17 +31,8 @@
                       = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
               .js-lieu-field[class="#{:collapse unless lieu_required}"]
                 = f.association :lieu,
-                  collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
-                  label_method: :full_name,
-                  input_html: { \
-                      class: "select2-input", \
-                      data: { \
-                        placeholder: "Sélectionnez un lieu", \
-                        "select2-config": { disableSearch: true }, \
-                        "auto-select-sole-option": lieu_required,
-                        "allow-clear": !lieu_required, \
-                      }, \
-                    }
+                  collection: @lieux_to_select,
+                  label_method: :full_name
 
     .row.justify-content-center
       .col-md-6
