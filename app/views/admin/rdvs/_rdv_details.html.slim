@@ -19,13 +19,12 @@
 - if rdv.phone?
   p.card-text
     = phone_icon(class: "text-primary-blue fr-mr-1w")
-    | RDV téléphonique
+    = display_user_phone_number_for_rdv(rdv, current_agent)
 - elsif rdv.motif.visio?
   p.card-text.mb-0
     = visio_icon(class: "text-primary-blue fr-mr-1w")
     |> Par visioconférence
     = link_to("démarrer la visioconférence ", rdv.visio_url, target: :_blank)
-
 - else
   .d-flex.mb-1
     = location_type_icon(rdv.motif.location_type, class: "text-primary-blue fr-mr-1w")
@@ -34,6 +33,7 @@
       = human_location(rdv)
     - elsif rdv.public_office?
       = human_location(rdv)
+
 .d-flex.card-text
   = user_icon(class: "text-primary-blue fr-mr-1w")
   div
