@@ -130,6 +130,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports: ["5432:5432"]
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["6379:6379"]
     steps:
       - uses: actions/checkout@v4
       - uses: WitherZuo/set-timezone@v1.0.0
@@ -146,8 +154,6 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
-      - name: Set up Redis
-        uses: zhulik/redis-action@1.1.0
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
@@ -208,6 +214,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports: ["5432:5432"]
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["6379:6379"]
     steps:
       - uses: actions/checkout@v4
       - uses: WitherZuo/set-timezone@v1.0.0
@@ -222,8 +236,6 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
-      - name: Set up Redis
-        uses: zhulik/redis-action@1.1.0
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
