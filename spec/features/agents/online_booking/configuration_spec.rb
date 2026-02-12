@@ -72,7 +72,7 @@ RSpec.describe "Agents can configure online booking" do
 
       click_on "Ouvrir une plage d'ouverture"
       click_on "Renseigner mes disponibilités"
-      find("label", text: motif.name).click
+      expect(page.find("input#plage_ouverture_motif_ids_#{motif.id}")).to be_checked
       find("label", text: "Lundi").click
 
       select(lieu.name, from: "Lieu")
