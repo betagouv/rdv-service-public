@@ -5,9 +5,7 @@
 
 .d-flex.fr-mb-1w
   = motif_icon(class: "text-primary-blue fr-mr-1w")
-  div
-    = motif_name_with_status(rdv.motif)
-    = motif_badges(rdv.motif)
+  = motif_name_with_status(rdv.motif)
 - if rdv.phone?
   p.card-text
     = phone_icon(class: "text-primary-blue fr-mr-1w")
