@@ -1,11 +1,5 @@
-- if rdv.created_by_user?
-  p
-    = icon("fr-icon-global-line", class: "text-primary-blue fr-mr-1w")
-    | RDV pris sur Internet
+/On commence par afficher les informations pratique pour participer au rendez-vous (quand et où)
 
-.d-flex.fr-mb-1w
-  = motif_icon(class: "text-primary-blue fr-mr-1w")
-  = motif_name_with_status(rdv.motif)
 - if rdv.phone?
   p.card-text
     = phone_icon(class: "text-primary-blue fr-mr-1w")
@@ -24,12 +18,24 @@
     - elsif rdv.public_office?
       = human_location(rdv)
 
-.d-flex.card-text
+.d-flex.card-text.fr-mt-3w
   = user_icon(class: "text-primary-blue fr-mr-1w")
   div
-    strong
-      => "Agent".pluralize(rdv.agents.size)
+    = "Agent".pluralize(rdv.agents.size)
+    |> &nbsp;:
     = agents_to_sentence(rdv.agents)
+
+/ Puis on affiche les informations sur ce qui va se passer pendant le rendez-vous : le motif et les éléments de contexte
+
+.d-flex.fr-mb-1w.fr-mt-3w
+  = motif_icon(class: "text-primary-blue fr-mr-1w")
+  |> Motif&nbsp;:
+  = motif_name_with_status(rdv.motif)
+
+- if rdv.created_by_user?
+  p
+    = icon("fr-icon-global-line", class: "text-primary-blue fr-mr-1w")
+    | RDV pris sur Internet
 
 - if current_organisation.territory.enable_context_field
   = icon("fr-icon-message-2-line", class: "text-primary-blue fr-mr-1w")
