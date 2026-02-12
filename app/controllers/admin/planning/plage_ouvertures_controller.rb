@@ -52,15 +52,11 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
       **defaults
     )
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-
-    prepare_form_selects(@plage_ouverture)
-    @plage_ouverture.motifs = [@motifs_to_select.sole] if @motifs_to_select.size == 1
-    @plage_ouverture.lieu_id = @lieux_to_select.sole.id if @lieux_to_select.size == 1
+    @plage_ouverture.motifs = [@plage_ouverture.available_motifs.sole] if @plage_ouverture.available_motifs.size == 1
   end
 
   def edit
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
-    prepare_form_selects(@plage_ouverture)
   end
 
   def create
@@ -84,7 +80,6 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
       update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
-      prepare_form_selects(@plage_ouverture)
       render :edit
     end
   end
@@ -97,7 +92,6 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
       flash[:notice] = "La plage d'ouverture a été supprimée."
       redirect_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)
     else
-      prepare_form_selects(@plage_ouverture)
       render :edit
     end
   end
@@ -144,10 +138,5 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
 
   def plage_ouverture_mailer
     Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture)
-  end
-
-  def prepare_form_selects(plage_ouverture)
-    @motifs_to_select = plage_ouverture.available_motifs.load
-    @lieux_to_select = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name.load
   end
 end
