@@ -28,7 +28,7 @@ make run      ## appelle overmind start -f Procfile.dev
 
 ## Commandes
 
-Un [Makefile](https://github.com/betagouv/rdv-solidarites.fr/blob/production/Makefile) est disponible, qui sert de point d’entrée aux différents outils :
+Le [Makefile](https://github.com/betagouv/rdv-solidarites.fr/blob/production/Makefile) sert de point d’entrée aux différents outils :
 
 ```bash
 > make help

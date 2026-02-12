@@ -1,6 +1,7 @@
-rdv_service_public_web: bundle exec dotenv -f .env.rdv_service_public ./bin/start_web_server
-rdv_solidarites_web: bundle exec dotenv -f .env.rdv_solidarites ./bin/start_web_server
-jobs: bundle exec good_job start
+rdv_service_public_web: bundle exec dotenv -f ".env.rdv_service_public,.env" ./bin/start_web_server
+rdv_solidarites_web: bundle exec dotenv -f ".env.rdv_solidarites,.env" ./bin/start_web_server
+rdv_service_public_jobs: bundle exec dotenv -f ".env.rdv_service_public,.env" bundle exec good_job start
+rdv_solidarites_jobs: bundle exec dotenv -f ".env.rdv_solidarites,.env" bundle exec good_job start
 js: yarn build --mode=development --watch --progress
 mss_web: PORT=3010 bundle exec ruby scripts/mon_suivi_social_local.rb
 ants_web: PORT=3020 bundle exec ruby scripts/ants_app.rb
