@@ -1,16 +1,19 @@
-class PrescripteurRdvWizard < UserRdvWizard
+class PrescripteurRdvWizard
+  include ActiveModel::Model
+  include RdvBuilderConcern
+
   attr_accessor :prescripteur
 
   def initialize(attributes, domain)
     attributes = attributes.deep_symbolize_keys
-    super(nil, attributes)
+    build_rdv_from_attributes(attributes)
     @prescripteur = Prescripteur.new(attributes[:prescripteur]) if attributes[:prescripteur].present?
     @user_attributes = attributes[:user]
     @domain = domain
   end
 
   def create!
-    creneau # On précharge le créneau en dehors de la transaction pour éviter les erreurs  ActiveRecord::AsynchronousQueryInsideTransactionError lors des requêtes asynchrones
+    creneau # On précharge le créneau en dehors de la transaction pour éviter les erreurs ActiveRecord::AsynchronousQueryInsideTransactionError lors des requêtes asynchrones
     ActiveRecord::Base.transaction do
       find_or_create_user
 
