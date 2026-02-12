@@ -145,7 +145,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv.reload
         expect do
           rdv.update_and_notify(agent, status: "noshow")
-        end.to have_enqueued_job(WebhookBuildAndSendJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
+        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
       end
     end
 
