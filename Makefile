@@ -1,8 +1,8 @@
 install: ## Setup development environment
 	bin/setup
 
-run: ## Start the application (web, jobs et webpack)
-	overmind start -f Procfile.dev
+run: ## Start the application (web, jobs et webpack), the port number will be setup by dotenv, not overmind
+	OVERMIND_NO_PORT=1 overmind start -f Procfile.dev
 
 lint: lint_rubocop lint_slim lint_brakeman ## Run all linters
 
