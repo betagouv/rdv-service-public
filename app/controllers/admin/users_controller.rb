@@ -175,9 +175,9 @@ class Admin::UsersController < AgentAuthController
   def user_form_object
     Admin::UserForm.new(
       @user,
+      current_organisation:,
       ignore_benign_errors: params.dig(:user, :ignore_benign_errors),
       view_locals: {
-        current_organisation: current_organisation,
         from_modal: from_modal?,
         return_location: params[:return_location],
       }

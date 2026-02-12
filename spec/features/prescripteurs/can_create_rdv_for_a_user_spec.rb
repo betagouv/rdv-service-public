@@ -130,9 +130,9 @@ RSpec.describe "un prescripteur peut prendre rendez-vous pour un usager" do
     end
   end
 
-  context "when a similar user already exists", js: true do
+  context "when a similar user already exists within the motifs's organisation's territory", js: true do
     let!(:user) do
-      create(:user, first_name: "Patricia", last_name: "Duroy", phone_number: "0611223344")
+      create(:user, first_name: "Patricia", last_name: "Duroy", phone_number: "0611223344", organisations: [create(:organisation, territory: motif.organisation.territory)])
     end
 
     def fill_prescripteur_form

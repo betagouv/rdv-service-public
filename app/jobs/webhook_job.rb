@@ -11,10 +11,23 @@ class WebhookJob < ApplicationJob
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
 
-  def perform(payload, webhook_endpoint_id)
-    webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
+  before_perform { throw :abort if Rails.env.development? }
 
-    return if Rails.env.development? && webhook_endpoint.target_url !~ /localhost/
+  #
+  # Deux signatures possibles
+  #
+  # - perform(payload, webhook_endpoint_id)
+  # - perform(record:, action:, webhook_endpoint_id:)
+  #
+  def perform(*args, **kwargs)
+    if kwargs[:record]
+      payload = kwargs[:record].generate_webhook_payload(kwargs[:action])
+      webhook_endpoint_id = kwargs[:webhook_endpoint_id]
+    else
+      payload, webhook_endpoint_id = args
+    end
+
+    webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
 
     request = Typhoeus::Request.new(
       webhook_endpoint.target_url,

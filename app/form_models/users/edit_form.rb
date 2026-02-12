@@ -1,0 +1,22 @@
+class Users::EditForm
+  include Users::UserFormConcern
+
+  def initialize(user:, domain:)
+    @user = user
+    @domain = domain
+  end
+
+  def show_birth_date_field? = false
+
+  def show_ants_pre_demande_number_field? = false
+
+  def show_logement_field? = user_profiles_territories.any?(&:enable_logement_field)
+
+  def show_address_field? = false
+
+  def phone_required? = false
+
+  def address_value = user.address
+
+  def show_social_fields? = true
+end
