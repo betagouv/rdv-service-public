@@ -15,6 +15,7 @@ class Export < ApplicationRecord
 
   # Relations
   belongs_to :agent
+  has_many :export_file_blobs, dependent: :destroy
 
   # Validations
   validates :expires_at, :file_name, presence: true
