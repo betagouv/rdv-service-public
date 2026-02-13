@@ -473,6 +473,9 @@ tables:
       - created_at
       - updated_at
 
+  - table_name: export_file_blobs
+    truncated: true
+
   - table_name: oauth_applications
     anonymized_column_names:
       - secret
