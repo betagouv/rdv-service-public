@@ -4,26 +4,16 @@ module RedisFileStorable
   class FileNotFoundError < StandardError; end
 
   def load_file
-    compressed_file = Redis.with_connection { _1.get(redis_file_key) }
-    raise FileNotFoundError, "Can't find file at key #{redis_file_key.inspect}" unless compressed_file
+    blob = export_file_blobs.find_by(page_index: nil)
+    raise FileNotFoundError, "Can't find file blob for Export##{id}" unless blob
 
-    Zlib.inflate(compressed_file)
+    Zlib.inflate(blob.data)
   end
 
   def store_file(content)
     transaction do
       update!(computed_at: Time.zone.now)
-      compressed_file = Zlib.deflate(content)
-      Redis.with_connection do |redis|
-        redis.set(redis_file_key, compressed_file)
-        redis.expire(redis_file_key, (expires_at - Time.zone.now).seconds.to_i)
-      end
+      export_file_blobs.create!(page_index: nil, data: Zlib.deflate(content))
     end
-  end
-
-  private
-
-  def redis_file_key
-    "Export#redis_file_key-#{id}"
   end
 end

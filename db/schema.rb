@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_13_081619) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -209,6 +209,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
     t.string "categories", default: [], array: true
     t.string "external_url", null: false
     t.datetime "published_at", null: false
+  end
+
+  create_table "export_file_blobs", force: :cascade do |t|
+    t.uuid "export_id", null: false
+    t.integer "page_index"
+    t.binary "data", null: false
+    t.datetime "created_at", null: false
+    t.index ["export_id", "page_index"], name: "index_export_file_blobs_on_export_id_and_page_index"
   end
 
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -864,7 +872,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
-    t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
+    t.index ["email"], name: "index_users_on_email", where: "(email IS NOT NULL)"
     t.index ["first_name"], name: "index_users_on_first_name"
     t.index ["franceconnect_openid_sub"], name: "index_users_on_franceconnect_openid_sub", where: "(franceconnect_openid_sub IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
@@ -930,6 +938,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
   add_foreign_key "annotations", "territories"
   add_foreign_key "annotations", "users"
   add_foreign_key "api_calls", "agents"
+  add_foreign_key "export_file_blobs", "exports"
   add_foreign_key "exports", "agents"
   add_foreign_key "external_calendar_events", "agents"
   add_foreign_key "external_references", "oauth_applications"

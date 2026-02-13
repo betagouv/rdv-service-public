@@ -161,6 +161,12 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyExpiredExportFileBlobs < CronJob
+    def perform
+      ExportFileBlob.joins(:export).where(exports: { expires_at: ..Time.zone.now }).delete_all
+    end
+  end
+
   class DestroyRedisWaitingRoomKeys < CronJob
     def perform
       Rdv.reset_user_in_waiting_room!

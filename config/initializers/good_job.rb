@@ -49,6 +49,11 @@ Rails.application.configure do
       class: "CronJob::DestroyRedisWaitingRoomKeys",
     },
 
+    destroy_expired_export_file_blobs: {
+      cron: "every day at 00:15 Europe/Paris",
+      class: "CronJob::DestroyExpiredExportFileBlobs",
+    },
+
     destroy_old_rdvs_and_inactive_users_job: {
       cron: "every day at 22:00 Europe/Paris",
       class: "CronJob::DestroyOldRdvsAndInactiveAccountsJob",
