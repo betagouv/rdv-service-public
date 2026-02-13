@@ -13,7 +13,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
   end
 
   shared_examples "can crud own plage ouvertures" do
-    it "works" do
+    it "works", js: true do
       expect_page_title("Plages d’ouverture")
       click_link "Permanence"
 
@@ -30,7 +30,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
       expect_page_title("Plages d’ouverture")
       click_on("La belle plage")
-      click_link("Supprimer")
+      accept_alert { click_link("Supprimer") }
 
       expect { perform_enqueued_jobs }.to change { emails_sent_to(agent.email).size }.by(1)
       open_email(agent.email)
@@ -48,8 +48,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect_page_title("Nouvelle plage d'ouverture")
 
       fill_in "Libellé (facultatif)", with: "Accueil"
-      select(lieu.full_name, from: "plage_ouverture_lieu_id") if lieu
       check "Suivi bonjour"
+      expect(page).to have_select("plage_ouverture_lieu_id", selected: lieu.full_name) if lieu
       click_button "Créer la plage d'ouverture"
       expect(PlageOuverture.last.title).to eq("Accueil")
       expect_page_title("Plages d’ouverture")
@@ -167,7 +167,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect_page_title("Nouvelle plage d'ouverture")
       fill_in "Libellé (facultatif)", with: "Accueil"
       check "Suivi bonjour"
-      select(lieu.full_name, from: "plage_ouverture_lieu_id")
+      expect(page).to have_select("plage_ouverture_lieu_id", selected: lieu.full_name)
       click_button "Créer la plage d'ouverture"
       expect(page).to have_content("Plage d'ouverture créée")
 
@@ -270,7 +270,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         expect(page).to have_checked_field(motif_phone.name)
         expect(page).not_to have_checked_field(motif.name)
         expect(page).to have_content("Lieu")
-        select(lieu.full_name, from: "plage_ouverture_lieu_id")
+        expect(page).to have_select("plage_ouverture_lieu_id", selected: lieu.full_name)
         click_on "Créer la plage d'ouverture"
         expect(page).to have_content("Plage d'ouverture créée")
         expect(PlageOuverture.last.motifs).to contain_exactly(motif_public_office, motif_phone)
@@ -298,7 +298,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     it "works", js: true do
       visit new_admin_organisation_planning_plage_ouverture_path(organisation, agent_id: agent)
       check motif.name
-      select(lieu.full_name, from: "plage_ouverture_lieu_id")
+      expect(page).to have_select("plage_ouverture_lieu_id", selected: lieu.full_name)
 
       # Set start time at 09:30
       select "09", from: "plage_ouverture_start_time_4i"
