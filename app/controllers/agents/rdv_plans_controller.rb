@@ -135,10 +135,10 @@ class Agents::RdvPlansController < AgentAuthController
     organisation = agent.organisations.first
 
     event_sources = [
-      { url: admin_api_agenda_rdvs_path(agent_id: agent.id, organisation_id: organisation.id, format: :json), id: "Rdv" },
-      { url: admin_api_agenda_absences_path(agent_id: agent.id, organisation_id: organisation.id, format: :json), id: "Absence" },
-      { url: admin_api_agenda_external_calendar_events_path(agent_id: agent.id, format: :json), id: "ExternalCalendarEvent" },
-      { url: admin_api_agenda_plage_ouvertures_path(agent_id: agent.id, organisation_id: organisation.id, mixed_with_rdvs: true, format: :json), id: "PlageOuverture" },
+      { id: "Rdv",                    url: admin_api_agenda_rdvs_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
+      { id: "Absence",                url: admin_api_agenda_absences_path(agent_id: agent.id, organisation_id: organisation.id, format: :json) },
+      { id: "ExternalCalendarEvent",  url: admin_api_agenda_external_calendar_events_path(agent_id: agent.id, format: :json) },
+      { id: "PlageOuverture",         url: admin_api_agenda_plage_ouvertures_path(agent_id: agent.id, organisation_id: organisation.id, mixed_with_rdvs: true, format: :json) },
       OffDays.to_full_calendar_array,
     ]
 
