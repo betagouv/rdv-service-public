@@ -11,14 +11,14 @@
 require "benchmark"
 
 LARGE_VALUE_SIZE = 100 * 1024 * 1024 # 100 MB
-REDIS_KEY_BIG = "test:big_file"
-REDIS_KEY_SMALL = "test:ping"
+REDIS_KEY_BIG = "test:big_file".freeze
+REDIS_KEY_SMALL = "test:ping".freeze
 NUM_READERS = 5
 READ_INTERVAL = 0.1 # seconds between read attempts
 
 REDIS_URL = Rails.configuration.x.redis_url
-READER_TIMEOUT = 0.1   # short timeout to detect blocking
-WRITER_TIMEOUT = 30     # long timeout for large operations
+READER_TIMEOUT = 0.1 # short timeout to detect blocking
+WRITER_TIMEOUT = 30 # long timeout for large operations
 
 def new_redis(timeout:)
   Redis.new(url: REDIS_URL, timeout: timeout, ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE })
@@ -39,13 +39,13 @@ stop_readers = Concurrent::AtomicBoolean.new(false)
 reader_futures = NUM_READERS.times.map do |i|
   Concurrent::Future.execute do
     reader = new_redis(timeout: READER_TIMEOUT)
-    while !stop_readers.true?
+    until stop_readers.true?
       start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       begin
         reader.get(REDIS_KEY_SMALL)
         elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
         reader_results << { reader: i, elapsed: elapsed.round(4), error: nil }
-      rescue => e
+      rescue StandardError => e
         elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
         reader_results << { reader: i, elapsed: elapsed.round(4), error: "#{e.class}: #{e.message}" }
       end
@@ -96,13 +96,13 @@ stop_readers = Concurrent::AtomicBoolean.new(false)
 reader_futures = NUM_READERS.times.map do |i|
   Concurrent::Future.execute do
     reader = new_redis(timeout: READER_TIMEOUT)
-    while !stop_readers.true?
+    until stop_readers.true?
       start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       begin
         reader.get(REDIS_KEY_SMALL)
         elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
         read_reader_results << { reader: i, elapsed: elapsed.round(4), error: nil }
-      rescue => e
+      rescue StandardError => e
         elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
         read_reader_results << { reader: i, elapsed: elapsed.round(4), error: "#{e.class}: #{e.message}" }
       end
