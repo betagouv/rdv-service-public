@@ -1,15 +1,15 @@
 class Users::RdvBookingForm
   include Users::UserFormConcern
 
-  attr_reader :rdv_wizard
+  attr_reader :rdv_builder
 
-  delegate :to_query, :motif, :service, :rdv, to: :rdv_wizard
+  delegate :to_query, :motif, :service, :rdv, to: :rdv_builder
 
   validate :validate_phone_number_present_for_motif_by_phone
 
-  def initialize(user:, rdv_wizard:, domain:, user_attributes: {})
+  def initialize(user:, rdv_builder:, domain:, user_attributes: {})
     @user = user
-    @rdv_wizard = rdv_wizard
+    @rdv_builder = rdv_builder
     @domain = domain
     @user.assign_attributes(user_attributes)
   end

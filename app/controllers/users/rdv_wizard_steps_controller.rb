@@ -14,27 +14,29 @@ class Users::RdvWizardStepsController < UserAuthController
   include TokenInvitable
 
   def new
-    @rdv_wizard = Users::RdvBuilder.new(current_user, query_params)
-    @rdv = @rdv_wizard.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain)
+    @rdv_builder = Users::RdvBuilder.new(current_user, query_params)
+    @rdv_wizard = @rdv_builder # pour les vues qui utilisent encore ce nom de variable
+    @rdv = @rdv_builder.rdv
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain)
     authorize(@rdv, policy_class: User::RdvPolicy)
-    if @rdv_wizard.creneau.present?
+    if @rdv_builder.creneau.present?
       render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
     else
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to(prendre_rdv_path(@rdv_wizard.to_query))
+      redirect_to(prendre_rdv_path(@rdv_builder.to_query))
     end
   end
 
   def create
-    @rdv_wizard = Users::RdvBuilder.new(current_user, rdv_params)
-    @rdv = @rdv_wizard.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys)
+    @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
+    @rdv_wizard = @rdv_builder
+    @rdv = @rdv_builder.rdv
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys)
     skip_authorization
     success = @rdv_booking_form.valid? && @rdv_booking_form.user.benign_errors.blank?
     success &&= @rdv_booking_form.save if current_step[:name] == "step1"
     if success
-      redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step[:number]))
+      redirect_to new_users_rdv_wizard_step_path(@rdv_builder.to_query.merge(step: next_step[:number]))
     else
       render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
     end

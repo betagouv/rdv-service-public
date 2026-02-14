@@ -11,7 +11,7 @@ RSpec.describe Users::RdvBookingForm do
   describe "#save" do
     context "when everything is ok" do
       let(:motif) { create(:motif, :at_public_office, organisation: organisation) }
-      let(:rdv_wizard) do
+      let(:rdv_builder) do
         Users::RdvBuilder.new(
           user, {
             starts_at: creneau.starts_at,
@@ -31,7 +31,7 @@ RSpec.describe Users::RdvBookingForm do
         }
       end
 
-      it { expect(described_class.new(user:, rdv_wizard:, user_attributes:, domain:).save).to be true }
+      it { expect(described_class.new(user:, rdv_builder:, user_attributes:, domain:).save).to be true }
     end
 
     context "pour un RDV de passeport ANTS Mairie" do
@@ -44,7 +44,7 @@ RSpec.describe Users::RdvBookingForm do
       context "l'usager fournit un numéro de pré-demande valide" do
         before { stub_ants_status_ok("VALID12345", status: "validated", meeting_point_id: lieu.id, appointments: []) }
 
-        let(:rdv_wizard) do
+        let(:rdv_builder) do
           Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
@@ -65,11 +65,11 @@ RSpec.describe Users::RdvBookingForm do
           }
         end
 
-        it { expect(described_class.new(user:, rdv_wizard:, user_attributes:, domain:).save).to be true }
+        it { expect(described_class.new(user:, rdv_builder:, user_attributes:, domain:).save).to be true }
       end
 
       context "l'usager fournit un numéro de pré-demande vide" do
-        let(:rdv_wizard) do
+        let(:rdv_builder) do
           Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
@@ -91,7 +91,7 @@ RSpec.describe Users::RdvBookingForm do
         end
 
         it "empêche la création" do
-          form = described_class.new(user:, rdv_wizard:, user_attributes:, domain:)
+          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -104,7 +104,7 @@ RSpec.describe Users::RdvBookingForm do
       context "l'usager fournit un numéro de pré-demande ANTS non reconnu" do
         before { stub_ants_status_ok("VALID12345", status: "unknown", meeting_point_id: lieu.id, appointments: []) }
 
-        let(:rdv_wizard) do
+        let(:rdv_builder) do
           Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
@@ -126,7 +126,7 @@ RSpec.describe Users::RdvBookingForm do
         end
 
         it "empêche la création" do
-          form = described_class.new(user:, rdv_wizard:, user_attributes:, domain:)
+          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -145,7 +145,7 @@ RSpec.describe Users::RdvBookingForm do
           )
         end
 
-        let(:rdv_wizard) do
+        let(:rdv_builder) do
           Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
@@ -167,7 +167,7 @@ RSpec.describe Users::RdvBookingForm do
         end
 
         it "empêche la création" do
-          form = described_class.new(user:, rdv_wizard:, user_attributes:, domain:)
+          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -191,7 +191,7 @@ RSpec.describe Users::RdvBookingForm do
           )
         end
 
-        let(:rdv_wizard) do
+        let(:rdv_builder) do
           Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
@@ -214,7 +214,7 @@ RSpec.describe Users::RdvBookingForm do
         end
 
         it "n'empêche pas la création" do
-          form = described_class.new(user:, rdv_wizard:, user_attributes:, domain:)
+          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
           res = form.save
           expect(res).to be true
         end
@@ -223,7 +223,7 @@ RSpec.describe Users::RdvBookingForm do
       context "l'usager fournit un numéro de pré-demande ANTS valide mais l'API ANTS timeout" do
         before { allow(AntsApi).to receive(:status).and_raise(Typhoeus::Errors::TimeoutError) }
 
-        let(:rdv_wizard) do
+        let(:rdv_builder) do
           Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
@@ -245,7 +245,7 @@ RSpec.describe Users::RdvBookingForm do
         end
 
         it "empêche la création" do
-          form = described_class.new(user:, rdv_wizard:, user_attributes:, domain:)
+          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
           res = form.save
           expect(res).to be false
           expect(form.errors.count).to eq(1)
@@ -259,7 +259,7 @@ RSpec.describe Users::RdvBookingForm do
       let(:motif) { create(:motif, :by_phone, organisation: organisation) }
 
       context "when the lieu is nil" do
-        let(:rdv_wizard) do
+        let(:rdv_builder) do
           Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
@@ -279,11 +279,11 @@ RSpec.describe Users::RdvBookingForm do
           }
         end
 
-        it { expect(described_class.new(user:, rdv_wizard:, user_attributes:, domain:).save).to be true }
+        it { expect(described_class.new(user:, rdv_builder:, user_attributes:, domain:).save).to be true }
       end
 
       context "when the phone number is blank" do
-        let(:rdv_wizard) do
+        let(:rdv_builder) do
           Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
@@ -303,10 +303,10 @@ RSpec.describe Users::RdvBookingForm do
           }
         end
 
-        it { expect(described_class.new(user:, rdv_wizard:, user_attributes:, domain:).save).to be false }
+        it { expect(described_class.new(user:, rdv_builder:, user_attributes:, domain:).save).to be false }
 
         it "return false with a rdv by_phone and user without phone" do
-          form = described_class.new(user:, rdv_wizard:, user_attributes:, domain:)
+          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
           form.valid?
           expect(form.errors.full_messages.join(", ")).to eq("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
         end
