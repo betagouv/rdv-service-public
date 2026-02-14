@@ -1,4 +1,4 @@
-RSpec.describe UserRdvWizard do
+RSpec.describe Users::RdvBuilder do
   let!(:organisation) { create(:organisation) }
   let!(:user) { create(:user) }
   let!(:user_for_rdv) { create(:user) }

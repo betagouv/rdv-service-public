@@ -1,16 +1,15 @@
-# Utilisé par UserRdvWizard et PrescripteurRdvWizard
-module RdvBuilderConcern
-  extend ActiveSupport::Concern
+class Users::RdvBuilder
+  attr_reader :rdv
 
-  included do
-    attr_accessor :rdv
+  delegate :motif, :starts_at, :service, to: :rdv
 
-    delegate :motif, :starts_at, :service, to: :rdv
+  def initialize(user, attributes)
+    @user = user
+    @attributes = attributes.to_h.symbolize_keys
+    build_rdv # on instancie le RDV dès l'initialize pour préserver le comportement actuel
   end
 
-  def build_rdv_from_attributes(attributes)
-    @attributes = attributes.to_h.symbolize_keys
-
+  def build_rdv
     if @attributes[:rdv_collectif_id].present?
       @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(@attributes[:rdv_collectif_id])
     else

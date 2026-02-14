@@ -7,13 +7,13 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
     let(:starts_at) { Time.zone.parse("2020-03-03 10h00") }
     let!(:mock_creneau) { instance_double(Creneau) }
     let!(:mock_rdv) { build(:rdv, starts_at: starts_at, users: [user], created_by: user) } # cannot use instance_double because it breaks pundit inference
-    let(:mock_user_rdv_wizard) { instance_double(UserRdvWizard, creneau: mock_creneau, rdv: mock_rdv) }
+    let(:mock_user_rdv_wizard) { instance_double(Users::RdvBuilder, creneau: mock_creneau, rdv: mock_rdv) }
 
     before { travel_to Date.parse("2020-03-01").in_time_zone + 8.hours }
 
     context "logged in user" do
       before do
-        allow(UserRdvWizard).to \
+        allow(Users::RdvBuilder).to \
           receive(:new).with(
             user,
             hash_including(
@@ -48,7 +48,7 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
         sign_in user
         user.signed_in_with_invitation_token!
         allow(controller).to receive(:current_user).and_return(user)
-        allow(UserRdvWizard).to receive(:new).and_return(mock_user_rdv_wizard)
+        allow(Users::RdvBuilder).to receive(:new).and_return(mock_user_rdv_wizard)
         allow(Users::RdvBookingForm).to receive(:new).and_return(instance_double(Users::RdvBookingForm))
       end
 
@@ -63,7 +63,7 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
 
       before do
         sign_in user
-        allow(UserRdvWizard).to receive(:new).and_return(mock_user_rdv_wizard)
+        allow(Users::RdvBuilder).to receive(:new).and_return(mock_user_rdv_wizard)
         allow(Users::RdvBookingForm).to receive(:new).and_return(instance_double(Users::RdvBookingForm))
       end
 

@@ -14,7 +14,7 @@ class Users::RdvWizardStepsController < UserAuthController
   include TokenInvitable
 
   def new
-    @rdv_wizard = UserRdvWizard.new(current_user, query_params)
+    @rdv_wizard = Users::RdvBuilder.new(current_user, query_params)
     @rdv = @rdv_wizard.rdv
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain)
     authorize(@rdv, policy_class: User::RdvPolicy)
@@ -27,7 +27,7 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def create
-    @rdv_wizard = UserRdvWizard.new(current_user, rdv_params)
+    @rdv_wizard = Users::RdvBuilder.new(current_user, rdv_params)
     @rdv = @rdv_wizard.rdv
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys)
     skip_authorization
