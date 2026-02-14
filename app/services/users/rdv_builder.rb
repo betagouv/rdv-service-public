@@ -13,9 +13,8 @@ class Users::RdvBuilder
     if @attributes[:rdv_collectif_id].present?
       @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(@attributes[:rdv_collectif_id])
     else
-      @rdv = Rdv.new({
-        user_ids: [@user&.id],
-      }.merge(@attributes.slice(:starts_at, :user_ids, :motif_id)))
+      @rdv = Rdv.new(user_ids: [@user&.id])
+      @rdv.assign_attributes(@attributes.slice(:starts_at, :user_ids, :motif_id))
       @rdv.duration_in_min = duration_in_min
       @rdv.organisation_id = @rdv.motif.organisation_id
     end
