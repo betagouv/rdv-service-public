@@ -5,8 +5,8 @@ class Users::RdvBookingForm
 
   delegate :to_query, :motif, :service, :rdv, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, to: :user
-  validates :ants_pre_demande_number, presence: true, if: :validate_ants?
-  validates_with AntsPreDemandeNumberStatusValidation, if: :validate_ants?
+  validates :ants_pre_demande_number, presence: true, if: -> { rdv.requires_ants_predemande_number? }
+  validates_with AntsPreDemandeNumberStatusValidation, if: -> { rdv.requires_ants_predemande_number? }
 
   validate :validate_phone_number_present_for_motif_by_phone
 
@@ -14,8 +14,7 @@ class Users::RdvBookingForm
     @user = user
     @rdv_builder = rdv_builder
     @domain = domain
-    @user_attributes = user_attributes
-    @user.assign_attributes(@user_attributes)
+    @user.assign_attributes(user_attributes)
   end
 
   def save
@@ -47,9 +46,5 @@ class Users::RdvBookingForm
 
   def validate_phone_number_present_for_motif_by_phone
     errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
-  end
-
-  def validate_ants?
-    rdv.requires_ants_predemande_number? && @user_attributes.present?
   end
 end

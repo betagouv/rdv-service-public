@@ -17,7 +17,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_builder = Users::RdvBuilder.new(current_user, query_params)
     @rdv_wizard = @rdv_builder # pour les vues qui utilisent encore ce nom de variable
     @rdv = @rdv_builder.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain)
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain) if step1?
     authorize(@rdv, policy_class: User::RdvPolicy)
     if @rdv_builder.creneau.present?
       render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
@@ -28,17 +28,20 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def create
+    skip_authorization
     @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
     @rdv_wizard = @rdv_builder
     @rdv = @rdv_builder.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys)
-    skip_authorization
-    success = @rdv_booking_form.valid? && @rdv_booking_form.user.benign_errors.blank?
-    success &&= @rdv_booking_form.save if current_step[:name] == "step1"
-    if success
-      redirect_to new_users_rdv_wizard_step_path(@rdv_builder.to_query.merge(step: next_step[:number]))
+    if step1?
+      @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys)
+      if @rdv_booking_form.save
+        redirect_to new_users_rdv_wizard_step_path(@rdv_builder.to_query.merge(step: next_step[:number]))
+      else
+        render "step1", locals: { current_step:, max_step: steps.size, next_step: }
+      end
     else
-      render current_step[:name], locals: { current_step:, max_step: steps.size, next_step: }
+      # dans les faits, uniquement pour la step 2 car la step3 pointe vers rdvs#create
+      redirect_to new_users_rdv_wizard_step_path(@rdv_builder.to_query.merge(step: next_step[:number]))
     end
   end
 
@@ -92,6 +95,8 @@ class Users::RdvWizardStepsController < UserAuthController
   def next_step
     steps[current_step[:next_step]]
   end
+
+  def step1? = current_step[:name] == "step1"
 
   def rdv_params
     params.require(:rdv).permit(*RDV_PERMITTED_PARAMS).merge(params.permit(*EXTRA_PERMITTED_PARAMS))
