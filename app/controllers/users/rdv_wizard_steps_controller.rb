@@ -27,12 +27,12 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def create
-    @rdv_wizard = UserRdvWizard.new(current_user, rdv_params.merge(user_params))
+    @rdv_wizard = UserRdvWizard.new(current_user, rdv_params)
     @rdv = @rdv_wizard.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain)
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_wizard: @rdv_wizard, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys)
     skip_authorization
-    success = @rdv_wizard.valid? && @rdv_wizard.user.benign_errors.blank?
-    success &&= @rdv_wizard.save if current_step[:name] == "step1"
+    success = @rdv_booking_form.valid? && @rdv_booking_form.user.benign_errors.blank?
+    success &&= @rdv_booking_form.save if current_step[:name] == "step1"
     if success
       redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step[:number]))
     else
