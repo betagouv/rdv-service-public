@@ -1,17 +1,20 @@
-class UserRdvWizard
-  attr_accessor :rdv
+class Users::RdvBuilder
+  attr_reader :rdv
 
   delegate :motif, :starts_at, :service, to: :rdv
 
   def initialize(user, attributes)
     @user = user
     @attributes = attributes.to_h.symbolize_keys
+    build_rdv # on instancie le RDV dès l'initialize pour préserver le comportement actuel
+  end
 
-    if attributes[:rdv_collectif_id].present?
-      @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(attributes[:rdv_collectif_id])
+  def build_rdv
+    if @attributes[:rdv_collectif_id].present?
+      @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(@attributes[:rdv_collectif_id])
     else
       @rdv = Rdv.new({
-        user_ids: [user&.id],
+        user_ids: [@user&.id],
       }.merge(@attributes.slice(:starts_at, :user_ids, :motif_id)))
       @rdv.duration_in_min = duration_in_min
       @rdv.organisation_id = @rdv.motif.organisation_id
@@ -81,8 +84,6 @@ class UserRdvWizard
       @rdv.users.presence || [@user].compact
     end
   end
-
-  private
 
   def lieu
     @lieu ||= lieu_id.present? ? Lieu.find(lieu_id) : nil

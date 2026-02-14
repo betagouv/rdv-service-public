@@ -12,7 +12,7 @@ RSpec.describe Users::RdvBookingForm do
     context "when everything is ok" do
       let(:motif) { create(:motif, :at_public_office, organisation: organisation) }
       let(:rdv_wizard) do
-        UserRdvWizard.new(
+        Users::RdvBuilder.new(
           user, {
             starts_at: creneau.starts_at,
             motif_id: motif.id,
@@ -45,7 +45,7 @@ RSpec.describe Users::RdvBookingForm do
         before { stub_ants_status_ok("VALID12345", status: "validated", meeting_point_id: lieu.id, appointments: []) }
 
         let(:rdv_wizard) do
-          UserRdvWizard.new(
+          Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
               motif_id: motif.id,
@@ -70,7 +70,7 @@ RSpec.describe Users::RdvBookingForm do
 
       context "l'usager fournit un numéro de pré-demande vide" do
         let(:rdv_wizard) do
-          UserRdvWizard.new(
+          Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
               motif_id: motif.id,
@@ -105,7 +105,7 @@ RSpec.describe Users::RdvBookingForm do
         before { stub_ants_status_ok("VALID12345", status: "unknown", meeting_point_id: lieu.id, appointments: []) }
 
         let(:rdv_wizard) do
-          UserRdvWizard.new(
+          Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
               motif_id: motif.id,
@@ -146,7 +146,7 @@ RSpec.describe Users::RdvBookingForm do
         end
 
         let(:rdv_wizard) do
-          UserRdvWizard.new(
+          Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
               motif_id: motif.id,
@@ -192,7 +192,7 @@ RSpec.describe Users::RdvBookingForm do
         end
 
         let(:rdv_wizard) do
-          UserRdvWizard.new(
+          Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
               motif_id: motif.id,
@@ -224,7 +224,7 @@ RSpec.describe Users::RdvBookingForm do
         before { allow(AntsApi).to receive(:status).and_raise(Typhoeus::Errors::TimeoutError) }
 
         let(:rdv_wizard) do
-          UserRdvWizard.new(
+          Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
               motif_id: motif.id,
@@ -260,7 +260,7 @@ RSpec.describe Users::RdvBookingForm do
 
       context "when the lieu is nil" do
         let(:rdv_wizard) do
-          UserRdvWizard.new(
+          Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
               motif_id: motif.id,
@@ -284,7 +284,7 @@ RSpec.describe Users::RdvBookingForm do
 
       context "when the phone number is blank" do
         let(:rdv_wizard) do
-          UserRdvWizard.new(
+          Users::RdvBuilder.new(
             user, {
               starts_at: creneau.starts_at,
               motif_id: motif.id,
