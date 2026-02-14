@@ -4,6 +4,9 @@ class Users::RdvBookingForm
   attr_reader :rdv_builder
 
   delegate :to_query, :motif, :service, :rdv, to: :rdv_builder
+  delegate :add_benign_error, :ignore_benign_errors, to: :user
+  validates :ants_pre_demande_number, presence: true, if: :validate_ants?
+  validates_with AntsPreDemandeNumberStatusValidation, if: :validate_ants?
 
   validate :validate_phone_number_present_for_motif_by_phone
 
@@ -11,19 +14,13 @@ class Users::RdvBookingForm
     @user = user
     @rdv_builder = rdv_builder
     @domain = domain
-    @user.assign_attributes(user_attributes)
+    @user_attributes = user_attributes
+    @user.assign_attributes(@user_attributes)
   end
 
   def save
     # we make sure the email can be updated only if it is blank
     @user.skip_reconfirmation! if @user.email_was.blank?
-
-    # dans la vue on appelle form_for(user) plutôt que form_for(user_rdv_wizard),
-    # il faut donc ajouter des validations (et des erreurs) sur l'objet user
-    if rdv.requires_ants_predemande_number?
-      @user.singleton_class.include(User::AntsPreDemandeNumberStatusValidationConcern)
-      @user.ants_meeting_point_id = rdv_wizard.lieu_id # used in AntsPreDemandeNumberStatusValidation
-    end
 
     valid? && @user.save
   end
@@ -44,9 +41,15 @@ class Users::RdvBookingForm
 
   def show_social_fields? = service.nil? || service.user_field_groups.include?(:social)
 
+  def ants_meeting_point_id = rdv_builder.lieu_id
+
   private
 
   def validate_phone_number_present_for_motif_by_phone
     errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
+  end
+
+  def validate_ants?
+    rdv.requires_ants_predemande_number? && @user_attributes.present?
   end
 end
