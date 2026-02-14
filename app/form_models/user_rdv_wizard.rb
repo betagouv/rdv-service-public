@@ -82,14 +82,6 @@ class UserRdvWizard
     end
   end
 
-  def display_france_connect?
-    motif.organisation.online_booking_for_particuliers
-  end
-
-  def display_pro_connect?
-    motif.organisation.online_booking_for_professionnels
-  end
-
   private
 
   def lieu
