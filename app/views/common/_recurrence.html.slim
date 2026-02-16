@@ -18,9 +18,9 @@
     .row.mb-2.hidden.js-plages-form-secondary-times-container
       .col = f.input :secondary_start_time, as: :time, ignore_date: true, minute_step: 5, include_blank: true
       .col = f.input :secondary_end_time,   as: :time, ignore_date: true, minute_step: 5, include_blank: true
-    .row.mb-2
+    .row.mb-2.js-plages-form-remove-secondary-times-button.hidden
       .col
-        button.fr-btn.fr-btn--tertiary.fr-btn--sm.fr-btn--icon-left.fr-icon-close-line.js-plages-form-remove-secondary-times-button.hidden[type="button" style="width: 100%"]
+        button.fr-btn.fr-btn--tertiary.fr-btn--sm.fr-btn--icon-left.fr-icon-close-line[type="button" style="width: 100%"]
           | Retirer la seconde période de la plage
 
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }

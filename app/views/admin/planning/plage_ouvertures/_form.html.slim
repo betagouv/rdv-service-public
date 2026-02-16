@@ -1,14 +1,11 @@
 - if plage_ouverture.available_motifs.any?
   = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], html: { class: "plage-ouverture-form", "data-controller": "plage-ouverture-form" } do |f|
+    = render("model_errors", model: plage_ouverture, f: f)
     .row.justify-content-center [data-plage-ouverture-form-target="motifsSection"]
       .col-md-6
         .card
           .card-body
-            h2.card-title Motifs
-            - if plage_ouverture.agent == current_agent
-              p.mb-4 Pour quels motifs de rendez-vous êtes-vous disponible ?
-            - else
-              p.mb-4 Pour quels motifs de rendez-vous l'agent est-t-il disponible ?
+            h2.dsfr-card-title Motifs concernés
 
             = collapsible_form_fields_for_warnings(plage_ouverture) do
               = f.hidden_field :agent_id
@@ -46,39 +43,38 @@
 
     .row.justify-content-center [data-plage-ouverture-form-target="recurrencePickerSection" hidden=plage_ouverture.new_record?]
       .col-md-6
-        = render("model_errors", model: plage_ouverture, f: f)
-
-        fieldset#plages-form.fr-fieldset[aria-labelledby="plages-form-legend plages-form-messages"]
-          legend#plages-form-legend.fr-fieldset__legend--regular.fr-fieldset__legend
-            |  Type de disponibilité
-            span.fr-hint-text
-              | Ponctuelle ou récurrente ?
-          .fr-fieldset__element.fr-fieldset__element--inline
-            .fr-radio-group.fr-radio-rich
-              input#non_reccurring[type="radio" name="recurrence_radio" value="false" checked=(plage_ouverture.persisted? && !plage_ouverture.recurring?) data-action="plage-ouverture-form#showAllSections plage-ouverture-form#disableRecurrence"]
-              label.fr-label.fr-mb-0[for="non_reccurring"]
-                | Ponctuelle
-              .fr-radio-rich__pictogram
-                = dsfr_svg "artwork/pictograms/digital/calendar"
-          .fr-fieldset__element.fr-fieldset__element--inline
-            .fr-radio-group.fr-radio-rich
-              input#reccurring[type="radio" name="recurrence_radio" value="true" checked=(plage_ouverture.persisted? && plage_ouverture.recurring?) data-action="plage-ouverture-form#showAllSections plage-ouverture-form#enableRecurrence"]
-              label.fr-label.fr-mb-0[for="reccurring"]
-                | Récurrente
-              .fr-radio-rich__pictogram
-                = dsfr_svg "artwork/pictograms/leisure/catalog"
-          #plages-form-messages.fr-messages-group[aria-live="polite"]
-
-    .row.justify-content-center [data-plage-ouverture-form-target="dateAndTimeSection" hidden=plage_ouverture.new_record?]
-      .col-md-6
         .card
           .card-body
-            = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
+            h2.dsfr-card-title Dates et horaires
+
+            fieldset#plages-form.fr-fieldset[aria-labelledby="plages-form-legend plages-form-messages"]
+              legend#plages-form-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+                span.fr-hint-text
+                  | Déclarer une disponibilité sur un seul jour ou récurrente sur plusieurs jours, semaines, mois ?
+              .fr-fieldset__element
+                .fr-radio-group.fr-radio-rich
+                  input#non_reccurring[type="radio" name="recurrence_radio" value="false" checked=(plage_ouverture.persisted? && !plage_ouverture.recurring?) data-action="plage-ouverture-form#showAllSections plage-ouverture-form#disableRecurrence"]
+                  label.fr-label.fr-mb-0[for="non_reccurring"]
+                    | Ponctuelle
+                  .fr-radio-rich__pictogram
+                    = dsfr_svg "artwork/pictograms/digital/calendar"
+              .fr-fieldset__element
+                .fr-radio-group.fr-radio-rich
+                  input#reccurring[type="radio" name="recurrence_radio" value="true" checked=(plage_ouverture.persisted? && plage_ouverture.recurring?) data-action="plage-ouverture-form#showAllSections plage-ouverture-form#enableRecurrence"]
+                  label.fr-label.fr-mb-0[for="reccurring"]
+                    | Récurrente
+                  .fr-radio-rich__pictogram
+                    = dsfr_svg "artwork/pictograms/leisure/catalog"
+              #plages-form-messages.fr-messages-group[aria-live="polite"]
+
+            .mt-2 [data-plage-ouverture-form-target="dateAndTimeSection" hidden=plage_ouverture.new_record?]
+              = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
 
     .row.justify-content-center [data-plage-ouverture-form-target="labelSection" hidden=plage_ouverture.new_record?]
       .col-md-6
         .card
           .card-body
+            h2.dsfr-card-title.mb-3 Options avancées
             = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
 
     .row.justify-content-center [data-plage-ouverture-form-target="submitSection" hidden=plage_ouverture.new_record?]
