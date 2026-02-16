@@ -83,11 +83,11 @@ module AgentsHelper
   def navigation_scoped_by_agent_services?(current_agent, current_organisation)
     return false if current_agent.secretaire?
 
-    !current_agent.roles.access_level_admin.exists?(organisation_id: current_organisation.id)
+    !current_agent.admin_in_organisation?(current_organisation)
   end
 
   def current_organisation_in_left_menu(&block)
-    if current_agent.organisations.count > 1
+    if current_agent.organisations_count > 1
       link_to(".left-submenu-account", "data-toggle" => :collapse, "aria-expanded" => "false", class: "side-menu__item", &block)
     else
       tag.div(class: "pt-2 pr-2 pb-2 pl-3", &block)
