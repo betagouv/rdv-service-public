@@ -7,6 +7,16 @@ tr
         .participation_birthdate.small
           = icon("fr-icon-calendar-line", class: "fr-icon--sm fr-mr-1v")
           = "Né·e le #{I18n.l(participation.user.birth_date)}"
+    - if participation.prescription?
+      - author = participation.created_by
+      .d-flex.card-text.mt-1
+        = icon("fr-icon-user-add-fill", class: "text-primary-blue fr-mr-1w")
+        div
+          | Prescripteur·ice : #{author.full_name} (#{mail_to(author.email)}
+          - if author.is_a?(Prescripteur) && author.phone_number.present?
+            |< – #{phone_to(author.phone_number)}
+          |> )
+
   - if participation.rdv.requires_ants_predemande_number?
     td
       = participation.user.ants_pre_demande_number
