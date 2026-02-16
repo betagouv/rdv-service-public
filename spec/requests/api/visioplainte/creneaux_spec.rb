@@ -1,4 +1,6 @@
 RSpec.describe "Visioplainte Creneaux" do
+  stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!")
+
   subject(:get_request) do
     get "/api/visioplainte/creneaux", headers: auth_header, params: creneaux_params
     response.parsed_body.deep_symbolize_keys
