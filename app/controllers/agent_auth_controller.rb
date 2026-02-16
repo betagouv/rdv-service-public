@@ -21,9 +21,7 @@ class AgentAuthController < ApplicationController
   end
 
   def current_agent
-    # Précharger les `roles` à chaque requête permet d'utiliser des helpers
-    # conçus pour manipuler des agents avec des roles préchargés.
-    super.tap { |agent| agent&.roles&.load }
+    super.tap(&:preload_roles)
   end
 
   def current_organisation

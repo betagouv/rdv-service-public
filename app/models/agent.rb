@@ -4,6 +4,7 @@ class Agent < ApplicationRecord
   self.ignored_columns += %w[connected_with_agent_connect]
   include Agent::CaldavConfiguration
   include Agent::FeatureFlags
+  include Agent::PreloadRoles
 
   encrypts :caldav_password, deterministic: true
 
@@ -238,19 +239,6 @@ class Agent < ApplicationRecord
       roles.find { _1.organisation_id == organisation_id }&.access_level
     else
       roles.where(organisation_id:).pick(:access_level)
-    end
-  end
-
-  def organisations_count
-    # Si `roles` est chargé, `size` va compter les objets, sinon elle va envoyer un COUNT en base
-    roles.size
-  end
-
-  def organisation_ids
-    if roles.loaded?
-      roles.map(&:organisation_id)
-    else
-      super
     end
   end
 
