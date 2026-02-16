@@ -32,6 +32,7 @@ yarn-debug.log*
 .DS_Store
 .env
 .env.development
+.env.rdv_solidarites
 .ruby-gemset
 lapins.kdbx
 .vscode/settings.json
