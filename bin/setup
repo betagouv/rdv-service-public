@@ -17,6 +17,9 @@ FileUtils.chdir APP_ROOT do
   unless File.exist?(".env")
     FileUtils.cp ".env.sample", ".env"
   end
+  unless File.exist?(".env.rdv_solidarites")
+    FileUtils.cp ".env.rdv_solidarites.sample", ".env.rdv_solidarites"
+  end
 
   puts "== Installing dependencies =="
   system! "gem install bundler --conservative"
@@ -24,8 +27,10 @@ FileUtils.chdir APP_ROOT do
   system! "yarn install --frozen-lockfile"
   system! "yarn run playwright install chromium --with-deps"
 
-  puts "\n== Preparing database =="
+  puts "\n== Preparing database for both local instances =="
   system! "bin/rails db:prepare"
+  system! "bundle exec dotenv -f '.env.rdv_solidarites,.env' bin/rails db:prepare"
+
 
   puts "\n== Preparing parallel test databases =="
   system! "RAILS_ENV=test rake parallel:create"

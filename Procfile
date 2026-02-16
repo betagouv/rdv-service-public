@@ -1,3 +1,3 @@
-web: ./bin/start_web_server
+web: bundle exec puma
 jobs: bundle exec good_job start
 postdeploy: bundle exec rake db:migrate
