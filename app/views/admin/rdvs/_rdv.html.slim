@@ -48,7 +48,7 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
       h5.fr-mb-2w
         = icon("fr-icon-team-fill", class: "text-primary-blue fr-mr-1w")
         |> Participants&nbsp;:
-      .fr-grid-row
+      .fr-grid-row.fr-grid-row--gutters
         - rdv.users.sort_by { _1.last_name.downcase }.each do |user|
           .fr-col-12.fr-col-md-4
             .card.light-gray-card.fr-mb-3w
