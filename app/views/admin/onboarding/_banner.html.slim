@@ -5,23 +5,23 @@
 
   - if needs_motif && current_organisation.lieux.enabled.none?
     - content_for :onboarding_banner do
-      .fr-callout.fr-pb-2w
+      .fr-callout.fr-pb-2w.fr-mt-2w
         h2.fr-h6 🌱 Bienvenue sur votre espace #{current_domain.name} !
         p Pour commencer, vous pouvez créer votre premier motif de rendez-vous.
         = link_to("Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "fr-btn")
   - elsif needs_lieu(current_organisation)
     - content_for :onboarding_banner do
-      .fr-callout.fr-pb-2w
+      .fr-callout.fr-pb-2w.fr-mt-2w
         p.fr-mr-2w 🌿 Vous pouvez maintenant ajouter le lieu où vous allez faire vos rendez-vous.
         = link_to("Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "fr-btn")
   - elsif needs_motif
     - content_for :onboarding_banner do
-      .fr-callout.fr-pb-2w
+      .fr-callout.fr-pb-2w.fr-mt-2w
         p.fr-mr-2w 🌿 Vous pouvez maintenant créer un motif de rendez-vous.
         = link_to("Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "fr-btn")
   - elsif current_organisation.rdvs.none? && current_organisation.motifs.bookable_by_everyone.none?
     - content_for :onboarding_banner do
-      .fr-callout.fr-pb-2w
+      .fr-callout.fr-pb-2w.fr-mt-2w
         - if in_agenda
           p 🪴 Vous pouvez prendre votre premier rendez-vous en cliquant sur l'horaire de votre choix dans l'agenda
         - else
