@@ -2,7 +2,7 @@
 
 ruby:
   titles_and_paths = [
-    (["Configuration", admin_organisation_configuration_path(current_organisation)] if current_agent_role.admin?),
+    (["Configuration", admin_organisation_configuration_path(current_organisation)] if current_agent.admin_in_organisation?(current_organisation)),
     (["Agents", admin_organisation_agents_path(current_organisation)] if current_page_title),
   ].compact
 

@@ -220,7 +220,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       .where(external_references: { external_id: "absence:#{absence_du_collegue.id}" })
     expect(copied_absence).to be_present
 
-    login_as(agent_rdv_sp, scope: :agent)
+    login_as(agent_rdv_sp.reload, scope: :agent)
     visit "http://www.rdv-service-public-test.localhost/admin/organisations/#{created_organisation.id}/agents"
 
     doc.add_screenshot(page,
