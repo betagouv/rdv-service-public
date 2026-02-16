@@ -28,6 +28,12 @@ class Agents::SessionsController < Devise::SessionsController
     # this is the first line of Devise::SessionsController#create
     self.resource = warden.authenticate!(auth_options)
 
+    if resource.pro_connect_openid_sub.present?
+      sign_out(resource)
+      redirect_to new_agent_session_path(pro_connect_required: resource.email)
+      return
+    end
+
     return if reset_current_agent_password_if_weak!(params[:agent][:password])
 
     super

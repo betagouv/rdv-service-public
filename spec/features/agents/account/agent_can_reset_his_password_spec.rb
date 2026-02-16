@@ -24,6 +24,26 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
   end
 
+  context "quand l’agent à un sub ProConnect" do
+    let!(:pro_connect_agent) { create(:agent, pro_connect_openid_sub: "some-sub") }
+
+    it "n’envoie pas le mail de réinitialisation depuis le formulaire agent" do
+      visit new_agent_password_path
+      fill_in "agent_email", with: pro_connect_agent.email
+      expect { click_on "Envoyer" }.not_to change { emails_sent_to(pro_connect_agent.email).size }
+      expected_message = "Si un compte agent existe pour #{pro_connect_agent.email} et que ce compte n’est pas associé à " \
+                         "un compte ProConnect, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe"
+      expect(page).to have_content(expected_message)
+    end
+
+    it "n’envoie pas le mail de réinitialisation depuis le formulaire usager" do
+      visit new_user_password_path
+      fill_in "user_email", with: pro_connect_agent.email
+      expect { click_on "Envoyer" }.not_to change { emails_sent_to(pro_connect_agent.email).size }
+      expect(page).to have_content(I18n.t("devise.passwords.send_instructions"))
+    end
+  end
+
   it "fonctionne via le formulaire de réinitialisation utilisateur" do
     visit new_user_password_path
     expect(page).to have_content("Mot de passe oublié ou première connexion ?")
@@ -46,7 +66,9 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
       fill_in "agent_email", with: "unknown@example.com"
 
       expect { click_on "Envoyer" }.not_to change { ActionMailer::Base.deliveries.size }
-      expect(page).to have_content("Si un compte agent existe pour unknown@example.com, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe")
+      expected_message = "Si un compte agent existe pour unknown@example.com et que ce compte n’est pas associé à " \
+                         "un compte ProConnect, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe"
+      expect(page).to have_content(expected_message)
     end
   end
 
@@ -58,7 +80,9 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
       fill_in "agent_email", with: agent_not_accepted.email
 
       expect { click_on "Envoyer" }.to change { emails_sent_to(agent_not_accepted.email).size }.by(1)
-      expect(page).to have_content("Si un compte agent existe pour #{agent_not_accepted.email}, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe")
+      expected_message = "Si un compte agent existe pour #{agent_not_accepted.email} et que ce compte n’est pas associé à " \
+                         "un compte ProConnect, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe"
+      expect(page).to have_content(expected_message)
     end
   end
 end
