@@ -125,6 +125,18 @@ RSpec.describe "Available Creneaux Count for Invitation" do
       let!(:plage_ouverture_with_secto) { create(:plage_ouverture, motifs: [motif_with_secto], lieu: lieu, organisation: org_with_secto, first_day: now + 4.days) }
       let!(:plage_ouverture_with_secto_expired) { create(:plage_ouverture, motifs: [motif_with_secto], lieu: lieu, organisation: org_with_secto, first_day: now - 10.days) }
 
+      let!(:org_visio) { create(:organisation, territory: territory33) }
+      let!(:motif_visio) do
+        create(
+          :motif,
+          location_type: :visio, min_public_booking_delay: 3.days, max_public_booking_delay: 1.month,
+          bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: org_visio, default_duration_in_min: 45
+        )
+      end
+      let!(:plage_ouverture_visio) do
+        create(:plage_ouverture, motifs: [motif_visio], lieu: nil, organisation: org_visio, first_day: now + 4.days)
+      end
+
       let!(:lieu) { create(:lieu, name: "Bordeaux Centre", address: "Place de la bourse, Bordeaux, 33000", organisation: organisation1) }
       let!(:lieu2) { create(:lieu, name: "Bruges", address: "3 Rue Gabriel Fauré, Bruges, 33520", organisation: organisation1) }
       let!(:lieu3) { create(:lieu, name: "Loin de Bordeaux", address: "7 Av. du Commandant l'Herminier, Arès, 33740", organisation: other_org_without_po) }
@@ -289,6 +301,19 @@ RSpec.describe "Available Creneaux Count for Invitation" do
             let!(:street_ban_id) { "33063_1155" }
 
             it { expect(parsed_response_body["creneau_availability"]).to be_truthy }
+          end
+        end
+
+        context "Avec un motif visio" do
+          let!(:"organisation_ids[]") { [org_visio.id] }
+
+          it { expect(parsed_response_body["creneau_availability"]).to be_truthy }
+
+          context "Avec le paramètre total_count" do
+            let!(:total_count) { "true" }
+
+            # 5 créneaux disponibles sur la plage d'ouverture visio (4h, motif de 45min)
+            it { expect(parsed_response_body["creneau_availability_count"]).to eq(5) }
           end
         end
       end

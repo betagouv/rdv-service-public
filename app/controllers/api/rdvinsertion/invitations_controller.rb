@@ -19,13 +19,13 @@ class Api::Rdvinsertion::InvitationsController < Api::Rdvinsertion::AgentAuthBas
     @creneau_availability_count ||= begin
       counter = 0
       invitation_search_context.matching_motifs.each do |motif|
-        if motif.phone?
-          counter += creneaux_available_for_motif(motif).all_creneaux.size
-        else
+        if motif.public_office?
           motif.lieux.each do |lieu|
             counter += creneaux_available_for_motif(motif, lieu).all_creneaux.size
             break if relevant_limit_reached?(counter)
           end
+        else
+          counter += creneaux_available_for_motif(motif).all_creneaux.size
         end
         break if relevant_limit_reached?(counter)
       end
@@ -35,10 +35,10 @@ class Api::Rdvinsertion::InvitationsController < Api::Rdvinsertion::AgentAuthBas
 
   def creneau_available?
     invitation_search_context.matching_motifs.any? do |motif|
-      if motif.phone?
-        creneaux_available_for_motif(motif).creneaux.any?
-      else
+      if motif.public_office?
         motif.lieux.any? { |lieu| creneaux_available_for_motif(motif, lieu).creneaux.any? }
+      else
+        creneaux_available_for_motif(motif).creneaux.any?
       end
     end
   end
