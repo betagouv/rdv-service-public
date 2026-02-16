@@ -96,19 +96,10 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
       expect(page).to have_content("Connexion réussie")
 
-      # Page de formulaire où l'on peut ajouter le nom de naissance, la date de naissance, le téléphone...
-      expect(page).to have_content("Étape 1 sur 3")
       fill_in "user_birth_date", with: "02/04/1990"
-      click_on("Continuer")
 
-      # Pour l'instant cette page s'affiche même si l'on a une seule personne dans la liste des choix. :/
-      expect(page).to have_content("Pour qui prenez-vous rendez-vous ?") # David est sélectionné par défaut
-      click_on("Continuer")
-
-      # Page finale de confirmation
-      expect(page).to have_content("Confirmation")
       expect(page).to have_content("Date du rendez-vous : mardi 20 septembre 2022 à 08h00 (45 minutes)")
-      expect { click_on("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
+      expect { click_button("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
     end
   end
 
