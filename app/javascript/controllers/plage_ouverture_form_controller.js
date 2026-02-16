@@ -13,16 +13,20 @@ export default class extends Controller {
   enableRecurrence() {
     this.recurrenceCheckboxTarget.checked = true;
     this.recurrenceCheckboxTarget.dispatchEvent(new Event('change'))
-    document.querySelector('label[for="recurrence-source"]').childNodes.filter(child => child.nodeType === Node.TEXT_NODE).forEach((node) => {
-      node.textContent = "Premier jour"
+    document.querySelector('label[for="recurrence-source"]').childNodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        node.textContent = "Premier jour"
+      }
     });
   }
 
   disableRecurrence() {
     this.recurrenceCheckboxTarget.checked = false;
     this.recurrenceCheckboxTarget.dispatchEvent(new Event('change'))
-    document.querySelector('label[for="recurrence-source"]').childNodes.filter(child => child.nodeType === Node.TEXT_NODE).forEach((node) => {
-      node.textContent = "Jour"
+    document.querySelector('label[for="recurrence-source"]').childNodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        node.textContent = "Date"
+      }
     });
   }
 
