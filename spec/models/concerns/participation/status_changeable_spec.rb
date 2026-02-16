@@ -81,7 +81,7 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
           rdv.reload
           expect do
             participation1.change_status_and_notify(agent, "noshow")
-          end.to have_enqueued_job(WebhookBuildAndSendJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id).at_least(1).times
+          end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id).at_least(1).times
         end
       end
     end

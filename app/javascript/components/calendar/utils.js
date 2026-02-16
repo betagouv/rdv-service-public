@@ -202,15 +202,17 @@ function eventRenderer(selectedEventId) {
 const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
 
   const messageReceivedCallback = (message) => {
+    const source = fullCalendarInstance.getEventSourceById(message.model);
+
     if (Array.isArray(message.refresh_periods) && message.refresh_periods.length > 0) {
       const beginningOfView = fullCalendarInstance.view.activeStart.toISOString();
       const endOfView = fullCalendarInstance.view.activeEnd.toISOString();
       const intersectsFunction = ([periodStart, periodEnd]) => (periodEnd > beginningOfView && periodStart < endOfView);
       if (message.refresh_periods.some(intersectsFunction)) {
-        fullCalendarInstance.refetchEvents();
+        source.refetch();
       }
     } else {
-      fullCalendarInstance.refetchEvents();
+      source.refetch();
     }
   };
 

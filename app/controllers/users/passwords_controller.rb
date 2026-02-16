@@ -24,6 +24,13 @@ class Users::PasswordsController < Devise::PasswordsController
   # This code is extracted from Devise::PasswordsController#create
   # with references to resource_class and resource_name hardcoded to Agent and :agent.
   def create_for_agent
+    agent = Agent.find_by(email: resource_params[:email])
+    if agent&.pro_connect_openid_sub.present?
+      flash[:notice] = I18n.t("devise.passwords.send_instructions")
+      respond_with({}, location: after_sending_reset_password_instructions_path_for(:agent))
+      return
+    end
+
     self.resource = Agent.send_reset_password_instructions(resource_params)
     yield resource if block_given?
 

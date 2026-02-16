@@ -1,4 +1,6 @@
 RSpec.describe "Authentification" do
+  stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!")
+
   let(:creneaux_params) do
     {
       service: "Gendarmerie",

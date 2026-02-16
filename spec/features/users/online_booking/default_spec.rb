@@ -39,11 +39,98 @@ RSpec.describe "User can search for rdvs" do
       confirm_rdv(motif, lieu)
     end
 
+    describe "quand l'usager est connecté via FranceConnect" do
+      let!(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
+
+      before { login_as(user, scope: :user) }
+
+      it "affiche la date de naissance en lecture seule, le warning FranceConnect et le champ email de notification" do
+        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        expect(page).to have_content("Vos informations")
+        expect(page).to have_field("Date de naissance", disabled: true)
+        expect(page).to have_field("Nom de naissance", disabled: true)
+        expect(page).to have_field("Prénom", disabled: true)
+        # FranceConnect ne gèle pas le nom de famille (seul ProConnect le fait)
+        expect(page).to have_field("Nom", disabled: false)
+        expect(page).to have_content("Les champs d'état civil ne peuvent plus être modifiés suite à la connexion certifiée par FranceConnect")
+        # Un usager FranceConnect n'a pas d'email mais un notification_email
+        expect(page).not_to have_css("[name='user[email]']")
+        expect(page).to have_field("Email de notification", with: user.notification_email)
+      end
+    end
+
+    describe "warning numéro fixe" do
+      let!(:user) { create(:user, phone_number: "0130303030", organisations: [organisation]) }
+
+      before { login_as(user, scope: :user) }
+
+      it "affiche le warning numéro non-mobile" do
+        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        expect(page).to have_content("Vous ne recevrez pas de SMS avec ce numéro non-mobile")
+      end
+    end
+
+    describe "champ complément d'adresse" do
+      let!(:territory92) { create(:territory, departement_number: "92", enable_address_details: true) }
+      let!(:user) { create(:user, organisations: [organisation]) }
+
+      before { login_as(user, scope: :user) }
+
+      it "affiche le champ complément d'adresse" do
+        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        expect(page).to have_field("Complément d'adresse")
+      end
+    end
+
+    describe "champs caisse d'affiliation" do
+      let!(:territory92) do
+        create(:territory, departement_number: "92", enable_caisse_affiliation_field: true, enable_affiliation_number_field: true)
+      end
+      let!(:user) { create(:user, organisations: [organisation]) }
+      let(:service) { create(:service, name: "Service social") }
+
+      before { login_as(user, scope: :user) }
+
+      it "affiche les champs caisse d'affiliation et numéro d'allocataire" do
+        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        expect(page).to have_select("Caisse d'affiliation")
+        expect(page).to have_field("Numéro d'allocataire")
+      end
+    end
+
+    describe "champ logement" do
+      let!(:user) { create(:user, organisations: [organisation]) }
+      let(:service) { create(:service, name: "Service social") }
+
+      before { login_as(user, scope: :user) }
+
+      context "quand le territoire active le champ logement" do
+        let!(:territory92) do
+          create(:territory, departement_number: "92", enable_birth_date_field: true, enable_logement_field: true)
+        end
+
+        it "affiche le champ logement" do
+          visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+          expect(page).to have_select("Logement")
+        end
+      end
+
+      context "quand le territoire n'active pas le champ logement" do
+        it "n'affiche pas le champ logement" do
+          visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+          expect(page).not_to have_select("Logement")
+        end
+      end
+    end
+
     describe "On RDV Service Public" do
       it "doesn't require an ANTS predemande number for a relative", js: true do
         visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice}"
         choose_creneau
         sign_up
+
+        # Le champ nom de naissance n'est pas affiché sur le domaine RDV Service Public
+        expect(page).not_to have_field("Nom de naissance")
         click_button("Continuer")
 
         add_relative(birth_date: false)

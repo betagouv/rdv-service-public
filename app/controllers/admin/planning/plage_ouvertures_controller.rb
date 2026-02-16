@@ -52,6 +52,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
       **defaults
     )
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+    @plage_ouverture.motifs = [@plage_ouverture.available_motifs.sole] if @plage_ouverture.available_motifs.size == 1
   end
 
   def edit

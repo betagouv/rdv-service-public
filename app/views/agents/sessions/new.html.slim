@@ -1,18 +1,24 @@
 - content_for :title do
   .fr-h1 Connexion agent à #{current_domain.name}
 
-- if display_pro_connect_button?
+- if params[:pro_connect_required].present?
+  = dsfr_alert(title: "Connexion par mot de passe désactivée sur votre compte", type: :info, html_attributes: { class: "fr-mb-6v" }) do
+    p Votre compte #{current_domain.name} étant lié à un compte ProConnect, depuis le 16 février 2026, la connexion par mot de passe n'est plus disponible. Veuillez utiliser le bouton ProConnect ci-dessous.
   div.text-center
-    = render "common/proconnect_button_dsfr"
+    = render "common/proconnect_button_dsfr", login_hint: params[:pro_connect_required]
+- else
+  - if display_pro_connect_button?
+    div.text-center
+      = render "common/proconnect_button_dsfr"
 
-  p.fr-hr-or ou
+    p.fr-hr-or ou
 
-p.text-muted.mb-2 Entrez votre email et votre mot de passe.
-= form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
-  = render "devise/shared/error_messages", resource: resource
-  .form-group
-    = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", autocomplete: "email"
-    = render "common/form/current_password_input", f:, forgotten_password_link: true
+  p.text-muted.mb-2 Entrez votre email et votre mot de passe.
+  = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
+    = render "devise/shared/error_messages", resource: resource
+    .form-group
+      = f.dsfr_email_field :email, label: "Adresse email", hint: "Format attendu : nom@domaine.fr", autocomplete: "email"
+      = render "common/form/current_password_input", f:, forgotten_password_link: true
 
-  .form-group.mb-0.rdv-text-align-center
-    = f.submit "Se connecter", class: "fr-btn"
+    .form-group.mb-0.rdv-text-align-center
+      = f.submit "Se connecter", class: "fr-btn"

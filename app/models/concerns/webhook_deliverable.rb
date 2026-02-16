@@ -17,7 +17,7 @@ module WebhookDeliverable
 
   def generate_payload_and_send_webhook(action)
     subscribed_webhook_endpoints.each do |endpoint|
-      WebhookBuildAndSendJob.perform_later(record: self, action:, webhook_endpoint_id: endpoint.id)
+      WebhookJob.perform_later(record: self, action:, webhook_endpoint_id: endpoint.id)
     end
   end
 
@@ -34,7 +34,7 @@ module WebhookDeliverable
 
     # Envoi le payload via jobs asynchrones
     subscribed_webhook_endpoints.map do |endpoint|
-      WebhookSendJob.perform_later(payload, endpoint.id)
+      WebhookJob.perform_later(payload, endpoint.id)
     end
   end
 
