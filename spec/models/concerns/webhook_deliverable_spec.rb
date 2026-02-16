@@ -22,14 +22,14 @@ RSpec.describe WebhookDeliverable, type: :concern do
         it "notifies the creation" do
           expect do
             rdv.save
-          end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "created"), webhook_endpoint.id)
+          end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :created, webhook_endpoint_id: webhook_endpoint.id)
         end
       end
 
       it "notifies on update" do
         expect do
           rdv.update(status: :excused)
-        end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "updated"), webhook_endpoint.id)
+        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
       end
 
       it "notifies on deletion" do

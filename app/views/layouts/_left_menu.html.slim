@@ -22,7 +22,7 @@ nav.left-side-menu-wrapper
                   = current_organisation.name
                   - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
                     span= current_agent.services_short_names
-              - if current_agent.organisations.count > 1
+              - if current_agent.organisations_count > 1
                 div.d-flex.align-items-center
                   = icon("fr-icon-arrow-down-s-line", class: "menu-arrow")
           = render "layouts/left_menu/organisation_switcher"
@@ -84,7 +84,7 @@ nav.left-side-menu-wrapper
             span.fr-icon-bar-chart-box-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Statistiques
 
-        - unless current_agent_role.admin?
+        - unless current_agent.admin_in_organisation?(current_organisation)
           li.fr-pb-0
             = active_link_to admin_organisation_lieux_path(current_organisation), class: "side-menu__item"
               = lieu_icon(class: "fr-icon--sm fr-mr-1w")
@@ -94,7 +94,7 @@ nav.left-side-menu-wrapper
               = motif_icon(class: "fr-icon--sm fr-mr-1w")
               | Motifs
 
-        - if current_agent_role.admin?
+        - if current_agent.admin_in_organisation?(current_organisation)
           li.fr-pb-0
             = link_to admin_organisation_configuration_path(current_organisation), class: "side-menu__item #{'active' if menu_top_level_item == 'settings'}"
               span.fr-icon-settings-5-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]

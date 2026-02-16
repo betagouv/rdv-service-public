@@ -27,6 +27,136 @@ RSpec.describe "User can update their information" do
     end
   end
 
+  describe "birth_name field" do
+    before { visit users_informations_path }
+
+    context "sur le domaine RDV Solidarités" do
+      it "affiche le champ nom de naissance" do
+        expect(page).to have_field("Nom de naissance")
+      end
+    end
+
+    context "quand l'usager est connecté via ProConnect" do
+      let(:user) { create(:user, pro_connect_openid_sub: "fake_sub", organisations: [organisation]) }
+
+      it "n'affiche pas le champ nom de naissance" do
+        expect(page).not_to have_field("Nom de naissance")
+      end
+    end
+
+    context "quand l'usager est connecté via FranceConnect" do
+      let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
+
+      it "affiche le champ nom de naissance en lecture seule" do
+        expect(page).to have_field("Nom de naissance", disabled: true)
+      end
+    end
+  end
+
+  describe "first_name and last_name fields" do
+    before do
+      visit users_informations_path
+    end
+
+    context "quand l'usager est connecté via FranceConnect" do
+      let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
+
+      it "affiche le prénom en lecture seule et le nom modifiable" do
+        expect(page).to have_field("Prénom", disabled: true)
+        expect(page).to have_field("Nom", disabled: false)
+      end
+    end
+
+    context "quand l'usager est connecté via ProConnect" do
+      let(:user) { create(:user, pro_connect_openid_sub: "fake_sub", organisations: [organisation]) }
+
+      it "affiche le prénom et le nom en lecture seule" do
+        expect(page).to have_field("Prénom", disabled: true)
+        expect(page).to have_field("Nom", disabled: true)
+      end
+    end
+  end
+
+  describe "FranceConnect frozen fields warning" do
+    context "quand l'usager est connecté via FranceConnect" do
+      let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }
+
+      it "affiche le warning FranceConnect" do
+        visit users_informations_path
+        expect(page).to have_content("Les champs d'état civil ne peuvent plus être modifiés suite à la connexion certifiée par FranceConnect")
+      end
+    end
+
+    context "quand l'usager n'est pas connecté via FranceConnect" do
+      it "n'affiche pas le warning FranceConnect" do
+        visit users_informations_path
+        expect(page).not_to have_content("Les champs d'état civil ne peuvent plus être modifiés")
+      end
+    end
+  end
+
+  describe "landline phone number warning" do
+    context "quand l'usager a un numéro fixe" do
+      let(:user) { create(:user, phone_number: "0130303030", organisations: [organisation]) }
+
+      it "affiche le warning numéro non-mobile" do
+        visit users_informations_path
+        expect(page).to have_content("Vous ne recevrez pas de SMS avec ce numéro non-mobile")
+      end
+    end
+
+    context "quand l'usager a un numéro mobile" do
+      let(:user) { create(:user, phone_number: "0612345678", organisations: [organisation]) }
+
+      it "n'affiche pas le warning" do
+        visit users_informations_path
+        expect(page).not_to have_content("Vous ne recevrez pas de SMS avec ce numéro non-mobile")
+      end
+    end
+  end
+
+  it "n'affiche pas le champ date de naissance" do
+    # TODO: je ne sais pas si c'est un comportement volontaire ou une erreur?
+    visit users_informations_path
+    expect(page).not_to have_field("Date de naissance")
+  end
+
+  describe "logement field" do
+    before { visit users_informations_path }
+
+    context "quand le territoire active le champ logement" do
+      let(:territory) { create(:territory, enable_logement_field: true) }
+
+      it "affiche le champ logement" do
+        expect(page).to have_select("Logement")
+      end
+    end
+
+    context "quand le territoire n'active pas le champ logement" do
+      it "n'affiche pas le champ logement" do
+        expect(page).not_to have_select("Logement")
+      end
+    end
+  end
+
+  describe "address_details field" do
+    before { visit users_informations_path }
+
+    context "quand le territoire active le champ complément d'adresse" do
+      let(:territory) { create(:territory, enable_address_details: true) }
+
+      it "affiche le champ complément d'adresse" do
+        expect(page).to have_field("Complément d'adresse")
+      end
+    end
+
+    context "quand le territoire n'active pas le champ complément d'adresse" do
+      it "n'affiche pas le champ complément d'adresse" do
+        expect(page).not_to have_field("Complément d'adresse")
+      end
+    end
+  end
+
   describe "updating notification_email" do
     context "when the user is connected with FranceConnect" do
       let(:user) { create(:user, :using_france_connect, organisations: [organisation]) }

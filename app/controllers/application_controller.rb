@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   end
 
   def sentry_user
-    current_person = current_agent || current_user || current_prescripteur
+    current_person = warden.user(:agent) || warden.user(:user) || warden.user(:prescripteur)
     {
       id: current_person&.id,
       role: current_person&.class&.name || "Guest",
@@ -58,9 +58,10 @@ class ApplicationController < ActionController::Base
   end
 
   def storable_location?
+    return false if devise_controller?
     return false if current_agent || current_user
 
-    request.get? && is_navigational_format? && !devise_controller? && !request.xhr? && request.fullpath != root_path
+    request.get? && is_navigational_format? && !request.xhr? && request.fullpath != root_path
   end
 
   def store_user_location!

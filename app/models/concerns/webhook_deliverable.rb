@@ -5,11 +5,6 @@ module WebhookDeliverable
   extend ActiveSupport::Concern
 
   def generate_webhook_payload(action)
-    # Reload attributes and associations from DB to ensure they are up to date.
-    # We dont use #reload on self because some other parts
-    # of the code rely on the state of the current object.
-    record = self.class.unscoped.find(id)
-
     meta = {
       model: self.class.name,
       event: action,
@@ -17,23 +12,28 @@ module WebhookDeliverable
       timestamp: Time.zone.now,
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
-    blueprint_class.render(record, root: :data, meta: meta)
+    blueprint_class.render(self, root: :data, meta: meta)
   end
 
   def generate_payload_and_send_webhook(action)
     subscribed_webhook_endpoints.each do |endpoint|
-      WebhookJob.perform_later(generate_webhook_payload(action), endpoint.id)
+      WebhookJob.perform_later(record: self, action:, webhook_endpoint_id: endpoint.id)
     end
   end
 
   def generate_payload_and_send_webhook_for_destroy
-    # Prépare les données à envoyer, avant de supprimer l'objet
-    payloads = subscribed_webhook_endpoints.index_with do |_endpoint|
-      generate_webhook_payload(:destroyed)
+    if subscribed_webhook_endpoints.none?
+      yield and return
     end
-    # Execute la suppression, après avoir construit les données à envoyer
-    yield if block_given?
-    payloads.each do |endpoint, payload|
+
+    # Prépare le payload, avant de supprimer l'objet
+    payload = generate_webhook_payload(:destroyed)
+
+    # Execute la suppression
+    yield
+
+    # Envoi le payload via jobs asynchrones
+    subscribed_webhook_endpoints.map do |endpoint|
       WebhookJob.perform_later(payload, endpoint.id)
     end
   end

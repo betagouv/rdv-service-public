@@ -13,12 +13,16 @@ class Users::RdvsController < UserAuthController
 
   def index
     authorize(Rdv, policy_class: User::RdvPolicy)
-    @rdvs = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).includes(:motif, :participations, :users).user_with_relatives(current_user.id).for_domain(current_domain)
-    @rdvs = if params[:past].present?
-              @rdvs.past.order(starts_at: :desc).page(page_number)
-            else
-              @rdvs.future.order(starts_at: :asc).page(page_number)
-            end
+    @all_rdvs = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).for_domain(current_domain)
+
+    @rdv_page = @all_rdvs.page(page_number)
+      .includes(:motif, :participations, :users)
+      .user_with_relatives(current_user.id)
+    @rdv_page = if params[:past]
+                  @rdv_page.past.order(starts_at: :desc)
+                else
+                  @rdv_page.future.order(starts_at: :asc)
+                end
   end
 
   def create
