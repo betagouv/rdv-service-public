@@ -64,6 +64,8 @@ fr:
         title: "[Rappel] RDV le %{date}"
       rdv_cancelled:
         title: RDV annulé le %{date} avec %{organisation}
+      participation_cancelled:
+        title: Participation annulée au RDV du %{date} avec %{organisation}
   prescripteurs_mailer:
     rdv_created:
       title: RDV confirmé le %{date}

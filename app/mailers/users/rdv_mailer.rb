@@ -44,6 +44,13 @@ class Users::RdvMailer < ApplicationMailer
     save_receipt(subject)
   end
 
+  def participation_cancelled
+    @participation = params[:participation]
+    subject = t("users.rdv_mailer.participation_cancelled.title", date: l(@rdv.starts_at, format: :human), organisation: @rdv.organisation.name)
+    mail(subject:)
+    save_receipt(subject)
+  end
+
   private
 
   def save_receipt(subject)
