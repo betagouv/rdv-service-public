@@ -27,13 +27,13 @@ RSpec.describe "Agent can see RDV details correctly" do
     it "displays the prescripteur when present" do
       rdv.participations.last.update!(created_by: prescripteur)
       visit admin_organisation_rdvs_path(organisation)
-      expect(page).to have_content("Prescripteur·ice : Jean VALJEAN")
+      expect(page).to have_content("Prescrit par Jean VALJEAN")
     end
 
     it "displays the agent prescripteur when present" do
       rdv.participations.last.update!(created_by: agent, created_by_agent_prescripteur: true)
       visit admin_organisation_rdvs_path(organisation)
-      expect(page).to have_content("Prescripteur·ice : Bruce WAYNE")
+      expect(page).to have_content("Prescrit par Bruce WAYNE")
     end
 
     it "Allows showing RDVs data and correctly displays user notifications and notif info" do
