@@ -9,18 +9,19 @@ RSpec.describe "User views his rdv" do
   end
 
   context "with no rdv" do
-    it { expect_page_with_no_record_text("Vous n'avez pas de RDV à venir") }
+    it "tells the user she has no rdv" do
+      expect(page).to have_content("Vous n'avez pas de RDV à venir")
+      expect(page).not_to have_content("Voir vos RDV passés")
+    end
   end
 
   context "with future rdv" do
     let!(:rdv) { create(:rdv, :future, users: [user], organisation: organisation) }
 
-    before { click_link "Vos rendez-vous" }
-
     it do
+      click_link "Vos rendez-vous"
       expect(page).to have_content("Le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
-      click_link "Voir vos RDV passés"
-      expect_page_with_no_record_text("Vous n'avez pas de RDV passés")
+      expect(page).not_to have_content("Voir vos RDV passés")
     end
   end
 
@@ -31,7 +32,7 @@ RSpec.describe "User views his rdv" do
 
     travel_to(now)
     click_link "Vos rendez-vous"
-    expect_page_with_no_record_text("Vous n'avez pas de RDV à venir")
+    expect(page).to have_content("Vous n'avez pas de RDV à venir")
     click_link "Voir vos RDV passés"
     expect(page).to have_content("Le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
   end

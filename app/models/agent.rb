@@ -4,6 +4,7 @@ class Agent < ApplicationRecord
   self.ignored_columns += %w[connected_with_agent_connect]
   include Agent::CaldavConfiguration
   include Agent::FeatureFlags
+  include Agent::PreloadRoles
 
   encrypts :caldav_password, deterministic: true
 
@@ -231,11 +232,13 @@ class Agent < ApplicationRecord
     access_level_in(organisation) == AgentRole::ACCESS_LEVEL_ADMIN
   end
 
-  def access_level_in(organisation)
+  def access_level_in(organisation_or_id)
+    organisation_id = organisation_or_id.respond_to?(:id) ? organisation_or_id.id : organisation_or_id
+
     if roles.loaded?
-      roles.find { _1.organisation == organisation }&.access_level
+      roles.find { _1.organisation_id == organisation_id }&.access_level
     else
-      roles.where(organisation: organisation).pick(:access_level)
+      roles.where(organisation_id:).pick(:access_level)
     end
   end
 
