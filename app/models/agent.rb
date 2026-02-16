@@ -232,8 +232,8 @@ class Agent < ApplicationRecord
     access_level_in(organisation) == AgentRole::ACCESS_LEVEL_ADMIN
   end
 
-  def access_level_in(organisation)
-    organisation_id = organisation.respond_to?(:id) ? organisation.id : organisation
+  def access_level_in(organisation_or_id)
+    organisation_id = organisation_or_id.respond_to?(:id) ? organisation_or_id.id : organisation_or_id
 
     if roles.loaded?
       roles.find { _1.organisation_id == organisation_id }&.access_level
