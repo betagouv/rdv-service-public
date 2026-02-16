@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = [
     "motifsSection",
+    "recurrencePickerSection",
     "dateAndTimeSection",
     "recurrenceCheckbox",
     "labelSection",
@@ -25,8 +26,8 @@ export default class extends Controller {
     });
   }
 
-  showMotifsSection() {
-    this.motifsSectionTarget.hidden = false;
+  showRecurrencePickerSection() {
+    this.recurrencePickerSectionTarget.hidden = false;
   }
 
   showAllSections() {
