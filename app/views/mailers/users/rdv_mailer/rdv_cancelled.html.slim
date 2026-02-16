@@ -1,24 +1,29 @@
 div
   p= t("mailers.common.hello")
 
-  - translation_key = (@rdv.status == "revoked" ? ".revoked_at_date" : ".cancelled_at_date")
-  p= t(translation_key, service: @rdv.service_name, date: l(@rdv.starts_at, format: :human))
+  p
+    - if @rdv.status == "revoked"
+      | Votre RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a été annulé pour raison administrative.
+    - else
+      | Votre RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a bien été annulé à votre demande.
 
   - if @rdv.phone_number.present?
-    - telephone_link = link_to(@rdv.phone_number, "tel:#{@rdv.phone_number_formatted}")
-    p= t(".reschedule_by_phone_html", telephone_link: telephone_link)
+    |> Vous pouvez reprendre un rendez-vous en appelant au
+    => link_to(@rdv.phone_number, "tel:#{@rdv.phone_number_formatted}")
+    | .
 
   - if @rdv.bookable_by_everyone?
-    p= t(".reschedule_online")
+    p
+      | Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous :
     .btn-wrapper
       / Il y a peut-être un bug ici : il manquerait le lieu_id, qui fait partie des choix de l'usager
-      = link_to t(".reschedule_button"), prendre_rdv_url(\
-        departement: @rdv.organisation.departement_number, \
-        motif_name_with_location_type: @rdv.motif.name_with_location_type, \
-        organisation_ids: [@rdv.organisation_id], \
-        address: @rdv.address, \
+      = link_to "Reprendre RDV", prendre_rdv_url(\
+        departement: @rdv.organisation.departement_number,
+        motif_name_with_location_type: @rdv.motif.name_with_location_type,
+        organisation_ids: [@rdv.organisation_id],
+        address: @rdv.address,
         invitation_token: @token \
-      ), class:"btn btn-primary"
+      ), class: "btn btn-primary"
 
   br
   = t("mailers.common.farewell_html", domain_name: domain.name)
