@@ -1,6 +1,11 @@
 require "English"
 require "shellwords"
 
+unless system("scalingo whoami", out: IO::NULL, err: IO::NULL)
+  puts "Erreur : vous n'êtes pas connecté à la CLI Scalingo. Lancez 'scalingo login' d'abord."
+  exit(1)
+end
+
 pr_number = `gh pr view --json number --jq '.number'`.strip
 exit(1) if $CHILD_STATUS.exitstatus != 0 # On quitte si aucune PR n'est liée à la branche courante
 
