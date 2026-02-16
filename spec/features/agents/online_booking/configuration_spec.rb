@@ -58,7 +58,7 @@ RSpec.describe "Agents can configure online booking" do
   describe "availabilities banner" do
     let!(:lieu) { create(:lieu, organisation:) }
 
-    it "shows the banner when needed, until the availabilities are open" do
+    it "shows the banner when needed, until the availabilities are open", js: true do
       visit admin_organisation_online_booking_path(organisation)
       find("label", text: motif.name).click
       click_on "Enregistrer"
@@ -73,9 +73,9 @@ RSpec.describe "Agents can configure online booking" do
       click_on "Ouvrir une plage d'ouverture"
       click_on "Renseigner mes disponibilités"
       expect(page.find("input#plage_ouverture_motif_ids_#{motif.id}")).to be_checked
-      find("label", text: "Lundi").click
 
       select(lieu.name, from: "Lieu")
+      find(:label, text: "Ponctuelle").click
       click_on "Créer la plage d'ouverture"
 
       expect(page).to have_content "Plage d'ouverture créée"

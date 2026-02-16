@@ -5,7 +5,7 @@
       .col-md-6
         .card
           .card-body
-            h2.dsfr-card-title Motifs concernés
+            h2.dsfr-card-title.mb-3 Motifs concernés
 
             = collapsible_form_fields_for_warnings(plage_ouverture) do
               = f.hidden_field :agent_id
@@ -76,7 +76,7 @@
             h2.dsfr-card-title.mb-3 Options avancées
             = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
 
-    .row.justify-content-center [data-plage-ouverture-form-target="submitSection" hidden=plage_ouverture.new_record?]
+    .row.justify-content-center
       .col-md-6
         .row.mb-5
           - if plage_ouverture.persisted?
@@ -88,10 +88,10 @@
               = f.button :submit, "Enregistrer"
           -else
             .col.text-left
-              = link_to "Annuler", \
+              = link_to "Revenir à la liste", \
                 admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: current_agent), \
-                class: "fr-btn fr-btn--tertiary-no-outline"
-            .col.text-right
+                class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
+            .col.text-right [data-plage-ouverture-form-target="submitSection" hidden=plage_ouverture.new_record?]
               = f.submit "Créer la plage d'ouverture", class: "fr-btn"
 - else
   .card
