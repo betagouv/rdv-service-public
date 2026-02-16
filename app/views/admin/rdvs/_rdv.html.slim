@@ -50,7 +50,7 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
         |> Participants&nbsp;:
       .fr-grid-row
         - rdv.users.sort_by { _1.last_name.downcase }.each do |user|
-          .fr-col-4
+          .fr-col-12.fr-col-md-4
             .card.light-gray-card.fr-mb-3w
               .card-body.p-2
                 = render "admin/participations/user_details", user: user
