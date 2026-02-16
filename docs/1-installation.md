@@ -21,10 +21,7 @@ make install  ## appelle bin/setup
 
 Pour certaines fonctionnalités comme ProConnect ou des appels à des API distantes, vous aurez besoin de récupérer des variables d'env depuis Vaulwarden. Le fichier .env contient des instructions pour chaque variable.
 
-Vous pouvez ensuite lancer le serveur avec :
-```bash
-make run      ## appelle overmind start -f Procfile.dev
-```
+Vous pouvez ensuite lancer le serveur avec `make run`
 
 ## Commandes
 
