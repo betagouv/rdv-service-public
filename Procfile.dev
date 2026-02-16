@@ -1,4 +1,4 @@
-web: PORT=3000 ./bin/start_web_server
+web: PORT=3000 bundle exec puma
 jobs: bundle exec good_job start
 web_rdv_solidarites: PORT=3001 bundle exec dotenv -f ".env.rdv_solidarites,.env" puma
 jobs_rdv_solidarites: bundle exec dotenv -f ".env,.env.rdv_solidarites" good_job start
