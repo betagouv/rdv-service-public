@@ -282,6 +282,28 @@ RSpec.describe Users::RdvBookingForm do
         it { expect(described_class.new(user:, rdv_builder:, user_attributes:, domain:).save).to be true }
       end
 
+      context "when the phone number is invalid" do
+        let(:rdv_builder) do
+          Users::RdvBuilder.new(
+            user, {
+              starts_at: creneau.starts_at,
+              motif_id: motif.id,
+              lieu_id: lieu.id,
+              user_ids: [user_for_rdv.id],
+              departement: "62",
+              city_code: "62100",
+            }
+          )
+        end
+        let(:user_attributes) { { first_name: "Léa", last_name: "Boubakar", phone_number: "0633" } }
+
+        it "affiche un message d'erreur complet incluant le nom du champ" do
+          form = described_class.new(user:, rdv_builder:, user_attributes:, domain:)
+          form.save
+          expect(form.errors.full_messages).to include("Le numéro de téléphone n'est pas valide")
+        end
+      end
+
       context "when the phone number is blank" do
         let(:rdv_builder) do
           Users::RdvBuilder.new(
