@@ -18,7 +18,7 @@ li.card
       li.card-text.fr-mb-1w
         span.fr-icon-user-fill.fr-mr-1w[aria-hidden="true"]
         |> Animé par
-        strong = agents_to_sentence(rdv.agents)
+        strong = rdv.agents.map(&:full_name).sort.to_sentence
       li.card-text.fr-mb-1w
         span.fr-icon-team-fill.fr-mr-1w[aria-hidden="true"]
         = I18n.t("rdvs.participants", count: rdv.users_count)
