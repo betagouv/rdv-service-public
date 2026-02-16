@@ -2,7 +2,7 @@ install: ## Setup development environment
 	bin/setup
 
 run: ## Start the application (web, jobs et webpack)
-	overmind start -f Procfile.dev
+	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev
 
 lint: lint_rubocop lint_slim lint_brakeman ## Run all linters
 
