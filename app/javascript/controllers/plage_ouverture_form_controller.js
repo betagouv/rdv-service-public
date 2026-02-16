@@ -10,6 +10,12 @@ export default class extends Controller {
     "submitSection",
   ]
 
+  connect() {
+    if (this.motifsSectionTarget.querySelectorAll('input[name="plage_ouverture[motif_ids][]"]').length === 1) {
+      this.showRecurrencePickerSection();
+    }
+  }
+
   enableRecurrence() {
     this.recurrenceCheckboxTarget.checked = true;
     this.recurrenceCheckboxTarget.dispatchEvent(new Event('change'))
