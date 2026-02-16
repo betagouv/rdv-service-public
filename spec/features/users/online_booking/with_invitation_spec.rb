@@ -57,7 +57,7 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
-      # user informations
+      # Formulaire : infos usager (pas de section proche pour les invités)
       expect(page).to have_content("Vos informations")
       expect(page).not_to have_field("Date de naissance")
       expect(page).not_to have_field("Adresse")
@@ -66,13 +66,7 @@ RSpec.describe "User can be invited" do
       expect(page).to have_field("Email", with: user.email, disabled: true)
       expect(page.find_field("Email", disabled: true)["name"]).to eq("user[email]")
       expect(page).to have_field("Téléphone", with: user.phone_number)
-      click_button("Continuer")
-
-      # Confirmation
-      expect(page).to have_content("Informations de contact")
-      expect(page).to have_content("johndoe@gmail.com")
-      expect(page).to have_content("0682605955")
-      click_link("Confirmer mon RDV")
+      click_button("Confirmer mon RDV")
 
       # RDV page
       expect(page).to have_content("Votre RDV")
@@ -208,19 +202,13 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
-      # RDV informations
+      # Formulaire : infos usager (pas de section proche pour les invités)
       expect(page).to have_content("Vos informations")
       expect(page).not_to have_field("Date de naissance")
       expect(page).not_to have_field("Adresse")
       expect(page).to have_field("Email", with: user.email, disabled: true)
       expect(page).to have_field("Téléphone", with: user.phone_number)
-      click_button("Continuer")
-
-      # Confirmation
-      expect(page).to have_content("Informations de contact")
-      expect(page).to have_content("johndoe@gmail.com")
-      expect(page).to have_content("0682605955")
-      click_link("Confirmer mon RDV")
+      click_button("Confirmer mon RDV")
 
       # RDV page
       expect(page).to have_content("Votre RDV")
@@ -273,19 +261,13 @@ RSpec.describe "User can be invited" do
         # Creneau selection
         first(:link, "11:00").click
 
-        # RDV informations
+        # Formulaire : infos usager (pas de section proche pour les invités)
         expect(page).to have_content("Vos informations")
         expect(page).not_to have_field("Date de naissance")
         expect(page).not_to have_field("Adresse")
         expect(page).to have_field("Email", with: user.email, disabled: true)
         expect(page).to have_field("Téléphone", with: user.phone_number)
-        click_button("Continuer")
-
-        # Confirmation
-        expect(page).to have_content("Informations de contact")
-        expect(page).to have_content("johndoe@gmail.com")
-        expect(page).to have_content("0682605955")
-        click_link("Confirmer mon RDV")
+        click_button("Confirmer mon RDV")
 
         # RDV page
         expect(page).to have_content("Votre RDV")

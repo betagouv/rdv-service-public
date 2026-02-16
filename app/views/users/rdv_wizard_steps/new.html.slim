@@ -1,0 +1,34 @@
+- content_for :title, "Votre rendez-vous"
+
+.fr-container.fr-pt-3w
+  .fr-col-lg-8.fr-col-offset-lg-2.fr-col-md-10.fr-col-offset-md-1
+    h1.fr-h3 Votre rendez-vous
+    .card
+      = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
+      .card-body
+        = form_for @rdv_booking_form, as: :user, url: users_rdv_wizard_step_path(**@rdv_wizard.to_query), method: "post", builder: Dsfr::FormBuilder do |f|
+          h2.fr-h4 Vos informations
+          = render "users/users/form_fields", f: f
+
+          /! Section proches (cas normal non-ANTS)
+          - unless @skip_proches_step || @rdv.requires_ants_predemande_number?
+            = render "proche_section", f: f
+
+          /! Section proches ANTS (n >= 2 pré-demandes)
+          - if @rdv.requires_ants_predemande_number? && !@skip_proches_step
+            - ants_count = @rdv_builder.ants_pre_demandes_count.to_i
+            - if ants_count >= 2
+              - (ants_count - 1).times do |slot_index|
+                = render "ants_proche_slot", slot_index: slot_index
+
+          /! Hidden fields pour les params du wizard
+          - @rdv_wizard.to_query.each do |wizard_key, wizard_value|
+            = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
+
+          .fr-grid-row.fr-grid-row--gutters.fr-mt-3w
+            .fr-col.rdv-justify-content-space-between.d-flex.flex-row-aligned
+              = link_to "Revenir en arrière", prendre_rdv_path(@rdv_wizard.to_query), class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
+              - if @rdv.collectif?
+                = f.submit "Confirmer ma participation", class: "fr-btn"
+              - else
+                = f.submit "Confirmer mon RDV", class: "fr-btn"

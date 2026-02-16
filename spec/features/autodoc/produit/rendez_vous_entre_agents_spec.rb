@@ -152,11 +152,9 @@ RSpec.describe "Prise de rendez-vous entre agents", js: true do
 
     expect(page.body).to include(user.notification_email) # L'email est dans un input, donc on utilise cette méthode plutôt qu'un expect(page).to have_content
 
-    click_on "Continuer"
-
     doc.add_screenshot(page,
                        text: "Je confirme le rendez-vous",
-                       wait_for: user.email)
+                       wait_for: "Vos informations")
 
     click_on "Confirmer mon RDV"
 

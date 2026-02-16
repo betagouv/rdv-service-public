@@ -35,7 +35,7 @@ ul.list-group.list-group-flush.fr-mt-0
         .col
           span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
           | Lieu :&nbsp;
-          = rdv_wizard.creneau.lieu.full_name
+          = rdv_wizard.lieu.full_name
         .col-auto
           = dsfr_link_to "Modifier", path_to_lieu_selection(rdv_wizard.params_to_selections), title: "Modifier le lieu"
   - else
@@ -49,32 +49,6 @@ ul.list-group.list-group-flush.fr-mt-0
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
       .col-auto
         = dsfr_link_to "Modifier", path_to_creneau_selection(rdv_wizard.params_to_selections), title: "Modifier la date du rendez-vous"
-  - if local_assigns[:show_user_info]
-    li.list-group-item
-      .row
-        .col
-          span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
-          | Usager :&nbsp;
-          = users_to_sentence(rdv_wizard.users)
-        .col-auto
-          - step = @skip_proches_step ? 1 : 2
-          = dsfr_link_to "Modifier", new_users_rdv_wizard_step_path(step: , **@rdv_wizard.to_query), title: "Modifier les usagers"
-    li.list-group-item
-      .row
-        .col
-          span.fr-icon-check-line.fr-mr-1w.rdv-color-text-default-success
-          | Informations de contact :&nbsp;
-      .row
-        .col.ml-3
-          span> ✉️ Email&nbsp;:
-          b>= current_user.preferred_email
-          span>= "(notifications par email #{current_user.notify_by_email? ? 'activées' :  'désactivées'})"
-      .row
-        .col.ml-3
-          span> 📞 Téléphone&nbsp;:
-          = user_notifiable_by_sms_text(current_user)
-        .col-auto
-          = dsfr_link_to "Modifier", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), title: "Modifier les informations de contact"
   - if @rdv_wizard.respond_to?(:prescripteur) && @rdv_wizard.prescripteur.present?
     li.list-group-item
       .row

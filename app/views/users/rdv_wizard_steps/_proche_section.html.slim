@@ -1,0 +1,44 @@
+/! Section "je prends RDV pour un proche" (cas normal non-ANTS)
+- relatives = current_user.relatives.order(:first_name)
+- submitted = @rdv_booking_form.submitted_proches_data
+
+.fr-mt-3w
+  = f.dsfr_check_box :booking_for_proche, label: "Je prends rendez-vous pour un proche"
+
+  fieldset.fr-fieldset.fr-mt-2w
+    - if relatives.any?
+      legend.fr-fieldset__legend--regular.fr-fieldset__legend Pour qui prenez-vous rendez-vous ?
+
+      - relatives.each do |relative|
+        .fr-fieldset__element.fr-p-2w.fr-mb-1w style="border: 1px solid var(--border-default-grey); border-radius: 4px;"
+          .fr-radio-group
+            = radio_button_tag "user[selected_proche]", relative.id.to_s, @rdv_booking_form.instance_variable_get(:@selected_proche) == relative.id.to_s
+            = label_tag "user_selected_proche_#{relative.id}", relative.full_name
+          .fr-grid-row.fr-grid-row--gutters.fr-mt-1w
+            - data = submitted[relative.id.to_s] || {}
+            .fr-col-md-6
+              = render "proche_field", name: "user[proches][#{relative.id}][first_name]", label: "Prénom", value: data["first_name"] || relative.first_name
+            .fr-col-md-6
+              = render "proche_field", name: "user[proches][#{relative.id}][last_name]", label: "Nom", value: data["last_name"] || relative.last_name
+            - if @rdv_booking_form.show_birth_date_field?
+              .fr-col-md-6
+                = render "proche_field", name: "user[proches][#{relative.id}][birth_date]", label: "Date de naissance", value: data["birth_date"] || relative.birth_date, type: :date
+
+    /! Option "Nouveau proche"
+    .fr-fieldset__element.fr-p-2w style="border: 1px solid var(--border-default-grey); border-radius: 4px;"
+      - if relatives.any?
+        .fr-radio-group
+          = radio_button_tag "user[selected_proche]", "new", @rdv_booking_form.instance_variable_get(:@selected_proche) == "new" || relatives.empty?
+          = label_tag "user_selected_proche_new", "Nouveau proche"
+      - else
+        = hidden_field_tag "user[selected_proche]", "new"
+        .fr-text--bold.fr-mb-1w Informations du proche
+      .fr-grid-row.fr-grid-row--gutters.fr-mt-1w
+        - data = submitted["new"] || {}
+        .fr-col-md-6
+          = render "proche_field", name: "user[proches][new][first_name]", label: "Prénom", value: data["first_name"]
+        .fr-col-md-6
+          = render "proche_field", name: "user[proches][new][last_name]", label: "Nom", value: data["last_name"]
+        - if @rdv_booking_form.show_birth_date_field?
+          .fr-col-md-6
+            = render "proche_field", name: "user[proches][new][birth_date]", label: "Date de naissance", value: data["birth_date"], type: :date

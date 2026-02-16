@@ -34,9 +34,7 @@ RSpec.describe "User can search for rdvs" do
 
       choose_creneau
       sign_up
-      continue_to_rdv(motif)
-      add_relative
-      confirm_rdv(motif, lieu)
+      fill_user_info_and_add_relative(motif)
     end
 
     describe "quand l'usager est connecté via FranceConnect" do
@@ -45,7 +43,7 @@ RSpec.describe "User can search for rdvs" do
       before { login_as(user, scope: :user) }
 
       it "affiche la date de naissance en lecture seule, le warning FranceConnect et le champ email de notification" do
-        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
         expect(page).to have_content("Vos informations")
         expect(page).to have_field("Date de naissance", disabled: true)
         expect(page).to have_field("Nom de naissance", disabled: true)
@@ -65,7 +63,7 @@ RSpec.describe "User can search for rdvs" do
       before { login_as(user, scope: :user) }
 
       it "affiche le warning numéro non-mobile" do
-        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
         expect(page).to have_content("Vous ne recevrez pas de SMS avec ce numéro non-mobile")
       end
     end
@@ -77,7 +75,7 @@ RSpec.describe "User can search for rdvs" do
       before { login_as(user, scope: :user) }
 
       it "affiche le champ complément d'adresse" do
-        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
         expect(page).to have_field("Complément d'adresse")
       end
     end
@@ -92,7 +90,7 @@ RSpec.describe "User can search for rdvs" do
       before { login_as(user, scope: :user) }
 
       it "affiche les champs caisse d'affiliation et numéro d'allocataire" do
-        visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+        visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
         expect(page).to have_select("Caisse d'affiliation")
         expect(page).to have_field("Numéro d'allocataire")
       end
@@ -110,14 +108,14 @@ RSpec.describe "User can search for rdvs" do
         end
 
         it "affiche le champ logement" do
-          visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+          visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
           expect(page).to have_select("Logement")
         end
       end
 
       context "quand le territoire n'active pas le champ logement" do
         it "n'affiche pas le champ logement" do
-          visit new_users_rdv_wizard_step_path(step: 1, motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
+          visit new_users_rdv_wizard_step_path(motif_id: motif.id, lieu_id: lieu.id, departement: "92", starts_at: (now + 1.month).change(hour: 8))
           expect(page).not_to have_select("Logement")
         end
       end
@@ -131,10 +129,7 @@ RSpec.describe "User can search for rdvs" do
 
         # Le champ nom de naissance n'est pas affiché sur le domaine RDV Service Public
         expect(page).not_to have_field("Nom de naissance")
-        click_button("Continuer")
-
-        add_relative(birth_date: false)
-        confirm_rdv(motif, lieu)
+        fill_user_info_and_add_relative(motif, lieu, birth_date: false)
       end
     end
   end
@@ -192,15 +187,13 @@ RSpec.describe "User can search for rdvs" do
 
         choose_creneau
         sign_up
-        continue_to_rdv(first_motif)
-        add_relative
-        confirm_rdv(first_motif)
+        fill_user_info_and_add_relative(first_motif)
       end
     end
 
     context "motif téléphonique avec restriction (instruction pré-RDV)" do
       let!(:first_motif) do
-        create(:motif, :by_phone, name: "RSA orientation par téléphone", organisation: first_organisation_with_po, restriction_for_rdv: "Merci d’apporter les documents nécessaires", service: service)
+        create(:motif, :by_phone, name: "RSA orientation par téléphone", organisation: first_organisation_with_po, restriction_for_rdv: "Merci d'apporter les documents nécessaires", service: service)
       end
 
       it "oblige à accepter la restriction", js: true do
@@ -213,10 +206,10 @@ RSpec.describe "User can search for rdvs" do
 
         ## Organisation selection
         click_on first_organisation_with_po.name
-        expect(page).to have_content("Merci d’apporter les documents nécessaires")
+        expect(page).to have_content("Merci d'apporter les documents nécessaires")
         click_on "Annuler"
         click_on first_organisation_with_po.name
-        expect(page).to have_content("Merci d’apporter les documents nécessaires")
+        expect(page).to have_content("Merci d'apporter les documents nécessaires")
         click_on "Accepter"
 
         ## Sélection créneau
@@ -254,9 +247,7 @@ RSpec.describe "User can search for rdvs" do
 
         choose_creneau
         sign_up
-        continue_to_rdv(first_motif, address: "03 Rue Lambert, Paris, 75016")
-        add_relative
-        confirm_rdv(first_motif)
+        fill_user_info_and_add_relative(first_motif, address: "03 Rue Lambert, Paris, 75016")
       end
     end
 
@@ -280,9 +271,7 @@ RSpec.describe "User can search for rdvs" do
         choose_creneau
         expect(page).to have_content("RDV par visioconférence")
         sign_up
-        continue_to_rdv(first_motif, address: "03 Rue Lambert, Paris, 75016")
-        add_relative
-        confirm_rdv(first_motif)
+        fill_user_info_and_add_relative(first_motif, address: "03 Rue Lambert, Paris, 75016")
         expect(page).to have_content("RDV par visioconférence")
       end
     end
@@ -397,13 +386,9 @@ RSpec.describe "User can search for rdvs" do
 
       first(:link, "09:00").click
 
-      ## Take rdv
+      ## Formulaire unique : infos usager + confirmation
       expect(page).to have_content("Vos informations")
-      click_button("Continuer")
-      expect(page).to have_content("Choix de l’usager")
-      click_button("Continuer")
-      expect(page).to have_content("Confirmation")
-      click_link("Confirmer mon RDV")
+      click_button("Confirmer mon RDV")
 
       expect(page).to have_content("Votre RDV")
       expect(page).to have_content(lieu.address)
@@ -510,23 +495,20 @@ RSpec.describe "User can search for rdvs" do
     before { login_as(user, scope: :user) }
 
     context "numéro de tel renseigné et valide" do
-      it "passe à l’étape suivante" do
-        visit(new_users_rdv_wizard_step_path(step: 1, departement: "24", motif_id: motif.id, lieu_id: lieu.id, starts_at: Time.zone.parse("2024-11-05 08:00")))
+      it "confirme le RDV directement" do
+        visit(new_users_rdv_wizard_step_path(departement: "24", motif_id: motif.id, lieu_id: lieu.id, starts_at: Time.zone.parse("2024-11-05 08:00")))
         expect(page).to have_content("Vos informations")
         fill_in :user_phone_number, with: "0130303030"
-        click_button("Continuer")
-        expect(page).to have_content("Pour qui prenez-vous rendez-vous")
+        click_button("Confirmer mon RDV")
+        expect(page).to have_content("Votre rendez vous a été confirmé")
       end
     end
 
     context "numéro de tel non renseigné" do
-      it "reste à l’étape 1 et montre une erreur" do
-        visit(new_users_rdv_wizard_step_path(step: 1, departement: "24", motif_id: motif.id, lieu_id: lieu.id, starts_at: Time.zone.parse("2024-11-05 08:00")))
+      it "reste sur le formulaire et montre une erreur" do
+        visit(new_users_rdv_wizard_step_path(departement: "24", motif_id: motif.id, lieu_id: lieu.id, starts_at: Time.zone.parse("2024-11-05 08:00")))
         expect(page).to have_content("Vos informations")
-        # page.execute_script(%{document.querySelector('#user_phone_number').removeAttribute("required")})
-        # cette ligne n’est nécessaire que si on passe le test en JS, ou pour reproduire le test dans votre navigateur
-        click_button("Continuer")
-        expect(page).not_to have_content("Pour qui prenez-vous rendez-vous")
+        click_button("Confirmer mon RDV")
         expect(page).to have_content("Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone")
       end
     end
@@ -543,9 +525,7 @@ RSpec.describe "User can search for rdvs" do
       click_on "Prochaine disponibilité"
       first(:link, "08:00").click
       sign_up
-      click_on "Continuer"
-      click_on "Continuer"
-      click_on "Confirmer"
+      click_on "Confirmer mon RDV"
       expect(page).to have_content "Votre rendez vous a été confirmé."
     end
   end
@@ -606,41 +586,35 @@ RSpec.describe "User can search for rdvs" do
     click_on("Valider")
 
     expect(page).to have_content("Connexion réussie")
-    expect(page).to have_content("Étape 1 sur 3")
   end
 
-  def continue_to_rdv(motif, address: nil)
+  # Remplit les infos usager, coche "proche", crée un nouveau proche et soumet le formulaire
+  def fill_user_info_and_add_relative(motif, lieu = nil, birth_date: true, address: nil)
     expect(page).to have_content("Vos informations")
-    find_field("Date de naissance").send_keys(Time.zone.yesterday.strftime("%d/%m/%Y"))
-    # using fill_in with this french date throws Error: Malformed value with playwright
-    fill_in("Nom de naissance", with: "Lapinou")
+    first(:field, "Date de naissance").send_keys(Time.zone.yesterday.strftime("%d/%m/%Y")) if birth_date
+    fill_in("Nom de naissance", with: "Lapinou") if page.has_field?("Nom de naissance")
     fill_in("Téléphone", with: "0612345678") if page.has_field?("Téléphone")
     fill_in("Adresse", with: address) if address
-    click_button("Continuer")
 
-    expect(page).to have_content(motif.name)
-    expect(page).to have_content("Michel LAPIN (Lapinou)")
-  end
+    # Section proche : cocher la case et remplir les champs du nouveau proche
+    check("Je prends rendez-vous pour un proche", allow_label_click: true)
+    if page.has_css?(".fr-radio-group", text: "Nouveau proche", wait: 0.5)
+      choose("Nouveau proche", allow_label_click: true)
+      within(".fr-fieldset__element", text: "Nouveau proche") do
+        fill_in("Prénom", with: "Mathieu")
+        fill_in("Nom", with: "Lapin")
+        fill_in("Date de naissance", with: Date.yesterday) if birth_date
+      end
+    else
+      # Pas de proches existants : les champs sont affichés directement
+      within(".fr-fieldset__element", text: "Informations du proche") do
+        fill_in("Prénom", with: "Mathieu")
+        fill_in("Nom", with: "Lapin")
+        fill_in("Date de naissance", with: Date.yesterday) if birth_date
+      end
+    end
 
-  def add_relative(birth_date: true)
-    click_link("Ajouter un proche")
-    expect(page).to have_selector("h1", text: "Ajouter un proche")
-    fill_in("Prénom", with: "Mathieu")
-    fill_in("Nom", with: "Lapin")
-    fill_in("Date de naissance", with: Date.yesterday) if birth_date
-    click_button("Enregistrer")
-
-    # Pour éviter une flaky spec (causée par l'animation CSS de la modale ?),
-    # on vérifie directement que le proche est bien enregistré dans la base.
-    wait_for { User.exists?(first_name: "Mathieu", last_name: "Lapin") }.to be(true)
-
-    click_button("Continuer")
-  end
-
-  def confirm_rdv(motif, lieu = nil)
-    expect(page).to have_content("Informations de contact")
-    expect(page).to have_content("Mathieu LAPIN")
-    click_link("Confirmer mon RDV")
+    click_button("Confirmer mon RDV")
 
     expect(page).to have_content("Votre RDV")
     expect(page).to have_content(lieu.address) if lieu.present?

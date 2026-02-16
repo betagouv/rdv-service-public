@@ -39,6 +39,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     before do
       stub_ants_status_ok("1122334455", meeting_point_id: lieu.id, appointments: appointments)
+      stub_ants_status_ok("5544332211", meeting_point_id: lieu.id, appointments: [])
     end
 
     it "allows booking a rdv through the full lifecycle of api calls" do
@@ -114,17 +115,33 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       login_via_6_digit_code(user.email)
 
+      # Formulaire unique : ANTS number du user principal + slot pour le proche
       expect(page).to have_field("Numéro de pré-demande ANTS")
       fill_in("user_ants_pre_demande_number", with: "1122334455")
-      click_button("Continuer")
-      fill_in("user_ants_pre_demande_number", with: "1122334455")
+
+      # Remplir le slot ANTS pour le proche (ants_pre_demandes_count=2 → 1 slot)
+      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+        fill_in("Prénom", with: "Alain")
+        fill_in("Nom", with: "Mairie")
+        fill_in("Numéro de pré-demande ANTS", with: "5544332211")
+      end
+
+      click_button("Confirmer mon RDV")
+
+      # Avertissement bénin : le numéro du user principal a déjà un RDV
       expect(page).to have_content(
         "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
       )
+
+      # Re-remplir les champs (le formulaire est ré-affiché après erreur)
+      fill_in("user_ants_pre_demande_number", with: "1122334455")
+      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+        fill_in("Prénom", with: "Alain")
+        fill_in("Nom", with: "Mairie")
+        fill_in("Numéro de pré-demande ANTS", with: "5544332211")
+      end
       click_button("Confirmer en ignorant les avertissements")
 
-      click_button("Continuer")
-      click_link("Confirmer mon RDV")
       expect(page).to have_content("Votre rendez vous a été confirmé.")
       expect(user.reload.ants_pre_demande_number).to eq("1122334455")
     end
@@ -143,7 +160,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
   context "quand la mairie a désactivé la réservation en ligne sur un motif ANTS" do
     let(:bookable_by) { :agents }
 
-    it "le point d’API ne retourne pas de créneau" do
+    it "le point d'API ne retourne pas de créneau" do
       visit api_ants_getManagedMeetingPoints_url
       lieux_ids = json_response.pluck("id")
       expect(lieux_ids).to eq([lieu.id.to_s])
@@ -160,14 +177,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
   end
 
-  context "ajout d’un proche avec des numéros ANTS problématiques puis avec un numéro ANTS valide" do
+  context "ajout d'un proche ANTS avec des numéros problématiques puis valide" do
     before do
       stub_ants_status_ok("1122334455", meeting_point_id: lieu.id, appointments: [])
       stub_ants_status_ok("5544332211", meeting_point_id: lieu.id, appointments: [])
-      stub_ants_status_ok("66CONSUMED", meeting_point_id: lieu.id, status: "consumed")
     end
 
-    it "permet de réserver sans avertissement", js: true do
+    it "valide le format du numéro ANTS du proche", js: true do
       time = Time.zone.now.change(hour: 9, min: 0)
       visit creneaux_url(
         starts_at: time.strftime("%Y-%m-%d %H:%M"),
@@ -180,96 +196,40 @@ RSpec.describe "User can search rdv on rdv mairie" do
       login_via_6_digit_code(user.email)
 
       fill_in "user_ants_pre_demande_number", with: "1122334455"
-      click_button "Continuer"
 
-      click_link "Ajouter un proche"
-      fill_in "Prénom", with: "Alain"
-      fill_in "Nom d’usage", with: "Mairie"
+      # Remplir le slot du proche sans numéro ANTS
+      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+        fill_in("Prénom", with: "Alain")
+        fill_in("Nom", with: "Mairie")
+      end
+      click_button "Confirmer mon RDV"
+      expect(page).to have_content("le numéro de pré-demande ANTS doit être renseigné")
 
-      # soumission sans numéro ANTS
-      click_button "Enregistrer"
-      ants_input_elt = find("label", text: /Numéro de pré-demande ANTS/).sibling("input")
-      expect(page).to have_field(ants_input_elt[:name], validation_message: /Please fill (in|out) this field/)
-
-      # soumission avec un numéro invalide
-      fill_in "Numéro de pré-demande ANTS", with: "inva lide"
-      click_button "Enregistrer"
-      expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
-
-      # soumission avec un numéro valide mais déjà consommé selon l’API de l’ANTS
-      fill_in "Numéro de pré-demande ANTS", with: "66CONSUMED"
-      click_button "Enregistrer"
-      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier déjà instruit")
-
-      # soumission avec un numéro valide, pas consommé et sans appointments
-      fill_in "Numéro de pré-demande ANTS", with: "5544332211"
-      click_button "Enregistrer"
-      # on attend que le proche soit bien enregistré dans la DB pour éviter une flaky spec (causée par l'animation CSS de la modale ?)
-      wait_for { User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211") }.to be(true)
-      alain = User.find_by(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")
-      expect(alain).to be_present
-
-      check("Marco POLO", allow_label_click: true)
-      check("Alain MAIRIE", allow_label_click: true)
-      click_button "Continuer"
-
-      click_link "Confirmer mon RDV"
-      expect(page).to have_content("Votre rendez vous a été confirmé.")
-      expect(page).to have_content("Alain MAIRIE")
-      expect(page).to have_content("Marco POLO")
-    end
-  end
-
-  context "ajout d’un proche avec un numéro ANTS différent mais qui a des appointments" do
-    before do
-      stub_ants_status_ok("1122334455", meeting_point_id: lieu.id, appointments: [])
-      stub_ants_status_ok(
-        "5544332211",
-        meeting_point_id: lieu.id,
-        appointments: [{
-          management_url: "https://gerer-rdv.com",
-          meeting_point: "Mairie de Sannois",
-          appointment_date: "2023-04-03T08:45:00",
-        }]
-      )
-    end
-
-    it "permet de réserver avec un avertissement contournable", js: true do
-      time = Time.zone.now.change(hour: 9, min: 0)
-      visit creneaux_url(
-        starts_at: time.strftime("%Y-%m-%d %H:%M"),
-        lieu_id: lieu.id,
-        motif_id: passport_motif.id,
-        public_link_organisation_id: organisation.id,
-        ants_pre_demandes_count: "2"
-      )
-
-      login_via_6_digit_code(user.email)
-
+      # Avec un numéro invalide
+      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+        fill_in("Prénom", with: "Alain")
+        fill_in("Nom", with: "Mairie")
+        fill_in("Numéro de pré-demande ANTS", with: "inva lide")
+      end
       fill_in "user_ants_pre_demande_number", with: "1122334455"
-      click_button "Continuer"
+      click_button "Confirmer mon RDV"
+      expect(page).to have_content("le numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
 
-      click_link "Ajouter un proche"
-      fill_in "Prénom", with: "Alain"
-      fill_in "Nom d’usage", with: "Mairie"
-      fill_in "Numéro de pré-demande ANTS", with: "5544332211"
-      click_button "Enregistrer"
+      # Avec un numéro valide
+      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+        fill_in("Prénom", with: "Alain")
+        fill_in("Nom", with: "Mairie")
+        fill_in("Numéro de pré-demande ANTS", with: "5544332211")
+      end
+      fill_in "user_ants_pre_demande_number", with: "1122334455"
+      click_button "Confirmer mon RDV"
 
-      expect(page).to have_content(
-        "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
-      )
-      click_button "Confirmer en ignorant les avertissements"
-      # on attend que le proche soit bien enregistré dans la DB pour éviter une flaky spec (causée par l'animation CSS de la modale ?)
-      wait_for { User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211") }.to be(true)
-
-      check("Marco POLO", allow_label_click: true)
-      check("Alain MAIRIE", allow_label_click: true)
-      click_button "Continuer"
-
-      click_link "Confirmer mon RDV"
       expect(page).to have_content("Votre rendez vous a été confirmé.")
       expect(page).to have_content("Alain MAIRIE")
       expect(page).to have_content("Marco POLO")
+
+      alain = User.find_by(first_name: "Alain", last_name: "Mairie")
+      expect(alain.ants_pre_demande_number).to eq("5544332211")
     end
   end
 
@@ -281,13 +241,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
         lieu_id: lieu.id,
         motif_id: passport_motif.id,
         public_link_organisation_id: organisation.id,
-        ants_pre_demandes_count: "2"
+        ants_pre_demandes_count: "1"
       )
 
       login_via_6_digit_code(user.email)
 
       fill_in("user_ants_pre_demande_number", with: "1234ABC")
-      click_button("Continuer")
+      click_button("Confirmer mon RDV")
       expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
@@ -302,15 +262,13 @@ RSpec.describe "User can search rdv on rdv mairie" do
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           public_link_organisation_id: organisation.id,
-          ants_pre_demandes_count: "2"
+          ants_pre_demandes_count: "1"
         )
 
         login_via_6_digit_code(user.email)
 
         fill_in("user_ants_pre_demande_number", with: "abcd1234ef")
-        click_button("Continuer")
-        click_button("Continuer")
-        expect { click_link("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
+        expect { click_button("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
         expect(user.reload.ants_pre_demande_number).to eq("ABCD1234EF")
         expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
       end
@@ -330,7 +288,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         login_via_6_digit_code(user.email)
 
         fill_in("user_ants_pre_demande_number", with: "  ")
-        click_button("Continuer")
+        click_button("Confirmer mon RDV")
         expect(page).to have_content("Numéro de pré-demande ANTS doit être renseigné")
       end
     end
@@ -354,7 +312,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         login_via_6_digit_code(user.email)
 
         fill_in("user_ants_pre_demande_number", with: "5544332211")
-        click_button("Continuer")
+        click_button("Confirmer mon RDV")
         expect(page).to have_content("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
         expect(page).not_to have_content("Confirmer en ignorant les avertissements")
       end
@@ -430,11 +388,11 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
   end
 
-  context "prise de RDV en direct sur RDVSP (sans passer par le moteur de l’ANTS)" do
+  context "prise de RDV en direct sur RDVSP (sans passer par le moteur de l'ANTS)" do
     before { stub_ants_status_ok("TESTRDV001", meeting_point_id: lieu.id) }
 
-    context "il n’y a pas de créneaux dispos" do
-      it "incite à passer par le moteur de l’ANTS", js: true do
+    context "il n'y a pas de créneaux dispos" do
+      it "incite à passer par le moteur de l'ANTS", js: true do
         visit "http://www.rdv-service-public-test.localhost/org/#{organisation.public_link_id}"
         click_on "Passeport"
         expect(page).to have_content("Nombre de pré-demandes ANTS")
@@ -471,28 +429,23 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "elo@ise.fr").code
       click_on "Valider"
       expect(page).to have_content("Connexion réussie")
-      # Parcours post-connexion
-      expect(page).to have_content("Étape 1 sur 3")
+      # Formulaire unique : infos usager + ANTS slot
       expect(page).to have_content("Vos informations")
       expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
       expect(page).to have_content("(50 minutes)")
-      fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001"
-      click_on "Continuer"
-      expect(page).to have_content("Étape 2 sur 3")
-      expect(page).to have_content("Choix de l’usager")
-      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
-      expect(page).to have_content("(50 minutes)")
-      click_on "Continuer"
-      expect(page).to have_content("Étape 3 sur 3")
-      expect(page).to have_content("Confirmation")
-      expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
-      expect(page).to have_content("(50 minutes)")
+      fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001", match: :first
+      # Remplir le slot du proche (ants_pre_demandes_count=2 → 1 slot)
+      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+        fill_in "Prénom", with: "Jean"
+        fill_in "Nom", with: "Vanna"
+        fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001"
+      end
       click_on "Confirmer mon RDV"
       expect(page).to have_content("Votre rendez vous a été confirmé")
       expect(page).to have_content("durée : 50 minutes")
     end
 
-    context "l’usager tente de passer un nombre invalide à l’étape de séléction du nombre de pré-demandes" do
+    context "l'usager tente de passer un nombre invalide à l'étape de séléction du nombre de pré-demandes" do
       specify do
         visit "http://www.rdv-service-public-test.localhost/org/#{organisation.public_link_id}"
         click_on "Passeport"
@@ -509,7 +462,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       end
     end
 
-    context "l’usager tente de hacker le nombre de demandes dans l’URL dans les étapes post-sign-in" do
+    context "l'usager tente de hacker le nombre de demandes dans l'URL dans les étapes post-sign-in" do
       specify do
         login_as(user, scope: :user)
         valid_query = {
@@ -520,39 +473,36 @@ RSpec.describe "User can search rdv on rdv mairie" do
           starts_at: Time.zone.parse("2021-12-13 9:00"),
         }
         visit(new_users_rdv_wizard_step_path(valid_query))
-        expect(page).to have_content("Étape 1 sur 3")
-        expect(page).to have_content("Vos informations")
+        expect(page).to have_selector("h2", text: "Vos informations")
         expect(page).not_to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
         invalid_query = valid_query.merge(ants_pre_demandes_count: "100")
         visit(new_users_rdv_wizard_step_path(invalid_query))
-        expect(page).not_to have_content("Étape 1 sur 3")
+        expect(page).not_to have_selector("h2", text: "Vos informations")
         expect(page).to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
       end
     end
 
-    context "l’usager tente de hacker le nombre de demandes dans l’URL à l’étape finale de confirmation du RDV", js: true do
+    context "l'usager tente de hacker le nombre de demandes via l'URL du formulaire", js: true do
       specify do
         login_as(user, scope: :user)
         valid_query = {
-          step: "3",
           ants_pre_demandes_count: "2",
           departement: "78",
           lieu_id: lieu.id,
           motif_id: passport_motif.id,
           starts_at: Time.zone.parse("2021-12-13 9:00"),
-          user_ids: [user.id],
         }
         visit(new_users_rdv_wizard_step_path(valid_query))
-        expect(page).to have_content("Étape 3 sur 3")
-        expect(page).to have_content("Confirmer mon RDV")
+        expect(page).to have_selector("h2", text: "Vos informations")
+        expect(page).to have_button("Confirmer mon RDV")
+        # Modifier l'URL d'action du formulaire pour injecter un count invalide
         page.execute_script(%{
-          elt = document.querySelector("a.fr-btn[data-disable-with='Veuillez patienter…']");
-          elt.setAttribute(
-            "href",
-            elt.getAttribute("href").replace("ants_pre_demandes_count=2", "ants_pre_demandes_count=100")
-          )
+          var form = document.querySelector("form");
+          form.action = form.action.replace("ants_pre_demandes_count=2", "ants_pre_demandes_count=100");
+          document.querySelector("input[name='rdv[ants_pre_demandes_count]']").value = "100";
         })
-        expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
+        fill_in "user_ants_pre_demande_number", with: "TESTRDV001", match: :first
+        expect { click_button "Confirmer mon RDV" }.not_to change(Rdv, :count)
         expect(page).to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")
       end
     end

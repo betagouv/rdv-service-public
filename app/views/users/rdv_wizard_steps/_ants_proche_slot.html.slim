@@ -1,0 +1,62 @@
+/! Slot pour un proche ANTS supplémentaire
+/! locals: (slot_index:)
+ruby:
+  relatives = current_user.relatives.order(:first_name)
+  submitted = @rdv_booking_form.submitted_proches_data
+  slot_data = submitted[slot_index.to_s] || {}
+  prefix = "user[proches][#{slot_index}]"
+
+.fr-mt-3w.fr-p-2w style="border: 1px solid var(--border-default-grey); border-radius: 4px;"
+  h4.fr-h6 Proche #{slot_index + 1}
+
+  - if relatives.any?
+    fieldset.fr-fieldset
+      - relatives.each do |relative|
+        .fr-fieldset__element
+          .fr-radio-group
+            = radio_button_tag "#{prefix}[selected_id]", relative.id.to_s, slot_data["selected_id"] == relative.id.to_s
+            = label_tag "#{prefix}_selected_id_#{relative.id}", relative.full_name
+          .fr-grid-row.fr-grid-row--gutters.fr-mt-1w
+            - proches_data = slot_data["proches"] || {}
+            - relative_data = proches_data[relative.id.to_s] || {}
+            .fr-col-md-6
+              = render "proche_field", name: "#{prefix}[proches][#{relative.id}][first_name]", label: "Prénom", value: relative_data["first_name"] || relative.first_name
+            .fr-col-md-6
+              = render "proche_field", name: "#{prefix}[proches][#{relative.id}][last_name]", label: "Nom", value: relative_data["last_name"] || relative.last_name
+            - if @rdv_booking_form.show_birth_date_field?
+              .fr-col-md-6
+                = render "proche_field", name: "#{prefix}[proches][#{relative.id}][birth_date]", label: "Date de naissance", value: relative_data["birth_date"] || relative.birth_date, type: :date
+            .fr-col-md-6
+              = render "proche_field", name: "#{prefix}[proches][#{relative.id}][ants_pre_demande_number]", label: "Numéro de pré-demande ANTS", value: relative_data["ants_pre_demande_number"] || relative.ants_pre_demande_number
+
+      /! Option nouveau proche
+      .fr-fieldset__element
+        .fr-radio-group
+          = radio_button_tag "#{prefix}[selected_id]", "new", slot_data["selected_id"] == "new" || relatives.empty?
+          = label_tag "#{prefix}_selected_id_new", "Nouveau proche"
+        .fr-grid-row.fr-grid-row--gutters.fr-mt-1w
+          - new_data = (slot_data["proches"] || {})["new"] || {}
+          .fr-col-md-6
+            = render "proche_field", name: "#{prefix}[proches][new][first_name]", label: "Prénom", value: new_data["first_name"]
+          .fr-col-md-6
+            = render "proche_field", name: "#{prefix}[proches][new][last_name]", label: "Nom", value: new_data["last_name"]
+          - if @rdv_booking_form.show_birth_date_field?
+            .fr-col-md-6
+              = render "proche_field", name: "#{prefix}[proches][new][birth_date]", label: "Date de naissance", value: new_data["birth_date"], type: :date
+          .fr-col-md-6
+            = render "proche_field", name: "#{prefix}[proches][new][ants_pre_demande_number]", label: "Numéro de pré-demande ANTS", value: new_data["ants_pre_demande_number"]
+
+  - else
+    /! Pas de proches existants, uniquement création
+    .fr-grid-row.fr-grid-row--gutters
+      - new_data = slot_data["proches"]&.dig("new") || slot_data
+      = hidden_field_tag "#{prefix}[selected_id]", "new"
+      .fr-col-md-6
+        = render "proche_field", name: "#{prefix}[proches][new][first_name]", label: "Prénom", value: new_data["first_name"]
+      .fr-col-md-6
+        = render "proche_field", name: "#{prefix}[proches][new][last_name]", label: "Nom", value: new_data["last_name"]
+      - if @rdv_booking_form.show_birth_date_field?
+        .fr-col-md-6
+          = render "proche_field", name: "#{prefix}[proches][new][birth_date]", label: "Date de naissance", value: new_data["birth_date"], type: :date
+      .fr-col-md-6
+        = render "proche_field", name: "#{prefix}[proches][new][ants_pre_demande_number]", label: "Numéro de pré-demande ANTS", value: new_data["ants_pre_demande_number"]

@@ -57,12 +57,8 @@ RSpec.describe "Adding a user to a collective RDV" do
       click_link("S'inscrire")
       uncheck "Accepte les notifications par email" unless notif
       uncheck "Accepte les notifications par SMS" unless notif
-      click_button("Continuer")
-      if page.has_button?("Continuer")
-        page.click_button("Continuer")
-      end
       stub_request(:post, "https://example.com/")
-      click_on("Confirmer ma participation")
+      click_button("Confirmer ma participation")
       expect(page).to have_content("Participation confirmée")
     end
   end
@@ -91,22 +87,13 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("S'inscrire")
         click_link("Revenir en arrière")
         click_link("S'inscrire")
-        click_button("Continuer")
-
-        click_link("Revenir en arrière")
-        sleep(1)
-        click_button("Continuer")
-
-        click_on "Ajouter un proche"
-        fill_in "Prénom", with: "Francis"
-        fill_in "Nom d’usage", with: "Factice"
-        click_on "Enregistrer"
-
-        expect(page).to have_content("Francis FACTICE a été ajouté comme proche.")
-        click_button("Continuer")
-
+        find(:label, text: "Je prends rendez-vous pour un proche").click
+        within(find("div", class: "fr-fieldset__element", text: /Informations du proche/)) do
+          fill_in "Prénom", with: "Francis"
+          fill_in "Nom", with: "Factice"
+        end
         stub_request(:post, "https://example.com/")
-        click_on("Confirmer ma participation")
+        click_button("Confirmer ma participation")
         expect(page).to have_content("Participation confirmée")
         expect(page).to have_content("modifier") # can_change_participants?
       end.to change { rdv.reload.users.count }.from(0).to(1)
@@ -129,9 +116,6 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       login_via_6_digit_code(logged_user.email)
 
-      click_button("Continuer")
-      expect(page).to have_content("Choix de l’usager")
-      click_button("Continuer")
       stub_request(:post, "https://example.com/")
       click_on("Confirmer ma participation")
       expect(page).to have_content("Participation confirmée")
@@ -313,13 +297,13 @@ RSpec.describe "Adding a user to a collective RDV" do
           select_motif
           select_lieu
           click_link("S'inscrire")
-          click_button("Continuer")
 
           rdv.update!(max_participants_count: 2)
           create(:participation, rdv: rdv)
           create(:participation, rdv: rdv)
 
-          click_button("Continuer")
+          stub_request(:post, "https://example.com/")
+          click_button("Confirmer ma participation")
           expect(page).to have_content("Ce créneau n'est plus disponible")
         end
       end

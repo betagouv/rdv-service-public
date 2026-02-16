@@ -2,26 +2,57 @@ class Users::RdvBookingForm
   include Users::UserFormConcern
 
   attr_reader :rdv_builder
+  attr_accessor :booking_for_proche
 
   delegate :to_query, :motif, :service, :rdv, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, to: :user
   validates :ants_pre_demande_number, presence: true, if: -> { rdv.requires_ants_predemande_number? }
   validates_with AntsPreDemandeNumberStatusValidation, if: -> { rdv.requires_ants_predemande_number? }
 
+  validate :validate_ants_pre_demandes_count
   validate :validate_phone_number_present_for_motif_by_phone
+  validate :validate_proches
 
   def initialize(user:, rdv_builder:, domain:, user_attributes: {})
     @user = user
     @rdv_builder = rdv_builder
     @domain = domain
+    @booking_for_proche = user_attributes.delete(:booking_for_proche)
+    @raw_proches_data = user_attributes.delete(:proches) || {}
+    @selected_proche = user_attributes.delete(:selected_proche)
+    @user_attributes = user_attributes
     @user.assign_attributes(user_attributes)
   end
 
   def save
-    # we make sure the email can be updated only if it is blank
+    # on ne permet la mise à jour de l'email que s'il était vide
     @user.skip_reconfirmation! if @user.email_was.blank?
 
-    valid? && @user.save
+    return false unless valid?
+
+    ActiveRecord::Base.transaction do
+      @user.save!
+      save_proches!
+    end
+    true
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
+
+  # Retourne les users pour le RDV
+  def users_for_rdv
+    if ants_with_proches?
+      [@user] + saved_proches
+    elsif booking_for_proche? && saved_proches.any?
+      saved_proches
+    else
+      [@user]
+    end
+  end
+
+  # Données des proches soumises (pour ré-affichage après erreur de validation)
+  def submitted_proches_data
+    @raw_proches_data
   end
 
   def show_birth_date_field? = !signed_in_with_invitation_token? && rdv.territory&.enable_birth_date_field?
@@ -43,6 +74,97 @@ class Users::RdvBookingForm
   def ants_meeting_point_id = rdv_builder.lieu_id
 
   private
+
+  def booking_for_proche?
+    @booking_for_proche.to_s == "1"
+  end
+
+  def ants_with_proches?
+    rdv.requires_ants_predemande_number? && rdv_builder.ants_pre_demandes_count.to_i > 1
+  end
+
+  def should_process_proches?
+    booking_for_proche? || ants_with_proches?
+  end
+
+  # Retourne les données du/des proche(s) à traiter
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def selected_proches_data
+    return [] unless should_process_proches?
+
+    if ants_with_proches?
+      # Cas ANTS : chaque slot a un selected_id et des données par proche
+      ants_slots = @raw_proches_data
+      ants_slots.values.filter_map do |slot|
+        selected_id = slot[:selected_id] || slot["selected_id"]
+        proches_in_slot = slot[:proches] || slot["proches"] || {}
+        data = (proches_in_slot[selected_id] || proches_in_slot[selected_id.to_s] || {}).symbolize_keys
+        data[:id] = selected_id unless selected_id == "new"
+        data
+      end
+    else
+      # Cas normal : un seul proche sélectionné via radio
+      return [] if @selected_proche.blank?
+
+      data = (@raw_proches_data[@selected_proche] || @raw_proches_data[@selected_proche.to_s] || {}).symbolize_keys
+      data[:id] = @selected_proche unless @selected_proche == "new"
+      [data]
+    end
+  end
+
+  def validate_proches
+    return unless should_process_proches?
+
+    selected_proches_data.each_with_index do |attrs, index|
+      prefix = "Proche #{index + 1}"
+      errors.add(:base, "#{prefix} : le prénom doit être renseigné") if attrs[:first_name].blank?
+      errors.add(:base, "#{prefix} : le nom doit être renseigné") if attrs[:last_name].blank?
+
+      next unless ants_with_proches?
+
+      number = attrs[:ants_pre_demande_number]
+      if number.blank?
+        errors.add(:base, "#{prefix} : le numéro de pré-demande ANTS doit être renseigné")
+      elsif !number.upcase.match?(AntsPreDemandeNumberFormatValidator::REGEX)
+        errors.add(:base, "#{prefix} : le numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+      end
+    end
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+  def save_proches!
+    return unless should_process_proches?
+
+    @saved_proches = selected_proches_data.map do |attrs|
+      proche = find_or_build_proche(attrs)
+      proche.assign_attributes(attrs.slice(:first_name, :last_name, :birth_date, :ants_pre_demande_number))
+      proche.save!
+      proche.reload
+    end
+  end
+
+  def find_or_build_proche(attrs)
+    if attrs[:id].present? && attrs[:id] != "new"
+      @user.relatives.find(attrs[:id])
+    else
+      User.new(
+        responsible_id: @user.id,
+        created_through: "user_relative_creation",
+        organisation_ids: @user.organisation_ids
+      )
+    end
+  end
+
+  def saved_proches
+    @saved_proches || []
+  end
+
+  def validate_ants_pre_demandes_count
+    count = rdv_builder.ants_pre_demandes_count
+    return if count.blank?
+
+    errors.add(:base, "Veuillez choisir un nombre de pré-demandes entre 1 et 6") unless AntsPreDemandesCountValidator.count_valid?(count)
+  end
 
   def validate_phone_number_present_for_motif_by_phone
     errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
