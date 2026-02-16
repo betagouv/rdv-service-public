@@ -21,7 +21,7 @@ class AgentAuthController < ApplicationController
   end
 
   def current_agent
-    super.tap(&:preload_roles)
+    super.tap { _1&.preload_roles }
   end
 
   def current_organisation
