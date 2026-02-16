@@ -1,6 +1,6 @@
 web: PORT=3000 ./bin/start_web_server
 jobs: bundle exec good_job start
-web_rdv_solidarites: PORT=3001 bundle exec dotenv --overwrite -f ".env,.env.rdv_solidarites" puma
+web_rdv_solidarites: PORT=3001 bundle exec dotenv -f ".env.rdv_solidarites,.env" puma
 jobs_rdv_solidarites: bundle exec dotenv -f ".env,.env.rdv_solidarites" good_job start
 js: yarn build --mode=development --watch --progress
 mss_web: PORT=3010 bundle exec ruby scripts/mon_suivi_social_local.rb
