@@ -16,7 +16,7 @@ class Users::RdvBuilder
       @rdv = Rdv.new(user_ids: [@user&.id])
       @rdv.assign_attributes(@attributes.slice(:starts_at, :user_ids, :motif_id))
       @rdv.duration_in_min = duration_in_min
-      @rdv.organisation_id = @rdv.motif.organisation_id
+      @rdv.organisation_id = @rdv.motif&.organisation_id
     end
   end
 
@@ -34,6 +34,8 @@ class Users::RdvBuilder
     # sont très peu validés. Le cas d’erreur principal qui peut se produire est qu’aucun créneau ne soit
     # trouvé pour les params passés. On s’appuie donc sur ce cas pour gérer l’erreur de validation ANTS
     return nil if ants_pre_demandes_count.present? && !AntsPreDemandesCountValidator.count_valid?(ants_pre_demandes_count)
+
+    return nil if starts_at.nil? || motif.nil?
 
     @creneau ||= CreneauxSearch::ForUser.creneau_for(
       user: @user,
@@ -67,10 +69,10 @@ class Users::RdvBuilder
   def duration_in_min
     if @attributes[:duration]
       @attributes[:duration].to_i
-    elsif @attributes[:ants_pre_demandes_count].present?
+    elsif @attributes[:ants_pre_demandes_count].present? && motif.present?
       motif.default_duration_in_min * @attributes[:ants_pre_demandes_count].to_i
     else
-      motif.default_duration_in_min
+      motif&.default_duration_in_min
     end
   end
 
@@ -85,6 +87,6 @@ class Users::RdvBuilder
   end
 
   def lieu
-    @lieu ||= lieu_id.present? ? Lieu.find(lieu_id) : nil
+    @lieu ||= lieu_id.present? ? Lieu.find_by(id: lieu_id) : nil
   end
 end
