@@ -1,4 +1,6 @@
 RSpec.describe "Visioplainte Plages d'ouverture" do
+  stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!")
+
   before do
     travel_to Time.zone.local(2024, 8, 19, 8, 0, 0)
     load Rails.root.join("db/seeds/visioplainte.rb")

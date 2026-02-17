@@ -9,10 +9,16 @@ class PlageOuvertureLieuSelection {
 
   toggleLieuSelectionField(noTransition = false) {
     const selectedMotifsPublicOffice = $(".plage-ouverture-form .form-check-input.public_office[name='plage_ouverture[motif_ids][]']:checked");
-    const lieuSelectionField = $(".plage-ouverture-form .collapse.js-lieu-field").toggleClass("no-transition", noTransition);
+    const lieuSelectionField = $(".plage-ouverture-form .js-lieu-field").toggleClass("no-transition", noTransition);
+    const lieuOptions = Array.from(lieuSelectionField[0].querySelector("select").options).filter(o => o.value);
 
     if (selectedMotifsPublicOffice.length > 0) {
       lieuSelectionField.collapse("show");
+
+      // Sélectionner automatiquement le lieu s'il n'y en a qu'un seul.
+      if (lieuOptions.length === 1) {
+        $(lieuSelectionField).find(".select2-input").val(lieuOptions[0].value).trigger('change');
+      }
     } else {
       $(lieuSelectionField).find(".select2-input").val(null).trigger('change');
       lieuSelectionField.collapse("hide");

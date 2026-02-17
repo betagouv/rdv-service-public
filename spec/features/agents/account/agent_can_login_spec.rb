@@ -11,6 +11,21 @@ RSpec.describe "Agent can login" do
       .to(be_within(10.seconds).of(Time.zone.now))
   end
 
+  context "when the agent has a pro_connect_openid_sub" do
+    it "redirects to the login page with a ProConnect message when password is correct" do
+      agent = create(:agent, password: "c0rrecThorse!", pro_connect_openid_sub: "some-sub")
+      visit new_agent_session_path
+      fill_in "Adresse email", with: agent.email
+      fill_in "Mot de passe", with: "c0rrecThorse!"
+      click_on "Se connecter"
+
+      expect(page).to have_content("Connexion par mot de passe désactivée sur votre compte")
+      expect(page).to have_content("ProConnect")
+      expect(page).not_to have_content("Adresse email")
+      expect(page).not_to have_content("Mot de passe")
+    end
+  end
+
   context "when the agent's password is too weak" do
     let(:agent) do
       build(:agent, password: "tropfaible").tap do |a|
