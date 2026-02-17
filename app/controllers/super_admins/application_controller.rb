@@ -22,8 +22,6 @@ module SuperAdmins
     before_action :set_sentry_context
     after_action :verify_authorized
 
-    helper_method :sign_in_as_allowed?
-
     # Pundit configuration for Administrate
     def policy_namespace
       [:super_admin]
@@ -66,10 +64,6 @@ module SuperAdmins
       end
 
       super
-    end
-
-    def sign_in_as_allowed?
-      ENV.fetch("SIGN_IN_AS_ALLOWED", false)
     end
 
     def set_sentry_context
