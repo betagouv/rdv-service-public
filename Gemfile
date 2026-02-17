@@ -9,8 +9,10 @@ gem "rails", "8.0.4"
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
 gem "puma"
-# Bundle and transpile JavaScript in Rails with esbuild, rollup.js, or Webpack.
+# Bundle and transpile JavaScript in Rails with esbuild, rollup.js, or Bun.
 gem "jsbundling-rails"
+# Provides Bun binary via the gem, no separate install needed
+gem "bundlebun"
 # Boot large ruby/rails apps faster
 gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb
 # Middleware for enabling Cross-Origin Resource Sharing in Rack apps

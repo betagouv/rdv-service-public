@@ -35,18 +35,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          node-version-file: .node-version
-          cache: yarn
+          ruby-version: .ruby-version
+          bundler-cache: true
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lockb') }}
           path: node_modules
-      - run: yarn install --frozen-lockfile --ignore-scripts
-      - run: yarn run prettier --check .
+      - run: bin/bun install --frozen-lockfile
+      - run: bin/bun run prettier --check .
   brakeman:
     name: Security Checker
     runs-on: ubuntu-latest
@@ -145,10 +145,6 @@ jobs:
           timezoneLinux: "Europe/Paris"
       - name: Prevent https://github.com/rails/rails/issues/53661
         run: touch tmp/local_secret.txt && openssl rand -hex 64 > tmp/local_secret.txt
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -157,15 +153,15 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lockb') }}
           path: node_modules
       - name: Install JS dependencies
-        run: yarn install --frozen-lockfile --ignore-scripts
+        run: bin/bun install --frozen-lockfile
       - name: Cache precompiled assets
         id: cache-precompiled-assets
         uses: actions/cache@v4
         with:
-          key: assets-invalid-${{ hashFiles('yarn.lock', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
+          key: assets-bun-${{ hashFiles('bun.lockb', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
           path: |
             app/assets/builds
             public/assets
@@ -227,10 +223,6 @@ jobs:
       - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -239,15 +231,15 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lockb') }}
           path: node_modules
       - name: Install JS dependencies
-        run: yarn install --frozen-lockfile --ignore-scripts
+        run: bin/bun install --frozen-lockfile
       - name: Cache precompiled assets
         id: cache-precompiled-assets
         uses: actions/cache@v4
         with:
-          key: assets-invalid-${{ hashFiles('yarn.lock', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
+          key: assets-bun-${{ hashFiles('bun.lockb', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
           path: |
             app/assets/builds
             public/assets
@@ -293,10 +285,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -305,9 +293,9 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('bun.lockb') }}
           path: node_modules
-      - run: yarn install --frozen-lockfile --ignore-scripts
+      - run: bin/bun install --frozen-lockfile
       - run: bin/test_boot
         env:
           HOST: http://www.rdv-test.fr

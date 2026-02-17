@@ -26,7 +26,7 @@ test_features:  ## Run feature tests
 autocorrect: ## Fix autocorrectable lint issues
 	bundle exec rubocop --auto-correct-all
 
-clean: ## Clean temporary files (including weppacks) and logs
+clean: ## Clean temporary files (including JS builds) and logs
 	bundle exec rails log:clear tmp:clear
 
 generate_db_diagram: ## Generate docs/domain_model.svg from Rails models

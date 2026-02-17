@@ -153,6 +153,12 @@ GEM
     bullet (8.0.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
+    bundlebun (0.4.0.1.3.9-arm64-darwin)
+      json (~> 2.0)
+      zeitwerk (~> 2.5)
+    bundlebun (0.4.0.1.3.9-x86_64-linux)
+      json (~> 2.0)
+      zeitwerk (~> 2.5)
     calendav (0.5.1)
       http
       icalendar
@@ -769,6 +775,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   bullet
+  bundlebun
   calendav (~> 0.5)
   capybara
   capybara-email
@@ -893,6 +900,8 @@ CHECKSUMS
   brakeman (7.0.0) sha256=1a0122b0c70f17519a61548a53a332c0acc19e3aa10b445e15e025a4b13b8577
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   bullet (8.0.0) sha256=77f02fde19a1dfef028db42535e581b2b7b49906be5aa934494f1365a478de4d
+  bundlebun (0.4.0.1.3.9-arm64-darwin) sha256=76480c02bc97d914a9103ce0531b31e233989f6e6fca19c34c3ec4c4454c0d02
+  bundlebun (0.4.0.1.3.9-x86_64-linux) sha256=56affc95f4ea54bbf7d5e8cf028937768d5123e5e45e999d6317fe814d3564e4
   calendav (0.5.1) sha256=c685eef12b6d70f3fb66a044c7156138cfd39c05acb4668415f79b2da2fbd7b9
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   capybara-email (3.0.2) sha256=ab65dd9b15c096b1ebe24308d18d790eb08814f916883ebccbc1cf46f760696f

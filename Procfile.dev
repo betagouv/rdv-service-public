@@ -2,6 +2,6 @@ web: PORT=3000 bundle exec puma
 jobs: bundle exec good_job start
 web_rdv_solidarites: PORT=3001 bundle exec dotenv -f ".env.rdv_solidarites,.env" puma
 jobs_rdv_solidarites: bundle exec dotenv -f ".env,.env.rdv_solidarites" good_job start
-js: yarn build --mode=development --watch --progress
+js: bin/bun run --watch bun.config.js
 mss_web: PORT=3010 bundle exec ruby scripts/mon_suivi_social_local.rb
 ants_web: PORT=3020 bundle exec ruby scripts/ants_app.rb
