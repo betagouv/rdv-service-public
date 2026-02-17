@@ -17,13 +17,18 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
       .where(agent: @agent)
-      .order(updated_at: :desc)
     @plage_ouvertures = all_plage_ouvertures
       .where(expired_cached: filter_params[:current_tab] == "expired")
       .page(page_number)
     @plage_ouvertures_before_text_search = @plage_ouvertures
 
     @plage_ouvertures = @plage_ouvertures.search_by_text(params[:search]) if params[:search].present?
+
+    if filter_params[:current_tab] == "expired"
+      @plage_ouvertures.order!(first_day: :desc)
+    else
+      @plage_ouvertures.order!(first_day: :asc)
+    end
     @display_tabs = all_plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
   end
 
