@@ -4,6 +4,9 @@
   "scripts": {
     "build": "webpack --config webpack.config.js"
   },
+  "engines": {
+    "node": "20.9.0"
+  },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
