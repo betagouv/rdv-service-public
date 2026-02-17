@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# run with : ./scripts/update_playwright.sh
+# run with : ./scripts/devtools/update_playwright.sh
 
 # get gems version before updating
 get_gem_version() {

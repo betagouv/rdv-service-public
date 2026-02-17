@@ -5,13 +5,13 @@
 Télécharger un dump de prod depuis Scalingo, puis le charger en local :
 
 ```bash
- ./scripts/db_dump_load.sh nom_du_dump.pgsql
+ ./scripts/devtools/db_dump_load.sh nom_du_dump.pgsql
 ```
 
 Supprimer les données de tous les espaces sauf un + anonymiser les données à l'aide du script `tronquer_et_anonymiser_db.rb` (peut prendre quelques minutes) :
 
 ```bash
-bundle exec rails runner scripts/tronquer_et_anonymiser_db.rb ID_TERRITOIRE
+bundle exec rails runner scripts/devtools/tronquer_et_anonymiser_db.rb ID_TERRITOIRE
 ```
 
 ## 2. Copier la base locale sur la review app
