@@ -10,6 +10,9 @@ class PlageOuvertureLieuSelection {
   toggleLieuSelectionField(noTransition = false) {
     const selectedMotifsPublicOffice = $(".plage-ouverture-form .form-check-input.public_office[name='plage_ouverture[motif_ids][]']:checked");
     const lieuSelectionField = $(".plage-ouverture-form .js-lieu-field").toggleClass("no-transition", noTransition);
+    if(!lieuSelectionField[0]) {
+      return;
+    }
     const lieuOptions = Array.from(lieuSelectionField[0].querySelector("select").options).filter(o => o.value);
 
     if (selectedMotifsPublicOffice.length > 0) {
