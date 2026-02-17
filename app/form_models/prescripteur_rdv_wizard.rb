@@ -1,9 +1,12 @@
-class PrescripteurRdvWizard < UserRdvWizard::Base
+class PrescripteurRdvWizard
+  attr_reader :rdv_builder
   attr_accessor :prescripteur
+
+  delegate :motif, :starts_at, :service, :rdv, :creneau, :to_query, :lieu_id, :ants_pre_demandes_count, to: :rdv_builder
 
   def initialize(attributes, domain)
     attributes = attributes.deep_symbolize_keys
-    super(nil, attributes)
+    @rdv_builder = Users::RdvBuilder.new(nil, attributes)
     @prescripteur = Prescripteur.new(attributes[:prescripteur]) if attributes[:prescripteur].present?
     @user_attributes = attributes[:user]
     @domain = domain
@@ -14,7 +17,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     ActiveRecord::Base.transaction do
       find_or_create_user
 
-      if @rdv.collectif?
+      if rdv.collectif?
         create_participation!
       else
         create_rdv!
@@ -25,7 +28,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def params_to_selections
-    super.merge(prescripteur: 1)
+    rdv_builder.params_to_selections.merge(prescripteur: 1)
   end
 
   private
@@ -33,7 +36,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   def create_rdv!
     rdv.assign_attributes(
       created_by: @prescripteur,
-      lieu: lieu,
+      lieu: rdv_builder.lieu,
       organisation: motif.organisation,
       agents: [creneau.agent],
       participations: [participation]
@@ -48,7 +51,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def participation
-    @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: @prescripteur)
+    @participation ||= Participation.new(rdv: rdv, user: @user, created_by: @prescripteur)
   end
 
   def find_or_create_user
