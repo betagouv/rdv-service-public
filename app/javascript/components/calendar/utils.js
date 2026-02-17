@@ -27,7 +27,7 @@ export const dayHeaderContent = ({ date, view }) => {
       return new Intl.DateTimeFormat('fr-FR', CUSTOM_HEADER_FORMATS[view.type]).format(date);
     }
   }
-  // else : on retourne null et FullCalendar utilise le formateur par défaut
+  return true; // v6 : retourner true pour afficher le contenu par défaut
 };
 
 // On empêche de sélectionner plusieurs jours car ce n'est pas actuellement
@@ -60,8 +60,28 @@ export const hiddenDays = ({ displaySaturdays, displaySundays }) => {
   return hiddenDays;
 };
 
+const buttonHints = {
+  prev: (navUnit) => {
+    const labels = {
+      Jour: "Jour précédent",
+      Semaine: "Semaine précédente",
+      Mois: "Mois précédent",
+    };
+    return labels[navUnit] || "Précédent";
+  },
+  next: (navUnit) => {
+    const labels = {
+      Jour: "Jour suivant",
+      Semaine: "Semaine suivante",
+      Mois: "Mois suivant",
+    };
+    return labels[navUnit] || "Suivant";
+  },
+};
+
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
+  buttonHints,
   allDaySlot: false,
   height: "auto",
   selectable: true,
@@ -240,14 +260,15 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
   setInterval(refreshDisconnectedWarning, 500);
 };
 
-const handleAjaxError = (response) => {
+const handleAjaxError = (error) => {
   if (window.ajaxErrorHandledAt) {
     const secondsSinceLast = (Date.now() - window.ajaxErrorHandledAt) / 1000;
     if (secondsSinceLast < 60) return
   }
   window.ajaxErrorHandledAt = Date.now()
 
-  switch (response.xhr.status) {
+  const status = error.response ? error.response.status : 0;
+  switch (status) {
     case 401:
       window.location = this.calendarEl.attributes["data-sign-in-path"].value;
       break;
@@ -258,7 +279,7 @@ const handleAjaxError = (response) => {
       alert(`Le chargement du calendrier a échoué, probablement car votre connexion internet a été coupée.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
       break;
     default:
-      alert(`Le chargement du calendrier a échoué avec une erreur ${response.xhr.status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
+      alert(`Le chargement du calendrier a échoué avec une erreur ${status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
   }
 };
 
