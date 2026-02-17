@@ -56,6 +56,83 @@ RSpec.describe Users::RdvBuilder do
     expect(rdv_wizard.creneau).to eq returned_creneau
   end
 
+  context "le motif_id ne correspond à aucun motif existant" do
+    let(:attributes) do
+      {
+        starts_at: Time.zone.parse("2020-10-20 09h30"),
+        motif_id: 0,
+        lieu_id: lieu.id,
+        user_ids: [user_for_rdv.id],
+        departement: "62",
+        city_code: "62100",
+      }
+    end
+
+    it "ne lève pas d'erreurs" do
+      rdv_builder = described_class.new(user, attributes)
+      expect(rdv_builder.rdv.motif).to be_nil
+      expect(rdv_builder.rdv.organisation_id).to be_nil
+      expect(rdv_builder.rdv.duration_in_min).to be_nil
+      expect(rdv_builder.creneau).to be_nil
+    end
+  end
+
+  context "le lieu_id ne correspond à aucun lieu existant" do
+    let(:attributes) do
+      {
+        starts_at: creneau.starts_at,
+        motif_id: motif.id,
+        lieu_id: 0,
+        user_ids: [user_for_rdv.id],
+        departement: "62",
+        city_code: "62100",
+      }
+    end
+
+    it "ne lève pas d'erreurs" do
+      rdv_builder = described_class.new(user, attributes)
+      expect(rdv_builder.lieu).to be_nil
+      expect(rdv_builder.creneau).to be_nil
+    end
+  end
+
+  context "starts_at est nil" do
+    let(:attributes) do
+      {
+        starts_at: nil,
+        motif_id: motif.id,
+        lieu_id: lieu.id,
+        user_ids: [user_for_rdv.id],
+        departement: "62",
+        city_code: "62100",
+      }
+    end
+
+    it "ne lève pas d'erreurs" do
+      rdv_builder = described_class.new(user, attributes)
+      expect(rdv_builder.creneau).to be_nil
+    end
+  end
+
+  context "ants_pre_demandes_count présent mais motif inexistant" do
+    let(:attributes) do
+      {
+        starts_at: Time.zone.parse("2020-10-20 09h30"),
+        motif_id: 0,
+        lieu_id: lieu.id,
+        user_ids: [user_for_rdv.id],
+        departement: "62",
+        city_code: "62100",
+        ants_pre_demandes_count: "2",
+      }
+    end
+
+    it "ne lève pas d'erreurs" do
+      rdv_builder = described_class.new(user, attributes)
+      expect(rdv_builder.duration_in_min).to be_nil
+    end
+  end
+
   context "Rdv collectif - bookable by agents and prescripteurs" do
     let(:motif) { create(:motif, :at_public_office, organisation: organisation, bookable_by: :agents_and_prescripteurs, collectif: true) }
     let!(:rdv) { create(:rdv, motif: motif, organisation: organisation) }
