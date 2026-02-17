@@ -5,6 +5,26 @@ import fs from "fs";
 const projectRoot = import.meta.dir;
 const nodeModulesPath = path.join(projectRoot, "node_modules");
 
+const entryPointDir = path.resolve(projectRoot, "app/javascript");
+
+const globalsPlugin = {
+  name: "globals",
+  setup(build) {
+    // Prepend globals import into each entry point so that window.jQuery,
+    // window.$, etc. are set before any other code (including jQuery plugins
+    // like select2 and bootstrap that expect them as globals).
+    build.onLoad({ filter: /app\/javascript\/[^/]+\.js$/ }, (args) => {
+      // Only prepend to entry points (files directly in app/javascript/)
+      if (path.dirname(args.path) !== entryPointDir) return undefined;
+      const source = fs.readFileSync(args.path, "utf-8");
+      return {
+        contents: `import './globals.js';\n${source}`,
+        loader: "js",
+      };
+    });
+  },
+};
+
 const sassPlugin = {
   name: "sass",
   setup(build) {
@@ -56,8 +76,7 @@ const result = await Bun.build({
   define: {
     "global": "window",
   },
-  plugins: [sassPlugin],
-  inject: ["./app/javascript/globals.js"],
+  plugins: [globalsPlugin, sassPlugin],
 });
 
 if (!result.success) {
