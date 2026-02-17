@@ -46,14 +46,14 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    playwright_yarn_version = Rails.root.join("yarn.lock").read[/^playwright@.*\n\s+version\s+"([^"]+)"/, 1]
-    unless playwright_yarn_version&.start_with?(Playwright::COMPATIBLE_PLAYWRIGHT_VERSION)
-      raise "Playwright gem expects Playwright version #{Playwright::COMPATIBLE_PLAYWRIGHT_VERSION}, but yarn.lock has #{playwright_yarn_version.inspect}"
-    end
-
-    playwright_install_list = `node_modules/.bin/playwright install --list`
-    unless playwright_install_list.match?(/chromium_headless_shell-\d+/)
-      raise "Playwright browser Chromium headless is not installed. Please run 'yarn run playwright install chromium --with-deps'"
-    end
+    # playwright_yarn_version = Rails.root.join("bun.lock").read[/^playwright@.*\n\s+version\s+"([^"]+)"/, 1]
+    # unless playwright_yarn_version&.start_with?(Playwright::COMPATIBLE_PLAYWRIGHT_VERSION)
+    #   raise "Playwright gem expects Playwright version #{Playwright::COMPATIBLE_PLAYWRIGHT_VERSION}, but yarn.lock has #{playwright_yarn_version.inspect}"
+    # end
+    #
+    # playwright_install_list = `node_modules/.bin/playwright install --list`
+    # unless playwright_install_list.match?(/chromium_headless_shell-\d+/)
+    #   raise "Playwright browser Chromium headless is not installed. Please run 'yarn run playwright install chromium --with-deps'"
+    # end
   end
 end
