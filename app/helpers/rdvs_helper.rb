@@ -134,6 +134,22 @@ module RdvsHelper
     end
   end
 
+  def display_user_phone_number_for_rdv(rdv, current_agent)
+    user_numbers = rdv.users.select do |user|
+      user.phone_number.present?
+    end.map do |user|
+      "#{user.full_name} au #{phone_to(user.humanized_phone_number)}"
+    end.to_sentence(two_words_connector: " ou ", last_word_connector: " ou ")
+
+    verb = if current_agent.in?(rdv.agents)
+             "vous pouvez appeler"
+           else
+             "l'agent peut appeler"
+           end
+
+    sanitize("RDV téléphonique : #{verb} #{user_numbers}.")
+  end
+
   private
 
   def rdv_individuel_title_for_agent(rdv)
