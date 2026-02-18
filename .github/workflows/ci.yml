@@ -43,7 +43,7 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('bun.lockb') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
       - run: bin/bun install --frozen-lockfile
       - run: bin/bun run prettier --check .
@@ -153,7 +153,7 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('bun.lockb') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
       - name: Install JS dependencies
         run: bin/bun install --frozen-lockfile
@@ -161,7 +161,7 @@ jobs:
         id: cache-precompiled-assets
         uses: actions/cache@v4
         with:
-          key: assets-bun-${{ hashFiles('bun.lockb', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
+          key: assets-bun-${{ hashFiles('bun.lock', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
           path: |
             app/assets/builds
             public/assets
@@ -231,7 +231,7 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('bun.lockb') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
       - name: Install JS dependencies
         run: bin/bun install --frozen-lockfile
@@ -239,7 +239,7 @@ jobs:
         id: cache-precompiled-assets
         uses: actions/cache@v4
         with:
-          key: assets-bun-${{ hashFiles('bun.lockb', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
+          key: assets-bun-${{ hashFiles('bun.lock', 'Gemfile.lock', 'app/javascript/**', 'app/assets/**') }}
           path: |
             app/assets/builds
             public/assets
@@ -293,7 +293,7 @@ jobs:
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
-          key: node_modules-${{ hashFiles('bun.lockb') }}
+          key: node_modules-${{ hashFiles('bun.lock') }}
           path: node_modules
       - run: bin/bun install --frozen-lockfile
       - run: bin/test_boot
