@@ -13,6 +13,10 @@
     - else
       p.fr-text--bold.fr-mb-0
         | Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.
+      - if context.organisation_id.present?
+        - organisation = Organisation.find(context.organisation_id)
+        = render "/users/organisations/contact_info", organisation: organisation
+
       - if context.first_matching_motif&.requires_ants_predemande_number?
         .fr-callout.fr-mt-4w
           h3.fr-callout__title Élargissez votre recherche
