@@ -7,7 +7,7 @@ header.main-content__header role="banner"
   div
     - if agent.invitation_accepted_at.nil? && agent.password.nil?
       => link_to "Inviter", invite_super_admins_agent_path(agent), method: :post, class: "button", data: { disable_with: "Veuillez patienter…"} if accessible_action?(agent, :invite)
-    - if sign_in_as_allowed? && !agent.is_an_intervenant?
+    - unless agent.is_an_intervenant?
       => link_to "Se logger en tant que", sign_in_as_super_admins_agent_path(agent), class: "button" if accessible_action?(agent, :sign_in_as)
     => link_to("Modifier", [:edit, namespace, agent], class: "button") if accessible_action?(agent, :edit)
     => link_to("Migrer", new_super_admins_agent_migration_path(agent_id: agent.id), class: "button")
