@@ -1,4 +1,4 @@
-RSpec.describe "Informatiosn de contact d'une structure lors de la réservation en ligne", js: true do
+RSpec.describe "Informations de contact d'une structure lors de la réservation en ligne", js: true do
   let!(:motif) { create(:motif, name: "Suivi de dossier", organisation:) }
   let(:organisation) { create(:organisation, :with_contact) }
 
