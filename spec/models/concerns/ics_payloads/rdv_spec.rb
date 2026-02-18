@@ -12,7 +12,7 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       let(:user) { build(:user) }
       let(:rdv) { build(:rdv, users: [user], starts_at: Time.zone.parse("20201123 15h50")) }
 
-      it { expect(rdv.payload[:name]).to eq("rdv-#{rdv.uuid}-2020-11-23-15-50-00-0100.ics") }
+      it { expect(rdv.payload[:name]).to eq("rdv-#{rdv.motif.name.parameterize}-2020-11-23-15h50.ics") }
     end
 
     describe ":starts_at" do
