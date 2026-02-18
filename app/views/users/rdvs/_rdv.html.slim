@@ -67,7 +67,7 @@ ul.list-group.list-group-flush.fr-mb-3w.fr-mt-0
 
   = render "/users/rdvs/file_attente", rdv: rdv
 
-= render "/users/organisations/contact_info", organisation: rdv.organisation
+= render "/users/organisations/contact_info", phone_number: rdv.phone_number, organisation: rdv.organisation
 
 / Check for authorizations and already cancelled rdv/participation
 - unless policy(rdv, policy_class: User::RdvPolicy).cancel? || \
