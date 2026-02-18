@@ -2,7 +2,7 @@
   "name": "lapin",
   "private": true,
   "scripts": {
-    "build": "bun run bun.config.js"
+    "build": "bin/bun run bun.config.js"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",

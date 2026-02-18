@@ -25,6 +25,23 @@ const globalsPlugin = {
   },
 };
 
+const select2Plugin = {
+  name: "select2-init",
+  setup(build) {
+    // select2's UMD wrapper, when bundled by Bun, enters the CommonJS branch
+    // and sets module.exports = factory without calling it. This leaves
+    // jQuery.fn.select2 uninitialized, breaking the i18n file which checks
+    // jQuery.fn.select2.amd. Appending a self-call forces initialization.
+    build.onLoad({ filter: /select2\/dist\/js\/select2(\.full)?\.min\.js$/ }, (args) => {
+      const source = fs.readFileSync(args.path, "utf-8");
+      return {
+        contents: source + "\nif (typeof module.exports === 'function') module.exports();",
+        loader: "js",
+      };
+    });
+  },
+};
+
 const sassPlugin = {
   name: "sass",
   setup(build) {
@@ -76,7 +93,7 @@ const result = await Bun.build({
   define: {
     "global": "window",
   },
-  plugins: [globalsPlugin, sassPlugin],
+  plugins: [globalsPlugin, select2Plugin, sassPlugin],
 });
 
 if (!result.success) {

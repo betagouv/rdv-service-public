@@ -6,8 +6,8 @@ import "@hotwired/turbo-rails"
 Turbo.session.drive = false
 
 import 'bootstrap'
-// import 'select2/dist/js/select2.full.min.js'
-// import 'select2/dist/js/i18n/fr.js'
+import 'select2/dist/js/select2.full.min.js'
+import 'select2/dist/js/i18n/fr.js'
 import { Datetimepicker } from './components/datetimepicker'
 import { Menu } from './components/menu'
 import { Modal } from './components/modal'
@@ -26,7 +26,7 @@ import { RecurrenceForm } from './components/recurrence-form.js'
 import { MergeUsersForm } from './components/merge-users-form.js'
 import { SectorAttributionForm } from './components/sector-attribution-form.js'
 import { ZoneForm } from './components/zone-form.js'
-// import { initializeSelect2 } from './components/select2-inputs'
+import { initializeSelect2 } from './components/select2-inputs'
 import { PlanningAgentSelect } from './components/planning-agent-select'
 import { planningAgentsSelect } from './components/planning-agents-select'
 import { AgendaMonoAgent } from './components/calendar'
@@ -57,11 +57,11 @@ Stimulus.register('dependent-input', DependentInputController)
 import './stylesheets/print'
 import './stylesheets/application_agent'
 
-// $.fn.select2.defaults.set("theme", "bootstrap4")
-// $.fn.select2.defaults.set("language", "fr")
+$.fn.select2.defaults.set("theme", "bootstrap4")
+$.fn.select2.defaults.set("language", "fr")
 
 new Modal()
-// initializeSelect2()
+initializeSelect2()
 new ServiceFilterForMotifsSelects()
 
 global.$ = require('jquery')
