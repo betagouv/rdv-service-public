@@ -24,7 +24,9 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def new
+    @organisations_to_select = current_agent.organisations.where(territory: current_territory).ordered_by_name
     @agent = Agent.new
+    @agent.organisations = [@organisations_to_select.sole] if @organisations_to_select.size == 1
     skip_authorization
     # l’agent n’étant pas lié à un espace la policy ne fonctionne pas
     # Admin::Territories::BaseController#set_territory limite néanmoins l’accès à cette page aux admins du espace

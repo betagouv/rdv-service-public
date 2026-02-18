@@ -65,7 +65,7 @@ RSpec.describe CronJob::DestroyOldAbsencesJob do
 
     described_class.new.perform
 
-    expect(enqueued_jobs.last["job_class"]).to eq("WebhookSendJob")
+    expect(enqueued_jobs.last["job_class"]).to eq("WebhookJob")
     expect(JSON.parse(enqueued_jobs.last["arguments"].first)["data"]["id"]).to eq(absence.id)
   end
 end

@@ -64,6 +64,7 @@ fr:
               invalid_format: doit comporter 10 chiffres et lettres
               unexpected_api_error: n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.
             phone_number:
+              invalid: "Le numéro de téléphone n'est pas valide"
               missing_for_phone_motif: "Le numéro de téléphone est obligatoire car le RDV aura lieu par téléphone"
               format: "%{message}"
     warnings:

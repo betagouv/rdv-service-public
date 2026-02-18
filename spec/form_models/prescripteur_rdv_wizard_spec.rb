@@ -55,12 +55,29 @@ RSpec.describe PrescripteurRdvWizard do
       create(:user, first_name: "Lea", last_name: "BOUBAKAR", phone_number: "0611223344")
     end
 
-    it "adds the rdv to the user" do
-      wizard = described_class.new(attributes, Domain::ALL.first)
-      expect { wizard.create! }.to change(Rdv, :count).by(1)
+    context "when the user is within the motif's organisation's territory" do
+      before { user.update!(organisations: [create(:organisation, territory: organisation.territory)]) }
 
-      expect(Rdv.last.users.first).to eq(user)
-      expect(user.reload.created_through).to eq("user_sign_up")
+      it "reuses the existing mathing user" do
+        wizard = described_class.new(attributes, Domain::ALL.first)
+        expect { wizard.create! }.to change(Rdv, :count).by(1).and(change(User, :count).by(0))
+
+        expect(Rdv.last.users.first).to eq(user)
+        expect(user.reload.created_through).to eq("user_sign_up")
+      end
+    end
+
+    context "when the user is outside the motif's organisation's territory" do
+      before { user.update!(organisations: [create(:organisation, territory: create(:territory))]) }
+
+      it "creates a new user" do
+        wizard = described_class.new(attributes, Domain::ALL.first)
+        expect { wizard.create! }.to change(Rdv, :count).by(1).and(change(User, :count).by(1))
+
+        created_user = Rdv.last.users.first
+        expect(created_user).not_to eq(user)
+        expect(created_user.created_through).to eq("prescripteur")
+      end
     end
   end
 

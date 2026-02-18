@@ -45,7 +45,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
     shared_examples "existing agent is added to organization" do
       it "adds agent to organisation and redirects to the agents list and does not create a new agent" do
         expect { subject }.not_to change(Agent, :count)
-        expect(existing_agent.organisation_ids).to include(organisation.id)
+        expect(existing_agent.reload.organisation_ids).to include(organisation.id)
         expect(response).to redirect_to(admin_organisation_agents_path(organisation.id))
       end
     end

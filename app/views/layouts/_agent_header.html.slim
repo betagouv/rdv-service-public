@@ -1,8 +1,6 @@
 header.header.bg-white
   = render "layouts/rdv_solidarites_instance_name"
   = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-  = render "layouts/pro_connect_migration_notice"
-
   nav.navbar.navbar-expand-lg.bg-transparent.navbar-dsfr[role="navigation" aria-label="navigation"]
     = link_to root_path, class: "header-brand ml-4" do
       = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr logo-dsfr--compactable"
@@ -17,7 +15,7 @@ header.header.bg-white
               | Nouveautés
               - if BlogPost.new_content_for_agent?(current_agent)
                 .ml-1.fr-badge.fr-badge--new.fr-badge--sm.fr-pl-3v
-          - elsif defined?(current_organisation) && current_organisation && current_agent.organisations.count <= 1 && current_agent.admin_in_organisation?(current_organisation)
+          - elsif defined?(current_organisation) && current_organisation && current_agent.organisations_count <= 1 && current_agent.admin_in_organisation?(current_organisation)
             = link_to "Passer à RDV Service Public", admin_organisation_instance_exports_path(current_organisation), class: "btn text-primary-blue link-dsfr"
 
         li#rdv-account-dropdown.list-inline-item.dropdown.mr-2

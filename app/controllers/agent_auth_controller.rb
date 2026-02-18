@@ -20,6 +20,10 @@ class AgentAuthController < ApplicationController
     @organisation = current_organisation
   end
 
+  def current_agent
+    super.tap { _1&.preload_roles }
+  end
+
   def current_organisation
     @current_organisation ||= Organisation.find(params[:organisation_id])
   end
