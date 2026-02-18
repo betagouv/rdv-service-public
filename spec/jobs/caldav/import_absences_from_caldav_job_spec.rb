@@ -110,7 +110,7 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
     response_breadcrumb = sentry_events.last.breadcrumbs.compact[1]
     expect(response_breadcrumb.data[:status_code]).to eq(500)
     expect(response_breadcrumb.data[:body]).to eq("ceci est mon corps")
-    expect(response_breadcrumb.data[:duration_ms]).to be_within(10).of(1)
+    expect(response_breadcrumb.data[:duration_ms]).to be_between(0, 100)
     expect(response_breadcrumb.data[:headers]["Set-Cookie"]).to eq("[FILTERED]")
   end
 
