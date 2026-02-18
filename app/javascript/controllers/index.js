@@ -21,3 +21,6 @@ application.register("rdv-plan", RdvPlanController)
 
 import LagaufreController from "./lagaufre"
 application.register("lagaufre", LagaufreController)
+
+import ProcheToogleController from "./proche_toggle_controller"
+application.register("proche-toggle", ProcheToogleController)

@@ -87,7 +87,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("S'inscrire")
         click_link("Revenir en arrière")
         click_link("S'inscrire")
-        find(:label, text: "Je prends rendez-vous pour un proche").click
+        check("Je prends rendez-vous pour un proche", allow_label_click: true)
         within(find("div", class: "fr-fieldset__element", text: /Informations du proche/)) do
           fill_in "Prénom", with: "Francis"
           fill_in "Nom", with: "Factice"

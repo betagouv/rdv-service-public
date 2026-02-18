@@ -18,6 +18,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_wizard = @rdv_builder # pour les vues qui utilisent encore ce nom de variable
     @rdv = @rdv_builder.rdv
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain)
+    @rdv_booking_form.booking_for_proche = "1" if params[:booking_for_proche] == "1"
     authorize(@rdv, policy_class: User::RdvPolicy)
     if @rdv_builder.creneau.present?
       render :new
@@ -36,6 +37,17 @@ class Users::RdvWizardStepsController < UserAuthController
       user: current_user, rdv_builder: @rdv_builder,
       domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys
     )
+    toggle_proche =
+      if params[:enable_proche_section].present?
+        "1"
+      elsif params[:disable_proche_section].present?
+        "0"
+      end
+    if toggle_proche
+      @rdv_booking_form.booking_for_proche = toggle_proche
+      render :new
+      return
+    end
 
     if @rdv_booking_form.save
       create_rdv_and_redirect
@@ -82,6 +94,8 @@ class Users::RdvWizardStepsController < UserAuthController
                     :ants_pre_demande_number,
                     :ignore_benign_errors,
                     :booking_for_proche,
+                    :enable_proche_section,
+                    :disable_proche_section,
                     :selected_proche,
                     { user_profiles_attributes: %i[logement id organisation_id] },
                     { proches: {} },

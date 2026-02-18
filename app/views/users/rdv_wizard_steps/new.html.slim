@@ -12,7 +12,8 @@
 
           /! Section proches (cas normal non-ANTS)
           - unless @skip_proches_step || @rdv.requires_ants_predemande_number?
-            = render "proche_section", f: f
+            = turbo_frame_tag "proche-section" do
+              = render "proche_section", f: f
 
           /! Section proches ANTS (n >= 2 pré-demandes)
           - if @rdv.requires_ants_predemande_number? && !@skip_proches_step
