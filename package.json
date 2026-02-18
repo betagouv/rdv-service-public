@@ -4,6 +4,9 @@
   "scripts": {
     "build": "webpack --config webpack.config.js"
   },
+  "engines": {
+    "node": "20.9.0"
+  },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
@@ -24,6 +27,7 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartkick": "^5.0.1",
     "custom-event-polyfill": "^1.0.7",
+    "date-fns": "^4.1.0",
     "jquery": "^3.4.0",
     "jquery-datetimepicker": "^2.5.21",
     "kind-of": ">=6.0.3",
@@ -47,5 +51,6 @@
   },
   "browserslist": [
     "cover 98.0% in FR and not dead"
-  ]
+  ],
+  "packageManager": "yarn@4.12.0"
 }
