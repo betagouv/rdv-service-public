@@ -1,0 +1,4 @@
+#!/bin/bash
+
+bundle exec "$@"
+bundle exec dotenv -f ".env.rdv_solidarites,.env" "$@"

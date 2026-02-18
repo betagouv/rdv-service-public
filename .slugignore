@@ -1,4 +1,5 @@
 spec
 docs
 /tmp/cache
+/scripts/devtools
 /.cache/yarn

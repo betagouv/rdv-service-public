@@ -1,7 +1,7 @@
-# USAGE : ./bin/bundle exec ruby scripts/ants_app.rb
+# USAGE : ./bin/bundle exec ruby scripts/devtools/ants_app.rb
 #
 # for livereload :
-# gem install rerun && cd scripts && rerun ../bin/bundle exec ruby ants_app.rb
+# gem install rerun && cd scripts/devtools && rerun ../bin/bundle exec ruby ants_app.rb
 
 require "sinatra"
 require "net/http"
