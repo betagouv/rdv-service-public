@@ -157,6 +157,7 @@ tables:
       - max_participants_count
       - users_count
       - status
+      - minutes_after_rdv
 
   - table_name: receipts
     anonymized_column_names:
@@ -279,6 +280,7 @@ tables:
       - recurrence
       - expired_cached
       - recurrence_ends_at
+      - minutes_between_rdvs
 
   - table_name: webhook_endpoints
     anonymized_column_names:
