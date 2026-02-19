@@ -2,7 +2,7 @@
 ruby:
   relatives = current_user.relatives.order(:first_name)
   submitted = @rdv_booking_form.submitted_proches_data
-  booking_for_proche = @rdv_booking_form.booking_for_proche.to_s == "1"
+  booking_for_proche = @rdv_booking_form.booking_for_proche?
   enable_url = new_users_rdv_wizard_step_path(**@rdv_wizard.to_query, booking_for_proche: "1")
   disable_url = new_users_rdv_wizard_step_path(**@rdv_wizard.to_query)
 

@@ -20,7 +20,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_wizard = @rdv_builder # pour les vues qui utilisent encore ce nom de variable
     @rdv = @rdv_builder.rdv
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain)
-    @rdv_booking_form.booking_for_proche = "1" if params[:booking_for_proche] == "1"
+    @rdv_booking_form.booking_for_proche = true if params[:booking_for_proche] == "1"
     authorize(@rdv, policy_class: User::RdvPolicy)
   end
 
@@ -61,14 +61,13 @@ class Users::RdvWizardStepsController < UserAuthController
     # la versions sans JS affiche deux boutons submit supplémentaires avec des name différents
     # lorsque l'usager clique dessus, on toggle le form et on re-render le #new
     # cela permet de conserver ce qu'il avait déjà renseigné dans les champs du formulaire
-    toggle_proche =
-      if params[:enable_proche_section].present?
-        "1"
-      elsif params[:disable_proche_section].present?
-        "0"
-      end
-    if toggle_proche
-      @rdv_booking_form.booking_for_proche = toggle_proche
+    if params[:enable_proche_section].present? || params[:disable_proche_section].present?
+      @rdv_booking_form.booking_for_proche =
+        if params[:enable_proche_section].present?
+          true
+        elsif params[:disable_proche_section].present?
+          false
+        end
       render :new
       true
     end

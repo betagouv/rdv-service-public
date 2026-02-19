@@ -40,7 +40,6 @@ class Users::RdvBookingForm
     false
   end
 
-  # Retourne les users pour le RDV
   def users_for_rdv
     if ants_with_proches?
       [@user] + saved_proches
@@ -51,10 +50,7 @@ class Users::RdvBookingForm
     end
   end
 
-  # Données des proches soumises (pour ré-affichage après erreur de validation)
-  def submitted_proches_data
-    @raw_proches_data
-  end
+  def submitted_proches_data = @raw_proches_data
 
   def show_birth_date_field? = !signed_in_with_invitation_token? && rdv.territory&.enable_birth_date_field?
 
@@ -78,17 +74,13 @@ class Users::RdvBookingForm
 
   private
 
-  def booking_for_proche?
-    @booking_for_proche.to_s == "1"
-  end
+  def booking_for_proche? = @booking_for_proche
 
   def ants_with_proches?
     rdv.requires_ants_predemande_number? && rdv_builder.ants_pre_demandes_count.to_i > 1
   end
 
-  def should_process_proches?
-    booking_for_proche? || ants_with_proches?
-  end
+  def should_process_proches? = booking_for_proche? || ants_with_proches?
 
   # Retourne les données du/des proche(s) à traiter
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
