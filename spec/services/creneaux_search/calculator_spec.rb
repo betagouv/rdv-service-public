@@ -116,6 +116,19 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         expect(slots.map(&:starts_at).map(&:hour)).to eq([10])
       end
     end
+
+    context "when there is a cooldown period for the plage ouverture" do
+      before do
+        create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 30.minutes, lieu: lieu, minutes_between_rdvs: 30)
+      end
+
+      it "returns 2 créneaux of 60mn with a 30 mn cooldown" do
+        creneaux = described_class.available_slots(motif:, lieu:, date_range:)
+        expect(creneaux.first.duration_in_min).to eq 60
+
+        expect(creneaux.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:30"])
+      end
+    end
   end
 
   describe "#plage_ouvertures_for" do
