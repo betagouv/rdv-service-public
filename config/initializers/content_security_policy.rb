@@ -23,6 +23,9 @@ lasuite = "lasuite.numerique.gouv.fr"
 
 # Utilisés par swagger pour la documentation de l'api
 swagger_shas = ["'sha256-j4Lx1FqFgvYDBEjW7NQaEY7/HhCi8WVsLWkqC4+wJ3w='", "'sha256-JHKToH7KbGJj6TloPeWnKnbImDel00Whl1rRnBiTYuQ='"]
+# Chargés via unpkg sur les pages de sectorisation (mapbox) et de stats (maplibre)
+mapbox_js_sha = "'sha384-0Zom4D5ryhUWYPBjopSgMAhn3l450eTuFZQypqbSBUPQuS2m2bdUsqi0IYDVgyi6'"
+maplibre_js_sha = "'sha384-bLkmUMwRt9nFp2+XvlPOzIkNUx/mnjvxxE7kI6bJWKMz/sfwiK5nra6w+60B9zyF'"
 
 # Tant qu'on utilise les Turbolinks, c'est très difficile d'avoir des CSP différentes pour chaque pages,
 # puisque les CSP sont uniquement chargées lors de la première requête qui charle le premier document,
@@ -37,11 +40,11 @@ Rails.application.config.content_security_policy do |policy|
   policy.worker_src :blob
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, metabase
-  policy.img_src :self, :data, :blob, tiles_osm, unpkg_cdn, tiles_data_gouv, lasuite
+  policy.img_src :self, :data, :blob, tiles_osm, tiles_data_gouv, lasuite
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv, lasuite
 
-  policy.script_src :self, unpkg_cdn, *swagger_shas
+  policy.script_src :self, mapbox_js_sha, maplibre_js_sha, *swagger_shas
 end
 
 # If you are using UJS then enable automatic nonce generation
