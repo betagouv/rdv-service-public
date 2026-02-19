@@ -28,20 +28,17 @@ module Users
         if Agent.exists?(email:)
           <<~ERROR
             Aucun compte usager n’existe pour cet email.
-            Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur
-            <a href="#{Rails.application.routes.url_helpers.new_agent_session_path(agent: { email: })}">
-              la page de connexion agents
-            </a>.
+            Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.
           ERROR
         else
           "Aucun compte usager n’existe pour cet email"
         end
-      errors.add(:base, error.html_safe) # rubocop:disable Rails/OutputSafety
+      errors.add(:base, error)
     end
 
     def validate_not_sent_too_recently
       if LoginCode.most_recent_usable_for(email:)&.very_recent?
-        errors.add(:base, <<~ERROR.html_safe) # rubocop:disable Rails/OutputSafety
+        errors.add(:base, <<~ERROR.sanitize)
           Un code a été envoyé à #{email} il y a moins de deux minutes.
           Vous devriez recevoir ce code d’ici peu de temps.
           <a href="#{Rails.application.routes.url_helpers.new_users_sessions_by_code_path(email:)}">
