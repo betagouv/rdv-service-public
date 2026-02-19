@@ -118,15 +118,29 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     end
 
     context "when there is a cooldown period for the plage ouverture" do
-      before do
-        create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 30.minutes, lieu: lieu, minutes_between_rdvs: 30)
+      context "and there is enough time for two creneaux" do
+        before do
+          create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12), lieu: lieu, minutes_between_rdvs: 30)
+        end
+
+        it "returns 2 créneaux of 60mn with a 30 mn cooldown" do
+          creneaux = described_class.available_slots(motif:, lieu:, date_range:)
+          expect(creneaux.first.duration_in_min).to eq 60
+
+          expect(creneaux.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:30"])
+        end
       end
 
-      it "returns 2 créneaux of 60mn with a 30 mn cooldown" do
-        creneaux = described_class.available_slots(motif:, lieu:, date_range:)
-        expect(creneaux.first.duration_in_min).to eq 60
+      context "and there is enought time for two rdvs but not for the cooldown" do
+        before do
+          create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), lieu: lieu, minutes_between_rdvs: 30)
+        end
 
-        expect(creneaux.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:30"])
+        it "only returns 1 créneaux" do
+          creneaux = described_class.available_slots(motif:, lieu:, date_range:)
+          expect(creneaux.first.duration_in_min).to eq 60
+          expect(creneaux.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00"])
+        end
       end
     end
   end
