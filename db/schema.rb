@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_19_141217) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -582,6 +582,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
     t.datetime "recurrence_ends_at"
     t.time "secondary_start_time"
     t.time "secondary_end_time"
+    t.integer "cooldown", default: 0, null: false
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
