@@ -35,6 +35,9 @@
         = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", required: true, label: "Adresse email", autocomplete: "email"
         .rdv-text-align-center
           = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn rdv-width-100 rdv-width-md-auto"
+          - if @login_code_request_form.errors[:base].any? { _1.to_s.match(/Un code a été envoyé .* il y a moins de deux minutes/) }
+            .fr-my-2w
+              = link_to "Saisir un code reçu", new_users_sessions_by_code_path(email: @login_code_request_form.email), class: "fr-btn fr-btn--secondary"
           .fr-mt-4w.fr-mb-2w.fr-text--sm
             |> Vous pouvez aussi vous
             = link_to "connecter par mot de passe", new_user_session_path(with_password: true)
