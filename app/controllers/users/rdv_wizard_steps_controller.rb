@@ -131,8 +131,8 @@ class Users::RdvWizardStepsController < UserAuthController
       flash[:success] = t("users.rdvs.create.rdv_confirmed")
       redirect_to users_rdv_path(rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
     else
-      flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to prendre_rdv_path(@rdv_builder.to_query)
+      flash[:error] = "Une erreur a empêché la confirmation de votre RDV"
+      render :new
     end
   end
 
