@@ -2,7 +2,7 @@ class Creneau
   include ActiveModel::Model
   include Comparable
 
-  attr_accessor :starts_at, :lieu_id, :motif, :agent
+  attr_accessor :starts_at, :lieu_id, :motif, :agent, :minutes_after_rdv
   attr_writer :duration_in_min
 
   delegate :full_name, to: :lieu, prefix: true, allow_nil: true
@@ -11,6 +11,7 @@ class Creneau
     Rdv.new(
       agents: [agent],
       duration_in_min: duration_in_min,
+      minutes_after_rdv: minutes_after_rdv,
       starts_at: starts_at,
       organisation: motif.organisation,
       motif: motif,

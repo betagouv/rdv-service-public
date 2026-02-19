@@ -86,7 +86,7 @@ class Rdv < ApplicationRecord
     # On fait un where plutôt que d'utiliser directement l'association pour éviter des effets de bords sur les objets AR.
     AgentsRdv.where(rdv_id: id).update_all(
       calculator_rdv_starts_at: starts_at,
-      calculator_rdv_ends_at: ends_at,
+      calculator_rdv_ends_at: ends_at + minutes_after_rdv.minutes,
       calculator_rdv_not_cancelled_and_in_the_future: not_cancelled_and_in_the_future?
     )
   end
