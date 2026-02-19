@@ -1,6 +1,6 @@
 json = {
   start: rdv.starts_at.as_json,
-  end: (rdv.ends_at + rdv.minutes_after_rdv.minutes).as_json,
+  end: rdv.ends_at.as_json,
 
   id: rdv.id,
   title: sanitize(rdv_title_in_agenda(rdv)),
