@@ -8,11 +8,11 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       end
     end
 
-    describe ":name" do
+    describe ":attachement_filename" do
       let(:user) { build(:user) }
       let(:rdv) { build(:rdv, users: [user], starts_at: Time.zone.parse("20201123 15h50")) }
 
-      it { expect(rdv.payload[:name]).to eq("rdv-#{rdv.motif.name.parameterize}-2020-11-23-15h50.ics") }
+      it { expect(rdv.payload[:attachement_filename]).to eq("rdv-#{rdv.motif.name.parameterize}-2020-11-23-15h50.ics") }
     end
 
     describe ":starts_at" do

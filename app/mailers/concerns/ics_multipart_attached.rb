@@ -50,7 +50,7 @@ module IcsMultipartAttached
     # Google calendar puts the text/calendar inside the multipart/alternative part.
     # We might want to try that too.
 
-    message.attachments[ics_payload[:name]] = {
+    message.attachments[ics_payload[:attachement_filename]] = {
       mime_type: "application/ics",
       content: Base64.encode64(cal.to_ical),
       encoding: "base64",

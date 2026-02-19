@@ -16,10 +16,10 @@ RSpec.describe IcsPayloads::Absence do
       end
     end
 
-    describe ":name" do
+    describe ":attachement_filename" do
       let(:absence) { create(:absence, agent:, title: "something", start_time: Time.zone.parse("12h30"), first_day: Date.new(2020, 11, 13)) }
 
-      it { expect(absence.payload[:name]).to eq("absence-something-2020-11-13-12-30-00-0100.ics") }
+      it { expect(absence.payload[:attachement_filename]).to eq("absence-something-2020-11-13-12-30-00-0100.ics") }
     end
 
     describe ":starts_at" do
