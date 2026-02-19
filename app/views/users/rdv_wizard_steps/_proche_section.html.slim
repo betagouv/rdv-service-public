@@ -10,13 +10,13 @@ ruby:
   /! Boutons sans JS (masqués par Stimulus au chargement)
   div data-proche-toggle-target="noJsToggle"
     - if booking_for_proche
-      = f.submit "Je souhaite prendre rendez-vous pour moi-même", name: "disable_proche_section", class: "fr-link"
+      = f.submit "Je prends rendez-vous pour moi-même", name: "disable_proche_section", class: "fr-link"
     - else
-      = f.submit "Je souhaite prendre rendez-vous pour un·e proche", name: "enable_proche_section", class: "fr-link"
+      = f.submit "Je prends rendez-vous pour un·e proche", name: "enable_proche_section", class: "fr-link"
 
   /! Checkbox JS uniquement (masquée par défaut, révélée par Stimulus)
   div data-proche-toggle-target="jsToggle" style="display: none;"
-    = f.dsfr_check_box :booking_for_proche, label: "Je prends rendez-vous pour un proche", data: { action: "change->proche-toggle#toggle" }
+    = f.dsfr_check_box :booking_for_proche, label: "Je prends rendez-vous pour un·e proche", data: { action: "change->proche-toggle#toggle" }
 
   /! Champs du proche (visibles seulement si booking_for_proche)
   - if booking_for_proche

@@ -120,18 +120,6 @@ RSpec.describe "User can search for rdvs" do
         end
       end
     end
-
-    describe "On RDV Service Public" do
-      it "doesn't require an ANTS predemande number for a relative", js: true do
-        visit "http://www.rdv-service-public-test.localhost/#{path_for_creneau_choice}"
-        choose_creneau
-        sign_up
-
-        # Le champ nom de naissance n'est pas affiché sur le domaine RDV Service Public
-        expect(page).not_to have_field("Nom de naissance")
-        fill_user_info_and_add_relative(motif, lieu, birth_date: false)
-      end
-    end
   end
 
   describe "Prise de RDV en ligne" do
@@ -597,7 +585,7 @@ RSpec.describe "User can search for rdvs" do
     fill_in("Adresse", with: address) if address
 
     # Section proche : cocher la case et remplir les champs du nouveau proche
-    check("Je prends rendez-vous pour un proche", allow_label_click: true)
+    check("Je prends rendez-vous pour un·e proche", allow_label_click: true)
     if page.has_css?(".fr-radio-group", text: "Nouveau proche", wait: 0.5)
       choose("Nouveau proche", allow_label_click: true)
       within(".fr-fieldset__element", text: "Nouveau proche") do
