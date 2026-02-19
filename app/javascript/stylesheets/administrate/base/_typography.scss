@@ -1,3 +1,5 @@
+@use "sass:color";
+
 body {
   color: $base-font-color;
   font-family: $base-font-family;
@@ -27,7 +29,7 @@ a {
   transition: color $base-duration $base-timing;
 
   &:hover {
-    color: mix($black, $action-color, 25%);
+    color: color.mix($black, $action-color, 25%);
   }
 
   &:focus {

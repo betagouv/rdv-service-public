@@ -1,3 +1,5 @@
+@use "sass:color";
+
 button,
 input[type="button"],
 input[type="reset"],
@@ -23,7 +25,7 @@ input[type="submit"],
   white-space: nowrap;
 
   &:hover {
-    background-color: mix($black, $action-color, 20%);
+    background-color: color.mix($black, $action-color, 20%);
     color: $white;
   }
 

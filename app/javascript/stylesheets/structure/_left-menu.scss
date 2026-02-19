@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .content-and-left-menu-wrapper {
   display: flex;
   flex-direction: column;
@@ -34,7 +36,7 @@
       font-weight: 500;
 
       &:hover {
-        background-color: darken($bg-leftbar, 5%);
+        background-color: color.adjust($bg-leftbar, $lightness: -5%);
       }
 
       &:active,
@@ -71,7 +73,7 @@
   }
 
   .current-organisation {
-    background-color: lighten($bg-leftbar, 10%);
+    background-color: color.adjust($bg-leftbar, $lightness: 10%);
     font-size: 1.125rem;
     border-top: 1px solid $card-border-color;
     border-bottom: 1px solid $card-border-color;

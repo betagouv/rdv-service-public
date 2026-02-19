@@ -1,4 +1,5 @@
 @use "sass:math";
+@use "sass:color";
 
 // Bootstrap Variables
 
@@ -160,7 +161,7 @@ $body-color: $gray-900;
 // Style anchor elements.
 
 $link-color: $primary;
-$link-hover-color: darken($link-color, 15%);
+$link-hover-color: color.adjust($link-color, $lightness: -15%);
 $link-hover-decoration: none;
 
 // Components
@@ -224,7 +225,7 @@ $table-head-bg: $gray-100;
 $table-head-color: $gray-700;
 
 $table-dark-bg: $gray-900;
-$table-dark-border-color: lighten($gray-900, 7.5%);
+$table-dark-border-color: color.adjust($gray-900, $lightness: 7.5%);
 $table-dark-color: $gray-600;
 
 // Buttons + Forms
@@ -296,7 +297,7 @@ $input-border-radius-md: $input-border-radius;
 $input-border-radius-lg: $input-border-radius;
 
 $input-focus-box-shadow: none;
-$input-focus-border-color: darken($input-border-color, 10%);
+$input-focus-border-color: color.adjust($input-border-color, $lightness: -10%);
 
 $input-placeholder-color: #6c747c;
 
@@ -358,13 +359,13 @@ $custom-file-text: (
 // Dropdown menu container and contents.
 
 $dropdown-padding-y: 0.25rem;
-$dropdown-border-color: darken($light, 3%);
+$dropdown-border-color: color.adjust($light, $lightness: -3%);
 
 $dropdown-link-color: $body-color;
 $dropdown-link-hover-color: $headings-color;
 
 $dropdown-link-active-color: $dark;
-$dropdown-link-active-bg: lighten($light, 3%);
+$dropdown-link-active-bg: color.adjust($light, $lightness: 3%);
 
 $dropdown-item-padding-y: 0.375rem;
 
@@ -448,8 +449,8 @@ $leftbar-width: 250px;
 
 //Menu item colors (Default-dark)
 $menu-item: #161616;
-$menu-item-hover: lighten($menu-item, 5%);
-$menu-item-active: lighten($menu-item, 5%);
+$menu-item-hover: color.adjust($menu-item, $lightness: 5%);
+$menu-item-active: color.adjust($menu-item, $lightness: 5%);
 
 //Menu item colors (light)
 $menu-item-light: #6c757d;
