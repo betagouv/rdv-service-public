@@ -2,7 +2,7 @@ module IcsPayloads
   module Rdv
     def payload(action = nil, recipient = users.first)
       payload = {
-        attachement_filename: ics_attachment_filename,
+        attachement_filename: "rdv-#{motif&.name&.parameterize}-#{starts_at.strftime('%Y-%m-%d-%Hh%M')}.ics",
         starts_at: starts_at,
         ends_at: ends_at,
         ical_uid: uuid,

@@ -322,10 +322,6 @@ class Rdv < ApplicationRecord
     users_count > max_participants_count
   end
 
-  def ics_attachment_filename
-    "rdv-#{motif&.name&.parameterize}-#{starts_at.strftime('%Y-%m-%d-%Hh%M')}.ics"
-  end
-
   # FIXME: we should either rename the column, or avoid the ambiguity in rdv_payload
   def title
     name

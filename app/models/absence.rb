@@ -58,10 +58,6 @@ class Absence < ApplicationRecord
     "absence_#{id}@#{IcalFormatters::Ics::ICS_UID_SUFFIX}"
   end
 
-  def ics_attachment_filename
-    "absence-#{title.parameterize}-#{starts_at.to_s.parameterize}.ics"
-  end
-
   private
 
   def set_end_day
