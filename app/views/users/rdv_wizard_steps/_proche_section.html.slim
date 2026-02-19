@@ -7,6 +7,8 @@ ruby:
   disable_url = new_users_rdv_wizard_step_path(**@rdv_wizard.to_query)
 
 .fr-mt-3w data-controller="proche-toggle" data-proche-toggle-enable-url-value=enable_url data-proche-toggle-disable-url-value=disable_url
+  / on ajoute un submit caché en premier dans le DOM : c'est celui qui sera appelé lors d'un clic sur Enter
+  = f.submit "Confirmer mon RDV en cliquant sur Entrée", class: "hidden"
   /! Boutons sans JS (masqués par Stimulus au chargement)
   div data-proche-toggle-target="noJsToggle"
     - if booking_for_proche
