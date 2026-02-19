@@ -111,8 +111,10 @@ class Users::RdvBookingForm
 
     selected_proches_data.each_with_index do |attrs, index|
       prefix = "Proche #{index + 1}"
-      errors.add(:base, "#{prefix} : le prénom doit être renseigné") if attrs[:first_name].blank?
-      errors.add(:base, "#{prefix} : le nom doit être renseigné") if attrs[:last_name].blank?
+      if attrs[:id].blank?
+        errors.add(:base, "#{prefix} : le prénom doit être renseigné") if attrs[:first_name].blank?
+        errors.add(:base, "#{prefix} : le nom doit être renseigné") if attrs[:last_name].blank?
+      end
 
       next unless ants_with_proches?
 
