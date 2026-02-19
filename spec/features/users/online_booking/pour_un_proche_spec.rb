@@ -33,20 +33,7 @@ RSpec.describe "Prise de RDV pour un proche" do
     )
   end
 
-  context "sélection d'un proche existant" do
-    let!(:proche) { create(:user, first_name: "Marie", last_name: "Martin", responsible: user) }
-
-    it "crée le RDV avec le proche sélectionné" do
-      visit wizard_path
-      check_or_click_submit("Je prends rendez-vous pour un·e proche")
-      choose(proche.full_name, allow_label_click: true)
-      click_button("Confirmer mon RDV")
-      expect(page).to have_content("Votre RDV")
-      expect(Rdv.last.users).to include(proche)
-    end
-  end
-
-  context "création d'un nouveau proche" do
+  context "création d'un nouveau proche, aucun proche préexistant" do
     it "crée le RDV avec le nouveau proche" do
       visit wizard_path
       check_or_click_submit("Je prends rendez-vous pour un·e proche")
@@ -60,8 +47,39 @@ RSpec.describe "Prise de RDV pour un proche" do
     end
   end
 
+  context "création d'un nouveau proche, 1 proche préexistant" do
+    before { create(:user, first_name: "Marie", last_name: "Martin", responsible: user) }
+
+    it "crée le RDV avec le nouveau proche" do
+      visit wizard_path
+      check_or_click_submit("Je prends rendez-vous pour un·e proche")
+      label = find(:label, text: "Nouveau proche")
+      label.click
+      within(label.ancestor(".fr-fieldset__element"), text: "Informations du proche") do
+        fill_in("Prénom", with: "Mathieu")
+        fill_in("Nom", with: "Lapin")
+      end
+      click_button("Confirmer mon RDV")
+      expect(page).to have_content("Votre RDV")
+      expect(Rdv.last.users).to include(User.find_by(first_name: "Mathieu", last_name: "Lapin"))
+    end
+  end
+
+  context "sélection d'un proche existant" do
+    let!(:proche) { create(:user, first_name: "Marie", last_name: "Martin", responsible: user) }
+
+    it "crée le RDV avec le proche sélectionné" do
+      visit wizard_path
+      check_or_click_submit("Je prends rendez-vous pour un·e proche")
+      choose(proche.full_name, allow_label_click: true)
+      click_button("Confirmer mon RDV")
+      expect(page).to have_content("Votre RDV")
+      expect(Rdv.last.users).to include(proche)
+    end
+  end
+
   context "sur le domaine RDV Service Public" do
-    it "n'affiche pas le champ 'Nom de naissance'", js: true do
+    it "n'affiche pas le champ 'Nom de naissance'" do
       visit "http://www.rdv-service-public-test.localhost#{wizard_path}"
       expect(page).not_to have_field("Nom de naissance")
       check_or_click_submit("Je prends rendez-vous pour un·e proche")
