@@ -46,6 +46,8 @@ class Users::RdvSms < Users::BaseSms
     @content = "#{base_message}\n#{footer}"
   end
 
+  alias participation_cancelled rdv_cancelled
+
   MAX_RDV_NAME_LENGTH = 50
 
   def truncated_rdv_name

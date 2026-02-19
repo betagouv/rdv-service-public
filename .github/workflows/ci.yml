@@ -39,13 +39,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
-          cache: yarn
+      - run: corepack enable
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
-      - run: yarn install --frozen-lockfile --ignore-scripts
+      - run: yarn install --immutable
       - run: yarn run prettier --check .
   brakeman:
     name: Security Checker
@@ -149,6 +149,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
+      - run: corepack enable
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -160,7 +161,7 @@ jobs:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
       - name: Install JS dependencies
-        run: yarn install --frozen-lockfile --ignore-scripts
+        run: yarn install --immutable
       - name: Cache precompiled assets
         id: cache-precompiled-assets
         uses: actions/cache@v4
@@ -231,6 +232,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
+      - run: corepack enable
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -242,7 +244,7 @@ jobs:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
       - name: Install JS dependencies
-        run: yarn install --frozen-lockfile --ignore-scripts
+        run: yarn install --immutable
       - name: Cache precompiled assets
         id: cache-precompiled-assets
         uses: actions/cache@v4
@@ -297,6 +299,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
+      - run: corepack enable
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -307,7 +310,7 @@ jobs:
         with:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
-      - run: yarn install --frozen-lockfile --ignore-scripts
+      - run: yarn install --immutable
       - run: bin/test_boot
         env:
           HOST: http://www.rdv-test.fr

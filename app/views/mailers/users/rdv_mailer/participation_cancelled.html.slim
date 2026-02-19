@@ -2,10 +2,10 @@ div
   p= t("mailers.common.hello")
 
   p
-    - if @rdv.status == "revoked"
-      | Votre RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a été annulé pour raison administrative.
+    - if @participation.status == "revoked"
+      | Votre participation au RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a été annulée pour raison administrative.
     - else
-      | Votre RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a bien été annulé à votre demande.
+      | Votre participation au RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a bien été annulée à votre demande.
 
   - if @rdv.phone_number.present?
     |> Vous pouvez reprendre un rendez-vous en appelant au

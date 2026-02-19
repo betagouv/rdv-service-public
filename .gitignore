@@ -29,6 +29,14 @@
 yarn-debug.log*
 .yarn-integrity
 
+# Yarn v4
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 .DS_Store
 .env
 .env.development
