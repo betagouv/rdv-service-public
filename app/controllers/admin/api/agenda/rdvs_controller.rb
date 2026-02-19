@@ -33,7 +33,7 @@ class Admin::Api::Agenda::RdvsController < Admin::Api::BaseController
       @rdv = rdv
     end
 
-    delegate :starts_at, :ends_at, to: :@rdv
+    delegate :starts_at, :ends_at, :minutes_after_rdv, to: :@rdv
 
     def to_partial_path
       "rdv_without_details"
