@@ -24,7 +24,7 @@ class Users::RdvWizardStepsController < UserAuthController
     authorize(@rdv, policy_class: User::RdvPolicy)
   end
 
-  def create
+  def create # rubocop:disable Metrics/PerceivedComplexity
     skip_authorization
     @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
     return if redirect_to_prendre_rdv_path_if_creneau_unavailable
@@ -48,9 +48,12 @@ class Users::RdvWizardStepsController < UserAuthController
       return
     end
 
-    if @rdv_booking_form.save
-      create_rdv_and_redirect
+    if @rdv_booking_form.save && create_rdv_and_redirect
+      flash[:success] = (@rdv.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
+      set_user_name_initials_verified
+      redirect_to users_rdv_path(@rdv, invitation_token: @invitation_token)
     else
+      flash[:error] = "Une erreur a empêché la confirmation de votre RDV"
       render :new
     end
   end
@@ -121,19 +124,15 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def create_individual_rdv
-    rdv = @rdv_builder.creneau.build_rdv
-    rdv.assign_attributes(users: @rdv_booking_form.users_for_rdv, created_by: current_user)
+    @rdv = @rdv_builder.creneau.build_rdv
+    @rdv.assign_attributes(users: @rdv_booking_form.users_for_rdv, created_by: current_user)
 
-    if rdv.save
-      notifier = Notifiers::RdvCreated.new(rdv, current_user)
-      notifier.perform
-      set_user_name_initials_verified
-      flash[:success] = t("users.rdvs.create.rdv_confirmed")
-      redirect_to users_rdv_path(rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
-    else
-      flash[:error] = "Une erreur a empêché la confirmation de votre RDV"
-      render :new
-    end
+    return false unless @rdv.save
+
+    notifier = Notifiers::RdvCreated.new(@rdv, current_user)
+    notifier.perform
+    @invitation_token = notifier.participations_tokens_by_user_id[current_user.id]
+    true
   end
 
   def create_collectif_participation
@@ -142,8 +141,7 @@ class Users::RdvWizardStepsController < UserAuthController
     authorize(participation, policy_class: User::ParticipationPolicy)
 
     participation.create_and_notify!(current_user)
-    set_user_name_initials_verified
-    flash[:success] = "Participation confirmée"
-    redirect_to users_rdv_path(@rdv, invitation_token: participation.restricted_auth_token)
+    @invitation_token = participation.restricted_auth_token
+    true
   end
 end
