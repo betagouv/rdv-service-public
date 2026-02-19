@@ -8,10 +8,9 @@
 in_status = "*.instatus.com"
 # Nous faisons des appels vers cette API dans notre recherche par adresse
 api_adresse_ign = "data.geopf.fr"
-# Nous utilisons mapbox via unpkg et les tiles etalab pour les interfaces de config de sectorisation
+# Nous utilisons mapbox et les tiles etalab pour les interfaces de config de sectorisation
 tiles_etalab = "etalab-tiles.fr"
-# Nous utilisons unpkg, les tiles OSM et etalab pour afficher une carte des lieux dans les stats avec maplibre
-unpkg_cdn = "unpkg.com"
+# Nous utilisons maplibre, les tiles OSM et etalab pour afficher une carte des lieux dans les stats
 tiles_osm = "tile.openstreetmap.org"
 tiles_data_gouv = "openmaptiles.data.gouv.fr"
 # Utilisé sur nos pages statiques (404.html, 500.html)
@@ -37,11 +36,11 @@ Rails.application.config.content_security_policy do |policy|
   policy.worker_src :blob
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, metabase
-  policy.img_src :self, :data, :blob, tiles_osm, unpkg_cdn, tiles_data_gouv, lasuite
-  policy.style_src :self, :unsafe_inline, bootstrap_cdn, unpkg_cdn
+  policy.img_src :self, :data, :blob, tiles_osm, tiles_data_gouv, lasuite
+  policy.style_src :self, :unsafe_inline, bootstrap_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv, lasuite
 
-  policy.script_src :self, unpkg_cdn, *swagger_shas
+  policy.script_src :self, *swagger_shas
 end
 
 # If you are using UJS then enable automatic nonce generation

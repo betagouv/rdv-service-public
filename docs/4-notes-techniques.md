@@ -101,6 +101,33 @@ Pas de politique très clairement décidée mais la pratique est d’essayer de 
 Une politique de mise à jour prudente a été décidée
 cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)
 
+### Librairies JS auto-hébergées (mapbox-gl, maplibre-gl)
+
+Mapbox et Maplibre sont servis en tant que fichiers statiques depuis `public/vendor/` plutôt que via un CDN externe, pour des raisons de sécurité (CSP).
+
+Pour mettre à jour une de ces librairies (exemple avec maplibre-gl en version `X.Y.Z`) :
+
+```bash
+# 1. Télécharger les nouveaux fichiers
+mkdir -p public/vendor/maplibre-gl@X.Y.Z
+curl -fsSL "https://unpkg.com/maplibre-gl@X.Y.Z/dist/maplibre-gl.js" -o public/vendor/maplibre-gl@X.Y.Z/maplibre-gl.js
+curl -fsSL "https://unpkg.com/maplibre-gl@X.Y.Z/dist/maplibre-gl.css" -o public/vendor/maplibre-gl@X.Y.Z/maplibre-gl.css
+
+# 2. Vérifier l'intégrité des fichiers téléchargés
+openssl dgst -sha384 -binary public/vendor/maplibre-gl@X.Y.Z/maplibre-gl.js | openssl base64 -A
+# Comparer avec le hash SRI publié sur https://www.srihash.org/ ou dans les release notes de la lib
+
+# 3. Mettre à jour les vues qui référencent l'ancienne version
+# Pour maplibre : app/views/stats/index.html.slim
+# Pour mapbox   : app/views/admin/territories/sectors/index_map.html.slim
+#                 app/views/admin/territories/sectors/show.html.slim
+
+# 4. Supprimer l'ancien dossier
+rm -rf public/vendor/maplibre-gl@ancienne.version
+```
+
+Il n'y a pas de modification à faire dans la CSP (`config/initializers/content_security_policy.rb`) : les fichiers sont servis depuis `:self`.
+
 ### Version de Playwright
 
 Playwright est notre système d’instrumentalisation du navigateur pour les tests E2E.
