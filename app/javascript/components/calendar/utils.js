@@ -192,7 +192,11 @@ function eventRenderer(selectedEventId) {
       }
     } else {
       if (extendedProps.duration) {
-        title += ` <small>(${extendedProps.duration} min)</small>`;
+        if (extendedProps.minutesAfterRdv && extendedProps.minutesAfterRdv  != "0") {
+          title += ` <small>(${extendedProps.duration} mn de RDV puis ${extendedProps.minutesAfterRdv} mn de battement)</small>`;
+        } else {
+          title += ` <small>(${extendedProps.duration} mn)</small>`;
+        }
         title += ` <br>${extendedProps.motif}`;
       }
 

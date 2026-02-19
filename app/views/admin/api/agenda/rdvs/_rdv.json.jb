@@ -1,6 +1,6 @@
 json = {
   start: rdv.starts_at.as_json,
-  end: rdv.ends_at.as_json,
+  end: (rdv.ends_at + rdv.minutes_after_rdv.minutes).as_json,
 
   id: rdv.id,
   title: sanitize(rdv_title_in_agenda(rdv)),
@@ -14,6 +14,7 @@ json = {
     lieu: sanitize(rdv.public_office? && rdv.lieu&.name),
     past: rdv.past?,
     duration: rdv.duration_in_min,
+    minutesAfterRdv: rdv.minutes_after_rdv,
   },
 
   # https://fullcalendar.io/docs/resources-and-events
