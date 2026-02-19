@@ -1,10 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.7"
-
-# Autoload dotenv in Rails.
-gem "dotenv-rails" # dotenv should always be loaded before rails
+ruby "3.4.8"
 
 # Full-stack web application framework.
 gem "rails", "8.0.4"
@@ -129,7 +126,8 @@ gem "groupdate", "~> 6.1"
 gem "rails_autolink"
 # ActionView helper to render currently active links
 gem "active_link_to"
-gem "dsfr-view-components", "~> 4.0"
+gem "dsfr-assets", "~> 1.14.2"
+gem "dsfr-view-components", "~> 4.1"
 gem "dsfr-form_builder", "= 0.0.7" # On fixe la version tant qu’on est pas en 1.0
 
 # Easily create styled HTML emails in Rails.
@@ -147,6 +145,12 @@ gem "montrose"
 gem "tod"
 # A ruby implementation of the iCalendar specification (RFC-5545).
 gem "icalendar", "~> 2.5"
+# Easy recurrence expansion for iCalendar
+gem "icalendar-recurrence"
+# ice_cube est utilisée par icalendar-recurrence pour calculer les occurrences des événements externes (Caldav)
+# TODO: faire pointer vers rubygems quand ceci est released : https://github.com/ice-cube-ruby/ice_cube/pull/449
+# Ruby Date Recurrence Library - Allows easy creation of recurrence rules and fast querying
+gem "ice_cube", git: "https://github.com/ice-cube-ruby/ice_cube.git", ref: "32ff145"
 # Caldav client library
 gem "calendav", "~> 0.5"
 # Base de données des fuseaux horaires
@@ -161,6 +165,9 @@ gem "lograge"
 gem "csv"
 
 group :development do
+  # Autoload dotenv in Rails in development (production, staging and demo envs already have env vars setup by the hosting provider)
+  gem "dotenv-rails" # dotenv should always be loaded before rails
+
   #  Hot reload
 
   # Rails application preloader
@@ -255,6 +262,8 @@ group :test do
 
   # Library for stubbing HTTP requests in Ruby.
   gem "webmock"
+  # Record your test suite's HTTP interactions and replay them during future test runs for fast, deterministic, accurate tests.
+  gem "vcr"
 
   # Modify your ENV
   gem "climate_control"

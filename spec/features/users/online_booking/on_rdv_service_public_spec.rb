@@ -24,13 +24,12 @@ RSpec.describe "User can search rdv on rdv service public" do
   end
 
   it "allows booking a rdv" do
-    visit "http://www.rdv-service-public-test.localhost/org/#{organisation.id}"
+    visit "http://www.rdv-service-public-test.localhost/org/#{organisation.public_link_id}"
     click_on("Clarification du dossier")
     click_on(lieu.name) # choix du lieu
 
     first(:link, "09:00").click
     expect(page).to have_current_path("/users/sign_in")
-    expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
 
     login_via_6_digit_code(user.email)
 

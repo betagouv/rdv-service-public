@@ -34,6 +34,8 @@ class CronJob < ApplicationJob
   end
 
   class ReminderJob < CronJob
+    include MonitorConcern
+
     def perform
       Rdv.not_cancelled.day_after_tomorrow.find_each do |rdv|
         run_at = rdv.starts_at - 48.hours
@@ -167,7 +169,7 @@ class CronJob < ApplicationJob
 
   class DestroyLoginCodesJob < CronJob
     def perform
-      LoginCode.where("created_at < ?", 7.days.ago)
+      LoginCode.where("created_at < ?", 7.days.ago).delete_all
       # on garde les codes quelques jours pour investiguer certaines situations et avoir une idée des volumes
     end
   end
@@ -192,14 +194,14 @@ class CronJob < ApplicationJob
     end
   end
 
-  class RefreshBlogPostsFromHeadwayJob < CronJob
+  class RefreshBlogPostsFromDocsJob < CronJob
     def perform
-      headway_html = Net::HTTP.get_response(URI(BlogPost::HEADWAY_URL)).body
-      posts = HeadwayParser.extract_posts_from_html(headway_html)
+      posts = DocsNumeriqueChangelog.fetch_and_parse_blog_posts
       if posts.any?
+        Rails.logger.info "destroying #{BlogPost.count} existing blog posts to insert #{posts.count} freshly fetched and parsed"
         BlogPost.refresh_from_posts(posts)
       else
-        raise "no posts found on Headway"
+        raise "no posts found on docs.numerique.gouv.fr"
       end
     end
   end

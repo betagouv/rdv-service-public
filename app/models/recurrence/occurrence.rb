@@ -21,4 +21,8 @@ class Recurrence::Occurrence
 
     range.overlaps?(starts_at..ends_at)
   end
+
+  def to_a
+    [starts_at, ends_at]
+  end
 end

@@ -1,5 +1,7 @@
 RSpec.describe "Visioplainte agents can work on sunday" do
   context "for a visioplainte agent" do
+    stub_env_with(DB_SEEDS_USERS_AND_AGENTS_PASSWORD: "Rdvservicepublictest1!")
+
     before do
       travel_to(Time.zone.local(2024, 11, 24, 15, 0, 0))
       load Rails.root.join("db/seeds/visioplainte.rb")

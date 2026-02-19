@@ -77,7 +77,6 @@ RSpec.describe "User can search rdv on rdv mairie" do
       visit creneaux_url
 
       expect(page).to have_current_path("/users/sign_in")
-      expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
       expect(page).to have_content("Motif : Passeport")
       expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
       expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
@@ -436,7 +435,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "il n’y a pas de créneaux dispos" do
       it "incite à passer par le moteur de l’ANTS", js: true do
-        visit "http://www.rdv-service-public-test.localhost/org/#{organisation.id}"
+        visit "http://www.rdv-service-public-test.localhost/org/#{organisation.public_link_id}"
         click_on "Passeport"
         expect(page).to have_content("Nombre de pré-demandes ANTS")
         expect(find_field(find("label", text: /pré-demandes ANTS/)[:for])[:value]).to eq("1")
@@ -451,7 +450,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     it "permet de choisir le nombre de dossiers à déposer" do
-      visit "http://www.rdv-service-public-test.localhost/org/#{organisation.id}"
+      visit "http://www.rdv-service-public-test.localhost/org/#{organisation.public_link_id}"
       click_on "Passeport"
       expect(page).to have_content("Nombre de pré-demandes ANTS")
       fill_in(find("label", text: /pré-demandes ANTS/)[:for], with: "2", fill_options: { clear: :backspace }) # ici on fait sans JS en remplissant le champ directement
@@ -462,18 +461,16 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("Sélectionnez un créneau")
       expect(page).to have_content("Nombre de pré-demandes ANTS à déposer : 2")
       click_on "09:00"
-      expect(page).to have_content("Connexion")
+      expect(page).to have_content("Votre identité")
       expect(page).to have_content("(50 minutes)")
-      # Inscription
-      click_on "Créer un compte"
+      # Inscription via code
       fill_in "Prénom", with: "Eloïse"
       fill_in "Nom", with: "Vanna"
       fill_in "Adresse email", with: "elo@ise.fr"
-      click_on "Je m’inscris"
-      expect(page).to have_content("Un message contenant un lien de confirmation a été envoyé à votre adresse email")
-      perform_enqueued_jobs
-      open_email("elo@ise.fr")
-      current_email.click_link "Confirmer mon compte"
+      click_button "Recevoir un code de connexion"
+      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: "elo@ise.fr").code
+      click_on "Valider"
+      expect(page).to have_content("Connexion réussie")
       # Parcours post-connexion
       expect(page).to have_content("Étape 1 sur 3")
       expect(page).to have_content("Vos informations")
@@ -497,7 +494,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     context "l’usager tente de passer un nombre invalide à l’étape de séléction du nombre de pré-demandes" do
       specify do
-        visit "http://www.rdv-service-public-test.localhost/org/#{organisation.id}"
+        visit "http://www.rdv-service-public-test.localhost/org/#{organisation.public_link_id}"
         click_on "Passeport"
         expect(page).to have_content("Nombre de pré-demandes ANTS")
         fill_in(find("label", text: /pré-demandes ANTS/)[:for], with: "notanumber", fill_options: { clear: :backspace }) # ici on fait sans JS en remplissant le champ directement

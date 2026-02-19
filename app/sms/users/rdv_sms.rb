@@ -17,7 +17,7 @@ class Users::RdvSms < Users::BaseSms
                        :short
                      end
 
-    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token, address_format:)}"
+    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token, address_format:)}"
   end
 
   def rdv_updated(rdv, user, token)
@@ -45,6 +45,8 @@ class Users::RdvSms < Users::BaseSms
              end
     @content = "#{base_message}\n#{footer}"
   end
+
+  alias participation_cancelled rdv_cancelled
 
   MAX_RDV_NAME_LENGTH = 50
 
@@ -77,7 +79,7 @@ class Users::RdvSms < Users::BaseSms
     details += "\n\n"
 
     url = rdv_short_from_token_url(token, host: domain_host).sub(%r{https?://}, "")
-    links = "Infos/annulation: #{url}"
+    links = "Gérer mon RDV: #{url}"
 
     links += "\n#{rdv.phone_number}" if rdv.phone_number.present?
 

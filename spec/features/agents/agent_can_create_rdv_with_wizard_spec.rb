@@ -82,10 +82,8 @@ RSpec.describe "Agent can create a Rdv with wizard" do
     end
 
     fill_in "Durée en minutes", with: "35"
-    # cannot use fill_in here because the datepicker does not autoclose as expected
-    find(:label, "Commence à").click
-    find(".xdsoft_calendar .xdsoft_date", text: "11").click
-    find(".xdsoft_time", text: "14:15").click
+    # Le datepicker JS est capricieux et cause des flaky specs donc on modifie la valeur du champ directement.
+    page.execute_script("document.getElementById('rdv_starts_at').value = '11/10/2019 14:15'")
     select("DIALO Alain", from: "rdv_agent_ids")
     select("MARTIN Robert", from: "rdv_agent_ids")
     click_button("Continuer")

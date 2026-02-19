@@ -35,9 +35,9 @@ RSpec.describe "Agent can create user" do
     expect(current_email.subject).to eq("Vous avez été invité sur RDV Aide Numérique")
   end
 
-  context "user already exists in other organisation" do
+  context "user already exists in other organisation of the same territory" do
     let!(:existing_user) do
-      create(:user, first_name: "Cee-Lo", last_name: "GREEN", email: "ceelo@green.com", organisations: [create(:organisation)])
+      create(:user, first_name: "Cee-Lo", last_name: "GREEN", email: "ceelo@green.com", organisations: [create(:organisation, territory:)])
     end
 
     it "allows using existing user" do

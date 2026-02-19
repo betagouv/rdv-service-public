@@ -4,7 +4,7 @@ class Agent::OrganisationPolicy < ApplicationPolicy
   end
 
   def admin_in_organisation?
-    current_agent.roles.access_level_admin.pluck(:organisation_id).include?(record.id)
+    current_agent.admin_in_organisation?(record)
   end
 
   def territorial_admin?

@@ -17,9 +17,10 @@
 
 ruby:
   event_sources = [
-    admin_api_agenda_rdvs_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
-    admin_api_agenda_absences_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json),
-    admin_api_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json),
+    { id: "Rdv",                    url: admin_api_agenda_rdvs_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json) },
+    { id: "Absence",                url: admin_api_agenda_absences_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json) },
+    { id: "ExternalCalendarEvent",  url: admin_api_agenda_external_calendar_events_path(agent_id: @agent, format: :json) },
+    { id: "PlageOuverture",         url: admin_api_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json) },
   ]
   event_sources.push(OffDays.to_full_calendar_array) unless current_territory.work_on_sunday?
 
@@ -34,7 +35,6 @@ ruby:
   data-display-sundays="#{current_territory.work_on_sunday? && current_agent.display_saturdays}"
   data-event-sources-json="#{event_sources.to_json}"
   data-sign-in-path="#{new_agent_session_path}"
-  data-realtime-refresh=Admin::Api::Agenda.realtime_refresh?(current_agent).to_s
 ]
 
 .my-3

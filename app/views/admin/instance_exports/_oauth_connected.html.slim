@@ -1,0 +1,45 @@
+= form_with url: admin_organisation_instance_export_path(current_organisation, @instance_export), method: :put, builder: Dsfr::FormBuilder do |form|
+  .fr-grid-row.fr-pt-4w
+    .fr-col-6
+      .card
+        .card-header
+          h2.fr-h3= current_domain.name
+        .card-body
+          - source_org = @instance_export.source_organisation
+          h3.fr-h4= source_org.name
+          .fr-grid-row
+            .fr-col-6
+              h4.fr-h5 Configuration
+              p #{source_org.motifs.count} #{"motif".pluralize(source_org.motifs.count)}
+              p #{source_org.lieux.count}  #{"lieu".pluralize(source_org.lieux.count)}
+              p #{source_org.agents.count} #{"agent".pluralize(source_org.agents.count)}
+              p #{source_org.users.count} usagers
+
+            .fr-col-6
+              h4.fr-h5 Planning
+              p #{source_org.rdvs.count} rendez-vous
+              p #{source_org.plage_ouvertures.not_expired.count} plages d'ouverture
+              p #{Absence.where(agent_id: source_org.agents.select(:id)).not_expired.count} absences
+
+    .fr-col-6
+      .d-flex
+        .fr-mx-4w[style="align-self: center"]= icon("fr-icon-arrow-right-fill")
+        .card
+          .card-header
+            h2.fr-h3 RDV Service Public
+          .card-body
+            - if @instance_export.new_instance_organisations.empty?
+              h3.fr-h5= @instance_export.source_organisation.name
+            - elsif @instance_export.new_instance_organisations.count == 1
+              h3.fr-h5= @instance_export.source_organisation.name
+              = form.hidden_field :destination_organisation_id, value: @instance_export.new_instance_organisations.first["id"]
+            - else
+              = form.select :destination_organisation_id, @instance_export.new_instance_organisations.map { |o| [o["name"], o["id"]] }, {}, { class: "select2-input" }
+
+  .rdv-text-align-center
+    .card
+      .card-body
+        p
+          |  Ces données vont être copiées automatiquement depuis #{current_domain.name} vers RDV Service Public
+
+        = form.submit  "Copier les données", class: "fr-btn"

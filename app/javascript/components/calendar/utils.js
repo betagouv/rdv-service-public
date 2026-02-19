@@ -27,7 +27,7 @@ export const dayHeaderContent = ({ date, view }) => {
       return new Intl.DateTimeFormat('fr-FR', CUSTOM_HEADER_FORMATS[view.type]).format(date);
     }
   }
-  // else : on retourne null et FullCalendar utilise le formateur par défaut
+  return true; // v6 : retourner true pour afficher le contenu par défaut
 };
 
 // On empêche de sélectionner plusieurs jours car ce n'est pas actuellement
@@ -60,8 +60,28 @@ export const hiddenDays = ({ displaySaturdays, displaySundays }) => {
   return hiddenDays;
 };
 
+const buttonHints = {
+  prev: (navUnit) => {
+    const labels = {
+      Jour: "Jour précédent",
+      Semaine: "Semaine précédente",
+      Mois: "Mois précédent",
+    };
+    return labels[navUnit] || "Précédent";
+  },
+  next: (navUnit) => {
+    const labels = {
+      Jour: "Jour suivant",
+      Semaine: "Semaine suivante",
+      Mois: "Mois suivant",
+    };
+    return labels[navUnit] || "Suivant";
+  },
+};
+
 const defaultFullCalendarConfig = () => ({
   locale: frLocale,
+  buttonHints,
   allDaySlot: false,
   height: "auto",
   selectable: true,
@@ -199,61 +219,28 @@ function eventRenderer(selectedEventId) {
   }
 }
 
-const setupPollingRefresh = (fullCalendarInstance) => {
-  const clearRefetchInterval = () => {
-    if (!fullCalendarInstance.refreshCalendarInterval) return
-    clearTimeout(fullCalendarInstance.refreshCalendarInterval)
-    fullCalendarInstance.refreshCalendarInterval = null
-  }
-
-  const setRefetchInterval = () => {
-    if (fullCalendarInstance.refreshCalendarInterval) return
-    fullCalendarInstance.refreshCalendarInterval = setInterval(() => fullCalendarInstance.refetchEvents(), 30000)
-  }
-
-  setRefetchInterval();
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      // when agent comes back to tab, refresh immediately
-      fullCalendarInstance.refetchEvents();
-
-      setRefetchInterval();
-    } else if (fullCalendarInstance.refreshCalendarInterval) {
-      clearRefetchInterval();
-    }
-  })
-};
-
 const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
 
   const messageReceivedCallback = (message) => {
+    const source = fullCalendarInstance.getEventSourceById(message.model);
+
     if (Array.isArray(message.refresh_periods) && message.refresh_periods.length > 0) {
       const beginningOfView = fullCalendarInstance.view.activeStart.toISOString();
       const endOfView = fullCalendarInstance.view.activeEnd.toISOString();
       const intersectsFunction = ([periodStart, periodEnd]) => (periodEnd > beginningOfView && periodStart < endOfView);
       if (message.refresh_periods.some(intersectsFunction)) {
-        fullCalendarInstance.refetchEvents();
+        source.refetch();
       }
     } else {
-      fullCalendarInstance.refetchEvents();
+      source.refetch();
     }
-  };
-
-  const disconnectCallback = () => {
-    clearTimeout(window.disconnectWarningTimeoutId);
-    window.disconnectWarningTimeoutId = setTimeout(() => {
-      document.querySelector("#js-agenda-disconnected-warning")?.classList?.remove("hidden");
-    }, 5000);
   };
 
   const connectCallback = ({ reconnected }) => {
     // `reconnected` nous indique que cette connexion fait suite à une
     // préalable déconnexion. C'est bien ce qui nous intéresse puisque
-    // nous voulons cacher l'avertissement affiché lors de la perte de connexion.
+    // nous ne voulons pas recharger les events lors de la connexion initiale.
     if (reconnected) {
-      clearTimeout(window.disconnectWarningTimeoutId);
-      document.querySelector("#js-agenda-disconnected-warning")?.classList?.add("hidden");
       fullCalendarInstance.refetchEvents();
     }
   };
@@ -262,19 +249,26 @@ const setupRealtimeRefresh = (fullCalendarInstance, agentIds) => {
     getConsumer().subscriptions.create({channel: "AgendaChannel", agent_id: agentId}, {
       received: messageReceivedCallback,
       connected: connectCallback,
-      disconnected: disconnectCallback,
     });
   });
+
+  const refreshDisconnectedWarning = () => {
+    const alertElement = document.querySelector("#js-agenda-disconnected-warning");
+    const connexionIsStale = getConsumer().connection.monitor.connectionIsStale();
+    alertElement.hidden = !connexionIsStale;
+  };
+  setInterval(refreshDisconnectedWarning, 500);
 };
 
-const handleAjaxError = (response) => {
+const handleAjaxError = (error) => {
   if (window.ajaxErrorHandledAt) {
     const secondsSinceLast = (Date.now() - window.ajaxErrorHandledAt) / 1000;
     if (secondsSinceLast < 60) return
   }
   window.ajaxErrorHandledAt = Date.now()
 
-  switch (response.xhr.status) {
+  const status = error.response ? error.response.status : 0;
+  switch (status) {
     case 401:
       window.location = this.calendarEl.attributes["data-sign-in-path"].value;
       break;
@@ -285,8 +279,8 @@ const handleAjaxError = (response) => {
       alert(`Le chargement du calendrier a échoué, probablement car votre connexion internet a été coupée.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
       break;
     default:
-      alert(`Le chargement du calendrier a échoué avec une erreur ${response.xhr.status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
+      alert(`Le chargement du calendrier a échoué avec une erreur ${status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
   }
 };
 
-export { defaultFullCalendarConfig, eventRenderer, setupPollingRefresh, setupRealtimeRefresh, handleAjaxError }
+export { defaultFullCalendarConfig, eventRenderer, setupRealtimeRefresh, handleAjaxError }

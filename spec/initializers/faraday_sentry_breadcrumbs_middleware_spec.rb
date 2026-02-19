@@ -11,14 +11,14 @@ RSpec.describe FaradaySentryBreadcrumbsMiddleware do
       builder.use :sentry_breadcrumbs
     end
 
-    connection.post("/posts", { title: "Mon article de blog" }, { Authorization: "Token token=abcd1234efgh" })
+    connection.post("/posts", { title: "Mon article de blog" }.to_json, { Authorization: "Token token=abcd1234efgh" })
     Sentry.capture_message("woops")
 
     request_breadcrumb, response_breadcrumb = sentry_events.last.breadcrumbs.compact
 
     expect(request_breadcrumb.message).to eq("HTTP request")
-    expect(request_breadcrumb.data[:body]).to eq({ title: "Mon article de blog" })
-    expect(request_breadcrumb.data[:headers]).to eq({ "Authorization" => "Token token=abcd1234efgh", "User-Agent" => "Faraday v2.9.0" })
+    expect(request_breadcrumb.data[:body]).to eq({ title: "Mon article de blog" }.to_json)
+    expect(request_breadcrumb.data[:headers]).to eq({ "Authorization" => "Token token=abcd1234efgh", "User-Agent" => "Faraday v2.14.1" })
     expect(request_breadcrumb.data[:method]).to eq(:post)
     expect(request_breadcrumb.data[:url].to_s).to eq("https://example.com/posts")
 
@@ -74,7 +74,7 @@ RSpec.describe FaradaySentryBreadcrumbsMiddleware do
         builder.use :sentry_breadcrumbs, scrub_request_body: true
       end
 
-      connection.post("/posts", { title: "Mon article de blog" })
+      connection.post("/posts", { title: "Mon article de blog" }.to_json)
       Sentry.capture_message("woops")
 
       request_breadcrumb, _response_breadcrumb = sentry_events.last.breadcrumbs.compact

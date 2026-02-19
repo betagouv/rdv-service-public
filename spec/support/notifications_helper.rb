@@ -97,6 +97,8 @@ module NotificationsHelper
       I18n.t("users.rdv_mailer.rdv_created.title", date: I18n.l(rdv.starts_at, format: :human))
     when :rdv_cancelled
       I18n.t("users.rdv_mailer.rdv_cancelled.title", date: I18n.l(rdv.starts_at, format: :human), organisation: rdv.organisation.name)
+    when :participation_cancelled
+      "Participation annulée au RDV du #{I18n.l(rdv.starts_at, format: :human)} avec #{rdv.organisation.name}"
     when :rdv_updated
       # Maybe not enough precision here (because specific design choice), the date used for agents rdv update is the previsous date of the rdv
       "modifié"

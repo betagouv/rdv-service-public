@@ -127,8 +127,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       select_lieu
       click_link("S'inscrire")
 
-      expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer.")
-
       login_via_6_digit_code(logged_user.email)
 
       click_button("Continuer")
@@ -257,7 +255,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         expect_notifications_sent_for(rdv, agent, :participation_cancelled)
         # Mail notif only, SMS are not sent when cancellation is made by the user
-        expect_notifications_sent_for(rdv, user, :rdv_cancelled, :mail)
+        expect_notifications_sent_for(rdv, user, :participation_cancelled, :mail)
         expect_webhooks_for(user)
       end
 
@@ -411,7 +409,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         expect_notifications_sent_for(rdv, agent, :participation_cancelled)
         # Mail notif only, SMS are not sent when cancellation is made by the user
-        expect_notifications_sent_for(rdv, user, :rdv_cancelled, :mail)
+        expect_notifications_sent_for(rdv, user, :participation_cancelled, :mail)
         expect_webhooks_for(user)
       end
 

@@ -16,8 +16,8 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
           it "send notifications and change participation object status to #{status}" do
             participation1.change_status_and_notify(agent, status)
             expect(participation1.reload.status).to eq(status)
-            expect_notifications_sent_for(rdv, participation1.user, :rdv_cancelled)
-            expect_no_email_sent_for(rdv, agent, :rdv_cancelled)
+            expect_notifications_sent_for(rdv, participation1.user, :participation_cancelled)
+            expect_no_email_sent_for(rdv, agent, :participation_cancelled)
           end
         end
 
@@ -37,7 +37,7 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
         specify do
           participation1.change_status_and_notify(other_agent, "excused")
           expect(participation1.reload.status).to eq("excused")
-          expect_notifications_sent_for(rdv, participation1.user, :rdv_cancelled)
+          expect_notifications_sent_for(rdv, participation1.user, :participation_cancelled)
           expect_notifications_sent_for(rdv, agent, :participation_cancelled)
         end
       end
@@ -79,8 +79,9 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
 
         it "sends a webhook" do
           rdv.reload
-          expect(WebhookJob).to receive(:perform_later).at_least(1)
-          participation1.change_status_and_notify(agent, "noshow")
+          expect do
+            participation1.change_status_and_notify(agent, "noshow")
+          end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id).at_least(1).times
         end
       end
     end
@@ -96,7 +97,7 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
         participation1.change_status_and_notify(other_agent, "excused")
         expect(participation1.reload.status).to eq("excused")
         expect(rdv.reload.status).to eq("excused") # le statut du RDV est modifié en conséquence
-        expect_notifications_sent_for(rdv, user1, :rdv_cancelled)
+        expect_notifications_sent_for(rdv, user1, :participation_cancelled)
         expect_notifications_sent_for(rdv, agent, :participation_cancelled)
       end
     end
@@ -113,7 +114,7 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
         participation1.change_status_and_notify(other_agent, "excused")
         expect(participation1.reload.status).to eq("excused")
         expect(rdv.reload.status).to eq("unknown") # le statut du RDV n’est pas modifié
-        expect_notifications_sent_for(rdv, user1, :rdv_cancelled)
+        expect_notifications_sent_for(rdv, user1, :participation_cancelled)
         expect_notifications_sent_for(rdv, agent, :participation_cancelled) # TODO: ce mail est un peu incorrect dans ce cas car il parle de RDV collectif
       end
     end

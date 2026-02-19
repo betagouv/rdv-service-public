@@ -212,4 +212,36 @@ RSpec.describe RdvsHelper do
       end
     end
   end
+
+  describe "#display_user_phone_number_for_rdv" do
+    subject { strip_tags(display_user_phone_number_for_rdv(rdv, current_agent)) }
+
+    let(:current_agent) { build(:agent) }
+    let(:rdv) { build(:rdv, :by_phone, users: [user], agents: [current_agent]) }
+    let(:user) do
+      build(:user, :francis_factice, phone_number: "0611223344")
+    end
+
+    context "when the current_agent participates in the rdv" do
+      it "displays the user's phone number so that the agent can call them" do
+        expect(subject).to eq "RDV téléphonique : vous pouvez appeler Francis FACTICE au 06 11 22 33 44."
+      end
+
+      context "with multiple users" do
+        let(:other_user_with_phone) { build(:user, first_name: "Camille", last_name: "Avec téléphone", phone_number: "0122334455") }
+        let(:user_without_phone) { build(:user, first_name: "Dominique", last_name: "Sans téléphone", phone_number: nil) }
+        let(:rdv) { build(:rdv, :by_phone, users: [user, other_user_with_phone, user_without_phone], agents: [current_agent]) }
+
+        it "displays all the available phone numbers" do
+          expect(subject).to eq "RDV téléphonique : vous pouvez appeler Francis FACTICE au 06 11 22 33 44 ou Camille AVEC TÉLÉPHONE au 01 22 33 44 55."
+        end
+      end
+    end
+
+    context "when the current_agent doesn't participate in the rdv" do
+      it "displays the proper text" do
+        expect(strip_tags(display_user_phone_number_for_rdv(rdv, build(:agent)))).to eq "RDV téléphonique : l'agent peut appeler Francis FACTICE au 06 11 22 33 44."
+      end
+    end
+  end
 end

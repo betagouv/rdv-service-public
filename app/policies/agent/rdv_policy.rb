@@ -23,7 +23,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   alias versions? show?
 
   def destroy?
-    current_agent.access_level_in(@record.organisation) == AgentRole::ACCESS_LEVEL_ADMIN
+    current_agent.admin_in_organisation?(@record.organisation)
   end
 
   def self.explain(organisation, agent)

@@ -35,12 +35,11 @@ RSpec.describe Admin::Api::Agenda::AbsencesController, type: :controller do
       describe "JSON response" do
         render_views
 
-        let!(:absence) { create(:absence, agent: agent, first_day: Time.zone.today) }
+        it "contains the agent's absences" do
+          absence = create(:absence, agent: agent, first_day: Time.zone.today)
 
-        it "is serialized for FullCalendar" do
           start_date = Time.zone.today.monday
           end_date = start_date.end_of_week
-
           get :index, params: { agent_id: agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
 
           expected_response = [

@@ -2,7 +2,8 @@ class RdvBlueprint < Blueprinter::Base
   identifier :id
 
   fields :uuid, :status, :starts_at, :ends_at, :duration_in_min, :address, :context, :cancelled_at,
-         :max_participants_count, :users_count, :name, :collectif, :created_by_type, :created_by_id, :created_at
+         :max_participants_count, :users_count, :name, :collectif, :created_by_type, :created_by_id, :created_at,
+         :visio_url
 
   # Retrocompatibilité avec l'ancien format de l'API pour created_by
   field :created_by do |rdv, _options|

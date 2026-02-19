@@ -1,31 +1,14 @@
-- if rdv.created_by_user?
-  p
-    = icon("fr-icon-global-line", class: "text-primary-blue fr-mr-1w")
-    | RDV pris sur Internet
-
-.d-flex.fr-mb-1w
-  = motif_icon(class: "text-primary-blue fr-mr-1w")
-  div
-    = motif_name_with_status(rdv.motif)
-    = motif_badges(rdv.motif)
-  - if current_organisation.territory.enable_context_field
-    div
-      - if rdv.context.blank?
-        .text-muted = t(".empty_context")
-      - else
-        .text-muted Contexte&nbsp;:
-        .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
+/On commence par afficher les informations pratique pour participer au rendez-vous (quand et où)
 
 - if rdv.phone?
   p.card-text
     = phone_icon(class: "text-primary-blue fr-mr-1w")
-    | RDV téléphonique
+    = display_user_phone_number_for_rdv(rdv, current_agent)
 - elsif rdv.motif.visio?
   p.card-text.mb-0
     = visio_icon(class: "text-primary-blue fr-mr-1w")
     |> Par visioconférence
     = link_to("démarrer la visioconférence ", rdv.visio_url, target: :_blank)
-
 - else
   .d-flex.mb-1
     = location_type_icon(rdv.motif.location_type, class: "text-primary-blue fr-mr-1w")
@@ -34,12 +17,34 @@
       = human_location(rdv)
     - elsif rdv.public_office?
       = human_location(rdv)
-.d-flex.card-text
+
+.d-flex.card-text.fr-mt-3w
   = user_icon(class: "text-primary-blue fr-mr-1w")
   div
-    strong
-      => "Agent".pluralize(rdv.agents.size)
+    = "Agent".pluralize(rdv.agents.size)
+    |> &nbsp;:
     = agents_to_sentence(rdv.agents)
+
+/ Puis on affiche les informations sur ce qui va se passer pendant le rendez-vous : le motif et les éléments de contexte
+
+.d-flex.fr-mb-1w.fr-mt-3w
+  = motif_icon(class: "text-primary-blue fr-mr-1w")
+  |> Motif&nbsp;:
+  = motif_name_with_status(rdv.motif)
+
+- if rdv.created_by_user?
+  p
+    = icon("fr-icon-global-line", class: "text-primary-blue fr-mr-1w")
+    | RDV pris sur Internet
+
+- if current_organisation.territory.enable_context_field
+  = icon("fr-icon-message-2-line", class: "text-primary-blue fr-mr-1w")
+  - if rdv.context.blank?
+    i= t(".empty_context")
+  - else
+    | Contexte&nbsp;:
+    br
+    .fr-ml-4w.fr-pl-1w.text-muted.border-left= simple_format(rdv.context, {}, wrapper_tag: :span)
 
 - rdv.participations.select(&:prescription?).each do |participation|
   - author = participation.created_by

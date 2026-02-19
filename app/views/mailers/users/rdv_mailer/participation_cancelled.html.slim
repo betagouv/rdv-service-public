@@ -1,0 +1,29 @@
+div
+  p= t("mailers.common.hello")
+
+  p
+    - if @participation.status == "revoked"
+      | Votre participation au RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a été annulée pour raison administrative.
+    - else
+      | Votre participation au RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a bien été annulée à votre demande.
+
+  - if @rdv.phone_number.present?
+    |> Vous pouvez reprendre un rendez-vous en appelant au
+    => link_to(@rdv.phone_number, "tel:#{@rdv.phone_number_formatted}")
+    | .
+
+  - if @rdv.bookable_by_everyone?
+    p
+      | Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous :
+    .btn-wrapper
+      / Il y a peut-être un bug ici : il manquerait le lieu_id, qui fait partie des choix de l'usager
+      = link_to "Reprendre RDV", prendre_rdv_url(\
+        departement: @rdv.organisation.departement_number,
+        motif_name_with_location_type: @rdv.motif.name_with_location_type,
+        organisation_ids: [@rdv.organisation_id],
+        address: @rdv.address,
+        invitation_token: @token \
+      ), class: "btn btn-primary"
+
+  br
+  = t("mailers.common.farewell_html", domain_name: domain.name)

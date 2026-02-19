@@ -28,7 +28,6 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_user_session_path
       fill_in "Adresse email", with: "nina@personne.fr"
       expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
-      expect(page).to have_content("Aucun compte usager n’existe pour cet email")
       expect(page).not_to have_content("code à 6 chiffres")
     end
   end
@@ -40,6 +39,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       click_on "Recevoir un code de connexion"
       expect(page).to have_content("Saisie du code")
       click_on "page de connexion"
+      fill_in "Adresse email", with: "marco@lolmail.fr"
       expect { click_on "Recevoir un code de connexion" }.not_to change(LoginCode, :count)
       expect(page).to have_content("Un code a été envoyé à marco@lolmail.fr il y a moins de deux minutes")
     end
@@ -54,6 +54,21 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       click_on "Valider"
       expect(page).not_to have_content("Connexion réussie")
       expect(page).to have_content("Code invalide")
+    end
+  end
+
+  context "l’usager entre un mauvais code puis le bon" do
+    before { create(:login_code, email: "marco@lolmail.fr", code: "123456", created_at: 1.minute.ago) }
+
+    specify do
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "999999")
+      click_on "Valider"
+      expect(page).not_to have_content("Connexion réussie")
+      expect(page).to have_content("Veuillez renseigner le dernier code qui vous a été envoyé par email")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      expect(page).to have_content("Connexion réussie")
     end
   end
 

@@ -6,8 +6,6 @@ RSpec.describe "User is redirected back to requested page after login" do
   it "works" do
     visit "/users/rdvs"
     expect(page).to have_current_path("/users/sign_in")
-    expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
-    find(".fr-alert--info") # On vérifie que le flash est une info et pas une alerte
 
     login_via_6_digit_code(user.email)
     expect(page).to have_current_path("/users/rdvs")

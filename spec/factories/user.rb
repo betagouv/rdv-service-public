@@ -63,5 +63,11 @@ FactoryBot.define do
       encrypted_password { "" }
       phone_number { nil }
     end
+
+    trait :francis_factice do
+      email { "francis.factice@usager.exemple.fr" }
+      first_name { "Francis" }
+      last_name {  "Factice" }
+    end
   end
 end

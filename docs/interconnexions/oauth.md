@@ -33,7 +33,7 @@ sequenceDiagram
 
 ## Développement
 
-Une application Sinatra de dev simule le comportement d’un client distant comme Mon Suivi Social : `scripts/mon_suivi_social_local.rb`.
+Une application Sinatra de dev simule le comportement d’un client distant comme Mon Suivi Social : `scripts/devtools/mon_suivi_social_local.rb`.
 Elle est lancée par défaut dans le `Procfile.dev` et accessible sur : `http://localhost:3010`.
 
 Elle permet de faire un parcours de prise de RDV via les RDV plans.

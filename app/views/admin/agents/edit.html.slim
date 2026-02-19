@@ -39,7 +39,7 @@
             = ff.input :access_level,
               collection: @roles,
               label_method: -> { render("admin/agents/role_labels/#{_1}", { services: @agent.services }) },
-              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_agent.organisations.count > 1),
+              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_agent.organisations_count > 1),
               as: :radio_buttons
 
           / allow turning an intervenant into an agent with an account

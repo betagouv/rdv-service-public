@@ -10,7 +10,7 @@ L’accès à /super_admins se fait:
 * sur les review apps, en http Basic.
     * login: rdv-solidarites
     * password: défini automatiquement au déploiement (cf [scalingo.json](scalingo.json))
-    * obtenu avec `scripts/review_app_super_admin_password.sh <numéro de la PR>`
+    * obtenu avec `scripts/devtools/review_app_super_admin_password.sh <numéro de la PR>`
 
 ## Schéma de données de la base
 
@@ -101,21 +101,11 @@ Pas de politique très clairement décidée mais la pratique est d’essayer de 
 Une politique de mise à jour prudente a été décidée
 cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)
 
-### Version du DSFR
-
-1. `yarn upgrade @gouvfr/dsfr`. Notez le nouveau numéro de version, par exemple 1.13.0
-2. Mettez à jour le lien symbolique vers les fichiers
-   précompilés : `rm public/dsfr-v* && ln -s ../node_modules/@gouvfr/dsfr/dist/ public/dsfr-v1.13.0`
-3. Mettez à jour la version dans `ApplicationHelper#dsfr_path`
-
-Cette manière de faire permet d’éviter de passer par des compilations d’assets inutiles via webpacker ou sprockets.
-Le numéro de version dans les chemins sert de fingerprint pour le cache bump des navigateurs.
-
 ### Version de Playwright
 
 Playwright est notre système d’instrumentalisation du navigateur pour les tests E2E.
 On utilise à la fois des gems et un package NPM, avec des contraintes de compatibilité entre les deux.
-Il faut donc les mettre à jour simultanément. Un script permet de faire ça : `./scripts/update_playwright.sh`
+Il faut donc les mettre à jour simultanément. Un script permet de faire ça : `./scripts/devtools/update_playwright.sh`
 
 ## Review apps
 

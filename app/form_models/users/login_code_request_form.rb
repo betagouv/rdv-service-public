@@ -2,16 +2,23 @@ module Users
   class LoginCodeRequestForm
     include ActiveModel::Model
 
-    attr_reader :login_code
+    attr_reader :login_code, :behaviour
 
-    delegate :email, to: :login_code
+    delegate :email, :first_name, :last_name, to: :login_code
 
     validate :validate_login_code
-    validate :validate_user_exists_or_suggest_agent, if: -> { login_code.valid? }
-    validate :validate_not_sent_too_recently, if: -> { login_code.valid? && errors.empty? }
+    validates :behaviour, inclusion: { in: %w[upsert_user find_existing_user].freeze }
+    validate :validate_not_sent_too_recently, if: -> { login_code.valid? }
+    validates :first_name, :last_name, presence: true, if: -> { login_code.valid? && behaviour == "upsert_user" }
+    validate :validate_user_exists_or_suggest_agent, if: -> { login_code.valid? && behaviour == "find_existing_user" }
 
-    def initialize(login_code)
+    def initialize(login_code, behaviour: nil)
       @login_code = login_code
+      @behaviour = behaviour.presence || "find_existing_user"
+    end
+
+    def validate_login_code
+      errors.merge!(login_code) if login_code.invalid?
     end
 
     def validate_user_exists_or_suggest_agent
@@ -21,36 +28,21 @@ module Users
         if Agent.exists?(email:)
           <<~ERROR
             Aucun compte usager n’existe pour cet email.
-            Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur
-            <a href="#{Rails.application.routes.url_helpers.new_agent_session_path(agent: { email: })}">
-              la page de connexion agents
-            </a>.
+            Si vous souhaitez vous connecter en tant qu’agent, veuillez vous rendre sur la page de connexion agent.
           ERROR
         else
-          <<~ERROR
-            Aucun compte usager n’existe pour cet email, veuillez
-            <a href='#{Rails.application.routes.url_helpers.new_user_registration_path(user: { email: })}'>
-              créer un compte
-            </a>
-          ERROR
+          "Aucun compte usager n’existe pour cet email"
         end
-      errors.add(:base, error.html_safe) # rubocop:disable Rails/OutputSafety
+      errors.add(:base, error)
     end
 
     def validate_not_sent_too_recently
       if LoginCode.most_recent_usable_for(email:)&.very_recent?
-        errors.add(:base, <<~ERROR.html_safe) # rubocop:disable Rails/OutputSafety
+        errors.add(:base, <<~ERROR)
           Un code a été envoyé à #{email} il y a moins de deux minutes.
           Vous devriez recevoir ce code d’ici peu de temps.
-          <a href="#{Rails.application.routes.url_helpers.new_users_sessions_by_code_path(email:)}">
-            Suivez ce lien pour saisir le code reçu.
-          </a>
         ERROR
       end
-    end
-
-    def validate_login_code
-      errors.merge!(login_code) if login_code.invalid?
     end
 
     def save = valid? && login_code.save

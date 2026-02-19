@@ -1,11 +1,13 @@
 - content_for :title, "Saisie du code de connexion"
 
+- if @existing_login_code&.errors&.any?
+  .fr-mb-2w= render "model_errors", model: @existing_login_code
+
 .card
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body.fr-pt-4w
     - if @existing_login_code
-      = render "model_errors", model: @existing_login_code
       p
         |> ✅ Un code à 6 chiffres a été envoyé à
         b> #{@existing_login_code.email}
@@ -34,8 +36,8 @@
     .fr-mt-8w.fr-mb-4w
       - if @existing_login_code&.very_recent?
         |> Vous pouvez choisir un autre mode de connexion depuis la
-        => link_to "page de connexion", new_user_session_path(login_code_form_request: { email: @email }), class: "fr-link"
+        => link_to "page de connexion", new_user_session_path(login_code_request_form: { email: @email }), class: "fr-link"
       - else
         |> Si vous n’avez pas reçu l’email contenant le code, vous pouvez en demander un nouveau depuis la
-        => link_to "page de connexion", new_user_session_path(login_code_form_request: { email: @email }), class: "fr-link"
+        => link_to "page de connexion", new_user_session_path(login_code_request_form: { email: @email }), class: "fr-link"
         |> Vous pouvez aussi choisir un autre mode de connexion depuis cette page.

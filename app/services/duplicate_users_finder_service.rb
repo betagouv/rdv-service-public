@@ -1,57 +1,63 @@
 class DuplicateUsersFinderService < BaseService
-  def initialize(user, organisation = nil)
-    # TODO: Remove organisation from the parameters
-    #   It is never used in the app. It’s only used when find_duplicate_based_on_phone_number is called directly.
-    @user = user
-    @organisation = organisation
+  def initialize(candidate_user:, within_territory:)
+    @candidate_user = candidate_user
+    @scope = within_territory.users
   end
 
   def perform
     [
-      self.class.find_duplicate_based_on_email(@user, @organisation),
-      self.class.find_duplicate_based_on_identity(@user, @organisation),
-      self.class.find_duplicate_based_on_phone_number(@user, @organisation),
+      self.class.find_duplicate_based_on_email(@candidate_user),
+      self.class.find_duplicate_based_on_identity(@candidate_user, @scope),
+      self.class.find_duplicate_based_on_phone_number(@candidate_user, @scope),
     ].compact
   end
 
   class << self
-    def find_duplicate_based_on_email(user, organisation)
-      return if user.email.blank?
+    # cette méthode n'est appelée que par le perform
+    def find_duplicate_based_on_email(candidate_user)
+      return if candidate_user.email.blank?
 
-      duplicates = users_in_scope(user, organisation)
-        .where(email: user.email)
+      duplicates = User
+        .where.not(id: candidate_user.id)
+        .where(email: candidate_user.email)
       return unless duplicates.exists?
 
       OpenStruct.new(severity: :error, attributes: [:email], user: most_relevant_user(duplicates))
     end
 
-    def find_duplicate_based_on_identity(user, organisation)
-      return unless user.birth_date.present? && user.first_name.present? && user.last_name.present?
+    # cette méthode n'est appelée que par le perform
+    def find_duplicate_based_on_identity(candidate_user, scope)
+      return unless candidate_user.birth_date.present? && candidate_user.first_name.present? && candidate_user.last_name.present?
 
-      duplicates = users_in_scope(user, organisation)
-        .where(birth_date: user.birth_date)
-        .merge(match_on_names(user.first_name, user.last_name))
+      duplicates = scope
+        .where.not(id: candidate_user.id)
+        .where(birth_date: candidate_user.birth_date)
+        .merge(match_on_names(candidate_user.first_name, candidate_user.last_name))
       return unless duplicates.exists?
 
       OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
     end
 
-    def find_duplicate_based_on_names_and_phone(user)
-      return unless user.phone_number_formatted.present? && user.first_name.present? && user.last_name.present?
+    # cette méthode est appelée uniquement depuis PrescripteurRdvWizard#find_or_create_user
+    def find_duplicate_based_on_names_and_phone(candidate_user:, scope:)
+      return unless candidate_user.phone_number_formatted.present? && candidate_user.first_name.present? && candidate_user.last_name.present?
 
-      duplicates = users_in_scope(user, nil)
-        .where(phone_number_formatted: user.phone_number_formatted)
-        .merge(match_on_names(user.first_name, user.last_name))
+      duplicates = scope
+        .where.not(id: candidate_user.id)
+        .where(phone_number_formatted: candidate_user.phone_number_formatted)
+        .merge(match_on_names(candidate_user.first_name, candidate_user.last_name))
       return unless duplicates.exists?
 
       most_relevant_user(duplicates)
     end
 
-    def find_duplicate_based_on_phone_number(user, organisation)
-      return nil if user.phone_number_formatted.blank?
+    # cette méthode est appelée par #perform et dans admin/users/_responsible_information.html.slim
+    def find_duplicate_based_on_phone_number(candidate_user, scope)
+      return nil if candidate_user.phone_number_formatted.blank?
 
-      duplicates = users_in_scope(user, organisation)
-        .where(phone_number_formatted: user.phone_number_formatted)
+      duplicates = scope
+        .where.not(id: candidate_user.id)
+        .where(phone_number_formatted: candidate_user.phone_number_formatted)
       return unless duplicates.exists?
 
       OpenStruct.new(severity: :warning, attributes: [:phone_number], user: most_relevant_user(duplicates))
@@ -67,17 +73,10 @@ class DuplicateUsersFinderService < BaseService
       )
     end
 
-    def users_in_scope(user, organisation)
-      u = User.all
-      u = u.where.not(id: user.id) if user.persisted?
-      u = u.merge(organisation.users) if organisation.present?
-      u
-    end
-
     def most_relevant_user(scope)
       # return the user with the most Rdvs.
-      # Avoid doing it in users_in_scope because the join may be expensive.
-      scope.left_joins(:rdvs).group(:id).order("COUNT(rdvs.id) DESC").first
+      # For performance reasons, we only run that query once we determined that there is at least one duplicate.
+      User.where(id: scope.ids).left_joins(:rdvs).group(:id).order("COUNT(rdvs.id) DESC").first
     end
   end
 end

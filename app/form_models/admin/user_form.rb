@@ -10,8 +10,9 @@ class Admin::UserForm
 
   delegate :errors, to: :user
 
-  def initialize(user, ignore_benign_errors: false, view_locals: {})
+  def initialize(user, current_organisation:, ignore_benign_errors: false, view_locals: {})
     @user = user
+    @current_organisation = current_organisation
     self.ignore_benign_errors = ignore_benign_errors
     @view_locals = view_locals
   end
@@ -34,7 +35,7 @@ class Admin::UserForm
   private
 
   def duplicate_results
-    @duplicate_results ||= DuplicateUsersFinderService.perform_with(user)
+    @duplicate_results ||= DuplicateUsersFinderService.perform_with(candidate_user: user, within_territory: @current_organisation.territory)
   end
 
   def validate_duplicates
@@ -59,6 +60,7 @@ class Admin::UserForm
       locals: {
         user: duplicate_result.user,
         attributes: duplicate_result.attributes,
+        current_organisation: @current_organisation,
         **@view_locals,
       }
     )
