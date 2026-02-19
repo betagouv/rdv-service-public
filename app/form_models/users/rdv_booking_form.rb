@@ -72,9 +72,9 @@ class Users::RdvBookingForm
 
   def rdv = @rdv || rdv_builder.rdv
 
-  private
-
   def booking_for_proche? = @booking_for_proche
+
+  private
 
   def ants_with_proches?
     rdv.requires_ants_predemande_number? && rdv_builder.ants_pre_demandes_count.to_i > 1
@@ -89,11 +89,10 @@ class Users::RdvBookingForm
 
     if ants_with_proches?
       # Cas ANTS : chaque slot a un selected_id et des données par proche
-      ants_slots = @raw_proches_data
-      ants_slots.values.filter_map do |slot|
-        selected_id = slot[:selected_id] || slot["selected_id"]
-        proches_in_slot = slot[:proches] || slot["proches"] || {}
-        data = (proches_in_slot[selected_id] || proches_in_slot[selected_id.to_s] || {}).symbolize_keys
+      @raw_proches_data.values.map(&:symbolize_keys).filter_map do |proche_data|
+        selected_id = proche_data[:selected_id]&.to_s
+        proches_in_slot = proche_data[:proches].stringify_keys
+        data = (proches_in_slot[selected_id] || {}).symbolize_keys
         data[:id] = selected_id unless selected_id == "new"
         data
       end
