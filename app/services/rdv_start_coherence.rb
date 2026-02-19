@@ -12,7 +12,7 @@ class RdvStartCoherence
     return [] if rdvs_ending_right_before?
 
     @rdvs_ending_shortly_before ||= all_rdvs_ending_before
-      .select { _1.ends_at <= starts_at - THRESHOLD }
+      .select { _1.ends_at <= starts_at - rdv.minutes_after_rdv.minutes - THRESHOLD }
   end
 
   def rdvs_ending_shortly_before?
