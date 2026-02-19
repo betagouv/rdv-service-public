@@ -1,10 +1,10 @@
 class Users::RdvBookingForm
   include Users::UserFormConcern
 
-  attr_reader :rdv_builder
+  attr_reader :rdv_builder, :invitation_token
   attr_accessor :booking_for_proche
 
-  delegate :to_query, :motif, :service, :rdv, to: :rdv_builder
+  delegate :to_query, :motif, :service, to: :rdv_builder
   delegate :add_benign_error, :ignore_benign_errors, to: :user
   validates :ants_pre_demande_number, presence: true, if: -> { rdv.requires_ants_predemande_number? }
   validates_with AntsPreDemandeNumberStatusValidation, if: -> { rdv.requires_ants_predemande_number? }
@@ -33,6 +33,7 @@ class Users::RdvBookingForm
     ActiveRecord::Base.transaction do
       @user.save!
       save_proches!
+      create_rdv
     end
     true
   rescue ActiveRecord::RecordInvalid
@@ -72,6 +73,8 @@ class Users::RdvBookingForm
   def show_social_fields? = service.nil? || service.user_field_groups.include?(:social)
 
   def ants_meeting_point_id = rdv_builder.lieu_id
+
+  def rdv = @rdv || rdv_builder.rdv
 
   private
 
@@ -168,5 +171,28 @@ class Users::RdvBookingForm
 
   def validate_phone_number_present_for_motif_by_phone
     errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
+  end
+
+  def create_rdv
+    rdv_builder.rdv.collectif? ? create_collectif_participation : create_individual_rdv
+  end
+
+  def create_individual_rdv
+    @rdv = rdv_builder.creneau.build_rdv
+    @rdv.assign_attributes(users: users_for_rdv, created_by: @user)
+
+    @rdv.save!
+
+    notifier = Notifiers::RdvCreated.new(@rdv, @user)
+    notifier.perform
+    @invitation_token = notifier.participations_tokens_by_user_id[@user.id]
+  end
+
+  def create_collectif_participation
+    participation = Participation.new(rdv:, user: users_for_rdv.first, created_by: @user)
+    # authorize(participation, policy_class: User::ParticipationPolicy)
+
+    participation.create_and_notify!(@user)
+    @invitation_token = participation.restricted_auth_token
   end
 end

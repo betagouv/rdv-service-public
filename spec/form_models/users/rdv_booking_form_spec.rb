@@ -4,9 +4,12 @@ RSpec.describe Users::RdvBookingForm do
   let!(:user_for_rdv) { create(:user) }
   let!(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:creneau) { build(:creneau, :respects_booking_delays, motif: motif, starts_at: Time.zone.parse("2020-10-20 09h30")) }
-  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu:, organisation:, agent:) }
+  let(:creneau) { build(:creneau, :respects_booking_delays, motif: motif, starts_at: Time.zone.parse("2020-10-20 09h30"), agent:, lieu_id: lieu.id) }
   let(:domain) { Domain::RDV_SERVICE_PUBLIC }
+
+  before { allow(rdv_builder).to receive(:creneau).and_return(creneau) }
 
   describe "#save" do
     context "when everything is ok" do

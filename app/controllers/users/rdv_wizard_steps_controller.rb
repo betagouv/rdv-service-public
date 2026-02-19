@@ -38,10 +38,10 @@ class Users::RdvWizardStepsController < UserAuthController
 
     return if render_new_if_toggling_proches_without_js
 
-    if @rdv_booking_form.save && create_rdv_and_redirect
-      flash[:success] = (@rdv.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
+    if @rdv_booking_form.save
+      flash[:success] = (@rdv_booking_form.rdv.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
       set_user_name_initials_verified
-      redirect_to users_rdv_path(@rdv, invitation_token: @invitation_token)
+      redirect_to users_rdv_path(@rdv_booking_form.rdv, invitation_token: @rdv_booking_form.invitation_token)
     else
       flash[:error] = "Une erreur a empêché la confirmation de votre RDV"
       render :new
@@ -118,37 +118,5 @@ class Users::RdvWizardStepsController < UserAuthController
                     { user_profiles_attributes: %i[logement id organisation_id] },
                     { proches: {} },
                   ])
-  end
-
-  private
-
-  def create_rdv_and_redirect
-    if @rdv.collectif?
-      create_collectif_participation
-    else
-      create_individual_rdv
-    end
-  end
-
-  def create_individual_rdv
-    @rdv = @rdv_builder.creneau.build_rdv
-    @rdv.assign_attributes(users: @rdv_booking_form.users_for_rdv, created_by: current_user)
-
-    return false unless @rdv.save
-
-    notifier = Notifiers::RdvCreated.new(@rdv, current_user)
-    notifier.perform
-    @invitation_token = notifier.participations_tokens_by_user_id[current_user.id]
-    true
-  end
-
-  def create_collectif_participation
-    user_for_rdv = @rdv_booking_form.users_for_rdv.first
-    participation = Participation.new(rdv: @rdv, user: user_for_rdv, created_by: current_user)
-    authorize(participation, policy_class: User::ParticipationPolicy)
-
-    participation.create_and_notify!(current_user)
-    @invitation_token = participation.restricted_auth_token
-    true
   end
 end
