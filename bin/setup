@@ -24,7 +24,7 @@ FileUtils.chdir APP_ROOT do
   puts "== Installing dependencies =="
   system! "gem install bundler --conservative"
   system("bundle check") || system!("bundle install")
-  system! "yarn install --frozen-lockfile"
+  system! "yarn install --immutable"
   system! "yarn run playwright install chromium --with-deps"
 
   puts "\n== Preparing database for both local instances =="

@@ -46,7 +46,7 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    playwright_yarn_version = Rails.root.join("yarn.lock").read[/^playwright@.*\n\s+version\s+"([^"]+)"/, 1]
+    playwright_yarn_version = Rails.root.join("yarn.lock").read[/^"playwright@npm:([^"]+)":/, 1]
     unless playwright_yarn_version&.start_with?(Playwright::COMPATIBLE_PLAYWRIGHT_VERSION)
       raise "Playwright gem expects Playwright version #{Playwright::COMPATIBLE_PLAYWRIGHT_VERSION}, but yarn.lock has #{playwright_yarn_version.inspect}"
     end

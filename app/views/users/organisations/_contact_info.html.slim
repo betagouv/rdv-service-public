@@ -1,0 +1,13 @@
+/# locals: (phone_number:, organisation:)
+- if phone_number.present? || organisation.website.present?
+  .fr-mb-2w
+    h2.fr-h6.fr-mt-3w Contact de #{organisation.name}
+    .d-flex
+      - if phone_number.present?
+        p.fr-mr-2w
+          span.fr-icon-phone-fill.fr-mr-1w[aria-hidden="true"]
+          = phone_to(phone_number, title: "Numéro de téléphone")
+      - if organisation.website.present?
+        p
+          span.fr-icon-global-fill.fr-mr-1w[aria-hidden="true"]
+          = link_to "Site web", organisation.website, target: "_blank"

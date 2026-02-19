@@ -4,6 +4,7 @@
     - case participation.temporal_status
     - when "unknown_future"
       = render "admin/participations/participation_status_dropdown_item", participation:, contextual_agents:, status: "excused"
+      = render "admin/participations/participation_status_dropdown_item", participation:, contextual_agents:, status: "revoked"
 
     - when "unknown_today"
       = render "admin/participations/participation_status_dropdown_item", participation:, contextual_agents:, status: "seen"
