@@ -24,7 +24,7 @@ class Users::RdvWizardStepsController < UserAuthController
     authorize(@rdv, policy_class: User::RdvPolicy)
   end
 
-  def create # rubocop:disable Metrics/PerceivedComplexity
+  def create
     skip_authorization
     @rdv_builder = Users::RdvBuilder.new(current_user, rdv_params)
     return if redirect_to_prendre_rdv_path_if_creneau_unavailable
@@ -36,17 +36,7 @@ class Users::RdvWizardStepsController < UserAuthController
       domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys
     )
 
-    toggle_proche =
-      if params[:enable_proche_section].present?
-        "1"
-      elsif params[:disable_proche_section].present?
-        "0"
-      end
-    if toggle_proche
-      @rdv_booking_form.booking_for_proche = toggle_proche
-      render :new
-      return
-    end
+    return if render_new_if_toggling_proches_without_js
 
     if @rdv_booking_form.save && create_rdv_and_redirect
       flash[:success] = (@rdv.collectif? ? "Participation confirmée" : t("users.rdvs.create.rdv_confirmed"))
@@ -63,6 +53,23 @@ class Users::RdvWizardStepsController < UserAuthController
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
       skip_authorization
       redirect_to prendre_rdv_path(@rdv_builder.to_query)
+      true
+    end
+  end
+
+  def render_new_if_toggling_proches_without_js
+    # la versions sans JS affiche deux boutons submit supplémentaires avec des name différents
+    # lorsque l'usager clique dessus, on toggle le form et on re-render le #new
+    # cela permet de conserver ce qu'il avait déjà renseigné dans les champs du formulaire
+    toggle_proche =
+      if params[:enable_proche_section].present?
+        "1"
+      elsif params[:disable_proche_section].present?
+        "0"
+      end
+    if toggle_proche
+      @rdv_booking_form.booking_for_proche = toggle_proche
+      render :new
       true
     end
   end
