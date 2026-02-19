@@ -201,6 +201,61 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     end
   end
 
+  describe "#participation_cancelled" do
+    before { travel_to Time.zone.parse("2020-06-10 12:30") }
+
+    let(:token) { "12345" }
+    let(:organisation) { build(:organisation, name: "Orga du coin") }
+    let(:user) { create(:user) }
+    let(:motif) { create(:motif, :collectif, organisation:) }
+    let(:rdv) { create(:rdv, :collectif, :without_users, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation:, motif:) }
+    let(:participation_status) { "unknown" }
+    let(:participation) { create(:participation, rdv:, user:, status: participation_status) }
+    let(:mail) { described_class.with(rdv:, user:, token:, participation:).participation_cancelled }
+
+    it "envoie le mail à l'usager" do
+      expect(mail[:from].to_s).to match(/"RDV Solidarités" <rdv\+[a-z0-9\-]+@reply\.rdv-solidarites-test\.localhost>/)
+      expect(mail.to).to eq([user.email])
+    end
+
+    it "le sujet contient la date et l'organisation" do
+      expect(mail.subject).to eq("Participation annulée au RDV du lundi 15 juin 2020 à 12h30 avec Orga du coin")
+    end
+
+    context "participation annulée à l'initiative du service (revoked)" do
+      let(:participation_status) { "revoked" }
+
+      it "le corps du mail indique une annulation pour raison administrative" do
+        expect(mail.body).to match("a été annulée pour raison administrative")
+      end
+    end
+
+    context "participation annulée à l'initiative de l'usager (excused)" do
+      let(:participation_status) { "excused" }
+
+      it "le corps du mail indique une annulation à la demande de l'usager" do
+        expect(mail.body).to match("a bien été annulée à votre demande")
+      end
+    end
+
+    context "motif ouvert au public" do
+      let(:motif) { create(:motif, :collectif, organisation:, bookable_by: :everyone) }
+
+      it "le corps contient un lien pour reprendre RDV" do
+        expected_url = prendre_rdv_url(
+          departement: rdv.organisation.departement_number,
+          motif_name_with_location_type: rdv.motif.name_with_location_type,
+          organisation_ids: [rdv.organisation_id],
+          address: rdv.address,
+          invitation_token: token,
+          host: Domain::RDV_SOLIDARITES.host_name
+        )
+
+        expect(mail.body).to have_link("Reprendre RDV", href: expected_url)
+      end
+    end
+  end
+
   describe "#rdv_upcoming_reminder" do
     let(:token) { "12345" }
     let!(:rdv) { create(:rdv, users: [user]) }

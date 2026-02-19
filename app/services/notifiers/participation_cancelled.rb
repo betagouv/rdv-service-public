@@ -24,11 +24,11 @@ class Notifiers::ParticipationCancelled < BaseService
     return unless participation.send_lifecycle_notifications?
 
     if user.notifiable_by_email?
-      Users::RdvMailer.with(rdv:, user:, token:).rdv_cancelled.deliver_later
+      Users::RdvMailer.with(rdv:, user:, token:, participation:).participation_cancelled.deliver_later
     end
 
     if user.notifiable_by_sms? && (author.is_a?(Agent) || author.is_a?(Prescripteur))
-      Users::RdvSms.rdv_cancelled(rdv, user, token).deliver_later
+      Users::RdvSms.participation_cancelled(rdv, user, token).deliver_later
     end
   end
 
