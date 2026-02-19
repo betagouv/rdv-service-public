@@ -29,13 +29,16 @@ fr:
       participation/statuses/action:
         unknown: Réinitialiser
         seen: Présent
-        excused: Annulation
+        excused: Annulation à l’initiative de l’usager
+        revoked: Annulation à l’initiative du service
         noshow: Absence non excusée
       participation/statuses/explanation:
         unknown: Pour corriger l’état du rendez-vous.
         seen: L’usager s’est présenté au rendez-vous.
         excused: L’usager a prévenu de son absence.
+        revoked: Le service a désinscrit l’usager, par exemple pour des raisons administratives.
         noshow: L’usager ne s’est pas présenté.
       participation/statuses/explanation_notif:
         unknown: Une notification de nouveau RDV sera envoyée à l'usager.
         excused: Une notification de confirmation lui sera envoyée.
+        revoked: Une notification d'annulation lui sera envoyée.

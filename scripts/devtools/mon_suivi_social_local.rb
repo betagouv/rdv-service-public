@@ -1,5 +1,5 @@
 # Ce script remplace une version locale de Mon Suivi Social pour tester les intégrations
-# Usage  bundle exec ruby scripts/mon_suivi_social_local.rb
+# Usage  bundle exec ruby scripts/devtools/mon_suivi_social_local.rb
 require "sinatra"
 require "omniauth-rdv-service-public"
 
