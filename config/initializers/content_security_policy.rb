@@ -40,7 +40,7 @@ Rails.application.config.content_security_policy do |policy|
   policy.worker_src :blob
   policy.child_src :blob, :self
   policy.frame_src :self, in_status, metabase
-  policy.img_src :self, :data, :blob, tiles_osm, unpkg_cdn, tiles_data_gouv, lasuite
+  policy.img_src :self, :data, :blob, tiles_osm, tiles_data_gouv, lasuite
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, unpkg_cdn
   policy.connect_src :self, api_adresse_ign, tiles_etalab, tiles_data_gouv, lasuite
 
