@@ -73,6 +73,8 @@ Rails.application.routes.draw do
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
+    # pour éviter les 404 lors d’un refresh après un premier post qui a rendu :new
+    get :rdv_wizard_step, to: redirect(path: "/users/rdv_wizard_step/new")
     resources :rdvs, only: %i[index create show edit update] do
       resources :participations, only: %i[index create]
       put "participations/cancel", to: "participations#cancel"
