@@ -169,7 +169,7 @@ class CronJob < ApplicationJob
 
   class DestroyLoginCodesJob < CronJob
     def perform
-      LoginCode.where("created_at < ?", 7.days.ago)
+      LoginCode.where("created_at < ?", 7.days.ago).delete_all
       # on garde les codes quelques jours pour investiguer certaines situations et avoir une idée des volumes
     end
   end
