@@ -92,6 +92,10 @@ class PlageOuverture < ApplicationRecord
     "plage_ouverture_#{id}@#{IcalFormatters::Ics::ICS_UID_SUFFIX}"
   end
 
+  def ics_attachment_filename
+    "plage-ouverture-#{title.presence&.parameterize || id}-#{starts_at.to_s.parameterize}.ics"
+  end
+
   def available_motifs
     Motif.available_motifs_for_organisation_and_agent(organisation, agent).individuel
   end

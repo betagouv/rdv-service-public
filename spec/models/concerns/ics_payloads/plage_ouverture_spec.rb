@@ -1,6 +1,6 @@
 RSpec.describe IcsPayloads::PlageOuverture do
   describe "#payload" do
-    %i[name starts_at rrule ical_uid ends_at].each do |key|
+    %i[attachement_filename starts_at rrule ical_uid ends_at].each do |key|
       it "return an hash with key #{key}" do
         plage_ouverture = create(:plage_ouverture)
         expect(plage_ouverture.payload).to have_key(key)

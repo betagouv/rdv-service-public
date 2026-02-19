@@ -2,7 +2,7 @@ RSpec.describe IcsPayloads::Absence do
   let(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
 
   describe "#payload" do
-    %i[name starts_at rrule ical_uid ends_at].each do |key|
+    %i[attachement_filename starts_at rrule ical_uid ends_at].each do |key|
       it "return an hash with key #{key}" do
         absence = create(:absence, agent:)
         expect(absence.payload).to have_key(key)
