@@ -42,8 +42,7 @@ class PrescripteurRdvWizard
       participations: [participation]
     )
 
-    rdv.minutes_after_rdv = PlageOuverture.joins(:motifs).where(agent: rdv.agents.map(&:id),
-                                                                motifs: rdv.motif).overlapping_range(rdv.starts_at..rdv.ends_at).pluck(:minutes_between_rdvs).max || 0
+    rdv.set_minutes_after_rdv_from_plage_ouvertures
     rdv.save!
 
     Notifiers::RdvCreated.perform_with(rdv, @prescripteur)

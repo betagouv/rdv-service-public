@@ -28,8 +28,7 @@ module Admin::RdvWizardFormConcern
       @agent_author = agent_author
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
-      @rdv.minutes_after_rdv = PlageOuverture.joins(:motifs).where(agent: @rdv.agents.map(&:id),
-                                                                   motifs: @rdv.motif).overlapping_range(@rdv.starts_at..@rdv.ends_at).pluck(:minutes_between_rdvs).max || 0
+      @rdv.set_minutes_after_rdv_from_plage_ouvertures
       @rdv.participations.each(&:set_default_notifications_flags)
       @service_id = attributes.to_h.symbolize_keys[:service_id]
     end
