@@ -43,7 +43,7 @@
     "esbuild-sass-plugin": "^3.3.1",
     "playwright": "1.56.1",
     "prettier": "3.3.2",
-    "sass": "^1.51.0"
+    "sass": "^1.97.2"
   },
   "browserslist": [
     "cover 98.0% in FR and not dead"

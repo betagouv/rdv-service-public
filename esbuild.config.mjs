@@ -3,6 +3,7 @@ import { sassPlugin } from 'esbuild-sass-plugin';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Logger } from 'sass'
 
 const select2Plugin = {
   name: 'select2-init',
@@ -49,6 +50,7 @@ const config = {
     sassPlugin({
       importMapper: (p) => p.replace(/^~/, ''),
       loadPaths: [path.resolve(__dirname, 'node_modules')],
+      logger: Logger.silent,
     }),
   ],
   external: ['*.svg'],
