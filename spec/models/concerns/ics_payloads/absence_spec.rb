@@ -2,7 +2,7 @@ RSpec.describe IcsPayloads::Absence do
   let(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
 
   describe "#payload" do
-    %i[name starts_at rrule ical_uid ends_at].each do |key|
+    %i[attachement_filename starts_at rrule ical_uid ends_at].each do |key|
       it "return an hash with key #{key}" do
         absence = create(:absence, agent:)
         expect(absence.payload).to have_key(key)
@@ -16,10 +16,10 @@ RSpec.describe IcsPayloads::Absence do
       end
     end
 
-    describe ":name" do
+    describe ":attachement_filename" do
       let(:absence) { create(:absence, agent:, title: "something", start_time: Time.zone.parse("12h30"), first_day: Date.new(2020, 11, 13)) }
 
-      it { expect(absence.payload[:name]).to eq("absence-something-2020-11-13-12-30-00-0100.ics") }
+      it { expect(absence.payload[:attachement_filename]).to eq("absence-something-2020-11-13-12-30-00-0100.ics") }
     end
 
     describe ":starts_at" do
