@@ -55,8 +55,8 @@ RSpec.describe "Adding a user to a collective RDV" do
   def expect_confirm_participation(notif: true)
     expect do
       click_link("S'inscrire")
-      uncheck "Accepte les notifications par email" unless notif
-      uncheck "Accepte les notifications par SMS" unless notif
+      uncheck "J’accepte les notifications par email" unless notif
+      uncheck "J’accepte les notifications par SMS" unless notif
       stub_request(:post, "https://example.com/")
       click_button("Confirmer ma participation")
       expect(page).to have_content("Participation confirmée")

@@ -30,9 +30,8 @@
 - if f.object.show_landline_phone_number_warning?
   .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile
 
-div.mb-2 Préférences de notifications
-div= f.dsfr_check_box :notify_by_email
-div= f.dsfr_check_box :notify_by_sms
+div= f.dsfr_check_box :notify_by_email, label: "J’accepte les notifications par email"
+div= f.dsfr_check_box :notify_by_sms, label: "J’accepte les notifications par SMS"
 
 - if f.object.show_address_field?
   = f.dsfr_text_field :address,
