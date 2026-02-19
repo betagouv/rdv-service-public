@@ -580,7 +580,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_24_092756) do
     t.datetime "recurrence_ends_at"
     t.time "secondary_start_time"
     t.time "secondary_end_time"
-    t.integer "cooldown", default: 0, null: false
+    t.integer "minutes_between_rdvs", default: 0, null: false
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
