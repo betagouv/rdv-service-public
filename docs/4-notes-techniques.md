@@ -10,7 +10,7 @@ L’accès à /super_admins se fait:
 * sur les review apps, en http Basic.
     * login: rdv-solidarites
     * password: défini automatiquement au déploiement (cf [scalingo.json](scalingo.json))
-    * obtenu avec `scripts/review_app_super_admin_password.sh <numéro de la PR>`
+    * obtenu avec `scripts/devtools/review_app_super_admin_password.sh <numéro de la PR>`
 
 ## Schéma de données de la base
 
@@ -105,7 +105,7 @@ cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/prod
 
 Playwright est notre système d’instrumentalisation du navigateur pour les tests E2E.
 On utilise à la fois des gems et un package NPM, avec des contraintes de compatibilité entre les deux.
-Il faut donc les mettre à jour simultanément. Un script permet de faire ça : `./scripts/update_playwright.sh`
+Il faut donc les mettre à jour simultanément. Un script permet de faire ça : `./scripts/devtools/update_playwright.sh`
 
 ## Review apps
 

@@ -4,13 +4,17 @@
   "scripts": {
     "build": "webpack --config webpack.config.js"
   },
+  "engines": {
+    "node": "20.9.0"
+  },
   "dependencies": {
-    "@fullcalendar/core": "^5.11.5",
-    "@fullcalendar/daygrid": "^5.11.5",
-    "@fullcalendar/interaction": "^5.11.5",
-    "@fullcalendar/list": "^5.11.5",
-    "@fullcalendar/resource-timegrid": "^5.11.5",
-    "@fullcalendar/timegrid": "^5.11.5",
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/list": "^6.1.15",
+    "@fullcalendar/resource": "^6.1.15",
+    "@fullcalendar/resource-timegrid": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.21",
     "@rails/actioncable": ">=7.0",
@@ -23,6 +27,7 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartkick": "^5.0.1",
     "custom-event-polyfill": "^1.0.7",
+    "date-fns": "^4.1.0",
     "jquery": "^3.4.0",
     "jquery-datetimepicker": "^2.5.21",
     "kind-of": ">=6.0.3",
@@ -46,5 +51,6 @@
   },
   "browserslist": [
     "cover 98.0% in FR and not dead"
-  ]
+  ],
+  "packageManager": "yarn@4.12.0"
 }

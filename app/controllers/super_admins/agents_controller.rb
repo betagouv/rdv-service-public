@@ -3,15 +3,10 @@ module SuperAdmins
     def sign_in_as
       authorize(:agent, :sign_in_as?, policy_class: SuperAdmin::AgentPolicy)
       agent = Agent.find(params[:id])
-      if sign_in_as_allowed?
-        sign_out(:user)
-        bypass_sign_in(agent, scope: :agent)
-        session[:super_admin_signed_in_as_agent] = true
-        redirect_to root_url
-      else
-        flash[:error] = "Fonctionnalité désactivée sur cet environnement."
-        redirect_to super_admins_agent_path(agent)
-      end
+      sign_out(:user)
+      bypass_sign_in(agent, scope: :agent)
+      session[:super_admin_signed_in_as_agent] = true
+      redirect_to root_url
     end
 
     def create

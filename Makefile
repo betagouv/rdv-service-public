@@ -2,7 +2,7 @@ install: ## Setup development environment
 	bin/setup
 
 run: ## Start the application (web, jobs et webpack)
-	overmind start -f Procfile.dev
+	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev
 
 lint: lint_rubocop lint_slim lint_brakeman ## Run all linters
 
@@ -44,7 +44,7 @@ rswag_api_v1: ## Re-generate swagger/v1/api.json by running API specs
 .DEFAULT_GOAL := help
 
 review_app: ## Create Scalingo review app for the PR linked to the current branch
-	ruby scripts/create_review_app.rb
+	ruby scripts/devtools/create_review_app.rb
 
 enable_emails_on_review_app:
 	/bin/sh scripts/enable_emails_on_review_app.sh

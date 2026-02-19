@@ -3,17 +3,15 @@ module Caldav
     include GoodJob::ActiveJobExtensions::Concurrency
 
     good_job_control_concurrency_with(
-      perform_limit: 1,
+      total_limit: 1,
       key: -> { "Caldav::ImportAbsencesFromCaldavJob-#{arguments.first}" }
     )
 
     before_enqueue { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
     before_perform { |job| throw :abort if job.class.synced_during_last_minute?(agent_id: job.arguments.first) }
 
-    def self.synced_during_last_minute?(agent_id:)
-      latest_run = Redis.with_connection { _1.get("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}") }
-      latest_run && latest_run.to_time > 1.minute.ago
-    end
+    def self.store_latest_run_timestamp(agent_id:) = Redis.with_connection { _1.set("latest_caldav_import:#{agent_id}", Time.zone.now, ex: 1.minute) }
+    def self.synced_during_last_minute?(agent_id:) = Redis.with_connection { _1.get("latest_caldav_import:#{agent_id}") }&.to_time&.after?(1.minute.ago)
 
     # Pour comprendre l'usage de la gem Calendav, voir la doc très claire :
     # https://github.com/pat/calendav?tab=readme-ov-file#synchronising
@@ -32,8 +30,8 @@ module Caldav
       update_local_events_of(agent:, updated_events:, deleted_events:, new_sync_token:)
 
       # Import successful: set job debounce and update realtime calendars
-      Redis.with_connection { _1.set("Caldav::ImportAbsencesFromCaldavJob#latest_run:#{agent_id}", Time.zone.now, ex: 1.minute) }
-      AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent")
+      self.class.store_latest_run_timestamp(agent_id:)
+      AgendaChannel.broadcast_to(agent_id, model: "ExternalCalendarEvent") if updated_events.any? || deleted_events.any?
     end
 
     private

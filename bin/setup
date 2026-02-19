@@ -10,22 +10,27 @@ end
 
 FileUtils.chdir APP_ROOT do
   # This script is a way to set up or update your development environment automatically.
-  # This script is idempotent, so that you can run it at any time and get an expectable outcome.
+  # This script is idempotent, so that you can run it at any time and get a reliable outcome.
   # Add necessary setup steps to this file.
+
+  puts "\n== Copying sample .env files =="
+  unless File.exist?(".env")
+    FileUtils.cp ".env.sample", ".env"
+  end
+  unless File.exist?(".env.rdv_solidarites")
+    FileUtils.cp ".env.rdv_solidarites.sample", ".env.rdv_solidarites"
+  end
 
   puts "== Installing dependencies =="
   system! "gem install bundler --conservative"
   system("bundle check") || system!("bundle install")
-  system! "yarn install --frozen-lockfile"
+  system! "yarn install --immutable"
   system! "yarn run playwright install chromium --with-deps"
 
-  # puts "\n== Copying sample files =="
-  # unless File.exist?("config/database.yml")
-  #   FileUtils.cp "config/database.yml.sample", "config/database.yml"
-  # end
-
-  puts "\n== Preparing database =="
+  puts "\n== Preparing database for both local instances =="
   system! "bin/rails db:prepare"
+  system! "bundle exec dotenv -f '.env.rdv_solidarites,.env' bin/rails db:prepare"
+
 
   puts "\n== Preparing parallel test databases =="
   system! "RAILS_ENV=test rake parallel:create"

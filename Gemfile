@@ -1,10 +1,7 @@
-source "https://beta.gem.coop/cooldown"
+source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.4.8"
-
-# Autoload dotenv in Rails.
-gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Full-stack web application framework.
 gem "rails", "8.0.4"
@@ -168,6 +165,9 @@ gem "lograge"
 gem "csv"
 
 group :development do
+  # Autoload dotenv in Rails in development (production, staging and demo envs already have env vars setup by the hosting provider)
+  gem "dotenv-rails" # dotenv should always be loaded before rails
+
   #  Hot reload
 
   # Rails application preloader

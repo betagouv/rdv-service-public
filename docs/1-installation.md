@@ -14,21 +14,18 @@
 
 ## Setup
 
-Commencer par copier `.env.sample` vers `.env` et définissez-y les variables POSTGRES_HOST, POSTGRES_USER et POSTGRES_PASSWORD pour la connexion à la db locale
-
-Puis exécuter ce script pour installer les gems et packages et créer la base de données :
+Exécutez ce script pour installer les gems et packages et créer la base de données :
 ```bash
 make install  ## appelle bin/setup
 ```
 
-Il ne reste (si tout s’est bien passé) qu’à lancer le serveur.
-```bash
-make run      ## appelle overmind start -f Procfile.dev
-```
+Pour certaines fonctionnalités comme ProConnect ou des appels à des API distantes, vous aurez besoin de récupérer des variables d'env depuis Vaulwarden. Le fichier .env contient des instructions pour chaque variable.
+
+Vous pouvez ensuite lancer le serveur avec `make run`
 
 ## Commandes
 
-Un [Makefile](https://github.com/betagouv/rdv-solidarites.fr/blob/production/Makefile) est disponible, qui sert de point d’entrée aux différents outils :
+Le [Makefile](https://github.com/betagouv/rdv-service-public/blob/production/Makefile) sert de point d’entrée aux différents outils :
 
 ```bash
 > make help
