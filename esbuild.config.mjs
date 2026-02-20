@@ -53,7 +53,7 @@ const config = {
       logger: Logger.silent,
     }),
   ],
-  external: ['*.svg'],
+  loader: { '.svg': 'file' },
   resolveExtensions: ['.js', '.scss', '.sass', '.css'],
   logLevel: 'info',
 };
