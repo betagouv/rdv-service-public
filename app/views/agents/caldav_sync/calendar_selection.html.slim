@@ -1,0 +1,27 @@
+/# locals: (calendars:, preselected_url:)
+
+- content_for :title do
+  | Configuration de la synchronisation CalDAV
+
+- content_for :breadcrumbs do
+  = dsfr_breadcrumbs do |b|
+    = b.with_breadcrumb label: "Synchronisation d'agenda", href: agents_calendar_sync_path
+    = b.with_breadcrumb label: "Configuration de la synchronisation CalDAV"
+
+p Veuillez sélectionner ci-dessous l'agenda que vous souhaitez synchroniser avec RDV Service Public.
+
+= form_tag agents_calendar_sync_caldav_sync_path, method: :put do
+  = hidden_field_tag :caldav_username, params[:caldav_username]
+  = hidden_field_tag :caldav_password, params[:caldav_password]
+
+  fieldset.fr-fieldset
+    legend.fr-fieldset__legend.fr-fieldset__legend--regular
+      | Sélectionnez l'agenda à synchroniser
+    - calendars.each do |calendar|
+      .fr-fieldset__element
+        .fr-radio-group
+          input type="radio" name="caldav_agenda_url" id="calendar_#{calendar.url.parameterize}" value=calendar.url required=true checked=(calendar.url.chomp("/") == preselected_url)
+          label.fr-label for="calendar_#{calendar.url.parameterize}"
+            = calendar.display_name
+
+  = submit_tag "Valider", class: "fr-btn fr-mt-2w"

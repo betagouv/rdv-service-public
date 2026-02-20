@@ -5,6 +5,27 @@ class Agents::CaldavSyncController < AgentAuthController
     skip_authorization
   end
 
+  def calendar_selection
+    skip_authorization
+    client = Calendav::Client.new(
+      Calendav::Credentials::Standard.new(
+        host: params[:caldav_agenda_url],
+        username: params[:caldav_username],
+        password: params[:caldav_password],
+        authentication: :basic_auth
+      )
+    )
+
+    begin
+      calendars = client.calendars.list
+      preselected_url = calendars.any? { |c| c.url.chomp("/") == params[:caldav_agenda_url].to_s.chomp("/") }
+      render locals: { calendars: calendars, preselected_url: preselected_url }
+    rescue StandardError => e
+      flash[:alert] = "L'authentification a échoué. Veuillez vérifier votre identifiant et votre mot de passe. #{e.message}"
+      redirect_to agents_calendar_sync_caldav_sync_path
+    end
+  end
+
   def update
     skip_authorization
     current_agent.assign_attributes(permitted_params)
