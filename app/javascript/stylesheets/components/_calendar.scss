@@ -120,6 +120,11 @@ main[data-beta-planning-layout="true"] .fc {
     background: #f4f4f4;
   }
 
+  // Pour éviter que les noms des agents se superposent soient illisibles quand on affiche une semaine pour beaucoup d'agents à la fois
+  .fc-col-header-cell-cushion {
+    display: inline;
+  }
+
   // Les headers FullCalendar sont des <a> sans href et le DSFR les grise.
   // Ici on override les propriétés pour reprendre le contrôle sur la couleur du texte.
   a.fc-col-header-cell-cushion,
