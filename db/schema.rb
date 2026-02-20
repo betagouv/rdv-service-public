@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_19_101309) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_20_101844) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -491,9 +491,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_101309) do
     t.datetime "updated_at", null: false
     t.text "logo_base64"
     t.text "post_logout_redirect_uri"
-    t.bigint "default_service_id", comment: "Indique le service qui sera ajouté au territoire par défaut si un agent qui utilise cette application ouvre un nouvel espace.\nCette colonne indique aussi que les agents qui utilisent cette application sont autorisés à ouvrir un nouvel espace.\n"
     t.boolean "grants_autonomous_signup", default: false, null: false
-    t.index ["default_service_id"], name: "index_oauth_applications_on_default_service_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
@@ -949,7 +947,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_101309) do
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
-  add_foreign_key "oauth_applications", "services", column: "default_service_id"
   add_foreign_key "operator_managers", "operators"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
