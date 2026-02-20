@@ -3,9 +3,6 @@ tr
   td
     = link_to plage_ouverture.title_with_default, admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture), class: "fr-link"
     = exceptionnelle_tag(plage_ouverture)
-    br
-    small
-      | modifiée le #{l(plage_ouverture.updated_at, format: :short)}
   td
     ul.pl-2
       - plage_ouverture.motifs.each do |motif|
