@@ -1,4 +1,6 @@
 module RecurrenceHelper
+  include DateHelper
+
   def display_recurrence(recurrent_record)
     every_part = display_every(recurrent_record)
 
