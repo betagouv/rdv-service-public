@@ -1,5 +1,4 @@
 @use "sass:math";
-@use "sass:color";
 
 fieldset {
   background-color: transparent;
@@ -59,7 +58,7 @@ textarea {
   width: 100%;
 
   &:hover {
-    border-color: color.mix($black, $base-border-color, 20%);
+    border-color: mix($black, $base-border-color, 20%);
   }
 
   &:focus {
@@ -68,7 +67,7 @@ textarea {
   }
 
   &:disabled {
-    background-color: color.mix($black, $white, 5%);
+    background-color: mix($black, $white, 5%);
     cursor: not-allowed;
 
     &:hover {

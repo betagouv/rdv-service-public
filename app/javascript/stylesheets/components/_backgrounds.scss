@@ -1,7 +1,5 @@
-@use "sass:color";
-
 .bg-light {
-  background-color: color.adjust(#f6f7fa, $lightness: -2%) !important;
+  background-color: darken(#f6f7fa, 2%) !important;
 }
 
 .bg-negative {

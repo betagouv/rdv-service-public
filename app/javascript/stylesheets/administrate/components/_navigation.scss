@@ -1,5 +1,3 @@
-@use "sass:color";
-
 $_navigation-link-padding: 0.6em;
 
 .navigation {
@@ -24,7 +22,7 @@ $_navigation-link-padding: 0.6em;
   }
 
   &:hover {
-    background-color: color.mix($black, $base-background-color, 5%);
+    background-color: mix($black, $base-background-color, 5%);
     border-radius: $base-border-radius;
     color: $base-font-color;
   }
