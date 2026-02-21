@@ -6,7 +6,7 @@ Turbo.session.drive = false
 
 import "./stylesheets/administrate/application";
 
-import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/select2';
 import { PlacesInputs } from './components/places-inputs.js';
 
 document.addEventListener("DOMContentLoaded", function() {

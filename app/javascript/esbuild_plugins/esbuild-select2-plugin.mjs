@@ -7,17 +7,14 @@ export const select2Plugin = {
     // module.exports = factory without calling it, leaving jQuery.fn.select2
     // uninitialized and breaking i18n files that check jQuery.fn.select2.amd.
     // Appending a self-call forces initialization.
-    build.onLoad(
-      { filter: /select2\/dist\/js\/select2(\.full)?\.min\.js$/ },
-      async (args) => {
-        const source = await fs.promises.readFile(args.path, "utf-8");
-        return {
-          contents:
-            source +
-            "\nif (typeof module.exports === 'function') module.exports();",
-          loader: "js",
-        };
-      },
-    );
+    build.onLoad({ filter: /select2\/dist\/js\/select2/ }, async (args) => {
+      const source = await fs.promises.readFile(args.path, "utf-8");
+      return {
+        contents:
+          source +
+          "\nif (typeof module.exports === 'function') module.exports();",
+        loader: "js",
+      };
+    });
   },
 };
