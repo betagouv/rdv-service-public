@@ -307,7 +307,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       select "12", from: "plage_ouverture_end_time_4i"
       select "00", from: "plage_ouverture_end_time_5i"
 
-      click_on "Ajouter un second créneau à la plage"
+      click_on "Ajouter une seconde période à la plage"
       # Set secondary start time at 09:30
       select "14", from: "plage_ouverture_secondary_start_time_4i"
       select "30", from: "plage_ouverture_secondary_start_time_5i"

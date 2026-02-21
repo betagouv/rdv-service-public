@@ -9,22 +9,26 @@ module RecurrenceHelper
     [every_part, time_part, range_part]
   end
 
-  def display_every(recurrent_record)
+  def display_every(recurrent_record) # rubocop:disable Metrics/PerceivedComplexity
     recurrence_hash = recurrent_record.recurrence.to_hash
 
     interval = "#{recurrence_hash[:interval]} " if recurrence_hash[:interval]&.>(1)
 
     case recurrence_hash[:every]
     when :week
-      every_part = "Toutes les #{interval} semaines"
+      every_part = if recurrence_hash[:interval] == 1
+                     "Tous"
+                   else
+                     "Toutes les #{interval}semaines,"
+                   end
 
       if recurrence_hash[:on].present?
-        "#{every_part}, les #{recurrence_hash[:on].map { |d| "#{weekday_in_fr(d)}s" }.to_sentence}"
+        "#{every_part} les #{recurrence_hash[:on].map { |d| "#{weekday_in_fr(d)}s" }.to_sentence}"
       else
-        "#{every_part}, le #{I18n.l(recurrent_record.first_day, format: '%A')}"
+        "#{every_part} le #{I18n.l(recurrent_record.first_day, format: '%A')}"
       end
     when :month
-      "Tous les #{interval} mois, #{weekday_position_in_month(recurrence_hash[:day])}"
+      "Tous les #{interval}mois, #{weekday_position_in_month(recurrence_hash[:day])}"
     end
   end
 
