@@ -110,22 +110,22 @@ jobs:
         name: [unit_non_js, unit_js, feature_agents_non_js, feature_agents_js, feature_rest_non_js, feature_rest_js]
         include:
           - dirname: "**"
-            command: "parallel:spec['spec/(?!features)’, '--tag ~js’]"
+            command: "parallel:spec[‘spec/(?!features)’, ‘--tag ~js’]"
             name: unit_non_js
           - dirname: "**"
-            command: "parallel:spec['spec/(?!features)’, '--tag js’]"
+            command: "parallel:spec[‘spec/(?!features)’, ‘--tag js’]"
             name: unit_js
           - dirname: features/agents
-            command: "parallel:spec[spec/features/agents, '--tag ~js’]"
+            command: "parallel:spec[spec/features/agents, ‘--tag ~js’]"
             name: feature_agents_non_js
           - dirname: features/agents
-            command: "parallel:spec[spec/features/agents, '--tag js’]"
+            command: "parallel:spec[spec/features/agents, ‘--tag js’]"
             name: feature_agents_js
           - dirname: features
-            command: "parallel:spec['spec/features/(?!(agents|autodoc))’, '--tag ~js’]"
+            command: "parallel:spec[‘spec/features/(?!(agents|autodoc))’, ‘--tag ~js’]"
             name: feature_rest_non_js
           - dirname: features
-            command: "parallel:spec['spec/features/(?!(agents|autodoc))’, '--tag js’]"
+            command: "parallel:spec[‘spec/features/(?!(agents|autodoc))’, ‘--tag js’]"
             name: feature_rest_js
     services:
       postgres:
