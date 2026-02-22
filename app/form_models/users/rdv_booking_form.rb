@@ -33,7 +33,7 @@ class Users::RdvBookingForm
     ActiveRecord::Base.transaction do
       @user.save!
       save_proches!
-      create_rdv
+      rdv_builder.rdv.collectif? ? create_collectif_participation : create_individual_rdv
     end
     true
   rescue ActiveRecord::RecordInvalid
@@ -82,7 +82,6 @@ class Users::RdvBookingForm
 
   def should_process_proches? = booking_for_proche? || ants_with_proches?
 
-  # Retourne les données du/des proche(s) à traiter
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def selected_proches_data
     return [] unless should_process_proches?
@@ -96,13 +95,14 @@ class Users::RdvBookingForm
         data[:id] = selected_id unless selected_id == "new"
         data
       end
+    elsif @selected_proche == "new"
+      # Cas : un seul proche à créer
+      [@raw_proches_data["new"].symbolize_keys]
+    elsif @selected_proche.present?
+      # Cas : un proche existant sélectionné, on ne permet pas de l'éditer
+      [{ id: @selected_proche }]
     else
-      # Cas normal : un seul proche sélectionné via radio
-      return [] if @selected_proche.blank?
-
-      data = (@raw_proches_data[@selected_proche] || @raw_proches_data[@selected_proche.to_s] || {}).symbolize_keys
-      data[:id] = @selected_proche unless @selected_proche == "new"
-      [data]
+      []
     end
   end
 
@@ -164,10 +164,6 @@ class Users::RdvBookingForm
 
   def validate_phone_number_present_for_motif_by_phone
     errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && user.phone_number.blank?
-  end
-
-  def create_rdv
-    rdv_builder.rdv.collectif? ? create_collectif_participation : create_individual_rdv
   end
 
   def create_individual_rdv
