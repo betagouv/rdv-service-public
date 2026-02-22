@@ -1,8 +1,4 @@
 RSpec.describe Admin::Api::Agenda::AbsencesController, type: :controller do
-  it "test" do
-    expect(organisations(:default_org).name).to eq("3")
-  end
-
   describe "GET index" do
     context "with a signed in agent" do
       let!(:organisation) { organisations(:default_org) }
