@@ -93,16 +93,16 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.global_fixtures = :all
 
-  config.around do |example|
-    if example.metadata[:js] || ENV["HEADLESS"] == "false"
-      self.use_transactional_tests = false
-      example.run
-      ActiveRecord::Tasks::DatabaseTasks.truncate_all
-    else
-      self.use_transactional_tests = true
-      example.run
-    end
-  end
+  # config.around do |example|
+  #   if example.metadata[:js] || ENV["HEADLESS"] == "false"
+  #     self.use_transactional_tests = false
+  #     example.run
+  #     ActiveRecord::Tasks::DatabaseTasks.truncate_all
+  #   else
+  #     self.use_transactional_tests = true
+  #     example.run
+  #   end
+  # end
 
   config.before do
     setup_sentry_test
