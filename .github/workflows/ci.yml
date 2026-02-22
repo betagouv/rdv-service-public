@@ -105,27 +105,33 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # cette strategy permet de lancer plusieurs jobs de specs en parallèle pour accélérer l’exécution
+        # cette strategy permet de lancer plusieurs jobs de specs en parallèle pour accélérer l'exécution
         # les specs JS (js: true) sont séparées des specs non-JS pour une meilleure lisibilité et performance
         name: [unit_non_js, unit_js, feature_agents_non_js, feature_agents_js, feature_rest_non_js, feature_rest_js]
         include:
-          - dirname: "**"
-            command: "parallel:spec[‘spec/(?!features)’, ‘--tag ~js’]"
+          - dirname: '**'
+            command: "parallel:spec['spec/(?!features)']"
+            spec_opts: '--tag ~js'
             name: unit_non_js
-          - dirname: "**"
-            command: "parallel:spec[‘spec/(?!features)’, ‘--tag js’]"
+          - dirname: '**'
+            command: "parallel:spec['spec/(?!features)']"
+            spec_opts: '--tag js'
             name: unit_js
           - dirname: features/agents
-            command: "parallel:spec[spec/features/agents, ‘--tag ~js’]"
+            command: 'parallel:spec[spec/features/agents]'
+            spec_opts: '--tag ~js'
             name: feature_agents_non_js
           - dirname: features/agents
-            command: "parallel:spec[spec/features/agents, ‘--tag js’]"
+            command: 'parallel:spec[spec/features/agents]'
+            spec_opts: '--tag js'
             name: feature_agents_js
           - dirname: features
-            command: "parallel:spec[‘spec/features/(?!(agents|autodoc))’, ‘--tag ~js’]"
+            command: "parallel:spec['spec/features/(?!(agents|autodoc))']"
+            spec_opts: '--tag ~js'
             name: feature_rest_non_js
           - dirname: features
-            command: "parallel:spec[‘spec/features/(?!(agents|autodoc))’, ‘--tag js’]"
+            command: "parallel:spec['spec/features/(?!(agents|autodoc))']"
+            spec_opts: '--tag js'
             name: feature_rest_js
     services:
       postgres:
@@ -193,7 +199,7 @@ jobs:
           path: tmp/parallel_runtime_rspec.log
         # By setting up and running in the same call, we save the app boot time
       - name: Setup parallel tests and run feature specs
-        run: "RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema ${{ matrix.command }}"
+        run: "SPEC_OPTS='${{ matrix.spec_opts }}' RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema ${{ matrix.command }}"
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
@@ -281,7 +287,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: tmp/capybara/autodoc
-        continue-on-error: true # On ne veut pas faire échouer le build si l'upload de l’artifact de la doc échoue
+        continue-on-error: true # On ne veut pas faire échouer le build si l'upload de l'artifact de la doc échoue
         if: ${{ github.ref == 'refs/heads/production' }}
       - uses: actions/upload-artifact@v4
         if: always()
