@@ -1,6 +1,0 @@
-/! Champ individuel pour un sous-formulaire proche
-/! locals: (name:, label:, value: nil, type: :text)
-- type = local_assigns.fetch(:type, :text)
-.fr-input-group
-  = label_tag name, label, class: "fr-label"
-  = text_field_tag name, value, class: "fr-input", type: type

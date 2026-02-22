@@ -17,10 +17,8 @@
 
           /! Section proches ANTS (n >= 2 pré-demandes)
           - if @rdv.requires_ants_predemande_number? && !@skip_proches_step
-            - ants_count = @rdv_builder.ants_pre_demandes_count.to_i
-            - if ants_count >= 2
-              - (ants_count - 1).times do |slot_index|
-                = render "ants_proche_slot", slot_index: slot_index
+            - if @rdv_builder.ants_pre_demandes_count.to_i >= 2
+              = render "ants_proche_slot", f: f
 
           /! Hidden fields pour les params du wizard
           - @rdv_wizard.to_query.each do |wizard_key, wizard_value|

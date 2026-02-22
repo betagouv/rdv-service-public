@@ -19,8 +19,7 @@ class Users::RdvWizardStepsController < UserAuthController
 
     @rdv_wizard = @rdv_builder # pour les vues qui utilisent encore ce nom de variable
     @rdv = @rdv_builder.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain)
-    @rdv_booking_form.booking_for_proche = true if params[:booking_for_proche] == "1"
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, booking_for_proche: params[:booking_for_proche] == "1")
     authorize(@rdv, policy_class: User::RdvPolicy)
   end
 
@@ -31,7 +30,7 @@ class Users::RdvWizardStepsController < UserAuthController
 
     @rdv_wizard = @rdv_builder
     @rdv = @rdv_builder.rdv
-    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys)
+    @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain, user_attributes: user_params[:user].to_h.symbolize_keys, **proche_params)
 
     return render(:new) if toggling_proches_without_js?
 
@@ -82,13 +81,17 @@ class Users::RdvWizardStepsController < UserAuthController
                     :notify_by_sms,
                     :ants_pre_demande_number,
                     :ignore_benign_errors,
-                    :booking_for_proche,
-                    :enable_proche_section,
-                    :disable_proche_section,
-                    :selected_proche,
                     { user_profiles_attributes: %i[logement id organisation_id] },
-                    { proches: {} },
+                    { relatives_attributes: %i[id first_name last_name birth_date ants_pre_demande_number] },
                   ])
+  end
+
+  def proche_params
+    {
+      booking_for_proche: params.dig(:user, :booking_for_proche) == "1",
+      selected_proche: params.dig(:user, :selected_proche),
+      ants_selected_relative_ids: params.dig(:user, :ants_selected_relative_ids) || [],
+    }
   end
 
   def redirect_to_prendre_rdv_path_if_creneau_unavailable

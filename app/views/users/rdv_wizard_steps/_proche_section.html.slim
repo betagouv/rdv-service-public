@@ -1,7 +1,6 @@
 /! Section "je prends RDV pour un proche" (cas normal non-ANTS)
 ruby:
   relatives = current_user.relatives.order(:first_name)
-  submitted = @rdv_booking_form.submitted_proches_data
   booking_for_proche = @rdv_booking_form.booking_for_proche?
   enable_url = new_users_rdv_wizard_step_path(**@rdv_wizard.to_query, booking_for_proche: "1")
   disable_url = new_users_rdv_wizard_step_path(**@rdv_wizard.to_query)
@@ -41,12 +40,10 @@ ruby:
         - else
           = hidden_field_tag "user[selected_proche]", "new"
           .fr-text--bold.fr-mb-1w Informations du proche
-        .fr-grid-row.fr-grid-row--gutters.fr-mt-1w
-          - data = submitted["new"] || {}
-          .fr-col-md-6
-            = render "proche_field", name: "user[proches][new][first_name]", label: "Prénom", value: data["first_name"]
-          .fr-col-md-6
-            = render "proche_field", name: "user[proches][new][last_name]", label: "Nom", value: data["last_name"]
-          - if @rdv_booking_form.show_birth_date_field?
-            .fr-col-md-6
-              = render "proche_field", name: "user[proches][new][birth_date]", label: "Date de naissance", value: data["birth_date"], type: :date
+        - if @rdv_booking_form.new_proche.present?
+          = f.fields_for :relatives, [@rdv_booking_form.new_proche] do |rf|
+            .fr-grid-row.fr-grid-row--gutters.fr-mt-1w
+              .fr-col-md-6= rf.dsfr_text_field :first_name, label: "Prénom"
+              .fr-col-md-6= rf.dsfr_text_field :last_name, label: "Nom"
+              - if @rdv_booking_form.show_birth_date_field?
+                .fr-col-md-6= rf.dsfr_text_field :birth_date, type: "date", label: "Date de naissance"

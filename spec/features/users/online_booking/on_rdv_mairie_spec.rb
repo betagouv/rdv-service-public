@@ -120,7 +120,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in("user_ants_pre_demande_number", with: "1122334455")
 
       # Remplir le slot ANTS pour le proche (ants_pre_demandes_count=2 → 1 slot)
-      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+      within(".fr-p-2w", text: "Proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
         fill_in("Numéro de pré-demande ANTS", with: "5544332211")
@@ -135,7 +135,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       # Re-remplir les champs (le formulaire est ré-affiché après erreur)
       fill_in("user_ants_pre_demande_number", with: "1122334455")
-      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+      within(".fr-p-2w", text: "Proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
         fill_in("Numéro de pré-demande ANTS", with: "5544332211")
@@ -198,7 +198,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in "user_ants_pre_demande_number", with: "1122334455"
 
       # Remplir le slot du proche sans numéro ANTS
-      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+      within(".fr-p-2w", text: "Proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
       end
@@ -206,7 +206,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("le numéro de pré-demande ANTS doit être renseigné")
 
       # Avec un numéro invalide
-      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+      within(".fr-p-2w", text: "Proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
         fill_in("Numéro de pré-demande ANTS", with: "inva lide")
@@ -216,7 +216,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("le numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
 
       # Avec un numéro valide
-      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+      within(".fr-p-2w", text: "Proche 1") do
         fill_in("Prénom", with: "Alain")
         fill_in("Nom", with: "Mairie")
         fill_in("Numéro de pré-demande ANTS", with: "5544332211")
@@ -435,7 +435,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("(50 minutes)")
       fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001", match: :first
       # Remplir le slot du proche (ants_pre_demandes_count=2 → 1 slot)
-      within(".fr-mt-3w.fr-p-2w", text: "Proche 1") do
+      within(".fr-p-2w", text: "Proche 1") do
         fill_in "Prénom", with: "Jean"
         fill_in "Nom", with: "Vanna"
         fill_in "Numéro de pré-demande ANTS", with: "TESTRDV001"

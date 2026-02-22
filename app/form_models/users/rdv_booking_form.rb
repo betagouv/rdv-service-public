@@ -5,7 +5,7 @@ class Users::RdvBookingForm
   attr_accessor :booking_for_proche
 
   delegate :to_query, :motif, :service, to: :rdv_builder
-  delegate :add_benign_error, :ignore_benign_errors, to: :user
+  delegate :add_benign_error, :ignore_benign_errors, :relatives_attributes=, to: :user
   validates :ants_pre_demande_number, presence: true, if: -> { rdv.requires_ants_predemande_number? }
   validates_with AntsPreDemandeNumberStatusValidation, if: -> { rdv.requires_ants_predemande_number? }
 
@@ -13,14 +13,15 @@ class Users::RdvBookingForm
   validate :validate_phone_number_present_for_motif_by_phone
   validate :validate_proches
 
-  def initialize(user:, rdv_builder:, domain:, user_attributes: {})
+  def initialize(user:, rdv_builder:, domain:, user_attributes: {}, booking_for_proche: false, selected_proche: nil, ants_selected_relative_ids: [])
     @user = user
     @rdv_builder = rdv_builder
     @domain = domain
-    @booking_for_proche = user_attributes.delete(:booking_for_proche)
-    @raw_proches_data = user_attributes.delete(:proches) || {}
-    @selected_proche = user_attributes.delete(:selected_proche)
-    @user_attributes = user_attributes
+    @booking_for_proche = booking_for_proche
+    @selected_proche = selected_proche
+    @ants_selected_relative_ids = ants_selected_relative_ids.map(&:to_s)
+    @user.singleton_class.accepts_nested_attributes_for :relatives
+    enrich_relatives_attributes!(user_attributes)
     @user.assign_attributes(user_attributes)
   end
 
@@ -32,7 +33,6 @@ class Users::RdvBookingForm
 
     ActiveRecord::Base.transaction do
       @user.save!
-      save_proches!
       rdv_builder.rdv.collectif? ? create_collectif_participation : create_individual_rdv
     end
     true
@@ -40,17 +40,40 @@ class Users::RdvBookingForm
     false
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def users_for_rdv
     if ants_with_proches?
-      [@user] + saved_proches
-    elsif booking_for_proche? && saved_proches.any?
-      saved_proches
+      [@user] + (@user.relatives.target || []).compact
+    elsif booking_for_proche? && @selected_proche == "new"
+      [(@user.relatives.target || []).find(&:persisted?)]
+    elsif booking_for_proche? && @selected_proche.present?
+      [@user.relatives.find(@selected_proche)]
     else
       [@user]
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-  def submitted_proches_data = @raw_proches_data
+  def new_proche
+    return unless booking_for_proche? && !ants_with_proches?
+
+    @new_proche ||= @user.relatives.target&.find(&:new_record?) ||
+                    @user.relatives.build(
+                      created_through: "user_relative_creation",
+                      organisation_ids: @user.organisation_ids
+                    )
+  end
+
+  def submitted_ants_selected_ids = @ants_selected_relative_ids
+
+  def new_ants_proches
+    return [] unless ants_with_proches?
+
+    count = rdv_builder.ants_pre_demandes_count.to_i - 1
+    built = (@user.relatives.target || []).select(&:new_record?)
+    extras_count = [count - built.size, 0].max
+    built + extras_count.times.map { User.new }
+  end
 
   def show_birth_date_field? = !signed_in_with_invitation_token? && rdv.territory&.enable_birth_date_field?
 
@@ -83,76 +106,38 @@ class Users::RdvBookingForm
   def should_process_proches? = booking_for_proche? || ants_with_proches?
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  def selected_proches_data
-    return [] unless should_process_proches?
+  def enrich_relatives_attributes!(attrs)
+    return unless attrs[:relatives_attributes]
 
-    if ants_with_proches?
-      # Cas ANTS : chaque slot a un selected_id et des données par proche
-      @raw_proches_data.values.map(&:symbolize_keys).filter_map do |proche_data|
-        selected_id = proche_data[:selected_id]&.to_s
-        proches_in_slot = proche_data[:proches].stringify_keys
-        data = (proches_in_slot[selected_id] || {}).symbolize_keys
-        data[:id] = selected_id unless selected_id == "new"
-        data
+    attrs[:relatives_attributes] = attrs[:relatives_attributes].values.filter_map do |rel_attrs|
+      rel_attrs = rel_attrs.symbolize_keys
+      if rel_attrs[:id].present?
+        # Proche existant : inclure seulement si coché (cas ANTS)
+        next if ants_with_proches? && @ants_selected_relative_ids.exclude?(rel_attrs[:id].to_s)
+
+        rel_attrs
+      else
+        # Rejeter si un proche existant est sélectionné (cas non-ANTS)
+        next if !ants_with_proches? && @selected_proche.present? && @selected_proche != "new"
+
+        rel_attrs.merge(created_through: "user_relative_creation", organisation_ids: @user.organisation_ids)
       end
-    elsif @selected_proche == "new"
-      # Cas : un seul proche à créer
-      [@raw_proches_data["new"].symbolize_keys]
-    elsif @selected_proche.present?
-      # Cas : un proche existant sélectionné, on ne permet pas de l'éditer
-      [{ id: @selected_proche }]
-    else
-      []
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   def validate_proches
-    return unless should_process_proches?
+    return unless ants_with_proches?
 
-    selected_proches_data.each_with_index do |attrs, index|
+    (@user.relatives.target || []).each_with_index do |relative, index|
       prefix = "Proche #{index + 1}"
-      if attrs[:id].blank?
-        errors.add(:base, "#{prefix} : le prénom doit être renseigné") if attrs[:first_name].blank?
-        errors.add(:base, "#{prefix} : le nom doit être renseigné") if attrs[:last_name].blank?
-      end
-
-      next unless ants_with_proches?
-
-      number = attrs[:ants_pre_demande_number]
+      number = relative.ants_pre_demande_number
       if number.blank?
         errors.add(:base, "#{prefix} : le numéro de pré-demande ANTS doit être renseigné")
       elsif !number.upcase.match?(AntsPreDemandeNumberFormatValidator::REGEX)
         errors.add(:base, "#{prefix} : le numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
       end
     end
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-
-  def save_proches!
-    return unless should_process_proches?
-
-    @saved_proches = selected_proches_data.map do |attrs|
-      proche = find_or_build_proche(attrs)
-      proche.assign_attributes(attrs.slice(:first_name, :last_name, :birth_date, :ants_pre_demande_number))
-      proche.save!
-      proche.reload
-    end
-  end
-
-  def find_or_build_proche(attrs)
-    if attrs[:id].present? && attrs[:id] != "new"
-      @user.relatives.find(attrs[:id])
-    else
-      User.new(
-        responsible_id: @user.id,
-        created_through: "user_relative_creation",
-        organisation_ids: @user.organisation_ids
-      )
-    end
-  end
-
-  def saved_proches
-    @saved_proches || []
   end
 
   def validate_ants_pre_demandes_count
