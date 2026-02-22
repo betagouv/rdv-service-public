@@ -11,7 +11,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
   end
   let!(:user) { create(:user, organisations: [organisation], first_name: "François", last_name: "Fictif", phone_number: "06.11.223344", email: nil, birth_date: Date.new(1990, 1, 1)) }
   let!(:user_from_other_organisation) { create(:user, organisations: [other_organisation], first_name: "Francis", last_name: "Factice", phone_number_formatted: nil, email: "francis@factice.cool") }
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:other_organisation) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }

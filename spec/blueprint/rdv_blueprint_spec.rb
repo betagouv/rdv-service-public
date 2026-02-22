@@ -49,7 +49,7 @@ RSpec.describe RdvBlueprint do
 
   describe "url_for_agents" do
     let(:rdv) { create(:rdv, organisation: organisation) }
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
 
     it "allows api clients to display a direct link to the rdv for the agent" do
       expect(json.dig("rdv", "url_for_agents")).to eq "http://www.rdv-solidarites-test.localhost/agents/rdvs/#{rdv.id}"

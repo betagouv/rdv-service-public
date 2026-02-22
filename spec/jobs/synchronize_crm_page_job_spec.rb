@@ -7,7 +7,7 @@ RSpec.describe SynchronizeCrmPageJob, type: :job do
   end
 
   context "quand la clef NOTION_API_SECRET n'est pas définie" do
-    let(:territory) { create(:territory) }
+    let(:territory) { territories(:default_territory) }
 
     before do
       ENV["NOTION_API_SECRET"] = nil
@@ -31,7 +31,7 @@ RSpec.describe SynchronizeCrmPageJob, type: :job do
     end
 
     context "quand la variable COMPTE PROD est un territory" do
-      let(:territory) { create(:territory) }
+      let(:territory) { territories(:default_territory) }
       let(:organisation_a) { create(:organisation, territory: territory) }
       let(:organisation_b) { create(:organisation, territory: territory) }
       let!(:rdv_a) { create(:rdv, organisation: organisation_a) }
@@ -58,7 +58,7 @@ RSpec.describe SynchronizeCrmPageJob, type: :job do
     end
 
     context "quand la variable COMPTE PROD est une organisation" do
-      let(:territory) { create(:territory) }
+      let(:territory) { territories(:default_territory) }
       let(:organisation) { create(:organisation, territory: territory) }
       let!(:rdv) { create(:rdv, organisation: organisation) }
 
@@ -83,7 +83,7 @@ RSpec.describe SynchronizeCrmPageJob, type: :job do
     end
 
     context "quand l'organisation n'a pas encore de RDV" do
-      let(:territory) { create(:territory) }
+      let(:territory) { territories(:default_territory) }
       let(:organisation) { create(:organisation, territory: territory) }
 
       it "le nombre de RDV est mis à jour dans la page Notion avec 0 et la date du dernier RDV est nulle" do

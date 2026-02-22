@@ -4,7 +4,7 @@ RSpec.describe Agent::SectorPolicy do
   let(:pundit_context) { agent }
 
   context "agent does not have any territorial role" do
-    let(:territory) { create(:territory) }
+    let(:territory) { territories(:default_territory) }
     let(:sector) { create(:sector, territory:) }
     let(:agent) { create(:agent) }
 
@@ -19,7 +19,7 @@ RSpec.describe Agent::SectorPolicy do
   end
 
   context "agent has territorial role in sector territory" do
-    let(:territory) { create(:territory) }
+    let(:territory) { territories(:default_territory) }
     let(:sector) { create(:sector, territory:) }
     let(:agent) { create(:agent, role_in_territories: [territory]) }
 

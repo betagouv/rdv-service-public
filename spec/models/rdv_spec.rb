@@ -149,7 +149,7 @@ RSpec.describe Rdv, type: :model do
   end
 
   describe "#associate_users_with_organisation" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:organisation2) { create(:organisation) }
     let(:user) { create(:user, organisations: [organisation]) }
 
@@ -822,7 +822,7 @@ RSpec.describe Rdv, type: :model do
     subject { rdv.creneaux_available(Time.zone.now..2.weeks.from_now) }
 
     context "RDV avec une durée égale à la durée par défaut du motif" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:lieu) { create(:lieu, organisation:) }
       let!(:motif) { create(:motif, organisation:, default_duration_in_min: 30) }
       let!(:rdv) { create(:rdv, organisation:, motif:, lieu:, duration_in_min: 30) }
@@ -846,7 +846,7 @@ RSpec.describe Rdv, type: :model do
     end
 
     context "RDV avec une durée différente de la durée par défaut du motif" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:lieu) { create(:lieu, organisation:) }
       let!(:motif) { create(:motif, organisation:, default_duration_in_min: 30) }
       let!(:rdv) { create(:rdv, organisation:, motif:, lieu:, duration_in_min: 90) }

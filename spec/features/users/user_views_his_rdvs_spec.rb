@@ -1,5 +1,5 @@
 RSpec.describe "User views his rdv" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:user) { create(:user, organisations: [organisation]) }
 
   before do

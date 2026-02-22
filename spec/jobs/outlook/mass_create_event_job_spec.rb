@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Outlook::MassCreateEventJob do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:agent) { create(:agent) }
 
   let!(:future_rdv1) { create(:rdv, organisation: organisation, starts_at: 1.day.from_now, agents: [agent]) }

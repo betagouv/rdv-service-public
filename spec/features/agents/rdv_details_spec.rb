@@ -4,7 +4,7 @@ RSpec.describe "Agent can see RDV details correctly" do
     login_as(agent, scope: :agent)
   end
 
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:service) { create(:service) }
   let(:starts_at) { Time.zone.local(2022, 4, 7).at_noon }
   let(:agent) { create(:agent, first_name: "Bruce", last_name: "Wayne", service: service, basic_role_in_organisations: [organisation]) }

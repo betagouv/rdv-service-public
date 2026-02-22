@@ -13,7 +13,7 @@ RSpec.describe "Referent Assignation authentified API" do
       parameter name: "agent_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "ID des agents référents", example: "[1, 2]"
       parameter name: "user_id", in: :query, type: :integer, description: "ID de l'utilisateur", example: 12
 
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:organisation) { create(:organisation, territory: territory, verticale: "rdv_insertion") }
       let!(:other_organisation) { create(:organisation, territory: territory, verticale: "rdv_solidarites") }
       let!(:user) { create(:user, organisations: [organisation]) }

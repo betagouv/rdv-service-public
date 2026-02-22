@@ -1,5 +1,5 @@
 RSpec.describe "Agent can update a RDV", js: true do
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let!(:organisation) { create(:organisation, territory:) }
   let(:rdv) do
     create(:rdv, organisation: organisation, motif: motif, agents: [agent_shiraz], lieu: lieu, starts_at:, ends_at:)

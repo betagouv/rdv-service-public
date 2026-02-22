@@ -10,7 +10,7 @@ RSpec.describe "RDV API" do
   end
   let(:application) { create(:oauth_application) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:service) { create(:service) }
 
   describe "#index" do

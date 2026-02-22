@@ -1,5 +1,5 @@
 RSpec.describe MergeUsersForm, type: :form do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   it "is valid when no franceConnected user" do
     user1 = create(:user, logged_once_with_franceconnect: false)

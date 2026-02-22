@@ -1,5 +1,5 @@
 RSpec.describe "Agent can duplicate a Rdv collectif" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", admin_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, :collectif, organisation: organisation, name: "Atelier Collectif") }
 

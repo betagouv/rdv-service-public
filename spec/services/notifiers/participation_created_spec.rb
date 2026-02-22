@@ -1,7 +1,7 @@
 RSpec.describe Notifiers::ParticipationCreated, type: :service do
   subject(:perform_notify) { described_class.perform_with(participation:, author:) }
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, organisations: [organisation]) }
   let!(:user) { create(:user) }
   let(:participation) { rdv.participations.first }

@@ -1,6 +1,6 @@
 RSpec.describe CreneauxSearch::Calculator, type: :service do
   let(:friday) { Time.zone.parse("20210430 8:00") }
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:lieu) { create(:lieu, organisation: organisation) }
 
   before do

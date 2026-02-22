@@ -3,7 +3,7 @@ RSpec.describe Agent::AgentTerritorialRolePolicy do
     subject { described_class.new(current_agent, agent_territorial_role).create_or_destroy? }
 
     context "current_agent is territorial admin and target agent has a basic role in the same territory" do
-      let(:territory) { create(:territory) }
+      let(:territory) { territories(:default_territory) }
       let(:current_agent) { create(:agent, role_in_territories: [territory]) }
       let(:organisation) { create(:organisation, territory:) }
       let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -13,7 +13,7 @@ RSpec.describe Agent::AgentTerritorialRolePolicy do
     end
 
     context "current_agent is not territorial admin and target agent has a basic role in the same territory" do
-      let(:territory) { create(:territory) }
+      let(:territory) { territories(:default_territory) }
       let(:organisation) { create(:organisation, territory:) }
       let(:current_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -23,7 +23,7 @@ RSpec.describe Agent::AgentTerritorialRolePolicy do
     end
 
     context "current_agent is territorial admin and target agent has a basic role in another territory" do
-      let(:territory) { create(:territory) }
+      let(:territory) { territories(:default_territory) }
       let(:current_agent) { create(:agent, role_in_territories: [territory]) }
       let(:other_territory) { create(:territory) }
       let(:organisation) { create(:organisation, territory: other_territory) }

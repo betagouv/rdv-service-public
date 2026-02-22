@@ -4,7 +4,7 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "POST create" do
     subject(:post_create) { post :create, params: params }
 
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:user) { create(:user) }
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
@@ -99,7 +99,7 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "PUT #cancel" do
     context "when user belongs to rdv" do
       let(:token) { rdv.participations.first.restricted_auth_token }
-      let(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:rdv) { create(:rdv, starts_at: 5.hours.from_now, organisation:) }
 
       it "calls update_and_notify function" do
@@ -161,7 +161,7 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "GET #show" do
     let(:user) { create(:user) }
     let(:user2) { create(:user) }
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:rdv) { create(:rdv, users: [user], motif:, starts_at: starts_at, created_by: user, organisation:) }
     let(:rdv2) { create(:rdv, users: [user2], motif: create(:motif, :by_phone, organisation:), lieu: nil, starts_at: starts_at, created_by: user, organisation:) }
@@ -323,7 +323,7 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "GET #index" do
     subject { get :index }
 
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:user) { create(:user) }
     let!(:user2) { create(:user) }
     let!(:rdv1) { create(:rdv, users: [user], starts_at: 5.days.from_now, organisation:) }
@@ -393,7 +393,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       rdv.reload
     end
 
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
@@ -462,7 +462,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       rdv.reload
     end
 
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:starts_at) { 3.days.from_now }
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -515,7 +515,7 @@ RSpec.describe Users::RdvsController, type: :controller do
   end
 
   describe "PUT #update" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let(:starts_at) { 3.days.from_now }
     let(:user) { create(:user) }

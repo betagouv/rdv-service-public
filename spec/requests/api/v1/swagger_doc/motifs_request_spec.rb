@@ -28,7 +28,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
       context "sans filtres" do
         response 200, "Renvoie les motifs", document: false do
           let!(:service) { create(:service) }
-          let!(:organisation) { create(:organisation) }
+          let!(:organisation) { organisations(:default_org) }
 
           let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
 
@@ -72,14 +72,14 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
         it_behaves_like "an endpoint that returns 401 - unauthorized" do
           let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
           let!(:service) { create(:service) }
-          let!(:organisation) { create(:organisation) }
+          let!(:organisation) { organisations(:default_org) }
           let(:organisation_id) { organisation.id }
         end
       end
 
       context "avec filtres" do
         let!(:service) { create(:service) }
-        let!(:organisation) { create(:organisation) }
+        let!(:organisation) { organisations(:default_org) }
 
         let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
 

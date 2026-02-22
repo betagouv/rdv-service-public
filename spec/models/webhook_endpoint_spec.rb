@@ -2,7 +2,7 @@ RSpec.describe WebhookEndpoint, type: :model do
   describe "target_url validation" do
     subject { webhook_endpoint.valid? }
 
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:webhook_endpoint) { build(:webhook_endpoint, organisation_id: organisation.id, target_url: target_url) }
     let!(:other_webhook_endpoint) { create(:webhook_endpoint, organisation_id: organisation.id, target_url: "https://www.taken_url.com") }
 
@@ -26,7 +26,7 @@ RSpec.describe WebhookEndpoint, type: :model do
   describe "#subscriptions_validity" do
     subject { webhook_endpoint.valid? }
 
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:webhook_endpoint) { build(:webhook_endpoint, organisation_id: organisation.id, subscriptions: subscriptions) }
 
     context "when the subscriptions array is valid" do
@@ -47,7 +47,7 @@ RSpec.describe WebhookEndpoint, type: :model do
   end
 
   describe "sending notifications for a new URL" do
-    let!(:territory) { create(:territory) }
+    let!(:territory) { territories(:default_territory) }
     let!(:organisation) { create(:organisation, territory: territory) }
     let!(:territory_admins) { create_list(:agent, 2, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }
 

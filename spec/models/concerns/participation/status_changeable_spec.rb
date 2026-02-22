@@ -2,7 +2,7 @@ RSpec.describe Participation::StatusChangeable, type: :concern do
   before { stub_netsize_ok }
 
   describe "#change_status_and_notify" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:agent) { create(:agent, organisations: [organisation], rdv_notifications_level: :others) }
 
     context "RDV collectif" do

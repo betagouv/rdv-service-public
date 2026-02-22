@@ -99,7 +99,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
 
   describe "#participation_cancelled" do
     let(:now) { Time.zone.parse("2025-11-10 10:30") }
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent_author) { create(:agent, organisations: [organisation], first_name: "Paola", last_name: "NORI") }
     let!(:agent) { create(:agent, organisations: [organisation]) }
     let!(:rdv) { create(:rdv, :collectif, :without_users, organisation:, starts_at: now + 3.days) }

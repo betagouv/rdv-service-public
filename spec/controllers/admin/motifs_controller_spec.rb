@@ -2,7 +2,7 @@
 RSpec.describe Admin::MotifsController, type: :controller do
   render_views
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, organisation_id: organisation.id) }
 

@@ -4,7 +4,7 @@ RSpec.describe Agent::SectorAttributionPolicy do
   let(:pundit_context) { agent }
 
   context "agent does not have any territorial role" do
-    let(:territory) { create(:territory) }
+    let(:territory) { territories(:default_territory) }
     let(:sector) { create(:sector, territory:) }
     let(:sector_attribution) { create(:sector_attribution, sector:) }
     let(:agent) { create(:agent) }
@@ -17,7 +17,7 @@ RSpec.describe Agent::SectorAttributionPolicy do
   end
 
   context "agent has territorial role in sector_attribution territory" do
-    let(:territory) { create(:territory) }
+    let(:territory) { territories(:default_territory) }
     let(:sector) { create(:sector, territory:) }
     let(:sector_attribution) { create(:sector_attribution, sector:) }
     let(:agent) { create(:agent, role_in_territories: [territory]) }
@@ -42,7 +42,7 @@ RSpec.describe Agent::SectorAttributionPolicy do
   end
 
   context "organisation is not in the territory" do
-    let(:territory) { create(:territory) }
+    let(:territory) { territories(:default_territory) }
     let(:sector) { create(:sector, territory: territory) }
     let(:sector_attribution) { build(:sector_attribution, sector:, organisation: create(:organisation)) }
     let(:agent) { create(:agent, role_in_territories: [territory]) }
@@ -53,7 +53,7 @@ RSpec.describe Agent::SectorAttributionPolicy do
   end
 
   context "agent is not in the territory" do
-    let(:territory) { create(:territory) }
+    let(:territory) { territories(:default_territory) }
     let(:sector) { create(:sector, territory: territory) }
     let(:sector_attribution) { build(:sector_attribution, :level_agent, sector:, agent: create(:agent)) }
     let(:agent) { create(:agent, role_in_territories: [territory]) }

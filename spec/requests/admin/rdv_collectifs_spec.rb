@@ -1,7 +1,7 @@
 RSpec.describe "Admin::RdvCollectifs", type: :request do
   include Rails.application.routes.url_helpers
 
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:motif) { create(:motif, :collectif, organisation:) }
 
   describe "GET /admin/organisations/:organisation_id/rdv_collectifs" do

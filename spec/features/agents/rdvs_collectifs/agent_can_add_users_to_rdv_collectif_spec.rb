@@ -1,7 +1,7 @@
 RSpec.describe "Un agent peut ajouter des usagers à un RDV Collectif", js: true do
   # on a besoin de js:true ici pour faire fonctionner les selects d’usagers
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:service) { create(:service) }
   let!(:agent_noe) { create(:agent, first_name: "Noé", email: "noe@service.fr", service:, admin_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, :collectif, service:, organisation:, name: "Atelier Collectif") }

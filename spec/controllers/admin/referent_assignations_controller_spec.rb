@@ -34,7 +34,7 @@ RSpec.describe Admin::ReferentAssignationsController, type: :controller do
   end
 
   describe "#create" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:user) { create(:user, referent_agents: [], organisations: [organisation]) }
     let!(:service) { create(:service) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
@@ -73,7 +73,7 @@ RSpec.describe Admin::ReferentAssignationsController, type: :controller do
   end
 
   describe "#delete" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:service) { create(:service) }
     let!(:referent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }

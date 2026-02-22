@@ -1,6 +1,6 @@
 RSpec.describe "Api pour Justice.fr" do
   let!(:lieu_with_po) { create(:lieu, id: 1861, organisation:) }
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:motif) { create(:motif, organisation:, bookable_by: :everyone) }
   let!(:lieu_without_po) { create(:lieu, id: 2098) }
 

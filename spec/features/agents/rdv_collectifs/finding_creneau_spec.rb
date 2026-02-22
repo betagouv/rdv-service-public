@@ -3,7 +3,7 @@ RSpec.describe "Agent can find a creneau for a rdv collectif" do
   let!(:motif) do
     create(:motif, :collectif, name: "Atelier participatif", organisation: organisation)
   end
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
   before { login_as(agent, scope: :agent) }

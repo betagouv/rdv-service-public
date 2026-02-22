@@ -1,7 +1,7 @@
 RSpec.describe WebhookDeliverable, type: :concern do
   include ActiveJob::TestHelper
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:webhook_endpoint) do
     create(
       :webhook_endpoint,

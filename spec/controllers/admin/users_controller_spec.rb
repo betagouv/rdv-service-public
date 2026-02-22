@@ -1,7 +1,7 @@
 RSpec.describe Admin::UsersController, type: :controller do
   render_views
 
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let(:organisation) { create(:organisation, territory:) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 

@@ -7,7 +7,7 @@ RSpec.describe "Motif selection" do
     let!(:motif) { create(:motif, name: "RDV Intégration direct' emploi", organisation: organisation, service: service) }
     let!(:autre_motif) { create(:motif, name: "RDV integration direct'emploi", organisation: autre_organisation, service: service) }
     let(:encore_autre_motif) { create(:motif, name: "Vaccination", organisation: organisation, service: service) }
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:autre_organisation) { create(:organisation, territory: organisation.territory) }
 
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
@@ -34,7 +34,7 @@ RSpec.describe "Motif selection" do
   end
 
   context "un seul motif dans le service" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service) { create(:service) }
     let(:lieu) { create(:lieu, organisation: organisation, name: "MDS Centre") }
     let!(:motif) { create(:motif, name: "premier contact", organisation: organisation, service: service) }
@@ -53,7 +53,7 @@ RSpec.describe "Motif selection" do
   end
 
   context "un motif avec service et un motif sans service" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service) { create(:service, name: "Action Sociale") }
     let(:lieu) { create(:lieu, organisation: organisation, name: "MDS Centre") }
     let!(:motif_avec_service) { create(:motif, name: "RSA", organisation: organisation, service: service) }

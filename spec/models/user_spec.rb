@@ -18,7 +18,7 @@ RSpec.describe User, type: :model do
     end
 
     let(:user) { create(:user, organisations: organisations) }
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
 
     describe "when organisation is not associated" do
       let(:organisations) { [] }

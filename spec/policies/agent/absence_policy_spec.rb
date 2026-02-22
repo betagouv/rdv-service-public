@@ -2,7 +2,7 @@ RSpec.describe Agent::AbsencePolicy, type: :policy do
   subject { described_class }
 
   let(:pundit_context) { AgentContext.new(agent) }
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   describe "#update?" do
     context "regular agent, own absence" do

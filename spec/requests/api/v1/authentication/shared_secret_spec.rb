@@ -1,5 +1,5 @@
 RSpec.describe "API authentication with shared secrets for RDV Insertion" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, password: "Correcth0rse!", admin_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent) }
 

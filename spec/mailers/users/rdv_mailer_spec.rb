@@ -67,7 +67,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     end
 
     context "motif collectif sur place" do
-      let(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:lieu) { create(:lieu, organisation:, name: "Mairie centrale") }
       let(:motif) { create(:motif, :collectif, organisation:, location_type: :public_office) }
       let(:rdv) { create(:rdv, motif:, organisation:, lieu:) }
@@ -79,7 +79,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     end
 
     context "motif collectif en visio, pas de visio_url_custom" do
-      let(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:motif) { create(:motif, :collectif, organisation:, location_type: :visio) }
       let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: nil) }
 
@@ -90,7 +90,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     end
 
     context "motif collectif en visio, visio_url_custom présente" do
-      let(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:motif) { create(:motif, :collectif, organisation:, location_type: :visio) }
       let(:rdv) { create(:rdv, motif:, organisation:, visio_url_custom: "https://webinaire.numerique.gouv.fr/test123") }
 

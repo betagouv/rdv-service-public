@@ -23,7 +23,7 @@ RSpec.describe AgentRole, type: :model do
   end
 
   describe "#organisation_cannot_change validation" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent_role1) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
     let!(:agent_role2) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) } # needed to avoid validation error for orga without admin
     let!(:other_orga) { create(:organisation) }
@@ -43,7 +43,7 @@ RSpec.describe AgentRole, type: :model do
 
   describe "#organisations_have_at_least_one_admin validation" do
     context "there is another admin" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent_role1) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
       let!(:agent_role2) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
 
@@ -55,7 +55,7 @@ RSpec.describe AgentRole, type: :model do
     end
 
     context "there are no other admins" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent_role1) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
       let!(:agent_role2) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_BASIC, organisation: organisation) }
 
@@ -70,7 +70,7 @@ RSpec.describe AgentRole, type: :model do
 
   describe "#organisation_have_at_least_one_admin_before_destroy" do
     context "there is another admin" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent_role1) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
       let!(:agent_role2) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
 
@@ -81,7 +81,7 @@ RSpec.describe AgentRole, type: :model do
     end
 
     context "there are no other admins" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent_role1) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
       let!(:agent_role2) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_BASIC, organisation: organisation) }
 

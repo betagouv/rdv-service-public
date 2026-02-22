@@ -1,5 +1,5 @@
 RSpec.describe Admin::EditRdvForm, type: :form do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent, organisation: organisation) }
 
@@ -47,7 +47,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
     end
 
     context "ajout d’un agent à un RDV avec une erreur contournable" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent_mayra) { create(:agent, first_name: "Mayra", basic_role_in_organisations: [organisation]) }
       let!(:agent_stefan) { create(:agent, first_name: "Stefan", basic_role_in_organisations: [organisation]) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent_mayra, organisation:) }
@@ -89,7 +89,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
   end
 
   context "suppression d’un agent d’un RDV avec une erreur contournable" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent_mayra) { create(:agent, first_name: "Mayra", basic_role_in_organisations: [organisation]) }
     let!(:agent_stefan) { create(:agent, first_name: "Stefan", basic_role_in_organisations: [organisation]) }
     let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent_mayra, organisation:) }

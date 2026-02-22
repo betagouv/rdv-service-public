@@ -1,7 +1,7 @@
 RSpec.describe Admin::AgentsController, type: :controller do
   render_views
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:agent1) { create(:agent, admin_role_in_organisations: [organisation], invitation_sent_at: 3.days.ago, invitation_accepted_at: nil) }
   let!(:organisation2) { create(:organisation) }

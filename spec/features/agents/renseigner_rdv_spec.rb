@@ -1,6 +1,6 @@
 RSpec.describe "Les agents peuvent renseigner le statut des rendez-vous pour nous permettre de mesurer notre impact" do
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:rdv) do
     create(:rdv, :past, status: :unknown, agents: [agent], motif: create(:motif, organisation:), organisation: organisation)
   end

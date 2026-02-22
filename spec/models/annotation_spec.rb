@@ -1,6 +1,6 @@
 RSpec.describe Annotation do
   describe "upsert!" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:territory) { organisation.territory }
     let!(:user) { create(:user, organisations: [organisation]) }
 

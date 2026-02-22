@@ -21,7 +21,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:organisation_id) { organisation.id }
 
       response 200, "Retourne des WebhookEndpoints" do
@@ -87,7 +87,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       parameter name: "subscriptions[]", in: :query, style: :form, explode: true, schema: { type: :array, items: { type: :string } },
                 description: "Les modèles concernés par le webhook", example: %w[rdv user user_profile organisation motif lieu agent agent_role], required: false
 
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:organisation) { create(:organisation, territory: territory) }
       let(:organisation_id) { organisation.id }
       let(:agent) { create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation]) }
@@ -150,7 +150,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       parameter name: "subscriptions[]", in: :query, style: :form, explode: true, schema: { type: :array, items: { type: :string } },
                 description: "Les modèles concernés par le webhook", example: %w[rdv user user_profile organisation motif lieu agent agent_role], required: false
 
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:organisation) { create(:organisation, territory: territory) }
       let(:organisation_id) { organisation.id }
       let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation) }

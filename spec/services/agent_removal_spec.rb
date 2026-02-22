@@ -2,7 +2,7 @@ RSpec.describe AgentRemoval, type: :service do
   context "agent belongs to single organisation, with a few absences and plages ouvertures" do
     # orgs must have at least one admin
     let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouvertures) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation) }
     let!(:absences) { create_list(:absence, 2, agent: agent) }
@@ -44,7 +44,7 @@ RSpec.describe AgentRemoval, type: :service do
   context "agent has upcoming RDVs" do
     # orgs must have at least one admin
     let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:rdv) { create(:rdv, agents: [agent], organisation: organisation, starts_at: Time.zone.today.next_week(:monday) + 10.hours) }
 
@@ -60,7 +60,7 @@ RSpec.describe AgentRemoval, type: :service do
   context "agent has old RDVs" do
     # orgs must have at least one admin
     let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
 
     it "succeeds" do
       now = Time.zone.parse("2021-02-13 13:00")
@@ -78,7 +78,7 @@ RSpec.describe AgentRemoval, type: :service do
   end
 
   context "l'agent est le seul admin de l'organisation mais il y a d'autres agents basiques" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
@@ -90,7 +90,7 @@ RSpec.describe AgentRemoval, type: :service do
   end
 
   context "l'agent est le seul admin de l'organisation et il n'y a aucun agent basique" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     it "fonctionne et soft-delete l'agent" do
@@ -101,7 +101,7 @@ RSpec.describe AgentRemoval, type: :service do
   end
 
   context "l'agent est admin de l'orga et le seul admin de l'espace" do
-    let!(:territory) { create(:territory) }
+    let!(:territory) { territories(:default_territory) }
     let!(:organisation) { create(:organisation, territory:) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:territorial_role) { create(:agent_territorial_role, agent:, territory:) }
@@ -117,7 +117,7 @@ RSpec.describe AgentRemoval, type: :service do
   end
 
   context "l'agent est admin de l'orga et aussi admin de l'espace (mais pas le seul)" do
-    let!(:territory) { create(:territory) }
+    let!(:territory) { territories(:default_territory) }
     let!(:organisation) { create(:organisation, territory:) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:agent1) { create(:agent) }
@@ -159,7 +159,7 @@ RSpec.describe AgentRemoval, type: :service do
     end
 
     context "dernière orga de l'agent mais iel a un rôle territorial" do
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:organisation) { create(:organisation, territory:) }
       let!(:agent) { create(:agent, organisations: [organisation]) }
       let!(:territorial_role) { create(:agent_territorial_role, agent: agent, territory:) }

@@ -1,7 +1,7 @@
 RSpec.describe Agent::WebhookEndpointPolicy do
   subject { described_class }
 
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:webhook) { create(:webhook_endpoint, organisation: organisation) }
 
@@ -20,7 +20,7 @@ end
 
 RSpec.describe Agent::WebhookEndpointPolicy::Scope do
   describe "#resolve?" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
 
     context "with an admin agent" do
       let(:agent) { create(:agent, role_in_territories: [organisation.territory]) }

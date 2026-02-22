@@ -3,7 +3,7 @@ RSpec.describe SuperAdmin::OrganisationPolicy, type: :policy do
 
   let!(:super_admin) { create(:super_admin) }
   let!(:pundit_context) { super_admin }
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   context "Permitted actions for super_admin" do
     it_behaves_like "permit actions", :organisation, :index?, :show?, :new?, :create?, :edit?, :update?, :destroy?

@@ -2,7 +2,7 @@ RSpec.describe MergeUsersService, type: :service do
   subject(:perform) { described_class.perform_with(user_target, user_to_merge, attributes_to_merge, organisation) }
 
   # defaults
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:attributes_to_merge) { [] }
   let!(:user_target) { create(:user, organisations: [organisation]) }
   let!(:user_to_merge) { create(:user, organisations: [organisation]) }

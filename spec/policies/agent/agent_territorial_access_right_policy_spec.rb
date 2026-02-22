@@ -1,5 +1,5 @@
 RSpec.describe Agent::AgentTerritorialAccessRightPolicy do
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let(:agent_territorial_access_right) { create(:agent_territorial_access_right, territory: territory) }
 
   let(:policy) { described_class.new(agent, agent_territorial_access_right) }

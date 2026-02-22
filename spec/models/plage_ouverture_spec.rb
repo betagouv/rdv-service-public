@@ -1,5 +1,5 @@
 RSpec.describe PlageOuverture, type: :model do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   describe "time validation" do
     it "validates that end_time is strictly greater than start_time" do

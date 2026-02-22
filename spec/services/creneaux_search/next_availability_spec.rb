@@ -2,7 +2,7 @@ RSpec.describe CreneauxSearch::NextAvailability, type: :service do
   let(:today) { Date.new(2021, 3, 18) }
   let(:now) { Time.zone.parse("20210318 8:23") }
 
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:lieu) { create(:lieu, organisation: organisation) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation) }

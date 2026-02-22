@@ -1,7 +1,7 @@
 RSpec.describe "Déconnexion" do
   let(:user) { create(:user) }
   let(:motif) { create(:motif, bookable_by: :everyone, organisation: organisation) }
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:lieu) { create(:lieu, organisation: organisation) }
 
   let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: 1.month.from_now, motifs: [motif], lieu: lieu, organisation: organisation) }

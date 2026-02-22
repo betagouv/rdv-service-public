@@ -26,7 +26,7 @@ RSpec.describe "Motif Category Territory API" do
       end
 
       response 200, "Active une catégorie de motifs sur un espace" do
-        let!(:territory) { create(:territory) }
+        let!(:territory) { territories(:default_territory) }
         let!(:organisation) { create(:organisation, territory: territory) }
         let!(:organisation_id) { organisation.id }
         let!(:motif_category) { create(:motif_category) }
@@ -51,7 +51,7 @@ RSpec.describe "Motif Category Territory API" do
       end
 
       context "when authentication fails" do
-        let!(:territory) { create(:territory) }
+        let!(:territory) { territories(:default_territory) }
         let!(:organisation) { create(:organisation, territory: territory) }
         let!(:organisation_id) { organisation.id }
         let!(:motif_category) { create(:motif_category) }

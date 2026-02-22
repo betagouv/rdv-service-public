@@ -1,5 +1,5 @@
 RSpec.describe Outlook::ApiClient do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:expected_body) do
     {
       subject: "Super Motif",

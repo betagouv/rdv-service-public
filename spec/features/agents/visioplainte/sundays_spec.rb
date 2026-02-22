@@ -61,7 +61,7 @@ RSpec.describe "Visioplainte agents can work on sunday" do
 
   context "for a normal agent" do
     let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:motif) { create(:motif, organisation: organisation, service: agent.services.first) }
 
     before { login_as(agent, scope: :agent) }

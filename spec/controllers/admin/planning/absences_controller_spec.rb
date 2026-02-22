@@ -1,7 +1,7 @@
 RSpec.describe Admin::Planning::AbsencesController, type: :controller do
   render_views
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   shared_examples "agent can CRUD absences" do
     describe "GET #index" do

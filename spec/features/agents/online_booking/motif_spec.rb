@@ -1,5 +1,5 @@
 RSpec.describe "Réservation en ligne pour un motif en particulier" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:motif) do
     create(:motif, organisation: organisation, bookable_by: :everyone, collectif: false)

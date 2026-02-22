@@ -12,7 +12,7 @@ RSpec.describe "Teams authentified API", swagger_doc: "v1/api.json" do
       operationId "getTeams"
       description "Renvoie toutes les équipes de tous les espaces auquel l'agent authentifié a accès."
 
-      let(:territory) { create(:territory) }
+      let(:territory) { territories(:default_territory) }
       let(:other_territory) { create(:territory) }
       let(:organisation) { create(:organisation, territory: territory) }
       let!(:agent) { create(:agent, :with_territory_access_rights, organisations: [organisation]) }

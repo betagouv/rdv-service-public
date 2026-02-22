@@ -38,7 +38,7 @@ OmniAuth.config.test_mode = true
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  # config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = [Rails.root.join("spec/fixtures").to_s]
   config.include PageSpecHelper
   config.include UnescapeHtmlSpecHelper
   config.include Select2SpecHelper
@@ -89,6 +89,9 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) { Autodoc.render }
+
+  config.use_transactional_fixtures = true
+  config.global_fixtures = :all
 
   config.around do |example|
     if example.metadata[:js] || ENV["HEADLESS"] == "false"

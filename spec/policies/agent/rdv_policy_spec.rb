@@ -14,7 +14,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
   end
 
   context "existing RDV from same agent" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service) { create(:service) }
     let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
     let(:motif) { create(:motif, organisation: organisation, service: service) }
@@ -27,7 +27,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
   end
 
   context "existing RDV from other agent from other service" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service_agent) { build(:service) }
     let(:service_rdv) { build(:service) }
     let(:motif) { create(:motif, organisation: organisation, service: service_rdv) }
@@ -63,7 +63,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
   end
 
   context "existing RDV from other agent on a motif without service" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:agents) { create_list(:agent, 2, organisations: [organisation]) }
     let(:motif) { create(:motif, organisation: organisation, service: nil) }
     let(:rdv) { create(:rdv, agents: [agents[0]], motif: motif, organisation: organisation) }
@@ -75,7 +75,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
   end
 
   context "existing RDV from other agent from same service" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service) { create(:service) }
     let(:agents) { create_list(:agent, 2, organisations: [organisation], service: service) }
     let(:motif) { create(:motif, organisation: organisation, service: service) }
@@ -116,7 +116,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
   end
 
   context "RDV existant pour l’agent courant et un autre agent auquel iel a accès" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service) { create(:service) }
     let(:agent1) { create(:agent, basic_role_in_organisations: [organisation], service:) }
     let(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service:) }
@@ -129,7 +129,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
 
   context "RDV existant pour l’agent courant et un autre agent auquel iel n’a pas accès (autre organisation)" do
     # NOTE: ce cas de deux agents partageant un RDV mais n’ayant pas d’accès l’un à l’autre est peu probable
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service) { create(:service) }
     let(:agent1) { create(:agent, basic_role_in_organisations: [organisation], service:) }
     let(:agent2) { create(:agent, basic_role_in_organisations: [create(:organisation)], service:) }
@@ -144,7 +144,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
   # `@rdv.participations.build(...)`, puis appellent cette policy.
   # Cette section teste ce cas de figure.
   context "adding users from outside the current agent's territory" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service) { create(:service) }
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
     let(:motif) { create(:motif, organisation: organisation, service: service) }
@@ -162,7 +162,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
   end
 
   context "any participating user is soft deleted" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service) { create(:service) }
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
     let(:motif) { create(:motif, organisation: organisation, service: service) }
@@ -182,7 +182,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
   end
 
   context "the participating user belongs to no organisation but already has a RDV in my orgs" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:service) { create(:service) }
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
     let(:motif) { create(:motif, organisation: organisation, service: service) }

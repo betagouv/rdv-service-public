@@ -1,5 +1,5 @@
 RSpec.describe AbsenceBlueprint do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   describe "#render" do
     it "contains an agent" do

@@ -104,7 +104,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
 
   context "POST step2 avec motif téléphonique et l’usager a un numéro de téléphone" do
     render_views
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:motif) { create(:motif, :by_phone, organisation:) }
     let!(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
     let!(:user) { create(:user, organisations: [organisation], first_name: "François", last_name: "Fictif", phone_number: "0606060606") }
@@ -132,7 +132,7 @@ RSpec.describe Admin::RdvWizardStepsController, type: :controller do
 
   context "POST step2 avec motif téléphonique mais l’usager n’a pas de numéro de téléphone" do
     render_views
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:motif) { create(:motif, :by_phone, organisation:) }
     let!(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
     let!(:user) { create(:user, organisations: [organisation], first_name: "François", last_name: "Fictif", phone_number: nil) }

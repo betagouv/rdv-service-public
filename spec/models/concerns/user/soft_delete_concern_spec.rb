@@ -75,7 +75,7 @@ RSpec.describe User::SoftDeleteConcern do
     end
 
     context "l’usager appartient à 2 organisations" do
-      let(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:other_organisation) { create(:organisation) }
 
       context "appel avec une orga passée en param" do
@@ -158,7 +158,7 @@ RSpec.describe User::SoftDeleteConcern do
   end
 
   describe "#can_be_soft_deleted_from_organisation?" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
 
     it "retourne true quand il n’y a pas de RDV pour l’usager ni ses proches" do
       user = create(:user, organisations: [organisation])

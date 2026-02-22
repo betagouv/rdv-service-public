@@ -21,7 +21,7 @@ RSpec.describe "Route vers l'agenda" do
     end
 
     context "and they have one organisation" do
-      let(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
       it "shows the agenda for this organisation" do

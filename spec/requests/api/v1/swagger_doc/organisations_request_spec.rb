@@ -88,7 +88,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
 
       parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 123
 
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent) { create(:agent, basic_role_in_organisations: Organisation.all) }
       let(:organisation_id) { organisation.id }
 
@@ -121,7 +121,7 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
       parameter name: "email", in: :query, type: :string, description: "Email", example: "cas@77.com", required: false
       parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33100008012", required: false
 
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:organisation_id) { organisation.id }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 

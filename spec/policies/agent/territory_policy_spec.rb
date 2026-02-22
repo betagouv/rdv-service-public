@@ -1,7 +1,7 @@
 RSpec.describe Agent::TerritoryPolicy, type: :policy do
   subject { described_class }
 
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let(:pundit_context) { agent }
 
   describe "agent with" do
@@ -20,7 +20,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
     end
 
     context "admin access to this territory" do
-      let(:territory) { create(:territory) }
+      let(:territory) { territories(:default_territory) }
       let(:agent) { create(:agent, role_in_territories: [territory]) }
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
 

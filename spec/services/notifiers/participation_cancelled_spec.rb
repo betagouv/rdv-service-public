@@ -1,5 +1,5 @@
 RSpec.describe Notifiers::ParticipationCancelled, type: :service do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, organisations: [organisation]) }
   let(:now) { Time.zone.parse("2025-07-30 09:00") }
 

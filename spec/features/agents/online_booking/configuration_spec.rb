@@ -1,5 +1,5 @@
 RSpec.describe "Agents can configure online booking" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:motif) do
     create(:motif, organisation: organisation, service: agent.services.first, bookable_by: :agents, collectif: false, name: "Motif individuel")
   end

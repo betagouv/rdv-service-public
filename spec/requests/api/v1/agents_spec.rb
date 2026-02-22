@@ -5,7 +5,7 @@ RSpec.describe "Agents API" do
   end
   let(:application) { create(:oauth_application) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   describe "#create" do
     let(:params) do

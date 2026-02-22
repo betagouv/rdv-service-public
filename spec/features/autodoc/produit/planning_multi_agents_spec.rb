@@ -1,5 +1,5 @@
 RSpec.describe "Nouveau planning / planning multi-agents", js: true do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent_admin) { create(:agent, first_name: "Justine", last_name: "Admin", admin_role_in_organisations: [organisation]) }
   let!(:agent_basique) { create(:agent, first_name: "Loïc", last_name: "Basique", basic_role_in_organisations: [organisation]) }
 

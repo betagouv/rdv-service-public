@@ -1,5 +1,5 @@
 RSpec.describe "Anybody can see stats" do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:motif) { create(:motif, :collectif, organisation:) }
 
   it "displays all the stats" do

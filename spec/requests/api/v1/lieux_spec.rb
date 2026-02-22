@@ -5,7 +5,7 @@ RSpec.describe "Lieux API" do
   end
   let(:application) { create(:oauth_application, grants_autonomous_signup: true) }
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
   describe "#index" do

@@ -1,6 +1,6 @@
 RSpec.describe Admin::RdvsController, type: :controller do
   let(:now) { Time.zone.parse("19/07/2019 15:00") }
-  let!(:territory) { create(:territory) }
+  let!(:territory) { territories(:default_territory) }
   let!(:organisation) { create(:organisation, territory:) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }

@@ -1,5 +1,5 @@
 RSpec.describe "Agents can change their email" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], password: "CorrectH0rse!") }
   let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) } # Organisation needs at least one admin
 

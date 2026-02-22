@@ -13,7 +13,7 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
       operationId "listLieux"
       description "Liste tous les lieux accessibles par l’agent connecté. N’inclut pas les lieux ponctuels ni les lieux désactivés."
 
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
       response 200, "Renvoie une liste des lieux" do
@@ -45,7 +45,7 @@ RSpec.describe "API des lieux", swagger_doc: "v1/api.json" do
         } },
       }, description: "L'id du lieu dans votre système pour éviter la création de doublons", required: false
 
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
       response 200, "Crée et renvoie un lieu" do

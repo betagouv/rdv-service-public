@@ -1,6 +1,6 @@
 RSpec.describe Agent::TeamPolicy do
   let(:team) { create(:team, territory: territory) }
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
 
   %i[create? new? destroy? edit? update? versions?].each do |action|
     describe "##{action}" do

@@ -14,7 +14,7 @@ RSpec.describe Agents::PagesController, type: :controller do
     end
 
     context "quand l’agent a une seule organisation accessible" do
-      let(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
 
       before do
         agent.organisations << organisation

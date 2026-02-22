@@ -1,7 +1,7 @@
 RSpec.describe "User can update their information" do
   let!(:organisation) { create(:organisation, territory: territory) }
   let(:user) { create(:user, organisations: [organisation]) }
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
 
   before { login_as(user, scope: :user) }
 

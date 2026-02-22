@@ -1,5 +1,5 @@
 RSpec.describe "Agent can't create duplicate RDV" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, organisation: organisation, service: service) }

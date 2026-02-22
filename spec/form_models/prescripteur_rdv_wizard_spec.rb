@@ -1,5 +1,5 @@
 RSpec.describe PrescripteurRdvWizard do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:motif) { create(:motif, organisation: organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
   let(:first_day) { Date.parse("2023/08/01") }

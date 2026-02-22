@@ -10,7 +10,7 @@ RSpec.describe SearchController, type: :controller do
 
   let!(:user) { create(:user, organisations: [organisation]) }
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:other_org) { create(:organisation) }
 
   let!(:service) { create(:service, name: "Joli service") }

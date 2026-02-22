@@ -1,5 +1,5 @@
 RSpec.describe Users::RdvBookingForm do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:user) { create(:user) }
   let!(:user_for_rdv) { create(:user) }
   let!(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30) }

@@ -33,7 +33,7 @@ RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
       )
 
       response 200, "updates participation status", document: false do
-        let!(:organisation) { create(:organisation) }
+        let!(:organisation) { organisations(:default_org) }
         let!(:service) { create(:service) }
         let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
         let(:access_admin_agent) { api_auth_headers_for_agent(admin_agent) }

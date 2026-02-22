@@ -13,7 +13,7 @@ RSpec.describe "User Profile authentified API" do
       parameter name: "organisation_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "ID des organisations", example: "[1, 2]"
       parameter name: "user_id", in: :query, type: :integer, description: "ID de l'utilisateur", example: 12
 
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:organisation1) { create(:organisation, territory: territory, verticale: "rdv_insertion") }
       let!(:organisation2) { create(:organisation, territory: territory, verticale: "rdv_insertion") }
       let!(:organisation3) { create(:organisation, territory: territory, verticale: "rdv_solidarites") }

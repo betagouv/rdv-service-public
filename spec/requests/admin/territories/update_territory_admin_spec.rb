@@ -1,5 +1,5 @@
 RSpec.describe "Update territory admin" do
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let(:current_agent) { create(:agent, role_in_territories: []) }
   let(:other_agent) { create(:agent) }
   let(:organisation) { create(:organisation, territory: territory) }

@@ -53,7 +53,7 @@ RSpec.describe "User can manage their rdvs" do
   end
 
   context "rdv are created by the user" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let!(:agent1) { create(:agent, organisations: [organisation]) }
     let!(:agent2) { create(:agent, organisations: [organisation]) }

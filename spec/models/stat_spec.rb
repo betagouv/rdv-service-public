@@ -1,6 +1,6 @@
 RSpec.describe Stat, type: :model do
   describe "#rdvs_group_by_type" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
 
     it "return empty hash without rdv" do
       stats = described_class.new(rdvs: Rdv.all)
@@ -55,7 +55,7 @@ RSpec.describe Stat, type: :model do
   end
 
   describe "#rdvs_group_by_service" do
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
 
     it "returns rdv group by service" do
       now = Time.zone.parse("20220123 13:00")

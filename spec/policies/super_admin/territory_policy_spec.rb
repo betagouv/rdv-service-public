@@ -3,7 +3,7 @@ RSpec.describe SuperAdmin::TerritoryPolicy, type: :policy do
 
   let!(:super_admin) { create(:super_admin) }
   let!(:pundit_context) { super_admin }
-  let!(:territory) { create(:territory) }
+  let!(:territory) { territories(:default_territory) }
 
   context "Permitted actions for super_admin" do
     it_behaves_like "permit actions", :territory, :index?, :show?, :edit?, :update?, :destroy?

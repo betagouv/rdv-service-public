@@ -1,5 +1,5 @@
 RSpec.describe Admin::ParticipationPresenter do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:user) { create(:user, organisations: [organisation]) }
 
   describe "#previous_rdvs_truncated" do

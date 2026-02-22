@@ -13,7 +13,7 @@ RSpec.describe User::RdvPolicy, type: :policy do
     end
   end
 
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let(:motif) { create(:motif, organisation: organisation) }
   let(:user) { create(:user) }

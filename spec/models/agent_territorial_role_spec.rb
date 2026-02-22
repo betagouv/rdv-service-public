@@ -1,7 +1,7 @@
 RSpec.describe AgentTerritorialRole, type: :model do
   describe "#territory_has_at_least_one_role_before_destroy" do
     context "there is another agent with territory role" do
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:role1) { create(:agent_territorial_role, territory: territory) }
       let!(:role2) { create(:agent_territorial_role, territory: territory) }
 
@@ -12,7 +12,7 @@ RSpec.describe AgentTerritorialRole, type: :model do
     end
 
     context "there are no other agents with territory role" do
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:role1) { create(:agent_territorial_role, territory: territory) }
 
       it "does not allow destroying it" do

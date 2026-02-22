@@ -1,5 +1,5 @@
 RSpec.describe Admin::Planning::AgendasController, type: :controller do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
   before { sign_in agent }

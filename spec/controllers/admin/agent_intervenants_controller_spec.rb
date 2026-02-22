@@ -1,7 +1,7 @@
 RSpec.describe Admin::AgentIntervenantsController, type: :controller do
   render_views
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:agent_intervenant) { create(:agent, :intervenant, organisations: [organisation]) }
   let(:service) { create(:service) }

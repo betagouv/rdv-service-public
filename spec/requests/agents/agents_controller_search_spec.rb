@@ -1,5 +1,5 @@
 RSpec.describe Agents::AgentsController, "#search" do
-  let!(:territory) { create(:territory) }
+  let!(:territory) { territories(:default_territory) }
   let!(:organisation) { create(:organisation, territory: territory) }
   let!(:current_agent) { create(:agent, first_name: "Martine", last_name: "Validay", admin_role_in_organisations: [organisation]) }
 

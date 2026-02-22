@@ -1,7 +1,7 @@
 RSpec.describe Agent, type: :model do
   describe "#soft_delete" do
     context "with remaining organisations attached" do
-      let(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
       it "raises" do
@@ -171,7 +171,7 @@ RSpec.describe Agent, type: :model do
     end
 
     context "for an intervenant" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation]) }
       let(:agent_intervenant) { build(:agent, :intervenant, organisations: [organisation]) }
 

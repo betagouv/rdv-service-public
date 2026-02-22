@@ -1,5 +1,5 @@
 RSpec.describe "Agent can list RDVs" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:current_agent) { create(:agent, organisations: [organisation], service: create(:service)) }
   let!(:user) { create(:user) }
 

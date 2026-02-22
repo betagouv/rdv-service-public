@@ -1,7 +1,7 @@
 RSpec.describe "Un agent peut retirer des usagers d’un RDV Collectif", js: true do
   let(:now) { Time.zone.parse("2025-11-26 10:00") }
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:service) { create(:service) }
   let!(:agent_noe) { create(:agent, first_name: "Noé", last_name: "Jacquet", email: "noe@service.fr", service:, admin_role_in_organisations: [organisation]) }
   let!(:agent_bouba) { create(:agent, first_name: "Bouba", email: "bouba@service.fr", service:, basic_role_in_organisations: [organisation]) }

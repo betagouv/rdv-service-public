@@ -1,5 +1,5 @@
 RSpec.describe Admin::Territories::SectorsController do
-  let!(:territory) { create(:territory) }
+  let!(:territory) { territories(:default_territory) }
   let!(:current_agent) { create(:agent, role_in_territories: [territory]) }
 
   before { sign_in current_agent }

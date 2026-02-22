@@ -1,7 +1,7 @@
 RSpec.describe Agent::AgentRolePolicy do
   subject { described_class }
 
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let(:organisation) { create(:organisation, territory: territory) }
 
   shared_examples "permit actions" do |*actions|

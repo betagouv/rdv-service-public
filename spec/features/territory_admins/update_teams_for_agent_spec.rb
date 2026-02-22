@@ -2,7 +2,7 @@ RSpec.describe "update an agent's teams" do
   let(:territory_admin) { create(:agent) }
   let(:agent) { create(:agent, basic_role_in_organisations: [orga]) }
 
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let(:other_territory) { create(:territory) }
   let(:orga) { create(:organisation, territory:) }
 

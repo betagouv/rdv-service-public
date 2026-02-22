@@ -12,7 +12,7 @@ RSpec.describe Admin::Api::Agenda::RdvsController, type: :controller do
   let(:aujourdhui_lundi_15h) { Time.zone.parse("2024-04-08 15:00:00") }
   let(:mercredi_15h) { Time.zone.parse("2024-04-10 15:00:00") }
 
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   context "with a signed in agent" do
     before { sign_in current_agent }

@@ -1,5 +1,5 @@
 RSpec.describe CreneauxSearch::ForUser, type: :service do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:creneau_double) { instance_double(Creneau, starts_at: 1.hour.from_now) }
   let(:lieu) { create(:lieu, organisation: organisation) }
   let(:date_range) { (Date.parse("2020-10-20")..Date.parse("2020-10-23")) }

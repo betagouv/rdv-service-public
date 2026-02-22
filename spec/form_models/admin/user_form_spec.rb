@@ -1,7 +1,7 @@
 RSpec.describe Admin::UserForm, type: :form do
   subject { described_class.new(user, current_organisation: organisation) }
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   before do
     allow(DuplicateUsersFinderService).to receive(:perform_with).with(candidate_user: user, within_territory: organisation.territory).and_return(duplicate_users_mock)

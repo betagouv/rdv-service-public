@@ -3,7 +3,7 @@ require "swagger_helper"
 RSpec.describe "Users API", swagger_doc: "v1/api.json" do
   with_examples
 
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
   path "/api/v1/users/{user_id}" do

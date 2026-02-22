@@ -1,5 +1,5 @@
 RSpec.describe Agents::UsersController, "#search" do
-  let!(:territory) { create(:territory) }
+  let!(:territory) { territories(:default_territory) }
   let!(:organisation_of_agent) { create(:organisation, territory: territory) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation_of_agent]) }
 

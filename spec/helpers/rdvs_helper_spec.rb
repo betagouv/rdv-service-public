@@ -1,7 +1,7 @@
 RSpec.describe RdvsHelper do
   include ActionView::Helpers::DateHelper
 
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:motif) { build(:motif, name: "Consultation normale", organisation:) }
   let(:user) { build(:user, first_name: "Marie", last_name: "DENIS") }
   let(:rdv) { build(:rdv, users: [user], motif: motif, organisation:) }

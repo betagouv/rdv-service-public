@@ -1,6 +1,6 @@
 RSpec.describe "Broken links in the application are visible in Sentry" do
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   let(:path_to_unknown_user_id) { admin_organisation_user_path(organisation_id: organisation.id, id: 99999) }
 

@@ -13,7 +13,7 @@ RSpec.describe "Step 3 of the rdv wizard" do
     create(:user, organisations: [organisation], first_name: "Francis", last_name: "Factice")
   end
   let(:other_territory) { create(:territory) }
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:organisation_from_other_territory) { create(:organisation, territory: other_territory) }
   let(:user_from_other_territory) do
     create(:user, organisations: [organisation_from_other_territory], first_name: "Gaston", last_name: "Bidon")

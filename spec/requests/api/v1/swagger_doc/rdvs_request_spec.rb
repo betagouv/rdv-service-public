@@ -75,7 +75,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       let!(:rdv) { create(:rdv, organisation: organisation, motif: motif, starts_at: "2022-01-01 09:00:00 +0200") }
 
-      let(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:service) { create(:service) }
       let(:motif) { create(:motif, organisation: organisation, service: service) }
       let!(:basic_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }

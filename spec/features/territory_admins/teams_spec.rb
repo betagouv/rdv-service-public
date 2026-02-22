@@ -3,7 +3,7 @@ RSpec.describe "Managing teams" do
   let!(:rights) do
     create :agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_teams: true
   end
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
 
   before do
     login_as(current_agent, scope: :agent)

@@ -15,7 +15,7 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
       parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 12
       parameter name: "user_id", in: :query, type: :integer, description: "ID de l'utilisateur", example: 12
 
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:organisation) { create(:organisation, territory: territory) }
       let!(:user) { create(:user) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -86,7 +86,7 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
       parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 14
       parameter name: "user_id", in: :query, type: :integer, description: "ID de l'utilisateur", example: 12
 
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:user) { create(:user, organisations: [organisation]) }
       let(:auth_headers) { api_auth_headers_for_agent(agent) }

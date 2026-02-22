@@ -4,7 +4,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
     allow(Devise.token_generator).to receive(:generate).and_return("12345678")
   end
 
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:agent) { create(:agent, rdv_notifications_level: "all") }
   let(:rdv) { create(:rdv, agents: [agent], organisation:) }
   let(:motif) { create(:motif, :collectif, organisation:) }

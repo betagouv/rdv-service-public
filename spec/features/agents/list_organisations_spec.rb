@@ -1,5 +1,5 @@
 RSpec.describe "Organisations" do
-  let!(:territory) { create(:territory) }
+  let!(:territory) { territories(:default_territory) }
   let!(:organisation1) { create(:organisation, territory: territory, name: "MDS de Paris Nord") }
   let!(:organisation2) { create(:organisation, territory: territory, name: "MDS de Paris Sud") }
 

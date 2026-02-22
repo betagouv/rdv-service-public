@@ -1,5 +1,5 @@
 RSpec.describe Creneau, type: :model do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let(:today) { Time.zone.local(2019, 9, 19) }

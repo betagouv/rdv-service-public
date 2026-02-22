@@ -1,6 +1,6 @@
 RSpec.describe "can see users' RDV" do
   context "with no RDV" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:user) { create(:user, first_name: "Tanguy", last_name: "Laverdure", organisations: [organisation]) }
 
@@ -13,7 +13,7 @@ RSpec.describe "can see users' RDV" do
   end
 
   context "with one RDV" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:service) { create(:service) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
     let!(:user) { create(:user, first_name: "Tanguy", last_name: "Laverdure", organisations: [organisation]) }

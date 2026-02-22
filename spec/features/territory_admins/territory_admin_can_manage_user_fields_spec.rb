@@ -1,5 +1,5 @@
 RSpec.describe "admin d'espace peut gérer les champs de fiche usager", type: :feature do
-  let!(:territory) { create(:territory) }
+  let!(:territory) { territories(:default_territory) }
   let!(:agent) { create(:agent, role_in_territories: [territory]) }
 
   it "works (cas général)" do

@@ -2,7 +2,7 @@ RSpec.describe Agent::AgentPolicy, type: :policy do
   subject { described_class }
 
   let(:pundit_context) { AgentContext.new(agent) }
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:organisation2) { create(:organisation) }
 
   %i[show? new? create? edit? update? invite? rdvs? reinvite? versions?].each do |action|
@@ -97,7 +97,7 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       it { is_expected.to contain_exactly(agent, other_agent_same_orgas) }
 
       context "when secrétaire is also territory admin" do
-        let!(:territory) { create(:territory) }
+        let!(:territory) { territories(:default_territory) }
         let!(:organisations) { create_list(:organisation, 2, territory: territory) }
         let!(:other_organisation_in_territory) { create(:organisation, territory: territory) }
         let!(:agent_in_other_org_in_territory) { create(:agent, organisations: [other_organisation_in_territory]) }

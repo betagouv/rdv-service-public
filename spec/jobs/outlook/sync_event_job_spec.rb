@@ -5,7 +5,7 @@ RSpec.describe Outlook::SyncEventJob do
   let(:rdv) { create(:rdv, organisation: organisation, agents: [agent]) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let(:agents_rdv) { rdv.agents_rdvs.first }
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
 
   before do
     allow(Outlook::ApiClient).to receive(:new).with(agent).and_return(client_double)

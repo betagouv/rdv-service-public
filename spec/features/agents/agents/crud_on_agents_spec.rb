@@ -1,5 +1,5 @@
 RSpec.describe "Agents can be managed by organisation admins" do
-  let(:territory) { create(:territory) }
+  let(:territory) { territories(:default_territory) }
   let(:pmi) { create(:service, name: "PMI", territories: [territory]) }
   let(:other_service) { create(:service, territories: []) }
   let(:organisation1) { create(:organisation, territory: territory) }

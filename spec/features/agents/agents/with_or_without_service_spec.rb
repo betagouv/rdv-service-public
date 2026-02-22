@@ -1,7 +1,7 @@
 RSpec.describe "Activer et désactiver les services pour les agents" do
   before { login_as(agent, scope: :agent) }
 
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, service: nil, admin_role_in_organisations: [organisation]) }
 
   before do

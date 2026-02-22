@@ -15,7 +15,7 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
 
       parameter name: "organisation_id", in: :query, type: :integer, description: "L'ID d'une organisation donnée", example: "123", required: false
 
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:organisation2) { create(:organisation) }
       let!(:organisation3) { create(:organisation) }
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation, organisation2]) }

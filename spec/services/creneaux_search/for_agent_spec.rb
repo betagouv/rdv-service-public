@@ -1,5 +1,5 @@
 RSpec.describe CreneauxSearch::ForAgent, type: :service do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:motif) { create :motif, organisation: organisation }
 
   describe "#next_availabilities" do

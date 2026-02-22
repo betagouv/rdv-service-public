@@ -8,7 +8,7 @@ RSpec.describe Participation::Creatable, type: :concern do
     let(:user) { create :user }
     let(:user2) { create :user, :without_devise_email, notification_email: "notif@email.fr" }
     let(:user3) { create :user }
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:relative) do
       create(:user, :relative, :without_devise_email, responsible: user, first_name: "Petit", last_name: "Bébé")
     end

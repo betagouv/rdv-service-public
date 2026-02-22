@@ -1,6 +1,6 @@
 RSpec.describe Users::RdvWizardStepsController, type: :controller do
   describe "#new" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:user) { create(:user) }
     let!(:motif) { create(:motif, organisation: organisation) }
     let!(:lieu) { create(:lieu, organisation: organisation) }

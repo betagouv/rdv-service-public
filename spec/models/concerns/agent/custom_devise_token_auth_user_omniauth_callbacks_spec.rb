@@ -19,7 +19,7 @@ RSpec.describe Agent::CustomDeviseTokenAuthUserOmniauthCallbacks, type: :concern
 
   describe "included validations" do
     context "when agent has all roles intervenant" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:agent) { build(:agent, email: nil) }
       let(:existing_agent) { build(:agent, email: nil) }
 
@@ -36,7 +36,7 @@ RSpec.describe Agent::CustomDeviseTokenAuthUserOmniauthCallbacks, type: :concern
     end
 
     context "when agent has a role that is not intervenant" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:existing_agent) { create(:agent, admin_role_in_organisations: [organisation], email: "super_agent@gmail.com") }
       let(:agent) { build(:agent, admin_role_in_organisations: [organisation], email: nil) }
 
@@ -53,7 +53,7 @@ RSpec.describe Agent::CustomDeviseTokenAuthUserOmniauthCallbacks, type: :concern
     end
 
     context "when agent has no role" do
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let!(:existing_agent) { create(:agent, admin_role_in_organisations: [organisation], email: "super_agent@gmail.com") }
       let(:agent) { build(:agent, email: nil) }
 

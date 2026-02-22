@@ -1,5 +1,5 @@
 RSpec.describe "Un agent peut créer et éditer un RDV collectif en visio en passant et retirant une URL de visio personnalisée", js: true do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:lieu) { create(:lieu, organisation:) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation], first_name: "Alain", last_name: "DIALO") }
 

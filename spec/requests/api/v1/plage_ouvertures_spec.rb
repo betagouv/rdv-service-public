@@ -5,7 +5,7 @@ RSpec.describe "Plage ouvertures API" do
   end
   let(:application) { create(:oauth_application, grants_autonomous_signup: true) }
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:motif) { create(:motif, organisation:) }
   let!(:lieu) { create(:lieu, organisation:) }
   let!(:motif_external_reference) do

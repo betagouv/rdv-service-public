@@ -13,7 +13,7 @@ RSpec.describe FileAttente, type: :model do
       file_attente.reload
     end
 
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let(:motif) { create(:motif, organisation: organisation) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }

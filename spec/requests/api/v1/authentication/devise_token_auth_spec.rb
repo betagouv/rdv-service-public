@@ -1,7 +1,7 @@
 RSpec.describe "API authentication" do
   # inspired by https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, password: "Correcth0rse!", admin_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent) }
 

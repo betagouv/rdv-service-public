@@ -11,7 +11,7 @@ RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
 
     context "same agent (=> in scope)" do
       let(:in_scope_mock_value) { true }
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent, organisation: organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:user) { create(:user, first_name: "Milos", last_name: "FORMAN") }
@@ -23,7 +23,7 @@ RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
 
     context "rdv from other agent but still in scope" do
       let(:in_scope_mock_value) { true }
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: build(:agent), organisation: organisation) }
       let!(:user) { create(:user, first_name: "Milos", last_name: "FORMAN") }
       let!(:rdv_context) { create(:rdv, organisation: organisation, starts_at: Time.zone.today.next_week(:monday).in_time_zone + 9.hours) }
@@ -35,7 +35,7 @@ RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
 
     context "rdv from other agent and not in scope" do
       let(:in_scope_mock_value) { false }
-      let!(:organisation) { create(:organisation) }
+      let!(:organisation) { organisations(:default_org) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: build(:agent), organisation: organisation) }
       let!(:user) { create(:user, first_name: "Milos", last_name: "FORMAN") }
       let!(:rdv_context) { create(:rdv, organisation: organisation, starts_at: Time.zone.today.next_week(:monday).in_time_zone + 9.hours) }

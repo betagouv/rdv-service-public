@@ -5,7 +5,7 @@ RSpec.describe Territory, type: :model do
 
   describe "#organisations_agents request don't include duplicates" do
     context "when an agent is attached to 2 organisations" do
-      let(:territory) { create(:territory) }
+      let(:territory) { territories(:default_territory) }
       let(:organisation1) { create(:organisation, territory: territory) }
       let(:organisation2) { create(:organisation, territory: territory) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }

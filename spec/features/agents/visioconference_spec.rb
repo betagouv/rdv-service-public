@@ -1,5 +1,5 @@
 RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:service) { create(:service) }
 
   let(:agent) do

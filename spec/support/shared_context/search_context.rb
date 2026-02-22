@@ -1,6 +1,6 @@
 RSpec.shared_examples "SearchContext" do
   let!(:user) { create(:user, organisations: [organisation]) }
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:service) { create(:service) }
   let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
   let!(:motif) { create(:motif, name: "RSA orientation sur site", motif_category: rsa_orientation, organisation: organisation, default_duration_in_min: 30) }

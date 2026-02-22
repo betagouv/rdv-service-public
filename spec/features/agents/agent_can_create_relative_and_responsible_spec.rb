@@ -1,5 +1,5 @@
 RSpec.describe "Admin can configure the organisation" do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
   before do

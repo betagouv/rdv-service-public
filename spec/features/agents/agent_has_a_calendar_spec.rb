@@ -58,7 +58,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
   end
 
   describe "revient à l'agenda du collègue après avoir consulté / modifié son RDV" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:me) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:colleague) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:motif) { create(:motif, organisation: organisation, name: "Atelier collectif") }
@@ -92,7 +92,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
   end
 
   describe "realtime refreshes" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     before do
@@ -181,7 +181,7 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
   end
 
   describe "création de RDV depuis l'agenda" do
-    let!(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     before do

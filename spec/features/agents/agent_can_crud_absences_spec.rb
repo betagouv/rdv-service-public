@@ -1,5 +1,5 @@
 RSpec.describe "Agent can CRUD absences" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
   before do

@@ -15,7 +15,7 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
       parameter name: "agent_id", in: :query, type: :integer, description: "ID de l'agent", example: 14
       parameter name: "user_id", in: :query, type: :integer, description: "ID de l'utilisateur", example: 12
 
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:organisation) { create(:organisation, territory: territory) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:user) { create(:user, organisations: [organisation]) }
@@ -79,7 +79,7 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
       parameter name: "agent_id", in: :query, type: :integer, description: "ID de l'agent", example: 14
       parameter name: "user_id", in: :query, type: :integer, description: "ID de l'utilisateur", example: 12
 
-      let!(:territory) { create(:territory) }
+      let!(:territory) { territories(:default_territory) }
       let!(:organisation) { create(:organisation, territory: territory) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:user) { create(:user, organisations: [organisation]) }

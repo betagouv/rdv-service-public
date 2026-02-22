@@ -1,5 +1,5 @@
 RSpec.describe "territory admin can manage motifs", type: :feature do
-  let!(:territory) { create(:territory) }
+  let!(:territory) { territories(:default_territory) }
   let!(:agent) { create(:agent, role_in_territories: [territory]) }
 
   before do

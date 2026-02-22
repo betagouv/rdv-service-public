@@ -1,5 +1,5 @@
 RSpec.describe SmsJob do
-  let!(:territory) { create(:territory) }
+  let!(:territory) { territories(:default_territory) }
   let(:content) { "contenu du message" }
 
   def enqueue_sms_job

@@ -535,7 +535,7 @@ RSpec.describe "User can search for rdvs" do
   context "pour un motif sans service" do
     let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, service: nil, location_type: Motif.location_types[:visio]) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], organisation: organisation) }
-    let(:organisation) { create(:organisation) }
+    let!(:organisation) { organisations(:default_org) }
 
     it "permet de prendre rendez-vous" do
       visit public_link_to_org_path(organisation_id: organisation.public_link_id)

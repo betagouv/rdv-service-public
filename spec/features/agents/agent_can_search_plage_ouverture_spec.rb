@@ -1,5 +1,5 @@
 RSpec.describe "Agent can search plage ouverture" do
-  let(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let(:agent) { create(:agent, organisations: [organisation]) }
   let!(:perm_enfance) { create(:plage_ouverture, title: "Permanence Enfance en cours", agent: agent, organisation: organisation) }
   let!(:perm_scolaire) { create(:plage_ouverture, title: "Permanence Scolaire en cours", agent: agent, organisation: organisation) }

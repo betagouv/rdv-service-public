@@ -3,7 +3,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
 
   before { login_as(agent, scope: :agent) }
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
   context "when there are multiple plage d'ouverture and lieux" do

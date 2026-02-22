@@ -3,7 +3,7 @@ RSpec.describe Participation, type: :model do
     %w[collectif individuel].each do |rdv_type|
       describe "For #{rdv_type} rdv" do
         rdv_type == "collectif" ? let(:motif) { create(:motif, :collectif, organisation:) } : let(:motif) { create(:motif, organisation:) }
-        let(:organisation) { create(:organisation) }
+        let!(:organisation) { organisations(:default_org) }
         let(:agent) { create(:agent) }
         let(:user) { create(:user) }
         let(:user2) { create(:user) }

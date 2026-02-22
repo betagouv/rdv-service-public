@@ -1,7 +1,7 @@
 RSpec.describe Admin::Planning::PlageOuverturesController, type: :controller do
   render_views
 
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:motif) { create(:motif, organisation: organisation, service: service) }

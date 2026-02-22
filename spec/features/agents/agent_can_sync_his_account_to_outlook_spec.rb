@@ -1,5 +1,5 @@
 RSpec.describe "Agent can sync his account to outlook" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { organisations(:default_org) }
   let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], starts_at: 10.days.ago) }
