@@ -39,5 +39,4 @@ document.addEventListener("DOMContentLoaded", function() {
     })
   }
 });
-import "./controllers"
 import "@hotwired/turbo-rails"
