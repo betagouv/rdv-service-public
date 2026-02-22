@@ -1,0 +1,37 @@
+- if plage_ouverture.available_motifs.any?
+  = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
+    = render("model_errors", model: plage_ouverture, f: f)
+
+    .row.justify-content-center
+      .col-md-6
+        = render partial: "admin/planning/plage_ouvertures/form/date_et_horaires", locals: { plage_ouverture:, f: }
+
+    .row.justify-content-center
+      .col-md-6
+        = render partial: "admin/planning/plage_ouvertures/form/choix_motifs", locals: { plage_ouverture:, f: }
+
+    .row.justify-content-center [data-plage-ouverture-form-target="labelSection"]
+      .col-md-6
+        = render partial: "admin/planning/plage_ouvertures/form/options_avancees", locals: { f: }
+
+    .row.justify-content-center
+      .col-md-6
+        .row.mb-5
+          - if plage_ouverture.persisted?
+            .col.text-left
+              = link_to "Annuler", \
+                admin_organisation_planning_plage_ouverture_path(current_organisation, plage_ouverture), \
+                class: "btn btn-link"
+            .col.text-right
+              = f.button :submit, "Enregistrer"
+          -else
+            .col.text-left
+              = link_to "Revenir à la liste", \
+                admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: current_agent), \
+                class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
+            .col.text-right [data-plage-ouverture-form-target="submitSection"]
+              = f.submit "Créer la plage d'ouverture", class: "fr-btn"
+- else
+  .card
+    .card-body
+      = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."

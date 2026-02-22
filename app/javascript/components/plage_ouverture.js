@@ -1,3 +1,35 @@
+class PlageOuvertureRecurrenceRadioButton {
+  constructor() {
+    this.radioButtonRecurring = document.querySelector(".js-radio-recurring");
+    this.radioButtonNonRecurring = document.querySelector(".js-radio-non-recurring");
+    this.recurrenceCheckbox = document.getElementById("recurrence_has_recurrence");
+    if(this.recurrenceCheckbox && this.radioButtonRecurring && this.radioButtonNonRecurring) {
+      this.radioButtonRecurring.addEventListener("change", this.enableRecurrence.bind(this));
+      this.radioButtonNonRecurring.addEventListener("change", this.disableRecurrence.bind(this));
+    }
+  }
+
+  enableRecurrence() {
+    this.recurrenceCheckbox.checked = true;
+    this.recurrenceCheckbox.dispatchEvent(new Event('change'))
+    document.querySelector('label[for="recurrence-source"]').childNodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        node.textContent = "Premier jour"
+      }
+    });
+  }
+
+  disableRecurrence() {
+    this.recurrenceCheckbox.checked = false;
+    this.recurrenceCheckbox.dispatchEvent(new Event('change'))
+    document.querySelector('label[for="recurrence-source"]').childNodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        node.textContent = "Date"
+      }
+    });
+  }
+}
+
 // Cette classe gère l'apparition ou non du champ "Lieu" en fonction
 // des motifs sélectionnés sur le formulaire de plages d'ouverture.
 class PlageOuvertureLieuSelection {
@@ -97,4 +129,4 @@ class PlageOuvertureSecondaryTimes {
   }
 }
 
-export { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes };
+export { PlageOuvertureRecurrenceRadioButton, PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes };

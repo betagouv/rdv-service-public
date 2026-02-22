@@ -1,0 +1,43 @@
+/# locals: (plage_ouverture:, f:)
+
+.card
+  .card-body
+    h2.dsfr-card-title Motifs concernés
+
+    - if plage_ouverture.agent == current_agent
+      p.mb-3 Pour quels motifs de rendez-vous êtes-vous disponible ?
+    - else
+      p.mb-3 Pour quels motifs de rendez-vous l'agent est-t-il disponible ?
+
+    = collapsible_form_fields_for_warnings(plage_ouverture) do
+      = f.hidden_field :agent_id
+      - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
+      - lieu_required = plage_ouverture.available_motifs.all?(&:public_office?)
+      - sort_motifs_by_service(motifs_by_services).each do |service, motifs|
+        .form-group data-controller="checkbox-select-all"
+          label.h4.d-flex
+            input.mr-1 type="checkbox" data-checkbox-select-all-target="checkboxAll"
+            span.cursor-pointer
+              - if service
+                | Motifs de #{service.name}
+              - else
+                | Motifs ouverts à tous les agents
+          - motifs.each do |motif|
+            .pl-4
+              - klasses = "form-check-input #{motif.location_type}"
+              - data_attrs = { checkbox_select_all_target: "checkbox" }
+              = f.check_box :motif_ids, { multiple: true, class: klasses, data: data_attrs }, motif.id, false
+              = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
+      .js-lieu-field[class="#{:collapse unless lieu_required}"]
+        = f.association :lieu,
+                collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
+                label_method: :full_name,
+                input_html: { \
+                        class: "select2-input", \
+                        data: { \
+                                placeholder: "Sélectionnez un lieu", \
+                                "select2-config": { disableSearch: true }, \
+                                "auto-select-sole-option": lieu_required,
+                                "allow-clear": !lieu_required, \
+                        }, \
+                }

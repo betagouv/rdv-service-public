@@ -1,0 +1,28 @@
+/# locals: (plage_ouverture:, f:)
+
+.card
+  .card-body
+    h2.dsfr-card-title Dates et horaires
+
+    fieldset#plages-form.fr-fieldset[aria-labelledby="plages-form-legend plages-form-messages"]
+      legend#plages-form-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+        p.mb-3
+          | Déclarer une disponibilité sur un seul jour ou récurrente sur plusieurs jours, semaines, mois ?
+      .fr-fieldset__element
+        .fr-radio-group.fr-radio-rich
+          input#non_reccurring.js-radio-non-recurring[type="radio" name="recurrence_radio" value="false" checked=(plage_ouverture.persisted? && !plage_ouverture.recurring?)]
+          label.fr-label.fr-mb-0[for="non_reccurring"]
+            | Ponctuelle
+          .fr-radio-rich__pictogram
+            = dsfr_svg "artwork/pictograms/digital/calendar"
+      .fr-fieldset__element
+        .fr-radio-group.fr-radio-rich
+          input#reccurring.js-radio-recurring[type="radio" name="recurrence_radio" value="true" checked=(plage_ouverture.persisted? && plage_ouverture.recurring?)]
+          label.fr-label.fr-mb-0[for="reccurring"]
+            | Récurrente
+          .fr-radio-rich__pictogram
+            = dsfr_svg "artwork/pictograms/leisure/catalog"
+      #plages-form-messages.fr-messages-group[aria-live="polite"]
+
+    .mt-2
+      = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }

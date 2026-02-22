@@ -1,0 +1,30 @@
+- if plage_ouverture.available_motifs.any?
+
+  .row.justify-content-center
+    .col-md-6
+      = dsfr_stepper(title: "Choix du motif", value: 2, max: 2, header_level: 2)
+
+  = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
+    = render("model_errors", model: plage_ouverture, f: f)
+
+    .row.justify-content-center
+      .col-md-6
+        = render partial: "admin/planning/plage_ouvertures/form/choix_motifs", locals: { plage_ouverture:, f: }
+
+    .row.justify-content-center
+      .col-md-6
+        = render partial: "admin/planning/plage_ouvertures/form/options_avancees", locals: { f: }
+
+    .row.justify-content-center
+      .col-md-6
+        .row.mb-5
+          .col.text-left
+            = link_to "Revenir à l'étape précédente", \
+              new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: current_agent, **params.permit(:plage_ouverture)), \
+              class: "fr-icon-arrow-left-line fr-btn--icon-left fr-btn fr-btn--tertiary-no-outline"
+          .col.text-right
+            = f.submit "Créer la plage d'ouverture", class: "fr-btn"
+- else
+  .card
+    .card-body
+      = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."

@@ -12,4 +12,7 @@
   - else
     = render "common/fil_ariane", titles_and_paths: [["Plages d’ouverture de #{@plage_ouverture.agent.full_name_or_email}", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
 
-= render "form", plage_ouverture: @plage_ouverture, agent: @agent
+- if params[:commit] == "Étape suivante"
+  = render "admin/planning/plage_ouvertures/new_form_step_2", plage_ouverture: @plage_ouverture, agent: @agent
+- else
+  = render "admin/planning/plage_ouvertures/new_form_step_1", plage_ouverture: @plage_ouverture, agent: @agent

@@ -33,7 +33,7 @@ import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
 import { AgendaPlageOuverture} from './components/agenda_plage_ouverture'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { Tooltips } from './components/tooltips'
-import { PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
+import { PlageOuvertureRecurrenceRadioButton, PlageOuvertureLieuSelection, PlageOuvertureSecondaryTimes } from './components/plage_ouverture.js'
 import { CheckAll, UnCheckAll } from './components/check-all'
 import './components/motifs_table'
 import './components/browser-detection'
@@ -129,6 +129,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   new ParticipationSelect()
 
+  new PlageOuvertureRecurrenceRadioButton()
   new PlageOuvertureLieuSelection()
   new PlageOuvertureSecondaryTimes()
 
