@@ -37,11 +37,10 @@ RSpec.describe "Creating a new account for a new project, which can be a mairie"
     fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input
     fill_in("Adresse mail", with: "francis@factice.org")
 
-    click_button("Enregistrer")
+    expect { click_button("Enregistrer") }.to change(Organisation, :count).by(1)
     expect(page).to have_content("Le nouvel espace a été créé, et une invitation a été envoyée à francis@factice.org")
 
     expect(page).to have_content("Francis FACTICE")
-    expect(Organisation.count).to eq(1)
 
     new_territory = Territory.last
     expect(new_territory).to have_attributes(

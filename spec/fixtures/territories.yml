@@ -1,3 +1,5 @@
 default_territory:
   name: "Pas-de-Calais"
   departement_number: "62"
+  sms_provider: "netsize"
+  sms_configuration: "a_key"

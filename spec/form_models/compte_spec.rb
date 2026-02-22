@@ -39,7 +39,7 @@ RSpec.describe Compte do
         )
 
         expect { compte.save! }.to raise_error(ActiveRecord::RecordInvalid)
-        expect(Territory.last).to be_nil
+        expect(Territory.where(name: "Montreuil")).not_to exist
         expect(territory_creation_request.reload.response).to eq "refused"
       end
     end

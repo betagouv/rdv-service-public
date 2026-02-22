@@ -3,7 +3,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     travel_to(Time.zone.parse("2022-11-07 15:00"))
   end
 
-  let!(:organisation) { organisations(:default_org) }
+  let!(:organisation) { create(:organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
   let!(:motif_collectif) do
