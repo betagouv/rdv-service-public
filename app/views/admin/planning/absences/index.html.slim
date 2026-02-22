@@ -6,10 +6,11 @@
   - else
     = "Indisponibilités de #{@agent.full_name_and_service}"
 
-- content_for :right_of_page_title do
-  = link_to "Créer une indisponibilité",
-          new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id),
-          class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line"
+- if @absences.any?
+  - content_for :right_of_page_title do
+    = link_to "Créer une indisponibilité",
+            new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id),
+            class: "fr-btn fr-btn--primary"
 
 .card.pb-3
   - if @display_tabs
@@ -48,12 +49,12 @@
           |> Les indisponibilités sont des exceptions aux
           em> plages d’ouvertures.
           | Vous pouvez les utiliser pour les congés ou les fermetures. Les indisponibilités peuvent être récurrentes (par exemple pour les temps partiels).
-  .rdv-text-align-center.py-2
-    = link_to new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id), class: "fr-btn" do
-      - if @agent == current_agent
-        | Créer une indisponibilité
-      - else
-        | Créer une indisponibilité pour #{@agent.full_name_or_email}
+    .rdv-text-align-center.py-2
+      = link_to new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--primary" do
+        - if @agent == current_agent
+          | Créer une indisponibilité
+        - else
+          | Créer une indisponibilité pour #{@agent.full_name_or_email}
 
 - unless current_territory.work_on_sunday?
   = dsfr_alert type: :info, size: :sm, html_attributes: { class: "fr-mb-2v" } do
