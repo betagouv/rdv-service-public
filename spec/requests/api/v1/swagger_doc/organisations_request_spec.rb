@@ -3,7 +3,7 @@ require "swagger_helper"
 RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
   with_examples
 
-  before(:each) do
+  before do
     ActiveRecord::Tasks::DatabaseTasks.truncate_all
   end
 
