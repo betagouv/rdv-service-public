@@ -2,8 +2,7 @@ class ApplicationController < ActionController::Base
   include ExplicitPunditConcern
   include DomainDetection
 
-  # TODO: supprimer cette var d'env après le 23/03/2026 c'était une sécurité le temps de la release
-  protect_from_forgery with: ENV.fetch("PROTECT_FROM_FORGERY_STRATEGY", "exception").to_sym
+  protect_from_forgery with: :exception
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
