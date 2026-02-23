@@ -48,7 +48,7 @@
               |> Vous pouvez aussi vous
               = link_to "connecter par mot de passe", new_user_session_path(with_password: true)
 
-      - if @rdv_wizard && !email_login_disabled_for_rdv?(@rdv_wizard)
+      - if @rdv_wizard
         p.fr-hr-or.fr-mt-16w ou
         .rdv-text-align-center.rdv-color-text-mention-grey
           = link_to prescripteur_start_path(@rdv_wizard.to_query) do
