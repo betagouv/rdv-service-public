@@ -4,47 +4,51 @@
 
   .card-body
     - if @rdv_wizard.nil? || @rdv_wizard.rdv.motif.organisation.online_booking_for_particuliers
-      = render "common/franceconnect_button", display_title: false
-      p.fr-hr-or ou
+      - if display_france_connect_v2_button?
+        = render "common/franceconnect_button", display_title: false
+        - if !email_login_disabled_for_rdv?(@rdv_wizard) || (display_pro_connect_button? && @rdv_wizard&.rdv&.motif&.organisation&.online_booking_for_professionnels)
+          p.fr-hr-or ou
 
     / Contrairement à FranceConnect, on n'affiche pas le bouton ProConnect en dehors de la prise de rendez-vous
     - if display_pro_connect_button? && @rdv_wizard&.rdv&.motif&.organisation&.online_booking_for_professionnels
       .rdv-text-align-center
         = render "common/proconnect_button_dsfr", user_type: "user"
-      p.fr-hr-or ou
+      - unless email_login_disabled_for_rdv?(@rdv_wizard)
+        p.fr-hr-or ou
 
-    - if params[:with_password].present? || params[:user].present?
-      = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
-        = render "devise/shared/error_messages", resource: resource
-        = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse email", autocomplete: "email"
-        = render "common/form/current_password_input", f:, forgotten_password_link: true, forgotten_password_link_label: @rdv_wizard.present? ? "Mot de passe oublié ?" : "Mot de passe oublié ou première connexion ?"
-        .rdv-text-align-center
-          = f.submit "Se connecter", class: "fr-mt-2v fr-btn"
-          .fr-mt-4w.fr-mb-2w.fr-text--sm
-            |> Vous pouvez aussi vous
-            = link_to "connecter via code à 6 chiffres", new_user_session_path
-    - else
-      = form_for @login_code_request_form, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_request_form do |f|
-        = render "model_errors", model: @login_code_request_form, form: f
-        - if @rdv_wizard
-          = hidden_field_tag :behaviour, "upsert_user"
-          .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
-            .fr-col-12.fr-col-md-6
-              = f.dsfr_text_field :first_name, required: true, label: "Prénom", autocomplete: "given-name"
-            .fr-col-12.fr-col-md-6
-              = f.dsfr_text_field :last_name, required: true, label: "Nom", autocomplete: "family-name"
-        = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", required: true, label: "Adresse email", autocomplete: "email"
-        .rdv-text-align-center
-          = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn rdv-width-100 rdv-width-md-auto"
-          - if @login_code_request_form.errors[:base].any? { _1.to_s.match(/Un code a été envoyé .* il y a moins de deux minutes/) }
-            .fr-my-2w
-              = link_to "Saisir un code reçu", new_users_sessions_by_code_path(email: @login_code_request_form.email), class: "fr-btn fr-btn--secondary"
-          .fr-mt-4w.fr-mb-2w.fr-text--sm
-            |> Vous pouvez aussi vous
-            = link_to "connecter par mot de passe", new_user_session_path(with_password: true)
+    - unless email_login_disabled_for_rdv?(@rdv_wizard)
+      - if params[:with_password].present? || params[:user].present?
+        = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
+          = render "devise/shared/error_messages", resource: resource
+          = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", require: true, label: "Adresse email", autocomplete: "email"
+          = render "common/form/current_password_input", f:, forgotten_password_link: true, forgotten_password_link_label: @rdv_wizard.present? ? "Mot de passe oublié ?" : "Mot de passe oublié ou première connexion ?"
+          .rdv-text-align-center
+            = f.submit "Se connecter", class: "fr-mt-2v fr-btn"
+            .fr-mt-4w.fr-mb-2w.fr-text--sm
+              |> Vous pouvez aussi vous
+              = link_to "connecter via code à 6 chiffres", new_user_session_path
+      - else
+        = form_for @login_code_request_form, url: users_login_codes_path, method: :post, builder: Dsfr::FormBuilder, as: :login_code_request_form do |f|
+          = render "model_errors", model: @login_code_request_form, form: f
+          - if @rdv_wizard
+            = hidden_field_tag :behaviour, "upsert_user"
+            .fr-grid-row.fr-grid-row--gutters.fr-mb-2w
+              .fr-col-12.fr-col-md-6
+                = f.dsfr_text_field :first_name, required: true, label: "Prénom", autocomplete: "given-name"
+              .fr-col-12.fr-col-md-6
+                = f.dsfr_text_field :last_name, required: true, label: "Nom", autocomplete: "family-name"
+          = f.dsfr_email_field :email, hint: "Format attendu : nom@domaine.fr", required: true, label: "Adresse email", autocomplete: "email"
+          .rdv-text-align-center
+            = f.submit "Recevoir un code de connexion", class: "fr-mt-2v fr-btn rdv-width-100 rdv-width-md-auto"
+            - if @login_code_request_form.errors[:base].any? { _1.to_s.match(/Un code a été envoyé .* il y a moins de deux minutes/) }
+              .fr-my-2w
+                = link_to "Saisir un code reçu", new_users_sessions_by_code_path(email: @login_code_request_form.email), class: "fr-btn fr-btn--secondary"
+            .fr-mt-4w.fr-mb-2w.fr-text--sm
+              |> Vous pouvez aussi vous
+              = link_to "connecter par mot de passe", new_user_session_path(with_password: true)
 
-    - if @rdv_wizard
-      p.fr-hr-or.fr-mt-16w ou
-      .rdv-text-align-center.rdv-color-text-mention-grey
-        = link_to prescripteur_start_path(@rdv_wizard.to_query) do
-          b Je suis un prescripteur qui oriente un bénéficiaire
+      - if @rdv_wizard && !email_login_disabled_for_rdv?(@rdv_wizard)
+        p.fr-hr-or.fr-mt-16w ou
+        .rdv-text-align-center.rdv-color-text-mention-grey
+          = link_to prescripteur_start_path(@rdv_wizard.to_query) do
+            b Je suis un prescripteur qui oriente un bénéficiaire
