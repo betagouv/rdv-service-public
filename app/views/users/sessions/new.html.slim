@@ -6,6 +6,7 @@
     - if @rdv_wizard.nil? || @rdv_wizard.rdv.motif.organisation.online_booking_for_particuliers
       - if display_france_connect_v2_button?
         = render "common/franceconnect_button", display_title: false
+        / On affiche le « ou » si le formulaire d’identification par email est activé ou si le bouton ProConnect est affiché
         - if !email_login_disabled_for_rdv?(@rdv_wizard) || (display_pro_connect_button? && @rdv_wizard&.rdv&.motif&.organisation&.online_booking_for_professionnels)
           p.fr-hr-or ou
 
