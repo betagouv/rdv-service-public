@@ -3,6 +3,7 @@ module FeatureHelper
     # TODO: faire sauter ce return une fois que nous avons implémenté la saisie d'adresse
     return false if current_organisation.territory.sectorized? && !user_provided
     return false unless current_organisation.territory.any_motifs_opened_for_prescription?
+    return false if current_territory.departement_number.blank?
 
     true
   end
