@@ -18,4 +18,12 @@ module DateHelper
 
     [Date.current, Date.current + 1].include?(date.to_date)
   end
+
+  def human_date_format(date)
+    if date.year == Time.zone.now.year
+      I18n.l(date, format: :human_without_year)
+    else
+      I18n.l(date, format: :human)
+    end
+  end
 end

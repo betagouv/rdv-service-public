@@ -744,8 +744,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_20_101844) do
   create_table "territories", force: :cascade do |t|
     t.string "departement_number", default: "", null: false
     t.string "name"
-    t.string "phone_number"
-    t.string "phone_number_formatted"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "sms_provider", enum_type: "sms_provider"

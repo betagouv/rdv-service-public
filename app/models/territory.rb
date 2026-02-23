@@ -1,5 +1,4 @@
 class Territory < ApplicationRecord
-  self.ignored_columns += %w[phone_number phone_number_formatted]
   has_paper_trail
 
   DEPARTEMENTS_NAMES = CSV.read(Rails.root.join("lib/assets/departements_fr.csv"), headers: :first_row)
