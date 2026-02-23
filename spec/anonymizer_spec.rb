@@ -198,20 +198,8 @@ RSpec.describe Anonymizer do
 
   describe "colonnes obsolètes" do
     it "ne référence pas de colonnes qui n'existent plus en base de données" do
-      config = described_class.default_config
-      stale_columns = []
-
-      config.table_configs.each do |table_config|
-        next if table_config.truncated?
-        next unless described_class.db_connection.table_exists?(table_config.table_name)
-
-        actual_columns = described_class.db_connection.columns(table_config.table_name).map(&:name)
-
-        (table_config.anonymized_column_names + table_config.non_anonymized_column_names).each do |column_name|
-          unless actual_columns.include?(column_name)
-            stale_columns << "#{table_config.table_name}.#{column_name}"
-          end
-        end
+      stale_columns = described_class.default_config.table_configs.reject(&:truncated?).flat_map do |table_config|
+        table_config.non_existent_columns(described_class.db_connection).map { "#{table_config.table_name}.#{_1}" }
       end
 
       expect(stale_columns).to eq([]), "Colonnes obsolètes dans la config anonymizer (supprimées de la base) :\n#{stale_columns.join("\n")}"
