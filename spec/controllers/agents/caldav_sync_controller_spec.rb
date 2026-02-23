@@ -112,7 +112,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
       delete :destroy
 
       expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
-      expect(agent.reload.caldav_disconnect_in_progress).to be(true)
+      expect(agent.reload.caldav_disconnect_started_at.present?).to be(true)
     end
   end
 end

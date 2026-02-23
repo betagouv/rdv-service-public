@@ -12,7 +12,7 @@ module Caldav
 
       ExternalCalendarEvent.where(agent:).delete_all
 
-      agent.update!(caldav_username: nil, caldav_password: nil, caldav_agenda_url: nil, caldav_disconnect_in_progress: false, caldav_disconnect_in_progress_at: nil, caldav_sync_token: nil)
+      agent.update!(caldav_username: nil, caldav_password: nil, caldav_agenda_url: nil, caldav_disconnect_started_at: nil, caldav_sync_token: nil)
     end
 
     private
