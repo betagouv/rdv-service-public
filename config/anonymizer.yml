@@ -135,7 +135,6 @@ tables:
       - deleted_at
       - created_at
       - updated_at
-      - connected_with_agent_connect
       - proconnect_siret
       - feature_flags
       - caldav_disconnect_in_progress
@@ -228,7 +227,6 @@ tables:
   - table_name: absences
     anonymized_column_names:
       - title
-      - caldav_url
     non_anonymized_column_names:
       - created_at
       - updated_at
@@ -308,8 +306,6 @@ tables:
     non_anonymized_column_names:
       - departement_number
       - name
-      - phone_number
-      - phone_number_formatted
       - created_at
       - updated_at
       - sms_provider
