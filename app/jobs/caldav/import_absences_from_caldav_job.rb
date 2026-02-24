@@ -19,7 +19,7 @@ module Caldav
     def perform(agent_id)
       agent = Agent.find(agent_id)
       Sentry.set_user({ id: agent.id, role: "Agent", email: agent.email })
-      return unless agent.caldav_configured? || agent.caldav_disconnect_in_progress?
+      return unless agent.caldav_configured? || agent.caldav_disconnect_started_at.present?
 
       if agent.caldav_sync_token
         updated_events, deleted_events, new_sync_token = changes_since_last_sync_of(agent:)

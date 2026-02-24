@@ -5,8 +5,9 @@
 
   .card-body
     = form_for resource, as: :user, url: registration_path(resource_name), builder: Dsfr::FormBuilder, display_required_tags: false do |f|
-      = render "common/franceconnect_button"
-      p.fr-hr-or ou
+      - if display_france_connect_v2_button?
+        = render "common/franceconnect_button"
+        p.fr-hr-or ou
 
       h2 Se créer un compte avec un email
       p.fr-hint-text Sauf mention contraire, tous les champs sont obligatoires.
