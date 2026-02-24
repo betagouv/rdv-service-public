@@ -2,22 +2,28 @@
 .card
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
+  ruby:
+    organisation = @rdv_wizard&.rdv&.motif&.organisation
+    for_particuliers = organisation&.online_booking_for_particuliers
+    for_professionnels = organisation&.online_booking_for_professionnels
+    only_sso = organisation&.online_booking_only_sso?
+
   .card-body
-    - if @rdv_wizard.nil? || @rdv_wizard.rdv.motif.organisation.online_booking_for_particuliers
+    - if @rdv_wizard.nil? || for_particuliers
       - if display_france_connect_v2_button?
         = render "common/franceconnect_button", display_title: false
         / On affiche le « ou » si le formulaire d’identification par email est activé ou si le bouton ProConnect est affiché
-        - if !@rdv_wizard&.rdv&.motif&.organisation&.online_booking_only_sso? || (display_pro_connect_button? && @rdv_wizard&.rdv&.motif&.organisation&.online_booking_for_professionnels)
+        - if !only_sso || (display_pro_connect_button? && for_professionnels)
           p.fr-hr-or ou
 
     / Contrairement à FranceConnect, on n'affiche pas le bouton ProConnect en dehors de la prise de rendez-vous
-    - if display_pro_connect_button? && @rdv_wizard&.rdv&.motif&.organisation&.online_booking_for_professionnels
+    - if display_pro_connect_button? && for_professionnels
       .rdv-text-align-center
         = render "common/proconnect_button_dsfr", user_type: "user"
-      - unless @rdv_wizard&.rdv&.motif&.organisation&.online_booking_only_sso?
+      - unless only_sso
         p.fr-hr-or ou
 
-    - unless @rdv_wizard&.rdv&.motif&.organisation&.online_booking_only_sso?
+    - unless only_sso
       - if params[:with_password].present? || params[:user].present?
         = form_for resource, as: resource_name, url: session_path(resource_name), builder: Dsfr::FormBuilder do |f|
           = render "devise/shared/error_messages", resource: resource
