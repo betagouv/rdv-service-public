@@ -56,8 +56,8 @@ RSpec.describe Organisation, type: :model do
     subject { organisation.online_booking_only_sso? }
 
     let(:territory) { build(:territory, id: territory_id) }
-    let(:organisation) { create(:organisation, territory:, verticale:) }
-    let(:motif) { create(:motif, organisation:) }
+    let(:organisation) { build(:organisation, territory:, verticale:) }
+    let(:motif) { build(:motif, organisation:) }
 
     context "when on RDV_SERVICE_PUBLIC domain with territory_id 2" do
       let(:territory_id) { 2 }

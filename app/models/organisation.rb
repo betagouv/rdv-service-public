@@ -121,7 +121,7 @@ class Organisation < ApplicationRecord
     # Pour l’espace de RDV Service Public, on veut obliger les usagers à s'authentifier avec ProConnect
     # pour éviter que des usagers prennent RDV alors que c’est un service réservé aux agents publics.
     # Dans le futur, on permettra peut-être à d’autres organisations ou espaces de faire de même
-    domain == Domain::RDV_SERVICE_PUBLIC && territory_id == 6
+    domain == Domain::RDV_SERVICE_PUBLIC && territory_id == 2
   end
 
   private
