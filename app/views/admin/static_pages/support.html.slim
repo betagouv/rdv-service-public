@@ -1,47 +1,48 @@
+- @hide_meet_the_team_banner = true
 - content_for(:title) { "Support" }
 - content_for(:menu_item) { "menu-support" }
 
-.fr-grid-row.fr-grid-row--gutters
-  .fr-col.fr-col-md-6
-    .fr-tile.fr-enlarge-link.fr-tile--horizontal
-      .fr-tile__body
-        .fr-tile__content
-          h3.fr-tile__title
-            = link_to "Documentation", current_domain.documentation_url, target: "_blank"
-          p.fr-tile__desc
-            | Explorez les fonctionnalités de l'outil à travers la documentation, et trouvez les informations dont vous avez besoin.
-      .fr-tile__header
-        .fr-tile__pictogram
-          = dsfr_svg "artwork/pictograms/leisure/book", class: "fr-responsive-img"
-  .fr-col.fr-col-md-6
-    .fr-tile.fr-enlarge-link.fr-tile--horizontal
-      .fr-tile__body
-        .fr-tile__content
-          h3.fr-tile__title
-            = link_to "Contactez l’équipe", new_aide_demande_support_path(role: "agent", sujet: "Question")
-          p.fr-tile__desc
-            | Vous avez des questions, vous rencontrez une difficulté, ou vous avez une suggéstion à nous partager ? Contactez nous via notre formulaire.
-      .fr-tile__header
-        .fr-tile__pictogram
-          = dsfr_svg "artwork/pictograms/leisure/community", class: "fr-responsive-img"
+.fr-card.fr-card--horizontal.fr-card--sm
+  .fr-card__body
+    .fr-card__content
+      h3.fr-card__title
+        | Contactez le support
+      p.fr-card__desc
+        | Vous avez des questions, vous rencontrez une difficulté, ou vous avez une suggestion à nous partager ? Contactez nous via notre formulaire.
+    .fr-card__footer
+      ul.fr-btns-group.fr-btns-group--inline-reverse.fr-btns-group--inline-lg
+        - if may_need_onboarding_help?
+          li
+            = external_link_to "Prendre rendez-vous", "https://rdv.anct.gouv.fr/motif/d17ekoDa/rendez-vous-d-accompagnement", class: "fr-btn"
+        li
+          = link_to "Formulaire de contact", new_aide_demande_support_path(role: "agent", sujet: "Question"), class: "fr-btn fr-btn--secondary"
+  .fr-card__header.rdv-background-color-blue-ecume-975
+    .fr-card__img
+      = dsfr_svg "artwork/pictograms/leisure/community", class: "fr-responsive-img"
 
-.fr-grid-row.fr-grid-row--gutters.fr-mt-3w
-  .fr-col.fr-col-md-6
-    .fr-tile.fr-enlarge-link.fr-tile--horizontal
-      .fr-tile__body
-        .fr-tile__content
-          h3.fr-tile__title
+.fr-grid-row.fr-grid-row--gutters.fr-mt-4w
+  .fr-col.fr-col-12.fr-col-md-4
+    .fr-card.fr-enlarge-link.fr-card--sm
+      .fr-card__body
+        .fr-card__content
+          h3.fr-card__title
+            = link_to "Documentation", current_domain.documentation_url, target: "_blank"
+          p.fr-card__desc
+            | Explorez les fonctionnalités de l'outil à travers la documentation, et trouvez les informations dont vous avez besoin.
+
+  .fr-col.fr-col-12.fr-col-md-4
+    .fr-card.fr-enlarge-link.fr-card--sm
+      .fr-card__body
+        .fr-card__content
+          h3.fr-card__title
             = link_to "Feuille de route", "https://projets.suite.anct.gouv.fr/boards/1608721650465900252", target: "_blank"
-          p.fr-tile__desc
+          p.fr-card__desc
             | Découvrez les nouvelles fonctionnalités et améliorations principales sur lesquelles nous sommes en train de travailler.
-      .fr-tile__header
-        .fr-tile__pictogram
-          = dsfr_svg "artwork/pictograms/digital/in-progress", class: "fr-responsive-img"
-  .fr-col.fr-col-md-6
-    .fr-tile.fr-enlarge-link.fr-tile--horizontal
-      .fr-tile__body
-        .fr-tile__content
-          h3.fr-tile__title
+  .fr-col.fr-col-12.fr-col-md-4
+    .fr-card.fr-enlarge-link.fr-card--sm
+      .fr-card__body
+        .fr-card__content
+          h3.fr-card__title
             = link_to "État des serveurs", "https://rdv-service-public.instatus.com", target: "_blank"
-          .fr-tile__desc
+          .fr-card__desc
             = render "admin/static_pages/instatus_iframe"
