@@ -132,15 +132,6 @@ module ApplicationHelper
     ENV["PRO_CONNECT_BASE_URL"].present?
   end
 
-  # Pour l’espace de RDV Service Public sur RDV Service Public, on ne veut pas permettre la prise de RDV par email pour
-  # éviter que des usagers prennent RDV alors que c’est un service réservé aux agents publics.
-  # Dans le futur, on permettra peut-être à d’autres organisations ou espaces de faire de même
-  def email_login_disabled_for_rdv?(rdv_wizard)
-    rdv_wizard.present? &&
-      current_domain == Domain::RDV_SERVICE_PUBLIC &&
-      rdv_wizard.rdv.motif.organisation.territory_id == 2
-  end
-
   def display_france_connect_v2_button?
     return false unless current_domain.france_connect_enabled
 
