@@ -51,4 +51,33 @@ RSpec.describe Organisation, type: :model do
       expect(organisation).to be_valid
     end
   end
+
+  describe "#online_booking_only_sso?" do
+    subject { organisation.online_booking_only_sso? }
+
+    let(:territory) { build(:territory, id: territory_id) }
+    let(:organisation) { build(:organisation, territory:, verticale:) }
+    let(:motif) { build(:motif, organisation:) }
+
+    context "when on RDV_SERVICE_PUBLIC domain with territory_id 2" do
+      let(:territory_id) { 2 }
+      let(:verticale) { :rdv_mairie }
+
+      it { is_expected.to be true }
+    end
+
+    context "when on RDV_SERVICE_PUBLIC domain with a different territory_id" do
+      let(:territory_id) { 123 }
+      let(:verticale) { :rdv_mairie }
+
+      it { is_expected.to be false }
+    end
+
+    context "when on RDV_SOLIDARITES domain with territory_id 2" do
+      let(:territory_id) { 2 }
+      let(:verticale) { :rdv_solidarites }
+
+      it { is_expected.to be false }
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_20_101844) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_24_092756) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -147,7 +147,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_20_101844) do
     t.string "caldav_agenda_url"
     t.string "caldav_username"
     t.string "caldav_password"
-    t.boolean "caldav_disconnect_in_progress", default: false, null: false
     t.datetime "blog_read_at"
     t.string "pro_connect_openid_sub"
     t.string "caldav_sync_token"
@@ -155,6 +154,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_20_101844) do
     t.boolean "group_by_agent", default: false, null: false
     t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.boolean "sensitive_account", default: false, null: false
+    t.datetime "caldav_disconnect_started_at"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true

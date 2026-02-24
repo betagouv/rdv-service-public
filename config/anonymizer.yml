@@ -133,7 +133,7 @@ tables:
       - updated_at
       - proconnect_siret
       - feature_flags
-      - caldav_disconnect_in_progress
+      - caldav_disconnect_started_at
       - blog_read_at
       - group_by_agent
 
