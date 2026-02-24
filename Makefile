@@ -7,6 +7,9 @@ run: ## Start the application (web, jobs et webpack)
 run_single_instance: ## Run only the RDV Service Public instance
 	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev -l "web,jobs,js"
 
+run_rdv_solidarites: ## Run only the RDV Solidarités instance
+	OVERMIND_SKIP_ENV=true overmind start -f Procfile.dev -l "web_rdv_solidarites,jobs_rdv_solidarites,js"
+
 lint: lint_rubocop lint_slim lint_brakeman ## Run all linters
 
 lint_rubocop: ## Ruby linter
