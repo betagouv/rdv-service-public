@@ -195,4 +195,14 @@ RSpec.describe Anonymizer do
       expect(errors).to eq([]), errors.join("\n")
     end
   end
+
+  describe "colonnes obsolètes" do
+    it "ne référence pas de colonnes qui n'existent plus en base de données" do
+      stale_columns = described_class.default_config.table_configs.reject(&:truncated?).flat_map do |table_config|
+        table_config.non_existent_columns(described_class.db_connection).map { "#{table_config.table_name}.#{_1}" }
+      end
+
+      expect(stale_columns).to eq([]), "Colonnes obsolètes dans la config anonymizer (supprimées de la base) :\n#{stale_columns.join("\n")}"
+    end
+  end
 end
