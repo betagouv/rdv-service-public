@@ -1,14 +1,13 @@
 /# locals: (display_title: true)
 
-- if display_france_connect_v2_button?
-  - if display_title
-    h2 Se connecter avec FranceConnect
-  .rdv-text-align-center
-    .fr-connect-group
-      p FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion à vos services en ligne
-      = link_to "/franceconnect_v2/auth", class: "fr-connect", method: :get, title: "S’identifier avec FranceConnect V2" do
-        span.fr-connect__login S’identifier avec
-        span.fr-connect__brand FranceConnect
+- if display_title
+  h2 Se connecter avec FranceConnect
+.rdv-text-align-center
+  .fr-connect-group
+    p FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion à vos services en ligne
+    = link_to "/franceconnect_v2/auth", class: "fr-connect", method: :get, title: "S’identifier avec FranceConnect V2" do
+      span.fr-connect__login S’identifier avec
+      span.fr-connect__brand FranceConnect
 
-    p
-      = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "fr-link", title: "Qu’est-ce que FranceConnect ? - Nouvelle fenêtre"
+  p
+    = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "fr-link", title: "Qu’est-ce que FranceConnect ? - Nouvelle fenêtre"
