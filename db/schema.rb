@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_23_104814) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_24_092756) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -147,7 +147,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_23_104814) do
     t.string "caldav_agenda_url"
     t.string "caldav_username"
     t.string "caldav_password"
-    t.boolean "caldav_disconnect_in_progress", default: false, null: false
     t.datetime "blog_read_at"
     t.string "pro_connect_openid_sub"
     t.string "caldav_sync_token"
