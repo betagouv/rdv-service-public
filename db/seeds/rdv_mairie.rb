@@ -20,9 +20,13 @@ service_titres = Service.create!(name: "Mairie", short_name: "Mairie")
 
 territory_val_doise.services << service_titres
 
-MotifCategory.create!(name: "Carte d'identité disponible sur le site de l'ANTS", short_name: "CNI")
-MotifCategory.create!(name: "Passeport disponible sur le site de l'ANTS", short_name: "PASSPORT")
-MotifCategory.create!(name: "Carte d'identité et passeport disponible sur le site de l'ANTS", short_name: "CNI-PASSPORT")
+motif_categories = [
+  MotifCategory.create!(name: "Carte d'identité disponible sur le site de l'ANTS", short_name: "CNI"),
+  MotifCategory.create!(name: "Passeport disponible sur le site de l'ANTS", short_name: "PASSPORT"),
+  MotifCategory.create!(name: "Carte d'identité et passeport disponible sur le site de l'ANTS", short_name: "CNI-PASSPORT"),
+]
+
+territory_val_doise.motif_categories = motif_categories
 
 # MOTIFS
 motif_passeport = Motif.create!(
