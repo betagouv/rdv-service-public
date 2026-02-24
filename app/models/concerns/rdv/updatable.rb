@@ -67,11 +67,15 @@ module Rdv::Updatable
   end
 
   def rdv_updated?
-    starts_at_changed? || lieu_changed?
+    starts_at_changed? || lieu_changed? || visio_url_custom_changed?
     # || agents_changed? désactivé pour l’instant cf https://github.com/betagouv/rdv-service-public/pull/5399
   end
 
   private
+
+  def visio_url_custom_changed?
+    collectif? && visio? && previous_changes["visio_url_custom"].present?
+  end
 
   def agents_changed?
     # we cannot use ActiveModel::Dirty methods here for this has_many association
