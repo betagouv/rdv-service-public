@@ -56,13 +56,11 @@ tables:
       - logement
       - ants_pre_demande_number
       - franceconnect_openid_sub
-      - pro_connect_idp_id
       - pro_connect_openid_sub
       - encrypted_password
       - confirmation_token
       - reset_password_token
       - invitation_token
-      - remember_created_at
       - rdv_invitation_token
     non_anonymized_column_names:
       - confirmed_at
@@ -94,7 +92,6 @@ tables:
       - encrypted_password
       - unconfirmed_email
       - uid
-      - external_id
       - calendar_uid
       - reset_password_token
       - confirmation_token
@@ -102,7 +99,6 @@ tables:
       - tokens
       - microsoft_graph_token
       - refresh_microsoft_graph_token
-      - remember_created_at
       - pro_connect_openid_sub
       - pro_connect_2fa_active
       - pro_connect_idp_id
@@ -135,10 +131,9 @@ tables:
       - deleted_at
       - created_at
       - updated_at
-      - connected_with_agent_connect
       - proconnect_siret
       - feature_flags
-      - caldav_disconnect_in_progress
+      - caldav_disconnect_started_at
       - blog_read_at
       - group_by_agent
 
@@ -156,7 +151,6 @@ tables:
       - motif_id
       - uuid
       - lieu_id
-      - old_location
       - created_by_id
       - created_by_type
       - ends_at
@@ -192,7 +186,6 @@ tables:
     non_anonymized_column_names:
       - created_at
       - updated_at
-      - participation_id
 
   - table_name: super_admins
     anonymized_column_names:
@@ -212,9 +205,7 @@ tables:
       - created_at
       - updated_at
       - name
-      - departement
       - horaires
-      - human_id
       - website
       - external_id
       - verticale
@@ -228,7 +219,6 @@ tables:
   - table_name: absences
     anonymized_column_names:
       - title
-      - caldav_url
     non_anonymized_column_names:
       - created_at
       - updated_at
@@ -249,10 +239,8 @@ tables:
     non_anonymized_column_names:
       - created_at
       - updated_at
-      - old_address
       - latitude
       - longitude
-      - old_enabled
       - availability
       - code_postal
 
@@ -308,8 +296,6 @@ tables:
     non_anonymized_column_names:
       - departement_number
       - name
-      - phone_number
-      - phone_number_formatted
       - created_at
       - updated_at
       - sms_provider
@@ -357,7 +343,6 @@ tables:
       - updated_at
       - allow_to_manage_access_rights
       - allow_to_invite_agents
-      - allow_to_download_metrics
 
   - table_name: teams
     non_anonymized_column_names:
@@ -371,7 +356,6 @@ tables:
       - created_at
       - updated_at
       - default_duration_in_min
-      - legacy_bookable_publicly
       - min_public_booking_delay
       - max_public_booking_delay
       - deleted_at
@@ -379,7 +363,6 @@ tables:
       - restriction_for_rdv
       - instruction_for_rdv
       - for_secretariat
-      - old_location_type
       - follow_up
       - visibility_type
       - sectorisation_level
@@ -427,7 +410,6 @@ tables:
 
   - table_name: sectors
     non_anonymized_column_names:
-      - departement
       - name
       - human_id
       - created_at
@@ -576,5 +558,4 @@ tables:
     non_anonymized_column_names:
       - used_at
       - created_at
-      - updated_at
       - domain_id

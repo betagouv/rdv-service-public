@@ -1,4 +1,6 @@
 module RecurrenceHelper
+  include DateHelper
+
   def display_recurrence(recurrent_record)
     every_part = display_every(recurrent_record)
 
@@ -44,16 +46,16 @@ module RecurrenceHelper
     if recurrent_record.recurring?
       display_recurrence(recurrent_record).join(" ")
     else
-      [I18n.l(recurrent_record.first_day, format: :human), display_time_range(recurrent_record)].join(" ")
+      [human_date_format(recurrent_record.first_day), display_time_range(recurrent_record)].join(" ")
     end
   end
 
   def display_recurrence_range(recurrent_record)
     recurrence_hash = recurrent_record.recurrence.to_hash
 
-    range_part = "à partir du #{I18n.l(recurrent_record.first_day, format: :human)}"
+    range_part = "à partir du #{human_date_format(recurrent_record.first_day)}"
 
-    range_part = "#{range_part}, jusqu'au #{I18n.l(recurrence_hash[:until].to_date, format: :human)}" if recurrence_hash[:until].present?
+    range_part = "#{range_part}, jusqu'au #{human_date_format(recurrence_hash[:until].to_date)}" if recurrence_hash[:until].present?
     range_part
   end
 

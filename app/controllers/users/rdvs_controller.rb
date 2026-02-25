@@ -1,5 +1,5 @@
 class Users::RdvsController < UserAuthController
-  before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux edit cancel update]
+  before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux ics edit cancel update]
   before_action :set_can_see_rdv_motif, only: %i[show edit index]
   before_action :set_geo_search, only: [:create]
   before_action :set_lieu, only: %i[edit update]
@@ -88,6 +88,15 @@ class Users::RdvsController < UserAuthController
       flash[:error] = "Impossible d'annuler le RDV."
     end
     redirect_to users_rdv_path(@rdv, invitation_token: @rdv.participation_token(current_user.id))
+  end
+
+  def ics
+    payload = @rdv.payload(nil, current_user)
+    cal = IcalFormatters::Ics.from_payload(payload)
+    send_data cal.to_ical,
+              filename: payload[:attachement_filename],
+              type: "text/calendar",
+              disposition: "attachment"
   end
 
   def creneaux

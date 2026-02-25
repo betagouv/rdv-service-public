@@ -106,6 +106,7 @@ fr:
       long: "%e %B %Y"
       short: "%-d %b"
       human: "%A %-d %B %Y"
+      human_without_year: "%A %-d %B"
     month_names:
     -
     - janvier
@@ -318,6 +319,7 @@ fr:
       short_sms: "%A %-d/%m %Hh%M"
       short_sms_approx: "%-d/%-m vers %Hh%M"
       human: "%A %-d %B %Y à %Hh%M"
+      human_without_year: "%A %-d %B à %Hh%M"
       human_approx: "%A %-d %B %Y vers %Hh%M"
       dense: "%-d/%m/%Y à %H:%M"
       dense_html: "%-d/%m/%Y&nbsp;à&nbsp;%H:%M"
