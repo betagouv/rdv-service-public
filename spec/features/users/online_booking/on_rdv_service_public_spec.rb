@@ -63,6 +63,7 @@ RSpec.describe "User can search rdv on rdv service public" do
         click_on("Continuer")
         click_on("Confirmer mon RDV")
         expect(page).to have_content "Votre rendez vous a été confirmé."
+        expect(user.rdvs.count).to eq(1)
       end
     end
 
@@ -77,6 +78,7 @@ RSpec.describe "User can search rdv on rdv service public" do
         click_on("Confirmer mon RDV")
         expect(page).to have_content "Ce motif de rendez-vous est réservé aux professionnels. " \
                                      "Si vous êtes un professionnel et que vous souhaitez prendre rendez-vous, merci de vous déconnecter et de recommencer votre demande en utilisant ProConnect."
+        expect(user.rdvs.count).to eq(0)
       end
     end
   end
