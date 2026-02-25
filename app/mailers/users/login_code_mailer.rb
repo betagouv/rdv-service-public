@@ -10,4 +10,14 @@ class Users::LoginCodeMailer < ApplicationMailer
       to: @login_code.email
     )
   end
+
+  def invitation_code
+    @login_code = params[:login_code]
+    @domain = Domain.find(@login_code.domain_id)
+
+    mail(
+      subject: "Votre code pour accéder à #{@domain.name}",
+      to: @login_code.email
+    )
+  end
 end

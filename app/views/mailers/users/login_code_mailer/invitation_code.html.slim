@@ -1,0 +1,14 @@
+p Un agent vous a invité à accéder à votre espace sur #{@domain.name}.
+
+p Voici votre code de connexion :
+
+p{style="font-family: monospace; letter-spacing: .5rem; font-size: 1.4rem; max-height: 4rem; height: 4rem;"}
+  = @login_code.code
+
+p Ce code est valable 30 minutes (jusqu'à #{I18n.l(@login_code.created_at + 30.minutes, format: :time_only)})
+
+p= link_to "Se connecter avec ce code", new_users_sessions_by_code_url(email: @login_code.email)
+
+hr{style="margin: 1rem 0;"}
+p
+  | Si vous n'êtes pas concerné(e) par ce message, vous pouvez l'ignorer.

@@ -24,7 +24,6 @@ class User < ApplicationRecord
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
-  include User::DeviseInvitableWithDomain
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
@@ -144,11 +143,7 @@ class User < ApplicationRecord
   end
 
   def invitable?
-    invitation_accepted_at.nil? &&
-      encrypted_password.blank? &&
-      email.present? && !relative? &&
-      invited_through != "external" &&
-      !logged_once_with_franceconnect?
+    confirmed_at.nil? && email? && !relative? && !logged_once_with_franceconnect?
   end
 
   def active_for_authentication?

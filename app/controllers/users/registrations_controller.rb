@@ -8,7 +8,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   layout "application_narrow", only: %i[new create update edit pending]
 
   def create
-    return invite_and_redirect(existing_unconfirmed_user) if existing_unconfirmed_user
+    return send_code_to_existing_unconfirmed_user if existing_unconfirmed_user
 
     super
   end
@@ -50,10 +50,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
     users_pending_registration_path(email_tld: resource.email_tld)
   end
 
-  def invite_and_redirect(user)
-    user.invite!(domain: current_domain, options: { user_params: sign_up_params })
-    set_flash_message! :notice, :signed_up_but_unconfirmed
-    respond_with user, location: after_inactive_sign_up_path_for(user)
+  def send_code_to_existing_unconfirmed_user
+    login_code = LoginCode.create!(email: existing_unconfirmed_user.email, domain_id: current_domain.id)
+    Users::LoginCodeMailer.with(login_code:).login_code.deliver_later
+    redirect_to new_users_sessions_by_code_path(email: existing_unconfirmed_user.email),
+                notice: "Un compte existe déjà pour cet email. Un code de connexion vous a été envoyé."
   end
 
   def existing_unconfirmed_user

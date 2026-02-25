@@ -58,9 +58,7 @@ class Admin::UsersController < AgentAuthController
     @user.skip_confirmation_notification!
     user_persisted = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
 
-    if invite_user?(@user, params)
-      @user.invite!(domain: current_domain)
-    end
+    send_invitation_code(@user) if invite_user?(@user, params)
 
     prepare_new unless user_persisted
 
@@ -99,8 +97,8 @@ class Admin::UsersController < AgentAuthController
   end
 
   def invite
-    @user.invite!(domain: current_domain)
-    redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "L’usager a été invité." }
+    send_invitation_code(@user)
+    redirect_to admin_organisation_user_path(current_organisation, @user), flash: { success: "Un code de connexion a été envoyé à l’usager." }
   end
 
   def destroy
@@ -147,6 +145,11 @@ class Admin::UsersController < AgentAuthController
 
   def invite_user?(user, params)
     user.persisted? && user.email.present? && (params[:invite_on_create] == "1")
+  end
+
+  def send_invitation_code(user)
+    login_code = LoginCode.create!(email: user.email, domain_id: current_domain.id, first_name: user.first_name, last_name: user.last_name)
+    Users::LoginCodeMailer.with(login_code:).invitation_code.deliver_later
   end
 
   def prepare_new
