@@ -10,6 +10,13 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def create
+    if @rdv.motif.organisation.online_booking_only_proconnect? && current_user.pro_connect_openid_sub.blank?
+      flash[:error] = "L’inscription a cet événement est réservé aux professionnels. " \
+                      "Si vous êtes un professionnel et que vous souhaitez prendre rendez-vous, merci de vous déconnecter et de recommencer votre demande en utilisant ProConnect."
+      skip_authorization
+      redirect_back fallback_location: root_path and return
+    end
+
     add_participation
   end
 
