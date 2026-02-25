@@ -25,17 +25,9 @@ class Users::RdvsController < UserAuthController
                 end
   end
 
-  def create # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+  def create
     lieu = Lieu.find(new_rdv_extra_params[:lieu_id]) if new_rdv_extra_params[:lieu_id].present?
     motif = Motif.find(rdv_params[:motif_id])
-
-    if motif.organisation.online_booking_only_proconnect? && current_user.pro_connect_openid_sub.blank?
-      flash[:error] = "Ce motif de rendez-vous est réservé aux professionnels. " \
-                      "Si vous êtes un professionnel et que vous souhaitez prendre rendez-vous, merci de vous déconnecter et de recommencer votre demande en utilisant ProConnect."
-      skip_authorization
-      redirect_back fallback_location: root_path and return
-    end
-
     @creneau = CreneauxSearch::ForUser.creneau_for(
       user: current_user,
       starts_at: Time.zone.parse(rdv_params[:starts_at]),
@@ -52,7 +44,6 @@ class Users::RdvsController < UserAuthController
       end
     end
     skip_authorization if @creneau.nil?
-
     if @save_succeeded
       notifier = Notifiers::RdvCreated.new(@rdv, current_user)
       notifier.perform

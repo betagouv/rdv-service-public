@@ -79,31 +79,6 @@ RSpec.describe "Users::Participants", type: :request do
     end
   end
 
-  describe "ProConnect-only organisation" do
-    # Pour le moment on n’accepte que ProConnect pour le territoire qui a l’id 2 sur RDV Service Public
-    # (le territoire qui nous permet de faire les rendez-vous de démo et les webinaires).
-    let(:organisation) { create(:organisation, territory: create(:territory, id: 2), verticale: :rdv_mairie) }
-    let(:rdv) { create(:rdv, :collectif, :without_users, organisation:) }
-
-    context "quand l'usager n'a pas de sub ProConnect" do
-      it "bloque la création de participation" do
-        post users_rdv_participations_path(rdv)
-        expect(flash[:error]).to include("réservé aux professionnels")
-        expect(rdv.reload.users).to be_empty
-      end
-    end
-
-    context "quand l'usager a un sub ProConnect" do
-      let(:user) { create(:user, :using_pro_connect) }
-
-      it "permet la création de participation" do
-        post users_rdv_participations_path(rdv)
-        expect(flash[:success]).to eq("Participation confirmée")
-        expect(rdv.reload.users).to contain_exactly(user)
-      end
-    end
-  end
-
   describe "Participation update (if excused)" do
     let(:participation1) { create(:participation, rdv: rdv, user: user) }
 

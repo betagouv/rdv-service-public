@@ -54,7 +54,6 @@ RSpec.describe "User can search rdv on rdv service public" do
 
     before { travel_to Date.parse("2024-11-03").in_time_zone + 8.hours }
     before { login_as(user, scope: :user) }
-    before { allow(organisation).to receive(:online_booking_only_proconnect?).and_return(true) }
 
     context "si le user à un sub ProConnect" do
       let!(:user) { create(:user, :using_pro_connect, organisations: [organisation]) }
@@ -72,15 +71,11 @@ RSpec.describe "User can search rdv on rdv service public" do
     context "si le user n’a pas de sub ProConnect" do
       let!(:user) { create(:user, organisations: [organisation]) }
 
-      it "permet de prendre un RDV" do
+      it "bloque l’accès au formulaire de prise de RDV" do
         visit(new_users_rdv_wizard_step_path(step: 1, departement: "24", motif_id: motif.id, lieu_id: lieu.id, starts_at: Time.zone.parse("2024-11-05 08:00")))
-        expect(page).to have_content("Vos informations")
-        click_on("Continuer")
-        click_on("Continuer")
-        click_on("Confirmer mon RDV")
         expect(page).to have_content "Ce motif de rendez-vous est réservé aux professionnels. " \
                                      "Si vous êtes un professionnel et que vous souhaitez prendre rendez-vous, merci de vous déconnecter et de recommencer votre demande en utilisant ProConnect."
-        expect(user.rdvs.count).to eq(0)
+        expect(page).to have_current_path(root_path)
       end
     end
   end
