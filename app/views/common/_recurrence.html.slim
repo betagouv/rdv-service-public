@@ -15,10 +15,10 @@
       .col
         button.fr-btn.fr-btn--tertiary.fr-btn--md.fr-btn--icon-left.fr-icon-add-line.js-plages-form-add-secondary-times-button.rdv-display-flex.rdv-justify-content-center[type="button" style="width: 100%"]
           | Ajouter une seconde période à la plage
-    .row.mb-2.hidden.js-plages-form-secondary-times-container
+    .row.mb-2.js-plages-form-secondary-times-container [hidden]
       .col = f.input :secondary_start_time, as: :time, ignore_date: true, minute_step: 5, include_blank: true
       .col = f.input :secondary_end_time,   as: :time, ignore_date: true, minute_step: 5, include_blank: true
-    .row.mb-2.js-plages-form-remove-secondary-times-button.hidden
+    .row.mb-2.js-plages-form-remove-secondary-times-button [hidden]
       .col
         button.fr-btn.fr-btn--tertiary.fr-btn--md.fr-btn--icon-left.fr-icon-close-line.rdv-display-flex.rdv-justify-content-center[type="button" style="width: 100%"]
           | Retirer la seconde période de la plage
