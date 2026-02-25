@@ -52,7 +52,7 @@ RSpec.describe "User can search rdv on rdv service public" do
 
     before { travel_to Date.parse("2024-11-03").in_time_zone + 8.hours }
     before { login_as(user, scope: :user) }
-    before { allow(organisation).to receive(:online_booking_only_sso?).and_return(true) }
+    before { allow(organisation).to receive(:online_booking_only_proconnect?).and_return(true) }
 
     context "si le user à un sub ProConnect" do
       let!(:user) { create(:user, :using_pro_connect, organisations: [organisation]) }
