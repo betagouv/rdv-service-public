@@ -64,6 +64,10 @@ FactoryBot.define do
       phone_number { nil }
     end
 
+    trait :using_pro_connect do
+      pro_connect_openid_sub { "fake_sub" }
+    end
+
     trait :francis_factice do
       email { "francis.factice@usager.exemple.fr" }
       first_name { "Francis" }
