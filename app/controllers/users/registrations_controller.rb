@@ -5,12 +5,20 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   layout "application"
-  layout "application_narrow", only: %i[new create update edit pending]
+  layout "application_narrow", only: %i[new create update edit]
 
   def create
     return send_code_to_existing_unconfirmed_user if existing_unconfirmed_user
 
-    super
+    build_resource(sign_up_params)
+    if resource.save
+      login_code = LoginCode.create!(email: resource.email, domain_id: current_domain.id)
+      Users::LoginCodeMailer.with(login_code:).login_code.deliver_later
+      redirect_to new_users_sessions_by_code_path(email: resource.email),
+                  notice: "Votre compte a été créé. Un code de connexion vous a été envoyé par email."
+    else
+      render :new
+    end
   end
 
   def destroy
@@ -26,10 +34,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     logout_and_redirect_user(flash_message_key: :destroyed)
   end
 
-  def pending
-    @email_tld = params[:email_tld]
-  end
-
   private
 
   def set_rdv_insertion_organisations
@@ -43,10 +47,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def build_resource(hash = {})
     form = Users::RegistrationForm.new(hash)
     self.resource = form
-  end
-
-  def after_inactive_sign_up_path_for(resource)
-    users_pending_registration_path(email_tld: resource.email_tld)
   end
 
   def send_code_to_existing_unconfirmed_user
