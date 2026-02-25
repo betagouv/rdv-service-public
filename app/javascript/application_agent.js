@@ -6,7 +6,7 @@ import "@hotwired/turbo-rails"
 Turbo.session.drive = false
 
 import 'bootstrap'
-import 'select2/dist/js/select2.full.min.js'
+import 'select2/dist/js/select2'
 import 'select2/dist/js/i18n/fr.js'
 import { Datetimepicker } from './components/datetimepicker'
 import { Menu } from './components/menu'
