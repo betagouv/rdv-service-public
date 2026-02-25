@@ -36,8 +36,8 @@ html lang="fr"
           header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, html_attributes: { class: "fr-icon-admin-line" }
           header.with_tool_link title: "Connexion Usager", path: new_user_session_path, html_attributes: { class: "fr-icon-account-line" }
         else
-          header.with_tool_link title: "Espace Agent", path: new_agent_session_path
-          header.with_tool_link title: "Se connecter", path: new_user_session_path,html_attributes: { class: "fr-fi-account-fill" }
+          header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, html_attributes: { class: "fr-icon-admin-line" }
+          header.with_tool_link title: "Connexion Usager", path: new_user_session_path, html_attributes: { class: "fr-icon-account-line" }
         end
 
         if current_domain == Domain::RDV_SERVICE_PUBLIC  && @site_vitrine_page
