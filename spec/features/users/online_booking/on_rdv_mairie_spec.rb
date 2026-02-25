@@ -124,7 +124,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       click_button("Confirmer en ignorant les avertissements")
 
       click_button("Continuer")
-      click_link("Confirmer mon RDV")
+      click_on("Confirmer mon RDV")
       expect(page).to have_content("Votre rendez vous a été confirmé.")
       expect(user.reload.ants_pre_demande_number).to eq("1122334455")
     end
@@ -213,7 +213,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       check("Alain MAIRIE", allow_label_click: true)
       click_button "Continuer"
 
-      click_link "Confirmer mon RDV"
+      click_on "Confirmer mon RDV"
       expect(page).to have_content("Votre rendez vous a été confirmé.")
       expect(page).to have_content("Alain MAIRIE")
       expect(page).to have_content("Marco POLO")
@@ -266,7 +266,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       check("Alain MAIRIE", allow_label_click: true)
       click_button "Continuer"
 
-      click_link "Confirmer mon RDV"
+      click_on "Confirmer mon RDV"
       expect(page).to have_content("Votre rendez vous a été confirmé.")
       expect(page).to have_content("Alain MAIRIE")
       expect(page).to have_content("Marco POLO")
@@ -310,7 +310,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
         fill_in("user_ants_pre_demande_number", with: "abcd1234ef")
         click_button("Continuer")
         click_button("Continuer")
-        expect { click_link("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
+        expect { click_on("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
         expect(user.reload.ants_pre_demande_number).to eq("ABCD1234EF")
         expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
       end
@@ -546,11 +546,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
         expect(page).to have_content("Étape 3 sur 3")
         expect(page).to have_content("Confirmer mon RDV")
         page.execute_script(%{
-          elt = document.querySelector("a.fr-btn[data-disable-with='Veuillez patienter…']");
-          elt.setAttribute(
-            "href",
-            elt.getAttribute("href").replace("ants_pre_demandes_count=2", "ants_pre_demandes_count=100")
-          )
+          elt = document.querySelector("button[data-disable-with='Veuillez patienter…']").closest("form");
+          elt.action = elt.action.replace("ants_pre_demandes_count=2", "ants_pre_demandes_count=100");
         })
         expect { click_on "Confirmer mon RDV" }.not_to change(Rdv, :count)
         expect(page).to have_content("Veuillez choisir un nombre de pré-demandes entre 1 et 6")

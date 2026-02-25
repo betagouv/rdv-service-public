@@ -110,7 +110,7 @@ RSpec.describe "Agent can CRUD intervenants" do
     click_link "FICTIF"
     expect_page_title("Modifier le niveau de permission de l'agent FICTIF")
     accept_alert do
-      click_link("Supprimer le compte")
+      click_on("Supprimer le compte")
     end
     expect_page_title("Agents de Organisation n°1")
     expect(page).to have_no_content("FICTIF")

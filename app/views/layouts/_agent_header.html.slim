@@ -30,7 +30,7 @@ header.header.bg-white
                 span.fr-icon--sm.fr-mr-2v.fr-icon-settings-5-line[aria-hidden="true"]
                 | Paramètres de #{territory.name_for_agent}
             li.dropdown-divider.my-1[aria-hidden="true"]
-            li = link_to destroy_agent_session_path, method: :delete, class: "dropdown-item-dsfr dropdown-item" do
+            li = button_to destroy_agent_session_path, method: :delete, class: "dropdown-item-dsfr dropdown-item" do
               span.fr-icon--sm.fr-mr-2v.fr-icon-logout-box-r-line[aria-hidden="true"]
               | Se déconnecter
         - if current_domain == Domain::RDV_SERVICE_PUBLIC && current_agent.lagaufre_access?

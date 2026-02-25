@@ -46,7 +46,7 @@ RSpec.describe "Adding a user to a collective RDV" do
     expect do
       expect(page).to have_content(/À venir/i)
       click_on("Annuler votre participation")
-      click_link("Oui, annuler votre participation", match: :first)
+      click_on("Oui, annuler votre participation", match: :first)
       expect(page).to have_content("Participation annulée")
       expect(page).to have_content(/Annulé/i)
     end

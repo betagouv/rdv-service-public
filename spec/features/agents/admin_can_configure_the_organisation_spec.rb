@@ -30,7 +30,7 @@ RSpec.describe "Admin can configure the organisation" do
       click_link "Modifier"
     end
 
-    click_link("Fermer ce lieu")
+    click_on("Fermer ce lieu")
     expect_page_title("Lieux")
 
     expect(nouveau_lieu.reload).to have_attributes(availability: "disabled")
@@ -40,14 +40,14 @@ RSpec.describe "Admin can configure the organisation" do
     click_on("Le nouveau lieu")
     expect(page).to have_content("Ce lieu est fermé")
 
-    click_link("Réouvrir ce lieu")
+    click_on("Réouvrir ce lieu")
     expect(page).to have_content("Le lieu a été rouvert.")
     expect(nouveau_lieu.reload).to have_attributes(availability: "enabled")
 
     nouveau_lieu.update!(availability: :disabled)
 
     click_on("Le nouveau lieu")
-    click_link("Supprimer")
+    click_on("Supprimer")
 
     expect_page_title("Lieux")
     expect(page).to have_content("Vous n'avez pas encore ajouté de lieu de consultation.")

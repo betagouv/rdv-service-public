@@ -39,13 +39,13 @@ tr
 
       - if motif.archived?
         - if motif_policy.unarchive?
-          = link_to "", unarchive_admin_organisation_motif_path(current_organisation, motif),
+          = button_to "", unarchive_admin_organisation_motif_path(current_organisation, motif),
                   class: "fr-btn fr-btn--tertiary fr-icon-upload-fill",
                   method: :post,
                   title: t("admin.motifs.actions.unarchive")
         - if motif_policy.destroy?
           - if motif.destroyable?
-            = link_to "", admin_organisation_motif_path(current_organisation, motif),
+            = button_to "", admin_organisation_motif_path(current_organisation, motif),
                     class: "fr-btn fr-btn--tertiary fr-icon-delete-fill",
                     method: :delete,
                     title: t("admin.motifs.actions.destroy"), data: { confirm: t("admin.motifs.actions.destroy_confirm") }
@@ -53,7 +53,7 @@ tr
             button.fr-btn.fr-btn--tertiary.fr-icon-delete-fill [disabled="disabled" title=t("admin.motifs.actions.not_destroyable_explanation")]
       - else
         - if motif_policy.archive?
-          = link_to "", archive_admin_organisation_motif_path(current_organisation, motif),
+          = button_to "", archive_admin_organisation_motif_path(current_organisation, motif),
                   class: "fr-btn fr-btn--tertiary fr-icon-archive-fill",
                   method: :post,
                   title: t("admin.motifs.actions.archive"),

@@ -403,7 +403,7 @@ RSpec.describe "User can search for rdvs" do
       expect(page).to have_content("Choix de l’usager")
       click_button("Continuer")
       expect(page).to have_content("Confirmation")
-      click_link("Confirmer mon RDV")
+      click_on("Confirmer mon RDV")
 
       expect(page).to have_content("Votre RDV")
       expect(page).to have_content(lieu.address)
@@ -640,7 +640,7 @@ RSpec.describe "User can search for rdvs" do
   def confirm_rdv(motif, lieu = nil)
     expect(page).to have_content("Informations de contact")
     expect(page).to have_content("Mathieu LAPIN")
-    click_link("Confirmer mon RDV")
+    click_on("Confirmer mon RDV")
 
     expect(page).to have_content("Votre RDV")
     expect(page).to have_content(lieu.address) if lieu.present?

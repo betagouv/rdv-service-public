@@ -7,7 +7,7 @@ RSpec.describe "Agent can unsync his account to outlook" do
   before do
     login_as(agent, scope: :agent)
     visit agents_calendar_sync_outlook_sync_path
-    click_link "Déconnecter votre compte Outlook"
+    click_on "Déconnecter votre compte Outlook"
   end
 
   it "unsyncs the account" do

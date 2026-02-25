@@ -16,7 +16,7 @@ RSpec.describe "Déconnexion" do
 
     click_button("Continuer")
     click_button("Continuer")
-    click_link("Confirmer mon RDV")
+    click_on("Confirmer mon RDV")
     expect(page).to have_content("Votre RDV")
 
     click_on "Déconnexion"

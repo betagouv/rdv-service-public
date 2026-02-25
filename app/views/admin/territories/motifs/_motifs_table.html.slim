@@ -59,13 +59,13 @@ table.table.table-centered.table-bordered.table-sm.mb-0[class=(display_checkboxe
                         target: :_blank
               - if motif.archived?
                 - if motif_policy.unarchive?
-                  = link_to "", unarchive_admin_territory_motif_path(current_territory, motif),
+                  = button_to "", unarchive_admin_territory_motif_path(current_territory, motif),
                           class: "fr-btn fr-btn--tertiary fr-icon-upload-fill",
                           method: :post,
                           title: "Réactiver"
                 - if motif_policy.destroy?
                   - if motif.destroyable?
-                    = link_to "", admin_territory_motif_path(current_territory, motif),
+                    = button_to "", admin_territory_motif_path(current_territory, motif),
                             class: "fr-btn fr-btn--tertiary fr-icon-delete-fill",
                             method: :delete,
                             title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" }
@@ -73,7 +73,7 @@ table.table.table-centered.table-bordered.table-sm.mb-0[class=(display_checkboxe
                     button.fr-btn.fr-btn--tertiary.fr-icon-delete-line [disabled="disabled" title=t("admin.motifs.actions.not_destroyable_explanation")]
               - else
                 - if motif_policy.archive?
-                  = link_to "", archive_admin_territory_motif_path(current_territory, motif),
+                  = button_to "", archive_admin_territory_motif_path(current_territory, motif),
                           class: "fr-btn fr-btn--tertiary fr-icon-archive-fill",
                           method: :post,
                           title: "Archiver",

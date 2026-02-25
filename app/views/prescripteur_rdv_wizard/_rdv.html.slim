@@ -40,7 +40,7 @@ ul.list-group.list-group-flush.fr-mt-0
         | Vous n’avez pas renseigné de numéro de téléphone pour l’usager. En cas d’annulation, il ne recevra pas de notification automatique.
     ul.fr-btns-group.fr-btns-group--inline
       li
-        = link_to "Annuler le rendez-vous", prescripteur_cancel_rdv_path, class: "fr-btn fr-btn--secondary", data: { confirm: prescripteur.user.phone_number.blank? ? "Attention ! L’usager ne recevera pas notification d’annulation. Êtes-vous sûr de vouloir annuler ce rendez-vous ?" : "Êtes-vous sûr de vouloir annuler ce rendez-vous ?", method: :delete }
+        = button_to "Annuler le rendez-vous", prescripteur_cancel_rdv_path, method: :delete, class: "fr-btn fr-btn--secondary", data: { confirm: prescripteur.user.phone_number.blank? ? "Attention ! L’usager ne recevera pas notification d’annulation. Êtes-vous sûr de vouloir annuler ce rendez-vous ?" : "Êtes-vous sûr de vouloir annuler ce rendez-vous ?" }
 p
   |> Besoin de corriger un détail ?
   = link_to "Contactez-nous", new_aide_demande_support_path(role: :agent,

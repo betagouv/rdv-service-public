@@ -27,7 +27,7 @@ RSpec.describe "Agent can sync his account to outlook" do
 
     expect(client_double).to receive(:create_event!)
     perform_enqueued_jobs do
-      find(:xpath, "//a/img[@alt=\"S'identifier avec Microsoft\"]").find(:xpath, "..").click
+      find(:xpath, "//button/img[@alt=\"S'identifier avec Microsoft\"]").find(:xpath, "..").click
 
       expect(agent.reload.microsoft_graph_token).to eq("super_token")
       expect(agent.reload.refresh_microsoft_graph_token).to eq("super_refresh_token")

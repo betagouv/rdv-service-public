@@ -12,7 +12,7 @@ RSpec.describe "Agent can display user" do
 
     it "prompts the agent to invite the user" do
       expect(page).to have_content("Cet usager ne s'est pas encore créé de compte RDV Solidarités.")
-      expect(page).to have_link("Inviter", href: invite_admin_organisation_user_path(id: user.id, organisation_id: organisation.id))
+      expect(page).to have_button("Inviter")
     end
   end
 

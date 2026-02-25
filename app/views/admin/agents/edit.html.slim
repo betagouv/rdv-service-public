@@ -55,7 +55,7 @@
           .row
             - if policy(@agent, policy_class: Agent::AgentPolicy).destroy?
               .col.text-left
-                = link_to @agent_removal_presenter.button_value, \
+                = button_to @agent_removal_presenter.button_value, \
                   admin_organisation_agent_path(current_organisation, @agent), \
                   data: { confirm: @agent_removal_presenter.confirm_message }, \
                   method: :delete, \

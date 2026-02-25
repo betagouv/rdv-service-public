@@ -37,7 +37,7 @@ RSpec.describe "un prescripteur peut annuler un rendez-vous qu’il a pris pour 
     expect(page).to have_content("Rendez-vous confirmé")
 
     # Sur la page de confirmation, le prescripteur doit pouvoir annuler le rdv
-    click_link "Annuler le rendez-vous"
+    click_on "Annuler le rendez-vous"
 
     expect(page).to have_content("Le rendez-vous a bien été annulé.")
 
@@ -52,7 +52,7 @@ RSpec.describe "un prescripteur peut annuler un rendez-vous qu’il a pris pour 
 
     visit prescripteur_show_path(token: prescripteur.token)
 
-    click_link "Annuler le rendez-vous"
+    click_on "Annuler le rendez-vous"
 
     expect(page).to have_content("Le rendez-vous a bien été annulé.")
 

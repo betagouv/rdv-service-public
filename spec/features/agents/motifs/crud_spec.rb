@@ -24,9 +24,9 @@ RSpec.describe "Agent can CRUD motifs" do
       click_button("Enregistrer")
 
       expect(page).to have_content("Suivi bonsoir (PMI)")
-      click_link("Archiver")
+      click_on("Archiver")
       expect(page).to have_content("Suivi bonsoir (PMI) (archivé)")
-      click_link("Supprimer")
+      click_on("Supprimer")
 
       expect_page_title("Motifs de rendez-vous")
       expect(page).to have_content("Vous n'avez pas encore créé de motif.")
@@ -70,9 +70,9 @@ RSpec.describe "Agent can CRUD motifs" do
       click_button("Enregistrer")
 
       expect(page).to have_content("Renouvellement de permis de construire")
-      click_link("Archiver")
+      click_on("Archiver")
       expect(page).to have_content("Renouvellement de permis de construire (archivé)")
-      click_link("Supprimer")
+      click_on("Supprimer")
     end
 
     context "when the territory doesn't have any services" do

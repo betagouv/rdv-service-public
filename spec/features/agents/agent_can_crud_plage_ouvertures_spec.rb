@@ -30,7 +30,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
       expect_page_title("Plages d’ouverture")
       click_on("La belle plage")
-      accept_alert { click_link("Supprimer") }
+      accept_alert { click_on("Supprimer") }
 
       expect { perform_enqueued_jobs }.to change { emails_sent_to(agent.email).size }.by(1)
       open_email(agent.email)
@@ -156,7 +156,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_on("La belle plage")
       expect(page).to have_content("La belle plage")
       accept_confirm do
-        click_link("Supprimer")
+        click_on("Supprimer")
       end
 
       expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
@@ -194,7 +194,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
         expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
         click_on("La belle plage")
-        click_link("Supprimer")
+        click_on("Supprimer")
 
         expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
         expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
@@ -215,7 +215,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, start_time: Tod::TimeOfDay.new(8, 30), end_time: Tod::TimeOfDay.new(9, 30)) }
 
     it "works" do
-      expect { click_link("Supprimer") }.to change(enqueued_jobs, :size).by(1)
+      expect { click_on("Supprimer") }.to change(enqueued_jobs, :size).by(1)
       expect { perform_enqueued_jobs }.to change { emails_sent_to(plage_ouverture.agent.email).size }.by(1)
       open_email(plage_ouverture.agent.email)
       expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture supprimée - #{plage_ouverture.title_with_default}")

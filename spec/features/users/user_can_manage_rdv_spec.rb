@@ -15,7 +15,7 @@ RSpec.describe "User can manage their rdvs" do
         expect(page).to have_content(rdv.motif_name)
         click_on("Annuler le RDV")
         expect(page).to have_content("Confirmation")
-        click_link("Oui, annuler le rendez-vous")
+        click_on("Oui, annuler le rendez-vous")
         expect(page).to have_selector(".fr-badge", text: "ANNULÉ")
       end
     end
@@ -76,7 +76,7 @@ RSpec.describe "User can manage their rdvs" do
           click_link("Déplacer le RDV")
           first(:link, "11:00").click
           expect(page).to have_content("Vous allez modifier votre RDV #{motif.name} qui a lieu le #{I18n.l(rdv.starts_at, format: :human)}")
-          click_link("Confirmer le nouveau créneau")
+          click_on("Confirmer le nouveau créneau")
           expect(rdv.reload.starts_at).not_to eq(original_date)
 
           # Check Notifications

@@ -72,7 +72,7 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content("Informations de contact")
       expect(page).to have_content("johndoe@gmail.com")
       expect(page).to have_content("0682605955")
-      click_link("Confirmer mon RDV")
+      click_on("Confirmer mon RDV")
 
       # RDV page
       expect(page).to have_content("Votre RDV")
@@ -220,7 +220,7 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content("Informations de contact")
       expect(page).to have_content("johndoe@gmail.com")
       expect(page).to have_content("0682605955")
-      click_link("Confirmer mon RDV")
+      click_on("Confirmer mon RDV")
 
       # RDV page
       expect(page).to have_content("Votre RDV")
@@ -285,7 +285,7 @@ RSpec.describe "User can be invited" do
         expect(page).to have_content("Informations de contact")
         expect(page).to have_content("johndoe@gmail.com")
         expect(page).to have_content("0682605955")
-        click_link("Confirmer mon RDV")
+        click_on("Confirmer mon RDV")
 
         # RDV page
         expect(page).to have_content("Votre RDV")
