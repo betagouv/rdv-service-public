@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_24_092756) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -147,7 +147,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
     t.string "caldav_agenda_url"
     t.string "caldav_username"
     t.string "caldav_password"
-    t.boolean "caldav_disconnect_in_progress", default: false, null: false
     t.datetime "blog_read_at"
     t.string "pro_connect_openid_sub"
     t.string "caldav_sync_token"
@@ -155,6 +154,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
     t.boolean "group_by_agent", default: false, null: false
     t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.boolean "sensitive_account", default: false, null: false
+    t.datetime "caldav_disconnect_started_at"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -491,9 +491,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
     t.datetime "updated_at", null: false
     t.text "logo_base64"
     t.text "post_logout_redirect_uri"
-    t.bigint "default_service_id", comment: "Indique le service qui sera ajouté au territoire par défaut si un agent qui utilise cette application ouvre un nouvel espace.\nCette colonne indique aussi que les agents qui utilisent cette application sont autorisés à ouvrir un nouvel espace.\n"
     t.boolean "grants_autonomous_signup", default: false, null: false
-    t.index ["default_service_id"], name: "index_oauth_applications_on_default_service_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
@@ -746,8 +744,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
   create_table "territories", force: :cascade do |t|
     t.string "departement_number", default: "", null: false
     t.string "name"
-    t.string "phone_number"
-    t.string "phone_number_formatted"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "sms_provider", enum_type: "sms_provider"
@@ -949,7 +945,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_094348) do
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "agents", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
-  add_foreign_key "oauth_applications", "services", column: "default_service_id"
   add_foreign_key "operator_managers", "operators"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"

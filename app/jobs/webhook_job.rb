@@ -11,8 +11,6 @@ class WebhookJob < ApplicationJob
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
 
-  before_perform { throw :abort if Rails.env.development? }
-
   #
   # Deux signatures possibles
   #
@@ -26,6 +24,9 @@ class WebhookJob < ApplicationJob
     else
       payload, webhook_endpoint_id = args
     end
+
+    # Les envois de webhooks en env de dev sont notamment utilisés par RDV-I.
+    return if Rails.env.development? && webhook_endpoint.target_url !~ /localhost/
 
     webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
 
@@ -52,13 +53,8 @@ class WebhookJob < ApplicationJob
       end
     end
 
-    # Le WAF du Pas-de-Calais bloque certaines requêtes et
-    # renvoie une réponse en HTML avec un statut 200.
     request.on_success do |response|
-      if response.body.include?("<html>")
-        fingerprint = ["OutgoingWebhookError HTML", webhook_endpoint.target_url, response.code.to_s]
-        Sentry.capture_message("HTML body in HTTP #{response.code} response in webhook to [#{webhook_endpoint.target_url}]", fingerprint: fingerprint)
-      end
+      warn_on_html_response(response, webhook_endpoint)
     end
 
     request.run
@@ -93,5 +89,16 @@ class WebhookJob < ApplicationJob
     body["message"]&.match?(Regexp.union(error_messages_from_drome))
   rescue StandardError
     false
+  end
+
+  private
+
+  # Le WAF du Pas-de-Calais bloque certaines requêtes et
+  # renvoie une réponse en HTML avec un statut 200.
+  def warn_on_html_response(response, webhook_endpoint)
+    if response.body.include?("<html>")
+      fingerprint = ["OutgoingWebhookError HTML", webhook_endpoint.target_url, response.code.to_s]
+      Sentry.capture_message("HTML body in HTTP #{response.code} response in webhook to [#{webhook_endpoint.target_url}]", fingerprint: fingerprint)
+    end
   end
 end

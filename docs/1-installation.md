@@ -21,7 +21,10 @@ make install  ## appelle bin/setup
 
 Pour certaines fonctionnalités comme ProConnect ou des appels à des API distantes, vous aurez besoin de récupérer des variables d'env depuis Vaulwarden. Le fichier .env contient des instructions pour chaque variable.
 
-Vous pouvez ensuite lancer le serveur avec `make run`
+Vous pouvez ensuite lancer tous les serveurs avec `make run`.
+
+Si vous voulez uniquement lancer une instance RDV Service Public, et pas RDV Solidarités ni les autres applications satellites, vous pouvez faire `make run_single_instance`
+
 
 ## Commandes
 

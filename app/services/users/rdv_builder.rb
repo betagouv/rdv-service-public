@@ -22,7 +22,10 @@ class Users::RdvBuilder
 
   def params_to_selections
     if @rdv.present?
-      return @attributes.merge(service: @rdv.motif.service_id, motif_name_with_location_type: @rdv.motif.name_with_location_type)
+      return @attributes.merge({
+        service: @rdv.motif&.service_id,
+        motif_name_with_location_type: @rdv.motif&.name_with_location_type,
+      }.compact)
     end
 
     @attributes

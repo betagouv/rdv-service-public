@@ -1,6 +1,6 @@
 RSpec.describe IcsPayloads::Rdv, type: :service do
   describe "#payload" do
-    %i[name ical_uid summary ends_at description location].each do |key|
+    %i[attachement_filename ical_uid summary ends_at description location].each do |key|
       it "return an hash with key #{key}" do
         user = build(:user)
         rdv = build(:rdv, users: [user])
@@ -8,11 +8,11 @@ RSpec.describe IcsPayloads::Rdv, type: :service do
       end
     end
 
-    describe ":name" do
+    describe ":attachement_filename" do
       let(:user) { build(:user) }
       let(:rdv) { build(:rdv, users: [user], starts_at: Time.zone.parse("20201123 15h50")) }
 
-      it { expect(rdv.payload[:name]).to eq("rdv-#{rdv.motif.name.parameterize}-2020-11-23-15h50.ics") }
+      it { expect(rdv.payload[:attachement_filename]).to eq("rdv-#{rdv.motif.name.parameterize}-2020-11-23-15h50.ics") }
     end
 
     describe ":starts_at" do

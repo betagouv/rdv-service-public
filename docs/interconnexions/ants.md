@@ -83,6 +83,10 @@ Pour mettre à jour ces tokens :
 
 ### Environnement de développement
 
+Sur vos machines locales et sur les review apps plusieurs solutions sont possibles :
+- par défaut la variable d'environnement `ANTS_RDV_API_MOCK_RESPONSES` est activée, aucun appel n'est fait
+- ou vous pouvez pointer vers un environnement d'API de développement, cf ci-dessous
+
 L’ANTS fournit un environnement de développement (aussi dit d’intégration) disponible sur [int.api-coordination.rendezvouspasseport.ants.gouv.fr](https://int.api-coordination.rendezvouspasseport.ants.gouv.fr).
 
 L’instance demo-rdv-solidarites (et donc le domaine demo.rdv.anct.gouv.fr) est configurée pour requêter cette API d’intégration.

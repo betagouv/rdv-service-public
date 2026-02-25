@@ -2,7 +2,7 @@ module IcsPayloads
   module PlageOuverture
     def payload(action = nil)
       payload = {
-        name: "plage-ouverture-#{title.presence&.parameterize || id}-#{starts_at.to_s.parameterize}.ics",
+        attachement_filename: "plage-ouverture-#{title.presence&.parameterize || id}-#{starts_at.to_s.parameterize}.ics",
         starts_at: starts_at,
         ends_at: first_occurrence_ends_at,
         ical_uid: ical_uid,

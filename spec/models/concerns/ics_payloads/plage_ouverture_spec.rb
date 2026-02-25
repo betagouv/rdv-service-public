@@ -1,6 +1,6 @@
 RSpec.describe IcsPayloads::PlageOuverture do
   describe "#payload" do
-    %i[name starts_at rrule ical_uid ends_at].each do |key|
+    %i[attachement_filename starts_at rrule ical_uid ends_at].each do |key|
       it "return an hash with key #{key}" do
         plage_ouverture = create(:plage_ouverture)
         expect(plage_ouverture.payload).to have_key(key)
@@ -14,15 +14,15 @@ RSpec.describe IcsPayloads::PlageOuverture do
       end
     end
 
-    describe ":name" do
+    describe ":attachement_filename" do
       let(:plage_ouverture) { create(:plage_ouverture, title: "Permanence mairie", start_time: Tod::TimeOfDay.new(9), first_day: Date.new(2020, 11, 13)) }
 
-      it { expect(plage_ouverture.payload[:name]).to eq("plage-ouverture-permanence-mairie-2020-11-13-09-00-00-0100.ics") }
+      it { expect(plage_ouverture.payload[:attachement_filename]).to eq("plage-ouverture-permanence-mairie-2020-11-13-09-00-00-0100.ics") }
 
       context "when title is empty" do
         let(:plage_ouverture) { create(:plage_ouverture, title: nil, start_time: Tod::TimeOfDay.new(9), first_day: Date.new(2020, 11, 13)) }
 
-        it { expect(plage_ouverture.payload[:name]).to eq("plage-ouverture-#{plage_ouverture.id}-2020-11-13-09-00-00-0100.ics") }
+        it { expect(plage_ouverture.payload[:attachement_filename]).to eq("plage-ouverture-#{plage_ouverture.id}-2020-11-13-09-00-00-0100.ics") }
       end
     end
 

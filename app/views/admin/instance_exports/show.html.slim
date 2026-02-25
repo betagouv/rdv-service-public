@@ -7,7 +7,7 @@
     .fr-col-8.fr-col-offset-2
       .card
         .card-body
-          - if @instance_export.good_job_batch && @instance_export.good_job_batch.jobs.where(finished_at: nil).none?
+          - if @instance_export.status == "planning_copied"
             - if current_organisation.motifs.active.any?
               p
                 = icon("fr-icon-checkbox-circle-fill", class: "fr-mr-1w color-scheme-green")
