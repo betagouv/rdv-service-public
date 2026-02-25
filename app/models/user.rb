@@ -227,8 +227,6 @@ class User < ApplicationRecord
   def domain
     if rdvs.any?
       rdvs.order(created_at: :desc).first.domain
-    elsif sign_up_domain
-      sign_up_domain
     else
       Domain.default_domain_for_current_instance
     end

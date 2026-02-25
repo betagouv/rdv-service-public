@@ -133,9 +133,9 @@ RSpec.describe Admin::UsersController, type: :controller do
         end
         let(:format) { format }
 
-        it "sends an invite" do
-          expect_any_instance_of(User).to receive(:invite!)
-          post :create, params: { organisation_id: organisation.id, user: attributes, invite_on_create: "1" }
+        it "sends an invitation code" do
+          expect { post :create, params: { organisation_id: organisation.id, user: attributes, invite_on_create: "1" } }
+            .to have_enqueued_mail(Users::LoginCodeMailer, :invitation_code)
         end
       end
     end

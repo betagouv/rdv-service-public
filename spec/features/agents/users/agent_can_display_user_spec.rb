@@ -10,9 +10,9 @@ RSpec.describe "Agent can display user" do
   context "when user is unregistered and never logged through FranceConnect" do
     let!(:user) { create(:user, :unconfirmed, :unregistered, organisations: [organisation]) }
 
-    it "prompts the agent to invite the user" do
-      expect(page).to have_content("Cet usager ne s'est pas encore créé de compte RDV Solidarités.")
-      expect(page).to have_link("Inviter", href: invite_admin_organisation_user_path(id: user.id, organisation_id: organisation.id))
+    it "prompts the agent to send a connection code" do
+      expect(page).to have_content("Cet usager n'a pas encore accédé à son espace RDV Solidarités.")
+      expect(page).to have_link("Envoyer un code de connexion", href: invite_admin_organisation_user_path(id: user.id, organisation_id: organisation.id))
     end
   end
 

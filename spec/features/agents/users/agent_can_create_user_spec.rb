@@ -30,9 +30,9 @@ RSpec.describe "Agent can create user" do
     within("#spec-primary-user-card") { click_link "Modifier" }
     fill_in "Email", with: "marco@lebreton.bzh"
     click_button "Enregistrer"
-    click_link "Inviter"
+    click_link "Envoyer un code de connexion"
     open_email("marco@lebreton.bzh")
-    expect(current_email.subject).to eq("Vous avez été invité sur RDV Aide Numérique")
+    expect(current_email.subject).to eq("Votre code pour accéder à RDV Aide Numérique")
   end
 
   context "user already exists in other organisation of the same territory" do

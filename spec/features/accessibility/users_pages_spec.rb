@@ -40,10 +40,6 @@ RSpec.describe "users pages", js: true do
     expect_page_to_be_axe_clean(new_user_session_path)
   end
 
-  it "new_user_password_path is accessible" do
-    expect_page_to_be_axe_clean(new_user_password_path)
-  end
-
   it "new_user_registration_path is accessible" do
     expect_page_to_be_axe_clean(new_user_registration_path)
   end
