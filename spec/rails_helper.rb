@@ -55,6 +55,14 @@ RSpec.configure do |config|
   config.include DeviseRequestSpecHelpers, type: :request
   config.include NotificationsHelper
 
+  config.around(:each, type: :request) do |example|
+    original = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = false
+    example.run
+  ensure
+    ActionController::Base.allow_forgery_protection = original
+  end
+
   # Permet d'avoir des données générées de manière déterministe pour les specs swagger
   if ENV["FAKER_SEED"]
     Faker::Config.random = Random.new(ENV["FAKER_SEED"].to_i)
