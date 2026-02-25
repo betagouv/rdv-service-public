@@ -3,7 +3,7 @@
 - if motif.duplicated_from_motif && motif.new_record? && organisations_i_can_manage.count > 1
   .card
     .card-body
-      = f.dsfr_select :organisation_id, organisations_i_can_manage.sort.collect { |organisation| [organisation.name, organisation.id] }, label: "Créer le motif dans cette organisation", required: true
+      = f.dsfr_select :organisation_id, organisations_i_can_manage.sort.collect { |organisation| [organisation.name, organisation.id] }, label: "Créer le motif dans cette organisation"
 
 .card
   .card-body
