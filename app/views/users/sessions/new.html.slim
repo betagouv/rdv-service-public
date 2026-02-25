@@ -39,6 +39,10 @@
           - if @login_code_request_form.errors[:base].any? { _1.to_s.match(/Un code a été envoyé .* il y a moins de deux minutes/) }
             .fr-my-2w
               = link_to "Saisir un code reçu", new_users_sessions_by_code_path(email: @login_code_request_form.email), class: "fr-btn fr-btn--secondary"
+          - unless @rdv_wizard
+            .fr-mt-4w.fr-mb-2w.fr-text--sm
+              |> Vous n'avez pas de compte ?
+              = link_to "Je m'inscris", new_user_registration_path
 
       - if @rdv_wizard
         p.fr-hr-or.fr-mt-16w ou

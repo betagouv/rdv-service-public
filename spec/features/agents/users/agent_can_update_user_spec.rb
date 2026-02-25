@@ -78,9 +78,9 @@ RSpec.describe "Agent can update user" do
       within("#spec-primary-user-card") { click_link "Modifier" }
       fill_in "Email", with: "jean@legende.com"
       click_button "Enregistrer"
-      click_link "Inviter"
+      click_link "Envoyer un code de connexion"
       open_email("jean@legende.com")
-      expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
+      expect(current_email.subject).to eq "Votre code pour accéder à RDV Solidarités"
     end
   end
 
