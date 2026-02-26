@@ -1,7 +1,7 @@
 spec
 docs
 /tmp/cache
-/node_modules
 /scripts/devtools
+/node_modules
 /.yarn/berry/cache
 /app/assets/builds
