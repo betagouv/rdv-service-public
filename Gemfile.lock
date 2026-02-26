@@ -214,11 +214,11 @@ GEM
       railties (>= 3.2)
     drb (2.2.3)
     dsfr-assets (1.14.3)
-    dsfr-form_builder (0.0.7)
+    dsfr-form_builder (0.0.13)
       actionview (>= 6.1, < 9.0)
       activemodel (>= 6.1, < 9.0)
       activesupport (>= 6.1, < 9.0)
-    dsfr-view-components (4.1.1)
+    dsfr-view-components (4.1.2)
       dsfr-assets (>= 1.13.2, < 1.15)
       html-attributes-utils (~> 1)
       view_component (~> 3)
@@ -788,7 +788,7 @@ DEPENDENCIES
   doorkeeper-i18n
   dotenv-rails
   dsfr-assets (~> 1.14.2)
-  dsfr-form_builder (= 0.0.7)
+  dsfr-form_builder (= 0.0.13)
   dsfr-view-components (~> 4.1)
   factory_bot
   faker
@@ -924,8 +924,8 @@ CHECKSUMS
   dotenv-rails (2.8.1) sha256=b05b81b7f4e51d1359e218d92279db1d84b12440f7118c9df19b5dfffb620f6c
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dsfr-assets (1.14.3) sha256=132dae8bbe8ddbcc2cf90f598c0112f3956453cd3c40bcd58442427b4215d9f1
-  dsfr-form_builder (0.0.7) sha256=16165ee281de4645617fdb79c4fc03384f9125cbbdf6a149daa1ef2bb367ffde
-  dsfr-view-components (4.1.1) sha256=b9e3c502222fc270b1567f10d7fa1ddd6a0a002ed2bf193be7e573f68db39830
+  dsfr-form_builder (0.0.13) sha256=d5c3c0a1af5423285dd94d94282606f3a99064ea74716335eaaf420f0cdcad04
+  dsfr-view-components (4.1.2) sha256=5b7b0b0027f84dd6db7e3a3f04bd731a488dd013f9631e7d76a9d3bf547a79ed
   erb (5.1.3) sha256=566e53057b6ba48699f824b578473b391fa8aef100aa14afad1c46725fae0e67
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   et-orbi (1.2.11) sha256=d26e868cc21db88280a9ec1a50aa3da5d267eb9b2037ba7b831d6c2731f5df64
