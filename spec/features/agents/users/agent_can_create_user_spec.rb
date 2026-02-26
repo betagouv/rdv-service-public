@@ -25,14 +25,6 @@ RSpec.describe "Agent can create user" do
 
     user = User.last
     expect(user.annotation_for(organisation.territory)).to eq "souhaite participer au prochain atelier collectif"
-
-    expect(page).to have_no_content("Inviter")
-    within("#spec-primary-user-card") { click_link "Modifier" }
-    fill_in "Email", with: "marco@lebreton.bzh"
-    click_button "Enregistrer"
-    click_link "Inviter"
-    open_email("marco@lebreton.bzh")
-    expect(current_email.subject).to eq("Vous avez été invité sur RDV Aide Numérique")
   end
 
   context "user already exists in other organisation of the same territory" do

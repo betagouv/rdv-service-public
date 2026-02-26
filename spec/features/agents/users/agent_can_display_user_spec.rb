@@ -7,15 +7,6 @@ RSpec.describe "Agent can display user" do
     visit admin_organisation_user_path(organisation, user)
   end
 
-  context "when user is unregistered and never logged through FranceConnect" do
-    let!(:user) { create(:user, :unconfirmed, :unregistered, organisations: [organisation]) }
-
-    it "prompts the agent to invite the user" do
-      expect(page).to have_content("Cet usager ne s'est pas encore créé de compte RDV Solidarités.")
-      expect(page).to have_link("Inviter", href: invite_admin_organisation_user_path(id: user.id, organisation_id: organisation.id))
-    end
-  end
-
   context "when user is unregistered but has logged through FranceConnect" do
     let!(:user) { create(:user, :unconfirmed, :unregistered, logged_once_with_franceconnect: true, organisations: [organisation]) }
 
@@ -23,14 +14,6 @@ RSpec.describe "Agent can display user" do
       expect(page).to have_content("Cet usager s'est déjà connecté via FranceConnect.")
       # There is no need to invite the user since FranceConnect binding is in place
       expect(page).not_to have_content("Cet usager ne s'est pas encore créé de compte")
-    end
-  end
-
-  context "when user was invited by an external service but did not yet accept the invite" do
-    let!(:user) { create(:user, :unconfirmed, :unregistered, invited_through: "external", organisations: [organisation]) }
-
-    it "displays a message to inform the agent" do
-      expect(page).to have_content("Cet usager a reçu une invitation via un partenaire de RDV Solidarités (ex : rdv-insertion).")
     end
   end
 

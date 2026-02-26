@@ -42,6 +42,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_inactive_sign_up_path_for(resource)
     users_pending_registration_path(email_tld: resource.email_tld)
   end
-
-
 end
