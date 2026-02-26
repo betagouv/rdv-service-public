@@ -1,0 +1,24 @@
+.rdv-background-color-alt-blue-ecume.fr-py-6v
+  .fr-container
+    = link_to root_path, class: "fr-btn fr-btn--secondary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line" do
+      | Retour à l’accueil
+
+    .fr-grid-row.justify-content-md-center
+      .card.fr-mt-6v.fr-mb-12v.fr-p-12v.fr-col-lg-8
+        .fr-container
+          = dsfr_stepper title: "Votre administration", value: 2, max: 3, next_title: "Vos effectifs", header_level: 1
+
+          h2.fr-h4 Quelle est l’envergure de votre administration ?
+          .fr-grid-row.fr-grid-row--gutters
+            .fr-col-12.fr-col-md-6
+              = dsfr_tile title: "Un seul service et/ou une seule structure",
+                      url: step_3_onboarding_path,
+                      description: "Déploiement simple comme une mairie d’une petite commune etc.",
+                      image_src: "/assets/artwork/pictograms/buildings/city-hall.svg"
+            .fr-col-12.fr-col-md-6
+              = dsfr_tile title: "Plusieurs services et/ou structures",
+                      url: help_needed_onboarding_path,
+                      description: "Déploiement à grande échelle comme un département, une agglomération, gestion de plusieurs services etc.",
+                      image_src: "/assets/artwork/pictograms/digital/ecosystem.svg"
+
+          = link_to "Précédent", step_1_onboarding_path, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line fr-mt-6v"

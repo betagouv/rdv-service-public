@@ -1,0 +1,14 @@
+.rdv-background-color-alt-blue-ecume.fr-py-6v
+  .fr-container
+    = link_to root_path, class: "fr-btn fr-btn--secondary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line" do
+      | Retour à l’accueil
+
+    .fr-grid-row.justify-content-md-center
+      .card.fr-mt-6v.fr-mb-12v.fr-p-12v.fr-col-lg-6
+        = dsfr_svg "artwork/pictograms/system/information"
+        h1.fr-h2 Votre projet nécessite un accompagnement personnalisé.
+        p Compte tenu de vos besoins, nous vous proposons d’organiser un moment d’échange avec notre équipe afin de vous présenter la solution et d’étudier ensemble vos cas d’usage, pour un accompagnement optimal.
+
+        = link_to "Plannifier un échange", Agents::PagesController::CONTACT_TEAM_URL, class: "fr-btn fr-btn--primary"
+
+        = link_to "Précédent", request.referer || root_path, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line fr-mt-6v"

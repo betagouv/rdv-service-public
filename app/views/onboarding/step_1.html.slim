@@ -1,0 +1,23 @@
+.rdv-background-color-alt-blue-ecume.fr-py-6v
+  .fr-container
+    = link_to root_path, class: "fr-btn fr-btn--secondary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line" do
+      | Retour à l’accueil
+
+    .fr-grid-row.justify-content-md-center
+      .card.fr-mt-6v.fr-mb-12v.fr-p-12v.fr-col-lg-8
+        .fr-container
+          h1 Découvrir RDV Service Public
+          p Afin de vous orienter vers l'accompagnement le plus adapté, parlez-nous de vous et de votre besoin.
+
+          h2 Vous êtes :
+          .fr-grid-row.fr-grid-row--gutters
+            .fr-col-12.fr-col-md-6
+              = dsfr_tile title: "Un particulier",
+                      url: usager_onboarding_path,
+                      description: "Vous cherchez à prendre ou modifier un rendez-vous avec un service public",
+                      image_src: "/assets/artwork/pictograms/digital/self-training.svg"
+            .fr-col-12.fr-col-md-6
+              = dsfr_tile title: "Un agent public",
+                      url: step_2_onboarding_path,
+                      description: "Vous cherchez à découvrir la solution ou obtenir des informations supplémentaires",
+                      image_src: "/assets/artwork/pictograms/digital/avatar.svg"

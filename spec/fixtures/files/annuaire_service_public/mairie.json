@@ -48,7 +48,7 @@
       "code_insee_commune": "60669",
       "statut_de_diffusion": "true",
       "adresse": "[{\"type_adresse\": \"Adresse\", \"complement1\": \"\", \"complement2\": \"\", \"numero_voie\": \"13 rue de l'Église\", \"service_distribution\": \"\", \"code_postal\": \"60140\", \"nom_commune\": \"Verderonne\", \"pays\": \"\", \"continent\": \"\", \"longitude\": \"2.49821996689\", \"latitude\": \"49.3306999207\"}]",
-      "url_service_public": "https://lannuaire.service-public.fr/hauts-de-france/oise/000e1df5-ae69-4a43-a52b-f6061bcc3707",
+      "url_service_public": "https://lannuaire.service-public.gouv.fr/hauts-de-france/oise/000e1df5-ae69-4a43-a52b-f6061bcc3707",
       "information_complementaire": null,
       "date_diffusion": null
     }
