@@ -3,5 +3,5 @@ docs
 /tmp/cache
 /node_modules
 /scripts/devtools
-/.yarn/cache
+/.yarn/berry/cache
 /app/assets/builds
