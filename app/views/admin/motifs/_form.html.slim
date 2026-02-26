@@ -20,8 +20,5 @@ ul#motif_tabs.nav.nav-tabs.mt-3[role="tablist"]
         = render "admin/motifs/form/notifs_et_instructions", f: f, motif: motif, rdvi_mode: rdvi_mode
 
     .row.mb-5
-      - if motif.persisted?
-        .col.text-left
-          = button_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(motif.organisation, motif), method: :delete, class: "fr-btn fr-btn--tertiary", data: { confirm: t("admin.motifs.actions.destroy_confirm") }
       .col.text-right
         = f.submit((motif.new_record? ? "Créer le motif" : "Enregistrer"), class: "fr-btn")

@@ -13,3 +13,7 @@
     = form_for @motif, url: admin_organisation_motif_path, builder: Dsfr::FormBuilder, html: { "data-controller": "motif-form" } do |f|
       = render "model_errors", model: @motif, f: f
       = render "admin/motifs/form", motif: @motif, f: f, rdvi_mode: current_organisation.rdv_insertion?
+
+    - if policy(@motif, policy_class: Agent::MotifPolicy).destroy?
+      .mt-2
+        = button_to t("admin.motifs.actions.destroy"), admin_organisation_motif_path(@motif.organisation, @motif), method: :delete, class: "fr-btn fr-btn--tertiary", data: { confirm: t("admin.motifs.actions.destroy_confirm") }
