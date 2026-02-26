@@ -4,4 +4,3 @@ docs
 /node_modules
 /scripts/devtools
 /.cache/yarn
-/app/assets/builds
