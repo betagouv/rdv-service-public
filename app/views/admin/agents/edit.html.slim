@@ -52,22 +52,21 @@
                 .col-md-6
                   = f.input :last_name, required: true, input_html: { value: "" }, disabled: true
 
-          .row
-            - if policy(@agent, policy_class: Agent::AgentPolicy).destroy?
-              .col.text-left
-                = button_to @agent_removal_presenter.button_value, \
-                  admin_organisation_agent_path(current_organisation, @agent), \
-                  data: { confirm: @agent_removal_presenter.confirm_message }, \
-                  method: :delete, \
-                  class: "btn btn-outline-danger"
-            .col.text-right
-              - if AgentRole.find(@agent_role.id).access_level == "intervenant"
+          .text-right
+            - if AgentRole.find(@agent_role.id).access_level == "intervenant"
+              = f.button :submit
+            - else
+              .js_agent_role_form__agent_with_account_fields
                 = f.button :submit
-              - else
-                .js_agent_role_form__agent_with_account_fields
-                  = f.button :submit
-                .js_agent_role_form__intervenant_fields[style="display:none;"]
-                  = f.button :submit, data: { confirm: "Cet agent ne pourra plus se connecter à son compter. Êtes vous sûr de vouloir continuer ?" }
+              .js_agent_role_form__intervenant_fields[style="display:none;"]
+                = f.button :submit, data: { confirm: "Cet agent ne pourra plus se connecter à son compter. Êtes vous sûr de vouloir continuer ?" }
+        - if policy(@agent, policy_class: Agent::AgentPolicy).destroy?
+          .mt-2
+            = button_to @agent_removal_presenter.button_value, \
+              admin_organisation_agent_path(current_organisation, @agent), \
+              data: { confirm: @agent_removal_presenter.confirm_message }, \
+              method: :delete, \
+              class: "btn btn-outline-danger"
 
 .row.justify-content-center
   .col-md-12.col-lg-8
