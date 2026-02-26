@@ -13,7 +13,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     build_resource(sign_up_params)
     # On empêche Devise d'envoyer son email de confirmation, on envoie un code de connexion à la place.
     # À supprimer lors du retrait du module :confirmable sur User.
-    resource.skip_confirmation_notification!
+    resource.user.skip_confirmation_notification!
     if resource.save
       login_code = LoginCode.create!(email: resource.email, domain_id: current_domain.id)
       Users::LoginCodeMailer.with(login_code:).login_code.deliver_later
