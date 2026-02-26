@@ -53,7 +53,7 @@ RSpec.describe Organisation, type: :model do
   end
 
   describe "#online_booking_only_sso?" do
-    subject { organisation.online_booking_only_sso? }
+    subject { organisation.online_booking_only_proconnect? }
 
     let(:territory) { build(:territory, id: territory_id) }
     let(:organisation) { build(:organisation, territory:, verticale:) }

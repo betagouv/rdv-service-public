@@ -17,6 +17,8 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_builder = Users::RdvBuilder.new(current_user, query_params)
     @rdv_wizard = @rdv_builder # pour les vues qui utilisent encore ce nom de variable
     @rdv = @rdv_builder.rdv
+    return if prevent_if_proconnect_restriction_not_respected
+
     @rdv_booking_form = Users::RdvBookingForm.new(user: current_user, rdv_builder: @rdv_builder, domain: current_domain) if step1?
     authorize(@rdv, policy_class: User::RdvPolicy)
     if @rdv_builder.creneau.present?
@@ -42,6 +44,17 @@ class Users::RdvWizardStepsController < UserAuthController
     else
       # dans les faits, uniquement pour la step 2 car la step3 pointe vers rdvs#create
       redirect_to new_users_rdv_wizard_step_path(@rdv_builder.to_query.merge(step: next_step[:number]))
+    end
+  end
+
+  private
+
+  def prevent_if_proconnect_restriction_not_respected
+    if @rdv.motif&.organisation&.online_booking_only_proconnect? && current_user.pro_connect_openid_sub.blank?
+      skip_authorization
+      flash[:error] = "Ce motif de rendez-vous est réservé aux professionnels. " \
+                      "Si vous êtes un professionnel et que vous souhaitez prendre rendez-vous, merci de vous déconnecter et de recommencer votre demande en utilisant ProConnect."
+      redirect_back(fallback_location: root_path)
     end
   end
 
