@@ -4,7 +4,7 @@ RSpec.describe "User signs up and signs in" do
 
     it "ne permet pas de créer un compte en arrivant depuis la page de connexion" do
       visit "http://www.rdv-solidarites-test.localhost/"
-      click_link "Se connecter"
+      click_link "Connexion Usager"
       expect(page).not_to have_content("Inscription")
       fill_in "Adresse email", with: user.email
       click_on "Recevoir un code de connexion"
@@ -17,7 +17,7 @@ RSpec.describe "User signs up and signs in" do
 
     it "can login via 6-digit code and gets confirmed" do
       visit "http://www.rdv-solidarites-test.localhost/"
-      click_link "Se connecter"
+      click_link "Connexion Usager"
       fill_in "Adresse email", with: invited_user.email
       click_on "Recevoir un code de connexion"
       fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: invited_user.email).code
@@ -34,7 +34,7 @@ RSpec.describe "User signs up and signs in" do
 
     it "logs them in and confirms their account" do
       visit "http://www.rdv-aide-numerique-test.localhost/"
-      click_link "Se connecter"
+      click_link "Connexion Usager"
       fill_in "Adresse email", with: unconfirmed_user.email
       click_on "Recevoir un code de connexion"
       fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: unconfirmed_user.email).code
@@ -50,7 +50,7 @@ RSpec.describe "User signs up and signs in" do
 
     it "redirige vers la page de connexion agent" do
       visit "http://www.rdv-solidarites-test.localhost/"
-      click_link "Se connecter"
+      click_link "Connexion Usager"
       within("form") do
         fill_in "Adresse email", with: "dulce@agent.fr"
         click_on "Recevoir un code de connexion"
