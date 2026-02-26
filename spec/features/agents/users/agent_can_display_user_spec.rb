@@ -12,7 +12,6 @@ RSpec.describe "Agent can display user" do
 
     it "displays a message to inform of FranceConnect binding, and hides the invitation prompt" do
       expect(page).to have_content("Cet usager s'est déjà connecté via FranceConnect.")
-      # There is no need to invite the user since FranceConnect binding is in place
       expect(page).not_to have_content("Cet usager ne s'est pas encore créé de compte")
     end
   end
