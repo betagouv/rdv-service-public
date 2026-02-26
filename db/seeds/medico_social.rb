@@ -429,6 +429,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
+  last_sign_in_at: 2.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
@@ -449,6 +450,7 @@ agent_org_paris_nord_pmi_elsa = Agent.new(
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
+  last_sign_in_at: 2.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
@@ -538,28 +540,72 @@ agent_org_bapaume_pmi_gina = Agent.new(
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!
 
-# Insert a lot of agents and add them to the paris_nord organisation
-# rubocop:disable Rails/SkipsModelValidations
-agents_attributes = 1_000.times.map do |i|
-  {
-    created_at: now,
-    updated_at: now,
-    email: "email_#{i}@test.com",
-    uid: "email_#{i}@test.com",
-    invitation_created_at: now,
-    invitation_sent_at: now,
-  }
+# 95% des orgas ont moins de 32 agents
+# cf https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io/question/858-pourcentile-95-nombre-dagents-par-orga
+[
+  ["Audran", "Lemaire"],
+  ["Perrine", "Gay"],
+  ["Pie", "Le gall"],
+  ["Agathon", "Laine"],
+  ["Paule", "Roussel"],
+  ["Armeline", "Garcia"],
+  ["Adolphie", "Perrin"],
+  ["Georgette", "Le Gall"],
+  ["Octave", "Arnaud"],
+  ["Séverine", "Marechal"],
+  ["Odilon", "Riviere"],
+  ["Arsinoé", "Girard"],
+  ["Amandin", "Royer"],
+  ["Aurelle", "Guillot"],
+  ["Amarande", "Le Goff"],
+  ["Archange", "Gay"],
+  ["Adeline", "Colin"],
+  ["Régine", "Lemaire"],
+  ["Blandine", "Berger"],
+  ["Améthyste", "Laine"],
+  ["Armand", "Klein"],
+  ["Vital", "Bertrand"],
+  ["Libère", "Lefevre"],
+  ["Waleran", "Lopéz"],
+  ["Didier", "Da Silva"],
+].map do |first_name, last_name|
+  email = ["#{first_name} #{last_name}".parameterize, "@demo.rdv-solidarites.fr"].join
+  Agent.new(
+    first_name:, last_name:,
+    created_at: now, updated_at: now,
+    email:, uid: email,
+    invitation_accepted_at: 10.days.ago,
+    last_sign_in_at: 2.days.ago,
+    password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
+    services: [service_social],
+    roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
+    agent_territorial_access_rights_attributes: [
+      { territory: territory75, allow_to_manage_teams: false, allow_to_manage_access_rights: false, allow_to_invite_agents: false },
+    ]
+  ).tap(&:skip_confirmation!).save!
 end
-results = Agent.insert_all!(agents_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]
-agent_ids = results.flat_map(&:values) # [1, 2, ...]
-agent_role_attributes = agent_ids.map { |id| { agent_id: id, organisation_id: org_paris_nord.id } }
-AgentRole.insert_all!(agent_role_attributes)
-agent_service_attributes = agent_ids.map { |id| { agent_id: id, service_id: service_social.id } }
-AgentService.insert_all!(agent_service_attributes)
 
-agent_territorial_access_rights_attributes = agent_ids.map { |id| { agent_id: id, territory_id: territory75.id, created_at: Time.zone.now, updated_at: Time.zone.now } }
-AgentTerritorialAccessRight.insert_all!(agent_territorial_access_rights_attributes)
-# rubocop:enable Rails/SkipsModelValidations
+# invited agents that have not accepted yet
+# bypass validations since this mirrors AdminCreatesAgent behavior with allow_blank_name
+# the agent is in "invited, not yet accepted" state so name is optional
+%w[
+  adeline-caron@demo.rdv-solidarites.fr
+  denis-fabre@demo.rdv-solidarites.fr
+  fabre-guyot@demo.rdv-solidarites.fr
+].each do |email|
+  agent = Agent.new(
+    email: email, uid: email,
+    invitation_sent_at: now,
+    password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"], # password required to avoid validation errors
+    services: [service_social],
+    roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
+    agent_territorial_access_rights_attributes: [
+      { territory: territory75, allow_to_manage_teams: false, allow_to_manage_access_rights: false, allow_to_invite_agents: false },
+    ]
+  )
+  agent.allow_blank_name = true
+  agent.save!
+end
 
 # SECTOR ATTRIBUTIONS - AGENT LEVEL
 
