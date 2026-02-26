@@ -54,7 +54,7 @@
         .card
           .card-body
             = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
-            = f.input :minutes_between_rdvs, label: "Durée de battement après le rendez-vous", hint: "Vous pouvez faire une pause après chaque rendez-vous"
+            = f.input :minutes_between_rdvs, label: "Intervalle entre chaque rendez-vous (en minutes)", hint: "Les créneaux proposés prendront en compte ce temps de pause"
 
     .row.justify-content-center
       .col-md-6
