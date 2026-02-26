@@ -24,7 +24,7 @@ RSpec.describe "User signs up and signs in" do
       click_on "Valider"
       expect(page).to have_content("Connexion réussie")
       expect(invited_user.reload).to be_confirmed
-      click_link "Déconnexion"
+      click_on "Déconnexion"
       expect(page).to have_current_path(root_path, ignore_query: true)
     end
   end

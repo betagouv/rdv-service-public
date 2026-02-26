@@ -38,7 +38,9 @@ html lang="fr"
           header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, html_attributes: { class: "fr-icon-calendar-fill" }
           header.with_tool_link title: "Vos informations", path: users_informations_path
           header.with_tool_link title: "Votre compte", path: edit_user_registration_path
-          header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, html_attributes: { "data-method": "delete", class: "fr-icon-lock-fill" }
+          header.with_custom_tool_link do
+            button_to("Déconnexion", destroy_user_session_path, method: :delete, class: "fr-btn fr-icon-lock-fill")
+          end
         elsif current_agent
           header.with_tool_link title: "Espace Agent", path: root_path
           header.with_tool_link title: current_agent.full_name, path: edit_agent_registration_path
