@@ -1,3 +1,5 @@
+/# locals: (home_path: root_path)
+
 footer.fr-footer.main-footer.fr-pb-12w#footer[role="contentinfo"]
   .fr-container
     .fr-footer__body
@@ -6,8 +8,12 @@ footer.fr-footer.main-footer.fr-pb-12w#footer[role="contentinfo"]
           | République
           br
           | Française
-        = link_to root_path, title: "aller à l'accueil #{current_domain.name}", class: "fr-footer__brand-link" do
-          = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "fr-footer__logo", width: "150"
+        - if home_path.present?
+          = link_to root_path, title: "aller à l'accueil #{current_domain.name}", class: "fr-footer__brand-link" do
+            = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "fr-footer__logo", width: "150"
+        - else
+          .fr-footer__brand-link
+            = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "fr-footer__logo", width: "150"
       .fr-footer__content
         p.fr-footer__content-desc
           |> #{current_domain.name} est un service porté par la

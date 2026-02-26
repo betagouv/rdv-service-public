@@ -78,6 +78,7 @@ Rails.application.routes.draw do
       put "participations/cancel", to: "participations#cancel"
       member do
         get :creneaux
+        get :ics
         put :cancel
       end
     end

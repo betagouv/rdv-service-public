@@ -20,9 +20,20 @@ html lang="fr"
     = render "layouts/rdv_solidarites_instance_name"
     = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
 
+    ruby:
+      home_path = root_path
+
+      # Sur RDV Service Public, la page d’accueil n’est pas à destination des usagers qui prennent rendez-vous
+      # On veut donc éviter d’avoir un lien qui mène vers la page d’accueil pendant la prise de rendez-vous
+      if current_domain == Domain::RDV_SERVICE_PUBLIC
+        if current_page?("/prendre_rdv") || @rdv_wizard
+          home_path = nil
+        end
+      end
+
     = dsfr_header logo_text: sanitize("République<br>Française"), html_attributes: {id: "header"} do |header|
       ruby:
-        header.with_operator_image title: "", src: asset_path(current_domain.dark_logo_path), alt: "Accueil - #{current_domain.name}"
+        header.with_operator_image title: "", src: asset_path(current_domain.dark_logo_path), alt: "Accueil - #{current_domain.name}", href: home_path
         if current_user.present? && !current_user.signed_in_with_invitation_token?
           header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, html_attributes: { class: "fr-icon-calendar-fill" }
           header.with_tool_link title: "Vos informations", path: users_informations_path
@@ -36,8 +47,8 @@ html lang="fr"
           header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, html_attributes: { class: "fr-icon-admin-line" }
           header.with_tool_link title: "Connexion Usager", path: new_user_session_path, html_attributes: { class: "fr-icon-account-line" }
         else
-          header.with_tool_link title: "Espace Agent", path: new_agent_session_path
-          header.with_tool_link title: "Se connecter", path: new_user_session_path,html_attributes: { class: "fr-fi-account-fill" }
+          header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, html_attributes: { class: "fr-icon-admin-line" }
+          header.with_tool_link title: "Connexion Usager", path: new_user_session_path, html_attributes: { class: "fr-icon-account-line" }
         end
 
         if current_domain == Domain::RDV_SERVICE_PUBLIC  && @site_vitrine_page
@@ -55,4 +66,4 @@ html lang="fr"
 
     #modal-holder
 
-    = render "layouts/footer"
+    = render "layouts/footer", home_path:

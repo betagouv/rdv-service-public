@@ -1,7 +1,6 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns += %w[caldav_disconnect_in_progress]
   include Agent::CaldavConfiguration
   include Agent::FeatureFlags
   include Agent::PreloadRoles
