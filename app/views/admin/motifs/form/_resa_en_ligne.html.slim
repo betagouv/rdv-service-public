@@ -68,7 +68,7 @@
 - if current_territory.motif_categories.present?
   .card
     .card-body
-      = f.dsfr_select :motif_category_id, current_territory.motif_categories.collect { |motif_categorie| [motif_categorie.name, motif_categorie.id] }, { include_blank: "Aucune" }, label: MotifCategory.model_name.human, hint: MotifCategory.human_attribute_name("category_hint")
+      = f.dsfr_select :motif_category_id, current_territory.motif_categories.collect { |motif_categorie| [motif_categorie.name, motif_categorie.id] }, label: MotifCategory.model_name.human, hint: MotifCategory.human_attribute_name("category_hint"), include_blank: "Aucune"
 
 - unless current_domain.online_reservation_with_public_link
   .card.collapse [data-motif-form-target="sectoSection"]
