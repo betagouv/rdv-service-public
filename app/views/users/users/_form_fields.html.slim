@@ -53,9 +53,9 @@ div= f.dsfr_check_box :notify_by_sms
   - if f.object.show_caisse_affiliation_field? || f.object.show_affiliation_number_field?
     .fr-grid-row.fr-grid-row--gutters.fr-mb-3v
       - if f.object.show_caisse_affiliation_field?
-        .fr-col-12.fr-col-md-6= f.dsfr_select :caisse_affiliation, User.human_attribute_values(:caisse_affiliation), { include_blank: true }
+        .fr-col-12.fr-col-md-6= f.dsfr_select :caisse_affiliation, User.human_attribute_values(:caisse_affiliation), include_blank: true
       - if f.object.show_affiliation_number_field?
         .fr-col-12.fr-col-md-6= f.dsfr_text_field :affiliation_number
 
   - if f.object.show_logement_field?
-    = f.dsfr_select :logement, User.human_attribute_values(:logement), { include_blank: true }
+    = f.dsfr_select :logement, User.human_attribute_values(:logement), include_blank: true
