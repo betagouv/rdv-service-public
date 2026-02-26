@@ -9,10 +9,6 @@ class Agent::UserPolicy < DefaultAgentPolicy
     @record.organisations.all? { |user_org| user_org.in?(current_agent.organisations) }
   end
 
-  def invite?
-    same_org? && not_deleted?
-  end
-
   def rdv_invitation_token?
     same_org? && not_deleted?
   end
