@@ -34,6 +34,10 @@
       .card-body
         = render "form", absence: @absence, agent: @agent
 
+        - if policy(@absence, policy_class: Agent::AbsencePolicy).destroy?
+          .mt-2
+            = button_to "Supprimer", admin_organisation_planning_absence_path(current_organisation, @absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t("admin.planning.absences.form.confirm_delete_absence") }
+
 .row.justify-content-center
   .col-md-12.col-lg-8
     = render "admin/versions/resource_versions_row", resource_policy: policy(@absence, policy_class: Agent::AbsencePolicy), resource: @absence

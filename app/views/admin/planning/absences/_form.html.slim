@@ -8,8 +8,5 @@
   = render partial: "common/recurrence", locals: { f: f, model: absence }
 
   .row
-    - if absence.persisted?
-      .col.text-left
-        = button_to "Supprimer", admin_organisation_planning_absence_path(current_organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_absence")}
     .col.text-right
       = f.submit class: "fr-btn"
