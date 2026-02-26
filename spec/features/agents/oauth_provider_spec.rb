@@ -6,6 +6,7 @@ RSpec.describe "OAuth provider", js: true do
   around do |example|
     pid = Process.fork do
       OmniAuth.config.test_mode = false
+      OmniAuth.config.request_validation_phase = nil # Sinatra ne dispose pas d'un token CSRF Rails
 
       `touch log/test_sinatra.log`
       $stdout.reopen("log/test_sinatra.log", "r+") # Pour ne pas logger sur stdout
