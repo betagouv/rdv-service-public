@@ -26,7 +26,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def create
-    lieu = new_rdv_extra_params[:lieu_id].present? ? Lieu.find(new_rdv_extra_params[:lieu_id]) : nil
+    lieu = Lieu.find(new_rdv_extra_params[:lieu_id]) if new_rdv_extra_params[:lieu_id].present?
     motif = Motif.find(rdv_params[:motif_id])
     @creneau = CreneauxSearch::ForUser.creneau_for(
       user: current_user,
