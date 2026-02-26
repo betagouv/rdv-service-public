@@ -1,5 +1,6 @@
 spec
 docs
 /tmp/cache
+/node_modules
 /scripts/devtools
 /.cache/yarn
