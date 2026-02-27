@@ -34,6 +34,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
     form = Users::RegistrationForm.new(hash)
     self.resource = form
   end
-
-
 end
