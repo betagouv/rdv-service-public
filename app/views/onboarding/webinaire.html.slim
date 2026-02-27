@@ -1,0 +1,19 @@
+.rdv-background-color-alt-blue-ecume.fr-py-6v
+  .fr-container
+    = link_to root_path, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line" do
+      | Retour à l’accueil
+
+    .fr-grid-row.justify-content-md-center
+      .card.fr-mt-6v.fr-mb-12v.fr-p-12v.fr-col-lg-6
+        = dsfr_svg "artwork/pictograms/system/success"
+        h1.fr-h2 Bonne nouvelle !
+        p
+          |> Compte tenu de vos besoins, vous pouvez commencer à utiliser l’outil dès maintenant en
+          = link_to "ouvrant votre espace", new_agents_territory_path, class: "fr-link"
+          | .
+
+        p Si toutefois vous souhaitez en savoir plus sur notre outil avant de vous lancer, vous pouvez vous inscrire à un de nos prochains webinaires.
+
+        = link_to "S’inscrire au webinaire", "https://rdv.anct.gouv.fr/motif/J87KGT9b/webinaire-rdv-service-public", class: "fr-btn"
+
+        = link_to "Précédent", request.referer || root_path, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line fr-mt-6v"
