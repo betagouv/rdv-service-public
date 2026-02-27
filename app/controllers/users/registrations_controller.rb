@@ -5,7 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   layout "application"
-  layout "application_narrow", only: %i[new create update edit pending]
+  layout "application_narrow", only: %i[new create update edit]
 
   def destroy
     authorize(resource, policy_class: User::UserPolicy)
@@ -18,10 +18,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     logout_and_redirect_user(flash_message_key: :destroyed)
-  end
-
-  def pending
-    @email_tld = params[:email_tld]
   end
 
   private
@@ -39,7 +35,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
     self.resource = form
   end
 
-  def after_inactive_sign_up_path_for(resource)
-    users_pending_registration_path(email_tld: resource.email_tld)
-  end
+
 end
