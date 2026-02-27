@@ -14,8 +14,7 @@ class User < ApplicationRecord
     ]
   )
 
-  devise :database_authenticatable, :registerable, :timeoutable,
-         :recoverable, :validatable, :confirmable, :async
+  devise :database_authenticatable, :registerable, :timeoutable, :async
 
   def timeout_in = 30.minutes # Used by Devise's :timeoutable
 
@@ -27,7 +26,6 @@ class User < ApplicationRecord
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
-  include StrongPasswordConcern
   include User::SoftDeleteConcern
 
   def self.search_options
@@ -79,6 +77,8 @@ class User < ApplicationRecord
   validates :ants_pre_demande_number, ants_pre_demande_number_format: true
 
   EMAIL_REGEXP = Devise.email_regexp
+  validates :email, format: { with: EMAIL_REGEXP }, allow_blank: true
+  validates :email, uniqueness: { case_sensitive: false }, allow_blank: true
   validates :notification_email, format: { with: EMAIL_REGEXP }, allow_blank: true
 
   validate :birth_date_validity
@@ -120,14 +120,7 @@ class User < ApplicationRecord
   end
 
   def delete_credentials_and_access_informations
-    update!(
-      encrypted_password: "",
-      confirmed_at: nil,
-      logged_once_with_franceconnect: false,
-      franceconnect_openid_sub: nil,
-      reset_password_token: nil,
-      reset_password_sent_at: nil
-    )
+    update!(confirmed_at: nil, logged_once_with_franceconnect: false, franceconnect_openid_sub: nil)
   end
 
   def available_users_for_rdv
@@ -270,26 +263,6 @@ class User < ApplicationRecord
       rdv_invitation_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
       break rdv_invitation_token unless User.find_by(rdv_invitation_token: rdv_invitation_token)
     end
-  end
-
-  def password_required?
-    false # users without passwords and emails can be created by agents
-  end
-
-  def email_required?
-    false # users without passwords and emails can be created by agents
-  end
-
-  def confirmation_required?
-    return false if signed_in_with_invitation_token?
-
-    super
-  end
-
-  def reconfirmation_required?
-    return false if signed_in_with_invitation_token?
-
-    super
   end
 
   def set_email_to_null_if_blank

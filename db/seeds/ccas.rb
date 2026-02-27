@@ -47,7 +47,7 @@ user = User.new(
   created_through: "user_sign_up"
 )
 
-user.skip_confirmation!
+user.confirmed_at = Time.zone.now
 user.save!
 
 # Un agent pour tester l'absence d'orga et de services

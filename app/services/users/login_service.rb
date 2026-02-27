@@ -16,7 +16,7 @@ class Users::LoginService
   def perform
     if matching_login_code&.usable?
       @user = upsert_user
-      user.confirm
+      user.update!(confirmed_at: Time.zone.now) if user.confirmed_at.nil?
       sign_in_user_lambda.call(user)
       matching_login_code.update!(used_at: Time.zone.now)
       true
@@ -74,7 +74,6 @@ class Users::LoginService
 
   def create_user
     user = User.new(email:, first_name:, last_name:, created_through: "auto_through_login")
-    user.skip_confirmation_notification!
     user.save!
     user
   end

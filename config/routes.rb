@@ -64,7 +64,7 @@ Rails.application.routes.draw do
 
   ## APP ##
   devise_for :users,
-             controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations" }
+             controllers: { registrations: "users/registrations", sessions: "users/sessions" }
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]

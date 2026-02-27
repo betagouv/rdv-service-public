@@ -24,8 +24,6 @@ module Users::DeviseOrSsoLogout
       session[:france_connect_v2_logout_state] = fc_client.state
       redirect_to fc_client.pro_connect_logout_url(franceconnect_v2_post_logout_url), allow_other_host: true
 
-    elsif params[:redirect_to_reset_password]
-      redirect_to new_user_password_path(email: current_user_before.email)
     else
       redirect_to after_sign_out_path_for(:user)
     end

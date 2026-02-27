@@ -294,7 +294,7 @@ user_org_paris_nord_patricia = User.new(
   created_through: "user_sign_up"
 )
 
-user_org_paris_nord_patricia.skip_confirmation!
+user_org_paris_nord_patricia.confirmed_at = Time.zone.now
 user_org_paris_nord_patricia.save!
 user_org_paris_nord_patricia.update!(logement: 2)
 
@@ -319,7 +319,7 @@ user_org_paris_nord_lea = User.new(
   created_through: "user_sign_up"
 )
 
-user_org_paris_nord_lea.skip_confirmation!
+user_org_paris_nord_lea.confirmed_at = Time.zone.now
 user_org_paris_nord_lea.save!
 user_org_paris_nord_lea.update!(logement: 2)
 
@@ -334,7 +334,7 @@ user_org_paris_nord_jean = User.new(
   created_through: "user_sign_up"
 )
 
-user_org_paris_nord_jean.skip_confirmation!
+user_org_paris_nord_jean.confirmed_at = Time.zone.now
 user_org_paris_nord_jean.save!
 user_org_paris_nord_jean.update!(logement: 2)
 
@@ -349,7 +349,7 @@ user_org_paris_sud = User.new(
   created_through: "user_sign_up"
 )
 
-user_org_paris_sud.skip_confirmation!
+user_org_paris_sud.confirmed_at = Time.zone.now
 user_org_paris_sud.save!
 user_org_paris_sud.update!(logement: 2)
 
@@ -362,7 +362,7 @@ user_org_arques = User.new(
   created_through: "user_sign_up"
 )
 
-user_org_arques.skip_confirmation!
+user_org_arques.confirmed_at = Time.zone.now
 user_org_arques.save!
 
 user_org_bapaume = User.new(
@@ -374,7 +374,7 @@ user_org_bapaume = User.new(
   created_through: "user_sign_up"
 )
 
-user_org_bapaume.skip_confirmation!
+user_org_bapaume.confirmed_at = Time.zone.now
 user_org_bapaume.save!
 
 # Insert a lot of users and add them to the paris_nord organisation

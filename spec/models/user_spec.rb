@@ -145,17 +145,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  # cf https://github.com/heartcombo/devise/wiki/How-To:-Email-only-sign-up
-  describe "#set_reset_password_token" do
-    it "returns the plaintext token" do
-      user = build(:user)
-      potential_token = user.send(:set_reset_password_token)
-      potential_token_digest = Devise.token_generator.digest(user, :reset_password_token, potential_token)
-      actual_token_digest = user.reset_password_token
-      expect(potential_token_digest).to eql(actual_token_digest)
-    end
-  end
-
   describe "#minor?" do
     it "return true when user birth in 2016 and we are un 2020" do
       now = Time.zone.parse("2020-4-3 13:45")

@@ -18,7 +18,7 @@ class Notifiers::RdvCreated < Notifiers::RdvBase
   end
 
   def self.should_send_sms_to_user?(user:, rdv:, author:)
-    author != user || !user.confirmed? || rdv.starts_at < 2.days.from_now
+    author != user || user.confirmed_at.nil? || rdv.starts_at < 2.days.from_now
   end
 
   protected

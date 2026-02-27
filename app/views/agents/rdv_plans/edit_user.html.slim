@@ -23,7 +23,7 @@
       = f.fields_for :user, @rdv_plan.user do |ff|
         .row
           .col-6
-            = ff.input :notification_email, input_html: { value: @rdv_plan.user.email.presence || @rdv_plan.user.notification_email}, disabled: @rdv_plan.user.encrypted_password.present?, hint: "Cet usager utilise cette adresse email pour ce connecter. Elle n'est donc pas modifiable."
+            = ff.input :notification_email, input_html: { value: @rdv_plan.user.email.presence || @rdv_plan.user.notification_email}, disabled: @rdv_plan.user.confirmed_at?, hint: "Cet usager utilise cette adresse email pour se connecter. Elle n'est donc pas modifiable."
           .col-6
             = ff.input :phone_number
       - if @rdv_plan.motif.visible_and_notified?

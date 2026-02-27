@@ -55,7 +55,6 @@ class Admin::UsersController < AgentAuthController
   def create
     prepare_create
     authorize(@user, policy_class: Agent::UserPolicy)
-    @user.skip_confirmation_notification!
     user_persisted = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
 
     prepare_new unless user_persisted
@@ -83,7 +82,6 @@ class Admin::UsersController < AgentAuthController
   def update
     @user.assign_attributes(user_params)
     @user_form = user_form_object
-    @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user_form.save(annotation_content: params.dig(:user, :annotation_content), current_territory:)
     if from_modal?
       respond_modal_with @user_form, location: modal_return_location
