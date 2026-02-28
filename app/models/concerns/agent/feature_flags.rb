@@ -6,6 +6,8 @@ module Agent::FeatureFlags
   AVAILABLE_FEATURES = [NEW_PLANNING].freeze
 
   def feature_enabled?(feature)
+    return true if feature == NEW_PLANNING
+
     feature_flags[feature] == true
   end
 
