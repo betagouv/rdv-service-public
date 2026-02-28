@@ -38,7 +38,6 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
   end
 
   it "fonctionne quand j'ai plusieurs agents sélectionnés dans l'agenda", js: true do
-    current_agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
     login_as(current_agent, scope: :agent)
 
     visit admin_organisation_planning_agenda_path(organisation)

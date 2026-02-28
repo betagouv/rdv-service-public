@@ -3,12 +3,6 @@
 
 = render "admin/onboarding/banner", in_agenda: true
 
-- content_for(:right_of_page_title) do
-  - unless @beta_planning_layout
-    .mr-1
-      - url = admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "true")
-      = link_to "Activer la nouvelle vue planning", url, method: :put, class: "fr-link fr-link--sm"
-
 - content_for :title do
   - if current_agent == @agent
     | Votre agenda

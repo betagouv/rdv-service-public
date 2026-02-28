@@ -78,7 +78,6 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "quand l'agent courant a activé le nouveau planning", js: true do
-      me.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
       login_as(me, scope: :agent)
       visit admin_organisation_planning_agenda_path(organisation, agent_id: colleague.id)
 
@@ -163,8 +162,6 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "fonctionne quand on change de page et qu'on revient", js: true do
-      agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
-
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       expect(page).to have_content("Planning de")
 
