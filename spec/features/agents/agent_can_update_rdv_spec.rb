@@ -7,7 +7,7 @@ RSpec.describe "Agent can update a RDV", js: true do
   let!(:agent_shiraz) { create(:agent, first_name: "Shiraz", last_name: "NADIR", email: "shiraz@angouleme.fr", basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let(:starts_at) { 1.hour.from_now }
+  let(:starts_at) { 5.minutes.from_now }
   let(:ends_at) { starts_at + 1.hour }
 
   before do
