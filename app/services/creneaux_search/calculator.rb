@@ -42,10 +42,9 @@ module CreneauxSearch::Calculator
       ranges = ranges_for(plage_ouverture, datetime_range)
       return [] if ranges.empty?
 
-      ranges.map do |range|
-        [range, BusyTimePreloader.start_loading_busy_times_for(range, plage_ouverture.agent, work_on_off_days:)]
-      end.flat_map do |range, busy_times_preloader|
-        busy_times = busy_times_preloader.busy_times
+      global_range = ranges.map(&:begin).min..ranges.map(&:end).max
+      busy_times = BusyTimePreloader.start_loading_busy_times_for(global_range, plage_ouverture.agent, work_on_off_days:).busy_times
+      ranges.flat_map do |range|
         split_range_recursively(range, busy_times)
       end
     end
