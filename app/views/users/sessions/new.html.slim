@@ -6,7 +6,7 @@
     organisation = @rdv_wizard&.rdv&.motif&.organisation
     for_particuliers = organisation&.online_booking_for_particuliers
     for_professionnels = organisation&.online_booking_for_professionnels
-    only_sso = organisation&.online_booking_only_sso?
+    only_sso = organisation&.online_booking_only_proconnect?
 
   .card-body
     - if @rdv_wizard.nil? || for_particuliers

@@ -2,4 +2,6 @@ spec
 docs
 /tmp/cache
 /scripts/devtools
-/.cache/yarn
+/node_modules
+/.yarn/berry/cache
+/app/assets/builds
