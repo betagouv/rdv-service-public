@@ -42,8 +42,12 @@ module CreneauxSearch::Calculator
       ranges = ranges_for(plage_ouverture, datetime_range)
       return [] if ranges.empty?
 
+      # On récupère les busy times sur l'ensemble des ranges de la plage d'ouverture.
+      # Auparavant, nous calculions les busy times pour chacun des occurrences, ce qui avait pour effet
+      # de générer 5 fois plus de requêtes pour une plage ayant lieu 5 fois par semaine par exemple.
       global_range = ranges.map(&:begin).min..ranges.map(&:end).max
       busy_times = BusyTimePreloader.start_loading_busy_times_for(global_range, plage_ouverture.agent, work_on_off_days:).busy_times
+
       ranges.flat_map do |range|
         split_range_recursively(range, busy_times)
       end
@@ -142,7 +146,7 @@ module CreneauxSearch::Calculator
       @range = range
       @agent = agent
       @work_on_off_days = work_on_off_days
-      start_loading!
+      load_absences_and_rdvs!
     end
 
     # On charge les absences en asynchrone et les rdvs en synchrone
@@ -168,11 +172,7 @@ module CreneauxSearch::Calculator
 
     private
 
-    def start_loading!
-      # c'est là que l'on execute le SQL
-      # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
-      #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
-
+    def load_absences_and_rdvs!
       @absences = @agent.absences.not_expired.in_range(@range).load
 
       @rdvs_starts_and_ends_at = optimized_rdv_request.pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
