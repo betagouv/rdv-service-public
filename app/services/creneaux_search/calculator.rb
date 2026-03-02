@@ -173,7 +173,7 @@ module CreneauxSearch::Calculator
     private
 
     def load_absences_and_rdvs!
-      @absences = @agent.absences.not_expired.in_range(@range).load
+      @absences = @agent.absences.not_expired.in_range(@range).load_async
 
       @rdvs_starts_and_ends_at = optimized_rdv_request.pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
     end
