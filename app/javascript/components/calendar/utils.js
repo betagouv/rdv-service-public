@@ -1,5 +1,6 @@
 import frLocale from '@fullcalendar/core/locales/fr';
 import { getConsumer, destroyConsumer } from "../../cable/consumer";
+import { JsonRequestError } from "@fullcalendar/core";
 
 export const betaPlanningEnabled = () => {
   return !!document.querySelector('main[data-beta-planning-layout="true"]');
@@ -267,19 +268,26 @@ const handleAjaxError = (error) => {
   }
   window.ajaxErrorHandledAt = Date.now()
 
-  const status = error.response ? error.response.status : 0;
-  switch (status) {
-    case 401:
-      window.location = this.calendarEl.attributes["data-sign-in-path"].value;
-      break;
-    case 500:
+  if(error instanceof JsonRequestError) {
+    const status = error.response.status;
+    if(status === 401) {
+      // L'agent est vraisemblablement déconnecté, un rechargement de la page déclenchera un redirect vers le login.
+      window.location.reload();
+    }
+    else if(status === 500) {
       alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
-      break;
-    case 0:
-      alert(`Le chargement du calendrier a échoué, probablement car votre connexion internet a été coupée.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
-      break;
-    default:
+    }
+    else {
       alert(`Le chargement du calendrier a échoué avec une erreur ${status}\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`)
+    }
+  }
+  else {
+    // Quand l'utilisateur clique sur un lien vers une autre page pendant que les données FullCalendar
+    // chargent, nous tombons dans ce cas (la requête est annulée et donc nous n'avons pas de réponse).
+    // Nous ne voulons alors pas afficher de message d'alerte. Le setTimeout de 5 secondes sert donc à celà.
+    setTimeout(() => {
+      alert(`Le chargement du calendrier a échoué, probablement car votre connexion internet a été coupée.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
+    }, 5000);
   }
 };
 
