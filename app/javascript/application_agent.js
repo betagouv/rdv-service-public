@@ -46,13 +46,18 @@ import CheckboxSelectAll from '@stimulus-components/checkbox-select-all'
 import MotifFormController from './controllers/motif_form_controller'
 import DestroyableController from './controllers/destroyable_controller'
 import DependentInputController from './controllers/dependent_input_controller'
-import './controllers'
+import FormController from "./controllers/form_controller"
+import PrintController from "./controllers/print_controller"
+import LagaufreController from "./controllers/lagaufre"
 
 window.Stimulus = Application.start()
 Stimulus.register('checkbox-select-all', CheckboxSelectAll)
 Stimulus.register('motif-form', MotifFormController)
 Stimulus.register('destroyable', DestroyableController)
 Stimulus.register('dependent-input', DependentInputController)
+Stimulus.register('form', FormController)
+Stimulus.register('print', PrintController)
+Stimulus.register('lagaufre', LagaufreController)
 
 import './stylesheets/print'
 import './stylesheets/application_agent'
