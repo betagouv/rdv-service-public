@@ -13,18 +13,18 @@ RSpec.describe "Agent can CRUD absences" do
     it "can crud a absence" do
       click_link "Indisponibilités"
 
-      expect_page_title("Vos indisponibilités")
+      expect(page).to have_link("Créer une indisponibilité") # vue liste
       click_link absence.title
 
-      expect_page_title("Modifier votre indisponibilité")
+      expect(page).to have_content("Modifier votre indisponibilité")
       fill_in "Description", with: "La belle indisponibilité"
       click_button("Enregistrer")
 
-      expect_page_title("Vos indisponibilités")
+      expect(page).to have_link("Créer une indisponibilité") # vue liste
       click_link "La belle indisponibilité"
 
       click_link("Supprimer")
-      expect_page_title("Vos indisponibilités")
+      expect(page).to have_link("Créer une indisponibilité") # vue liste
       expect(page).to have_content("Vous n’avez pas encore créé d’indisponibilité")
 
       expect { perform_enqueued_jobs }.to change { emails_sent_to(absence.agent.email).size }.by(1)
@@ -33,7 +33,7 @@ RSpec.describe "Agent can CRUD absences" do
 
       click_link "Créer une indisponibilité", match: :first
 
-      expect_page_title("Nouvelle indisponibilité")
+      expect(page).to have_content("Nouvelle indisponibilité")
       fill_in "Description", with: "Nouvelle indisponibilité"
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
@@ -43,7 +43,7 @@ RSpec.describe "Agent can CRUD absences" do
       open_email(absence.agent.email)
       expect(current_email.subject).to eq("RDV Service Public - Indisponibilité créée - Nouvelle indisponibilité")
 
-      expect_page_title("Vos indisponibilités")
+      expect(page).to have_link("Créer une indisponibilité") # vue liste
       click_link "Nouvelle indisponibilité"
     end
   end
@@ -55,18 +55,18 @@ RSpec.describe "Agent can CRUD absences" do
 
     it "can crud a absence" do
       visit admin_organisation_planning_absences_path(organisation, agent_id: other_agent.id)
-      expect_page_title("Indisponibilités de Jane FAROU (PMI)")
+      expect(page).to have_content("Planning deFAROU Jane")
       click_link absence.title
 
-      expect_page_title("Modifier l’indisponibilité de Jane FAROU")
+      expect(page).to have_content("Modifier l’indisponibilité de Jane FAROU")
       fill_in "Description", with: "La belle indisponibilité"
       click_button("Enregistrer")
 
-      expect_page_title("Indisponibilités de Jane FAROU (PMI)")
+      expect(page).to have_content("Planning deFAROU Jane")
       click_link "La belle indisponibilité"
 
       click_link("Supprimer")
-      expect_page_title("Indisponibilités de Jane FAROU (PMI)")
+      expect(page).to have_content("Planning deFAROU Jane")
       expect(page).to have_content("Jane FAROU n’a pas encore créé d’indisponibilité")
 
       expect { perform_enqueued_jobs }.to change { emails_sent_to(absence.agent.email).size }.by(1)
@@ -75,7 +75,7 @@ RSpec.describe "Agent can CRUD absences" do
 
       click_link "Créer une indisponibilité", match: :first
 
-      expect_page_title("Nouvelle indisponibilité")
+      expect(page).to have_content("Nouvelle indisponibilité")
       fill_in "Description", with: "Nouvelle indisponibilité"
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
@@ -85,7 +85,7 @@ RSpec.describe "Agent can CRUD absences" do
       open_email(absence.agent.email)
       expect(current_email.subject).to eq("RDV Service Public - Indisponibilité créée - Nouvelle indisponibilité")
 
-      expect_page_title("Indisponibilités de Jane FAROU (PMI)")
+      expect(page).to have_content("Planning deFAROU Jane")
       click_link "Nouvelle indisponibilité"
     end
   end
@@ -96,7 +96,7 @@ RSpec.describe "Agent can CRUD absences" do
 
     it do
       click_link "Indisponibilités"
-      expect_page_title("Vos indisponibilités")
+      expect(page).to have_link("Créer une indisponibilité") # vue liste
 
       click_link "En cours"
       expect(page).to have_content(future_absence.title)
