@@ -8,19 +8,18 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
   before do
     login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
-    click_link "Plages d'ouverture"
+    visit admin_organisation_planning_plage_ouvertures_path(organisation_id: organisation.id)
   end
 
   shared_examples "can crud own plage ouvertures" do
     it "works", js: true do
-      expect_page_title("Plages d’ouverture")
+      expect(page).to have_content("Planning de\n#{agent.reverse_full_name}") # vue liste
       click_link "Permanence"
 
-      expect_page_title("Permanence")
+      expect(page).to have_content("Libellé :\nPermanence")
       click_link "Modifier"
 
-      expect_page_title("Modifier votre plage d'ouverture")
+      expect(page).to have_content("Modifier votre plage d'ouverture")
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
@@ -28,7 +27,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       open_email(agent.email)
       expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture modifiée - La belle plage")
 
-      expect_page_title("Plages d’ouverture")
+      expect(page).to have_content("Planning de\n#{agent.reverse_full_name}") # vue liste
       click_on("La belle plage")
       accept_alert { click_link("Supprimer") }
 
@@ -36,23 +35,23 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       open_email(agent.email)
       expect(current_email.subject).to eq("RDV Service Public - Plage d’ouverture supprimée - La belle plage")
 
-      expect_page_title("Plages d’ouverture")
+      expect(page).to have_content("Planning de\n#{agent.reverse_full_name}") # vue liste
       expect(page).to have_content("Vous n'avez pas encore créé de plage d'ouverture")
 
       # Navigate back and forth between the list and the detail
       click_link "Créer une plage d'ouverture", match: :first
-      expect_page_title("Nouvelle plage d'ouverture")
+      expect(page).to have_content("Nouvelle plage d'ouverture")
       click_link("Annuler")
-      expect_page_title("Plages d’ouverture")
+      expect(page).to have_content("Planning de\n#{agent.reverse_full_name}") # vue liste
       click_link "Créer une plage d'ouverture", match: :first
-      expect_page_title("Nouvelle plage d'ouverture")
+      expect(page).to have_content("Nouvelle plage d'ouverture")
 
       fill_in "Libellé (facultatif)", with: "Accueil"
       check "Suivi bonjour"
       expect(page).to have_select("plage_ouverture_lieu_id", selected: lieu.full_name) if lieu
       click_button "Créer la plage d'ouverture"
       expect(PlageOuverture.last.title).to eq("Accueil")
-      expect_page_title("Plages d’ouverture")
+      expect(page).to have_content("Planning de\n#{agent.reverse_full_name}") # vue liste
 
       expect { perform_enqueued_jobs }.to change { emails_sent_to(agent.email).size }.by(1)
       open_email(agent.email)
@@ -110,7 +109,6 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
 
     it "cannot create plage_ouverture" do
-      expect_page_title("Plages d’ouverture")
       click_link "Créer une plage d'ouverture", match: :first
       expect(page).to have_content("Aucun motif de rendez-vous ne vous est accessible. Vous devez demander à un administrateur de votre organisation d'en ajouter un")
     end
@@ -139,32 +137,32 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
     it "can crud a plage_ouverture", js: true do
       visit admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: other_agent.id)
 
-      expect_page_title("Plages d’ouverture de Jane FAROU (PMI)") # vue liste
+      expect(page).to have_content("Planning de\nFAROU Jane") # vue liste
       expect(page).to have_content "Permanence"
       click_link "Vue calendrier"
       expect(page).to have_content "Semaine" # necessary to make sure the calendar page has loaded
       expect(page).to have_content "Permanence"
       first("a.fc-event:not(.fc-event-today)", text: "Permanence").click
-      expect_page_title("Permanence")
+      expect(page).to have_content("Libellé :\nPermanence")
       click_link "Modifier"
 
-      expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
+      expect(page).to have_content("Modifier la plage d'ouverture de Jane FAROU")
       fill_in "Libellé (facultatif)", with: "La belle plage"
       click_button("Enregistrer")
 
-      expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
+      expect(page).to have_content("Planning de\nFAROU Jane") # vue liste
       click_on("La belle plage")
       expect(page).to have_content("La belle plage")
       accept_confirm do
         click_link("Supprimer")
       end
 
-      expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
+      expect(page).to have_content("Planning de\nFAROU Jane") # vue liste
       expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
 
       click_link "Renseigner les disponibilités de Jane FAROU", match: :first
 
-      expect_page_title("Nouvelle plage d'ouverture")
+      expect(page).to have_content("Nouvelle plage d'ouverture")
       fill_in "Libellé (facultatif)", with: "Accueil"
       check "Suivi bonjour"
       expect(page).to have_select("plage_ouverture_lieu_id", selected: lieu.full_name)
@@ -172,7 +170,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(page).to have_content("Plage d'ouverture créée")
 
       expect(PlageOuverture.last.title).to eq("Accueil")
-      expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
+      expect(page).to have_content("Planning de\nFAROU Jane") # vue liste
     end
 
     context "when the motif doesn't require a lieu" do
@@ -182,31 +180,31 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       it "still can crud a plage_ouverture" do
         visit admin_organisation_planning_plage_ouvertures_path(organisation, agent_id: other_agent.id)
 
-        expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
+        expect(page).to have_content("Planning deFAROU Jane")
         click_link "Permanence"
 
-        expect_page_title("Permanence")
+        expect(page).to have_content("Libellé :\nPermanence")
         click_link "Modifier"
 
-        expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
+        expect(page).to have_content("Modifier la plage d'ouverture de Jane FAROU")
         fill_in "Libellé (facultatif)", with: "La belle plage"
         click_button("Enregistrer")
 
-        expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
+        expect(page).to have_content("Planning deFAROU Jane")
         click_on("La belle plage")
         click_link("Supprimer")
 
-        expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
+        expect(page).to have_content("Planning deFAROU Jane")
         expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
 
         click_link "Renseigner les disponibilités de Jane FAROU", match: :first
 
-        expect_page_title("Nouvelle plage d'ouverture")
+        expect(page).to have_content("Nouvelle plage d'ouverture")
         fill_in "Libellé (facultatif)", with: "Accueil"
         check "Suivi bonjour"
         click_button "Créer la plage d'ouverture"
         expect(PlageOuverture.last.title).to eq("Accueil")
-        expect_page_title("Plages d’ouverture de Jane FAROU (PMI)")
+        expect(page).to have_content("Planning deFAROU Jane")
       end
     end
   end
