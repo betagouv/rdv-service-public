@@ -43,8 +43,8 @@ module CreneauxSearch::Calculator
       return [] if ranges.empty?
 
       # On récupère les busy times sur l'ensemble des ranges de la plage d'ouverture.
-      # Auparavant, nous calculions les busy times pour chacun des occurrences, ce qui avait pour effet
-      # de générer 5 fois plus de requêtes pour une plage ayant lieu 5 fois par semaine par exemple.
+      # Le but est d'éviter de lancer des requêtes en base pour chacun des occurrences,
+      # même si cela a pour effet de parfois charger des busy_times qui sont en dehors des ranges.
       global_range = ranges.map(&:begin).min..ranges.map(&:end).max
       busy_times = BusyTimePreloader.start_loading_busy_times_for(global_range, plage_ouverture.agent, work_on_off_days:).busy_times
 
