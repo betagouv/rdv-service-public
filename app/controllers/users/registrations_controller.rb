@@ -29,5 +29,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def non_rdv_insertion_organisations
     @non_rdv_insertion_organisations = resource.organisations.reject { |org| org.verticale == "rdv_insertion" }
   end
-
 end
