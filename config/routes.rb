@@ -62,14 +62,9 @@ Rails.application.routes.draw do
   end
   get "super_admin", to: redirect("super_admins", status: 301)
 
-  devise_scope :user do
-    get "users/pending_registration" => "users/registrations#pending"
-    get "invitation", to: "users/invitations#invitation", as: "invitations_landing"
-  end
-
   ## APP ##
   devise_for :users,
-             controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations", invitations: "users/invitations" }
+             controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations" }
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
@@ -318,7 +313,6 @@ Rails.application.routes.draw do
         end
         resources :users do
           member do
-            post :invite
             get :link_to_organisation
           end
           collection do

@@ -156,19 +156,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "#invitation_period_valid?" do
-    subject { user.send(:invitation_period_valid?) }
-
-    let(:invitation_created_at) { Time.zone.parse("2022-04-05 13:00") }
-    let(:user) { create(:user, invitation_created_at: invitation_created_at) }
-
-    before { travel_to(Time.zone.parse("2022-04-05 13:45")) }
-
-    it "is valid" do
-      expect(subject).to be(true)
-    end
-  end
-
   describe "#minor?" do
     it "return true when user birth in 2016 and we are un 2020" do
       now = Time.zone.parse("2020-4-3 13:45")

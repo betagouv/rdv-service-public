@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_paper_trail(
     only: %w[
       email notification_email first_name last_name birth_name
-      created_at confirmed_at invitation_accepted_at deleted_at
+      created_at confirmed_at deleted_at
       invited_through created_through
       address phone_number birth_date
       responsible_id
@@ -14,7 +14,7 @@ class User < ApplicationRecord
     ]
   )
 
-  devise :invitable, :database_authenticatable, :registerable, :timeoutable,
+  devise :database_authenticatable, :registerable, :timeoutable,
          :recoverable, :validatable, :confirmable, :async
 
   def timeout_in = 30.minutes # Used by Devise's :timeoutable
@@ -24,7 +24,6 @@ class User < ApplicationRecord
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
-  include User::DeviseInvitableWithDomain
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
@@ -143,14 +142,6 @@ class User < ApplicationRecord
     [self, relatives, responsible].compact.flatten
   end
 
-  def invitable?
-    invitation_accepted_at.nil? &&
-      encrypted_password.blank? &&
-      email.present? && !relative? &&
-      invited_through != "external" &&
-      !logged_once_with_franceconnect?
-  end
-
   def active_for_authentication?
     super && !deleted_at
   end
@@ -232,8 +223,6 @@ class User < ApplicationRecord
   def domain
     if rdvs.any?
       rdvs.order(created_at: :desc).first.domain
-    elsif sign_up_domain
-      sign_up_domain
     else
       Domain.default_domain_for_current_instance
     end

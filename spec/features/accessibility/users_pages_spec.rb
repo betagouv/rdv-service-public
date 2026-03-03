@@ -20,10 +20,6 @@ RSpec.describe "users pages", js: true do
     expect_page_to_be_axe_clean(users_informations_path)
   end
 
-  it "users_pending_registration_path is accessible" do
-    expect_page_to_be_axe_clean(users_pending_registration_path)
-  end
-
   it "edit_relative_path is accessible" do
     user = create(:user)
     login_as(user, scope: :user)

@@ -12,18 +12,18 @@ RSpec.describe "User signs up and signs in" do
     end
   end
 
-  context "for invited user" do
-    let(:invited_user) { create(:user, :unconfirmed) }
+  context "for unconfirmed user" do
+    let(:unconfirmed_user) { create(:user, :unconfirmed) }
 
     it "can login via 6-digit code and gets confirmed" do
       visit "http://www.rdv-solidarites-test.localhost/"
       click_link "Connexion Usager"
-      fill_in "Adresse email", with: invited_user.email
+      fill_in "Adresse email", with: unconfirmed_user.email
       click_on "Recevoir un code de connexion"
-      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: invited_user.email).code
+      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: unconfirmed_user.email).code
       click_on "Valider"
       expect(page).to have_content("Connexion réussie")
-      expect(invited_user.reload).to be_confirmed
+      expect(unconfirmed_user.reload).to be_confirmed
       click_link "Déconnexion"
       expect(page).to have_current_path(root_path, ignore_query: true)
     end
