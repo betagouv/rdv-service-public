@@ -37,6 +37,8 @@ nav.left-side-menu-wrapper
           = active_link_to(admin_organisation_planning_agenda_path(current_organisation, **query_params), active: menu_top_level_item == "planning", class: "side-menu__item")
             span.fr-icon-calendar-event-fill.fr-icon--sm.fr-mr-1w[aria-hidden="true"]
             | Planning
+            - unless current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
+              .fr-ml-1w.rdv-pastille
 
         li.fr-pb-0
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")

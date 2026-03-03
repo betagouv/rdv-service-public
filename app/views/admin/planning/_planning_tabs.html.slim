@@ -6,6 +6,10 @@ nav#planning_tabs.fr-nav[role="navigation" aria-label="Menu du planning"]
     li.fr-nav__item
       = active_link_to(admin_organisation_planning_plage_ouvertures_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link") do
         | Plages d'ouverture
+        - unless current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
+          .fr-ml-1w.rdv-pastille
     li.fr-nav__item
       = active_link_to(admin_organisation_planning_absences_path(current_organisation, { agent_id: params[:agent_id] }.compact_blank), class: "fr-nav__link") do
         | Indisponibilités
+        - unless current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
+          .fr-ml-1w.rdv-pastille
