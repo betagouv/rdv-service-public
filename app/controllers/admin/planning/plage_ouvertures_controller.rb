@@ -14,7 +14,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   def index
     # TODO: retirer ce code 2 semaines après la mise en prod, il affiche une pastille sur les nouveaux onglets.
     unless current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-      current_agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
+      current_agent.update_columns(feature_flags: current_agent.feature_flags.merge("new_planning" => true)) # rubocop:disable Rails/SkipsModelValidations
     end
 
     @multiple_agents_makes_sense = true
