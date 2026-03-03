@@ -7,6 +7,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   layout "application"
   layout "application_narrow", only: %i[new create update edit]
 
+  def new
+    redirect_to root_path
+  end
+
   def destroy
     authorize(resource, policy_class: User::UserPolicy)
     # users from rdv-insertion have to be monitored wether they want it or not, so we don't allow them to destroy themselves
