@@ -63,7 +63,16 @@ Rails.application.routes.draw do
   get "super_admin", to: redirect("super_admins", status: 301)
 
   ## APP ##
-  devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions" }
+  devise_for :users
+
+  devise_scope :user do
+    get    "users/sign_in",  to: "users/sessions#new",          as: "new_user_session"
+    post   "users/sign_in",  to: "users/sessions#create",       as: "user_session"
+    delete "users/sign_out", to: "users/sessions#destroy",      as: "destroy_user_session"
+    get    "users/edit",     to: "users/registrations#edit",    as: "edit_user_registration"
+    patch  "users",          to: "users/registrations#update",  as: "user_registration"
+    delete "users",          to: "users/registrations#destroy"
+  end
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
