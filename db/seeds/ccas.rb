@@ -41,7 +41,6 @@ user = User.new(
   last_name: "Duroy",
   email: "patricia@demo.rdv-solidarites.fr",
   birth_date: Date.parse("20/06/1975"),
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010101",
   organisation_ids: [orga_ccas.id],
   created_through: "user_sign_up"

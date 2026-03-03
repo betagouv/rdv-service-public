@@ -72,12 +72,11 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
       end
     end
 
-    context "when the user also users Devise to login with an email and a passowrd" do
+    context "when the user also uses a login code to login with an email" do
       before do
         create(
           :user,
           email: "jeanne@longo.fr",
-          password: "coRrect!h0rse",
           franceconnect_openid_sub: "hvdiuds4357",
           logged_once_with_franceconnect: true,
           first_name: "Jeannine",
