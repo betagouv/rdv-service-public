@@ -27,7 +27,6 @@ import { MergeUsersForm } from './components/merge-users-form.js'
 import { SectorAttributionForm } from './components/sector-attribution-form.js'
 import { ZoneForm } from './components/zone-form.js'
 import { initializeSelect2 } from './components/select2-inputs'
-import { PlanningAgentSelect } from './components/planning-agent-select'
 import { planningAgentsSelect } from './components/planning-agents-select'
 import { AgendaMonoAgent } from './components/calendar'
 import { AgendaMultiAgent} from './components/calendar/agenda-multi-agent'
@@ -122,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   new ZoneForm()
 
-  new PlanningAgentSelect()
   planningAgentsSelect()
 
   new AgendaMonoAgent()

@@ -1,6 +1,8 @@
 class Admin::Planning::AgendasController < AgentAuthController
   include Admin::Planning::SetAgentsConcern
 
+  before_action { @planning_layout = true }
+
   def show
     set_agents
 

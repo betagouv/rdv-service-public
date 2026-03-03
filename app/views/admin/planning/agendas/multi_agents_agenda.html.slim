@@ -23,7 +23,4 @@ ruby:
   data-organisation-id="#{current_organisation.id}"
 ]
 
-- if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-  = render partial: "admin/planning/agendas/preferences_modal", locals: { display_cancelled_rdv: true, display_saturdays: true, group_by_agent: true }
-- else
-  = render partial: "admin/planning/agendas/preferences_buttons"
+= render partial: "admin/planning/agendas/preferences_modal", locals: { display_cancelled_rdv: true, display_saturdays: true, group_by_agent: true }

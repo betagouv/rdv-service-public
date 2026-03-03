@@ -5,6 +5,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
   before_action :build_plage_ouverture, only: [:create]
   before_action :set_agents
+  before_action { @planning_layout = true }
 
   def show
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
