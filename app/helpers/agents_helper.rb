@@ -47,7 +47,6 @@ module AgentsHelper
     }[content_for(:menu_item)]
   end
 
-
   def navigation_scoped_by_agent_services?(current_agent, current_organisation)
     return false if current_agent.secretaire?
 
