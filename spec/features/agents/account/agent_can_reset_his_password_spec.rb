@@ -46,7 +46,7 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
 
   it "fonctionne via le formulaire de réinitialisation utilisateur" do
     visit new_user_password_path
-    expect(page).to have_content("Mot de passe oublié ou première connexion ?")
+    expect(page).to have_content("Mot de passe oublié ?")
     expect(page).to have_link("Se connecter")
 
     fill_in "user_email", with: agent.email

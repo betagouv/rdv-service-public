@@ -1,4 +1,4 @@
-- content_for :title, "Mot de passe oublié ou première connexion ?"
+- content_for :title, "Mot de passe oublié ?"
 
 .card
   .card-body
@@ -16,9 +16,5 @@
     hr
     .rdv-text-align-center
       p.rdv-color-text-mention-grey
-        | Vous avez un compte ?&nbsp;
+        | Vous pouvez également vous connecter par code magique ?&nbsp;
         = link_to "Se connecter", new_session_path(resource_name), class: "fr-link"
-
-      p.rdv-color-text-mention-grey
-        | Vous n'avez pas de compte ?&nbsp;
-        = link_to "Je m’inscris", new_registration_path(resource_name), class: "fr-link"
