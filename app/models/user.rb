@@ -14,7 +14,7 @@ class User < ApplicationRecord
     ]
   )
 
-  devise :timeoutable, :async
+  devise :timeoutable
   def timeout_in = 30.minutes # Used by Devise's :timeoutable
 
   include PgSearch::Model
