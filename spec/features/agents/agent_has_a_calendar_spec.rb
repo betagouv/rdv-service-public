@@ -72,8 +72,8 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       expect(page).to have_current_path("/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}?contextual_agent_ids=#{colleague.id}")
 
       # On vérifie qu'un clic sur Agenda nous ramène bien sur l'agenda du collègue
-      click_on "Agenda"
-      expect(page).to have_content("Agenda de #{colleague.full_name}")
+      click_on "Planning"
+      expect(page).to have_content("Planning de\n#{colleague.reverse_full_name}")
       expect(page).to have_current_path("/admin/organisations/#{organisation.id}/planning/agenda?agent_id=#{colleague.id}")
     end
 
