@@ -5,11 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   layout "application"
-  layout "application_narrow", only: %i[new create update edit]
-
-  def new
-    redirect_to root_path
-  end
+  layout "application_narrow", only: %i[update edit]
 
   def destroy
     authorize(resource, policy_class: User::UserPolicy)
@@ -34,8 +30,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @non_rdv_insertion_organisations = resource.organisations.reject { |org| org.verticale == "rdv_insertion" }
   end
 
-  def build_resource(hash = {})
-    form = Users::RegistrationForm.new(hash)
-    self.resource = form
-  end
 end
