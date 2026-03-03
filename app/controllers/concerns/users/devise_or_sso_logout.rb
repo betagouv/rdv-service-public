@@ -2,7 +2,7 @@ module Users::DeviseOrSsoLogout
   extend ActiveSupport::Concern
 
   # Cette méthode permet de gérer la déconnexion dans 3 cas différents :
-  # - Email/Mot de passe via Devise
+  # - Code de connexion (Devise)
   # - ProConnect
   # - FranceConnect v2
   def logout_and_redirect_user(flash_message_key:)
@@ -10,7 +10,6 @@ module Users::DeviseOrSsoLogout
     pro_connect_id_token = session.delete(:pro_connect_id_token)
 
     session.delete(:invitation) # créé par TokenInvitable
-    current_user_before = current_user
     sign_out(:user)
     set_flash_message!(:notice, flash_message_key)
 
