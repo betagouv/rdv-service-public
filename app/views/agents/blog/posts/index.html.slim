@@ -1,5 +1,5 @@
-- content_for(:title) do
-  h2.h4 Nouveautés
+- content_for(:title, "Nouveautés")
+
 - if @posts.any?
   - @posts.each do |post|
     .m-2

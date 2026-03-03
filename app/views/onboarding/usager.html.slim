@@ -1,0 +1,20 @@
+.rdv-background-color-alt-blue-ecume.fr-py-6v
+  .fr-container
+    = link_to root_path, class: "fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line" do
+      | Retour à l’accueil
+
+    .fr-grid-row.justify-content-md-center
+      .card.fr-mt-6v.fr-mb-12v.fr-p-12v.fr-col-lg-6
+        = dsfr_svg "artwork/pictograms/system/information"
+        h1.fr-h2 Vous cherchez à prendre un rendez-vous avec un service public ?
+        p
+          |> RDV Service Public est un service permettant aux administrations et aux collectivités de vous proposer des créneaux de rendez-vous.
+          b Notre équipe n'a pas accès à vos dossiers, ni aux plannings des services qui vous accompagnent.
+
+        p Pour toute demande de rendez-vous, vous pouvez vous adresser directement au service concerné :
+
+        ul
+          li
+            = external_link_to "Trouver les coordonnées d’un service public", "https://lannuaire.service-public.gouv.fr/", class: "fr-link"
+          li
+            = external_link_to "Consulter l'aide aux usagers pour la prise de RDV", aide_aiguillage_usager_path(raison: "creneaux"), class: "fr-link"

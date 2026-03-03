@@ -36,6 +36,6 @@ class AnnuaireServicePublic
   end
 
   def response
-    @response ||= Faraday.get("https://api-lannuaire.service-public.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=siret%3D%22#{@siret}%22")
+    @response ||= Faraday.get("https://api-lannuaire.service-public.gouv.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=siret%3D%22#{@siret}%22")
   end
 end

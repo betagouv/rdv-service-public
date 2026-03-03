@@ -43,7 +43,7 @@ module CreneauxSearch::Calculator
       return [] if ranges.empty?
 
       ranges.map do |range|
-        [range, BusyTimePreloader.start_loading_busy_times_for(range, plage_ouverture, work_on_off_days:)]
+        [range, BusyTimePreloader.start_loading_busy_times_for(range, plage_ouverture.agent, work_on_off_days:)]
       end.flat_map do |range, busy_times_preloader|
         busy_times = busy_times_preloader.busy_times
         split_range_recursively(range, busy_times)
@@ -139,18 +139,16 @@ module CreneauxSearch::Calculator
   end
 
   class BusyTimePreloader
-    def initialize(range, plage_ouverture, work_on_off_days)
+    def initialize(range, agent, work_on_off_days)
       @range = range
-      @plage_ouverture = plage_ouverture
+      @agent = agent
       @work_on_off_days = work_on_off_days
       start_loading!
     end
 
-    attr_reader :range, :plage_ouverture
-
     # On charge les absences en asynchrone et les rdvs en synchrone
-    def self.start_loading_busy_times_for(range, plage_ouverture, work_on_off_days:)
-      new(range, plage_ouverture, work_on_off_days)
+    def self.start_loading_busy_times_for(range, agent, work_on_off_days:)
+      new(range, agent, work_on_off_days)
     end
 
     def busy_times
@@ -176,7 +174,7 @@ module CreneauxSearch::Calculator
       # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
       #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
 
-      @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
+      @absences = @agent.absences.not_expired.in_range(@range).load_async
 
       @rdvs_starts_and_ends_at = optimized_rdv_request.pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
     end
@@ -184,15 +182,15 @@ module CreneauxSearch::Calculator
     def optimized_rdv_request
       # Cet requête est censée utiliser l'index "calculator_index"
       AgentsRdv
-        .where(agent_id: plage_ouverture.agent_id, calculator_rdv_not_cancelled_and_in_the_future: true)
-        .where("tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+        .where(agent_id: @agent.id, calculator_rdv_not_cancelled_and_in_the_future: true)
+        .where("tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsrange(?, ?)", @range.begin, @range.end)
         .select(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
     end
 
     def busy_times_from_absences
       busy_times = []
       @absences.each do |absence|
-        absence.occurrences_for(range).each do |absence_occurrence|
+        absence.occurrences_for(@range).each do |absence_occurrence|
           next if absence_out_of_range?(absence_occurrence)
 
           busy_times << BusyTime.new(absence_occurrence.starts_at, absence_occurrence.ends_at)
@@ -202,16 +200,15 @@ module CreneauxSearch::Calculator
     end
 
     def absence_out_of_range?(absence)
-      absence.ends_at < range.begin || range.end < absence.starts_at
+      absence.ends_at < @range.begin || @range.end < absence.starts_at
     end
 
     def busy_times_from_external_calendar
-      agent = plage_ouverture.agent
-      return [] unless agent.caldav_configured?
+      return [] unless @agent.caldav_configured?
 
       external_calendar_occurrences = []
-      ExternalCalendarEvent.where(agent:).within_range(range).each do |event|
-        event.all_occurrences_within(range).each do |occurrence|
+      ExternalCalendarEvent.where(agent_id: @agent.id).within_range(@range).each do |event|
+        event.all_occurrences_within(@range).each do |occurrence|
           external_calendar_occurrences << BusyTime.new(occurrence.starts_at, occurrence.ends_at)
         end
       end
@@ -219,7 +216,7 @@ module CreneauxSearch::Calculator
     end
 
     def busy_times_from_off_days
-      OffDays.all_in_date_range(range).map do |off_day|
+      OffDays.all_in_date_range(@range).map do |off_day|
         BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
       end
     end
