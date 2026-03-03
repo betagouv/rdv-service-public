@@ -432,6 +432,15 @@ Rails.application.routes.draw do
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
   get "presentation_agent" => "static_pages#presentation_for_agents"
 
+  resource :onboarding, controller: :onboarding do
+    get "step_1"
+    get "step_2"
+    get "step_3"
+    get "usager"
+    get "webinaire"
+    get "help_needed"
+  end
+
   root "search#home"
 
   get "/prendre_rdv", to: "search#search_rdv"
