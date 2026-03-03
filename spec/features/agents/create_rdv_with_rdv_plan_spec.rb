@@ -111,7 +111,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
         visit edit_user_agents_rdv_plan_path(rdv_plan.id)
         expect(page).to have_field("Email", with: user.email, disabled: true)
 
-        expect(page).to have_content("Cet usager utilise cette adresse email pour ce connecter. Elle n'est donc pas modifiable.")
+        expect(page).to have_content("Cet usager utilise cette adresse email pour se connecter. Elle n'est donc pas modifiable.")
 
         fill_in("Téléphone", with: "0612345678")
 

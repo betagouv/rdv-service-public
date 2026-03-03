@@ -37,9 +37,6 @@ FactoryBot.define do
       confirmed_at { nil }
       password { nil }
       password_confirmation { nil }
-      before(:create) do |user, _|
-        user.skip_confirmation_notification!
-      end
     end
     trait :relative do
       responsible { association(:user) }

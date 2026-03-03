@@ -35,7 +35,6 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
                          "un compte ProConnect, alors un email de réinitialisation va y être envoyé avec un lien de réinitialisation de mot de passe"
       expect(page).to have_content(expected_message)
     end
-
   end
 
   context "quand l’email n’existe pas" do

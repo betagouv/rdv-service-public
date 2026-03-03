@@ -19,11 +19,8 @@ RSpec.describe "Agent can update user" do
     fill_in :user_last_name, with: "reynolds"
     fill_in "Email", with: "jeanne@reynolds.com"
     click_button "Enregistrer"
-    # When the user has already a pwd, changing email send a confirmation email
-    open_email("jeanne@reynolds.com")
-    expect(current_email.subject).to eq "Instructions de confirmation de votre nouvelle adresse email"
     expect_page_title("jeanne REYNOLDS")
-    expect(page).to have_content("En attente de confirmation pour jeanne@reynolds.com")
+    expect(page).to have_content("jeanne@reynolds.com")
   end
 
   describe "optional fields" do
