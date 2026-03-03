@@ -44,10 +44,10 @@ RSpec.describe "Un agent peut réinitialiser son mot de passe" do
     end
   end
 
-  it "fonctionne via le formulaire de réinitialisation utilisateur" do
+  it "fonctionne via le formulaire de réinitialisation utilisateur", js: true do
     visit new_user_password_path
     expect(page).to have_content("Mot de passe oublié ?")
-    expect(page).to have_link("Se connecter")
+    expect(page).to have_content("connecter via code à 6 chiffres")
 
     fill_in "user_email", with: agent.email
     expect { click_on "Envoyer" }.to change { emails_sent_to(agent.email).size }.by(1)
