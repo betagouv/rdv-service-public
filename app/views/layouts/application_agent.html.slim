@@ -12,7 +12,7 @@ html lang="fr"
 
     .content-and-left-menu-wrapper
       = render "layouts/left_menu"
-      main#main.content-page[style="flex-grow: 1;" role="main" data-beta-planning-layout=@planning_layout.to_s]
+      main#main.content-page[style="flex-grow: 1;" role="main"]
         .content
           - if @planning_layout
             = content_for :onboarding_banner

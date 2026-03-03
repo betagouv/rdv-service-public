@@ -16,54 +16,7 @@ $rdvs-fc-header-bg-color: $gray-200;
   --fc-bg-event-opacity: 1;
 }
 
-main[data-beta-planning-layout="false"] .fc {
-  // réduit la taille de la date
-  .fc-toolbar-title {
-    font-size: 1.25rem;
-    line-height: 1.875rem;
-  }
-
-  // change l'apparence de l'en-tête du calendrier
-  .fc-col-header-cell {
-    background: $rdvs-fc-header-bg-color;
-    border: none;
-    font-size: 13px;
-    line-height: 20px;
-    padding: 10px 0;
-  }
-
-  // Les headers FullCalendar sont des <a> sans href et le DSFR les grise.
-  // Ici on override ce ce comportement pour garder le texte en noir (meilleur contraste).
-  a.fc-col-header-cell-cushion,
-  a.fc-list-day-text,
-  a.fc-list-day-side-text {
-    color: black;
-    cursor: default;
-  }
-
-  // définit la couleur de fond de la petite case en haut à gauche
-  .fc-timegrid-axis:not(.fc-timegrid-col) {
-    background-color: $rdvs-fc-header-bg-color;
-  }
-
-  .fc-button {
-    border: none;
-    text-transform: capitalize;
-    box-shadow: none;
-    border-radius: 0px;
-    margin: 0 3px;
-    padding: 6px 12px;
-    height: auto;
-
-    // prend le dessus sur une règle très spécifique dans FullCalendar
-    // .fc .fc-button-primary:not(:disabled).fc-button-active
-    &.fc-button-active.fc-button-primary:not(:disabled) {
-      color: var(--fc-button-active-color);
-    }
-  }
-}
-
-main[data-beta-planning-layout="true"] .fc {
+#main .fc {
   .fc-button {
     background-color: white;
     font-size: 16px;
