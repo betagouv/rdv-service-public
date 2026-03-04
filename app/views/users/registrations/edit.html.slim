@@ -5,7 +5,10 @@
     p.rdv-font-weight-bold Adresse email
     p Votre adresse email actuelle est : #{resource.preferred_email}
     .fr-alert.fr-alert--info.fr-mb-4w
-      p La modification de l'adresse email n'est pas encore disponible. Si vous souhaitez utiliser une autre adresse, vous pouvez créer un nouveau compte. Nous travaillons à rendre cette fonctionnalité disponible prochainement.
+      p
+        | Pour modifier votre adresse email, veuillez contacter le support via le
+        =< link_to "formulaire de contact", new_aide_demande_support_path(role: :usager, sujet: "Changement adresse e-mail")
+        | .
     hr.fr-mt-2w
     p Vous souhaitez supprimer votre compte ?
     - if resource.can_be_soft_deleted?

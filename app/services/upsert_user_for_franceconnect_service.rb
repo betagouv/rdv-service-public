@@ -21,7 +21,14 @@ class UpsertUserForFranceconnectService < BaseService
 
   def update_existing_user
     @user.assign_attributes(user_attribute_values_from_fc)
-    @user.notification_email = omniauth_info.email&.downcase
+    email_from_fc = omniauth_info.email.presence&.downcase
+    if email_from_fc
+      if @user.email
+        @user.email = email_from_fc
+      else
+        @user.notification_email = email_from_fc
+      end
+    end
     @user.save!(context: :france_connect_login)
   end
 
