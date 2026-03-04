@@ -5,12 +5,18 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
   before_action :build_plage_ouverture, only: [:create]
   before_action :set_agents
+  before_action { @planning_layout = true }
 
   def show
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
   def index
+    # TODO: retirer ce code 2 semaines après la mise en prod, il affiche une pastille sur les nouveaux onglets.
+    unless current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
+      current_agent.update_columns(feature_flags: current_agent.feature_flags.merge("new_planning" => true)) # rubocop:disable Rails/SkipsModelValidations
+    end
+
     @multiple_agents_makes_sense = true
     render :multi_agents_index and return if @agents.size > 1
 

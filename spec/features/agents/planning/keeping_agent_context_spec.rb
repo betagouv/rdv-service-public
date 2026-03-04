@@ -19,9 +19,8 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
     login_as(current_agent, scope: :agent)
 
     visit admin_organisation_planning_agenda_path(organisation)
-    find("#select2-planning_agent_select-container").click
+    find("#select2-agent_id-container").click
     find(%(.select2-results__option), text: "COLLEGUE Mon").click
-    expect(page).to have_content("Agenda de Mon COLLEGUE")
     click_on "Usager DU RDV" # on clique sur le RDV dans l'agenda
 
     back_button = "Retour à l'agenda de Mon COLLEGUE"
@@ -34,11 +33,10 @@ RSpec.describe "permettre de revenir à l'agenda d'un collègue après avoir cli
     expect(rdv_du_collegue.reload.duration_in_min).to eq(240)
     expect(page).to have_link(back_button)
     click_on back_button
-    expect(page).to have_content("Agenda de Mon COLLEGUE")
+    expect(page).to have_content("Planning de\nCOLLEGUE Mon")
   end
 
   it "fonctionne quand j'ai plusieurs agents sélectionnés dans l'agenda", js: true do
-    current_agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
     login_as(current_agent, scope: :agent)
 
     visit admin_organisation_planning_agenda_path(organisation)

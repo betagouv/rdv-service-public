@@ -1,13 +1,6 @@
 - content_for(:menu_item) { "menu-agendas" }
-- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_planning_agenda_path" }
 
 = render "admin/onboarding/banner", in_agenda: true
-
-- content_for(:right_of_page_title) do
-  - unless @beta_planning_layout
-    .mr-1
-      - url = admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "true")
-      = link_to "Activer la nouvelle vue planning", url, method: :put, class: "fr-link fr-link--sm"
 
 - content_for :title do
   - if current_agent == @agent
@@ -37,10 +30,7 @@ ruby:
 ]
 
 .my-3
-  - if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-    = render partial: "admin/planning/agendas/preferences_modal", locals: { display_cancelled_rdv: true, display_saturdays: true }
-  - else
-    = render partial: "admin/planning/agendas/preferences_buttons"
+  = render partial: "admin/planning/agendas/preferences_modal", locals: { display_cancelled_rdv: true, display_saturdays: true }
 
 .mt-2
   = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do

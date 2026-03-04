@@ -1,6 +1,8 @@
 class Admin::Planning::AgendasController < AgentAuthController
   include Admin::Planning::SetAgentsConcern
 
+  before_action { @planning_layout = true }
+
   def show
     set_agents
 
@@ -21,16 +23,6 @@ class Admin::Planning::AgendasController < AgentAuthController
   def toggle_displays
     authorize(current_agent, policy_class: Agent::AgentPolicy)
     current_agent.update!(permitted_agent_params)
-    redirect_back fallback_location: admin_organisation_planning_agenda_path(current_organisation)
-  end
-
-  def toggle_new_planning
-    authorize(current_agent, :edit?, policy_class: Agent::AgentPolicy)
-    if params[:set_to] == "true"
-      current_agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
-    else
-      current_agent.disable_feature!(Agent::FeatureFlags::NEW_PLANNING)
-    end
     redirect_back fallback_location: admin_organisation_planning_agenda_path(current_organisation)
   end
 

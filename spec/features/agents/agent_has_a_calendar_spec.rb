@@ -72,13 +72,12 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       expect(page).to have_current_path("/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}?contextual_agent_ids=#{colleague.id}")
 
       # On vérifie qu'un clic sur Agenda nous ramène bien sur l'agenda du collègue
-      click_on "Agenda"
-      expect(page).to have_content("Agenda de #{colleague.full_name}")
+      click_on "Planning"
+      expect(page).to have_content("Planning de\n#{colleague.reverse_full_name}")
       expect(page).to have_current_path("/admin/organisations/#{organisation.id}/planning/agenda?agent_id=#{colleague.id}")
     end
 
     it "quand l'agent courant a activé le nouveau planning", js: true do
-      me.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
       login_as(me, scope: :agent)
       visit admin_organisation_planning_agenda_path(organisation, agent_id: colleague.id)
 
@@ -163,8 +162,6 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "fonctionne quand on change de page et qu'on revient", js: true do
-      agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
-
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       expect(page).to have_content("Planning de")
 

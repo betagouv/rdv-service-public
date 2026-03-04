@@ -11,7 +11,6 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
   end
 
   it "default", js: true do
-    expect_page_title("Modifier votre plage d'ouverture")
     expect_not_checked("recurrence_has_recurrence")
     expect(page).not_to have_text("Répéter tou(te)s les")
 

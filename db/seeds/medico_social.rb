@@ -414,8 +414,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
-  }],
-  feature_flags: { new_planning: true }
+  }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
@@ -436,8 +435,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-  }],
-  feature_flags: { new_planning: true }
+  }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
