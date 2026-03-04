@@ -9,7 +9,7 @@ RSpec.describe Users::LoginService, type: :service do
     specify do
       expect(sign_in_user_lambda).to receive(:call).with(user)
       expect(service.perform).to be true
-      expect(user.reload.confirmed_at?).to be true
+      expect(user.reload.already_logged_in?).to be true
       expect(login_code.reload.used?).to be true
     end
   end
