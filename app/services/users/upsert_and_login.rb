@@ -12,9 +12,7 @@ class Users::UpsertAndLogin
     ActiveRecord::Base.transaction do
       @user = upsert_user
       user.update!(latest_login_at: Time.zone.now) if user.respond_to?(:latest_login_at)
-      matching_login_code.update!(used_at: Time.zone.now)
     end
-    yield(@user) if block_given?
   end
 
   def upsert_user
@@ -28,8 +26,8 @@ class Users::UpsertAndLogin
   end
 
   def update_user(user)
-    if (user.first_name != @first_name || user.last_name != @last_name) &&
-       !user.logged_once_with_franceconnect? # les users FranceConnectés ne peuvent pas modifier leur identité
+    both_names_changed = user.first_name != @first_name || user.last_name != @last_name
+    if both_names_changed && !user.connected_with_sso? # les users France/Pro-Connectés ne peuvent pas modifier leur identité
       user.update!(first_name: @first_name, last_name: @last_name)
     end
   end

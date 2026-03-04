@@ -113,6 +113,10 @@ class User < ApplicationRecord
     email&.gsub(".@", "@")&.gsub("..", ".")
   end
 
+  def email_or_notification_email
+    email || notification_email
+  end
+
   def email=(email)
     super(sanitize_email(email))
   end

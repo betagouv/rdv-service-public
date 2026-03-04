@@ -1,0 +1,30 @@
+- content_for(:title, "Choix de la fiche usager")
+
+p
+  | Plusieurs fiches usagers sont liées à l'adresse "#{session[:current_user_email]}".
+  br
+  | Veuillez choisir avec laquelle vous voulez vous connecter.
+
+.mb-4
+  - @fiches_usagers.each do |user|
+    - territory_name = user.organisations.first.territory.name_in_stats
+    - url = submit_choix_fiche_usager_users_sessions_by_code_path(user_id: user.id)
+    .fr-tile.fr-tile--sm.fr-tile--horizontal.fr-enlarge-link.mt-2
+      .fr-tile__body
+        .fr-tile__content
+          h3.fr-tile__title
+            a[href=url]
+              = user.full_name
+          p.fr-tile__desc
+            = territory_name
+          p.fr-tile__detail
+            | #{pluralize(user.rdvs.count, "rendez-vous", plural: "rendez-vous")}
+            - if user.phone_number_formatted.present?
+              |< - tel :
+              =< user.phone_number_formatted
+            - if user.relatives.any?
+              |< - proches :
+              =< user.relatives.map(&:full_name).join(", ")
+      .fr-tile__header
+        .fr-tile__pictogram
+          = dsfr_svg "artwork/pictograms/digital/avatar", class: "fr-responsive-img"

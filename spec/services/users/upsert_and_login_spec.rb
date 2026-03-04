@@ -38,7 +38,7 @@ RSpec.describe Users::UpsertAndLogin do
   end
 
   context "quand il existe une fiche usager avec cet e-mail dans l'orga passée et qu'elle est liée à un sub FranceConnect" do
-    let!(:existing_user) { create(:user, email:, first_name: "Ancien", organisations: [organisation]) }
+    let!(:existing_user) { create(:user, email:, first_name: "Ancien", organisations: [organisation], franceconnect_openid_sub: "abcdef") }
 
     it "retrouve la fiche et met à jour les noms" do
       expect { service.perform }.not_to change { existing_user.reload.first_name }.from("Ancien")
