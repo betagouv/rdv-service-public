@@ -1,4 +1,13 @@
 class User < ApplicationRecord
+  # Ces colonnes sont orphelines suite à la suppression des modules Devise
+  # correspondants. Elles seront supprimées dans une migration ultérieure.
+  self.ignored_columns += %w[
+    encrypted_password
+    reset_password_token reset_password_sent_at
+    confirmation_token confirmation_sent_at unconfirmed_email
+    invitation_token invitation_created_at invitation_sent_at invitation_accepted_at invitation_limit invited_by_type invited_by_id
+  ]
+
   # Mixins
   has_paper_trail(
     only: %w[
