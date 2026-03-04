@@ -26,14 +26,14 @@
   div= f.input( \
     :notify_by_email,  \
     wrapper: false, \
-    **input_opts.deep_merge(user.confirmed? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
+    **input_opts.deep_merge(user.already_logged_in? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
   )
   div= f.input( \
     :notify_by_sms,  \
     wrapper: false, \
-    **input_opts.deep_merge(user.confirmed? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
+    **input_opts.deep_merge(user.already_logged_in? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
   )
-- if user.confirmed?
+- if user.already_logged_in?
   .mt-1.text-muted
     | L'usager ayant validé son compte, vous ne pouvez plus modifier ses préférences
 

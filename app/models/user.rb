@@ -263,8 +263,8 @@ class User < ApplicationRecord
     (franceconnect_openid_sub || pro_connect_openid_sub).present?
   end
 
-  def confirmed?
-    latest_login_at.present? || super
+  def already_logged_in?
+    encrypted_password.present? || confirmed_at.present? || latest_login_at.present?
   end
 
   protected
