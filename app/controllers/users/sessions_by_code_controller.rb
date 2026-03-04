@@ -14,19 +14,29 @@ class Users::SessionsByCodeController < ApplicationController
 
   def create
     email, code = params.require(:login_code).expect(:email, :code)
-    login_service = Users::LoginService.new(
-      email:, code:,
-      sign_in_user_lambda: ->(user) { sign_in(:user, user) }
-    )
+    login_code_validator = Users::LoginCodeValidator.new(email:, code:)
 
-    if login_service.perform
-      redirect_to after_sign_in_path_for(login_service.user), flash: { success: "Connexion réussie" }
-    elsif login_service.should_redirect_to_code_request?
+    if login_code_validator.valid?
+      if @rdv_wizard
+        valid_login_code = login_code_validator.valid_login_code
+        organisation = @rdv_wizard.motif.organisation
+        raise "pas d'orga !?" unless organisation
+
+        # retrouver fiche du motif du RDV
+        user = Users::UpsertAndLogin.new(email:, first_name: valid_login_code.first_name, last_name: valid_login_code.last_name, organisation:).user
+        sign_in(:user, user)
+        redirect_to stored_location_for(user), flash: { success: "Connexion réussie" }
+      else
+        session[:current_user_email] = email
+        redirect_to choix_fiche_usager
+      end
+
+    elsif login_code_validator.should_redirect_to_code_request?
       redirect_to new_users_sessions_by_code_path(email:), flash: { error: login_service.error }
     else
-      @email = login_service.email
+      @email = email
       @existing_login_code = LoginCode.most_recent_usable_for(email:)
-      @existing_login_code.errors.add(:base, login_service.error)
+      @existing_login_code.errors.add(:base, login_code_validator.error)
       render :new
     end
   end

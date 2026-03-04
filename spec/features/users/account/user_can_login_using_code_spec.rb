@@ -23,6 +23,25 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
     expect(page).to have_field("user_first_name", with: "Marco")
   end
 
+  context "quand l'usager possède plusieurs fiches dans des espaces différents" do
+    let!(:territory_1) { create(:territory) }
+    let!(:territory_2) { create(:territory) }
+    let!(:orga_1) { create(:organisation, territory: territory_1) }
+    let!(:orga_2) { create(:organisation, territory: territory_2) }
+    let!(:user_1) { create(:user, organisations: [orga_1]) }
+    let!(:user_2) { create(:user, organisations: [orga_2]) }
+
+    it "permet de choisir avec quelle fiche se logger" do
+      create(:login_code, email: "marco@lolmail.fr", code: "123456")
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      click_on(user_1.full_name)
+      click_on("Vos informations")
+      expect(page).to have_content(user_1.phone_number) # on arrive sur le formulaire
+    end
+  end
+
   context "l’usager rentre une adresse email pour laquelle il n’existe pas de compte usager" do
     specify do
       visit new_user_session_path
