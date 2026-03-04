@@ -263,6 +263,10 @@ class User < ApplicationRecord
     (franceconnect_openid_sub || pro_connect_openid_sub).present?
   end
 
+  def already_logged_in?
+    confirmed_at.present? || latest_login_at.present?
+  end
+
   protected
 
   def generate_rdv_invitation_token

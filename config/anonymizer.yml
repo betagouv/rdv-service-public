@@ -82,6 +82,7 @@ tables:
       - notify_by_sms
       - logged_once_with_franceconnect
       - rdv_invitation_token_updated_at
+      - latest_login_at
 
   - table_name: agents
     anonymized_column_names:
