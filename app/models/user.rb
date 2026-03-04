@@ -4,7 +4,7 @@ class User < ApplicationRecord
   self.ignored_columns += %w[
     encrypted_password
     reset_password_token reset_password_sent_at
-    confirmation_token confirmation_sent_at unconfirmed_email
+    confirmed_at confirmation_token confirmation_sent_at unconfirmed_email
     invitation_token invitation_created_at invitation_sent_at invitation_accepted_at invitation_limit invited_by_type invited_by_id
   ]
 
@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_paper_trail(
     only: %w[
       email notification_email first_name last_name birth_name
-      created_at confirmed_at deleted_at
+      created_at latest_login_at deleted_at
       invited_through created_through
       address phone_number birth_date
       responsible_id
@@ -128,7 +128,7 @@ class User < ApplicationRecord
   end
 
   def delete_credentials_and_access_informations
-    update!(confirmed_at: nil, logged_once_with_franceconnect: false, franceconnect_openid_sub: nil)
+    update!(latest_login_at: nil, logged_once_with_franceconnect: false, franceconnect_openid_sub: nil)
   end
 
   def available_users_for_rdv
@@ -265,7 +265,7 @@ class User < ApplicationRecord
   end
 
   def already_logged_in?
-    confirmed_at.present? || latest_login_at.present?
+    latest_login_at?
   end
 
   protected

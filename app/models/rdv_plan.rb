@@ -63,7 +63,7 @@ class RdvPlan < ApplicationRecord
       if user_attributes[:notification_email]&.downcase == user.email || user_attributes[:notification_email].blank?
         # L'email est le même, mais on veut quand même changer le numéro de téléphone
         user.update!(user_attributes)
-      elsif user.confirmed_at? # On essaye de changer l'email de l'usager
+      elsif user.already_logged_in? # On essaye de changer l'email de l'usager
         # Dans ce cas l'usager s'est déjà connecté et utilise cet email pour se connecter
         raise "L'email de cet usager ne peut pas être modifié"
       else

@@ -94,7 +94,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
-      let(:user) { create(:user, :unconfirmed, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+      let(:user) { create(:user, latest_login_at: nil, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
       let(:user_id) { user.id }
 
       response 200, "Met à jour et renvoie un·e usager·ère" do

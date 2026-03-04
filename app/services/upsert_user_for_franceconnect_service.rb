@@ -39,7 +39,7 @@ class UpsertUserForFranceconnectService < BaseService
         created_through: "franceconnect_sign_up"
       )
     )
-    @user.confirmed_at = Time.zone.now
+    @user.latest_login_at = Time.zone.now
     @user.save!(context: :france_connect_login)
     @user
   end

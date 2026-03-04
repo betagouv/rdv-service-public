@@ -291,7 +291,7 @@ user_org_paris_nord_patricia = User.new(
   phone_number: "0101010101",
   organisation_ids: [org_paris_nord.id, org_arques.id],
   created_through: "user_sign_up",
-  confirmed_at: Time.zone.now
+  latest_login_at: Time.zone.now
 )
 
 user_org_paris_nord_patricia.save!
@@ -315,7 +315,7 @@ user_org_paris_nord_lea = User.new(
   phone_number: "0101010102",
   organisation_ids: [org_paris_nord.id],
   created_through: "user_sign_up",
-  confirmed_at: Time.zone.now
+  latest_login_at: Time.zone.now
 )
 
 user_org_paris_nord_lea.save!
@@ -329,7 +329,7 @@ user_org_paris_nord_jean = User.new(
   phone_number: "0101010103",
   organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
   created_through: "user_sign_up",
-  confirmed_at: Time.zone.now
+  latest_login_at: Time.zone.now
 )
 
 user_org_paris_nord_jean.save!
@@ -343,7 +343,7 @@ user_org_paris_sud = User.new(
   phone_number: "0101010103",
   organisation_ids: [org_paris_sud.id],
   created_through: "user_sign_up",
-  confirmed_at: Time.zone.now
+  latest_login_at: Time.zone.now
 )
 
 user_org_paris_sud.save!
@@ -355,7 +355,7 @@ user_org_arques = User.new(
   phone_number: "0611223344",
   organisation_ids: [org_arques.id],
   created_through: "user_sign_up",
-  confirmed_at: Time.zone.now
+  latest_login_at: Time.zone.now
 )
 
 user_org_arques.save!
@@ -366,7 +366,7 @@ user_org_bapaume = User.new(
   email: "francois@factice.cool",
   organisation_ids: [org_bapaume.id],
   created_through: "user_sign_up",
-  confirmed_at: Time.zone.now
+  latest_login_at: Time.zone.now
 )
 
 user_org_bapaume.save!

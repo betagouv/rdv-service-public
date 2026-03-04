@@ -1,4 +1,4 @@
-RSpec.describe "User signs up and signs in" do
+RSpec.describe "User signs in" do
   context "for regular new user" do
     let(:user) { build(:user) }
 
@@ -12,36 +12,36 @@ RSpec.describe "User signs up and signs in" do
     end
   end
 
-  context "for unconfirmed user" do
-    let(:unconfirmed_user) { create(:user, :unconfirmed) }
+  context "for rdv-solidarites" do
+    let(:user) { create(:user, latest_login_at: nil) }
 
-    it "can login via 6-digit code and gets confirmed" do
+    it "can login via 6-digit code and fill latest_login_at" do
       visit "http://www.rdv-solidarites-test.localhost/"
       click_link "Connexion Usager"
-      fill_in "Adresse email", with: unconfirmed_user.email
+      fill_in "Adresse email", with: user.email
       click_on "Recevoir un code de connexion"
-      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: unconfirmed_user.email).code
+      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: user.email).code
       click_on "Valider"
       expect(page).to have_content("Connexion réussie")
-      expect(unconfirmed_user.reload.confirmed_at?).to be true
+      expect(user.reload.already_logged_in?).to be true
       click_link "Déconnexion"
       expect(page).to have_current_path(root_path, ignore_query: true)
     end
   end
 
-  context "when an unconfirmed user already exists with the given email" do
-    let!(:unconfirmed_user) { create(:user, :unconfirmed) }
+  context "for rdv-aide-numerique" do
+    let(:user) { create(:user, latest_login_at: nil) }
 
-    it "logs them in and confirms their account" do
+    it "can login via 6-digit code and fill latest_login_at" do
       visit "http://www.rdv-aide-numerique-test.localhost/"
       click_link "Connexion Usager"
-      fill_in "Adresse email", with: unconfirmed_user.email
+      fill_in "Adresse email", with: user.email
       click_on "Recevoir un code de connexion"
-      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: unconfirmed_user.email).code
+      fill_in "Code à 6 chiffres", with: LoginCode.most_recent_usable_for(email: user.email).code
       click_on "Valider"
 
       expect(page).to have_content("Connexion réussie")
-      expect(unconfirmed_user.reload.confirmed_at?).to be true
+      expect(user.reload.already_logged_in?).to be true
     end
   end
 

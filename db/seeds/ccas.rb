@@ -43,10 +43,10 @@ user = User.new(
   birth_date: Date.parse("20/06/1975"),
   phone_number: "0101010101",
   organisation_ids: [orga_ccas.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user.confirmed_at = Time.zone.now
 user.save!
 
 # Un agent pour tester l'absence d'orga et de services
