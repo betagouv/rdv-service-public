@@ -35,7 +35,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
         create(
           :user,
           email: nil,
-          encrypted_password: "",
           franceconnect_openid_sub: "hvdiuds4357",
           logged_once_with_franceconnect: true,
           first_name: "Jeannine",
