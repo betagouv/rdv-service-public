@@ -263,6 +263,10 @@ class User < ApplicationRecord
     (franceconnect_openid_sub || pro_connect_openid_sub).present?
   end
 
+  def confirmed?
+    latest_login_at.present? || super
+  end
+
   protected
 
   def generate_rdv_invitation_token
@@ -290,10 +294,6 @@ class User < ApplicationRecord
     return false if signed_in_with_invitation_token?
 
     super
-  end
-
-  def confirmed?
-    latest_login_at.present? || super
   end
 
   def set_email_to_null_if_blank
