@@ -73,8 +73,6 @@ class Users::LoginService
   end
 
   def create_user
-    user = User.new(email:, first_name:, last_name:, created_through: "auto_through_login")
-    user.save!
-    user
+    User.create!(email:, first_name:, last_name:, created_through: "auto_through_login")
   end
 end
