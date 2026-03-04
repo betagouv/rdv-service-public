@@ -68,6 +68,15 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(page).to have_content("Retour sur Démarches Simplifiées")
   end
 
+  it "displays existing RDVs and absences", js: true do
+    existing_rdv_this_week = create(:rdv, starts_at: Time.zone.now.beginning_of_week + 8.hours, agents: [agent], motif:, organisation:)
+    existing_absence_next_week = create(:absence, first_day: Time.zone.now.beginning_of_week.to_date + 1.week, agent:)
+    visit agents_rdv_plan_path(rdv_plan.id)
+    expect(page).to have_content(existing_rdv_this_week.users.first.full_name)
+    click_on("Semaine suivante")
+    expect(page).to have_content(existing_absence_next_week.title)
+  end
+
   context "quand l'usager avait déjà une adresse email dans la colonne email et pas notification_email" do
     let(:rdv_plan) do
       create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
