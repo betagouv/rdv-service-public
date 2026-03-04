@@ -292,6 +292,10 @@ class User < ApplicationRecord
     super
   end
 
+  def confirmed?
+    latest_login_at.present? || super
+  end
+
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
   end

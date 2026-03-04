@@ -17,6 +17,7 @@ class Users::LoginService
     if matching_login_code&.usable?
       @user = upsert_user
       user.confirm
+      user.update!(latest_login_at: Time.zone.now)
       sign_in_user_lambda.call(user)
       matching_login_code.update!(used_at: Time.zone.now)
       true
