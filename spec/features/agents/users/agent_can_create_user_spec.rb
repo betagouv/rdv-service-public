@@ -67,4 +67,17 @@ RSpec.describe "Agent can create user" do
       expect_page_title("Marco LEBRETON")
     end
   end
+
+  it "création de proche", js: true do
+    choose("Proche")
+    fill_in("Prénom", with: "enfant-prenom", match: :first)
+    fill_in("Nom", with: "enfant-nom", match: :first)
+    click_on("Nouvel Usager")
+    fill_in("user_responsible_attributes_first_name", with: "parent-prenom")
+    fill_in("user_responsible_attributes_last_name", with: "parent-nom")
+
+    click_button("Enregistrer")
+    expect_page_title("enfant-prenom ENFANT-NOM")
+    expect(User.last(2).map(&:last_name)).to eq(%w[parent-nom enfant-nom])
+  end
 end
