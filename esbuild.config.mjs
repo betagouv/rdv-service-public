@@ -31,7 +31,6 @@ const config = {
   plugins: [
     select2Plugin,
     sassPlugin({
-      importMapper: (p) => p.replace(/^~/, ""),
       loadPaths: [path.resolve(__dirname, "node_modules")],
       logger: Logger.silent,
     }),
