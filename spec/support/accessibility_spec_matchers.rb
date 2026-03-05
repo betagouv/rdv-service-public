@@ -3,14 +3,18 @@
 class AxeRunner
   attr_reader :page
 
-  Violation = Data.define(:id, :impact, :tags, :description, :help, :helpUrl) do
+  Violation = Data.define(:id, :impact, :tags, :description, :help, :helpUrl, :nodes) do
     def to_s
+      node_details = nodes.map { |node| "  - #{node['target'].join(', ')}\n    #{node['html']}\n    #{node['failureSummary']}" }.join("\n")
+
       <<~MSG
         # #{description}
 
         impact #{impact} · #{help}
         #{id} · #{tags.join(', ')}
         #{helpUrl}
+        Nodes:
+        #{node_details}
       MSG
     end
   end
@@ -26,7 +30,7 @@ class AxeRunner
   def violations
     @violations ||= raw_results
       .fetch("violations")
-      .map { Violation.new(**_1.except("nodes")) } # nodes clutters up the output
+      .map { Violation.new(**_1.slice("id", "impact", "tags", "description", "help", "helpUrl", "nodes")) }
   end
 
   # inject the axe JS into the page, wait for the results to be logged, parse the results, and return them
