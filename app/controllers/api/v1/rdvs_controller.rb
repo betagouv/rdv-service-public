@@ -53,7 +53,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
     @rdv = Rdv.find(params[:rdv_id])
     authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
-    @rdv.update!(params.permit(:status))
+    @rdv.update_and_notify(current_agent, params.permit(:status))
 
     # Le blueprint complet du rendez-vous renvoie énormément d'information, qui ne sont pas pertinentes ici.
     # On va sans doute devoir restreindre la quantité de données renvoyées par ce blueprint pour rendre
