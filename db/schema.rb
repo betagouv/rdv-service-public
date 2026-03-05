@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_16_144148) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_17_085457) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -156,6 +156,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_16_144148) do
     t.boolean "sensitive_account", default: false, null: false
     t.datetime "caldav_disconnect_started_at"
     t.boolean "display_extended_hours", default: false, null: false
+    t.bigint "latest_used_organisation_id"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -932,6 +933,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_16_144148) do
   add_foreign_key "agent_territorial_access_rights", "territories"
   add_foreign_key "agent_territorial_roles", "agents"
   add_foreign_key "agent_territorial_roles", "territories"
+  add_foreign_key "agents", "organisations", column: "latest_used_organisation_id"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
   add_foreign_key "annotations", "territories"
