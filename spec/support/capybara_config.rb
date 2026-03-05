@@ -4,14 +4,21 @@ WebMock.disable_net_connect!(allow: [
                                "www.rdv-solidarites-test.localhost",
                              ])
 
+playwright_config = {
+  browser_type: ENV["PLAYWRIGHT_BROWSER"]&.to_sym || :chromium,
+  headless: ENV["HEADLESS"] != "false",
+  timeout: 5,
+  timezoneId: "Europe/Paris",
+}
+
 Capybara.register_driver(:playwright) do |app|
-  Capybara::Playwright::Driver.new(
-    app,
-    browser_type: ENV["PLAYWRIGHT_BROWSER"]&.to_sym || :chromium,
-    headless: ENV["HEADLESS"] != "false",
-    timeout: 5
-  )
+  Capybara::Playwright::Driver.new(app, **playwright_config)
 end
+
+Capybara.register_driver(:playwright_guadeloupe) do |app|
+  Capybara::Playwright::Driver.new(app, **playwright_config, timezoneId: "America/Guadeloupe")
+end
+
 Capybara.javascript_driver = :playwright
 
 Capybara.configure do |config|

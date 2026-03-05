@@ -211,4 +211,23 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday_next_week, format: '%-d/%m/%Y')} à 08:30")
     end
   end
+
+  describe "apparence de l'agenda" do
+    let!(:organisation) { create(:organisation) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+    before do
+      login_as(agent, scope: :agent)
+    end
+
+    it "affiche chaque jour", js: true do
+      Capybara.using_driver(:playwright_guadeloupe) do
+        page.driver.with_playwright_page { _1.clock.pause_at(Time.zone.parse("2026-03-15 08:00")) }
+        visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+        expected_header = ["lun. 9", "mar. 10", "mer. 11", "jeu. 12", "ven. 13"]
+        actual_headers = find_all(".fc-col-header-cell-cushion").map(&:text)
+        expect(actual_headers).to eq(expected_header)
+      end
+    end
+  end
 end
