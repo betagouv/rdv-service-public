@@ -6,11 +6,14 @@ class Agents::PagesController < AgentAuthController
   def home
     skip_authorization
 
-    accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
+    accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope).to_a
+    latest_used_organisation = accessible_organisations.find { _1.id == current_agent.latest_used_organisation_id }
 
-    if accessible_organisations.count == 1
+    if accessible_organisations.size == 1
       redirect_to admin_organisation_planning_agenda_path(accessible_organisations.first)
-    elsif accessible_organisations.count > 1
+    elsif latest_used_organisation
+      redirect_to admin_organisation_planning_agenda_path(latest_used_organisation)
+    elsif accessible_organisations.size > 1
       redirect_to admin_organisations_path
     else
       policy = Agent::TerritoryPolicy.new(current_agent, Territory.new)

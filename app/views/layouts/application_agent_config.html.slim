@@ -24,7 +24,7 @@ html lang="fr"
         .auth-fluid-left.text-center.col-xs-12.col-md-4#sidemenu class="#{"auth-fluid-left--agent-preferences" if current_agent}"
           .p-2
             = link_logo
-          - if current_agent.present?
+          - if current_agent&.latest_used_organisation_id
             = link_to(root_path, class: "pt-1 pb-4") do
               i.fr-icon-arrow-left-line
               |< Retour à l'accueil
