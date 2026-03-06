@@ -12,6 +12,7 @@ RSpec.describe "Lister les organisations et y naviguer" do
 
     it "un clic sur le logo renvoie vers l'accueil de cette orga" do
       visit "/admin/organisations/#{organisation.id}/users"
+      expect(page).not_to have_content("Retour à l'accueil")
       find("header nav a.header-brand").click
       expect(page).to have_current_path("/admin/organisations/#{organisation.id}/planning/agenda")
     end
@@ -44,12 +45,12 @@ RSpec.describe "Lister les organisations et y naviguer" do
 
     context "quand l'agent a déjà visité une organisation" do
       before do
-        visit "/admin/organisations/#{organisation2.id}/support"
+        visit "/admin/organisations/#{organisation2.id}/support" # l'agent a déjà visité organisation2
       end
 
-      it "une visite du root path redirige vers la dernière orga" do
+      it "une visite du root path redirige vers le choix d'orga" do
         visit "/"
-        expect(page).to have_current_path("/admin/organisations/#{organisation2.id}/planning/agenda")
+        expect(page).to have_current_path("/admin/organisations")
       end
 
       it "un clic sur le logo renvoie vers le choix d'orga" do
@@ -58,7 +59,7 @@ RSpec.describe "Lister les organisations et y naviguer" do
         expect(page).to have_current_path("/admin/organisations")
       end
 
-      it "permet de lister son orga et de revenir à l'accueil" do
+      it "sur la liste des orgas, le bouton de retour à l'accueil pointe vers la dernière orga visitée" do
         visit "/admin/organisations"
         expect(page).to have_current_path("/admin/organisations")
         click_on("Retour à l'accueil")
