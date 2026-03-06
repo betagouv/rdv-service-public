@@ -36,9 +36,9 @@ class RdvServicePublicApiClient
   end
 
   def ressource_already_created_error_response?(response)
-    external_id_errors = response.body.dig("errors", "external_id")
+    external_id_errors = Array(response.body.dig("errors", "external_id")) + Array(response.body.dig("errors", "external_references.external_id"))
 
-    external_id_errors&.find do |error_hash|
+    external_id_errors.find do |error_hash|
       error_hash["error"] == "taken"
     end
   end
