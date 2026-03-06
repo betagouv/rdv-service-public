@@ -25,13 +25,13 @@ class AgentAuthController < ApplicationController
   end
 
   def current_organisation
-    @current_organisation ||= Organisation.find(params[:organisation_id])
+    return @current_organisation if defined? @current_organisation
 
-    if current_agent && @current_organisation && @current_organisation.id != current_agent.latest_used_organisation_id
-      current_agent.update_columns(latest_used_organisation_id: @current_organisation.id) # rubocop:disable Rails/SkipsModelValidations
+    @current_organisation = Organisation.find(params[:organisation_id]).tap do |organisation|
+      if organisation && current_agent
+        current_agent.update_columns(latest_used_organisation_id: organisation.id) # rubocop:disable Rails/SkipsModelValidations
+      end
     end
-
-    @current_organisation
   end
 
   def current_territory
