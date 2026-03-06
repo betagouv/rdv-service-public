@@ -12,7 +12,6 @@ RSpec.describe "Lister les organisations et y naviguer" do
 
     it "un clic sur le logo renvoie vers l'accueil de cette orga" do
       visit "/admin/organisations/#{organisation.id}/users"
-      expect(page).not_to have_content("Retour à l'accueil")
       find("header nav a.header-brand").click
       expect(page).to have_current_path("/admin/organisations/#{organisation.id}/planning/agenda")
     end
@@ -21,8 +20,7 @@ RSpec.describe "Lister les organisations et y naviguer" do
       visit "/admin/organisations"
       expect(page).to have_current_path("/admin/organisations")
 
-      # un clic sur le logo redirige vers le root_path et donc son unique orga
-      find('#sidemenu a[href="/"]').click
+      click_on("Retour à l'accueil")
       expect(page).to have_current_path("/admin/organisations/#{organisation.id}/planning/agenda")
     end
   end
@@ -40,7 +38,13 @@ RSpec.describe "Lister les organisations et y naviguer" do
       expect(page).to have_current_path("/admin/organisations")
       expect(page).to have_content("MDS de Paris Nord")
       expect(page).to have_content("MDS de Paris Sud")
-      expect(page).not_to have_content("Retour à l'accueil")
+    end
+
+    # TODO: corriger ce problème (boucle infinie si je n'ai jamais visité d'orga)
+    it "enferme l'agent sur la page de choix d'orga" do
+      visit "/admin/organisations"
+      click_on("Retour à l'accueil")
+      expect(page).to have_current_path("/admin/organisations")
     end
 
     context "quand l'agent a déjà visité une organisation" do
