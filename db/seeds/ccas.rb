@@ -53,7 +53,6 @@ user.save!
 # Un agent pour tester l'absence d'orga et de services
 agent = Agent.new(
   email: "bob-sans-orga@demo.rdv-solidarites.fr",
-  uid: "bob-sans-orga@demo.rdv-solidarites.fr",
   first_name: "Bob",
   last_name: "Sans Organisation",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],

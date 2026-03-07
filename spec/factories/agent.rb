@@ -3,7 +3,6 @@ FactoryBot.define do
 
   factory :agent do
     email { generate(:agent_email) }
-    uid { email }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     password { "Correcth0rse!" }
@@ -94,7 +93,6 @@ FactoryBot.define do
     end
     trait :intervenant do
       email { nil }
-      uid { nil }
       first_name { nil }
       invitation_token { nil }
       invitation_created_at { nil }

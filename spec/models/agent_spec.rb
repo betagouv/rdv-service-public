@@ -36,7 +36,7 @@ RSpec.describe Agent, type: :model do
       agent = create(:agent, basic_role_in_organisations: [])
       create(:rdv, agents: [agent])
       agent.soft_delete
-      expect(agent.uid).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
+      expect(agent.reload.uid).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
 
     it "delete associations" do

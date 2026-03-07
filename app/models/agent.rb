@@ -177,8 +177,7 @@ class Agent < ApplicationRecord
       update_columns(
         deleted_at: Time.zone.now,
         email_original: email,
-        email: deleted_email,
-        uid: deleted_email
+        email: deleted_email
       )
     end
   end

@@ -134,7 +134,6 @@ motif_yonne_telephone = Motif.create!(
 # Agent
 agent_orgs_rdv_insertion = Agent.new(
   email: "alain.sertion@rdv-insertion-demo.fr",
-  uid: "alain.sertion@rdv-insertion-demo.fr",
   first_name: "Alain",
   last_name: "Sertion",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],

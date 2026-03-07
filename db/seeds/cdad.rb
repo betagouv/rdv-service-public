@@ -39,7 +39,6 @@ motif1_cdad1 = Motif.create!(
 # Agent
 all_cdad_agent = Agent.new(
   email: "secretariat@cdad.fr",
-  uid: "secretariat@cdad.fr",
   first_name: "Maxime",
   last_name: "Secrétariat",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -59,7 +58,6 @@ all_cdad_agent.territorial_roles.create!(territory: territory_gironde)
 
 cdad1_agent = Agent.new(
   email: "cdad1@cdad.fr",
-  uid: "cdad1@cdad.fr",
   first_name: "Basic",
   last_name: "CDAD1",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -78,7 +76,6 @@ cdad1_agent.territorial_roles.create!(territory: territory_gironde)
 
 cdad1_admin = Agent.new(
   email: "cdad1_admin@cdad.fr",
-  uid: "cdad1_admin@cdad.fr",
   first_name: "Admin",
   last_name: "CDAD1",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -97,7 +94,6 @@ cdad1_admin.territorial_roles.create!(territory: territory_gironde)
 
 cdad2_agent = Agent.new(
   email: "cdad2@cdad.fr",
-  uid: "cdad2@cdad.fr",
   first_name: "Basic",
   last_name: "CDAD2",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -116,7 +112,6 @@ cdad2_agent.territorial_roles.create!(territory: territory_gironde)
 
 cdad2_admin = Agent.new(
   email: "cdad2_admin@cdad.fr",
-  uid: "cdad2_admin@cdad.fr",
   first_name: "Admin",
   last_name: "CDAD2",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],

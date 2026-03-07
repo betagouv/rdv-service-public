@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_04_111613) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_07_094024) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -127,7 +127,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_04_111613) do
     t.datetime "deleted_at"
     t.string "email_original"
     t.string "provider", default: "email", null: false
-    t.string "uid", default: ""
     t.text "tokens"
     t.boolean "allow_password_change", default: false
     t.enum "rdv_notifications_level", default: "all", enum_type: "agents_rdv_notifications_level"
@@ -155,6 +154,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_04_111613) do
     t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.boolean "sensitive_account", default: false, null: false
     t.datetime "caldav_disconnect_started_at"
+    t.virtual "uid", type: :string, as: "email", stored: true
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -166,7 +166,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_04_111613) do
     t.index ["pro_connect_openid_sub"], name: "index_agents_on_pro_connect_openid_sub", where: "(pro_connect_openid_sub IS NOT NULL)"
     t.index ["proconnect_siret"], name: "index_agents_on_proconnect_siret"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
-    t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
+    t.index ["uid"], name: "index_agents_on_uid"
   end
 
   create_table "agents_rdvs", force: :cascade do |t|

@@ -402,7 +402,6 @@ UserProfile.insert_all!(user_organisation_attributes)
 
 agent_org_paris_nord_pmi_martine = Agent.new(
   email: "martine@demo.rdv-solidarites.fr",
-  uid: "martine@demo.rdv-solidarites.fr",
   first_name: "Martine",
   last_name: "Validay",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -422,7 +421,6 @@ agent_org_paris_nord_pmi_martine.territorial_roles.create!(territory: territory7
 
 agent_org_paris_nord_pmi_marco = Agent.new(
   email: "marco@demo.rdv-solidarites.fr",
-  uid: "marco@demo.rdv-solidarites.fr",
   first_name: "Marco",
   last_name: "Durand",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -442,7 +440,6 @@ agent_org_paris_nord_pmi_marco.save!
 
 agent_org_paris_nord_pmi_elsa = Agent.new(
   email: "Elsa@demo.rdv-solidarites.fr",
-  uid: "Elsa@demo.rdv-solidarites.fr",
   first_name: "Elsa",
   last_name: "Deck",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -462,7 +459,6 @@ agent_org_paris_nord_pmi_elsa.save!
 
 agent_org_paris_nord_social_polo = Agent.new(
   email: "polo@demo.rdv-solidarites.fr",
-  uid: "polo@demo.rdv-solidarites.fr",
   first_name: "Polo",
   last_name: "Durant",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -481,7 +477,6 @@ agent_org_paris_nord_social_polo.save!
 
 org_arques_pmi_maya = Agent.new(
   email: "maya@demo.rdv-solidarites.fr",
-  uid: "maya@demo.rdv-solidarites.fr",
   first_name: "Maya",
   last_name: "Patrick",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -501,7 +496,6 @@ org_arques_pmi_maya.territorial_roles.create!(territory: territory62)
 
 agent_org_bapaume_pmi_bruno = Agent.new(
   email: "bruno@demo.rdv-solidarites.fr",
-  uid: "bruno@demo.rdv-solidarites.fr",
   first_name: "Bruno",
   last_name: "Frangi",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -521,7 +515,6 @@ AgentTerritorialRole.create!(agent: agent_org_bapaume_pmi_bruno, territory: terr
 
 agent_org_bapaume_pmi_gina = Agent.new(
   email: "gina@demo.rdv-solidarites.fr",
-  uid: "gina@demo.rdv-solidarites.fr",
   first_name: "Gina",
   last_name: "Leone",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -571,7 +564,7 @@ agent_org_bapaume_pmi_gina.save!
   Agent.new(
     first_name:, last_name:,
     created_at: now, updated_at: now,
-    email:, uid: email,
+    email:,
     invitation_accepted_at: 10.days.ago,
     last_sign_in_at: 2.days.ago,
     password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
@@ -592,7 +585,7 @@ end
   fabre-guyot@demo.rdv-solidarites.fr
 ].each do |email|
   agent = Agent.new(
-    email: email, uid: email,
+    email: email,
     invitation_sent_at: now,
     password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"], # password required to avoid validation errors
     services: [service_social],

@@ -44,7 +44,6 @@ motif_passeport = Motif.create!(
 # Agent
 agent_mairie_de_sannois = Agent.new(
   email: "alain.mairie@rdv-mairie-demo.fr",
-  uid: "alain.mairie@rdv-mairie-demo.fr",
   first_name: "Alain",
   last_name: "Mairie",
   password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],

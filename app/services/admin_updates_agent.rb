@@ -85,7 +85,6 @@ class AdminUpdatesAgent
 
   def reset_agent_email_and_password
     @agent.email = nil
-    @agent.uid = nil
     @agent.password = nil
     @agent.password_confirmation = nil
   end
