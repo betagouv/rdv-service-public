@@ -8,7 +8,7 @@ module CreneauxSearch::Calculator
 
     attr_reader :free_times_po, :motif, :duration_in_min
 
-    def perform
+    def perform(datetime_range)
       slots_for(free_times_po, motif, duration_in_min:).select do |slot|
         slot.starts_at >= datetime_range.begin
       end
