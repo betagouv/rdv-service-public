@@ -25,7 +25,7 @@ module CreneauxSearch::Calculator
 
       free_times = {}
       @plages_ouvertures.each do |plage_ouverture|
-        free_times[plage_ouverture] = calculate_free_times(plage_ouverture, @search_datetime_range, work_on_off_days:)
+        free_times[plage_ouverture] = calculate_free_times(plage_ouverture, work_on_off_days:)
       end
       free_times.select { |_, v| v&.any? }
     end
@@ -34,8 +34,8 @@ module CreneauxSearch::Calculator
 
     attr_reader :work_on_off_days
 
-    def calculate_free_times(plage_ouverture, datetime_range, work_on_off_days:)
-      ranges = occurrence_ranges_for(plage_ouverture, datetime_range)
+    def calculate_free_times(plage_ouverture, work_on_off_days:)
+      ranges = occurrence_ranges_for(plage_ouverture)
       return [] if ranges.empty?
 
       busy_times = BusyTimePreloader.start_loading_busy_times_for(ranges, plage_ouverture.agent, work_on_off_days:).busy_times
