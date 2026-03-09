@@ -13,9 +13,7 @@ module CreneauxSearch::Calculator
         work_on_off_days: motif.organisation.territory.work_on_sunday? # La colonne `work_on_sunday` indique aussi que les agents travaillent les jours fériés
       )
 
-      slots_for(free_times_po, motif, duration_in_min:).select do |slot|
-        slot.starts_at >= datetime_range.begin
-      end
+      SplitFreeTimeRangesIntoCreneaux.new(free_times_po, motif, duration_in_min:).perform
     end
 
     def plage_ouvertures_for(motif, lieu, datetime_range, agents)
@@ -84,50 +82,6 @@ module CreneauxSearch::Calculator
       range if (busy_time.ends_at < range.begin) || (busy_time.starts_at > range.end) # Dans ce dernier cas il n'y a pas d'overlap du tout entre le range et le busy_time
     end
 
-    def slots_for(plage_ouverture_free_times, motif, duration_in_min: nil)
-      slots = []
-      plage_ouverture_free_times.each do |plage_ouverture, free_times|
-        free_times.each do |free_time|
-          slots += calculate_slots(free_time, motif, plage_ouverture, duration_in_min:)
-        end
-      end
-      slots
-    end
-
-    def calculate_slots(free_time, motif, plage_ouverture, duration_in_min: nil)
-      possible_slot_start = earliest_possible_slot_start(free_time)
-      duration_in_min ||= motif.default_duration_in_min
-      last_possible_slot_start = free_time.end - duration_in_min.minutes
-
-      slots = []
-
-      while possible_slot_start <= last_possible_slot_start
-        slots << Creneau.new(
-          starts_at: possible_slot_start,
-          motif: motif,
-          duration_in_min:,
-          lieu_id: plage_ouverture.lieu_id,
-          agent: plage_ouverture.agent
-        )
-        possible_slot_start += duration_in_min.minutes
-      end
-      slots
-    end
-
-    def earliest_possible_slot_start(free_time)
-      earliest_possible_start = Time.zone.now
-
-      possible_slot_start = free_time.begin
-
-      if free_time.begin < earliest_possible_start
-        step_length = 5.minutes
-
-        possible_slot_start += step_length * ((earliest_possible_start - free_time.begin) / step_length).ceil
-      end
-
-      possible_slot_start
-    end
-
     def import_absences_from_caldav(agents)
       agents.each do |agent|
         if agent.caldav_configured?
@@ -191,9 +145,7 @@ module CreneauxSearch::Calculator
         multiranges << slice.map { |range| ActiveRecord::Base.sanitize_sql_array(["tsrange(?, ?, '[]')", range.begin, range.end]) }.join(", ")
       end
 
-      multiranges_union_in_sql = multiranges.map do |multirange_arguments|
-        "tsmultirange(#{multirange_arguments})"
-      end.join("+")
+      multiranges_union_in_sql = multiranges.map { |multirange_arguments| "tsmultirange(#{multirange_arguments})" }.join("+")
 
       AgentsRdv
         .where(agent_id: @agent.id, calculator_rdv_not_cancelled_and_in_the_future: true)
