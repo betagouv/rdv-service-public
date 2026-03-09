@@ -177,15 +177,13 @@ module CreneauxSearch::Calculator
         @agent.absences.not_expired.in_range(range).load_async
       end
 
-      puts "REQUEST"
-      puts optimized_rdv_request.to_sql
       @rdvs_starts_and_ends_at = optimized_rdv_request.pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
     end
 
     def optimized_rdv_request
       # Cet requête est censée utiliser l'index "calculator_index"
       #
-      ranges_in_sql = @ranges.map { |range| "tsrange('#{range.begin}', '#{range.end}', '[]')" }.join(", ")
+      ranges_in_sql = @ranges.map { |range| ActiveRecord::Base.sanitize_sql_array(["tsrange(?, ?, '[]')", range.begin, range.end]) }.join(", ")
       AgentsRdv
         .where(agent_id: @agent.id, calculator_rdv_not_cancelled_and_in_the_future: true)
         .where("tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsmultirange(#{ranges_in_sql})")
