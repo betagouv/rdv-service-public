@@ -8,10 +8,9 @@ module CreneauxSearch::Calculator
 
       # Cette méthode découpe les plages d'ouverture en fonction des absences, rdvs, et jours fériés
       free_times_po = FreeTimesFromPlageOuvertureAndBusyTimes.new(
-        plage_ouvertures,
         datetime_range,
         work_on_off_days: motif.organisation.territory.work_on_sunday? # La colonne `work_on_sunday` indique aussi que les agents travaillent les jours fériés
-      ).perform
+      ).perform(plage_ouvertures)
 
       # Convention de nommage:
       #

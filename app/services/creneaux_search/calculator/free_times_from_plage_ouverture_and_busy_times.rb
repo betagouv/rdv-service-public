@@ -1,12 +1,11 @@
 module CreneauxSearch::Calculator
   class FreeTimesFromPlageOuvertureAndBusyTimes
-    def initialize(plages_ouvertures, search_datetime_range, work_on_off_days:)
-      @plages_ouvertures = plages_ouvertures
+    def initialize(search_datetime_range, work_on_off_days:)
       @search_datetime_range = search_datetime_range
       @work_on_off_days = work_on_off_days
     end
 
-    def perform
+    def perform(plages_ouvertures)
       # pseudo-code :
       # charger toutes les occurrences de la plage_ouverture
       #
@@ -24,7 +23,7 @@ module CreneauxSearch::Calculator
       # découper le range résultant en créneaux
 
       free_times = {}
-      @plages_ouvertures.each do |plage_ouverture|
+      plages_ouvertures.each do |plage_ouverture|
         free_times[plage_ouverture] = calculate_free_times(plage_ouverture, work_on_off_days:)
       end
       free_times.select { |_, v| v&.any? }
@@ -40,9 +39,7 @@ module CreneauxSearch::Calculator
 
       busy_times = BusyTimePreloader.start_loading_busy_times_for(ranges, plage_ouverture.agent, work_on_off_days:).busy_times
 
-      ranges.flat_map do |range|
-        split_range_recursively(range, busy_times)
-      end
+      multirange_difference(ranges, busy_times.map(&:range))
     end
 
     def occurrence_ranges_for(plage_ouverture)
@@ -55,29 +52,37 @@ module CreneauxSearch::Calculator
       end.compact
     end
 
-    # On enlève les intervalles occupés d'un morceau de plage d'ouverture
-    def split_range_recursively(range, busy_times)
-      return [] if range.nil?
-      return [range] if busy_times.empty?
+    # available_ranges: array of datetime ranges, e.g. [(Time.zone.now..1.hour.from_now), (24.hours.from_now..25.hours.from_now)]
+    # busy_times: array of BusyTimes
+    # The return value is also the same type
+    def multirange_difference(available_ranges, busy_ranges)
+      pg_available_ranges = datetime_ranges_to_pg_tsmultirange(available_ranges)
+      pg_busy_ranges = datetime_ranges_to_pg_tsmultirange(busy_ranges)
 
-      busy_time = busy_times.first
+      result = ActiveRecord::Base.connection.execute("SELECT (#{ActiveRecord::Base.sanitize_sql(pg_available_ranges)}) - (#{ActiveRecord::Base.sanitize_sql(pg_busy_ranges)})")
 
-      first_range(range, busy_time) \
-        + split_range_recursively(remaining_range(range, busy_time), busy_times - [busy_time])
+      parse_pg_tsmultirange(result.getvalue(0, 0))
     end
 
-    def first_range(range, busy_time)
-      return [range.begin..busy_time.starts_at] if range.begin < busy_time.starts_at && range.cover?(busy_time.range)
-
-      []
+    def parse_pg_tsmultirange(pg_string)
+      pg_string.scan(/\{*[\[|\(](.*?)?,(.*?)?[\]|\)]/).map do |range|
+        (parse_pg_timestamp(range[0])..parse_pg_timestamp(range[1]))
+      end
     end
 
-    def remaining_range(range, busy_time)
-      return busy_time.ends_at..range.end if range.cover?(busy_time.range)
-      return range.begin..busy_time.starts_at if range.cover?(busy_time.starts_at)
-      return busy_time.ends_at..range.end if range.cover?(busy_time.ends_at)
+    def parse_pg_timestamp(pg_ts_string)
+      Time.find_zone("UTC").parse(pg_ts_string).in_time_zone(Time.zone.name)
+    end
 
-      range if (busy_time.ends_at < range.begin) || (busy_time.starts_at > range.end) # Dans ce dernier cas il n'y a pas d'overlap du tout entre le range et le busy_time
+    def datetime_ranges_to_pg_tsmultirange(datetime_ranges)
+      return "tsmultirange()" if datetime_ranges.empty?
+
+      multiranges = []
+      datetime_ranges.each_slice(100) do |slice| # The Postgres initializer can't take more than 100 arguments
+        multiranges << slice.map { |range| ActiveRecord::Base.sanitize_sql_array(["tsrange(?, ?, '[]')", range.begin, range.end]) }.join(", ")
+      end
+
+      multiranges.map { |multirange_arguments| "tsmultirange(#{multirange_arguments})" }.join("+")
     end
 
     class BusyTimePreloader
