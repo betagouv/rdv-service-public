@@ -186,7 +186,7 @@ module CreneauxSearch::Calculator
       ranges_in_sql = @ranges.map { |range| ActiveRecord::Base.sanitize_sql_array(["tsrange(?, ?, '[]')", range.begin, range.end]) }.join(", ")
       AgentsRdv
         .where(agent_id: @agent.id, calculator_rdv_not_cancelled_and_in_the_future: true)
-        .where("tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsmultirange(#{ranges_in_sql})")
+        .where("tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsmultirange(#{ActiveRecord::Base.sanitize_sql(ranges_in_sql)})")
         .select(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
     end
 
