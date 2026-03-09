@@ -173,7 +173,7 @@ module CreneauxSearch::Calculator
       # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
       #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
 
-      @absence_arrays = @ranges.map do |range|
+      @absences_by_range = @ranges.index_with do |range|
         @agent.absences.not_expired.in_range(range).load_async
       end
 
@@ -191,10 +191,10 @@ module CreneauxSearch::Calculator
 
     def busy_times_from_absences
       busy_times = []
-      @absence_arrays.each do |absences|
+      @absences_by_range.each do |range, absences|
         absences.each do |absence|
-          absence.occurrences_for(@range).each do |absence_occurrence|
-            next if absence_out_of_range?(absence_occurrence)
+          absence.occurrences_for(range).each do |absence_occurrence|
+            next if absence_out_of_range?(absence_occurrence, range)
 
             busy_times << BusyTime.new(absence_occurrence.starts_at, absence_occurrence.ends_at)
           end
@@ -203,26 +203,30 @@ module CreneauxSearch::Calculator
       busy_times
     end
 
-    def absence_out_of_range?(absence)
-      absence.ends_at < @range.begin || @range.end < absence.starts_at
+    def absence_out_of_range?(absence, range)
+      absence.ends_at < range.begin || range.end < absence.starts_at
     end
 
     def busy_times_from_external_calendar
       return [] unless @agent.caldav_configured?
 
       external_calendar_occurrences = []
-      ExternalCalendarEvent.where(agent_id: @agent.id).within_range(@range).each do |event|
-        event.all_occurrences_within(@range).each do |occurrence|
-          external_calendar_occurrences << BusyTime.new(occurrence.starts_at, occurrence.ends_at)
+      @ranges.each do |range|
+        ExternalCalendarEvent.where(agent_id: @agent.id).within_range(range).each do |event|
+          event.all_occurrences_within(range).each do |occurrence|
+            external_calendar_occurrences << BusyTime.new(occurrence.starts_at, occurrence.ends_at)
+          end
         end
       end
       external_calendar_occurrences
     end
 
     def busy_times_from_off_days
-      OffDays.all_in_date_range(@range).map do |off_day|
-        BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
-      end
+      @ranges.map do |range|
+        OffDays.all_in_date_range(range).map do |off_day|
+          BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
+        end
+      end.flatten
     end
   end
 
