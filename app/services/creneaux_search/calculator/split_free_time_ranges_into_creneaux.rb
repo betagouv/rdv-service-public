@@ -6,27 +6,27 @@ module CreneauxSearch::Calculator
       @duration_in_min = duration_in_min
     end
 
-    attr_reader :free_times_po, :motif, :duration_in_min
-
     def perform(datetime_range)
-      slots_for(free_times_po, motif, duration_in_min:).select do |slot|
+      slots_for(free_times_po, duration_in_min:).select do |slot|
         slot.starts_at >= datetime_range.begin
       end
     end
 
     private
 
-    def slots_for(plage_ouverture_free_times, motif, duration_in_min: nil)
+    attr_reader :free_times_po, :motif, :duration_in_min
+
+    def slots_for(plage_ouverture_free_times, duration_in_min: nil)
       slots = []
       plage_ouverture_free_times.each do |plage_ouverture, free_times|
         free_times.each do |free_time|
-          slots += calculate_slots(free_time, motif, plage_ouverture, duration_in_min:)
+          slots += calculate_slots(free_time, plage_ouverture, duration_in_min:)
         end
       end
       slots
     end
 
-    def calculate_slots(free_time, motif, plage_ouverture, duration_in_min: nil)
+    def calculate_slots(free_time, plage_ouverture, duration_in_min: nil)
       possible_slot_start = earliest_possible_slot_start(free_time)
       duration_in_min ||= motif.default_duration_in_min
       last_possible_slot_start = free_time.end - duration_in_min.minutes
