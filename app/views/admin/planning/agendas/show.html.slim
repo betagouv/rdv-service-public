@@ -1,13 +1,6 @@
 - content_for(:menu_item) { "menu-agendas" }
-- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_planning_agenda_path" }
 
 = render "admin/onboarding/banner", in_agenda: true
-
-- content_for(:right_of_page_title) do
-  - unless @beta_planning_layout
-    .mr-1
-      - url = admin_organisation_planning_toggle_new_planning_path(current_organisation, set_to: "true")
-      = link_to "Activer la nouvelle vue planning", url, method: :put, class: "fr-link fr-link--sm"
 
 - content_for :title do
   - if current_agent == @agent
@@ -17,11 +10,12 @@
 
 ruby:
   event_sources = [
-    { id: "Rdv",                    url: admin_api_agenda_rdvs_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json) },
-    { id: "Absence",                url: admin_api_agenda_absences_path(agent_id: @agent, organisation_id: current_organisation.id, format: :json) },
-    { id: "ExternalCalendarEvent",  url: admin_api_agenda_external_calendar_events_path(agent_id: @agent, format: :json) },
-    { id: "PlageOuverture",         url: admin_api_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json) },
+    { id: "Rdv",            url: admin_api_agenda_rdvs_path(agent_id: @agent.id, organisation_id: current_organisation.id, format: :json) },
+    { id: "Absence",        url: admin_api_agenda_absences_path(agent_id: @agent.id, organisation_id: current_organisation.id, format: :json) },
+    { id: "PlageOuverture", url: admin_api_agenda_plage_ouvertures_path(agent_id: @agent.id, organisation_id: current_organisation.id, mixed_with_rdvs: true, format: :json) },
   ]
+
+  event_sources.push({ id: "ExternalCalendarEvent", url: admin_api_agenda_external_calendar_events_path(agent_id: @agent.id, format: :json) }) if @agent.caldav_configured?
   event_sources.push(OffDays.to_full_calendar_array) unless current_territory.work_on_sunday?
 
 = render partial: "admin/planning/agendas/disconnected_warning"
@@ -37,10 +31,7 @@ ruby:
 ]
 
 .my-3
-  - if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-    = render partial: "admin/planning/agendas/preferences_modal", locals: { display_cancelled_rdv: true, display_saturdays: true }
-  - else
-    = render partial: "admin/planning/agendas/preferences_buttons"
+  = render partial: "admin/planning/agendas/preferences_modal", locals: { display_cancelled_rdv: true, display_saturdays: true }
 
 .mt-2
   = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do

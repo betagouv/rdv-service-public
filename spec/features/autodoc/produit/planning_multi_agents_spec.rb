@@ -20,46 +20,10 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     # L’accessibilité a été améliorée, mais on laisse le paramètre désactivé pour cette doc, car nous utilisons select2 qu’il est difficile de corriger.
     doc = Autodoc.start_scenario("Nouveau planning / planning multi-agents", self, accessibility_checks: false, category: "3) Produit")
 
-    #
-    # FEATURE FLAG DÉSACTIVÉ : on fait un tour du planning
-    #
-
-    doc.start_section("Pour un agent qui n'a pas activé la feature")
+    doc.start_section("Agenda")
     visit admin_organisation_planning_agenda_path(organisation)
-    expect(page).to have_content("Votre agenda")
-    doc.add_screenshot(page, text: "L'agenda classique est affiché, et le menu de planning dépliant est affiché à gauche",
-                             wait_for: "DELOIC")
-
-    click_on "Plages d'ouverture"
-    doc.add_screenshot(page, text: "L'agent peut voir ses plages d'ouverture",
-                             wait_for: "Plage de Loïc")
-
-    click_on "Indisponibilités"
-    doc.add_screenshot(page, text: "L'agent peut voir ses indisponibilité",
-                             wait_for: "Indispo de Loïc")
-
-    find("#select2-planning_agent_select-container").click
-    find(%(.select2-results__option), text: "ADMIN Justine").click
-    doc.add_screenshot(page, text: "Il est possible de sélectionner un autre agent via le menu de gauche (ici on sélectionne Justine)",
-                             wait_for: "Indispo de Justine")
-
-    click_on "Plages d'ouverture"
-    doc.add_screenshot(page, text: "Lorsque l'on navigue vers les plages, on garde l'agent sélectionné",
-                             wait_for: "Plage de Justine")
-
-    click_on "Agenda"
-    doc.add_screenshot(page, text: "Lorsque l'on navigue vers l'agenda, on garde l'agent sélectionné",
-                             wait_for: "DEJUSTINE") # On vérifie que le RDV de Justine apparaît bien dans l'agenda
-
-    #
-    # FEATURE FLAG ACTIVÉ : on fait un tour du planning
-    #
-
-    doc.start_section("Quand l'agent active la feature (actuellement faisable depuis le super-admin)")
-    visit admin_organisation_planning_agenda_path(organisation)
-    click_on("Activer la nouvelle vue planning")
     expect(page).to have_content("Planning de")
-    doc.add_screenshot(page, text: "Une nouvelle navigation est proposée, où le choix de l'agent et du sous-menu sont dans la page principale et non plus dans le menu",
+    doc.add_screenshot(page, text: "On a le choix de l'agent et du sous-menu sont dans la page principale",
                              wait_for: "DELOIC") # On vérifie que le RDV de Loïc apparaît bien dans l'agenda
 
     click_on "Plages d'ouverture"
@@ -103,9 +67,5 @@ RSpec.describe "Nouveau planning / planning multi-agents", js: true do
     click_on "Indisponibilités"
     expect(page).to have_content(["Justine ADMIN", "1 indisponibilité", "Loïc BASIQUE", "1 indisponibilité"].join("\n"))
     doc.add_screenshot(page, text: "La section des indisponibilités liste tous les agents sélectionnés.")
-
-    visit admin_organisation_planning_agenda_path(organisation)
-    click_on("Revenir à l'ancienne vue")
-    expect(page).to have_content("Votre agenda")
   end
 end

@@ -1,12 +1,6 @@
 module Admin::Planning::SetAgentsConcern
   extend ActiveSupport::Concern
 
-  included do
-    before_action do
-      @beta_planning_layout = current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-    end
-  end
-
   private
 
   def set_agents
@@ -22,14 +16,7 @@ module Admin::Planning::SetAgentsConcern
       @agent = agents.first
       @agents = [@agent]
     else
-      if current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
-        @agents = agents
-      else
-        # Si l'agent courant n'a pas activé la feature on ne considère qu'il n'y
-        # a qu'un seul agent sélectionné, car le code sera en mode mono-agent.
-        @agent = agents.first
-        @agents = [@agent]
-      end
+      @agents = agents
     end
 
     if @agents.size > 1

@@ -2,7 +2,7 @@
 
 ruby:
   href = admin_organisation_planning_agenda_path(current_organisation, agent_id: contextual_agents.map(&:id))
-  label = if contextual_agents.size == 1 || !current_agent.feature_enabled?(Agent::FeatureFlags::NEW_PLANNING)
+  label = if contextual_agents.size == 1
             contextual_agents == [current_agent] ? "Retour à votre agenda" : "Retour à l'agenda de #{contextual_agents.first.full_name_or_email}"
           else
             "Retour aux agendas de #{contextual_agents.map(&:short_name_or_email).to_sentence.truncate(50)}"

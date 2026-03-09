@@ -26,7 +26,7 @@ RSpec.describe "Route vers l'agenda" do
 
       it "shows the agenda for this organisation" do
         visit "/agents/agenda"
-        expect(page).to have_content "Votre agenda"
+        expect(page).to have_content "Planning de"
         expect(page).to have_current_path("/admin/organisations/#{organisation.id}/planning/agenda")
       end
     end

@@ -8,11 +8,9 @@ import {
   eventRenderer,
   setupRealtimeRefresh,
   handleAjaxError,
-  classicHeaderToolbarLayout,
-  betaHeaderToolbarLayout,
-  betaWeekTitleFormat,
+  headerToolbarLayout,
+  weekTitleFormat,
   dayHeaderContent,
-  betaPlanningEnabled,
   preferencesModalToggle,
   hiddenDays,
 } from './calendar/utils'
@@ -45,10 +43,10 @@ export class AgendaMonoAgent {
       initialDate: this.getDefaultDate(),
       initialView: this.getDefaultView(),
       hiddenDays: hiddenDays(this.data),
-      titleFormat: betaPlanningEnabled() ? betaWeekTitleFormat : null,
+      titleFormat: weekTitleFormat,
       dayHeaderContent: dayHeaderContent,
       select: this.selectEvent,
-      headerToolbar: betaPlanningEnabled() ? betaHeaderToolbarLayout : classicHeaderToolbarLayout,
+      headerToolbar: headerToolbarLayout,
       customButtons: { preferencesModalToggle },
       views: {
         timeGridOneDay: {

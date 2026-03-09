@@ -2,14 +2,9 @@ import frLocale from '@fullcalendar/core/locales/fr';
 import { getConsumer, destroyConsumer } from "../../cable/consumer";
 import { JsonRequestError } from "@fullcalendar/core";
 
-export const betaPlanningEnabled = () => {
-  return !!document.querySelector('main[data-beta-planning-layout="true"]');
-};
+export const headerToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "preferencesModalToggle" };
 
-export const betaHeaderToolbarLayout = { left: "today,prev,next,title", center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek", right: "preferencesModalToggle" };
-export const classicHeaderToolbarLayout = { center: "dayGridMonth,timeGridWeek,timeGridOneDay,listWeek" };
-
-export const betaWeekTitleFormat = { month: "long", year: "numeric" };
+export const weekTitleFormat = { month: "long", year: "numeric" };
 
 export const preferencesModalToggle = {
   text: "Préférences d’affichage",
@@ -23,10 +18,9 @@ const CUSTOM_HEADER_FORMATS = {
   resourceTimeGridWeek: { weekday: "short", day: "numeric" },
 };
 export const dayHeaderContent = ({ date, view }) => {
-  if(betaPlanningEnabled()) {
-    if (CUSTOM_HEADER_FORMATS[view.type]) {
-      return new Intl.DateTimeFormat('fr-FR', CUSTOM_HEADER_FORMATS[view.type]).format(date);
-    }
+  const customFormat = CUSTOM_HEADER_FORMATS[view.type];
+  if (customFormat) {
+    return new Intl.DateTimeFormat('fr-FR', { timeZone: "Europe/Paris", ...customFormat }, ).format(date);
   }
   return true; // v6 : retourner true pour afficher le contenu par défaut
 };

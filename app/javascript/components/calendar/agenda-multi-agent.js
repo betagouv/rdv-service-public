@@ -7,7 +7,7 @@ import {
   setupRealtimeRefresh,
   handleAjaxError,
   dayHeaderContent,
-  betaWeekTitleFormat,
+  weekTitleFormat,
   preferencesModalToggle,
   hiddenDays,
 } from "./utils";
@@ -39,7 +39,7 @@ class AgendaMultiAgent {
         center: "resourceTimeGridDay,resourceTimeGridWeek",
         right: "preferencesModalToggle",
       },
-      titleFormat: betaWeekTitleFormat,
+      titleFormat: weekTitleFormat,
       dayHeaderContent: dayHeaderContent,
       customButtons: { preferencesModalToggle },
       datesAboveResources: this.data.groupByAgent !== "true",

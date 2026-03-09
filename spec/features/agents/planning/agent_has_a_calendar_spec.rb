@@ -72,13 +72,12 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       expect(page).to have_current_path("/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}?contextual_agent_ids=#{colleague.id}")
 
       # On vérifie qu'un clic sur Agenda nous ramène bien sur l'agenda du collègue
-      click_on "Agenda"
-      expect(page).to have_content("Agenda de #{colleague.full_name}")
+      click_on "Planning"
+      expect(page).to have_content("Planning de\n#{colleague.reverse_full_name}")
       expect(page).to have_current_path("/admin/organisations/#{organisation.id}/planning/agenda?agent_id=#{colleague.id}")
     end
 
     it "quand l'agent courant a activé le nouveau planning", js: true do
-      me.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
       login_as(me, scope: :agent)
       visit admin_organisation_planning_agenda_path(organisation, agent_id: colleague.id)
 
@@ -163,8 +162,6 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
 
     it "fonctionne quand on change de page et qu'on revient", js: true do
-      agent.enable_feature!(Agent::FeatureFlags::NEW_PLANNING)
-
       visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
       expect(page).to have_content("Planning de")
 
@@ -212,6 +209,33 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
       find('.fc-timegrid-slot-lane[data-time="08:30:00"]').click
       monday_next_week = Time.zone.today.beginning_of_week + 1.week
       expect(page).to have_content("Nouveau RDV pour le #{I18n.l(monday_next_week, format: '%-d/%m/%Y')} à 08:30")
+    end
+  end
+
+  describe "apparence de l'agenda" do
+    let!(:organisation) { create(:organisation) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+    before do
+      login_as(agent, scope: :agent)
+    end
+
+    it "affiche le nom des jour en en-tête", js: true do
+      Capybara.using_driver(:playwright_guadeloupe) do
+        page.driver.with_playwright_page { _1.clock.pause_at(Time.zone.parse("2026-03-15 08:00")) }
+        visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+
+        # vue semaine
+        expected_header = ["lun. 9", "mar. 10", "mer. 11", "jeu. 12", "ven. 13"]
+        actual_headers = find_all(".fc-col-header-cell-cushion").map(&:text)
+        expect(actual_headers).to eq(expected_header)
+
+        # vue mois
+        click_on("Mois")
+        expected_header = %w[lundi mardi mercredi jeudi vendredi]
+        actual_headers = find_all(".fc-col-header-cell-cushion").map(&:text)
+        expect(actual_headers).to eq(expected_header)
+      end
     end
   end
 end
