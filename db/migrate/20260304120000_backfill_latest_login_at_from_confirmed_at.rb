@@ -1,11 +1,8 @@
-class BackfillLatestLoginAtFromConfirmedAt < ActiveRecord::Migration[7.2]
+class BackfillLatestLoginAtFromConfirmedAt < ActiveRecord::Migration[8.0]
   def up
-    safety_assured { execute(<<~SQL.squish) }
-      UPDATE users
-      SET latest_login_at = confirmed_at
-      WHERE confirmed_at IS NOT NULL
-        AND latest_login_at IS NULL
-    SQL
+    User.where(latest_login_at: nil).where.not(confirmed_at: nil).in_batches do |batch|
+      batch.update_all("latest_login_at = confirmed_at")
+    end
   end
 
   def down
