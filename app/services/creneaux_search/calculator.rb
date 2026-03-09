@@ -183,10 +183,21 @@ module CreneauxSearch::Calculator
     def optimized_rdv_request
       # Cet requête est censée utiliser l'index "calculator_index"
       #
-      ranges_in_sql = @ranges.map { |range| ActiveRecord::Base.sanitize_sql_array(["tsrange(?, ?, '[]')", range.begin, range.end]) }.join(", ")
+      #
+      # On construit plusieurs multirange, parce que la fonction du contructeur ne peut pas prendre plus de 100 ranges en arguments
+
+      multiranges = []
+      @ranges.each_slice(100) do |slice|
+        multiranges << slice.map { |range| ActiveRecord::Base.sanitize_sql_array(["tsrange(?, ?, '[]')", range.begin, range.end]) }.join(", ")
+      end
+
+      multiranges_union_in_sql = multiranges.map do |multirange_arguments|
+        "tsmultirange(#{multirange_arguments})"
+      end.join("+")
+
       AgentsRdv
         .where(agent_id: @agent.id, calculator_rdv_not_cancelled_and_in_the_future: true)
-        .where("tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsmultirange(#{ActiveRecord::Base.sanitize_sql(ranges_in_sql)})")
+        .where("tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && (#{ActiveRecord::Base.sanitize_sql(multiranges_union_in_sql)})")
         .select(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
     end
 
