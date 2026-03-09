@@ -1,20 +1,10 @@
-class CreneauxSearch::Calculator::CreneauxFromPlageOuvertureAndBusyTimes
-  def initialize(search_datetime_range, plage_ouverture, motif, work_on_off_days:, duration_in_min:)
+class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
+  def initialize(search_datetime_range, plage_ouverture, work_on_off_days:, duration_in_min:)
     @search_datetime_range = search_datetime_range
     @plage_ouverture = plage_ouverture
-    @motif = motif
     @work_on_off_days = work_on_off_days
     @duration_in_min = duration_in_min
   end
-
-  # Convention de nommage:
-  #
-  # - available/disponible : moments où l'agent déclare pouvoir assurer des rendez-vous
-  #   (via une plage d'ouverture, qui sera peut-être renommée en disponibilités), mais il est possible que l'agent soit occupé par une absence, un rendez-vous ou autre
-  # - busy/occupé : moment où l'agent est pris par un rendez-vous, une indispo, un congé, ou un évènement
-  # - free/libre : moment où l'agent est effectivement libre: il est disponible et il n'est pas occupé
-  #
-  # pour résumer : "available times" - "busy times" = "free times"
 
   def perform
     # pseudo-code :
@@ -33,14 +23,7 @@ class CreneauxSearch::Calculator::CreneauxFromPlageOuvertureAndBusyTimes
     #
     # découper le range résultant en créneaux
 
-    free_times = calculate_free_times
-    CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux.new(free_times, @motif, @plage_ouverture, duration_in_min: @duration_in_min).perform(@search_datetime_range)
-  end
-
-  private
-
-  def calculate_free_times
-    ranges = occurrence_ranges_for
+    ranges = occurrence_ranges
     return [] if ranges.empty?
 
     busy_times = BusyTimePreloader.start_loading_busy_times_for(ranges, @plage_ouverture.agent, work_on_off_days: @work_on_off_days).busy_times
@@ -48,7 +31,9 @@ class CreneauxSearch::Calculator::CreneauxFromPlageOuvertureAndBusyTimes
     CreneauxSearch::Calculator::MultirangeDifference.new.perform(ranges, busy_times)
   end
 
-  def occurrence_ranges_for
+  private
+
+  def occurrence_ranges
     occurrences = @plage_ouverture.occurrences_for(@search_datetime_range)
 
     occurrences.map do |occurrence|
