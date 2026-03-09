@@ -35,7 +35,7 @@ module CreneauxSearch::Calculator
     attr_reader :work_on_off_days
 
     def calculate_free_times(plage_ouverture, datetime_range, work_on_off_days:)
-      ranges = ranges_for(plage_ouverture, datetime_range)
+      ranges = occurrence_ranges_for(plage_ouverture, datetime_range)
       return [] if ranges.empty?
 
       busy_times = BusyTimePreloader.start_loading_busy_times_for(ranges, plage_ouverture.agent, work_on_off_days:).busy_times
@@ -45,8 +45,8 @@ module CreneauxSearch::Calculator
       end
     end
 
-    def ranges_for(plage_ouverture, datetime_range)
-      occurrences = plage_ouverture.occurrences_for(datetime_range)
+    def occurrence_ranges_for(plage_ouverture)
+      occurrences = plage_ouverture.occurrences_for(@search_datetime_range)
 
       occurrences.map do |occurrence|
         next if occurrence.ends_at < Time.zone.now
