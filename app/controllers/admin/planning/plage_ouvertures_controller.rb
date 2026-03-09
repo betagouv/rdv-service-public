@@ -43,27 +43,42 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     authorize(@agent, :show?, policy_class: Agent::AgentPolicy)
   end
 
+  FORM_ATTRS = %i[
+    recurrence
+    first_day
+    start_time
+    end_time
+    secondary_start_time
+    secondary_end_time
+    motif_ids
+    lieu_id
+    title
+  ].freeze
+
   def new
+    @plage_ouverture = PlageOuverture.new(new_plage_form_defaults)
     if params[:duplicate_plage_ouverture_id].present?
       original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
-      defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :secondary_start_time, :secondary_end_time, :recurrence)
+      @plage_ouverture.assign_attributes(original_po.slice(**FORM_ATTRS))
     else
-      defaults = {
-        first_day: Time.zone.now,
-        start_time: Tod::TimeOfDay.new(9),
-        end_time: Tod::TimeOfDay.new(12),
-        secondary_start_time: nil,
-        secondary_end_time: nil,
-      }.merge(params.permit(:first_day, :start_time, :end_time, :motif_ids))
+      @plage_ouverture.assign_attributes(params.permit(*FORM_ATTRS))
     end
-    @plage_ouverture = PlageOuverture.new(
-      organisation: current_organisation,
-      motif_ids: params[:motif_ids],
-      agent: @agent,
-      **defaults
-    )
+
+    @plage_ouverture.organisation = current_organisation
+    @plage_ouverture.agent = @agent
+
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     @plage_ouverture.motifs = [@plage_ouverture.available_motifs.sole] if @plage_ouverture.available_motifs.size == 1
+  end
+
+  def new_plage_form_defaults
+    {
+      first_day: Time.zone.now,
+      start_time: Tod::TimeOfDay.new(9),
+      end_time: Tod::TimeOfDay.new(12),
+      secondary_start_time: nil,
+      secondary_end_time: nil,
+    }
   end
 
   def edit
