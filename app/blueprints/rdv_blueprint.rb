@@ -22,19 +22,11 @@ class RdvBlueprint < Blueprinter::Base
   end
 
   field :starts_at do |rdv, _options|
-    if rdv.motif.organisation.time_zone
-      rdv.starts_at.in_time_zone(rdv.motif.organisation.time_zone)
-    else
-      rdv.starts_at
-    end
+    rdv.starts_at_in_time_zone
   end
 
   field :ends_at do |rdv, _options|
-    if rdv.motif.organisation.time_zone
-      rdv.ends_at.in_time_zone(rdv.motif.organisation.time_zone)
-    else
-      rdv.ends_at
-    end
+    rdv.ends_at_in_time_zone
   end
 
   # On permet des associations optionnelles, mais on les charge toutes si le paramètre `include` n'est pas utilisé
