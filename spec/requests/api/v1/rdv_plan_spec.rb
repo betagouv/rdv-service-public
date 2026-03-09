@@ -194,5 +194,27 @@ RSpec.describe "RDV Plan API" do
         expect(response.status).to eq 404
       end
     end
+
+    describe "utilise la bonne timezone" do
+      let(:organisation) { create(:organisation, time_zone: "America/Guadeloupe") }
+      let(:rdv) { create(:rdv, organisation: organisation) }
+      let(:rdv_plan) { create(:rdv_plan, planning_agent: agent, rdv: rdv) }
+
+      context "lorsque la timezone de l'organisation est la timezone par défaut (Europe/Paris)" do
+        let(:organisation) { create(:organisation) }
+
+        it "utilise la timezone de l'instance" do
+          get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
+          expect(parsed_response_body.dig("rdv_plan", "rdv", "starts_at")).to eq rdv.starts_at.to_s
+        end
+      end
+
+      context "lorsque la timezone de l'organisation est définie" do
+        it "utilise la timezone de l'organisation" do
+          get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
+          expect(parsed_response_body.dig("rdv_plan", "rdv", "starts_at")).to eq rdv.starts_at.change(zone: "America/Guadeloupe").to_s
+        end
+      end
+    end
   end
 end

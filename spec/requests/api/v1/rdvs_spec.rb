@@ -106,7 +106,7 @@ RSpec.describe "RDV API" do
     end
 
     describe "utilise la bonne timezone" do
-      context "lorsque la timezone de l'organisation n'est pas définie" do
+      context "lorsque la timezone de l'organisation est la timezone par défaut (Europe/Paris)" do
         it "utilise la timezone de l'instance" do
           get "/api/v1/rdvs", headers: headers, params: { user_id: user.id, agent_id: agent.id }, as: :json
           expect(parsed_response_body["rdvs"].first["starts_at"]).to eq rdv_with_user_and_agent.starts_at.to_s
