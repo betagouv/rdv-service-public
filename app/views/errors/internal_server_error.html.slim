@@ -7,9 +7,11 @@
     p Désolé, une erreur s'est produite. Notre équipe technique en a été avertie automatiquement, et va chercher à la résoudre le plus rapidement possible.
 
     p
-      | Vous pouvez retrouver plus d'information sur l'état général de notre service ici&nbsp;:&nbsp;
-      br
-      = link_to("État du service", "https://rdv-service-public.instatus.com/", target: "_blank")
+      | Vous pouvez vérifier l’état du service et les éventuels incidents en cours ici&nbsp;:&nbsp;
+
+    ul
+      li = link_to("Vérifier l’état du service", "https://rdv-service-public.instatus.com/", target: "_blank")
+      li = link_to("État de service de notre hébergeur (Scalingo)", "https://scalingostatus.com/", target: "_blank")
 
     p.fr-mt-4w
       |> Essayez de rafraîchir la page ou bien réessayez plus tard.
