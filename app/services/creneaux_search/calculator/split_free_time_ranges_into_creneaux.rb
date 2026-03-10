@@ -20,7 +20,7 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
 
   private
 
-  attr_reader :free_times_po, :duration_in_min
+  attr_reader :duration_in_min
 
   def calculate_slots(free_time, duration_in_min: nil)
     possible_slot_start = earliest_possible_slot_start(free_time)
