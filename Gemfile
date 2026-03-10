@@ -213,6 +213,7 @@ group :development do
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
   gem "rails-erd", require: false # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+  gem "benchmark-ips"
 end
 
 group :development, :test do
