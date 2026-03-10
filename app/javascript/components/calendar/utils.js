@@ -18,8 +18,9 @@ const CUSTOM_HEADER_FORMATS = {
   resourceTimeGridWeek: { weekday: "short", day: "numeric" },
 };
 export const dayHeaderContent = ({ date, view }) => {
-  if (CUSTOM_HEADER_FORMATS[view.type]) {
-    return new Intl.DateTimeFormat('fr-FR', CUSTOM_HEADER_FORMATS[view.type]).format(date);
+  const customFormat = CUSTOM_HEADER_FORMATS[view.type];
+  if (customFormat) {
+    return new Intl.DateTimeFormat('fr-FR', { timeZone: "Europe/Paris", ...customFormat }, ).format(date);
   }
   return true; // v6 : retourner true pour afficher le contenu par défaut
 };
