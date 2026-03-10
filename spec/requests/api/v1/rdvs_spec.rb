@@ -106,6 +106,61 @@ RSpec.describe "RDV API" do
     end
   end
 
+  describe "#update_status" do
+    before { stub_netsize_ok }
+
+    let(:user) { create(:user, organisations: [organisation]) }
+    let(:motif) { create(:motif, organisation:, service:) }
+    let!(:rdv) { create(:rdv, organisation:, motif:, agents: [agent], users: [user], starts_at: 2.days.from_now) }
+
+    it "met à jour le statut du RDV et renvoie le statut" do
+      patch "/api/v1/rdvs/#{rdv.id}/update_status", headers:, params: { status: "excused" }, as: :json
+      expect(response).to have_http_status(:ok)
+      expect(parsed_response_body).to eq({ "status" => "excused" })
+      expect(rdv.reload.status).to eq("excused")
+    end
+
+    it "met à jour le statut des participations en conséquence" do
+      patch "/api/v1/rdvs/#{rdv.id}/update_status", headers:, params: { status: "excused" }, as: :json
+      expect(rdv.participations.first.reload.status).to eq("excused")
+    end
+
+    it "envoie les notifications lors d'une annulation (excused)" do
+      patch "/api/v1/rdvs/#{rdv.id}/update_status", headers:, params: { status: "excused" }, as: :json
+      expect_notifications_sent_for(rdv, user, :rdv_cancelled)
+      expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
+    end
+
+    it "envoie les notifications lors d'une remise en unknown depuis un statut annulé" do
+      rdv.update!(status: "excused", cancelled_at: Time.zone.now)
+      rdv.participations.each { it.update!(status: "excused") }
+      patch "/api/v1/rdvs/#{rdv.id}/update_status", headers:, params: { status: "unknown" }, as: :json
+      expect_notifications_sent_for(rdv.reload, user, :rdv_created)
+    end
+
+    it "n'envoie pas de notifications si le statut ne change pas" do
+      rdv.update!(status: "excused", cancelled_at: Time.zone.now)
+      patch "/api/v1/rdvs/#{rdv.id}/update_status", headers:, params: { status: "excused" }, as: :json
+      expect_no_notifications
+    end
+
+    it "n'envoie pas de notifications si le RDV est passé" do
+      rdv.update!(starts_at: 2.days.ago, ends_at: 2.days.ago + 30.minutes)
+      patch "/api/v1/rdvs/#{rdv.id}/update_status", headers:, params: { status: "excused" }, as: :json
+      expect_no_notifications
+    end
+
+    describe "webhook" do
+      let!(:webhook_endpoint) { create(:webhook_endpoint, organisation:, subscriptions: ["rdv"]) }
+
+      it "envoie un webhook lors de la mise à jour" do
+        expect do
+          patch "/api/v1/rdvs/#{rdv.id}/update_status", headers:, params: { status: "noshow" }, as: :json
+        end.to have_enqueued_job(WebhookJob).with(record: rdv, action: :updated, webhook_endpoint_id: webhook_endpoint.id)
+      end
+    end
+  end
+
   describe "#create" do
     context "pour une migration inter-instance d'un rendez-vous pris par un usager" do
       let(:user_on_old_instance) { create(:user, organisations: [organisation_on_old_instance]) }
