@@ -15,14 +15,15 @@ class CreneauxSearch::Calculator::RubyRangeDifference
 
     busy_time = busy_times.first
 
-    first_range(range, busy_time) \
-      + split_range_recursively(remaining_range(range, busy_time), busy_times - [busy_time])
+    first_range(range, busy_time) + split_range_recursively(remaining_range(range, busy_time), busy_times - [busy_time])
   end
 
   def first_range(range, busy_time)
-    return [range.begin..busy_time.begin] if range.begin < busy_time.begin && range.cover?(busy_time)
-
-    []
+    if range.begin < busy_time.begin && range.cover?(busy_time)
+      [range.begin..busy_time.begin]
+    else
+      []
+    end
   end
 
   def remaining_range(range, busy_time)
