@@ -288,13 +288,12 @@ user_org_paris_nord_patricia = User.new(
   last_name: "Duroy",
   email: "patricia_duroy@demo.rdv-solidarites.fr",
   birth_date: Date.parse("20/06/1975"),
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010101",
   organisation_ids: [org_paris_nord.id, org_arques.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_paris_nord_patricia.skip_confirmation!
 user_org_paris_nord_patricia.save!
 user_org_paris_nord_patricia.update!(logement: 2)
 
@@ -313,13 +312,12 @@ user_org_paris_nord_lea = User.new(
   last_name: "Dupont",
   email: "lea_dupont@demo.rdv-solidarites.fr",
   birth_date: Date.parse("01/12/1982"),
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010102",
   organisation_ids: [org_paris_nord.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_paris_nord_lea.skip_confirmation!
 user_org_paris_nord_lea.save!
 user_org_paris_nord_lea.update!(logement: 2)
 
@@ -328,13 +326,12 @@ user_org_paris_nord_jean = User.new(
   last_name: "Moustache",
   email: "jean_moustache@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010103",
   organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
 user_org_paris_nord_jean.update!(logement: 2)
 
@@ -343,38 +340,35 @@ user_org_paris_sud = User.new(
   last_name: "Factice",
   email: "francis.factice@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0101010103",
   organisation_ids: [org_paris_sud.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_paris_sud.skip_confirmation!
 user_org_paris_sud.save!
 user_org_paris_sud.update!(logement: 2)
 
 user_org_arques = User.new(
   first_name: "Francis",
   last_name: "Factice",
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   phone_number: "0611223344",
   organisation_ids: [org_arques.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_arques.skip_confirmation!
 user_org_arques.save!
 
 user_org_bapaume = User.new(
   first_name: "François",
   last_name: "Factice",
-  password: ENV["DB_SEEDS_USERS_AND_AGENTS_PASSWORD"],
   email: "francois@factice.cool",
   organisation_ids: [org_bapaume.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
+  latest_login_at: Time.zone.now
 )
 
-user_org_bapaume.skip_confirmation!
 user_org_bapaume.save!
 
 # Insert a lot of users and add them to the paris_nord organisation

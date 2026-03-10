@@ -128,11 +128,11 @@ class ProConnectController < ApplicationController
   def connect_user(callback_client)
     user = User.find_or_initialize_by(pro_connect_openid_sub: callback_client.openid_sub)
 
-    user.confirmed_at ||= Time.zone.now # Nécessaire pour que Devise autorise la connexion
     user.update!(
       first_name: callback_client.user_first_name,
       last_name: callback_client.user_last_name,
-      notification_email: callback_client.user_email
+      notification_email: callback_client.user_email,
+      latest_login_at: Time.zone.now
     )
 
     bypass_sign_in(user, scope: :user)

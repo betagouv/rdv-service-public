@@ -25,10 +25,10 @@ class WebhookJob < ApplicationJob
       payload, webhook_endpoint_id = args
     end
 
+    webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
+
     # Les envois de webhooks en env de dev sont notamment utilisés par RDV-I.
     return if Rails.env.development? && webhook_endpoint.target_url !~ /localhost/
-
-    webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
 
     request = Typhoeus::Request.new(
       webhook_endpoint.target_url,

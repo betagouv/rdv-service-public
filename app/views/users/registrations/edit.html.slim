@@ -2,32 +2,14 @@
 
 .card
   .card-body
-    - if resource.encrypted_password.present?
-      - if resource.logged_once_with_franceconnect?
-        .fr-alert.fr-alert--info.fr-mb-3w
-          | Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
-      - if resource.pro_connect_openid_sub
-        .fr-alert.fr-alert--info.fr-mb-3w
-          | Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de ProConnect
-      = form_for resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }, builder: Dsfr::FormBuilder do |f|
-        = f.dsfr_email_field :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), autocomplete: "email"
-        - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-          .form-text.rdv-color-text-mention-grey.mb-2
-            | En attente de confirmation pour #{resource.unconfirmed_email}
-        = render "common/form/new_password_input", f:, hint: "Choisissez votre mot de passe ou laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.", password_label: "Nouveau mot de passe"
-        = render "common/form/current_password_input", f: f, name: :current_password, hint: "Renseignez votre mot de passe actuel pour tout changement.", password_label: "Mot de passe actuel"
-        .rdv-text-align-right= f.submit "Modifier", class: "fr-btn"
-      .mt-5
-        hr
-    - else
-      p.rdv-font-weight-bold Mot de passe
+    p.rdv-font-weight-bold Adresse email
+    p Votre adresse email actuelle est : #{resource.preferred_email}
+    .fr-alert.fr-alert--info.fr-mb-4w
       p
-        |> Le mot de passe vous permet de vous reconnecter à votre compte pour une future prise de RDV. Vous n’avez pas défini de mot de passe.
-        |> Ce n’est pas obligatoire. Vous pourrez le faire plus tard.
-        |> Si vous souhaitez le faire maintenant, suivez ce lien :
-        = link_to "définir un nouveau mot de passe…", destroy_user_session_path(redirect_to_reset_password: true), method: :delete
-      .mt-5
-        hr
+        | Pour modifier votre adresse email, veuillez contacter le support via le
+        =< link_to "formulaire de contact", new_aide_demande_support_path(role: :usager, sujet: "Changement adresse e-mail")
+        | .
+    hr.fr-mt-2w
     p Vous souhaitez supprimer votre compte ?
     - if resource.can_be_soft_deleted?
       = link_to "Supprimer",

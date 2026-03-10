@@ -145,17 +145,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  # cf https://github.com/heartcombo/devise/wiki/How-To:-Email-only-sign-up
-  describe "#set_reset_password_token" do
-    it "returns the plaintext token" do
-      user = build(:user)
-      potential_token = user.send(:set_reset_password_token)
-      potential_token_digest = Devise.token_generator.digest(user, :reset_password_token, potential_token)
-      actual_token_digest = user.reset_password_token
-      expect(potential_token_digest).to eql(actual_token_digest)
-    end
-  end
-
   describe "#minor?" do
     it "return true when user birth in 2016 and we are un 2020" do
       now = Time.zone.parse("2020-4-3 13:45")
@@ -242,6 +231,109 @@ RSpec.describe User, type: :model do
       user = build(:user, :without_devise_email, notification_email: ".test@domain.com")
       expect(user).not_to be_valid
       expect(user.errors[:notification_email]).to include("n'est pas valide")
+    end
+  end
+
+  describe "#domain" do
+    context "when user has no RDV" do
+      let(:user) { create(:user) }
+
+      context "on the RDV Solidarités instance" do
+        stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: "true")
+
+        it "uses RDV_SOLIDARITES" do
+          expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+        end
+      end
+
+      context "on another instance" do
+        stub_env_with(DEFAULT_DOMAIN_IS_RDV_SOLIDARITES: nil)
+
+        it "uses RDV Service Public" do
+          expect(user.domain).to eq(Domain::RDV_SERVICE_PUBLIC)
+        end
+      end
+    end
+
+    context "when user only has RDV Solidarités rdvs" do
+      let!(:organisation) { create(:organisation, verticale: :rdv_solidarites) }
+      let!(:user) { create(:user) }
+      let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
+
+      it "uses RDV_SOLIDARITES" do
+        expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+      end
+    end
+
+    context "when user has some rdvs" do
+      let!(:user) { create(:user) }
+      let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
+
+      context "in a RDV Insertion organisation" do
+        let!(:organisation) { create(:organisation, verticale: :rdv_insertion) }
+
+        it "uses RDV_SOLIDARITES" do
+          expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+        end
+      end
+
+      context "in a RDV Aide Numerique organisation" do
+        let!(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
+
+        it "uses RDV_AIDE_NUMERIQUE" do
+          expect(user.domain).to eq(Domain::RDV_AIDE_NUMERIQUE)
+        end
+      end
+
+      context "in a RDV Mairie organisation" do
+        let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+
+        it "uses RDV_SERVICE_PUBLIC" do
+          expect(user.domain).to eq(Domain::RDV_SERVICE_PUBLIC)
+        end
+      end
+    end
+
+    context "when user has mixed RDV domains and most recent is rdv_aide_numerique" do
+      let!(:user) { create(:user) }
+      let!(:old_domain_organisation) { create(:organisation, verticale: :rdv_solidarites) }
+      let!(:old_domain_organisation2) { create(:organisation, verticale: :rdv_insertion) }
+      let!(:new_domain_organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
+      let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
+      let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
+      let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
+
+      it "uses the domain of the most recently created rdv" do
+        expect(user.domain).to eq(Domain::RDV_AIDE_NUMERIQUE)
+      end
+    end
+
+    context "when user has mixed RDV domains and most recent is rdv_solidarites" do
+      let!(:user) { create(:user) }
+      let!(:old_domain_organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
+      let!(:old_domain_organisation2) { create(:organisation, verticale: :rdv_insertion) }
+      let!(:new_domain_organisation) { create(:organisation, verticale: :rdv_solidarites) }
+      let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
+      let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
+      let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
+
+      it "uses the domain of the most recently created rdv" do
+        expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+      end
+    end
+
+    context "when user has mixed RDV domains and most recent is rdv_insertion" do
+      let!(:user) { create(:user) }
+      let!(:old_domain_organisation) { create(:organisation, verticale: :rdv_solidarites) }
+      let!(:old_domain_organisation2) { create(:organisation, verticale: :rdv_aide_numerique) }
+      let!(:new_domain_organisation) { create(:organisation, verticale: :rdv_insertion) }
+      let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
+      let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
+      let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
+
+      it "uses the domain of the most recently created rdv" do
+        expect(user.domain).to eq(Domain::RDV_SOLIDARITES)
+      end
     end
   end
 end
