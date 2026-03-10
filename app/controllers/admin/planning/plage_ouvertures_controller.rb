@@ -59,9 +59,10 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     @plage_ouverture = PlageOuverture.new(new_plage_form_defaults)
     if params[:duplicate_plage_ouverture_id].present?
       original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
-      @plage_ouverture.assign_attributes(original_po.slice(**FORM_ATTRS))
+      @plage_ouverture.assign_attributes(original_po.slice(*FORM_ATTRS))
     else
-      @plage_ouverture.assign_attributes(params.permit(*FORM_ATTRS))
+      query_params = params[:plage_ouverture] ? params[:plage_ouverture].permit(*FORM_ATTRS) : params.permit(*FORM_ATTRS)
+      @plage_ouverture.assign_attributes(query_params)
     end
 
     @plage_ouverture.organisation = current_organisation
