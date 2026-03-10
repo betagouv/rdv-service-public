@@ -261,29 +261,9 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     end
   end
 
-  describe "#free_times_from" do
-    it "return an empty hash without plage_ouvertures" do
-      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-      expect(described_class.free_times_from([], range, work_on_off_days: false)).to eq({})
-    end
-
-    it "calls calculate_free_times for given plage_ouvertures" do
-      plage_ouverture = build(:plage_ouverture)
-      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-      expect(described_class).to receive(:calculate_free_times).with(plage_ouverture, range, work_on_off_days: false)
-      described_class.free_times_from([plage_ouverture], range, work_on_off_days: false)
-    end
-  end
-
   describe "#calculate_free_times" do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
     let(:agent) { create(:agent, organisations: [organisation]) }
-
-    it "return one free time from plage ouverture date range" do
-      plage_ouverture = build(:plage_ouverture, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-      expect(described_class.calculate_free_times(plage_ouverture, range, work_on_off_days: false)).to eq([Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")])
-    end
 
     it "return plage ouverture slot minus rdv duration" do
       starts_at = Time.zone.parse("20211027 9:00")
@@ -460,33 +440,6 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       range = Time.zone.parse("20211126 9:00")..Time.zone.parse("20211126 11:00")
       busy_times = [CreneauxSearch::Calculator::BusyTime.new(absence.starts_at, absence.ends_at)]
       expect(described_class.split_range_recursively(range, busy_times)).to eq([])
-    end
-  end
-
-  describe "#slots_for" do
-    it "returns empty with empty free times" do
-      motif = build(:motif)
-      expect(described_class.slots_for({}, motif)).to eq([])
-    end
-
-    it "calls calculate_slots for plage_ouverture's free_time and motif" do
-      motif = build(:motif)
-      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-      free_times = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
-      plage_ouverture_free_times = { plage_ouverture => free_times }
-
-      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture, duration_in_min: nil).and_return([])
-      described_class.slots_for(plage_ouverture_free_times, motif)
-    end
-
-    it "should pass down overridden duration_in_min" do
-      motif = build(:motif, default_duration_in_min: 25)
-      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-      free_times = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
-      plage_ouverture_free_times = { plage_ouverture => free_times }
-
-      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture, duration_in_min: 30).and_return([])
-      described_class.slots_for(plage_ouverture_free_times, motif, duration_in_min: 30)
     end
   end
 
