@@ -7,21 +7,21 @@ Benchmark.ips do |x|
   # the warmup phase (default 2) and calculation phase (default 5)
   x.config(warmup: 2, time: 5)
 
-  x.report("one week ruby diff") do
+  x.report("one week old version") do
     # On trouve environ 1200 créneaux
-    CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..1.week.from_now), ruby_diff: true)
+    CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..1.week.from_now), old_calculator: true)
   end
 
-  x.report("Three month ruby diff") do
-    CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..3.months.from_now), ruby_diff: true)
+  x.report("three month old version") do
+    CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..3.months.from_now), old_calculator: true)
   end
 
-  x.report("one week gem diff") do
+  x.report("one week new version") do
     # On trouve environ 1200 créneaux
-    CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..1.week.from_now), ruby_diff: false)
+    CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..1.week.from_now))
   end
 
-  x.report("Three month gem diff") do
-    CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..3.months.from_now), ruby_diff: false)
+  x.report("three month new version") do
+    CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..3.months.from_now))
   end
 end

@@ -1,6 +1,10 @@
 class CreneauxSearch::Calculator
-  def self.available_slots(motif:, lieu:, date_range:, agents: [], duration_in_min: nil)
-    new(motif:, lieu:, date_range:, agents:, duration_in_min:).available_slots
+  def self.available_slots(motif:, lieu:, date_range:, agents: [], duration_in_min: nil, old_calculator: false)
+    if ENV["USE_OLD_CRENEAUX_SEARCH_CALCULATOR"] || old_calculator
+      CreneauxSearch::OldCalculator.available_slots(motif:, lieu:, date_range:, agents:, duration_in_min:)
+    else
+      new(motif:, lieu:, date_range:, agents:, duration_in_min:).available_slots
+    end
   end
 
   def initialize(motif:, lieu:, date_range:, agents:, duration_in_min:)
