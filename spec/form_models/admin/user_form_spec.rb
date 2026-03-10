@@ -62,7 +62,7 @@ RSpec.describe Admin::UserForm, type: :form do
       it "tells so in the error message" do
         expect(subject.valid?).to be false
         expect(subject.benign_errors[0]).to include(
-          "Un usager avec le même email a déjà une fiche au sein de l&#39;organisation #{current_organisation.name}"
+          "Un usager avec le même email a déjà une fiche au sein de l&#39;organisation"
         )
       end
     end
@@ -73,7 +73,7 @@ RSpec.describe Admin::UserForm, type: :form do
       it "tells so in the error message" do
         expect(subject.valid?).to be false
         expect(subject.benign_errors[0]).to include(
-          "Un usager avec le même email a déjà une fiche au sein de l&#39;espace #{current_territory.name} dans l&#39;organisation #{other_org_of_territory.name}"
+          "Un usager avec le même email a déjà une fiche au sein de l&#39;espace #{current_territory.name}"
         )
       end
     end

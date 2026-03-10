@@ -2,23 +2,41 @@ ruby:
   existing_attributes = attributes.map { User.human_attribute_name(_1) }.map(&:downcase).join(", ")
   return_location ||= admin_organisation_user_path(current_organisation, user)
   from_modal ||= false
-  duplicate_is_within_current_org = user.organisation_ids.include?(current_organisation.id)
+  duplicate_is_within_current_org = user.organisations.load.include?(current_organisation)
 
-div.flex-grow-1
-  p
+div
+  div
     - if duplicate_is_within_current_org
-      span>= "Un usager avec le même #{existing_attributes} a déjà une fiche au sein de l'organisation #{user.organisations.first.name}"
+      span>= "Un usager avec le même #{existing_attributes} a déjà une fiche au sein de l'organisation"
     - else
-      span>= "Un usager avec le même #{existing_attributes} a déjà une fiche au sein de l'espace #{current_organisation.territory.name_for_agent} dans l'organisation #{user.organisations.first.name}"
-  p
+      span>= "Un usager avec le même #{existing_attributes} a déjà une fiche au sein de l'espace #{current_organisation.territory.name_for_agent}"
+
+  div
+    b Nom :
+    =< full_name_and_birthdate(user)
+
+  - if user.address
     div
-      b= full_name_and_birthdate(user)
-    - if user.address
-      div= user.address
-    - if user.email.present?
-      div= user.email
-    - if user.phone_number.present?
-      div= user.phone_number
+      b Adresse :
+      =< user.address
+
+  - if user.email.present?
+    div
+      b E-mail :
+      =< user.email
+
+  - if user.phone_number.present?
+    div
+      b Téléphone :
+      =< user.phone_number
+
+  - unless duplicate_is_within_current_org
+    div
+      b Organisations :
+      ul
+        - user.organisations.each do |organisation|
+          li = organisation.name
+
   div.text-right
     - if duplicate_is_within_current_org
       - if from_modal
@@ -33,4 +51,4 @@ div.flex-grow-1
         Redis.with_connection do |redis|
           redis.set(redis_key, user.id.to_s, ex: 30.seconds)
         end
-      = link_to "Importer cet usager", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, modal: from_modal, secure_key:), class: "btn btn-warning"
+      = link_to "Importer cette fiche dans #{current_organisation.name}", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, modal: from_modal, secure_key:), class: "btn btn-warning"

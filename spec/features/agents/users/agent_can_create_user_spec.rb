@@ -37,8 +37,9 @@ RSpec.describe "Agent can create user" do
       fill_in :user_last_name, with: "Green"
       fill_in :user_email, with: "ceelo@green.com"
       click_on "Enregistrer"
-      expect(page).to have_content("Un usager avec le même email a déjà une fiche au sein de l'espace #{territory.name} dans l'organisation #{existing_user.organisations.sole.name}")
-      click_link "Importer cet usager"
+      expect(page).to have_content("Un usager avec le même email a déjà une fiche au sein de l'espace #{territory.name}")
+      expect(page).to have_content(existing_user.organisations.sole.name)
+      click_link "Importer cette fiche dans #{organisation.name}"
       expect_page_title("Cee-Lo GREEN")
       expect(page).to have_content("L'usager a été associé à votre organisation.")
       expect(existing_user.reload.organisations).to include(organisation)
@@ -49,7 +50,8 @@ RSpec.describe "Agent can create user" do
       fill_in :user_last_name, with: "Green"
       fill_in :user_email, with: "ceelo@green.com"
       click_on "Enregistrer"
-      expect(page).to have_content("Un usager avec le même email a déjà une fiche au sein de l'espace #{territory.name} dans l'organisation #{existing_user.organisations.sole.name}")
+      expect(page).to have_content("Un usager avec le même email a déjà une fiche au sein de l'espace #{territory.name}")
+      expect(page).to have_content(existing_user.organisations.sole.name)
       expect { click_on "Confirmer en ignorant les avertissements" }.to change(User, :count).by(1)
       expect_page_title("Cee-Lo GREEN")
       expect(page).to have_content("L'usager a été créé.")
