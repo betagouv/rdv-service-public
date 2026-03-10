@@ -56,7 +56,7 @@ class Users::LoginService
   end
 
   def upsert_user
-    user = User.order(created_at: :desc).find_by(email: email)
+    user = User.joins(:rdvs).order("rdvs.created_at DESC, users.created_at DESC").where(email: email).first
     if user
       update_user(user) if first_name.present? && last_name.present?
     else
