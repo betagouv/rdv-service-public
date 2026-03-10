@@ -17,7 +17,7 @@ fr:
     notice:
       models:
         agent_role:
-          existing: L’agent %{email} a déjà une fiche et a été ajouté à votre organisation.
+          existing: L’agent %{email} a déjà un compte et a été ajouté à votre organisation.
           invited: L’agent %{email} a été invité à rejoindre votre organisation.
           updated: Les permissions de l'agent ont été mises à jour.
     errors:
