@@ -30,7 +30,7 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
     occurrences.map do |occurrence|
       next if occurrence.ends_at < Time.zone.now
 
-      occurrence.starts_at..occurrence.ends_at
+      occurrence.starts_at...occurrence.ends_at
     end.compact
   end
 
@@ -47,7 +47,7 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
 
     ExternalCalendarEvent.where(agent_id: @agent.id).within_range(max_availability_range).each do |event|
       event.all_occurrences_within(range).each do |occurrence|
-        external_calendar_occurrences << (occurrence.starts_at..occurrence.ends_at)
+        external_calendar_occurrences << (occurrence.starts_at...occurrence.ends_at)
       end
     end
 
@@ -61,7 +61,7 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
 
     absences.each do |absence|
       absence.occurrences_for(max_availability_range).each do |absence_occurrence|
-        busy_times << (absence_occurrence.starts_at..absence_occurrence.ends_at)
+        busy_times << (absence_occurrence.starts_at...absence_occurrence.ends_at)
       end
     end
 
@@ -70,7 +70,7 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
 
   def busy_times_from_rdvs(available_ranges)
     optimized_rdv_request(available_ranges).pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at).map do |starts_at, ends_at|
-      (starts_at..ends_at)
+      (starts_at...ends_at)
     end
   end
 
