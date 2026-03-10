@@ -59,12 +59,11 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
   def busy_times_from_absences
     busy_times = []
 
-    absences = @agent.absences.not_expired.in_range(@available_ranges.first.begin..@availabled_ranges.last.end)
+    full_range = @available_ranges.first.begin..@available_ranges.last.end
+    absences = @agent.absences.not_expired.in_range(full_range)
 
     absences.each do |absence|
-      absence.occurrences_for(range).each do |absence_occurrence|
-        next if absence_out_of_range?(absence_occurrence, range)
-
+      absence.occurrences_for(full_range).each do |absence_occurrence|
         busy_times << (absence_occurrence.starts_at..absence_occurrence.ends_at)
       end
     end
