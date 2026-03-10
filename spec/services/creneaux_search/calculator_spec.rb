@@ -1,4 +1,6 @@
 RSpec.describe CreneauxSearch::Calculator, type: :service do
+  subject(:available_slots) { described_class.available_slots(motif:, lieu:, date_range:) }
+
   let(:friday) { Time.zone.parse("20210430 8:00") }
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
@@ -11,28 +13,34 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     let(:date_range) { first_day..Date.new(2021, 5, 8) }
 
     context "when there is no plage_ouverture" do
-      it "returns an empty array" do
-        slots = described_class.available_slots(motif:, lieu:, date_range:)
-        expect(slots).to eq([])
+      it { is_expected.to eq([]) }
+    end
+
+    context "with a plage d'ouverture lasting 2 hours" do
+      before do
+        create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       end
-    end
 
-    it "returns 2 slots with a basic context" do
-      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
-      slots = described_class.available_slots(motif:, lieu:, date_range:)
-      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:00"])
-    end
+      it "returns 2 slots" do
+        expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:00"])
+        expect(available_slots.first.class.to_s).to eq("Creneau")
+      end
 
-    it "accepts and uses overriden duration_in_min" do
-      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
-      slots = described_class.available_slots(motif:, lieu:, date_range:, duration_in_min: 25)
-      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "09:25", "09:50", "10:15", "10:40"])
-    end
+      context "when passing a duration_in_min" do
+        subject(:available_slots) { described_class.available_slots(motif:, lieu:, date_range:, duration_in_min: 25) }
 
-    it "return Creneaux object" do
-      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
-      slots = described_class.available_slots(motif:, lieu:, date_range:)
-      expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
+        it "overrides the motif's default duration, and creates slots of the correct length" do
+          expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "09:25", "09:50", "10:15", "10:40"])
+        end
+      end
+
+      context "when the required lieu doesn't match the plage_ouverture" do
+        subject(:available_slots) { described_class.available_slots(motif:, lieu: other_lieu, date_range:) }
+
+        let(:other_lieu) { create(:lieu, organisation:) }
+
+        it { is_expected.to eq([]) }
+      end
     end
 
     context "when the plage d'ouverture has already started" do
@@ -121,6 +129,23 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
         expect(slots.map(&:starts_at).map(&:hour)).to eq([10])
       end
     end
+
+    context "for a motif not requiring a lieu" do
+      subject(:available_slots) { described_class.available_slots(motif:, lieu: nil, date_range:) }
+
+      let(:motif) { create(:motif, :by_phone, default_duration_in_min: 60, organisation:) }
+
+      context "with one plage_ouverture with a lieu and one without" do
+        before do
+          create(:plage_ouverture, lieu: nil, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(10))
+          create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(15))
+        end
+
+        it "returns slots for both plage_ouverture" do
+          expect(available_slots.map(&:starts_at).map(&:hour)).to eq([9, 14])
+        end
+      end
+    end
   end
 
   # Ces tests legacy appellent une méthode privée
@@ -128,24 +153,6 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
     let(:first_day) { Date.new(2021, 5, 3) }
     let(:date_range) { first_day..Date.new(2021, 5, 8) }
-
-    it "return plage_ouverture that match when a lieu is given" do
-      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
-
-      expect(plage_ouvertures).to eq([matching_po])
-    end
-
-    it "return plage_ouverture that match without no lieu given" do
-      motif = create(:motif, :by_phone, default_duration_in_min: 60, organisation: organisation)
-      matching_po1 = create(:plage_ouverture, lieu: nil, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      matching_po2 = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, nil, date_range, [])
-
-      expect(plage_ouvertures).to contain_exactly(matching_po1, matching_po2)
-    end
 
     it "returns all plage_ouverture for the range" do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
@@ -159,15 +166,6 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "returns only without recurrence PO where first_day is in range" do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day + 1.month, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
-
-      expect(plage_ouvertures).to eq([matching_po])
-    end
-
-    it "returns only same lieu PO" do
-      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      create(:plage_ouverture, lieu: create(:lieu), motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
