@@ -1,6 +1,6 @@
 class CreneauxSearch::Calculator::RubyRangeDifference
   def perform(ranges, busy_times)
-    busy_times.sort_by!(&:starts_at)
+    busy_times.sort_by!(&:end)
     ranges.map do |range|
       split_range_recursively(range, busy_times)
     end.flatten
