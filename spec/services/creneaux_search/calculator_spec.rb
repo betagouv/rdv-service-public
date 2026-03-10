@@ -3,14 +3,19 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
 
-  before do
-    travel_to(friday)
-  end
+  before { travel_to(friday) }
 
   describe "#available_slots" do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
     let(:first_day) { Date.new(2021, 5, 3) }
     let(:date_range) { first_day..Date.new(2021, 5, 8) }
+
+    context "when there is no plage_ouverture" do
+      it "returns an empty array" do
+        slots = described_class.available_slots(motif:, lieu:, date_range:)
+        expect(slots).to eq([])
+      end
+    end
 
     it "returns 2 slots with a basic context" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
@@ -118,16 +123,11 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     end
   end
 
-  describe "#plage_ouvertures_for" do
+  # Ces tests legacy appellent une méthode privée
+  describe "#plage_ouvertures" do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
     let(:first_day) { Date.new(2021, 5, 3) }
     let(:date_range) { first_day..Date.new(2021, 5, 8) }
-
-    it "return empty without plage_ouverture" do
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
-
-      expect(plage_ouvertures).to eq([])
-    end
 
     it "return plage_ouverture that match when a lieu is given" do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
