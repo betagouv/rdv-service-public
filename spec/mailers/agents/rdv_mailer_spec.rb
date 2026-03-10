@@ -32,6 +32,14 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       end
     end
 
+    context "in 3 days" do
+      let(:rdv) { create(:rdv, starts_at: t + 3.days, agents: [agent]) }
+
+      it "has a correct subject" do
+        expect(mail.subject).to eq("Nouveau RDV ajouté pour le 4 mar. sur votre agenda RDV Service Public")
+      end
+    end
+
     describe "using the agent domain's branding" do
       context "when agent's service is not conseiller_numerique" do
         let(:agent) { build(:agent, service: build(:service, :social)) }

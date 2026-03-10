@@ -3,7 +3,7 @@ RSpec.describe DateHelper do
     # def relative_date(date, fallback_format = :short)
     it "returns 23 déc." do
       date = Time.zone.parse("2021-12-23 15:30")
-      expect(relative_date(date)).to eq("23 déc.")
+      expect(relative_date(date)).to eq("le 23 déc.")
     end
     # def relative_date(date, fallback_format = :short)
 

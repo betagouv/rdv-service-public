@@ -27,7 +27,7 @@ class Agents::RdvMailer < ApplicationMailer
   end
 
   def rdv_cancelled(old_starts_at: nil)
-    date = relative_date(old_starts_at || @rdv.starts_at)
+    date = old_starts_at || @rdv.starts_at
     self.ics_payload = @rdv.payload(:destroy, @agent)
     subject = "RDV #{relative_date_with_preposition(date)} annulé"
     mail(subject: subject)

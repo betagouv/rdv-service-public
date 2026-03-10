@@ -8,7 +8,7 @@ module DateHelper
     elsif date == Date.current + 1
       "demain"
     else
-      I18n.l(date, format: fallback_format)
+      "le #{I18n.l(date, format: fallback_format)}"
     end
   end
 
