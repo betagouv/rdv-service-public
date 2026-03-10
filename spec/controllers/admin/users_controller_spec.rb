@@ -91,8 +91,10 @@ RSpec.describe Admin::UsersController, type: :controller do
         }
       end
 
-      it { expect { subject }.not_to change(User, :count) }
-      it { expect(subject).to render_template(:new) }
+      it "creates a duplicate" do
+        expect { subject }.to change(User, :count).by(1)
+        expect(response).to redirect_to(admin_organisation_user_path(organisation.id, User.last.id))
+      end
     end
 
     context "with invalid params" do

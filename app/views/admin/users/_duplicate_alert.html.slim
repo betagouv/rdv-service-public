@@ -2,10 +2,14 @@ ruby:
   existing_attributes = attributes.map { User.human_attribute_name(_1) }.map(&:downcase).join(", ")
   return_location ||= admin_organisation_user_path(current_organisation, user)
   from_modal ||= false
+  duplicate_is_within_current_org = user.organisation_ids.include?(current_organisation.id)
 
 div.flex-grow-1
   p
-    span>= "Un usager avec le même #{existing_attributes} a déjà un compte sur #{current_domain.name}"
+    - if duplicate_is_within_current_org
+      span>= "Un usager avec le même #{existing_attributes} a déjà une fiche au sein de l'organisation #{user.organisations.first.name}"
+    - else
+      span>= "Un usager avec le même #{existing_attributes} a déjà une fiche au sein de l'espace #{current_organisation.territory.name_for_agent} dans l'organisation #{user.organisations.first.name}"
   p
     div
       b= full_name_and_birthdate(user)
@@ -16,7 +20,7 @@ div.flex-grow-1
     - if user.phone_number.present?
       div= user.phone_number
   div.text-right
-    - if user.organisation_ids.include?(current_organisation.id)
+    - if duplicate_is_within_current_org
       - if from_modal
         = link_to "Choisir cet usager", add_query_string_params_to_url(return_location, "user_ids[]": user.id), class: "btn btn-secondary btn-small"
       - else
