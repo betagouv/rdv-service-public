@@ -20,7 +20,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       let(:rdv) { create(:rdv, starts_at: t + 10.minutes, agents: [agent]) }
 
       it "has a correct subject" do
-        expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda RDV Service Public pour aujourd’hui")
+        expect(mail.subject).to eq("Nouveau RDV ajouté pour aujourd’hui sur votre agenda RDV Service Public")
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       let(:rdv) { create(:rdv, starts_at: t + 1.day, agents: [agent]) }
 
       it "has a correct subject" do
-        expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda RDV Service Public pour demain")
+        expect(mail.subject).to eq("Nouveau RDV ajouté pour demain sur votre agenda RDV Service Public")
       end
     end
 
@@ -110,7 +110,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
 
     specify do
       mail = described_class.with(agent:, participation:, author: agent_author).participation_cancelled
-      expect(mail.subject).to eq("Participation au RDV collectif annulée sur votre agenda RDV Service Public pour 13 nov.")
+      expect(mail.subject).to eq("Participation au RDV collectif du 13 nov. annulée sur votre agenda RDV Service Public")
       expect(mail.html_part.body.to_s).to include("La participation de Marcia LOPEZ au RDV collectif le jeudi 13/11 à 10h30 a été annulée par Paola NORI")
     end
   end

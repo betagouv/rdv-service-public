@@ -4,11 +4,24 @@ module DateHelper
 
     date = date.to_date
     if date == Date.current
-      I18n.t "date.helpers.today"
+      "aujourd’hui"
     elsif date == Date.current + 1
-      I18n.t "date.helpers.tomorrow"
+      "demain"
     else
       I18n.l(date, format: fallback_format)
+    end
+  end
+
+  def relative_date_with_preposition(date, fallback_format = :short)
+    return if date.nil?
+
+    date_obj = date.to_date
+    if date_obj == Date.current
+      "d'aujourd'hui"
+    elsif date_obj == Date.current + 1
+      "de demain"
+    else
+      "du #{I18n.l(date_obj, format: fallback_format)}"
     end
   end
 

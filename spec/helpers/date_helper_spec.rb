@@ -23,6 +23,21 @@ RSpec.describe DateHelper do
     end
   end
 
+  describe "#relative_date_with_preposition" do
+    it "returns du 23 déc." do
+      date = Time.zone.parse("2021-12-23 15:30")
+      expect(relative_date_with_preposition(date)).to eq("du 23 déc.")
+    end
+
+    it "returns d'aujourd'hui" do
+      expect(relative_date_with_preposition(Time.zone.now)).to eq("d'aujourd'hui")
+    end
+
+    it "returns de demain" do
+      expect(relative_date_with_preposition(Time.zone.tomorrow)).to eq("de demain")
+    end
+  end
+
   describe "#soon_date?" do
     it "return false" do
       date = Time.zone.parse("2021-12-23 15:30")
