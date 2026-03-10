@@ -77,7 +77,7 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
       #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
 
       @absences_by_range = @ranges.index_with do |range|
-        @agent.absences.not_expired.in_range(range).load_async
+        @agent.absences.not_expired.in_range(range)
       end
 
       @rdvs_starts_and_ends_at = optimized_rdv_request.pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
