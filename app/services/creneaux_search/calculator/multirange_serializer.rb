@@ -1,5 +1,5 @@
 module CreneauxSearch::Calculator::MultirangeSerializer
-  def datetime_ranges_to_pg_tsmultirange(datetime_ranges)
+  def self.datetime_ranges_to_pg_tsmultirange(datetime_ranges)
     return "tsmultirange()" if datetime_ranges.empty?
 
     multiranges = []

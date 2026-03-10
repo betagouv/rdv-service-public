@@ -9,13 +9,15 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
 
   def perform
     @available_ranges = plage_ouverture_occurrence_ranges
+
     return [] if @available_ranges.empty?
 
-    busy_times = @work_on_off_days ? [] : busy_times_from_off_days
+    max_availability_range = @available_ranges.first.begin..@available_ranges.last.end
 
-    busy_times += busy_times_from_external_calendar
-    busy_times += busy_times_from_absences
-    busy_times += busy_times_from_rdvs
+    busy_times = busy_times_from_off_days(max_availability_range)
+    busy_times += busy_times_from_external_calendar(max_availability_range)
+    busy_times += busy_times_from_absences(max_availability_range)
+    busy_times += busy_times_from_rdvs(@available_ranges)
 
     (MultiRange.new(@available_ranges) - MultiRange.new(busy_times)).ranges
   end
@@ -32,34 +34,33 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
     end.compact
   end
 
-  def busy_times_from_off_days
-    @available_ranges.map do |range|
-      OffDays.all_in_date_range(range).map(&:all_day)
-    end.flatten
+  def busy_times_from_off_days(max_availability_range)
+    return [] if @work_on_off_days
+
+    OffDays.all_in_date_range(max_availability_range).map(&:all_day)
   end
 
-  def busy_times_from_external_calendar
+  def busy_times_from_external_calendar(max_availability_range)
     return [] unless @agent.caldav_configured?
 
     external_calendar_occurrences = []
-    @available_ranges.each do |range|
-      ExternalCalendarEvent.where(agent_id: @agent.id).within_range(range).each do |event|
-        event.all_occurrences_within(range).each do |occurrence|
-          external_calendar_occurrences << (occurrence.starts_at..occurrence.ends_at)
-        end
+
+    ExternalCalendarEvent.where(agent_id: @agent.id).within_range(max_availability_range).each do |event|
+      event.all_occurrences_within(range).each do |occurrence|
+        external_calendar_occurrences << (occurrence.starts_at..occurrence.ends_at)
       end
     end
+
     external_calendar_occurrences
   end
 
-  def busy_times_from_absences
+  def busy_times_from_absences(max_availability_range)
     busy_times = []
 
-    full_range = @available_ranges.first.begin..@available_ranges.last.end
-    absences = @agent.absences.not_expired.in_range(full_range)
+    absences = @agent.absences.not_expired.in_range(max_availability_range)
 
     absences.each do |absence|
-      absence.occurrences_for(full_range).each do |absence_occurrence|
+      absence.occurrences_for(max_availability_range).each do |absence_occurrence|
         busy_times << (absence_occurrence.starts_at..absence_occurrence.ends_at)
       end
     end
@@ -67,20 +68,16 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
     busy_times
   end
 
-  def absence_out_of_range?(absence, range)
-    absence.ends_at < range.begin || range.end < absence.starts_at
-  end
-
-  def busy_times_from_rdvs
-    optimized_rdv_request.pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at).map do |starts_at, ends_at|
+  def busy_times_from_rdvs(available_ranges)
+    optimized_rdv_request(available_ranges).pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at).map do |starts_at, ends_at|
       (starts_at..ends_at)
     end
   end
 
-  def optimized_rdv_request
+  def optimized_rdv_request(available_ranges)
     # Cette requête est censée utiliser l'index "calculator_index"
 
-    multiranges_union_in_sql = CreneauxSearch::Calculator::MultirangeDifference.new.datetime_ranges_to_pg_tsmultirange(@available_ranges)
+    multiranges_union_in_sql = CreneauxSearch::Calculator::MultirangeSerializer.datetime_ranges_to_pg_tsmultirange(available_ranges)
 
     AgentsRdv
       .where(agent_id: @agent.id, calculator_rdv_not_cancelled_and_in_the_future: true)
