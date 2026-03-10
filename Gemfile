@@ -165,6 +165,7 @@ gem "lograge"
 gem "csv"
 
 gem "benchmark-ips"
+gem "multi_range"
 
 group :development do
   # Autoload dotenv in Rails in development (production, staging and demo envs already have env vars setup by the hosting provider)

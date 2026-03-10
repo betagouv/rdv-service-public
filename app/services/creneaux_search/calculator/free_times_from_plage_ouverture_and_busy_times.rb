@@ -20,7 +20,7 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
     if ruby_diff
       CreneauxSearch::Calculator::RubyRangeDifference.new.perform(@available_ranges, busy_times)
     else
-      CreneauxSearch::Calculator::MultirangeDifference.new.perform(@available_ranges, busy_times)
+      (MultiRange.new(@available_ranges) - MultiRange.new(busy_times)).ranges
     end
   end
 

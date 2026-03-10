@@ -16,12 +16,12 @@ Benchmark.ips do |x|
     CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..3.months.from_now), ruby_diff: true)
   end
 
-  x.report("one week pg diff") do
+  x.report("one week gem diff") do
     # On trouve environ 1200 créneaux
     CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..1.week.from_now), ruby_diff: false)
   end
 
-  x.report("Three month pg diff") do
+  x.report("Three month gem diff") do
     CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..3.months.from_now), ruby_diff: false)
   end
 end
