@@ -74,10 +74,8 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
   end
 
   def busy_times_from_rdvs
-    rdvs_starts_and_ends_at = optimized_rdv_request.pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at)
-
-    rdvs_starts_and_ends_at.map do |rdv_starts_and_ends_at|
-      (rdv_starts_and_ends_at.first..rdv_starts_and_ends_at.last)
+    optimized_rdv_request.pluck(:calculator_rdv_starts_at, :calculator_rdv_ends_at).map do |starts_at, ends_at|
+      (starts_at..ends_at)
     end
   end
 
