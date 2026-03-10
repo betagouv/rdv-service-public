@@ -116,11 +116,15 @@ RSpec.describe "RDV API" do
 
       context "lorsque la timezone de l'organisation est définie" do
         let(:organisation) { create(:organisation, time_zone: "America/Guadeloupe") }
+        let!(:rdv_with_user_and_agent) do
+          create(:rdv, organisation: organisation, motif: motif, users: [user], agents: [agent],
+                       starts_at: Time.zone.parse("2025-01-15 10:00:00"))
+        end
 
         it "utilise la timezone de l'organisation" do
           get "/api/v1/rdvs", headers: headers, params: { user_id: user.id, agent_id: agent.id }, as: :json
-          expect(parsed_response_body["rdvs"].first["starts_at"]).to eq rdv_with_user_and_agent.starts_at.change(zone: "America/Guadeloupe").to_s
-          expect(parsed_response_body["rdvs"].first["ends_at"]).to eq rdv_with_user_and_agent.ends_at.change(zone: "America/Guadeloupe").to_s
+          expect(parsed_response_body["rdvs"].first["starts_at"]).to eq "2025-01-15 10:00:00 -0400"
+          expect(parsed_response_body["rdvs"].first["ends_at"]).to eq "2025-01-15 10:45:00 -0400"
         end
       end
     end

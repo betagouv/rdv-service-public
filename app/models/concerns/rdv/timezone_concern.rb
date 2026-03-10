@@ -9,7 +9,7 @@ module Rdv::TimezoneConcern
   extend ActiveSupport::Concern
 
   def starts_at_in_time_zone
-    if organisation.time_zone.nil?
+    if organisation.time_zone == "Europe/Paris"
       starts_at
     else
       starts_at.change(zone: organisation.time_zone)
@@ -17,7 +17,7 @@ module Rdv::TimezoneConcern
   end
 
   def ends_at_in_time_zone
-    if organisation.time_zone.nil?
+    if organisation.time_zone == "Europe/Paris"
       ends_at
     else
       ends_at.change(zone: organisation.time_zone)

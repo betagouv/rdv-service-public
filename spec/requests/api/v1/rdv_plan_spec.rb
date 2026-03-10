@@ -210,9 +210,11 @@ RSpec.describe "RDV Plan API" do
       end
 
       context "lorsque la timezone de l'organisation est définie" do
+        let(:rdv) { create(:rdv, organisation: organisation, starts_at: Time.zone.parse("2025-01-15 10:00:00")) }
+
         it "utilise la timezone de l'organisation" do
           get "/api/v1/rdv_plans/#{rdv_plan.id}", headers: headers, params: {}, as: :json
-          expect(parsed_response_body.dig("rdv_plan", "rdv", "starts_at")).to eq rdv.starts_at.change(zone: "America/Guadeloupe").to_s
+          expect(parsed_response_body.dig("rdv_plan", "rdv", "starts_at")).to eq "2025-01-15 10:00:00 -0400"
         end
       end
     end
