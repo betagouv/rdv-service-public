@@ -1,6 +1,5 @@
 RSpec.describe "User session expiration" do
-  let(:password) { "Rdvservicepublictest1!" }
-  let!(:user) { create(:user, password: password, password_confirmation: password) }
+  let!(:user) { create(:user) }
 
   def expect_to_be_logged_in
     visit users_informations_path

@@ -6,9 +6,9 @@ RSpec.describe "Prise de rendez-vous par un instructeur", js: true do
                                logo_base64: file_fixture("logo_demarches_simplifiees_base_64.txt").read)
   end
   let!(:user) do
-    create(:user, :unregistered, organisations: [organisation],
-                                 email: "camille.dupont@exemple.fr", phone_number: nil,
-                                 first_name: "Camille", last_name: "Dupont") # créé par appel d'api par l'appli qui s'intègre avec nous
+    create(:user, latest_login_at: nil, organisations: [organisation],
+                  email: "camille.dupont@exemple.fr", phone_number: nil,
+                  first_name: "Camille", last_name: "Dupont") # créé par appel d'api par l'appli qui s'intègre avec nous
   end
   let!(:motif) { create(:motif, organisation: organisation, location_type: :public_office, name: "Suivi de dossier") }
   let!(:phone_motif) { create(:motif, organisation: organisation, location_type: :phone, name: "Suivi de dossier") }
