@@ -9,6 +9,7 @@ Benchmark.ips do |x|
 
   # Typical mode, runs the block as many times as it can
   x.report("creneaux_search") do
+    # On trouve environ 1200 créneaux
     CreneauxSearch::Calculator.available_slots(motif: motif, lieu: nil, agents: nil, date_range: (Time.zone.now..3.months.from_now))
   end
 end
