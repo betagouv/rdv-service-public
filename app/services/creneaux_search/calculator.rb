@@ -1,6 +1,6 @@
 class CreneauxSearch::Calculator
-  def self.available_slots(motif:, lieu:, date_range:, agents: [], duration_in_min: nil)
-    new(motif:, lieu:, date_range:, agents:, duration_in_min:).available_slots
+  def self.available_slots(motif:, lieu:, date_range:, ruby_diff:, agents: [], duration_in_min: nil)
+    new(motif:, lieu:, date_range:, agents:, duration_in_min:).available_slots(ruby_diff:)
   end
 
   def initialize(motif:, lieu:, date_range:, agents:, duration_in_min:)
@@ -11,7 +11,7 @@ class CreneauxSearch::Calculator
     @duration_in_min = duration_in_min
   end
 
-  def available_slots
+  def available_slots(ruby_diff:)
     import_absences_from_caldav
 
     @datetime_range = CreneauxSearch::Range.ensure_date_range_with_time(@date_range)
@@ -32,7 +32,7 @@ class CreneauxSearch::Calculator
         plage_ouverture,
         work_on_off_days: @motif.organisation.territory.work_on_sunday?, # La colonne `work_on_sunday` indique aussi que les agents travaillent les jours fériés
         duration_in_min: @duration_in_min
-      ).perform
+      ).perform(ruby_diff:)
 
       SplitFreeTimeRangesIntoCreneaux.new(free_times, @motif, plage_ouverture, duration_in_min: @duration_in_min).perform(@datetime_range)
     end.flatten

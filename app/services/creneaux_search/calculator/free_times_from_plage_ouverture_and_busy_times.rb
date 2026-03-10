@@ -7,7 +7,7 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
     @duration_in_min = duration_in_min
   end
 
-  def perform(ruby_diff: true)
+  def perform(ruby_diff:)
     @available_ranges = plage_ouverture_occurrence_ranges
     return [] if @available_ranges.empty?
 

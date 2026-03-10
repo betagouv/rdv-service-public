@@ -164,6 +164,8 @@ gem "lograge"
 # Utilisée pour les imports
 gem "csv"
 
+gem "benchmark-ips"
+
 group :development do
   # Autoload dotenv in Rails in development (production, staging and demo envs already have env vars setup by the hosting provider)
   gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -213,7 +215,6 @@ group :development do
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
   gem "rails-erd", require: false # Keeps docs/domain_model.svg up-to-date. See .erdconfig
-  gem "benchmark-ips"
 end
 
 group :development, :test do
