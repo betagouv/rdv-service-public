@@ -1,5 +1,5 @@
 class CreneauxSearch::Calculator
-  def self.available_slots(motif:, lieu:, date_range:, agents: [], duration_in_min: nil, old_calculator: false)
+  def self.available_slots(date_range:, motif:, lieu: nil, agents: [], duration_in_min: nil, old_calculator: false)
     if ENV["USE_OLD_CRENEAUX_SEARCH_CALCULATOR"] || old_calculator
       CreneauxSearch::OldCalculator.available_slots(motif:, lieu:, date_range:, agents:, duration_in_min:)
     else
@@ -51,7 +51,7 @@ class CreneauxSearch::Calculator
       .includes(:agent)
       .where(agent: Agent.excluding_pending_invitation)
 
-    scope = scope.where(agent: @agents) if @agents&.any?
+    scope = scope.where(agent: @agents) if @agents.present?
     scope = scope.where(lieu: @lieu) if @lieu.present?
     scope
   end
