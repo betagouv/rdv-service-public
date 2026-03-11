@@ -34,8 +34,7 @@ class CreneauxSearch::Calculator
       free_times = FreeTimesFromPlageOuvertureAndBusyTimes.new(
         @datetime_range,
         plage_ouverture,
-        work_on_off_days: @motif.organisation.territory.work_on_sunday?, # La colonne `work_on_sunday` indique aussi que les agents travaillent les jours fériés
-        duration_in_min: @duration_in_min
+        work_on_off_days: @motif.organisation.territory.work_on_sunday? # La colonne `work_on_sunday` indique aussi que les agents travaillent les jours fériés
       ).perform
 
       SplitFreeTimeRangesIntoCreneaux.new(free_times, @motif, plage_ouverture, duration_in_min: @duration_in_min).perform(@datetime_range)
