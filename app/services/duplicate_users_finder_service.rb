@@ -6,7 +6,7 @@ class DuplicateUsersFinderService < BaseService
 
   def perform
     [
-      self.class.find_duplicate_based_on_email(@candidate_user),
+      self.class.find_duplicate_based_on_email(@candidate_user, @scope),
       self.class.find_duplicate_based_on_identity(@candidate_user, @scope),
       self.class.find_duplicate_based_on_phone_number(@candidate_user, @scope),
     ].compact
@@ -14,15 +14,15 @@ class DuplicateUsersFinderService < BaseService
 
   class << self
     # cette méthode n'est appelée que par le perform
-    def find_duplicate_based_on_email(candidate_user)
+    def find_duplicate_based_on_email(candidate_user, scope)
       return if candidate_user.email.blank?
 
-      duplicates = User
+      duplicates = scope
         .where.not(id: candidate_user.id)
         .where(email: candidate_user.email)
       return unless duplicates.exists?
 
-      OpenStruct.new(severity: :error, attributes: [:email], user: most_relevant_user(duplicates))
+      OpenStruct.new(attributes: [:email], user: most_relevant_user(duplicates))
     end
 
     # cette méthode n'est appelée que par le perform
@@ -35,7 +35,7 @@ class DuplicateUsersFinderService < BaseService
         .merge(match_on_names(candidate_user.first_name, candidate_user.last_name))
       return unless duplicates.exists?
 
-      OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
+      OpenStruct.new(attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
     end
 
     # cette méthode est appelée uniquement depuis PrescripteurRdvWizard#find_or_create_user
@@ -60,7 +60,7 @@ class DuplicateUsersFinderService < BaseService
         .where(phone_number_formatted: candidate_user.phone_number_formatted)
       return unless duplicates.exists?
 
-      OpenStruct.new(severity: :warning, attributes: [:phone_number], user: most_relevant_user(duplicates))
+      OpenStruct.new(attributes: [:phone_number], user: most_relevant_user(duplicates))
     end
 
     private
