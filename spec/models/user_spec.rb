@@ -22,17 +22,18 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe ".loginable_by_code_for_email_in_territory" do
-    let!(:territory_1) { create(:territory) }
-    let!(:territory_2) { create(:territory) }
-    let!(:orga_1)      { create(:organisation, territory: territory_1) }
-    let!(:orga_2)      { create(:organisation, territory: territory_2) }
-    let!(:user_in)     { create(:user, email: "test@example.fr", organisations: [orga_1]) }
-    let!(:user_out)    { create(:user, email: nil, notification_email: "test@example.fr", organisations: [orga_2]) }
-    let!(:user_sso)    { create(:user, email: nil, notification_email: "test@example.fr", franceconnect_openid_sub: "abc123", organisations: [orga_1]) }
+  describe ".loginable_by_code_for_email_in_territory_or_without_territory" do
+    let!(:territory_1)    { create(:territory) }
+    let!(:territory_2)    { create(:territory) }
+    let!(:orga_1)         { create(:organisation, territory: territory_1) }
+    let!(:orga_2)         { create(:organisation, territory: territory_2) }
+    let!(:user_in)        { create(:user, email: "test@example.fr", organisations: [orga_1]) }
+    let!(:user_out)       { create(:user, email: nil, notification_email: "test@example.fr", organisations: [orga_2]) }
+    let!(:user_no_org)    { create(:user, email: nil, notification_email: "test@example.fr") }
+    let!(:user_sso)       { create(:user, email: nil, notification_email: "test@example.fr", franceconnect_openid_sub: "abc123", organisations: [orga_1]) }
 
-    it "retourne uniquement les fiches non-SSO du territoire donné" do
-      expect(described_class.loginable_by_code_for_email_in_territory("test@example.fr", territory_id: territory_1.id)).to contain_exactly(user_in)
+    it "retourne les fiches du territoire donné et les fiches sans territoire, en excluant le SSO" do
+      expect(described_class.loginable_by_code_for_email_in_territory_or_without_territory("test@example.fr", territory_id: territory_1.id)).to contain_exactly(user_in, user_no_org)
     end
   end
 

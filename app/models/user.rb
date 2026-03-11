@@ -104,8 +104,11 @@ class User < ApplicationRecord
   scope :fiches_for_email, ->(email) { where(email:).or(where(notification_email: email)) }
   scope :without_sso, -> { where(franceconnect_openid_sub: nil, pro_connect_openid_sub: nil) }
   scope :loginable_by_code_for_email, ->(email) { fiches_for_email(email).without_sso }
-  scope :loginable_by_code_for_email_in_territory, lambda { |email, territory_id:|
-    loginable_by_code_for_email(email).joins(:territories).where(territories: { id: territory_id }).includes(organisations: :territory)
+  scope :loginable_by_code_for_email_in_territory_or_without_territory, lambda { |email, territory_id:|
+    loginable_by_code_for_email(email)
+      .left_joins(organisations: :territory)
+      .where(territories: { id: [territory_id, nil] })
+      .distinct
   }
 
   ## -

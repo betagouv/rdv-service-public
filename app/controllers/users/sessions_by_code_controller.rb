@@ -74,7 +74,7 @@ class Users::SessionsByCodeController < ApplicationController
     if @rdv_wizard
       # Dans le contexte d'un rdv_wizard, on restreint aux fiches usagers du même espace que le motif du rdv en cours de création
       # afin d'éviter d'avoir une même fiche usagers sur plusieurs espaces en même temps (ce qui est techniquement/historiquement possible mais pas souhaitable)
-      User.loginable_by_code_for_email_in_territory(email, territory_id: @rdv_wizard.motif.organisation.territory_id)
+      User.loginable_by_code_for_email_in_territory_or_without_territory(email, territory_id: @rdv_wizard.motif.organisation.territory_id)
     else
       # En dehors du contexte d'un rdv_wizard (connexion explicite), on affiche toutes les fiches usagers associées à l'email, même celles d'autres espaces
       User.loginable_by_code_for_email(email).includes(organisations: :territory)
