@@ -212,49 +212,59 @@ RSpec.describe CreneauxSearch::Calculator do
     before do
       plage_ouverture = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
 
-      create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 11, 26), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12))
+      create(:absence, agent: plage_ouverture.agent, first_day: first_day, start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12))
     end
 
     it { is_expected.to eq([]) }
   end
 
-  describe "#ranges_for" do
-    context "without recurrence" do
-      it "return empty when po is out of range" do
-        plage_ouverture = build(:plage_ouverture, first_day: friday, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-        range = (friday + 3.days)..(friday + 10.days)
-        expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
+  context "without recurrence" do
+    context "when po is out of range" do
+      let(:date_range) { (friday + 3.days)..(friday + 10.days) }
+
+      before do
+        create(:plage_ouverture, motifs: [motif], first_day: friday, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
       end
 
-      it "return occurrence of po when is in range" do
-        plage_ouverture = build(:plage_ouverture, first_day: friday + 4.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-        range = (friday + 3.days)..(friday + 10.days)
-        expect(described_class.ranges_for(plage_ouverture, range)).to eq([Time.zone.parse("20210504 9:00")..Time.zone.parse("20210504 11:00")])
+      it { is_expected.to eq([]) }
+    end
+
+    context "when occurrence of po is in range" do
+      let(:date_range) { (friday + 3.days)..(friday + 10.days) }
+
+      before do
+        create(:plage_ouverture, motifs: [motif], lieu:, first_day: friday + 4.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
       end
 
-      it "return occurrence minus already past time of today of po when is in range starting today" do
-        friday = Time.zone.parse("20210430 12:00")
-        travel_to(friday)
-        plage_ouverture = build(:plage_ouverture, first_day: friday, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-        range = friday..(friday + 10.days)
-        expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
+      it "returns créneaux" do
+        expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:00"])
       end
     end
 
-    context "with recurrence" do
-      it "return empty when po and it occurrence is out of range" do
-        plage_ouverture = build(:plage_ouverture, first_day: friday + 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                                  recurrence: Montrose.every(:week, starts: friday + 14.days, interval: 1))
-        range = (friday + 3.days)..(friday + 10.days)
-        expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
-      end
+    context "when po is in range starting today" do
+      let(:friday) { Time.zone.parse("20210430 12:00") }
+      let(:date_range) { friday..(friday + 10.days) }
 
-      it "return occurrence of po that in range" do
-        plage_ouverture = build(:plage_ouverture, first_day: friday - 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                                  recurrence: Montrose.every(:week, starts: friday - 14.days, interval: 1))
-        range = (friday + 3.days)..(friday + 10.days)
-        expect(described_class.ranges_for(plage_ouverture, range)).to eq([(Time.zone.parse("20210507 9:00")..Time.zone.parse("20210507 11:00"))])
+      it "return occurrence minus already past time of today of po" do
+        create(:plage_ouverture, motifs: [motif], lieu:, first_day: friday, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(14))
+        expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["12:00", "13:00"])
       end
+    end
+  end
+
+  context "with recurrence" do
+    it "return empty when po and it occurrence is out of range" do
+      plage_ouverture = build(:plage_ouverture, first_day: friday + 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+                                                recurrence: Montrose.every(:week, starts: friday + 14.days, interval: 1))
+      range = (friday + 3.days)..(friday + 10.days)
+      expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
+    end
+
+    it "return occurrence of po that in range" do
+      plage_ouverture = build(:plage_ouverture, first_day: friday - 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+                                                recurrence: Montrose.every(:week, starts: friday - 14.days, interval: 1))
+      range = (friday + 3.days)..(friday + 10.days)
+      expect(described_class.ranges_for(plage_ouverture, range)).to eq([(Time.zone.parse("20210507 9:00")..Time.zone.parse("20210507 11:00"))])
     end
   end
 end
