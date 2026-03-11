@@ -23,6 +23,72 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
     expect(page).to have_field("user_first_name", with: "Marco")
   end
 
+  context "quand l'usager n'a qu'une fiche avec un notification_email" do
+    let!(:user_notif) { create(:user, email: nil, notification_email: "notif_only@lolmail.fr", first_name: "Nina") }
+
+    before { create(:login_code, email: "notif_only@lolmail.fr", code: "123456") }
+
+    it "connecte l'usager sur sa fiche" do
+      visit new_users_sessions_by_code_path(email: "notif_only@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      expect(page).to have_content("Connexion réussie")
+      click_on "Vos informations"
+      expect(page).to have_field("user_first_name", with: "Nina")
+    end
+  end
+
+  context "quand l'usager possède plusieurs fiches dans des espaces différents" do
+    let!(:territory_1) { create(:territory) }
+    let!(:territory_2) { create(:territory) }
+    let!(:orga_1) { create(:organisation, territory: territory_1) }
+    let!(:orga_2) { create(:organisation, territory: territory_2) }
+    let!(:user_2) { create(:user, email: nil, notification_email: "marco@lolmail.fr", organisations: [orga_2]) }
+    let(:user_1) { User.find_by!(email: "marco@lolmail.fr") }
+
+    before { user_1.organisations << orga_1 }
+
+    it "affiche l'écran de sélection avec les deux fiches" do
+      create(:login_code, email: "marco@lolmail.fr", code: "123456")
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      expect(page).to have_content("Plusieurs fiches usagers")
+      expect(page).to have_content(user_1.full_name)
+      expect(page).to have_content(user_2.full_name)
+    end
+
+    it "connecte sur la fiche de l'email après sélection" do
+      create(:login_code, email: "marco@lolmail.fr", code: "123456")
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      click_on user_1.full_name
+      expect(page).to have_content("Connexion réussie")
+      click_on "Vos informations"
+      expect(page).to have_field("user_first_name", with: user_1.first_name)
+    end
+
+    it "connecte sur la fiche du notification_email après sélection" do
+      create(:login_code, email: "marco@lolmail.fr", code: "123456")
+      visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
+      fill_in("Code à 6 chiffres", with: "123456")
+      click_on "Valider"
+      click_on user_2.full_name
+      expect(page).to have_content("Connexion réussie")
+      click_on "Vos informations"
+      expect(page).to have_field("user_first_name", with: user_2.first_name)
+    end
+  end
+
+  context "accès direct à l'écran de sélection sans session" do
+    it "redirige vers la page de connexion avec une erreur" do
+      visit choix_fiche_usager_users_sessions_by_code_path
+      expect(page).to have_content("Échec de la connexion")
+      expect(page).to have_current_path(new_user_session_path)
+    end
+  end
+
   context "l’usager rentre une adresse email pour laquelle il n’existe pas de compte usager" do
     specify do
       visit new_user_session_path
