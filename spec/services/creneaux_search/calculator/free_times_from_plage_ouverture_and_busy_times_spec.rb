@@ -43,7 +43,7 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
       rdv = create(:rdv, motif: motif, starts_at: starts_at - 30.minutes, agents: [agent], organisation:)
       other_rdv = create(:rdv, motif: motif, starts_at: starts_at + 45.minutes, agents: [agent], organisation:)
 
-      expect(free_times).to eq([rdv.ends_at...other_rdv.starts_at, other_rdv.ends_at..ends_at])
+      expect(free_times).to eq([rdv.ends_at...other_rdv.starts_at, other_rdv.ends_at...ends_at])
     end
   end
 
@@ -64,7 +64,7 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
       create(:absence, first_day: s8h30.to_date, start_time: Tod::TimeOfDay.new(s8h30.hour, s8h30.min), end_day: e9h30.to_date, end_time: Tod::TimeOfDay.new(e9h30.hour, e9h30.min), agent: agent)
       create(:absence, first_day: s9h45.to_date, start_time: Tod::TimeOfDay.new(s9h45.hour, s9h45.min), end_day: e10h45.to_date, end_time: Tod::TimeOfDay.new(e10h45.hour, e10h45.min), agent: agent)
 
-      expect(free_times).to eq([e9h30...s9h45, e10h45..ends_at])
+      expect(free_times).to eq([e9h30...s9h45, e10h45...ends_at])
     end
   end
 
@@ -85,7 +85,7 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
       ExternalCalendarEvent.create!(agent:, starts_at: s8h30, ends_at: e9h30, url: "abcde1")
       ExternalCalendarEvent.create!(agent:, starts_at: s9h45, ends_at: e10h45, url: "abcde2")
 
-      expected_ranges = [e9h30...s9h45, e10h45..plage_ouverture.ends_at]
+      expected_ranges = [e9h30...s9h45, e10h45...plage_ouverture.ends_at]
       expect(free_times).to eq(expected_ranges)
     end
   end
@@ -105,7 +105,7 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
       at_9h45 = Time.zone.parse("2021-10-27 09:45")
       at_10h00 = Time.zone.parse("2021-10-27 10:00")
 
-      expected_ranges = [at_9h00...at_9h45, at_10h00..plage_ouverture.ends_at]
+      expected_ranges = [at_9h00...at_9h45, at_10h00...plage_ouverture.ends_at]
       Date.new(2021, 10, 25)...Date.new(2021, 10, 30)
       expect(free_times).to eq(expected_ranges)
     end
@@ -174,7 +174,7 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
       prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent])
       rdv = create(:rdv, starts_at: starts_at + 45.minutes, agents: [agent])
 
-      expected_ranges = [prev_rdv.ends_at...rdv.starts_at, rdv.ends_at..ends_at]
+      expected_ranges = [prev_rdv.ends_at...rdv.starts_at, rdv.ends_at...ends_at]
       expect(free_times).to eq(expected_ranges)
     end
   end
@@ -190,7 +190,7 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
       prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent], organisation:)
       rdv = create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent], organisation:)
 
-      expected_ranges = [prev_rdv.ends_at...rdv.starts_at, rdv.ends_at..ends_at]
+      expected_ranges = [prev_rdv.ends_at...rdv.starts_at, rdv.ends_at...ends_at]
       expect(free_times).to eq(expected_ranges)
     end
   end
