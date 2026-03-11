@@ -2,7 +2,7 @@ div
   p
     | Bonjour,
   p
-    | Dans le cadre du RDV du #{@date} avec #{@rdv.agents.map(&:short_name).sort.to_sentence}, l'usager⋅e #{@author} a envoyé la réponse suivante par e-mail :
+    | Dans le cadre du RDV #{@date} avec #{@rdv.agents.map(&:short_name).sort.to_sentence}, l'usager⋅e #{@author} a envoyé la réponse suivante par e-mail :
   blockquote
     h4 = @reply_subject
     div = simple_format(@reply_body)

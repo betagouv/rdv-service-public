@@ -78,13 +78,13 @@ module NotificationsHelper
   def email_title_for_agent(rdv, person, event)
     case event
     when :participation_created
-      "Nouvelle participation au RDV collectif sur votre agenda #{person.domain.name} pour #{relative_date(rdv.starts_at)}"
+      "Nouvelle participation au RDV collectif #{relative_date_with_preposition(rdv.starts_at)} sur votre agenda #{person.domain.name}"
     when :rdv_created
-      "Nouveau RDV ajouté sur votre agenda #{person.domain.name} pour #{relative_date(rdv.starts_at)}"
+      "Nouveau RDV ajouté pour #{relative_date(rdv.starts_at)} sur votre agenda #{person.domain.name}"
     when :rdv_cancelled
-      "RDV annulé #{relative_date(rdv.starts_at)}"
+      "RDV #{relative_date_with_preposition(rdv.starts_at)} annulé"
     when :participation_cancelled
-      "Participation au RDV collectif annulée sur votre agenda #{person.domain.name} pour #{relative_date(rdv.starts_at)}"
+      "Participation au RDV collectif #{relative_date_with_preposition(rdv.starts_at)} annulée sur votre agenda #{person.domain.name}"
     when :rdv_updated
       # Maybe not enough precision here (because specific design choice), the date used for agents rdv update is the previsous date of the rdv
       "modifié"

@@ -12,7 +12,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
   let!(:user) do
-    create(:user, :unregistered, organisations: [organisation]) # créé par appel d'api par l'appli qui s'intègre avec nous
+    create(:user, latest_login_at: nil, organisations: [organisation]) # créé par appel d'api par l'appli qui s'intègre avec nous
   end
   let(:rdv_plan) do
     create(:rdv_plan,
@@ -63,7 +63,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     emails = ActionMailer::Base.deliveries
     expect(emails.size).to eq(2)
     expect(emails.map { [_1.to, _1.subject] }).to include([["newaddress@exemple.com"], a_string_matching(/RDV confirmé le/)])
-    expect(emails.map { [_1.to, _1.subject] }).to include([[agent.email], a_string_matching(/Nouveau RDV ajouté sur votre agenda/)])
+    expect(emails.map { [_1.to, _1.subject] }).to include([[agent.email], a_string_matching(/Nouveau RDV ajouté pour .+ sur votre agenda/)])
 
     expect(page).to have_content("Retour sur Démarches Simplifiées")
   end
@@ -87,8 +87,8 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
                         oauth_application: application)
     end
 
-    context "et l'usager n'a pas de compte devise" do
-      let(:user) { create(:user, :unregistered, organisations: [organisation], email: "old_email@exemple.fr") }
+    context "et l'usager ne s'est jamais connecté" do
+      let(:user) { create(:user, latest_login_at: nil, organisations: [organisation], email: "old_email@exemple.fr") }
 
       it "remplace l'email par un notification_email" do
         visit edit_user_agents_rdv_plan_path(rdv_plan.id)
@@ -120,7 +120,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
         visit edit_user_agents_rdv_plan_path(rdv_plan.id)
         expect(page).to have_field("Email", with: user.email, disabled: true)
 
-        expect(page).to have_content("Cet usager utilise cette adresse email pour ce connecter. Elle n'est donc pas modifiable.")
+        expect(page).to have_content("Cet usager utilise cette adresse email pour se connecter. Elle n'est donc pas modifiable.")
 
         fill_in("Téléphone", with: "0612345678")
 
@@ -136,7 +136,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
   end
 
   context "quand un autre usager utilise déjà ce notification_email, et qu'on change l'email" do
-    let(:user) { create(:user, :unregistered, organisations: [organisation], email: nil, notification_email: "francis@precedent.fr") }
+    let(:user) { create(:user, latest_login_at: nil, organisations: [organisation], email: nil, notification_email: "francis@precedent.fr") }
     let!(:user_with_same_email) { create(:user, organisations: [organisation], email: nil, notification_email: "francis@exemple.fr") }
     let(:rdv_plan) do
       create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,

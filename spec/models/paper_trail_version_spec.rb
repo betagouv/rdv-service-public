@@ -11,8 +11,8 @@ RSpec.describe "PaperTrail::Version" do
       travel_to(now - 1.day)
       user = create(:user)
       travel_to(now)
-      user.update(confirmed_at: now)
-      expect(user.versions.last.changeset).to eq({ "confirmed_at" => [
+      user.update(latest_login_at: now)
+      expect(user.versions.last.changeset).to eq({ "latest_login_at" => [
                                                    "2022-04-20T12:30:00.000+02:00",
                                                    "2022-04-21T12:30:00.000+02:00",
                                                  ] })

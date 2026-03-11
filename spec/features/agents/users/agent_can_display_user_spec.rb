@@ -8,7 +8,7 @@ RSpec.describe "Agent can display user" do
   end
 
   context "when user is unregistered but has logged through FranceConnect" do
-    let!(:user) { create(:user, :unconfirmed, :unregistered, logged_once_with_franceconnect: true, organisations: [organisation]) }
+    let!(:user) { create(:user, latest_login_at: nil, logged_once_with_franceconnect: true, organisations: [organisation]) }
 
     it "displays a message to inform of FranceConnect binding, and hides the invitation prompt" do
       expect(page).to have_content("Cet usager s'est déjà connecté via FranceConnect.")

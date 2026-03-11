@@ -19,7 +19,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   end
 
   def show
-    rdv_plan = policy_scope(RdvPlan, policy_scope_class: Agent::RdvPlanPolicy::Scope).find(params[:id])
+    rdv_plan = policy_scope(RdvPlan, policy_scope_class: Agent::RdvPlanPolicy::Scope).includes(rdv: :organisation).find(params[:id])
 
     render_record rdv_plan
   end
@@ -42,7 +42,6 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
     # C'est à la fois pour garder une api rétrocompatible, et aussi parce qu'on aurait préféré que la colonne notification_email
     # reste juste "email", et que la colonne utilisée pour l'email devise ai un autre nom (peut-être `login_email`, `account_email` ou `devise_email`).
     user.notification_email = user_params[:email]
-    user.skip_confirmation_notification!
     user
   end
 

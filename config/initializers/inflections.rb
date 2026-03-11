@@ -15,6 +15,7 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.uncountable "created_by"
   inflect.irregular "demande_support", "demandes_support"
   inflect.acronym "IGN"
+  inflect.acronym "ANCT"
 end
 
 # These inflection rules are supported but not enabled by default:
