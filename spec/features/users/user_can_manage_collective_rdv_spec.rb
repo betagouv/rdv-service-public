@@ -203,7 +203,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         perform_enqueued_jobs
 
-        expect_notifications_sent_for(user, :rdv_created, :mail) # pas de SMS car le RDV est dans plus de 48h
+        expect_notifications_sent_for(rdv, user, :rdv_created, :mail) # pas de SMS car le RDV est dans plus de 48h
 
         expect_webhooks_for(user)
       end

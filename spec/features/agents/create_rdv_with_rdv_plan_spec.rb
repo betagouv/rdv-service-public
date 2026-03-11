@@ -63,7 +63,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     emails = ActionMailer::Base.deliveries
     expect(emails.size).to eq(2)
     expect(emails.map { [_1.to, _1.subject] }).to include([["newaddress@exemple.com"], a_string_matching(/RDV confirmé le/)])
-    expect(emails.map { [_1.to, _1.subject] }).to include([[agent.email], a_string_matching(/Nouveau RDV ajouté sur votre agenda/)])
+    expect(emails.map { [_1.to, _1.subject] }).to include([[agent.email], a_string_matching(/Nouveau RDV ajouté pour .+ sur votre agenda/)])
 
     expect(page).to have_content("Retour sur Démarches Simplifiées")
   end
