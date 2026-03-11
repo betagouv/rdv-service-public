@@ -68,8 +68,6 @@ fr:
           subject: Export des RDVs par usager du %{date}
   date:
     helpers:
-      tomorrow: demain
-      today: aujourd’hui
       yesterday: hier
     abbr_day_names:
     - dim
