@@ -45,7 +45,7 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
     external_calendar_occurrences = []
 
     ExternalCalendarEvent.where(agent_id: @agent.id).within_range(max_availability_range).each do |event|
-      event.all_occurrences_within(range).each do |occurrence|
+      event.all_occurrences_within(max_availability_range).each do |occurrence|
         external_calendar_occurrences << (occurrence.starts_at...occurrence.ends_at)
       end
     end
