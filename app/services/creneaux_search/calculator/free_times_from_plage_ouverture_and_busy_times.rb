@@ -33,6 +33,10 @@ class CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTimes
     end.compact
   end
 
+  def busy_time(starts_at, ends_at)
+    Range.new(starts_at, ends_at, true) # Le troisième argument exclut la fin du range pour ne pas faire d'erreur d'une seconde lors des soustractions de ranges
+  end
+
   def busy_times_from_off_days(max_availability_range)
     return [] if @work_on_off_days
 

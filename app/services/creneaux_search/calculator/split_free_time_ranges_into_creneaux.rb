@@ -6,7 +6,7 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
     @duration_in_min = duration_in_min
   end
 
-  def perform(datetime_range)
+  def perform(search_datetime_range)
     slots = []
 
     @free_time_ranges.each do |free_time|
@@ -14,7 +14,7 @@ class CreneauxSearch::Calculator::SplitFreeTimeRangesIntoCreneaux
     end
 
     slots.select do |slot|
-      slot.starts_at >= datetime_range.begin
+      slot.starts_at >= search_datetime_range.begin
     end
   end
 

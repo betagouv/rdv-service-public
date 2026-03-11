@@ -208,42 +208,14 @@ RSpec.describe CreneauxSearch::Calculator do
     expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:00"])
   end
 
-  describe "#split_range_recursively" do
-    it "return empty free times with an absence over range" do
-      absence = build(:absence, first_day: Date.new(2021, 11, 26), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12))
-      range = Time.zone.parse("20211126 9:00")..Time.zone.parse("20211126 11:00")
-      busy_times = [CreneauxSearch::Calculator::BusyTime.new(absence.starts_at, absence.ends_at)]
-      expect(described_class.split_range_recursively(range, busy_times)).to eq([])
-    end
-  end
+  context "with an absence over range" do
+    before do
+      plage_ouverture = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
 
-  describe "#calculate_slots" do
-    it "returns empty when free_time too short" do
-      motif = build(:motif, default_duration_in_min: 30)
-      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-      free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 9:15")
-      expect(described_class.calculate_slots(free_time, motif, plage_ouverture)).to eq([])
+      create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 11, 26), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12))
     end
 
-    it "returns slots that fit" do
-      motif = build(:motif, default_duration_in_min: 30)
-      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-      free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 10:15")
-
-      slots = described_class.calculate_slots(free_time, motif, plage_ouverture)
-      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "09:30"])
-      expect(slots.map(&:duration_in_min)).to eq([30, 30])
-    end
-
-    it "returns slots that fit when passed an overriden duration_in_min" do
-      motif = build(:motif, default_duration_in_min: 30)
-      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
-      free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 10:15")
-
-      slots = described_class.calculate_slots(free_time, motif, plage_ouverture, duration_in_min: 20)
-      expect(slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "09:20", "09:40"])
-      expect(slots.map(&:duration_in_min)).to eq([20, 20, 20])
-    end
+    it { is_expected.to eq([]) }
   end
 
   describe "#ranges_for" do
