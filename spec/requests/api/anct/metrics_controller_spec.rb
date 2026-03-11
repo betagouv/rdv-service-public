@@ -14,14 +14,14 @@ RSpec.describe "/api/anct/metrics" do
   end
 
   it "works when cached is warmed up" do
-    allow(CartoAnct).to receive(:cached_metrics).and_return(valid_cached_metrics)
+    allow(CartoANCT).to receive(:cached_metrics).and_return(valid_cached_metrics)
     get "/api/anct/metrics", headers: auth_headers
     expect(response.parsed_body["results"].size).to eq(4)
   end
 
   it "allows for offset-based pagination" do
     # On simule 1400 résultats
-    allow(CartoAnct).to receive(:cached_metrics).and_return(1400.times.map { |i| { insee: i.to_s.rjust(5, "0"), metrics: { tu: i * 2 } } })
+    allow(CartoANCT).to receive(:cached_metrics).and_return(1400.times.map { |i| { insee: i.to_s.rjust(5, "0"), metrics: { tu: i * 2 } } })
 
     get "/api/anct/metrics", headers: auth_headers, params: { limit: 800 }
     expect(response.parsed_body["results"].size).to eq(800)
@@ -34,7 +34,7 @@ RSpec.describe "/api/anct/metrics" do
   end
 
   it "returns a 500 with JSON body on error" do
-    allow(CartoAnct).to receive(:cached_metrics).and_raise("boom")
+    allow(CartoANCT).to receive(:cached_metrics).and_raise("boom")
     get "/api/anct/metrics", headers: auth_headers
     expect(response).to have_http_status(:internal_server_error)
     expect(response.body).to eq("{\"error\":\"Erreur interne du serveur\"}")
@@ -42,7 +42,7 @@ RSpec.describe "/api/anct/metrics" do
 
   describe "authentication" do
     before do
-      allow(CartoAnct).to receive(:cached_metrics).and_return(valid_cached_metrics)
+      allow(CartoANCT).to receive(:cached_metrics).and_return(valid_cached_metrics)
     end
 
     context "when providing the correct shared secret" do

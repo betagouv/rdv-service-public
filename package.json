@@ -5,7 +5,7 @@
     "build": "node esbuild.config.mjs"
   },
   "engines": {
-    "node": "20.9.0"
+    "node": "24.14.0"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",

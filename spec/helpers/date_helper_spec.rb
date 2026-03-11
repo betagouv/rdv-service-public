@@ -3,7 +3,7 @@ RSpec.describe DateHelper do
     # def relative_date(date, fallback_format = :short)
     it "returns 23 déc." do
       date = Time.zone.parse("2021-12-23 15:30")
-      expect(relative_date(date)).to eq("23 déc.")
+      expect(relative_date(date)).to eq("le 23 déc.")
     end
     # def relative_date(date, fallback_format = :short)
 
@@ -20,6 +20,21 @@ RSpec.describe DateHelper do
       travel_to(now)
       date = now + 1.day
       expect(relative_date(date)).to eq("demain")
+    end
+  end
+
+  describe "#relative_date_with_preposition" do
+    it "returns du 23 déc." do
+      date = Time.zone.parse("2021-12-23 15:30")
+      expect(relative_date_with_preposition(date)).to eq("du 23 déc.")
+    end
+
+    it "returns d'aujourd'hui" do
+      expect(relative_date_with_preposition(Time.zone.now)).to eq("d'aujourd'hui")
+    end
+
+    it "returns de demain" do
+      expect(relative_date_with_preposition(Time.zone.tomorrow)).to eq("de demain")
     end
   end
 
