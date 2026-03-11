@@ -108,7 +108,7 @@ Rails.application.configure do
     },
     refresh_carto_anct_stats: {
       cron: "every day at 06:30 Europe/Paris",
-      class: "CronJob::RefreshCartoAnctStatsJob",
+      class: "CronJob::RefreshCartoANCTStatsJob",
     },
     refresh_cached_stats: {
       cron: "every day at 08:00 Europe/Paris",

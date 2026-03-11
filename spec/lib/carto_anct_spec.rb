@@ -1,4 +1,4 @@
-RSpec.describe CartoAnct do
+RSpec.describe CartoANCT do
   describe ".fetch_and_merge_metrics" do
     it "merges siret and insee" do
       stub_request(:post, /#{MetabaseApi::HOST_URL}/)
