@@ -1,4 +1,74 @@
 RSpec.describe User, type: :model do
+  describe ".fiches_for_email" do
+    let!(:user_email)  { create(:user, email: "test@example.fr", notification_email: nil) }
+    let!(:user_notif)  { create(:user, email: nil, notification_email: "test@example.fr") }
+    let!(:user_other)  { create(:user, email: "other@example.fr", notification_email: nil) }
+
+    it "retourne les fiches dont l'email correspond" do
+      expect(described_class.fiches_for_email("test@example.fr")).to contain_exactly(user_email, user_notif)
+    end
+
+    it "ne retourne pas les fiches sans lien avec l'email" do
+      expect(described_class.fiches_for_email("test@example.fr")).not_to include(user_other)
+    end
+  end
+
+  describe ".loginable_by_code_for_email" do
+    let!(:user_normal) { create(:user, email: "test@example.fr") }
+    let!(:user_sso)    { create(:user, email: nil, notification_email: "test@example.fr", franceconnect_openid_sub: "abc123") }
+
+    it "exclut les fiches connectées via SSO" do
+      expect(described_class.loginable_by_code_for_email("test@example.fr")).to contain_exactly(user_normal)
+    end
+  end
+
+  describe ".loginable_by_code_for_email_in_territory" do
+    let!(:territory_1) { create(:territory) }
+    let!(:territory_2) { create(:territory) }
+    let!(:orga_1)      { create(:organisation, territory: territory_1) }
+    let!(:orga_2)      { create(:organisation, territory: territory_2) }
+    let!(:user_in)     { create(:user, email: "test@example.fr", organisations: [orga_1]) }
+    let!(:user_out)    { create(:user, email: nil, notification_email: "test@example.fr", organisations: [orga_2]) }
+    let!(:user_sso)    { create(:user, email: nil, notification_email: "test@example.fr", franceconnect_openid_sub: "abc123", organisations: [orga_1]) }
+
+    it "retourne uniquement les fiches non-SSO du territoire donné" do
+      expect(described_class.loginable_by_code_for_email_in_territory("test@example.fr", territory_id: territory_1.id)).to contain_exactly(user_in)
+    end
+  end
+
+  describe "#names_differ_from?" do
+    let(:user) { build(:user, first_name: "Alice", last_name: "Dupont") }
+
+    it "retourne false si les noms correspondent" do
+      expect(user.names_differ_from?(first_name: "Alice", last_name: "Dupont")).to be false
+    end
+
+    it "retourne true si le prénom diffère" do
+      expect(user.names_differ_from?(first_name: "Bob", last_name: "Dupont")).to be true
+    end
+
+    it "retourne true si le nom diffère" do
+      expect(user.names_differ_from?(first_name: "Alice", last_name: "Martin")).to be true
+    end
+
+    it "retourne false si les noms passés sont vides" do
+      expect(user.names_differ_from?(first_name: "", last_name: "")).to be false
+    end
+  end
+
+  describe ".create_from_login_code!" do
+    let(:login_code) { build(:login_code, email: "new@example.fr", first_name: "Alice", last_name: "Dupont") }
+
+    it "crée un usager avec les attributs du login code" do
+      user = described_class.create_from_login_code!(email: "new@example.fr", login_code:)
+      expect(user).to be_persisted
+      expect(user.email).to eq("new@example.fr")
+      expect(user.first_name).to eq("Alice")
+      expect(user.last_name).to eq("Dupont")
+      expect(user.created_through).to eq("auto_through_login")
+    end
+  end
+
   describe "#email=" do
     it %(automatically fixes ".@" typo) do
       expect(described_class.new(email: "francis.@exemple.fr").email).to eq("francis@exemple.fr")
