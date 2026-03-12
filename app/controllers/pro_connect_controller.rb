@@ -4,7 +4,7 @@ class ProConnectController < ApplicationController
   def auth
     auth_client = ProConnectOpenIdClient::Auth.new(
       login_hint: params[:login_hint],
-      client_id: ProConnect.client_id(current_domain),
+      client_id: current_domain.pro_connect_client_id,
       client_secret: current_domain.pro_connect_client_secret
     )
 
@@ -41,7 +41,7 @@ class ProConnectController < ApplicationController
       params_state: params[:state],
       callback_url: pro_connect_callback_url,
       nonce: pro_connect_session[:nonce],
-      client_id: ProConnect.client_id(current_domain),
+      client_id: current_domain.pro_connect_client_id,
       client_secret: current_domain.pro_connect_client_secret
     )
 

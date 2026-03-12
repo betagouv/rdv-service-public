@@ -10,7 +10,7 @@
           => resource.invited_by.full_name
           | vous invite à rejoindre l'organisation « #{resource.organisations.first.name} ».
 
-      - if ProConnect.display_button?(current_domain)
+      - if display_pro_connect_button?
         p.rdv-text-align-center Pour créer votre compte, connectez-vous avec ProConnect.
         .rdv-text-align-center
           = render "common/proconnect_button_dsfr", login_hint: resource.email

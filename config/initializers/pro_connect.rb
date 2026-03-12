@@ -1,35 +1,22 @@
 # Le guide pour configurer ProConnect en local : docs/interconnexions/proconnect.md
 
-module ProConnect
-  DISCOVERY_CACHE_KEY = "pro_connect_discovery_config".freeze
+require_relative "sentry"
 
-  def self.base_url
-    ENV["PRO_CONNECT_BASE_URL"].presence
-  end
+Rails.configuration.x.pro_connect_unreachable_at_boot_time = false
 
-  def self.display_button?(domain)
-    base_url && !disabled? && client_id(domain)
-  end
+if ENV["PRO_CONNECT_BASE_URL"].present?
+  begin
+    # la méthode .discover! fait un appel à l'API de ProConnect
+    Rails.configuration.x.pro_connect_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["PRO_CONNECT_BASE_URL"])
+  rescue StandardError => e
+    error_message = <<~MSG
+      ProConnect n'est pas joignable au démarrage de l'application.
+      Elle a été démarrée en désactivant le bouton ProConnect, mais elle aura besoin d'être redémarrée quand ProConnect sera à nouveau joignable."
+    MSG
 
-  def self.disabled?
-    ENV["PRO_CONNECT_DISABLED"].present?
-  end
-
-  def self.client_id(domain)
-    {
-      Domain::RDV_SOLIDARITES => ENV["PRO_CONNECT_RDVS_CLIENT_ID"],
-      Domain::RDV_AIDE_NUMERIQUE => ENV["PRO_CONNECT_RDVAN_CLIENT_ID"],
-      Domain::RDV_SERVICE_PUBLIC => ENV["PRO_CONNECT_RDVSP_CLIENT_ID"],
-    }.fetch(domain).presence or raise "ProConnect client id not found for #{domain.id}"
-  end
-
-  def self.open_id_config_discover!
-    OpenIDConnect::Discovery::Provider::Config.discover!(base_url)
-  end
-end
-
-if ProConnect.base_url
-  Rails.configuration.x.pro_connect_config = Rails.cache.fetch(ProConnect::DISCOVERY_CACHE_KEY, expires_in: 2.weeks) do
-    ProConnect.open_id_config_discover!
+    Rails.logger.warn(error_message)
+    Sentry.capture_exception(e, level: :warning)
+    Sentry.capture_message(error_message)
+    Rails.configuration.x.pro_connect_unreachable_at_boot_time = true
   end
 end

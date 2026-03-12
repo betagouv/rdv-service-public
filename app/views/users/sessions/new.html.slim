@@ -17,7 +17,7 @@
           p.fr-hr-or ou
 
     / Contrairement à FranceConnect, on n'affiche pas le bouton ProConnect en dehors de la prise de rendez-vous
-    - if ProConnect.display_button? && for_professionnels
+    - if display_pro_connect_button? && for_professionnels
       .rdv-text-align-center
         = render "common/proconnect_button_dsfr", user_type: "user"
       - unless only_sso

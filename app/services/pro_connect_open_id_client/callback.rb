@@ -86,7 +86,7 @@ module ProConnectOpenIdClient
       }
 
       response = Typhoeus.post(
-        URI("#{ProConnect.base_url}/token"),
+        URI("#{ENV['PRO_CONNECT_BASE_URL']}/token"),
         body: data,
         headers: { "Content-Type" => "application/x-www-form-urlencoded" }
       )
@@ -113,7 +113,7 @@ module ProConnectOpenIdClient
     end
 
     def fetch_user_info(token)
-      uri = URI("#{ProConnect.base_url}/userinfo")
+      uri = URI("#{ENV['PRO_CONNECT_BASE_URL']}/userinfo")
       uri.query = URI.encode_www_form({ schema: "openid" })
 
       response = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })

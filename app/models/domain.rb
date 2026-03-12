@@ -88,6 +88,14 @@ class Domain
     "https://aide.rdv-service-public.fr"
   end
 
+  def pro_connect_client_id
+    {
+      RDV_SOLIDARITES => ENV["PRO_CONNECT_RDVS_CLIENT_ID"],
+      RDV_AIDE_NUMERIQUE => ENV["PRO_CONNECT_RDVAN_CLIENT_ID"],
+      RDV_SERVICE_PUBLIC => ENV["PRO_CONNECT_RDVSP_CLIENT_ID"],
+    }.fetch(self)
+  end
+
   def pro_connect_client_secret
     {
       RDV_SOLIDARITES => ENV["PRO_CONNECT_RDVS_CLIENT_SECRET"],

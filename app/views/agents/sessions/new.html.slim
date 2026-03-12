@@ -7,7 +7,7 @@
   div.text-center
     = render "common/proconnect_button_dsfr", login_hint: params[:pro_connect_required]
 - else
-  - if ProConnect.display_button?
+  - if display_pro_connect_button?
     div.text-center
       = render "common/proconnect_button_dsfr"
 
