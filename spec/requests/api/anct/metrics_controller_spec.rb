@@ -1,5 +1,5 @@
 RSpec.describe "/api/anct/metrics" do
-  stub_env_with(CARTO_ANCT_SHARED_SECRET: "t0p_s3cr3t!")
+  stub_env_with(CARTO_ANCT_SHARED_SECRET: "t0p_s3cr3t!", CARTO_ANCT_ENABLED: "true")
 
   let(:bearer) { "t0p_s3cr3t!" }
   let(:auth_headers) { { "Authorization" => "Bearer #{bearer}" } }
@@ -38,6 +38,13 @@ RSpec.describe "/api/anct/metrics" do
     get "/api/anct/metrics", headers: auth_headers
     expect(response).to have_http_status(:internal_server_error)
     expect(response.body).to eq("{\"error\":\"Erreur interne du serveur\"}")
+  end
+
+  it 'returns a 404 when ENV["CARTO_ANCT_ENABLED"] is not set' do
+    with_modified_env(CARTO_ANCT_ENABLED: nil) do
+      get "/api/anct/metrics", headers: auth_headers
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe "authentication" do
