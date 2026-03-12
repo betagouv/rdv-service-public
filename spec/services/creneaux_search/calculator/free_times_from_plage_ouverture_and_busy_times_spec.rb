@@ -208,20 +208,10 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
     let(:available_ranges) do
       [Time.zone.parse("2021-10-26 06:00:00")..Time.zone.parse("2021-10-29 10:00:00")]
     end
-
-    # Décommentez ces tests si vous changez la requête pour vérifier qu'elle reste rapide.
-    # Ce test est trop long pour être ajouté à la CI pour chaque build (il faut créer beaucoup de données), mais il est utile si l'index ou la requête change
-    before do
-      # Il faut créer un minimum de données pour que l'index soit utilisé (le query planner prend des décisions en fonction de la taille des tables et des indexes)
-      100.times do |i|
-        create(:rdv, starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
-        create(:rdv, agents: [agent], starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
-      end
-    end
+    let(:request) { described_class.new(range, plage_ouverture, work_on_off_days: false).send(:optimized_rdv_request, available_ranges) }
 
     it "est optimisée pour utiliser l'index 'calculator_index'. Décommentez le test suivant si celui-ci échoue." do
       # Voir https://www.postgresql.org/docs/current/indexes-index-only-scans.html
-      request = described_class.new(range, plage_ouverture, work_on_off_days: false).send(:optimized_rdv_request, available_ranges)
       expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).to_sql.squish).to eq <<~SQL.squish
         SELECT "agents_rdvs"."calculator_rdv_starts_at",
                "agents_rdvs"."calculator_rdv_ends_at"
@@ -232,12 +222,23 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
       SQL
     end
 
-    # TODO: depuis l'utilisation du tsmultirange, ce test ne passe plus. En fonction des performances qu'on obtient en production, ce n'est pas forcément un problème.
+    # TODO: Ce test ne passe plus, ce n'est pas clair si c'est un faux positif ou non. En fonction des performances qu'on obtient en production, ce n'est pas forcément un problème.
     # On pourrait voir si en production on a encore des index-only scan, et/ou utiliser un grand range plutôt qu'un multirange (mais ce n'est pas clair si le tradeoff est positif).
-    # it "is optimized to use an index only scan" do
-    #   # Voir https://www.postgresql.org/docs/current/indexes-index-only-scans.html
-    #   request = described_class.new(range, plage_ouverture, work_on_off_days: false).send(:optimized_rdv_request, available_ranges)
-    #   expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).explain.inspect).to include "Index Only Scan using calculator_index"
+    #
+    # Décommentez ce tests si vous changez la requête pour vérifier qu'elle reste rapide.
+    # Ce test est trop long pour être ajouté à la CI pour chaque build (il faut créer beaucoup de données), mais il est utile si l'index ou la requête change
+    # describe "index only scan" do
+    #   before do
+    #     # Il faut créer un minimum de données pour que l'index soit utilisé (le query planner prend des décisions en fonction de la taille des tables et des indexes)
+    #     100.times do |i|
+    #       create(:rdv, starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
+    #       create(:rdv, agents: [agent], starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
+    #     end
+    #   end
+    #
+    #   it "is optimized to use an index only scan" do
+    #     expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).explain.inspect).to include "Index Only Scan using calculator_index"
+    #   end
     # end
   end
 end
