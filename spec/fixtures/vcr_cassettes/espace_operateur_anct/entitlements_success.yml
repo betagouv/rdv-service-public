@@ -1,0 +1,55 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://operateurs.suite.anct.gouv.fr/api/v1.0/entitlements/?account_email=contact@mairie-nantes.fr&account_type=user&service_id=49&siret=21550050500015
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Service-Auth:
+      - Bearer fake-token
+      User-Agent:
+      - Faraday v2.14.1
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      Authorization: "[Filtered in vcr.rb -> before_record]"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 09 Mar 2026 17:05:01 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '247'
+      Connection:
+      - keep-alive
+      X-Request-Id:
+      - 6a54bd02-f959-4b63-ae24-123dcf70e249
+      Vary:
+      - Accept, origin, Accept-Language, Cookie
+      Allow:
+      - GET, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      Content-Language:
+      - fr-fr
+      Strict-Transport-Security:
+      - max-age=60; includeSubDomains; preload
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Set-Cookie: "[Filtered in vcr.rb -> before_record]"
+    body:
+      encoding: UTF-8
+      string: '{"organization":{"type":"other","name":"Bezonvaux","oidc_valid":null},"operator":{"id":"f33e9b4b-213f-4db9-8b39-ab17558f2931","name":"TEST","url":null,"config":{}},"entitlements":{"can_access":true,"is_admin":false,"is_admin_reason":"no_account"}}'
+  recorded_at: Mon, 09 Mar 2026 17:05:01 GMT
+recorded_with: VCR 6.4.0

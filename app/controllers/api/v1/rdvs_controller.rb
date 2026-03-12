@@ -10,7 +10,7 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
     if params[:include].nil?
       rdvs = rdvs.includes(:organisation, :lieu, :agents, :users, participations: [:user], motif: [:motif_category])
     elsif params[:include].is_a?(Array)
-      rdvs.includes!(:organisation) if "organisation".in?(params[:include])
+      rdvs.includes!(:organisation) # Nous avons besoin de l’organisation pour renvoyer les RDV sur le bon fuseau horaire
 
       rdvs.includes!(:lieu) if "lieu".in?(params[:include])
 

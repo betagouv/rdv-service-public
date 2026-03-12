@@ -32,7 +32,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         let!(:homonym_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000", organisations: [create(:organisation)]) }
         let(:within_territory) { homonym_user.organisations.first.territory }
 
-        it { is_expected.to eq([OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: homonym_user)]) }
+        it { is_expected.to eq([OpenStruct.new(attributes: %i[first_name last_name birth_date], user: homonym_user)]) }
 
         context "but the user is outside the given territory" do
           let(:within_territory) { create(:territory) }
@@ -56,7 +56,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         let!(:user_with_same_phone_number) { create(:user, phone_number: "0658032518", organisations: [create(:organisation)]) }
         let(:within_territory) { user_with_same_phone_number.organisations.first.territory }
 
-        it { is_expected.to eq([OpenStruct.new(severity: :warning, attributes: %i[phone_number], user: user_with_same_phone_number)]) }
+        it { is_expected.to eq([OpenStruct.new(attributes: %i[phone_number], user: user_with_same_phone_number)]) }
 
         context "but the user is outside the given territory" do
           let(:within_territory) { create(:territory) }
@@ -80,7 +80,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [create(:organisation)]) }
         let(:within_territory) { user_with_same_email.organisations.first.territory }
 
-        it { is_expected.to eq([OpenStruct.new(severity: :error, attributes: [:email], user: user_with_same_email)]) }
+        it { is_expected.to eq([OpenStruct.new(attributes: [:email], user: user_with_same_email)]) }
       end
 
       context "when there is another user OUTSIDE the territory with the same email" do
@@ -88,10 +88,7 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
         let!(:user_with_same_email) { create(:user, email: "candidat@exemple.fr", organisations: [create(:organisation)]) }
         let(:within_territory) { create(:territory) }
 
-        # TODO: Ce comportement est problématique et sera bientôt corrigé une fois qu'on aura retiré l'unicité sur `users.email`.
-        it "ignores the scope :'(" do
-          expect(results).to eq([OpenStruct.new(severity: :error, attributes: [:email], user: user_with_same_email)])
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -107,9 +104,9 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
 
       it "works" do
         expected_results = [
-          OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: user_with_matching_identity),
-          OpenStruct.new(severity: :warning, attributes: [:phone_number],                     user: user_with_matching_phone),
-          OpenStruct.new(severity: :error,   attributes: [:email],                            user: user_with_matching_email),
+          OpenStruct.new(attributes: %i[first_name last_name birth_date], user: user_with_matching_identity),
+          OpenStruct.new(attributes: [:phone_number],                     user: user_with_matching_phone),
+          OpenStruct.new(attributes: [:email],                            user: user_with_matching_email),
         ]
         expect(results).to match_array(expected_results)
       end

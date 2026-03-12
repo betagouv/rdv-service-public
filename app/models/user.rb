@@ -30,7 +30,6 @@ class User < ApplicationRecord
   include FullNameConcern
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
-  include User::ImprovedUnicityErrorConcern
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
@@ -86,7 +85,6 @@ class User < ApplicationRecord
 
   EMAIL_REGEXP = Devise.email_regexp
   validates :email, format: { with: EMAIL_REGEXP }, allow_blank: true
-  validates :email, uniqueness: { case_sensitive: false }, allow_blank: true
   validates :notification_email, format: { with: EMAIL_REGEXP }, allow_blank: true
 
   validate :birth_date_validity
