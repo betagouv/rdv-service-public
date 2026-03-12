@@ -241,4 +241,97 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
     #   end
     # end
   end
+
+  # TODO: ces tests ont été adaptés depuis l'implémentation précédente, donc ils vérifient des méthodes qui sont maintenant privées
+  # Il faudrait les adapter pour utiliser l'interface publique de la classe.
+  describe "busy times" do
+    let(:monday) { Time.zone.parse("20211025 10:00") }
+    let(:range) { Time.zone.parse("2021-10-26 8:00")..Time.zone.parse("2021-10-29 12:00") }
+    let(:agent) { create(:agent) }
+
+    before { travel_to(monday) }
+
+    describe "from absences" do
+      subject(:busy_times) { described_class.new(range, plage_ouverture, work_on_off_days:).send(:busy_times_from_absences, range) }
+
+      context "with an absence without recurrence" do
+        it "returns BusyTime starts_at as absence first_day and start_time" do
+          create(:absence, agent: agent, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9))
+          expect(busy_times.first.begin).to eq(Time.zone.parse("20211027 9:00"))
+        end
+
+        it "returns BusyTime ends_at as absence first_day and end_time when end_day is nil" do
+          create(:absence, agent: agent, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_day: nil,
+                           end_time: Tod::TimeOfDay.new(9, 40))
+          expect(busy_times.first.end).to eq(Time.zone.parse("20211027 9:40"))
+        end
+
+        it "returns BusyTime ends_at as absence end_day and end_time" do
+          create(:absence, agent: agent, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9),
+                           end_day: Date.new(2021, 10, 28), end_time: Tod::TimeOfDay.new(12))
+          expect(busy_times.first.end).to eq(Time.zone.parse("20211028 12"))
+        end
+      end
+
+      context "with an absence with recurrence" do
+        it "returns starts_at first occurrence in range" do
+          create(:absence, agent: agent, first_day: Date.new(2021, 10, 19), start_time: Tod::TimeOfDay.new(9),
+                           recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil, interval: 1))
+          expect(busy_times.first.begin).to eq(Time.zone.parse("20211026 9:00"))
+        end
+
+        it "returns ends_at occurrence in range" do
+          create(:absence, agent: agent, first_day: Date.new(2021, 10, 19), start_time: Tod::TimeOfDay.new(9),
+                           end_time: Tod::TimeOfDay.new(9, 45), recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil, interval: 1))
+          expect(busy_times.first.end).to eq(Time.zone.parse("20211026 9:45"))
+        end
+
+        it "returns a busy_time for each occurrence in range" do
+          create(:absence,
+                 agent: agent,
+                 first_day: Date.new(2021, 10, 19),
+                 start_time: Tod::TimeOfDay.new(9),
+                 end_time: Tod::TimeOfDay.new(9, 45),
+                 recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Time.zone.parse("20211019 9:00"), until: nil, interval: 1))
+          expect(busy_times.map(&:end)).to eq([Time.zone.parse("20211026 9:45"), Time.zone.parse("20211029 9:45")])
+        end
+      end
+    end
+
+    describe "from off days" do
+      subject(:busy_times) { described_class.new(range, plage_ouverture, work_on_off_days:).send(:busy_times_from_off_days, range) }
+
+      context "with an off_day in range" do
+        context "with a range on a single day" do
+          let(:range) { Time.zone.parse("2024-12-25 8:00")..Time.zone.parse("2024-12-25 12:00") }
+
+          it "returns off_day from beginning of day to end of day" do
+            busy_time = busy_times.first
+            expect(busy_time.begin).to eq(Time.zone.parse("2024-12-25 0:00"))
+            expect(busy_time.end).to be_within(1.second).of(Time.zone.parse("2024-12-25 23:59:59"))
+          end
+        end
+
+        context "during christmas week" do
+          let(:range) do
+            Time.zone.parse("2024-12-20 8:00")..Time.zone.parse("2024-12-26 12:00")
+          end
+
+          it "returns off_day from beginning of day to end of day" do
+            busy_time = busy_times.first
+            expect(busy_time.begin).to eq(Time.zone.parse("2024-12-25 0:00"))
+            expect(busy_time.end).to be_within(1.second).of(Time.zone.parse("2024-12-25 23:59:59"))
+          end
+        end
+
+        context "during a regular week" do
+          let(:range) { Time.zone.parse("2021-12-13 8:00")..Time.zone.parse("2021-12-19 12:00") }
+
+          it "returns off_day that in given range only" do
+            expect(busy_times).to be_empty
+          end
+        end
+      end
+    end
+  end
 end
