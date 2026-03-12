@@ -8,6 +8,14 @@ header.header.bg-white
       i.fr-icon-menu-fill.text-primary-blue
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
+        li.list-inline-item
+          - if current_domain == Domain::RDV_SERVICE_PUBLIC
+            = link_to "Donnez votre avis", "https://tally.so/r/obBope", class: "btn text-primary-blue link-dsfr", target: "_blank"
+          - elsif current_domain == Domain::RDV_SOLIDARITES
+            = link_to "Donnez votre avis", "https://tally.so/r/5BkP56", class: "btn text-primary-blue link-dsfr", target: "_blank"
+          - else
+            = link_to "Donnez votre avis", "https://tally.so/r/0QMR5N", class: "btn text-primary-blue link-dsfr", target: "_blank"
+
         = render "layouts/rdv_a_renseigner", organisation: defined?(current_organisation) && current_organisation
         li.list-inline-item
           - if current_domain != Domain::RDV_AIDE_NUMERIQUE
