@@ -253,18 +253,28 @@ RSpec.describe CreneauxSearch::Calculator do
   end
 
   context "with recurrence" do
-    it "return empty when po and it occurrence is out of range" do
-      plage_ouverture = build(:plage_ouverture, first_day: friday + 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                                recurrence: Montrose.every(:week, starts: friday + 14.days, interval: 1))
-      range = (friday + 3.days)..(friday + 10.days)
-      expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
+    context "when po is out of range" do
+      let(:date_range) { (friday + 3.days)..(friday + 10.days) }
+
+      before do
+        create(:plage_ouverture, motifs: [motif], lieu:, first_day: friday + 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+                                 recurrence: Montrose.every(:week, starts: friday + 14.days, interval: 1))
+      end
+
+      it { is_expected.to eq([]) }
     end
 
-    it "return occurrence of po that in range" do
-      plage_ouverture = build(:plage_ouverture, first_day: friday - 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                                recurrence: Montrose.every(:week, starts: friday - 14.days, interval: 1))
-      range = (friday + 3.days)..(friday + 10.days)
-      expect(described_class.ranges_for(plage_ouverture, range)).to eq([(Time.zone.parse("20210507 9:00")..Time.zone.parse("20210507 11:00"))])
+    context "when PO is in range" do
+      let(:date_range) { (friday + 3.days)..(friday + 10.days) }
+
+      before do
+        create(:plage_ouverture, motifs: [motif], lieu:, first_day: friday - 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+                                 recurrence: Montrose.every(:week, starts: friday - 14.days, interval: 1))
+      end
+
+      it "return occurrence" do
+        expect(available_slots.map(&:starts_at).map { _1.strftime("%H:%M") }).to eq(["09:00", "10:00"])
+      end
     end
   end
 end
