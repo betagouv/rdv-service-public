@@ -7,15 +7,18 @@ p
 
 .mb-4
   - @fiches_usagers.each do |user|
-    - territory_name = user.organisations.first.territory.name_in_stats
+    / TODO: une fiche ne devrait être rattachée qu'à un seul territoire
+    / En attendant, on affiche tous les territoires pour aider l'usager à identifier la bonne fiche.
+    - territory_names = user.organisations.map { |o| o.territory.name_in_stats }.uniq
     - url = submit_choix_fiche_usager_users_sessions_by_code_path(user_id: user.id)
     .fr-tile.fr-tile--sm.fr-tile--horizontal.fr-enlarge-link.mt-2
       .fr-tile__body
         .fr-tile__content
           h3.fr-tile__title
             = link_to user.full_name, url, method: :post
-          p.fr-tile__desc
-            = territory_name
+          - if territory_names.any?
+            p.fr-tile__desc
+              = territory_names.to_sentence
           p.fr-tile__detail
             | #{pluralize(user.rdvs.count, "rendez-vous", plural: "rendez-vous")}
             - if user.phone_number_formatted.present?
