@@ -18,7 +18,6 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     @user = User.new
     @user.assign_attributes(user_params.merge(created_through: "agent_creation_api"))
     authorize(@user, policy_class: Agent::UserPolicy)
-    @user.skip_confirmation_notification!
     @user.save!
     render_record @user
   end
@@ -32,7 +31,6 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
       return
     end
 
-    @user.skip_reconfirmation!
     @user.update!(user_params)
     render_record @user
   end

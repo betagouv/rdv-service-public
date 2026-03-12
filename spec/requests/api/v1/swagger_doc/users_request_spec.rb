@@ -94,7 +94,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
-      let(:user) { create(:user, :unconfirmed, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+      let(:user) { create(:user, latest_login_at: nil, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
       let(:user_id) { user.id }
 
       response 200, "Met à jour et renvoie un·e usager·ère" do
@@ -215,11 +215,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "phone number is misformatted", false do
         let(:phone_number) { "misformatted phone number" }
-      end
-
-      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "email is taken", false do
-        let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
-        let(:email) { existing_user.email }
       end
     end
 
@@ -473,14 +468,6 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
         let(:phone_number) { "misformatted phone number" }
-      end
-
-      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "email is taken", false do
-        let(:first_name) { "Johnny" }
-        let(:last_name) { "Silverhand" }
-
-        let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
-        let(:email) { existing_user.email }
       end
     end
   end

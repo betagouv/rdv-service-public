@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_04_111613) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_04_145918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -869,7 +869,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_04_111613) do
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
-    t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
+    t.index ["email"], name: "index_users_on_email", where: "(email IS NOT NULL)"
     t.index ["first_name"], name: "index_users_on_first_name"
     t.index ["franceconnect_openid_sub"], name: "index_users_on_franceconnect_openid_sub", where: "(franceconnect_openid_sub IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

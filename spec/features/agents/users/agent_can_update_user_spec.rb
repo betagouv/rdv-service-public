@@ -19,11 +19,8 @@ RSpec.describe "Agent can update user" do
     fill_in :user_last_name, with: "reynolds"
     fill_in "Email", with: "jeanne@reynolds.com"
     click_button "Enregistrer"
-    # When the user has already a pwd, changing email send a confirmation email
-    open_email("jeanne@reynolds.com")
-    expect(current_email.subject).to eq "Instructions de confirmation de votre nouvelle adresse email"
     expect_page_title("jeanne REYNOLDS")
-    expect(page).to have_content("En attente de confirmation pour jeanne@reynolds.com")
+    expect(page).to have_content("jeanne@reynolds.com")
   end
 
   describe "optional fields" do
@@ -71,7 +68,7 @@ RSpec.describe "Agent can update user" do
 
   context "unregistered user" do
     let!(:user) do
-      create(:user, :unregistered, first_name: "Jean", last_name: "LEGENDE", email: nil, organisations: [organisation])
+      create(:user, latest_login_at: nil, first_name: "Jean", last_name: "LEGENDE", email: nil, organisations: [organisation])
     end
 
     it "add email to existing user" do
@@ -82,9 +79,9 @@ RSpec.describe "Agent can update user" do
     end
   end
 
-  context "usager n’a pas encore confirmé son compte" do
+  context "usager ne s'est jamais connecté" do
     # lorsqu’un usager a confirmé son compte, l’agent n’a plus la main sur ses préférences de notifs
-    let!(:user) { create(:user, :unconfirmed, organisations: [organisation]) }
+    let!(:user) { create(:user, latest_login_at: nil, organisations: [organisation]) }
 
     it "permet de désactiver et réactiver les préférences de notifications SMS et email" do
       within("#spec-primary-user-card") { click_link "Modifier" }

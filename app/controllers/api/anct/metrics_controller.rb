@@ -2,13 +2,13 @@
 # Cette API est appelée par la cartographie du déploiement de la suite territoriale.
 # Voir docs/interconnexions/carto_anct.md
 #
-class Api::Anct::MetricsController < ActionController::Base # rubocop:disable Rails/ApplicationController
+class Api::ANCT::MetricsController < ActionController::Base # rubocop:disable Rails/ApplicationController
   before_action :authorize_via_shared_secret
 
   rescue_from StandardError, with: :render_json_error
 
   def index
-    all_metrics = CartoAnct.cached_metrics
+    all_metrics = CartoANCT.cached_metrics
 
     paginated_results = all_metrics.drop(params[:offset].presence.to_i || 0)
     paginated_results = paginated_results.take(params[:limit].to_i) if params[:limit].present?

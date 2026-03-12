@@ -21,10 +21,6 @@ ul.list-unstyled.mb-5
     - if user.phone_number.present?
       li.mb-2= object_attribute_tag(user, :notify_by_sms, notify_by_sms_description(user))
 
-  - if user.pending_reconfirmation?
-    .text-muted.mb-2
-      | En attente de confirmation pour #{user.unconfirmed_email}
-
   - if current_territory.enable_notes_field?
     li.mb-2= object_attribute_tag(user, :annotation_content, formatted_user_annotation(user, current_territory))
 
