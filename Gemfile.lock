@@ -136,6 +136,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.20)
     benchmark (0.5.0)
+    benchmark-ips (2.14.0)
     better_errors (2.10.1)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
@@ -245,6 +246,7 @@ GEM
       multipart-post (~> 2.0)
     faraday-net_http (3.4.2)
       net-http (~> 0.5)
+    fast_interval_tree (0.2.2)
     ffi (1.17.2)
     ffi (1.17.2-arm64-darwin)
     ffi (1.17.2-x86_64-linux-gnu)
@@ -377,6 +379,9 @@ GEM
     montrose (0.18.0)
       activesupport (>= 5.2, < 9)
     msgpack (1.8.0)
+    multi_range (2.2.3)
+      fast_interval_tree (~> 0.2.0)
+      roulette-wheel-selection (~> 1.1.1)
     multi_xml (0.6.0)
     multipart-post (2.4.1)
     mustermann (3.0.4)
@@ -576,6 +581,7 @@ GEM
       railties (>= 5.2)
     rexml (3.4.2)
     rouge (4.5.1)
+    roulette-wheel-selection (1.1.1)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -763,6 +769,7 @@ DEPENDENCIES
   administrate
   anonymizer!
   auto_strip_attributes
+  benchmark-ips
   better_errors
   binding_of_caller
   blueprinter
@@ -807,6 +814,7 @@ DEPENDENCIES
   lograge
   mail
   montrose
+  multi_range
   notion-ruby-client (~> 1.2)
   omniauth-microsoft_graph
   omniauth-rails_csrf_protection
@@ -884,6 +892,7 @@ CHECKSUMS
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt (3.1.20) sha256=8410f8c7b3ed54a3c00cd2456bf13917d695117f033218e2483b2e40b0784099
   benchmark (0.5.0) sha256=465df122341aedcb81a2a24b4d3bd19b6c67c1530713fd533f3ff034e419236c
+  benchmark-ips (2.14.0) sha256=b72bc8a65d525d5906f8cd94270dccf73452ee3257a32b89fbd6684d3e8a9b1d
   better_errors (2.10.1) sha256=f798f1bac93f3e775925b7fcb24cffbcf0bb62ee2210f5350f161a6b75fc0a73
   bigdecimal (3.3.1) sha256=eaa01e228be54c4f9f53bf3cc34fe3d5e845c31963e7fcc5bedb05a4e7d52218
   bindata (2.5.0) sha256=29dccb8ba1cc9de148f24bb88930840c62db56715f0f80eccadd624d9f3d2623
@@ -937,6 +946,7 @@ CHECKSUMS
   faraday-mashify (0.1.1) sha256=b4b2bc7890d78327a271e4d64bd0156b5e4589fcd8d3e66b1b529fcef10a3eba
   faraday-multipart (1.1.0) sha256=856b0f1c7316a4d6c052dd2eef5c42f887d56d93a171fe8880da1af064ca0751
   faraday-net_http (3.4.2) sha256=f147758260d3526939bf57ecf911682f94926a3666502e24c69992765875906c
+  fast_interval_tree (0.2.2) sha256=6ace1eb84e443c8100f7bbd50bce248db117af2bd1ec4f328827c8a69b67fd7e
   ffi (1.17.2) sha256=297235842e5947cc3036ebe64077584bff583cd7a4e94e9a02fdec399ef46da6
   ffi (1.17.2-arm64-darwin) sha256=54dd9789be1d30157782b8de42d8f887a3c3c345293b57ffb6b45b4d1165f813
   ffi (1.17.2-x86_64-linux-gnu) sha256=05d2026fc9dbb7cfd21a5934559f16293815b7ce0314846fee2ac8efbdb823ea
@@ -992,6 +1002,7 @@ CHECKSUMS
   minitest (5.26.2) sha256=f021118a6185b9ba9f5af71f2ba103ad770c75afde9f2ab8da512677c550cde3
   montrose (0.18.0) sha256=bf5568c70497c4d4ffe0eeeb77515cf89e068c9256ee2f994cd612e2f3dd32f9
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
+  multi_range (2.2.3) sha256=9851365ff84e5c2f500ffea224195d02dd72b45505a5f368411907b78e7429d9
   multi_xml (0.6.0) sha256=d24393cf958adb226db884b976b007914a89c53ad88718e25679d7008823ad52
   multipart-post (2.4.1) sha256=9872d03a8e552020ca096adadbf5e3cb1cd1cdd6acd3c161136b8a5737cdb4a8
   mustermann (3.0.4) sha256=85fadcb6b3c6493a8b511b42426f904b7f27b282835502233dd154daab13aa22
@@ -1068,6 +1079,7 @@ CHECKSUMS
   responders (3.1.1) sha256=92f2a87e09028347368639cfb468f5fefa745cb0dc2377ef060db1cdd79a341a
   rexml (3.4.2) sha256=1384268554a37af5da5279431ca3f2f37d46f09ffdd6c95e17cc84c83ea7c417
   rouge (4.5.1) sha256=2ac81c6dee7019bbc6600d4c2d641d730d65c165941400ebd924259067e690dd
+  roulette-wheel-selection (1.1.1) sha256=8dd014b037b122f78f38787f946c9f31b4c696f0c0dab1d0fb3c14e6a702019d
   rspec (3.13.0) sha256=d490914ac1d5a5a64a0e1400c1d54ddd2a501324d703b8cfe83f458337bab993
   rspec-core (3.13.2) sha256=94fbda6e4738e478f1c7532b7cc241272fcdc8b9eac03a97338b1122e4573300
   rspec-expectations (3.13.3) sha256=0e6b5af59b900147698ea0ff80456c4f2e69cac4394fbd392fbd1ca561f66c58
@@ -1139,7 +1151,7 @@ CHECKSUMS
   zeitwerk (2.7.3) sha256=b2e86b4a9b57d26ba68a15230dcc7fe6f040f06831ce64417b0621ad96ba3e85
 
 RUBY VERSION
-   ruby 3.4.8p72
+  ruby 3.4.9
 
 BUNDLED WITH
-   2.7.2
+  4.0.8
