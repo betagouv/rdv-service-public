@@ -37,25 +37,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "#names_differ_from?" do
-    let(:user) { build(:user, first_name: "Alice", last_name: "Dupont") }
-
-    it "retourne false si les noms correspondent" do
-      expect(user.names_differ_from?(first_name: "Alice", last_name: "Dupont")).to be false
-    end
-
-    it "retourne true si le prénom diffère" do
-      expect(user.names_differ_from?(first_name: "Bob", last_name: "Dupont")).to be true
-    end
-
-    it "retourne true si le nom diffère" do
-      expect(user.names_differ_from?(first_name: "Alice", last_name: "Martin")).to be true
-    end
-
-    it "retourne false si les noms passés sont vides" do
-      expect(user.names_differ_from?(first_name: "", last_name: "")).to be false
-    end
-  end
 
   describe ".create_from_login_code!" do
     let(:login_code) { build(:login_code, email: "new@example.fr", first_name: "Alice", last_name: "Dupont") }

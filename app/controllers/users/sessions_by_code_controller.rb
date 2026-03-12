@@ -29,22 +29,19 @@ class Users::SessionsByCodeController < ApplicationController
   end
 
   def choix_fiche_usager
-    email = session[:current_user_email]
+    email = cookies.encrypted[:fiche_selection_email]&.fetch("email")
     return redirect_to new_user_session_path, flash: { error: "Échec de la connexion" } if email.blank?
 
     @fiches_usagers = candidate_fiches(email)
   end
 
   def submit_choix_fiche_usager
-    email      = session.delete(:current_user_email)
-    first_name = session.delete(:wizard_first_name)
-    last_name  = session.delete(:wizard_last_name)
+    email = consume_fiche_selection_email
     return redirect_to new_user_session_path, flash: { error: "Échec de la connexion" } if email.blank?
 
     chosen_user = candidate_fiches(email).find_by(id: params[:user_id])
     return redirect_to new_user_session_path, flash: { error: "Échec de la connexion" } unless chosen_user
 
-    flash[:notice] = proche_notice(chosen_user) if chosen_user.names_differ_from?(first_name:, last_name:)
     login_user(chosen_user)
   end
 
@@ -56,14 +53,13 @@ class Users::SessionsByCodeController < ApplicationController
     fiches = candidate_fiches(email).to_a
 
     if fiches.many?
-      store_selection_context(email, valid_login_code)
+      store_fiche_selection_email(email)
       redirect_to choix_fiche_usager_users_sessions_by_code_path
     elsif fiches.one?
-      user = fiches.first
-      flash[:notice] = proche_notice(user) if @rdv_wizard && user.names_differ_from?(first_name: valid_login_code.first_name, last_name: valid_login_code.last_name)
-      login_user(user)
+      login_user(fiches.first)
     else
       # Aucune fiche existante sur ce territoire : création d'une nouvelle fiche (wizard uniquement).
+      # En login spontané, LoginCodeRequestForm bloque l'envoi du code si aucun compte n'existe.
       return redirect_to new_user_session_path, flash: { error: "Échec de la connexion" } unless @rdv_wizard
 
       login_user(User.create_from_login_code!(email:, login_code: valid_login_code))
@@ -81,24 +77,19 @@ class Users::SessionsByCodeController < ApplicationController
     end
   end
 
-  def store_selection_context(email, valid_login_code)
-    session[:current_user_email] = email
-    return unless @rdv_wizard
+  def store_fiche_selection_email(email)
+    cookies.encrypted[:fiche_selection_email] = { value: { "email" => email }, expires: 15.minutes.from_now }
+  end
 
-    session[:wizard_first_name] = valid_login_code.first_name
-    session[:wizard_last_name]  = valid_login_code.last_name
+  def consume_fiche_selection_email
+    email = cookies.encrypted[:fiche_selection_email]&.fetch("email")
+    cookies.delete(:fiche_selection_email)
+    email
   end
 
   def login_user(user)
     user.update!(latest_login_at: Time.zone.now)
     bypass_sign_in(user, scope: :user)
     redirect_to after_sign_in_path_for(user), flash: { success: "Connexion réussie" }
-  end
-
-  def proche_notice(user)
-    # On suppose que si les prénoms ou noms diffèrent de la fiche usager existante, c'est que l'utilisateur se connecte pour un proche (et pas pour lui-même)
-    "Vous êtes connecté en tant que #{user.full_name}. " \
-      "Si ce rendez-vous est pour une autre personne, " \
-      "utilisez le système de prise de rdv pour un proche à l'étape suivante."
   end
 end

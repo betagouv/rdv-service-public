@@ -276,12 +276,6 @@ class User < ApplicationRecord
     )
   end
 
-  def names_differ_from?(first_name:, last_name:)
-    return false unless first_name.present? && last_name.present?
-
-    self.first_name != first_name || self.last_name != last_name
-  end
-
   def connected_with_sso?
     (franceconnect_openid_sub || pro_connect_openid_sub).present?
   end

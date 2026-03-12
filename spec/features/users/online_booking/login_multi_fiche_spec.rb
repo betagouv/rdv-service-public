@@ -57,12 +57,11 @@ RSpec.describe "Login multi-fiches durant la prise de RDV en ligne" do
   context "quand une fiche existe dans le territoire mais avec un prénom/nom différent de ceux saisis dans le formulaire de connexion" do
     let!(:user) { create(:user, email: "alice@test.fr", first_name: "Alice", last_name: "Dupont", organisations: [organisation]) }
 
-    it "connecte l'usager sur sa fiche existante sans modifier ses noms et affiche un message l'invitant à utiliser le système de proche" do
+    it "connecte l'usager sur sa fiche existante sans modifier ses noms" do
       reach_creneau_page
       enter_code_for("alice@test.fr", first_name: "Bob", last_name: "Martin")
 
       expect(page).to have_content("Connexion réussie")
-      expect(page).to have_content("système de prise de rdv pour un proche")
       expect(page).to have_content("Étape 1 sur 3")
       expect(user.reload.first_name).to eq("Alice")
       expect(user.reload.last_name).to eq("Dupont")
