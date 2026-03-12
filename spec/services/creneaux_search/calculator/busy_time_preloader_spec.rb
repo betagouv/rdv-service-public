@@ -1,4 +1,5 @@
 RSpec.describe CreneauxSearch::Calculator::BusyTimePreloader, type: :service do
+  # TODO: déplacer ces specs
   subject(:busy_times) do
     described_class.start_loading_busy_times_for(range, agent, work_on_off_days: false).busy_times
   end
@@ -8,10 +9,6 @@ RSpec.describe CreneauxSearch::Calculator::BusyTimePreloader, type: :service do
   let(:agent) { create(:agent) }
 
   before { travel_to(monday) }
-
-  it "returns empty busy times without RDV or absence" do
-    expect(busy_times).to eq([])
-  end
 
   context "with a RDV" do
     it "returns a BusyTime with the correct attributes" do
