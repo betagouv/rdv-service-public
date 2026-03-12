@@ -37,7 +37,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-
   describe ".create_from_login_code!" do
     let(:login_code) { build(:login_code, email: "new@example.fr", first_name: "Alice", last_name: "Dupont") }
 
