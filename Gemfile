@@ -164,7 +164,9 @@ gem "lograge"
 # Utilisée pour les imports
 gem "csv"
 
-gem "benchmark-ips"
+# Pour tester les performances en review app, et parfois dans des workers one-off de production
+gem "benchmark-ips", require: false
+# Pour faire des comparaisons d'ensemble d'intervalles de datetime dans la recherche de créneaux
 gem "multi_range"
 
 group :development do
