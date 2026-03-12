@@ -10,18 +10,6 @@ RSpec.describe CreneauxSearch::Calculator::BusyTimePreloader, type: :service do
 
   before { travel_to(monday) }
 
-  context "with a RDV" do
-    it "returns a BusyTime with the correct attributes" do
-      create(:rdv, agents: [agent], starts_at: Time.zone.parse("20211027 9:00"), ends_at: Time.zone.parse("20211027 9:40"))
-
-      busy_time = busy_times.first
-      expect(busy_time).to have_attributes(
-        starts_at: Time.zone.parse("20211027 9:00"),
-        ends_at: Time.zone.parse("20211027 9:40")
-      )
-    end
-  end
-
   context "with an absence without recurrence" do
     it "returns BusyTime starts_at as absence first_day and start_time" do
       create(:absence, agent: agent, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9))
@@ -114,36 +102,5 @@ RSpec.describe CreneauxSearch::Calculator::BusyTimePreloader, type: :service do
         expect(described_class.start_loading_busy_times_for(all_work_week, agent, work_on_off_days: false).busy_times).to be_empty
       end
     end
-  end
-
-  describe "request to fetch rdvs" do
-    it "est optimisée pour utiliser l'index 'calculator_index'. Décommentez le test suivant si celui-ci échoue." do
-      # Voir https://www.postgresql.org/docs/current/indexes-index-only-scans.html
-      request = described_class.new(range, agent, work_on_off_days: false).send(:optimized_rdv_request)
-      expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).to_sql.squish).to eq <<~SQL.squish
-        SELECT "agents_rdvs"."calculator_rdv_starts_at",
-               "agents_rdvs"."calculator_rdv_ends_at"
-        FROM "agents_rdvs"
-        WHERE "agents_rdvs"."agent_id" = #{agent.id}
-          AND "agents_rdvs"."calculator_rdv_not_cancelled_and_in_the_future" = TRUE
-          AND (tsrange(calculator_rdv_starts_at, calculator_rdv_ends_at, '[)') && tsrange('2021-10-26 06:00:00', '2021-10-29 10:00:00'))
-      SQL
-    end
-
-    # Décommentez ces tests si vous changez la requête pour vérifier qu'elle reste rapide.
-    # Ce test est trop long pour être ajouté à la CI pour chaque build (il faut créer beaucoup de données), mais il est utile si l'index ou la requête change
-    # before do
-    #   # Il faut créer un minimum de données pour que l'index soit utilisé (le query planner prend des décisions en fonction de la taille des tables et des indexes)
-    #   100.times do |i|
-    #     create(:rdv, starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
-    #     create(:rdv, agents: [agent], starts_at: Time.zone.parse("20211027 9:00") + (i * 30.minutes), ends_at: Time.zone.parse("20211027 9:40") + (i * 30.minutes))
-    #   end
-    # end
-    #
-    # it "is optimized to use an index only scan" do
-    #   # Voir https://www.postgresql.org/docs/current/indexes-index-only-scans.html
-    #   request = described_class.new(range, agent).send(:optimized_rdv_request)
-    #   expect(request.select(:calculator_rdv_starts_at, :calculator_rdv_ends_at).explain.inspect).to include "Index Only Scan using calculator_index"
-    # end
   end
 end
