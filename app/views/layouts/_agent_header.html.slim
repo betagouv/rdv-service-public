@@ -8,6 +8,8 @@ header.header.bg-white
       i.fr-icon-menu-fill.text-primary-blue
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
+        li.list-inline-item
+          = link_to "Donnez votre avis", "https://tally.so/r/obBope", class: "btn text-primary-blue link-dsfr", target: "_blank"
         = render "layouts/rdv_a_renseigner", organisation: defined?(current_organisation) && current_organisation
         li.list-inline-item
           - if current_domain != Domain::RDV_AIDE_NUMERIQUE
