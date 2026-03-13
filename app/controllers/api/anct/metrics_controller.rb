@@ -8,8 +8,6 @@ class Api::ANCT::MetricsController < ActionController::Base # rubocop:disable Ra
   rescue_from StandardError, with: :render_json_error
 
   def index
-    head :not_found and return unless ENV["CARTO_ANCT_ENABLED"]
-
     all_metrics = CartoANCT.cached_metrics
 
     paginated_results = all_metrics.drop(params[:offset].presence.to_i || 0)
