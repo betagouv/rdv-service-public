@@ -10,4 +10,17 @@ RSpec.describe "Anybody can see stats" do
     # cette page contient l’iframe metabase
     expect(page).to have_css("iframe")
   end
+
+  describe "stats by territories" do
+    let!(:territory_with_stats) do
+      create(:territory, public_stats: true, name: "Territoire public")
+    end
+
+    let!(:territory_without_stats) do
+      create(:territory, public_stats: false, name: "Territoire secret")
+    end
+
+    it "lists the territories that are willing to publish public stats" do
+    end
+  end
 end
