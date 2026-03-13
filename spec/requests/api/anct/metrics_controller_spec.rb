@@ -40,6 +40,13 @@ RSpec.describe "/api/anct/metrics" do
     expect(response.body).to eq("{\"error\":\"Erreur interne du serveur\"}")
   end
 
+  it 'returns a 404 when ENV["CARTO_ANCT_SHARED_SECRET"] is not set' do
+    with_modified_env(CARTO_ANCT_SHARED_SECRET: nil) do
+      get "/api/anct/metrics", headers: auth_headers
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
+
   describe "authentication" do
     before do
       allow(CartoANCT).to receive(:cached_metrics).and_return(valid_cached_metrics)
