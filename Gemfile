@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.8"
+ruby "3.4.9"
 
 # Full-stack web application framework.
 gem "rails", "8.0.4"
@@ -163,6 +163,11 @@ gem "lograge"
 
 # Utilisée pour les imports
 gem "csv"
+
+# Pour tester les performances en review app, et parfois dans des workers one-off de production
+gem "benchmark-ips", require: false
+# Pour faire des comparaisons d'ensemble d'intervalles de datetime dans la recherche de créneaux
+gem "multi_range"
 
 group :development do
   # Autoload dotenv in Rails in development (production, staging and demo envs already have env vars setup by the hosting provider)
