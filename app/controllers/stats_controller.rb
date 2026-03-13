@@ -9,7 +9,7 @@ class StatsController < ApplicationController
   end
 
   def territories
-    @territories = Territory.all
+    @territories = Territory.where(public_stats: true)
   end
 
   def territory
@@ -39,7 +39,7 @@ class StatsController < ApplicationController
   private
 
   def set_territory_and_records
-    @territory = Territory.find(params[:territory])
+    @territory = Territory.where(public_stats: true).find(params[:territory])
     @rdvs = @territory.rdvs
     @users = @territory.users
     @organisations = @territory.organisations
