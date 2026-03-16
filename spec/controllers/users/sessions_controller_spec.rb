@@ -4,10 +4,10 @@ RSpec.describe Users::SessionsController do
   end
 
   describe "#create" do
-    it "does not allow to login an agent anymore" do
-      existing_agent = create(:agent, password: "CorrectH0rse!")
-      post :create, params: { user: { email: existing_agent.email, password: "CorrectH0rse!" } }
-      expect(controller.current_agent).to be_nil
+    it "does not allow to login an agent anymore", type: :request do
+      expect do
+        post "/users/sign_in", params: { user: { email: existing_agent.email, password: "CorrectH0rse!" } }
+      end.to raise_error(ActionController::RoutingError)
     end
   end
 
