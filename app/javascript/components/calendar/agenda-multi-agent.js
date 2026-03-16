@@ -10,6 +10,7 @@ import {
   weekTitleFormat,
   preferencesModalToggle,
   hiddenDays,
+  calendarTimeRange,
 } from "./utils";
 
 class AgendaMultiAgent {
@@ -27,6 +28,7 @@ class AgendaMultiAgent {
   }
   initFullCalendar = () => {
     const options = {
+      ...calendarTimeRange(this.data),
       plugins: [resourceTimegridPlugin, interactionPlugin],
       schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
       resources: this.resources,
