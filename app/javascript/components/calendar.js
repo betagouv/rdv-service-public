@@ -13,6 +13,7 @@ import {
   dayHeaderContent,
   preferencesModalToggle,
   hiddenDays,
+  calendarTimeRange,
 } from './calendar/utils'
 
 import Bowser from "bowser";
@@ -37,6 +38,7 @@ export class AgendaMonoAgent {
 
   initFullCalendar = () => {
     const options = {
+      ...calendarTimeRange(this.data),
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: handleAjaxError,
