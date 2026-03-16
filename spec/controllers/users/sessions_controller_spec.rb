@@ -1,7 +1,18 @@
 RSpec.describe Users::SessionsController do
+  before do
+    request.env["devise.mapping"] = Devise.mappings[:user] # d'après la doc de Devise
+  end
+
+  describe "#create" do
+    it "does not allow to login an agent anymore" do
+      existing_agent = create(:agent, password: "CorrectH0rse!")
+      post :create, params: { user: { email: existing_agent.email, password: "CorrectH0rse!" } }
+      expect(controller.current_agent).to be_nil
+    end
+  end
+
   describe "#destroy" do
     before do
-      request.env["devise.mapping"] = Devise.mappings[:user] # d'après la doc de Devise
       sign_in create(:user)
     end
 
