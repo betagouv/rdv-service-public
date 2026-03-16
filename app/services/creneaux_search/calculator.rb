@@ -21,6 +21,7 @@ class CreneauxSearch::Calculator
 
     @datetime_range = CreneauxSearch::Range.ensure_date_range_with_time(@date_range)
 
+    work_on_off_days = @motif.organisation.territory.work_on_sunday? # La colonne `work_on_sunday` indique aussi que les agents travaillent les jours fériés
     plage_ouvertures.map do |plage_ouverture|
       # Convention de nommage:
       #
@@ -35,7 +36,7 @@ class CreneauxSearch::Calculator
       free_times = FreeTimesFromPlageOuvertureAndBusyTimes.new(
         @datetime_range,
         plage_ouverture,
-        work_on_off_days: @motif.organisation.territory.work_on_sunday? # La colonne `work_on_sunday` indique aussi que les agents travaillent les jours fériés
+        work_on_off_days:
       ).perform
 
       SplitFreeTimeRangesIntoCreneaux.new(free_times, @motif, plage_ouverture, duration_in_min: @duration_in_min).perform(@datetime_range)
