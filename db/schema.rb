@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_04_145918) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_13_100202) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -774,6 +774,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_04_145918) do
     t.boolean "enable_address_field", default: false
     t.boolean "work_on_sunday", default: false
     t.bigint "operator_id"
+    t.boolean "public_stats", default: true, null: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
     t.index ["operator_id"], name: "index_territories_on_operator_id"
   end
