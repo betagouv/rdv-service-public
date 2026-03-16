@@ -334,4 +334,16 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
       end
     end
   end
+
+  context "when a plage d'ouverture has a secondary start time before its main start time" do
+    let(:plage_ouverture) do
+      build(:plage_ouverture, first_day: starts_at.to_date, agent: agent,
+                              start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(15),
+                              secondary_start_time: Tod::TimeOfDay.new(9), secondary_end_time: Tod::TimeOfDay.new(11))
+    end
+
+    it "still returns the proper ranges in the correct order" do
+      expect(free_times).to eq([])
+    end
+  end
 end
