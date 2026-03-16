@@ -212,6 +212,39 @@ RSpec.describe "Agent calendar displays rdvs and plages" do
     end
   end
 
+  describe "amplitude horaire étendue" do
+    let!(:organisation) { create(:organisation) }
+    let!(:user_matinal) { create(:user, first_name: "Jean", last_name: "MATINAL") }
+
+    it "ne montre pas les RDV hors de la plage 7h-20h quand l'amplitude étendue est désactivée", js: true do
+      agent = create(:agent, basic_role_in_organisations: [organisation], display_extended_hours: false)
+      # RDV à 5h du matin, hors de la plage par défaut 7h–20h
+      create(:rdv, :no_service, agents: [agent], organisation:, users: [user_matinal], starts_at: Time.zone.now.beginning_of_week.change(hour: 5))
+      # RDV à 14h dans la plage visible, pour confirmer que les événements AJAX sont bien chargés
+      create(:rdv, :no_service, agents: [agent], organisation:, users: [create(:user, last_name: "VISIBLE")], starts_at: Time.zone.now.beginning_of_week.change(hour: 14))
+
+      login_as(agent, scope: :agent)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      expect(page).to have_selector(".fc-event", text: "VISIBLE")
+      expect(page).to have_no_selector(".fc-event", text: "Jean MATINAL")
+    end
+
+    it "montre les RDV hors de la plage 7h-20h quand l'amplitude étendue est activée", js: true do
+      agent = create(:agent, basic_role_in_organisations: [organisation], display_extended_hours: true)
+      create(:rdv, :no_service, agents: [agent], organisation:, users: [user_matinal], starts_at: Time.zone.now.beginning_of_week.change(hour: 5))
+      # RDV de référence dans la plage visible pour confirmer que les événements AJAX sont chargés
+      create(:rdv, :no_service, agents: [agent], organisation:, users: [create(:user, last_name: "VISIBLE")], starts_at: Time.zone.now.beginning_of_week.change(hour: 14))
+
+      login_as(agent, scope: :agent)
+      visit admin_organisation_planning_agenda_path(organisation, agent_id: agent.id)
+      expect(page).to have_selector(".fc-event", text: "VISIBLE") # on vérifie que les événements sont bien chargés
+      # Avec l'amplitude étendue, le calendrier affiche les créneaux à partir de 0h (au lieu de 7h)
+      expect(page).to have_selector('.fc-timegrid-slot-lane[data-time="05:00:00"]')
+      # Le RDV de 5h est rendu dans le DOM
+      expect(page).to have_selector(".fc-event", text: "Jean MATINAL")
+    end
+  end
+
   describe "apparence de l'agenda" do
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
