@@ -343,7 +343,7 @@ RSpec.describe CreneauxSearch::Calculator::FreeTimesFromPlageOuvertureAndBusyTim
     end
 
     it "still returns the proper ranges in the correct order" do
-      expect(free_times).to eq([])
+      expect(free_times.map(&:begin)).to eq([Time.zone.parse("2021-10-27 09:00:00"), Time.zone.parse("2021-10-27 14:00:00")])
     end
   end
 end
