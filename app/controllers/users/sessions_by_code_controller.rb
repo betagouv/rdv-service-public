@@ -29,10 +29,10 @@ class Users::SessionsByCodeController < ApplicationController
   end
 
   def choix_fiche_usager
-    email = cookies.encrypted[:fiche_selection_email]&.fetch("email")
-    return redirect_to new_user_session_path, flash: { error: "Échec de la connexion" } if email.blank?
+    @email = cookies.encrypted[:fiche_selection_email]&.fetch("email").presence
+    return redirect_to new_user_session_path, flash: { error: "Échec de la connexion" } unless @email
 
-    @fiches_usagers = candidate_fiches(email)
+    @fiches_usagers = candidate_fiches(@email)
   end
 
   def submit_choix_fiche_usager

@@ -43,7 +43,7 @@ RSpec.describe "Login multi-fiches durant la prise de RDV en ligne" do
       reach_creneau_page
       enter_code_for("multi@test.fr", first_name: "Alice", last_name: "Dupont")
 
-      expect(page).to have_content("Plusieurs fiches usagers")
+      expect(page).to have_content(%(Plusieurs fiches usagers sont liées à l'adresse "multi@test.fr".))
       expect(page).to have_content(user_1.full_name)
       expect(page).to have_content(user_2.full_name)
 
