@@ -261,14 +261,6 @@ class Agent < ApplicationRecord
     update_column(:unknown_past_rdv_count, rdvs.a_renseigner.count) if persisted?
   end
 
-  def visit_organisation!(organisation_id)
-    raise "organisation_id arg required" unless organisation_id
-
-    if latest_used_organisation_id != organisation_id
-      update_columns(latest_used_organisation_id: organisation_id)
-    end
-  end
-
   # This method is called when calling #current_agent on a controller action that is automatically generated
   # by the devise_token_auth gem. It can happen since these actions inherits from ApplicationController (see PR #1933).
   # We monkey-patch it for it not to raise.

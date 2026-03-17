@@ -7,7 +7,7 @@ class AgentAuthController < ApplicationController
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
-  helper_method :current_organisation, :current_territory, :policy_scope, :from_modal?
+  helper_method :current_organisation, :current_territory, :policy_scope, :from_modal?, :latest_used_organisation_id
 
   private
 
@@ -28,7 +28,7 @@ class AgentAuthController < ApplicationController
     return @current_organisation if defined? @current_organisation
 
     @current_organisation = Organisation.find(params[:organisation_id]).tap do |organisation|
-      current_agent&.visit_organisation!(organisation.id) if organisation
+      session[:latest_used_organisation_id] = organisation.id if organisation
     end
   end
 
@@ -38,6 +38,10 @@ class AgentAuthController < ApplicationController
 
   def from_modal?
     params[:modal].present?
+  end
+
+  def latest_used_organisation_id
+    session[:latest_used_organisation_id] if current_agent.organisation_ids.include?(session[:latest_used_organisation_id])
   end
 
   def authorize_organisation

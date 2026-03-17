@@ -25,8 +25,7 @@ html lang="fr"
           .p-2
             = link_logo
           - if current_agent
-            - latest_org = current_agent.latest_used_organisation_id
-            - accueil = latest_org ? admin_organisation_planning_agenda_path(organisation_id: latest_org) : root_path
+            - accueil = latest_used_organisation_id ? admin_organisation_planning_agenda_path(organisation_id: latest_used_organisation_id) : root_path
             = link_to(accueil, class: "pt-1 pb-4") do
               i.fr-icon-arrow-left-line
               |< Retour à l'accueil

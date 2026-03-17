@@ -208,17 +208,4 @@ RSpec.describe Agent, type: :model do
       expect(described_class.new(proconnect_siret: nil).proconnect_siret).to                  be_nil
     end
   end
-
-  describe "#visit_organisation!" do
-    it "updates the value in db" do
-      org = create(:organisation)
-      agent = create(:agent)
-      expect { agent.visit_organisation!(org.id) }.to change { agent.reload.latest_used_organisation_id }.from(nil).to(org.id)
-
-      other_org = create(:organisation)
-      expect { agent.visit_organisation!(other_org.id) }.to change { agent.reload.latest_used_organisation_id }.from(org.id).to(other_org.id)
-
-      expect { agent.visit_organisation!(nil) }.to raise_error("organisation_id arg required")
-    end
-  end
 end
