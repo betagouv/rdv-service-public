@@ -63,7 +63,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
-      click_on user_1.full_name
+      click_on territory_1.name
       expect(page).to have_content("Connexion réussie")
       click_on "Vos informations"
       expect(page).to have_field("user_first_name", with: user_1.first_name)
@@ -74,7 +74,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "123456")
       click_on "Valider"
-      click_on user_2.full_name
+      click_on territory_2.name
       expect(page).to have_content("Connexion réussie")
       click_on "Vos informations"
       expect(page).to have_field("user_first_name", with: user_2.first_name)
