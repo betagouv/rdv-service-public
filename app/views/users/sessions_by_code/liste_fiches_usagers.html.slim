@@ -17,10 +17,10 @@ p
           .fr-tile__content
             h3.fr-tile__title
               button type="submit"
-                = user.full_name
+                = territory_names.to_sentence
             - if territory_names.any?
               p.fr-tile__desc
-                = territory_names.to_sentence
+                = user.full_name
             p.fr-tile__detail
               | #{pluralize(user.rdvs.count, "rendez-vous", plural: "rendez-vous")}
               - if user.phone_number_formatted.present?
