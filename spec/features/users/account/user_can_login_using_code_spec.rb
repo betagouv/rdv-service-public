@@ -83,7 +83,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
 
   context "accès direct à l'écran de sélection sans session" do
     it "redirige vers la page de connexion avec une erreur" do
-      visit choix_fiche_usager_users_sessions_by_code_path
+      visit liste_fiches_usagers_users_sessions_by_code_path
       expect(page).to have_content("Échec de la connexion")
       expect(page).to have_current_path(new_user_session_path)
     end

@@ -1,10 +1,10 @@
 RSpec.describe Users::SessionsByCodeController, type: :controller do
   before { request.env["devise.mapping"] = Devise.mappings[:user] }
 
-  describe "#submit_choix_fiche_usager" do
+  describe "#choix_fiche_usager" do
     context "sans cookie de sélection" do
       it "redirige vers la page de connexion avec une erreur" do
-        post :submit_choix_fiche_usager, params: { user_id: 0 }
+        post :choix_fiche_usager, params: { user_id: 0 }
         expect(response).to redirect_to(new_user_session_path)
         expect(flash[:error]).to be_present
       end
@@ -17,7 +17,7 @@ RSpec.describe Users::SessionsByCodeController, type: :controller do
       before { cookies.encrypted[:fiche_selection_email] = { "email" => "alice@test.fr" } }
 
       it "redirige vers la page de connexion sans connecter l'usager" do
-        post :submit_choix_fiche_usager, params: { user_id: user_bob.id }
+        post :choix_fiche_usager, params: { user_id: user_bob.id }
         expect(response).to redirect_to(new_user_session_path)
         expect(flash[:error]).to be_present
       end

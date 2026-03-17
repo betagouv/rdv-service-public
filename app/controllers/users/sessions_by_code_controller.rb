@@ -28,14 +28,14 @@ class Users::SessionsByCodeController < ApplicationController
     end
   end
 
-  def choix_fiche_usager
+  def liste_fiches_usagers
     @email = cookies.encrypted[:fiche_selection_email]&.fetch("email").presence
     return redirect_to new_user_session_path, flash: { error: "Échec de la connexion" } unless @email
 
     @fiches_usagers = candidate_fiches(@email)
   end
 
-  def submit_choix_fiche_usager
+  def choix_fiche_usager
     email = consume_fiche_selection_email
     return redirect_to new_user_session_path, flash: { error: "Échec de la connexion" } if email.blank?
 
@@ -54,7 +54,7 @@ class Users::SessionsByCodeController < ApplicationController
 
     if fiches.many?
       store_fiche_selection_email(email)
-      redirect_to choix_fiche_usager_users_sessions_by_code_path
+      redirect_to liste_fiches_usagers_users_sessions_by_code_path
     elsif fiches.one?
       login_user(fiches.first)
     else

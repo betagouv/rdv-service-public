@@ -94,8 +94,8 @@ Rails.application.routes.draw do
 
     resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
       collection do
-        get :choix_fiche_usager
-        post :submit_choix_fiche_usager
+        get :liste_fiches_usagers
+        post :choix_fiche_usager
       end
     end
     resources :login_codes, only: %i[create]
