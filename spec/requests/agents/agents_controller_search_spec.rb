@@ -32,7 +32,7 @@ RSpec.describe Agents::AgentsController, "#search" do
     let!(:francis) { create(:agent, first_name: "Francis", last_name: "Factice", basic_role_in_organisations: [orga_1, orga_2]) }
 
     it "ne s'affiche qu'une seule fois dans la liste" do
-      get search_agents_agents_path(term: "francis fac"), as: :json
+      get search_agents_agents_path(organisation_id: [orga_1, orga_2], term: "francis fac"), as: :json
       expect(parsed_response_body[:results].sole).to match({ "id" => francis.id, "text" => "FACTICE Francis" })
     end
   end
