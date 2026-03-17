@@ -91,7 +91,12 @@ Rails.application.routes.draw do
 
     post "file_attente", to: "file_attentes#create_or_delete"
 
-    resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code"
+    resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
+      collection do
+        get :liste_fiches_usagers
+        post :choix_fiche_usager
+      end
+    end
     resources :login_codes, only: %i[create]
     get "login_codes", to: redirect(path: "/users/sign_in")
   end
