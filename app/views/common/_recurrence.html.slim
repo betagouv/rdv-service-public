@@ -1,4 +1,6 @@
-.recurrence-select.recurrence-select--weekly.js-recurrence-container data-controller="recurrence"
+/# locals: (f:, model:, hidden: false)
+
+.recurrence-select.recurrence-select--weekly.js-recurrence-container data-controller="recurrence" hidden=hidden
   .row
     .col
       = date_input(f, :first_day, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" }, class: "js-recurrence-first-day js-recurrence-input"} )

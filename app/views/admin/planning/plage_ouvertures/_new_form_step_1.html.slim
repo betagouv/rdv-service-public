@@ -4,8 +4,10 @@
     .col-md-6
       = dsfr_stepper(title: "Nouvelle plage d'ouverture", value: 1, max: 2, header_level: 1, next_title: "Choix du motif")
 
-  = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], url: new_admin_organisation_planning_plage_ouverture_path, html: { class: "plage-ouverture-form" }, method: :get do |f|
+  = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], url: submit_step_1_admin_organisation_planning_plage_ouvertures_path, html: { class: "plage-ouverture-form" } do |f|
     = render("model_errors", model: plage_ouverture, f: f)
+
+    = f.hidden_field :agent_id, value: @agent.id
 
     .row.justify-content-center
       .col-md-6

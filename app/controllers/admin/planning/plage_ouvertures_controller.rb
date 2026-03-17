@@ -3,7 +3,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: %i[show edit update destroy]
-  before_action :build_plage_ouverture, only: [:create]
+  before_action :build_plage_ouverture, only: [:create, :submit_step_1]
   before_action :set_agents
   before_action { @planning_layout = true }
 
@@ -43,19 +43,25 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     authorize(@agent, :show?, policy_class: Agent::AgentPolicy)
   end
 
-  FORM_ATTRS = %i[
+  STEP_1_ATTRS = %i[
     recurrence
     first_day
     start_time
     end_time
     secondary_start_time
     secondary_end_time
+  ]
+
+  STEP_2_ATTRS = %i[
     motif_ids
     lieu_id
     title
-  ].freeze
+  ]
+
+  FORM_ATTRS = STEP_1_ATTRS + STEP_2_ATTRS
 
   def new
+    @plage_form_step = 1
     @plage_ouverture = PlageOuverture.new(new_plage_form_defaults)
     if params[:duplicate_plage_ouverture_id].present?
       original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
@@ -95,7 +101,28 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
       update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
+      @plage_form_step = step_for(@plage_ouverture)
       render :new
+    end
+  end
+
+  def submit_step_1
+    @plage_ouverture.organisation = current_organisation
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
+
+    @plage_ouverture.validate
+    @plage_ouverture.errors.delete(:motifs)
+    @plage_ouverture.errors.delete(:lieu)
+    @plage_form_step = step_for(@plage_ouverture)
+
+    render :new
+  end
+
+  def step_for(plage_ouverture)
+    if plage_ouverture.errors.attribute_names.intersect?(STEP_1_ATTRS) || plage_ouverture.errors.any? { |e| e.type.include?("horaire") }
+      1
+    else
+      2
     end
   end
 

@@ -7,6 +7,13 @@
   = simple_form_for [:admin, plage_ouverture.organisation, :planning, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
     = render("model_errors", model: plage_ouverture, f: f)
 
+    = f.hidden_field :recurrence, value: plage_ouverture.recurrence.presence&.to_json
+    = f.hidden_field :first_day, value: plage_ouverture.first_day
+    = f.hidden_field :start_time, value: plage_ouverture.start_time
+    = f.hidden_field :end_time, value: plage_ouverture.end_time
+    = f.hidden_field :secondary_start_time, value: plage_ouverture.secondary_start_time
+    = f.hidden_field :secondary_end_time, value: plage_ouverture.secondary_end_time
+
     .row.justify-content-center
       .col-md-6
         = render partial: "admin/planning/plage_ouvertures/form/choix_motifs", locals: { plage_ouverture:, f: }

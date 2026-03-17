@@ -342,6 +342,7 @@ Rails.application.routes.draw do
           resources :plage_ouvertures do
             collection do
               get :calendar
+              post :submit_step_1
             end
           end
         end

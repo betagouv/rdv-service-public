@@ -6,6 +6,7 @@ class Agent::PlageOuverturePolicy < ApplicationPolicy
   end
 
   alias new? update?
+  alias submit_step_1? update?
   alias create? update?
   alias edit? update?
   alias destroy? update?

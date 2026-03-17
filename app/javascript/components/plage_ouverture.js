@@ -8,23 +8,37 @@ const setLabel = (selector, newContent) => {
 
 class PlageOuvertureRecurrenceRadioButton {
   constructor() {
+    this.container = document.querySelector('.js-recurrence-container')
     this.radioButtonRecurring = document.querySelector(".js-radio-recurring");
     this.radioButtonNonRecurring = document.querySelector(".js-radio-non-recurring");
     this.hasRecurrenceTarget = document.querySelector('.js-recurrence-toggle')
     if(this.hasRecurrenceTarget && this.radioButtonRecurring && this.radioButtonNonRecurring) {
-      this.radioButtonRecurring.addEventListener("change", this.enableRecurrence.bind(this));
-      this.radioButtonNonRecurring.addEventListener("change", this.disableRecurrence.bind(this));
+      this.radioButtonRecurring.addEventListener("change", this.updateView.bind(this));
+      this.radioButtonNonRecurring.addEventListener("change", this.updateView.bind(this));
+    }
+    this.updateView();
+  }
+
+  updateView() {
+    if (this.radioButtonRecurring.checked) {
+      this.enableRecurrence();
+    } else if (this.radioButtonNonRecurring.checked) {
+      this.disableRecurrence();
+    } else {
+      // this.container.hidden = true;
     }
   }
 
   enableRecurrence() {
     this.hasRecurrenceTarget.checked = true;
+    this.container.hidden = false;
     this.hasRecurrenceTarget.dispatchEvent(new Event('change'))
     setLabel('label[for="recurrence-source"]', 'Premier jour')
   }
 
   disableRecurrence() {
     this.hasRecurrenceTarget.checked = false;
+    this.container.hidden = false;
     this.hasRecurrenceTarget.dispatchEvent(new Event('change'))
     setLabel('label[for="recurrence-source"]', 'Date')
   }
