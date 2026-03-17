@@ -87,8 +87,6 @@ const defaultFullCalendarConfig = () => ({
       startTime: '07:00',
       endTime: '20:00',
   },
-  slotMinTime: '07:00:00',
-  slotMaxTime: '20:00:00',
   selectAllow: canSelectOnlyOneDay,
   eventClassNames: eventClassNames,
   eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
@@ -283,6 +281,13 @@ const handleAjaxError = (error) => {
       alert(`Le chargement du calendrier a échoué, probablement car votre connexion internet a été coupée.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-service-public.fr`);
     }, 5000);
   }
+};
+
+export const calendarTimeRange = ({ displayExtendedHours }) => {
+  if (displayExtendedHours === "true") {
+    return { slotMinTime: '00:00:00', slotMaxTime: '24:00:00', scrollTime: '07:00:00', height: 700 };
+  }
+  return { slotMinTime: '07:00:00', slotMaxTime: '20:00:00' };
 };
 
 export { defaultFullCalendarConfig, eventRenderer, setupRealtimeRefresh, handleAjaxError }

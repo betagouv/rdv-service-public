@@ -125,6 +125,7 @@ tables:
       - unknown_past_rdv_count
       - display_saturdays
       - display_cancelled_rdv
+      - display_extended_hours
       - plage_ouverture_notification_level
       - absence_notification_level
       - outlook_disconnect_in_progress
