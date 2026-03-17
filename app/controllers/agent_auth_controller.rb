@@ -25,7 +25,11 @@ class AgentAuthController < ApplicationController
   end
 
   def current_organisation
-    @current_organisation ||= Organisation.find(params[:organisation_id])
+    return @current_organisation if defined? @current_organisation
+
+    @current_organisation = Organisation.find(params[:organisation_id]).tap do |organisation|
+      session[:latest_used_organisation_id] = organisation.id if organisation
+    end
   end
 
   def current_territory
