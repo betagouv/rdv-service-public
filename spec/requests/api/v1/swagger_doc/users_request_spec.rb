@@ -215,6 +215,18 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "phone number is misformatted", false do
         let(:phone_number) { "misformatted phone number" }
       end
+
+      # TODO: supprimer ce test dans la PR2 (suppression de notification_email)
+      response 200, "rétrocompatibilité : notification_email met à jour email", document: false do
+        let(:user) { create(:user, latest_login_at: nil, email: nil, organisations: [organisation]) }
+
+        before do
+          patch "/api/v1/users/#{user.id}", params: { notification_email: "ancien@champ.fr", organisation_ids: [organisation.id] },
+                                            headers: auth_headers
+        end
+
+        it { expect(user.reload.email).to eq("ancien@champ.fr") }
+      end
     end
 
     patch "Mettre à jour un·e usager·ère via l'authentification shared secret", params: { document: false } do
@@ -467,6 +479,19 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
         let(:phone_number) { "misformatted phone number" }
+      end
+
+      # TODO: supprimer ce test dans la PR2 (suppression de notification_email)
+      response 200, "rétrocompatibilité : notification_email crée l'usager avec email", document: false do
+        let(:first_name) { "Test" }
+        let(:last_name) { "Compat" }
+
+        before do
+          post "/api/v1/users", params: { first_name: "Test", last_name: "Compat", notification_email: "compat@test.fr", organisation_ids: [organisation.id] },
+                                headers: auth_headers
+        end
+
+        it { expect(User.last.email).to eq("compat@test.fr") }
       end
     end
   end

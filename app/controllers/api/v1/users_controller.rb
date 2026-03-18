@@ -57,7 +57,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     render_error :not_found, not_found: :user
   end
 
-  def user_params
+  def user_params # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     attrs = %i[
       first_name birth_name last_name email address phone_number
       birth_date responsible_id caisse_affiliation affiliation_number
@@ -66,6 +66,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
 
     attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
 
+    map_notification_email_to_email
     permitted_params = params.permit(*attrs, organisation_ids: [])
 
     if params[:external_reference].present?
@@ -86,6 +87,11 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     referents_i_cant_modify = @user.referent_agents - referents_i_can_modify
 
     permitted_params.merge(referent_agent_ids: authorized_referent_ids + referents_i_cant_modify.map(&:id))
+  end
+
+  # TODO: supprimer cette rétrocompatibilité dans la PR de suppression de notification_email
+  def map_notification_email_to_email
+    params[:email] ||= params.delete(:notification_email) if params[:notification_email].present?
   end
 
   def authorized_referent_ids
