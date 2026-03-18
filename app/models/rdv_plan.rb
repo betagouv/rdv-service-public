@@ -59,21 +59,12 @@ class RdvPlan < ApplicationRecord
   private
 
   def update_user_before_creating_rdv(user_attributes:)
-    if user.email
-      if user_attributes[:notification_email]&.downcase == user.email || user_attributes[:notification_email].blank?
-        # L'email est le même, mais on veut quand même changer le numéro de téléphone
-        user.update!(user_attributes)
-      elsif user.already_logged_in? # On essaye de changer l'email de l'usager
-        # Dans ce cas l'usager s'est déjà connecté et utilise cet email pour se connecter
-        raise "L'email de cet usager ne peut pas être modifié"
-      else
-        # Le notification_email peut remplacer l'email sans risque, puisque l'usager n'a pas de compte Devise
-        user.assign_attributes(email: nil)
-        user.update!(user_attributes)
-      end
-    else
-      user.update!(user_attributes)
+    new_email = user_attributes[:email]&.downcase
+    if new_email && new_email != user.email && user.already_logged_in?
+      raise "L'email de cet usager ne peut pas être modifié"
     end
+
+    user.update!(user_attributes)
   end
 
   def return_url_is_authorized

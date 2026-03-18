@@ -11,7 +11,7 @@ class User < ApplicationRecord
   # Mixins
   has_paper_trail(
     only: %w[
-      email notification_email first_name last_name birth_name
+      email first_name last_name birth_name
       created_at latest_login_at deleted_at
       invited_through created_through
       address phone_number birth_date
@@ -43,7 +43,7 @@ class User < ApplicationRecord
 
   # Attributes
   ONGOING_MARGIN = 1.hour.freeze
-  auto_strip_attributes :email, :notification_email, :first_name, :last_name, :birth_name
+  auto_strip_attributes :email, :first_name, :last_name, :birth_name
 
   enum :caisse_affiliation, { aucune: 0, caf: 1, msa: 2 }
   enum :family_situation, { single: 0, in_a_relationship: 1, divorced: 2 }
@@ -85,13 +85,11 @@ class User < ApplicationRecord
 
   EMAIL_REGEXP = Devise.email_regexp
   validates :email, format: { with: EMAIL_REGEXP }, allow_blank: true
-  validates :notification_email, format: { with: EMAIL_REGEXP }, allow_blank: true
 
   validate :birth_date_validity
 
   # Hooks
   before_save :set_email_to_null_if_blank
-  before_save :clear_notification_email_if_email_present
   normalizes :email, with: ->(email) { email.downcase }
 
   # Scopes
@@ -112,10 +110,6 @@ class User < ApplicationRecord
   end
 
   def email=(email)
-    super(sanitize_email(email))
-  end
-
-  def notification_email=(email)
     super(sanitize_email(email))
   end
 
@@ -277,10 +271,6 @@ class User < ApplicationRecord
 
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
-  end
-
-  def clear_notification_email_if_email_present
-    self.notification_email = nil if email.present?
   end
 
   def birth_date_validity

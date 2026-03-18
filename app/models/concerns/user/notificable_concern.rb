@@ -5,13 +5,9 @@ module User::NotificableConcern
     valid_email? && notify_by_email? && !soft_deleted?
   end
 
-  def valid_email?
-    email.present? || notification_email.present?
-  end
+  def valid_email? = email.present?
 
-  def preferred_email
-    email.presence || notification_email.presence
-  end
+  def preferred_email = email
 
   def notifiable_by_sms?
     phone_number_formatted.present? && phone_number_mobile? && notify_by_sms? && !soft_deleted?
