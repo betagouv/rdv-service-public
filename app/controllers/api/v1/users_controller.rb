@@ -57,7 +57,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     render_error :not_found, not_found: :user
   end
 
-  def user_params # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def user_params
     attrs = %i[
       first_name birth_name last_name email address phone_number
       birth_date responsible_id caisse_affiliation affiliation_number
