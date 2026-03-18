@@ -129,7 +129,6 @@ class Users::RdvWizardStepsController < UserAuthController
                     :phone_number,
                     :birth_date,
                     :email,
-                    :notification_email,
                     :address,
                     :caisse_affiliation,
                     :affiliation_number,
