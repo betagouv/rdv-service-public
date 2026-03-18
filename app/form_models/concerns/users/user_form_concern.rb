@@ -36,13 +36,13 @@ module Users::UserFormConcern
   def show_franceconnect_frozen_fields_warning? = logged_once_with_franceconnect?
 
   # NOTE: à discuter en équipe
-  # Ancien fonctionnement : email (Devise) affiché disabled pour les invités qui en avaient un.
-  # notification_email affiché modifiable pour les invités sans email et les usagers SSO.
+  # Ancien fonctionnement : email (Devise) affiché disabled pour les invités à prendre rdv (rdvi) qui en avaient un.
+  # notification_email affiché et modifiable pour les invités sans email et les usagers SSO.
   # Comportement actuel :
   # - Invité avec email → affiché, disabled
-  # - Invité sans email → affiché, modifiable, non requis
-  # - SSO (FC/ProConnect) → affiché, modifiable, non requis
-  # - Usager normal → pas affiché
+  # - Invité sans email → affiché, modifiable
+  # - SSO (FC/ProConnect) → affiché, modifiable
+  # - Usager connecté via code → pas affiché
   def show_email_field? = signed_in_with_invitation_token? || connected_with_sso?
 
   def email_disabled? = signed_in_with_invitation_token? && email.present?
