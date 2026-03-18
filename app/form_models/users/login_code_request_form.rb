@@ -22,7 +22,7 @@ module Users
     end
 
     def validate_user_exists_or_suggest_agent
-      return true if User.where(email:).any?
+      return true if User.loginable_by_code_for_email(email).any?
 
       error =
         if Agent.exists?(email:)

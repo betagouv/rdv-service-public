@@ -1,11 +1,11 @@
 RSpec.describe User, type: :model do
   describe ".fiches_for_email" do
-    let!(:user_email)  { create(:user, email: "test@example.fr", notification_email: nil) }
-    let!(:user_notif)  { create(:user, email: nil, notification_email: "test@example.fr") }
-    let!(:user_other)  { create(:user, email: "other@example.fr", notification_email: nil) }
+    let!(:user_1)     { create(:user, email: "test@example.fr") }
+    let!(:user_2)     { create(:user, email: "test@example.fr") }
+    let!(:user_other) { create(:user, email: "other@example.fr") }
 
     it "retourne les fiches dont l'email correspond" do
-      expect(described_class.fiches_for_email("test@example.fr")).to contain_exactly(user_email, user_notif)
+      expect(described_class.fiches_for_email("test@example.fr")).to contain_exactly(user_1, user_2)
     end
 
     it "ne retourne pas les fiches sans lien avec l'email" do
@@ -15,7 +15,7 @@ RSpec.describe User, type: :model do
 
   describe ".loginable_by_code_for_email" do
     let!(:user_normal) { create(:user, email: "test@example.fr") }
-    let!(:user_sso)    { create(:user, email: nil, notification_email: "test@example.fr", franceconnect_openid_sub: "abc123") }
+    let!(:user_sso)    { create(:user, email: "test@example.fr", franceconnect_openid_sub: "abc123") }
 
     it "exclut les fiches connectées via SSO" do
       expect(described_class.loginable_by_code_for_email("test@example.fr")).to contain_exactly(user_normal)
@@ -28,9 +28,9 @@ RSpec.describe User, type: :model do
     let!(:orga_1)         { create(:organisation, territory: territory_1) }
     let!(:orga_2)         { create(:organisation, territory: territory_2) }
     let!(:user_in)        { create(:user, email: "test@example.fr", organisations: [orga_1]) }
-    let!(:user_out)       { create(:user, email: nil, notification_email: "test@example.fr", organisations: [orga_2]) }
-    let!(:user_no_org)    { create(:user, email: nil, notification_email: "test@example.fr") }
-    let!(:user_sso)       { create(:user, email: nil, notification_email: "test@example.fr", franceconnect_openid_sub: "abc123", organisations: [orga_1]) }
+    let!(:user_out)       { create(:user, email: "test@example.fr", organisations: [orga_2]) }
+    let!(:user_no_org)    { create(:user, email: "test@example.fr") }
+    let!(:user_sso)       { create(:user, email: "test@example.fr", franceconnect_openid_sub: "abc123", organisations: [orga_1]) }
 
     it "retourne les fiches du territoire donné et les fiches sans territoire, en excluant le SSO" do
       expect(described_class.loginable_by_code_for_email_in_territory_or_without_territory("test@example.fr", territory_id: territory_1.id)).to contain_exactly(user_in, user_no_org)
