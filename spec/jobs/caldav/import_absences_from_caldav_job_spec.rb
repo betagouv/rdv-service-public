@@ -91,6 +91,15 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
         expect(ExternalCalendarEvent.where(url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/c766aa62-c76e-48eb-a6a1-c5a496ec740b.ics")).to be_empty
       end
     end
+
+    context "quand le serveur Caldav retourne des VTODO dans l’appelle de sync" do
+      it "ignore les VTODO et ne plante pas" do
+        VCR.use_cassette("caldav/sync_with_vtodos") do
+          expect { described_class.new.perform(agent.id) }.not_to raise_error
+          expect(ExternalCalendarEvent.where(url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/vtodo_event.ics")).to be_empty
+        end
+      end
+    end
   end
 
   it "enregistre la réponse dans Sentry si la récupération du token retourne un body inattendu" do
