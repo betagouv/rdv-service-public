@@ -115,7 +115,7 @@ RSpec.describe "User can be invited" do
         )
       end
 
-      it "affiche le champ Email non requis" do
+      it "affiche le champ Email non requis et modifiable" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
           address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"

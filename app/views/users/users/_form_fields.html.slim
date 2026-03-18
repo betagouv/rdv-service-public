@@ -21,7 +21,7 @@
     = I18n.t("users.franceconnect_frozen_fields")
 
 - if f.object.show_email_field?
-  = f.dsfr_email_field :email, disabled: f.object.email_disabled?, required: true, autocomplete: "email"
+  = f.dsfr_email_field :email, disabled: f.object.email_disabled?, required: false, autocomplete: "email"
 
 = f.dsfr_phone_field :phone_number, as: :tel, required: f.object.phone_required?, autocomplete: "tel"
 - if f.object.show_landline_phone_number_warning?
