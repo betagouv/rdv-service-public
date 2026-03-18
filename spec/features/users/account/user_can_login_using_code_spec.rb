@@ -52,7 +52,7 @@ RSpec.describe "Un usager peut se logger via un code à 6 chiffres" do
       expect(page).to have_field("user_first_name", with: user_1.first_name)
     end
 
-        it "connecte sur une autre fiche après sélection" do
+    it "connecte sur une autre fiche après sélection" do
       create(:login_code, email: "marco@lolmail.fr", code: "123456")
       visit new_users_sessions_by_code_path(email: "marco@lolmail.fr")
       fill_in("Code à 6 chiffres", with: "123456")
