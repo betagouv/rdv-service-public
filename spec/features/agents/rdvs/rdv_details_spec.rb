@@ -44,10 +44,10 @@ RSpec.describe "Agent can see RDV details correctly" do
       expect(page).to have_text(user.phone_number)
     end
 
-    it "show good notification preferences when user has a notification_email" do
-      user.update(email: nil, notification_email: "test@test.fr")
+    it "show good notification preferences when user has an email" do
+      user.update(email: "test@test.fr")
       visit admin_organisation_rdv_path(organisation, rdv)
-      expect(page).to have_text(user.notification_email)
+      expect(page).to have_text(user.email)
       expect(page).not_to have_text(I18n.t("admin.users.notifications_preferences.email_absent"))
     end
 

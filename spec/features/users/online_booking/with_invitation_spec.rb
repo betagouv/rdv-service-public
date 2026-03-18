@@ -62,7 +62,7 @@ RSpec.describe "User can be invited" do
       expect(page).not_to have_field("Date de naissance")
       expect(page).not_to have_field("Adresse")
 
-      # le champ email (et pas notification_email) est affiché et il n'est pas éditable
+      # le champ email est affiché et il n'est pas éditable
       expect(page).to have_field("Email", with: user.email, disabled: true)
       expect(page.find_field("Email", disabled: true)["name"]).to eq("user[email]")
       expect(page).to have_field("Téléphone", with: user.phone_number)
@@ -109,13 +109,13 @@ RSpec.describe "User can be invited" do
       let!(:user) do
         create(
           :user,
-          first_name: "john", last_name: "doe", email: nil, notification_email: nil,
+          first_name: "john", last_name: "doe", email: nil,
           phone_number: "0682605955", address: "26 avenue de la resistance, Paris, 75016",
           birth_date: Date.new(1988, 12, 20), organisations: [organisation]
         )
       end
 
-      it "affiche le champ Email (notification_email) mais non requis" do
+      it "affiche le champ Email non requis" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
           address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
@@ -126,11 +126,9 @@ RSpec.describe "User can be invited" do
         first(:link, "11:00").click
 
         expect(page).to have_content("Vos informations")
-        # Le champ Email correspond au notification_email, non requis car vide
         expect(page).to have_field("Email")
         expect(page.find_field("Email")["required"]).to be_falsey
         expect(page.find_field("Email")["disabled"]).to be_falsey
-        expect(page).not_to have_css("[name='user[email]']")
       end
     end
 

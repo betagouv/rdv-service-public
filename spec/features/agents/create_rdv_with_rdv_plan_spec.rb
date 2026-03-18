@@ -57,7 +57,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
       lieu: lieu,
       organisation: organisation
     )
-    expect(user.reload.notification_email).to eq "newaddress@exemple.com"
+    expect(user.reload.email).to eq "newaddress@exemple.com"
 
     perform_enqueued_jobs
     emails = ActionMailer::Base.deliveries
@@ -77,7 +77,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     expect(page).to have_content(existing_absence_next_week.title)
   end
 
-  context "quand l'usager avait déjà une adresse email dans la colonne email et pas notification_email" do
+  context "quand l'usager a déjà une adresse email et qu'on veut la changer" do
     let(:rdv_plan) do
       create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
                         rdv_agent: agent,
@@ -90,7 +90,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     context "et l'usager ne s'est jamais connecté" do
       let(:user) { create(:user, latest_login_at: nil, organisations: [organisation], email: "old_email@exemple.fr") }
 
-      it "remplace l'email par un notification_email" do
+      it "met à jour l'email" do
         visit edit_user_agents_rdv_plan_path(rdv_plan.id)
         fill_in("Email", with: "francis@exemple.fr")
 
@@ -106,10 +106,7 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
           lieu: lieu,
           organisation: organisation
         )
-        expect(user.reload).to have_attributes(
-          email: nil,
-          notification_email: "francis@exemple.fr"
-        )
+        expect(user.reload.email).to eq "francis@exemple.fr"
       end
     end
 
@@ -135,9 +132,9 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
     end
   end
 
-  context "quand un autre usager utilise déjà ce notification_email, et qu'on change l'email" do
-    let(:user) { create(:user, latest_login_at: nil, organisations: [organisation], email: nil, notification_email: "francis@precedent.fr") }
-    let!(:user_with_same_email) { create(:user, organisations: [organisation], email: nil, notification_email: "francis@exemple.fr") }
+  context "quand un autre usager utilise déjà cet email, et qu'on change l'email" do
+    let(:user) { create(:user, latest_login_at: nil, organisations: [organisation], email: "francis@precedent.fr") }
+    let!(:user_with_same_email) { create(:user, organisations: [organisation], email: "francis@exemple.fr") }
     let(:rdv_plan) do
       create(:rdv_plan, user: user, motif: motif, location_type: :public_office, duration_in_minutes: 30,
                         rdv_agent: agent,
@@ -163,10 +160,10 @@ RSpec.describe "Les agents peuvent prendre un rendez-vous en passant par l'inter
         lieu: lieu,
         organisation: organisation
       )
-      expect(user.reload.notification_email).to eq "francis@exemple.fr"
+      expect(user.reload.email).to eq "francis@exemple.fr"
 
-      # On a deux usagers avec le même e-mail de notif dans notre base, et c'est pas grave.
-      expect(User.where(notification_email: "francis@exemple.fr").count).to eq(2)
+      # On a deux usagers avec le même email dans notre base, et c'est pas grave.
+      expect(User.where(email: "francis@exemple.fr").count).to eq(2)
     end
   end
 

@@ -62,8 +62,7 @@ RSpec.describe FranceConnectV2Controller do
       expect(user.reload).to have_attributes(
         franceconnect_openid_sub: user_info["sub"],
         logged_once_with_franceconnect: true,
-        notification_email: "wossewodda-3728@yopmail.com",
-        email: nil,
+        email: "wossewodda-3728@yopmail.com",
         first_name: "Angela Claire Louise",
         last_name: "DUBOIS",
         updated_at: be_within(10.seconds).of(Time.zone.now)
