@@ -23,9 +23,6 @@
 - if f.object.show_email_field?
   = f.dsfr_email_field :email, disabled: f.object.email_disabled?, required: true, autocomplete: "email"
 
-- elsif f.object.show_notification_email_field?
-  = f.dsfr_email_field :notification_email, label: f.object.notification_email_label, required: f.object.notification_email_required?
-
 = f.dsfr_phone_field :phone_number, as: :tel, required: f.object.phone_required?, autocomplete: "tel"
 - if f.object.show_landline_phone_number_warning?
   .fr-alert.fr-alert--warning.fr-mb-1w Vous ne recevrez pas de SMS avec ce numéro non-mobile

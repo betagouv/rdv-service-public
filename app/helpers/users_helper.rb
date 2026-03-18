@@ -94,10 +94,6 @@ module UsersHelper
     user.responsible_preferred_email.present? ? mail_to(user.responsible_preferred_email) : nil
   end
 
-  def clickable_user_notification_email(user)
-    user.notification_email.present? ? mail_to(user.notification_email) : nil
-  end
-
   def notify_by_sms_description(user)
     if !user.responsible_phone_number_mobile?
       "🔴 le numéro de téléphone renseigné n'est pas un mobile"

@@ -17,10 +17,7 @@
 
 = f.input :phone_number, as: :tel, **input_opts
 
-- if user.notification_email.present?
-  = f.input(:notification_email, as: :email, **input_opts)
-- else
-  = f.input(:email, as: :email, **input_opts)
+= f.input(:email, as: :email, **input_opts)
 .label Préférences de notifications
 .mb-2
   div= f.input( \

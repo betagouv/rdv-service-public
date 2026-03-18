@@ -8,7 +8,7 @@ module Users::UserFormConcern
 
     delegate :first_name, :last_name, :birth_name, :birth_date,
              :phone_number, :phone_number_mobile?,
-             :email, :email_changed?, :notification_email,
+             :email, :email_changed?,
              :address, :address_details, :city_code, :post_code, :city_name,
              :caisse_affiliation, :affiliation_number, :logement,
              :notify_by_email, :notify_by_sms,
@@ -39,16 +39,6 @@ module Users::UserFormConcern
   def show_email_field? = signed_in_with_invitation_token? && email.present?
 
   def email_disabled? = email.present? && !email_changed?
-
-  def show_notification_email_field?
-    email.blank? && (signed_in_with_invitation_token? || (notification_email && connected_with_sso?))
-  end
-
-  def notification_email_label = signed_in_with_invitation_token? ? "Email" : "Email de notification"
-
-  # Nous ne voulons pas perdre d'informations si l'utilisateur a déjà un email de notification, donc le champ est requis.
-  # L'utilisateur peut définir un email de notification s'il n'en a pas encore, mais ce n'est pas obligatoire.
-  def notification_email_required? = signed_in_with_invitation_token? && notification_email.present?
 
   def show_landline_phone_number_warning? = phone_number.present? && !phone_number_mobile?
 
