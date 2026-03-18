@@ -125,6 +125,7 @@ tables:
       - unknown_past_rdv_count
       - display_saturdays
       - display_cancelled_rdv
+      - display_extended_hours
       - plage_ouverture_notification_level
       - absence_notification_level
       - outlook_disconnect_in_progress
@@ -318,6 +319,7 @@ tables:
       - category
       - work_on_sunday
       - operator_id
+      - public_stats
 
   # Tables sans données personnelles
   - table_name: agent_territorial_roles

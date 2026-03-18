@@ -155,6 +155,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_18_100000) do
     t.string "pro_connect_idp_id", comment: "Fournisseur d'identité ProConnect (identity provider)"
     t.boolean "sensitive_account", default: false, null: false
     t.datetime "caldav_disconnect_started_at"
+    t.boolean "display_extended_hours", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -774,6 +775,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_18_100000) do
     t.boolean "enable_address_field", default: false
     t.boolean "work_on_sunday", default: false
     t.bigint "operator_id"
+    t.boolean "public_stats", default: true, null: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
     t.index ["operator_id"], name: "index_territories_on_operator_id"
   end

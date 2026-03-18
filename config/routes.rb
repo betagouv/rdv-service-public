@@ -67,7 +67,6 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get    "users/sign_in",  to: "users/sessions#new",          as: "new_user_session"
-    post   "users/sign_in",  to: "users/sessions#create",       as: "user_session"
     delete "users/sign_out", to: "users/sessions#destroy",      as: "destroy_user_session"
     get    "users/edit",     to: "users/registrations#edit",    as: "edit_user_registration"
     patch  "users",          to: "users/registrations#update",  as: "user_registration"
@@ -92,7 +91,12 @@ Rails.application.routes.draw do
 
     post "file_attente", to: "file_attentes#create_or_delete"
 
-    resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code"
+    resource :sessions_by_code, only: %i[new create], controller: "sessions_by_code" do
+      collection do
+        get :liste_fiches_usagers
+        post :choix_fiche_usager
+      end
+    end
     resources :login_codes, only: %i[create]
     get "login_codes", to: redirect(path: "/users/sign_in")
   end
