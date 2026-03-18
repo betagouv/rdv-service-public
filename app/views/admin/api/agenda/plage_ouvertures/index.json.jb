@@ -3,7 +3,7 @@
     title: sanitize(plage_ouverture.title_with_default),
     start: occurrence.starts_at.as_json,
     end: occurrence.ends_at.as_json,
-    backgroundColor: plage_ouverture.organisation == @organisation ? "#6fceff80" : "grey",
+    backgroundColor: plage_ouverture.organisation == @organisation ? plage_ouverture.hex_color : "grey",
     textColor: "#313131",
     display: @display_in_background ? "background" : nil,
     url: admin_organisation_planning_plage_ouverture_path(@organisation, plage_ouverture),

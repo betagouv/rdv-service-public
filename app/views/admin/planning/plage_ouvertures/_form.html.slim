@@ -54,6 +54,7 @@
         .card
           .card-body
             = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
+            = f.input :hex_color, as: :color, label: "Couleur", hint: "Cette couleur peut vous aider à distinguer vos plages sur votre agenda."
 
     .row.justify-content-center
       .col-md-6
