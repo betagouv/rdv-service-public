@@ -18,7 +18,7 @@
         ruby:
           user = participation.user
           phone_number = user.user_to_notify&.phone_number
-          email = user.user_to_notify&.preferred_email
+          email = user.user_to_notify&.email
         div
           = user
           - if user.birth_date

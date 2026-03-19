@@ -6,7 +6,6 @@ fr:
         other: Usagers
     attributes:
       user:
-        preferred_email: Email
         email: Email
         organisation: Organisation
         caisse_affiliation: Caisse d'affiliation

@@ -35,10 +35,7 @@ class Api::V1::RdvPlansController < Api::V1::AgentAuthBaseController
   end
 
   def build_user(user_params)
-    user = User.new(user_params.permit(:first_name, :last_name, :address, :phone_number, :birth_date))
-
-    user.email = user_params[:email]
-    user
+    User.new(user_params.permit(:first_name, :last_name, :email, :address, :phone_number, :birth_date))
   end
 
   def find_user(user_params)
