@@ -52,7 +52,7 @@ RSpec.describe Admin::Api::Agenda::PlageOuverturesController, type: :controller 
               "start" => plage_ouverture.starts_at.as_json,
               "end" => plage_ouverture.ends_at.as_json,
               "resourceIds" => [plage_ouverture.agent.id],
-              "backgroundColor" => "#6fceff80",
+              "backgroundColor" => "#c6ecff",
               "textColor" => "#313131",
               "display" => nil,
               "url" => "/admin/organisations/#{organisation.id}/planning/plage_ouvertures/#{plage_ouverture.id}",
