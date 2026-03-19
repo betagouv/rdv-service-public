@@ -40,11 +40,12 @@ module Caldav
       collection = agent.caldav_client.calendars.sync(agent.caldav_agenda_url, agent.caldav_sync_token)
       new_sync_token = collection.sync_token
 
+      # Dans les deux cas suivants, on rejette les changements qui ne sont pas des événements
+      # (c’est notamment le cas des VTODO qui peuvent être mélangées avec les VEVENT dans certains serveurs Caldav)
       # On met à jour les événements modifiés qui sont « OPAQUE » (considérés comme occupés)
-      updated_events = collection.changes.select(&:calendar_data).select { |event| consider_busy?(event) }
-
+      updated_events = collection.changes.select { _1.calendar_data && _1.send(:inner_event) }.select { |event| consider_busy?(event) }
       # On supprime les événements modifiés qui sont « TRANSPARENT » (considérés comme libres)
-      deleted_events = collection.changes.select(&:calendar_data).reject { |event| consider_busy?(event) }.map(&:url)
+      deleted_events = collection.changes.select { _1.calendar_data && _1.send(:inner_event) }.reject { |event| consider_busy?(event) }.map(&:url)
 
       # Le serveur Caldav de la Suite Numérique signale une suppression à travers un calendar_data vide.
       deleted_events += collection.changes.reject(&:calendar_data).map(&:url)
@@ -57,7 +58,7 @@ module Caldav
 
     def all_events_for(agent:)
       new_sync_token = agent.caldav_client.calendars.find(agent.caldav_agenda_url, sync: true).sync_token
-      updated_events = agent.caldav_client.events.list(agent.caldav_agenda_url)
+      updated_events = agent.caldav_client.events.list(agent.caldav_agenda_url) # Cette méthode ne récupère que les événements et rejette bien les VTODO
       deleted_events = []
       [updated_events, deleted_events, new_sync_token]
     end
