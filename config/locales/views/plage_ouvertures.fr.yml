@@ -5,19 +5,19 @@ fr:
         index:
           calendar_view: Vue calendrier
           list_view: Vue liste
-          create_plage_ouverture: Créer une plage d'ouverture
-          create_plage_ouverture_for: Créer une plage d'ouverture pour %{full_name}
+          create_plage_ouverture: Créer une disponibilité
+          create_plage_ouverture_for: Créer une disponibilité pour %{full_name}
           in_progress: En cours
           past: "Passées"
           no_results_for_your_search: Il n'y a pas de résultat correspondant à votre recherche.
 
           self:
-            not_yet_created_plage_ouverture: Vous n'avez pas encore créé de plage d'ouverture.
-            explanation_plage_ouverture: Vos plages d'ouverture sont votre vitrine de disponibilité. Elles permettent aux usagers de réserver un créneau avec vous (si l’option est activée) et facilitent la coordination avec vos collègues.
+            not_yet_created_plage_ouverture: Vous n’avez pas encore créé de disponibilité.
+            explanation_plage_ouverture: Vos disponibilités permettent aux usagers de réserver un créneau avec vous (si l’option est activée) et facilitent la coordination avec vos collègues.
             create_first_plage_cta: Renseigner mes disponibilités
           other_agent:
-            not_yet_created_plage_ouverture: "%{full_name} n'a pas encore créé de plage d'ouverture."
-            explanation_plage_ouverture: Ses plages d'ouverture sont sa vitrine de disponibilité. Elles permettent aux usagers de réserver un créneau (si l’option est activée) et facilitent la coordination avec ses collègues.
+            not_yet_created_plage_ouverture: "%{full_name} n’a pas encore créé de disponibilité."
+            explanation_plage_ouverture: Ses disponibilités permettent aux usagers de réserver un créneau (si l’option est activée) et facilitent la coordination avec ses collègues.
             create_first_plage_cta: Renseigner les disponibilités de %{full_name}
 
           title: Libellé
@@ -25,4 +25,4 @@ fr:
           place: Lieu
           dates: Dates
           search_placeholder: "ex: permanence, consultation…"
-          hint_delete_old: "Les plages d'ouvertures fermées depuis plus d'un an sont automatiquement supprimées."
+          hint_delete_old: "Les disponibilités fermées depuis plus d'un an sont automatiquement supprimées."

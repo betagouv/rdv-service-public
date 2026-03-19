@@ -2,9 +2,9 @@
 
 - content_for :title do
   - if current_agent == @agent
-    | Plages d’ouverture
+    | Disponibilités
   - else
-    | Plages d’ouverture de #{@agent.full_name_and_service}
+    | Disponibilités de #{@agent.full_name_and_service}
 
 - content_for :right_of_page_title do
   - if current_organisation.motifs.active.any?
@@ -16,7 +16,7 @@
   - content_for :onboarding_banner do
     .fr-callout.fr-pb-2w
       h2.fr-h6 Vous avez terminé !
-      p La réservation en ligne est maintenant disponible grâce à cette plage d'ouverture !
+      p La réservation en ligne est maintenant disponible grâce à cette disponibilité !
       = link_to("Voir la réservation en ligne", admin_organisation_online_booking_path(current_organisation), class: "fr-btn")
 
 .card
@@ -72,7 +72,7 @@
     - if current_organisation.motifs.active.none?
       .fr-grid-row
         .fr-col-12.fr-px-2w
-          = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."
+          = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une disponibilité, vous devez d'abord créer un motif de rendez-vous."
 
   - if params[:current_tab] == "expired"
     .rdv-text-align-center.text-muted = t(".hint_delete_old")

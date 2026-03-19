@@ -5,9 +5,9 @@
 
 - content_for :fil_ariane do
   - if current_agent == @plage_ouverture.agent
-    = render "common/fil_ariane", titles_and_paths: [["Plages d’ouverture", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
+    = render "common/fil_ariane", titles_and_paths: [["Disponibilités", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
   - else
-    = render "common/fil_ariane", titles_and_paths: [["Plages d’ouverture de #{@plage_ouverture.agent.full_name_and_service}", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
+    = render "common/fil_ariane", titles_and_paths: [["Disponibilités de #{@plage_ouverture.agent.full_name_and_service}", admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)]], current_page_title: yield(:title)
 
 .row.justify-content-center
   .col-md-6.mb-3
@@ -61,7 +61,7 @@
             "Supprimer", \
             admin_organisation_planning_plage_ouverture_path(current_organisation, @plage_ouverture), \
             method: :delete, \
-            data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}, \
+            data: { confirm: "Confirmez-vous la suppression de cette disponibilité ?"}, \
             class: "btn btn-danger" \
           )
         div

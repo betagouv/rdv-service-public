@@ -71,8 +71,8 @@
                 admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: current_agent), \
                 class: "fr-btn fr-btn--tertiary-no-outline"
             .col.text-right
-              = f.submit "Créer la plage d'ouverture", class: "fr-btn"
+              = f.submit "Créer la disponibilité", class: "fr-btn"
 - else
   .card
     .card-body
-      = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."
+      = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une disponibilité, vous devez d'abord créer un motif de rendez-vous."

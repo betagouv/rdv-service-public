@@ -75,7 +75,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.save
       Notifiers::PlageOuvertureCreated.new(@plage_ouverture).perform
-      flash[:success] = "Plage d'ouverture créée"
+      flash[:success] = "Disponibilité créée"
       update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
@@ -87,7 +87,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.update(plage_ouverture_params)
       Notifiers::PlageOuvertureUpdated.new(@plage_ouverture).perform
-      flash[:success] = "La plage d'ouverture a été modifiée."
+      flash[:success] = "La disponibilité a été modifiée."
       update_online_booking_banner_display
       redirect_to admin_organisation_planning_plage_ouvertures_path(organisation_id: @plage_ouverture.organisation, agent_id: @plage_ouverture.agent_id)
     else
@@ -100,7 +100,7 @@ class Admin::Planning::PlageOuverturesController < AgentAuthController
     notifier = Notifiers::PlageOuvertureDestroyed.new(@plage_ouverture)
     if @plage_ouverture.destroy
       notifier.perform
-      flash[:notice] = "La plage d'ouverture a été supprimée."
+      flash[:notice] = "La disponibilité a été supprimée."
       redirect_to admin_organisation_planning_plage_ouvertures_path(@plage_ouverture.organisation, agent_id: @plage_ouverture.agent)
     else
       render :edit

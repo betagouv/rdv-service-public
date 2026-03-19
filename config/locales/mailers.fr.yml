@@ -26,16 +26,16 @@ fr:
         description_2: Vous pouvez supprimer l’évènement correspondant de votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
     plage_ouverture_mailer:
       plage_ouverture_created:
-        title: "%{domain_name} - Plage d’ouverture créée - %{title}"
-        description_1: Vous venez de créer une plage d’ouverture sur votre planning.
+        title: "%{domain_name} - Disponibilité créée - %{title}"
+        description_1: Vous venez de créer une disponibilité sur votre planning.
         description_2: Vous pouvez synchroniser l’évènement sur votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
       plage_ouverture_updated:
-        title: "%{domain_name} - Plage d’ouverture modifiée - %{title}"
-        description_1: Une de vos plages d’ouvertures a été modifiée.
+        title: "%{domain_name} - Disponibilité modifiée - %{title}"
+        description_1: Une de vos disponibilités a été modifiée.
         description_2: Vous pouvez synchroniser l’évènement sur votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
       plage_ouverture_destroyed:
-        title: "%{domain_name} - Plage d’ouverture supprimée - %{title}"
-        description_1: Une de vos plages d’ouvertures a été supprimée.
+        title: "%{domain_name} - Disponibilité supprimée - %{title}"
+        description_1: Une de vos disponibilités a été supprimée.
         description_2: Vous pouvez supprimer l’évènement de votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
     reply_transfer_mailer:
       notify_agent_of_user_reply:

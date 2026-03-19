@@ -46,7 +46,7 @@
             | #{@agent.full_name_or_email} n’a pas encore créé d’indisponibilité
         p
           |> Les indisponibilités sont des exceptions aux
-          em> plages d’ouvertures.
+          em> disponibilités.
           | Vous pouvez les utiliser pour les congés ou les fermetures. Les indisponibilités peuvent être récurrentes (par exemple pour les temps partiels).
   .rdv-text-align-center.py-2
     = link_to new_admin_organisation_planning_absence_path(current_organisation, agent_id: @agent.id), class: "fr-btn" do

@@ -1,6 +1,6 @@
 - content_for(:menu_item) { "menu-plages-ouvertures" }
 
-- content_for :title, "Plages d'ouverture (#{@agents.count} #{'agent'.pluralize(@agents.count)} sélectionnés)"
+- content_for :title, "Disponibilités (#{@agents.count} #{'agent'.pluralize(@agents.count)} sélectionnés)"
 
 - @agents.includes(:services).each do |agent|
   .fr-tile.fr-tile--sm.fr-tile--horizontal.fr-enlarge-link.mt-2
@@ -12,7 +12,7 @@
         p.fr-tile__desc
           = agent.services.map(&:short_name).join(", ")
         p.fr-tile__detail
-          | #{pluralize(agent.plage_ouvertures.size, "plage", plural: "plages")} d'ouverture
+          | #{pluralize(agent.plage_ouvertures.size, "disponibilité", plural: "disponibilités")}
     .fr-tile__header
       .fr-tile__pictogram
         = dsfr_svg "artwork/pictograms/digital/avatar", class: "fr-responsive-img"

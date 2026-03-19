@@ -1,7 +1,7 @@
 fr:
   activerecord:
     models:
-      plage_ouverture: Plage d'ouverture
+      plage_ouverture: Disponibilité
     attributes:
       plage_ouverture:
         title: Libellé

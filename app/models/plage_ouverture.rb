@@ -84,7 +84,7 @@ class PlageOuverture < ApplicationRecord
     elsif starts_at && ends_at
       "Plage de #{human_time_range}"
     else
-      "Plage d'ouverture"
+      "Disponibilité"
     end
   end
 
@@ -180,7 +180,7 @@ class PlageOuverture < ApplicationRecord
 
     return if overlapping_plages_ouvertures.empty?
 
-    add_benign_error("Conflit de dates et d'horaires avec d'autres plages d'ouvertures")
+    add_benign_error("Conflit de dates et d'horaires avec d'autres disponibilités")
     # TODO: display richer warning messages by rendering the partial
     # overlapping_plage_ouvertures (implies passing view locals which may be tricky)
   end
@@ -190,7 +190,7 @@ class PlageOuverture < ApplicationRecord
 
     return unless overflow_motifs_duration?
 
-    add_benign_error("Certains motifs ont une durée supérieure à la plage d'ouverture prévue")
+    add_benign_error("Certains motifs ont une durée supérieure à la disponibilité prévue")
   end
 
   def requires_lieu?

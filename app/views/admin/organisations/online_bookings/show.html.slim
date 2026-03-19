@@ -16,13 +16,13 @@
         p Les motifs #{sanitize(bold_motif_names.to_sentence)} sont ouverts pour la réservation en ligne.
 
       - if @banner.motifs_with_missing_availabilities.any?(&:individuel?)
-        p Vous devez maintenant ouvrir une plage d'ouverture pour que la réservation en ligne soit possible.
+        p Vous devez maintenant ajouter une disponibilité pour que la réservation en ligne soit possible.
 
       - if @banner.motifs_with_missing_availabilities.any?(&:collectif?)
         p Pour les motifs de rendez-vous collectifs, vous devez planifier des prochains rendez-vous.
 
       - if @banner.motifs_with_missing_availabilities.all?(&:individuel?)
-        = link_to "Ouvrir une plage d'ouverture", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
+        = link_to "Ajouter une disponibilité", admin_organisation_planning_plage_ouvertures_path(current_organisation), class: "fr-btn"
       - elsif @banner.motifs_with_missing_availabilities.all?(&:collectif?)
         = link_to "Planifier un rendez-vous collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "fr-btn"
       - else
@@ -41,7 +41,7 @@
       - org_booking_link = public_link_to_org_url(organisation_id: current_organisation.public_link_id, org_slug: current_organisation.slug)
       = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: org_booking_link }
 
-    p.fr-mt-2w Ce lien permet de  prendre rendez-vous avec votre organisation sur les plages d'ouverture disponibles.
+    p.fr-mt-2w Ce lien permet de prendre rendez-vous avec votre organisation sur les disponibilités ouvertes.
 
     p Vous pouvez l'intégrer à votre site internet, votre signature d'email, ou l'envoyer directement à vos usagers.
 

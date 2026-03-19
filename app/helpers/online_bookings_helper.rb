@@ -9,9 +9,9 @@ module OnlineBookingsHelper
 
   def plage_ouvertures_checkbox_text(plage_ouvertures)
     if plage_ouvertures.any?
-      "Vous avez #{plage_ouvertures.count} #{'plage'.pluralize(plage_ouvertures.count)} d'ouverture #{'liée'.pluralize(plage_ouvertures.count)} à des motifs réservables en ligne"
+      "Vous avez #{plage_ouvertures.count} #{'disponibilité'.pluralize(plage_ouvertures.count)} #{'liée'.pluralize(plage_ouvertures.count)} à des motifs réservables en ligne"
     else
-      "Ajouter des plages d'ouverture pour les motifs ouverts à la réservation en ligne"
+      "Ajouter des disponibilités pour les motifs ouverts à la réservation en ligne"
     end
   end
 end

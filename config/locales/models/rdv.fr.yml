@@ -99,11 +99,11 @@ fr:
               overlapping_absence: "%{agent_name} n'est pas disponible pendant la période du RDV"
               overlapping_plage_ouverture:
                 in_scope:
-                  in_current_organisation_html: "%{agent_name} a <a href='%{path}'>une plage d'ouverture</a> à %{lieu_name} %{occurrence_text}"
-                  in_other_organisation_html: "%{agent_name} a <a href='%{path}'>une plage d'ouverture</a> à %{lieu_name} (%{organisation_name}) %{occurrence_text}"
+                  in_current_organisation_html: "%{agent_name} a <a href='%{path}'>une disponibilité</a> à %{lieu_name} %{occurrence_text}"
+                  in_other_organisation_html: "%{agent_name} a <a href='%{path}'>une disponibilité</a> à %{lieu_name} (%{organisation_name}) %{occurrence_text}"
                 out_of_scope:
-                  in_current_organisation_html: "%{agent_name} a une plage d'ouverture dans un autre lieu au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette plage d'ouverture)"
-                  in_other_organisation_html: "%{agent_name} a une plage d'ouverture dans une autre organisation au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette plage d'ouverture)"
+                  in_current_organisation_html: "%{agent_name} a une disponibilité dans un autre lieu au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette disponibilité)"
+                  in_other_organisation_html: "%{agent_name} a une disponibilité dans une autre organisation au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette disponibilité)"
               rdv_ending_shortly_before:
                 current_agent_html: "Vous avez <a href='%{path}'>un RDV</a> finissant à %{ends_at_time} avec %{user_names}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans votre agenda"
                 in_scope_html: "%{agent_name} a <a href='%{path}'>un RDV</a> finissant à %{ends_at_time} avec %{user_names}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans son agenda"
