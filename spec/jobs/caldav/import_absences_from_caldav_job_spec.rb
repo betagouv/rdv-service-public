@@ -100,6 +100,23 @@ RSpec.describe Caldav::ImportAbsencesFromCaldavJob do
         end
       end
     end
+
+    context "quand le serveur Caldav signale une suppression via un calendar_data vide (Suite Numérique)" do
+      it "supprime l’événement local correspondant" do
+        ExternalCalendarEvent.create(
+          agent:,
+          url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/event_signaled_as_deleted.ics",
+          starts_at: Time.zone.tomorrow.change(hour: 9, min: 0),
+          ends_at: Time.zone.tomorrow.change(hour: 10, min: 0)
+        )
+
+        VCR.use_cassette("caldav/sync_with_empty_calendar_data") do
+          expect { described_class.new.perform(agent.id) }.to change(ExternalCalendarEvent, :count).by(-1)
+        end
+
+        expect(ExternalCalendarEvent.where(url: "https://ox8-oidc.ox8-oidc.osprod.dimail1.numerique.gouv.fr/dav/caldav/1234_calendar_id/event_signaled_as_deleted.ics")).to be_empty
+      end
+    end
   end
 
   it "enregistre la réponse dans Sentry si la récupération du token retourne un body inattendu" do
