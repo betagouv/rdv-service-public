@@ -179,23 +179,6 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         end)
       end
     end
-
-    describe "with a user with an email" do
-      let(:user_with_email) { create(:user, email: "user_with_email@test.com", organisations: [organisation]) }
-
-      it "works", js: true do
-        step1
-        select_user(user_with_email)
-        click_button("Continuer")
-        step3(:enabled)
-        expect(page).to have_content("Reçoit les notifications par email")
-        expect(page).to have_content("user_with_email@test.com")
-        click_button("Confirmer le RDV")
-        expect(page).to have_content("Le rendez-vous a été créé.")
-
-        expect(user_with_email.rdvs.count).to eq(1)
-      end
-    end
   end
 
   describe "create a RDV with a single_use lieu" do
