@@ -59,11 +59,6 @@ class RdvPlan < ApplicationRecord
   private
 
   def update_user_before_creating_rdv(user_attributes:)
-    new_email = user_attributes[:email]&.downcase
-    if new_email && new_email != user.email && user.already_logged_in?
-      raise "L'email de cet usager ne peut pas être modifié"
-    end
-
     user.update!(user_attributes)
   end
 

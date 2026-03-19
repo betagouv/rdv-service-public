@@ -17,7 +17,7 @@
 
 = f.input :phone_number, as: :tel, **input_opts
 
-= f.input(:email, as: :email, **input_opts)
+= f.input(:email, as: :email, **input_opts.deep_merge(user.already_logged_in? ? { hint: "Cet usager utilise cette adresse email pour se connecter." } : {}))
 .label Préférences de notifications
 .mb-2
   div= f.input( \
@@ -32,7 +32,7 @@
   )
 - if user.already_logged_in?
   .mt-1.text-muted
-    | L'usager s'étant connecté, vous ne pouvez plus modifier ses préférences
+    | L'usager s'étant connecté, vous ne pouvez plus modifier ses préférences de notification
 
 - if current_territory.enable_address_field?
   = f.input :address, **(input_opts.deep_merge(input_html: { data: { "address-autocomplete": "on" }, dir: "ltr" }))

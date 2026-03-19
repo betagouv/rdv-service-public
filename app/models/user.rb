@@ -91,6 +91,7 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
+  before_save :reset_latest_login_at_on_email_change
   normalizes :email, with: ->(email) { email.downcase }
 
   # Scopes
@@ -290,6 +291,10 @@ class User < ApplicationRecord
 
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
+  end
+
+  def reset_latest_login_at_on_email_change
+    self.latest_login_at = nil if email_changed? && email_was.present?
   end
 
   def birth_date_validity
