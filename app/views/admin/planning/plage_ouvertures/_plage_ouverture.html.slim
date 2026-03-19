@@ -1,8 +1,9 @@
 - organisation = plage_ouverture.organisation
 
 tr
+  td.pr-0
+    span.badge.badge-pill style="background: #{plage_ouverture.hex_color};" &nbsp;
   td
-    span.badge.badge-pill.ml-0.mr-1 style="background: #{plage_ouverture.hex_color};" &nbsp;
     = link_to plage_ouverture.title_with_default, admin_organisation_planning_plage_ouverture_path(organisation, plage_ouverture), class: "fr-link"
     = exceptionnelle_tag(plage_ouverture)
   td
