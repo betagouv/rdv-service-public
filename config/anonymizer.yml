@@ -532,9 +532,9 @@ tables:
       - source_organisation_id
       - status
   - table_name: operators
-    anonymized_column_names:
-      - name
     non_anonymized_column_names:
+      - name
+      - siret
       - created_at
       - updated_at
   - table_name: operator_managers
