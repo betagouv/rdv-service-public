@@ -77,20 +77,8 @@ class Admin::RdvsController < AgentAuthController
 
   def download_participants
     authorize(@rdv, policy_class: Agent::RdvPolicy)
-
-    csv_data = CSV.generate(headers: true) do |csv|
-      csv << %w[full_name email status]
-      @rdv.participations.includes(:user).each do |participation|
-        csv << [
-          participation.user.full_name,
-          participation.user.email,
-          Rdv.human_attribute_value(:status, participation.temporal_status, disable_cast: true),
-        ]
-      end
-    end
-
-    filename = "participants-rdv-collectif-#{@rdv.starts_at.to_date}.csv"
-    send_data csv_data, filename:, type: "text/csv"
+    generator = ParticipantsCsv.new(@rdv)
+    send_data generator.generate_csv, filename: generator.filename, type: "text/csv"
   end
 
   def edit
