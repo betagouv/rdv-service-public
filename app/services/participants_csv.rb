@@ -9,7 +9,7 @@ class ParticipantsCsv
       @rdv.participations.includes(:user).order(created_at: :asc).each do |participation|
         csv << [
           participation.user.full_name,
-          participation.user.email,
+          participation.user.preferred_email,
           Rdv.human_attribute_value(:status, participation.temporal_status, disable_cast: true),
         ]
       end
