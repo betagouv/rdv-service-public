@@ -75,6 +75,24 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
+  def download_participants
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
+
+    csv_data = CSV.generate(headers: true) do |csv|
+      csv << %w[full_name email status]
+      @rdv.participations.includes(:user).each do |participation|
+        csv << [
+          participation.user.full_name,
+          participation.user.email,
+          Rdv.human_attribute_value(:status, participation.temporal_status, disable_cast: true),
+        ]
+      end
+    end
+
+    filename = "participants-rdv-collectif-#{@rdv.starts_at.to_date}.csv"
+    send_data csv_data, filename:, type: "text/csv"
+  end
+
   def edit
     add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
     users_to_add = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.where(id: add_user_ids)).resolve.distinct
