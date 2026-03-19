@@ -13,7 +13,7 @@
             current_page_title: yield(:title)
   - else
     = render "common/fil_ariane",
-            titles_and_paths: [["Indisponibilités de #{@absence.agent.full_name_and_service}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
+            titles_and_paths: [["Indisponibilités de #{@absence.agent.full_name_or_email}", admin_organisation_planning_absences_path(current_organisation, agent_id: @absence.agent)]],
             current_page_title: yield(:title)
 
 - content_for :right_of_page_title do
