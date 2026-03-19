@@ -43,9 +43,9 @@ module Caldav
       # Dans les deux cas suivants, on rejette les changements qui ne sont pas des événements
       # (c’est notamment le cas des VTODO qui peuvent être mélangées avec les VEVENT dans certains serveurs Caldav)
       # On met à jour les événements modifiés qui sont « OPAQUE » (considérés comme occupés)
-      updated_events = collection.changes.select(&:calendar_data).reject { _1.send(:inner_event).nil? }.select { |event| consider_busy?(event) }
+      updated_events = collection.changes.select { _1.calendar_data && _1.send(:inner_event) }.select { |event| consider_busy?(event) }
       # On supprime les événements modifiés qui sont « TRANSPARENT » (considérés comme libres)
-      deleted_events = collection.changes.select(&:calendar_data).reject { _1.send(:inner_event).nil? }.reject { |event| consider_busy?(event) }.map(&:url)
+      deleted_events = collection.changes.select { _1.calendar_data && _1.send(:inner_event) }.reject { |event| consider_busy?(event) }.map(&:url)
 
       # Le serveur Caldav de la Suite Numérique signale une suppression à travers un calendar_data vide.
       deleted_events += collection.changes.reject(&:calendar_data).map(&:url)
