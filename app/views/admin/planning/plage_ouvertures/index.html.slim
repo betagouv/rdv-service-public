@@ -1,4 +1,5 @@
 - content_for(:menu_item) { "menu-plages-ouvertures" }
+- available_motifs_for_agent = Motif.available_motifs_for_organisation_and_agent(current_organisation, @agent).individuel
 
 - content_for :title do
   - if current_agent == @agent
@@ -10,7 +11,8 @@
   - if current_organisation.motifs.active.any?
     .fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left
       = link_to t(".calendar_view"), calendar_admin_organisation_planning_plage_ouvertures_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary fr-icon-calendar-fill mb-0"
-      = link_to t(".create_plage_ouverture"),  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary fr-btn fr-btn--icon-left fr-icon-add-line mb-0"
+      - if available_motifs_for_agent.any?
+        = link_to t(".create_plage_ouverture"),  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "fr-btn fr-btn--secondary fr-btn fr-btn--icon-left fr-icon-add-line mb-0"
 
 - if flash[:onboarding] == "online_booking_ready"
   - content_for :onboarding_banner do
@@ -63,17 +65,22 @@
             h2= t(".other_agent.not_yet_created_plage_ouverture", full_name: @agent.full_name_or_email)
             p = t(".other_agent.explanation_plage_ouverture")
 
-          - if current_organisation.motifs.active.any?
+          - if available_motifs_for_agent.any?
             .mt-3
               = link_to  new_admin_organisation_planning_plage_ouverture_path(current_organisation, agent_id: @agent.id), class: "fr-btn" do
                 - if current_agent == @agent
                   = t(".self.create_first_plage_cta")
                 - else
                   = t(".other_agent.create_first_plage_cta", full_name: @agent.full_name_or_email)
-    - if current_organisation.motifs.active.none?
+    - if available_motifs_for_agent.none?
       .fr-grid-row
         .fr-col-12.fr-px-2w
-          = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."
+          - if current_organisation.motifs.active.none?
+            = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."
+          - elsif current_organisation.motifs.active.individuel.none?
+            = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous individuel. Cette organisation ne contient que des motifs collectifs.", non_admin_text: "Aucun motif de rendez-vous individuel n'est disponible dans cette organisation. Vous devez demander à un administrateur de votre organisation d'en créer un."
+          - else
+            = render "admin/motifs/creation_needed_callout", motivation_text: "Aucun motif individuel n'est accessible à cet agent. Les motifs existants sont liés à des services auxquels il n'appartient pas.", non_admin_text: "Vous n'avez accès à aucun motif individuel pour cette organisation. Les motifs existants sont liés à des services auxquels vous n'appartenez pas. Vous devez demander à un administrateur de votre organisation d'en créer un accessible à votre service."
 
   - if params[:current_tab] == "expired"
     .rdv-text-align-center.text-muted = t(".hint_delete_old")
