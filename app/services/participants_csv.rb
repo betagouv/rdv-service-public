@@ -5,7 +5,7 @@ class ParticipantsCsv
 
   def generate_csv
     CSV.generate(headers: true) do |csv|
-      csv << %w[full_name email status]
+      csv << ["nom complet", "adresse e-mail", "statut"]
       @rdv.participations.includes(:user).order(created_at: :asc).each do |participation|
         csv << [
           participation.user.full_name,

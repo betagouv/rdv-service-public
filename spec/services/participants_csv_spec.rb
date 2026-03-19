@@ -23,7 +23,7 @@ RSpec.describe ParticipantsCsv, type: :service do
 
     it "returns a CSV with headers and one row per participation, ordered by creation date" do
       expected_csv = <<~CSV
-        full_name,email,status
+        nom complet,adresse e-mail,statut
         Alice MARTIN,alice@example.com,Rendez-vous à venir
         Bob DUPONT,bob@example.com,Rendez-vous à venir
       CSV
@@ -34,7 +34,7 @@ RSpec.describe ParticipantsCsv, type: :service do
       rdv.participations.find_by!(user: user1).update!(status: "seen")
 
       expected_csv = <<~CSV
-        full_name,email,status
+        nom complet,adresse e-mail,statut
         Alice MARTIN,alice@example.com,Rendez-vous honoré
         Bob DUPONT,bob@example.com,Rendez-vous à venir
       CSV
