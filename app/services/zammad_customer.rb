@@ -10,4 +10,8 @@ class ZammadCustomer
   attribute :note, :string
   attribute :rdvsp_role, :string
   attribute :instance, :string, default: Domain.default_domain_for_current_instance.to_s
+
+  def email
+    super&.strip
+  end
 end
