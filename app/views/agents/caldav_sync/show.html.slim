@@ -30,9 +30,16 @@ p
       |> Les événements qui avaient été importés dans votre agenda sont en cours de suppression. Cela peut prendre quelques minutes.
       | Vous pouvez revenir sur cette page plus tard pour reconfigurer vos identifiants CalDAV.
 - elsif current_agent.caldav_configured?
-  p Vos identifiants CalDAV sont déjà configurés.
-  = form_tag agents_calendar_sync_caldav_sync_path, method: :delete do
-    = submit_tag "Supprimer la configuration CalDAV", class: "fr-btn fr-btn--secondary", data: { confirm: "Êtes-vous sûr de vouloir supprimer vos identifiants CalDAV ?" }
+  .card
+    .card-body
+      .fr-mb-2w
+        .fr-badge.fr-badge--success Synchronisation active
+        p.fr-my-2w Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_username}.
+      .fr-btns-group.fr-btns-group--inline
+        - if current_agent.organisations.any?
+          = link_to("Voir mon agenda", admin_organisation_planning_agenda_path(current_agent.organisations.first), class: "fr-btn fr-btn--secondary")
+        = form_tag agents_calendar_sync_caldav_sync_path, method: :delete do
+          = submit_tag "Supprimer la configuration CalDAV", class: "fr-btn fr-btn--tertiary", data: { confirm: "Êtes-vous sûr de vouloir supprimer vos identifiants CalDAV ?" }
 - else
   = form_tag agents_calendar_sync_caldav_sync_path, method: :put do
     .fr-input-group
