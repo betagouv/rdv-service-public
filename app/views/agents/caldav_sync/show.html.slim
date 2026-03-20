@@ -34,7 +34,7 @@ p
     .card-body
       .fr-mb-2w
         .fr-badge.fr-badge--success Synchronisation active
-        span.fr-ml-2w Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_username}.
+        p.fr-my-2w Votre agenda est synchronisé avec l'agenda CalDAV #{current_agent.caldav_username}.
       .fr-btns-group.fr-btns-group--inline
         - if current_agent.organisations.any?
           = link_to("Voir mon agenda", admin_organisation_planning_agenda_path(current_agent.organisations.first), class: "fr-btn fr-btn--secondary")
