@@ -158,8 +158,7 @@ gem "calendav", "~> 0.5"
 # on utilise cette gem pour avoir la même partout.
 gem "tzinfo-data"
 # Generate links to add to various calendars
-gem 'add_to_calendar'
-
+gem "add_to_calendar"
 
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"
