@@ -4,7 +4,7 @@ class AddRdvToCalendar
     @current_user = current_user
   end
 
-  delegate :google_url, :outlook_com_url, :office365_url, :ical_url, to: :cal
+  delegate :google_url, :outlook_com_url, :office365_url, to: :cal
 
   private
 
