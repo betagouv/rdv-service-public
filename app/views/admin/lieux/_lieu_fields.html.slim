@@ -7,7 +7,9 @@
 / All forms
 = f.dsfr_text_field :name, label: Lieu.human_attribute_name(:name), required: true, hint: "Le nom apparaît dans les notifications par email et SMS aux usagers."
 
-= f.dsfr_text_field :address, label: Lieu.human_attribute_name(:address), data: { "address-autocomplete": "on" }, required: true, hint: "L'adresse apparaît dans les notifications par email et SMS aux usagers."
+= f.dsfr_text_field :address, label: Lieu.human_attribute_name(:address), data: { "address-autocomplete": "on", "address-no-geocoding-checkbox": "lieu[address_without_geocoding]" }, required: true, hint: "L'adresse apparaît dans les notifications par email et SMS aux usagers."
+- if current_domain == Domain::RDV_SERVICE_PUBLIC
+  = f.dsfr_check_box :address_without_geocoding, label: "Le lieu est à l'étranger"
 = f.hidden_field :latitude
 = f.hidden_field :longitude
 

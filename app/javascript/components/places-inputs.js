@@ -13,6 +13,11 @@ class PlacesInput {
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
         filter(i => !!i.elt) // filter only present inputs
 
+    const noGeocodingCheckboxName = container.dataset.addressNoGeocodingCheckbox;
+    this.noGeocodingCheckbox = noGeocodingCheckboxName
+      ? form.querySelector(`input[type="checkbox"][name="${noGeocodingCheckboxName}"]`)
+      : null;
+
     $(container).autocomplete(
       { hint: false },
       [{
@@ -25,10 +30,21 @@ class PlacesInput {
     );
 
     // clear dependent fields upon input event (before selecting suggestion)
-    container.addEventListener("input", () => this.setDependentInputs({}))
+    container.addEventListener("input", () => {
+      if (!this.noGeocodingCheckbox?.checked) this.setDependentInputs({})
+    })
+
+    // when checking "no geocoding": clear lat/lng; when unchecking: clear address to force re-selection
+    if (this.noGeocodingCheckbox) {
+      this.noGeocodingCheckbox.addEventListener("change", () => {
+        this.setDependentInputs({})
+      })
+    }
   }
 
   getSuggestions = (query, callback) => {
+    if (this.noGeocodingCheckbox?.checked) return callback([])
+
     const url = "https://data.geopf.fr/geocodage/search/"
     const searchParams = new URLSearchParams()
     searchParams.append("q", query)

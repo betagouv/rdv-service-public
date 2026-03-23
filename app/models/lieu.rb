@@ -108,6 +108,7 @@ class Lieu < ApplicationRecord
   private
 
   def longitude_and_latitude_must_be_present
+    return if address_without_geocoding?
     return if latitude.present? && longitude.present?
 
     errors.add(:address, :must_be_valid)
