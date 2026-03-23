@@ -8,13 +8,13 @@
         - page.resource.errors.full_messages.each do |message|
           li.flash-error= message
   - page.attributes.each do |attribute|
-    - next if current_domain != Domain::RDV_SERVICE_PUBLIC && attribute.name == "address_without_geocoding"
+    - next if !current_domain.accept_lieu_address_without_geocoding? && attribute.name == "address_without_geocoding"
     div class=("field-unit field-unit--#{attribute.html_class} field-unit--#{requireness(attribute)}")
       = render_field attribute, f: f
   .form-actions
     p
       | La latitude et la longitude sont requises
-      - if current_domain == Domain::RDV_SERVICE_PUBLIC
+      - if current_domain.accept_lieu_address_without_geocoding?
         |< (sauf si vous cochez la case « Adresse à l’étranger ou introuvable »)
       | . Vous pouvez les retrouver en cherchant l'adresse du lieu dans #{link_to("Open Street Map", "https://www.openstreetmap.org/")}
     p
