@@ -24,6 +24,7 @@ class LieuDashboard < Administrate::BaseDashboard
     phone_number_formatted: Field::String,
     availability: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     address: PlacesField.with_options(searchable: true),
+    address_without_geocoding: Field::Boolean,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -60,6 +61,7 @@ class LieuDashboard < Administrate::BaseDashboard
     latitude
     longitude
     address
+    address_without_geocoding
     organisation
   ].freeze
 
