@@ -49,7 +49,7 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
         = icon("fr-icon-team-fill", class: "text-primary-blue fr-mr-1w")
         |> Participants&nbsp;:
       .fr-grid-row.fr-grid-row--gutters
-        - rdv.users.sort_by { _1.last_name.downcase }.each do |user|
+        - rdv.users.includes(:responsible, [:user_profiles, :annotations]).order("users.last_name ASC").each do |user|
           .fr-col-12.fr-col-md-4
             .card.light-gray-card.fr-mb-3w
               .card-body.p-2
@@ -61,7 +61,7 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
         .d-none.d-sm-block
           = render "admin/rdvs/users_table", rdv:, contextual_agents:
         .d-md-none.d-print-none
-          - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
+          - rdv.participations.includes(user: [:responsible, :user_profiles]).order_by_user_last_name.each do |participation|
             = render "admin/participations/user_card", participation: participation, contextual_agents:
       - else
         p Il n'y a pas encore de participant pour ce RDV

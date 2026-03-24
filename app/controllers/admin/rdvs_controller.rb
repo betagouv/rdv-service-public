@@ -72,6 +72,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def show
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
     authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
