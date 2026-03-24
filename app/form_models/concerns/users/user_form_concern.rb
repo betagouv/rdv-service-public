@@ -15,7 +15,7 @@ module Users::UserFormConcern
              :connected_with_sso?, :pro_connect_openid_sub,
              :logged_once_with_franceconnect?, :signed_in_with_invitation_token?,
              :errors, :errors_are_all_benign?, :benign_errors,
-             :ants_pre_demande_number,
+             :ants_pre_demande_number, :already_logged_in?,
              to: :user
 
     def self.human_attribute_name(...) = User.human_attribute_name(...)
