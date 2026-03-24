@@ -26,6 +26,12 @@ module SuperAdmins
       permitted[:response] = nil if permitted[:response].blank?
 
       if @territory_creation_request.update(permitted)
+        if @territory_creation_request.response == "refused"
+          Agents::TerritoryCreationRequestMailer.refused(
+            agent: @territory_creation_request.agent,
+            domain_id: current_domain.id
+          ).deliver_later
+        end
         redirect_to super_admins_territory_creation_requests_path, flash: { success: "Demande traitée" }
       else
         flash.now[:error] = @territory_creation_request.errors.full_messages.join(" ")

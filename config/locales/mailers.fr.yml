@@ -51,6 +51,8 @@ fr:
     territory_creation_request_mailer:
       accepted:
         title: "Votre espace %{domain_name} est ouvert 🚀"
+      refused:
+        title: "Votre demande d’ouverture d’espace %{domain_name} a été refusée"
   users:
     file_attente_mailer:
       new_creneau_available:
