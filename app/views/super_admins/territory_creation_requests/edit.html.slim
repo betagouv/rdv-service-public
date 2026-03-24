@@ -73,3 +73,10 @@ section.main-content__body
           = f.submit "Refuser"
 
         = link_to("Accepter", new_super_admins_compte_path(request_id: @territory_creation_request.id), class: "button")
+
+    - elsif @territory_creation_request.response == "refused"
+      hr
+      p Cette demande a été refusée.
+      = simple_form_for([namespace, @territory_creation_request], html: { class: "form" }) do |f|
+        = f.hidden_field :response, value: ""
+        = f.submit "Repasser en attente"
