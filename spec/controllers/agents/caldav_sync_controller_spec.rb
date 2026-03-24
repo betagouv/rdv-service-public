@@ -40,6 +40,7 @@ RSpec.describe Agents::CaldavSyncController, type: :controller do
         expect(response).to redirect_to(agents_calendar_sync_caldav_sync_path)
         expect(agent.reload.caldav_username).to eq("user@example.fr")
         expect(agent.reload.caldav_agenda_url).to eq("https://caldav.example.fr/dav/calendars/user/default")
+        expect(flash[:success]).to eq("La synchronisation avec votre agenda CalDAV user@example.fr est activée.")
       end
 
       it "ne met pas de message d’erreur en flash" do

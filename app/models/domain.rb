@@ -80,6 +80,13 @@ class Domain
     ),
   ].freeze
 
+  # Dans le cadre de l’instance RDV Service Public, nous ne proposons pas de sélection d’adresse à l’usager, et nous avons des adresses de lieux
+  # à l’étranger qui ne peuvent pas être géocodées par la BAN.
+  # On souhaite donc proposer aux agents de pouvoir ajouter des lieux en bypassant le géocodage.
+  def accept_lieu_address_without_geocoding?
+    !provides_address_selection?
+  end
+
   def provides_address_selection?
     address_selection_template_name.present?
   end

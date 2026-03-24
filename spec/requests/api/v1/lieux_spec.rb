@@ -106,6 +106,25 @@ RSpec.describe "Lieux API" do
       end
     end
 
+    context "with address_without_geocoding and no coordinates" do
+      let(:params) do
+        {
+          organisation_id: organisation.id,
+          name: "Ambassade de France à Berlin",
+          address: "Pariser Platz 5, 10117 Berlin, Allemagne",
+          address_without_geocoding: true,
+        }
+      end
+
+      it "crée le lieu sans coordonnées" do
+        expect { post "/api/v1/lieux", headers:, params:, as: :json }.to change(Lieu, :count).by(1)
+        expect(response.status).to eq 200
+        expect(Lieu.last.address_without_geocoding).to be true
+        expect(Lieu.last.latitude).to be_nil
+        expect(Lieu.last.longitude).to be_nil
+      end
+    end
+
     context "when a lieux already exists for the given external reference" do
       let(:params) do
         {

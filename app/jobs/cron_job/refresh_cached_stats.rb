@@ -62,7 +62,7 @@ class CronJob::RefreshCachedStats
       return rows unless single_count_row?
 
       # Metabase can split thousands with spaces or commas depending on its configurations, which can be changed in its web ui
-      rows[0]["c"].gsub(/[, ]/, "").to_i
+      rows[0]["c"].to_s.gsub(/[, ]/, "").to_i
     end
 
     def single_count_row? = rows.count == 1 && rows[0]["c"].present?
