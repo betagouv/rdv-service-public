@@ -110,7 +110,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
     it "cannot create plage_ouverture" do
       click_link "Créer une plage d'ouverture", match: :first
-      expect(page).to have_content("Aucun motif de rendez-vous ne vous est accessible. Vous devez demander à un administrateur de votre organisation d'en ajouter un")
+      expect(page).to have_content("services auxquels vous n'appartenez pas")
     end
 
     context "with motif for_secretariat" do
