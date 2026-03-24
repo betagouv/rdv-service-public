@@ -245,6 +245,7 @@ tables:
       - longitude
       - availability
       - code_postal
+      - address_without_geocoding
 
   - table_name: participations
     anonymized_column_names:
