@@ -35,17 +35,13 @@ module Users::UserFormConcern
 
   def show_franceconnect_frozen_fields_warning? = logged_once_with_franceconnect?
 
-  # NOTE: à discuter en équipe
-  # Ancien fonctionnement : email (Devise) affiché disabled pour les invités à prendre rdv (rdvi) qui en avaient un.
-  # notification_email affiché et modifiable pour les invités sans email et les usagers SSO.
-  # Comportement actuel :
-  # - Invité avec email → affiché, disabled
-  # - Invité sans email → affiché, modifiable
+  # Champ email du parcours de RDV :
+  # - Usager invité via token → affiché, modifiable sauf si il s'est déjà connecté
   # - SSO (FC/ProConnect) → affiché, modifiable
-  # - Usager connecté via code → pas affiché
+  # - Usager connecté via code → pas affiché (A voir plus tard https://github.com/betagouv/rdv-service-public/pull/6259#discussion_r2959304082)
   def show_email_field? = signed_in_with_invitation_token? || connected_with_sso?
 
-  def email_disabled? = signed_in_with_invitation_token? && email.present?
+  def email_disabled? = signed_in_with_invitation_token? && email.present? && already_logged_in?
 
   def show_landline_phone_number_warning? = phone_number.present? && !phone_number_mobile?
 
