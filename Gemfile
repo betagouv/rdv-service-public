@@ -144,7 +144,7 @@ gem "montrose"
 # Supplies TimeOfDay and Shift class
 gem "tod"
 # A ruby implementation of the iCalendar specification (RFC-5545).
-gem "icalendar", "~> 2.5"
+gem "icalendar", "~> 2.12"
 # Easy recurrence expansion for iCalendar
 gem "icalendar-recurrence"
 # ice_cube est utilisée par icalendar-recurrence pour calculer les occurrences des événements externes (Caldav)
