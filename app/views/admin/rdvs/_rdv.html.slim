@@ -43,7 +43,7 @@ turbo-frame.card.rdv-item[id= "rdv-#{rdv.id}" target="_top"]
           = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "fr-btn fr-btn--secondary fr-btn--sm", data: { turbo: false }
 
   .mx-3
-  - if rdv.users.any?
+  - if rdv.users.any? && link_in_header
     div class=("users-details collapse fr-mx-3w fr-mb-0")
       h5.fr-mb-2w
         = icon("fr-icon-team-fill", class: "text-primary-blue fr-mr-1w")
