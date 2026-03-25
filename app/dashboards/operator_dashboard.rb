@@ -5,6 +5,7 @@ class OperatorDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     siret: Field::String,
+    support_link: Field::String,
     territories: Field::HasMany,
     operator_managers: Field::HasMany,
   }.freeze
@@ -19,6 +20,7 @@ class OperatorDashboard < Administrate::BaseDashboard
     id
     name
     siret
+    support_link
     territories
     operator_managers
   ].freeze
@@ -26,6 +28,7 @@ class OperatorDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     name
     siret
+    support_link
   ].freeze
 
   def display_resource(operator)
