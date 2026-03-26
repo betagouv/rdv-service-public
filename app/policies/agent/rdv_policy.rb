@@ -127,7 +127,7 @@ class Agent::RdvPolicy < ApplicationPolicy
     return true if current_agent.participates_in?(@record)
 
     case current_agent.access_level_in(@record.organisation)
-    when AgentRole::ACCESS_LEVEL_ADMIN
+    when AgentRole::ACCESS_LEVEL_ADMIN, AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL
       true
     when AgentRole::ACCESS_LEVEL_BASIC
       same_service? || rdv_without_service? || current_agent.secretaire?

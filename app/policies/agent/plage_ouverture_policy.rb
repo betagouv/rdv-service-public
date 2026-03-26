@@ -19,10 +19,10 @@ class Agent::PlageOuverturePolicy < ApplicationPolicy
     return true if @record.agent == current_agent
 
     case current_agent.access_level_in(@record.organisation)
-    when AgentRole::ACCESS_LEVEL_ADMIN
+    when AgentRole::ACCESS_LEVEL_ADMIN, AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL
       true
     when AgentRole::ACCESS_LEVEL_BASIC
-      same_service? || current_agent.secretaire?
+      same_service?
     else
       false
     end
