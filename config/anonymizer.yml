@@ -39,7 +39,6 @@ tables:
       - birth_name
       - birth_date
       - email
-      - notification_email
       - unconfirmed_email
       - address
       - address_details
@@ -70,7 +69,7 @@ tables:
       - created_through
       - invitation_accepted_at
       - invitation_created_at
-      - text_search_terms_with_notification_email
+      - text_search_terms
       - deleted_at
       - invitation_limit
       - reset_password_sent_at

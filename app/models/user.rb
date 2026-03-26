@@ -6,7 +6,6 @@ class User < ApplicationRecord
     reset_password_token reset_password_sent_at
     confirmed_at confirmation_token confirmation_sent_at unconfirmed_email
     invitation_token invitation_created_at invitation_sent_at invitation_accepted_at invitation_limit invited_by_type invited_by_id
-    notification_email
   ]
 
   # Mixins
@@ -38,7 +37,7 @@ class User < ApplicationRecord
 
   def self.search_options
     {
-      using: { tsearch: { prefix: true, tsvector_column: "text_search_terms_with_notification_email" } },
+      using: { tsearch: { prefix: true, tsvector_column: "text_search_terms" } },
     }
   end
 

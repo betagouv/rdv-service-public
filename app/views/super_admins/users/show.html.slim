@@ -1,7 +1,7 @@
 ruby:
   content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) }
-  email_to_search = page.resource.email.presence || page.resource.notification_email
-  same_email_count = email_to_search.present? ? User.where.not(id: page.resource.id).where(email: email_to_search).or(User.where.not(id: page.resource.id).where(notification_email: email_to_search)).count : 0
+  email_to_search = page.resource.email.presence
+  same_email_count = email_to_search.present? ? User.where.not(id: page.resource.id).where(email: email_to_search).count : 0
 header.main-content__header role="banner"
   h1.main-content__page-title
     = content_for(:title)
