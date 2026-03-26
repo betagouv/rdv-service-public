@@ -7,7 +7,7 @@ class Agent::MotifPolicy < ApplicationPolicy
     return false unless motif.organisation.in?(agent.organisations)
     return true if motif.service.blank?
 
-    agent.secretaire? ||
+    agent.access_level_in(motif.organisation) == AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL ||
       agent_can_manage_motif?(motif, agent) ||
       motif.service_id.in?(agent.service_ids)
   end
@@ -50,12 +50,9 @@ class Agent::MotifPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if current_agent.secretaire?
-        scope.where(organisation_id: current_agent.organisation_ids)
-      else
-        scope.where(organisation: current_agent.basic_orgs, service: (current_agent.services + [nil]))
-          .or(scope.where(organisation: current_agent.admin_orgs))
-      end
+      scope.where(organisation: current_agent.basic_orgs, service: (current_agent.services + [nil]))
+        .or(scope.where(organisation: current_agent.admin_orgs))
+        .or(scope.where(organisation: current_agent.agent_accueil_orgs))
     end
 
     alias current_agent pundit_user
