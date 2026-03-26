@@ -537,6 +537,7 @@ tables:
     non_anonymized_column_names:
       - name
       - siret
+      - support_link
       - created_at
       - updated_at
   - table_name: operator_managers

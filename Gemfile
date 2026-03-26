@@ -144,7 +144,7 @@ gem "montrose"
 # Supplies TimeOfDay and Shift class
 gem "tod"
 # A ruby implementation of the iCalendar specification (RFC-5545).
-gem "icalendar", "~> 2.5"
+gem "icalendar", "~> 2.12"
 # Easy recurrence expansion for iCalendar
 gem "icalendar-recurrence"
 # ice_cube est utilisée par icalendar-recurrence pour calculer les occurrences des événements externes (Caldav)
@@ -157,6 +157,8 @@ gem "calendav", "~> 0.5"
 # Au lieu d’utiliser la base de données système qui peut différer entre les environnements (local, CI, production)
 # on utilise cette gem pour avoir la même partout.
 gem "tzinfo-data"
+# Generate links to add to various calendars
+gem "add_to_calendar"
 
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"

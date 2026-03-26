@@ -25,16 +25,6 @@ module IcsPayloads
       payload
     end
 
-    private
-
-    def ics_status
-      if cancelled?
-        "CANCELLED"
-      else
-        "CONFIRMED"
-      end
-    end
-
     def ics_location
       if motif.phone?
         nil
@@ -61,6 +51,16 @@ module IcsPayloads
       end
 
       description
+    end
+
+    private
+
+    def ics_status
+      if cancelled?
+        "CANCELLED"
+      else
+        "CONFIRMED"
+      end
     end
   end
 end

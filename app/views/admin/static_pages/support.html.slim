@@ -1,21 +1,35 @@
-- @hide_meet_the_team_banner = true
-- content_for(:title) { "Aide et support" }
-- content_for(:menu_item) { "menu-support" }
+ruby:
+  @hide_meet_the_team_banner = true
+  content_for(:title) { "Aide et support" }
+  content_for(:menu_item) { "menu-support" }
+  operator = current_territory.operator
+  operator_support_link = operator&.support_link.presence
 
 .fr-card.fr-card--horizontal.fr-card--sm
   .fr-card__body
-    .fr-card__content
-      h3.fr-card__title
-        | Contactez le support
-      p.fr-card__desc
-        | Vous avez des questions, vous rencontrez une difficulté, ou vous avez une suggestion à nous partager ? Contactez nous via notre formulaire.
-    .fr-card__footer
-      ul.fr-btns-group.fr-btns-group--inline-reverse.fr-btns-group--inline-lg
-        - if may_need_onboarding_help?
+    - if operator_support_link
+      .fr-card__content
+        h3.fr-card__title
+          | Contactez #{operator.name}
+        p.fr-card__desc
+          | Vous avez des questions, vous rencontrez une difficulté, ou vous avez une suggestion à partager ? Votre opérateur est là pour vous aider, n’hésitez pas à le contacter via son formulaire de contact.
+      .fr-card__footer
+        ul.fr-btns-group.fr-btns-group--inline-reverse.fr-btns-group--inline-lg
           li
-            = external_link_to "Contacter l’équipe", "https://rdv.anct.gouv.fr/motif/d17ekoDa/rendez-vous-d-accompagnement", class: "fr-btn"
-        li
-          = link_to "Formulaire de contact", new_aide_demande_support_path(role: "agent", sujet: "Question"), class: "fr-btn fr-btn--secondary"
+            = external_link_to "Formulaire de contact", operator_support_link, class: "fr-btn fr-btn--secondary"
+    - else
+      .fr-card__content
+        h3.fr-card__title
+          | Contactez le support
+        p.fr-card__desc
+          | Vous avez des questions, vous rencontrez une difficulté, ou vous avez une suggestion à nous partager ? Contactez nous via notre formulaire.
+      .fr-card__footer
+        ul.fr-btns-group.fr-btns-group--inline-reverse.fr-btns-group--inline-lg
+          - if may_need_onboarding_help?
+            li
+              = external_link_to "Contacter l’équipe", "https://rdv.anct.gouv.fr/motif/d17ekoDa/rendez-vous-d-accompagnement", class: "fr-btn"
+          li
+            = link_to "Formulaire de contact", new_aide_demande_support_path(role: "agent", sujet: "Question"), class: "fr-btn fr-btn--secondary"
   .fr-card__header.fr-background-alt--blue-france.rdv-max-width-400px
     .fr-card__img
       = dsfr_svg "artwork/pictograms/leisure/community", class: "fr-responsive-img"
