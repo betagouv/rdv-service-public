@@ -36,17 +36,24 @@ class Users::RdvSms < Users::BaseSms
 
   def rdv_cancelled(rdv, _user, token)
     base_message = "RDV #{rdv_title(rdv)} #{I18n.l(rdv.starts_at, format: :short)} a été annulé."
-    url = prendre_rdv_short_url(host: domain_host, tkn: token)
 
-    footer = if rdv.phone_number.present?
-               "Appelez le #{rdv.phone_number} ou allez sur #{url} pour reprendre RDV."
-             else
-               "Allez sur #{url} pour reprendre RDV."
-             end
-    @content = "#{base_message}\n#{footer}"
+    @content = "#{base_message}\n#{cancellation_footer(rdv, token)}"
   end
 
-  alias participation_cancelled rdv_cancelled
+  def participation_cancelled(rdv, _user, token)
+    base_message = "Votre participation au RDV #{rdv_title(rdv)} #{I18n.l(rdv.starts_at, format: :short)} a été annulée."
+
+    @content = "#{base_message}\n#{cancellation_footer(rdv, token)}"
+  end
+
+  def cancellation_footer(rdv, token)
+    url = prendre_rdv_short_url(host: domain_host, tkn: token)
+    if rdv.phone_number.present?
+      "Appelez le #{rdv.phone_number} ou allez sur #{url} pour reprendre RDV."
+    else
+      "Allez sur #{url} pour reprendre RDV."
+    end
+  end
 
   MAX_RDV_NAME_LENGTH = 50
 
