@@ -34,10 +34,10 @@ RSpec.describe "Login multi-fiches durant la prise de RDV en ligne" do
     click_on("Valider")
   end
 
-  context "quand deux fiches usager partagent le même email dans le même territoire (email principal + notification_email)" do
+  context "quand deux fiches usager partagent le même email dans le même territoire" do
     let!(:organisation_2) { create(:organisation, territory: territory) }
     let!(:user_1) { create(:user, email: "multi@test.fr", first_name: "Alice", last_name: "Dupont", organisations: [organisation]) }
-    let!(:user_2) { create(:user, email: nil, notification_email: "multi@test.fr", first_name: "Bob", last_name: "Martin", organisations: [organisation_2]) }
+    let!(:user_2) { create(:user, email: "multi@test.fr", first_name: "Bob", last_name: "Martin", organisations: [organisation_2]) }
 
     it "interrompt le wizard pour afficher l'écran de sélection de fiche, puis reprend le wizard après le choix" do
       reach_creneau_page

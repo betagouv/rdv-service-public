@@ -3,8 +3,7 @@ RSpec.describe "rdv-insertion API: users" do
   let(:user) do
     create(
       :user,
-      :without_devise_email,
-      notification_email: "notif@example.com",
+      email: "notif@example.com",
       organisations: [organisation_rdv_insertion, other_organisation_rdv_insertion, organisation_rdv_solidarites]
     )
   end
@@ -26,6 +25,6 @@ RSpec.describe "rdv-insertion API: users" do
     response_user_profiles = response.parsed_body.dig("user", "user_profiles")
     response_organisation_ids = response_user_profiles.map { |user_profile| user_profile.dig("organisation", "id") }
     expect(response_organisation_ids).to contain_exactly(organisation_rdv_insertion.id, other_organisation_rdv_insertion.id)
-    expect(parsed_response_body["user"]["notification_email"]).to eq("notif@example.com")
+    expect(parsed_response_body["user"]["email"]).to eq("notif@example.com")
   end
 end

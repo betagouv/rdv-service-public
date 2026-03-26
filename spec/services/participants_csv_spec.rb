@@ -30,13 +30,6 @@ RSpec.describe ParticipantsCsv, type: :service do
       expect(described_class.new(rdv).generate_csv).to eq(expected_csv)
     end
 
-    it "uses notification_email when email is blank" do
-      user1.update!(email: nil, notification_email: "alice-notif@example.com")
-
-      csv = CSV.parse(described_class.new(rdv).generate_csv, headers: true)
-      expect(csv[0]["adresse e-mail"]).to eq("alice-notif@example.com")
-    end
-
     it "uses the participation's temporal status, not the RDV's" do
       rdv.participations.find_by!(user: user1).update!(status: "seen")
 

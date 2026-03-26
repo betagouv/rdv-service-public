@@ -23,10 +23,10 @@ class Users::UsersController < UserAuthController
 
   def user_params
     params.require(:user).permit(
+      :email,
       :first_name,
       :last_name,
       :birth_name,
-      :notification_email,
       :phone_number,
       :birth_date,
       :address,

@@ -91,11 +91,7 @@ module UsersHelper
   end
 
   def clickable_user_email(user)
-    user.responsible_preferred_email.present? ? mail_to(user.responsible_preferred_email) : nil
-  end
-
-  def clickable_user_notification_email(user)
-    user.notification_email.present? ? mail_to(user.notification_email) : nil
+    user.responsible_email.present? ? mail_to(user.responsible_email) : nil
   end
 
   def notify_by_sms_description(user)
