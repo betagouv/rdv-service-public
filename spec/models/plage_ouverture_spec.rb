@@ -133,8 +133,8 @@ RSpec.describe PlageOuverture, type: :model do
 
     let(:plage_ouverture) { build(:plage_ouverture, agent: agent, organisation: organisation, motifs: [motif]) }
 
-    describe "for secretaire" do
-      let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+    describe "for agent d'accueil" do
+      let(:agent) { create(:agent, agent_accueil_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif3, motif_sans_service) }
     end

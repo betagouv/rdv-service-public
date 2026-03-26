@@ -369,8 +369,8 @@ RSpec.describe "agents can prescribe rdvs" do
       end
     end
 
-    context "when agent is not admin in current org but is a secretaire" do
-      let!(:current_agent) { create(:agent, basic_role_in_organisations: [org_mds], services: [create(:service, :secretariat)]) }
+    context "when agent is not admin in current org but is agent d'accueil" do
+      let!(:current_agent) { create(:agent, agent_accueil_role_in_organisations: [org_mds]) }
 
       it "only show the motif of the agent's service(s)" do
         go_to_prescription_page

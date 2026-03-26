@@ -8,6 +8,10 @@ FactoryBot.define do
       access_level { AgentRole::ACCESS_LEVEL_ADMIN }
     end
 
+    trait :agent_accueil do
+      access_level { AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL }
+    end
+
     trait :intervenant do
       access_level { AgentRole::ACCESS_LEVEL_INTERVENANT }
     end

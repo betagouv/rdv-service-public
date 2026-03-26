@@ -86,17 +86,15 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       end
     end
 
-    context "when agent is secrétaire" do
-      let!(:service_secretariat) { create(:service, :secretariat) }
+    context "when agent is agent d'accueil" do
       let!(:other_service) { create :service }
-      let!(:services) { create_list(:service, 2) }
       let!(:organisations) { create_list(:organisation, 2) }
-      let!(:agent) { create(:agent, basic_role_in_organisations: organisations, service: service_secretariat) }
+      let!(:agent) { create(:agent, agent_accueil_role_in_organisations: organisations) }
       let!(:other_agent_same_orgas) { create(:agent, basic_role_in_organisations: organisations, service: other_service) }
 
       it { is_expected.to contain_exactly(agent, other_agent_same_orgas) }
 
-      context "when secrétaire is also territory admin" do
+      context "when agent d'accueil is also territory admin" do
         let!(:territory) { create(:territory) }
         let!(:organisations) { create_list(:organisation, 2, territory: territory) }
         let!(:other_organisation_in_territory) { create(:organisation, territory: territory) }
