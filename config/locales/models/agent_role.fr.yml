@@ -8,6 +8,7 @@ fr:
       agent_role/access_levels:
         none: Inaccessible
         basic: Basique
+        agent_accueil: Agent d'accueil
         admin: Administrateur
         intervenant: Intervenant
     warnings:

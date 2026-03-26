@@ -100,7 +100,8 @@ h1
                 .card-body
                   = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
                   = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
-                  = f.input :access_level, as: :radio_buttons, collection: AgentRole::ACCESS_LEVELS, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
+                  - available_access_levels = AgentRole::ACCESS_LEVELS.select { |l| l != AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL || current_territory.services.any? || role&.agent_accueil? }
+                  = f.input :access_level, as: :radio_buttons, collection: available_access_levels, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
                 .card-footer
                   .row
                     .col.text-left

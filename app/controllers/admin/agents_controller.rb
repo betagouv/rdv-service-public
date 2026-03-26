@@ -116,11 +116,17 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def access_levels_collection
-    if @agent != current_agent && @agent.organisations.count < 2
-      AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
-    else
-      AgentRole::ACCESS_LEVELS
+    base = if @agent != current_agent && @agent.organisations.count < 2
+             AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
+           else
+             AgentRole::ACCESS_LEVELS
+           end
+
+    unless current_territory.services.any? || @agent.roles.any?(&:agent_accueil?)
+      base = base.reject { |l| l == AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL }
     end
+
+    base
   end
 
   def create_agent_params

@@ -48,8 +48,8 @@ class Agent::PlageOuverturePolicy < ApplicationPolicy
         plages_of_my_orgs
           .where(
             "plage_ouvertures.agent_id = ?
-              OR (plage_ouvertures.agent_id IN (?) AND agent_roles.access_level = 'basic')
-              OR (agent_roles.access_level = 'admin')",
+              OR (plage_ouvertures.agent_id IN (?) AND agent_roles.access_level IN ('basic', 'agent_accueil'))
+              OR (agent_roles.access_level IN ('admin', 'agent_accueil'))",
             current_agent.id, confreres_of_my_orgs.ids
           )
       end
