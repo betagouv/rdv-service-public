@@ -6,4 +6,8 @@ div
   .btn-wrapper
     = link_to "Vérifier la disponibilité", creneaux_users_rdv_url(@rdv, invitation_token: @token), class:"btn btn-primary"
 
+  p
+    |> Si vous ne souhaitez pas recevoir ce type de notification, vous pouvez vous désinscrire en cliquant sur ce lien :
+    = link_to "ne plus me notifier des créneaux disponibles", users_unsubscribe_file_attente_url(token: @token)
+
   = t("mailers.common.farewell_html", domain_name: domain.name)
