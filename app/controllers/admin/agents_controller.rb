@@ -122,7 +122,7 @@ class Admin::AgentsController < AgentAuthController
              AgentRole::ACCESS_LEVELS
            end
 
-    unless current_territory.services.any? || @agent.roles.any?(&:agent_accueil?)
+    unless current_organisation.agent_accueil_enabled? || @agent.roles.any?(&:agent_accueil?)
       base = base.reject { |l| l == AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL }
     end
 

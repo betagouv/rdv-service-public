@@ -14,5 +14,6 @@
           = f.input :website, placeholder: "https://rdv-solidarites.fr"
           = f.input :email, placeholder: "contact@ma-mds.fr"
           = f.input :horaires, placeholder: "Du lundi au vendredi de 9h à 17h, le samedi de 9h à 12h"
+          = f.input :agent_accueil_enabled, as: :boolean, label: "Activer le rôle « Agent d'accueil »", hint: "Permet d'assigner le rôle Agent d'accueil aux agents de cette organisation"
           .text-right
             = f.button :submit

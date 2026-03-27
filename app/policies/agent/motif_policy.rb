@@ -7,7 +7,7 @@ class Agent::MotifPolicy < ApplicationPolicy
     return false unless motif.organisation.in?(agent.organisations)
     return true if motif.service.blank?
 
-    agent.access_level_in(motif.organisation) == AgentRole::ACCESS_LEVEL_AGENT_ACCUEIL ||
+    agent.agent_accueil_in_organisation?(motif.organisation) ||
       agent_can_manage_motif?(motif, agent) ||
       motif.service_id.in?(agent.service_ids)
   end
