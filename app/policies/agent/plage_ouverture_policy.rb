@@ -39,20 +39,16 @@ class Agent::PlageOuverturePolicy < ApplicationPolicy
       plages_of_my_orgs = scope.joins("INNER JOIN agent_roles ON agent_roles.organisation_id = plage_ouvertures.organisation_id")
         .where(agent_roles: { agent_id: current_agent.id }) # plages des organisations dans lesquelles j'ai un role
 
-      if current_agent.secretaire?
-        plages_of_my_orgs
-      else
-        confreres_of_my_orgs = current_agent.confreres.joins(:roles)
-          .where(agent_roles: { organisation_id: current_agent.organisations })
+      confreres_of_my_orgs = current_agent.confreres.joins(:roles)
+        .where(agent_roles: { organisation_id: current_agent.organisations })
 
-        plages_of_my_orgs
-          .where(
-            "plage_ouvertures.agent_id = ?
-              OR (plage_ouvertures.agent_id IN (?) AND agent_roles.access_level IN ('basic', 'agent_accueil'))
-              OR (agent_roles.access_level IN ('admin', 'agent_accueil'))",
-            current_agent.id, confreres_of_my_orgs.ids
-          )
-      end
+      plages_of_my_orgs
+        .where(
+          "plage_ouvertures.agent_id = ?
+            OR (plage_ouvertures.agent_id IN (?) AND agent_roles.access_level IN ('basic', 'agent_accueil'))
+            OR (agent_roles.access_level IN ('admin', 'agent_accueil'))",
+          current_agent.id, confreres_of_my_orgs.ids
+        )
     end
   end
 end
