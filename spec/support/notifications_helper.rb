@@ -33,7 +33,7 @@ module NotificationsHelper
 
   def expect_no_notifications_for_user(user)
     perform_enqueued_jobs
-    expect(ActionMailer::Base.deliveries.map(&:to).flatten).not_to include(user.preferred_email)
+    expect(ActionMailer::Base.deliveries.map(&:to).flatten).not_to include(user.email)
     expect(Receipt.where(user_id: user.id, channel: "sms", result: "delivered").count).to eq 0
   end
 
@@ -47,8 +47,8 @@ module NotificationsHelper
 
   def expect_email_sent_for(rdv, person, event)
     if person.instance_of?(User)
-      expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(person.preferred_email)
-      expect(first_email_sent_to(person.preferred_email).subject).to include(email_title_for_user(rdv, event))
+      expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(person.email)
+      expect(first_email_sent_to(person.email).subject).to include(email_title_for_user(rdv, event))
     elsif person.instance_of?(Agent)
       expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(person.email)
       expect(first_email_sent_to(person.email).subject).to include(email_title_for_agent(rdv, person, event))
@@ -57,8 +57,8 @@ module NotificationsHelper
 
   def expect_no_email_sent_for(rdv, person, event)
     if person.instance_of?(User)
-      if ActionMailer::Base.deliveries.map(&:to).flatten.include?(person.preferred_email)
-        expect(first_email_sent_to(person.preferred_email).subject).not_to include(email_title_for_user(rdv, event))
+      if ActionMailer::Base.deliveries.map(&:to).flatten.include?(person.email)
+        expect(first_email_sent_to(person.email).subject).not_to include(email_title_for_user(rdv, event))
       end
     elsif person.instance_of?(Agent)
       if ActionMailer::Base.deliveries.map(&:to).flatten.include?(person.email)

@@ -131,7 +131,7 @@ class ProConnectController < ApplicationController
     user.update!(
       first_name: callback_client.user_first_name,
       last_name: callback_client.user_last_name,
-      notification_email: callback_client.user_email,
+      email: callback_client.user_email,
       latest_login_at: Time.zone.now
     )
 

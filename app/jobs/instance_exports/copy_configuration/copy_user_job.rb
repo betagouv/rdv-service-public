@@ -8,7 +8,6 @@ class InstanceExports::CopyConfiguration
       user = User.find(user_id)
 
       request_body = user.attributes.symbolize_keys.slice(*UserBlueprint.reflections[:default].fields.keys - %i[id responsible_id])
-      request_body[:notification_email] ||= request_body.delete(:email) # Les users n'auront pas de mot de passe devise sur la nouvelle instance, donc il faut uniquement utiliser le notification_email
       request_body[:organisation_ids] = [instance_export.destination_organisation_id]
 
       request_body[:external_reference] = {

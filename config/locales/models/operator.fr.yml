@@ -2,3 +2,6 @@ fr:
   activerecord:
     models:
       operator: Opérateur
+    attributes:
+      operator:
+        support_link: Lien de support

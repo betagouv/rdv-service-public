@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_16_144148) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_25_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -383,6 +383,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_16_144148) do
     t.enum "availability", default: "enabled", null: false, comment: "Permet de savoir si le lieu est un lieu normal (enabled), un lieu ponctuel qui sera utilisé pour un seul rdv (single_use), ou un lieu supprimé par soft-delete (disabled). Dans la plupart des cas on s'intéresse uniquement aux lieux enabled\n", enum_type: "lieu_availability"
     t.string "address", null: false
     t.string "code_postal"
+    t.boolean "address_without_geocoding", default: false, null: false
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
@@ -520,6 +521,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_16_144148) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "siret"
+    t.string "support_link"
   end
 
   create_table "organisations", force: :cascade do |t|
@@ -589,6 +592,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_16_144148) do
     t.datetime "recurrence_ends_at"
     t.time "secondary_start_time"
     t.time "secondary_end_time"
+    t.string "hex_color", limit: 7, default: "#c6ecff", null: false
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"

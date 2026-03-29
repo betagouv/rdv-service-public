@@ -54,6 +54,7 @@
         .card
           .card-body
             = f.input :title, label: "Libellé (facultatif)", placeholder: "ex: Permanence hebdo", hint: "Ce libellé sera affiché aux agents mais jamais aux usagers"
+            = f.input :hex_color, as: :color, label: "Couleur", hint: "Cette couleur peut vous aider à distinguer vos plages sur votre agenda."
 
     .row.justify-content-center
       .col-md-6
@@ -75,4 +76,9 @@
 - else
   .card
     .card-body
-      = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."
+      - if plage_ouverture.organisation.motifs.active.none?
+        = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous."
+      - elsif plage_ouverture.organisation.motifs.active.individuel.none?
+        = render "admin/motifs/creation_needed_callout", motivation_text: "Pour créer une plage d'ouverture, vous devez d'abord créer un motif de rendez-vous individuel. Cette organisation ne contient que des motifs collectifs.", non_admin_text: "Aucun motif de rendez-vous individuel n'est disponible dans cette organisation. Vous devez demander à un administrateur de votre organisation d'en créer un."
+      - else
+        = render "admin/motifs/creation_needed_callout", motivation_text: "Aucun motif individuel n'est accessible à cet agent. Les motifs existants sont liés à des services auxquels il n'appartient pas.", non_admin_text: "Vous n'avez accès à aucun motif individuel pour cette organisation. Les motifs existants sont liés à des services auxquels vous n'appartenez pas. Vous devez demander à un administrateur de votre organisation d'en créer un accessible à votre service."

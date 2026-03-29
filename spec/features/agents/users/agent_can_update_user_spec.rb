@@ -23,6 +23,19 @@ RSpec.describe "Agent can update user" do
     expect(page).to have_content("jeanne@reynolds.com")
   end
 
+  it "affiche un avertissement quand l'usager s'est déjà connecté" do
+    within("#spec-primary-user-card") { click_link "Modifier" }
+    expect(page).to have_content("Cet usager utilise cette adresse email pour se connecter.")
+  end
+
+  it "réinitialise le statut de connexion lors d'un changement d'email" do
+    expect(user.already_logged_in?).to be true
+    within("#spec-primary-user-card") { click_link "Modifier" }
+    fill_in "Email", with: "nouveau@email.fr"
+    click_button "Enregistrer"
+    expect(user.reload.already_logged_in?).to be false
+  end
+
   describe "optional fields" do
     let!(:organisation) { create(:organisation, territory: territory) }
 

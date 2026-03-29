@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.4.9"
 
 # Full-stack web application framework.
-gem "rails", "8.0.4"
+gem "rails", "8.0.4.1"
 # Rack-based asset packaging system
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
@@ -144,7 +144,7 @@ gem "montrose"
 # Supplies TimeOfDay and Shift class
 gem "tod"
 # A ruby implementation of the iCalendar specification (RFC-5545).
-gem "icalendar", "~> 2.5"
+gem "icalendar", "~> 2.12"
 # Easy recurrence expansion for iCalendar
 gem "icalendar-recurrence"
 # ice_cube est utilisée par icalendar-recurrence pour calculer les occurrences des événements externes (Caldav)
@@ -157,6 +157,8 @@ gem "calendav", "~> 0.5"
 # Au lieu d’utiliser la base de données système qui peut différer entre les environnements (local, CI, production)
 # on utilise cette gem pour avoir la même partout.
 gem "tzinfo-data"
+# Generate links to add to various calendars
+gem "add_to_calendar"
 
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"

@@ -6,6 +6,7 @@ import {
   defaultFullCalendarConfig,
   preferencesModalToggle,
   hiddenDays,
+  calendarTimeRange,
 } from './calendar/utils'
 
 export class AgendaPlageOuverture {
@@ -23,6 +24,7 @@ export class AgendaPlageOuverture {
   initFullCalendar = () => {
     const options = {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+      ...calendarTimeRange(this.data),
       eventSources: JSON.parse(this.data.eventSourcesJson),
       hiddenDays: hiddenDays(this.data),
       select: this.selectEvent,

@@ -149,7 +149,7 @@ RSpec.describe "Migration depuis RDV Aide Numérique vers RDV Service Public", j
       verticale: "rdv_mairie"
     )
 
-    expect(created_organisation.users.last.notification_email).to be_present
+    expect(created_organisation.users.last.email).to be_present
 
     expect(created_organisation.agents.count).to eq 2
 

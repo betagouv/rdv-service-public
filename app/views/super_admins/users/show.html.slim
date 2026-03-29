@@ -1,9 +1,13 @@
-- content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) }
+ruby:
+  content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) }
+  same_email_count = page.resource.email.present? ? User.where.not(id: page.resource.id).where(email: page.resource.email).count : 0
 header.main-content__header role="banner"
   h1.main-content__page-title
     = content_for(:title)
   div
     => link_to(t("administrate.actions.edit_resource", name: page.page_title),[:edit, namespace, page.resource], class: "button") if accessible_action?(page.resource, :edit)
+    - if same_email_count > 0
+      => link_to "Voir les fiches avec le même email (#{same_email_count})", super_admins_users_path(search: page.resource.email), class: "button"
 section.main-content__body
   dl
     - page.attributes.each do |attribute|

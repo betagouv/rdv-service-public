@@ -43,8 +43,7 @@ FactoryBot.define do
     trait :using_france_connect do
       franceconnect_openid_sub { "fake_sub" }
       logged_once_with_franceconnect { true }
-      email { nil }
-      notification_email { generate(:user_email) }
+      email { generate(:user_email) }
       phone_number { nil }
     end
 

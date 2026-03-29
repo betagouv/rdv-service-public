@@ -43,8 +43,7 @@ module User::SoftDeleteConcern
       first_name: "Usager supprimé",
       last_name: "Usager supprimé",
       deleted_at: Time.zone.now,
-      email: deleted_email,
-      notification_email: nil
+      email: deleted_email
     )
     reload # anonymizer operates outside the realm of rails knowledge
   end

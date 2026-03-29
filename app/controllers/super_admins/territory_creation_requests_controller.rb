@@ -22,7 +22,10 @@ module SuperAdmins
       @territory_creation_request = TerritoryCreationRequest.find(params[:id])
       authorize_resource(@territory_creation_request)
 
-      if @territory_creation_request.update(params.require(:territory_creation_request).permit(:response))
+      permitted = params.require(:territory_creation_request).permit(:response)
+      permitted[:response] = nil if permitted[:response].blank?
+
+      if @territory_creation_request.update(permitted)
         redirect_to super_admins_territory_creation_requests_path, flash: { success: "Demande traitée" }
       else
         flash.now[:error] = @territory_creation_request.errors.full_messages.join(" ")

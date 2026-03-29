@@ -9,8 +9,7 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
   end
 
   def expect_france_connect_fields_to_be_up_to_date(user)
-    expect(user.email).to be_nil # Pour un usager qui ne se connecte pas par email/mot de passe
-    expect(user.notification_email).to eq("jeanne@longo.fr")
+    expect(user.email).to eq("jeanne@longo.fr")
 
     expect(user.first_name).to eq("jeanne")
     expect(user.birth_name).to eq("longo")
@@ -66,7 +65,7 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
           expect { service.perform }.not_to change(User, :count)
           expect(service.new_user?).to be(false)
           user = service.user.reload
-          expect(user.notification_email).to eq("jeanne@longo.fr")
+          expect(user.email).to eq("jeanne@longo.fr")
         end
       end
     end
@@ -93,7 +92,6 @@ RSpec.describe UpsertUserForFranceconnectService, type: :service do
         expect(user).to have_attributes(
           {
             email: "jeanne@longo.fr",
-            notification_email: nil,
             birth_name: "longo",
           }
         )

@@ -24,6 +24,18 @@ RSpec.describe ZammadCustomer do
         end
       end
 
+      context "agent trouvé par email avec un email contenant des espaces" do
+        let!(:agent) { create(:agent, email: "agent@example.com") }
+        let(:args) { {} }
+
+        specify do
+          zammad_customer = ZammadCustomer.new(email: "  agent@example.com  ", phone: nil)
+          described_class.new(zammad_customer).run
+          expect(zammad_customer.note).to eq "Agent trouvé avec l'email agent@example.com"
+          expect(zammad_customer.super_admin_url).to eq "http://www.rdv-service-public-test.localhost/super_admins/agents/#{agent.id}"
+        end
+      end
+
       context "usager trouvé par numéro de téléphone" do
         let!(:user) { create(:user, phone_number: "0612345678", phone_number_formatted: "+33612345678") }
 

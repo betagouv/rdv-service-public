@@ -80,7 +80,7 @@ class Agents::RdvPlansController < AgentAuthController
   def create_rdv
     rdv_plan_params = params.require(:rdv_plan)
 
-    user_attributes = rdv_plan_params.require(:user).permit(:notification_email, :phone_number)
+    user_attributes = rdv_plan_params.require(:user).permit(:email, :phone_number)
 
     # TODO: possible à mettre en commun ?
     participation_attributes = if @rdv_plan.motif.visible_and_notified?

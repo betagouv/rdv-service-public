@@ -245,6 +245,7 @@ tables:
       - longitude
       - availability
       - code_postal
+      - address_without_geocoding
 
   - table_name: participations
     anonymized_column_names:
@@ -281,6 +282,7 @@ tables:
       - recurrence
       - expired_cached
       - recurrence_ends_at
+      - hex_color
 
   - table_name: webhook_endpoints
     anonymized_column_names:
@@ -532,9 +534,10 @@ tables:
       - source_organisation_id
       - status
   - table_name: operators
-    anonymized_column_names:
-      - name
     non_anonymized_column_names:
+      - name
+      - siret
+      - support_link
       - created_at
       - updated_at
   - table_name: operator_managers
