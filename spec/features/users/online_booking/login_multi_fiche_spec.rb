@@ -47,7 +47,7 @@ RSpec.describe "Login multi-fiches durant la prise de RDV en ligne" do
       expect(page).to have_content(user_1.full_name)
       expect(page).to have_content(user_2.full_name)
 
-      click_on user_1.full_name
+      page.all("h3.fr-tile__title button[type=submit]").first.click
 
       expect(page).to have_content("Connexion réussie")
       expect(page).to have_content("Étape 1 sur 3")
