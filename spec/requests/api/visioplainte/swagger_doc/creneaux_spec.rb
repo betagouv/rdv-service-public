@@ -55,6 +55,19 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
           )
         end
       end
+      response 400, "Renvoie un message d'erreur si date_debut et date_fin sont espacés de plus de 31 jours" do
+        let(:date_debut) { "2024-08-19" }
+        let(:date_fin) { "2024-10-19" }
+        run_test!
+        schema type: :object, properties: { errors: { type: :array, items: { type: :string } } }, required: %w[errors]
+
+        specify do
+          expect(parsed_response_body).to eq(
+            { errors: ["date_debut et date_fin ne doivent pas être espacés de plus de 31 jours"] }
+          )
+          expect(response.status).to eq 400
+        end
+      end
     end
   end
 
