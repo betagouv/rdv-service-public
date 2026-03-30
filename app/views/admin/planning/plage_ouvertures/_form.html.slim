@@ -9,7 +9,8 @@
         .card
           .card-body
             h2.dsfr-card-title Dates et horaires
-            = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
+            - legend = "Déclarer une disponibilité sur un seul jour ou récurrente sur plusieurs jours, semaines, mois ?"
+            = render partial: "common/recurrence", locals: { f:, model: plage_ouverture, legend: }
 
     .row.justify-content-center
       .col-md-6

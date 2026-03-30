@@ -1,4 +1,27 @@
+/# locals: (model:, f:, legend:)
+
 .recurrence-select.recurrence-select--weekly.js-recurrence-container
+  .row
+    .col
+      fieldset.fr-fieldset[aria-labelledby="recurrence-legend recurrence-messages"]
+        legend#recurrence-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          = legend
+        .fr-fieldset__element
+          .fr-radio-group.fr-radio-rich
+            input#non_reccurring.js-recurrence-input.js-radio-non-recurring[type="radio" name="recurrence_radio" value="false" checked=model.recurring?]
+            label.fr-label.fr-mb-0[for="non_reccurring"]
+              | Ponctuelle
+            .fr-radio-rich__pictogram
+              = dsfr_svg "artwork/pictograms/digital/calendar"
+        .fr-fieldset__element
+          .fr-radio-group.fr-radio-rich
+            input#reccurring.js-recurrence-input.js-radio-recurring[type="radio" name="recurrence_radio" value="true" checked=!model.recurring?]
+            label.fr-label.fr-mb-0[for="reccurring"]
+              | Récurrente
+            .fr-radio-rich__pictogram
+              = dsfr_svg "artwork/pictograms/leisure/catalog"
+        #recurrence-messages.fr-messages-group[aria-live="polite"]
+
   .row
     .col
       = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day js-recurrence-input"} )
@@ -26,8 +49,6 @@
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", class: "js-recurrence-computed" }
 
   = simple_fields_for :recurrence do |n|
-    = n.input :has_recurrence, as: :boolean, label: "Répéter…", input_html: { class: "js-recurrence-toggle js-recurrence-input" }
-
     .all-select
       .form-group
         .form-inline

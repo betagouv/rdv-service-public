@@ -3,7 +3,8 @@ class RecurrenceForm {
     this.element = document.querySelector('.js-recurrence-container')
     if (!this.element) return;
 
-    this.hasRecurrenceTarget = document.querySelector('.js-recurrence-toggle')
+    this.radioButtonRecurring = document.querySelector(".js-radio-recurring");
+    this.radioButtonNonRecurring = document.querySelector(".js-radio-non-recurring");
     this.recurrenceComputedTarget = document.querySelector('.js-recurrence-computed')
     this.intervalTarget = document.querySelector('.js-recurrence-interval')
     this.everyTarget = document.querySelector('.js-recurrence-every')
@@ -17,9 +18,9 @@ class RecurrenceForm {
 
     let model = this.getRecurrenceComputed() || {};
     if (model.every == undefined) {
-      this.hasRecurrenceTarget.checked = false;
+      this.radioButtonNonRecurring.click();
     } else {
-      this.hasRecurrenceTarget.checked = true;
+      this.radioButtonRecurring.click();
       this.everyTarget.value = model.every;
       this.intervalTarget.value = model.interval;
       if (model.until) {
@@ -61,7 +62,8 @@ class RecurrenceForm {
   updateRecurrence = () => {
     let model = {};
 
-    if (this.hasRecurrenceTarget.checked) {
+    const recurringRadio = this.radioButtonRecurring.checked;
+    if (recurringRadio) {
       model.every = this.everyTarget.value;
       model.interval = Number(this.intervalTarget.value);
       model.starts = this.firstDayTarget.value
