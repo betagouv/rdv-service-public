@@ -95,9 +95,11 @@ class RecurrenceForm {
     } else if (model.every == "month") {
       this.monthlyTarget.innerHTML = this.getDayText(this.getFirstDay());
       this.element.classList.add("recurrence-select--monthly");
-    } else {
+    } else { // no recurrence
       this.element.classList.add("recurrence-select--never");
     }
+
+    setLabel('label[for="recurrence-source"]', model.every ? 'Premier jour ' : 'Date ')
   }
 
   getWeekday = (date) => {
@@ -121,5 +123,13 @@ class RecurrenceForm {
     return `Tous les ${nthWeekdayOfMonth} ${Intl.DateTimeFormat("fr", {weekday: "long"}).format(date).toLowerCase()} du mois`;
   }
 }
+
+const setLabel = (selector, newContent) => {
+  document.querySelector(selector).childNodes.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      node.textContent = newContent;
+    }
+  });
+};
 
 export { RecurrenceForm }
