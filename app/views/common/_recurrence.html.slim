@@ -8,15 +8,15 @@
           = legend
         .fr-fieldset__element
           .fr-radio-group.fr-radio-rich
-            input#non_reccurring.js-recurrence-input.js-radio-non-recurring[type="radio" name="recurrence_radio" value="false" checked=model.recurring?]
-            label.fr-label.fr-mb-0[for="non_reccurring"]
+            input#radio_non_recurring.js-recurrence-input.js-radio-non-recurring[type="radio" name="recurrence_radio" value="false" checked=model.recurring?]
+            label.fr-label.fr-mb-0[for="radio_non_recurring"]
               | Ponctuelle
             .fr-radio-rich__pictogram
               = dsfr_svg "artwork/pictograms/digital/calendar"
         .fr-fieldset__element
           .fr-radio-group.fr-radio-rich
-            input#reccurring.js-recurrence-input.js-radio-recurring[type="radio" name="recurrence_radio" value="true" checked=!model.recurring?]
-            label.fr-label.fr-mb-0[for="reccurring"]
+            input#radio_recurring.js-recurrence-input.js-radio-recurring[type="radio" name="recurrence_radio" value="true" checked=!model.recurring?]
+            label.fr-label.fr-mb-0[for="radio_recurring"]
               | Récurrente
             .fr-radio-rich__pictogram
               = dsfr_svg "artwork/pictograms/leisure/catalog"
