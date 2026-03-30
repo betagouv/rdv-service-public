@@ -97,6 +97,17 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
           )
         end
       end
+
+      response 400, "Renvoie un message d'erreur si date_debut n'est pas indiqué" do
+        run_test!
+        schema type: :object, properties: { errors: { type: :array, items: { type: :string } } }, required: %w[errors]
+
+        let(:date_debut) { nil }
+
+        specify do
+          expect(parsed_response_body).to eq({ errors: ["Paramètre date_debut manquant"] }.deep_stringify_keys)
+        end
+      end
     end
   end
 end
