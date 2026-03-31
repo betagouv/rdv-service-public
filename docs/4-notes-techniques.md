@@ -195,11 +195,10 @@ Il s’agit des chiffres pour l’instance historique RDV Solidarités.
 
 |                                      | web | jobs | variables d’env | où trouver la config ? |
 |------------------------------------- | --- | ---- | --------------- | ---------------------- |
-| scalingo_workers_count               | 8   | 2    | -               | `scalingo scale`       |
-| processes_per_worker                 | 3   | 1    | WEB_CONCURRENCY | config/puma.rb         |
+| scalingo_workers_count               | 6   | 2    | -               | `scalingo scale`       |
+| processes_per_worker                 | 4   | 1    | WEB_CONCURRENCY | config/puma.rb         |
 | connection_pools_sizes_per_worker    | 4   | 8    | GOOD_JOB_MAX_THREADS et RAILS_MAX_THREADS | config/database.yml |
-| extra_connections_per_process        | 0   | 3    | -               | doc de GoodJob         |
-| total_max_connections                | 96  | 22   | -               | -                      |
+| total_max_connections                | 96  | 16   | -               | -                      |
 
 Soit un total de 118 connexions à la base PostgreSQL ouvertes simultanées possibles.
 
