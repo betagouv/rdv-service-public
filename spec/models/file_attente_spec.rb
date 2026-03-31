@@ -54,6 +54,17 @@ RSpec.describe FileAttente, type: :model do
           expect { send_notifications }.to change(file_attente, :last_creneau_sent_at).from(nil).to(now)
         end
       end
+
+      context "when the rdv participant is a proche of the user to notify" do
+        let!(:responsible) { create(:user) }
+        let!(:user) { create(:user, :relative, responsible: responsible) }
+
+        it "sends the notification to the responsible with a valid invitation token" do
+          allow(Users::FileAttenteMailer).to receive(:with).and_call_original
+          expect(Users::FileAttenteMailer).to receive(:with).with(hash_including(user: responsible, token: be_present))
+          subject
+        end
+      end
     end
 
     context "without availabilities before rdv" do
