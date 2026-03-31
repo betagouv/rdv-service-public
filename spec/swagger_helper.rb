@@ -43,6 +43,16 @@ RSpec.configure do |config|
           ```
           curl -X POST --url "https://staging.rdv-service-public.fr/api/visioplainte/reset" --header "X-VISIOPLAINTE-API-KEY: LA_CLE_D_API"
           ```
+
+          ## Codes et messages d'erreur
+
+          En cas de requête invalide (paramètre manquant), l'api renverra un statut 400 avec un body avec un message d'erreur de ce type :
+          ```
+          { "errors": ["Pas de créneau disponible à la date demandée"] }
+
+          ```
+
+          Tous les endpoints qui prennent un id en paramètre renverront une erreur 404 s'il n'y a pas d'objet correspondant à cet id.
         MARKDOWN
       },
     },

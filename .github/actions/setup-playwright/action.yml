@@ -11,7 +11,7 @@ runs:
         echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["playwright"]' package.json)" >> $GITHUB_ENV
     - name: Cache Playwright Chromium browser
       id: playwright-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.cache/ms-playwright
         key: playwright-browsers-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}

@@ -137,7 +137,7 @@ RSpec.describe "Visioplainte Rdvs" do
     end
 
     describe "authentication" do
-      it "returns a 400 status if the auth header is missing" do
+      it "returns a 401 status if the auth header is missing" do
         get "/api/visioplainte/rdvs/", params: { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-27T08:00:00+02:00" }, headers: {}
         expect(response.status).to eq 401
         expect(response.parsed_body["rdvs"]).to be_blank
