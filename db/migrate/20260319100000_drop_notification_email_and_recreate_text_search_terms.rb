@@ -1,9 +1,6 @@
 class DropNotificationEmailAndRecreateTextSearchTerms < ActiveRecord::Migration[8.0]
   def up
     safety_assured do
-      remove_index :users, name: "index_users_text_search_terms_with_notification_email"
-      remove_column :users, :text_search_terms_with_notification_email, :virtual
-
       remove_index :users, name: "index_users_on_notification_email"
       remove_column :users, :notification_email, :string
 
