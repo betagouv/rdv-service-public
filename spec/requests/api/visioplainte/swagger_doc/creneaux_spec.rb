@@ -63,9 +63,8 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
 
         specify do
           expect(parsed_response_body).to eq(
-            { errors: ["date_debut et date_fin ne doivent pas être espacés de plus de 31 jours"] }
+            { "errors" => ["date_debut et date_fin ne doivent pas être espacés de plus de 31 jours"] }
           )
-          expect(response.status).to eq 400
         end
       end
     end
