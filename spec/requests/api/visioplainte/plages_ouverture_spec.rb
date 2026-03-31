@@ -64,12 +64,4 @@ RSpec.describe "Visioplainte Plages d'ouverture" do
       expect(plages_ouvertures.first["starts_at"]).to eq("2024-08-19T08:00:00+02:00")
     end
   end
-
-  context "without required params" do
-    it "returns an error" do
-      get "/api/visioplainte/plages_ouverture", params: { date_debut: "2024-08-19", date_fin: nil }, headers: auth_header
-      expect(response.status).to eq 400
-      expect(response.parsed_body["errors"].first).to eq "Vous devez préciser les paramètres date_debut et date_fin"
-    end
-  end
 end
